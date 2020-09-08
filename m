@@ -2,89 +2,174 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63216C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4E8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F16218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F5F21532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599547996;
-	bh=kX4OBNeuOTXrAp1QEjnnD5+YUWM194wv+em948K2p7U=;
-	h=Date:From:Cc:Subject:In-Reply-To:References:To:List-ID:From;
-	b=zz8WpHZnOKGKedzDQckXnNvWpSgyDLGew+b4FXZKoYmkyKp8OMhcpYXp6oWHrwn5K
-	 +BLk0tT2cYKTYwF70oqCUSUzA1+je8RxENvFNWxUsey0ltP8UgNfiPf4ti/CNSRgxm
-	 Mds0taSp3JgU4CaS3tRVa9XC22b3uNG+jUYGDwX0=
+	s=default; t=1599548016;
+	bh=uXjlhXtYV5JTnSUGBm0cZr3Q3TDmKsWQxWIbyqPGrZc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iUeeHEyCMJDKncS0VLbPyPvkhB91+Ju82q2DCW3JqNYtqnodm5CwAf+9BAdzhAdWw
+	 NkDC8QbH7aLfFoy8be1FumT5W1vEedLZ+yFzMYc61ItS/2Azux8Z+Q4kDKkKhkx+W4
+	 DIU10PsMVb6/sxhmRccskUnNivDtzCZdcImzhJew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgIHGxO (ORCPT
+        id S1729094AbgIHGxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:53:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728479AbgIHGxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:53:12 -0400
-Received: from coco.lan (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E65121532;
-        Tue,  8 Sep 2020 06:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599547992;
-        bh=kX4OBNeuOTXrAp1QEjnnD5+YUWM194wv+em948K2p7U=;
-        h=Date:From:Cc:Subject:In-Reply-To:References:From;
-        b=yWgQW1AAWSizcuZNknmH7z4JdnCeWIkTmnbpgHUFdlerRbPBbe/vgJHvSWcZPQn0I
-         3X0f/AJhaKAloJD4PvishVLAItI0ql3tdZ/OkFW5THVsAhT1r7vA+BV/7/O6qeQL6L
-         1mzMmxz0MYkzIGSs6fTOJY7tmTWwNRwRIzHTgdhw=
-Date:   Tue, 8 Sep 2020 08:53:07 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/11] dwc3-of-simple: add support for Hikey 970
-Message-ID: <20200908085307.2c25657b@coco.lan>
-In-Reply-To: <83393769e4391d038c4ab69a67ac77e2ca34efd4.1599493845.git.mchehab+huawei@kernel.org>
-References: <cover.1599493845.git.mchehab+huawei@kernel.org>
-        <83393769e4391d038c4ab69a67ac77e2ca34efd4.1599493845.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 8 Sep 2020 02:53:33 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35848 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728479AbgIHGx3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:53:29 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w1so14877586edr.3;
+        Mon, 07 Sep 2020 23:53:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4p/H0CiiSp9E1p70DbzLGLjDnVkXgbyRRzE1jCB1PFQ=;
+        b=S7WxUvUTdnLU7LePTuZl4k7VJNW+ONr/Umyfb4+4BPV8IeFeTdoFpZFGwZv0U5xAAf
+         l0qsn30xsfPj7e5YbH2UvWlcW0N6QjK9hZcbT5XJUV0a2egd2n6VDSbQ9Gh8GDtZPgmG
+         zBIs6I6SquQBlgajjA6aICEwAQM3QI54uaSFZfnOJC3g9KGmmi+Y6WyUF+lhdFS6gLA5
+         kiJ+WspAS3byVVfbm28bkTCdVloKsyLMkey1ZWxnO0amizs8iU4ymVY/LkOvp2X2V/SF
+         8RUBUnh321IN0IQAbp938uoXOWjRoexzrEuPg3h2dGu9Fcgu8e7NAASJvSkdUeaCLCp+
+         z6JQ==
+X-Gm-Message-State: AOAM532O3/18clLyfddv1pLXQagcSVx4DmV98nMPkehJqaaF2HRHb0m6
+        G7ZWA4F8aad2pPWmAp03jnU=
+X-Google-Smtp-Source: ABdhPJw5ezQoF+AB+ms88qmJv+sqAXN2TYB1n/eHFI3sUP193yhAz8pVhfX4GcC87mq6+y/gYFPPXw==
+X-Received: by 2002:a05:6402:180a:: with SMTP id g10mr24930880edy.18.1599548004828;
+        Mon, 07 Sep 2020 23:53:24 -0700 (PDT)
+Received: from pi3 ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id c5sm9290071ejk.37.2020.09.07.23.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 23:53:23 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 08:53:21 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [RFT 09/25] ARM: dts: s5pv210: fix number of I2S DAI cells
+Message-ID: <20200908065321.GB24227@pi3>
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-10-krzk@kernel.org>
+ <BN6PR04MB0660D9B0D0B5FB4F40CF2769CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB0660D9B0D0B5FB4F40CF2769CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon,  7 Sep 2020 17:59:34 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+On Mon, Sep 07, 2020 at 04:55:26PM -0700, Jonathan Bakker wrote:
+> Sadly, this is causing issues for me.  The machine driver is no longer probing correctly
+> on the Galaxy S.
+> 
+> The failing call in sound/soc/samsung/aries_wm8994.c is
+> 
+> 	/* Set CPU of_node for BT DAI */
+> 	aries_dai[2].cpus->of_node = of_parse_phandle(cpu,
+> 			"sound-dai", 1);
+> 
+> where cpus->of_node is not set properly.  Which is definitely weird because it doesn't
+> look like this should affect that.
+> 
+> Let me know if there's any specific test that you want me to do.
 
-> diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-> index 8852fbfdead4..2d497165efe2 100644
-> --- a/drivers/usb/dwc3/dwc3-of-simple.c
-> +++ b/drivers/usb/dwc3/dwc3-of-simple.c
-> @@ -49,7 +49,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
->  	 * Some controllers need to toggle the usb3-otg reset before trying to
->  	 * initialize the PHY, otherwise the PHY times out.
->  	 */
-> -	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
-> +	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
-> +	    of_device_is_compatible(np, "hisilicon,hi3670-dwc3"))
->  		simple->need_reset = true;
+Thanks for the tests. I wonder now if this was working before because
+really my change should not break it... I'll think more about it.
 
-It turns that this hunk caused Serror during my suspend/resume tests.
+Best regards,
+Krzysztof
 
-Without this one, the driver works just fine.
-
-As you already applied this patch, do you prefer a patch dropping it,
-or should I send a version 2 without it?
-
-Thanks,
-Mauro
+> 
+> Thanks,
+> Jonathan
+> 
+> 
+> On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
+> > The bindings describe I2S DAI has 1 cells.  This makes especially sense
+> > for i2s0 which registers two DAIs.  Adjust the cells to fix dtbs_check
+> > warnings like:
+> > 
+> >   i2s@e2100000: #sound-dai-cells:0:0: 1 was expected
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm/boot/dts/s5pv210-fascinate4g.dts | 2 +-
+> >  arch/arm/boot/dts/s5pv210-galaxys.dts     | 2 +-
+> >  arch/arm/boot/dts/s5pv210.dtsi            | 6 +++---
+> >  3 files changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/s5pv210-fascinate4g.dts b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> > index ca064359dd30..a6dc8a173af1 100644
+> > --- a/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> > +++ b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> > @@ -102,7 +102,7 @@
+> >  		pinctrl-0 = <&headset_det &earpath_sel>;
+> >  
+> >  		cpu {
+> > -			sound-dai = <&i2s0>, <&bt_codec>;
+> > +			sound-dai = <&i2s0 0>, <&bt_codec>;
+> >  		};
+> >  
+> >  		codec {
+> > diff --git a/arch/arm/boot/dts/s5pv210-galaxys.dts b/arch/arm/boot/dts/s5pv210-galaxys.dts
+> > index 560f830b6f6b..0eba06f56ac7 100644
+> > --- a/arch/arm/boot/dts/s5pv210-galaxys.dts
+> > +++ b/arch/arm/boot/dts/s5pv210-galaxys.dts
+> > @@ -132,7 +132,7 @@
+> >  		pinctrl-0 = <&headset_det &earpath_sel>;
+> >  
+> >  		cpu {
+> > -			sound-dai = <&i2s0>, <&bt_codec>;
+> > +			sound-dai = <&i2s0 0>, <&bt_codec>;
+> >  		};
+> >  
+> >  		codec {
+> > diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+> > index 2871351ab907..96e667ba1c3f 100644
+> > --- a/arch/arm/boot/dts/s5pv210.dtsi
+> > +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> > @@ -251,7 +251,7 @@
+> >  			samsung,idma-addr = <0xc0010000>;
+> >  			pinctrl-names = "default";
+> >  			pinctrl-0 = <&i2s0_bus>;
+> > -			#sound-dai-cells = <0>;
+> > +			#sound-dai-cells = <1>;
+> >  			status = "disabled";
+> >  		};
+> >  
+> > @@ -266,7 +266,7 @@
+> >  			clocks = <&clocks CLK_I2S1>, <&clocks SCLK_AUDIO1>;
+> >  			pinctrl-names = "default";
+> >  			pinctrl-0 = <&i2s1_bus>;
+> > -			#sound-dai-cells = <0>;
+> > +			#sound-dai-cells = <1>;
+> >  			status = "disabled";
+> >  		};
+> >  
+> > @@ -281,7 +281,7 @@
+> >  			clocks = <&clocks CLK_I2S2>, <&clocks SCLK_AUDIO2>;
+> >  			pinctrl-names = "default";
+> >  			pinctrl-0 = <&i2s2_bus>;
+> > -			#sound-dai-cells = <0>;
+> > +			#sound-dai-cells = <1>;
+> >  			status = "disabled";
+> >  		};
+> >  
+> > 
