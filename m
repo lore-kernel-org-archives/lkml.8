@@ -2,68 +2,68 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E341C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A436EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D422721582
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C6E21532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599540165;
-	bh=vL/EL9ebYCG53fhuBlrAWUrGNhVRl9P0xEjcC9wiB80=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ulV72yuPfvMrXiE0aS+ddo7cZOm8pTJzUi0vp1AX1NuxRWBuw/p2BF27lBNyJuRJ7
-	 31Jvbz+EXuKsRfLD8ch+mSAz60roXiNw75VAw8dRavWs8fCDNF7URAvvaoVFG2e79a
-	 PeZ9KL6niNdZHJuMsL1JHQVDqXkmEYuBws1hA16w=
+	s=default; t=1599540172;
+	bh=1VLB/RvnQha8CjbcwJCA39bUqNlzXx3CwWoF1+wVkQU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NpfM+ajGT2LG7ny+go/PrbWg7MKU2Zeuk7MvvDmkZPUrmBxcgtiyS1BGa0I1NdERa
+	 QMZ8wHf13FORG8BeHwdD4ypQbonInEhGEIYf7hRt+rbrYPsdB2Wr8quAXvi8+yzeHe
+	 Op9IMFbYGkquAXxUZ9wWwoxbixwZToTc2pUAk1xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgIHEmo (ORCPT
+        id S1728512AbgIHEms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34764 "EHLO
+        Tue, 8 Sep 2020 00:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgIHEmf (ORCPT
+        with ESMTP id S1726805AbgIHEml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:42:35 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AF1C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 21:42:34 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id c142so9909820pfb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 21:42:34 -0700 (PDT)
+        Tue, 8 Sep 2020 00:42:41 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81006C061575
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 21:42:38 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g29so9174385pgl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 21:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4gdL8pqvo4jo9ucAoXnblDNUDcsJ7ePdXxrWQwtpEBQ=;
-        b=VXtCNwLE1D9n/1PFQXm5o/iOEJP2ppecvPHa3nN3hyNiBhh5sHJ49uaeLl9gV3QlXM
-         YZmdywOWGITiaXbDSM0jpvOyelGN2GemD6vMrAcCPc5kF7sqXx5b/2d0iTzjKHNk9vpQ
-         jbcTLrlLQ+g3pHOaLu0xG2ceXamBz4NqpDBT211ACQBJkNbFxFYD7MoYDrwrdqNq0+St
-         DvQ4JdtkKjdYD6VUN2JJHfVfCmy13BxzEczmR/yCTUyp2q0W4cW3Kiaobawhw6cDbJ2V
-         QQbLrR3qqIzLpRuUMp+P2JtgOPEJVmPT4HkSf/gz1q40Q2YnRjaw6FIvw+TL0gTAdJGD
-         2N+w==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1X2wgdypEexLJoyJFvgbErcW6sFtqTXmvvhkdoCXtb4=;
+        b=sYbEEV3aTFimo35fJALPnPZUfN6NziOkMW9HewicxlH9EijYn5xJP0zEM+7/XXeJm2
+         ofZJKdvn4/FeZjJDBsKdA8Swqg5i95BXqRpGfAritJTcP+b1GrteWTk22dkgIG1QH9Gt
+         yL8YIMeTFuu1yjBTT0unyElYzj8PgqFj8RlCVEA4nueF5fmTv1cWoNtgyZys6HlfayP4
+         lbSv4k7TGo2DB6TAgLxj33QefPwlnBrfiObjgKMNDYdZ7R/C5apc1LoasPsRW2uVBAJx
+         bxBpgYtayADl6Uy+jUAf9WbdFyE208LSyHJix9C9dq/9ReEbnqLUtSK/M9yBydJjOfmA
+         zrgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=4gdL8pqvo4jo9ucAoXnblDNUDcsJ7ePdXxrWQwtpEBQ=;
-        b=WHZyJZihd4HxBxJo364ZMV+gKvJ4fD0tpk3hsFbz399EvyQ+Iqx/aeHl2gzGS7lD83
-         MW/kUnJI8Q2TdcDUlWSD32QWbp5DW6kA5TyxXSu9OQ3/zSM7TD0gCV8+/b+iKWTSnx+W
-         eMn9uHl9NB3tWYDr0+7oAEDJ3PAzd7Yi8CRB2SeSV2cotU3w0pcvQ+RfPY2GfV9C1who
-         YvTecuHylfM92NSdskyFzZClTcxFsPXTnhcOFhx7FOA5MQ/qCnjm+g+MGooBdTQ7tGKv
-         av4mtD0t/n/mgwcCVN3jEg8I11CC+Fc1t/U0tEGMZNZBZZYRVl3U2hXY/zEPK/FLLntb
-         eEuw==
-X-Gm-Message-State: AOAM532YY9Pvoe8GzskpUlkWnN8+hqVU+eglCX9dJ4T28ryg7utgrxQV
-        XE4+L68qaYlPfLOmEp3HCUE=
-X-Google-Smtp-Source: ABdhPJy4DKPraj3SlfZ/Uiq7loaccP4UAIZ7D1nRqUIlTUiMHSs8tWFLqgilT6qa1j4sI2sD9FkPew==
-X-Received: by 2002:a63:4965:: with SMTP id y37mr19473180pgk.349.1599540154263;
-        Mon, 07 Sep 2020 21:42:34 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=1X2wgdypEexLJoyJFvgbErcW6sFtqTXmvvhkdoCXtb4=;
+        b=V5awRZ+MYOZ087WYzZKdTrxWq504DPih8N69XWLvjBkmN0CvNkEX0naKb8mE4JY6gQ
+         eY3/26SAs2Lp6k7DFnyGrTB3BmO0R50j+rb0dgKuT2BpEv6E1SKgSPzofil4e0jq6NiE
+         FOACLdC8mFGpT9PrX5cfRq8koksl5ci3pQBL9JTguqAgHvGK7T5OiC4gki+VYNi7sFhB
+         Sre3jOaVCP8e1F8ZHOb4bL/xjfznJPkqGmgNKImkJt7FPfmsYodZCGxQi6ICuawSgYBN
+         +Py2Fu/iYqOVLTDPTSVSWu830KbDaRIeMeO3bR2HEGmxz1J4GnTT4O15n/Kqi8Ve5iau
+         2w8A==
+X-Gm-Message-State: AOAM532DFkY/KQKCL52R6/paYbdgbalZRXdT7kVfe9TZApFlk0I+VzvD
+        J66F8Jf9XX7HDxLgquVrCyg=
+X-Google-Smtp-Source: ABdhPJyg+7zv4hQn+a1FLOaK80AMqwoFtSK0iBQIsy4P/v+w46/AUfId8KFZMSncZSXsuw6SDBed6A==
+X-Received: by 2002:a17:902:7895:b029:d0:89f4:621c with SMTP id q21-20020a1709027895b02900d089f4621cmr20971171pll.4.1599540157761;
+        Mon, 07 Sep 2020 21:42:37 -0700 (PDT)
 Received: from balhae.roam.corp.google.com ([101.235.31.111])
-        by smtp.gmail.com with ESMTPSA id q5sm16777625pfn.109.2020.09.07.21.42.30
+        by smtp.gmail.com with ESMTPSA id q5sm16777625pfn.109.2020.09.07.21.42.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 21:42:33 -0700 (PDT)
+        Mon, 07 Sep 2020 21:42:37 -0700 (PDT)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>
@@ -75,10 +75,12 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Andi Kleen <andi@firstfloor.org>,
         Ian Rogers <irogers@google.com>
-Subject: [PATCHSET 0/4] perf stat: Add --multiply-cgroup option
-Date:   Tue,  8 Sep 2020 13:42:24 +0900
-Message-Id: <20200908044228.61197-1-namhyung@kernel.org>
+Subject: [PATCH 1/4] perf evsel: Add evsel__clone() function
+Date:   Tue,  8 Sep 2020 13:42:25 +0900
+Message-Id: <20200908044228.61197-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+In-Reply-To: <20200908044228.61197-1-namhyung@kernel.org>
+References: <20200908044228.61197-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,93 +88,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+The evsel__clone() is to create an exactly same evsel from same
+attributes.  Note that metric events will be handled by later patch.
 
-When we profile cgroup events with perf stat, it's very annoying to
-specify events and cgroups on the command line as it requires the
-mapping between events and cgroups.  (Note that perf record can use
-cgroup sampling but it's not usable for perf stat).
+It will be used by perf stat to generate separate events for each
+cgroup.
 
-I guess most cases we just want to use a same set of events (N) for
-all cgroups (M), but we need to specify NxM events and NxM cgroups.
-This is not good especially when profiling large number of cgroups:
-say M=200.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/evsel.c | 57 +++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/evsel.h |  1 +
+ 2 files changed, 58 insertions(+)
 
-So I added --multiply-cgroup option to make it easy for that case.  It
-will create NxM events from N events and M cgroups.  One more upside
-is that it can handle metrics too.
-
-For example, the following example measures IPC metric for 3 cgroups
-
-  $ cat perf-multi-cgrp.sh
-  #!/bin/sh
-  
-  METRIC=${1:-IPC}
-  CGROUP_DIR=/sys/fs/cgroup/perf_event
-  
-  sudo mkdir $CGROUP_DIR/A $CGROUP_DIR/B $CGROUP_DIR/C
-  
-  # add backgroupd workload for each cgroup
-  echo $$ | sudo tee $CGROUP_DIR/A/cgroup.procs > /dev/null
-  yes > /dev/null &
-  echo $$ | sudo tee $CGROUP_DIR/B/cgroup.procs > /dev/null
-  yes > /dev/null &
-  echo $$ | sudo tee $CGROUP_DIR/C/cgroup.procs > /dev/null
-  yes > /dev/null &
-
-  # run 'perf stat' in the root cgroup
-  echo $$ | sudo tee $CGROUP_DIR/cgroup.procs > /dev/null
-  perf stat -a -M $METRIC --multiply-cgroup -G A,B,C sleep 1
-  
-  kill %1 %2 %3
-  sudo rmdir $CGROUP_DIR/A $CGROUP_DIR/B $CGROUP_DIR/C
-
-  
-  $ ./perf-multi-cgrp.sh IPC
-  
-   Performance counter stats for 'system wide':
-  
-      11,284,850,010      inst_retired.any          A #     2.71 IPC                    
-       4,157,915,982      cpu_clk_unhalted.thread   A                                   
-      11,342,188,640      inst_retired.any          B #     2.72 IPC                    
-       4,173,014,732      cpu_clk_unhalted.thread   B                                   
-      11,135,863,604      inst_retired.any          C #     2.67 IPC                    
-       4,171,375,184      cpu_clk_unhalted.thread   C                                   
-  
-         1.011948803 seconds time elapsed
-
-
-The code is available at 'perf/cgroup-multiply-v1' branch on
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks
-Namhyung
-
-
-Namhyung Kim (4):
-  perf evsel: Add evsel__clone() function
-  perf stat: Add --multiply-cgroup option
-  perf tools: Copy metric events properly when multiply cgroups
-  perf test: Add multiply cgroup event test
-
- tools/perf/builtin-stat.c          |  21 ++-
- tools/perf/tests/Build             |   1 +
- tools/perf/tests/builtin-test.c    |   4 +
- tools/perf/tests/multiply-cgroup.c | 203 +++++++++++++++++++++++++++++
- tools/perf/tests/tests.h           |   1 +
- tools/perf/util/cgroup.c           | 106 ++++++++++++++-
- tools/perf/util/cgroup.h           |   4 +
- tools/perf/util/evlist.c           |  11 ++
- tools/perf/util/evlist.h           |   1 +
- tools/perf/util/evsel.c            |  57 ++++++++
- tools/perf/util/evsel.h            |   1 +
- tools/perf/util/metricgroup.c      |  77 +++++++++++
- tools/perf/util/metricgroup.h      |   6 +
- tools/perf/util/stat.h             |   1 +
- 14 files changed, 488 insertions(+), 6 deletions(-)
- create mode 100644 tools/perf/tests/multiply-cgroup.c
-
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index fd865002cbbd..4f50f9499973 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -331,6 +331,63 @@ struct evsel *evsel__new_cycles(bool precise)
+ 	goto out;
+ }
+ 
++/**
++ * evsel__clone - create a new evsel copied from @orig
++ * @orig: original evsel
++ *
++ * The assumption is that @orig is not configured nor opened yet.
++ * So we only care about the attributes that can be set while it's parsed.
++ */
++struct evsel *evsel__clone(struct evsel *orig)
++{
++	struct evsel *evsel;
++	struct evsel_config_term *pos, *tmp;
++
++	BUG_ON(orig->core.fd);
++
++	evsel = evsel__new(&orig->core.attr);
++	if (evsel == NULL)
++		return NULL;
++
++	*evsel = *orig;
++	evsel->evlist = NULL;
++	INIT_LIST_HEAD(&evsel->core.node);
++
++	evsel->core.cpus = perf_cpu_map__get(orig->core.cpus);
++	evsel->core.own_cpus = perf_cpu_map__get(orig->core.own_cpus);
++	evsel->core.threads = perf_thread_map__get(orig->core.threads);
++	if (orig->name)
++		evsel->name = strdup(orig->name);
++	if (orig->group_name)
++		evsel->group_name = strdup(orig->group_name);
++	if (orig->pmu_name)
++		evsel->pmu_name = strdup(orig->pmu_name);
++
++	INIT_LIST_HEAD(&evsel->config_terms);
++	list_for_each_entry(pos, &orig->config_terms, list) {
++		tmp = malloc(sizeof(*tmp));
++		if (tmp == NULL) {
++			evsel__delete(evsel);
++			evsel = NULL;
++			break;
++		}
++
++		*tmp = *pos;
++		if (tmp->free_str) {
++			tmp->val.str = strdup(pos->val.str);
++			if (tmp->val.str == NULL) {
++				evsel__delete(evsel);
++				evsel = NULL;
++				free(tmp);
++				break;
++			}
++		}
++		list_add_tail(&tmp->list, &evsel->config_terms);
++	}
++
++	return evsel;
++}
++
+ /*
+  * Returns pointer with encoded error via <linux/err.h> interface.
+  */
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 35e3f6d66085..507c31d6a389 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -169,6 +169,7 @@ static inline struct evsel *evsel__new(struct perf_event_attr *attr)
+ 	return evsel__new_idx(attr, 0);
+ }
+ 
++struct evsel *evsel__clone(struct evsel *orig);
+ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
+ 
+ /*
 -- 
 2.28.0.526.ge36021eeef-goog
 
