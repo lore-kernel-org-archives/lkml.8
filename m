@@ -2,133 +2,145 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F39C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFA6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93FF020C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5294920C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgIHKS7 (ORCPT
+        id S1729095AbgIHKTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:18:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:51340 "EHLO foss.arm.com"
+        Tue, 8 Sep 2020 06:19:17 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47652 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbgIHKSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:18:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B616631B;
-        Tue,  8 Sep 2020 03:18:43 -0700 (PDT)
-Received: from [10.163.71.211] (unknown [10.163.71.211])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80B453F66E;
-        Tue,  8 Sep 2020 03:18:40 -0700 (PDT)
-Subject: Re: [PATCH 1/2] arm64/mm: Change THP helpers to comply with generic
- MM semantics
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        will@kernel.org, akpm@linux-foundation.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1597655984-15428-1-git-send-email-anshuman.khandual@arm.com>
- <1597655984-15428-2-git-send-email-anshuman.khandual@arm.com>
- <20200903165631.GC31409@gaia>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <b29e2bda-3299-e69f-90cf-1c9bd59a219d@arm.com>
-Date:   Tue, 8 Sep 2020 15:48:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1729285AbgIHKTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:19:01 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C889201599;
+        Tue,  8 Sep 2020 12:18:59 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 41D7620158D;
+        Tue,  8 Sep 2020 12:18:59 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 78C302036D;
+        Tue,  8 Sep 2020 12:18:58 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 13:18:58 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     peng.fan@nxp.com
+Cc:     sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        aisheng.dong@nxp.com
+Subject: Re: [PATCH] clk: imx: lpcg-scu: SW workaround for errata (e10858)
+Message-ID: <20200908101858.kiuzcnc6rolbbyma@fsr-ub1664-175>
+References: <1599556487-31364-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200903165631.GC31409@gaia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599556487-31364-1-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/03/2020 10:26 PM, Catalin Marinas wrote:
-> On Mon, Aug 17, 2020 at 02:49:43PM +0530, Anshuman Khandual wrote:
->> pmd_present() and pmd_trans_huge() are expected to behave in the following
->> manner during various phases of a given PMD. It is derived from a previous
->> detailed discussion on this topic [1] and present THP documentation [2].
->>
->> pmd_present(pmd):
->>
->> - Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
->> - Returns false if pmd does not refer to system RAM - Invalid pmd_page(pmd)
+On 20-09-08 17:14:47, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> The second bullet doesn't make much sense. If you have a pmd mapping of
-> some I/O memory, pmd_present() still returns true (as does
-> pte_present()).
-
-Derived this from an earlier discussion (https://lkml.org/lkml/2018/10/17/231)
-but current representation here might not be accurate.
-
-Would this be any better ?
-
-pmd_present(pmd):
-
-- Returns true if pmd refers to system RAM with a valid pmd_page(pmd)
-- Returns false if pmd refers to a migration or swap entry
-
+> Back-to-back LPCG writes can be ignored by the LPCG register due to
+> a HW bug. The writes need to be separated by at least 4 cycles of
+> the gated clock.
 > 
->> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
->> index 4d867c6446c4..28792fdd9627 100644
->> --- a/arch/arm64/include/asm/pgtable-prot.h
->> +++ b/arch/arm64/include/asm/pgtable-prot.h
->> @@ -19,6 +19,13 @@
->>  #define PTE_DEVMAP		(_AT(pteval_t, 1) << 57)
->>  #define PTE_PROT_NONE		(_AT(pteval_t, 1) << 58) /* only when !PTE_VALID */
->>  
->> +/*
->> + * This help indicate that the entry is present i.e pmd_page()
+> The workaround is implemented as follows:
+> 1. For clocks running greater than or equal to 24MHz, a read
+> followed by the write will provide sufficient delay.
+> 2. For clocks running below 24MHz, add a delay of 4 clock cylces
+> after the write to the LPCG register.
 > 
-> Nit: add another . after i.e
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/clk/imx/clk-lpcg-scu.c | 31 +++++++++++++++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-lpcg-scu.c b/drivers/clk/imx/clk-lpcg-scu.c
+> index 1f0e44f921ae..6ee9d2caedf2 100644
+> --- a/drivers/clk/imx/clk-lpcg-scu.c
+> +++ b/drivers/clk/imx/clk-lpcg-scu.c
+> @@ -6,6 +6,7 @@
+>  
+>  #include <linux/bits.h>
+>  #include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+> @@ -38,6 +39,31 @@ struct clk_lpcg_scu {
+>  
+>  #define to_clk_lpcg_scu(_hw) container_of(_hw, struct clk_lpcg_scu, hw)
+>  
+> +/* e10858 -LPCG clock gating register synchronization errata */
+> +static void do_lpcg_workaround(u32 rate, void __iomem *reg, u32 val)
+> +{
+> +	writel(val, reg);
+> +
+> +	if (rate >= 24000000 || rate == 0) {
+> +		u32 reg1;
+> +
+> +		/*
+> +		 * The time taken to access the LPCG registers from the AP core
+> +		 * through the interconnect is longer than the minimum delay
+> +		 * of 4 clock cycles required by the errata.
+> +		 * Adding a readl will provide sufficient delay to prevent
+> +		 * back-to-back writes.
+> +		 */
+> +		reg1 = readl(reg);
+> +	} else {
+> +		/*
+> +		 * For clocks running below 24MHz, wait a minimum of
+> +		 * 4 clock cycles.
+> +		 */
+> +		ndelay(4 * (DIV_ROUND_UP(1000000000, rate)));
+> +	}
 
-Will fix.
+Just to make sure this is totally understood, if the lpcg consumer
+needs to two enables/disables in less than 4 multiplied by the clock
+period, the second enable/disable will be delayed.
 
-> 
->> + * still points to a valid huge page in memory even if the pmd
->> + * has been invalidated.
->> + */
->> +#define PMD_PRESENT_INVALID	(_AT(pteval_t, 1) << 59) /* only when !PMD_SECT_VALID */
->> +
->>  #ifndef __ASSEMBLY__
->>  
->>  #include <asm/cpufeature.h>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index d5d3fbe73953..7aa69cace784 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -145,6 +145,18 @@ static inline pte_t set_pte_bit(pte_t pte, pgprot_t prot)
->>  	return pte;
->>  }
->>  
->> +static inline pmd_t clr_pmd_bit(pmd_t pmd, pgprot_t prot)
->> +{
->> +	pmd_val(pmd) &= ~pgprot_val(prot);
->> +	return pmd;
->> +}
-> 
-> Could you use clear_pmd_bit (instead of clr) for consistency with
-> clear_pte_bit()?
+If we're fine with this, then here is my R-b.
 
-Sure, will do.
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
+> +}
+> +
+>  static int clk_lpcg_scu_enable(struct clk_hw *hw)
+>  {
+>  	struct clk_lpcg_scu *clk = to_clk_lpcg_scu(hw);
+> @@ -54,7 +80,8 @@ static int clk_lpcg_scu_enable(struct clk_hw *hw)
+>  		val |= CLK_GATE_SCU_LPCG_HW_SEL;
+>  
+>  	reg |= val << clk->bit_idx;
+> -	writel(reg, clk->reg);
+> +
+> +	do_lpcg_workaround(clk_hw_get_rate(hw), clk->reg, reg);
+>  
+>  	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
+>  
+> @@ -71,7 +98,7 @@ static void clk_lpcg_scu_disable(struct clk_hw *hw)
+>  
+>  	reg = readl_relaxed(clk->reg);
+>  	reg &= ~(CLK_GATE_SCU_LPCG_MASK << clk->bit_idx);
+> -	writel(reg, clk->reg);
+> +	do_lpcg_workaround(clk_hw_get_rate(hw), clk->reg, reg);
+>  
+>  	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
+>  }
+> -- 
+> 2.28.0
 > 
-> It would be good if the mm folk can do a sanity check on the assumptions
-> about pmd_present/pmdp_invalidate/pmd_trans_huge.
-> 
-> The patch looks fine to me otherwise, feel free to add:
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
->
