@@ -2,320 +2,171 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1955C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B507C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DBF23F29
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:06:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EMT8EAzf"
+	by mail.kernel.org (Postfix) with ESMTP id BCCA324058
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgIHPFG (ORCPT
+        id S1729990AbgIHPHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:05:06 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49896 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729953AbgIHPD4 (ORCPT
+        Tue, 8 Sep 2020 11:07:07 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:51959 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730177AbgIHPEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:03:56 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088DoBcA053778;
-        Tue, 8 Sep 2020 08:50:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599573011;
-        bh=qHLb+aBzQu0XOv/X10dRlx794IjobDqksoE3Mzhu9Rc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=EMT8EAzfZ2+Yw0UXfSoMMmNmBwQ/TyZ1EWFOar8tQE22hGSnP7XfZhSx9nEZRLomw
-         zsWGPqwbcsbf7IA021UF376HHbwutublPiuVHCcaCQGxvnel61yWpErR7DC903yROS
-         x+jTX9aOAXQYYQUmvbt30HMcBJH7fKHPLK9Y/hpQ=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088DoBFs083592;
-        Tue, 8 Sep 2020 08:50:11 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
- 2020 08:50:11 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Sep 2020 08:50:11 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088DoAgk050565;
-        Tue, 8 Sep 2020 08:50:11 -0500
-Subject: Re: [PATCH] ASoC: tlv320adcx140: Add support for master mode
-To:     Camel Guo <camel.guo@axis.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@axis.com>, Camel Guo <camelg@axis.com>
-References: <20200908091812.1441-1-camel.guo@axis.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1fdc20a0-2bc7-f479-e489-5a31ba36e4c3@ti.com>
-Date:   Tue, 8 Sep 2020 08:50:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 11:04:20 -0400
+Received: (qmail 790483 invoked by uid 1000); 8 Sep 2020 10:32:03 -0400
+Date:   Tue, 8 Sep 2020 10:32:03 -0400
+From:   "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>
+To:     Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/2] usb: ohci: Add per-port overcurrent quirk
+Message-ID: <20200908143203.GA789878@rowland.harvard.edu>
+References: <20200904032247.11345-1-hamish.martin@alliedtelesis.co.nz>
+ <20200904032247.11345-2-hamish.martin@alliedtelesis.co.nz>
+ <20200904154517.GB694058@rowland.harvard.edu>
+ <9ba7b4dda9ef40e3c4c9b3f1c33075e04601ef61.camel@alliedtelesis.co.nz>
+ <20200907145900.GC762136@rowland.harvard.edu>
+ <d4523ef1d68202f492fc646455d67e0d4dee4898.camel@alliedtelesis.co.nz>
 MIME-Version: 1.0
-In-Reply-To: <20200908091812.1441-1-camel.guo@axis.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4523ef1d68202f492fc646455d67e0d4dee4898.camel@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Camel
+On Mon, Sep 07, 2020 at 10:28:26PM +0000, Hamish Martin wrote:
+> On Mon, 2020-09-07 at 10:59 -0400, stern@rowland.harvard.edu wrote:
+> > On Mon, Sep 07, 2020 at 01:50:10AM +0000, Hamish Martin wrote:
+> > > Hi Alan,
+> > > 
+> > > Thanks for your quick feedback. My replies are inline below.
+> > > 
+> > > On Fri, 2020-09-04 at 11:45 -0400, Alan Stern wrote:
+> > > > On Fri, Sep 04, 2020 at 03:22:46PM +1200, Hamish Martin wrote:
+> > > > > Some integrated OHCI controller hubs do not expose all ports of
+> > > > > the
+> > > > > hub
+> > > > > to pins on the SoC. In some cases the unconnected ports
+> > > > > generate
+> > > > > spurious overcurrent events. For example the Broadcom
+> > > > > 56060/Ranger
+> > > > > 2 SoC
+> > > > > contains a nominally 3 port hub but only the first port is
+> > > > > wired.
+> > > > > 
+> > > > > Default behaviour for ohci-platform driver is to use "ganged"
+> > > > > overcurrent protection mode. This leads to the spurious
+> > > > > overcurrent
+> > > > > events affecting all ports in the hub.
+> > > > > 
+> > > > > Allow this to be rectified by specifying per-port overcurrent
+> > > > > protection
+> > > > > mode via the device tree.
+> > > > > 
+> > > > > Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz
+> > > > > >
+> > > > > ---
+> > > > >  drivers/usb/host/ohci-hcd.c      | 4 ++++
+> > > > >  drivers/usb/host/ohci-platform.c | 3 +++
+> > > > >  drivers/usb/host/ohci.h          | 1 +
+> > > > >  3 files changed, 8 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/usb/host/ohci-hcd.c
+> > > > > b/drivers/usb/host/ohci-
+> > > > > hcd.c
+> > > > > index dd37e77dae00..01e3d75e29d9 100644
+> > > > > --- a/drivers/usb/host/ohci-hcd.c
+> > > > > +++ b/drivers/usb/host/ohci-hcd.c
+> > > > > @@ -687,6 +687,10 @@ static int ohci_run (struct ohci_hcd
+> > > > > *ohci)
+> > > > >  		val |= RH_A_NPS;
+> > > > >  		ohci_writel (ohci, val, &ohci->regs-
+> > > > > >roothub.a);
+> > > > >  	}
+> > > > > +	if (ohci->flags & OHCI_QUIRK_PER_PORT_OC) {
+> > > > > +		val |= RH_A_OCPM;
+> > > > > +		ohci_writel(ohci, val, &ohci->regs->roothub.a);
+> > > > > +	}
+> > > > 
+> > > > I don't think this is right, for two reasons.  First, isn't per-
+> > > > port 
+> > > > overcurrent protection the default?
+> > > 
+> > > Not as far as I understand the current code. Just above where my
+> > > patch
+> > > applies, the RH_A_OCPM (and RH_A_PSM) bits are explicitly cleared
+> > > in
+> > > 'val' with:
+> > >     val &= ~(RH_A_PSM | RH_A_OCPM);
+> > > 
+> > > This, coupled with the OHCI_QUIRK_HUB_POWER being set by virtue of
+> > > the
+> > > 'distrust_firmware' module param defaulting true, reads to me like
+> > > the
+> > > default is for ganged over-current protection. And that is my
+> > > experience in this case. 
+> > 
+> > You're right about that.  I hadn't noticed before; it makes little
+> > sense 
+> > to have a quirk that defaults to true.
+> > 
+> > It's not easy to tell the full story from the kernel history; that 
+> > module parameter predates the Git era.  I did learn that it was
+> > modified 
+> > in 2.6.3-rc3 and goes back even farther: see
+> > 
+> > 	https://marc.info/?l=linux-usb-devel&m=110628457424684&w=2
+> > 
+> > > If none of the quirks are selected then all of the fiddling with
+> > > 'val'
+> > > never gets written to 'ohci->regs->roothub.a'
+> > > 
+> > > I'd appreciate your reading of that analysis because I'm by no
+> > > means
+> > > sure of it.
+> > > 
+> > > > 
+> > > > Second, RH_A_OCPM doesn't do anything unless RH_A_NOCP is clear.
+> > > 
+> > > Correct, and that is my mistake. If I progress to a v2 of this
+> > > patch I
+> > > will update accordingly.
+> > 
+> > Shall we try changing the parameter's default value?  The USB
+> > subsystem 
+> > is a lot more mature and reliable now than it was back in 2004.
+> 
+> That doesn't really help me in my particular case. I tried turning the
+> param off and that just leads to the roothub.a reg not being modified
+> at all (and ganged over-current protection being left in place).
+> 
+> So, I guess I'm still back to my original idea of adding a new quirk
+> (perhaps quirk is not the best name for it in this case) that allows
+> the per-port over-current to be selected.
+> If you would rather that this not be a quirk and I rework the code such
+> that if no other quirks are selected then we configure for per-port
+> over-current as the default then I can do that too. If you expect per-
+> port over-current to be the default then explicit code that enforces
+> that might be best.
+> 
+> What's the best approach?
 
-On 9/8/20 4:18 AM, Camel Guo wrote:
-> From: Camel Guo <camelg@axis.com>
->
-> Add setup of bclk-to-ws ratio and sample rate when in master mode,
-> as well as MCLK input pin setup.
+In the absence of any evidence to the contrary, I think we should make 
+per-port overcurrent handling be the default.  So yes, add code which 
+does that.
 
-The patches you submitted need to go on the sound/for-next branch as it 
-does not apply cleanly.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
-
-> Limitations:
->
-> - MCLK is assumed to be connected to GPIO1 (other possible choices
->    would be GPI0..3 if they weren't used for analog positive inputs).
-> - PLL is always enabled, and clock generation is in automatic mode.
->
-> Signed-off-by: Camel Guo <camelg@axis.com>
-> ---
->   sound/soc/codecs/tlv320adcx140.c | 134 ++++++++++++++++++++++++++++++-
->   sound/soc/codecs/tlv320adcx140.h |  35 ++++++++
->   2 files changed, 165 insertions(+), 4 deletions(-)
->
-> diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-> index 13ece039e9fe..f143b6b62f84 100644
-> --- a/sound/soc/codecs/tlv320adcx140.c
-> +++ b/sound/soc/codecs/tlv320adcx140.c
-> @@ -35,6 +35,7 @@ struct adcx140_priv {
->   	unsigned int dai_fmt;
->   	unsigned int tdm_delay;
->   	unsigned int slot_width;
-> +	int master;
-Can this be a bool instead?
->   };
->   
->   static const char * const gpo_config_names[] = {
-> @@ -614,12 +615,85 @@ static int adcx140_reset(struct adcx140_priv *adcx140)
->   	return ret;
->   }
->   
-> +static int adcx140_fs_bclk_ratio(unsigned int bclk_ratio)
-> +{
-> +	switch (bclk_ratio) {
-> +	case 16:
-> +		return ADCX140_RATIO_16;
-> +	case 24:
-> +		return ADCX140_RATIO_24;
-> +	case 32:
-> +		return ADCX140_RATIO_32;
-> +	case 48:
-> +		return ADCX140_RATIO_48;
-> +	case 64:
-> +		return ADCX140_RATIO_64;
-> +	case 96:
-> +		return ADCX140_RATIO_96;
-> +	case 128:
-> +		return ADCX140_RATIO_128;
-> +	case 192:
-> +		return ADCX140_RATIO_192;
-> +	case 256:
-> +		return ADCX140_RATIO_256;
-> +	case 384:
-> +		return ADCX140_RATIO_384;
-> +	case 512:
-> +		return ADCX140_RATIO_512;
-> +	case 1024:
-> +		return ADCX140_RATIO_1024;
-> +	case 2048:
-> +		return ADCX140_RATIO_2048;
-> +	default:
-> +		break;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +static int adcx140_fs_rate(unsigned int rate)
-> +{
-> +	switch (rate) {
-> +	case 7350:
-> +	case 8000:
-> +		return ADCX140_8_OR_7_35KHZ;
-> +	case 14700:
-> +	case 16000:
-> +		return ADCX140_16_OR_14_7KHZ;
-> +	case 22050:
-> +	case 24000:
-> +		return ADCX140_24_OR_22_05KHZ;
-> +	case 29400:
-> +	case 32000:
-> +		return ADCX140_32_OR_29_4KHZ;
-> +	case 44100:
-> +	case 48000:
-> +		return ADCX140_48_OR_44_1KHZ;
-> +	case 88200:
-> +	case 96000:
-> +		return ADCX140_96_OR_88_2KHZ;
-> +	case 176400:
-> +	case 192000:
-> +		return ADCX140_192_OR_176_4KHZ;
-> +	case 352800:
-> +	case 384000:
-> +		return ADCX140_384_OR_352_8KHZ;
-> +	case 705600:
-> +	case 768000:
-> +		return ADCX140_768_OR_705_6KHZ;
-> +	default:
-> +		break;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
->   static int adcx140_hw_params(struct snd_pcm_substream *substream,
->   			     struct snd_pcm_hw_params *params,
->   			     struct snd_soc_dai *dai)
->   {
->   	struct snd_soc_component *component = dai->component;
-> +	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
->   	u8 data = 0;
-> +	u8 mst_cfg0 = 0;
->   
->   	switch (params_width(params)) {
->   	case 16:
-> @@ -640,6 +714,60 @@ static int adcx140_hw_params(struct snd_pcm_substream *substream,
->   		return -EINVAL;
->   	}
->   
-> +	if (adcx140->master) {
-> +		u8 mst_cfg1 = 0;
-> +		u8 gpio_cfg0 = 0;
-
-> +		unsigned int bclk_ratio;
-> +		int ret;
-> +
-
-Can this be moved into a function?
-
-Then we can avoid variable init mid function
-
-> +		mst_cfg0 = ADCX140_MST_SLV_CFG_BIT;
-> +		if (params_rate(params) % 1000)
-> +			mst_cfg0 |= ADCX140_FS_MODE_BIT; /* 44.1 kHz et al */
-> +
-> +		ret = adcx140_fs_rate(params_rate(params));
-> +		if (ret < 0) {
-> +			dev_err(component->dev, "%s: Unsupported rate %d\n",
-> +				__func__, params_rate(params));
-> +			return ret;
-> +		}
-> +		mst_cfg1 |= ret;
-> +
-> +		/* In slave mode when using automatic clock configuration,
-> +		 * the codec figures out the BCLK to FSYNC ratio itself. But
-> +		 * here in master mode, we need to tell it.
-> +		 */
-> +
-> +		bclk_ratio = snd_soc_params_to_frame_size(params);
-> +		ret = adcx140_fs_bclk_ratio(bclk_ratio);
-> +		if (ret < 0) {
-> +			dev_err(component->dev, "%s: Unsupported bclk_ratio %d\n",
-> +				__func__, bclk_ratio);
-> +			return ret;
-> +		}
-> +		mst_cfg1 |= ret;
-> +
-> +		/* The codec can receive MCLK on any input: GPIO, GPI0..3.
-> +		 * While in future it would be nice to have these selectable
-> +		 * via clk_id for instance, for now we fix GPIO1 as the MCLK
-> +		 * source.
-> +		 */
-> +		gpio_cfg0 |= ADCX140_GPIO1_MCLK;
-
-Actually the latest driver has the GPO and GPI configurable via the DT
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml?h=v5.9-rc4
-
-Shouldn't be to difficult to add the GPIO as well please add this 
-instead of hard coding the GPIO.
-
-
-> +
-> +		snd_soc_component_update_bits(component, ADCX140_MST_CFG1,
-> +					      ADCX140_FS_RATE_MSK |
-> +					      ADCX140_RATIO_MSK,
-> +					      mst_cfg1);
-> +
-> +		snd_soc_component_update_bits(component, ADCX140_GPIO_CFG0,
-> +					      ADCX140_GPIO1_CFG_MSK,
-> +					      gpio_cfg0);
-> +	}
-> +
-> +	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
-> +				      ADCX140_FS_MODE_BIT |
-> +				      ADCX140_MST_SLV_CFG_BIT,
-> +				      mst_cfg0);
-> +
->   	snd_soc_component_update_bits(component, ADCX140_ASI_CFG0,
->   			    ADCX140_WORD_LEN_MSK, data);
->   
-> @@ -652,16 +780,16 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
->   	struct snd_soc_component *component = codec_dai->component;
->   	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
->   	u8 iface_reg1 = 0;
-> -	u8 iface_reg2 = 0;
->   	int offset = 0;
->   	int width = adcx140->slot_width;
->   
->   	/* set master/slave audio interface */
->   	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
->   	case SND_SOC_DAIFMT_CBM_CFM:
-> -		iface_reg2 |= ADCX140_BCLK_FSYNC_MASTER;
-
-> +		adcx140->master = 1;
->   		break;
->   	case SND_SOC_DAIFMT_CBS_CFS:
-> +		adcx140->master = 0;
->   		break;
->   	case SND_SOC_DAIFMT_CBS_CFM:
->   	case SND_SOC_DAIFMT_CBM_CFS:
-> @@ -714,8 +842,6 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
->   				      ADCX140_BCLKINV_BIT |
->   				      ADCX140_ASI_FORMAT_MSK,
->   				      iface_reg1);
-> -	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
-> -				      ADCX140_BCLK_FSYNC_MASTER, iface_reg2);
->   
->   	/* Configure data offset */
->   	snd_soc_component_update_bits(component, ADCX140_ASI_CFG1,
-> diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
-> index eedbc1d7221f..bac34800b189 100644
-> --- a/sound/soc/codecs/tlv320adcx140.h
-> +++ b/sound/soc/codecs/tlv320adcx140.h
-> @@ -145,4 +145,39 @@
->   #define ADCX140_GPO_CFG_MAX		4
->   #define ADCX140_GPO_DRV_MAX		5
->   
-> +/* MST_CFG0 */
-> +#define ADCX140_MST_SLV_CFG_BIT	BIT(7)
-
-This is already defined as  ADCX140_BCLK_FSYNC_MASTER please don't 
-define defines that are already defined.
-
-> +#define ADCX140_FS_MODE_BIT	BIT(3)
-
-This is already defined as ADCX140_FSYNCINV_BIT
-
-Dan
-
+Alan Stern
