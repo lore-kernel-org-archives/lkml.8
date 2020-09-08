@@ -2,119 +2,129 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA626C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF49EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6285720708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599583460;
-	bh=5e2FeFGeBsQ08Xbq+c6ro2JvZjXm8XuuPBlwX6Hax+g=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=OnYDIgJ3j8PMO42AhIRy+WXB6ntxhWiTj/3JJPHrdAWPysPjEZwB7oMfDCj84uY7T
-	 pQmIZZ2AoMFpE2EZqwdLMjYl/06lw1S7PrXXLNuJcgJEv3lFialcagG5sDQcbZXwTp
-	 gyo/9O25EzgCWYs/wJaNidyx7uUnfs/5g83SZs7Y=
+	by mail.kernel.org (Postfix) with ESMTP id 91E0B206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iK7u8gqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbgIHQoI (ORCPT
+        id S1732006AbgIHQoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:44:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732022AbgIHQbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:31:38 -0400
-Received: from localhost.localdomain (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5ED822C9C;
-        Tue,  8 Sep 2020 14:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599577202;
-        bh=5e2FeFGeBsQ08Xbq+c6ro2JvZjXm8XuuPBlwX6Hax+g=;
-        h=From:To:Subject:Date:From;
-        b=qgJeyzEPOC/OZb4p2XNSaZQ1LKhhDQM0wSLJswkbINraU//gjo2q3iNVapN3KlpoX
-         LD+GSH763ArX4beMKDc/0Nj2S3pV0mCEZWbQmWOXULN3x+JV5TJFK99hlwhsNBhvOo
-         gvUcAsfw4BUb54G+Juq4Zw3m4IWCuT7C6nZvAl08=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: net: Correct interrupt flags in examples
-Date:   Tue,  8 Sep 2020 16:59:39 +0200
-Message-Id: <20200908145939.4569-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 8 Sep 2020 12:44:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36016 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731771AbgIHQb3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:31:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599582670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UXzNpJhj5sowidUDfDEXaS6phGxQ0LavcBR8ek7/U9c=;
+        b=iK7u8gqpTdfoXtYU7OEq1JMZEKUJ/jsz2+CmjRLgK0vnEdBMfK+xTHflvuSIQPLCQXQfKI
+        USZG0O04bXNJOlvoGMTFRjaBw7T40JaXY42xiTQfpf4AohMPEtBxaRPxNgnOL7Zhri5m+g
+        MiUFwMRms28BSiokT5MqTL9KorYiJ3Q=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-186-NTz7vs9qOBO87HqdsTWTiw-1; Tue, 08 Sep 2020 10:15:58 -0400
+X-MC-Unique: NTz7vs9qOBO87HqdsTWTiw-1
+Received: by mail-wr1-f70.google.com with SMTP id n15so6987947wrv.23
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:15:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UXzNpJhj5sowidUDfDEXaS6phGxQ0LavcBR8ek7/U9c=;
+        b=Au6uLxctztv6jf5BDxOLkYBGxoMPEYRgWfmOG8QaGXaWAwg4lxn1uovcAfD1FmvhfM
+         qnPI6rz8alZU7HSJwHPpB0JiAKVSRVfdtdmulrNHNDvC9IaXGgoNBbfgbu//+SbAumo9
+         WCf1DVTrM1zyM5YDwp1ROSGe9vRV+o9JHiJHMts6M8LeHnNLsb4CZ+zxeHvBpiNYWz/z
+         F3oltTX9ezT53NWilRQ32DmUdBDieKQ8UO1MSJdp+XWY+WnDfmz1eKVlTiRJ+Frl8sKM
+         BhNnNhVFMwOADzqn5xkIYEjjd5ghkLeHo1Gi7sKErB9jL1vyvKqE0X3nOTZyWYZNPJaw
+         ctRg==
+X-Gm-Message-State: AOAM5303nggodCpw46pZ29hIGD/quAVk5vE2Ml7IO0Elze+UmcarbKRv
+        NWWsEpZsZzUdITanQHW3l1CVORTVjFDqxYwvbaWrirdKBYaayrzxqkbS6Sc3ZS1ENm9uHVZwk4D
+        O3B8F6EGgqxHk0WRADXAtPy50
+X-Received: by 2002:adf:ba10:: with SMTP id o16mr26932376wrg.100.1599574557186;
+        Tue, 08 Sep 2020 07:15:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzqEKlAdEL5xW+LjUpamB0FNN2eHC7z5gQAJUS0ZT9mISMnhGZ2hx0LZial5U4dn8IDd/bz+A==
+X-Received: by 2002:adf:ba10:: with SMTP id o16mr26932354wrg.100.1599574557014;
+        Tue, 08 Sep 2020 07:15:57 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-218-236.inter.net.il. [80.230.218.236])
+        by smtp.gmail.com with ESMTPSA id a20sm30604272wmm.40.2020.09.08.07.15.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 07:15:55 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 10:15:50 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Matej Genci <matej.genci@nutanix.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Felipe Franciosi <felipe@nutanix.com>
+Subject: Re: [PATCH] Rescan the entire target on transport reset when LUN is 0
+Message-ID: <20200908101531-mutt-send-email-mst@kernel.org>
+References: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GPIO_ACTIVE_x flags are not correct in the context of interrupt flags.
-These are simple defines so they could be used in DTS but they will not
-have the same meaning:
-1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
-2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
+On Fri, Aug 28, 2020 at 12:21:35PM +0000, Matej Genci wrote:
+> VirtIO 1.0 spec says
+>     The removed and rescan events ... when sent for LUN 0, they MAY
+>     apply to the entire target so the driver can ask the initiator
+>     to rescan the target to detect this.
+> 
+> This change introduces the behaviour described above by scanning the
+> entire scsi target when LUN is set to 0. This is both a functional and a
+> performance fix. It aligns the driver with the spec and allows control
+> planes to hotplug targets with large numbers of LUNs without having to
+> request a RESCAN for each one of them.
+> 
+> Signed-off-by: Matej Genci <matej@nutanix.com>
+> Suggested-by: Felipe Franciosi <felipe@nutanix.com>
 
-Correct the interrupt flags, assuming the author of the code wanted some
-logical behavior behind the name "ACTIVE_xxx", this is:
-  ACTIVE_LOW  => IRQ_TYPE_LEVEL_LOW
-  ACTIVE_HIGH => IRQ_TYPE_LEVEL_HIGH
+Stefan, Paolo, could you review this pls?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
- Documentation/devicetree/bindings/net/nfc/nxp-nci.txt  | 2 +-
- Documentation/devicetree/bindings/net/nfc/pn544.txt    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-index 3613c2c8f75d..0968b40aef1e 100644
---- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-+++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
-@@ -33,7 +33,7 @@ tcan4x5x: tcan4x5x@0 {
- 		spi-max-frequency = <10000000>;
- 		bosch,mram-cfg = <0x0 0 0 32 0 0 1 1>;
- 		interrupt-parent = <&gpio1>;
--		interrupts = <14 GPIO_ACTIVE_LOW>;
-+		interrupts = <14 IRQ_TYPE_LEVEL_LOW>;
- 		device-state-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
- 		device-wake-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
- 		reset-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
-diff --git a/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt b/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
-index cfaf88998918..9e4dc510a40a 100644
---- a/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
-@@ -25,7 +25,7 @@ Example (for ARM-based BeagleBone with NPC100 NFC controller on I2C2):
- 		clock-frequency = <100000>;
- 
- 		interrupt-parent = <&gpio1>;
--		interrupts = <29 GPIO_ACTIVE_HIGH>;
-+		interrupts = <29 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		enable-gpios = <&gpio0 30 GPIO_ACTIVE_HIGH>;
- 		firmware-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
-diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Documentation/devicetree/bindings/net/nfc/pn544.txt
-index 92f399ec22b8..2bd82562ce8e 100644
---- a/Documentation/devicetree/bindings/net/nfc/pn544.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
-@@ -25,7 +25,7 @@ Example (for ARM-based BeagleBone with PN544 on I2C2):
- 		clock-frequency = <400000>;
- 
- 		interrupt-parent = <&gpio1>;
--		interrupts = <17 GPIO_ACTIVE_HIGH>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		enable-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
- 		firmware-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
--- 
-2.17.1
+> ---
+>  drivers/scsi/virtio_scsi.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+> index bfec84aacd90..a4b9bc7b4b4a 100644
+> --- a/drivers/scsi/virtio_scsi.c
+> +++ b/drivers/scsi/virtio_scsi.c
+> @@ -284,7 +284,12 @@ static void virtscsi_handle_transport_reset(struct virtio_scsi *vscsi,
+>  
+>  	switch (virtio32_to_cpu(vscsi->vdev, event->reason)) {
+>  	case VIRTIO_SCSI_EVT_RESET_RESCAN:
+> -		scsi_add_device(shost, 0, target, lun);
+> +		if (lun == 0) {
+> +			scsi_scan_target(&shost->shost_gendev, 0, target,
+> +					 SCAN_WILD_CARD, SCSI_SCAN_INITIAL);
+> +		} else {
+> +			scsi_add_device(shost, 0, target, lun);
+> +		}
+>  		break;
+>  	case VIRTIO_SCSI_EVT_RESET_REMOVED:
+>  		sdev = scsi_device_lookup(shost, 0, target, lun);
+> -- 
+> 2.20.1
 
