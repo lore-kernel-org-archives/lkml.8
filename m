@@ -2,55 +2,58 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA993C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFDCC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B122087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DE22080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589680;
-	bh=NGMD93V9ArFeuIG8EFdY9DZSKhb0K8Og0xZXFCbWbnQ=;
+	s=default; t=1599589691;
+	bh=+6AfGjqpcz6AUoTPPYTG7JZKiXihcM5oveKaLtMH5hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ui64DyMmVy4AXN7PcDFQ0jYdp5w5wfjzQzoebbop1zqir1svwduUk+qFVei2tESSX
-	 V6JP5OkVVVYRlsDB+dgpeK1ZC61ju1lVVIl5LJV9N2DMvOyc//fKjH1x0Cvg8ELnSD
-	 ZVtu21qwTjID12kIixlkPK4jLGVzA0WB8T8WzWrw=
+	b=0eItYoZuMC8wdKEg5mlW0VvNWT3NpsLX+xzil8+uJxDn/rtEh6/IwX3EEFPbIQB3u
+	 /9Xxme198NJNGIhTWCeulKnia1T8OIJ2Ydt+maxkStUVz9CvL4CP0/x2GKkeRErzQC
+	 fqnnGKCIwGTFaVVIv8bLBb9EIzOBQ/NUzvg72TVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIHS1w (ORCPT
+        id S1731680AbgIHS2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:28:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbgIHQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:29 -0400
+        id S1731402AbgIHQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:10:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24BE824747;
-        Tue,  8 Sep 2020 15:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4418F2468A;
+        Tue,  8 Sep 2020 15:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579670;
-        bh=NGMD93V9ArFeuIG8EFdY9DZSKhb0K8Og0xZXFCbWbnQ=;
+        s=default; t=1599580224;
+        bh=+6AfGjqpcz6AUoTPPYTG7JZKiXihcM5oveKaLtMH5hk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDFbi1B05OEFV1BpNiYcR9mbgdza+teXnByipYPjhcjHFjx6cfD2yEGz2IMvG1tGZ
-         RKSdUMg+GxPs0UYoYm4HiTm04l6jH3d0nkOio2bcUBAv2Amg5dv9tZWxDLIcIi97SZ
-         ERkz9hLK0JQ2n/KjqMarM9xpUTzcidBgCNGLoIHo=
+        b=jUN5u1i9nvhyP7tiW/+wTWTbOB9J2GxzY0zdOjLrOHfZ89tGDhPfXACVxSt3nEsGi
+         O3X8Ckdx/k/Y6dOitdj4WIpnlCQmIsR0QZFCBzlUdBmAJ+JW3ZHZBp96msZglWSk2i
+         tIOiyxhwmaY9Ntmi1kypzCd+yXRj6Gy4NaMrR6A8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Poirier <benjamin.poirier@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 144/186] ALSA: hda/realtek - Improved routing for Thinkpad X1 7th/8th Gen
-Date:   Tue,  8 Sep 2020 17:24:46 +0200
-Message-Id: <20200908152248.643397994@linuxfoundation.org>
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 50/88] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
+Date:   Tue,  8 Sep 2020 17:25:51 +0200
+Message-Id: <20200908152223.628314736@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,136 +63,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 6a6660d049f88b89fd9a4b9db3581b245f7782fa upstream.
+[ Upstream commit 30d24faba0532d6972df79a1bf060601994b5873 ]
 
-There've been quite a few regression reports about the lowered volume
-(reduced to ca 65% from the previous level) on Lenovo Thinkpad X1
-after the commit d2cd795c4ece ("ALSA: hda - fixup for the bass speaker
-on Lenovo Carbon X1 7th gen").  Although the commit itself does the
-right thing from HD-audio POV in order to have a volume control for
-bass speakers, it seems that the machine has some secret recipe under
-the hood.
+We can sometimes get bogus thermal shutdowns on omap4430 at least with
+droid4 running idle with a battery charger connected:
 
-Through experiments, Benjamin Poirier found out that the following
-routing gives the best result:
-* DAC1 (NID 0x02) -> Speaker pin (NID 0x14)
-* DAC2 (NID 0x03) -> Shared by both Bass Speaker pin (NID 0x17) &
-                     Headphone pin (0x21)
-* DAC3 (NID 0x06) -> Unused
+thermal thermal_zone0: critical temperature reached (143 C), shutting down
 
-DAC1 seems to have some equalizer internally applied, and you'd get
-again the output in a bad quality if you connect this to the
-headphone pin.  Hence the headphone is connected to DAC2, which is now
-shared with the bass speaker pin.  DAC3 has no volume amp, hence it's
-not connected at all.
+Dumping out the register values shows we can occasionally get a 0x7f value
+that is outside the TRM listed values in the ADC conversion table. And then
+we get a normal value when reading again after that. Reading the register
+multiple times does not seem help avoiding the bogus values as they stay
+until the next sample is ready.
 
-For achieving the routing above, this patch introduced a couple of
-workarounds:
+Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
+should have values from 13 to 107 listed with a total of 95 values. But
+looking at the omap4430_adc_to_temp array, the values are off, and the
+end values are missing. And it seems that the 4430 ADC table is similar
+to omap3630 rather than omap4460.
 
-* The connection list of bass speaker pin (NID 0x17) is reduced not to
-  include DAC3 (NID 0x06)
-* Pass preferred_pairs array to specify the fixed connection
+Let's fix the issue by using values based on the omap3630 table and just
+ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
+the missing values added while the TRM table only shows every second
+value.
 
-Here, both workarounds are needed because the generic parser prefers
-the individual DAC assignment over others.
+Note that sometimes the ADC register values within the valid table can
+also be way off for about 1 out of 10 values. But it seems that those
+just show about 25 C too low values rather than too high values. So those
+do not cause a bogus thermal shutdown.
 
-When the routing above is applied, the generic parser creates the two
-volume controls "Front" and "Bass Speaker".  Since we have only two
-DACs for three output pins, those are not fully controlling each
-output individually, and it would confuse PulseAudio.  For avoiding
-the pitfall, in this patch, we rename those volume controls to some
-unique ones ("DAC1" and "DAC2").  Then PulseAudio ignore them and
-concentrate only on the still good-working "Master" volume control.
-If a user still wants to control each DAC volume, they can still
-change manually via "DAC1" and "DAC2" volume controls.
-
-Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
-Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
-Reviewed-by: Jaroslav Kysela <perex@perex.cz>
-Tested-by: Benjamin Poirier <benjamin.poirier@gmail.com>
-Cc: <stable@vger.kernel.org>
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207407#c10
-BugLink: https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3214171
-BugLink: https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3276276
-Link: https://lore/kernel.org/r/20200829112746.3118-1-benjamin.poirier@gmail.com
-Link: https://lore.kernel.org/r/20200903083300.6333-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1a31270e54d7 ("staging: omap-thermal: add OMAP4 data structures")
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200706183338.25622-1-tony@atomide.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |   42 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ .../ti-soc-thermal/omap4-thermal-data.c       | 23 ++++++++++---------
+ .../thermal/ti-soc-thermal/omap4xxx-bandgap.h | 10 +++++---
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5880,6 +5880,39 @@ static void alc275_fixup_gpio4_off(struc
- 	}
- }
+diff --git a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
+index c12211eaaac4d..0b9f835d931f0 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
++++ b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
+@@ -46,20 +46,21 @@ static struct temp_sensor_data omap4430_mpu_temp_sensor_data = {
  
-+/* Quirk for Thinkpad X1 7th and 8th Gen
-+ * The following fixed routing needed
-+ * DAC1 (NID 0x02) -> Speaker (NID 0x14); some eq applied secretly
-+ * DAC2 (NID 0x03) -> Bass (NID 0x17) & Headphone (NID 0x21); sharing a DAC
-+ * DAC3 (NID 0x06) -> Unused, due to the lack of volume amp
+ /*
+  * Temperature values in milli degree celsius
+- * ADC code values from 530 to 923
++ * ADC code values from 13 to 107, see TRM
++ * "18.4.10.2.3 ADC Codes Versus Temperature".
+  */
+ static const int
+ omap4430_adc_to_temp[OMAP4430_ADC_END_VALUE - OMAP4430_ADC_START_VALUE + 1] = {
+-	-38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000, -22000,
+-	-20000, -18000, -17000, -15000, -13000, -12000, -10000, -8000, -6000,
+-	-5000, -3000, -1000, 0, 2000, 3000, 5000, 6000, 8000, 10000, 12000,
+-	13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28000, 30000,
+-	32000, 33000, 35000, 37000, 38000, 40000, 42000, 43000, 45000, 47000,
+-	48000, 50000, 52000, 53000, 55000, 57000, 58000, 60000, 62000, 64000,
+-	66000, 68000, 70000, 71000, 73000, 75000, 77000, 78000, 80000, 82000,
+-	83000, 85000, 87000, 88000, 90000, 92000, 93000, 95000, 97000, 98000,
+-	100000, 102000, 103000, 105000, 107000, 109000, 111000, 113000, 115000,
+-	117000, 118000, 120000, 122000, 123000,
++	-40000, -38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000,
++	-22000,	-20000, -18500, -17000, -15000, -13500, -12000, -10000, -8000,
++	-6500, -5000, -3500, -1500, 0, 2000, 3500, 5000, 6500, 8500, 10000,
++	12000, 13500, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28500,
++	30000, 32000, 33500, 35000, 37000, 38500, 40000, 42000, 43500, 45000,
++	47000, 48500, 50000, 52000, 53500, 55000, 57000, 58500, 60000, 62000,
++	64000, 66000, 68000, 70000, 71500, 73500, 75000, 77000, 78500, 80000,
++	82000, 83500, 85000, 87000, 88500, 90000, 92000, 93500, 95000, 97000,
++	98500, 100000, 102000, 103500, 105000, 107000, 109000, 111000, 113000,
++	115000, 117000, 118500, 120000, 122000, 123500, 125000,
+ };
+ 
+ /* OMAP4430 data */
+diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+index b87c8659ec608..8a081abce4b5f 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+@@ -67,9 +67,13 @@
+  * and thresholds for OMAP4430.
+  */
+ 
+-/* ADC conversion table limits */
+-#define OMAP4430_ADC_START_VALUE			0
+-#define OMAP4430_ADC_END_VALUE				127
++/*
++ * ADC conversion table limits. Ignore values outside the TRM listed
++ * range to avoid bogus thermal shutdowns. See omap4430 TRM chapter
++ * "18.4.10.2.3 ADC Codes Versus Temperature".
 + */
-+static void alc285_fixup_thinkpad_x1_gen7(struct hda_codec *codec,
-+					  const struct hda_fixup *fix, int action)
-+{
-+	static const hda_nid_t conn[] = { 0x02, 0x03 }; /* exclude 0x06 */
-+	static const hda_nid_t preferred_pairs[] = {
-+		0x14, 0x02, 0x17, 0x03, 0x21, 0x03, 0
-+	};
-+	struct alc_spec *spec = codec->spec;
-+
-+	switch (action) {
-+	case HDA_FIXUP_ACT_PRE_PROBE:
-+		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
-+		spec->gen.preferred_dacs = preferred_pairs;
-+		break;
-+	case HDA_FIXUP_ACT_BUILD:
-+		/* The generic parser creates somewhat unintuitive volume ctls
-+		 * with the fixed routing above, and the shared DAC2 may be
-+		 * confusing for PA.
-+		 * Rename those to unique names so that PA doesn't touch them
-+		 * and use only Master volume.
-+		 */
-+		rename_ctl(codec, "Front Playback Volume", "DAC1 Playback Volume");
-+		rename_ctl(codec, "Bass Speaker Playback Volume", "DAC2 Playback Volume");
-+		break;
-+	}
-+}
-+
- static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
- 					 const struct hda_fixup *fix,
- 					 int action)
-@@ -6148,6 +6181,7 @@ enum {
- 	ALC289_FIXUP_DUAL_SPK,
- 	ALC294_FIXUP_SPK2_TO_DAC1,
- 	ALC294_FIXUP_ASUS_DUAL_SPK,
-+	ALC285_FIXUP_THINKPAD_X1_GEN7,
- 	ALC285_FIXUP_THINKPAD_HEADSET_JACK,
- 	ALC294_FIXUP_ASUS_HPE,
- 	ALC294_FIXUP_ASUS_COEF_1B,
-@@ -7293,11 +7327,17 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC294_FIXUP_SPK2_TO_DAC1
- 	},
-+	[ALC285_FIXUP_THINKPAD_X1_GEN7] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_thinkpad_x1_gen7,
-+		.chained = true,
-+		.chain_id = ALC269_FIXUP_THINKPAD_ACPI
-+	},
- 	[ALC285_FIXUP_THINKPAD_HEADSET_JACK] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_headset_jack,
- 		.chained = true,
--		.chain_id = ALC285_FIXUP_SPEAKER2_TO_DAC1
-+		.chain_id = ALC285_FIXUP_THINKPAD_X1_GEN7
- 	},
- 	[ALC294_FIXUP_ASUS_HPE] = {
- 		.type = HDA_FIXUP_VERBS,
++#define OMAP4430_ADC_START_VALUE			13
++#define OMAP4430_ADC_END_VALUE				107
+ /* bandgap clock limits (no control on 4430) */
+ #define OMAP4430_MAX_FREQ				32768
+ #define OMAP4430_MIN_FREQ				32768
+-- 
+2.25.1
+
 
 
