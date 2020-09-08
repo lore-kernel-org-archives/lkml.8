@@ -2,149 +2,148 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99016C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D91C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F6B21D1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599550424;
-	bh=PVSSlZ7Uaf8BkjWldKCFBALWWbApIq8zDDF8hQ5P0tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gKpFY7ijhWU0rYedHG+Bg/GtTEoxzJhc/qjmq1qeB/QPLduV5knWJMMnLlaofWNs8
-	 tF8UUExMOlzH+unT3QLdoA8WsLtdl76FXdDQdsStIDz8RPmuhIewJL43AYj8fpxAAk
-	 4GJKYBq4+4PhB+CeCaIjhPLLFtRaSIb4io+kwkBA=
+	by mail.kernel.org (Postfix) with ESMTP id A613121D42
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgIHHdk (ORCPT
+        id S1729600AbgIHHdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgIHHdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:33:36 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8F1E218AC;
-        Tue,  8 Sep 2020 07:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599550416;
-        bh=PVSSlZ7Uaf8BkjWldKCFBALWWbApIq8zDDF8hQ5P0tk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VaselhRfYKFR7jx3vh6moUnhaMD7gSgAEyQEgiqk7aW9rmkZ4yYb+4kGU4tjPfnXI
-         syIkg3Ahe1Zb/Phl3r5TwMHTlr1hcVt0HlevnPJiI0aj+zpIGgtoWgo0L3+fNL9V4u
-         i7SZDaKVgrGxQ/L/D+LcAwozWhhlTTsxt5LQ/SMA=
-Received: by pali.im (Postfix)
-        id 9D231617; Tue,  8 Sep 2020 09:33:33 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 09:33:33 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Andre Heider <a.heider@gmail.com>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: marvell: espressobin: Simplify v7 ethernet
- port labeling
-Message-ID: <20200908073333.i4mpjfcay42kkhq5@pali>
-References: <20200908073050.535919-1-a.heider@gmail.com>
+        Tue, 8 Sep 2020 03:33:44 -0400
+Received: from mail-il1-f208.google.com ([209.85.166.208]:51675 "EHLO
+        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729490AbgIHHdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:33:21 -0400
+Received: by mail-il1-f208.google.com with SMTP id i80so487875ild.18
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:33:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=DrM2WCpXJni+pWF+DYDXi6ZPwROH9NKgPGVrwdvcC8Y=;
+        b=Ih4V8EzZHKA0BKJcdOeqZ3qR+xG3jZJ12NjCIQ5t/ePMCmSNDC++EDRJszUqmEvBi2
+         Mm00htAgljutrel4l4/IC5GR2ixmjWjNcLD9Qk/jW2tUAX3C48MOQqmb16FkLBjwP2Si
+         UpKcTfgqEByhLlP3qOhGH3jzLRjRO5kEwRtj0XSfhUKMJZ86BDvZKJJPuYTeYPnRlLGy
+         NFxBBZElxW7bV0BzXn9KwmB9VIpcDRvhFu8fg3T3sVS8dh1im0IL51vWTaV5E9+8d08j
+         /f5V8glIndjlTIUEx0IFcRtrdKnmfaradWY9CqZ3s37YxTC4JsG6p87h2Xc3zMzGoqdY
+         0CBA==
+X-Gm-Message-State: AOAM530oxLVjJjd0A4Hu3gq1qeXnNCCVcMdq5lJQfpvXYOriH0E9UWjJ
+        EoeOnlD/sVj1PB5jTEqjFXkBAT1Mq6SGwRmLvnZTugIJsnTU
+X-Google-Smtp-Source: ABdhPJxwxola6tjl5Xs6+98Cwd4t1PyoPXL1Rdc31C+ffEV6FNz4YYMQcG8FHq4dtiLGPk6Dfu1FjSLLkOH+GfEAiInawEhOqtpv
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200908073050.535919-1-a.heider@gmail.com>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a6b:e718:: with SMTP id b24mr20719449ioh.9.1599550399960;
+ Tue, 08 Sep 2020 00:33:19 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 00:33:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000063dca305aec85988@google.com>
+Subject: BUG: spinlock bad magic in lock_sock_nested
+From:   syzbot <syzbot+eb47d1a545390e9fd5bf@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 08 September 2020 09:30:50 Andre Heider wrote:
-> Now that the switch ports have a label in the .dtsi, simplify the whole
-> "switch0" block for the v7 dts files.
-> 
-> Signed-off-by: Andre Heider <a.heider@gmail.com>
+Hello,
 
-Thank you, looks good!
+syzbot found the following issue on:
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+HEAD commit:    0f091e43 netlabel: remove unused param from audit_log_form..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1171cbb6900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61025c6fd3261bb1
+dashboard link: https://syzkaller.appspot.com/bug?extid=eb47d1a545390e9fd5bf
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-> ---
-> 
-> This goes on top of Pali's patch:
-> "arm64: dts: marvell: espressobin: Add ethernet switch aliases"
-> 
-> The resulting .dtb files are the same.
-> 
->  .../armada-3720-espressobin-v7-emmc.dts        | 18 +++++-------------
->  .../dts/marvell/armada-3720-espressobin-v7.dts | 18 +++++-------------
->  2 files changed, 10 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> index 215d2f702623..61d49d6a2a2a 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> @@ -28,20 +28,12 @@ aliases {
->  	};
->  };
->  
-> -&switch0 {
-> -	ports {
-> -		switch0port1: port@1 {
-> -			reg = <1>;
-> -			label = "lan1";
-> -			phy-handle = <&switch0phy0>;
-> -		};
-> +&switch0port1 {
-> +	label = "lan1";
-> +};
->  
-> -		switch0port3: port@3 {
-> -			reg = <3>;
-> -			label = "wan";
-> -			phy-handle = <&switch0phy2>;
-> -		};
-> -	};
-> +&switch0port3 {
-> +	label = "wan";
->  };
->  
->  /* U11 */
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> index b6f4af8ebafb..44dbe9a21cc7 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> @@ -27,18 +27,10 @@ aliases {
->  	};
->  };
->  
-> -&switch0 {
-> -	ports {
-> -		switch0port1: port@1 {
-> -			reg = <1>;
-> -			label = "lan1";
-> -			phy-handle = <&switch0phy0>;
-> -		};
-> +&switch0port1 {
-> +	label = "lan1";
-> +};
->  
-> -		switch0port3: port@3 {
-> -			reg = <3>;
-> -			label = "wan";
-> -			phy-handle = <&switch0phy2>;
-> -		};
-> -	};
-> +&switch0port3 {
-> +	label = "wan";
->  };
-> -- 
-> 2.28.0
-> 
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+eb47d1a545390e9fd5bf@syzkaller.appspotmail.com
+
+BUG: spinlock bad magic on CPU#0, kworker/0:2/2721
+ lock: 0xffff88809395b088, .magic: ffff8880, .owner: <none>/-1, .owner_cpu: 4
+CPU: 0 PID: 2721 Comm: kworker/0:2 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
+ do_raw_spin_lock+0x216/0x2b0 kernel/locking/spinlock_debug.c:112
+ spin_lock_bh include/linux/spinlock.h:359 [inline]
+ lock_sock_nested+0x3b/0x110 net/core/sock.c:3034
+ l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
+ l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
+ l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
+ l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+general protection fault, probably for non-canonical address 0xff16fb65bf176ca9: 0000 [#1] PREEMPT SMP KASAN
+KASAN: maybe wild-memory-access in range [0xf8b7fb2df8bb6548-0xf8b7fb2df8bb654f]
+CPU: 0 PID: 2721 Comm: kworker/0:2 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+RIP: 0010:__pv_queued_spin_lock_slowpath+0x538/0xaf0 kernel/locking/qspinlock.c:471
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 50 05 00 00 4a 03 1c e5 00 59 84 89 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 20 05 00 00 4c 8d 6b 14 48 89 6c 24 08 48 8b 2c
+RSP: 0018:ffffc9000947f9c8 EFLAGS: 00010a07
+RAX: dffffc0000000000 RBX: f8b7fb2df8bb654f RCX: ffffffff815b03df
+RDX: 1f16ff65bf176ca9 RSI: 0000000000000002 RDI: ffffffff8984fd38
+RBP: ffff88809395b088 R08: 0000000000000001 R09: ffff88809395b08b
+R10: ffffed101272b611 R11: 0000000000000160 R12: 0000000000001487
+R13: 0000000000000001 R14: 0000000000040000 R15: ffff8880ae636b80
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb5e095ddb8 CR3: 000000005badb000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:656 [inline]
+ queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:51 [inline]
+ queued_spin_lock include/asm-generic/qspinlock.h:85 [inline]
+ do_raw_spin_lock+0x200/0x2b0 kernel/locking/spinlock_debug.c:113
+ spin_lock_bh include/linux/spinlock.h:359 [inline]
+ lock_sock_nested+0x3b/0x110 net/core/sock.c:3034
+ l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
+ l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
+ l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
+ l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace cdfef0620d680c8c ]---
+RIP: 0010:__pv_queued_spin_lock_slowpath+0x538/0xaf0 kernel/locking/qspinlock.c:471
+Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 50 05 00 00 4a 03 1c e5 00 59 84 89 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 20 05 00 00 4c 8d 6b 14 48 89 6c 24 08 48 8b 2c
+RSP: 0018:ffffc9000947f9c8 EFLAGS: 00010a07
+RAX: dffffc0000000000 RBX: f8b7fb2df8bb654f RCX: ffffffff815b03df
+RDX: 1f16ff65bf176ca9 RSI: 0000000000000002 RDI: ffffffff8984fd38
+RBP: ffff88809395b088 R08: 0000000000000001 R09: ffff88809395b08b
+R10: ffffed101272b611 R11: 0000000000000160 R12: 0000000000001487
+R13: 0000000000000001 R14: 0000000000040000 R15: ffff8880ae636b80
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb5e095ddb8 CR3: 000000005badb000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
