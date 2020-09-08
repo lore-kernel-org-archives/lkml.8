@@ -2,33 +2,33 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A77CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BECDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54C8120672
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F23208C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgIHK1B (ORCPT
+        id S1729710AbgIHK1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:27:01 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:56194 "EHLO inva021.nxp.com"
+        Tue, 8 Sep 2020 06:27:07 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57036 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbgIHK0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:26:09 -0400
+        id S1729556AbgIHK0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:26:43 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7333320021E;
-        Tue,  8 Sep 2020 12:26:06 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D010201592;
+        Tue,  8 Sep 2020 12:26:13 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 64A29201595;
-        Tue,  8 Sep 2020 12:26:06 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3497820158F;
+        Tue,  8 Sep 2020 12:26:13 +0200 (CEST)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9677D2036D;
-        Tue,  8 Sep 2020 12:26:05 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 8465120327;
+        Tue,  8 Sep 2020 12:26:12 +0200 (CEST)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Mike Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v3 01/14] dt-bindings: clocks: imx8mp: Rename audiomix ids clocks to audio_blk_ctl
-Date:   Tue,  8 Sep 2020 13:24:38 +0300
-Message-Id: <1599560691-3763-2-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v3 10/14] clk: imx: Add generic blk-ctl driver
+Date:   Tue,  8 Sep 2020 13:24:47 +0300
+Message-Id: <1599560691-3763-11-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599560691-3763-1-git-send-email-abel.vesa@nxp.com>
 References: <1599560691-3763-1-git-send-email-abel.vesa@nxp.com>
@@ -56,147 +56,426 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the reference manual the actual name is Audio BLK_CTL.
-Lets make it more obvious here by renaming from audiomix to audio_blk_ctl.
+The i.MX8MP platform introduces a new type of IP which is called BLK_CTL in
+RM and usually is comprised of some GPRs that are considered too
+generic to be part of any dedicated IP from that specific subsystem.
+
+In general, some of the GPRs have some clock bits, some have reset bits,
+so in order to be able to use the imx clock API, this needs to be
+in a clock driver. From there it can use the reset controller API and
+leave the rest to the syscon.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- include/dt-bindings/clock/imx8mp-clock.h | 120 +++++++++++++++----------------
- 1 file changed, 60 insertions(+), 60 deletions(-)
+ drivers/clk/imx/Makefile      |   2 +-
+ drivers/clk/imx/clk-blk-ctl.c | 297 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/imx/clk-blk-ctl.h |  80 ++++++++++++
+ 3 files changed, 378 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/imx/clk-blk-ctl.c
+ create mode 100644 drivers/clk/imx/clk-blk-ctl.h
 
-diff --git a/include/dt-bindings/clock/imx8mp-clock.h b/include/dt-bindings/clock/imx8mp-clock.h
-index e8d68fb..89c67b7 100644
---- a/include/dt-bindings/clock/imx8mp-clock.h
-+++ b/include/dt-bindings/clock/imx8mp-clock.h
-@@ -324,66 +324,66 @@
+diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+index 79e53f2..105c117 100644
+--- a/drivers/clk/imx/Makefile
++++ b/drivers/clk/imx/Makefile
+@@ -23,7 +23,7 @@ obj-$(CONFIG_MXC_CLK) += mxc-clk.o
  
- #define IMX8MP_CLK_END				313
+ obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
+ obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
+-obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
++obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o clk-blk-ctl.o
+ obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
  
--#define IMX8MP_CLK_AUDIOMIX_SAI1_IPG		0
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK1		1
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK2		2
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK3		3
--#define IMX8MP_CLK_AUDIOMIX_SAI2_IPG		4
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK1		5
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK2		6
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK3		7
--#define IMX8MP_CLK_AUDIOMIX_SAI3_IPG		8
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK1		9
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK2		10
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK3		11
--#define IMX8MP_CLK_AUDIOMIX_SAI5_IPG		12
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK1		13
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK2		14
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK3		15
--#define IMX8MP_CLK_AUDIOMIX_SAI6_IPG		16
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1		17
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK2		18
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK3		19
--#define IMX8MP_CLK_AUDIOMIX_SAI7_IPG		20
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK1		21
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK2		22
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK3		23
--#define IMX8MP_CLK_AUDIOMIX_ASRC_IPG		24
--#define IMX8MP_CLK_AUDIOMIX_PDM_IPG		25
--#define IMX8MP_CLK_AUDIOMIX_SDMA2_ROOT		26
--#define IMX8MP_CLK_AUDIOMIX_SDMA3_ROOT		27
--#define IMX8MP_CLK_AUDIOMIX_SPBA2_ROOT		28
--#define IMX8MP_CLK_AUDIOMIX_DSP_ROOT		29
--#define IMX8MP_CLK_AUDIOMIX_DSPDBG_ROOT		30
--#define IMX8MP_CLK_AUDIOMIX_EARC_IPG		31
--#define IMX8MP_CLK_AUDIOMIX_OCRAMA_IPG		32
--#define IMX8MP_CLK_AUDIOMIX_AUD2HTX_IPG		33
--#define IMX8MP_CLK_AUDIOMIX_EDMA_ROOT		34
--#define IMX8MP_CLK_AUDIOMIX_AUDPLL_ROOT		35
--#define IMX8MP_CLK_AUDIOMIX_MU2_ROOT		36
--#define IMX8MP_CLK_AUDIOMIX_MU3_ROOT		37
--#define IMX8MP_CLK_AUDIOMIX_EARC_PHY		38
--#define IMX8MP_CLK_AUDIOMIX_PDM_ROOT		39
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK1_SEL	40
--#define IMX8MP_CLK_AUDIOMIX_SAI1_MCLK2_SEL	41
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK1_SEL	42
--#define IMX8MP_CLK_AUDIOMIX_SAI2_MCLK2_SEL	43
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK1_SEL	44
--#define IMX8MP_CLK_AUDIOMIX_SAI3_MCLK2_SEL	45
--#define IMX8MP_CLK_AUDIOMIX_SAI4_MCLK1_SEL	46
--#define IMX8MP_CLK_AUDIOMIX_SAI4_MCLK2_SEL	47
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK1_SEL	48
--#define IMX8MP_CLK_AUDIOMIX_SAI5_MCLK2_SEL	49
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1_SEL	50
--#define IMX8MP_CLK_AUDIOMIX_SAI6_MCLK2_SEL	51
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK1_SEL	52
--#define IMX8MP_CLK_AUDIOMIX_SAI7_MCLK2_SEL	53
--#define IMX8MP_CLK_AUDIOMIX_PDM_SEL		54
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_REF_SEL	55
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL		56
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS	57
--#define IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT		58
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI1_IPG		0
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI1_MCLK1		1
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI1_MCLK2		2
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI1_MCLK3		3
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI2_IPG		4
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI2_MCLK1		5
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI2_MCLK2		6
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI2_MCLK3		7
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI3_IPG		8
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI3_MCLK1		9
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI3_MCLK2		10
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI3_MCLK3		11
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI5_IPG		12
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI5_MCLK1		13
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI5_MCLK2		14
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI5_MCLK3		15
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI6_IPG		16
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI6_MCLK1		17
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI6_MCLK2		18
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI6_MCLK3		19
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI7_IPG		20
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI7_MCLK1		21
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI7_MCLK2		22
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI7_MCLK3		23
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_ASRC_IPG		24
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_PDM_IPG		25
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SDMA2_ROOT		26
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SDMA3_ROOT		27
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SPBA2_ROOT		28
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_DSP_ROOT		29
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_DSPDBG_ROOT		30
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_EARC_IPG		31
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_OCRAMA_IPG		32
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_AUD2HTX_IPG		33
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_EDMA_ROOT		34
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_AUDPLL_ROOT		35
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_MU2_ROOT		36
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_MU3_ROOT		37
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_EARC_PHY		38
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_PDM_ROOT		39
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI1_MCLK1_SEL	40
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI1_MCLK2_SEL	41
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI2_MCLK1_SEL	42
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI2_MCLK2_SEL	43
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI3_MCLK1_SEL	44
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI3_MCLK2_SEL	45
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI4_MCLK1_SEL	46
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI4_MCLK2_SEL	47
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI5_MCLK1_SEL	48
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI5_MCLK2_SEL	49
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI6_MCLK1_SEL	50
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI6_MCLK2_SEL	51
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI7_MCLK1_SEL	52
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI7_MCLK2_SEL	53
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_PDM_SEL		54
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI_PLL_REF_SEL	55
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI_PLL		56
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI_PLL_BYPASS	57
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_SAI_PLL_OUT		58
- 
--#define IMX8MP_CLK_AUDIOMIX_END			59
-+#define IMX8MP_CLK_AUDIO_BLK_CTL_END			59
- 
- #endif
+ obj-$(CONFIG_MXC_CLK_SCU) += clk-imx-scu.o clk-imx-lpcg-scu.o
+diff --git a/drivers/clk/imx/clk-blk-ctl.c b/drivers/clk/imx/clk-blk-ctl.c
+new file mode 100644
+index 00000000..1a6f1eb
+--- /dev/null
++++ b/drivers/clk/imx/clk-blk-ctl.c
+@@ -0,0 +1,297 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2020 NXP.
++ */
++
++#include <linux/clk.h>
++#include <linux/reset-controller.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/types.h>
++
++#include "clk.h"
++#include "clk-blk-ctl.h"
++
++struct imx_reset_hw {
++	u32 offset;
++	u32 shift;
++	u32 mask;
++	volatile unsigned long asserted;
++};
++
++struct imx_pm_safekeep_info {
++	uint32_t *regs_values;
++	uint32_t *regs_offsets;
++	uint32_t regs_num;
++};
++
++struct imx_blk_ctl_drvdata {
++	void __iomem *base;
++	struct reset_controller_dev rcdev;
++	struct imx_reset_hw *rst_hws;
++	struct imx_pm_safekeep_info pm_info;
++
++	spinlock_t lock;
++};
++
++static void __maybe_unused imx_blk_ctl_read_write(struct device *dev,
++							bool write)
++{
++	struct imx_blk_ctl_drvdata *drvdata = dev_get_drvdata(dev);
++	struct imx_pm_safekeep_info *pm_info = &drvdata->pm_info;
++	void __iomem *base = drvdata->base;
++	int i;
++
++	if (!pm_info->regs_num)
++		return;
++
++	for (i = 0; i < pm_info->regs_num; i++) {
++		u32 offset = pm_info->regs_offsets[i];
++
++		if (write)
++			writel(pm_info->regs_values[i], base + offset);
++		else
++			pm_info->regs_values[i] = readl(base + offset);
++	}
++
++}
++
++static int __maybe_unused imx_blk_ctl_runtime_suspend(struct device *dev)
++{
++	imx_blk_ctl_read_write(dev, false);
++
++	return 0;
++}
++
++static int __maybe_unused imx_blk_ctl_runtime_resume(struct device *dev)
++{
++	imx_blk_ctl_read_write(dev, true);
++
++	return 0;
++}
++
++const struct dev_pm_ops imx_blk_ctl_pm_ops = {
++	SET_RUNTIME_PM_OPS(imx_blk_ctl_runtime_suspend,
++			   imx_blk_ctl_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++			   pm_runtime_force_resume)
++};
++EXPORT_SYMBOL_GPL(imx_blk_ctl_pm_ops);
++
++static int imx_blk_ctl_reset_set(struct reset_controller_dev *rcdev,
++				  unsigned long id, bool assert)
++{
++	struct imx_blk_ctl_drvdata *drvdata = container_of(rcdev,
++			struct imx_blk_ctl_drvdata, rcdev);
++	unsigned int offset = drvdata->rst_hws[id].offset;
++	unsigned int shift = drvdata->rst_hws[id].shift;
++	unsigned int mask = drvdata->rst_hws[id].mask;
++	void __iomem *reg_addr = drvdata->base + offset;
++	unsigned long flags;
++	u32 reg;
++
++	if (assert && !test_and_set_bit(1, &drvdata->rst_hws[id].asserted))
++		pm_runtime_get_sync(rcdev->dev);
++
++	spin_lock_irqsave(&drvdata->lock, flags);
++
++	reg = readl(reg_addr);
++	if (assert)
++		writel(reg & ~(mask << shift), reg_addr);
++	else
++		writel(reg | (mask << shift), reg_addr);
++
++	spin_unlock_irqrestore(&drvdata->lock, flags);
++
++	if (!assert && test_and_clear_bit(1, &drvdata->rst_hws[id].asserted))
++		pm_runtime_put(rcdev->dev);
++
++	return 0;
++}
++
++static int imx_blk_ctl_reset_assert(struct reset_controller_dev *rcdev,
++					   unsigned long id)
++{
++	return imx_blk_ctl_reset_set(rcdev, id, true);
++}
++
++static int imx_blk_ctl_reset_deassert(struct reset_controller_dev *rcdev,
++					     unsigned long id)
++{
++	return imx_blk_ctl_reset_set(rcdev, id, false);
++}
++
++static const struct reset_control_ops imx_blk_ctl_reset_ops = {
++	.assert		= imx_blk_ctl_reset_assert,
++	.deassert	= imx_blk_ctl_reset_deassert,
++};
++
++static int imx_blk_ctl_register_reset_controller(struct device *dev)
++{
++	const struct imx_blk_ctl_dev_data *dev_data = of_device_get_match_data(dev);
++	struct imx_blk_ctl_drvdata *drvdata = dev_get_drvdata(dev);
++	int max = dev_data->resets_max;
++	struct imx_reset_hw *hws;
++	int i;
++
++	spin_lock_init(&drvdata->lock);
++
++	drvdata->rcdev.owner     = THIS_MODULE;
++	drvdata->rcdev.nr_resets = max;
++	drvdata->rcdev.ops       = &imx_blk_ctl_reset_ops;
++	drvdata->rcdev.of_node   = dev->of_node;
++	drvdata->rcdev.dev	 = dev;
++
++	drvdata->rst_hws = devm_kcalloc(dev, max, sizeof(struct imx_reset_hw),
++					GFP_KERNEL);
++	hws = drvdata->rst_hws;
++
++	for (i = 0; i < dev_data->hws_num; i++) {
++		struct imx_blk_ctl_hw *hw = &dev_data->hws[i];
++
++		if (hw->type != BLK_CTL_RESET)
++			continue;
++
++		hws[hw->id].offset = hw->offset;
++		hws[hw->id].shift = hw->shift;
++		hws[hw->id].mask = hw->mask;
++	}
++
++	return devm_reset_controller_register(dev, &drvdata->rcdev);
++}
++static struct clk_hw *imx_blk_ctl_register_one_clock(struct device *dev,
++						struct imx_blk_ctl_hw *hw)
++{
++	struct imx_blk_ctl_drvdata *drvdata = dev_get_drvdata(dev);
++	void __iomem *base = drvdata->base;
++	struct clk_hw *clk_hw = NULL;
++
++	switch (hw->type) {
++	case BLK_CTL_CLK_MUX:
++		clk_hw = imx_dev_clk_hw_mux_flags(dev, hw->name,
++						  base + hw->offset,
++						  hw->shift, hw->width,
++						  hw->parents,
++						  hw->parents_count,
++						  hw->flags);
++		break;
++	case BLK_CTL_CLK_GATE:
++		clk_hw = imx_dev_clk_hw_gate(dev, hw->name, hw->parents,
++					     base + hw->offset, hw->shift);
++		break;
++	case BLK_CTL_CLK_SHARED_GATE:
++		clk_hw = imx_dev_clk_hw_gate_shared(dev, hw->name,
++						    hw->parents,
++						    base + hw->offset,
++						    hw->shift,
++						    hw->shared_count);
++		break;
++	case BLK_CTL_CLK_PLL14XX:
++		clk_hw = imx_dev_clk_hw_pll14xx(dev, hw->name, hw->parents,
++						base + hw->offset, hw->pll_tbl);
++		break;
++	};
++
++	return clk_hw;
++}
++
++static int imx_blk_ctl_register_clock_controller(struct device *dev)
++{
++	const struct imx_blk_ctl_dev_data *dev_data = of_device_get_match_data(dev);
++	struct clk_hw_onecell_data *clk_hw_data;
++	struct clk_hw **hws;
++	int i;
++
++	clk_hw_data = devm_kzalloc(dev, struct_size(clk_hw_data, hws,
++				dev_data->hws_num), GFP_KERNEL);
++	if (WARN_ON(!clk_hw_data))
++		return -ENOMEM;
++
++	clk_hw_data->num = dev_data->clocks_max;
++	hws = clk_hw_data->hws;
++
++	for (i = 0; i < dev_data->hws_num; i++) {
++		struct imx_blk_ctl_hw *hw = &dev_data->hws[i];
++
++		hws[hw->id] = imx_blk_ctl_register_one_clock(dev, hw);
++		WARN(IS_ERR(hws[hw->id]), "failed to register clock %d", hw->id);
++	}
++
++	imx_check_clk_hws(hws, dev_data->clocks_max);
++
++	return of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
++					clk_hw_data);
++}
++
++static int imx_blk_ctl_init_runtime_pm_safekeeping(struct device *dev)
++{
++	const struct imx_blk_ctl_dev_data *dev_data = of_device_get_match_data(dev);
++	struct imx_blk_ctl_drvdata *drvdata = dev_get_drvdata(dev);
++	struct imx_pm_safekeep_info *pm_info = &drvdata->pm_info;
++	u32 regs_num = dev_data->pm_runtime_saved_regs_num;
++	const u32 *regs_offsets = dev_data->pm_runtime_saved_regs;
++
++	if (!dev_data->pm_runtime_saved_regs_num)
++		return 0;
++
++	pm_info->regs_values = devm_kzalloc(dev,
++					    sizeof(u32) * regs_num,
++					    GFP_KERNEL);
++	if (WARN_ON(IS_ERR(pm_info->regs_values)))
++		return PTR_ERR(pm_info->regs_values);
++
++	pm_info->regs_offsets = kmemdup(regs_offsets,
++					regs_num * sizeof(u32), GFP_KERNEL);
++	if (WARN_ON(IS_ERR(pm_info->regs_offsets)))
++		return PTR_ERR(pm_info->regs_offsets);
++
++	pm_info->regs_num = regs_num;
++
++	return 0;
++}
++
++int imx_blk_ctl_probe(struct platform_device *pdev)
++{
++	struct imx_blk_ctl_drvdata *drvdata;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
++	if (WARN_ON(!drvdata))
++		return -ENOMEM;
++
++	drvdata->base = devm_platform_ioremap_resource(pdev, 0);
++	if (WARN_ON(IS_ERR(drvdata->base)))
++		return PTR_ERR(drvdata->base);
++
++	dev_set_drvdata(dev, drvdata);
++
++	ret = imx_blk_ctl_init_runtime_pm_safekeeping(dev);
++	if (ret)
++		return ret;
++
++	pm_runtime_get_noresume(dev);
++	pm_runtime_set_active(dev);
++	pm_runtime_enable(dev);
++
++	ret = imx_blk_ctl_register_clock_controller(dev);
++	if (ret) {
++		pm_runtime_put(dev);
++		return ret;
++	}
++
++	ret = imx_blk_ctl_register_reset_controller(dev);
++
++	pm_runtime_put(dev);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(imx_blk_ctl_probe);
+diff --git a/drivers/clk/imx/clk-blk-ctl.h b/drivers/clk/imx/clk-blk-ctl.h
+new file mode 100644
+index 00000000..e5bf723
+--- /dev/null
++++ b/drivers/clk/imx/clk-blk-ctl.h
+@@ -0,0 +1,80 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __MACH_IMX_CLK_BLK_CTL_H
++#define __MACH_IMX_CLK_BLK_CTL_H
++
++enum imx_blk_ctl_hw_type {
++	BLK_CTL_CLK_MUX,
++	BLK_CTL_CLK_GATE,
++	BLK_CTL_CLK_SHARED_GATE,
++	BLK_CTL_CLK_PLL14XX,
++	BLK_CTL_RESET,
++};
++
++struct imx_blk_ctl_hw {
++	int type;
++	char *name;
++	u32 offset;
++	u32 shift;
++	u32 mask;
++	u32 width;
++	u32 flags;
++	u32 id;
++	const void *parents;
++	u32 parents_count;
++	int *shared_count;
++	const struct imx_pll14xx_clk *pll_tbl;
++};
++
++struct imx_blk_ctl_dev_data {
++	struct imx_blk_ctl_hw *hws;
++	u32 hws_num;
++
++	u32 clocks_max;
++	u32 resets_max;
++
++	u32 pm_runtime_saved_regs_num;
++	u32 pm_runtime_saved_regs[];
++};
++
++#define IMX_BLK_CTL(_type, _name, _id, _offset, _shift, _width, _mask, _parents, _parents_count, _flags, sh_count, _pll_tbl) \
++	{						\
++		.type = _type,				\
++		.name = _name,				\
++		.id = _id,				\
++		.offset = _offset,			\
++		.shift = _shift,			\
++		.width = _width,			\
++		.mask = _mask,				\
++		.parents = _parents,			\
++		.parents_count = _parents_count,	\
++		.flags = _flags,			\
++		.shared_count = sh_count,		\
++		.pll_tbl = _pll_tbl,			\
++	}
++
++#define IMX_BLK_CTL_CLK_MUX(_name, _id, _offset, _shift, _width, _parents) \
++	IMX_BLK_CTL(BLK_CTL_CLK_MUX, _name, _id, _offset, _shift, _width, 0, _parents, ARRAY_SIZE(_parents), 0, NULL, NULL)
++
++#define IMX_BLK_CTL_CLK_MUX_FLAGS(_name, _id, _offset, _shift, _width, _parents, _flags) \
++	IMX_BLK_CTL(BLK_CTL_CLK_MUX, _name, _id, _offset, _shift, _width, 0, _parents, ARRAY_SIZE(_parents), _flags, NULL, NULL)
++
++#define IMX_BLK_CTL_CLK_GATE(_name, _id, _offset, _shift, _parents) \
++	IMX_BLK_CTL(BLK_CTL_CLK_GATE, _name, _id, _offset, _shift, 1, 0, _parents, 1, 0, NULL, NULL)
++
++#define IMX_BLK_CTL_CLK_SHARED_GATE(_name, _id, _offset, _shift, _parents, sh_count) \
++	IMX_BLK_CTL(BLK_CTL_CLK_SHARED_GATE, _name, _id, _offset, _shift, 1, 0, _parents, 1, 0, sh_count, NULL)
++
++#define IMX_BLK_CTL_CLK_PLL14XX(_name, _id, _offset, _parents, _pll_tbl) \
++	IMX_BLK_CTL(BLK_CTL_CLK_PLL14XX, _name, _id, _offset, 0, 0, 0, _parents, 1, 0, NULL, _pll_tbl)
++
++#define IMX_BLK_CTL_RESET(_id, _offset, _shift) \
++	IMX_BLK_CTL(BLK_CTL_RESET, NULL, _id, _offset, _shift, 0, 1, NULL, 0, 0, NULL, NULL)
++
++#define IMX_BLK_CTL_RESET_MASK(_id, _offset, _shift, mask) \
++	IMX_BLK_CTL(BLK_CTL_RESET, NULL, _id, _offset, _shift, 0, mask, NULL, 0, 0, NULL, NULL)
++
++extern const struct dev_pm_ops imx_blk_ctl_pm_ops;
++
++int imx_blk_ctl_probe(struct platform_device *pdev);
++
++#endif
 -- 
 2.7.4
 
