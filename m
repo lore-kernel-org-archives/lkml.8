@@ -2,53 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16988C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D72C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7CAF2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA4C2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586681;
-	bh=zba2ZhrfWnao+NzzXlL0aB1i5rh5TOa1g+pbwBrVhZo=;
+	s=default; t=1599586687;
+	bh=iGJobUoHn8yZVUhhAlEuqw83zoj5Q2su3p7kWCOT0N0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eea5M0W2/3ABRk89Aojk4GuxMTk29CK34mXNraBzghHQsq0XIAO63rdPqJMo0xrk3
-	 p7Mro7Ecvz21aRKytptxdLTy6PXYqAYMJ4gyWFNsRB7f+lqGQ/dF+rCeT4hC/PtCu4
-	 OZYb855FAqRjoYt0zmIrZms/q/BYTFMfx6F9KOWU=
+	b=qlEdPlPc8EtWSY0/a5hdAOlQ+di+2YGAEFWDqR5VmJLii3Rz6PVqERp8NjwTOMFXe
+	 QCDX5fFbbngOJCzUaxCP9d67RyDS1L+ewF9F0d3DT2R3BDO6lt9BqU9VW5ZOi4Cxid
+	 kET1q7DQw4zrvL+JEACyC/jwiL5vz/758oDXsnNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbgIHRh6 (ORCPT
+        id S1731941AbgIHRiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:38:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731186AbgIHQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731698AbgIHQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:14:38 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A903824914;
-        Tue,  8 Sep 2020 15:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65FBA24912;
+        Tue,  8 Sep 2020 15:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580431;
-        bh=zba2ZhrfWnao+NzzXlL0aB1i5rh5TOa1g+pbwBrVhZo=;
+        s=default; t=1599580428;
+        bh=iGJobUoHn8yZVUhhAlEuqw83zoj5Q2su3p7kWCOT0N0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WLLf38zq7c2GeEpi8HE7RtpkSxJlLPmH3q++Y2vM2nWHCQ2Zo7DogiAEhShCVSY2A
-         fGFUvLfkakL2Uk6LhDKhycXD/xQay1FuSkrV97HKXQND693Yjllf2S8l7Jp2+Q9QJA
-         kfZHiKSIxR7IxfM/TKXP/ZpWhqE/pEIJvYIDcff4=
+        b=0+oIgtvxqvNnb3RAVZevnHQ/4yJe87qxumQo9gXG4C9sEa/ZwQ9j0MFGmCOXg08gC
+         P/qeuTYWqU9ml+Lt4DRFX7TsFGZfjNKNowchHzU325rN71g7UuMvFCu2WEF3LpGhtk
+         N7t03P4eUiA6bOXlkyaYBclv1a8YNhUdP3AoQm4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/65] net: usb: qmi_wwan: add Telit 0x1050 composition
-Date:   Tue,  8 Sep 2020 17:26:30 +0200
-Message-Id: <20200908152219.369507690@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Karthik Shivaram <karthikgs@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 54/65] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
+Date:   Tue,  8 Sep 2020 17:26:39 +0200
+Message-Id: <20200908152219.872724744@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -61,36 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit e0ae2c578d3909e60e9448207f5d83f785f1129f ]
+commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
 
-This patch adds support for Telit FN980 0x1050 composition
+All three generations of Sandisk SSDs lock up hard intermittently.
+Experiments showed that disabling NCQ lowered the failure rate significantly
+and the kernel has been disabling NCQ for some models of SD7's and 8's,
+which is obviously undesirable.
 
-0x1050: tty, adb, rmnet, tty, tty, tty, tty
+Karthik worked with Sandisk to root cause the hard lockups to trim commands
+larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
+limits max trim size to 128M and applies it to all three generations of
+Sandisk SSDs.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Karthik Shivaram <karthikgs@fb.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/ata/libata-core.c |    5 ++---
+ drivers/ata/libata-scsi.c |    8 +++++++-
+ include/linux/libata.h    |    1 +
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 88b8ba0ad2cda..03f84bf4b6ee4 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1251,6 +1251,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
- 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
- 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
-+	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)},	/* Telit FN980 */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
- 	{QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},	/* Telit LE920 */
--- 
-2.25.1
-
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4488,9 +4488,8 @@ static const struct ata_blacklist_entry
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
+ 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
+ 
+-	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
+-	   SD7SN6S256G and SD8SN8U256G */
+-	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
++	/* Sandisk SD7/8/9s lock up hard on large trims */
++	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
+ 
+ 	/* devices which puke on READ_NATIVE_MAX */
+ 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2392,6 +2392,7 @@ static unsigned int ata_scsiop_inq_89(st
+ 
+ static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
+ {
++	struct ata_device *dev = args->dev;
+ 	u16 min_io_sectors;
+ 
+ 	rbuf[1] = 0xb0;
+@@ -2417,7 +2418,12 @@ static unsigned int ata_scsiop_inq_b0(st
+ 	 * with the unmap bit set.
+ 	 */
+ 	if (ata_id_has_trim(args->id)) {
+-		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
++		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
++
++		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
++			max_blocks = 128 << (20 - SECTOR_SHIFT);
++
++		put_unaligned_be64(max_blocks, &rbuf[36]);
+ 		put_unaligned_be32(1, &rbuf[28]);
+ 	}
+ 
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -440,6 +440,7 @@ enum {
+ 	ATA_HORKAGE_NO_DMA_LOG	= (1 << 23),	/* don't use DMA for log read */
+ 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
+ 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
++	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
+ 
+ 	 /* DMA mask for user DMA control: User visible values; DO NOT
+ 	    renumber */
 
 
