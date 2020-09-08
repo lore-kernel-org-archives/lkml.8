@@ -2,97 +2,151 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1821DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BDEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCEDF21481
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599533737;
-	bh=JWnIjcnJzQwoUBMp2JNF74qQ2x9XJSOCWBezRJosGWI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fl+K+ZDf+yUhI8OPgB054en2SPHuvx+arwkO9B7INCU3DRZgkES8ZohnDA7MeMia/
-	 aXAWhOADatqDSqbcGHL7SYYuq14HDgMk6nEnYXGj6Orrd3f+qrxOI+svqfdw30UhH3
-	 /oAHo+y3khOTemuddz69DyXoHm1lSOvPQd4UslkM=
+	by mail.kernel.org (Postfix) with ESMTP id E1EEF20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpljHXZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgIHCzf (ORCPT
+        id S1728513AbgIHC4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbgIHCze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 22:55:34 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B3720678;
-        Tue,  8 Sep 2020 02:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599533733;
-        bh=JWnIjcnJzQwoUBMp2JNF74qQ2x9XJSOCWBezRJosGWI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WhluC8MTcrpRscv8gged+7zO2Rg9TnVnAx+EKYOvnIwvst97Z3S3dJ5yQ9AYOVgHA
-         g03qgZB4pYRQMHQjCuWox3tm/xc+6dqf4/7NxiHCYPzseFP9wn1PqiTEBYusxt3ljx
-         jYhwvHLdNQXbPo4eCXjHbOPMVW2sDqed4oYno6hc=
-Date:   Tue, 8 Sep 2020 11:55:27 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     fche@redhat.com (Frank Ch. Eigler)
-Cc:     peterz@infradead.org, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
-        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
-        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        linux-arch@vger.kernel.org, cameron@moodycamel.com,
-        oleg@redhat.com, will@kernel.org, paulmck@kernel.org,
-        systemtap@sourceware.org
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-Id: <20200908115527.cf8d2b106bf1a9c4416bbc89@kernel.org>
-In-Reply-To: <87eendo51o.fsf@redhat.com>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
-        <20200901190808.GK29142@worktop.programming.kicks-ass.net>
-        <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
-        <20200902070226.GG2674@hirez.programming.kicks-ass.net>
-        <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
-        <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
-        <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
-        <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
-        <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
-        <20200903110226.8963179e6a7c978e2d56c595@kernel.org>
-        <87eendo51o.fsf@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 7 Sep 2020 22:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728241AbgIHC4Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 22:56:24 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D357EC061573;
+        Mon,  7 Sep 2020 19:56:23 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v196so9764771pfc.1;
+        Mon, 07 Sep 2020 19:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=kmcZx1efgyiwxd8i4daWvO803rq/Bn4EFGyYaODUC10=;
+        b=WpljHXZ4qcFl5YflPHEhUG/uib5qeFPcnUyiXgXNWuaG7tJc0QYQRWd3pwM24dhDwX
+         h/rZwSDflBgkgQGbC8EM8exKBM0UjlUgRYe9sDQaL6EfnbBMSwSEP3aFhZORmKRFjlTs
+         hnONKlRVEY4356lL93i4O9g64fyAxG7jUpT9qTxoILjx+sD3w4GcWfGVjbSmZCdyLXDV
+         PyHCecyI4a5j9yhaWf3o2+99z7o3ioOOKaOyqFmvYB6eHr+TL8V8bWQ5muAEvWnI5TqH
+         Q4FHldJN/Wa9iNPNQNNiBEFM15Z+8ia0gUjmmm/YySoGiFZTwStCjfa2znx2cH5uaU+T
+         pj8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=kmcZx1efgyiwxd8i4daWvO803rq/Bn4EFGyYaODUC10=;
+        b=VElKbh1M7HA8Kgd3xy8IT/5mmWhfFxQHVgGuYV+kFgTDdPgkm6RaTBJoJxGJh+7IRk
+         zcl2Ui+XBeYYsaKsHByzWHQeIYKBgAa/bI8TyEQ0iSTH0EiOe4WczDExLbk0iyCei6dJ
+         EFJM7MLNTjwZx5uyEojpBkJJ+7tjlA3Ep/mjV03FzCEECcqs1t7ciJD7unq/+Er74nds
+         BBozJFSoRxcr5GM1WIUndpu4nKDwUdiWBDyozlTY3sQrHKF6EG/Oy0eDAWwSk4YfWpAz
+         4JyvmUHXoiQ3HeaFJ6qBfM7xl6hM9LPE/wKyuENnyU3xTbXvFJA1+ZOnr/OQ6T0hzFav
+         /N5g==
+X-Gm-Message-State: AOAM5307+yNKAoUhODmFMqyzk1/Q8rfolkJpC/VAEizOXS4MDM+xThtI
+        KvQpMDxOj3SHDqonRp/+XHY=
+X-Google-Smtp-Source: ABdhPJyEKABSDzk6tjhsePwW4+cKhjbi8DxSguLX9VEnwzvFwEbNc2+VfZZhbZbet5n/0l6YVn9dTw==
+X-Received: by 2002:a63:5f03:: with SMTP id t3mr18573059pgb.258.1599533780451;
+        Mon, 07 Sep 2020 19:56:20 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id gn24sm384247pjb.8.2020.09.07.19.56.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Sep 2020 19:56:19 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Peter Krystad <peter.krystad@linux.intel.com>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [MPTCP][PATCH v2 net 2/2] mptcp: fix subflow's remote_id issues
+Date:   Tue,  8 Sep 2020 10:49:39 +0800
+Message-Id: <0127c08400bdf65c03438b0b6e90e4ab72ea1576.1599532593.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1599532593.git.geliangtang@gmail.com>
+References: <cover.1599532593.git.geliangtang@gmail.com>
+In-Reply-To: <110eaa273bf313fb1a2a668a446956d27aba05a8.1599532593.git.geliangtang@gmail.com>
+References: <cover.1599532593.git.geliangtang@gmail.com> <110eaa273bf313fb1a2a668a446956d27aba05a8.1599532593.git.geliangtang@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 07 Sep 2020 13:44:19 -0400
-fche@redhat.com (Frank Ch. Eigler) wrote:
+This patch set the init remote_id to zero, otherwise it will be a random
+number.
 
-> Masami Hiramatsu <mhiramat@kernel.org> writes:
-> 
-> > Sorry, for noticing this point, I Cc'd to systemtap. Is systemtap taking
-> > care of spinlock too?
-> 
-> On PRREMPT_RT configurations, systemtap uses the raw_spinlock_t
-> types/functions, to keep its probe handlers as atomic as we can make them.
+Then it added the missing subflow's remote_id setting code both in
+__mptcp_subflow_connect and in subflow_ulp_clone.
 
-OK, if the lock is only used in the probe handlers, there should be
-no problem. Even if a probe hits in the NMI which happens in another
-kprobe handler, the probe does not call its handler (because we don't
-support nested kprobes* yet).
-But maybe you'll get warnings if you enable the lockdep.
+Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
+Fixes: ec3edaa7ca6ce ("mptcp: Add handling of outgoing MP_JOIN requests")
+Fixes: f296234c98a8f ("mptcp: Add handling of incoming MP_JOIN requests")
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ net/mptcp/pm_netlink.c | 2 +-
+ net/mptcp/subflow.c    | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-* https://lkml.kernel.org/r/158894789510.14896.13461271606820304664.stgit@devnote2
-It seems that we need more work for the nested kprobes.
-
-Thank you,
-
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 3e70d848033d..bd88e9c0bf71 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -181,9 +181,9 @@ static void check_work_pending(struct mptcp_sock *msk)
+ 
+ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ {
++	struct mptcp_addr_info remote = { 0 };
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct mptcp_pm_addr_entry *local;
+-	struct mptcp_addr_info remote;
+ 	struct pm_nl_pernet *pernet;
+ 
+ 	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index e8cac2655c82..9ead43f79023 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1063,6 +1063,7 @@ int __mptcp_subflow_connect(struct sock *sk, int ifindex,
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sockaddr_storage addr;
++	int remote_id = remote->id;
+ 	int local_id = loc->id;
+ 	struct socket *sf;
+ 	struct sock *ssk;
+@@ -1107,10 +1108,11 @@ int __mptcp_subflow_connect(struct sock *sk, int ifindex,
+ 		goto failed;
+ 
+ 	mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+-	pr_debug("msk=%p remote_token=%u local_id=%d", msk, remote_token,
+-		 local_id);
++	pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d", msk,
++		 remote_token, local_id, remote_id);
+ 	subflow->remote_token = remote_token;
+ 	subflow->local_id = local_id;
++	subflow->remote_id = remote_id;
+ 	subflow->request_join = 1;
+ 	subflow->request_bkup = 1;
+ 	mptcp_info2sockaddr(remote, &addr);
+@@ -1347,6 +1349,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
+ 		new_ctx->fully_established = 1;
+ 		new_ctx->backup = subflow_req->backup;
+ 		new_ctx->local_id = subflow_req->local_id;
++		new_ctx->remote_id = subflow_req->remote_id;
+ 		new_ctx->token = subflow_req->token;
+ 		new_ctx->thmac = subflow_req->thmac;
+ 	}
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
