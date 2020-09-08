@@ -2,99 +2,143 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0940AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9A2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B765C2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589706;
-	bh=fAwFO1P7fVr5Y3Eo8Ta4MRRO6FnQf2ilbIIAN3MRW8Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+7chNRxmhNfoZrHDR+4S86lFM49cl3BR3VwASnDFT0eF0AyN+7DLrxHVbIB1+GYf
-	 mj+T8FfMNMqWmvhXbT97WZv5iH6+fsHskIMn7Txr3JfgbMRmwEO+C2fJ8l0hOlRak7
-	 f1J3jq1c8G8tINM+BcrH5Q3lKMSoGUcaJDUVO/4w=
+	by mail.kernel.org (Postfix) with ESMTP id 78CE12087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbgIHS2Z (ORCPT
+        id S1731719AbgIHS23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:28:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:56900 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731408AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731396AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:10:25 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91C1424743;
-        Tue,  8 Sep 2020 15:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579668;
-        bh=fAwFO1P7fVr5Y3Eo8Ta4MRRO6FnQf2ilbIIAN3MRW8Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhHjaWlF49E73yoDL7VvR1JLPukZyjk0ZrFTL2Z43E8rtOng3sMb5JL2eXKcfdGbt
-         2AkKPh7kADft2kYHzZ8zmapp72k2BiO14Q3vB46+L4kvbt5X8LMYUiJD25IxtwFPCg
-         4WU2saQIo3sSd8en+hWVijtDewydVyu47VfRDUds=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adrien Crivelli <adrien.crivelli@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 143/186] ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion NT950XCJ-X716A
-Date:   Tue,  8 Sep 2020 17:24:45 +0200
-Message-Id: <20200908152248.594845012@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 038A215DB;
+        Tue,  8 Sep 2020 06:26:35 -0700 (PDT)
+Received: from bogus (unknown [10.57.10.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98FA43F73C;
+        Tue,  8 Sep 2020 06:26:32 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 14:26:26 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
+Message-ID: <20200908132602.GA27241@bogus>
+References: <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
+ <20200605045645.GD12397@bogus>
+ <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
+ <20200605085830.GA32372@bogus>
+ <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
+ <20200610093334.yznxl2esv5ht27ns@vireshk-i7>
+ <20200611100027.GB18781@bogus>
+ <CABb+yY1OwVB+uk+0w+D-4Xy46iYn8tPZYBZ0qjrzQFLA6SaTvw@mail.gmail.com>
+ <20200612052853.nds4iycie6ldjnnr@vireshk-i7>
+ <CAK8P3a0nVOR7YYSZaKmzm3WsUZLgOqL7yZq+f0Dfnn2=16AkLA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0nVOR7YYSZaKmzm3WsUZLgOqL7yZq+f0Dfnn2=16AkLA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrien Crivelli <adrien.crivelli@gmail.com>
+On Tue, Sep 08, 2020 at 11:14:50AM +0200, Arnd Bergmann wrote:
+> Picking up the old thread again after and getting pinged by multiple
+> colleagues about it (thanks!) reading through the history.
+> 
+> On Fri, Jun 12, 2020 at 7:29 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 11-06-20, 19:34, Jassi Brar wrote:
+> > > In the first post in this thread, Viresh lamented that mailbox
+> > > introduces "a few ms" delay in the scheduler path.
+> > > Your own tests show that is certainly not the case -- average is the
+> > > same as proposed virtual channels 50-100us, the best case is 3us vs
+> > > 53us for virtual channels.
+> >
+> > Hmmm, I am not sure where is the confusion here Jassi. There are two
+> > things which are very very different from each other.
+> >
+> > - Time taken by the mailbox framework (and remote for acknowledging
+> >   it) for completion of a single request, this can be 3us to 100s of
+> >   us. This is clear for everyone. THIS IS NOT THE PROBLEM.
+> >
+> > - Delay introduced by few of such requests on the last one, i.e. 5
+> >   normal requests followed by an important one (like DVFS), the last
+> >   one needs to wait for the first 5 to finish first. THIS IS THE
+> >   PROBLEM.
+> 
+> Earlier, Jassi also commented "Linux does not provide real-time
+> guarantees", which to me is what actually causes the issue here:
+> 
+> Linux having timeouts when communicating to the firmware means
+> that it relies on the hardware and firmware having real-time behavior
+> even when not providing real-time guarantees to its processes.
+> 
+> When comparing the two usage models, it's clear that the minimum
+> latency for a message delivery is always at least the time time
+> to process an interrupt, plus at least one expensive MMIO read
+> and one less expensive posted MMIO write for an Ack. If we
+> have a doorbell plus out-of-band message, we need an extra
+> DMA barrier and a read from coherent memory, both of which can
+> be noticeable. As soon as messages are queued in the current
+> model, the maximum latency increases by a potentially unbounded
+> number of round-trips, while in the doorbell model that problem
+> does not exist, so I agree that we need to handle both modes
+> in the kernel deal with all existing hardware as well as firmware
+> that requires low-latency communication.
+> 
+> It also sounds like that debate is already settled because there
+> are platforms using both modes, and in the kernel we usually
+> end up supporting the platforms that our users have, whether
+> we think it's a good idea or not.
+>
 
-commit 8bcea6cb2cbc1f749e574954569323dec5e2920e upstream.
+Thanks for the nice summary of the discussion so far.
 
-The Galaxy Book Ion NT950XCJ-X716A (15 inches) uses the same ALC298
-codec as other Samsung laptops which have the no headphone sound bug. I
-confirmed on my own hardware that this fixes the bug.
+> The only questions that I see in need of being answered are:
+> 
+> 1. Should the binding use just different "#mbox-cells" values or
+>    also different "compatible" strings to tell that difference?
 
-This also correct the model name for the 13 inches version. It was
-incorrectly referenced as NT950XCJ-X716A in commit e17f02d05. But it
-should have been NP930XCJ-K01US.
+I initially proposed latter, but Rob preferred the former which
+makes sense for the reasons you have mentioned below.
 
-Fixes: e17f02d0559c ("ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
-Signed-off-by: Adrien Crivelli <adrien.crivelli@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200826084014.211217-1-adrien.crivelli@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 2. Should one driver try to handle both modes or should there
+>    be two drivers?
+>
+> It sounds like Jassi strongly prefers separate drivers, which
+> would make separate compatible strings the more practical
+> approach.
 
----
- sound/pci/hda/patch_realtek.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Indeed.
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7708,7 +7708,8 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc189, "Samsung Galaxy Flex Book (NT950QCG-X716)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
--	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
-+	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NP930XCJ-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
-+	SND_PCI_QUIRK(0x144d, 0xc830, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
- 	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
+> While the argument can be made that a single
+> piece of hardware should only have one DT description,
+> the counter-argument would be that the behavior described
+> by the DT here is made up by both the hardware and the
+> firmware behind it, and they are in fact different.
+>
 
+I am too fine either way.
 
+--
+Regards,
+Sudeep
