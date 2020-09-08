@@ -2,81 +2,96 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AE0C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A732087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B570E20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585426;
-	bh=MLbB+MGwr/r5a0jx3JnLPatiU4On+aPxTZ/schrAPb8=;
+	s=default; t=1599585429;
+	bh=UjPlKjnFMWRSsJEdw3kVGk0wyHovwv3zHTf3Nn44oWg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U0r1z8M6TPV9Tc2qDOlgOCg3XbVkRrJKjNenrrf/L3cGgs7F/gUWma2tTqStoyMjm
-	 KfpKNO2YRNaxsR9cgABlNpntXQXgdI+SbnaFh3itbE6Wb1iWv+D0F7QmxoDY2cZywW
-	 UOaKeU5EWODAlY5p9tzGmHdj0q1VNGnWY/o3Eq+w=
+	b=IOSOX1geLhmmHJK9SxSUxi+3aKx11xrIf8wBScfji6QCM+Kp/8c4bwAQxyN17rUrN
+	 K+KUIjN9QPdz316i8Y8Mm4wu2njDXJpQufad3PES4dbeSmscb2OXgxiSsj+tP9lypR
+	 pJlpKjXHB3sKrpbyFSK7o07+/8u0+J99fBRLcJXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbgIHRRB (ORCPT
+        id S1731980AbgIHRQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731760AbgIHQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731637AbgIHQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67B72067C;
-        Tue,  8 Sep 2020 11:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A73DC22B2C;
+        Tue,  8 Sep 2020 13:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599566094;
-        bh=MLbB+MGwr/r5a0jx3JnLPatiU4On+aPxTZ/schrAPb8=;
+        s=default; t=1599570388;
+        bh=UjPlKjnFMWRSsJEdw3kVGk0wyHovwv3zHTf3Nn44oWg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JAijrfA70TLd2SlHXaPJ7sJAG2b3/itt6wTJkQ9xzFwtj9xstl1hwVKhAvEnYhTXX
-         nT6c2aribxoYEyWLw2ee+agJ+24B1WaYjoa7se3qUTwLH8zr9WxA6oA8Y7Vnmd5KOH
-         IFHKJKT4NpDrV3A4iWY4YidN6r/Se+41BPyNMr84=
-Date:   Tue, 8 Sep 2020 13:55:06 +0200
+        b=dPHNZTV6XY3o3arSn/Ih5Vo5tLuDpx/Z9zAVSPIlvAeU5qFBy0nomTnodvhRxwf4a
+         gIicJQLVW5n96S4SgT/k/NlBB9Kz3pdCGs30Lqp45DQsB0u3Y56Bj+D5354E3rFkw5
+         4rss3mUOtZFbZ5AqaBC9/bFS5FsoAEkIVkTQ7P6A=
+Date:   Tue, 8 Sep 2020 15:06:40 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Huacai Chen <chenhuacai@gmail.com>, Takashi Iwai <tiwai@suse.de>,
-        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH v2] Revert "ALSA: hda: Add support for Loongson 7A1000
- controller"
-Message-ID: <20200908115506.GA1624115@kroah.com>
-References: <1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn>
- <s5hsgcb59gw.wl-tiwai@suse.de>
- <CAAhV-H5V5adhY2OjJLxW7x3zDaHGgBxxy45hjf22+qMSEBQuww@mail.gmail.com>
- <bf50515b-a018-a66d-188a-4901428e66a6@loongson.cn>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     sashal@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
+        peterx@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v4.14.y 2/3] vfio-pci: Fault mmaps to enable vma tracking
+Message-ID: <20200908130640.GC3075407@kroah.com>
+References: <1599509828-23596-1-git-send-email-akaher@vmware.com>
+ <1599509828-23596-2-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bf50515b-a018-a66d-188a-4901428e66a6@loongson.cn>
+In-Reply-To: <1599509828-23596-2-git-send-email-akaher@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 11:09:31AM +0800, Tiezhu Yang wrote:
-> On 09/08/2020 08:37 AM, Huacai Chen wrote:
-> > Hi, all
-> > 
-> > This patch should be backported to 5.4.
+On Tue, Sep 08, 2020 at 01:47:06AM +0530, Ajay Kaher wrote:
+> From: Alex Williamson <alex.williamson@redhat.com>
 > 
-> Hi,
+> commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
 > 
-> Commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
-> 7A1000 controller") has been not yet merged into 5.4, so no
-> need to backport.
+> Rather than calling remap_pfn_range() when a region is mmap'd, setup
+> a vm_ops handler to support dynamic faulting of the range on access.
+> This allows us to manage a list of vmas actively mapping the area that
+> we can later use to invalidate those mappings.  The open callback
+> invalidates the vma range so that all tracking is inserted in the
+> fault handler and removed in the close handler.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/pci/hda/hda_intel.c?h=v5.4
+> Reviewed-by: Peter Xu <peterx@redhat.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> [Ajay: Regenerated the patch for v4.14]
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         | 75 ++++++++++++++++++++++++++++++++++++-
+>  drivers/vfio/pci/vfio_pci_private.h |  7 ++++
+>  2 files changed, 80 insertions(+), 2 deletions(-)
 
-It showed up in 5.4.62, so yes, it does need to go there.
+Oops, nope, this patch breaks the build:
+
+drivers/vfio/pci/vfio_pci.c:1183:11: error: initialization of \u2018int (*)(struct vm_fault *)\u2019 from incompatible pointer type \u2018int (*)(struct vm_area_struct *, struct vm_fault *)\u2019 [-Werror=incompatible-pointer-types]
+ 1183 |  .fault = vfio_pci_mmap_fault,
+      |           ^~~~~~~~~~~~~~~~~~~
+drivers/vfio/pci/vfio_pci.c:1183:11: note: (near initialization for \u2018vfio_pci_mmap_ops.fault\u2019)
+cc1: some warnings being treated as errors
+
+Did you test this?
+
+Please fix up and resend the whole series for 4.14.y
 
 thanks,
 
