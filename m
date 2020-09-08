@@ -2,53 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E57AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E076BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4969B21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7AC2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588335;
-	bh=h6ks64jl06DbIv9dD4cgt72UfJdgdym0WvGOZh3FOfA=;
+	s=default; t=1599588339;
+	bh=NWNr8WBAsMOdVH2Mb9AGSgAgiZJ2G2P+I3KtIHbjk3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QyWTaMZU8F3l0hssrw28w9U3Zc8R87Wl/J45FbLKU2S8wIHdGeBP4eFPWuieIcdLE
-	 HP1B42vF4PoI32WvEqIbXktvOf+XsxR2BYXxL3nQ2vThfqogfw8Z5bsWPlb1/+DiTC
-	 5vtQxCxIM7IzdpuH8Ef4hTRjk6YM2+XtkHxzcO3s=
+	b=nR3/bdKugnZsQnGowNfDT+7SWorZx8KR+L+6UJbg/OSVtoVtlwZlsFfhegR3u6snb
+	 5VAzvuapWSe/k3J6/oyCw8V84dURa9eqRADYFbFCTIqjfm3mLT/t+Angd/ziSESkeU
+	 lQXvKGMupu8ZqfewqZuodhlJfH2s3OqiEW1z52Og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbgIHSFc (ORCPT
+        id S1732128AbgIHSFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730924AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731526AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64EC424793;
-        Tue,  8 Sep 2020 15:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8030F247B8;
+        Tue,  8 Sep 2020 15:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580274;
-        bh=h6ks64jl06DbIv9dD4cgt72UfJdgdym0WvGOZh3FOfA=;
+        s=default; t=1599580282;
+        bh=NWNr8WBAsMOdVH2Mb9AGSgAgiZJ2G2P+I3KtIHbjk3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQVppZgmqYt1iIPPpcyE39Ow0d4BKolVPHmohtfsxG/JC/XVVubEtxY41BiXuf361
-         yGxBjux8VTb3kYdEnWyo+Q/4x9787jl0fza7BWUIVMLDXac7diJRi33QsLpEfne9nl
-         d/VxmRD903y8OE+Zziuc7La8rCcG/3HIy2DcmgIs=
+        b=OGCxyZpT1uvPinjtl+aU1gtzvNxIgO+B4KUT5XYEI9CxTKxV+toEbw021JTS8M6bD
+         INNTezcQBgkbgwMY/oKsaku0RGl01iKDvtdl7nkk7C+zfKPwQb+y1CLVdiOzA/AFpj
+         BJdzkBaYmq/ElMMDJJWrpPj0WQBU0cN1EOBRd6Ck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Leiner <simon@leiner.me>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/65] xen/xenbus: Fix granting of vmallocd memory
-Date:   Tue,  8 Sep 2020 17:25:55 +0200
-Message-Id: <20200908152217.556133019@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: [PATCH 4.14 02/65] HID: core: Sanitize event code and type when mapping input
+Date:   Tue,  8 Sep 2020 17:25:47 +0200
+Message-Id: <20200908152217.143910269@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -61,47 +59,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Leiner <simon@leiner.me>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit d742db70033c745e410523e00522ee0cfe2aa416 ]
+commit 35556bed836f8dc07ac55f69c8d17dce3e7f0e25 upstream.
 
-On some architectures (like ARM), virt_to_gfn cannot be used for
-vmalloc'd memory because of its reliance on virt_to_phys. This patch
-introduces a check for vmalloc'd addresses and obtains the PFN using
-vmalloc_to_pfn in that case.
+When calling into hid_map_usage(), the passed event code is
+blindly stored as is, even if it doesn't fit in the associated bitmap.
 
-Signed-off-by: Simon Leiner <simon@leiner.me>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Link: https://lore.kernel.org/r/20200825093153.35500-1-simon@leiner.me
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This event code can come from a variety of sources, including devices
+masquerading as input devices, only a bit more "programmable".
+
+Instead of taking the event code at face value, check that it actually
+fits the corresponding bitmap, and if it doesn't:
+- spit out a warning so that we know which device is acting up
+- NULLify the bitmap pointer so that we catch unexpected uses
+
+Code paths that can make use of untrusted inputs can now check
+that the mapping was indeed correct and bail out if not.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/xen/xenbus/xenbus_client.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/hid/hid-input.c      |    4 ++++
+ drivers/hid/hid-multitouch.c |    2 ++
+ include/linux/hid.h          |   42 +++++++++++++++++++++++++++++-------------
+ 3 files changed, 35 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index e94a61eaeceb0..f7b553faadb10 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -365,8 +365,14 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
- 	int i, j;
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1116,6 +1116,10 @@ static void hidinput_configure_usage(str
+ 	}
  
- 	for (i = 0; i < nr_pages; i++) {
--		err = gnttab_grant_foreign_access(dev->otherend_id,
--						  virt_to_gfn(vaddr), 0);
-+		unsigned long gfn;
+ mapped:
++	/* Mapping failed, bail out */
++	if (!bit)
++		return;
 +
-+		if (is_vmalloc_addr(vaddr))
-+			gfn = pfn_to_gfn(vmalloc_to_pfn(vaddr));
-+		else
-+			gfn = virt_to_gfn(vaddr);
+ 	if (device->driver->input_mapped &&
+ 	    device->driver->input_mapped(device, hidinput, field, usage,
+ 					 &bit, &max) < 0) {
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -616,6 +616,8 @@ static int mt_touch_input_mapping(struct
+ 		    (usage->hid & HID_USAGE) > 1)
+ 			code--;
+ 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
++		if (!*bit)
++			return -1;
+ 		input_set_capability(hi->input, EV_KEY, code);
+ 		return 1;
+ 
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -919,34 +919,49 @@ static inline void hid_device_io_stop(st
+  * @max: maximal valid usage->code to consider later (out parameter)
+  * @type: input event type (EV_KEY, EV_REL, ...)
+  * @c: code which corresponds to this usage and type
++ *
++ * The value pointed to by @bit will be set to NULL if either @type is
++ * an unhandled event type, or if @c is out of range for @type. This
++ * can be used as an error condition.
+  */
+ static inline void hid_map_usage(struct hid_input *hidinput,
+ 		struct hid_usage *usage, unsigned long **bit, int *max,
+-		__u8 type, __u16 c)
++		__u8 type, unsigned int c)
+ {
+ 	struct input_dev *input = hidinput->input;
+-
+-	usage->type = type;
+-	usage->code = c;
++	unsigned long *bmap = NULL;
++	unsigned int limit = 0;
+ 
+ 	switch (type) {
+ 	case EV_ABS:
+-		*bit = input->absbit;
+-		*max = ABS_MAX;
++		bmap = input->absbit;
++		limit = ABS_MAX;
+ 		break;
+ 	case EV_REL:
+-		*bit = input->relbit;
+-		*max = REL_MAX;
++		bmap = input->relbit;
++		limit = REL_MAX;
+ 		break;
+ 	case EV_KEY:
+-		*bit = input->keybit;
+-		*max = KEY_MAX;
++		bmap = input->keybit;
++		limit = KEY_MAX;
+ 		break;
+ 	case EV_LED:
+-		*bit = input->ledbit;
+-		*max = LED_MAX;
++		bmap = input->ledbit;
++		limit = LED_MAX;
+ 		break;
+ 	}
 +
-+		err = gnttab_grant_foreign_access(dev->otherend_id, gfn, 0);
- 		if (err < 0) {
- 			xenbus_dev_fatal(dev, err,
- 					 "granting access to ring page");
--- 
-2.25.1
-
++	if (unlikely(c > limit || !bmap)) {
++		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
++				    input->name, c, type);
++		*bit = NULL;
++		return;
++	}
++
++	usage->type = type;
++	usage->code = c;
++	*max = limit;
++	*bit = bmap;
+ }
+ 
+ /**
+@@ -960,7 +975,8 @@ static inline void hid_map_usage_clear(s
+ 		__u8 type, __u16 c)
+ {
+ 	hid_map_usage(hidinput, usage, bit, max, type, c);
+-	clear_bit(c, *bit);
++	if (*bit)
++		clear_bit(usage->code, *bit);
+ }
+ 
+ /**
 
 
