@@ -2,52 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D72C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06932C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA4C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1082087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586687;
-	bh=iGJobUoHn8yZVUhhAlEuqw83zoj5Q2su3p7kWCOT0N0=;
+	s=default; t=1599586701;
+	bh=UiT+te9JUW4wlzjOjVa3ADVR0CS6B9RsZbWsXfGBPl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlEdPlPc8EtWSY0/a5hdAOlQ+di+2YGAEFWDqR5VmJLii3Rz6PVqERp8NjwTOMFXe
-	 QCDX5fFbbngOJCzUaxCP9d67RyDS1L+ewF9F0d3DT2R3BDO6lt9BqU9VW5ZOi4Cxid
-	 kET1q7DQw4zrvL+JEACyC/jwiL5vz/758oDXsnNc=
+	b=TUYnTscydUTnKI+otSbRmZGB0YowvIb2yABDd2xziWi5r+Tih827tF22KZNpESnyJ
+	 g2kqTtqICBziePhyW+3QNhBuhESWgIt9TZ+WeaS6IRGS1hQA+8Azfc5IyvXVdGiVPc
+	 s+IksdpGKKoIOSlpXySFI89z+R0j+hazC0k23o7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgIHRiF (ORCPT
+        id S1731964AbgIHRiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731698AbgIHQOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:14:38 -0400
+        id S1731692AbgIHQOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:14:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65FBA24912;
-        Tue,  8 Sep 2020 15:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D2762490A;
+        Tue,  8 Sep 2020 15:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580428;
-        bh=iGJobUoHn8yZVUhhAlEuqw83zoj5Q2su3p7kWCOT0N0=;
+        s=default; t=1599580421;
+        bh=UiT+te9JUW4wlzjOjVa3ADVR0CS6B9RsZbWsXfGBPl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+oIgtvxqvNnb3RAVZevnHQ/4yJe87qxumQo9gXG4C9sEa/ZwQ9j0MFGmCOXg08gC
-         P/qeuTYWqU9ml+Lt4DRFX7TsFGZfjNKNowchHzU325rN71g7UuMvFCu2WEF3LpGhtk
-         N7t03P4eUiA6bOXlkyaYBclv1a8YNhUdP3AoQm4k=
+        b=Iod8nBKFXE+qiuwhR5F8HYTbOcNgJGuBhfagSbuj3R+pJXmS4Nr9GpNjCQ7zz4XbC
+         QVrRwmYU/c4+SN7MoP3h/Q0wsn17Lo8/ZgFn5pprWGlJO9wi6BouCqRwyISRmSTE1A
+         x8+Kn2CsQ50M0TLYgG4LuB+QHZnxyR5IrJUP4mvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Karthik Shivaram <karthikgs@fb.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 54/65] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-Date:   Tue,  8 Sep 2020 17:26:39 +0200
-Message-Id: <20200908152219.872724744@linuxfoundation.org>
+        stable@vger.kernel.org, Max Staudt <max@enpas.org>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 51/65] affs: fix basic permission bits to actually work
+Date:   Tue,  8 Sep 2020 17:26:36 +0200
+Message-Id: <20200908152219.701932055@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -60,79 +59,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Max Staudt <max@enpas.org>
 
-commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
+commit d3a84a8d0dde4e26bc084b36ffcbdc5932ac85e2 upstream.
 
-All three generations of Sandisk SSDs lock up hard intermittently.
-Experiments showed that disabling NCQ lowered the failure rate significantly
-and the kernel has been disabling NCQ for some models of SD7's and 8's,
-which is obviously undesirable.
+The basic permission bits (protection bits in AmigaOS) have been broken
+in Linux' AFFS - it would only set bits, but never delete them.
+Also, contrary to the documentation, the Archived bit was not handled.
 
-Karthik worked with Sandisk to root cause the hard lockups to trim commands
-larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
-limits max trim size to 128M and applies it to all three generations of
-Sandisk SSDs.
+Let's fix this for good, and set the bits such that Linux and classic
+AmigaOS can coexist in the most peaceful manner.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Karthik Shivaram <karthikgs@fb.com>
+Also, update the documentation to represent the current state of things.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Max Staudt <max@enpas.org>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/libata-core.c |    5 ++---
- drivers/ata/libata-scsi.c |    8 +++++++-
- include/linux/libata.h    |    1 +
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ Documentation/filesystems/affs.txt |   16 ++++++++++------
+ fs/affs/amigaffs.c                 |   27 +++++++++++++++++++++++++++
+ fs/affs/file.c                     |   26 +++++++++++++++++++++++++-
+ 3 files changed, 62 insertions(+), 7 deletions(-)
 
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4488,9 +4488,8 @@ static const struct ata_blacklist_entry
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
- 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
+--- a/Documentation/filesystems/affs.txt
++++ b/Documentation/filesystems/affs.txt
+@@ -93,13 +93,15 @@ The Amiga protection flags RWEDRWEDHSPAR
  
--	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
--	   SD7SN6S256G and SD8SN8U256G */
--	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
-+	/* Sandisk SD7/8/9s lock up hard on large trims */
-+	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
+   - R maps to r for user, group and others. On directories, R implies x.
  
- 	/* devices which puke on READ_NATIVE_MAX */
- 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -2392,6 +2392,7 @@ static unsigned int ata_scsiop_inq_89(st
+-  - If both W and D are allowed, w will be set.
++  - W maps to w.
  
- static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
+   - E maps to x.
+ 
+-  - H and P are always retained and ignored under Linux.
++  - D is ignored.
+ 
+-  - A is always reset when a file is written to.
++  - H, S and P are always retained and ignored under Linux.
++
++  - A is cleared when a file is written to.
+ 
+ User id and group id will be used unless set[gu]id are given as mount
+ options. Since most of the Amiga file systems are single user systems
+@@ -111,11 +113,13 @@ Linux -> Amiga:
+ 
+ The Linux rwxrwxrwx file mode is handled as follows:
+ 
+-  - r permission will set R for user, group and others.
++  - r permission will allow R for user, group and others.
++
++  - w permission will allow W for user, group and others.
+ 
+-  - w permission will set W and D for user, group and others.
++  - x permission of the user will allow E for plain files.
+ 
+-  - x permission of the user will set E for plain files.
++  - D will be allowed for user, group and others.
+ 
+   - All other flags (suid, sgid, ...) are ignored and will
+     not be retained.
+--- a/fs/affs/amigaffs.c
++++ b/fs/affs/amigaffs.c
+@@ -419,24 +419,51 @@ affs_mode_to_prot(struct inode *inode)
+ 	u32 prot = AFFS_I(inode)->i_protect;
+ 	umode_t mode = inode->i_mode;
+ 
++	/*
++	 * First, clear all RWED bits for owner, group, other.
++	 * Then, recalculate them afresh.
++	 *
++	 * We'll always clear the delete-inhibit bit for the owner, as that is
++	 * the classic single-user mode AmigaOS protection bit and we need to
++	 * stay compatible with all scenarios.
++	 *
++	 * Since multi-user AmigaOS is an extension, we'll only set the
++	 * delete-allow bit if any of the other bits in the same user class
++	 * (group/other) are used.
++	 */
++	prot &= ~(FIBF_NOEXECUTE | FIBF_NOREAD
++		  | FIBF_NOWRITE | FIBF_NODELETE
++		  | FIBF_GRP_EXECUTE | FIBF_GRP_READ
++		  | FIBF_GRP_WRITE   | FIBF_GRP_DELETE
++		  | FIBF_OTR_EXECUTE | FIBF_OTR_READ
++		  | FIBF_OTR_WRITE   | FIBF_OTR_DELETE);
++
++	/* Classic single-user AmigaOS flags. These are inverted. */
+ 	if (!(mode & 0100))
+ 		prot |= FIBF_NOEXECUTE;
+ 	if (!(mode & 0400))
+ 		prot |= FIBF_NOREAD;
+ 	if (!(mode & 0200))
+ 		prot |= FIBF_NOWRITE;
++
++	/* Multi-user extended flags. Not inverted. */
+ 	if (mode & 0010)
+ 		prot |= FIBF_GRP_EXECUTE;
+ 	if (mode & 0040)
+ 		prot |= FIBF_GRP_READ;
+ 	if (mode & 0020)
+ 		prot |= FIBF_GRP_WRITE;
++	if (mode & 0070)
++		prot |= FIBF_GRP_DELETE;
++
+ 	if (mode & 0001)
+ 		prot |= FIBF_OTR_EXECUTE;
+ 	if (mode & 0004)
+ 		prot |= FIBF_OTR_READ;
+ 	if (mode & 0002)
+ 		prot |= FIBF_OTR_WRITE;
++	if (mode & 0007)
++		prot |= FIBF_OTR_DELETE;
+ 
+ 	AFFS_I(inode)->i_protect = prot;
+ }
+--- a/fs/affs/file.c
++++ b/fs/affs/file.c
+@@ -428,6 +428,24 @@ static int affs_write_begin(struct file
+ 	return ret;
+ }
+ 
++static int affs_write_end(struct file *file, struct address_space *mapping,
++			  loff_t pos, unsigned int len, unsigned int copied,
++			  struct page *page, void *fsdata)
++{
++	struct inode *inode = mapping->host;
++	int ret;
++
++	ret = generic_write_end(file, mapping, pos, len, copied, page, fsdata);
++
++	/* Clear Archived bit on file writes, as AmigaOS would do */
++	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
++		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
++		mark_inode_dirty(inode);
++	}
++
++	return ret;
++}
++
+ static sector_t _affs_bmap(struct address_space *mapping, sector_t block)
  {
-+	struct ata_device *dev = args->dev;
- 	u16 min_io_sectors;
+ 	return generic_block_bmap(mapping,block,affs_get_block);
+@@ -437,7 +455,7 @@ const struct address_space_operations af
+ 	.readpage = affs_readpage,
+ 	.writepage = affs_writepage,
+ 	.write_begin = affs_write_begin,
+-	.write_end = generic_write_end,
++	.write_end = affs_write_end,
+ 	.direct_IO = affs_direct_IO,
+ 	.bmap = _affs_bmap
+ };
+@@ -794,6 +812,12 @@ done:
+ 	if (tmp > inode->i_size)
+ 		inode->i_size = AFFS_I(inode)->mmu_private = tmp;
  
- 	rbuf[1] = 0xb0;
-@@ -2417,7 +2418,12 @@ static unsigned int ata_scsiop_inq_b0(st
- 	 * with the unmap bit set.
- 	 */
- 	if (ata_id_has_trim(args->id)) {
--		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
-+		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
++	/* Clear Archived bit on file writes, as AmigaOS would do */
++	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
++		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
++		mark_inode_dirty(inode);
++	}
 +
-+		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
-+			max_blocks = 128 << (20 - SECTOR_SHIFT);
-+
-+		put_unaligned_be64(max_blocks, &rbuf[36]);
- 		put_unaligned_be32(1, &rbuf[28]);
- 	}
- 
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -440,6 +440,7 @@ enum {
- 	ATA_HORKAGE_NO_DMA_LOG	= (1 << 23),	/* don't use DMA for log read */
- 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
- 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
-+	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
- 
- 	 /* DMA mask for user DMA control: User visible values; DO NOT
- 	    renumber */
+ err_first_bh:
+ 	unlock_page(page);
+ 	put_page(page);
 
 
