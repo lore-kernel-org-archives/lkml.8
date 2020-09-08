@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7121FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3BAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23BAA2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4A721741
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592605;
-	bh=wkAzy+/lV7e2qMtMdBz3rknYjw51l58UVEVCpQvBVJY=;
+	s=default; t=1599592608;
+	bh=RoQ2WSTwrddXDMOIrp4crkXftKa5k90TuAtUJGIvRzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=izFYJ6F1+d98JnrcuaNU7I6PGfWqG35/w+Hcp1DnDAKdSjZnbuFJ/lIgmyBf3nAED
-	 obX7Wsy4rhTxJWFhfVr7ikQp3i45hrQJ79PjRTyHvhlPyccXqi0KXk0r2BkN2RGwAt
-	 6PQ+CdC5xjytaP2OqZomloL1/m+Syg8/LxKo8ubU=
+	b=eXKhNl+JatBWxUUdzpXuk8Wok0LtQRYLWdH3TFOsCb+7J01RzftDwLsi5CDDkUnU4
+	 7jaSw3Dt27vLXVBKqKyq8lLv/6wwcIPXkbkJ40WzheyoBx8lB19kXzXnUBWixJaozM
+	 zy4sB0Ffc6fMs9KXZujlUbtFsIoa7OQTwB8YkKcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731761AbgIHTQn (ORCPT
+        id S1731949AbgIHTQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:16:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731172AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:04:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA59E2467C;
-        Tue,  8 Sep 2020 15:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 873FD224D3;
+        Tue,  8 Sep 2020 15:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579570;
-        bh=wkAzy+/lV7e2qMtMdBz3rknYjw51l58UVEVCpQvBVJY=;
+        s=default; t=1599579430;
+        bh=RoQ2WSTwrddXDMOIrp4crkXftKa5k90TuAtUJGIvRzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1jLgQH/3hm5vAancixbCF0MBeOT3nRWpM29jtUFitA+y+w691qZF4+u/dbkUUO3TH
-         pG3ijwnNvWkF1ELr93WTmQjZZH1g1XWejli3xv2G+M2sTRtRqsE/cl7XiQiMg3qpsm
-         9DuAuZ9dlAa61It8oAj4S3p/7IraLnXzAk8xFz7A=
+        b=pFMLhduRYKws50DkJnhHE5F/U+ZV0HD4S/8D5WIMW0M5Fh+of9EWTegCuas3kAtPM
+         reoWf5+fmMGNMi5l14S0f56AUHu5wKfW0Tl/LNicJmV4Sw6KFXAyECcEzMu6NTy4Yc
+         3wlz8YHRcARTP8Y6VoSqvsHWtz2eSpBoAdvqEuBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Chou <max.chou@realtek.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 132/186] Bluetooth: Return NOTIFY_DONE for hci_suspend_notifier
-Date:   Tue,  8 Sep 2020 17:24:34 +0200
-Message-Id: <20200908152248.042281584@linuxfoundation.org>
+Subject: [PATCH 5.8 073/186] xfs: finish dfops on every insert range shift iteration
+Date:   Tue,  8 Sep 2020 17:23:35 +0200
+Message-Id: <20200908152245.190903037@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Chou <max.chou@realtek.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit 24b065727ceba53cc5bec0e725672417154df24f ]
+[ Upstream commit 9c516e0e4554e8f26ab73d46cbc789d7d8db664d ]
 
-The original return is NOTIFY_STOP, but notifier_call_chain would stop
-the future call for register_pm_notifier even registered on other Kernel
-modules with the same priority which value is zero.
+The recent change to make insert range an atomic operation used the
+incorrect transaction rolling mechanism. The explicit transaction
+roll does not finish deferred operations. This means that intents
+for rmapbt updates caused by extent shifts are not logged until the
+final transaction commits. Thus if a crash occurs during an insert
+range, log recovery might leave the rmapbt in an inconsistent state.
+This was discovered by repeated runs of generic/455.
 
-Signed-off-by: Max Chou <max.chou@realtek.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Update insert range to finish dfops on every shift iteration. This
+is similar to collapse range and ensures that intents are logged
+with the transactions that make associated changes.
+
+Fixes: dd87f87d87fa ("xfs: rework insert range into an atomic operation")
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/hci_core.c | 2 +-
+ fs/xfs/xfs_bmap_util.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 41fba93d857a6..fc28dc201b936 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3370,7 +3370,7 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
- 		bt_dev_err(hdev, "Suspend notifier action (%lu) failed: %d",
- 			   action, ret);
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index afdc7f8e0e701..feb277874a1fb 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -1165,7 +1165,7 @@ xfs_insert_file_space(
+ 		goto out_trans_cancel;
  
--	return NOTIFY_STOP;
-+	return NOTIFY_DONE;
- }
+ 	do {
+-		error = xfs_trans_roll_inode(&tp, ip);
++		error = xfs_defer_finish(&tp);
+ 		if (error)
+ 			goto out_trans_cancel;
  
- /* Alloc HCI device */
 -- 
 2.25.1
 
