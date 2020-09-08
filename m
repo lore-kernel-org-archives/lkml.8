@@ -2,107 +2,78 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCD6C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 873BF204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEAB207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="h7N4rGvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgIHUJw (ORCPT
+        id S1731729AbgIHUJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:09:52 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22413 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730280AbgIHPSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:18:38 -0400
-IronPort-SDR: Kog8Twc+2HjYMVg/wd15CUBhnamZunO4tL4nKH0jMqOTAbrDzRDlSLmGXMzDHxNUkknb30a9Wl
- NsOE/hDiL1Ww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="219689060"
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="219689060"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:53:09 -0700
-IronPort-SDR: 956F71r7a6JZ1C6XielGjK+RnLRhRq38MyfSOcKlJJVVT4ETYmGMjazSwhbmwHtOSf1Aot0c6n
- MO8OQtJNIYww==
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="448792089"
-Received: from mgarber-mobl1.amr.corp.intel.com (HELO [10.212.179.134]) ([10.212.179.134])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:53:07 -0700
-Subject: Re: [PATCH v2 2/4] soundwire: qcom: avoid dependency on
- CONFIG_SLIMBUS
-To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "moderated list:SOUNDWIRE SUBSYSTEM" <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200905173905.16541-1-jonathan@marek.ca>
- <20200905173905.16541-3-jonathan@marek.ca>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <69955702-c61c-a961-72fd-2f8a6b3ab978@linux.intel.com>
-Date:   Tue, 8 Sep 2020 08:53:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 16:09:54 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:4303 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729457AbgIHPSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:18:37 -0400
+X-UUID: 51970f2d630042fabf15de668d72185e-20200908
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ZedMZfUFgLvexz8GKyj+hsZdPazQ9EjrZfeYaT0ZaBc=;
+        b=h7N4rGvPg3n4HrBGWAOOsN+Y5SXtHE+F+IhfvmOdQ45i60texspG7e/jP7W7Vod49lsgfaTq9VXBFo24W8gPR+W7MMYF5bdB9ZnHGAfDTNrLYeiYO+ZlYCK/2R/ZcVPADF1mHnUYTkXAqhrdBnzK8/oA+yA2CPc3c9ips0asMfg=;
+X-UUID: 51970f2d630042fabf15de668d72185e-20200908
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <fengping.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1609223649; Tue, 08 Sep 2020 20:08:27 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 8 Sep 2020 20:08:24 +0800
+Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 8 Sep 2020 20:08:23 +0800
+From:   Fengping Yu <fengping.yu@mediatek.com>
+To:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-input@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v18] Add matrix keypad driver support for Mediatek SoCs 
+Date:   Tue, 8 Sep 2020 20:03:46 +0800
+Message-ID: <20200908120349.1685-1-fengping.yu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200905173905.16541-3-jonathan@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+DQpDaGFuZ2Ugc2luY2UgdjE3Og0KLSBtb2RpZnkgaG93IHRvIGdldCBrZXljb2RlIGluIGtleXBh
+ZCBpbnRlcnJ1cHQgaGFuZGxlcg0KLSByZXBsYWNlIHZhcmlhYmxlIHJldCBhcyBlcnJvciBpbiBw
+cm9iZSBmdW5jdGlvbg0KLSB1cGRhdGUga2V5cGFkLCBudW0tY29sdW1ucyBhbmQga2V5cGFkLCBu
+dW0tcm93cyBkZXNjcmlwdGlvaW4NCg0KZmVuZ3BpbmcueXUgKDMpOg0KICBkdC1iaW5kaW5nczog
+QWRkIGJpbmRpbmdzIGZvciBNZWRpYXRlayBtYXRyaXgga2V5cGFkDQogIGRyaXZlcnM6IGlucHV0
+OmtleWJvYXJkOiBBZGQgbXRrIGtleXBhZCBkcml2ZXINCiAgY29uZmlnczogZGVmY29uZmlnOiBB
+ZGQgQ09ORklHX0tFWUJPQVJEX01US19LUEQ9bQ0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+aW5wdXQvbXRrLWtwZC55YW1sICAgIHwgIDgzICsrKysrKysNCiBhcmNoL2FybTY0L2NvbmZpZ3Mv
+ZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5wdXQva2V5Ym9h
+cmQvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAxMSArDQogZHJpdmVycy9pbnB1dC9rZXlib2Fy
+ZC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2lucHV0L2tleWJvYXJk
+L210ay1rcGQuYyAgICAgICAgICAgICAgfCAyMTggKysrKysrKysrKysrKysrKysrDQogNSBmaWxl
+cyBjaGFuZ2VkLCAzMTQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sDQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvbXRrLWtwZC5jDQoNCi0tDQoyLjE4LjAN
+Cg0K
 
-
-On 9/5/20 12:39 PM, Jonathan Marek wrote:
-> The driver may be used without slimbus, so don't depend on slimbus.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->   drivers/soundwire/Kconfig | 2 +-
->   drivers/soundwire/qcom.c  | 4 ++++
->   2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-> index fa2b4ab92ed9..f83d02c9c60a 100644
-> --- a/drivers/soundwire/Kconfig
-> +++ b/drivers/soundwire/Kconfig
-> @@ -33,7 +33,7 @@ config SOUNDWIRE_INTEL
->   
->   config SOUNDWIRE_QCOM
->   	tristate "Qualcomm SoundWire Master driver"
-> -	depends on SLIMBUS
-> +	imply SLIMBUS
->   	depends on SND_SOC
->   	help
->   	  SoundWire Qualcomm Master driver.
-> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-> index d1e33ef1afac..6401ad451eee 100644
-> --- a/drivers/soundwire/qcom.c
-> +++ b/drivers/soundwire/qcom.c
-> @@ -753,7 +753,11 @@ static int qcom_swrm_probe(struct platform_device *pdev)
->   	if (!ctrl)
->   		return -ENOMEM;
->   
-> +#if IS_ENABLED(CONFIG_SLIBMUS)
-
-typo: SLIMBUS.
-
->   	if (dev->parent->bus == &slimbus_bus) {
-> +#else
-> +	if (false) {
-> +#endif
->   		ctrl->reg_read = qcom_swrm_ahb_reg_read;
->   		ctrl->reg_write = qcom_swrm_ahb_reg_write;
->   		ctrl->regmap = dev_get_regmap(dev->parent, NULL);
-> 
