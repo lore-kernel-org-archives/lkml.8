@@ -2,120 +2,120 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD99FC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4040DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898D321582
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D311E206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mzrxN6sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgIHE7z (ORCPT
+        id S1728547AbgIHFAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:59:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47178 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgIHE7z (ORCPT
+        Tue, 8 Sep 2020 01:00:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgIHFAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:59:55 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: krisman)
-        with ESMTPSA id 2488328F7E8
-From:   Gabriel Krisman Bertazi <krisman@collabora.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, willy@infradead.org,
-        linux-kselftest@vger.kernel.org, shuah@kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v6 1/9] kernel: Support TIF_SYSCALL_INTERCEPT flag
-Organization: Collabora
-References: <20200904203147.2908430-1-krisman@collabora.com>
-        <20200904203147.2908430-2-krisman@collabora.com>
-        <20200907101608.ldfhhvcy3vmrkg6b@wittgenstein>
-Date:   Tue, 08 Sep 2020 00:59:49 -0400
-In-Reply-To: <20200907101608.ldfhhvcy3vmrkg6b@wittgenstein> (Christian
-        Brauner's message of "Mon, 7 Sep 2020 12:16:08 +0200")
-Message-ID: <87wo14n9ru.fsf@collabora.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 8 Sep 2020 01:00:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB6FC061575
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 22:00:31 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u3so4159637pjr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 22:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=p5I0f0cr9Zk0jbT8NfArDdE5a/xV5YyqTPOFrjxdFJs=;
+        b=mzrxN6sva0MNjzdM0DxiM8w2ccXXm4iFw5E6I2j2XdD5sGSKe26zraZmMOHcvsnLfc
+         QsttZK0WhSqxiR64Pu+SbGRTt7t08s8jdt1gPY0+u+0iAuvbceTw8+cEZIP3S47svbDC
+         h8Ce2PULmRcOYOY6vGRiUkKLLjp2ypuLFuuRuDWfZ3FW5MMsOAcvcOScvq5BY+md85l9
+         Myr8ZbYqy7zKovK1H5howGAfb6OmNDkWKIS4uYEjy/oY2DuY0FHNCUCLf/F98PTU4M+T
+         3g6cklKHKYTgezaTLwSGhv0/GhLNhjWbRYG9NHKSGyVs5xDSjjqcWDTtlMJRaEA6wgzE
+         ZGtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=p5I0f0cr9Zk0jbT8NfArDdE5a/xV5YyqTPOFrjxdFJs=;
+        b=mPa39Go/u7usEGXIc1AaLgVv1ePNalB9lyiXPOuLgJziKxwD3FYLWJufG3yKd/C4/Q
+         w9uUQj5NoT6rDhObjGyg4yWJQBfj/JmV7IiL6XOLRsHXanc4DukTRNfFfmIUVcGS794h
+         mDsumM1oDIo7heIiPpspHT+kpucWPA8cZVX5VH/w3VbvWdjUWFTZXnNJcNISi+g7mFOv
+         6VARtMU4SnnQ20msqfgY/ocuyY50ikSpNrGVaIGb+W4QWItCtt14hFOPSHqTzjqvRJo1
+         lJZRqbho54eanKZ9+79HC9Iph04i9RNj7V9zsqMf0fdGTwTWk9AJuGl/O1/Oy6OuJA2C
+         eXHg==
+X-Gm-Message-State: AOAM531fcoNzEJuAOi6mVOwScKhQwtUlgzzJ8mpb8nowZfAIkYCEge5h
+        x7l/sQpeGdVDBeH1ndbDEEt8jw==
+X-Google-Smtp-Source: ABdhPJxDIlLMncfQswJITWdvDIrZGm4T2rg/FBTogDVPm/HS7Q//GjaFcvSbV2iii/s2mq4LYOgL+A==
+X-Received: by 2002:a17:90a:5805:: with SMTP id h5mr2221277pji.236.1599541229578;
+        Mon, 07 Sep 2020 22:00:29 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id v91sm15250081pjv.12.2020.09.07.22.00.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Sep 2020 22:00:28 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 10:30:16 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: armada-37xx: Add missing MODULE_DEVICE_TABLE
+Message-ID: <20200908050016.chsqxsnzyl4mnpfa@vireshk-i7>
+References: <20200907132716.6379-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200907132716.6379-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
+On 07-09-20, 15:27, Pali Rohár wrote:
+> CONFIG_ARM_ARMADA_37XX_CPUFREQ is tristate option and therefore this
+> cpufreq driver can be compiled as a module. This patch adds missing
+> MODULE_DEVICE_TABLE which generates correct modalias for automatic
+> loading of this cpufreq driver when is compiled as an external module.
+> 
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Fixes: 92ce45fb875d7 ("cpufreq: Add DVFS support for Armada 37xx")
+> ---
+>  drivers/cpufreq/armada-37xx-cpufreq.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/armada-37xx-cpufreq.c b/drivers/cpufreq/armada-37xx-cpufreq.c
+> index df1c941260d1..46f33c3a7316 100644
+> --- a/drivers/cpufreq/armada-37xx-cpufreq.c
+> +++ b/drivers/cpufreq/armada-37xx-cpufreq.c
+> @@ -484,6 +484,12 @@ static int __init armada37xx_cpufreq_driver_init(void)
+>  /* late_initcall, to guarantee the driver is loaded after A37xx clock driver */
+>  late_initcall(armada37xx_cpufreq_driver_init);
+>  
+> +static const struct of_device_id armada37xx_cpufreq_of_match[] = {
+> +	{ .compatible = "marvell,armada-3700-nb-pm" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, armada37xx_cpufreq_of_match);
+> +
+>  MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>");
+>  MODULE_DESCRIPTION("Armada 37xx cpufreq driver");
+>  MODULE_LICENSE("GPL");
 
-> On Fri, Sep 04, 2020 at 04:31:39PM -0400, Gabriel Krisman Bertazi wrote:
->> index afe01e232935..3511c98a7849 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -959,7 +959,11 @@ struct task_struct {
->>  	kuid_t				loginuid;
->>  	unsigned int			sessionid;
->>  #endif
->> -	struct seccomp			seccomp;
->> +
->> +	struct {
->> +		unsigned int			syscall_intercept;
->> +		struct seccomp			seccomp;
->> +	};
->
-> If there's no specific reason to do this I'd not wrap this in an
-> anonymous struct. It doesn't really buy anything and there doesn't seem
-> to be  precedent in struct task_struct right now. Also, if this somehow
-> adds padding it seems you might end up increasing the size of struct
-> task_struct more than necessary by accident? (I might be wrong
-> though.)
-
-Hi Christian,
-
-Thanks for your review on this and on the other patches of this series.
-
-I wrapped these to prevent struct layout randomization from separating
-the flags field from seccomp, as they are going to be used together and
-I was trying to reduce overhead to seccomp entry due to two cache misses
-when reading this structure.  Measuring it seccomp_benchmark didn't show
-any difference with the unwrapped version, so perhaps it was a bit of
-premature optimization?
-
->> diff --git a/include/linux/syscall_intercept.h b/include/linux/syscall_intercept.h
->> new file mode 100644
->> index 000000000000..725d157699da
->> --- /dev/null
->> +++ b/include/linux/syscall_intercept.h
->> @@ -0,0 +1,70 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2020 Collabora Ltd.
->> + */
->> +#ifndef _SYSCALL_INTERCEPT_H
->> +#define _SYSCALL_INTERCEPT_H
->> +
->> +#include <linux/sched.h>
->> +#include <linux/sched/signal.h>
->> +#include <linux/thread_info.h>
->> +
->> +#define SYSINT_SECCOMP		0x1
->
-> <bikeshed>
->
-> Can we maybe use a better name for this? I noone minds the extra
-> characters I'd suggest:
-> SYSCALL_INTERCEPT_SECCOMP
-> or
-> SYS_INTERCEPT_SECCOMP
->
-> </bikeshed>
->
-
-will do.
-
-Thanks,
+Applied. Thanks.
 
 -- 
-Gabriel Krisman Bertazi
+viresh
