@@ -2,53 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF82C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD32320658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:31:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795A220658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593513;
-	bh=Zrta8asgImS4Hpgo1V9zLaLLHHYj8NOiLwkbHAizcAI=;
+	s=default; t=1599593520;
+	bh=iKePNMRyYjuk70vMsaDLL0LcdLKGJj7Qdt4/LFD3uuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nm3fQtFQ0jNDphUUdbZPHWPA1WHCKxovjvaaaLjSClsS/VCqtB/IsleL/+TpEPVWm
-	 A2adL2rnGl7J3EUOW2LvebGggU7r+hgHhyUAVxQda2L2DdIedqjbOxDRcij7PkCUv4
-	 eM44DZIZry4fstnrpCpnnOskc0J62cpvihXs/J80=
+	b=Y2LuRhXT36H7VUrulFE2bhQPylqhaqsIlu6EZLPq690juy+ElQi0M5hUAIw3HM/b3
+	 +8DhIujc8uyg0GfzYdoG1/15mWy4ipPY5uN+B25Hxcfu3J2IRtj/PIFe7sA28AGV7F
+	 OPwus9q6S/a/xcvbENAwqD5TME5UFUjnGuBo2438=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbgIHTbu (ORCPT
+        id S1732113AbgIHTb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47740 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:31:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731002AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730999AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:58:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E26C246E2;
-        Tue,  8 Sep 2020 15:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9C923D3C;
+        Tue,  8 Sep 2020 15:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579610;
-        bh=Zrta8asgImS4Hpgo1V9zLaLLHHYj8NOiLwkbHAizcAI=;
+        s=default; t=1599579449;
+        bh=iKePNMRyYjuk70vMsaDLL0LcdLKGJj7Qdt4/LFD3uuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wM74pc7XPB3qFecZSbutkDnk/Q7VV+9oEkSy/A57hkZnxw+pGrie/24O6O6/0EHiH
-         VT+V7JehnyBhUnlW4HDgv5TlunlnaUzetDmlmccQL0xJxa5MwJhgd8NzlsV7jvbzXx
-         nCKSEFnmQzXunasdpxjKInqzOQb+T3IpF2oPY78c=
+        b=p9qo7YP9qXUu2VLBiHWyBeTOkT0vDQqnTnlCFCRWmc1GMuIWe7EnmVhYyto06Dsbb
+         ksHQiSSmQibj3l7LdU9Eh4wQRS55HKvov3rcNzYvtdAUOR/nsbiZjsL5YRcaWxDb+b
+         r7fNkoZIbCN7Saa6NQsfb5qosScOu7tdWlPqjG98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.8 150/186] media: rc: uevent sysfs file races with rc_unregister_device()
-Date:   Tue,  8 Sep 2020 17:24:52 +0200
-Message-Id: <20200908152248.929464358@linuxfoundation.org>
+        Jussi Kivilinna <jussi.kivilinna@haltian.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 042/186] batman-adv: bla: use netif_rx_ni when not in interrupt context
+Date:   Tue,  8 Sep 2020 17:23:04 +0200
+Message-Id: <20200908152243.708000869@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,82 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Jussi Kivilinna <jussi.kivilinna@haltian.com>
 
-commit 4f0835d6677dc69263f90f976524cb92b257d9f4 upstream.
+[ Upstream commit 279e89b2281af3b1a9f04906e157992c19c9f163 ]
 
-Only report uevent file contents if device still registered, else we
-might read freed memory.
+batadv_bla_send_claim() gets called from worker thread context through
+batadv_bla_periodic_work(), thus netif_rx_ni needs to be used in that
+case. This fixes "NOHZ: local_softirq_pending 08" log messages seen
+when batman-adv is enabled.
 
-Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: <stable@vger.kernel.org> # 4.16+
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Signed-off-by: Jussi Kivilinna <jussi.kivilinna@haltian.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/rc-main.c |   32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ net/batman-adv/bridge_loop_avoidance.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1613,25 +1613,25 @@ static void rc_dev_release(struct device
- 	kfree(dev);
- }
+diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
+index 41cc87f06b142..cfb9e16afe38a 100644
+--- a/net/batman-adv/bridge_loop_avoidance.c
++++ b/net/batman-adv/bridge_loop_avoidance.c
+@@ -437,7 +437,10 @@ static void batadv_bla_send_claim(struct batadv_priv *bat_priv, u8 *mac,
+ 	batadv_add_counter(bat_priv, BATADV_CNT_RX_BYTES,
+ 			   skb->len + ETH_HLEN);
  
--#define ADD_HOTPLUG_VAR(fmt, val...)					\
--	do {								\
--		int err = add_uevent_var(env, fmt, val);		\
--		if (err)						\
--			return err;					\
--	} while (0)
--
- static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
- {
- 	struct rc_dev *dev = to_rc_dev(device);
-+	int ret = 0;
- 
--	if (dev->rc_map.name)
--		ADD_HOTPLUG_VAR("NAME=%s", dev->rc_map.name);
--	if (dev->driver_name)
--		ADD_HOTPLUG_VAR("DRV_NAME=%s", dev->driver_name);
--	if (dev->device_name)
--		ADD_HOTPLUG_VAR("DEV_NAME=%s", dev->device_name);
-+	mutex_lock(&dev->lock);
- 
--	return 0;
-+	if (!dev->registered)
-+		ret = -ENODEV;
-+	if (ret == 0 && dev->rc_map.name)
-+		ret = add_uevent_var(env, "NAME=%s", dev->rc_map.name);
-+	if (ret == 0 && dev->driver_name)
-+		ret = add_uevent_var(env, "DRV_NAME=%s", dev->driver_name);
-+	if (ret == 0 && dev->device_name)
-+		ret = add_uevent_var(env, "DEV_NAME=%s", dev->device_name);
-+
-+	mutex_unlock(&dev->lock);
-+
-+	return ret;
- }
- 
- /*
-@@ -2023,14 +2023,14 @@ void rc_unregister_device(struct rc_dev
- 	del_timer_sync(&dev->timer_keyup);
- 	del_timer_sync(&dev->timer_repeat);
- 
--	rc_free_rx_device(dev);
--
- 	mutex_lock(&dev->lock);
- 	if (dev->users && dev->close)
- 		dev->close(dev);
- 	dev->registered = false;
- 	mutex_unlock(&dev->lock);
- 
-+	rc_free_rx_device(dev);
-+
- 	/*
- 	 * lirc device should be freed with dev->registered = false, so
- 	 * that userspace polling will get notified.
+-	netif_rx(skb);
++	if (in_interrupt())
++		netif_rx(skb);
++	else
++		netif_rx_ni(skb);
+ out:
+ 	if (primary_if)
+ 		batadv_hardif_put(primary_if);
+-- 
+2.25.1
+
 
 
