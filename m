@@ -2,117 +2,73 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D37EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA35C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6D92087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCAD2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DnvdxO7D"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RV4MIZfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgIHL2Z (ORCPT
+        id S1729721AbgIHL3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729548AbgIHLSi (ORCPT
+        Tue, 8 Sep 2020 07:29:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:32150 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729372AbgIHLV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:18:38 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43FA1C061795
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 04:18:33 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l191so9813473pgd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 04:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DPhVHm5Yrxe2FB2XOtylUDcuz6wqU+n6Rek/Gj8QDMc=;
-        b=DnvdxO7DNfMgF2822srzxO46S7+iUknrOl82Tmyyt7VtUswfPN06weMAagErbpa4LC
-         pRlt+sFlA9u3HiYkl1OEgTbFRoLjATIThTuxJjAjdyMLUYLQ8GBr5zpsKEOYexT62HQt
-         zcrv6Uq3HUlM91lUn+k7tbTW86pprdhqOtPGc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DPhVHm5Yrxe2FB2XOtylUDcuz6wqU+n6Rek/Gj8QDMc=;
-        b=kdDJYCUaDeS06ocj19hxz8HbBPAZ59kKbY7lN+6E5Yv53afs3MHRSH8ejkmfsDwDeK
-         eMX08QSzOnazGYUekyaoX1IclTKNAVR/Vv9+dQF3HPjONdrsewg16O/anvl/H5+a1HdV
-         eOKCBsXfWQ1rG3QdKQFyrW7E1GPoL0PTPeck3pAxdYfPqxQVixSbEnXMLL5drA8pwG9Q
-         /W8QDhSTRgXM7KqO/J6juDhgLrAno1Qmqxt+YRgdGwsSy3MnDG9sqw556+ilWA/Rj9R/
-         vtxTNwpY93oa7u3pn3x5M1Ix61S3ZoyAuUwWqUYVvsrO85yRNuyWs4T0WqOD/fm8loJQ
-         b/FQ==
-X-Gm-Message-State: AOAM531yyFlyZHVj6gb7bhBTF7b7swPNovu8C16QxGGcZE40fmGuF9C7
-        wkAX3u4DA8JkIfsAgle++zpi3xv9ieVgZU08si4ysM+Qnvc3R/F1DRaGlbQi8bhYUObTSnz3ic0
-        nC5tvCA1KaN9O4aDy6KgC7k2bUnJDrVmJfZ0QoI9c0EXzsC9k/dD9vIPCjY0QwykVXMLF88K2Bm
-        EPSjocF7bZi9OE5w==
-X-Google-Smtp-Source: ABdhPJw2aKs+cbUI2Gr5JM9a3FiERmT6ihTxueHJ3DXph1yki85dd64nvsBzqMCXIcfeyHvIt9GCZQ==
-X-Received: by 2002:aa7:9592:0:b029:13e:d13d:a054 with SMTP id z18-20020aa795920000b029013ed13da054mr657563pfj.26.1599563912366;
-        Tue, 08 Sep 2020 04:18:32 -0700 (PDT)
-Received: from [10.230.32.194] ([192.19.148.250])
-        by smtp.gmail.com with ESMTPSA id a15sm10046542pfi.119.2020.09.08.04.18.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 04:18:31 -0700 (PDT)
-Subject: Re: [PATCH] brcmsmac: fix memory leak in wlc_phy_attach_lcnphy
-To:     Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     takafumi@sslab.ics.keio.ac.jp,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <brcm80211-dev-list@cypress.com>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <bad4e33a-af2f-b44f-63e5-56386c312a91@broadcom.com>
- <20200908001324.8215-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <c13ee142-d69d-6d21-6373-acb56507c9ec@broadcom.com>
-Date:   Tue, 8 Sep 2020 13:18:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 07:21:28 -0400
+X-UUID: cd19ca6877cb4c87a84d88385cff48e4-20200908
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=J6PetP5hY2T+2YPn7CjXIDc6ZgTmKvWDCgSOANgtWDU=;
+        b=RV4MIZfopVZVu1atLbAv7iS3QiYc90+A8iHdZINNf2k+aBQ9lKJqNDPAST3Q/YwhEQgwoFHMCYBdgX6o5fLfcDt8xSrNC+8Yy2Z64FYrkavqh+iQZ7mmmQVz8v7Hu8NCfBQtWtkQo+2Wqr6jCN1Ja3YrzdJOO5aRov2KH4KyydE=;
+X-UUID: cd19ca6877cb4c87a84d88385cff48e4-20200908
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <hector.yuan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 687616419; Tue, 08 Sep 2020 19:21:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 8 Sep 2020 19:21:19 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 8 Sep 2020 19:21:20 +0800
+Message-ID: <1599564080.2621.9.camel@mtkswgap22>
+Subject: Re: [PATCH v4 1/2] cpufreq: mediatek-hw: Add support for Mediatek
+ cpufreq HW driver
+From:   Hector Yuan <hector.yuan@mediatek.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rob Herring" <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Tue, 8 Sep 2020 19:21:20 +0800
+In-Reply-To: <20200908111331.rdvtrvttoapqxaib@vireshk-i7>
+References: <1599550547-27767-1-git-send-email-hector.yuan@mediatek.com>
+         <1599550547-27767-2-git-send-email-hector.yuan@mediatek.com>
+         <20200908102752.r2n6xvghl4fcdrcv@vireshk-i7>
+         <1599563425.2621.5.camel@mtkswgap22>
+         <20200908111331.rdvtrvttoapqxaib@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200908001324.8215-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/2020 2:13 AM, Keita Suzuki wrote:
-> When wlc_phy_txpwr_srom_read_lcnphy fails in wlc_phy_attach_lcnphy,
-> the allocated pi->u.pi_lcnphy is leaked, since struct brcms_phy will be
-> freed in the caller function.
-> 
-> Fix this by calling wlc_phy_detach_lcnphy in the error handler of
-> wlc_phy_txpwr_srom_read_lcnphy before returning.
+T24gVHVlLCAyMDIwLTA5LTA4IGF0IDE2OjQzICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+
+IE9uIDA4LTA5LTIwLCAxOToxMCwgSGVjdG9yIFl1YW4gd3JvdGU6DQo+ID4gT0ssIEkgd2lsbCBk
+ZWZpbmUgdGhlIGNvcnJlc3BvbmRpbmcgZXhpdCBmdW5jdGlvbi4gDQo+IA0KPiBBbHNvIHBsZWFz
+ZSBhZGQgcmVtb3ZlKCkgY29ycmVzcG9uZGluZyB0byBwcm9iZSgpLg0KPiANCk9LLCB0aGFua3Mg
+Zm9yIHlvdXIga2luZCByZW1pbmRlci4NCg0K
 
-Thanks for resubmitting the patch addressing my comment. For clarity it 
-is recommended to mark the subject with '[PATCH V2]' and add a ...
-
-> Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-> ---
-... changelog here describing difference between previous patch and this 
-version.
-
-Regards,
-Arend
----
->   .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c    | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
