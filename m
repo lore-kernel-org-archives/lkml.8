@@ -2,112 +2,89 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA18DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77540C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BEE42080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2CC2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731591AbgIHSvy (ORCPT
+        id S1731561AbgIHSvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:51:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:33472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbgIHSuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:50:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEDFB1045;
-        Tue,  8 Sep 2020 11:50:12 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A7E103F73C;
-        Tue,  8 Sep 2020 11:50:11 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, mingo@kernel.org,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] sched/topology: Move sd_flag_debug out of #ifdef CONFIG_SYSCTL
-Date:   Tue,  8 Sep 2020 19:49:56 +0100
-Message-Id: <20200908184956.23369-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 8 Sep 2020 14:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731211AbgIHSvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:51:10 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D900C061573;
+        Tue,  8 Sep 2020 11:51:10 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFihG-00CnM8-KF; Tue, 08 Sep 2020 18:50:26 +0000
+Date:   Tue, 8 Sep 2020 19:50:26 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH v8 0/3] Add support for AT_INTERPRETED (was O_MAYEXEC)
+Message-ID: <20200908185026.GU1236603@ZenIV.linux.org.uk>
+References: <20200908075956.1069018-1-mic@digikod.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200908075956.1069018-1-mic@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The last sd_flag_debug shuffle inadvertently moved its definition within
-an #ifdef CONFIG_SYSCTL region. While CONFIG_SYSCTL is indeed required to
-produce the sched domain ctl interface (which uses sd_flag_debug to output
-flag names), it isn't required to run any assertion on the sched_domain
-hierarchy itself.
+On Tue, Sep 08, 2020 at 09:59:53AM +0200, Mickaël Salaün wrote:
+> Hi,
+> 
+> This height patch series rework the previous O_MAYEXEC series by not
+> adding a new flag to openat2(2) but to faccessat2(2) instead.  As
+> suggested, this enables to perform the access check on a file descriptor
+> instead of on a file path (while opening it).  This may require two
+> checks (one on open and then with faccessat2) but it is a more generic
+> approach [8].
 
-Move the definition of sd_flag_debug to a CONFIG_SCHED_DEBUG region of
-topology.c.
-
-Now at long last we have:
-o sd_flag_debug declared in include/linux/sched/topology.h iff
-  CONFIG_SCHED_DEBUG=y
-o sd_flag_debug defined in kernel/sched/topology.c, conditioned by:
-  o CONFIG_SCHED_DEBUG, with an explicit #ifdef block
-  o CONFIG_SMP, as a requirement to compile topology.c
-
-With this change, all symbols pertaining to SD flag metadata (with the
-exception of __SD_FLAG_CNT) are now defined exclusively within topology.c
-
-Fixes: 8fca9494d4b4 ("sched/topology: Move sd_flag_debug out of linux/sched/topology.h")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
-@Randy I didn't keep your Acked-by given that this is a slightly different
-shuffle.
----
- kernel/sched/debug.c    | 6 ------
- kernel/sched/topology.c | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 0d7896d2a0b2..0655524700d2 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -245,12 +245,6 @@ set_table_entry(struct ctl_table *entry,
- 	entry->proc_handler = proc_handler;
- }
- 
--#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
--const struct sd_flag_debug sd_flag_debug[] = {
--#include <linux/sched/sd_flags.h>
--};
--#undef SD_FLAG
--
- static int sd_ctl_doflags(struct ctl_table *table, int write,
- 			  void *buffer, size_t *lenp, loff_t *ppos)
- {
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index da3cd60e4b78..55c453d140e9 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -25,6 +25,12 @@ static inline bool sched_debug(void)
- 	return sched_debug_enabled;
- }
- 
-+#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
-+const struct sd_flag_debug sd_flag_debug[] = {
-+#include <linux/sched/sd_flags.h>
-+};
-+#undef SD_FLAG
-+
- static int sched_domain_debug_one(struct sched_domain *sd, int cpu, int level,
- 				  struct cpumask *groupmask)
- {
--- 
-2.27.0
-
+Again, why is that folded into lookup/open/whatnot, rather than being
+an operation applied to a file (e.g. O_PATH one)?
