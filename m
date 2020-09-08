@@ -2,63 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F235BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFABA2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CD92087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591672;
-	bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
+	s=default; t=1599591681;
+	bh=y+zrUYeyGIEDIzii/wZZiVN5+0rnA8OlhzATkZVQEdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GP4wexALFGfAn24fn+6wFG6s0Ql1lLclYAOzqJN+Qv0oA+5hEZArMn6W7zyZxymC7
-	 NDAay3JDgZ7fakU4E+39X3Pmex4DbGI9SB2opX01+xEvTnSlLokHblUheQndiF8VrI
-	 TRfAUMU5DABuGyFyEW+ykv+o3c4hiDMMPGYMZ0sI=
+	b=KrKgbIPCasN4QiDU8bvkp5OMTT8BNzm3DNGAyBSMQXz4HyeNdbHhrZR7iuFdNFXJb
+	 Ze9riq6m9k0cm3ldMkdlphRT50EVNG5zx02Up8EpY7t+PcCLVQS5Wq8+iEyQ7B7ynN
+	 UQzGfqX3fMM4ZetZ+++qzQrh8M4iAgu/7eYgazss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbgIHTBK (ORCPT
+        id S1731475AbgIHTBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731210AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731295AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:08:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4071023EB4;
-        Tue,  8 Sep 2020 15:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F36F23F2C;
+        Tue,  8 Sep 2020 15:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580052;
-        bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
+        s=default; t=1599580086;
+        bh=y+zrUYeyGIEDIzii/wZZiVN5+0rnA8OlhzATkZVQEdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zcg3eiGwV9ovLNXAd/aH+w9lKa4wkZ+BD0/IJWs3eAfhYZCZCwR+2l2ysMQs3FMna
-         gPaqxii2haK7fgUnntJtCdS5SY8TRXbGtvnV4CEKK9YTtlt9Im6DAYA6MT5ub/SxAY
-         e9HyFowugL1BdpRJjEfwwmEde1iChLAWNdu+zGa8=
+        b=N7oxB6aJDGKFNQiZrVoFFOHSG1OnXSZY4D7DfQy5iSAwkosEhdrqK+9yQ+P9g4QCC
+         qFCfT6N5I6qlZPAVcNUNEQICuJzAeiCsgyKjV38QPaU0NwWSGJYpKHNG+SKJkg5U1H
+         i3opgvgNf5b2HMwEuAZaO+WSElBUEogpQTZTi0Ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Clarke <pc@us.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Tony Jones <tonyj@suse.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.19 03/88] perf record/stat: Explicitly call out event modifiers in the documentation
-Date:   Tue,  8 Sep 2020 17:25:04 +0200
-Message-Id: <20200908152221.258114730@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 26/88] net: systemport: Fix memleak in bcm_sysport_probe
+Date:   Tue,  8 Sep 2020 17:25:27 +0200
+Message-Id: <20200908152222.372361279@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -71,63 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-commit e48a73a312ebf19cc3d72aa74985db25c30757c1 upstream.
+[ Upstream commit 7ef1fc57301f3cef7201497aa27e89ccb91737fe ]
 
-Event modifiers are not mentioned in the perf record or perf stat
-manpages.  Add them to orient new users more effectively by pointing
-them to the perf list manpage for details.
+When devm_kcalloc() fails, dev should be freed just
+like what we've done in the subsequent error paths.
 
-Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Tony Jones <tonyj@suse.de>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200901215853.276234-1-kim.phillips@amd.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7b78be48a8eb6 ("net: systemport: Dynamically allocate number of TX rings")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/Documentation/perf-record.txt |    4 ++++
- tools/perf/Documentation/perf-stat.txt   |    4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -33,6 +33,10 @@ OPTIONS
-         - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 6b761f6b8fd56..9a614c5cdfa22 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2441,8 +2441,10 @@ static int bcm_sysport_probe(struct platform_device *pdev)
+ 	priv->tx_rings = devm_kcalloc(&pdev->dev, txq,
+ 				      sizeof(struct bcm_sysport_tx_ring),
+ 				      GFP_KERNEL);
+-	if (!priv->tx_rings)
+-		return -ENOMEM;
++	if (!priv->tx_rings) {
++		ret = -ENOMEM;
++		goto err_free_netdev;
++	}
  
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
- 	  'param1', 'param2', etc are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*.
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -39,6 +39,10 @@ report::
- 	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
- 
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
- 	  param1 and param2 are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
+ 	priv->is_lite = params->is_lite;
+ 	priv->num_rx_desc_words = params->num_rx_desc_words;
+-- 
+2.25.1
+
 
 
