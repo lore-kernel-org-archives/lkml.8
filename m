@@ -2,87 +2,118 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15686C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47BCC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A3D20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kIRfaUoI"
+	by mail.kernel.org (Postfix) with ESMTP id 775C720658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599595144;
+	bh=pUEfMpq/UYZC7azZMZ5kSA/t1DHYIvIV/tbSmdkMHt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eE50Ad/6cblMZIvbflmHKCfJWr12HVssAEatIlKL7QQs59gwb0DGjMa4AsWxC9TUm
+	 uDZaAmCV4k5UOd1QYGgIqDtsjRK3AH63SWUiFM/unX9w/Ed6CXYmrahCnKMvwoiqyy
+	 s2LWMfEuaUsCEX0adWBgFbC1M0digfsPm+3SYgzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732585AbgIHT6r (ORCPT
+        id S1732595AbgIHT7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:58:47 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47486 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbgIHPfm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:35:42 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088EEO62040774;
-        Tue, 8 Sep 2020 09:14:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599574464;
-        bh=362EVhcP1ExwtmVZiQkIb5x6Yg4rPvLgH1gDwH3m8P4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kIRfaUoIMVEntv78JAUsTIXtMMJEhxv7cGcQV8JdKjfYyvxEslm6+klfuWWV8PCji
-         zXvd7SD3ie+BbiWV0LoSzILEcIvwQ7D/nhiJMtSZDoxYy7eL5A09dUrxLA0zSTK9Yx
-         71o1uqiBsnwjDYle0QVuf2+aBoI6F3mZmWhdjAOs=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088EEOLZ045543
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Sep 2020 09:14:24 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
- 2020 09:14:24 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Sep 2020 09:14:24 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088EEOFG106227;
-        Tue, 8 Sep 2020 09:14:24 -0500
-Subject: Re: [PATCH v3 0/2] leds: mt6360: Add LED driver for MT6360
-To:     Gene Chen <gene.chen.richtek@gmail.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>
-CC:     <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <gene_chen@richtek.com>,
-        <Wilma.Wu@mediatek.com>, <shufan_lee@richtek.com>,
-        <cy_huang@richtek.com>, <benjamin.chao@mediatek.com>
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <b8d090b7-ef47-d434-1af1-2afbc2ad30ae@ti.com>
-Date:   Tue, 8 Sep 2020 09:14:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 15:59:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730431AbgIHPfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:35:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F172723BE5;
+        Tue,  8 Sep 2020 13:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599571408;
+        bh=pUEfMpq/UYZC7azZMZ5kSA/t1DHYIvIV/tbSmdkMHt8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F0S8l6qu0IET3EzvZa3BeHFC0eAm7E2aMFtOGtSg4MVL1uz8Bf2WvkYY7OEOJOI+g
+         zeE2vL5jNPiS75krNhH/BAAmujRDEfwUzgv3ohTAR5HKdwMAWJxGwat9vAFf1wxe4X
+         hSjqMSsMuTCoX1v0XkWWt2kLar5QEeFnSbqv1oqs=
+Date:   Tue, 8 Sep 2020 14:22:44 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 02/11] spi: sprd: Simplify with dev_err_probe()
+Message-ID: <20200908132244.GA48155@sirena.org.uk>
+References: <20200901152713.18629-1-krzk@kernel.org>
+ <20200901152713.18629-2-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+Content-Disposition: inline
+In-Reply-To: <20200901152713.18629-2-krzk@kernel.org>
+X-Cookie: Remember the... the... uhh.....
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gene
 
-On 9/7/20 5:27 AM, Gene Chen wrote:
-> In-Reply-To:
->
-> This patch series add MT6360 LED support contains driver and binding document
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I cannot find the v2 patch series for this.
+On Tue, Sep 01, 2020 at 05:27:04PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
 
-Dan
+This doesn't apply against current code, please check and resend.
 
+Applying: spi: sprd: Simplify with dev_err_probe()
+Using index info to reconstruct a base tree...
+M	drivers/spi/spi-sprd-adi.c
+Falling back to patching base and 3-way merge...
+Auto-merging drivers/spi/spi-sprd-adi.c
+CONFLICT (content): Merge conflict in drivers/spi/spi-sprd-adi.c
+
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9XhaMACgkQJNaLcl1U
+h9BD+Qf/aECmurEbZzuMemn3QkE80q0VxXmiRjrG37cSIuZiDfm3np+BN4O6qef4
+jaozUFazSi1o8PpDSZtZmUuUhXIxs1TnlfIiET/a770NsLAy1CiCZcV7oIY2KWQ8
+5h51M2zOavV16MTiPa3BpaNJig5ZCrrltr+cVzP8GZ8ZlQRQJxS63yHkWPEvJ6jP
+N7nQ1JidLKkucxQveOxuFd8fUEajsGwJboKYBcFWL10Ga6A5aZOwNb8/fsjiu8sx
+KgGKvEZgoTfhhfGX5kg6s7ZWdCRLyyaSekjAXtY6ECQL6j4RHwGcx5sHqRUKR0pS
+TnET69OatkEPU5lbOiMrQS1KC+ycBw==
+=hY0h
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
