@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E076BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7810BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7AC2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239AE207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588339;
-	bh=NWNr8WBAsMOdVH2Mb9AGSgAgiZJ2G2P+I3KtIHbjk3s=;
+	s=default; t=1599588343;
+	bh=MJAJA/fN2pD/X3JSdBk4OSXnYveTo8IA0F8VPCEkQgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nR3/bdKugnZsQnGowNfDT+7SWorZx8KR+L+6UJbg/OSVtoVtlwZlsFfhegR3u6snb
-	 5VAzvuapWSe/k3J6/oyCw8V84dURa9eqRADYFbFCTIqjfm3mLT/t+Angd/ziSESkeU
-	 lQXvKGMupu8ZqfewqZuodhlJfH2s3OqiEW1z52Og=
+	b=TknDwPRqY1qDFlwJUmk2D3Wiaz2Vd8QSGIECEfGgmr0vkKHkPUKnAu59L29bggkXQ
+	 4v6nkbwoV0rXdC1H/8t2w5KMx7MsBzk3rGievuW6SfwkTMW+MMxpl99drIejzp0F1C
+	 CO68I30ZCwWDprvqf1QXrOphL7Bsl2AvlxAtaKgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732128AbgIHSFh (ORCPT
+        id S1732207AbgIHSFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:05:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731526AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731528AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8030F247B8;
-        Tue,  8 Sep 2020 15:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 382B824767;
+        Tue,  8 Sep 2020 15:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580282;
-        bh=NWNr8WBAsMOdVH2Mb9AGSgAgiZJ2G2P+I3KtIHbjk3s=;
+        s=default; t=1599580262;
+        bh=MJAJA/fN2pD/X3JSdBk4OSXnYveTo8IA0F8VPCEkQgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OGCxyZpT1uvPinjtl+aU1gtzvNxIgO+B4KUT5XYEI9CxTKxV+toEbw021JTS8M6bD
-         INNTezcQBgkbgwMY/oKsaku0RGl01iKDvtdl7nkk7C+zfKPwQb+y1CLVdiOzA/AFpj
-         BJdzkBaYmq/ElMMDJJWrpPj0WQBU0cN1EOBRd6Ck=
+        b=0DoL1MdyLTl4mXfdvpVUXOyTG+G0J4NY5/yBbb0LcWiucpFFQiXW0FFqdHkZRc5Bq
+         UBBZm19MwktKswLBE62cPgEasdhnJex6hyXC4N7w7K/w9P2WGtOB1Fkik0C+lHKwT0
+         Ym+oQutewvOeGK10LDsKoPtppcAYWoTUuP9FwEeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Subject: [PATCH 4.14 02/65] HID: core: Sanitize event code and type when mapping input
-Date:   Tue,  8 Sep 2020 17:25:47 +0200
-Message-Id: <20200908152217.143910269@linuxfoundation.org>
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH 4.19 82/88] KVM: arm64: Survive synchronous exceptions caused by AT instructions
+Date:   Tue,  8 Sep 2020 17:26:23 +0200
+Message-Id: <20200908152225.296499433@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,132 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: James Morse <james.morse@arm.com>
 
-commit 35556bed836f8dc07ac55f69c8d17dce3e7f0e25 upstream.
+commit 88a84ccccb3966bcc3f309cdb76092a9892c0260 upstream.
 
-When calling into hid_map_usage(), the passed event code is
-blindly stored as is, even if it doesn't fit in the associated bitmap.
+KVM doesn't expect any synchronous exceptions when executing, any such
+exception leads to a panic(). AT instructions access the guest page
+tables, and can cause a synchronous external abort to be taken.
 
-This event code can come from a variety of sources, including devices
-masquerading as input devices, only a bit more "programmable".
+The arm-arm is unclear on what should happen if the guest has configured
+the hardware update of the access-flag, and a memory type in TCR_EL1 that
+does not support atomic operations. B2.2.6 "Possible implementation
+restrictions on using atomic instructions" from DDI0487F.a lists
+synchronous external abort as a possible behaviour of atomic instructions
+that target memory that isn't writeback cacheable, but the page table
+walker may behave differently.
 
-Instead of taking the event code at face value, check that it actually
-fits the corresponding bitmap, and if it doesn't:
-- spit out a warning so that we know which device is acting up
-- NULLify the bitmap pointer so that we catch unexpected uses
+Make KVM robust to synchronous exceptions caused by AT instructions.
+Add a get_user() style helper for AT instructions that returns -EFAULT
+if an exception was generated.
 
-Code paths that can make use of untrusted inputs can now check
-that the mapping was indeed correct and bail out if not.
+While KVM's version of the exception table mixes synchronous and
+asynchronous exceptions, only one of these can occur at each location.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Re-enter the guest when the AT instructions take an exception on the
+assumption the guest will take the same exception. This isn't guaranteed
+to make forward progress, as the AT instructions may always walk the page
+tables, but guest execution may use the translation cached in the TLB.
+
+This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64: Defer guest
+entry when an asynchronous exception is pending"), KVM will return to the
+host to process IRQs allowing the rest of the system to keep running.
+
+Cc: stable@vger.kernel.org # v4.19
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/hid-input.c      |    4 ++++
- drivers/hid/hid-multitouch.c |    2 ++
- include/linux/hid.h          |   42 +++++++++++++++++++++++++++++-------------
- 3 files changed, 35 insertions(+), 13 deletions(-)
+ arch/arm64/include/asm/kvm_asm.h |   28 ++++++++++++++++++++++++++++
+ arch/arm64/kvm/hyp/hyp-entry.S   |   12 ++++++++++--
+ arch/arm64/kvm/hyp/switch.c      |    8 ++++----
+ 3 files changed, 42 insertions(+), 6 deletions(-)
 
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1116,6 +1116,10 @@ static void hidinput_configure_usage(str
- 	}
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -87,6 +87,34 @@ extern u32 __init_stage2_translation(voi
+ 		*__hyp_this_cpu_ptr(sym);				\
+ 	 })
  
- mapped:
-+	/* Mapping failed, bail out */
-+	if (!bit)
-+		return;
++#define __KVM_EXTABLE(from, to)						\
++	"	.pushsection	__kvm_ex_table, \"a\"\n"		\
++	"	.align		3\n"					\
++	"	.long		(" #from " - .), (" #to " - .)\n"	\
++	"	.popsection\n"
 +
- 	if (device->driver->input_mapped &&
- 	    device->driver->input_mapped(device, hidinput, field, usage,
- 					 &bit, &max) < 0) {
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -616,6 +616,8 @@ static int mt_touch_input_mapping(struct
- 		    (usage->hid & HID_USAGE) > 1)
- 			code--;
- 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
-+		if (!*bit)
-+			return -1;
- 		input_set_capability(hi->input, EV_KEY, code);
- 		return 1;
++
++#define __kvm_at(at_op, addr)						\
++( { 									\
++	int __kvm_at_err = 0;						\
++	u64 spsr, elr;							\
++	asm volatile(							\
++	"	mrs	%1, spsr_el2\n"					\
++	"	mrs	%2, elr_el2\n"					\
++	"1:	at	"at_op", %3\n"					\
++	"	isb\n"							\
++	"	b	9f\n"						\
++	"2:	msr	spsr_el2, %1\n"					\
++	"	msr	elr_el2, %2\n"					\
++	"	mov	%w0, %4\n"					\
++	"9:\n"								\
++	__KVM_EXTABLE(1b, 2b)						\
++	: "+r" (__kvm_at_err), "=&r" (spsr), "=&r" (elr)		\
++	: "r" (addr), "i" (-EFAULT));					\
++	__kvm_at_err;							\
++} )
++
++
+ #else /* __ASSEMBLY__ */
  
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -919,34 +919,49 @@ static inline void hid_device_io_stop(st
-  * @max: maximal valid usage->code to consider later (out parameter)
-  * @type: input event type (EV_KEY, EV_REL, ...)
-  * @c: code which corresponds to this usage and type
-+ *
-+ * The value pointed to by @bit will be set to NULL if either @type is
-+ * an unhandled event type, or if @c is out of range for @type. This
-+ * can be used as an error condition.
-  */
- static inline void hid_map_usage(struct hid_input *hidinput,
- 		struct hid_usage *usage, unsigned long **bit, int *max,
--		__u8 type, __u16 c)
-+		__u8 type, unsigned int c)
- {
- 	struct input_dev *input = hidinput->input;
+ .macro hyp_adr_this_cpu reg, sym, tmp
+--- a/arch/arm64/kvm/hyp/hyp-entry.S
++++ b/arch/arm64/kvm/hyp/hyp-entry.S
+@@ -186,6 +186,15 @@ el1_error:
+ 	mov	x0, #ARM_EXCEPTION_EL1_SERROR
+ 	b	__guest_exit
+ 
++el2_sync:
++	save_caller_saved_regs_vect
++	stp     x29, x30, [sp, #-16]!
++	bl	kvm_unexpected_el2_exception
++	ldp     x29, x30, [sp], #16
++	restore_caller_saved_regs_vect
++
++	eret
++
+ el2_error:
+ 	save_caller_saved_regs_vect
+ 	stp     x29, x30, [sp, #-16]!
+@@ -223,7 +232,6 @@ ENDPROC(\label)
+ 	invalid_vector	el2t_irq_invalid
+ 	invalid_vector	el2t_fiq_invalid
+ 	invalid_vector	el2t_error_invalid
+-	invalid_vector	el2h_sync_invalid
+ 	invalid_vector	el2h_irq_invalid
+ 	invalid_vector	el2h_fiq_invalid
+ 	invalid_vector	el1_fiq_invalid
+@@ -251,7 +259,7 @@ ENTRY(__kvm_hyp_vector)
+ 	invalid_vect	el2t_fiq_invalid	// FIQ EL2t
+ 	invalid_vect	el2t_error_invalid	// Error EL2t
+ 
+-	invalid_vect	el2h_sync_invalid	// Synchronous EL2h
++	valid_vect	el2_sync		// Synchronous EL2h
+ 	invalid_vect	el2h_irq_invalid	// IRQ EL2h
+ 	invalid_vect	el2h_fiq_invalid	// FIQ EL2h
+ 	valid_vect	el2_error		// Error EL2h
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -268,10 +268,10 @@ static bool __hyp_text __translate_far_t
+ 	 * saved the guest context yet, and we may return early...
+ 	 */
+ 	par = read_sysreg(par_el1);
+-	asm volatile("at s1e1r, %0" : : "r" (far));
+-	isb();
 -
--	usage->type = type;
--	usage->code = c;
-+	unsigned long *bmap = NULL;
-+	unsigned int limit = 0;
+-	tmp = read_sysreg(par_el1);
++	if (!__kvm_at("s1e1r", far))
++		tmp = read_sysreg(par_el1);
++	else
++		tmp = 1; /* back to the guest */
+ 	write_sysreg(par, par_el1);
  
- 	switch (type) {
- 	case EV_ABS:
--		*bit = input->absbit;
--		*max = ABS_MAX;
-+		bmap = input->absbit;
-+		limit = ABS_MAX;
- 		break;
- 	case EV_REL:
--		*bit = input->relbit;
--		*max = REL_MAX;
-+		bmap = input->relbit;
-+		limit = REL_MAX;
- 		break;
- 	case EV_KEY:
--		*bit = input->keybit;
--		*max = KEY_MAX;
-+		bmap = input->keybit;
-+		limit = KEY_MAX;
- 		break;
- 	case EV_LED:
--		*bit = input->ledbit;
--		*max = LED_MAX;
-+		bmap = input->ledbit;
-+		limit = LED_MAX;
- 		break;
- 	}
-+
-+	if (unlikely(c > limit || !bmap)) {
-+		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
-+				    input->name, c, type);
-+		*bit = NULL;
-+		return;
-+	}
-+
-+	usage->type = type;
-+	usage->code = c;
-+	*max = limit;
-+	*bit = bmap;
- }
- 
- /**
-@@ -960,7 +975,8 @@ static inline void hid_map_usage_clear(s
- 		__u8 type, __u16 c)
- {
- 	hid_map_usage(hidinput, usage, bit, max, type, c);
--	clear_bit(c, *bit);
-+	if (*bit)
-+		clear_bit(usage->code, *bit);
- }
- 
- /**
+ 	if (unlikely(tmp & 1))
 
 
