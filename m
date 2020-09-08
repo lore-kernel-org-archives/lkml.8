@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D430CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 718F4208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CE22080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589917;
-	bh=qcY164/4W/DBptoaByAIm5DT2JpzRcBh8egnBejCHwI=;
+	s=default; t=1599589924;
+	bh=jG9jcxOiNk0XFPoc+dnyCQQJ1CQAskudLdTb87D0ZH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PgZ6PAnX2vdeNzG4TnjHcLsiK1RlT4/CjnZkJlPuGDZKT3GHBM2XftT/1hShniS1z
-	 T+KT7xHu6YLgX6I+maMhzP9cIz3aCt14mBRVbDjWuTI8AajYcX/9j8SyJgKrpQmPoS
-	 y/a1CJpchgl8mWHIwyuXOilUrdFono9ZTPzn1Luk=
+	b=aQVKctXp0yZbbWIR359C0EQW6LDWyNxaJNWX4Sl/o6N0sAaWOm5WSPOK6KN/S7Jd7
+	 N4baivEGxwe444JueuJlsqhJGFevf6I/sGMt4dfqoyYwNkAbuUSrGDdyjdxe4DGScQ
+	 qEfFLGNCjudoLn9OtjN5yRedXa7jFIPS1ZOz17ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbgIHSbx (ORCPT
+        id S1731625AbgIHScA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731374AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731370AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:35 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C55C724199;
-        Tue,  8 Sep 2020 15:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B826B24181;
+        Tue,  8 Sep 2020 15:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580189;
-        bh=qcY164/4W/DBptoaByAIm5DT2JpzRcBh8egnBejCHwI=;
+        s=default; t=1599580179;
+        bh=jG9jcxOiNk0XFPoc+dnyCQQJ1CQAskudLdTb87D0ZH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ULnYm20ODdlCS8NwQOKJvsKwDsq2oWVvA2Jyo1FBSULhPM4rWoHw7XuuUoOa4MJu+
-         EF/marR0QL7AVXL+mXXfSSoOGLSlYFWvIXqxqIvEBokIMmC4t8/2K0HjZw4xKIM0fw
-         RFcXPJYGjbOrOp3J2H27k559gfwGPUV71vMyLGog=
+        b=EUi/hYA7k8tOkXtF3zC7FY/bhT+bjD1xs4nF10rwIyWqcU8SDna42KN6RZWsaAsoX
+         1yJh2hzS32WpM2aRQJ4hb2b1zHiuKH5OCg8o0WIR5gUu0uxLOnSIU2m11t7/j7GOrY
+         7vhTrdZx3pYuXw7DaqAy/IWQUJ0nkg0+gG+m1gHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rogan Dawes <rogan@dawes.za.net>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 65/88] usb: qmi_wwan: add D-Link DWM-222 A2 device ID
-Date:   Tue,  8 Sep 2020 17:26:06 +0200
-Message-Id: <20200908152224.372450889@linuxfoundation.org>
+Subject: [PATCH 4.19 62/88] uaccess: Add non-pagefault user-space write function
+Date:   Tue,  8 Sep 2020 17:26:03 +0200
+Message-Id: <20200908152224.228758210@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -60,29 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rogan Dawes <rogan@dawes.za.net>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit 7d6053097311643545a8118100175a39bd6fa637 ]
+[ Upstream commit 1d1585ca0f48fe7ed95c3571f3e4a82b2b5045dc ]
 
-Signed-off-by: Rogan Dawes <rogan@dawes.za.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Commit 3d7081822f7f ("uaccess: Add non-pagefault user-space read functions")
+missed to add probe write function, therefore factor out a probe_write_common()
+helper with most logic of probe_kernel_write() except setting KERNEL_DS, and
+add a new probe_user_write() helper so it can be used from BPF side.
+
+Again, on some archs, the user address space and kernel address space can
+co-exist and be overlapping, so in such case, setting KERNEL_DS would mean
+that the given address is treated as being in kernel address space.
+
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/bpf/9df2542e68141bfa3addde631441ee45503856a8.1572649915.git.daniel@iogearbox.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/uaccess.h | 12 +++++++++++
+ mm/maccess.c            | 45 +++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 41fbb8669845e..af58bf54aa9b6 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1227,6 +1227,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x2001, 0x7e16, 3)},	/* D-Link DWM-221 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
-+	{QMI_FIXED_INTF(0x2001, 0x7e3d, 4)},	/* D-Link DWM-222 A2 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
- 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
- 	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index db88f36540e9e..db9b0dd0a7a3b 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -265,6 +265,18 @@ extern long probe_user_read(void *dst, const void __user *src, size_t size);
+ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
+ 
++/*
++ * probe_user_write(): safely attempt to write to a location in user space
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
++extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
++
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+ extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+ 				     long count);
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 80d70cb5cc0bd..6e41ba452e5e9 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -17,6 +17,18 @@ probe_read_common(void *dst, const void __user *src, size_t size)
+ 	return ret ? -EFAULT : 0;
+ }
+ 
++static __always_inline long
++probe_write_common(void __user *dst, const void *src, size_t size)
++{
++	long ret;
++
++	pagefault_disable();
++	ret = __copy_to_user_inatomic(dst, src, size);
++	pagefault_enable();
++
++	return ret ? -EFAULT : 0;
++}
++
+ /**
+  * probe_kernel_read(): safely attempt to read from a kernel-space location
+  * @dst: pointer to the buffer that shall take the data
+@@ -84,6 +96,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
+  * Safely write to address @dst from the buffer at @src.  If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
++
+ long __weak probe_kernel_write(void *dst, const void *src, size_t size)
+     __attribute__((alias("__probe_kernel_write")));
+ 
+@@ -93,15 +106,39 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
+ 	mm_segment_t old_fs = get_fs();
+ 
+ 	set_fs(KERNEL_DS);
+-	pagefault_disable();
+-	ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
+-	pagefault_enable();
++	ret = probe_write_common((__force void __user *)dst, src, size);
+ 	set_fs(old_fs);
+ 
+-	return ret ? -EFAULT : 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_write);
+ 
++/**
++ * probe_user_write(): safely attempt to write to a user-space location
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++
++long __weak probe_user_write(void __user *dst, const void *src, size_t size)
++    __attribute__((alias("__probe_user_write")));
++
++long __probe_user_write(void __user *dst, const void *src, size_t size)
++{
++	long ret = -EFAULT;
++	mm_segment_t old_fs = get_fs();
++
++	set_fs(USER_DS);
++	if (access_ok(VERIFY_WRITE, dst, size))
++		ret = probe_write_common(dst, src, size);
++	set_fs(old_fs);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(probe_user_write);
+ 
+ /**
+  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
 -- 
 2.25.1
 
