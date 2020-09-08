@@ -2,119 +2,128 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8F0C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91EEC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D09206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D843206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GbC0SGU+"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RER59LuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbgIHRwo (ORCPT
+        id S1731117AbgIHRwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:52:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
+        Tue, 8 Sep 2020 13:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731630AbgIHQNo (ORCPT
+        with ESMTP id S1731624AbgIHQNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:13:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B97C061388
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:30:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j2so18912977wrx.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=y/EkIKvR6iBw+zS5qhGZEpN1iwHB9TWxtJTSD07C3J4=;
-        b=GbC0SGU+jdHDgkoKWG2x4two8n4K73jUfxTdN6DtKPjGlsAaxh51FOkVE6YUzsr5dv
-         Cl/uPdJHLO81KjXKkjm2YvYdaTjNfEdMS/wT0FkZHVgd+Pl9rk9gtifJLHjIO7kvCaMA
-         eAQRJ0CKTL6XgI16ktwVj+sdsxZ4/ZT3SPRDRGEvgvV6Hem09VJQLjoYw52OOMtzAMRU
-         WuCUZ1D2FRKthW77L5ZYlhOGTOLDjUUdyuMHMJP1hLgQNmFOgLRHNQYsOxcYmxQXpWM3
-         Bpbvek41ZTKkov39peOcMfxY1Lf+7U5vKv199vZzovSFk/oQHLmzj0qS0PbV1iitF6qv
-         c+FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=y/EkIKvR6iBw+zS5qhGZEpN1iwHB9TWxtJTSD07C3J4=;
-        b=KZ7jD41VewP7h0GqzDnE4T11ljwNjCnhQutxnF4T9kssNpjn/sk/7BbiJYDUngBMML
-         wNUFycdTYTW8ns4DLDcNOlGZEQkXq/jOjbckIZMERFlt+Ce89hh1yJigc8eV5hHIcy1/
-         CBf9xyvbva4ejB39x/EZHiRtoqXB6cPzgeKjYGRzwzsjriT8asdOeezUVMUmy1W6XbAC
-         H9O04oPyB9DZtyaVqtXnXyF50brGVE1QyceDKKkSCyi4360j6LFvWPTWKf4GSw2MAp6q
-         RfigGq48Dk2v6O9I4Tloh0X680nq5ov+60R0SuIOXidjpPq0Q73syUyh7ZLYUXywzj7k
-         FQhg==
-X-Gm-Message-State: AOAM532uDg7b8YZQJxFlc4D7i2VyrZoXutC9QlDU8X8rW2Btt/mbFjJW
-        WtI1aKq1sfTs9pvDxBgc3OQgWVlWKoLf8w40kfI3EA==
-X-Google-Smtp-Source: ABdhPJzcPzSvH+P8hTbAa6PCtKuOhme3NG7uL/ej8gWFNWQLmk0e0zNZlg/a/MBGYQeeUXoyAAxylIEsLLY0lkgdWbI=
-X-Received: by 2002:adf:ded0:: with SMTP id i16mr28452918wrn.372.1599568210306;
- Tue, 08 Sep 2020 05:30:10 -0700 (PDT)
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C208CC0612A3
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:04:36 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 919001234;
+        Tue,  8 Sep 2020 14:59:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599569961;
+        bh=GDMaaknSuM/l5R2bNi1lvtcCye+AKH88XR9vhap1/7A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RER59LuXTiblOv2vSyDxvZpT+Ed7gQ+POuX8WyqY88MvZXDj3Y50WMKCNegqg5to5
+         K0fGTPm/wCJATwzOQEk2vCENEnxIF4UkJNBzKwxKuy+KFqt99DQEKAb/CxaK4reQ4D
+         pGJqx5590eRkfuBSB+fie6ZxVTRbPj7s2eGEE6zk=
+Date:   Tue, 8 Sep 2020 15:58:55 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     marex@denx.de, airlied@linux.ie, daniel@ffwll.ch,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, tomi.valkeinen@ti.com, linux-imx@nxp.com,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm: mxsfb: check framebuffer pitch
+Message-ID: <20200908125855.GL6047@pendragon.ideasonboard.com>
+References: <20200908125558.256843-1-stefan@agner.ch>
 MIME-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com> <20200907134055.2878499-8-elver@google.com>
- <20200908115316.GD25591@gaia>
-In-Reply-To: <20200908115316.GD25591@gaia>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Tue, 8 Sep 2020 14:29:59 +0200
-Message-ID: <CAG_fn=U8tv2tXdWPTakcpDKG253kHj0YdsSU46GA5WgMo46BWg@mail.gmail.com>
-Subject: Re: [PATCH RFC 07/10] kfence, kmemleak: make KFENCE compatible with KMEMLEAK
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, paulmck@kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200908125558.256843-1-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Could you instead do:
->
-> #if defined(CONFIG_KFENCE) && defined(CONFIG_HAVE_ARCH_KFENCE_STATIC_POOL=
-)
->         delete_object_part((unsigned long)__kfence_pool, KFENCE_POOL_SIZE=
-);
-> #endif
+Hi Stefan,
 
-Thanks, we'll apply this to v2!
+Thank you for the patch.
 
---=20
-Alexander Potapenko
-Software Engineer
+On Tue, Sep 08, 2020 at 02:55:58PM +0200, Stefan Agner wrote:
+> The lcdif IP does not support a framebuffer pitch (stride) other than
+> framebuffer width. Check for equality and reject the framebuffer
+> otherwise.
+> 
+> This prevents a distorted picture when using 640x800 and running the
+> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+Still s/tires/tries/ :-)
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+> leads at that particular resolution to width != stride. Currently
+> Mesa has no fallback behavior, but rejecting this configuration allows
+> userspace to handle the issue correctly.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c | 21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 8c549c3931af..fa6798d21029 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -21,6 +21,7 @@
+>  #include <drm/drm_connector.h>
+>  #include <drm/drm_drv.h>
+>  #include <drm/drm_fb_helper.h>
+> +#include <drm/drm_fourcc.h>
+>  #include <drm/drm_gem_cma_helper.h>
+>  #include <drm/drm_gem_framebuffer_helper.h>
+>  #include <drm/drm_irq.h>
+> @@ -81,8 +82,26 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+>  		clk_disable_unprepare(mxsfb->clk_axi);
+>  }
+>  
+> +static struct drm_framebuffer *
+> +mxsfb_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+> +		  const struct drm_mode_fb_cmd2 *mode_cmd)
+> +{
+> +	const struct drm_format_info *info;
+> +
+> +	info = drm_get_format_info(dev, mode_cmd);
+> +	if (!info)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	if (mode_cmd->width * info->cpp[0] != mode_cmd->pitches[0]) {
+> +		dev_dbg(dev->dev, "Invalid pitch: fb width must match pitch\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return drm_gem_fb_create(dev, file_priv, mode_cmd);
+> +}
+> +
+>  static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
+> -	.fb_create		= drm_gem_fb_create,
+> +	.fb_create		= mxsfb_fb_create,
+>  	.atomic_check		= drm_atomic_helper_check,
+>  	.atomic_commit		= drm_atomic_helper_commit,
+>  };
+
+-- 
+Regards,
+
+Laurent Pinchart
