@@ -2,120 +2,183 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B27C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE7820732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585266;
-	bh=t9oVmlAucUPz8wGFixUVdC8fAehFz3C3ZSo8YUF4qKE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vQprzd/Df8olEmwZqI1Jq3/MVIKUBNsLKF++65UY4YljDYHfJ2YgKZsCoMDoUgaxc
-	 lRXKhmb/zKLmyElAChDnx9ltkPTbNP+kZMI+iLF3vA8/T1moRQL3AT6lbAUOSCLjA8
-	 Ph4tUxQxwAi4qsHB1IU2oZmC5FjQ+0zZLckq0f9I=
+	by mail.kernel.org (Postfix) with ESMTP id 4146120936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l8TFfPPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgIHROY (ORCPT
+        id S1731961AbgIHROg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731764AbgIHQTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:19:09 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9C7C24839;
-        Tue,  8 Sep 2020 15:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579892;
-        bh=t9oVmlAucUPz8wGFixUVdC8fAehFz3C3ZSo8YUF4qKE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QUi9voyZ+uduZSCbHDGhatykNuRsucdyh7XherfXxWlKuJyZPDcQIq9/nBSL/9g2q
-         3UpR5Tn/qcCMeuxj3EGtaWzSckZHPxZxk7yH7aYsqi265ylxgeouZxSnoybpoyKYDm
-         4C2d34TDMl5AWga44leKJfTP9zNNzyVnDtHb4i4g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Smith <msmith626@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/129] bnxt_en: fix HWRM error when querying VF temperature
-Date:   Tue,  8 Sep 2020 17:24:47 +0200
-Message-Id: <20200908152232.002539599@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 13:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731946AbgIHROS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:14:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A79DC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:14:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id n3so44207pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/gCc+KLpNK9ExlVMZwWTulckz89Pa9STYRhLISVmRXE=;
+        b=l8TFfPPi8zCMxO4dQ+cL2mPjwdbrYknGcvJ3S7KeMVYr2Q/H76gUGB/4DPzblBc4wL
+         Z/kVUs7HQzPp6jHkL4co16aB0o/g9Ki0Ci0aIB0eJoVFKyQw8ebfadzXTbu4V+oR00+P
+         Y0GX8EGtn/TLhA7swJKiiBEOKxyP30iGgiknVXfiRggge5Bv6Ynx3A+1F897oXDNaoVR
+         kVH5X1H8mEjwr96L9W1aE7R55Kb7ZR5yUxkKFHGYbtAPNMDgXY7WU4juuRBrpC4IgkSf
+         Q6Y88UZSHorH9uaE9yPAgcDEGg9XIEKFsGjNzLTMMT0/0Jx0dHHH+2sXVL5BjPJrknNp
+         m0mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/gCc+KLpNK9ExlVMZwWTulckz89Pa9STYRhLISVmRXE=;
+        b=eNJwvyFCI3TvMnwK4cVPvdKuyIeEzoz12MdT3adevCGRurrS1FdlwGZozmPKL75DFT
+         Pi7nRGVx1TSJL2oZZBXDN/zq7MeRkspdSFHA3Hv+xUb5cLnnUTcRjPkALZFVUUyS7uEf
+         tcFJ50vXfm+Lx1/qtXPeXTANdJXW+XjQPbQEXGICdoGPFfAQkQocD6TeqtGzXC43y8MH
+         fXchXJV/r/ufypnoQ20S/4EcuFl8c4StPjq3C95Z365MGJZqOgtHKDyOhNEdAg2PiiGp
+         wuqAIn/HIudEDrBoGzCzZ1MJ12yQGj3drMPiab4aNFxNkjDQzn7q2V22UkSooHmKQt6S
+         6Tbg==
+X-Gm-Message-State: AOAM532JqPut5ynTKBOMxqxk5yEwmxK7eTJdXfe8mRaDyZCr1itiUgfm
+        RGHC+01P15rGL7z+mjKLtoGeMQ==
+X-Google-Smtp-Source: ABdhPJwIjKawnMHTj/rRnXjnjsmCJjseMt/B3KoD/9OR2ojGQkPMO3BFzGgdcfjb98S269z1QHdN5g==
+X-Received: by 2002:a17:90a:ea0c:: with SMTP id w12mr105528pjy.65.1599585257422;
+        Tue, 08 Sep 2020 10:14:17 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id z18sm9322pfn.186.2020.09.08.10.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:14:16 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 10:14:11 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
+Message-ID: <20200908171411.GC2743468@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-10-samitolvanen@google.com>
+ <CAK7LNASTtxJ7OCMM_KxmaoSL3CDfTY-65Pu=-MYkMo7iz-_NOQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASTtxJ7OCMM_KxmaoSL3CDfTY-65Pu=-MYkMo7iz-_NOQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edwin Peer <edwin.peer@broadcom.com>
+On Sun, Sep 06, 2020 at 05:17:32AM +0900, Masahiro Yamada wrote:
+> On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > This change adds build system support for Clang's Link Time
+> > Optimization (LTO). With -flto, instead of ELF object files, Clang
+> > produces LLVM bitcode, which is compiled into native code at link
+> > time, allowing the final binary to be optimized globally. For more
+> > details, see:
+> >
+> >   https://llvm.org/docs/LinkTimeOptimization.html
+> >
+> > The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
+> > which defaults to LTO being disabled. To use LTO, the architecture
+> > must select ARCH_SUPPORTS_LTO_CLANG and support:
+> >
+> >   - compiling with Clang,
+> >   - compiling inline assembly with Clang's integrated assembler,
+> >   - and linking with LLD.
+> >
+> > While using full LTO results in the best runtime performance, the
+> > compilation is not scalable in time or memory. CONFIG_THINLTO
+> > enables ThinLTO, which allows parallel optimization and faster
+> > incremental builds. ThinLTO is used by default if the architecture
+> > also selects ARCH_SUPPORTS_THINLTO:
+> >
+> >   https://clang.llvm.org/docs/ThinLTO.html
+> >
+> > To enable LTO, LLVM tools must be used to handle bitcode files. The
+> > easiest way is to pass the LLVM=1 option to make:
+> >
+> >   $ make LLVM=1 defconfig
+> >   $ scripts/config -e LTO_CLANG
+> >   $ make LLVM=1
+> >
+> > Alternatively, at least the following LLVM tools must be used:
+> >
+> >   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
+> >
+> > To prepare for LTO support with other compilers, common parts are
+> > gated behind the CONFIG_LTO option, and LTO can be disabled for
+> > specific files by filtering out CC_FLAGS_LTO.
+> >
+> > Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
+> > follow-up patches.
+> >
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > ---
+> >  Makefile                          | 18 +++++++-
+> >  arch/Kconfig                      | 68 +++++++++++++++++++++++++++++++
+> >  include/asm-generic/vmlinux.lds.h | 11 +++--
+> >  scripts/Makefile.build            |  9 +++-
+> >  scripts/Makefile.modfinal         |  9 +++-
+> >  scripts/Makefile.modpost          | 24 ++++++++++-
+> >  scripts/link-vmlinux.sh           | 32 +++++++++++----
+> >  7 files changed, 154 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index a9dae26c93b5..dd49eaea7c25 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -909,6 +909,22 @@ KBUILD_CFLAGS      += $(CC_FLAGS_SCS)
+> >  export CC_FLAGS_SCS
+> >  endif
+> >
+> > +ifdef CONFIG_LTO_CLANG
+> > +ifdef CONFIG_THINLTO
+> > +CC_FLAGS_LTO_CLANG := -flto=thin -fsplit-lto-unit
+> > +KBUILD_LDFLAGS += --thinlto-cache-dir=.thinlto-cache
+> > +else
+> > +CC_FLAGS_LTO_CLANG := -flto
+> > +endif
+> > +CC_FLAGS_LTO_CLANG += -fvisibility=default
+> > +endif
+> > +
+> > +ifdef CONFIG_LTO
+> > +CC_FLAGS_LTO   := $(CC_FLAGS_LTO_CLANG)
+> 
+> 
+> $(CC_FLAGS_LTO_CLANG) is not used elsewhere.
+> 
+> Why didn't you add the flags to CC_FLAGS_LTO
+> directly?
+> 
+> Will it be useful if LTO_GCC is supported ?
 
-[ Upstream commit 12cce90b934bf2b0ed9c339b4d5503e69954351a ]
+The idea was to allow compiler-specific LTO flags to be filtered out
+separately if needed, but you're right, this is not really necessary
+right now. I'll drop CC_FLAGS_LTO_CLANG in v3.
 
-Firmware returns RESOURCE_ACCESS_DENIED for HWRM_TEMP_MONITORY_QUERY for
-VFs. This produces unpleasing error messages in the log when temp1_input
-is queried via the hwmon sysfs interface from a VF.
-
-The error is harmless and expected, so silence it and return unknown as
-the value. Since the device temperature is not particularly sensitive
-information, provide flexibility to change this policy in future by
-silencing the error rather than avoiding the HWRM call entirely for VFs.
-
-Fixes: cde49a42a9bb ("bnxt_en: Add hwmon sysfs support to read temperature")
-Cc: Marc Smith <msmith626@gmail.com>
-Reported-by: Marc Smith <msmith626@gmail.com>
-Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 16462d21fea38..089d7b9cc409d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -8938,16 +8938,19 @@ static ssize_t bnxt_show_temp(struct device *dev,
- 	struct hwrm_temp_monitor_query_input req = {0};
- 	struct hwrm_temp_monitor_query_output *resp;
- 	struct bnxt *bp = dev_get_drvdata(dev);
--	u32 temp = 0;
-+	u32 len = 0;
- 
- 	resp = bp->hwrm_cmd_resp_addr;
- 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_TEMP_MONITOR_QUERY, -1, -1);
- 	mutex_lock(&bp->hwrm_cmd_lock);
--	if (!_hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT))
--		temp = resp->temp * 1000; /* display millidegree */
-+	if (!_hwrm_send_message_silent(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT))
-+		len = sprintf(buf, "%u\n", resp->temp * 1000); /* display millidegree */
- 	mutex_unlock(&bp->hwrm_cmd_lock);
- 
--	return sprintf(buf, "%u\n", temp);
-+	if (len)
-+		return len;
-+
-+	return sprintf(buf, "unknown\n");
- }
- static SENSOR_DEVICE_ATTR(temp1_input, 0444, bnxt_show_temp, NULL, 0);
- 
--- 
-2.25.1
-
-
-
+Sami
