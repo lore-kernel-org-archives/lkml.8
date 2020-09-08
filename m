@@ -2,74 +2,190 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF007C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C994C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710962064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC472192A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599587298;
+	bh=m+ClQ6dGBmm1kPlUQFOI0RPpN5EaagK1SMwsjH8Lyao=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QYelt1qCcFKpqBAvvD9767I1tv84cYWY0uiLdY0fZ1Z5zvjf1+XLa2/39sFwBiGx1
+	 wZDQMnHhwZqY/Ag+WRdcO3Ab+CAuQLxGJCx7czxI8mkojJ3FsN+T3BT3gC+FeLPUNo
+	 B4IvziUSyIIlNlb4DMX0eaz8k4OfqPKUUwEsVrq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbgIHRsN (ORCPT
+        id S1731768AbgIHRq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:48:13 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2797 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731982AbgIHRsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:48:02 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C8C77FFD658B0BA32181;
-        Tue,  8 Sep 2020 14:41:22 +0100 (IST)
-Received: from [127.0.0.1] (10.47.6.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 8 Sep 2020
- 14:41:21 +0100
-Subject: Re: [PATCH v8 00/18] blk-mq/scsi: Provide hostwide shared tags for
- SCSI HBAs
-To:     Hannes Reinecke <hare@suse.de>, <axboe@kernel.dk>,
-        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <don.brace@microsemi.com>, <kashyap.desai@broadcom.com>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>,
-        <dgilbert@interlog.com>, <paolo.valente@linaro.org>, <hch@lst.de>
-CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
-        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>
-References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
- <cef0e816-1b30-dd62-0f39-2842df766298@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <51a599a0-0952-ced1-ad78-89012c46f5eb@huawei.com>
-Date:   Tue, 8 Sep 2020 14:38:43 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 8 Sep 2020 13:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731619AbgIHQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:13:59 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD2FC248BE;
+        Tue,  8 Sep 2020 15:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580360;
+        bh=m+ClQ6dGBmm1kPlUQFOI0RPpN5EaagK1SMwsjH8Lyao=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NAcOEbIje24Mi27CYAD7pBkDS5mCPtFtMlChXWY0hRAyHMZviWUMfAxNKIYNnTg3V
+         qbn5xKNae/QFY/SvmoAb+BvGiBHPP68d3xuq9YhAIws6cuwfuSueqltXXED8ZbVG+F
+         EoXzDsdOroPCYA6/R6aLFRhpzm1S/DRCJ1k2eRxQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 43/65] uaccess: Add non-pagefault user-space write function
+Date:   Tue,  8 Sep 2020 17:26:28 +0200
+Message-Id: <20200908152219.263089868@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <cef0e816-1b30-dd62-0f39-2842df766298@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.6.45]
-X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/09/2020 13:46, Hannes Reinecke wrote:
-> Now that Jens merged the block bits in his tree, wouldn't it be better
-> to re-send the SCSI bits only, thereby avoiding a potential merge error
-> later on?
-> 
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-Anything which I resend would need to be against Jens' tree (and not 
-Martin's), assuming Jens will carry them also. So I am not sure how that 
-will help.
+[ Upstream commit 1d1585ca0f48fe7ed95c3571f3e4a82b2b5045dc ]
 
-JFYI, I just tested against today's linux-next, and the SCSI parts (hpsa 
-and smartpqi omitted) still apply there without conflict.
+Commit 3d7081822f7f ("uaccess: Add non-pagefault user-space read functions")
+missed to add probe write function, therefore factor out a probe_write_common()
+helper with most logic of probe_kernel_write() except setting KERNEL_DS, and
+add a new probe_user_write() helper so it can be used from BPF side.
 
-Thanks,
-John
+Again, on some archs, the user address space and kernel address space can
+co-exist and be overlapping, so in such case, setting KERNEL_DS would mean
+that the given address is treated as being in kernel address space.
+
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/bpf/9df2542e68141bfa3addde631441ee45503856a8.1572649915.git.daniel@iogearbox.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/uaccess.h | 12 +++++++++++
+ mm/maccess.c            | 45 +++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 53 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index c64a685a55640..d49f193a44a29 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -265,6 +265,18 @@ extern long probe_user_read(void *dst, const void __user *src, size_t size);
+ extern long notrace probe_kernel_write(void *dst, const void *src, size_t size);
+ extern long notrace __probe_kernel_write(void *dst, const void *src, size_t size);
+ 
++/*
++ * probe_user_write(): safely attempt to write to a location in user space
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++extern long notrace probe_user_write(void __user *dst, const void *src, size_t size);
++extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
++
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+ extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+ 				     long count);
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 5ebf9a3ca3674..03ea550f5a743 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -17,6 +17,18 @@ probe_read_common(void *dst, const void __user *src, size_t size)
+ 	return ret ? -EFAULT : 0;
+ }
+ 
++static __always_inline long
++probe_write_common(void __user *dst, const void *src, size_t size)
++{
++	long ret;
++
++	pagefault_disable();
++	ret = __copy_to_user_inatomic(dst, src, size);
++	pagefault_enable();
++
++	return ret ? -EFAULT : 0;
++}
++
+ /**
+  * probe_kernel_read(): safely attempt to read from a kernel-space location
+  * @dst: pointer to the buffer that shall take the data
+@@ -84,6 +96,7 @@ EXPORT_SYMBOL_GPL(probe_user_read);
+  * Safely write to address @dst from the buffer at @src.  If a kernel fault
+  * happens, handle that and return -EFAULT.
+  */
++
+ long __weak probe_kernel_write(void *dst, const void *src, size_t size)
+     __attribute__((alias("__probe_kernel_write")));
+ 
+@@ -93,15 +106,39 @@ long __probe_kernel_write(void *dst, const void *src, size_t size)
+ 	mm_segment_t old_fs = get_fs();
+ 
+ 	set_fs(KERNEL_DS);
+-	pagefault_disable();
+-	ret = __copy_to_user_inatomic((__force void __user *)dst, src, size);
+-	pagefault_enable();
++	ret = probe_write_common((__force void __user *)dst, src, size);
+ 	set_fs(old_fs);
+ 
+-	return ret ? -EFAULT : 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(probe_kernel_write);
+ 
++/**
++ * probe_user_write(): safely attempt to write to a user-space location
++ * @dst: address to write to
++ * @src: pointer to the data that shall be written
++ * @size: size of the data chunk
++ *
++ * Safely write to address @dst from the buffer at @src.  If a kernel fault
++ * happens, handle that and return -EFAULT.
++ */
++
++long __weak probe_user_write(void __user *dst, const void *src, size_t size)
++    __attribute__((alias("__probe_user_write")));
++
++long __probe_user_write(void __user *dst, const void *src, size_t size)
++{
++	long ret = -EFAULT;
++	mm_segment_t old_fs = get_fs();
++
++	set_fs(USER_DS);
++	if (access_ok(VERIFY_WRITE, dst, size))
++		ret = probe_write_common(dst, src, size);
++	set_fs(old_fs);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(probe_user_write);
+ 
+ /**
+  * strncpy_from_unsafe: - Copy a NUL terminated string from unsafe address.
+-- 
+2.25.1
+
+
+
