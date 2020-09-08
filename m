@@ -2,111 +2,79 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5AFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9751EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0A2207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OnTn3YI/"
+	by mail.kernel.org (Postfix) with ESMTP id 569B721532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599538219;
+	bh=7odZQvUtuGLow8kJkUKxWanDGq/uvBKPEezxTaLB6tg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YSLABwtRXpoVdORn8G7Yy20mhAvcx7PVUt+HgYU2cEVQk7RH000q2hxlVMZ5+jBS4
+	 pEHy/d3r7130ub+KWM/ucijDcyatTEtsSRwURDM0gdUZQmelBBbsams1hw/gEEyHCr
+	 IfT88ffXHvDY3soY63+NmB3DZErk/zyqYhWGDfdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725831AbgIHEAc (ORCPT
+        id S1726761AbgIHEKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:00:32 -0400
-Received: from ozlabs.org ([203.11.71.1]:39451 "EHLO ozlabs.org"
+        Tue, 8 Sep 2020 00:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgIHEAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:00:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725801AbgIHEKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 00:10:15 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Blryw3lfYz9sSP;
-        Tue,  8 Sep 2020 14:00:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599537629;
-        bh=lX+lFzaomXR3T5BNsGpelGARr9NU3vJkQfKKiQ3vhfo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OnTn3YI/noqm0XeiRNjqDqsf27QSFchpoFOwYNoKV5Eln0f4Xg46WXR9m4LQFxXSq
-         y18VBCHxYmAbMFCbbrVFeP30hQtx/kEDT3WNg4BUeUM0em/LkskRDYwrVfumXzQ/w/
-         h6ezb6t0N5kEtiwMyYqnfFSiffQHE7GKi9rPZQBAE8gAItZd+71Q8rGTLTxoL+kdOG
-         BvXO/VMr0xmmGnwlUfVYjk3nr7UPOgC77+dsm34C5mmwbGDrHsjdT9oELMy98qniqZ
-         9kty7X/fjrRhkTFO8tOXoVkaB9Tjlpw8q7DKyJtV9fjv0L7vxOdJA9MpBBp8w3nfjp
-         aLV37DoAM5L2A==
-Date:   Tue, 8 Sep 2020 14:00:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Guru Das Srinagesh <gurus@codeaurora.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the drm-intel tree with Linus' tree
-Message-ID: <20200908140022.67dd3801@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C688321481;
+        Tue,  8 Sep 2020 04:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599538215;
+        bh=7odZQvUtuGLow8kJkUKxWanDGq/uvBKPEezxTaLB6tg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EGj9vMkJxWQ/GG1XSj4TGjIvY+XtIE0dCS3QGAwfwmNfJcmW89yve0qJd5DaYLzAt
+         tv+4svBGxo9Qh28lbivrJmTi/pckrm/zPfaiIyGxdR5DhSLo06cgFOnVo62zVU6wSU
+         LZOfETfJbpfw72Msdhd1VxcsEtGtvd9vXtR0jPWU=
+Date:   Mon, 7 Sep 2020 21:10:13 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, davem@davemloft.net,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com
+Subject: Re: [PATCH net v2] hv_netvsc: Fix hibernation for mlx5 VF driver
+Message-ID: <20200907211013.0f1a6702@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200907071339.35677-1-decui@microsoft.com>
+References: <20200907071339.35677-1-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/h0m8vAjcwPu32aOQXEmjVLl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/h0m8vAjcwPu32aOQXEmjVLl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon,  7 Sep 2020 00:13:39 -0700 Dexuan Cui wrote:
+> mlx5_suspend()/resume() keep the network interface, so during hibernation
+> netvsc_unregister_vf() and netvsc_register_vf() are not called, and hence
+> netvsc_resume() should call netvsc_vf_changed() to switch the data path
+> back to the VF after hibernation. Note: after we close and re-open the
+> vmbus channel of the netvsc NIC in netvsc_suspend() and netvsc_resume(),
+> the data path is implicitly switched to the netvsc NIC. Similarly,
+> netvsc_suspend() should not call netvsc_unregister_vf(), otherwise the VF
+> can no longer be used after hibernation.
+> 
+> For mlx4, since the VF network interafce is explicitly destroyed and
+> re-created during hibernation (see mlx4_suspend()/resume()), hv_netvsc
+> already explicitly switches the data path from and to the VF automatically
+> via netvsc_register_vf() and netvsc_unregister_vf(), so mlx4 doesn't need
+> this fix. Note: mlx4 can still work with the fix because in
+> netvsc_suspend()/resume() ndev_ctx->vf_netdev is NULL for mlx4.
+> 
+> Fixes: 0efeea5fb153 ("hv_netvsc: Add the support of hibernation")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
-Hi all,
-
-Today's linux-next merge of the drm-intel tree got a conflict in:
-
-  drivers/gpu/drm/i915/display/intel_panel.c
-
-between commit:
-
-  f8bd54d21904 ("drm/i915: panel: Use atomic PWM API for devs with an exter=
-nal PWM controller")
-
-from Linus' tree and commit:
-
-  6b51e7d23aa8 ("drm/i915: panel: Honor the VBT PWM frequency for devs with=
- an external PWM controller")
-
-from the drm-intel tree.
-
-I fixed it up (I just used the latter) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/h0m8vAjcwPu32aOQXEmjVLl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XAdYACgkQAVBC80lX
-0GyqvQf8Cn9ZF8yqil/uPRy79nIaruZ5rShO6tXxLcj2/g03Eyk3zsCcaV9Vs00N
-2MVGydDPI4xh40OjIrPKuhbHjvqwosg9TQQ6g0q8VIv/e1tE62qP3Dst3VWYIHhl
-t3TgfrLfzqMKoLgUrcyqbUmZ2/E+iH538sLZbm2UdqJNVT311IgNSMMVtdYbfn+Q
-5w5LGYltB74C0ai55NDMw8Hl4/uqeXIDMqdy3C4Ul7R1wE83hD7s2j9F59vx0AAo
-RbNIupYaBxVQMwqev3TsrRO7tPJvEDBB1fH+UZsD3YyTG7ZqyTRL+EYdPi/YC176
-b5FtRP4/npzO3KXZ0FafbxtzNWUu5w==
-=pB//
------END PGP SIGNATURE-----
-
---Sig_/h0m8vAjcwPu32aOQXEmjVLl--
+Applied, thanks!
