@@ -2,141 +2,289 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E33BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6252EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 127CC207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585000;
-	bh=6NFe0ymOhoqmib9dZ3TJK/YVGzpwyBIPD6QNXwYX8UY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yjLz6XDdCZxNXNU1OUUOn2HNgL2vB1A8y6cMjT/KkGJnjLSbkdNVpWXZqQwu81B7u
-	 xyfCj9BhQFFWEfHdd5GvSXoDCUBT3xBAzpQaF9WnqHkPPFTT0K1jGg7eB1Dg1bAf1n
-	 R/4v2KzRmzBN8MvL3wmWvk50y/12eYtikKrZgjFk=
+	by mail.kernel.org (Postfix) with ESMTP id 1FB09207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aOzz+i4C";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UTrG2BQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbgIHRJx (ORCPT
+        id S1732134AbgIHRJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731812AbgIHRJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:09:44 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B6421924;
-        Tue,  8 Sep 2020 17:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599584983;
-        bh=6NFe0ymOhoqmib9dZ3TJK/YVGzpwyBIPD6QNXwYX8UY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mEOZY60QPhE7P0G9fDleoicJlosE0kdMqazDE59cEpI3AaF6rOo+YSIy/7T94gwnn
-         ivR9jr/Ak+vHTJ5zLH7ZzWDIrqU30dceu/CPIMczpsa19WzNYdlxNgFDhPIBZ9qp6n
-         x2t59Sv1jfj1flMANuF+WxRHwsDvoi3XRzbx8fW4=
-Received: by mail-ot1-f46.google.com with SMTP id a65so15477445otc.8;
-        Tue, 08 Sep 2020 10:09:43 -0700 (PDT)
-X-Gm-Message-State: AOAM530iJ/UlHgWO6be21zDy72njzyuihZGKsSti0OHrB1BGXmw0Ttkr
-        CFDfkPSiTPfMkHIgM0JDy34OzLYvmN+eoKkVlw==
-X-Google-Smtp-Source: ABdhPJwHvRobpy4sNP5E9Yg1dDeCFskCK1HpqEtpykR12ltq7YM6SYurKbQYjTYNf+T1ZSWapNAMuvoOnGPsoD0q7yw=
-X-Received: by 2002:a9d:411:: with SMTP id 17mr45450otc.192.1599584982696;
- Tue, 08 Sep 2020 10:09:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200830185356.5365-1-digetx@gmail.com> <20200830185356.5365-2-digetx@gmail.com>
- <20200903161022.GA2707794@bogus> <790dbb23-7422-887a-3f11-5ae55bb916fa@gmail.com>
- <CAL_Jsq+Ue72jJ9gurcG0f_R+gGVC77dErhgbKpB_p40buUewLg@mail.gmail.com> <40e34696-5af8-a3da-35f2-483a0dacd835@gmail.com>
-In-Reply-To: <40e34696-5af8-a3da-35f2-483a0dacd835@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 8 Sep 2020 11:09:31 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+mE5gv6srBQgoNFehMx2RdxTpxeE9+y2uhfNGZAT_yFw@mail.gmail.com>
-Message-ID: <CAL_Jsq+mE5gv6srBQgoNFehMx2RdxTpxeE9+y2uhfNGZAT_yFw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: Add ENE KB930 Embedded
- Controller binding
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 8 Sep 2020 13:09:11 -0400
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:60186
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732102AbgIHRIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:08:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599584879;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=svFWprcWFvN22I2hfcfhEDwuffz662KdF6zeskRYzi8=;
+        b=aOzz+i4CSHjh+icv4CKqQQeraWB6gmrGKAefyxC1pcouogz9cavattMkJLrXPpWU
+        Pd5JCaDPQdikVLPQDIn/c38DUmwDhrT4U2wfuJw5WI7+tARgQpjYQsYelgya8LCsImw
+        YXe4rTW0kKjH8sltx3RAGotaX2/6tif52Cn6nLTg=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599584879;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=svFWprcWFvN22I2hfcfhEDwuffz662KdF6zeskRYzi8=;
+        b=UTrG2BQtVcswNfK4eEX4VHzLYMvW4/GimSVZLKB67sTybERmQqlRADoyXGuYV+HU
+        tUtvz1L3DxFLc/WKrQ6KlVzWA/UDeQ89eQ/7aajj7fDNCtMpTzk08d4LHF/OEAkKnVk
+        381TKCC5tECVAFojpWmQijTb17+Xlc29niJX+VfE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF9BBC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 2/3] dt-bindings: clock: Add YAML schemas for the QCOM Camera clock bindings.
+Date:   Tue, 8 Sep 2020 17:07:59 +0000
+Message-ID: <010101746eb0416a-d5b8acbb-fded-4025-aa27-15ccc5f27de6-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599584848-15530-1-git-send-email-tdas@codeaurora.org>
+References: <1599584848-15530-1-git-send-email-tdas@codeaurora.org>
+X-SES-Outgoing: 2020.09.08-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 9:54 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 04.09.2020 18:40, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Fri, Sep 4, 2020 at 6:07 AM Dmitry Osipenko <digetx@gmail.com> wrote=
-:
-> >>
-> >> 03.09.2020 19:10, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> On Sun, 30 Aug 2020 21:53:51 +0300, Dmitry Osipenko wrote:
-> >>>> Add binding document for the ENE KB930 Embedded Controller.
-> >>>>
-> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 ++++++++++++++++=
-+++
-> >>>>  1 file changed, 66 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.=
-yaml
-> >>>>
-> >>>
-> >>>
-> >>> My bot found errors running 'make dt_binding_check' on your patch:
-> >>>
-> >>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/=
-mfd/ene-kb930.example.dt.yaml: battery-cell: 'operating-range-celsius' does=
- not match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9=
-]+'
-> >>>       From schema: /builds/robherring/linux-dt-review/Documentation/d=
-evicetree/bindings/power/supply/battery.yaml
-> >>>
-> >>>
-> >>> See https://patchwork.ozlabs.org/patch/1354004
-> >>>
-> >>> If you already ran 'make dt_binding_check' and didn't see the above
-> >>> error(s), then make sure dt-schema is up to date:
-> >>>
-> >>> pip3 install git+https://github.com/devicetree-org/dt-schema.git@mast=
-er --upgrade
-> >>>
-> >>> Please check and re-submit.
-> >>>
-> >>
-> >> Apparently bot uses outdated kernel.
-> >
-> > It's on v5.9-rc2. The scripts don't know your base/dependencies and
-> > neither did I because you didn't mention anything here. I do review
-> > the errors before spamming people.
->
-> The patches are based on the linux-next, hence nothing special here. My
-> expectation is that the bot should use the linux-next as well in order
-> to prevent such warnings. Is there any reason to why bot not using
-> linux-next?
+The Camera Subsystem clock provider have a bunch of generic properties
+that are needed in a device tree. Add a YAML schemas for those.
 
-What the bot uses is not the issue. The issue is not stating what your
-dependencies are. linux-next is not a stable base. No patches to be
-applied should be based on linux-next because there's no maintainer
-that can take them if you consider anything in linux-next could be a
-dependency. Of course, you're probably just dependent on one
-maintainer's tree usually, but whose tree? Am I supposed to figure
-that out?
+Add clock ids for Camera clocks which are required to bring the camera
+subsystem out of reset.
 
-linux-next is frequently broken with respect to binding checks, so it
-really doesn't work for the bot. I need a known good base.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ .../bindings/clock/qcom,sc7180-camcc.yaml          |  73 +++++++++++++
+ include/dt-bindings/clock/qcom,camcc-sc7180.h      | 121 +++++++++++++++++++++
+ 2 files changed, 194 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml
+ create mode 100644 include/dt-bindings/clock/qcom,camcc-sc7180.h
 
-Rob
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml
+new file mode 100644
+index 0000000..07bd38e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/qcom,sc7180-camcc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Camera Clock & Reset Controller Binding for SC7180
++
++maintainers:
++  - Taniya Das <tdas@codeaurora.org>
++
++description: |
++  Qualcomm camera clock control module which supports the clocks, resets and
++  power domains on SC7180.
++
++  See also:
++  - dt-bindings/clock/qcom,camcc-sc7180.h.
++
++properties:
++  compatible:
++    const: qcom,sc7180-camcc
++
++  clocks:
++    items:
++      - description: Board XO source
++      - description: Camera_ahb clock from GCC
++      - description: Camera XO clock from GCC
++
++  clock-names:
++    items:
++      - const: bi_tcxo
++      - const: iface
++      - const: xo
++
++  '#clock-cells':
++    const: 1
++
++  '#reset-cells':
++    const: 1
++
++  '#power-domain-cells':
++    const: 1
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++  - '#reset-cells'
++  - '#power-domain-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    clock-controller@ad00000 {
++      compatible = "qcom,sc7180-camcc";
++      reg = <0x0ad00000 0x10000>;
++      clocks = <&rpmhcc RPMH_CXO_CLK>,
++               <&gcc GCC_CAMERA_AHB_CLK>,
++               <&gcc GCC_CAMERA_XO_CLK>;
++      clock-names = "bi_tcxo", "iface", "xo";
++      #clock-cells = <1>;
++      #reset-cells = <1>;
++      #power-domain-cells = <1>;
++    };
++...
+diff --git a/include/dt-bindings/clock/qcom,camcc-sc7180.h b/include/dt-bindings/clock/qcom,camcc-sc7180.h
+new file mode 100644
+index 0000000..ef7d3a0
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,camcc-sc7180.h
+@@ -0,0 +1,121 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_CLK_QCOM_CAM_CC_SC7180_H
++#define _DT_BINDINGS_CLK_QCOM_CAM_CC_SC7180_H
++
++/* CAM_CC clocks */
++#define CAM_CC_PLL2_OUT_EARLY					0
++#define CAM_CC_PLL0						1
++#define CAM_CC_PLL1						2
++#define CAM_CC_PLL2						3
++#define CAM_CC_PLL2_OUT_AUX					4
++#define CAM_CC_PLL3						5
++#define CAM_CC_CAMNOC_AXI_CLK					6
++#define CAM_CC_CCI_0_CLK					7
++#define CAM_CC_CCI_0_CLK_SRC					8
++#define CAM_CC_CCI_1_CLK					9
++#define CAM_CC_CCI_1_CLK_SRC					10
++#define CAM_CC_CORE_AHB_CLK					11
++#define CAM_CC_CPAS_AHB_CLK					12
++#define CAM_CC_CPHY_RX_CLK_SRC					13
++#define CAM_CC_CSI0PHYTIMER_CLK					14
++#define CAM_CC_CSI0PHYTIMER_CLK_SRC				15
++#define CAM_CC_CSI1PHYTIMER_CLK					16
++#define CAM_CC_CSI1PHYTIMER_CLK_SRC				17
++#define CAM_CC_CSI2PHYTIMER_CLK					18
++#define CAM_CC_CSI2PHYTIMER_CLK_SRC				19
++#define CAM_CC_CSI3PHYTIMER_CLK					20
++#define CAM_CC_CSI3PHYTIMER_CLK_SRC				21
++#define CAM_CC_CSIPHY0_CLK					22
++#define CAM_CC_CSIPHY1_CLK					23
++#define CAM_CC_CSIPHY2_CLK					24
++#define CAM_CC_CSIPHY3_CLK					25
++#define CAM_CC_FAST_AHB_CLK_SRC					26
++#define CAM_CC_ICP_APB_CLK					27
++#define CAM_CC_ICP_ATB_CLK					28
++#define CAM_CC_ICP_CLK						29
++#define CAM_CC_ICP_CLK_SRC					30
++#define CAM_CC_ICP_CTI_CLK					31
++#define CAM_CC_ICP_TS_CLK					32
++#define CAM_CC_IFE_0_AXI_CLK					33
++#define CAM_CC_IFE_0_CLK					34
++#define CAM_CC_IFE_0_CLK_SRC					35
++#define CAM_CC_IFE_0_CPHY_RX_CLK				36
++#define CAM_CC_IFE_0_CSID_CLK					37
++#define CAM_CC_IFE_0_CSID_CLK_SRC				38
++#define CAM_CC_IFE_0_DSP_CLK					39
++#define CAM_CC_IFE_1_AXI_CLK					40
++#define CAM_CC_IFE_1_CLK					41
++#define CAM_CC_IFE_1_CLK_SRC					42
++#define CAM_CC_IFE_1_CPHY_RX_CLK				43
++#define CAM_CC_IFE_1_CSID_CLK					44
++#define CAM_CC_IFE_1_CSID_CLK_SRC				45
++#define CAM_CC_IFE_1_DSP_CLK					46
++#define CAM_CC_IFE_LITE_CLK					47
++#define CAM_CC_IFE_LITE_CLK_SRC					48
++#define CAM_CC_IFE_LITE_CPHY_RX_CLK				49
++#define CAM_CC_IFE_LITE_CSID_CLK				50
++#define CAM_CC_IFE_LITE_CSID_CLK_SRC				51
++#define CAM_CC_IPE_0_AHB_CLK					52
++#define CAM_CC_IPE_0_AREG_CLK					53
++#define CAM_CC_IPE_0_AXI_CLK					54
++#define CAM_CC_IPE_0_CLK					55
++#define CAM_CC_IPE_0_CLK_SRC					56
++#define CAM_CC_JPEG_CLK						57
++#define CAM_CC_JPEG_CLK_SRC					58
++#define CAM_CC_LRME_CLK						59
++#define CAM_CC_LRME_CLK_SRC					60
++#define CAM_CC_MCLK0_CLK					61
++#define CAM_CC_MCLK0_CLK_SRC					62
++#define CAM_CC_MCLK1_CLK					63
++#define CAM_CC_MCLK1_CLK_SRC					64
++#define CAM_CC_MCLK2_CLK					65
++#define CAM_CC_MCLK2_CLK_SRC					66
++#define CAM_CC_MCLK3_CLK					67
++#define CAM_CC_MCLK3_CLK_SRC					68
++#define CAM_CC_MCLK4_CLK					69
++#define CAM_CC_MCLK4_CLK_SRC					70
++#define CAM_CC_BPS_AHB_CLK					71
++#define CAM_CC_BPS_AREG_CLK					72
++#define CAM_CC_BPS_AXI_CLK					73
++#define CAM_CC_BPS_CLK						74
++#define CAM_CC_BPS_CLK_SRC					75
++#define CAM_CC_SLOW_AHB_CLK_SRC					76
++#define CAM_CC_SOC_AHB_CLK					77
++#define CAM_CC_SYS_TMR_CLK					78
++
++/* CAM_CC power domains */
++#define BPS_GDSC						0
++#define IFE_0_GDSC						1
++#define IFE_1_GDSC						2
++#define IPE_0_GDSC						3
++#define TITAN_TOP_GDSC						4
++
++/* CAM_CC resets */
++#define CAM_CC_BPS_BCR						0
++#define CAM_CC_CAMNOC_BCR					1
++#define CAM_CC_CCI_0_BCR					2
++#define CAM_CC_CCI_1_BCR					3
++#define CAM_CC_CPAS_BCR						4
++#define CAM_CC_CSI0PHY_BCR					5
++#define CAM_CC_CSI1PHY_BCR					6
++#define CAM_CC_CSI2PHY_BCR					7
++#define CAM_CC_CSI3PHY_BCR					8
++#define CAM_CC_ICP_BCR						9
++#define CAM_CC_IFE_0_BCR					10
++#define CAM_CC_IFE_1_BCR					11
++#define CAM_CC_IFE_LITE_BCR					12
++#define CAM_CC_IPE_0_BCR					13
++#define CAM_CC_JPEG_BCR						14
++#define CAM_CC_LRME_BCR						15
++#define CAM_CC_MCLK0_BCR					16
++#define CAM_CC_MCLK1_BCR					17
++#define CAM_CC_MCLK2_BCR					18
++#define CAM_CC_MCLK3_BCR					19
++#define CAM_CC_MCLK4_BCR					20
++#define CAM_CC_TITAN_TOP_BCR					21
++
++#endif
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
+
