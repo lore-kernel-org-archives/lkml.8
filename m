@@ -2,82 +2,95 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EF0C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D48C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C89A21D42
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA4F2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="Nip8LBTJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QPX3it+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732083AbgIHRn0 (ORCPT
+        id S1731722AbgIHRoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
+        Tue, 8 Sep 2020 13:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731280AbgIHRmv (ORCPT
+        with ESMTP id S1731664AbgIHQOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:42:51 -0400
+        Tue, 8 Sep 2020 12:14:04 -0400
 Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AAA8C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:42:50 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id k18so180465wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:42:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E2EC0617B9
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:16:22 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q9so17091120wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:16:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=OEf+BGjF/t1JSSdnc1xyf+TDXOi/Xxv0WukkmnIdvak=;
-        b=Nip8LBTJIwyVryN3G1TC6CvDmzGXzZLtpIWyp4oLnyJg756Yi/T1XrlRX5l4q10pq5
-         KPXGPSSkxpDZO2ofu+3llwSUCrdutCjsmjJhF874adxIVK/TixD/rUgcb3wtev6fJEDg
-         hQHhNPAqej0ccihmGc52Lsd3cLHMg5TjYKW6J7pQ+VAEajE+BqqayRXzdY1UEu/CbIQl
-         dRZKrnvJJFH1ZIQoQ/N0E/haKrRpS8/VY1hHZhT5kgYf1iCa6tHpQazmOgtD6yy/XGBv
-         VwPiBf5aSdPIhj6PRaAi5PIZHtQM++hnRAdo1Unw1f2FT6sN5vs/FOZLq273pmHDhxbs
-         8wPA==
+        bh=25SuQDI0eyCRm9y5WDHzplEK9oGtQL3VKe10BEOjmTA=;
+        b=QPX3it+b0HCvDkvbnLXnuah4CoH16gftRJ7806vrwP3qNieZtYGGzWOWb5H6s2Ymo6
+         tFciYxxHwZ+bLk25IzxWbtHz0zL7hPxojHfBsUJqxOPoVKqSYMw4s5Jhs4CWSe+lLKvZ
+         c5AwWr450MpqcX6CXpFhLMMNrVYkQ9Fjd8nqLWMfFi9LnzsfdtWd0LpKQYtzz+NCxHB3
+         J637fA5b93NLgh+gh4KvKv3RMjqzd73wNSnuCBKM/un+6MXqTcJ0HEPCNbet4mb1L5NA
+         cKFb0yVJxMPcpuUS6t+uXVXwP2CwZFGY4q8U86OqXN4i0oaciML3l3t5SgA2Rsr+bZIa
+         dFfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OEf+BGjF/t1JSSdnc1xyf+TDXOi/Xxv0WukkmnIdvak=;
-        b=fZsvRABr13l67gC30FRA8QoPHiNS3AqM8M3mSbD/84Lv/D1c2/dDUQWSb4r3nRahNn
-         oS9xbavUnE9O3b9w94tfnecTydycDArA3JMcqkNshfwAXFhYwH6cQwqpAR8v7blkUJc+
-         NlKlzxyuGLz+qntOtoTuHMJniYcfRMhuQNMp3KzBBakrjCiS/r89dqbiNwMlLZj2BQyh
-         GFnlCgLtDYC9gdkWkP89HEhvBl/JdaQa53rgb2j/oPbDjogH3eLCsPHbYQljPJ8g89Kt
-         lQAncPmNdUAzPXHEexj8pte5mAJecnhHRrxkz3XHcuCXOZSFv4Iz3AYOO59E6jllzqeW
-         7sgg==
-X-Gm-Message-State: AOAM531M8m7XL1P8kO+TemGX8AFjG7Kkp9fgp+wDMpUecFMasdfw/qgX
-        PN3gCw6bLd5uXrTCHFADMOF/GtcUcQ5aexMhQFKzOw==
-X-Google-Smtp-Source: ABdhPJwdAhCHkjes0xF1vFytq4iFsXQyYNDN0A43hixRh6hsuZrP+Tcfw609dCp9J8cPhB1mHHbGKxY9funQbMQmKE4=
-X-Received: by 2002:a1c:7314:: with SMTP id d20mr249187wmb.76.1599586968746;
- Tue, 08 Sep 2020 10:42:48 -0700 (PDT)
+        bh=25SuQDI0eyCRm9y5WDHzplEK9oGtQL3VKe10BEOjmTA=;
+        b=boefQ8avXQ0E42bqc2BFMAzZoV8ybYrVJvNGYhi189YPd5vouqN9MmBrP0Tha5RFo1
+         bVKZnvQcjJ1IbdQiAvrqAvQXSC7KO9m8rZRIUtXyvecCkZcDl3xIOhqCKiddiGIyfWA4
+         4PdUwPr4kn51e34P2gpHdKAIZ00Pqzu10qSQpGepPXGI7PetV+l4rSharXpPaAu/93/R
+         fcB1+SsIHKovrAqELN1M3DMpPn1uRfj7r+JLH53ClGQCAS4tQQjPF9ElQeS1FrA+lig+
+         FL/31kYRTVIM2nDEp9mRDxiK8CYafuIhanksD2JRduy38/qntsscabjixCvwBauTcCss
+         dKpA==
+X-Gm-Message-State: AOAM533GZAKh1VDluVY3uG07/aHmOgQtgQ9JXW+NM5LwEG0huFdyJiO2
+        pduAP81gJPGjEtFa0ZMWWGhShXZDv/lbhRTm2fkThw==
+X-Google-Smtp-Source: ABdhPJzNFarnK0nYdbKJBLU0NMJuC6Hpm534oaFYqrVkXTx051ncwUm57xW2hX6Fd0DEO38hfYKPpM9pZm6/JEEqxdA=
+X-Received: by 2002:a1c:105:: with SMTP id 5mr4078883wmb.175.1599567380842;
+ Tue, 08 Sep 2020 05:16:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200501193141.30293-1-rad@semihalf.com> <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
- <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com> <8b97bf43-ddd8-df81-90e7-9e87c19af1ab@linux.intel.com>
-In-Reply-To: <8b97bf43-ddd8-df81-90e7-9e87c19af1ab@linux.intel.com>
-From:   =?UTF-8?Q?Rados=C5=82aw_Biernacki?= <rad@semihalf.com>
-Date:   Tue, 8 Sep 2020 19:42:33 +0200
-Message-ID: <CAOs-w0KvKcRnDkMtdAV2n_3XLfwk9KgM65QEO=6+qNshobJx3g@mail.gmail.com>
-Subject: Re: [PATCH V2] ASoC: Intel: boards: Use FS as nau8825 sysclk in
- nau88125_* machine
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Lech Betlej <Lech.Betlej@intel.com>, alsa-devel@alsa-project.org,
-        Todd Broch <tbroch@google.com>,
-        Harshapriya <harshapriya.n@intel.com>,
-        John Hsu <KCHSU0@nuvoton.com>,
-        Alex Levin <levinale@google.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Sienkiewicz, Michal" <michal.sienkiewicz@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Ben Zhang <benzh@chromium.org>,
-        Mac Chiang <mac.chiang@intel.com>,
-        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
-        Marcin Wojtas <mw@semihalf.com>, linux-kernel@vger.kernel.org,
-        Yong Zhi <yong.zhi@intel.com>
+References: <20200907134055.2878499-1-elver@google.com> <4dc8852a-120d-0835-1dc4-1a91f8391c8a@suse.cz>
+In-Reply-To: <4dc8852a-120d-0835-1dc4-1a91f8391c8a@suse.cz>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Tue, 8 Sep 2020 14:16:09 +0200
+Message-ID: <CAG_fn=UdnN4EL6OtAV8RY7kuqO+VXqSsf+grx2Le64UQJOUMvQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/10] KFENCE: A low-overhead sampling-based memory
+ safety error detector
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, paulmck@kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Memory Management List <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,117 +98,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for missing the response for so long.
-Somehow lost this thread in my mailbox.
-
-=C5=9Br., 6 maj 2020 o 00:04 Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> napisa=C5=82(a):
->
->
-> >>> This single fix address two issues on machines with nau88125:
-> >>> 1) Audio distortion, due to lack of required clock rate on MCLK line
-> >>> 2) Loud audible "pops" on headphones if there is no sysclk during nau=
-8825
-> >>>      playback power up sequence
-> >>>
-> >>> Explanation for:
-> >>> 1) Due to Skylake HW limitation, MCLK pin can only output 24MHz clk
-> >>>      rate (it can be only connected to XTAL parent clk). The BCLK pin
-> >>>      can be driven by dividers and therefore FW is able to set it to =
-rate
-> >>>      required by chosen audio format. According to nau8825 datasheet,=
- 256*FS
-> >>>      sysclk gives the best audio quality and the only way to achieve =
-this
-> >>>      (taking into account the above limitations) its to regenerate th=
-e MCLK
-> >>>      from BCLK on nau8825 side by FFL. Without required clk rate, aud=
-io is
-> >>>      distorted by added harmonics.
-> >>
-> >> The BCLK is going to be a multiple of 50 * Fs due to clocking
-> >> restrictions. Can the codec regenerate a good-enough sysclk from this?
-> >
-> > According to Intel, silicon has a limitation, on SKL/KBL only clk_id =
-=3D
-> > SKL_XTAL, .name =3D "xtal" is available for IO domain.
-> > As mentioned in the commit:
-> > MCLK is generated by using 24MHz Xtal directly or applying a divider
-> > (so no way of achieving the rate required by audio format).
-> > BCLK/FS is generated from 24MHz and uses dividers and additional
-> > padding bits are used to match the clock source.
-> > Next gen silicon has the possibility of using additional clock sources.
-> >
-> > Summing up, using MCLK from SKL to NAU88L25 is not an option.
-> > The only option we found is to use BCLK and regen the required clock
-> > rate by FLL on the NAU88l25 side.
->
-> Right, this 24 MHz is a recurring problem.
-> But what I was asking was if the NAU8825 is fine working with e.g. a
-> 2.4MHz bit clock. i.e. with 25 bit slots or padding at the end of the fra=
-me?
-
-From our tests NAU8825 is working fine with these parameters.
-Also the output audio signal looks fine on the scope and FFT and there
-are no audible glitches.
-
->
-> >
-> >>>
-> >>> 2) Currently Skylake does not output MCLK/FS when the back-end DAI op
-> >>>      hw_param is called, so we cannot switch to MCLK/FS in hw_param. =
- This
-> >>>      patch reduces pop by letting nau8825 keep using its internal VCO=
- clock
-> >>>      during widget power up sequence, until SNDRV_PCM_TRIGGER_START w=
-hen
-> >>>      MCLK/FS is available. Once device resumes, the system will only =
-enable
-> >>>      power sequence for playback without doing hardware parameter, au=
-dio
-> >>>      format, and PLL configure. In the mean time, the jack detecion s=
-equence
-> >>>      has changed PLL parameters and switched to internal clock. Thus,=
+> Toggling a static branch is AFAIK quite disruptive (PeterZ will probably =
+tell
+> you better), and with the default 100ms sample interval, I'd think it's n=
+ot good
+> to toggle it so often? Did you measure what performance would you get, if=
  the
-> >>>      playback signal distorted without correct PLL parameters.  That =
-is why
-> >>>      we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUME c=
-ase.
-> >>
-> >> IIRC the FS can be controlled with the clk_ api with the Skylake drive=
-r,
-> >> as done for some KBL platforms. Or is this not supported by the firmwa=
-re
-> >> used by this machine?
+> static key was only for long-term toggling the whole feature on and off (=
+boot
+> time or even runtime), but the decisions "am I in a sample interval right=
+ now?"
+> would be normal tests behind this static key? Thanks.
+
+100ms is the default that we use for testing, but for production it
+should be fine to pick a longer interval (e.g. 1 second or more).
+We haven't noticed any performance impact with neither 100ms nor bigger val=
+ues.
+
+Regarding using normal branches, they are quite expensive.
+E.g. at some point we used to have a branch in slab_free() to check
+whether the freed object belonged to KFENCE pool.
+When the pool address was taken from memory, this resulted in some
+non-zero performance penalty.
+
+As for enabling the whole feature at runtime, our intention is to let
+the users have it enabled by default, otherwise someone will need to
+tell every machine in the fleet when the feature is to be enabled.
+>
+> > We have verified by running synthetic benchmarks (sysbench I/O,
+> > hackbench) that a kernel with KFENCE is performance-neutral compared to
+> > a non-KFENCE baseline kernel.
 > >
-> > According to Ben, SKL had limitations in FW for managing the clk's
-> > back in the days.
-> > Can you point to the other driver you mention so we can cross check?
+> > KFENCE is inspired by GWP-ASan [1], a userspace tool with similar
+> > properties. The name "KFENCE" is a homage to the Electric Fence Malloc
+> > Debugger [2].
+> >
+> > For more details, see Documentation/dev-tools/kfence.rst added in the
+> > series -- also viewable here:
+> >
+> >       https://raw.githubusercontent.com/google/kasan/kfence/Documentati=
+on/dev-tools/kfence.rst
+> >
+> > [1] http://llvm.org/docs/GwpAsan.html
+> > [2] https://linux.die.net/man/3/efence
+> >
+> > Alexander Potapenko (6):
+> >   mm: add Kernel Electric-Fence infrastructure
+> >   x86, kfence: enable KFENCE for x86
+> >   mm, kfence: insert KFENCE hooks for SLAB
+> >   mm, kfence: insert KFENCE hooks for SLUB
+> >   kfence, kasan: make KFENCE compatible with KASAN
+> >   kfence, kmemleak: make KFENCE compatible with KMEMLEAK
+> >
+> > Marco Elver (4):
+> >   arm64, kfence: enable KFENCE for ARM64
+> >   kfence, lockdep: make KFENCE compatible with lockdep
+> >   kfence, Documentation: add KFENCE documentation
+> >   kfence: add test suite
+> >
+> >  Documentation/dev-tools/index.rst  |   1 +
+> >  Documentation/dev-tools/kfence.rst | 285 +++++++++++
+> >  MAINTAINERS                        |  11 +
+> >  arch/arm64/Kconfig                 |   1 +
+> >  arch/arm64/include/asm/kfence.h    |  39 ++
+> >  arch/arm64/mm/fault.c              |   4 +
+> >  arch/x86/Kconfig                   |   2 +
+> >  arch/x86/include/asm/kfence.h      |  60 +++
+> >  arch/x86/mm/fault.c                |   4 +
+> >  include/linux/kfence.h             | 174 +++++++
+> >  init/main.c                        |   2 +
+> >  kernel/locking/lockdep.c           |   8 +
+> >  lib/Kconfig.debug                  |   1 +
+> >  lib/Kconfig.kfence                 |  70 +++
+> >  mm/Makefile                        |   1 +
+> >  mm/kasan/common.c                  |   7 +
+> >  mm/kfence/Makefile                 |   6 +
+> >  mm/kfence/core.c                   | 730 +++++++++++++++++++++++++++
+> >  mm/kfence/kfence-test.c            | 777 +++++++++++++++++++++++++++++
+> >  mm/kfence/kfence.h                 | 104 ++++
+> >  mm/kfence/report.c                 | 201 ++++++++
+> >  mm/kmemleak.c                      |  11 +
+> >  mm/slab.c                          |  46 +-
+> >  mm/slab_common.c                   |   6 +-
+> >  mm/slub.c                          |  72 ++-
+> >  25 files changed, 2591 insertions(+), 32 deletions(-)
+> >  create mode 100644 Documentation/dev-tools/kfence.rst
+> >  create mode 100644 arch/arm64/include/asm/kfence.h
+> >  create mode 100644 arch/x86/include/asm/kfence.h
+> >  create mode 100644 include/linux/kfence.h
+> >  create mode 100644 lib/Kconfig.kfence
+> >  create mode 100644 mm/kfence/Makefile
+> >  create mode 100644 mm/kfence/core.c
+> >  create mode 100644 mm/kfence/kfence-test.c
+> >  create mode 100644 mm/kfence/kfence.h
+> >  create mode 100644 mm/kfence/report.c
+> >
 >
-> There are two KBL drivers that control the SSP clocks from the machine
-> driver, but indeed I don't know if this would work on Firmware, it'd be
-> a question for Lech/Cezary.
->
-> kbl_rt5663_max98927.c:          ret =3D clk_prepare_enable(priv->mclk);
-> kbl_rt5663_max98927.c:          ret =3D clk_prepare_enable(priv->sclk);
-> kbl_rt5663_rt5514_max98927.c:           ret =3D
-> clk_prepare_enable(priv->mclk);
-> kbl_rt5663_rt5514_max98927.c:           ret =3D
-> clk_prepare_enable(priv->sclk);
-> kbl_rt5663_rt5514_max98927.c:                   ret =3D
-> clk_prepare_enable(priv->mclk);
->
-
-Czarek answered this and we got the same response from other Intel
-devs while consulting this change:
-FW cannot request a chosen rate (48k) for MCLK pin as it does not
-"align with what's present on SKL hw".
-
-The only way we found out for NAU8825 to cooperate at chosen rate with
-SKL HW is to regen the MCLK from BCLK by FLL as mentioned above.
-NHTL is used to set SSP0 (48k, 24/25 bit on 24MHz crystal).
-If I get all of this right, use of NHTL and HW "abilities" would
-explain why there is no call to change SSP from a machine driver.
 
 
-If all of this is ok I will send V3 with msleep() removed.
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
