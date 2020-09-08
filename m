@@ -2,245 +2,315 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCCDC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0839DC2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D5E215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GMa6O0ay"
+	by mail.kernel.org (Postfix) with ESMTP id CFE9E215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbgIHIuw (ORCPT
+        id S1730206AbgIHIvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:50:52 -0400
-Received: from mail-eopbgr50069.outbound.protection.outlook.com ([40.107.5.69]:26852
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729234AbgIHIuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:50:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hO7nYrENUt73V+4Q4tNHlzXsPnPUYyqRD4PmXiWUxYnYQpcHmb3CmReO7fpTj1Xspkec9ZNjZ+XnIzNHpuDFiOJ1vj6buBtxynMuOWIL5Wxbfvgqt9kd6Q6MMgrxrC/FCprc9MePZ7RBHYn/PBFoX5zlawPxsxk+NcjUK8wlVTYKBAabyVWsE55KS7n6OccwIYHmNS1gibgxPz1ySvkvKHaii8S/tEhmC6ASkGfv6YUUTpy4+d5v5w6khTAwJcL7vUASjXAStzchIasV3+HNiqi0JR0SHWQMyHC5GE9GNkqO4EPby2DCGdy0R9oZK5TvbxJVFYDMvbrbEeKdTrSQUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nwHsbMcIsz1uLTBDJDbxf2ECpDNrLrIgReYwe3XEOtY=;
- b=cRK9GraLjbCq4afOAJjtZIgiavdJgYcvRB2TRPBtx+43LUuYBZd6rcA7ycLVpjVrxIdbFTF+9X9jX1cc+8tqvBdmMxEb93l3Ke0yeg98hcP9y7RZuV4HENU6DgSBw1EYAaBe6p6eufzkNY2wJd7fvWSHlJAxOmczoLodP+TTO1lK8O3dgRwrKhgNkjwuzwvGAyG5eMfb0IZlMixWgCrkugyHTMwYzIao6tg3qT2bd1nuGkB9gLSWotKEzFAvtPqWBlCb7AJGnr6/cP8QXi5XczBJiofYwfSoLnJe1+roXotGIzebsxzrOQW/kF6iR6MhWviVElIKMLPCzsPla46y5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nwHsbMcIsz1uLTBDJDbxf2ECpDNrLrIgReYwe3XEOtY=;
- b=GMa6O0ayJVjVFzFxIoZTe4pP2kI0gEp4Hd/KE9PWPwl1U4AKQUt+ejnkJfdbq6GnVUHEeRxMU3IHmlDU5Rlq+5mfuOFR+H1T0pysv5EQMQy8lZgReKa/a3YfcrR8gk5kzYdADG2wGbWfedYYbiaeWHNIk2VqblqyXkAFB9t575o=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM5PR0401MB2675.eurprd04.prod.outlook.com (2603:10a6:203:35::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
- 2020 08:50:44 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca%3]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 08:50:44 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "arnd@arndb.de" <arnd@arndb.de>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V4 1/3] pinctrl: imx: Use function callbacks for SCU
- related functions
-Thread-Topic: [PATCH V4 1/3] pinctrl: imx: Use function callbacks for SCU
- related functions
-Thread-Index: AQHWhbigGIeXCJYutE2c5EqtLEP1AKlebcDw
-Date:   Tue, 8 Sep 2020 08:50:44 +0000
-Message-ID: <AM6PR04MB49662C68D10D235ADF3F109980290@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1599552721-24872-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1599552721-24872-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3e7d16a0-2a9a-432b-7dc5-08d853d445da
-x-ms-traffictypediagnostic: AM5PR0401MB2675:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR0401MB26757F6356FE00CE4858868880290@AM5PR0401MB2675.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gwFsgbN+8BWE7JeHDmTZcozSCnxsM6gSyPmscIu4ZGVHA9IF/yOCq3eyBhmM5vWtAcIkepZTYe+n7duzWjBEc+mTUROZc2L384eHgybEzAM/UkCxN08x5LbxcJPqiaCRIkqTlmCUzI4kK1do0KRYtszplLLvOHJbisOXggazLFtbEgIaHHxZ8w3jIs7h3RndbRm1K4hQ7JFDkiVlvmrlnsHwudQbGzVCfOZZU1Oi/W1Kg7lqbVXfJuxqseL+cRoYfVUJrH4WPjawJVzP+AD6TbiK07AO5RJLjDtMb1G9xy/8xJYA0NlxJ+FPzM+UHGEMq6yOfut8aic8P/5BumGSG/h7FWH+hd4HVvwJSNUPq3tVSjlWOleWPn5ACaM/C4Tx
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(6506007)(86362001)(66556008)(26005)(4326008)(64756008)(66476007)(2906002)(110136005)(66446008)(186003)(66946007)(76116006)(83380400001)(9686003)(478600001)(71200400001)(55016002)(7696005)(316002)(52536014)(8676002)(5660300002)(33656002)(8936002)(44832011)(7416002)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Mb6AI8bAk5oYUJfvZmxJ+TTLjOjjpX/am9JpLbFOuXJDEqq9FyON9kOmsq/r1Xya6NyRSpChmKla1GndZCGPoCxAE0BDqUNHuI1BuJUwk9giCEgyjJ7lCLXMlYat+hQlFpQWPNZB6lFO6292oFv9ooW/Mmi/xMbJTCkaINI0RFJew2H1/dSQHzHdfAuz4Toq9vj+K7zeA9Qk5xhKIKtAVnVyJLd3pu85uiW3WNDhmjwHRh3x8g8DMHmwiqH/kTK527XkNZmvOwUWW9jDCaxlCHBEr29M5TB3up9al4Geu69rjjf6KmjxsJyjIUz1KNcPC1kFzwhl6TGaO5kcQXM2MQshSN62HCJFSfnTeQ9lCAb06RkZEnRtcBDKNk0ys2gp3JSTPFBfY/4MEWdlEAM6LpQoBBFtBhCjNfTHqurBn9vy6wJkgbUgvSbmB317mkVmkfvsIfxMsbK5usYZINuxvd4yYtCBqYfSqEv8LGmq0HbU1wKCmT7dkQmT6BulOtCXOpVzCCdeEnqywrltuomltVgtESpgnw9fEMMF/x4Ik+Kcp6kTaRStU/ous3JBIEPFK0FGzm7a8JVwszEYcIDb3in3IbTPO2H16T+YjCS2Hqtt2/EfBJUfhRQzwJQVxiwODqDfI4enTSv2ji20q1WauQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 8 Sep 2020 04:51:16 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54674 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729999AbgIHIvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 04:51:16 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1296C1C0B7F; Tue,  8 Sep 2020 10:51:12 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 10:51:11 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: Re: [PATCH 1/3] Input: atmel_mxt_ts - use runtime PM instead of
+ custom functions
+Message-ID: <20200908085111.GA31609@duo.ucw.cz>
+References: <20200318230938.31573-1-tony@atomide.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e7d16a0-2a9a-432b-7dc5-08d853d445da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 08:50:44.1834
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PJrgm87UOQ/9q4WhnQuM7uJbs90OJn5slHa87ohnXlj3Eapq7xAbX09Tj3JInbxsPR7xT23s/xPNEebSxL+enw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0401MB2675
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Content-Disposition: inline
+In-Reply-To: <20200318230938.31573-1-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVHVlc2Rh
-eSwgU2VwdGVtYmVyIDgsIDIwMjAgNDoxMiBQTQ0KPiANCj4gVXNlIGZ1bmN0aW9uIGNhbGxiYWNr
-cyBmb3IgU0NVIHJlbGF0ZWQgZnVuY3Rpb25zIGluIHBpbmN0cmwtaW14LmMgaW4gb3JkZXIgdG8N
-Cj4gc3VwcG9ydCB0aGUgc2NlbmFyaW8gb2YgUElOQ1RSTF9JTVggaXMgYnVpbHQgaW4gd2hpbGUg
-UElOQ1RSTF9JTVhfU0NVIGlzIGJ1aWx0DQo+IGFzIG1vZHVsZSwgYWxsIGRyaXZlcnMgdXNpbmcg
-U0NVIHBpbmN0cmwgZHJpdmVyIG5lZWQgdG8gaW5pdGlhbGl6ZSB0aGUgU0NVIHJlbGF0ZWQNCj4g
-ZnVuY3Rpb24gY2FsbGJhY2ssIGFuZCBubyBuZWVkIHRvIGNoZWNrIENPTkZJR19QSU5DVFJMX0lN
-WF9TQ1UgYW55bW9yZSwNCj4gaGVuY2Ugc3R1YiBmdW5jdGlvbnMgYWxzbyBjYW4gYmUgcmVtb3Zl
-ZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29t
-Pg0KDQpSZXZpZXdlZC1ieTogRG9uZyBBaXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCg0K
-UmVnYXJkcw0KQWlzaGVuZw0KDQo+IC0tLQ0KPiBObyBjaGFuZ2UuDQo+IC0tLQ0KPiAgZHJpdmVy
-cy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5jICAgICB8ICA4ICsrLS0NCj4gIGRyaXZl
-cnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaCAgICAgfCA1NyArKysrKysrKysrKy0t
-LS0tLS0tLS0tLS0tLS0tLQ0KPiAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlt
-eDhkeGwuYyB8ICAzICsrDQo+IGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4
-cW0uYyAgfCAgMyArKw0KPiBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHF4
-cC5jIHwgIDMgKysNCj4gIDUgZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMzkgZGVs
-ZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9w
-aW5jdHJsLWlteC5jDQo+IGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5j
-DQo+IGluZGV4IDUwN2U0YWYuLmI4MGM0NTAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3Ry
-bC9mcmVlc2NhbGUvcGluY3RybC1pbXguYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNj
-YWxlL3BpbmN0cmwtaW14LmMNCj4gQEAgLTM3Myw3ICszNzMsNyBAQCBzdGF0aWMgaW50IGlteF9w
-aW5jb25mX2dldChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsDQo+ICAJY29uc3Qgc3RydWN0
-IGlteF9waW5jdHJsX3NvY19pbmZvICppbmZvID0gaXBjdGwtPmluZm87DQo+IA0KPiAgCWlmIChp
-bmZvLT5mbGFncyAmIElNWF9VU0VfU0NVKQ0KPiAtCQlyZXR1cm4gaW14X3BpbmNvbmZfZ2V0X3Nj
-dShwY3RsZGV2LCBwaW5faWQsIGNvbmZpZyk7DQo+ICsJCXJldHVybiBpbmZvLT5pbXhfcGluY29u
-Zl9nZXQocGN0bGRldiwgcGluX2lkLCBjb25maWcpOw0KPiAgCWVsc2UNCj4gIAkJcmV0dXJuIGlt
-eF9waW5jb25mX2dldF9tbWlvKHBjdGxkZXYsIHBpbl9pZCwgY29uZmlnKTsgIH0gQEAgLTQyMyw3
-DQo+ICs0MjMsNyBAQCBzdGF0aWMgaW50IGlteF9waW5jb25mX3NldChzdHJ1Y3QgcGluY3RybF9k
-ZXYgKnBjdGxkZXYsDQo+ICAJY29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvICppbmZv
-ID0gaXBjdGwtPmluZm87DQo+IA0KPiAgCWlmIChpbmZvLT5mbGFncyAmIElNWF9VU0VfU0NVKQ0K
-PiAtCQlyZXR1cm4gaW14X3BpbmNvbmZfc2V0X3NjdShwY3RsZGV2LCBwaW5faWQsDQo+ICsJCXJl
-dHVybiBpbmZvLT5pbXhfcGluY29uZl9zZXQocGN0bGRldiwgcGluX2lkLA0KPiAgCQkJCQkgICBj
-b25maWdzLCBudW1fY29uZmlncyk7DQo+ICAJZWxzZQ0KPiAgCQlyZXR1cm4gaW14X3BpbmNvbmZf
-c2V0X21taW8ocGN0bGRldiwgcGluX2lkLCBAQCAtNDQwLDcgKzQ0MCw3DQo+IEBAIHN0YXRpYyB2
-b2lkIGlteF9waW5jb25mX2RiZ19zaG93KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwNCj4g
-IAlpbnQgcmV0Ow0KPiANCj4gIAlpZiAoaW5mby0+ZmxhZ3MgJiBJTVhfVVNFX1NDVSkgew0KPiAt
-CQlyZXQgPSBpbXhfcGluY29uZl9nZXRfc2N1KHBjdGxkZXYsIHBpbl9pZCwgJmNvbmZpZyk7DQo+
-ICsJCXJldCA9IGluZm8tPmlteF9waW5jb25mX2dldChwY3RsZGV2LCBwaW5faWQsICZjb25maWcp
-Ow0KPiAgCQlpZiAocmV0KSB7DQo+ICAJCQlkZXZfZXJyKGlwY3RsLT5kZXYsICJmYWlsZWQgdG8g
-Z2V0ICVzIHBpbmNvbmZcbiIsDQo+ICAJCQkJcGluX2dldF9uYW1lKHBjdGxkZXYsIHBpbl9pZCkp
-Ow0KPiBAQCAtNjI5LDcgKzYyOSw3IEBAIHN0YXRpYyBpbnQgaW14X3BpbmN0cmxfcGFyc2VfZ3Jv
-dXBzKHN0cnVjdCBkZXZpY2Vfbm9kZQ0KPiAqbnAsDQo+ICAJZm9yIChpID0gMDsgaSA8IGdycC0+
-bnVtX3BpbnM7IGkrKykgew0KPiAgCQlwaW4gPSAmKChzdHJ1Y3QgaW14X3BpbiAqKShncnAtPmRh
-dGEpKVtpXTsNCj4gIAkJaWYgKGluZm8tPmZsYWdzICYgSU1YX1VTRV9TQ1UpDQo+IC0JCQlpbXhf
-cGluY3RybF9wYXJzZV9waW5fc2N1KGlwY3RsLCAmZ3JwLT5waW5zW2ldLA0KPiArCQkJaW5mby0+
-aW14X3BpbmN0cmxfcGFyc2VfcGluKGlwY3RsLCAmZ3JwLT5waW5zW2ldLA0KPiAgCQkJCQkJICBw
-aW4sICZsaXN0KTsNCj4gIAkJZWxzZQ0KPiAgCQkJaW14X3BpbmN0cmxfcGFyc2VfcGluX21taW8o
-aXBjdGwsICZncnAtPnBpbnNbaV0sIGRpZmYgLS1naXQNCj4gYS9kcml2ZXJzL3BpbmN0cmwvZnJl
-ZXNjYWxlL3BpbmN0cmwtaW14LmggYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwt
-aW14LmgNCj4gaW5kZXggMzMzZDMyYi4uZmQ4YzRiNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9w
-aW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5oDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9m
-cmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiBAQCAtNzUsNiArNzUsMjEgQEAgc3RydWN0IGlteF9j
-ZmdfcGFyYW1zX2RlY29kZSB7DQo+ICAJYm9vbCBpbnZlcnQ7DQo+ICB9Ow0KPiANCj4gKy8qKg0K
-PiArICogQGRldjogYSBwb2ludGVyIGJhY2sgdG8gY29udGFpbmluZyBkZXZpY2UNCj4gKyAqIEBi
-YXNlOiB0aGUgb2Zmc2V0IHRvIHRoZSBjb250cm9sbGVyIGluIHZpcnR1YWwgbWVtb3J5ICAqLyBz
-dHJ1Y3QNCj4gK2lteF9waW5jdHJsIHsNCj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+ICsJc3Ry
-dWN0IHBpbmN0cmxfZGV2ICpwY3RsOw0KPiArCXZvaWQgX19pb21lbSAqYmFzZTsNCj4gKwl2b2lk
-IF9faW9tZW0gKmlucHV0X3NlbF9iYXNlOw0KPiArCWNvbnN0IHN0cnVjdCBpbXhfcGluY3RybF9z
-b2NfaW5mbyAqaW5mbzsNCj4gKwlzdHJ1Y3QgaW14X3Bpbl9yZWcgKnBpbl9yZWdzOw0KPiArCXVu
-c2lnbmVkIGludCBncm91cF9pbmRleDsNCj4gKwlzdHJ1Y3QgbXV0ZXggbXV0ZXg7DQo+ICt9Ow0K
-PiArDQo+ICBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gew0KPiAgCWNvbnN0IHN0cnVjdCBw
-aW5jdHJsX3Bpbl9kZXNjICpwaW5zOw0KPiAgCXVuc2lnbmVkIGludCBucGluczsNCj4gQEAgLTk4
-LDIxICsxMTMsMTMgQEAgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvIHsNCj4gIAkJCQkgIHN0
-cnVjdCBwaW5jdHJsX2dwaW9fcmFuZ2UgKnJhbmdlLA0KPiAgCQkJCSAgdW5zaWduZWQgb2Zmc2V0
-LA0KPiAgCQkJCSAgYm9vbCBpbnB1dCk7DQo+IC19Ow0KPiAtDQo+IC0vKioNCj4gLSAqIEBkZXY6
-IGEgcG9pbnRlciBiYWNrIHRvIGNvbnRhaW5pbmcgZGV2aWNlDQo+IC0gKiBAYmFzZTogdGhlIG9m
-ZnNldCB0byB0aGUgY29udHJvbGxlciBpbiB2aXJ0dWFsIG1lbW9yeQ0KPiAtICovDQo+IC1zdHJ1
-Y3QgaW14X3BpbmN0cmwgew0KPiAtCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gLQlzdHJ1Y3QgcGlu
-Y3RybF9kZXYgKnBjdGw7DQo+IC0Jdm9pZCBfX2lvbWVtICpiYXNlOw0KPiAtCXZvaWQgX19pb21l
-bSAqaW5wdXRfc2VsX2Jhc2U7DQo+IC0JY29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZv
-ICppbmZvOw0KPiAtCXN0cnVjdCBpbXhfcGluX3JlZyAqcGluX3JlZ3M7DQo+IC0JdW5zaWduZWQg
-aW50IGdyb3VwX2luZGV4Ow0KPiAtCXN0cnVjdCBtdXRleCBtdXRleDsNCj4gKwlpbnQgKCppbXhf
-cGluY29uZl9nZXQpKHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwgdW5zaWduZWQgaW50IHBp
-bl9pZCwNCj4gKwkJCSAgICAgICB1bnNpZ25lZCBsb25nICpjb25maWcpOw0KPiArCWludCAoKmlt
-eF9waW5jb25mX3NldCkoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LCB1bnNpZ25lZCBpbnQg
-cGluX2lkLA0KPiArCQkJICAgICAgIHVuc2lnbmVkIGxvbmcgKmNvbmZpZ3MsIHVuc2lnbmVkIGlu
-dCBudW1fY29uZmlncyk7DQo+ICsJdm9pZCAoKmlteF9waW5jdHJsX3BhcnNlX3Bpbikoc3RydWN0
-IGlteF9waW5jdHJsICppcGN0bCwNCj4gKwkJCQkgICAgICB1bnNpZ25lZCBpbnQgKnBpbl9pZCwg
-c3RydWN0IGlteF9waW4gKnBpbiwNCj4gKwkJCQkgICAgICBjb25zdCBfX2JlMzIgKipsaXN0X3Ap
-Ow0KPiAgfTsNCj4gDQo+ICAjZGVmaW5lIElNWF9DRkdfUEFSQU1TX0RFQ09ERShwLCBtLCBvKSBc
-IEBAIC0xMzcsNyArMTQ0LDYgQEAgc3RydWN0DQo+IGlteF9waW5jdHJsIHsgIGludCBpbXhfcGlu
-Y3RybF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0KPiAgCQkJY29uc3Qgc3Ry
-dWN0IGlteF9waW5jdHJsX3NvY19pbmZvICppbmZvKTsNCj4gDQo+IC0jaWZkZWYgQ09ORklHX1BJ
-TkNUUkxfSU1YX1NDVQ0KPiAgI2RlZmluZSBCTV9QQURfQ1RMX0dQX0VOQUJMRQkJQklUKDMwKQ0K
-PiAgI2RlZmluZSBCTV9QQURfQ1RMX0lGTVVYX0VOQUJMRQkJQklUKDMxKQ0KPiAgI2RlZmluZSBC
-UF9QQURfQ1RMX0lGTVVYCQkyNw0KPiBAQCAtMTUwLDIzICsxNTYsNCBAQCBpbnQgaW14X3BpbmNv
-bmZfc2V0X3NjdShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsDQo+IHVuc2lnbmVkIHBpbl9p
-ZCwgIHZvaWQgaW14X3BpbmN0cmxfcGFyc2VfcGluX3NjdShzdHJ1Y3QgaW14X3BpbmN0cmwgKmlw
-Y3RsLA0KPiAgCQkJICAgICAgIHVuc2lnbmVkIGludCAqcGluX2lkLCBzdHJ1Y3QgaW14X3BpbiAq
-cGluLA0KPiAgCQkJICAgICAgIGNvbnN0IF9fYmUzMiAqKmxpc3RfcCk7DQo+IC0jZWxzZQ0KPiAt
-c3RhdGljIGlubGluZSBpbnQgaW14X3BpbmNvbmZfZ2V0X3NjdShzdHJ1Y3QgcGluY3RybF9kZXYg
-KnBjdGxkZXYsDQo+IC0JCQkJICAgICAgdW5zaWduZWQgcGluX2lkLCB1bnNpZ25lZCBsb25nICpj
-b25maWcpDQo+IC17DQo+IC0JcmV0dXJuIC1FSU5WQUw7DQo+IC19DQo+IC1zdGF0aWMgaW5saW5l
-IGludCBpbXhfcGluY29uZl9zZXRfc2N1KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwNCj4g
-LQkJCQkgICAgICB1bnNpZ25lZCBwaW5faWQsIHVuc2lnbmVkIGxvbmcgKmNvbmZpZ3MsDQo+IC0J
-CQkJICAgICAgdW5zaWduZWQgbnVtX2NvbmZpZ3MpDQo+IC17DQo+IC0JcmV0dXJuIC1FSU5WQUw7
-DQo+IC19DQo+IC1zdGF0aWMgaW5saW5lIHZvaWQgaW14X3BpbmN0cmxfcGFyc2VfcGluX3NjdShz
-dHJ1Y3QgaW14X3BpbmN0cmwgKmlwY3RsLA0KPiAtCQkJCQkgICAgdW5zaWduZWQgaW50ICpwaW5f
-aWQsDQo+IC0JCQkJCSAgICBzdHJ1Y3QgaW14X3BpbiAqcGluLA0KPiAtCQkJCQkgICAgY29uc3Qg
-X19iZTMyICoqbGlzdF9wKQ0KPiAtew0KPiAtfQ0KPiAtI2VuZGlmDQo+ICAjZW5kaWYgLyogX19E
-UklWRVJTX1BJTkNUUkxfSU1YX0ggKi8NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9m
-cmVlc2NhbGUvcGluY3RybC1pbXg4ZHhsLmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxl
-L3BpbmN0cmwtaW14OGR4bC5jDQo+IGluZGV4IDEyYjk3ZGEuLmQzMDIwYzAgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4ZHhsLmMNCj4gKysrIGIv
-ZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhkeGwuYw0KPiBAQCAtMTU5LDYg
-KzE1OSw5IEBAIHN0YXRpYyBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gaW14OGR4bF9waW5j
-dHJsX2luZm8NCj4gPSB7DQo+ICAJLnBpbnMgPSBpbXg4ZHhsX3BpbmN0cmxfcGFkcywNCj4gIAku
-bnBpbnMgPSBBUlJBWV9TSVpFKGlteDhkeGxfcGluY3RybF9wYWRzKSwNCj4gIAkuZmxhZ3MgPSBJ
-TVhfVVNFX1NDVSwNCj4gKwkuaW14X3BpbmNvbmZfZ2V0ID0gaW14X3BpbmNvbmZfZ2V0X3NjdSwN
-Cj4gKwkuaW14X3BpbmNvbmZfc2V0ID0gaW14X3BpbmNvbmZfc2V0X3NjdSwNCj4gKwkuaW14X3Bp
-bmN0cmxfcGFyc2VfcGluID0gaW14X3BpbmN0cmxfcGFyc2VfcGluX3NjdSwNCj4gIH07DQo+IA0K
-PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW14OGR4bF9waW5jdHJsX29mX21h
-dGNoW10gPSB7IGRpZmYgLS1naXQNCj4gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0
-cmwtaW14OHFtLmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHFt
-LmMNCj4gaW5kZXggMDk1YWNmNC4uOGY0NmI5NDAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGlu
-Y3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cW0uYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwv
-ZnJlZXNjYWxlL3BpbmN0cmwtaW14OHFtLmMNCj4gQEAgLTI5Miw2ICsyOTIsOSBAQCBzdGF0aWMg
-Y29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvDQo+IGlteDhxbV9waW5jdHJsX2luZm8g
-PSB7DQo+ICAJLnBpbnMgPSBpbXg4cW1fcGluY3RybF9wYWRzLA0KPiAgCS5ucGlucyA9IEFSUkFZ
-X1NJWkUoaW14OHFtX3BpbmN0cmxfcGFkcyksDQo+ICAJLmZsYWdzID0gSU1YX1VTRV9TQ1UsDQo+
-ICsJLmlteF9waW5jb25mX2dldCA9IGlteF9waW5jb25mX2dldF9zY3UsDQo+ICsJLmlteF9waW5j
-b25mX3NldCA9IGlteF9waW5jb25mX3NldF9zY3UsDQo+ICsJLmlteF9waW5jdHJsX3BhcnNlX3Bp
-biA9IGlteF9waW5jdHJsX3BhcnNlX3Bpbl9zY3UsDQo+ICB9Ow0KPiANCj4gIHN0YXRpYyBjb25z
-dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlteDhxbV9waW5jdHJsX29mX21hdGNoW10gPSB7IGRpZmYg
-LS1naXQNCj4gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHF4cC5jDQo+
-IGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteDhxeHAuYw0KPiBpbmRleCA4
-MWViZDRjLi42Nzc2YWQ2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxl
-L3BpbmN0cmwtaW14OHF4cC5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGlu
-Y3RybC1pbXg4cXhwLmMNCj4gQEAgLTE5OCw2ICsxOTgsOSBAQCBzdGF0aWMgc3RydWN0IGlteF9w
-aW5jdHJsX3NvY19pbmZvIGlteDhxeHBfcGluY3RybF9pbmZvDQo+ID0gew0KPiAgCS5waW5zID0g
-aW14OHF4cF9waW5jdHJsX3BhZHMsDQo+ICAJLm5waW5zID0gQVJSQVlfU0laRShpbXg4cXhwX3Bp
-bmN0cmxfcGFkcyksDQo+ICAJLmZsYWdzID0gSU1YX1VTRV9TQ1UsDQo+ICsJLmlteF9waW5jb25m
-X2dldCA9IGlteF9waW5jb25mX2dldF9zY3UsDQo+ICsJLmlteF9waW5jb25mX3NldCA9IGlteF9w
-aW5jb25mX3NldF9zY3UsDQo+ICsJLmlteF9waW5jdHJsX3BhcnNlX3BpbiA9IGlteF9waW5jdHJs
-X3BhcnNlX3Bpbl9zY3UsDQo+ICB9Ow0KPiANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2
-aWNlX2lkIGlteDhxeHBfcGluY3RybF9vZl9tYXRjaFtdID0gew0KPiAtLQ0KPiAyLjcuNA0KDQo=
+
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Let's use standard runtime PM functions instead of custom start and stop
+> functions. This way we can implement runtime idle mode using runtime PM
+> autosuspend in the following patches.
+
+This is not in recent kernel. What needs to be done here?
+
+Best regards,
+								Pavel
+							=09
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/input/mt.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/of.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/property.h>
+>  #include <linux/slab.h>
+>  #include <linux/gpio/consumer.h>
+> @@ -2927,58 +2928,27 @@ static const struct attribute_group mxt_attr_grou=
+p =3D {
+>  	.attrs =3D mxt_attrs,
+>  };
+> =20
+> -static void mxt_start(struct mxt_data *data)
+> +static int mxt_input_open(struct input_dev *input_dev)
+>  {
+> -	switch (data->suspend_mode) {
+> -	case MXT_SUSPEND_T9_CTRL:
+> -		mxt_soft_reset(data);
+> -
+> -		/* Touch enable */
+> -		/* 0x83 =3D SCANEN | RPTEN | ENABLE */
+> -		mxt_write_object(data,
+> -				MXT_TOUCH_MULTI_T9, MXT_T9_CTRL, 0x83);
+> -		break;
+> -
+> -	case MXT_SUSPEND_DEEP_SLEEP:
+> -	default:
+> -		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
+> -
+> -		/* Recalibrate since chip has been in deep sleep */
+> -		mxt_t6_command(data, MXT_COMMAND_CALIBRATE, 1, false);
+> -		break;
+> -	}
+> -}
+> -
+> -static void mxt_stop(struct mxt_data *data)
+> -{
+> -	switch (data->suspend_mode) {
+> -	case MXT_SUSPEND_T9_CTRL:
+> -		/* Touch disable */
+> -		mxt_write_object(data,
+> -				MXT_TOUCH_MULTI_T9, MXT_T9_CTRL, 0);
+> -		break;
+> +	struct mxt_data *data =3D input_get_drvdata(input_dev);
+> +	struct device *dev =3D &data->client->dev;
+> +	int error;
+> =20
+> -	case MXT_SUSPEND_DEEP_SLEEP:
+> -	default:
+> -		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
+> -		break;
+> +	error =3D pm_runtime_get_sync(dev);
+> +	if (error < 0) {
+> +		pm_runtime_put_noidle(dev);
+> +		return error;
+>  	}
+> -}
+> -
+> -static int mxt_input_open(struct input_dev *dev)
+> -{
+> -	struct mxt_data *data =3D input_get_drvdata(dev);
+> -
+> -	mxt_start(data);
+> =20
+>  	return 0;
+>  }
+> =20
+> -static void mxt_input_close(struct input_dev *dev)
+> +static void mxt_input_close(struct input_dev *input_dev)
+>  {
+> -	struct mxt_data *data =3D input_get_drvdata(dev);
+> +	struct mxt_data *data =3D input_get_drvdata(input_dev);
+> +	struct device *dev =3D &data->client->dev;
+> =20
+> -	mxt_stop(data);
+> +	pm_runtime_put_sync(dev);
+>  }
+> =20
+>  static int mxt_parse_device_properties(struct mxt_data *data)
+> @@ -3036,6 +3006,7 @@ static const struct dmi_system_id chromebook_T9_sus=
+pend_dmi[] =3D {
+>  static int mxt_probe(struct i2c_client *client, const struct i2c_device_=
+id *id)
+>  {
+>  	struct mxt_data *data;
+> +	struct device *dev;
+>  	int error;
+> =20
+>  	/*
+> @@ -3070,6 +3041,7 @@ static int mxt_probe(struct i2c_client *client, con=
+st struct i2c_device_id *id)
+>  	snprintf(data->phys, sizeof(data->phys), "i2c-%u-%04x/input0",
+>  		 client->adapter->nr, client->addr);
+> =20
+> +	dev =3D &client->dev;
+>  	data->client =3D client;
+>  	data->irq =3D client->irq;
+>  	i2c_set_clientdata(client, data);
+> @@ -3109,20 +3081,23 @@ static int mxt_probe(struct i2c_client *client, c=
+onst struct i2c_device_id *id)
+>  		msleep(MXT_RESET_INVALID_CHG);
+>  	}
+> =20
+> +	pm_runtime_enable(dev);
+> +
+>  	error =3D mxt_initialize(data);
+>  	if (error)
+> -		return error;
+> +		goto err_disable;
+> =20
+>  	error =3D sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
+>  	if (error) {
+>  		dev_err(&client->dev, "Failure %d creating sysfs group\n",
+>  			error);
+> -		goto err_free_object;
+> +		goto err_disable;
+>  	}
+> =20
+>  	return 0;
+> =20
+> -err_free_object:
+> +err_disable:
+> +	pm_runtime_disable(dev);
+>  	mxt_free_input_device(data);
+>  	mxt_free_object_table(data);
+>  	return error;
+> @@ -3131,11 +3106,69 @@ static int mxt_probe(struct i2c_client *client, c=
+onst struct i2c_device_id *id)
+>  static int mxt_remove(struct i2c_client *client)
+>  {
+>  	struct mxt_data *data =3D i2c_get_clientdata(client);
+> +	struct device *dev =3D &data->client->dev;
+> =20
+>  	disable_irq(data->irq);
+>  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+>  	mxt_free_input_device(data);
+>  	mxt_free_object_table(data);
+> +	pm_runtime_disable(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused mxt_runtime_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct mxt_data *data =3D i2c_get_clientdata(client);
+> +	struct input_dev *input_dev =3D data->input_dev;
+> +
+> +	if (!input_dev)
+> +		return 0;
+> +
+> +	switch (data->suspend_mode) {
+> +	case MXT_SUSPEND_T9_CTRL:
+> +		/* Touch disable */
+> +		mxt_write_object(data,
+> +				 MXT_TOUCH_MULTI_T9, MXT_T9_CTRL, 0);
+> +		break;
+> +
+> +	case MXT_SUSPEND_DEEP_SLEEP:
+> +	default:
+> +		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_DEEPSLEEP);
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused mxt_runtime_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct mxt_data *data =3D i2c_get_clientdata(client);
+> +	struct input_dev *input_dev =3D data->input_dev;
+> +
+> +	if (!input_dev)
+> +		return 0;
+> +
+> +	switch (data->suspend_mode) {
+> +	case MXT_SUSPEND_T9_CTRL:
+> +		mxt_soft_reset(data);
+> +
+> +		/* Touch enable */
+> +		/* 0x83 =3D SCANEN | RPTEN | ENABLE */
+> +		mxt_write_object(data,
+> +				 MXT_TOUCH_MULTI_T9, MXT_T9_CTRL, 0x83);
+> +		break;
+> +
+> +	case MXT_SUSPEND_DEEP_SLEEP:
+> +	default:
+> +		mxt_set_t7_power_cfg(data, MXT_POWER_CFG_RUN);
+> +
+> +		/* Recalibrate since chip has been in deep sleep */
+> +		mxt_t6_command(data, MXT_COMMAND_CALIBRATE, 1, false);
+> +		break;
+> +	}
+> =20
+>  	return 0;
+>  }
+> @@ -3152,7 +3185,7 @@ static int __maybe_unused mxt_suspend(struct device=
+ *dev)
+>  	mutex_lock(&input_dev->mutex);
+> =20
+>  	if (input_dev->users)
+> -		mxt_stop(data);
+> +		mxt_runtime_suspend(dev);
+> =20
+>  	mutex_unlock(&input_dev->mutex);
+> =20
+> @@ -3175,14 +3208,17 @@ static int __maybe_unused mxt_resume(struct devic=
+e *dev)
+>  	mutex_lock(&input_dev->mutex);
+> =20
+>  	if (input_dev->users)
+> -		mxt_start(data);
+> +		mxt_runtime_resume(dev);
+> =20
+>  	mutex_unlock(&input_dev->mutex);
+> =20
+>  	return 0;
+>  }
+> =20
+> -static SIMPLE_DEV_PM_OPS(mxt_pm_ops, mxt_suspend, mxt_resume);
+> +const struct dev_pm_ops mxt_pm_ops =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(mxt_suspend, mxt_resume)
+> +	SET_RUNTIME_PM_OPS(mxt_runtime_suspend, mxt_runtime_resume, NULL)
+> +};
+> =20
+>  static const struct of_device_id mxt_of_match[] =3D {
+>  	{ .compatible =3D "atmel,maxtouch", },
+> -
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1dF/wAKCRAw5/Bqldv6
+8ry4AJ9+U8VvV+Jlu52A++JvLKDnd+GRFQCgj/tHEWx8mCSlyLZF+IDhmt/qBz8=
+=VlX6
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
