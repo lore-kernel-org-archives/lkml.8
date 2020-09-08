@@ -2,75 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65547C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F93C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E566821897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m0E3zr9A"
+	by mail.kernel.org (Postfix) with ESMTP id 765D121532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgIHGXf (ORCPT
+        id S1728971AbgIHGXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 02:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbgIHGXc (ORCPT
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:42643 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728009AbgIHGXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:23:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01927C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 23:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sksp/t0ni/xrmSuCxSHeJAbkuuheoDez0O8NIcBsyNY=; b=m0E3zr9AelfXyWNRedxJdmPxni
-        /5kOwchSrWI2cUO0Kcaakoe0rgd0DMbjZelgTJTiAXThC5QLC8QCvHTgL6y+HhaqjWuPx5Ywqh8wI
-        ClsQw8MY+LH5Bwa2ThIPoe7KR1wxLxnTwgOTS+315FS2eIzyUGq+YZUbfa/dnPAC9XQPMWu+uURuM
-        xfoswb7HyU5gjU4Yf6JXFCFBaTq8VqvMe0lozrt4izVdTS7WXAV6d3Ox3GLZh2VnLVN+XuLZUVDGO
-        fvlfFMIlwEzcWsF/F3Y8EDDplTYAfXs718yKVGEMySswnjnCgp6u3Y3Ms8p58Xc92B/UVOOQMx9vM
-        uUAupsNA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFX2M-0006nR-W4; Tue, 08 Sep 2020 06:23:27 +0000
-Date:   Tue, 8 Sep 2020 07:23:26 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Tom Murphy <murphyt7@tcd.ie>, intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
- dma-iommu
-Message-ID: <20200908062326.GB20774@infradead.org>
-References: <20200903201839.7327-1-murphyt7@tcd.ie>
- <20200903201839.7327-6-murphyt7@tcd.ie>
- <20200907070035.GA25114@infradead.org>
- <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
- <20200908053619.GA15418@infradead.org>
- <20200908055510.GA19078@infradead.org>
- <9655fdc9-6ea0-e4c1-e104-a9a8981ecb1e@linux.intel.com>
+        Tue, 8 Sep 2020 02:23:31 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 5B965D31;
+        Tue,  8 Sep 2020 02:23:30 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 08 Sep 2020 02:23:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=8PeJUwpZWqv0vmkZd7YAC2nu4o8
+        KiLCP0IQDcIlnSOo=; b=ZuF+MoBRPeJv/T6zjra7/jOdL5LsazsWA6d2xxmB0Pb
+        R7WPMM4onVuWLRbFYKVFiDAQfSp8mIcXPdkNuo3iEHpOPx58Lw9BVnexpT6i43KR
+        gGTirBBDiZ2y/RD4bVpjeVYLM6ceEapi9PQ6skZnx+hbn9+aL+SEmh0ENvV+Cv5J
+        DUZi+t0R80p463Kr4msD0LHGcCQDCkziK2l67GkzkuN8lD6lgFfj3agEBCs7wQu6
+        PP2Q5d8bwYZrNrsSlmGk2V7E4YpKpqRC1m07QS/9ogZpvjnFCGxQHb7kNO5p50Q2
+        iMlv23fASXV0OzGuUWU1pqBDaRFr2R4AgkzxfDq+Z/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8PeJUw
+        pZWqv0vmkZd7YAC2nu4o8KiLCP0IQDcIlnSOo=; b=GTZf36Cany/gjRwOXn7Ic7
+        uQLF77zuPvk5r4fut2E7gGmf3H1s7bzZFo9lbvY9zzlucSzMiCjoHTLstla6QzBE
+        pmBN7Podzt5RDzSelNcfuXTtYBpyZpCCiG2m+hWwndspCZGGbhNrzWPyVTuFFq+e
+        VZwhz6cGzqBmX36xKkmmcyACtgxmyvDppa4QX69WYr34FnR6GzE7pJeJwK5KTusE
+        Y/JdCjjWxEbhobBJ0yx+Rn/dB6hm7yUmSXOv5yZJmJW1tUNH3MrhjOc2i07rLSZX
+        Ou5CqKYc9AScW3mKXDy6mDfVI4JzxyuYFoBs7SOBKW+cU71kVnLay793GpRuyfPQ
+        ==
+X-ME-Sender: <xms:YCNXX2UgErBiRdbujEhwkEIsRdNlQh46_OYzYA0GFNnSObo6kvaLSg>
+    <xme:YCNXXyml5PsQO6HK6Oc-Mx8Xj1dOsbi5w2FA5JygQosZWVNZh8KhwnJ2z0N8Rfom5
+    PUs_RUoJD_WMSKMOnU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehuddguddthecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
+    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedvne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:YCNXX6aA6XP7FcQ7vAnSs84CykRxh6pIDAEmJkG_0Ezltc18Bwe_cA>
+    <xmx:YCNXX9VW7PVPnu24SXyGTD6cazPERfiK-GsiUJ312VOSz9MdP5GcYA>
+    <xmx:YCNXXwkbRAobrRfVg_mtQB0ELVx1gyOrEXZSh90RpTxkd8AT-J7W9g>
+    <xmx:YSNXX67eMQSUQGB8SVRgN3mCY746la5Pt9qVueY9EUQo23vpsvxV3jGRLOk>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7A28F3280059;
+        Tue,  8 Sep 2020 02:23:28 -0400 (EDT)
+Date:   Tue, 8 Sep 2020 08:23:27 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Martin Cerveny <m.cerveny@computer.org>
+Cc:     devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] ARM: dts: sun8i: v3s: Enable video decoder
+Message-ID: <20200908062327.7o4abjnosvghtafy@gilmour.lan>
+References: <20200904200112.5563-1-m.cerveny@computer.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yeunpu5qtdhq4w3a"
 Content-Disposition: inline
-In-Reply-To: <9655fdc9-6ea0-e4c1-e104-a9a8981ecb1e@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200904200112.5563-1-m.cerveny@computer.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:04:53PM +0800, Lu Baolu wrote:
-> Do you mind telling where can I find Marek's series?
 
-[PATCH v10 00/30] DRM: fix struct sg_table nents vs. orig_nents misuse
+--yeunpu5qtdhq4w3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-on various lists including the iommu one.
+Hi,
+
+On Fri, Sep 04, 2020 at 10:01:06PM +0200, Martin Cerveny wrote:
+> First patch extends cedrus capability to all decoders
+> because V3s missing MPEG2 decoder.
+>=20
+> Next two patches add system control node (SRAM C1) and=20
+> next three patches add support for Cedrus VPU.
+
+How was it tested?
+
+Maxime
+
+--yeunpu5qtdhq4w3a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1cjXwAKCRDj7w1vZxhR
+xV8GAP0cNYAAAy/pw2iH4/pxcs9qpz9Yq4xEwKOO219Fvk4puwD9EU7b+Q9/2v/p
+2OT6tPxEesH157Xx1P4yiIB53HjDIQs=
+=Kt/J
+-----END PGP SIGNATURE-----
+
+--yeunpu5qtdhq4w3a--
