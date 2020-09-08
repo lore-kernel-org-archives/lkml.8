@@ -2,51 +2,53 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C09C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A7AC2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD922208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0762080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589870;
-	bh=d6cW1362UUvBQmj+ryx5yQSEiJ9hRL5OR5ltO0kSPYs=;
+	s=default; t=1599589882;
+	bh=x2JmDUj9Cjm3JEiQiOGlXRvx+7Wrmx9ulOOTFrYIEg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pk8gZxcFiWGHmgG0Ny+OH0JjoL88XsvN6jZnhp/e+sm2GDdq2nhhuR9klPMK/CsGi
-	 bkNwBCl5SQhu+0GE7AVxBIgZOTDQ/MbPFWzeMDw1zr31mSlQExJMQIrc1dZ7CmYIdE
-	 VBzg6BvTZOscMyuLO2M9EMp4vgNHIEaKToIztgTg=
+	b=cOxGRpNqo629WMUJbQX6167bUlMGYaKdMMq4D1wB5TbuTUAMfH1IJj9SICF/MRm6G
+	 RzsvIN1soyGkWEczBkeDJNl2BggQ6HO+cyBu75PCtlm+1sKXoFcIn/WfDwOgnZpRdm
+	 0TXaPE9wUS2cD86mNMMWGqSwFBZ5OsvJC90Q0SFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731791AbgIHSbJ (ORCPT
+        id S1731769AbgIHSbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730710AbgIHQJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:37 -0400
+        id S1731371AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:35 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 571992463E;
-        Tue,  8 Sep 2020 15:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 541B324197;
+        Tue,  8 Sep 2020 15:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580201;
-        bh=d6cW1362UUvBQmj+ryx5yQSEiJ9hRL5OR5ltO0kSPYs=;
+        s=default; t=1599580186;
+        bh=x2JmDUj9Cjm3JEiQiOGlXRvx+7Wrmx9ulOOTFrYIEg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLADgTgfsM019pr9UGH2FiZaPyN8sH6huce0KXgSzGNvNdza828z2ScjPYyMUp8gS
-         RXbQyDMUJmRcO7+Dh76pc5bheN6bTbsoOsk5o+p14v/amp6NoNQ01Jstfff9+6sDBh
-         VSk09dqKOZlHZ11OHrhTQvqi2Q42nZroAeD/aqQ4=
+        b=LnIPIe5fm0jKUjfQfpQELj7VqsTFcCVuylRTlWXQxpL5o8OQydmbCjtkR2Fr+yV4q
+         dtFcncxtchuY0HhVV/tOSKO2eXbWD0Aq7eXhH0pgfvTp8gOQZ4g1HIVpWYKem0cl3q
+         URyEVtprMAYOn/V8zwEv5c5ajuU8AAu0xm0p8tPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Crawford <dnlcrwfrd@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 70/88] ALSA: hda - Fix silent audio output and corrupted input on MSI X570-A PRO
-Date:   Tue,  8 Sep 2020 17:26:11 +0200
-Message-Id: <20200908152224.673016973@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 64/88] net: usb: qmi_wwan: add Telit 0x1050 composition
+Date:   Tue,  8 Sep 2020 17:26:05 +0200
+Message-Id: <20200908152224.325800148@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -59,39 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Crawford <dnlcrwfrd@gmail.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit 15cbff3fbbc631952c346744f862fb294504b5e2 upstream.
+[ Upstream commit e0ae2c578d3909e60e9448207f5d83f785f1129f ]
 
-Following Christian Lachner's patch for Gigabyte X570-based motherboards,
-also patch the MSI X570-A PRO motherboard; the ALC1220 codec requires the
-same workaround for Clevo laptops to enforce the DAC/mixer connection
-path. Set up a quirk entry for that.
+This patch adds support for Telit FN980 0x1050 composition
 
-I suspect most if all X570 motherboards will require similar patches.
+0x1050: tty, adb, rmnet, tty, tty, tty, tty
 
-[ The entries reordered in the SSID order -- tiwai ]
-
-Related buglink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
-Signed-off-by: Dan Crawford <dnlcrwfrd@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200829024946.5691-1-dnlcrwfrd@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    1 +
+ drivers/net/usb/qmi_wwan.c | 1 +
  1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2452,6 +2452,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
-+	SND_PCI_QUIRK(0x1462, 0x9c37, "MSI X570-A PRO", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
- 	SND_PCI_QUIRK(0x147b, 0x107a, "Abit AW9D-MAX", ALC882_FIXUP_ABIT_AW9D_MAX),
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index ea3c891186147..41fbb8669845e 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1262,6 +1262,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x2357, 0x9000, 4)},	/* TP-LINK MA260 */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1031, 3)}, /* Telit LE910C1-EUX */
+ 	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)},	/* Telit LE922A */
++	{QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)},	/* Telit FN980 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},	/* Telit ME910 */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},	/* Telit ME910 dual modem */
+ 	{QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},	/* Telit LE920 */
+-- 
+2.25.1
+
 
 
