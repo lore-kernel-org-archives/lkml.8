@@ -2,156 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16508C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA516C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D338F207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:50:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IVSzWb0N"
+	by mail.kernel.org (Postfix) with ESMTP id 8F5AA20658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599594644;
+	bh=XA3XmwhgTEagE7sLyFFI3GNE6kqdL3le3JsFG6UEYsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eW6n9jB6cxHYjkEdcOqdWe/4Hp41akF0lJipI8/WWtUSuOkTcRinF1VVyQXyfv8mQ
+	 IdFtH/TOAbZjxgVv/YLPyfV/JnhFZGJfEgFM8gsRY4Gf9UeT/TMZVoTSLo5j2qXcdL
+	 zhawNRYRbzwbrtPwtEzVpZ+2c3mTUbDB6SdjtR84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732367AbgIHTu1 (ORCPT
+        id S1732025AbgIHTum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:50:27 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17744 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730811AbgIHPur (ORCPT
+        Tue, 8 Sep 2020 15:50:42 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36728 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731854AbgIHTuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:50:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f57a7ad0000>; Tue, 08 Sep 2020 08:47:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 08 Sep 2020 08:50:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 08 Sep 2020 08:50:11 -0700
-Received: from [10.2.173.224] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
- 2020 15:50:05 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     David Hildenbrand <david@redhat.com>, Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, <linux-mm@kvack.org>,
-        "Rik van Riel" <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Yang Shi" <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Date:   Tue, 8 Sep 2020 11:50:03 -0400
-X-Mailer: MailMate (1.13.1r5705)
-Message-ID: <ED165EDF-0B06-4857-B92A-A9AD8B7B5603@nvidia.com>
-In-Reply-To: <20200908142758.GF27537@casper.infradead.org>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
- <20200908142758.GF27537@casper.infradead.org>
+        Tue, 8 Sep 2020 15:50:10 -0400
+Received: by mail-il1-f196.google.com with SMTP id p13so101348ils.3;
+        Tue, 08 Sep 2020 12:50:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5c1HRgnQ3n06UIr0qlZyRVS1Vpy/Owe423E/eWb8Yz0=;
+        b=i0vdxeM1lkFa05dG+d3dkiKG3Yzowrmhe8zJny7u9+laIgih6E0ulsW9COiZvLZkpz
+         rLYth++u9KII1CpQd+hiOYH/AK3HWDUMyn6oWXEBwImkJJlvCoaxJJ6I7u0waiYotYgy
+         i3yOynvmmfnQhhNTWHjxIzBDuBEtK7CCg8EQK+NmV+4JXzjD94gQpoRfhYH8fsvulNAq
+         PTMn/i5TEi+e05TwfB3cg7idOumqku2tqKPQnemEnyz6wd/1uVw6IHNApO6z837ql8hu
+         SHumWiLpE7STYRSlmm1MzWX90UiR2+10h+4/k7ntrEG9WimRCJiQnchiz5Y162eJsFSU
+         OaUQ==
+X-Gm-Message-State: AOAM532gS5fAr7c17sj7/VAuhWhqPpLyAiA5SMvxaCGrfsh2gBsoxF4I
+        3vP7j3gML0+eH0C9VPGrbw==
+X-Google-Smtp-Source: ABdhPJzcBJdUYSOqv5vyyPlfYhRkyAZLdFPz4Ih+Qvjiv4ZaD+Mgtxnccaffyn/7jgGO/9dLHjaRQQ==
+X-Received: by 2002:a05:6e02:807:: with SMTP id u7mr360581ilm.67.1599594609068;
+        Tue, 08 Sep 2020 12:50:09 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id z4sm132715iol.52.2020.09.08.12.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 12:50:08 -0700 (PDT)
+Received: (nullmailer pid 794409 invoked by uid 1000);
+        Tue, 08 Sep 2020 19:50:03 -0000
+Date:   Tue, 8 Sep 2020 13:50:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, repk@triplefau.lt, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: phy:
+ amlogic,meson-axg-mipi-pcie-analog: remove reg attribute
+Message-ID: <20200908195003.GB790974@bogus>
+References: <20200907073402.26674-1-narmstrong@baylibre.com>
+ <20200907073402.26674-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_E353A99C-21B4-44AC-A534-76899F22AA9E_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599580077; bh=5Y3AtZ5y0BxzRZh9nWpGpshKd2sNX9a56t17hma0SLg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=IVSzWb0NwL9gV7u2Tmo0EYDh3vHPACAUsUeewRr3ApO22XiMMP6gTVsBFCbDGqe8f
-         aeNYDRnY1ZGzpa9BA6HCVX+5jMTwjo3NWy0WGYVRHbLmWXGZcR4tPjvwnuHyRyu+Ee
-         6by+7ENoXf2LrwsqtJnisW7eI9Ls0lI3spkby2EhyThQx4kfsXl5JKxluGgM3Y19I0
-         UaXm1d61PPkQ8GygM9KD5sSiUDeHJVihT06wn3GyccafJM2y0o/58ZguEDitexQHrP
-         4bWjAvP+a7Jw7WpPjPXmzzC/C0ADtwi6eEncbZ+vd4v/uRoUCEt4oWgdXBhbHBFeKH
-         gAVopH2kxSOTA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907073402.26674-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_E353A99C-21B4-44AC-A534-76899F22AA9E_=
-Content-Type: text/plain; charset="UTF-8"; markup=markdown
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 07, 2020 at 09:34:00AM +0200, Neil Armstrong wrote:
+> The Amlogic AXG MIPI + PCIe Analog PHY should be a subnode of the hhi mfd
+> node like the axg-clkc node.
+> 
+> Thus the reg attribute is not needed.
 
-On 8 Sep 2020, at 10:27, Matthew Wilcox wrote:
+If the phy registers have an address then it should remain even if Linux 
+happens to not care. The exception is if the registers are all 
+interleaved with other stuff.
 
-> On Tue, Sep 08, 2020 at 10:05:11AM -0400, Zi Yan wrote:
->> On 8 Sep 2020, at 7:57, David Hildenbrand wrote:
->>> I have concerns if we would silently use 1~GB THPs in most scenarios
->>> where be would have used 2~MB THP. I'd appreciate a trigger to
->>> explicitly enable that - MADV_HUGEPAGE is not sufficient because some=
-
->>> applications relying on that assume that the THP size will be 2~MB
->>> (especially, if you want sparse, large VMAs).
->>
->> This patchset is not intended to silently use 1GB THP in place of 2MB =
-THP.
->> First of all, there is a knob /sys/kernel/mm/transparent_hugepage/enab=
-le_1GB
->> to enable 1GB THP explicitly. Also, 1GB THP is allocated from a reserv=
-ed CMA
->> region (although I had alloc_contig_pages as a fallback, which can be =
-removed
->> in next version), so users need to add hugepage_cma=3DnG kernel parame=
-ter to
->> enable 1GB THP allocation. If a finer control is necessary, we can add=
-
->> a new MADV_HUGEPAGE_1GB for 1GB THP.
->
-> I think we do need that flag.  Machines don't run a single workload
-> (arguably with VMs, we're getting closer to going back to the single
-> workload per machine, but that's a different matter).  So if there's
-> one app that wants 2MB pages and one that wants 1GB pages, we need to
-> be able to distinguish them.
->
-> I could also see there being an app which benefits from 1GB for
-> one mapping and prefers 2GB for a different mapping, so I think the
-> per-mapping madvise flag is best.
->
-> I'm a little wary of encoding the size of an x86 PUD in the Linux API
-> though.  Probably best to follow the example set in
-> include/uapi/asm-generic/hugetlb_encode.h, but I don't love it.  I
-> don't have a better suggestion though.
-
-Using hugeltb_encode.h makes sense to me. I will add it in the next versi=
-on.
-
-Thanks for the suggestion.
-
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_E353A99C-21B4-44AC-A534-76899F22AA9E_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9XqCsPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqK7ZgP/2b6pm1R2b/HxqJJOJrbv3Z/ALVfMhcIFUNb
-kQZsSGuKjbg4UeJ9pcGdBl/3OwP7Dq7+o9WvvGmJZsRRLcu5Ha8tMzO8oLqC653z
-PC+x+bj1S/ppbhbASW/qFfiqhOd53bCpwJPHFNq3DRtHtThPnVbWDKsD6KpD0tkb
-qDQrX0clkqwaj/NpkKhyG+1wLV4Ak3jDKMjdnbBIySY66x3JlVdcYic+IB/UE5fz
-+OvpdkSJ6pCU3VLc/ExQKwjfxALmPfe1ZpadHqyXKt6fXjWhL1Z7pGrv7+kLlrt9
-XnCIZXKKOnhVz+5kIfqH+/KXDS3pdJuxUXg3F9um4p1JA1td7gsV0nKW2uP8ItB+
-hwP1/GfoZDaS4dGfpI+nW75I6KmA2X19evmQXD26WEAweoMfa7E+jWgasyMgI5EK
-wyLzD9FUXO5yWe5UMG6dK7VW0LuglxZe/14HD3Jlq6P113dJGTLKbfaqklj6OOca
-WewVnIpSws9VODfQoykO30TdUvCkKzeFTZqHXFq4VRv4yr/M/T2opT4fUNwUdkSI
-mzjEr8f7LSuyZXKYLVkIUoIz5SBfUdTO76LJGQLvBE+0ZZoF2LbwIhdtAEy+43tq
-ABpvIqEIc0nX+7mRTZI4HN/qYFoBI+FMoe/uWmXFMc1Eq9rouODB+PpahTPYvJmm
-MUFEYKGA
-=MdJ0
------END PGP SIGNATURE-----
-
---=_MailMate_E353A99C-21B4-44AC-A534-76899F22AA9E_=--
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml      | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> index 18c1ec5e19ad..a9040aa387cf 100644
+> --- a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> @@ -13,15 +13,11 @@ properties:
+>    compatible:
+>      const: amlogic,axg-mipi-pcie-analog-phy
+>  
+> -  reg:
+> -    maxItems: 1
+> -
+>    "#phy-cells":
+>      const: 1
+>  
+>  required:
+>    - compatible
+> -  - reg
+>    - "#phy-cells"
+>  
+>  additionalProperties: false
+> -- 
+> 2.22.0
+> 
