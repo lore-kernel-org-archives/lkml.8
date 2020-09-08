@@ -2,131 +2,163 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CC2C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A26B2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9BE20658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pWgWvsnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732409AbgIHTwF (ORCPT
+        id S1730736AbgIHTwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:52:05 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:8215 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730736AbgIHPth (ORCPT
+        Tue, 8 Sep 2020 15:52:43 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:9486 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730460AbgIHPtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:49:37 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="466596022"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 14:08:43 +0200
-Date:   Tue, 8 Sep 2020 14:08:43 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-cc:     kernel test robot <lkp@intel.com>,
-        Denis Efremov <efremov@linux.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org
-Subject: Re: [kbuild-all] Re: [PATCH] coccinelle: api: fix device_attr_show.cocci
- warnings
-In-Reply-To: <3c266a0e-a2b9-ffde-0768-3b4fa89b0bfe@samsung.com>
-Message-ID: <alpine.DEB.2.22.394.2009081408160.2478@hadrien>
-References: <202008101736.EtK0s7BQ%lkp@intel.com> <CGME20200810092148eucas1p117cc6af85f23fb6e457fddb913d2b41a@eucas1p1.samsung.com> <20200810092100.GA42813@2f5448a72a42> <3c266a0e-a2b9-ffde-0768-3b4fa89b0bfe@samsung.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 8 Sep 2020 11:49:06 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088DqRUJ027924;
+        Tue, 8 Sep 2020 15:53:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=6w3g6tB8aZNlO4rCM3lm4/rbYpN+ADaXzbOYDVLkgaI=;
+ b=pWgWvsnMGafLwoGVVukmZPlvMeHb5hGxiAQvNskUz1uGBWJpQNT+u8wuqg3yS+ExTZQj
+ JztgosFabJsoAT5WG53dfkVPTTrH0wpUMSmfsrTd6o82n50vWEHHnN8j1pbQ3cUob20l
+ 4PKYjvtd6nn18oiyAq/YgEHo0Y7ipXmVpR0wBUyreHuAREWapa8O8yGtLOvt4sK7wd0v
+ ZyYSw6o9MQosgbHP11GX7Wy1pIEPns3vxmTgQGFVzrKUBjDa6g+c9jlgks+X33Kn52Tt
+ fkygIqb3XwgmfNhzzl8MAGM8wZ9cQJVmTMgK27KQKHh2IHtcQaS8qD38+598osPus9LK QA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 33c0euqfqb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 15:53:41 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F204210002A;
+        Tue,  8 Sep 2020 15:53:35 +0200 (CEST)
+Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BE56D2BC7B5;
+        Tue,  8 Sep 2020 15:53:35 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.50) by GPXDAG3NODE5.st.com
+ (10.75.127.72) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
+ 2020 15:53:35 +0200
+Date:   Tue, 8 Sep 2020 15:53:33 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 08/11] spi: stm32: Simplify with dev_err_probe()
+Message-ID: <20200908135333.GE6329@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20200901152713.18629-1-krzk@kernel.org>
+ <20200901152713.18629-8-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200901152713.18629-8-krzk@kernel.org>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To GPXDAG3NODE5.st.com
+ (10.75.127.72)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 01, 2020 at 03:27:10PM +0000, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+Reviewed-by: Alain Volmat <alain.volmat@st.com>
 
-On Tue, 8 Sep 2020, Bartlomiej Zolnierkiewicz wrote:
-
->
-> Hi,
->
-> On 8/10/20 11:21 AM, kernel test robot wrote:
-> > From: kernel test robot <lkp@intel.com>
-> >
-> > drivers/video/fbdev/core/fbcon.c:3509:8-16: WARNING: use scnprintf or sprintf
-> > drivers/video/fbdev/core/fbcon.c:3484:8-16: WARNING: use scnprintf or sprintf
-> >
-> >
-> >  From Documentation/filesystems/sysfs.txt:
-> >   show() must not use snprintf() when formatting the value to be
-> >   returned to user space. If you can guarantee that an overflow
-> >   will never happen you can use sprintf() otherwise you must use
-> >   scnprintf().
-> >
-> > Generated by: scripts/coccinelle/api/device_attr_show.cocci
-> >
-> > Fixes: abfc19ff202d ("coccinelle: api: add device_attr_show script")
-> > CC: Denis Efremov <efremov@linux.com>
-> > Signed-off-by: kernel test robot <lkp@intel.com>
-> > ---
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   fc80c51fd4b23ec007e88d4c688f2cac1b8648e7
-> > commit: abfc19ff202d287742483e15fd478ddd6ada2187 coccinelle: api: add device_attr_show script
-> >
-> > Please take the patch only if it's a positive warning. Thanks!
-> >
-> >  fbcon.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > --- a/drivers/video/fbdev/core/fbcon.c
-> > +++ b/drivers/video/fbdev/core/fbcon.c
-> > @@ -3481,7 +3481,7 @@ static ssize_t show_rotate(struct device
-> >  	rotate = fbcon_get_rotate(info);
-> >  err:
-> >  	console_unlock();
-> > -	return snprintf(buf, PAGE_SIZE, "%d\n", rotate);
-> > +	return scnprintf(buf, PAGE_SIZE, "%d\n", rotate);
->
-> buf length is at least PAGE_SIZE and rotate val is an int so
-> shouldn't this be converted to use sprintf() instead?
-
-The rule is evolving in this direction.  Thanks for the feedback.
-
-julia
-
->
-> >  }
-> >
-> >  static ssize_t show_cursor_blink(struct device *device,
-> > @@ -3506,7 +3506,7 @@ static ssize_t show_cursor_blink(struct
-> >  	blink = (ops->flags & FBCON_FLAGS_CURSOR_TIMER) ? 1 : 0;
-> >  err:
-> >  	console_unlock();
-> > -	return snprintf(buf, PAGE_SIZE, "%d\n", blink);
-> > +	return scnprintf(buf, PAGE_SIZE, "%d\n", blink);
->
-> ditto for blink val
->
-> >  }
-> >
-> >  static ssize_t store_cursor_blink(struct device *device,
-> >
->
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
->
+> ---
+>  drivers/spi/spi-stm32.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+> index d4b33b358a31..f0e594b2fee4 100644
+> --- a/drivers/spi/spi-stm32.c
+> +++ b/drivers/spi/spi-stm32.c
+> @@ -1857,9 +1857,7 @@ static int stm32_spi_probe(struct platform_device *pdev)
+>  
+>  	spi->irq = platform_get_irq(pdev, 0);
+>  	if (spi->irq <= 0) {
+> -		ret = spi->irq;
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "failed to get irq: %d\n", ret);
+> +		ret = dev_err_probe(&pdev->dev, spi->irq, "failed to get irq\n");
+>  		goto err_master_put;
+>  	}
+>  	ret = devm_request_threaded_irq(&pdev->dev, spi->irq,
+> -- 
+> 2.17.1
+> 
