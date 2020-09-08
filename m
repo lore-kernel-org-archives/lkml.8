@@ -2,182 +2,137 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9879C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4550CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBD320757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F1C20757
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="cMCk0lKz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mlr6R/1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgIHWnz (ORCPT
+        id S1730502AbgIHWoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33508 "EHLO
+        Tue, 8 Sep 2020 18:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730469AbgIHWnc (ORCPT
+        with ESMTP id S1730054AbgIHWku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:43:32 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C59C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 15:43:32 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id h11so480363ilj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 15:43:32 -0700 (PDT)
+        Tue, 8 Sep 2020 18:40:50 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0847C061573;
+        Tue,  8 Sep 2020 15:40:49 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y11so539405lfl.5;
+        Tue, 08 Sep 2020 15:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kP3fRBjvfm91Lgym+an8BHFQ2PuoWlJ3si63rQdbN8c=;
-        b=cMCk0lKzNfxAMTO2UkKJ0lXqynPZojKcMVW8pVBD0mlICjkRQgjWFrGN9QLlhQkHwT
-         /1hBT7NZs2Gr3ljH38g6Vgva0RGAIwKBL2lof8SnGTM7KVvDmeSc64CAB5ZYI51ye64A
-         myig/VRQXeaoQ2s/61egtsT7H1YfnYF00beULBHNwfkxORoyxD3tpyeCI6Vv4fXW9aiB
-         GZnJVGUOtP0w4hIktrh22UQPPwcXtPBeUim5uFhP4e860zMBj/sx+nCWMoR6wglWGBae
-         T9aUpzVxoJnsq7orTcIcavPOpRMVeH9o5ow658uO6j6bws7ZRAzwVfQXC+uLjcXt9vgh
-         eYDQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=e1fEwvYGVc4Rjygf6C1JwpQ8Ow8K6KfjGtqJJ79slO8=;
+        b=Mlr6R/1l4hKnL+YI84D/CMKw3csSXxA5bp//v92tFjvz8zuOva72KP5A64ui7nvrD0
+         uimCtB1InIu/44d8gr98G4OksCcnW+2Gr9YV03Q3x0Fc14tYnjirC0KFfNBmzITsWaOd
+         EsGCzd2frJxu7R3W3aFlsMG2Hk4e41d71EuJYjccyxqoDxUNz7/7cXP4dLINmVViz6Ii
+         FwkGClUmAVBBGcjEscNdF4xvS1Onm8UFZ8T2Gg6MI+Wpqt48ncA614UEx2X9RFkbVp7z
+         bu8/knXp0Lvf9+m1wALtHesOwJgdSf+LydEMnK7iq8AyRz35KYpC6BAti3mIqNQXG8qc
+         d0uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kP3fRBjvfm91Lgym+an8BHFQ2PuoWlJ3si63rQdbN8c=;
-        b=hhwz5graUoKQ3nl/QJQ4ZM90TJvBmVw+GOCHWqBuss6QXBjTW3tIS7E6rFDjzb+8R6
-         Hk2A6DtOSz1M8VZpiDkoI0iWfPJo6n372at3Qvq92VLH+iXALuitBTlm31S/weCWTKcE
-         TlGXMtoj8j8ZKFhIhhvleCyeU9+hEHaAWBzj6li1JImTEoc1ve50mIcwkrZLJ8SiM/tA
-         PHAzMc4zM7k8JUWKc1fgWAyvviQARsHLlZvDJoXJBT8L/4kVuubsi+/3Vn++y78AwBEX
-         vRRQbIKkf8nyvhEHPJ3tgWwJH+jCPsOJ4qxphVDmHX/hjJJqnu5r94TaB8Z6rRfEPyTU
-         TH5Q==
-X-Gm-Message-State: AOAM533R8uJrgGHFnuILy0nxAMFqb12/jEJra+BREeDyiLD3pYlDaEAt
-        juY56mmq14XeTiDprSAqNPeZrE3y4AqQzcoqXiEgGw==
-X-Google-Smtp-Source: ABdhPJy2euDOe9gR5D2dH2jq/gUSw+Ds2//IpXgtG+LSuaTtkhuhiIiGtc0UENWkqIWHIiGMHapySfCTPJbwaFtJHWw=
-X-Received: by 2002:a92:9408:: with SMTP id c8mr928626ili.61.1599605010111;
- Tue, 08 Sep 2020 15:43:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org> <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com> <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com> <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
- <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com> <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
- <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com> <b27cae1f-07ff-bef2-f125-a5f0d968016d@linux.intel.com>
-In-Reply-To: <b27cae1f-07ff-bef2-f125-a5f0d968016d@linux.intel.com>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Tue, 8 Sep 2020 23:43:19 +0100
-Message-ID: <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
- dma-iommu api
-To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, kvm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=e1fEwvYGVc4Rjygf6C1JwpQ8Ow8K6KfjGtqJJ79slO8=;
+        b=hpM8zxIPXXLTpCCYxi6RrTW3Qb1JuZVavT4pF/1niXbdaOini41vAD6/K673WIDvWn
+         Me0wYVMwEc6jq7BZllAknw/4ls++RMJX4JTIHkfhQgANrLyGFUskGij0zMM2rs29BtDL
+         avgWX3FGJ16BFwgFB/Wy1L4GVG8YWJnR3Fv4GZNpfdGnINBNAXtE6Wkvv4y75TYOcWAk
+         46Okf9+fW5ngKYRNtVOX7LBqD0lhGcGnJiJAXR4s8kH79+1IGxmTk7mljP0MtjNvegSp
+         vRbGMwW45ncVb+dtkYLBG9CmnamyG86Ju8VkXWRMJW9+GW9sVxrDHw5f3xDtmYVby0Bc
+         vneg==
+X-Gm-Message-State: AOAM531eGW/ghnsu8QWZgVejqm+JTZG77O5xOrBW165k1M+HYW1KurBc
+        6G3HW1M4txh1dXheZvpjUQc=
+X-Google-Smtp-Source: ABdhPJyYRnAwV78qx0If7eGiPj5aYVpnoOn40HTT8DyE/y9S2NeEQ8y0562g4b6N+S8MpsV8qtjkzA==
+X-Received: by 2002:a19:5e5d:: with SMTP id z29mr542824lfi.32.1599604848234;
+        Tue, 08 Sep 2020 15:40:48 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id s15sm268311ljp.25.2020.09.08.15.40.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 15:40:47 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 17/34] i2c: tegra: Remove outdated barrier()
+Date:   Wed,  9 Sep 2020 01:39:49 +0300
+Message-Id: <20200908224006.25636-18-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200908224006.25636-1-digetx@gmail.com>
+References: <20200908224006.25636-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 at 16:56, Tvrtko Ursulin
-<tvrtko.ursulin@linux.intel.com> wrote:
->
->
-> On 08/09/2020 16:44, Logan Gunthorpe wrote:
-> > On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
-> >>>
-> >>> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
-> >>> b/drivers/gpu/drm/i915/i915
-> >>> index b7b59328cb76..9367ac801f0c 100644
-> >>> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
-> >>> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-> >>> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
-> >>>    } __sgt_iter(struct scatterlist *sgl, bool dma) {
-> >>>           struct sgt_iter s = { .sgp = sgl };
-> >>>
-> >>> +       if (sgl && !sg_dma_len(s.sgp))
-> >>
-> >> I'd extend the condition to be, just to be safe:
-> >>      if (dma && sgl && !sg_dma_len(s.sgp))
-> >>
-> >
-> > Right, good catch, that's definitely necessary.
-> >
-> >>> +               s.sgp = NULL;
-> >>> +
-> >>>           if (s.sgp) {
-> >>>                   s.max = s.curr = s.sgp->offset;
-> >>> -               s.max += s.sgp->length;
-> >>> -               if (dma)
-> >>> +
-> >>> +               if (dma) {
-> >>> +                       s.max += sg_dma_len(s.sgp);
-> >>>                           s.dma = sg_dma_address(s.sgp);
-> >>> -               else
-> >>> +               } else {
-> >>> +                       s.max += s.sgp->length;
-> >>>                           s.pfn = page_to_pfn(sg_page(s.sgp));
-> >>> +               }
-> >>
-> >> Otherwise has this been tested or alternatively how to test it? (How to
-> >> repro the issue.)
-> >
-> > It has not been tested. To test it, you need Tom's patch set without the
-> > last "DO NOT MERGE" patch:
-> >
-> > https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
->
-> Tom, do you have a branch somewhere I could pull from? (Just being lazy
-> about downloading a bunch of messages from the archives.)
+The barrier() was intended to reduce possibility of racing with the
+interrupt handler, but driver's code evolved significantly and today's
+driver enables interrupt only when it waits for completion notification.
+Hence barrier() has no good use anymore, let's remove it.
 
-I don't unfortunately. I'm working locally with poor internet.
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
->
-> What GPU is in your Lenovo x1 carbon 5th generation and what
-> graphical/desktop setup I need to repro?
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 71e82a68c942..ab83d1de6c94 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -795,18 +795,17 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 			words_to_transfer = tx_fifo_avail;
+ 
+ 		/*
+-		 * Update state before writing to FIFO.  If this casues us
+-		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
+-		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
+-		 * not maskable).  We need to make sure that the isr sees
+-		 * buf_remaining as 0 and doesn't call us back re-entrantly.
++		 * Update state before writing to FIFO.  Note that this may
++		 * cause us to finish writing all bytes (AKA buf_remaining
++		 * goes to 0), hence we have a potential for an interrupt
++		 * (PACKET_XFER_COMPLETE is not maskable), but GIC interrupt
++		 * is disabled at this point.
+ 		 */
+ 		buf_remaining -= words_to_transfer * BYTES_PER_FIFO_WORD;
+ 		tx_fifo_avail -= words_to_transfer;
+ 		i2c_dev->msg_buf_remaining = buf_remaining;
+ 		i2c_dev->msg_buf = buf +
+ 			words_to_transfer * BYTES_PER_FIFO_WORD;
+-		barrier();
+ 
+ 		i2c_writesl(i2c_dev, buf, I2C_TX_FIFO, words_to_transfer);
+ 
+@@ -827,10 +826,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 		memcpy(&val, buf, buf_remaining);
+ 		val = le32_to_cpu(val);
+ 
+-		/* Again update before writing to FIFO to make sure isr sees. */
+ 		i2c_dev->msg_buf_remaining = 0;
+ 		i2c_dev->msg_buf = NULL;
+-		barrier();
+ 
+ 		i2c_writel(i2c_dev, val, I2C_TX_FIFO);
+ 	}
+-- 
+2.27.0
 
-
-Is this enough info?:
-
-$ lspci -vnn | grep VGA -A 12
-00:02.0 VGA compatible controller [0300]: Intel Corporation HD
-Graphics 620 [8086:5916] (rev 02) (prog-if 00 [VGA controller])
-    Subsystem: Lenovo ThinkPad X1 Carbon 5th Gen [17aa:224f]
-    Flags: bus master, fast devsel, latency 0, IRQ 148
-    Memory at eb000000 (64-bit, non-prefetchable) [size=16M]
-    Memory at 60000000 (64-bit, prefetchable) [size=256M]
-    I/O ports at e000 [size=64]
-    [virtual] Expansion ROM at 000c0000 [disabled] [size=128K]
-    Capabilities: [40] Vendor Specific Information: Len=0c <?>
-    Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
-    Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-    Capabilities: [d0] Power Management version 2
-    Capabilities: [100] Process Address Space ID (PASID)
-    Capabilities: [200] Address Translation Service (ATS)
-
-
->
-> Regards,
->
-> Tvrtko
