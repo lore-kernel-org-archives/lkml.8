@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD53C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96372C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 362CB2137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651B92087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592701;
-	bh=q3vBjvCt0Cagzm5812yCqvqral+gB1OvdBKbPXl4hk4=;
+	s=default; t=1599592705;
+	bh=R4RDt6MB6w6jlYYnXl0Sp5AbezBpq9SsMLs9+AC9t24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csP6EkRwnZQjwL3xxXXJ9HWnMnE+r78oAwxNXkuudqdivDMay7h2eq/3YEIC8fqbu
-	 N3JuEKT1a/BNcU/5T5X6X0PYZzia3c7741WxsoR2iim3LcL2CXwikQVGyJPOLJzk4U
-	 CwLZongUXXhnB8qSqW22gt1ocJPWvL3mJAPg3354=
+	b=PqfjsQ4SlqF4GBO18M328KxgRYA6OQD2YxxpBGU5GI0Hs8SD1nYU4NZAJjOvjMHNk
+	 0JXRG23FDwmEE3FzxlFf+mnreakW+0yc6Vgm+A98Qu6iZoOKQItp0WzeXqVMrNVtQd
+	 7JiCR5m9Hgg7toupN6thuwZmTDfCs22wl/TMkv/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbgIHTSS (ORCPT
+        id S1732006AbgIHTSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51452 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731146AbgIHQCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:02:53 -0400
+        id S1731140AbgIHQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:02:52 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E89523D99;
-        Tue,  8 Sep 2020 15:37:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFCF823EF1;
+        Tue,  8 Sep 2020 15:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579457;
-        bh=q3vBjvCt0Cagzm5812yCqvqral+gB1OvdBKbPXl4hk4=;
+        s=default; t=1599579478;
+        bh=R4RDt6MB6w6jlYYnXl0Sp5AbezBpq9SsMLs9+AC9t24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gr/X4SBLuLeeqs13Acc+0tVNgMzY7HRRIWoqSpB+NmsE4FnxUCMsrm6dcDA3ByaR0
-         YQDHXChoo5FP6VInJATwwLkKTNfBa4QMHod6tS32gm42PIZQUqXQCP8NO4BIrgAwRJ
-         vYMySb0vtmHPRNpaBHNyt0usySPbVT0PYZzs+FKk=
+        b=Uj2DTWBH77JI6Hk5bvkYkRb3PfVd7aB4c5+8hQxEz6vB06W+B+aDWKTr2+FVQLqIq
+         x9eT2iHwkEJDMKTuacMCE7MmZPS76LzLqkyacp4017Lp5suXRE4eD8xYX5Dc6Tq6Zp
+         RKyC7bskXGgjz2ME62i++kDv4aesZ2QrbUuA4vTo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 086/186] opp: Dont drop reference for an OPP table that was never parsed
-Date:   Tue,  8 Sep 2020 17:23:48 +0200
-Message-Id: <20200908152245.811400583@linuxfoundation.org>
+Subject: [PATCH 5.8 077/186] media: cedrus: Add missing v4l2_ctrl_request_hdl_put()
+Date:   Tue,  8 Sep 2020 17:23:39 +0200
+Message-Id: <20200908152245.381408480@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,96 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 922ff0759a16299e24cacfc981ac07914d8f1826 ]
+[ Upstream commit b30063976f29fc221a99d18d37d22ca035068aa9 ]
 
-dev_pm_opp_remove_table() should drop a reference to the OPP table only
-if the DT OPP table was parsed earlier with a call to
-dev_pm_opp_of_add_table() earlier. Else it may end up dropping the
-reference to the OPP table, which was added as a result of other calls
-like dev_pm_opp_set_clkname(). And would hence result in undesirable
-behavior later on when caller would try to free the resource again.
+The check for a required control in the request was missing a call to
+v4l2_ctrl_request_hdl_put() in the error path. Fix it.
 
-Fixes: 03758d60265c ("opp: Replace list_kref with a local counter")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: 50e761516f2b8c ("media: platform: Add Cedrus VPU decoder driver")
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/opp/core.c | 22 ++++++++++++++++------
- drivers/opp/opp.h  |  2 +-
- 2 files changed, 17 insertions(+), 7 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 8c90f78717723..91dcad982d362 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1265,13 +1265,19 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_remove);
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+index bc27f9430eeb1..7c6b91f0e780a 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -199,6 +199,7 @@ static int cedrus_request_validate(struct media_request *req)
+ 	struct v4l2_ctrl *ctrl_test;
+ 	unsigned int count;
+ 	unsigned int i;
++	int ret = 0;
  
--void _opp_remove_all_static(struct opp_table *opp_table)
-+bool _opp_remove_all_static(struct opp_table *opp_table)
- {
- 	struct dev_pm_opp *opp, *tmp;
-+	bool ret = true;
- 
- 	mutex_lock(&opp_table->lock);
- 
--	if (!opp_table->parsed_static_opps || --opp_table->parsed_static_opps)
-+	if (!opp_table->parsed_static_opps) {
-+		ret = false;
-+		goto unlock;
-+	}
-+
-+	if (--opp_table->parsed_static_opps)
- 		goto unlock;
- 
- 	list_for_each_entry_safe(opp, tmp, &opp_table->opp_list, node) {
-@@ -1281,6 +1287,8 @@ void _opp_remove_all_static(struct opp_table *opp_table)
- 
- unlock:
- 	mutex_unlock(&opp_table->lock);
-+
-+	return ret;
- }
- 
- /**
-@@ -2382,13 +2390,15 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
- 		return;
+ 	list_for_each_entry(obj, &req->objects, list) {
+ 		struct vb2_buffer *vb;
+@@ -243,12 +244,16 @@ static int cedrus_request_validate(struct media_request *req)
+ 		if (!ctrl_test) {
+ 			v4l2_info(&ctx->dev->v4l2_dev,
+ 				  "Missing required codec control\n");
+-			return -ENOENT;
++			ret = -ENOENT;
++			break;
+ 		}
  	}
  
--	_opp_remove_all_static(opp_table);
-+	/*
-+	 * Drop the extra reference only if the OPP table was successfully added
-+	 * with dev_pm_opp_of_add_table() earlier.
-+	 **/
-+	if (_opp_remove_all_static(opp_table))
-+		dev_pm_opp_put_opp_table(opp_table);
+ 	v4l2_ctrl_request_hdl_put(hdl);
  
- 	/* Drop reference taken by _find_opp_table() */
- 	dev_pm_opp_put_opp_table(opp_table);
--
--	/* Drop reference taken while the OPP table was added */
--	dev_pm_opp_put_opp_table(opp_table);
++	if (ret)
++		return ret;
++
+ 	return vb2_request_validate(req);
  }
  
- /**
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index e51646ff279eb..c3fcd571e446d 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -212,7 +212,7 @@ struct opp_table {
- 
- /* Routines internal to opp core */
- void dev_pm_opp_get(struct dev_pm_opp *opp);
--void _opp_remove_all_static(struct opp_table *opp_table);
-+bool _opp_remove_all_static(struct opp_table *opp_table);
- void _get_opp_table_kref(struct opp_table *opp_table);
- int _get_opp_count(struct opp_table *opp_table);
- struct opp_table *_find_opp_table(struct device *dev);
 -- 
 2.25.1
 
