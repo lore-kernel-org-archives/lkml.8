@@ -2,191 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24156C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2711EC2D0E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B591020936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAC92078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586103;
-	bh=vz/rJ82lQGFmeFstvC9WgMiNuCiMsme+wQgrAQY1Ok0=;
+	s=default; t=1599586125;
+	bh=mECtXbiRFJUbuleY1pmT6Ktiv9PX7GzbC8Bl9dfQ3N8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hUTiiaoeeURKGiUfaXQuriKuv921yJzCPncQRM2sJDAC07oquok4CZA1hEeaBrLzr
-	 Zz8hu8F9cAgEymiOsd+SJ0JxWZiL5uz+OWu16ce5nDKV6xAYkiH0y4oDMxvIsarO5b
-	 RkjlRSGFkUlVW7g0G3mk6+8ryGaGL7Q6CyhuYfYw=
+	b=em2K6o6aSRY4GQi7fzrslNVbo+u7yJ/K99u/NjQi26y8LkhJTGxVpN2Lbv+tpUm6i
+	 pn4rpimF5zCR2yoEmMYn4fFtCqJHhNSlYYlr+j1kJadQaY/kKg7a1G78xh6gH2eVQ4
+	 1XcKKwXT7TCWAdEzC4qFOiQHrXp1PmwcTZTR3Eno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbgIHR1o (ORCPT
+        id S1732052AbgIHR2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731724AbgIHQQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731725AbgIHQQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:16:31 -0400
-Received: from localhost.localdomain (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 685AD23C2F;
-        Tue,  8 Sep 2020 15:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 632C22483B;
+        Tue,  8 Sep 2020 15:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599577419;
-        bh=vz/rJ82lQGFmeFstvC9WgMiNuCiMsme+wQgrAQY1Ok0=;
+        s=default; t=1599579894;
+        bh=mECtXbiRFJUbuleY1pmT6Ktiv9PX7GzbC8Bl9dfQ3N8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f83qnPfcbf2pWlWdEcVcmx6CZMFj90HQ1l+Hf2E1oKZvkzJjMGNSAFzhelsuw+UDN
-         lAaZerPbUxMmyAhJ1V4B5nhswe+6q96BWrGXQEh7hFtACQ67yCIirUZECc9WnV7jL2
-         m3y3kFPwAeZFwowJpLMjvBdBOHODdsCQCWw8n074=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Adam Ford <aford173@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Alifer Moraes <alifer.wsdm@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5/8] arm64: dts: imx8mq: Correct interrupt flags in examples
-Date:   Tue,  8 Sep 2020 17:02:38 +0200
-Message-Id: <20200908150241.5771-5-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200908150241.5771-1-krzk@kernel.org>
-References: <20200908150241.5771-1-krzk@kernel.org>
+        b=qyuxbq7o6EpMboBHKmVD9k4u8EmSKyjOyz7Rkshj7bTaH4afpc2LviZmCbIKccRTm
+         qhXCdbG/fQMJ9O+xy+1ngMvxVbY5hmUBo2Xc4SP4+DW0fX5j5y/IGW3+8+RKab9Ywe
+         FcayABey6Q7MuyWfhpach+F1tCzPwBFo436q8TBI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 047/129] xfs: fix boundary test in xfs_attr_shortform_verify
+Date:   Tue,  8 Sep 2020 17:24:48 +0200
+Message-Id: <20200908152232.053568703@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GPIO_ACTIVE_x flags are not correct in the context of interrupt flags.
-These are simple defines so they could be used in DTS but they will not
-have the same meaning:
-1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
-2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
+From: Eric Sandeen <sandeen@redhat.com>
 
-Correct the interrupt flags, assuming the author of the code wanted some
-logical behavior behind the name "ACTIVE_xxx", this is:
-  ACTIVE_LOW  => IRQ_TYPE_LEVEL_LOW
+[ Upstream commit f4020438fab05364018c91f7e02ebdd192085933 ]
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The boundary test for the fixed-offset parts of xfs_attr_sf_entry in
+xfs_attr_shortform_verify is off by one, because the variable array
+at the end is defined as nameval[1] not nameval[].
+Hence we need to subtract 1 from the calculation.
 
+This can be shown by:
+
+# touch file
+# setfattr -n root.a file
+
+and verifications will fail when it's written to disk.
+
+This only matters for a last attribute which has a single-byte name
+and no value, otherwise the combination of namelen & valuelen will
+push endp further out and this test won't fail.
+
+Fixes: 1e1bbd8e7ee06 ("xfs: create structure verifier function for shortform xattrs")
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ fs/xfs/libxfs/xfs_attr_leaf.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Not tested on HW.
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 5 +++--
- arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi       | 3 ++-
- arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts       | 3 ++-
- arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts        | 3 ++-
- 4 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-index a80e53428c2f..7f728dea32ca 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index f0089e862216c..fe277ee5ec7c4 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -946,8 +946,10 @@ xfs_attr_shortform_verify(
+ 		 * struct xfs_attr_sf_entry has a variable length.
+ 		 * Check the fixed-offset parts of the structure are
+ 		 * within the data buffer.
++		 * xfs_attr_sf_entry is defined with a 1-byte variable
++		 * array at the end, so we must subtract that off.
+ 		 */
+-		if (((char *)sfep + sizeof(*sfep)) >= endp)
++		if (((char *)sfep + sizeof(*sfep) - 1) >= endp)
+ 			return __this_address;
  
- #include "dt-bindings/input/input.h"
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include "dt-bindings/pwm/pwm.h"
- #include "dt-bindings/usb/pd.h"
- #include "imx8mq.dtsi"
-@@ -60,7 +61,7 @@
- 			label = "WWAN_WAKE";
- 			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;
- 			interrupt-parent = <&gpio3>;
--			interrupts = <8 GPIO_ACTIVE_LOW>;
-+			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
- 			wakeup-source;
- 			linux,code = <KEY_PHONE>;
- 		};
-@@ -288,7 +289,7 @@
- 		#clock-cells = <0>;
- 		clock-output-names = "pmic_clk";
- 		interrupt-parent = <&gpio1>;
--		interrupts = <3 GPIO_ACTIVE_LOW>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-names = "irq";
- 		rohm,reset-snvs-powered;
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-index c3e290703fe8..3c389c7ffb2c 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include "dt-bindings/input/input.h"
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include "dt-bindings/pwm/pwm.h"
- #include "dt-bindings/usb/pd.h"
- #include "imx8mq.dtsi"
-@@ -639,7 +640,7 @@
- 		clock-names = "osc";
- 		clock-output-names = "pmic_clk";
- 		interrupt-parent = <&gpio1>;
--		interrupts = <7 GPIO_ACTIVE_LOW>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-names = "irq";
- 		rohm,reset-snvs-powered;
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f541ddf0768..05fcea2fb402 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -6,6 +6,7 @@
- /dts-v1/;
- 
- #include "imx8mq.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "Google i.MX8MQ Phanbell";
-@@ -125,7 +126,7 @@
- 		clocks = <&pmic_osc>;
- 		clock-output-names = "pmic_clk";
- 		interrupt-parent = <&gpio1>;
--		interrupts = <3 GPIO_ACTIVE_LOW>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
- 
- 		regulators {
- 			buck1: BUCK1 {
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-index 59da96b7143f..84c3a143d87b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
-@@ -9,6 +9,7 @@
- /dts-v1/;
- 
- #include "imx8mq.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "TechNexion PICO-PI-8M";
-@@ -70,7 +71,7 @@
- 		clock-names = "osc";
- 		clock-output-names = "pmic_clk";
- 		interrupt-parent = <&gpio1>;
--		interrupts = <3 GPIO_ACTIVE_LOW>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
- 		interrupt-names = "irq";
- 
- 		regulators {
+ 		/* Don't allow names with known bad length. */
 -- 
-2.17.1
+2.25.1
+
+
 
