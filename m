@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04752C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9661C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C240120708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7900E20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592243;
-	bh=OHJAv06qZoq3OhRqsI02z1f04r0K+39Op1CU4gZCoO0=;
+	s=default; t=1599592254;
+	bh=NqMaoRw+5/BsIKvTRlZSxaEi2PjZWGU9pYqi2JqcjVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Di/rlmUblTsCq7aLuAceaSHJaIoWCIDRdm6A9pkX0HnZnnYz9tWhv7cyieL3U4y32
-	 aSHhB1tcUEQhYflvcZK+EBvC5kjArYb8Ihq3+2c9zcY6iFDZouvEQt20zzRbIGWbbk
-	 zPAjOUFOZrcUdAQcEl/Godw+j7jJuSH/DEp3PjmA=
+	b=J6p6MvSY2bCkKrZ9uYyHcHdOnc4euMV5e/Gds1RNYB+MBQ+o+/zmaUMROnPJK8DUn
+	 tzM3wYVdmi72eQ2hGml2lePGKKkhz1iP+4wPvnUL4sbel7MVrTxF6dZ4hZfeOSNfTa
+	 Wni57so7fYD6EQVcTKykrB+7G2VdA7xyLCba2eqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbgIHTKU (ORCPT
+        id S1731754AbgIHTKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731239AbgIHQFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:37 -0400
+        id S1731228AbgIHQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5665522A83;
-        Tue,  8 Sep 2020 15:46:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2770F229C4;
+        Tue,  8 Sep 2020 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579973;
-        bh=OHJAv06qZoq3OhRqsI02z1f04r0K+39Op1CU4gZCoO0=;
+        s=default; t=1599579966;
+        bh=NqMaoRw+5/BsIKvTRlZSxaEi2PjZWGU9pYqi2JqcjVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=du720iQzOk4zYlbLMRRbmxbxc+IZdu0XI5LmB4asZhgoodOirqqw3Bf0nSSrsTxtO
-         uGaKMFUbb5nQnAt4zk80dZQ6oRACG0K5oBapAlgZIg/Ev5QBxqZ6RJl3EOUI8N3J2e
-         bTpEbJ7I9gKpRJirq3Atfy0hRUT6ZFWe9kVqMqMM=
+        b=VCQyvzSZTngePZrtJTSrJ2+si+OXoi76GMDb8jr0h4uCQ3nkLtoVAOgv7N09Ve6u9
+         mZUdlhWVbXIVb9I3cA9NhI1lCDoSwZAqW198mFpo9Qw2faXqUhwZOeVbgOM1HAJKke
+         1lPawg0ohyn42hZirYD0f/b6XJzR9G57DteqtOSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 079/129] xfs: dont update mtime on COW faults
-Date:   Tue,  8 Sep 2020 17:25:20 +0200
-Message-Id: <20200908152233.646658986@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 104/129] media: rc: do not access device via sysfs after rc_unregister_device()
+Date:   Tue,  8 Sep 2020 17:25:45 +0200
+Message-Id: <20200908152235.032347423@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -59,73 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Sean Young <sean@mess.org>
 
-commit b17164e258e3888d376a7434415013175d637377 upstream.
+commit a2e2d73fa28136598e84db9d021091f1b98cbb1a upstream.
 
-When running in a dax mode, if the user maps a page with MAP_PRIVATE and
-PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
-when the user hits a COW fault.
+Device drivers do not expect to have change_protocol or wakeup
+re-programming to be accesed after rc_unregister_device(). This can
+cause the device driver to access deallocated resources.
 
-This breaks building of the Linux kernel.  How to reproduce:
-
- 1. extract the Linux kernel tree on dax-mounted xfs filesystem
- 2. run make clean
- 3. run make -j12
- 4. run make -j12
-
-at step 4, make would incorrectly rebuild the whole kernel (although it
-was already built in step 3).
-
-The reason for the breakage is that almost all object files depend on
-objtool.  When we run objtool, it takes COW page fault on its .data
-section, and these faults will incorrectly update the timestamp of the
-objtool binary.  The updated timestamp causes make to rebuild the whole
-tree.
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org> # 4.16+
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/xfs_file.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/media/rc/rc-main.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1172,6 +1172,14 @@ __xfs_filemap_fault(
- 	return ret;
- }
+--- a/drivers/media/rc/rc-main.c
++++ b/drivers/media/rc/rc-main.c
+@@ -1256,6 +1256,10 @@ static ssize_t store_protocols(struct de
+ 	}
  
-+static inline bool
-+xfs_is_write_fault(
-+	struct vm_fault		*vmf)
-+{
-+	return (vmf->flags & FAULT_FLAG_WRITE) &&
-+	       (vmf->vma->vm_flags & VM_SHARED);
-+}
-+
- static vm_fault_t
- xfs_filemap_fault(
- 	struct vm_fault		*vmf)
-@@ -1179,7 +1187,7 @@ xfs_filemap_fault(
- 	/* DAX can shortcut the normal fault path on write faults! */
- 	return __xfs_filemap_fault(vmf, PE_SIZE_PTE,
- 			IS_DAX(file_inode(vmf->vma->vm_file)) &&
--			(vmf->flags & FAULT_FLAG_WRITE));
-+			xfs_is_write_fault(vmf));
- }
+ 	mutex_lock(&dev->lock);
++	if (!dev->registered) {
++		mutex_unlock(&dev->lock);
++		return -ENODEV;
++	}
  
- static vm_fault_t
-@@ -1192,7 +1200,7 @@ xfs_filemap_huge_fault(
+ 	old_protocols = *current_protocols;
+ 	new_protocols = old_protocols;
+@@ -1394,6 +1398,10 @@ static ssize_t store_filter(struct devic
+ 		return -EINVAL;
  
- 	/* DAX can shortcut the normal fault path on write faults! */
- 	return __xfs_filemap_fault(vmf, pe_size,
--			(vmf->flags & FAULT_FLAG_WRITE));
-+			xfs_is_write_fault(vmf));
- }
+ 	mutex_lock(&dev->lock);
++	if (!dev->registered) {
++		mutex_unlock(&dev->lock);
++		return -ENODEV;
++	}
  
- static vm_fault_t
+ 	new_filter = *filter;
+ 	if (fattr->mask)
+@@ -1508,6 +1516,10 @@ static ssize_t store_wakeup_protocols(st
+ 	int i;
+ 
+ 	mutex_lock(&dev->lock);
++	if (!dev->registered) {
++		mutex_unlock(&dev->lock);
++		return -ENODEV;
++	}
+ 
+ 	allowed = dev->allowed_wakeup_protocols;
+ 
 
 
