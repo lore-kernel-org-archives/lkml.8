@@ -2,94 +2,129 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8339BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87549C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48C7B20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0D320708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592242;
+	bh=/CmNhgqxZ+7MyzWgmRTnoJ1IsBiQQimdXO1C8uYuIbo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vep5z8IVLkUSC6DLKs7vC2rNtASR6M13uuoiV78D/PLuWKkAd4XYZW8FB58gHza7v
+	 5w5FU+RzuSRFNg271IwE3wyNKOQdv/igBhrW8shFIeo9/6L+zzzVagoO2w2pPD073U
+	 wCLdOm5i1aN8TAg3XWdItP4ytdIkEPjnpF7euntA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbgIHTKh (ORCPT
+        id S1731801AbgIHTKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:10:37 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56356 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbgIHTKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:10:24 -0400
-Received: from kevin (unknown [IPv6:2607:fea8:55f:a950::68f4])
+        Tue, 8 Sep 2020 15:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731205AbgIHQFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:37 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: alyssa)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 93A0B295E47;
-        Tue,  8 Sep 2020 20:10:18 +0100 (BST)
-Date:   Tue, 8 Sep 2020 15:10:10 -0400
-From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     robh@kernel.org, tomeu.vizoso@collabora.com, steven.price@arm.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 4/5] drm/panfrost: add amlogic reset quirk callback
-Message-ID: <20200908191010.GB10568@kevin>
-References: <20200908151853.4837-1-narmstrong@baylibre.com>
- <20200908151853.4837-5-narmstrong@baylibre.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF5E23D3B;
+        Tue,  8 Sep 2020 15:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579976;
+        bh=/CmNhgqxZ+7MyzWgmRTnoJ1IsBiQQimdXO1C8uYuIbo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eX2PVjQ9p8Y/lqZaxqZWtBlolqOTm/ySNtV+ZOUnBmSLnw9QLpg68odJwgIDAFFZ+
+         7Yz3jg6ONjIeQWCKdSexh+qirPuETdWBVnPxnjYB/95+kb80Ixdub+xPU7M+HhduQG
+         aL/fBCKCxCu/6EvAldK3wojRiEIUBNJzXYEj887A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 5.4 080/129] ARC: perf: dont bail setup if pct irq missing in device-tree
+Date:   Tue,  8 Sep 2020 17:25:21 +0200
+Message-Id: <20200908152233.689473504@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Content-Disposition: inline
-In-Reply-To: <20200908151853.4837-5-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vineet Gupta <vgupta@synopsys.com>
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit feb92d7d3813456c11dce215b3421801a78a8986 upstream.
 
-> Since the documentation of the GPU cores are not public, we do not know what does these
-> values, but they permit having a fully functional GPU running with Panfrost.
+Current code inadventely bails if hardware supports sampling/overflow
+interrupts, but the irq is missing from device tree.
 
-Since this is Amlogic magic, not specifically GPU, I'd rephrase this as
-"Since the Amlogic's integration of the GPU cores with the SoC is not
-publicly documented..."
+|
+| # perf stat -e cycles,instructions,major-faults,minor-faults ../hackbench
+| Running with 10 groups 400 process
+| Time: 0.921
+|
+| Performance counter stats for '../hackbench':
+|
+|   <not supported>      cycles
+|   <not supported>      instructions
+|                 0      major-faults
+|              8679      minor-faults
 
-> +	/*
-> +	 * The Amlogic integrated Mali-T820, Mali-G31 & Mali-G52 needs
-> +	 * these undocumented bits to be set in order to operate
-> +	 * correctly.
-> +	 * These GPU_PWR registers contains:
-> +	 * "device-specific power control value"
-> +	 */
+This need not be as we can still do simple counting based perf stat.
+This unborks perf on HSDK-4xD
 
-PWR_OVERRIDE1 is the Amlogic specific value.
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Per the name, for PWR_KEY, I'd do add "#define GPU_PWR_KEY_UNLOCK
-0x2968A819" in panfrost-gpu.h so it's clear which value is which.
+---
+ arch/arc/kernel/perf_event.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -562,7 +562,7 @@ static int arc_pmu_device_probe(struct p
+ {
+ 	struct arc_reg_pct_build pct_bcr;
+ 	struct arc_reg_cc_build cc_bcr;
+-	int i, has_interrupts;
++	int i, has_interrupts, irq;
+ 	int counter_size;	/* in bits */
+ 
+ 	union cc_name {
+@@ -637,13 +637,7 @@ static int arc_pmu_device_probe(struct p
+ 		.attr_groups	= arc_pmu->attr_groups,
+ 	};
+ 
+-	if (has_interrupts) {
+-		int irq = platform_get_irq(pdev, 0);
+-
+-		if (irq < 0) {
+-			pr_err("Cannot get IRQ number for the platform\n");
+-			return -ENODEV;
+-		}
++	if (has_interrupts && (irq = platform_get_irq(pdev, 0) >= 0)) {
+ 
+ 		arc_pmu->irq = irq;
+ 
+@@ -652,9 +646,9 @@ static int arc_pmu_device_probe(struct p
+ 				   this_cpu_ptr(&arc_pmu_cpu));
+ 
+ 		on_each_cpu(arc_cpu_pmu_irq_init, &irq, 1);
+-
+-	} else
++	} else {
+ 		arc_pmu->pmu.capabilities |= PERF_PMU_CAP_NO_INTERRUPT;
++	}
+ 
+ 	/*
+ 	 * perf parser doesn't really like '-' symbol in events name, so let's
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl9X1woACgkQ/v5QWgr1
-WA0XAg//c9nGGJntvueFe8c6qd2IaRIMN3EM6NDls15z8sc2USz064lxnb0x5o15
-futnTLgG+9RPsMRDl3GmLwHyffyRWWIupoVPgMEu/RdWUai8d4yKyF76xVDpUOAD
-RnPBzvstwXzN3Wggj47fB6ajEZFFOI2erWqEgAY8UZARPkw3jP+lUbHpagmKdMVF
-SYrAuYXOZmOjdlHXeTM4jxAW1I76imu2iEnvm+/2bpgRUumypy3/K33/wICFL9W3
-RVC1/2Gw6zRrhT9Je9eVBLID7xoeJk5jFHAFss9xd+OtshquOBlapVXwJVcfEm+p
-gDFNrxG/pXgrJvkI6a8anp0cqyaixvIONfMt2fJwfTbqP5+K0QigQFVclGa6eXM3
-iLkfjlbgrCn8iiywRBx7BunsMqMWgHEt5K78PGczw2JmU+Ahp1O1vq9Az0s2yYIt
-X5nlp/iwUHRtPEnoNwqPFfasUnO3UAkObmax9oZVG3iBede/wMMWDOvm/J0Q8pEq
-jI/liFrKDPa7Qnkwara3B1hxAeMedig7Qi+RAFuRTUFlNCoBuD4TfCcvBGqH1cDX
-aupOBHrxmstHtZH5lnCcy7cXepJuCOmati2khQRvoOJolnRYI1HFyt2poZT3HQ+w
-K8zkmWUzKZZk/QwJn31i7zX7emvAvma0aO3dGzdT4+F3OMeJRf0=
-=eeWO
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
