@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58895C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7024C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160A420738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6784321973
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586245;
-	bh=QFNDRV0IBgicjcxJXtH/2GSq+Z4LFRN7RIfO0RgBAoA=;
+	s=default; t=1599586261;
+	bh=K3eI6LMy5f0gL5/OJtNUhVXe7P76Th8BY6Pj5CVWRsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdlnoSP3/NH5vmeosrlwo89CnIQ20gNoIU49SM9hepJ3Ad+iFzcQgcqQWS19m7Djn
-	 BAej9oGEuxFN9ksimsX+faJxHJY7PEM1UC1CN9+p6I3NsFERqWUvciV+mJRqONo3NS
-	 4E9Ap+156MazOuNjJm7E/Q3s1yfGBOHB3Vwrm+QQ=
+	b=TixBzpJVAQg+KkaPO6hEwnM8TrbQjSq4Qx7OlECU3SbsN88k2FN9/BU73l/DSSbWx
+	 s2RsxekD+hwfmZ6irUOnTHeNiIysuknmwxICUZ0LKbSLaK/Szmi0CTaVd7H9aC4zGV
+	 lRTZcrraZfdNpIKwwUZ4SvJKUUEdA4PODiquaBJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731898AbgIHRam (ORCPT
+        id S1731548AbgIHRa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:30:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57890 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:30:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731705AbgIHQPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:15:25 -0400
+        id S1731597AbgIHQPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:15:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12F352483D;
-        Tue,  8 Sep 2020 15:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19CA924819;
+        Tue,  8 Sep 2020 15:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579897;
-        bh=QFNDRV0IBgicjcxJXtH/2GSq+Z4LFRN7RIfO0RgBAoA=;
+        s=default; t=1599579832;
+        bh=K3eI6LMy5f0gL5/OJtNUhVXe7P76Th8BY6Pj5CVWRsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZ5AH3pkg90hm5mw0PHIt0ZLEV/HHI5qGqtEZdSAAistVKQ73sOFNwL3X+wLXnfzA
-         /4+qX0y4kfUhB7rzsiZ/+x3aXCV2aoRyrjA1iminwVtgZy9nVoM41DKuONFx89OjZf
-         AffeoB1b5KUqYRbbHtGE47cNW0V5gQXkpg+8xMks=
+        b=pDPSwTmuFZCjiTg7AH7y6dns+bcfd+mvD6Zj5EUYy/OiVmQx0ZWW82Lt6lnywKI6g
+         ka/TLhFnaHcAH/fwaGl5YcAzMfF6jESCj6HCRRIZXwApU7gEjO75ocZ6SEF3/dE3dt
+         SWVzssVdypA86+lVYXwsZV6KzIeh1Ll6i0i54udY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Sherwood <rsher@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Landen Chao <landen.chao@mediatek.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/129] bnxt: dont enable NAPI until rings are ready
-Date:   Tue,  8 Sep 2020 17:24:49 +0200
-Message-Id: <20200908152232.110275264@linuxfoundation.org>
+Subject: [PATCH 5.4 052/129] net: dsa: mt7530: fix advertising unsupported 1000baseT_Half
+Date:   Tue,  8 Sep 2020 17:24:53 +0200
+Message-Id: <20200908152232.310727712@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -62,84 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Landen Chao <landen.chao@mediatek.com>
 
-[ Upstream commit 96ecdcc992eb7f468b2cf829b0f5408a1fad4668 ]
+[ Upstream commit f272285f6abb9178d029375599626baf3d5f4e8a ]
 
-Netpoll can try to poll napi as soon as napi_enable() is called.
-It crashes trying to access a doorbell which is still NULL:
+Remove 1000baseT_Half to advertise correct hardware capability in
+phylink_validate() callback function.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000000
- CPU: 59 PID: 6039 Comm: ethtool Kdump: loaded Tainted: G S                5.9.0-rc1-00469-g5fd99b5d9950-dirty #26
- RIP: 0010:bnxt_poll+0x121/0x1c0
- Code: c4 20 44 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 41 8b 86 a0 01 00 00 41 23 85 18 01 00 00 49 8b 96 a8 01 00 00 0d 00 00 00 24 <89> 02
-41 f6 45 77 02 74 cb 49 8b ae d8 01 00 00 31 c0 c7 44 24 1a
-  netpoll_poll_dev+0xbd/0x1a0
-  __netpoll_send_skb+0x1b2/0x210
-  netpoll_send_udp+0x2c9/0x406
-  write_ext_msg+0x1d7/0x1f0
-  console_unlock+0x23c/0x520
-  vprintk_emit+0xe0/0x1d0
-  printk+0x58/0x6f
-  x86_vector_activate.cold+0xf/0x46
-  __irq_domain_activate_irq+0x50/0x80
-  __irq_domain_activate_irq+0x32/0x80
-  __irq_domain_activate_irq+0x32/0x80
-  irq_domain_activate_irq+0x25/0x40
-  __setup_irq+0x2d2/0x700
-  request_threaded_irq+0xfb/0x160
-  __bnxt_open_nic+0x3b1/0x750
-  bnxt_open_nic+0x19/0x30
-  ethtool_set_channels+0x1ac/0x220
-  dev_ethtool+0x11ba/0x2240
-  dev_ioctl+0x1cf/0x390
-  sock_do_ioctl+0x95/0x130
-
-Reported-by: Rob Sherwood <rsher@fb.com>
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/net/dsa/mt7530.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 089d7b9cc409d..4030020f92be5 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -9132,15 +9132,15 @@ static int __bnxt_open_nic(struct bnxt *bp, bool irq_re_init, bool link_re_init)
- 		}
- 	}
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index dc9a3bb241149..00d680cb44418 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -1456,7 +1456,7 @@ unsupported:
+ 		phylink_set(mask, 100baseT_Full);
  
--	bnxt_enable_napi(bp);
--	bnxt_debug_dev_init(bp);
--
- 	rc = bnxt_init_nic(bp, irq_re_init);
- 	if (rc) {
- 		netdev_err(bp->dev, "bnxt_init_nic err: %x\n", rc);
--		goto open_err;
-+		goto open_err_irq;
- 	}
- 
-+	bnxt_enable_napi(bp);
-+	bnxt_debug_dev_init(bp);
-+
- 	if (link_re_init) {
- 		mutex_lock(&bp->link_lock);
- 		rc = bnxt_update_phy_setting(bp);
-@@ -9171,10 +9171,6 @@ static int __bnxt_open_nic(struct bnxt *bp, bool irq_re_init, bool link_re_init)
- 		bnxt_vf_reps_open(bp);
- 	return 0;
- 
--open_err:
--	bnxt_debug_dev_exit(bp);
--	bnxt_disable_napi(bp);
--
- open_err_irq:
- 	bnxt_del_napi(bp);
- 
+ 		if (state->interface != PHY_INTERFACE_MODE_MII) {
+-			phylink_set(mask, 1000baseT_Half);
++			/* This switch only supports 1G full-duplex. */
+ 			phylink_set(mask, 1000baseT_Full);
+ 			if (port == 5)
+ 				phylink_set(mask, 1000baseX_Full);
 -- 
 2.25.1
 
