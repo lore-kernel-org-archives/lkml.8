@@ -2,131 +2,179 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5744CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE1AE2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E703207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yJoNljIa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TDmZ2xXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbgIHUGj (ORCPT
+        id S1731207AbgIHUHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
+        Tue, 8 Sep 2020 16:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730243AbgIHPVk (ORCPT
+        with ESMTP id S1730285AbgIHPUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:21:40 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD3AC0612F6
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:58:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a9so17082340wmm.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nLn7MBojIPZBX1Cc0fte6bJy2zYPGF+0OvSOSKZTZQk=;
-        b=yJoNljIa9qlqXWuxKL1etUoPBbX1rvf2LnGB7dKBJ9r9JaiDrabh6nGL1BJ3LsQvqH
-         30ELXTFAi7IW9qjR3oYAyzwHxFMURLTJuY/bsyInF9Ja3sIV9hQ98k2ul+IyUVYV9AcB
-         hriqDEUIZxfsCVQXzh8HYZENCU+u3nykO1L232HxS6MQVmeG4jnL6BsnJNuW95FEI9+W
-         VnNzWEwTQSp82wWUt+DvVzP0H9mCix905ZS7D4JffHFa0McetsJrX2l4WnM5ty4GFFgR
-         tzhL8qo+FMnFFqBOCK8nJieJK7CyM2FzaO96jnHFpKPdNS28pxgac4yq8+FlXv4mY9lG
-         NvVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nLn7MBojIPZBX1Cc0fte6bJy2zYPGF+0OvSOSKZTZQk=;
-        b=XbLp37lGboxKL29ond/sVTKJ5av/clDx4ysGtYwYhxt5Yg4wWysEmH4iOQiIdciwnU
-         Re1jtkiqENGSVzAu2DDCMthyR8L+PmlCz3L9b6JCUn+2uj1H6Xqdg49j9WbVodagakaH
-         jIT4hMztyU3VehceMdmfAnGikTmuw6MTzHkc4joHatUy6ReWEco73v7mZkiFQo74GZFz
-         mL/6kYG9oxi9q38Q7xZoz+1UNgo+FnGR9Ir94QiFT/Zmc/DzN7Ecrf4lmoZDDJ/QTXJb
-         wHOSoaBS74ot7LCxpiaMdPYiHtm2s8JR4DazMnSDhH+1U8T1X70OxzSGDYqkb02wcmH9
-         QTnA==
-X-Gm-Message-State: AOAM533L7BdDOvVqafueIZhxYj6s6X7s7qRABWsNbcLO0K8AQ/D/tBLx
-        uHZX1CveGfb72mSay0tb66gduA==
-X-Google-Smtp-Source: ABdhPJw2UX4DwJ8uomQdKlEKGp4dWXgNPdYavMGcv8xNO/e3jRahH6Mfzl+E80OqSzYNL6Ct55Zkqw==
-X-Received: by 2002:a1c:7d0c:: with SMTP id y12mr4360474wmc.103.1599569906573;
-        Tue, 08 Sep 2020 05:58:26 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id y207sm34817875wmc.17.2020.09.08.05.58.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 05:58:26 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/3] device: property: add helpers to count items in string arrays
-Date:   Tue,  8 Sep 2020 14:58:11 +0200
-Message-Id: <20200908125813.8809-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200908125813.8809-1-brgl@bgdev.pl>
-References: <20200908125813.8809-1-brgl@bgdev.pl>
+        Tue, 8 Sep 2020 11:20:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57790C0A3BEB;
+        Tue,  8 Sep 2020 07:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=0u/YkNfz2765ChTMinGG6JPDmCovYyDZgG3vdcYFHY8=; b=TDmZ2xXcoGXTNzeEqQje2OrEN0
+        tJUThZVnfY/+jhjr38EK96Z6+YKRTzvma5UyzgPRh7rBnLiAu6smazcTVNJL2GUjYgU7SSuo5FIw6
+        ERtmOFoZpr7EQQI3bN2vMCSGQGLPSa+ULL/d8fd1NvqvHE3KiRksaH+l+G4xV02UIbqrEUT0c6KfV
+        /DcNDGhvUUpyOAbq99PireHT06M1bGrqd1ltn3XFKabhDWF5aF5O+rBgoyOMniVhgb5m91e+98+5x
+        R2Uz/l6Kpebqi65qaI5JfVFusWp6YoZ0lNkou9FjXFNtR3vHrdDKCJXc/offPT0YF6vZp3YRLxPD9
+        8qka3LmA==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf0L-0002um-9p; Tue, 08 Sep 2020 14:53:54 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 01/19] block: add a bdev_check_media_change helper
+Date:   Tue,  8 Sep 2020 16:53:29 +0200
+Message-Id: <20200908145347.2992670-2-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Like check_disk_changed, except that it does not call ->revalidate_disk
+but leaves that to the caller.
 
-Instead of doing the following:
-
-    count = device_property_read_string_array(dev, propname, NULL, 0);
-
-Let's provide inline helpers with hardcoded arguments for counting
-strings in property arrays.
-
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- include/linux/property.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ block/genhd.c         | 29 ++++++++++++++++++++++++++++-
+ fs/block_dev.c        | 17 +++--------------
+ include/linux/genhd.h |  2 +-
+ 3 files changed, 32 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 9f805c442819..1fa5e250a8ea 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -170,6 +170,12 @@ static inline int device_property_count_u64(struct device *dev, const char *prop
- 	return device_property_read_u64_array(dev, propname, NULL, 0);
- }
- 
-+static inline int device_property_count_strings(struct device *dev,
-+						const char *propname)
-+{
-+	return device_property_read_string_array(dev, propname, NULL, 0);
-+}
-+
- static inline bool fwnode_property_read_bool(const struct fwnode_handle *fwnode,
- 					     const char *propname)
+diff --git a/block/genhd.c b/block/genhd.c
+index 081f1039d9367f..9d060e79eb31d8 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -2052,7 +2052,7 @@ void disk_flush_events(struct gendisk *disk, unsigned int mask)
+  * CONTEXT:
+  * Might sleep.
+  */
+-unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask)
++static unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask)
  {
-@@ -224,6 +230,13 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
- 	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
+ 	struct disk_events *ev = disk->ev;
+ 	unsigned int pending;
+@@ -2090,6 +2090,33 @@ unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask)
+ 	return pending;
  }
  
-+static inline int
-+fwnode_property_count_strings(const struct fwnode_handle *fwnode,
-+			      const char *propname)
++/**
++ * bdev_check_media_change - check if a removable media has been changed
++ * @bdev: block device to check
++ *
++ * Check whether a removable media has been changed, and attempt to free all
++ * dentries and inodes and invalidates all block device page cache entries in
++ * that case.
++ *
++ * Returns %true if the block device changed, or %false if not.
++ */
++bool bdev_check_media_change(struct block_device *bdev)
 +{
-+	return fwnode_property_read_string_array(fwnode, propname, NULL, 0);
-+}
++	unsigned int events;
 +
- struct software_node;
++	events = disk_clear_events(bdev->bd_disk, DISK_EVENT_MEDIA_CHANGE |
++				   DISK_EVENT_EJECT_REQUEST);
++	if (!(events & DISK_EVENT_MEDIA_CHANGE))
++		return false;
++
++	if (__invalidate_device(bdev, true))
++		pr_warn("VFS: busy inodes on changed media %s\n",
++			bdev->bd_disk->disk_name);
++	set_bit(BDEV_NEED_PART_SCAN, &bdev->bd_flags);
++	return true;
++}
++EXPORT_SYMBOL(bdev_check_media_change);
++
+ /*
+  * Separate this part out so that a different pointer for clearing_ptr can be
+  * passed in for disk_clear_events.
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index c70c41ecba4872..c6ac0bd22eca70 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1379,21 +1379,10 @@ EXPORT_SYMBOL(revalidate_disk_size);
+  */
+ int check_disk_change(struct block_device *bdev)
+ {
+-	struct gendisk *disk = bdev->bd_disk;
+-	const struct block_device_operations *bdops = disk->fops;
+-	unsigned int events;
+-
+-	events = disk_clear_events(disk, DISK_EVENT_MEDIA_CHANGE |
+-				   DISK_EVENT_EJECT_REQUEST);
+-	if (!(events & DISK_EVENT_MEDIA_CHANGE))
++	if (!bdev_check_media_change(bdev))
+ 		return 0;
+-
+-	if (__invalidate_device(bdev, true))
+-		pr_warn("VFS: busy inodes on changed media %s\n",
+-			disk->disk_name);
+-	set_bit(BDEV_NEED_PART_SCAN, &bdev->bd_flags);
+-	if (bdops->revalidate_disk)
+-		bdops->revalidate_disk(bdev->bd_disk);
++	if (bdev->bd_disk->fops->revalidate_disk)
++		bdev->bd_disk->fops->revalidate_disk(bdev->bd_disk);
+ 	return 1;
+ }
  
- /**
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index c618b27292fcc8..322d48a207728a 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -315,7 +315,6 @@ extern void disk_unblock_events(struct gendisk *disk);
+ extern void disk_flush_events(struct gendisk *disk, unsigned int mask);
+ void set_capacity_revalidate_and_notify(struct gendisk *disk, sector_t size,
+ 		bool update_bdev);
+-extern unsigned int disk_clear_events(struct gendisk *disk, unsigned int mask);
+ 
+ /* drivers/char/random.c */
+ extern void add_disk_randomness(struct gendisk *disk) __latent_entropy;
+@@ -372,6 +371,7 @@ void unregister_blkdev(unsigned int major, const char *name);
+ 
+ void revalidate_disk_size(struct gendisk *disk, bool verbose);
+ int check_disk_change(struct block_device *bdev);
++bool bdev_check_media_change(struct block_device *bdev);
+ int __invalidate_device(struct block_device *bdev, bool kill_dirty);
+ void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors);
+ 
 -- 
-2.26.1
+2.28.0
 
