@@ -2,158 +2,133 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CB9C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02443C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B502145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e9tOmp79"
+	by mail.kernel.org (Postfix) with ESMTP id C4D592080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731765AbgIHSZQ (ORCPT
+        id S1730654AbgIHSZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:25:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:23311 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726660AbgIHSZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:25:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599589502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c4gcp/bZU9lgZw1R6KxJ0Pc2FZGgn2nf/f7K9pgTFxk=;
-        b=e9tOmp79VNZYasogx0gTaeVP1fnyO8K0hUA6absDu1o//DmzC5fRsPgFR6NxQGDFR+ixYN
-        iOQ+wywUndXQ/lssdiwUh6jbelfulkjxgAtkr82+KUgJAhpVIx5vdZpsC7w+o2xowYMVfb
-        yVgej6LY6w1ArKqH3hBoKA5VC/8vuFY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-9H-jqZILNf6yTEMqn5ySgw-1; Tue, 08 Sep 2020 14:23:36 -0400
-X-MC-Unique: 9H-jqZILNf6yTEMqn5ySgw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C191718B9EC4;
-        Tue,  8 Sep 2020 18:23:34 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-102.rdu2.redhat.com [10.10.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 252CD83560;
-        Tue,  8 Sep 2020 18:23:34 +0000 (UTC)
-Subject: Re: [PATCH v3] debugobjects: install CPU hotplug callback
-To:     qiang.zhang@windriver.com, tglx@linutronix.de, mingo@kernel.org,
-        elver@google.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20200908062709.11441-1-qiang.zhang@windriver.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <3bcdacd0-10c4-78c0-6e63-a73811a0ced6@redhat.com>
-Date:   Tue, 8 Sep 2020 14:23:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 8 Sep 2020 14:25:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51499 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgIHSZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:25:25 -0400
+IronPort-SDR: dG5By9HBXXJoXUGErJ6k/+2MyMDAkdGFigq6MHw5IC1d4AaGwY/WhuE+YiEFL0JTzYmNp+z0O0
+ rSqFh8q/Su1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155602347"
+X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
+   d="scan'208";a="155602347"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 11:25:23 -0700
+IronPort-SDR: bTS1USQJwqhUAqTZ1mXCWmgKPD1f8ak2tiuGhfZUz3y/kZrFWzwSTM0whGUwwHvZRrXPondA26
+ 9gLrCKJRf3PA==
+X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
+   d="scan'208";a="448891489"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.209.111.239]) ([10.209.111.239])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 11:25:21 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+ <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
+ <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
+ <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
+ <20200901102758.GY6642@arm.com>
+ <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+ <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
+ <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
+ <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
+ <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
+Date:   Tue, 8 Sep 2020 11:25:20 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200908062709.11441-1-qiang.zhang@windriver.com>
+In-Reply-To: <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 2:27 AM, qiang.zhang@windriver.com wrote:
-> From: Zqiang <qiang.zhang@windriver.com>
->
-> Due to CPU hotplug, it may never be online after it's offline,
-> some objects in percpu pool is never free. in order to avoid
-> this happening, install CPU hotplug callback, call this callback
-> func to free objects in percpu pool when CPU going offline.
->
-> Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-> ---
->   v1->v2:
->   Modify submission information.
->
->   v2->v3:
->   In CPU hotplug callback func, add clear percpu pool "obj_free" operation.
->   capitalize 'CPU', and use shorter preprocessor sequence.
->
->   include/linux/cpuhotplug.h |  1 +
->   lib/debugobjects.c         | 24 ++++++++++++++++++++++++
->   2 files changed, 25 insertions(+)
->
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index 3215023d4852..0c39d57e5342 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -36,6 +36,7 @@ enum cpuhp_state {
->   	CPUHP_X86_MCE_DEAD,
->   	CPUHP_VIRT_NET_DEAD,
->   	CPUHP_SLUB_DEAD,
-> +	CPUHP_DEBUG_OBJ_DEAD,
->   	CPUHP_MM_WRITEBACK_DEAD,
->   	CPUHP_MM_VMSTAT_DEAD,
->   	CPUHP_SOFTIRQ_DEAD,
-> diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-> index fe4557955d97..bb69a02c3e7b 100644
-> --- a/lib/debugobjects.c
-> +++ b/lib/debugobjects.c
-> @@ -19,6 +19,7 @@
->   #include <linux/slab.h>
->   #include <linux/hash.h>
->   #include <linux/kmemleak.h>
-> +#include <linux/cpu.h>
->   
->   #define ODEBUG_HASH_BITS	14
->   #define ODEBUG_HASH_SIZE	(1 << ODEBUG_HASH_BITS)
-> @@ -433,6 +434,24 @@ static void free_object(struct debug_obj *obj)
->   	}
->   }
->   
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static int object_cpu_offline(unsigned int cpu)
-> +{
-> +	struct debug_percpu_free *percpu_pool;
-> +	struct hlist_node *tmp;
-> +	struct debug_obj *obj;
-> +
-> +	percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
-> +	hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
-> +		hlist_del(&obj->node);
-> +		kmem_cache_free(obj_cache, obj);
-> +	}
-> +	percpu_pool->obj_free = 0;
+On 9/8/2020 10:57 AM, Dave Hansen wrote:
+> On 9/8/20 10:50 AM, Yu, Yu-cheng wrote:
+>> What about this:
+>>
+>> - Do not add any new syscall or arch_prctl for creating a new shadow stack.
+>>
+>> - Add a new arch_prctl that can turn an anonymous mapping to a shadow
+>> stack mapping.
+>>
+>> This allows the application to do whatever is necessary.  It can even
+>> allow GDB or JIT code to create or fix a call stack.
+> 
+> Fine with me.  But, it's going to effectively be
+> 
+> 	arch_prctl(PR_CONVERT_TO_SHS..., addr, len);
+> 
+> when it could just as easily be:
+> 
+> 	madvise(addr, len, MADV_SHSTK...);
+> 
+> Or a new syscall.  The only question in my mind is whether we want to do
+> something generic that we can use for other similar things in the
+> future, like:
+> 
+> 	madvise2(addr, len, flags, MADV2_SHSTK...);
+> 
+> I don't really feel strongly about it, though.  Could you please share
+> your logic on why you want a prctl() as opposed to a whole new syscall?
+> 
 
-For pointer, it is better to use NULL for clarity.
+A new syscall is more intrusive, I think.  When creating a new shadow 
+stack, the kernel also installs a restore token on the top of the new 
+shadow stack, and it is somewhat x86-specific.  So far no other arch's 
+need this.
 
-Cheers,
-Longman
-
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->   /*
->    * We run out of memory. That means we probably have tons of objects
->    * allocated.
-> @@ -1367,6 +1386,11 @@ void __init debug_objects_mem_init(void)
->   	} else
->   		debug_objects_selftest();
->   
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +	cpuhp_setup_state_nocalls(CPUHP_DEBUG_OBJ_DEAD, "object:offline", NULL,
-> +					object_cpu_offline);
-> +#endif
-> +
->   	/*
->   	 * Increase the thresholds for allocating and freeing objects
->   	 * according to the number of possible CPUs available in the system.
-
-
+Yes, madvise is better if the kernel only needs to change the mapping. 
+The application itself can create the restore token before calling 
+madvise().
