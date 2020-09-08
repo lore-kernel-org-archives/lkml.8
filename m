@@ -2,134 +2,101 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD40C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66FF206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587597;
-	bh=Vxf8thUXD9HDmFrlefoNCGBHtvxhE+QvMWyMaGEiawk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LaYZjFUdcOuInR1bg1N/kYm/U4qUQmLjOwdln3KgG3CMma1pdhJv6MOCRzm4U1lYb
-	 WI7HUea8nX43yzvxP4nepFh8um/VDzBIKQH+jlyVR1JamksqWT2a+/Y2G+56tZCQyE
-	 tizKfBxBGdJFcDqajinHieATKZ8k8aZ4+jGIBcxc=
+	by mail.kernel.org (Postfix) with ESMTP id C6634206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gck+FqS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731647AbgIHQNo (ORCPT
+        id S1731769AbgIHRxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 8 Sep 2020 13:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731600AbgIHQNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731217AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:22 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 008B8224B0;
-        Tue,  8 Sep 2020 15:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579954;
-        bh=Vxf8thUXD9HDmFrlefoNCGBHtvxhE+QvMWyMaGEiawk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HpIPdnIos3VGvS250go4Qjo0QZDovh2FGPm2ffxiJxFCFuAwQBtrW8IC/Dd+wtQev
-         6MhIr0hCsAxsPrRKKx9Riyh1YDLJFCk2+Wj1Gbg4o+94UrDZkeSOXeZuJbiqib2uVX
-         I6VP+LoprjKypMoCfD7new4S6ptNUyCzgS14JkLQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 100/129] mmc: mediatek: add optional module reset property
-Date:   Tue,  8 Sep 2020 17:25:41 +0200
-Message-Id: <20200908152234.812316496@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1C4C061290
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:01:33 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id a15so19988558ljk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9ROFMex6SmeQcgvgfjI5Vchgvc+G2tj/iCxGO6nsxuo=;
+        b=gck+FqS4TFd5ioreMir7T2hmA8fOv7VmNt+UEdcoNlHpyopB61mqzfwAgUgzpnzI1M
+         awXeDvbGswaVG9tiaeMeWaU39z+IibLEQ+XqA6dnfa0fojUufDKdMMk1Cf3PgB6k6MD8
+         jr/nL7gXzFGPBVryCkZTzvftcp8o6uyy5VwP3T5/xlmEVZ0ICQT66jYZJ2dm0Qsu+KO4
+         OZANzsYGJ2FdjcMvOaH17vORAB6hK/dCqCiIA2790Wa7sTbCy6mb16uHiI7SK3HbLHxU
+         gGT61gn0NiPQwyQewP2S+WzKFszo3IFb/LbbilVCN7YK4fhSGXVMm1FM4hBkhd3sDSGz
+         OjZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9ROFMex6SmeQcgvgfjI5Vchgvc+G2tj/iCxGO6nsxuo=;
+        b=Ma6rvF8h2N2mLG9xSRek3Lr/xljgBJR/WyDitv5BZapVKuwK7zvRqA9tI/NXivvmtn
+         uz0d1EbkY88MsETKOAw7Va1XqHXgpHz91SYm0DUl4dHCuovQyaC4nsT/WkYmvuO7H6mq
+         UF2NIlYB/dVP5yBq3O8FvxfgCADJXbMeHCBbp/H5gbAcxs+9O1QrTZazPNrz0fGhenll
+         Jptvyi8qiWIgefP/DSpRwrbNatoQ/9yPrCUoxl48xOpPHwVoE1gxdCW6eeC46XwA2CCL
+         qtZ07B575Clz4G7G1BDGJ/kUsNKkk1VZaBl/sNK1gX81Tei8QwrkHC6VjEpLRsmF0dMS
+         3+tA==
+X-Gm-Message-State: AOAM531XHBnCnm8kRWU9MIFwyBJznQi/5QzksCdSYL8IMC3wNer5Szmu
+        93sMTJa7NzUL7CZp58qXeqnAhratogeW8W/UDGQ=
+X-Google-Smtp-Source: ABdhPJzNCPOWmmxsXcRfVxojDQus+EStgmwv1gk8/iTKXOq4a7uo6VFLWq6gOeHI82RqCdy4Fdrc7ekP8uPBAtxxulA=
+X-Received: by 2002:a2e:9899:: with SMTP id b25mr11694176ljj.178.1599570091951;
+ Tue, 08 Sep 2020 06:01:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200908125558.256843-1-stefan@agner.ch>
+In-Reply-To: <20200908125558.256843-1-stefan@agner.ch>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 8 Sep 2020 10:01:20 -0300
+Message-ID: <CAOMZO5Amaxi-rU44b_q4+6k4vtOoCOmbKgiDJ0r3tEi4zkZB=w@mail.gmail.com>
+Subject: Re: [PATCH v2] drm: mxsfb: check framebuffer pitch
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenbin Mei <wenbin.mei@mediatek.com>
+Hi Stefan,
 
-commit 855d388df217989fbf1f18c781ae6490dbb48e86 upstream.
+On Tue, Sep 8, 2020 at 9:56 AM Stefan Agner <stefan@agner.ch> wrote:
+>
+> The lcdif IP does not support a framebuffer pitch (stride) other than
+> framebuffer width. Check for equality and reject the framebuffer
+> otherwise.
+>
+> This prevents a distorted picture when using 640x800 and running the
+> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
+> leads at that particular resolution to width != stride. Currently
+> Mesa has no fallback behavior, but rejecting this configuration allows
+> userspace to handle the issue correctly.
 
-This patch fixs eMMC-Access on mt7622/Bpi-64.
-Before we got these Errors on mounting eMMC ion R64:
-[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
-flags 0x800 phys_seg 1 prio class 0
-[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
+What about adding a Fixes tag so that it can be backported to old
+stable kernels?
 
-This patch adds a optional reset management for msdc.
-Sometimes the bootloader does not bring msdc register
-to default state, so need reset the msdc controller.
-
-Cc: <stable@vger.kernel.org> # v5.4+
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
-Link: https://lore.kernel.org/r/20200814014346.6496-4-wenbin.mei@mediatek.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/mmc/host/mtk-sd.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
-+#include <linux/reset.h>
- 
- #include <linux/mmc/card.h>
- #include <linux/mmc/core.h>
-@@ -412,6 +413,7 @@ struct msdc_host {
- 	struct pinctrl_state *pins_uhs;
- 	struct delayed_work req_timeout;
- 	int irq;		/* host interrupt */
-+	struct reset_control *reset;
- 
- 	struct clk *src_clk;	/* msdc source clock */
- 	struct clk *h_clk;      /* msdc h_clk */
-@@ -1474,6 +1476,12 @@ static void msdc_init_hw(struct msdc_hos
- 	u32 val;
- 	u32 tune_reg = host->dev_comp->pad_tune_reg;
- 
-+	if (host->reset) {
-+		reset_control_assert(host->reset);
-+		usleep_range(10, 50);
-+		reset_control_deassert(host->reset);
-+	}
-+
- 	/* Configure to MMC/SD mode, clock free running */
- 	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
- 
-@@ -2232,6 +2240,11 @@ static int msdc_drv_probe(struct platfor
- 	if (IS_ERR(host->src_clk_cg))
- 		host->src_clk_cg = NULL;
- 
-+	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-+								"hrst");
-+	if (IS_ERR(host->reset))
-+		return PTR_ERR(host->reset);
-+
- 	host->irq = platform_get_irq(pdev, 0);
- 	if (host->irq < 0) {
- 		ret = -EINVAL;
-
-
+Thanks
