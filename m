@@ -2,264 +2,117 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043F2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE48C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C13D620672
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:29:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsPUQ/TJ"
+	by mail.kernel.org (Postfix) with ESMTP id 68DFC20672
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgIHK3J (ORCPT
+        id S1729726AbgIHK3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:29:09 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21905 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729517AbgIHK0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:26:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599560793;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=mOMtXpC9w9DNODyqnAlcSJZsWHWQ8hOHZ9+OpCpEsMo=;
-        b=VsPUQ/TJEY0kFx1NlbCSt6bLZMUOvGYrYfUI4odbdttPvuU3LFevrICYA4/LxIqxKVULlX
-        HDbJV3ED1EOstDcHmliQSggFVfftK/tP38rqW08Hr1IlH0HPDCYM2mLPzdMKv8aGiym5ii
-        W53t/ZSs4weSVJyYhxJkUs14HNEsAEU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-535-ocpL4LifPeKj0Evr1s394g-1; Tue, 08 Sep 2020 06:26:29 -0400
-X-MC-Unique: ocpL4LifPeKj0Evr1s394g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86C691007467;
-        Tue,  8 Sep 2020 10:26:26 +0000 (UTC)
-Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA7021002D46;
-        Tue,  8 Sep 2020 10:26:21 +0000 (UTC)
-Subject: Re: [PATCH v1 2/5] kernel/resource: merge_system_ram_resources() to
- merge resources after hotplug
-To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux MM <linux-mm@kvack.org>, linux-hyperv@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Julien Grall <julien@xen.org>, Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-References: <20200821103431.13481-1-david@redhat.com>
- <20200821103431.13481-3-david@redhat.com>
- <CAM9Jb+hJ8YSB6XZi6CB3jU-LSdVhKGZw=6NESzFhY7bbU9uOSQ@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <93e5b25b-ff00-b6b7-eb1e-b051ea6dcbe5@redhat.com>
-Date:   Tue, 8 Sep 2020 12:26:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <CAM9Jb+hJ8YSB6XZi6CB3jU-LSdVhKGZw=6NESzFhY7bbU9uOSQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Tue, 8 Sep 2020 06:29:21 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:44896 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729489AbgIHK0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:26:38 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3CA701A035F;
+        Tue,  8 Sep 2020 12:26:10 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2ED6A1A0339;
+        Tue,  8 Sep 2020 12:26:10 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7E33220327;
+        Tue,  8 Sep 2020 12:26:09 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v3 06/14] dt-bindings: clock: imx8mp: Add hdmi blk_ctl clock IDs
+Date:   Tue,  8 Sep 2020 13:24:43 +0300
+Message-Id: <1599560691-3763-7-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599560691-3763-1-git-send-email-abel.vesa@nxp.com>
+References: <1599560691-3763-1-git-send-email-abel.vesa@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.08.20 11:35, Pankaj Gupta wrote:
->> Some add_memory*() users add memory in small, contiguous memory blocks.
->> Examples include virtio-mem, hyper-v balloon, and the XEN balloon.
->>
->> This can quickly result in a lot of memory resources, whereby the actual
->> resource boundaries are not of interest (e.g., it might be relevant for
->> DIMMs, exposed via /proc/iomem to user space). We really want to merge
->> added resources in this scenario where possible.
->>
->> Let's provide an interface to trigger merging of applicable child
->> resources. It will be, for example, used by virtio-mem to trigger
->> merging of system ram resources it added to its resource container, but
->> also by XEN and Hyper-V to trigger merging of system ram resources in
->> iomem_resource.
->>
->> Note: We really want to merge after the whole operation succeeded, not
->> directly when adding a resource to the resource tree (it would break
->> add_memory_resource() and require splitting resources again when the
->> operation failed - e.g., due to -ENOMEM).
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
->> Cc: Haiyang Zhang <haiyangz@microsoft.com>
->> Cc: Stephen Hemminger <sthemmin@microsoft.com>
->> Cc: Wei Liu <wei.liu@kernel.org>
->> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->> Cc: Juergen Gross <jgross@suse.com>
->> Cc: Stefano Stabellini <sstabellini@kernel.org>
->> Cc: Roger Pau Monné <roger.pau@citrix.com>
->> Cc: Julien Grall <julien@xen.org>
->> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Wei Yang <richardw.yang@linux.intel.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  include/linux/ioport.h |  3 +++
->>  kernel/resource.c      | 52 ++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 55 insertions(+)
->>
->> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
->> index 52a91f5fa1a36..3bb0020cd6ddc 100644
->> --- a/include/linux/ioport.h
->> +++ b/include/linux/ioport.h
->> @@ -251,6 +251,9 @@ extern void __release_region(struct resource *, resource_size_t,
->>  extern void release_mem_region_adjustable(struct resource *, resource_size_t,
->>                                           resource_size_t);
->>  #endif
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +extern void merge_system_ram_resources(struct resource *res);
->> +#endif
->>
->>  /* Wrappers for managed devices */
->>  struct device;
->> diff --git a/kernel/resource.c b/kernel/resource.c
->> index 1dcef5d53d76e..b4e0963edadd2 100644
->> --- a/kernel/resource.c
->> +++ b/kernel/resource.c
->> @@ -1360,6 +1360,58 @@ void release_mem_region_adjustable(struct resource *parent,
->>  }
->>  #endif /* CONFIG_MEMORY_HOTREMOVE */
->>
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +static bool system_ram_resources_mergeable(struct resource *r1,
->> +                                          struct resource *r2)
->> +{
->> +       return r1->flags == r2->flags && r1->end + 1 == r2->start &&
->> +              r1->name == r2->name && r1->desc == r2->desc &&
->> +              !r1->child && !r2->child;
->> +}
->> +
->> +/*
->> + * merge_system_ram_resources - try to merge contiguous system ram resources
->> + * @parent: parent resource descriptor
->> + *
->> + * This interface is intended for memory hotplug, whereby lots of contiguous
->> + * system ram resources are added (e.g., via add_memory*()) by a driver, and
->> + * the actual resource boundaries are not of interest (e.g., it might be
->> + * relevant for DIMMs). Only immediate child resources that are busy and
->> + * don't have any children are considered. All applicable child resources
->> + * must be immutable during the request.
->> + *
->> + * Note:
->> + * - The caller has to make sure that no pointers to resources that might
->> + *   get merged are held anymore. Callers should only trigger merging of child
->> + *   resources when they are the only one adding system ram resources to the
->> + *   parent (besides during boot).
->> + * - release_mem_region_adjustable() will split on demand on memory hotunplug
->> + */
->> +void merge_system_ram_resources(struct resource *parent)
->> +{
->> +       const unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
->> +       struct resource *cur, *next;
->> +
->> +       write_lock(&resource_lock);
->> +
->> +       cur = parent->child;
->> +       while (cur && cur->sibling) {
->> +               next = cur->sibling;
->> +               if ((cur->flags & flags) == flags &&
-> 
-> Maybe this can be changed to:
-> !(cur->flags & ~flags)
+These will be used by the imx8mp for blk_ctl driver.
 
-That would be different I think.
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ include/dt-bindings/clock/imx8mp-clock.h | 40 ++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-(cur->flags & flags) == flags
-checks that all "flags" are set (additional ones might be set).
-
-!(cur->flags & ~flags)
-checks that no other flags besides "flags" are set (and "flags" are not
-required to be set).
-
-
-We use the same handling in find_next_iomem_res(), e.g., called via
-walk_system_ram_range also with IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY.
-
-Thanks for having a look!
-
+diff --git a/include/dt-bindings/clock/imx8mp-clock.h b/include/dt-bindings/clock/imx8mp-clock.h
+index 12632fa..de7d522 100644
+--- a/include/dt-bindings/clock/imx8mp-clock.h
++++ b/include/dt-bindings/clock/imx8mp-clock.h
+@@ -424,4 +424,44 @@
+ 
+ #define IMX8MP_CLK_MEDIA_BLK_CTL_END			25
+ 
++#define IMX8MP_CLK_HDMI_BLK_CTL_GLOBAL_APB_CLK		0
++#define IMX8MP_CLK_HDMI_BLK_CTL_GLOBAL_B_CLK		1
++#define IMX8MP_CLK_HDMI_BLK_CTL_GLOBAL_REF266M_CLK	2
++#define IMX8MP_CLK_HDMI_BLK_CTL_GLOBAL_XTAL24M_CLK	3
++#define IMX8MP_CLK_HDMI_BLK_CTL_GLOBAL_XTAL32K_CLK	4
++#define IMX8MP_CLK_HDMI_BLK_CTL_GLOBAL_TX_PIX_CLK	5
++#define IMX8MP_CLK_HDMI_BLK_CTL_IRQS_STEER_CLK		6
++#define IMX8MP_CLK_HDMI_BLK_CTL_NOC_HDMI_CLK		7
++#define IMX8MP_CLK_HDMI_BLK_CTL_NOC_HDCP_CLK		8
++#define IMX8MP_CLK_HDMI_BLK_CTL_LCDIF_APB_CLK		9
++#define IMX8MP_CLK_HDMI_BLK_CTL_LCDIF_B_CLK		10
++#define IMX8MP_CLK_HDMI_BLK_CTL_LCDIF_PDI_CLK		11
++#define IMX8MP_CLK_HDMI_BLK_CTL_LCDIF_PIX_CLK		12
++#define IMX8MP_CLK_HDMI_BLK_CTL_LCDIF_SPU_CLK		13
++#define IMX8MP_CLK_HDMI_BLK_CTL_FDCC_REF_CLK		14
++#define IMX8MP_CLK_HDMI_BLK_CTL_HRV_MWR_APB_CLK		15
++#define IMX8MP_CLK_HDMI_BLK_CTL_HRV_MWR_B_CLK		16
++#define IMX8MP_CLK_HDMI_BLK_CTL_HRV_MWR_CEA_CLK		17
++#define IMX8MP_CLK_HDMI_BLK_CTL_VSFD_CEA_CLK		18
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_HPI_CLK		19
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_APB_CLK		20
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_CEC_CLK		21
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_ESM_CLK		22
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_GPA_CLK		23
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_PIXEL_CLK		24
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_SFR_CLK		25
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_SKP_CLK		26
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_PREP_CLK		27
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_PHY_APB_CLK		28
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_PHY_INT_CLK		29
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_SEC_MEM_CLK		30
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_TRNG_SKP_CLK		31
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_VID_LINK_PIX_CLK	32
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_TRNG_APB_CLK		33
++#define IMX8MP_CLK_HDMI_BLK_CTL_HTXPHY_CLK_SEL		34
++#define IMX8MP_CLK_HDMI_BLK_CTL_LCDIF_CLK_SEL		35
++#define IMX8MP_CLK_HDMI_BLK_CTL_TX_PIPE_CLK_SEL		36
++
++#define IMX8MP_CLK_HDMI_BLK_CTL_END			37
++
+ #endif
 -- 
-Thanks,
-
-David / dhildenb
+2.7.4
 
