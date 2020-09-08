@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19654C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D962076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7132087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592760;
-	bh=IW5uSBcmOPPSkVi4qJhYfoEVWEe0kYakDz5/+FPWbEk=;
+	s=default; t=1599592763;
+	bh=+bIpSi/c6GEhT293GlRTXrXmug0KpOewySLts4rLX6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHCXvt0qNp7AR344B4teAbUEKEL6J5Ml7ktlJiZydPb+DrVBVQ3QJUKJ62Q0RX7fE
-	 LKCKSmQ26aLUmvWDQmVN7w3PaxlRFQCeyUE7mWpGBr7StBXrvq5/7CN8qI3qfhnlOY
-	 YR/T96PPq0xmXc4SsNtd7i1RqfZkEnV6qhr0QZLU=
+	b=E0CH1xKQE0H5SUqfzTJs+cD5Z/9hPNHShu+nSVgwRijKJXDynlu4ni5uYa1Hsjbbk
+	 PnXdS4gI1+QtjABH9S6ApiryyXFryc1vJypPIBNEno1YeIx3mMRBSCUNgAdihk5/1d
+	 Tq6DYBe2LClgkgEiYtWySZU+3bGtwvRxPmnTbJow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731773AbgIHTTT (ORCPT
+        id S1732037AbgIHTTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731139AbgIHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731132AbgIHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:02:51 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D7EF246E3;
-        Tue,  8 Sep 2020 15:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B57502468E;
+        Tue,  8 Sep 2020 15:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579618;
-        bh=IW5uSBcmOPPSkVi4qJhYfoEVWEe0kYakDz5/+FPWbEk=;
+        s=default; t=1599579577;
+        bh=+bIpSi/c6GEhT293GlRTXrXmug0KpOewySLts4rLX6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GqPHP/JxVfMST3bSXczU4rOuDyQqEeMnTrvWjzsfmLmk5SmJxvnwgV6/dcNd6falK
-         +yPi4IGWsWkFJrN88pyBUAkQZPPxQ+O2rAc+C3s2PMl+EfNjJ7AVqjwKt1KoC3N0SH
-         ZSVM4GvJR616JpoLXL7yv7vHM9WBSKMFsg6t9C1A=
+        b=EcMcwrVETyfads1fQ8jTDjAx3dvFnw+v8mO1kvAKzr2RxAlAFfHSeT3XJ0+LXO3yM
+         JGWe6Br+mFzewDDlsOQcOeTrIOd5RAhmNQxfvOe7s970pLIr63p/PEUH8ZM/jmVfjZ
+         ic7nnN11Z0peNHA45jjyQl/UwJOtwmTIr6iMJyLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 153/186] block: ensure bdi->io_pages is always initialized
-Date:   Tue,  8 Sep 2020 17:24:55 +0200
-Message-Id: <20200908152249.075194644@linuxfoundation.org>
+        stable@vger.kernel.org, Tong Zhang <ztong0001@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 135/186] ALSA: ca0106: fix error code handling
+Date:   Tue,  8 Sep 2020 17:24:37 +0200
+Message-Id: <20200908152248.190442183@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,36 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Tong Zhang <ztong0001@gmail.com>
 
-commit de1b0ee490eafdf65fac9eef9925391a8369f2dc upstream.
+commit ee0761d1d8222bcc5c86bf10849dc86cf008557c upstream.
 
-If a driver leaves the limit settings as the defaults, then we don't
-initialize bdi->io_pages. This means that file systems may need to
-work around bdi->io_pages == 0, which is somewhat messy.
+snd_ca0106_spi_write() returns 1 on error, snd_ca0106_pcm_power_dac()
+is returning the error code directly, and the caller is expecting an
+negative error code
 
-Initialize the default value just like we do for ->ra_pages.
-
-Cc: stable@vger.kernel.org
-Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
-Reported-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200824224541.1260307-1-ztong0001@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-core.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/ca0106/ca0106_main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -526,6 +526,7 @@ struct request_queue *__blk_alloc_queue(
- 		goto fail_stats;
- 
- 	q->backing_dev_info->ra_pages = VM_READAHEAD_PAGES;
-+	q->backing_dev_info->io_pages = VM_READAHEAD_PAGES;
- 	q->backing_dev_info->capabilities = BDI_CAP_CGROUP_WRITEBACK;
- 	q->node = node_id;
- 
+--- a/sound/pci/ca0106/ca0106_main.c
++++ b/sound/pci/ca0106/ca0106_main.c
+@@ -537,7 +537,8 @@ static int snd_ca0106_pcm_power_dac(stru
+ 		else
+ 			/* Power down */
+ 			chip->spi_dac_reg[reg] |= bit;
+-		return snd_ca0106_spi_write(chip, chip->spi_dac_reg[reg]);
++		if (snd_ca0106_spi_write(chip, chip->spi_dac_reg[reg]) != 0)
++			return -ENXIO;
+ 	}
+ 	return 0;
+ }
 
 
