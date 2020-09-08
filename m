@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7D7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D0B2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47EB2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592557;
-	bh=0OpwguM5VuIK0HzhVOAJGjUbPJq9mNBmUvNdlbS1eyw=;
+	s=default; t=1599592561;
+	bh=eWXvw12jKk2fVfZJ6GFWhus/h0ADtQcj6KHW9wEg1eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p07WxV1SeA5oGWM78MMxWSsIi8F7VFoLk/hrvwaLcygcyHEpG6eSJzj46UFD8JaGa
-	 uRBDDmtF0OoTrN4kdxDnoXEWGg9gmLlpfawutHN/GI3Trk35BMfBwxxYcrd9E2J8cz
-	 SWfCOMqeRr5CdE+Q6E3ebDOSP0l0yifxq9VZhBuI=
+	b=FL48q0O0q4cLV0lezLOQ9VM4B5Mp2RBoUKapQ1ksm0VKE5yrSfiiYPOPgtcL6kaw/
+	 84/WiVTs7lxLMbPTP2wghW90OOhxCc9XHaj9caxNTH5zEGhH3TyGIsJO0oV0f8V4Cz
+	 UUdXCJOkbx1L29MH/eCuOT4N8Z5PUSjDk6XVAxuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgIHTP4 (ORCPT
+        id S1731930AbgIHTP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:15:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731179AbgIHQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:04:45 -0400
+        id S1731176AbgIHQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:04:40 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0D0B23E1D;
-        Tue,  8 Sep 2020 15:37:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB20C23CD3;
+        Tue,  8 Sep 2020 15:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579464;
-        bh=0OpwguM5VuIK0HzhVOAJGjUbPJq9mNBmUvNdlbS1eyw=;
+        s=default; t=1599579413;
+        bh=eWXvw12jKk2fVfZJ6GFWhus/h0ADtQcj6KHW9wEg1eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eca0E/wwios6s6k+JvvI/LOlhtHhgsOkhR3CBEFLiMDS9KbErUBj0RNfPXOZo9ycR
-         cjARc+mPN8a0T3kE80xMFA+MS8bLw5whIGrroikjvHSfiYJLNTO2nAomBOrLJTI+IY
-         ylAxdl/y73ot8XkFewgZlwX9iNP+bD8GhRSmK8W0=
+        b=MW3WLTghdqifSltS/70TCBQqVsUQdfCRPef8GO3+ix6ScXetJLMx8BtOiDAg19Iaa
+         TdS4FFsVSvq8D2KEg0CMx91gLYnk/96UKmWlju1MoIR8/8lRhDFsUtyMIAC5gcqwqG
+         5KEdTFU2qo9avZEuX2tlvgYCl4ySoPpb8rzSGTQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Huang Pei <huangpei@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Pavan Chebbi <pavan.chebbi@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 089/186] MIPS: perf: Fix wrong check condition of Loongson event IDs
-Date:   Tue,  8 Sep 2020 17:23:51 +0200
-Message-Id: <20200908152245.958909094@linuxfoundation.org>
+Subject: [PATCH 5.8 067/186] bnxt_en: Dont query FW when netif_running() is false.
+Date:   Tue,  8 Sep 2020 17:23:29 +0200
+Message-Id: <20200908152244.906154725@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,41 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Pavan Chebbi <pavan.chebbi@broadcom.com>
 
-[ Upstream commit a231995700c392c0807da95deea231b23fc51a3c ]
+[ Upstream commit c1c2d77408022a398a1a7c51cf20488c922629de ]
 
-According to the user's manual chapter 8.2.1 of Loongson 3A2000 CPU [1]
-and 3A3000 CPU [2], we should take some event IDs such as 274, 358, 359
-and 360 as valid in the check condition, otherwise they are recognized
-as "not supported", fix it.
+In rare conditions like two stage OS installation, the
+ethtool's get_channels function may be called when the
+device is in D3 state, leading to uncorrectable PCI error.
+Check netif_running() first before making any query to FW
+which involves writing to BAR.
 
-[1] http://www.loongson.cn/uploadfile/cpu/3A2000/Loongson3A2000_user2.pdf
-[2] http://www.loongson.cn/uploadfile/cpu/3A3000/Loongson3A3000_3B3000user2.pdf
-
-Fixes: e9dfbaaeef1c ("MIPS: perf: Add hardware perf events support for new Loongson-3")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Acked-by: Huang Pei <huangpei@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: db4723b3cd2d ("bnxt_en: Check max_tx_scheduler_inputs value from firmware.")
+Signed-off-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/perf_event_mipsxx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index efce5defcc5cf..011eb6bbf81a5 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -1898,8 +1898,8 @@ static const struct mips_perf_event *mipsxx_pmu_map_raw_event(u64 config)
- 				(base_id >= 64 && base_id < 90) ||
- 				(base_id >= 128 && base_id < 164) ||
- 				(base_id >= 192 && base_id < 200) ||
--				(base_id >= 256 && base_id < 274) ||
--				(base_id >= 320 && base_id < 358) ||
-+				(base_id >= 256 && base_id < 275) ||
-+				(base_id >= 320 && base_id < 361) ||
- 				(base_id >= 384 && base_id < 574))
- 				break;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index b4aa56dc4f9fb..dcb3f61af7ab0 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -847,7 +847,7 @@ static void bnxt_get_channels(struct net_device *dev,
+ 	int max_tx_sch_inputs;
+ 
+ 	/* Get the most up-to-date max_tx_sch_inputs. */
+-	if (BNXT_NEW_RM(bp))
++	if (netif_running(dev) && BNXT_NEW_RM(bp))
+ 		bnxt_hwrm_func_resc_qcaps(bp, false);
+ 	max_tx_sch_inputs = hw_resc->max_tx_sch_inputs;
  
 -- 
 2.25.1
