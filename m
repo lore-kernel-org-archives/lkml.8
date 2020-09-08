@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EEAC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59553C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5261020738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C052078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586083;
-	bh=lDxhKLPh1jApYZIAYFWh3prI6m+QbYoiAoEvWLSo5ZM=;
+	s=default; t=1599586090;
+	bh=Hqrjbc6boyisskgOrWsePN/GEu+kQdQBb4I5dQN/XoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UN4/oy7ZVBbYHZu6smirstojI/jAh6wrgOK9UIUJ+SMksHa4C7GdI/bSjiVc9S6Xk
-	 948WuDNfRMHL7d8LWV4YcDheHtXnTwhJKKzXI22wWAjrTQPMh+Oq1xUvAIxnURZaBr
-	 x5OLHYkM2ImQtq9sUXcEm3/KBxTS/Kt9YJME+Wf8=
+	b=UWqmWXK7iAHA63fpZcdgF5TVgQWOyq6PMJRUiNXJOiTyzgXotpOjaniVxV1hKIlr5
+	 nxu9dXf7UpoK+Op8reLALF/E3TIQFT2bXtCsot7VjpHW/4BlyhVrBBdWhoEDS71gk4
+	 iTcl2P4/B0kYRKPNhLte1cgh0ceeK8ECt9Xe0VQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbgIHR2B (ORCPT
+        id S1730140AbgIHR2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:28:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57570 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731722AbgIHQQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731723AbgIHQQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:16:31 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5B22483C;
-        Tue,  8 Sep 2020 15:44:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF092481B;
+        Tue,  8 Sep 2020 15:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579887;
-        bh=lDxhKLPh1jApYZIAYFWh3prI6m+QbYoiAoEvWLSo5ZM=;
+        s=default; t=1599579837;
+        bh=Hqrjbc6boyisskgOrWsePN/GEu+kQdQBb4I5dQN/XoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXmkdXjVwMyCcy11ImMxif7h2U//UIl8zlmp6mPaa0S2OKR/bcg1IXRtBBh3jfg8p
-         z/6E8b4yzrsfuOyoG1aJnqjpEH5WhCY3LIKoORkLkysibFEwJb4gI72XR/8eduKc/a
-         nOCU/JZRpOV8qaSJPFunswMmOV5DrCxztFHabw58=
+        b=iITTj7PFlugrKLE7rUjGgqNfwM4N3P130+5U8EloNALskuswOkcyS82EfwvCcSYQu
+         LvPs8ZNMdwSXWhV/YIF8xfIWavZwx7PxaN3x3WBYAa75VwgvHPz12HPVKYEux7g9uk
+         qgv6mHE2S5SgPH1slchEt7quyn2ZAwsEfXS0JhbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/129] include/linux/log2.h: add missing () around n in roundup_pow_of_two()
-Date:   Tue,  8 Sep 2020 17:25:13 +0200
-Message-Id: <20200908152233.303971539@linuxfoundation.org>
+Subject: [PATCH 5.4 054/129] nvmet-fc: Fix a missed _irqsave version of spin_lock in nvmet_fc_fod_op_done()
+Date:   Tue,  8 Sep 2020 17:24:55 +0200
+Message-Id: <20200908152232.409084961@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -61,35 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 428fc0aff4e59399ec719ffcc1f7a5d29a4ee476 ]
+[ Upstream commit 70e37988db94aba607d5491a94f80ba08e399b6b ]
 
-Otherwise gcc generates warnings if the expression is complicated.
+The way 'spin_lock()' and 'spin_lock_irqsave()' are used is not consistent
+in this function.
 
-Fixes: 312a0c170945 ("[PATCH] LOG2: Alter roundup_pow_of_two() so that it can use a ilog2() on a constant")
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Link: https://lkml.kernel.org/r/0-v1-8a2697e3c003+41165-log_brackets_jgg@nvidia.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Use 'spin_lock_irqsave()' also here, as there is no guarantee that
+interruptions are disabled at that point, according to surrounding code.
+
+Fixes: a97ec51b37ef ("nvmet_fc: Rework target side abort handling")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/log2.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/target/fc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/log2.h b/include/linux/log2.h
-index 83a4a3ca3e8a7..c619ec6eff4ae 100644
---- a/include/linux/log2.h
-+++ b/include/linux/log2.h
-@@ -173,7 +173,7 @@ unsigned long __rounddown_pow_of_two(unsigned long n)
- #define roundup_pow_of_two(n)			\
- (						\
- 	__builtin_constant_p(n) ? (		\
--		(n == 1) ? 1 :			\
-+		((n) == 1) ? 1 :		\
- 		(1UL << (ilog2((n) - 1) + 1))	\
- 				   ) :		\
- 	__roundup_pow_of_two(n)			\
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index ce8d819f86ccc..fc35f7ae67b0a 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -1994,9 +1994,9 @@ nvmet_fc_fod_op_done(struct nvmet_fc_fcp_iod *fod)
+ 			return;
+ 		if (fcpreq->fcp_error ||
+ 		    fcpreq->transferred_length != fcpreq->transfer_length) {
+-			spin_lock(&fod->flock);
++			spin_lock_irqsave(&fod->flock, flags);
+ 			fod->abort = true;
+-			spin_unlock(&fod->flock);
++			spin_unlock_irqrestore(&fod->flock, flags);
+ 
+ 			nvmet_req_complete(&fod->req, NVME_SC_INTERNAL);
+ 			return;
 -- 
 2.25.1
 
