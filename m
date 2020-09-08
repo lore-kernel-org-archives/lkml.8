@@ -2,124 +2,163 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649FEC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDC121532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRYjRdKK"
+	by mail.kernel.org (Postfix) with ESMTP id 2313421919
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599547344;
+	bh=G/unC9tDIykyDy4VNj9lPegEFGYDWJqI75rh2wbFfBc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xx0qXn4pm3mHDawYvxQIfSmKnDnB5mb9n7TWMjE7+RE2SZFScOnBP0IG6qxM/0yxo
+	 mH5kcgPw4WpuTqtNHDLa8Cs+RLA1NPCZw67zihi16cdiXgv0fS4iuve36J293gm/IU
+	 6nKWqEHmNv53/Q1X3X+tlVer9CgDWGLcVYoLM8mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgIHGl7 (ORCPT
+        id S1729081AbgIHGmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgIHGl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:41:58 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF7FC061573;
-        Mon,  7 Sep 2020 23:41:57 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id u28so3700974ooe.12;
-        Mon, 07 Sep 2020 23:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Z4woB6C8Tv6F/Z/MvCwCzucOF/m1MsrTyEtPgxnRS4k=;
-        b=cRYjRdKKvdQhonEZL4Ha0EgTiq1jGo8Cay+/b9o00euZBc0KmnBhPvP33oO8kItJlD
-         m5gkUUTVppXImLuasS0nE4b5VV4ex5lw9AdJsaPpA9BVktnuQGpJQ4TwVlDeAKPGw9e0
-         h5a4CkJwojSGPPMu58xK4iR2xBq6+DU/0y5bZBq/M7X7aJFh79NqhMLU8mMjHgZpRQZL
-         lxjVXzXmr0WYmFgm3PR9O0t+6tMSl57zKL7knMAocj9M7d7YKj7IsvBawu9FZZ2y62+V
-         urqaFZyRQpeHwecLFznjYyvLfrTTv6Ql0q7lgrvga5wjsZ7aPqpWdMQLKMvZ+HIaNU08
-         vdzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Z4woB6C8Tv6F/Z/MvCwCzucOF/m1MsrTyEtPgxnRS4k=;
-        b=gEsVd2W7ZfCnbW+dpkeRVdBcKFCliefoIiYaX4+yYH2DbrpqHRc6pOl8Sox3//APZc
-         Q/2u1J8kG1jAQ9Cic3rU4OidX9goRyH6+nV6wchyVPMh+fm+HO9z17fp6rLvwcSGP39d
-         l9Q6+QI/I8StvP8Fq7sinhV9YtBW3Tz6RVnXykvq/Ef4InGS7J5aOioBtJwpWc1SJdFC
-         a+XXqMB+OdOfPobgsoQps0/lsxINJlKBjReyOyENoubniiCbW7FLYP6iqXX3ypFdgvF4
-         8lZ5FOVTRcSM8esexw/loERq+NRRq1fjWzaJFeAJ8VznEq4m5bc+UO0LotNLgtQvbo+G
-         3Pgw==
-X-Gm-Message-State: AOAM530v0doe/ghJqKCP4WnuM8Clw0vQtiM5SVpqKUYv5E2gvPzoY+4Q
-        nqBLTV82//6HHTr0IgmWO0eARfZY3yBpA8AU+ug=
-X-Google-Smtp-Source: ABdhPJyyo86yjdnfYeJdb2lbLD7KXA4jOdvTgpqKfAGrDtRhvcjvgLVVPdzbGLOZDTeO8wykvnQKnCVmo02w8jVXUKU=
-X-Received: by 2002:a4a:3e13:: with SMTP id t19mr17278220oot.49.1599547317033;
- Mon, 07 Sep 2020 23:41:57 -0700 (PDT)
+        Tue, 8 Sep 2020 02:42:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728895AbgIHGmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:42:20 -0400
+Received: from coco.lan (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE9821532;
+        Tue,  8 Sep 2020 06:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599547339;
+        bh=G/unC9tDIykyDy4VNj9lPegEFGYDWJqI75rh2wbFfBc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Z/w+D6BkXxTlstn3Ad5ZuhYV0/WVmN6v6LVcxfH0PhSPwOA81ugYYZSgYe4iGrpjv
+         xeiT8Za9k9G71FCxXMVPOI3trLO7O3LKobkXL1Pyd51XtgD6h2/k4zwVdPr0SOBBiT
+         wrSiaL2FSw3/vkY0yOEoiC04nFzKkpXKO1XWWhIY=
+Date:   Tue, 8 Sep 2020 08:42:06 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yu Chen <chenyu56@huawei.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        john.stultz@linaro.org, suzhuangluan@hisilicon.com,
+        kongfei@hisilicon.com, liuyu712@hisilicon.com,
+        wanghu17@hisilicon.com, butao@hisilicon.com, chenyao11@huawei.com,
+        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
+        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
+        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
+        zangleigang@hisilicon.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>
+Subject: Re: [PATCH v6 04/13] usb: dwc3: Add splitdisable quirk for
+ Hisilicon Kirin Soc
+Message-ID: <20200908084206.6eeaa599@coco.lan>
+In-Reply-To: <874ko9of80.fsf@kernel.org>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+        <20190420064019.57522-5-chenyu56@huawei.com>
+        <20200907150631.70e1bce0@coco.lan>
+        <874ko9of80.fsf@kernel.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <CAP6odjjZAZ4fcAdoFETzbX0_e-VPsrvJ0Fh1_ZXfeAZKLppj3A@mail.gmail.com>
-In-Reply-To: <CAP6odjjZAZ4fcAdoFETzbX0_e-VPsrvJ0Fh1_ZXfeAZKLppj3A@mail.gmail.com>
-From:   Grant Grundler <grantgrundler@gmail.com>
-Date:   Mon, 7 Sep 2020 23:41:46 -0700
-Message-ID: <CAP6odjibYc6gMeSHqsjeZyA0YDpD_teeix8_RFkY=8UfV-xq-g@mail.gmail.com>
-Subject: Re: Apply from 2018? [V2,0/3] phy: qcom-ipq4019-usb: add new driver
-To:     Alban Bedel <albeu@free.fr>, linux-soc <linux-soc@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Matthew McClintock <matthew@mcclintock.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding linux-soc@vger.kernel.org since Andy's email in MAINTAINERs bounced.
-Using Matthew's personal email since his codeaurora email bounced.
+Em Mon, 07 Sep 2020 17:04:31 +0300
+Felipe Balbi <balbi@kernel.org> escreveu:
 
-On Mon, Sep 7, 2020 at 11:35 PM Grant Grundler <grantgrundler@gmail.com> wr=
-ote:
->
-> Alban, Andy,
-> Can you please apply this patch series from 2018 or please explain
-> what I (or John) have to do so this series can be applied?
->
->    https://patchwork.kernel.org/cover/10552139/
->    [V2,0/3] phy: qcom-ipq4019-usb: add new driver=EF=BF=BC
->
-> OpenWRT has been applying this code to all ipq4019 targets since Jul 2018=
-:
->     https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dcommitdiff;h=3D9=
-5672e04335ea0d7d8f468cec8f63d593cc6ede6
->
-> I expect if there were problems with it, we'd know by now.
->
-> $ find -name \*qcom-ipq4019-usb\*
-> ./target/linux/ipq40xx/patches-5.4/076-phy-qcom-ipq4019-usb-add-driver-fo=
-r-QCOM-IPQ4019.patch
-> ./target/linux/ipq40xx/patches-5.4/075-dt-bindings-phy-qcom-ipq4019-usb-a=
-dd-binding-documen.patch
-> ./target/linux/ipq40xx/patches-4.19/076-phy-qcom-ipq4019-usb-add-driver-f=
-or-QCOM-IPQ4019.patch
-> ./target/linux/ipq40xx/patches-4.19/075-dt-bindings-phy-qcom-ipq4019-usb-=
-add-binding-documen.patch
-> ...
->
-> In 2018, Rob Herring reviewed (and approved):
->    [V2,1/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
->
-> I've just reviewed 2/3 and 3/3. You can add to those:
->   Reviewed-by: Grant Grundler <grantgrundler@gmail.com>
->
-> I compared 3/3 with the DTS entries that were submitted (and I
-> approved) to chromeos-3.18 kernel tree in 2016:
->    https://chromium-review.googlesource.com/337605
->    https://chromium-review.googlesource.com/344471
->
-> While not identical, the important bits (reg values) are.
->
-> (I would reply to the original thread but I don't have it in a format
-> I can easily reply to.)
->
-> cheers,
-> grant
+> >>  static const struct dev_pm_ops dwc3_dev_pm_ops = {
+> >>  	SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
+> >> +	.complete = dwc3_complete,  
+> 
+> why is this done on complete? Why can't it be done at the end of
+> dwc3_resume()?
+
+Updating my answer:
+
+No. I just tested moving the code from .complete to the end of
+.resume. After moving it, the HID won't be able to properly enable
+the device at resume time (logs filtered to show only relevant msgs):
+
+	# echo reboot > /sys/power/disk; echo disk > /sys/power/state
+
+	...
+	[   29.051314] Freezing user space processes ... (elapsed 0.001 seconds) done.
+	[   29.059811] OOM killer disabled.
+	[   30.171526] PM: hibernation: Creating image:
+	[   30.171526] PM: hibernation: Need to copy 164192 pages
+	[   30.171526] PM: hibernation: Image created (164192 pages copied)
+	[   30.171644] Enabling non-boot CPUs ...
+	[   30.293953] dwc3 ff100000.dwc3: dwc3_resume
+	[   30.424549] usb usb1-port1: status 0101 change 0001
+	[   30.428538] usb usb2-port1: status 0203 change 0001
+	[   30.536609] usb 1-1: Waited 0ms for CONNECT
+	[   30.543822] usb 1-1: finish reset-resume
+	[   30.544619] usb 2-1: Waited 0ms for CONNECT
+	[   30.558869] usb 2-1: finish reset-resume
+	[   30.676706] usb 1-1: reset high-speed USB device number 2 using xhci-hcd
+	[   30.882194] hub 1-1:1.0: hub_reset_resume
+	[   30.888479] hub 1-1:1.0: enabling power on all ports
+	[   30.960767] usb 2-1: reset SuperSpeed Gen 1 USB device number 2 using xhci-hcd
+	[   30.994229] hub 2-1:1.0: hub_reset_resume
+	[   31.000574] usb 1-1-port1: status 0301 change 0001
+	[   31.002088] hub 2-1:1.0: enabling power on all ports
+	[   31.009079] usb 1-1-port2: status 0101 change 0001
+	[   31.132633] usb 1-1.2: Waited 0ms for CONNECT
+	[   31.132665] usb 1-1.1: Waited 0ms for CONNECT
+	[   31.140560] usb 1-1.2: finish reset-resume
+	[   31.148509] usb 1-1.1: finish reset-resume
+	[   31.240760] usb 1-1.2: reset high-speed USB device number 4 using xhci-hcd
+	[   32.471492] dwc3 ff100000.dwc3: dwc3_complete
+	[   32.480512] PM: Cannot find swap device, try swapon -a
+	[   32.489532] PM: Cannot get swap writer
+	[   32.575790] Restarting tasks ... 
+	[   32.575891] hub 1-0:1.0: state 7 ports 1 chg 0000 evt 0000
+	[   32.575894] hub 2-0:1.0: state 7 ports 1 chg 0000 evt 0000
+	[   32.575896] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0002
+	[   32.576570] hub 2-1:1.0: state 7 ports 4 chg 0000 evt 0000
+	[   32.576876] done.
+	[   32.600094] hub 2-1:1.0: hub_suspend
+	[   32.642090] PM: hibernation: hibernation exit
+	[   32.650255] usb 2-1: usb auto-suspend, wakeup 1
+	[   32.668581] hub 2-0:1.0: hub_suspend
+	[   33.122384] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0002
+	[   33.378220] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+	[   33.698394] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0000
+	[   34.882365] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0002
+	[   35.138217] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+	[   35.458617] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0000
+	[   36.642392] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0002
+	[   36.898207] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+	[   37.218598] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0000
+	[   37.672658] kirin9xx-drm e8600000.dpe: [drm:dss_disable_vblank [kirin9xx_drm]] dss_disable_vblank
+	[   38.402368] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0002
+	[   38.658174] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+	[   38.978594] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0000
+	[   40.162361] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0002
+	[   40.418148] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+	...
+	[  397.698132] usb 1-1.1: reset low-speed USB device number 3 using xhci-hcd
+	[  398.018565] hub 1-1:1.0: state 7 ports 4 chg 0000 evt 0000
+
+Basically, after resume, the code behaves just like the quirk were
+not applied.
+
+Explaining with more details, without the splitdisable quirk, what
+happens is that the USB URBs return -EPROTO errors, causing
+hid-core.c to call hid_io_error(). This function starts a reset
+work (usbhid->reset_work), which ends calling (at hid_reset()):
+
+	usb_queue_reset_device(usbhid->intf);
+
+This happens on every HZ/2 intervals, causing an endless reset
+loop.
+
+Thanks,
+Mauro
