@@ -2,99 +2,235 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F58C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595C8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3B92166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296092166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="opmcjJAA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGlRdYkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgIHJMm (ORCPT
+        id S1729139AbgIHJNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:12:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52489 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729322AbgIHJMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:12:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Blzty11gQz9sSJ;
-        Tue,  8 Sep 2020 19:12:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599556348;
-        bh=xkKtQPVGfzHcLN5WAlWypj63duX2vRBfC4xpES4+S9E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=opmcjJAAROFcd3v61LSygjI+JYzHXbfeUk71FLl1rwSflXTVnZf91pTlR0RTUmlaj
-         hixz9g/wWNtgxXmfkfL+QxENOtyEfwpidRck5ekNVB74vMlJKiL6zT9PrACZW+CSe9
-         DxaJSiYwXLWPthLMtXCOHzbhYWSgYj0UkYWWAzYSytd/EBLoWTMiuoVpn0mJ5Dz5X4
-         L2YUIpMcJK4IyxM/aD0/1P1mfwXZ0bs+Q2L2MLfMA4itHTrgCPivx6vvUHO/7CoSM5
-         TZJKx6ufYB8Vzc5g1KW5QP1bRZAGxfIF3rDeWbdCqEvxzB6JUVW+denv9Ff3/2/1Ws
-         EOWL4vjKiOP3Q==
-Date:   Tue, 8 Sep 2020 19:12:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the tip tree
-Message-ID: <20200908191223.0e7a9640@canb.auug.org.au>
+        Tue, 8 Sep 2020 05:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbgIHJNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 05:13:44 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF94C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 02:13:44 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w186so9594807pgb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 02:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=w+fgoFgrvub+PVRBQAqPAVJ0vJ5KWjyrTSwEc7m3Tac=;
+        b=VGlRdYkT+u84u3Y6Kjvu8qHXN3TW1XyiJ+KOLZEjSJ5tEz1ZmoqFnTL7tM859f6NfT
+         BdSeby2ktDOTnLqHtsjBLtOtDf7DBioZPYsJYDACD0+jKLWjnLDLqD6OeITQ9gl9K4WT
+         j9II5uAli4pvZKiluAWuUKzG2ECNFoJ6Mv83A01XZhJk9FKWdpkG8ekvXBfPUZ51Zt2e
+         G9u1lgB5oXrcz9v7Ltcd3aN3QqumGn5P8ONfN9SYqi2QLMQ5ZlCA+pQWmZFQdAMMDtxI
+         ERSsOQ4uuml18R8UR1VgtJg98TEJFsPfgwbLjxZYTaAQ5GuZQPPsNGS8xU1HwgA/bLen
+         OiSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=w+fgoFgrvub+PVRBQAqPAVJ0vJ5KWjyrTSwEc7m3Tac=;
+        b=Dbk/n5tJ2ef8khhKaoGMQv8torun+WJZTL+P85qm1PaUeAQf5Vw7dJJzDB/RjPCywU
+         OD8i0OHnZp/5jcbzKNMBxDFQZXw/74lg4jyb0SCB5K1XWVtOtWgeu6zh8XrUvVNltv3V
+         9lZlGNoD0CFI9XRtFmBZpH0S7Tvx2D2rWOHRk+S+wQZPjjivjAsToyeyikiIfiMRABng
+         r/LvGMwsCxKN3wvBwg5cukQ0VQ68MAgptD11dsing7fXUpKtCxVEnRvQvpsOhC4Z+MA9
+         zY9fSqsE1I2kW4weR13D6wexg+jf56F0aU90YgbgEeLdn/UKUYDTtFXBKXJ0TGpK6PV2
+         KbxA==
+X-Gm-Message-State: AOAM531RHjafE90kA/Lknkp7yFNJzweq6Erm67E4DTUFGNv/LsRFhPKA
+        urz/Bhs+lgVyt2dhZpv+A2g=
+X-Google-Smtp-Source: ABdhPJwd4muQSZj47jYzjoWHw0sLP9vUqRC+sbt0sjdS5yOxhOJAjexMEe+LdHqfY09BJ08YufwJXQ==
+X-Received: by 2002:a62:7c82:0:b029:13c:1611:6532 with SMTP id x124-20020a627c820000b029013c16116532mr22326829pfc.4.1599556424068;
+        Tue, 08 Sep 2020 02:13:44 -0700 (PDT)
+Received: from localhost ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id f12sm3178494pjm.5.2020.09.08.02.13.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 02:13:43 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 19:13:37 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v1 5/5] powerpc/fault: Perform exception fixup in
+ do_page_fault()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
+        <5748c8f5cf0a9b3686169e2c7709107e6aaec408.1596734105.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <5748c8f5cf0a9b3686169e2c7709107e6aaec408.1596734105.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hYofkrjaPSAvqhP_kr/YbJq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Message-Id: <1599555291.xys33gyt02.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hYofkrjaPSAvqhP_kr/YbJq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
+> Exception fixup doesn't require the heady full regs saving,
+                                      heavy
 
-Hi all,
+> do it from do_page_fault() directly.
+>=20
+> For that, split bad_page_fault() in two parts.
+>=20
+> As bad_page_fault() can also be called from other places than
+> handle_page_fault(), it will still perform exception fixup and
+> fallback on __bad_page_fault().
+>=20
+> handle_page_fault() directly calls __bad_page_fault() as the
+> exception fixup will now be done by do_page_fault()
 
-After merging the tip tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+Looks good. We can probably get rid of bad_page_fault completely after=20
+this too.
 
-ERROR: modpost: too long symbol ".__tracepoint_iter_pnfs_mds_fallback_pg_ge=
-t_mirror_count" [fs/nfs/flexfilelayout/nfs_layout_flexfiles.ko]
+Hmm, the alignment exception might(?) hit user copies if the user points=20
+it to CI memory. Then you could race and the memory gets unmapped. In=20
+that case the exception table check might be better to be explicit there
+with comments.
 
-Caused by commit
+The first call in do_hash_fault is not required (copy user will never
+be in nmi context). The second one and the one in slb_fault could be
+made explicit too. Anyway for now this is fine.
 
-  d25e37d89dd2 ("tracepoint: Optimize using static_call()")
+Thanks,
+Nick
 
-Exported symbols need to be <=3D (64 - sizeof(Elf_Addr)) long.  This is
-presumably 56 on 64 bit arches and the above symbol (including the '.')
-is 56 characters long.
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-I have reverted that commit for today.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hYofkrjaPSAvqhP_kr/YbJq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XSvcACgkQAVBC80lX
-0GyRVQf7B1Ax2DBQ5gKK5Kq7QsZRIFiKrcVfbog2OnYc8+MNR2tbZPP8lATP/Gxr
-AIaMn5PQu+J0tANjdncm87DTgDN0af7RV0ndmj2VWIx+eBBZwrmRoWU6+jxO245L
-XzOY5IwJkV5mZnMFdvsWrmh++eL1Ecg7QYMTsGplotHNPzmN8IIH6hYhl92lsxWp
-5QFXwt50apJ3cgbMmZhBAIzZPuYbkXrzO40p0tSWnmgyiKe6t898vsbmslzLY4xy
-0oGB9GPqUmxg9HQaYurdP6W3tSrj7uf7K5rwB+mRiNaAu4xWkSJzJ1wf36owFVO8
-LBp6T7Q3geUWzoi5wlJjBFg23mmAug==
-=H2FX
------END PGP SIGNATURE-----
-
---Sig_/hYofkrjaPSAvqhP_kr/YbJq--
+>=20
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  arch/powerpc/kernel/entry_32.S       |  2 +-
+>  arch/powerpc/kernel/exceptions-64e.S |  2 +-
+>  arch/powerpc/kernel/exceptions-64s.S |  2 +-
+>  arch/powerpc/mm/fault.c              | 33 ++++++++++++++++++++--------
+>  4 files changed, 27 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_3=
+2.S
+> index f4d0af8e1136..c198786591f9 100644
+> --- a/arch/powerpc/kernel/entry_32.S
+> +++ b/arch/powerpc/kernel/entry_32.S
+> @@ -678,7 +678,7 @@ handle_page_fault:
+>  	mr	r5,r3
+>  	addi	r3,r1,STACK_FRAME_OVERHEAD
+>  	lwz	r4,_DAR(r1)
+> -	bl	bad_page_fault
+> +	bl	__bad_page_fault
+>  	b	ret_from_except_full
+> =20
+>  #ifdef CONFIG_PPC_BOOK3S_32
+> diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/e=
+xceptions-64e.S
+> index d9ed79415100..dd9161ea5da8 100644
+> --- a/arch/powerpc/kernel/exceptions-64e.S
+> +++ b/arch/powerpc/kernel/exceptions-64e.S
+> @@ -1024,7 +1024,7 @@ storage_fault_common:
+>  	mr	r5,r3
+>  	addi	r3,r1,STACK_FRAME_OVERHEAD
+>  	ld	r4,_DAR(r1)
+> -	bl	bad_page_fault
+> +	bl	__bad_page_fault
+>  	b	ret_from_except
+> =20
+>  /*
+> diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/e=
+xceptions-64s.S
+> index f7d748b88705..2cb3bcfb896d 100644
+> --- a/arch/powerpc/kernel/exceptions-64s.S
+> +++ b/arch/powerpc/kernel/exceptions-64s.S
+> @@ -3254,7 +3254,7 @@ handle_page_fault:
+>  	mr	r5,r3
+>  	addi	r3,r1,STACK_FRAME_OVERHEAD
+>  	ld	r4,_DAR(r1)
+> -	bl	bad_page_fault
+> +	bl	__bad_page_fault
+>  	b	interrupt_return
+> =20
+>  /* We have a data breakpoint exception - handle it */
+> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+> index edde169ba3a6..bd6e397eb84a 100644
+> --- a/arch/powerpc/mm/fault.c
+> +++ b/arch/powerpc/mm/fault.c
+> @@ -542,10 +542,20 @@ NOKPROBE_SYMBOL(__do_page_fault);
+>  int do_page_fault(struct pt_regs *regs, unsigned long address,
+>  		  unsigned long error_code)
+>  {
+> +	const struct exception_table_entry *entry;
+>  	enum ctx_state prev_state =3D exception_enter();
+>  	int rc =3D __do_page_fault(regs, address, error_code);
+>  	exception_exit(prev_state);
+> -	return rc;
+> +	if (likely(!rc))
+> +		return 0;
+> +
+> +	entry =3D search_exception_tables(regs->nip);
+> +	if (unlikely(!entry))
+> +		return rc;
+> +
+> +	instruction_pointer_set(regs, extable_fixup(entry));
+> +
+> +	return 0;
+>  }
+>  NOKPROBE_SYMBOL(do_page_fault);
+> =20
+> @@ -554,17 +564,10 @@ NOKPROBE_SYMBOL(do_page_fault);
+>   * It is called from the DSI and ISI handlers in head.S and from some
+>   * of the procedures in traps.c.
+>   */
+> -void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig=
+)
+> +void __bad_page_fault(struct pt_regs *regs, unsigned long address, int s=
+ig)
+>  {
+> -	const struct exception_table_entry *entry;
+>  	int is_write =3D page_fault_is_write(regs->dsisr);
+> =20
+> -	/* Are we prepared to handle this fault?  */
+> -	if ((entry =3D search_exception_tables(regs->nip)) !=3D NULL) {
+> -		regs->nip =3D extable_fixup(entry);
+> -		return;
+> -	}
+> -
+>  	/* kernel has accessed a bad area */
+> =20
+>  	switch (TRAP(regs)) {
+> @@ -598,3 +601,15 @@ void bad_page_fault(struct pt_regs *regs, unsigned l=
+ong address, int sig)
+> =20
+>  	die("Kernel access of bad area", regs, sig);
+>  }
+> +
+> +void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig=
+)
+> +{
+> +	const struct exception_table_entry *entry;
+> +
+> +	/* Are we prepared to handle this fault?  */
+> +	entry =3D search_exception_tables(instruction_pointer(regs));
+> +	if (entry)
+> +		instruction_pointer_set(regs, extable_fixup(entry));
+> +	else
+> +		__bad_page_fault(regs, address, sig);
+> +}
+> --=20
+> 2.25.0
+>=20
+>=20
