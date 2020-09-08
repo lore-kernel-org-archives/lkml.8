@@ -2,208 +2,147 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63577C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E116C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D244E20936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ZIyCzS7y"
+	by mail.kernel.org (Postfix) with ESMTP id 297832080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599597248;
+	bh=oeMukUNCsEcmOKOZa4BXbmL4i8tsEpncJUS7M3Q9Uz4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EDW4tqiVzKHo60u13cSfz7k9gOxgK2gEdDzIi0CGqftJLI74xPW/rbWYcoovLNdx+
+	 kqHEXv6pbrIPcTuZaLfsXHIWhLG451hSA8DreWhbICvDA5wUqYoWT+6j/Oik+qh2SU
+	 pn5Z5lHubc2YkfdbU+5Mz0gzysgVoeqHN6FDIA+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgIHUdC (ORCPT
+        id S1730184AbgIHUeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:33:02 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46642 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgIHUdC (ORCPT
+        Tue, 8 Sep 2020 16:34:06 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46962 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbgIHUeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:33:02 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C05EA806B5;
-        Wed,  9 Sep 2020 08:32:56 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1599597176;
-        bh=rwV/xSJfjutzpYJ4zBUGBqee/pB4wUosVEzaIEIqS9w=;
-        h=From:To:Cc:Subject:Date;
-        b=ZIyCzS7yW2Fo+L0Hw6H+bFNw1YTAUzoX5gn3nTdUwHErTvGcHKP7gvMZU2RH0ZkKr
-         I6FAzR3SNBSvSJJV/Sh/WNEO8d72Tk5QVpr13MnGKRE8SDPaVgtKYXJM6UsC78Rw+P
-         sozudACqIdLxX6t3kNhtUhnDvQaNbh+Aa/oJDcS2uqFxpnl3LMwL2QVJhBnunweFLs
-         Wxf9t4jxTlyqE9JVPVCHTOriqOchbme7mpRtG+CG0RgPe3X67ywZORLP7vNHYC9tSK
-         +WyN9Zeij0S8q5OCPeEIKFm5Gk+8yLjWmN3jLlu9jpUrxBhPkIpmt32oBXBqkXKaNF
-         vShDaCRF2OTQw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f57ea770000>; Wed, 09 Sep 2020 08:32:55 +1200
-Received: from evann-dl.ws.atlnz.lc (evann-dl.ws.atlnz.lc [10.33.23.31])
-        by smtp (Postfix) with ESMTP id 5833C13EEB7;
-        Wed,  9 Sep 2020 08:32:56 +1200 (NZST)
-Received: by evann-dl.ws.atlnz.lc (Postfix, from userid 1780)
-        id 79E4D1A4E97; Wed,  9 Sep 2020 08:32:56 +1200 (NZST)
-From:   Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
-To:     wsa@kernel.org, andriy.shevchenko@linux.intel.com,
-        chris.packham@alliedtelesis.co.nz, jarkko.nikula@linux.intel.com,
-        jdelvare@suse.de
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
-Subject: [PATCH v4 1/1] i2c: algo-pca: Reapply i2c bus settings after reset
-Date:   Wed,  9 Sep 2020 08:32:47 +1200
-Message-Id: <20200908203247.14374-1-evan.nimmo@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
+        Tue, 8 Sep 2020 16:34:03 -0400
+Received: by mail-il1-f195.google.com with SMTP id t16so165500ilf.13;
+        Tue, 08 Sep 2020 13:34:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gleTakc4Nn6mTISuQkejPMu6ISZTqy+j8/Bxw7G61oU=;
+        b=GjlejI12ZPAigfezzb+Ei1pn2BgFccfWpBoB+G/F2P/3V3Xnh+pfH6y31JlvkUvrms
+         /3UEY3HQss/X3CpZdcaR9nzHzu7aOtmFMxsbcPOKDV9VxuM22L4uevkF9xooqPTrSCCD
+         uTAgk1H+1BLGAEdYgyNWxnbMm/yKfX2S4jWRERzWIxg/dURoKd6V5z2Ta4ZIBJpJrZ5z
+         j6RV9WHQao05fXOTnm7Df6tT87/xFJWYcgSdHC1t6w3RcT+w1G3Hgn6QLlkRNu/sV75f
+         yBJs5iri7/gNl2cT39YspXde+0BaHmLNAjGjQ+9/Zks0G0RdC//ZEo3scxfP2rInuQ7Y
+         n9sA==
+X-Gm-Message-State: AOAM533o3cVa8Wx3g7TY9JVV6lGiuLY4cvNN/Q5Ov5GXMPami+axClYd
+        fJU0yO1aV45DozlagpmSEQ==
+X-Google-Smtp-Source: ABdhPJzCHoj/ZvrJj7t400J/VsMUBFrd75e5tcT3ln+3OZZL67b775TNHUe3xKteGxNcW5bAkZ322A==
+X-Received: by 2002:a92:c049:: with SMTP id o9mr483817ilf.193.1599597242634;
+        Tue, 08 Sep 2020 13:34:02 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k14sm217738ioa.7.2020.09.08.13.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:34:02 -0700 (PDT)
+Received: (nullmailer pid 868500 invoked by uid 1000);
+        Tue, 08 Sep 2020 20:33:57 -0000
+Date:   Tue, 8 Sep 2020 14:33:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v7 2/3] ASoC: qcom: dt-bindings: Add sc7180 machine
+ bindings
+Message-ID: <20200908203357.GA861143@bogus>
+References: <20200907100039.1731457-1-cychiang@chromium.org>
+ <20200907100039.1731457-3-cychiang@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907100039.1731457-3-cychiang@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If something goes wrong (such as the SCL being stuck low) then we need
-to reset the PCA chip. The issue with this is that on reset we lose all
-config settings and the chip ends up in a disabled state which results
-in a lock up/high CPU usage. We need to re-apply any configuration that
-had previously been set and re-enable the chip.
+On Mon, Sep 07, 2020 at 06:00:38PM +0800, Cheng-Yi Chiang wrote:
+> Add devicetree bindings documentation file for sc7180 sound card.
+> 
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+> ---
+>  .../bindings/sound/qcom,sc7180.yaml           | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> new file mode 100644
+> index 000000000000..ae809346ca80
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
+> +
+> +maintainers:
+> +  - Rohit kumar <rohitkr@codeaurora.org>
+> +  - Cheng-Yi Chiang <cychiang@chromium.org>
+> +
+> +description:
+> +  This binding describes the SC7180 sound card which uses LPASS for audio.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sc7180-sndcard
+> +
+> +  audio-routing:
+> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +    description:
+> +      A list of the connections between audio components. Each entry is a
+> +      pair of strings, the first being the connection's sink, the second
+> +      being the connection's source.
+> +
+> +  model:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: User specified audio sound card name
+> +
+> +  headset-jack:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle of the codec for headset detection
+> +
+> +  hdmi-jack:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle of the codec for hdmi jack detection
 
-Signed-off-by: Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
-Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Wolfram Sang <wsa@kernel.org>
----
-changes in v2:
-- changed lowercase "pca to uppercase "PCA".
-- reworded and reformatted the multiline comment.
-- moved the clock frequency KERN_INFO closer to the call that sets this.
-- moved the i2c_bus_settings struct to the more generic i2c.h and removed
-- the comments indicating this as being for the pca chip.
+You already have links to these devices. Why duplicate it here? 
 
-changes in v3:
-- changed lowercase "cpu" to uppercase "CPU".
+What if you had 2 headsets? This doesn't scale.
 
-changes in v4:
-- renamed the struct i2c_bus_settings struct to struct pca_i2c_bus_settin=
-gs.
-- moved the struct pca_i2c_bus_settings struct from i2c.h to i2c-algo-pca=
-.h.
-- adjusted the struct field in the struct i2c_algo_pca_data struct to be =
-of type
-- struct pca_i2c_bus settings.
-- removed an extra line in i2c-algo-pca.c
-
- drivers/i2c/algos/i2c-algo-pca.c | 35 +++++++++++++++++++++-----------
- include/linux/i2c-algo-pca.h     | 15 ++++++++++++++
- 2 files changed, 38 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/i2c/algos/i2c-algo-pca.c b/drivers/i2c/algos/i2c-alg=
-o-pca.c
-index 710fbef9a9c2..384af88e58ad 100644
---- a/drivers/i2c/algos/i2c-algo-pca.c
-+++ b/drivers/i2c/algos/i2c-algo-pca.c
-@@ -41,8 +41,22 @@ static void pca_reset(struct i2c_algo_pca_data *adap)
- 		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_IPRESET);
- 		pca_outw(adap, I2C_PCA_IND, 0xA5);
- 		pca_outw(adap, I2C_PCA_IND, 0x5A);
-+
-+		/*
-+		 * After a reset we need to re-apply any configuration
-+		 * (calculated in pca_init) to get the bus in a working state.
-+		 */
-+		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_IMODE);
-+		pca_outw(adap, I2C_PCA_IND, adap->bus_settings.mode);
-+		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_ISCLL);
-+		pca_outw(adap, I2C_PCA_IND, adap->bus_settings.tlow);
-+		pca_outw(adap, I2C_PCA_INDPTR, I2C_PCA_ISCLH);
-+		pca_outw(adap, I2C_PCA_IND, adap->bus_settings.thi);
-+
-+		pca_set_con(adap, I2C_PCA_CON_ENSIO);
- 	} else {
- 		adap->reset_chip(adap->data);
-+		pca_set_con(adap, I2C_PCA_CON_ENSIO | adap->bus_settings.clock_freq);
- 	}
- }
-=20
-@@ -423,13 +437,14 @@ static int pca_init(struct i2c_adapter *adap)
- 				" Use the nominal frequency.\n", adap->name);
- 		}
-=20
--		pca_reset(pca_data);
--
- 		clock =3D pca_clock(pca_data);
- 		printk(KERN_INFO "%s: Clock frequency is %dkHz\n",
- 		     adap->name, freqs[clock]);
-=20
--		pca_set_con(pca_data, I2C_PCA_CON_ENSIO | clock);
-+		/* Store settings as these will be needed when the PCA chip is reset *=
-/
-+		pca_data->bus_settings.clock_freq =3D clock;
-+
-+		pca_reset(pca_data);
- 	} else {
- 		int clock;
- 		int mode;
-@@ -496,19 +511,15 @@ static int pca_init(struct i2c_adapter *adap)
- 			thi =3D tlow * min_thi / min_tlow;
- 		}
-=20
-+		/* Store settings as these will be needed when the PCA chip is reset *=
-/
-+		pca_data->bus_settings.mode =3D mode;
-+		pca_data->bus_settings.tlow =3D tlow;
-+		pca_data->bus_settings.thi =3D thi;
-+
- 		pca_reset(pca_data);
-=20
- 		printk(KERN_INFO
- 		     "%s: Clock frequency is %dHz\n", adap->name, clock * 100);
--
--		pca_outw(pca_data, I2C_PCA_INDPTR, I2C_PCA_IMODE);
--		pca_outw(pca_data, I2C_PCA_IND, mode);
--		pca_outw(pca_data, I2C_PCA_INDPTR, I2C_PCA_ISCLL);
--		pca_outw(pca_data, I2C_PCA_IND, tlow);
--		pca_outw(pca_data, I2C_PCA_INDPTR, I2C_PCA_ISCLH);
--		pca_outw(pca_data, I2C_PCA_IND, thi);
--
--		pca_set_con(pca_data, I2C_PCA_CON_ENSIO);
- 	}
- 	udelay(500); /* 500 us for oscillator to stabilise */
-=20
-diff --git a/include/linux/i2c-algo-pca.h b/include/linux/i2c-algo-pca.h
-index d03071732db4..7c522fdd9ea7 100644
---- a/include/linux/i2c-algo-pca.h
-+++ b/include/linux/i2c-algo-pca.h
-@@ -53,6 +53,20 @@
- #define I2C_PCA_CON_SI		0x08 /* Serial Interrupt */
- #define I2C_PCA_CON_CR		0x07 /* Clock Rate (MASK) */
-=20
-+/**
-+ * struct pca_i2c_bus_settings - The configured PCA i2c bus settings
-+ * @mode: Configured i2c bus mode
-+ * @tlow: Configured SCL LOW period
-+ * @thi: Configured SCL HIGH period
-+ * @clock_freq: The configured clock frequency
-+ */
-+struct pca_i2c_bus_settings {
-+	int mode;
-+	int tlow;
-+	int thi;
-+	int clock_freq;
-+};
-+
- struct i2c_algo_pca_data {
- 	void 				*data;	/* private low level data */
- 	void (*write_byte)		(void *data, int reg, int val);
-@@ -64,6 +78,7 @@ struct i2c_algo_pca_data {
- 	 * For PCA9665, use the frequency you want here. */
- 	unsigned int			i2c_clock;
- 	unsigned int			chip;
-+	struct pca_i2c_bus_settings		bus_settings;
- };
-=20
- int i2c_pca_add_bus(struct i2c_adapter *);
---=20
-2.27.0
-
+Rob
