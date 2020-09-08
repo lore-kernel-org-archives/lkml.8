@@ -2,54 +2,56 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9661C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE76FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7900E20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFE321D47
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592254;
-	bh=NqMaoRw+5/BsIKvTRlZSxaEi2PjZWGU9pYqi2JqcjVE=;
+	s=default; t=1599592269;
+	bh=KL/RnWFdKMBOtqrl2VD04BYDPvj9MiMytGRWijMGInc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J6p6MvSY2bCkKrZ9uYyHcHdOnc4euMV5e/Gds1RNYB+MBQ+o+/zmaUMROnPJK8DUn
-	 tzM3wYVdmi72eQ2hGml2lePGKKkhz1iP+4wPvnUL4sbel7MVrTxF6dZ4hZfeOSNfTa
-	 Wni57so7fYD6EQVcTKykrB+7G2VdA7xyLCba2eqE=
+	b=XaAqLZPgHKkYqiBhPsDfbOIODbz9v3jiRmepd4XTbz4krNLISsgL3/03pjK8pS9yQ
+	 +wb7FE9evHHoyJlCiusHNJgMkVNgBcYtaFZuGO/Is/5LuMwJgRhXRQH9WRwuZv3U+H
+	 1n9E7XRhFWxmfCQVWoQ4JYxCcxLro04Ov/PXY63o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgIHTKx (ORCPT
+        id S1731826AbgIHTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51452 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731228AbgIHQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:24 -0400
+        id S1731212AbgIHQFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2770F229C4;
-        Tue,  8 Sep 2020 15:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7E9624672;
+        Tue,  8 Sep 2020 15:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579966;
-        bh=NqMaoRw+5/BsIKvTRlZSxaEi2PjZWGU9pYqi2JqcjVE=;
+        s=default; t=1599579565;
+        bh=KL/RnWFdKMBOtqrl2VD04BYDPvj9MiMytGRWijMGInc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VCQyvzSZTngePZrtJTSrJ2+si+OXoi76GMDb8jr0h4uCQ3nkLtoVAOgv7N09Ve6u9
-         mZUdlhWVbXIVb9I3cA9NhI1lCDoSwZAqW198mFpo9Qw2faXqUhwZOeVbgOM1HAJKke
-         1lPawg0ohyn42hZirYD0f/b6XJzR9G57DteqtOSc=
+        b=gWko5L8RGYr50jiWd8B6lwYl4P3imRCKY8QB3FkTYjZuocuNG1WAAvcH67se7V61a
+         172a3GUX3buZL7N4TEaSwOOE+AH7rPBmJd9b0TEmAA2jJN4hS0ZIizljuylt0oQHVX
+         3CVodfbqtVrffEBg1iG1VhltDSZMC6KKKn+4ZR6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 104/129] media: rc: do not access device via sysfs after rc_unregister_device()
-Date:   Tue,  8 Sep 2020 17:25:45 +0200
-Message-Id: <20200908152235.032347423@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 130/186] btrfs: block-group: fix free-space bitmap threshold
+Date:   Tue,  8 Sep 2020 17:24:32 +0200
+Message-Id: <20200908152247.941811240@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,57 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-commit a2e2d73fa28136598e84db9d021091f1b98cbb1a upstream.
+commit e3e39c72b99f93bbd0420d38c858e7c4a061bb63 upstream.
 
-Device drivers do not expect to have change_protocol or wakeup
-re-programming to be accesed after rc_unregister_device(). This can
-cause the device driver to access deallocated resources.
+[BUG]
+After commit 9afc66498a0b ("btrfs: block-group: refactor how we read one
+block group item"), cache->length is being assigned after calling
+btrfs_create_block_group_cache. This causes a problem since
+set_free_space_tree_thresholds calculates the free-space threshold to
+decide if the free-space tree should convert from extents to bitmaps.
 
-Cc: <stable@vger.kernel.org> # 4.16+
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+The current code calls set_free_space_tree_thresholds with cache->length
+being 0, which then makes cache->bitmap_high_thresh zero. This implies
+the system will always use bitmap instead of extents, which is not
+desired if the block group is not fragmented.
+
+This behavior can be seen by a test that expects to repair systems
+with FREE_SPACE_EXTENT and FREE_SPACE_BITMAP, but the current code only
+created FREE_SPACE_BITMAP.
+
+[FIX]
+Call set_free_space_tree_thresholds after setting cache->length. There
+is now a WARN_ON in set_free_space_tree_thresholds to help preventing
+the same mistake to happen again in the future.
+
+Link: https://github.com/kdave/btrfs-progs/issues/251
+Fixes: 9afc66498a0b ("btrfs: block-group: refactor how we read one block group item")
+CC: stable@vger.kernel.org # 5.8+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/rc/rc-main.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/btrfs/block-group.c     |    4 +++-
+ fs/btrfs/free-space-tree.c |    4 ++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1256,6 +1256,10 @@ static ssize_t store_protocols(struct de
- 	}
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -1814,7 +1814,6 @@ static struct btrfs_block_group *btrfs_c
  
- 	mutex_lock(&dev->lock);
-+	if (!dev->registered) {
-+		mutex_unlock(&dev->lock);
-+		return -ENODEV;
-+	}
+ 	cache->fs_info = fs_info;
+ 	cache->full_stripe_len = btrfs_full_stripe_len(fs_info, start);
+-	set_free_space_tree_thresholds(cache);
  
- 	old_protocols = *current_protocols;
- 	new_protocols = old_protocols;
-@@ -1394,6 +1398,10 @@ static ssize_t store_filter(struct devic
- 		return -EINVAL;
+ 	cache->discard_index = BTRFS_DISCARD_INDEX_UNUSED;
  
- 	mutex_lock(&dev->lock);
-+	if (!dev->registered) {
-+		mutex_unlock(&dev->lock);
-+		return -ENODEV;
-+	}
+@@ -1928,6 +1927,8 @@ static int read_one_block_group(struct b
+ 	if (ret < 0)
+ 		goto error;
  
- 	new_filter = *filter;
- 	if (fattr->mask)
-@@ -1508,6 +1516,10 @@ static ssize_t store_wakeup_protocols(st
- 	int i;
++	set_free_space_tree_thresholds(cache);
++
+ 	if (need_clear) {
+ 		/*
+ 		 * When we mount with old space cache, we need to
+@@ -2148,6 +2149,7 @@ int btrfs_make_block_group(struct btrfs_
+ 		return -ENOMEM;
  
- 	mutex_lock(&dev->lock);
-+	if (!dev->registered) {
-+		mutex_unlock(&dev->lock);
-+		return -ENODEV;
-+	}
+ 	cache->length = size;
++	set_free_space_tree_thresholds(cache);
+ 	cache->used = bytes_used;
+ 	cache->flags = type;
+ 	cache->last_byte_to_unpin = (u64)-1;
+--- a/fs/btrfs/free-space-tree.c
++++ b/fs/btrfs/free-space-tree.c
+@@ -22,6 +22,10 @@ void set_free_space_tree_thresholds(stru
+ 	size_t bitmap_size;
+ 	u64 num_bitmaps, total_bitmap_size;
  
- 	allowed = dev->allowed_wakeup_protocols;
- 
++	if (WARN_ON(cache->length == 0))
++		btrfs_warn(cache->fs_info, "block group %llu length is zero",
++			   cache->start);
++
+ 	/*
+ 	 * We convert to bitmaps when the disk space required for using extents
+ 	 * exceeds that required for using bitmaps.
 
 
