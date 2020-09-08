@@ -2,123 +2,124 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB267C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B36C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 945C12166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851E22166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHBZfPNk"
+	dkim=pass (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="I49U5h01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732359AbgIHTmo (ORCPT
+        id S1732378AbgIHTm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53422 "EHLO
+        Tue, 8 Sep 2020 15:42:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730878AbgIHPws (ORCPT
+        with ESMTP id S1730891AbgIHPwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:52:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EECC06125C;
-        Tue,  8 Sep 2020 06:16:29 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r24so1067221ljm.3;
-        Tue, 08 Sep 2020 06:16:29 -0700 (PDT)
+        Tue, 8 Sep 2020 11:52:47 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BD0C061799
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:02:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x14so18777236wrl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2ob3Uu2PIV7nT5SLsDGzmqre4E7eymr6wADbftdvJ7s=;
-        b=sHBZfPNkDu7qQ/ABlj/tJmyO+hyuIaD0i7Otp2n/gRkNQXppwriHIudfwvuTMV/eU8
-         Reh+27n+d9CkUCqKE+iTP24S5cZ8Jodfl7NrIDEOE6mnSrxsb8emFOicItGzrxJIeHEO
-         WzP9rNy+KrTZp2z0UYcfKlD+Km8COYz58aY1v1W4anzE4R1DqRcAZ/d5VqM/jGXujFSW
-         yl2B+8AB55zFoHuI0nvit09zP6ula0J2xQ1Pr2qgeE10wU0YrqYUY4cS9jL99NTrLUkX
-         UxkL54VXWhJVcNkkD+kH2WEJBeK4dZkl8tblMgYgzCjVQ8iZU1yfOJAojwxQxFsdI9Bg
-         uoxQ==
+        d=sslab.ics.keio.ac.jp; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fHKZGBn8DYDZmUzkcQdtFyocASRnUskXF0G0c14zQIY=;
+        b=I49U5h01ldadqbGBSJ+JPwaa/XpVL1RHekltbw+5yb9vJdeb7HlxO2SH/MxU+AXAwy
+         mFX3smUOgYMCiRiMYtlhJgNbB0x45bfB59AcCGTmRd7oJw5HUypGbJ+wDCYeJroaA4or
+         rnyPXVVdanOQ2bOVqv7iQHTy8xceM8lkCF844=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2ob3Uu2PIV7nT5SLsDGzmqre4E7eymr6wADbftdvJ7s=;
-        b=MvpCaly9u0GWd0UaI/uGvZtpHm1VN+S+u5iz3Mg8ocPjgQ7mmfT/RbiMEJawoWSiN6
-         N+TNV9NSFAvhaSv6dC1GZkiAJdsISlr+SmmolC9fDP3ZPHa+Z/nl1VYTmlHt9w0D5YNE
-         nyUx+dwD96Dg+6AGBakqXDatEtPqCmWjCuL8vaAXpeoUsDsEeaIljICY8uW+eVm+Aw8G
-         oQr/Jnfk/zclxEEdudvDAsZDpSokEYEPSLVGbm3BBSfasFOAsgd3lEHW242ZsDF/n5Aq
-         b1fdX/tW19ztlr8FB30fiEhxPjRyiuHcPyOBoolmc6bbZwoaDsPB345XSsJkBp+/eMaO
-         DhXg==
-X-Gm-Message-State: AOAM533ymPDVLNr+3H5V1WtjN4bLGLjInamfL/oAr8bXxzlz06U6maRv
-        q280J6Ml2uNhCnLjJ9sR4ng3NP6wNNk=
-X-Google-Smtp-Source: ABdhPJzdTI4rNxCjoKspr+yIbdJopN0tD13+QHFV+10jpjX4FDTBXbZoVi61q9LPhPcSEiMzvq9XTQ==
-X-Received: by 2002:a2e:8782:: with SMTP id n2mr10169705lji.262.1599570987442;
-        Tue, 08 Sep 2020 06:16:27 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id 25sm10448215lji.130.2020.09.08.06.16.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 06:16:26 -0700 (PDT)
-Subject: Re: [PATCH v6 14/35] i2c: tegra: Clean up probe function
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200908021021.9123-1-digetx@gmail.com>
- <20200908021021.9123-15-digetx@gmail.com>
- <CAHp75Vc9srPR1BYes9ZEo46gxV2BAhZ71ov_JZ_sHrmtgdAr-g@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dd51a8eb-5b8d-0b63-3130-428980cfe7ff@gmail.com>
-Date:   Tue, 8 Sep 2020 16:16:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fHKZGBn8DYDZmUzkcQdtFyocASRnUskXF0G0c14zQIY=;
+        b=qxEop9Mctu8BYFqt1QQ8KDo2XTvuts9Mq1gkIVEOOG9A8ansD84hTxgI55nO2Uh/zL
+         rL2/Cyj1fofY/lL69+BCGHA2S4Bkal+am/oeKaDZa9doqZJG9M5wivfyc1hlZPenwc5H
+         RcFJqs9iPZqbjLsetCz7MNJdkHkt+2zEj7kqLFsGGMpgn+rT8SzEoz6wlOoyCr8wwMsc
+         Yb2NVN7AXew6HLmVOtS3Vs5C/Vw5+Cep6DrkDPtVURkmKTpeCKVPO54jZTe66EpD0B/V
+         eSgpP77jo5d9vcTpZRKghR1wmk6xY67rye3pEMSOexYiMSPnMRBhvZhG7pysoul4BsVJ
+         fFzw==
+X-Gm-Message-State: AOAM530n+NfUTqU2ERGAlKrQ3C01QsdN+2/DlGeQEVl6U9G0AUCyHncL
+        Vrl83XOSubtAC9xrgMCfa09jHh5cHf0HBXFcJ3i5lA==
+X-Google-Smtp-Source: ABdhPJxLDgBM+s6ZLA0Xk5AyltkUhSxI4KJM4wlm9qfxvCvlS9XOiwZ2ahmKEQRp2PPZaiGtIw02aY3u8gSTeR+ZTXc=
+X-Received: by 2002:adf:eecb:: with SMTP id a11mr26936125wrp.356.1599566568481;
+ Tue, 08 Sep 2020 05:02:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vc9srPR1BYes9ZEo46gxV2BAhZ71ov_JZ_sHrmtgdAr-g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <bad4e33a-af2f-b44f-63e5-56386c312a91@broadcom.com>
+ <20200908001324.8215-1-keitasuzuki.park@sslab.ics.keio.ac.jp> <c13ee142-d69d-6d21-6373-acb56507c9ec@broadcom.com>
+In-Reply-To: <c13ee142-d69d-6d21-6373-acb56507c9ec@broadcom.com>
+From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Date:   Tue, 8 Sep 2020 21:02:35 +0900
+Message-ID: <CAEYrHjmG-R4RHn=59AGK8E0jKDXE5sbxQj49VpBvDMvBuBGiig@mail.gmail.com>
+Subject: Re: [PATCH] brcmsmac: fix memory leak in wlc_phy_attach_lcnphy
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Takafumi Kubota <takafumi@sslab.ics.keio.ac.jp>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <brcm80211-dev-list@cypress.com>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.09.2020 11:40, Andy Shevchenko пишет:
-> On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> The driver's probe function code is a bit difficult to read. This patch
->> reorders code of the probe function, forming groups of code that are easy
->> to work with.
->>
->> The probe tear-down order now matches the driver-removal order.
-> 
->> All dev/&pdev->dev are replaced with i2c_dev->dev in order to have uniform
->> code style across the driver.
-> 
-> You see, below is my point why leaving a temporary variable can reduce a churn.
-> 
->> The "ret" variable renamed to "err" since it only carries error code and
->> the new name clearly shows that.
-> 
-> Overall it sounds like you need to split this into a few patches.
-> 
-> ...
-> 
->> -       struct device *dev = &pdev->dev;
-> 
->> -       i2c_dev->rst = devm_reset_control_get_exclusive(&pdev->dev, "i2c");
-> 
->> +       i2c_dev->rst = devm_reset_control_get_exclusive(i2c_dev->dev, "i2c");
-> 
-> You see, if it had been simple 'dev', this line would have not been changed.
-> 
-> And so on.
-> 
+Thank you for your comment. I am relatively new to the Linux
+kernel community, so I am more than happy to receive comments.
+Please let me know if I'm violating any other rules.
 
-Alright, I'll move all the renamings into the "Clean up variable names"
-patch, thanks.
+> > Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+> > ---
+> ... changelog here describing difference between previous patch and this
+> version.
+
+I will re-send the patch with the change log.
+
+Thanks,
+Keita
+
+2020=E5=B9=B49=E6=9C=888=E6=97=A5(=E7=81=AB) 20:18 Arend Van Spriel <arend.=
+vanspriel@broadcom.com>:
+>
+> On 9/8/2020 2:13 AM, Keita Suzuki wrote:
+> > When wlc_phy_txpwr_srom_read_lcnphy fails in wlc_phy_attach_lcnphy,
+> > the allocated pi->u.pi_lcnphy is leaked, since struct brcms_phy will be
+> > freed in the caller function.
+> >
+> > Fix this by calling wlc_phy_detach_lcnphy in the error handler of
+> > wlc_phy_txpwr_srom_read_lcnphy before returning.
+>
+> Thanks for resubmitting the patch addressing my comment. For clarity it
+> is recommended to mark the subject with '[PATCH V2]' and add a ...
+>
+> > Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+> > ---
+> ... changelog here describing difference between previous patch and this
+> version.
+>
+> Regards,
+> Arend
+> ---
+> >   .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c    | 4 +++=
+-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
