@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39D8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98901C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED46207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA342078E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588480;
-	bh=yak2AVQpBF3q7cNjcP4nggu5l/OGn/Gfsq3p4CB6I/w=;
+	s=default; t=1599588492;
+	bh=aOapCg8Fs1QO/aVSI3dHbCrCilxDYbrwYv0hJDimFW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbbJCeR1WVDJ/D2O55XMcs/sTRhPYsxDBs20GL9+tlvNA/r+H5jaLCGOYs+4DnXR4
-	 bTeiWS43AXzWFriSEg+dtSUXCdKGtPfYzEFSFAPn1zw1FA199rZoy8cYQbww6oGvlQ
-	 cmW5cWWgU6jxmDjiGyYFcMa0gqBjX60Q6+b9Mh1s=
+	b=K1jt50YKBFcQU5l5n0+ijB0LnZAmeUlIlE3YmFZVtc5jmrK0vopW/PyUD5yiMEjJU
+	 wGaOEYoavx7UBSdpQKRM0TUtU7igLemaOjyleBAK5rNDffRb+Z+QRObCctQnKC7uzC
+	 xJ04DM+PBIZ21xFsJRovaaMhokBgPym545YbBmQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732162AbgIHSHx (ORCPT
+        id S1732300AbgIHSH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731501AbgIHQLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:52 -0400
+        id S1731500AbgIHQLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9C6F246EE;
-        Tue,  8 Sep 2020 15:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E484F2472F;
+        Tue,  8 Sep 2020 15:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579623;
-        bh=yak2AVQpBF3q7cNjcP4nggu5l/OGn/Gfsq3p4CB6I/w=;
+        s=default; t=1599579651;
+        bh=aOapCg8Fs1QO/aVSI3dHbCrCilxDYbrwYv0hJDimFW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vqUQSK1j+BXDhe6teQ0z5rbp60gQjUzVfP7BR644LuSyyjUV/xh7UxqaiesWWxM+P
-         ZVHoEpxvode53Z2r9+eKg9e6mUSuvnp5gGVSZvNnBKt2kelGeQgCc/Rl7wTSLnl56v
-         SljReQIcvWvbQ89St1qWT/I00A8CmqVUkt+ao4TI=
+        b=J+CleQUMk0NF4lVwjUi+CPaQubOTbG1rSNwHBZlvEfBi/QOubvmn8jrFjn0FZQTRj
+         ZPVz1xPNGb9mXHFATp1afPX38zna3hQGcr36KphIgfNeph+Ppket5D0aj91wbmhU8N
+         jWme6CH0HwR1WT8KOqvMTIqKkjrp4XN3jxOumMHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiufei Xue <jiufei.xue@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 155/186] io_uring: fix removing the wrong file in __io_sqe_files_update()
-Date:   Tue,  8 Sep 2020 17:24:57 +0200
-Message-Id: <20200908152249.175031831@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.8 165/186] dm writecache: handle DAX to partitions on persistent memory correctly
+Date:   Tue,  8 Sep 2020 17:25:07 +0200
+Message-Id: <20200908152249.661695677@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,34 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiufei Xue <jiufei.xue@linux.alibaba.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 98dfd5024a2e9e170b85c07078e2d89f20a5dfbd upstream.
+commit f9e040efcc28309e5c592f7e79085a9a52e31f58 upstream.
 
-Index here is already the position of the file in fixed_file_table, we
-should not use io_file_from_index() again to get it. Otherwise, the
-wrong file which still in use may be released unexpectedly.
+The function dax_direct_access doesn't take partitions into account,
+it always maps pages from the beginning of the device. Therefore,
+persistent_memory_claim() must get the partition offset using
+get_start_sect() and add it to the page offsets passed to
+dax_direct_access().
 
-Cc: stable@vger.kernel.org # v5.6
-Fixes: 05f3fb3c5397 ("io_uring: avoid ring quiesce for fixed file set unregister and update")
-Signed-off-by: Jiufei Xue <jiufei.xue@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Fixes: 48debafe4f2f ("dm: add writecache target")
+Cc: stable@vger.kernel.org # 4.18+
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-writecache.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -6928,7 +6928,7 @@ static int __io_sqe_files_update(struct
- 		table = &ctx->file_data->table[i >> IORING_FILE_TABLE_SHIFT];
- 		index = i & IORING_FILE_TABLE_MASK;
- 		if (table->files[index]) {
--			file = io_file_from_index(ctx, index);
-+			file = table->files[index];
- 			err = io_queue_file_removal(data, file);
- 			if (err)
- 				break;
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -231,6 +231,7 @@ static int persistent_memory_claim(struc
+ 	pfn_t pfn;
+ 	int id;
+ 	struct page **pages;
++	sector_t offset;
+ 
+ 	wc->memory_vmapped = false;
+ 
+@@ -245,9 +246,16 @@ static int persistent_memory_claim(struc
+ 		goto err1;
+ 	}
+ 
++	offset = get_start_sect(wc->ssd_dev->bdev);
++	if (offset & (PAGE_SIZE / 512 - 1)) {
++		r = -EINVAL;
++		goto err1;
++	}
++	offset >>= PAGE_SHIFT - 9;
++
+ 	id = dax_read_lock();
+ 
+-	da = dax_direct_access(wc->ssd_dev->dax_dev, 0, p, &wc->memory_map, &pfn);
++	da = dax_direct_access(wc->ssd_dev->dax_dev, offset, p, &wc->memory_map, &pfn);
+ 	if (da < 0) {
+ 		wc->memory_map = NULL;
+ 		r = da;
+@@ -269,7 +277,7 @@ static int persistent_memory_claim(struc
+ 		i = 0;
+ 		do {
+ 			long daa;
+-			daa = dax_direct_access(wc->ssd_dev->dax_dev, i, p - i,
++			daa = dax_direct_access(wc->ssd_dev->dax_dev, offset + i, p - i,
+ 						NULL, &pfn);
+ 			if (daa <= 0) {
+ 				r = daa ? daa : -EINVAL;
 
 
