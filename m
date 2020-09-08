@@ -2,248 +2,614 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A60C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC82C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9EF20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44DA2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgIHJk6 (ORCPT
+        id S1728963AbgIHJm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:40:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45942 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728798AbgIHJkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:40:52 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3B11753A6107732905F0;
-        Tue,  8 Sep 2020 17:40:48 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 17:40:37 +0800
-Subject: Re: [PATCH v2 2/3] irqchip: dw-apb-ictl: support hierarchy irq domain
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Tue, 8 Sep 2020 05:42:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:4229 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728676AbgIHJm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 05:42:57 -0400
+IronPort-SDR: BCuf1oimURVgbGh9ICdWzR37KHXO4uzH7Y8zGRJZPa/ouXrTfKx7H3yNz+PDCj59qYiizS8jka
+ VMW3Cd52Y4bQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="222311160"
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="222311160"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 02:42:56 -0700
+IronPort-SDR: QyaKoQtNkwVDjwQwMvZEd2mG0ayfMJjGIVvHGgarWtgqXvPkXkAwaOJjo24HAMUckb0iHfFEk8
+ 6WrjCpuFBYbA==
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="333415026"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 02:42:53 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 428E020765; Tue,  8 Sep 2020 12:42:51 +0300 (EEST)
+Date:   Tue, 8 Sep 2020 12:42:51 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Haoyu Lv <lvhaoyu@huawei.com>, Libin <huawei.libin@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-References: <20200908071134.2578-1-thunder.leizhen@huawei.com>
- <20200908071134.2578-3-thunder.leizhen@huawei.com>
- <8f6e4cc51a53f580538b879cafcd06c3@kernel.org>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <0e860ff8-3e72-1099-c28c-c5a0bc28f2c4@huawei.com>
-Date:   Tue, 8 Sep 2020 17:40:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Hao He <hao.he@bitland.com.cn>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drinkcat@chromium.org,
+        Xingyu Wu <wuxy@bitland.com.cn>, dongchun.zhu@mediatek.com,
+        sj.huang@mediatek.com, darfur_liu@gcoreinc.com, hao.he7@gmail.com
+Subject: Re: [PATCH v4 4/4] media: i2c: gc5035: Add OTP configuration handling
+Message-ID: <20200908094251.GD27352@paasikivi.fi.intel.com>
+References: <20200902224813.14283-1-tfiga@chromium.org>
+ <20200902224813.14283-5-tfiga@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <8f6e4cc51a53f580538b879cafcd06c3@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902224813.14283-5-tfiga@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Tomasz,
 
+Thanks for the patch.
 
-On 2020/9/8 15:41, Marc Zyngier wrote:
-> On 2020-09-08 08:11, Zhen Lei wrote:
->> Add support to use dw-apb-ictl as primary interrupt controller.
->>
->> Suggested-by: Marc Zyngier <maz@kernel.org>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> Tested-by: Haoyu Lv <lvhaoyu@huawei.com>
->> ---
->>  drivers/irqchip/Kconfig           |  2 +-
->>  drivers/irqchip/irq-dw-apb-ictl.c | 75 +++++++++++++++++++++++++++++--
->>  2 files changed, 73 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->> index bfc9719dbcdc..7c2d1c8fa551 100644
->> --- a/drivers/irqchip/Kconfig
->> +++ b/drivers/irqchip/Kconfig
->> @@ -148,7 +148,7 @@ config DAVINCI_CP_INTC
->>  config DW_APB_ICTL
->>      bool
->>      select GENERIC_IRQ_CHIP
->> -    select IRQ_DOMAIN
->> +    select IRQ_DOMAIN_HIERARCHY
->>
->>  config FARADAY_FTINTC010
->>      bool
->> diff --git a/drivers/irqchip/irq-dw-apb-ictl.c
->> b/drivers/irqchip/irq-dw-apb-ictl.c
->> index aa6214da0b1f..405861322596 100644
->> --- a/drivers/irqchip/irq-dw-apb-ictl.c
->> +++ b/drivers/irqchip/irq-dw-apb-ictl.c
->> @@ -17,6 +17,7 @@
->>  #include <linux/irqchip/chained_irq.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_irq.h>
->> +#include <asm/exception.h>
->>
->>  #define APB_INT_ENABLE_L    0x00
->>  #define APB_INT_ENABLE_H    0x04
->> @@ -26,6 +27,30 @@
->>  #define APB_INT_FINALSTATUS_H    0x34
->>  #define APB_INT_BASE_OFFSET    0x04
->>
->> +/*
->> + * irq domain of the primary interrupt controller. Currently, only one is
->> + * supported.
+On Wed, Sep 02, 2020 at 10:48:13PM +0000, Tomasz Figa wrote:
+> From: Hao He <hao.he@bitland.com.cn>
 > 
-> By definition, there is only one primary interrupt controller.
-
-OK, I will delete the comment "Currently, only one is supported". Should I replace
-it with your commend above?
-
+> The sensor OTP holds values for various configuration registers
+> deteremined at manufacturing time and dead pixel correction tables. Add
+> code to load both from the OTP and initialize the sensor appropriately.
 > 
->> + */
->> +static struct irq_domain *dw_apb_ictl_irq_domain;
->> +
->> +static void __exception_irq_entry dw_apb_ictl_handle_irq(struct pt_regs *regs)
->> +{
->> +    struct irq_domain *d = dw_apb_ictl_irq_domain;
->> +    int n;
->> +
->> +    for (n = 0; n < d->revmap_size; n += 32) {
->> +        struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, n);
->> +        u32 stat = readl_relaxed(gc->reg_base + APB_INT_FINALSTATUS_L);
->> +
->> +        while (stat) {
->> +            u32 hwirq = ffs(stat) - 1;
->> +
->> +            handle_domain_irq(d, hwirq, regs);
->> +            stat &= ~(1 << hwirq);
+> Signed-off-by: Hao He <hao.he@bitland.com.cn>
+> Signed-off-by: Xingyu Wu <wuxy@bitland.com.cn>
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> ---
+>  drivers/media/i2c/gc5035.c | 478 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 478 insertions(+)
 > 
-> nit: prefer BIT(hwirq)
+> diff --git a/drivers/media/i2c/gc5035.c b/drivers/media/i2c/gc5035.c
+> index 12e1b3a430b5..61645cec6948 100644
+> --- a/drivers/media/i2c/gc5035.c
+> +++ b/drivers/media/i2c/gc5035.c
+> @@ -81,6 +81,57 @@
+>  #define GC5035_TEST_PATTERN_ENABLE			0x11
+>  #define GC5035_TEST_PATTERN_DISABLE			0x10
+>  
+> +/* Page 2 registers */
+> +
+> +/* OTP access registers */
+> +#define GC5035_REG_OTP_MODE				0xf3
+> +#define GC5035_OTP_PRE_READ				0x20
+> +#define GC5035_OTP_READ_MODE				0x12
+> +#define GC5035_OTP_READ_DONE				0x00
+> +#define GC5035_REG_OTP_DATA				0x6c
+> +#define GC5035_REG_OTP_ACCESS_ADDR_H			0x69
+> +#define GC5035_REG_OTP_ACCESS_ADDR_L			0x6a
+> +#define GC5035_OTP_ACCESS_ADDR_H_MASK			0x1f
+> +#define GC5035_OTP_ADDR_MASK				0x1fff
+> +#define GC5035_OTP_ADDR_SHIFT				3
+> +#define GC5035_REG_DD_TOTALNUM_H			0x01
+> +#define GC5035_REG_DD_TOTALNUM_L			0x02
+> +#define GC5035_DD_TOTALNUM_H_MASK			0x07
+> +#define GC5035_REG_DD_LOAD_STATUS			0x06
+> +#define GC5035_OTP_BIT_LOAD				BIT(0)
+> +
+> +/* OTP-related definitions */
+> +
+> +#define GC5035_OTP_ID_SIZE				9
+> +#define GC5035_OTP_ID_DATA_OFFSET			0x0020
+> +#define GC5035_OTP_DATA_LENGTH				1024
+> +
+> +/* OTP DPC parameters */
+> +#define GC5035_OTP_DPC_FLAG_OFFSET			0x0068
+> +#define GC5035_OTP_DPC_FLAG_MASK			0x03
+> +#define GC5035_OTP_FLAG_EMPTY				0x00
+> +#define GC5035_OTP_FLAG_VALID				0x01
+> +#define GC5035_OTP_DPC_TOTAL_NUMBER_OFFSET		0x0070
+> +#define GC5035_OTP_DPC_ERROR_NUMBER_OFFSET		0x0078
+> +
+> +/* OTP register parameters */
+> +#define GC5035_OTP_REG_FLAG_OFFSET			0x0880
+> +#define GC5035_OTP_REG_DATA_OFFSET			0x0888
+> +#define GC5035_OTP_REG_ADDR_OFFSET			1
+> +#define GC5035_OTP_REG_VAL_OFFSET			2
+> +#define GC5035_OTP_PAGE_FLAG_OFFSET			3
+> +#define GC5035_OTP_PER_PAGE_SIZE			4
+> +#define GC5035_OTP_REG_PAGE_MASK			0x07
+> +#define GC5035_OTP_REG_MAX_GROUP			5
+> +#define GC5035_OTP_REG_BYTE_PER_GROUP			5
+> +#define GC5035_OTP_REG_PER_GROUP			2
+> +#define GC5035_OTP_REG_BYTE_PER_REG			2
+> +#define GC5035_OTP_REG_DATA_SIZE			25
+> +#define GC5035_OTP_REG_SIZE				10
+> +
+> +#define GC5035_DD_DELAY_US				(10 * 1000)
+> +#define GC5035_DD_TIMEOUT_US				(100 * 1000)
+> +
+>  static const char * const gc5035_supplies[] = {
+>  	/*
+>  	 * Requested separately due to power sequencing needs:
+> @@ -95,6 +146,21 @@ struct gc5035_regval {
+>  	u8 val;
+>  };
+>  
+> +struct gc5035_reg {
+> +	u8 page;
+> +	struct gc5035_regval regval;
+> +};
+> +
+> +struct gc5035_otp_regs {
+> +	unsigned int num_regs;
+> +	struct gc5035_reg regs[GC5035_OTP_REG_SIZE];
+> +};
+> +
+> +struct gc5035_dpc {
+> +	bool valid;
+> +	unsigned int total_num;
+> +};
+> +
+>  struct gc5035_mode {
+>  	u32 width;
+>  	u32 height;
+> @@ -122,6 +188,11 @@ struct gc5035 {
+>  	struct v4l2_ctrl *hblank;
+>  	struct v4l2_ctrl *vblank;
+>  
+> +	bool otp_read;
+> +	u8 otp_id[GC5035_OTP_ID_SIZE];
+> +	struct gc5035_dpc dpc;
+> +	struct gc5035_otp_regs otp_regs;
+> +
+>  	/*
+>  	 * Serialize control access, get/set format, get selection
+>  	 * and start streaming.
+> @@ -136,6 +207,69 @@ static inline struct gc5035 *to_gc5035(struct v4l2_subdev *sd)
+>  	return container_of(sd, struct gc5035, subdev);
+>  }
+>  
+> +static const struct gc5035_regval gc5035_otp_init_regs[] = {
+> +	{0xfc, 0x01},
+> +	{0xf4, 0x40},
+> +	{0xf5, 0xe9},
+> +	{0xf6, 0x14},
+> +	{0xf8, 0x49},
+> +	{0xf9, 0x82},
+> +	{0xfa, 0x00},
+> +	{0xfc, 0x81},
+> +	{0xfe, 0x00},
+> +	{0x36, 0x01},
+> +	{0xd3, 0x87},
+> +	{0x36, 0x00},
+> +	{0x33, 0x00},
+> +	{0xf7, 0x01},
+> +	{0xfc, 0x8e},
+> +	{0xfe, 0x00},
+> +	{0xee, 0x30},
+> +	{0xfa, 0x10},
+> +	{0xf5, 0xe9},
+> +	{0xfe, 0x02},
+> +	{0x67, 0xc0},
+> +	{0x59, 0x3f},
+> +	{0x55, 0x84},
+> +	{0x65, 0x80},
+> +	{0x66, 0x03},
+> +	{0xfe, 0x00},
+> +};
+> +
+> +static const struct gc5035_regval gc5035_otp_exit_regs[] = {
+> +	{0xfe, 0x02},
+> +	{0x67, 0x00},
+> +	{0xfe, 0x00},
+> +	{0xfa, 0x00},
+> +};
+> +
+> +static const struct gc5035_regval gc5035_dd_auto_load_regs[] = {
+> +	{0xfe, 0x02},
+> +	{0xbe, 0x00},
+> +	{0xa9, 0x01},
+> +	{0x09, 0x33},
+> +};
+> +
+> +static const struct gc5035_regval gc5035_otp_dd_regs[] = {
+> +	{0x03, 0x00},
+> +	{0x04, 0x80},
+> +	{0x95, 0x0a},
+> +	{0x96, 0x30},
+> +	{0x97, 0x0a},
+> +	{0x98, 0x32},
+> +	{0x99, 0x07},
+> +	{0x9a, 0xa9},
+> +	{0xf3, 0x80},
+> +};
+> +
+> +static const struct gc5035_regval gc5035_otp_dd_enable_regs[] = {
+> +	{0xbe, 0x01},
+> +	{0x09, 0x00},
+> +	{0xfe, 0x01},
+> +	{0x80, 0x02},
+> +	{0xfe, 0x00},
+> +};
+> +
+>  /*
+>   * Xclk 24Mhz
+>   * Pclk 87.6Mhz
+> @@ -763,6 +897,346 @@ static int gc5035_read_reg(struct gc5035 *gc5035, u8 reg, u8 *val)
+>  	return 0;
+>  }
+>  
+> +static int gc5035_otp_read_data(struct gc5035 *gc5035, u16 bit_addr, u8 *data,
+> +				size_t length)
+> +{
+> +	size_t i;
+> +	int ret;
+> +
+> +	if (WARN_ON(bit_addr % 8))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(bit_addr / 8 + length > GC5035_OTP_DATA_LENGTH))
+> +		return -EINVAL;
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_PAGE_REG, 2);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_REG_OTP_ACCESS_ADDR_H,
+> +			       (bit_addr >> 8) &
+> +			       GC5035_OTP_ACCESS_ADDR_H_MASK);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_REG_OTP_ACCESS_ADDR_L,
+> +			       bit_addr & 0xff);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_REG_OTP_MODE,
+> +			       GC5035_OTP_PRE_READ);
+> +	if (ret)
+> +		goto out_read_done;
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_REG_OTP_MODE,
+> +			       GC5035_OTP_READ_MODE);
+> +	if (ret)
+> +		goto out_read_done;
+> +
+> +	for (i = 0; i < length; i++) {
+> +		ret = gc5035_read_reg(gc5035, GC5035_REG_OTP_DATA, &data[i]);
+> +		if (ret)
+> +			goto out_read_done;
+> +	}
+> +
+> +out_read_done:
+> +	gc5035_write_reg(gc5035, GC5035_REG_OTP_MODE, GC5035_OTP_READ_DONE);
+> +
+> +	return ret;
+> +}
+> +
+> +static int gc5035_read_otp_regs(struct gc5035 *gc5035)
+> +{
+> +	struct device *dev = &gc5035->client->dev;
+> +	struct gc5035_otp_regs *otp_regs = &gc5035->otp_regs;
+> +	u8 regs[GC5035_OTP_REG_DATA_SIZE] = {0};
+> +	unsigned int i, j;
+> +	u8 flag;
+> +	int ret;
+> +
+> +	ret = gc5035_otp_read_data(gc5035, GC5035_OTP_REG_FLAG_OFFSET,
+> +				   &flag, 1);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read otp reg flag\n");
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(dev, "register update flag = 0x%x\n", flag);
+> +
+> +	gc5035->otp_regs.num_regs = 0;
+> +	if (flag != GC5035_OTP_FLAG_VALID)
+> +		return 0;
+> +
+> +	ret = gc5035_otp_read_data(gc5035, GC5035_OTP_REG_DATA_OFFSET,
+> +				   regs, sizeof(regs));
+> +	if (ret) {
+> +		dev_err(dev, "failed to read otp reg data\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < GC5035_OTP_REG_MAX_GROUP; i++) {
+> +		unsigned int base_group = i * GC5035_OTP_REG_BYTE_PER_GROUP;
+> +
+> +		for (j = 0; j < GC5035_OTP_REG_PER_GROUP; j++) {
+> +			struct gc5035_reg *reg;
+> +
+> +			if (!(regs[base_group] &
+> +			      BIT((GC5035_OTP_PER_PAGE_SIZE * j +
+> +				  GC5035_OTP_PAGE_FLAG_OFFSET))))
+> +				continue;
+> +
+> +			reg = &otp_regs->regs[otp_regs->num_regs++];
+> +			reg->page = (regs[base_group] >>
+> +					(GC5035_OTP_PER_PAGE_SIZE * j)) &
+> +					GC5035_OTP_REG_PAGE_MASK;
+> +			reg->regval.addr = regs[base_group + j *
+> +					GC5035_OTP_REG_BYTE_PER_REG +
+> +					GC5035_OTP_REG_ADDR_OFFSET];
+> +			reg->regval.val = regs[base_group + j *
+> +					GC5035_OTP_REG_BYTE_PER_REG +
+> +					GC5035_OTP_REG_VAL_OFFSET];
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int gc5035_read_dpc(struct gc5035 *gc5035)
+> +{
+> +	struct device *dev = &gc5035->client->dev;
+> +	struct gc5035_dpc *dpc = &gc5035->dpc;
+> +	u8 dpc_flag = 0;
+> +	u8 error_number = 0;
+> +	u8 total_number = 0;
+> +	int ret;
+> +
+> +	ret = gc5035_otp_read_data(gc5035, GC5035_OTP_DPC_FLAG_OFFSET,
+> +				   &dpc_flag, 1);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read dpc flag\n");
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(dev, "dpc flag = 0x%x\n", dpc_flag);
+> +
+> +	dpc->valid = false;
+> +
+> +	switch (dpc_flag & GC5035_OTP_DPC_FLAG_MASK) {
+> +	case GC5035_OTP_FLAG_EMPTY:
+> +		dev_dbg(dev, "dpc info is empty!!\n");
+> +		break;
+> +
+> +	case GC5035_OTP_FLAG_VALID:
+> +		dev_dbg(dev, "dpc info is valid!\n");
+> +		ret = gc5035_otp_read_data(gc5035,
+> +					   GC5035_OTP_DPC_TOTAL_NUMBER_OFFSET,
+> +					   &total_number, 1);
+> +		if (ret) {
+> +			dev_err(dev, "failed to read dpc total number\n");
+> +			return ret;
+> +		}
+> +
+> +		ret = gc5035_otp_read_data(gc5035,
+> +					   GC5035_OTP_DPC_ERROR_NUMBER_OFFSET,
+> +					   &error_number, 1);
+> +		if (ret) {
+> +			dev_err(dev, "failed to read dpc error number\n");
+> +			return ret;
+> +		}
+> +
+> +		dpc->total_num = total_number + error_number;
+> +		dpc->valid = true;
+> +		dev_dbg(dev, "total_num = %d\n", dpc->total_num);
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int gc5035_otp_read_sensor_info(struct gc5035 *gc5035)
+> +{
+> +	int ret;
+> +
+> +	ret = gc5035_read_dpc(gc5035);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return gc5035_read_otp_regs(gc5035);
+> +}
+> +
+> +static int gc5035_check_dd_load_status(struct gc5035 *gc5035)
+> +{
+> +	u8 status;
+> +	int ret;
+> +
+> +	ret = gc5035_read_reg(gc5035, GC5035_REG_DD_LOAD_STATUS, &status);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (status & GC5035_OTP_BIT_LOAD)
+> +		return status;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static int gc5035_otp_update_dd(struct gc5035 *gc5035)
+> +{
+> +	struct device *dev = &gc5035->client->dev;
+> +	struct gc5035_dpc *dpc = &gc5035->dpc;
+> +	int val, ret;
+> +
+> +	if (!dpc->valid) {
+> +		dev_dbg(dev, "DPC table invalid, not updating DD.\n");
+> +		return 0;
+> +	}
+> +
+> +	dev_dbg(dev, "DD auto load start\n");
+> +
+> +	ret = gc5035_write_array(gc5035, gc5035_dd_auto_load_regs,
+> +				 ARRAY_SIZE(gc5035_dd_auto_load_regs));
+> +	if (ret) {
+> +		dev_err(dev, "failed to write dd auto load reg\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_REG_DD_TOTALNUM_H,
+> +			       (dpc->total_num >> 8) &
+> +			       GC5035_DD_TOTALNUM_H_MASK);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gc5035_write_reg(gc5035, GC5035_REG_DD_TOTALNUM_L,
+> +			       dpc->total_num & 0xff);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = gc5035_write_array(gc5035, gc5035_otp_dd_regs,
+> +				 ARRAY_SIZE(gc5035_otp_dd_regs));
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Wait for DD to finish loading automatically */
+> +	ret = readx_poll_timeout(gc5035_check_dd_load_status, gc5035,
+> +				val, val <= 0, GC5035_DD_DELAY_US,
+> +				GC5035_DD_TIMEOUT_US);
+> +	if (ret < 0) {
+> +		dev_err(dev, "DD load timeout\n");
+> +		return -EFAULT;
+> +	}
+> +	if (val < 0) {
+> +		dev_err(dev, "DD load failure\n");
+> +		return val;
+> +	}
+> +
+> +	ret = gc5035_write_array(gc5035, gc5035_otp_dd_enable_regs,
+> +				 ARRAY_SIZE(gc5035_otp_dd_enable_regs));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int gc5035_otp_update_regs(struct gc5035 *gc5035)
+> +{
+> +	struct device *dev = &gc5035->client->dev;
+> +	struct gc5035_otp_regs *otp_regs = &gc5035->otp_regs;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	dev_dbg(dev, "reg count = %d\n", otp_regs->num_regs);
+> +
+> +	for (i = 0; i < otp_regs->num_regs; i++) {
+> +		ret = gc5035_write_reg(gc5035, GC5035_PAGE_REG,
+> +				       otp_regs->regs[i].page);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = gc5035_write_reg(gc5035,
+> +				       otp_regs->regs[i].regval.addr,
+> +				       otp_regs->regs[i].regval.val);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int gc5035_otp_update(struct gc5035 *gc5035)
+> +{
+> +	struct device *dev = &gc5035->client->dev;
+> +	int ret;
+> +
+> +	ret = gc5035_otp_update_dd(gc5035);
+> +	if (ret) {
+> +		dev_err(dev, "failed to update otp dd\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = gc5035_otp_update_regs(gc5035);
+> +	if (ret) {
+> +		dev_err(dev, "failed to update otp regs\n");
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int gc5035_set_otp_config(struct gc5035 *gc5035)
+> +{
+> +	struct device *dev = &gc5035->client->dev;
+> +	u8 otp_id[GC5035_OTP_ID_SIZE];
+> +	int ret;
+> +
+> +	ret = gc5035_write_array(gc5035, gc5035_otp_init_regs,
+> +				 ARRAY_SIZE(gc5035_otp_init_regs));
+> +	if (ret) {
+> +		dev_err(dev, "failed to write otp init reg\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = gc5035_otp_read_data(gc5035, GC5035_OTP_ID_DATA_OFFSET,
+> +				   &otp_id[0], GC5035_OTP_ID_SIZE);
 
-OK, I will correct it.
+Is this read needed every time when streaming is about to start?
 
-> 
->> +        }
->> +    }
->> +}
->> +
->>  static void dw_apb_ictl_handle_irq_cascaded(struct irq_desc *desc)
->>  {
->>      struct irq_domain *d = irq_desc_get_handler_data(desc);
->> @@ -50,6 +75,30 @@ static void dw_apb_ictl_handle_irq_cascaded(struct
->> irq_desc *desc)
->>      chained_irq_exit(chip, desc);
->>  }
->>
->> +static int dw_apb_ictl_irq_domain_alloc(struct irq_domain *domain,
->> unsigned int virq,
->> +                unsigned int nr_irqs, void *arg)
->> +{
->> +    int i, ret;
->> +    irq_hw_number_t hwirq;
->> +    unsigned int type = IRQ_TYPE_NONE;
->> +    struct irq_fwspec *fwspec = arg;
->> +
->> +    ret = irq_domain_translate_onecell(domain, fwspec, &hwirq, &type);
->> +    if (ret)
->> +        return ret;
->> +
->> +    for (i = 0; i < nr_irqs; i++)
->> +        irq_map_generic_chip(domain, virq + i, hwirq + i);
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct irq_domain_ops dw_apb_ictl_irq_domain_ops = {
->> +    .translate = irq_domain_translate_onecell,
->> +    .alloc = dw_apb_ictl_irq_domain_alloc,
->> +    .free = irq_domain_free_irqs_top,
->> +};
->> +
->>  #ifdef CONFIG_PM
->>  static void dw_apb_ictl_resume(struct irq_data *d)
->>  {
->> @@ -78,11 +127,24 @@ static int __init dw_apb_ictl_init(struct device_node *np,
->>      const struct irq_domain_ops *domain_ops = &irq_generic_chip_ops;
->>      irq_flow_handler_t flow_handler = handle_level_irq;
->>
->> +    if (dw_apb_ictl_irq_domain) {
->> +        pr_err("%pOF: a hierarchy irq domain is already exist.\n", np);
->> +        return -EBUSY;
-> 
-> How can this happen?
+I guess it's not wrong but it seems unnecessary on subsequent times.
 
-Just afraid the users maybe define two primary interrupt controller nodes in dts
-by mistake, or maybe mixed with secondary interrupt controller nodes. But an error
-maybe reported before when parse devicetree nodes. So I'll just delete it.
+> +	if (ret) {
+> +		dev_err(dev, "failed to read otp id\n");
+> +		goto out_otp_exit;
+> +	}
+> +
+> +	if (!gc5035->otp_read || memcmp(gc5035->otp_id, otp_id, sizeof(otp_id))) {
+> +		dev_dbg(dev, "reading OTP configuration\n");
+> +
+> +		memset(&gc5035->otp_regs, 0, sizeof(gc5035->otp_regs));
+> +		memset(&gc5035->dpc, 0, sizeof(gc5035->dpc));
+> +
+> +		memcpy(gc5035->otp_id, otp_id, sizeof(gc5035->otp_id));
+> +
+> +		ret = gc5035_otp_read_sensor_info(gc5035);
+> +		if (ret < 0) {
+> +			dev_err(dev, "failed to read otp info\n");
+> +			goto out_otp_exit;
+> +		}
+> +
+> +		gc5035->otp_read = true;
+> +	}
+> +
+> +	ret = gc5035_otp_update(gc5035);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +out_otp_exit:
+> +	ret = gc5035_write_array(gc5035, gc5035_otp_exit_regs,
+> +				 ARRAY_SIZE(gc5035_otp_exit_regs));
+> +	if (ret) {
+> +		dev_err(dev, "failed to write otp exit reg\n");
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int gc5035_set_fmt(struct v4l2_subdev *sd,
+>  			  struct v4l2_subdev_pad_config *cfg,
+>  			  struct v4l2_subdev_format *fmt)
+> @@ -859,6 +1333,10 @@ static int __gc5035_start_stream(struct gc5035 *gc5035)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = gc5035_set_otp_config(gc5035);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = gc5035_write_array(gc5035, gc5035->cur_mode->reg_list,
+>  				 gc5035->cur_mode->num_regs);
+>  	if (ret)
 
-> 
->> +    }
->> +
->>      /* Map the parent interrupt for the chained handler */
->>      parent_irq = irq_of_parse_and_map(np, 0);
->>      if (parent_irq <= 0) {
->> -        pr_err("%pOF: unable to parse irq\n", np);
->> -        return -EINVAL
-> 
-> Checking for an output interrupt is not the way to check for a chained
-> interrupt controller. That's what the parent device_node is for (no
-> parent or parent == self denotes a primary controller).
+-- 
+Kind regards,
 
-OK, Thank you for the point. I will modify it.
-
-> ;
->> +        /* It's used as secondary interrupt controller */
->> +        if (of_find_property(np, "interrupts", NULL)) {
->> +            pr_err("%pOF: unable to parse irq\n", np);
->> +            return -EINVAL;
->> +        }
->> +
->> +        /* It's used as the primary interrupt controller */
->> +        parent_irq = 0;
->> +        domain_ops = &dw_apb_ictl_irq_domain_ops;
->> +        flow_handler = handle_fasteoi_irq;
-> 
-> Why? This irqchip obviously doesn't support an EOI method since you
-> setting it to a NOP callback below. From what I understand, this
-> controller should use handle_level_irq, just like its chained version.
-
-OK, I will try to use handle_level_irq().
-
-> 
->>      }
->>
->>      ret = of_address_to_resource(np, 0, &r);
->> @@ -145,10 +207,17 @@ static int __init dw_apb_ictl_init(struct device_node *np,
->>          gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
->>          gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
->>          gc->chip_types[0].chip.irq_resume = dw_apb_ictl_resume;
->> +        if (!parent_irq)
->> +            gc->chip_types[0].chip.irq_eoi = irq_gc_noop;
->>      }
->>
->> -    irq_set_chained_handler_and_data(parent_irq,
->> +    if (parent_irq) {
->> +        irq_set_chained_handler_and_data(parent_irq,
->>                  dw_apb_ictl_handle_irq_cascaded, domain);
->> +    } else {
->> +        dw_apb_ictl_irq_domain = domain;
->> +        set_handle_irq(dw_apb_ictl_handle_irq);
->> +    }
->>
->>      return 0;
-> 
-> Thanks,
-> 
->         M.
-
+Sakari Ailus
