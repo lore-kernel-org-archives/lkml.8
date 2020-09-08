@@ -2,164 +2,122 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B45DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8EF520768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A790220658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgIHUDl (ORCPT
+        id S1732525AbgIHUDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:03:41 -0400
-Received: from smtp-bc0a.mail.infomaniak.ch ([45.157.188.10]:59541 "EHLO
-        smtp-bc0a.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730455AbgIHPYC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:24:02 -0400
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Bm4Zc3mc0zlhVkF;
-        Tue,  8 Sep 2020 14:43:36 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Bm4ZX61Rqzlh8TW;
-        Tue,  8 Sep 2020 14:43:32 +0200 (CEST)
-Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
- faccessat2(2)
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Tue, 8 Sep 2020 16:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730447AbgIHPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:23:54 -0400
+Received: from gaia (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E3942074D;
+        Tue,  8 Sep 2020 14:52:40 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 15:52:37 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@linux.microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-References: <20200908075956.1069018-1-mic@digikod.net>
- <20200908075956.1069018-2-mic@digikod.net>
- <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <75451684-58f3-b946-dca4-4760fa0d7440@digikod.net>
-Date:   Tue, 8 Sep 2020 14:43:32 +0200
-User-Agent: 
+        kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 22/35] arm64: mte: Enable in-kernel MTE
+Message-ID: <20200908145237.GI25591@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <6a83a47d9954935d37a654978e96c951cc56a2f6.1597425745.git.andreyknvl@google.com>
+ <CAAeHK+y-gJ5JKcGZYfZutKtb=BoM3qfkOyoTi7CtW6apHUcCAw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAeHK+y-gJ5JKcGZYfZutKtb=BoM3qfkOyoTi7CtW6apHUcCAw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 08, 2020 at 04:39:35PM +0200, Andrey Konovalov wrote:
+> On Fri, Aug 14, 2020 at 7:28 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> >
+> > The Tag Checking operation causes a synchronous data abort as
+> > a consequence of a tag check fault when MTE is configured in
+> > synchronous mode.
+> >
+> > Enable MTE in Synchronous mode in EL1 to provide a more immediate
+> > way of tag check failure detection in the kernel.
+> >
+> > As part of this change enable match-all tag for EL1 to allow the
+> > kernel to access user pages without faulting. This is required because
+> > the kernel does not have knowledge of the tags set by the user in a
+> > page.
+> >
+> > Note: For MTE, the TCF bit field in SCTLR_EL1 affects only EL1 in a
+> > similar way as TCF0 affects EL0.
+> >
+> > Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> > ---
+> >  arch/arm64/kernel/cpufeature.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> > index 4d3abb51f7d4..4d94af19d8f6 100644
+> > --- a/arch/arm64/kernel/cpufeature.c
+> > +++ b/arch/arm64/kernel/cpufeature.c
+> > @@ -1670,6 +1670,9 @@ static void cpu_enable_mte(struct arm64_cpu_capabilities const *cap)
+> >         write_sysreg_s(0, SYS_TFSR_EL1);
+> >         write_sysreg_s(0, SYS_TFSRE0_EL1);
+> >
+> > +       /* Enable Match-All at EL1 */
+> > +       sysreg_clear_set(tcr_el1, 0, SYS_TCR_EL1_TCMA1);
+> > +
+> >         /*
+> >          * CnP must be enabled only after the MAIR_EL1 register has been set
+> >          * up. Inconsistent MAIR_EL1 between CPUs sharing the same TLB may
+> > @@ -1687,6 +1690,9 @@ static void cpu_enable_mte(struct arm64_cpu_capabilities const *cap)
+> >         mair &= ~MAIR_ATTRIDX(MAIR_ATTR_MASK, MT_NORMAL_TAGGED);
+> >         mair |= MAIR_ATTRIDX(MAIR_ATTR_NORMAL_TAGGED, MT_NORMAL_TAGGED);
+> >         write_sysreg_s(mair, SYS_MAIR_EL1);
+> > +
+> > +       /* Enable MTE Sync Mode for EL1 */
+> > +       sysreg_clear_set(sctlr_el1, SCTLR_ELx_TCF_MASK, SCTLR_ELx_TCF_SYNC);
+> >         isb();
+> >
+> >         local_flush_tlb_all();
+> > --
+> > 2.28.0.220.ged08abb693-goog
+> >
+> 
+> Should we change this commit to enable in-kernel MTE only if
+> KASAN_HW_TAGS is enabled?
 
-On 08/09/2020 14:28, Mimi Zohar wrote:
-> Hi Mickael,
-> 
-> On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
->> diff --git a/fs/open.c b/fs/open.c
->> index 9af548fb841b..879bdfbdc6fa 100644
->> --- a/fs/open.c
->> +++ b/fs/open.c
->> @@ -405,9 +405,13 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
->>  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
->>  		return -EINVAL;
->>  
->> -	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
->> +	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH |
->> +				AT_INTERPRETED))
->>  		return -EINVAL;
->>  
->> +	/* Only allows X_OK with AT_INTERPRETED for now. */
->> +	if ((flags & AT_INTERPRETED) && !(mode & S_IXOTH))
->> +		return -EINVAL;
->>  	if (flags & AT_SYMLINK_NOFOLLOW)
->>  		lookup_flags &= ~LOOKUP_FOLLOW;
->>  	if (flags & AT_EMPTY_PATH)
->> @@ -426,7 +430,30 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
->>  
->>  	inode = d_backing_inode(path.dentry);
->>  
->> -	if ((mode & MAY_EXEC) && S_ISREG(inode->i_mode)) {
->> +	if ((flags & AT_INTERPRETED)) {
->> +		/*
->> +		 * For compatibility reasons, without a defined security policy
->> +		 * (via sysctl or LSM), using AT_INTERPRETED must map the
->> +		 * execute permission to the read permission.  Indeed, from
->> +		 * user space point of view, being able to execute data (e.g.
->> +		 * scripts) implies to be able to read this data.
->> +		 *
->> +		 * The MAY_INTERPRETED_EXEC bit is set to enable LSMs to add
->> +		 * custom checks, while being compatible with current policies.
->> +		 */
->> +		if ((mode & MAY_EXEC)) {
-> 
-> Why is the ISREG() test being dropped?   Without dropping it, there
-> would be no reason for making the existing test an "else" clause.
+I think so. We don't currently have any patchset decoupling MTE from
+KASAN.
 
-The ISREG() is not dropped, it is just moved below with the rest of the
-original code. The corresponding code (with the path_noexec call) for
-AT_INTERPRETED is added with the next commit, and it relies on the
-sysctl configuration for compatibility reasons.
+See my other comment on TCR_EL1.TBI1, you'd need to set TCMA1 as well in
+the same proc.S file.
 
-> 
->> +			mode |= MAY_INTERPRETED_EXEC;
->> +			/*
->> +			 * For compatibility reasons, if the system-wide policy
->> +			 * doesn't enforce file permission checks, then
->> +			 * replaces the execute permission request with a read
->> +			 * permission request.
->> +			 */
->> +			mode &= ~MAY_EXEC;
->> +			/* To be executed *by* user space, files must be readable. */
->> +			mode |= MAY_READ;
-> 
-> After this change, I'm wondering if it makes sense to add a call to
-> security_file_permission().  IMA doesn't currently define it, but
-> could.
-
-Yes, that's the idea. We could replace the following inode_permission()
-with file_permission(). I'm not sure how this will impact other LSMs though.
-
-> 
-> Mimi
-> 
->> +		}
->> +	} else if ((mode & MAY_EXEC) && S_ISREG(inode->i_mode)) {
->>  		/*
->>  		 * MAY_EXEC on regular files is denied if the fs is mounted
->>  		 * with the "noexec" flag.
-> 
+-- 
+Catalin
