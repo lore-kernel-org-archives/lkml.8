@@ -2,114 +2,188 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44454C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365A2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E48C120672
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB28B206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XMPdvNue"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o7AAPg2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgIHXml (ORCPT
+        id S1728899AbgIHXq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42574 "EHLO
+        Tue, 8 Sep 2020 19:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgIHXmk (ORCPT
+        with ESMTP id S1728297AbgIHXqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:42:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C78C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:42:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id o20so483317pfp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:42:39 -0700 (PDT)
+        Tue, 8 Sep 2020 19:46:51 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAEF6C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:46:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d9so517853pfd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=eMOiJpHtFtKakMysopXvdUXf6Ey6S8XzJcpKEXF+UkI=;
-        b=XMPdvNueNy5Mw0EVTj1jo2i6yWrdGtPdxF80B9LN6j5ePhv5tGbKQG8tS6CoyXfvak
-         IIKjHGyT2UjhA91g2TfnCgqW4Rvf0LLq5HypwLKornW+bmD99kvgt1BS/bB0PH9C5qVF
-         HPtTkPs0rYnwKpg+UPKr5h7kYgZVivAROlVb4=
+         :content-disposition:in-reply-to;
+        bh=z8KgGGQx1h7YczMCEetfx/jb92oxBiLV/4DApZXEdSc=;
+        b=o7AAPg2tGIBeoDCy+SKZSPrMh90LWzBsQz7vIgRgf0gXKcazYi7dMUuiHS6pkeEhe3
+         72U8LTqKCD+Y0nvZWHnSCPgKx22WrkcnXsI1zBTHp65y4SK7sUDb96k8i08E7N1I3ndK
+         MAbE+qSMIBBIRaP4TaKmNwhLB/bhB54qsZiAh3Ur4seHsvyrTB8t5y34VNrcKVW/C66L
+         l7cjL+k9FUiFppFSh3huLQBHCcZYt8E1otUR46Y0GfuzwzhPLhut+2yC5pR2SQvSs0VL
+         ilFTrWMA4JBjFg121/n2oGTyDANdfOuIpPL/4ZyE02D71+D1zpI6L2df8XB6haMHzveL
+         5RSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=eMOiJpHtFtKakMysopXvdUXf6Ey6S8XzJcpKEXF+UkI=;
-        b=hEMPHnlCpzWISrltIXM7WPex04/Zb3tgs0XPCJBg2AEJNQD85Ji/+cufEJNaO4qyCk
-         V3kGY0gY8NwWq7D/FTvE3sXTqX3/l1hLbu2O05JlxKCXCcrrEKhMtrxELrsih/Xx1Pjd
-         bICDmOaWUEsWyIJRjiN6hFUCXSt/MG66zczXq6mgy0IG2MqGrP7NFIovEPEHYxhXdJo+
-         c8nW7u1gU1LGRFCG56nwCM6Tcrp2gdej+A20DpS40j2SKkSgBPK350ohzjpkI6ruFJW8
-         MD9gjIFuvpGUq1zLR1OZIgBFmCG9L/aD0UgMDplzNIoVsmklJ7iZ2vXr9KscpwggSi4V
-         b7wA==
-X-Gm-Message-State: AOAM532LuAJ7gnNPEJ7CvCBLJOgayz06ZWI6bVOCPfjmqpf9+5AGWHsI
-        sjqbW7/tRX9mSvFF8VA4M6TG1A==
-X-Google-Smtp-Source: ABdhPJxgBv1cW1PoOumcL8FFZLU9cgOsJLl8SUUN2m6ZrIVziQbshuuKUDDc1Q3iS58MLHQCbgA1jw==
-X-Received: by 2002:a63:754:: with SMTP id 81mr825522pgh.435.1599608559253;
-        Tue, 08 Sep 2020 16:42:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y203sm495466pfb.58.2020.09.08.16.42.38
+         :mime-version:content-disposition:in-reply-to;
+        bh=z8KgGGQx1h7YczMCEetfx/jb92oxBiLV/4DApZXEdSc=;
+        b=nEf7mNIpgN5lBcNGDfqwepx4Js90jtUarBcNBlZeNXKv7G3sYQwUAdAO74Aw48C4hF
+         SOQZOnE1/WGocJ291Vz/pLf0KQjGyMKdrok7pi2ueYD0XiNSH3aI1NlYJasj5R4nHZB/
+         eQOTJhrnyFkNFoKK3XosNah73zSQ80TVXFqFW3JPBGEJnNpCyYNzLyGpFvgT/6/VRSw2
+         Mmm+iYPvMqE8OBU0plo27JZbSYqrW454xVnoEGdRdIHpgUUwkkul8EhUQz+hNjByEIdX
+         yGlDIY5IFM24fDWzliyx6fdNYiEMUfvWgFl3hSfclr4FWgakoyrFmcQmRr5KO5V73xr7
+         nBYg==
+X-Gm-Message-State: AOAM531Wt/slqcyo0nzeFQhuzSeBvv7Y3tteYnuUMZFfaWiWyd+wL21I
+        duhbn7s0F4ZXes5MAKM3vEkQaQ==
+X-Google-Smtp-Source: ABdhPJyPXjsg2EPOqZVE0HrEMh1e+YhXcjhHaIFb+FoC7uPh34ggtt3CwAG5NZI9KmvOFhjBQ3KjBw==
+X-Received: by 2002:a63:4664:: with SMTP id v36mr859465pgk.194.1599608809917;
+        Tue, 08 Sep 2020 16:46:49 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id n67sm332121pgn.14.2020.09.08.16.46.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 16:42:38 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 16:42:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Tue, 08 Sep 2020 16:46:49 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 16:46:43 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] samples/seccomp: eliminate two compile warnings
- in user-trap.c
-Message-ID: <202009081633.CC35635@keescook>
-References: <20200901083903.2083-1-thunder.leizhen@huawei.com>
- <20200901083903.2083-2-thunder.leizhen@huawei.com>
- <973a1752-7609-bac9-758a-1a977e6fb1f0@huawei.com>
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
+Message-ID: <20200908234643.GF1060586@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <CAK7LNASDUkyJMDD0a5K_HT=1q5NEc6dcN4=FUb330yK0BCKcTw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <973a1752-7609-bac9-758a-1a977e6fb1f0@huawei.com>
+In-Reply-To: <CAK7LNASDUkyJMDD0a5K_HT=1q5NEc6dcN4=FUb330yK0BCKcTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 09:33:06AM +0800, Leizhen (ThunderTown) wrote:
-> On 2020/9/1 16:39, Zhen Lei wrote:
-> > samples/seccomp/user-trap.c is compiled with $(userccflags), and the
-> > latter does not contain -fno-strict-aliasing, so the warnings reported as
-> > below. Due to add "userccflags += -fno-strict-aliasing" will impact other
-> > files, so use __attribute__((__may_alias__)) to suppress it exactly.
-> > 
-> > My gcc version is 5.5.0 20171010.
-> > 
-> > ----------
-> > samples/seccomp/user-trap.c: In function ‘send_fd’:
-> > samples/seccomp/user-trap.c:50:2: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
-> >   *((int *)CMSG_DATA(cmsg)) = fd;
-> >   ^
-> > samples/seccomp/user-trap.c: In function ‘recv_fd’:
-> > samples/seccomp/user-trap.c:83:2: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
-> >   return *((int *)CMSG_DATA(cmsg));
-> >   ^
->
-> Doesn't anyone care about this? Or is it that everyone hasn't encountered this problem?
-> Why do these two warnings occur every time I compiled?
+On Sun, Sep 06, 2020 at 09:24:38AM +0900, Masahiro Yamada wrote:
+> On Fri, Sep 4, 2020 at 5:30 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+> >
+> > This patch series adds support for building x86_64 and arm64 kernels
+> > with Clang's Link Time Optimization (LTO).
+> >
+> > In addition to performance, the primary motivation for LTO is
+> > to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> > kernel. Google has shipped millions of Pixel devices running three
+> > major kernel versions with LTO+CFI since 2018.
+> >
+> > Most of the patches are build system changes for handling LLVM
+> > bitcode, which Clang produces with LTO instead of ELF object files,
+> > postponing ELF processing until a later stage, and ensuring initcall
+> > ordering.
+> >
+> > Note that patches 1-4 are not directly related to LTO, but are
+> > needed to compile LTO kernels with ToT Clang, so I'm including them
+> > in the series for your convenience:
+> >
+> >  - Patches 1-3 are required for building the kernel with ToT Clang,
+> >    and IAS, and patch 4 is needed to build allmodconfig with LTO.
+> >
+> >  - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
+> >
+> 
+> 
+> I still do not understand how this patch set works.
+> (only me?)
+> 
+> Please let me ask fundamental questions.
+> 
+> 
+> 
+> I applied this series on top of Linus' tree,
+> and compiled for ARCH=arm64.
+> 
+> I compared the kernel size with/without LTO.
+> 
+> 
+> 
+> [1] No LTO  (arm64 defconfig, CONFIG_LTO_NONE)
+> 
+> $ llvm-size   vmlinux
+>    text    data     bss     dec     hex filename
+> 15848692 10099449 493060 26441201 19375f1 vmlinux
+> 
+> 
+> 
+> [2] Clang LTO  (arm64 defconfig + CONFIG_LTO_CLANG)
+> 
+> $ llvm-size   vmlinux
+>    text    data     bss     dec     hex filename
+> 15906864 10197445 490804 26595113 195cf29 vmlinux
+> 
+> 
+> I compared the size of raw binary, arch/arm64/boot/Image.
+> Its size increased too.
+> 
+> 
+> 
+> So, in my experiment, enabling CONFIG_LTO_CLANG
+> increases the kernel size.
+> Is this correct?
 
-Hi!
+Yes. LTO does produce larger binaries, mostly due to function
+inlining between translation units, I believe. The compiler people
+can probably give you a more detailed answer here. Without -mllvm
+-import-instr-limit, the binaries would be even larger.
 
-I think the samples have been a bit ignored lately because they have a
-lot of weird build issues with regard to native vs compat and needing
-the kernel headers to be built first, etc.
+> One more thing, could you teach me
+> how Clang LTO optimizes the code against
+> relocatable objects?
+> 
+> 
+> 
+> When I learned Clang LTO first, I read this document:
+> https://llvm.org/docs/LinkTimeOptimization.html
+> 
+> It is easy to confirm the final executable
+> does not contain foo2, foo3...
+> 
+> 
+> 
+> In contrast to userspace programs,
+> kernel modules are basically relocatable objects.
+> 
+> Does Clang drop unused symbols from relocatable objects?
+> If so, how?
 
-That said, yes, I'd like to fix warnings. However, I can't reproduce
-this. How are you building? I tried x86_64 and cross-compiled to i386.
+I don't think the compiler can legally drop global symbols from
+relocatable objects, but it can rename and possibly even drop static
+functions. This is why we need global wrappers for initcalls, for
+example, to have stable symbol names.
 
--- 
-Kees Cook
+Sami
