@@ -2,151 +2,184 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C632C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C1BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 650D521D20
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X51AbloW"
+	by mail.kernel.org (Postfix) with ESMTP id 4ABFD2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgIHJ1j (ORCPT
+        id S1728876AbgIHJdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:27:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728925AbgIHJ1h (ORCPT
+        Tue, 8 Sep 2020 05:33:51 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:60616 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727995AbgIHJdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:27:37 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1AFC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 02:27:37 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m5so9625703pgj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 02:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i0GFzGW74PyYALEBgGjzHXdAT2j83gL/RVUSxd4kwZw=;
-        b=X51AbloW9ypAQ1OQa7gR/4XkFqgIJPigv3XJzZaBAJbkqCUSTNeQCSKny+zZ+ol6uf
-         W+qVyKrrLUwg44iL3zmZyKemnBmtyQwtrFnVZXNIhTIbOuitZuJ33VACIOePrBgf7x6D
-         qN/xQUbDXasH+P5jcjf9R2V9XKxgJJr2vKR4X1zUGwKPYKxjBdhPhWzjsi/fAH8W3WqN
-         QTir5aY9ONJG1qhasl7hlHoQDhKQwScuiKmpISpleXUpYIQFQwWQWghu8e21SqQnivIY
-         /vXSZMMQ5j/ge95hqp+E3uFmPVTNxU9DlxGUZ9JPOClKzjkoZX410WApFaqe9AEBSzjA
-         JFlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i0GFzGW74PyYALEBgGjzHXdAT2j83gL/RVUSxd4kwZw=;
-        b=coYqlDKZMnwpHOusPN1L6768kG9gOjD1+JW8whXigYifKfCK2i7O1ReRfihlW3Bet0
-         tGVLmSftMDBbfi6th8+q/PkPK0VzlBv45QMjWd4hyu29tIBajYmcHjVMP/X2SC2kDGXq
-         V/SdRwtXgnXhIl/7WRVQKSzy049LODO+QG7lBYYr5YhRkIW2XxC6p6kvd68WJJc0slHj
-         7PBwblK+03QAq0JfTOl3MDmRb+69n2Yr8RWBp4P0byoDkkZVA2M5/m/mI65deVeYW+9O
-         XEVX7gXGcTyyduQ1AlTIchYrswwBdL88kRi7hqzkmLLJhs254uuH+YnR1eDbqy1sJOY3
-         twcQ==
-X-Gm-Message-State: AOAM5329t9qAdulrFU+F1lqy/awjB8EegvGRW9cMCMFcQ2Ff8zVp63pf
-        813+itTOnNFawe+MRXoKjkno/Q==
-X-Google-Smtp-Source: ABdhPJxQ5sM0tMG1zH359TymoXLzPfbTreQlsgxFUwS+5qLrfqoW66Pg8LhWCsxBeR9jVPXLnUfUVQ==
-X-Received: by 2002:a63:fd0b:: with SMTP id d11mr19743398pgh.21.1599557256781;
-        Tue, 08 Sep 2020 02:27:36 -0700 (PDT)
-Received: from localhost ([122.181.54.133])
-        by smtp.gmail.com with ESMTPSA id n26sm17352986pff.30.2020.09.08.02.27.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Sep 2020 02:27:36 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 14:57:29 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200908092729.sv2pzkvqzpbloe2o@vireshk-i7>
-References: <CABb+yY27Ngb0C-onkU2qyt=uKgG4iVrcv8hGkC+anypQbTRA1w@mail.gmail.com>
- <20200605045645.GD12397@bogus>
- <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
- <20200605085830.GA32372@bogus>
- <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
- <20200610093334.yznxl2esv5ht27ns@vireshk-i7>
- <20200611100027.GB18781@bogus>
- <CABb+yY1OwVB+uk+0w+D-4Xy46iYn8tPZYBZ0qjrzQFLA6SaTvw@mail.gmail.com>
- <20200612052853.nds4iycie6ldjnnr@vireshk-i7>
- <CAK8P3a0nVOR7YYSZaKmzm3WsUZLgOqL7yZq+f0Dfnn2=16AkLA@mail.gmail.com>
+        Tue, 8 Sep 2020 05:33:51 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id C4DE2634C8C;
+        Tue,  8 Sep 2020 12:33:41 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kFa0T-0000VG-WE; Tue, 08 Sep 2020 12:33:42 +0300
+Date:   Tue, 8 Sep 2020 12:33:41 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, hverkuil@xs4all.nl,
+        jacopo+renesas@jmondi.org, luca@lucaceresoli.net,
+        leonl@leopardimaging.com, robh+dt@kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] dt-bindings: media: imx274: Add optional input
+ clock and supplies
+Message-ID: <20200908093341.GB834@valkosipuli.retiisi.org.uk>
+References: <1599012278-10203-1-git-send-email-skomatineni@nvidia.com>
+ <1599012278-10203-3-git-send-email-skomatineni@nvidia.com>
+ <20200903125542.nxiafnysatoexken@uno.localdomain>
+ <d3a1843c-5d73-cfa6-9611-405b905ddcd1@nvidia.com>
+ <20200903163525.p5z2adhp4wq453bs@uno.localdomain>
+ <f38bb328-b282-783b-3ac5-5441001d10b6@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0nVOR7YYSZaKmzm3WsUZLgOqL7yZq+f0Dfnn2=16AkLA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f38bb328-b282-783b-3ac5-5441001d10b6@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-09-20, 11:14, Arnd Bergmann wrote:
-> Picking up the old thread again after and getting pinged by multiple
-> colleagues about it (thanks!) reading through the history.
-
-Thanks for your inputs Arnd.
-
-> Earlier, Jassi also commented "Linux does not provide real-time
-> guarantees", which to me is what actually causes the issue here:
+On Thu, Sep 03, 2020 at 09:40:57AM -0700, Sowjanya Komatineni wrote:
 > 
-> Linux having timeouts when communicating to the firmware means
-> that it relies on the hardware and firmware having real-time behavior
-> even when not providing real-time guarantees to its processes.
+> On 9/3/20 9:35 AM, Jacopo Mondi wrote:
+> > Hi Sowjanya,
+> > 
+> > On Thu, Sep 03, 2020 at 09:05:27AM -0700, Sowjanya Komatineni wrote:
+> > > On 9/3/20 5:55 AM, Jacopo Mondi wrote:
+> > > > Hello Sowjanya,
+> > > > 
+> > > > On Tue, Sep 01, 2020 at 07:04:37PM -0700, Sowjanya Komatineni wrote:
+> > > > > This patch adds IMX274 optional external clock input and voltage
+> > > > > supplies to device tree bindings.
+> > > > > 
+> > > > > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> > > > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > > > > ---
+> > > > >    .../devicetree/bindings/media/i2c/sony,imx274.yaml  | 21 +++++++++++++++++++++
+> > > > >    1 file changed, 21 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
+> > > > > index 7ae47a6..57e7176 100644
+> > > > > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
+> > > > > @@ -25,6 +25,27 @@ properties:
+> > > > >      reset-gpios:
+> > > > >        maxItems: 1
+> > > > > 
+> > > > I just sent an update to my json-schema conversion of this bindings
+> > > > document (not yet on patchwork, sorry) and Sakari pointed me to the
+> > > > fact in between my v2 and my v4 this patch from you went in:
+> > > > 4ea3273d24b ("dt-bindings: media: imx274: Add optional input clock and supplies")
+> > > > 
+> > > > I should probably now update my bindings conversion patch, basically
+> > > > taking in what you've done here, but I would have one question.
+> > > > 
+> > > > > +  clocks:
+> > > > > +    maxItems: 1
+> > > > > +    description: Reference to the sensor input clock
+> > > > > +
+> > > > > +  clock-names:
+> > > > > +    maxItems: 1
+> > > > > +    items:
+> > > > > +      - const: inck
+> > > > > +
+> > > > > +  vana-supply:
+> > > > > +    description:
+> > > > > +      Analog voltage supply, 2.8 volts
+> > > > > +
+> > > > > +  vdig-supply:
+> > > > > +    description:
+> > > > > +      Digital IO voltage supply, 1.8 volts
+> > > > > +
+> > > > > +  vddl-supply:
+> > > > > +    description:
+> > > > > +      Digital core voltage supply, 1.2 volts
+> > > > 4ea3273d24b introduced these regulators as VANA-supply, VDIG-supply
+> > > > and VDDL-supply (please note the upper-case names). This version uses
+> > > > lower-case ones instead. Is this intentional ? The driver currently
+> > > > does not parse any of these if I'm not mistaken, but as the bindings
+> > > > in textual form defines an ABI which should be preserved during the
+> > > > conversion to json-schema, should these be kept in upper-case ?
+> > > > 
+> > > > Thanks
+> > > >      j
+> > > Yes, based on feedback lower case was recommended. So, changed to use
+> > > lower-case names.
+> > > 
+> > > These properties were not used by driver currently and from my prior series
+> > > only dt-binding got merged as  no feedback was received on it for all prior
+> > > versions.
+> > > 
+> > > So, should be ok to change to lower-case as there properties are introduced
+> > > now and driver update using these properties is under review
+> > > 
+> > Well, I see that patch went in v5.9-rc1, so it will be part of v5.9.
+> > 
+> > If the bindings update goes in in v5.10 (or whatever comes after v5.9)
+> > then we have a problem, as the DTB created for v5.9 won't work anymore
+> > on any later version, and that should not happen. Alternatively, a fix
+> > for the next -rc release could be fast-tracked, but you would
+> > need to synchronize with the dt maintainers for that and make a patch
+> > for the existing .txt bindings file.
+> > 
+> > If the name change happens in the yaml file and one release is made
+> > with the old names, then we're stuck with those forever and ever, if I
+> > got the situation right.
+> > 
+> > Please check with the dt and media maintainers, or they can comment
+> > here if they glance through these lines.
+> > 
+> > Thanks
+> >    j
 > 
-> When comparing the two usage models, it's clear that the minimum
-> latency for a message delivery is always at least the time time
-> to process an interrupt, plus at least one expensive MMIO read
-> and one less expensive posted MMIO write for an Ack. If we
-> have a doorbell plus out-of-band message, we need an extra
-> DMA barrier and a read from coherent memory, both of which can
-> be noticeable. As soon as messages are queued in the current
-> model, the maximum latency increases by a potentially unbounded
-> number of round-trips, while in the doorbell model that problem
-> does not exist, so I agree that we need to handle both modes
-> in the kernel deal with all existing hardware as well as firmware
-> that requires low-latency communication.
-
-Right.
-
-> It also sounds like that debate is already settled because there
-> are platforms using both modes, and in the kernel we usually
-> end up supporting the platforms that our users have, whether
-> we think it's a good idea or not.
+> Hi Leon Luo,
 > 
-> The only questions that I see in need of being answered are:
+> I used upper case for regulator supply names in all prior 4 versions of
+> IMX274 patch series as I see some other media i2c drivers doing it and
+> dt-binding patch from v3 got merged in 5.9-rc1 which was using upper-case.
 > 
-> 1. Should the binding use just different "#mbox-cells" values or
->    also different "compatible" strings to tell that difference?
-> 2. Should one driver try to handle both modes or should there
->    be two drivers?
+> Later received feedback from Sakari requesting to use lower-case names so
+> updated to use lower case name now in v5.
 > 
-> It sounds like Jassi strongly prefers separate drivers, which
-> would make separate compatible strings the more practical
-> approach. While the argument can be made that a single
-> piece of hardware should only have one DT description,
-> the counter-argument would be that the behavior described
-> by the DT here is made up by both the hardware and the
-> firmware behind it, and they are in fact different.
+> Not sure if we have timeline to squeeze in patch to change names to
+> lower-case before they get into 5.10.
+> 
+> Can you please comment?
 
-I would be fine with both the ideas and that isn't a blocker for me.
-Though I still feel this is exactly why we have #mbox-cells here and
-that should be enough in this case, even if we opt for multiple
-drivers.
+We can merge patches through the fixes branch if needed. That is not an
+issue.
 
-But whatever everyone agrees to will be fine.
+> 
+> Sakari,
+> 
+> Can you also help understand why can't we keep upper case for regulator
+> supplies?
+> 
+> I see some other media i2c drivers using upper case as well.
+
+The vast majority of bindings use lower case, that's it, simply.
 
 -- 
-viresh
+Regards,
+
+Sakari Ailus
