@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8455FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6862193E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B4C20C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgIHDCs (ORCPT
+        id S1728755AbgIHDDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 23:02:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11256 "EHLO huawei.com"
+        Mon, 7 Sep 2020 23:03:05 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47872 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728470AbgIHDCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 23:02:32 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B38739E199F4AEA5642F;
+        id S1728241AbgIHDCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 23:02:30 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CC0E3FF86FAEEF52E2C4;
         Tue,  8 Sep 2020 11:02:27 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 8 Sep 2020 11:02:19 +0800
+ 14.3.487.0; Tue, 8 Sep 2020 11:02:20 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guangbin Huang <huangguangbin2@huawei.com>,
+        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 2/7] net: hns3: skip periodic service task if reset failed
-Date:   Tue, 8 Sep 2020 10:59:49 +0800
-Message-ID: <1599533994-32744-3-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 7/7] net: hns3: remove some unused function hns3_update_promisc_mode()
+Date:   Tue, 8 Sep 2020 10:59:54 +0800
+Message-ID: <1599533994-32744-8-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
 References: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,48 +48,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+From: Guojia Liao <liaoguojia@huawei.com>
 
-When reset fails, if there are some pending jobs for the periodic
-service task, it does not do anything except print error each
-time the task is scheduled. So skip the periodic service task if
-reset failed.
+hns3_update_promisc_mode is defined, but not be used, so remove it.
 
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 3 +++
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 14 --------------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  1 -
+ 2 files changed, 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index d553ed7..40d68a4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -3944,6 +3944,9 @@ static void hclge_periodic_service_task(struct hclge_dev *hdev)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 1d66f84..93825a4 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -623,20 +623,6 @@ void hns3_request_update_promisc_mode(struct hnae3_handle *handle)
+ 		ops->request_update_promisc_mode(handle);
+ }
+ 
+-int hns3_update_promisc_mode(struct net_device *netdev, u8 promisc_flags)
+-{
+-	struct hns3_nic_priv *priv = netdev_priv(netdev);
+-	struct hnae3_handle *h = priv->ae_handle;
+-
+-	if (h->ae_algo->ops->set_promisc_mode) {
+-		return h->ae_algo->ops->set_promisc_mode(h,
+-						promisc_flags & HNAE3_UPE,
+-						promisc_flags & HNAE3_MPE);
+-	}
+-
+-	return 0;
+-}
+-
+ void hns3_enable_vlan_filter(struct net_device *netdev, bool enable)
  {
- 	unsigned long delta = round_jiffies_relative(HZ);
+ 	struct hns3_nic_priv *priv = netdev_priv(netdev);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index cef6f9a..98ca6ea 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -601,7 +601,6 @@ void hns3_set_vector_coalesce_rl(struct hns3_enet_tqp_vector *tqp_vector,
+ 				 u32 rl_value);
  
-+	if (test_bit(HCLGE_STATE_RST_FAIL, &hdev->state))
-+		return;
-+
- 	/* Always handle the link updating to make sure link state is
- 	 * updated when it is triggered by mbx.
- 	 */
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 20dd04c..20dd50d 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2186,6 +2186,9 @@ static void hclgevf_periodic_service_task(struct hclgevf_dev *hdev)
- 	unsigned long delta = round_jiffies_relative(HZ);
- 	struct hnae3_handle *handle = &hdev->nic;
+ void hns3_enable_vlan_filter(struct net_device *netdev, bool enable);
+-int hns3_update_promisc_mode(struct net_device *netdev, u8 promisc_flags);
+ void hns3_request_update_promisc_mode(struct hnae3_handle *handle);
  
-+	if (test_bit(HCLGEVF_STATE_RST_FAIL, &hdev->state))
-+		return;
-+
- 	if (time_is_after_jiffies(hdev->last_serv_processed + HZ)) {
- 		delta = jiffies - hdev->last_serv_processed;
- 
+ #ifdef CONFIG_HNS3_DCB
 -- 
 2.7.4
 
