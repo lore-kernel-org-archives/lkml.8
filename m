@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2B5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB48DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 280ED2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882E6206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbgIHR4d (ORCPT
+        id S1732077AbgIHR4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:56:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60797 "EHLO mga18.intel.com"
+        Tue, 8 Sep 2020 13:56:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:15879 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731627AbgIHRzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:55:52 -0400
-IronPort-SDR: 9OJTvAM4QfO6yO+jzuedL+2Oot2iPZTGsHigG38YpsB35IwCQG5vIS5syCHmZL7DOCtWAFrK5p
- XOtWb/5j5hkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="145907154"
+        id S1731222AbgIHRza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:55:30 -0400
+IronPort-SDR: rGv7BcOiLMt6h83qndJHvR600Yj8FvvQBe5fNOTTW+G1RxECr34TEQyvNqFZNa7ly/HYCzoI/s
+ i4ZlIoV8Jv/Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="176252048"
 X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="145907154"
+   d="scan'208";a="176252048"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:55:28 -0700
-IronPort-SDR: OqijQn5XQJ2/iaYbW4T8ZpmDTkdbfTWJgBmRL58Yhk0+O9v+LxRQy+XkS4oLJ5+IycOU7C+G3l
- cvo2+SoHYBiw==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:55:27 -0700
+IronPort-SDR: 3lVLJ6Fr9VYHdfjBmUke2txwCLQ2s1xCK08IQZJlnMccjS8+A0wiBZHq3P0aAi01xmck9/fObr
+ WcvSqrZI5gPg==
 X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="480125764"
+   d="scan'208";a="480125748"
 Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:55:28 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:55:26 -0700
 From:   Tony Luck <tony.luck@intel.com>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     Tony Luck <tony.luck@intel.com>,
         Youquan Song <youquan.song@intel.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] x86/mce: Avoid tail copy when machine check terminated a copy from user
-Date:   Tue,  8 Sep 2020 10:55:16 -0700
-Message-Id: <20200908175519.14223-6-tony.luck@intel.com>
+Subject: [PATCH 1/8] x86/mce: Stop mce_reign() from re-computing severity for every CPU
+Date:   Tue,  8 Sep 2020 10:55:12 -0700
+Message-Id: <20200908175519.14223-2-tony.luck@intel.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200908175519.14223-1-tony.luck@intel.com>
 References: <20200908175519.14223-1-tony.luck@intel.com>
@@ -53,58 +53,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the page fault case it is ok to see if a few more unaligned bytes
-can be copied from the source address. Worst case is that the page fault
-will be triggered again.
+Back in:
 
-Machine checks are more serious. Just give up at the point where the
-main copy loop triggered the #MC and return as if the copy succeeded.
+commit 20d51a426fe9 ("x86/mce: Reuse one of the u16 padding fields in 'struct mce'")
 
-[Tried returning bytes not copied here, but that puts the kernel
- into a loop taking the machine check over and over. I don't know
- at what level some code is retrying]
+a field was added to "struct mce" to save the computed error severity.
+
+Make use of this in mce_reign() to avoid re-computing the severity
+for every CPU.
+
+In the case where we panic, we do still need one call to mce_severity to
+provide the correct message giving the reason for the panic.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/lib/copy_user_64.S | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/kernel/cpu/mce/core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/lib/copy_user_64.S b/arch/x86/lib/copy_user_64.S
-index 5b68e945bf65..1a58946e7c4e 100644
---- a/arch/x86/lib/copy_user_64.S
-+++ b/arch/x86/lib/copy_user_64.S
-@@ -15,6 +15,7 @@
- #include <asm/asm.h>
- #include <asm/smap.h>
- #include <asm/export.h>
-+#include <asm/trapnr.h>
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index f43a78bde670..fb6b5f64f7e6 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -872,7 +872,6 @@ static void mce_reign(void)
+ 	struct mce *m = NULL;
+ 	int global_worst = 0;
+ 	char *msg = NULL;
+-	char *nmsg = NULL;
  
- .macro ALIGN_DESTINATION
- 	/* check for bad alignment of destination */
-@@ -221,6 +222,7 @@ EXPORT_SYMBOL(copy_user_enhanced_fast_string)
-  * Try to copy last bytes and clear the rest if needed.
-  * Since protection fault in copy_from/to_user is not a normal situation,
-  * it is not necessary to optimize tail handling.
-+ * Don't try to copy the tail if machine check happened
-  *
-  * Input:
-  * rdi destination
-@@ -232,10 +234,15 @@ EXPORT_SYMBOL(copy_user_enhanced_fast_string)
-  */
- SYM_CODE_START_LOCAL(.Lcopy_user_handle_tail)
- 	movl %edx,%ecx
-+	cmp $X86_TRAP_MC,%eax		/* check if X86_TRAP_MC */
-+	je 3f
- 1:	rep movsb
- 2:	mov %ecx,%eax
- 	ASM_CLAC
- 	ret
-+3:	xorl %eax,%eax	/* pretend we succeeded? */
-+	ASM_CLAC
-+	ret
+ 	/*
+ 	 * This CPU is the Monarch and the other CPUs have run
+@@ -880,12 +879,10 @@ static void mce_reign(void)
+ 	 * Grade the severity of the errors of all the CPUs.
+ 	 */
+ 	for_each_possible_cpu(cpu) {
+-		int severity = mce_severity(&per_cpu(mces_seen, cpu),
+-					    mca_cfg.tolerant,
+-					    &nmsg, true);
+-		if (severity > global_worst) {
+-			msg = nmsg;
+-			global_worst = severity;
++		struct mce *mtmp = &per_cpu(mces_seen, cpu);
++
++		if (mtmp->severity > global_worst) {
++			global_worst = mtmp->severity;
+ 			m = &per_cpu(mces_seen, cpu);
+ 		}
+ 	}
+@@ -895,8 +892,11 @@ static void mce_reign(void)
+ 	 * This dumps all the mces in the log buffer and stops the
+ 	 * other CPUs.
+ 	 */
+-	if (m && global_worst >= MCE_PANIC_SEVERITY && mca_cfg.tolerant < 3)
++	if (m && global_worst >= MCE_PANIC_SEVERITY && mca_cfg.tolerant < 3) {
++		/* call mce_severity() to get "msg" for panic */
++		mce_severity(m, mca_cfg.tolerant, &msg, true);
+ 		mce_panic("Fatal machine check", m, msg);
++	}
  
- 	_ASM_EXTABLE_CPY(1b, 2b)
- SYM_CODE_END(.Lcopy_user_handle_tail)
+ 	/*
+ 	 * For UC somewhere we let the CPU who detects it handle it.
 -- 
 2.21.1
 
