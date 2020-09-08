@@ -2,99 +2,299 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B66C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1897BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF452145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C200B2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:53:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oo8OJtBO"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zw5XrRQ6";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="heRgyMGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgIHUvW (ORCPT
+        id S1730388AbgIHUxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:51:22 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35662 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730067AbgIHUvU (ORCPT
+        Tue, 8 Sep 2020 16:53:01 -0400
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:48204
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730104AbgIHUw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:51:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599598279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/vYiscYO+ORFUdOiUUtyHPdjWVlpvJ1fdCdpC1aIvMI=;
-        b=Oo8OJtBOg0YkNn8GBxOO5HEZ3axBTW5JJVFwjECUXCFPgXwcj+RYMLaCFS1AjNC6qE7jec
-        1/cItoEDyN0sURiVE8RIrmoG+Rwm+VV3NkhLTHXBecCGH9Xrse8slBz8T1QpTOyY2AWl34
-        +8jOK/13bpO5DoSHJoSjpuUsV0U5V84=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-aJilGBotOMKkPvu9_BG1FQ-1; Tue, 08 Sep 2020 16:51:15 -0400
-X-MC-Unique: aJilGBotOMKkPvu9_BG1FQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F15D01006488;
-        Tue,  8 Sep 2020 20:51:13 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-6.rdu2.redhat.com [10.10.113.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 305E58357E;
-        Tue,  8 Sep 2020 20:51:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net-next 3/3] rxrpc: Allow multiple client connections to the
- same peer
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 08 Sep 2020 21:51:12 +0100
-Message-ID: <159959827240.645007.5925464824704611056.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159959825107.645007.502549394334535916.stgit@warthog.procyon.org.uk>
-References: <159959825107.645007.502549394334535916.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Tue, 8 Sep 2020 16:52:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599598378;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=8IKm0Isv5Oa5ar1k/NOTqlHxZ1ZhkdPDWFXYTLsl6GY=;
+        b=Zw5XrRQ6v8hfnLag4esTVR1JTT8Ax8Pctb6S+zX3YA4CB9NpZGMdPW+AhsIzL+2S
+        ztnhjUQeu+HmnnM1v7+Zjw7BzcfADeNxnDEdO2Ih5P1xQjhc2T3wZwzwiq07+Fy26Ep
+        3tFEsxaIypk1oYM0cWtH+MZETbxQfFV+5/Xjspfk=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599598378;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=8IKm0Isv5Oa5ar1k/NOTqlHxZ1ZhkdPDWFXYTLsl6GY=;
+        b=heRgyMGUMKWRtyRopKqFkVxPmhTs+4iPJgwHHUHu3ruNCm1nQQO1ph0vL7EiZk9p
+        mR29UkU6m4rOuzHwSrw6+mpcX/bBdTJ/NwmDrXq0Cd8j11/8lbzJg1aQZeOorn5p/aq
+        cnlHWQx21q7wZTPD3J7ti2zAY2T3VWqJftjsAeBs=
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Date:   Tue, 8 Sep 2020 20:52:58 +0000
+From:   abhinavk@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Sean Paul <sean@poorly.run>,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/2] drm/msm/dpu: clean up some impossibilities
+In-Reply-To: <CAF6AEGsETZxbPEneBycbNBjGD7_OU7V=T8J0TByC_ZTv40q-Og@mail.gmail.com>
+References: <20200907170450.370122-1-robdclark@gmail.com>
+ <20200907170450.370122-2-robdclark@gmail.com>
+ <010101746f3f7667-5ee2e9e4-9b10-41e0-8bbc-65219583cb86-000000@us-west-2.amazonses.com>
+ <CAF6AEGsETZxbPEneBycbNBjGD7_OU7V=T8J0TByC_ZTv40q-Og@mail.gmail.com>
+Message-ID: <010101746f7e3da4-f7a88051-69ce-4d97-8ad9-01417cc3d1d9-000000@us-west-2.amazonses.com>
+X-Sender: abhinavk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.08-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow the number of parallel connections to a machine to be expanded from a
-single connection to a maximum of four.  This allows up to 16 calls to be
-in progress at the same time to any particular peer instead of 4.
+On 2020-09-08 13:11, Rob Clark wrote:
+> On Tue, Sep 8, 2020 at 12:44 PM <abhinavk@codeaurora.org> wrote:
+>> 
+>> On 2020-09-07 10:04, Rob Clark wrote:
+>> > From: Rob Clark <robdclark@chromium.org>
+>> >
+>> > Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
 
- net/rxrpc/conn_client.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/net/rxrpc/conn_client.c b/net/rxrpc/conn_client.c
-index 8b41c87b3333..0e4e1879c24d 100644
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -486,6 +486,12 @@ static void rxrpc_maybe_add_conn(struct rxrpc_bundle *bundle, gfp_t gfp)
- 	if (!usable)
- 		goto alloc_conn;
- 
-+	if (!bundle->avail_chans &&
-+	    !bundle->try_upgrade &&
-+	    !list_empty(&bundle->waiting_calls) &&
-+	    usable < ARRAY_SIZE(bundle->conns))
-+		goto alloc_conn;
-+
- 	spin_unlock(&bundle->channel_lock);
- 	_leave("");
- 	return;
-
-
+>> > ---
+>> >  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 81 ++++--------------------
+>> >  1 file changed, 12 insertions(+), 69 deletions(-)
+>> >
+>> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> > b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> > index 89c0245b5de5..ad49b0e17fcb 100644
+>> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> > @@ -265,11 +265,6 @@ enum dpu_intf_mode dpu_crtc_get_intf_mode(struct
+>> > drm_crtc *crtc)
+>> >  {
+>> >       struct drm_encoder *encoder;
+>> >
+>> > -     if (!crtc) {
+>> > -             DPU_ERROR("invalid crtc\n");
+>> > -             return INTF_MODE_NONE;
+>> > -     }
+>> > -
+>> >       /*
+>> >        * TODO: This function is called from dpu debugfs and as part of
+>> > atomic
+>> >        * check. When called from debugfs, the crtc->mutex must be held to
+>> > @@ -500,12 +495,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc
+>> > *crtc,
+>> >       struct dpu_crtc_state *cstate;
+>> >       struct drm_encoder *encoder;
+>> >       struct drm_device *dev;
+>> > -     unsigned long flags;
+>> > -
+>> > -     if (!crtc) {
+>> > -             DPU_ERROR("invalid crtc\n");
+>> > -             return;
+>> > -     }
+>> >
+>> >       if (!crtc->state->enable) {
+>> >               DPU_DEBUG("crtc%d -> enable %d, skip atomic_begin\n",
+>> > @@ -521,15 +510,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc
+>> > *crtc,
+>> >
+>> >       _dpu_crtc_setup_lm_bounds(crtc, crtc->state);
+>> >
+>> > -     if (dpu_crtc->event) {
+>> > -             WARN_ON(dpu_crtc->event);
+>> > -     } else {
+>> > -             spin_lock_irqsave(&dev->event_lock, flags);
+>> > -             dpu_crtc->event = crtc->state->event;
+>> > -             crtc->state->event = NULL;
+>> > -             spin_unlock_irqrestore(&dev->event_lock, flags);
+>> > -     }
+>> > -
+>> >       /* encoder will trigger pending mask now */
+>> >       drm_for_each_encoder_mask(encoder, crtc->dev,
+>> > crtc->state->encoder_mask)
+>> >               dpu_encoder_trigger_kickoff_pending(encoder);
+>> > @@ -583,14 +563,11 @@ static void dpu_crtc_atomic_flush(struct drm_crtc
+>> > *crtc,
+>> >               return;
+>> >       }
+>> >
+>> > -     if (dpu_crtc->event) {
+>> > -             DPU_DEBUG("already received dpu_crtc->event\n");
+>> > -     } else {
+>> > -             spin_lock_irqsave(&dev->event_lock, flags);
+>> > -             dpu_crtc->event = crtc->state->event;
+>> > -             crtc->state->event = NULL;
+>> > -             spin_unlock_irqrestore(&dev->event_lock, flags);
+>> > -     }
+>> > +     WARN_ON(dpu_crtc->event);
+>> before the patch "move vblank events to complete_commit()", the 
+>> dpu_crtc
+>> events
+>> were consumed in the _dpu_crtc_complete_flip(). So there was a chance
+>> that if the vblank event
+>> did not come in time before the next commit, dpu_crtc->event will not 
+>> be
+>> consumed.
+>> 
+>> But after the patch, _dpu_crtc_complete_flip() is being signaled in
+>> dpu_crtc_complete_commit()
+>> which will always happen, so is there any case where we will hit this
+>> warning at all or will this
+>> catch some other condition?
+> 
+> The core drm-atomic bits will reject an incoming atomic update if the
+> previous one has not completed, so other than a coding bug, this
+> WARN_ON() should not be hit..  it's only purpose is to make it very
+> obvious if someone breaks something :-)
+> 
+> BR,
+> -R
+> 
+>> 
+>> > +     spin_lock_irqsave(&dev->event_lock, flags);
+>> > +     dpu_crtc->event = crtc->state->event;
+>> > +     crtc->state->event = NULL;
+>> > +     spin_unlock_irqrestore(&dev->event_lock, flags);
+>> >
+>> >       /*
+>> >        * If no mixers has been allocated in dpu_crtc_atomic_check(),
+>> > @@ -635,14 +612,7 @@ static void dpu_crtc_atomic_flush(struct drm_crtc
+>> > *crtc,
+>> >  static void dpu_crtc_destroy_state(struct drm_crtc *crtc,
+>> >               struct drm_crtc_state *state)
+>> >  {
+>> > -     struct dpu_crtc_state *cstate;
+>> > -
+>> > -     if (!crtc || !state) {
+>> > -             DPU_ERROR("invalid argument(s)\n");
+>> > -             return;
+>> > -     }
+>> > -
+>> > -     cstate = to_dpu_crtc_state(state);
+>> > +     struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
+>> >
+>> >       DPU_DEBUG("crtc%d\n", crtc->base.id);
+>> >
+>> > @@ -731,14 +701,8 @@ static void dpu_crtc_reset(struct drm_crtc *crtc)
+>> >   */
+>> >  static struct drm_crtc_state *dpu_crtc_duplicate_state(struct drm_crtc
+>> > *crtc)
+>> >  {
+>> > -     struct dpu_crtc_state *cstate, *old_cstate;
+>> > -
+>> > -     if (!crtc || !crtc->state) {
+>> > -             DPU_ERROR("invalid argument(s)\n");
+>> > -             return NULL;
+>> > -     }
+>> > +     struct dpu_crtc_state *cstate, *old_cstate =
+>> > to_dpu_crtc_state(crtc->state);
+>> >
+>> > -     old_cstate = to_dpu_crtc_state(crtc->state);
+>> >       cstate = kmemdup(old_cstate, sizeof(*old_cstate), GFP_KERNEL);
+>> >       if (!cstate) {
+>> >               DPU_ERROR("failed to allocate state\n");
+>> > @@ -754,19 +718,12 @@ static struct drm_crtc_state
+>> > *dpu_crtc_duplicate_state(struct drm_crtc *crtc)
+>> >  static void dpu_crtc_disable(struct drm_crtc *crtc,
+>> >                            struct drm_crtc_state *old_crtc_state)
+>> >  {
+>> > -     struct dpu_crtc *dpu_crtc;
+>> > -     struct dpu_crtc_state *cstate;
+>> > +     struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
+>> > +     struct dpu_crtc_state *cstate = to_dpu_crtc_state(crtc->state);
+>> >       struct drm_encoder *encoder;
+>> >       unsigned long flags;
+>> >       bool release_bandwidth = false;
+>> >
+>> > -     if (!crtc || !crtc->state) {
+>> > -             DPU_ERROR("invalid crtc\n");
+>> > -             return;
+>> > -     }
+>> > -     dpu_crtc = to_dpu_crtc(crtc);
+>> > -     cstate = to_dpu_crtc_state(crtc->state);
+>> > -
+>> >       DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
+>> >
+>> >       /* Disable/save vblank irq handling */
+>> > @@ -825,19 +782,13 @@ static void dpu_crtc_disable(struct drm_crtc
+>> > *crtc,
+>> >  static void dpu_crtc_enable(struct drm_crtc *crtc,
+>> >               struct drm_crtc_state *old_crtc_state)
+>> >  {
+>> > -     struct dpu_crtc *dpu_crtc;
+>> > +     struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
+>> >       struct drm_encoder *encoder;
+>> >       bool request_bandwidth = false;
+>> >
+>> > -     if (!crtc) {
+>> > -             DPU_ERROR("invalid crtc\n");
+>> > -             return;
+>> > -     }
+>> > -
+>> >       pm_runtime_get_sync(crtc->dev->dev);
+>> >
+>> >       DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
+>> > -     dpu_crtc = to_dpu_crtc(crtc);
+>> >
+>> >       drm_for_each_encoder_mask(encoder, crtc->dev,
+>> > crtc->state->encoder_mask) {
+>> >               /* in video mode, we hold an extra bandwidth reference
+>> > @@ -873,9 +824,9 @@ struct plane_state {
+>> >  static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
+>> >               struct drm_crtc_state *state)
+>> >  {
+>> > -     struct dpu_crtc *dpu_crtc;
+>> > +     struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
+>> > +     struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
+>> >       struct plane_state *pstates;
+>> > -     struct dpu_crtc_state *cstate;
+>> >
+>> >       const struct drm_plane_state *pstate;
+>> >       struct drm_plane *plane;
+>> > @@ -889,16 +840,8 @@ static int dpu_crtc_atomic_check(struct drm_crtc
+>> > *crtc,
+>> >       int left_zpos_cnt = 0, right_zpos_cnt = 0;
+>> >       struct drm_rect crtc_rect = { 0 };
+>> >
+>> > -     if (!crtc) {
+>> > -             DPU_ERROR("invalid crtc\n");
+>> > -             return -EINVAL;
+>> > -     }
+>> > -
+>> >       pstates = kzalloc(sizeof(*pstates) * DPU_STAGE_MAX * 4, GFP_KERNEL);
+>> >
+>> > -     dpu_crtc = to_dpu_crtc(crtc);
+>> > -     cstate = to_dpu_crtc_state(state);
+>> > -
+>> >       if (!state->enable || !state->active) {
+>> >               DPU_DEBUG("crtc%d -> enable %d, active %d, skip atomic_check\n",
+>> >                               crtc->base.id, state->enable, state->active);
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
