@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F995C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B6EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8B42087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC062098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592591;
-	bh=aX/T//x1amBJx3NMDymbydpLmjyMzPOQPyzS9kFjhUg=;
+	s=default; t=1599592596;
+	bh=E0S5fTo0mX+8r5130quZXaxIlSmWMKiZqSWg4n8H/MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMqNM+xcRW3p3bB0jsArzqaC89NQo3WL8y6TRLj54uQUMewSDEQzEfjQLrb+L/rDh
-	 2lYEWedsOdkPBrdtyxh22ygzyQfcdOjxrUB8KF3QMMVQakXuaXY2427JC30teU8o9X
-	 LBpQ1kU34dNLKvJiKoUHPJeieQkdjWAgRDmmz9Ow=
+	b=coRMSJm1B9bzUpLWbxc9U3IPF70/7+tcA1SmQ2pP40f6aRWqdlmDcYeX17QHlwcdI
+	 VXpRAkCG6Bn3A6QEyFUzVFEINtLLLc4BE7QiYUNfSvPOFqTYuxT/rgK0zXrN9s7O4C
+	 MqROmBpy1XRvF3ZlcbE4oF/VnnmojEuLfqfwEicA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgIHTQ3 (ORCPT
+        id S1731762AbgIHTQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53448 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730910AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731174AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:04:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B7E22470;
-        Tue,  8 Sep 2020 15:36:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C3E23C3F;
+        Tue,  8 Sep 2020 15:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579420;
-        bh=aX/T//x1amBJx3NMDymbydpLmjyMzPOQPyzS9kFjhUg=;
+        s=default; t=1599579365;
+        bh=E0S5fTo0mX+8r5130quZXaxIlSmWMKiZqSWg4n8H/MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ipcQXslFFP4gRN+9C13TkWftsAwqB0dALffIGEcFXYb9kKL85YYE8mraXeV2XskVe
-         j7GL4kloSWrDwo95wVuydpa8t7qlLel2Zt+ql6sCMpB9OUBVdmCqj0V6b0I6FLu2Zj
-         ytPEcvB5RVpYHpXX9sWDxUq4AHUumXnQ23OElIg4=
+        b=Yc3FY8Et+gMhOBdliRNBI/a3MEFHpTfTCE7gHhU7o70veGouVXDifnTfr8QLvWnet
+         m2lVenA/jINz/1mGKibW4Zep1esxbTiaYvwS6pfE2z/noIh2a/fZ3U+fUwFQJi1vFG
+         OqRpf+wVj/gLBIhVX91Q+nZZ/LWI8TVaQFNf/QIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 070/186] bnxt_en: Fix PCI AER error recovery flow
-Date:   Tue,  8 Sep 2020 17:23:32 +0200
-Message-Id: <20200908152245.052297495@linuxfoundation.org>
+Subject: [PATCH 5.8 018/186] drm/msm/a6xx: fix gmu start on newer firmware
+Date:   Tue,  8 Sep 2020 17:22:40 +0200
+Message-Id: <20200908152242.542199045@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,44 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit df3875ec550396974b1d8a518bd120d034738236 ]
+[ Upstream commit f5749d6181fa7df5ae741788e5d96f593d3a60b6 ]
 
-When a PCI error is detected the PCI state could be corrupt, save
-the PCI state after initialization and restore it after the slot
-reset.
+New Qualcomm firmware has changed a way it reports back the 'started'
+event. Support new register values.
 
-Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 7463a1847cebd..e71a99555b4bc 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -12065,6 +12065,7 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		    (long)pci_resource_start(pdev, 0), dev->dev_addr);
- 	pcie_print_link_status(pdev);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 1d330204c465c..2dd1cf1ffbe25 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -207,6 +207,16 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
+ {
+ 	int ret;
+ 	u32 val;
++	u32 mask, reset_val;
++
++	val = gmu_read(gmu, REG_A6XX_GMU_CM3_DTCM_START + 0xff8);
++	if (val <= 0x20010004) {
++		mask = 0xffffffff;
++		reset_val = 0xbabeface;
++	} else {
++		mask = 0x1ff;
++		reset_val = 0x100;
++	}
  
-+	pci_save_state(pdev);
- 	return 0;
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
  
- init_err_cleanup:
-@@ -12260,6 +12261,8 @@ static pci_ers_result_t bnxt_io_slot_reset(struct pci_dev *pdev)
- 			"Cannot re-enable PCI device after reset.\n");
- 	} else {
- 		pci_set_master(pdev);
-+		pci_restore_state(pdev);
-+		pci_save_state(pdev);
+@@ -218,7 +228,7 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
  
- 		err = bnxt_hwrm_func_reset(bp);
- 		if (!err) {
+ 	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
+-		val == 0xbabeface, 100, 10000);
++		(val & mask) == reset_val, 100, 10000);
+ 
+ 	if (ret)
+ 		DRM_DEV_ERROR(gmu->dev, "GMU firmware initialization timed out\n");
 -- 
 2.25.1
 
