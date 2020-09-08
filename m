@@ -2,89 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4171CC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A69C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2F420732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99A62166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgIHGPd (ORCPT
+        id S1728940AbgIHGQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:15:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:51452 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbgIHGPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:15:31 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BA83B68AFE; Tue,  8 Sep 2020 08:15:28 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 08:15:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <rmk@arm.linux.org.uk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] ARM: traps: use get_kernel_nofault instead of
- set_fs()
-Message-ID: <20200908061528.GB13930@lst.de>
-References: <20200907153701.2981205-1-arnd@arndb.de> <20200907153701.2981205-3-arnd@arndb.de>
+        Tue, 8 Sep 2020 02:16:05 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:45671 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728775AbgIHGQE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:16:04 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id C7B1CC63;
+        Tue,  8 Sep 2020 02:16:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 08 Sep 2020 02:16:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=zJiWzEaieWUTkjd149kfcmDNEkV
+        tYQAGVUYM1KagiNw=; b=HRNaf0nqivK37YCvZIDh7RO8nzWh2/fDKBlD54LoaCB
+        0WuDvtZ+DlCtyd39yIGtuTYNwfdaba7UwxDdzJ+BptmBdUVpDH2/adAd2/RRqjOT
+        /GQlq2LhQ1KYWmf4epZ2f8UnVTUr+p43QHtLocXelJNBAXW2pidygl9UDqWcEXsX
+        zgO9kPmiY7rJoQaMRAYDwRdtqGlB9yBJMp+bJ9/fbsKcJB9a8iRVYSMHFcNkA5sn
+        bFyELdF8Mf239H5Xr/ART8E5NliiWGlrgNwWx9EtTthjsHuBsr2SycccMzOnqkFF
+        p/QXpI2L57GKQ12/2zA9AiaMoxCaBrnlplSvQjkptSw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zJiWzE
+        aieWUTkjd149kfcmDNEkVtYQAGVUYM1KagiNw=; b=IlLCEqn+XhMyg6/XVGNmhN
+        LWk8MDd3GbNW1g/z9oIm0n8ew3PLMLnK78kvhx6ob6HIZjHn6J+UfyWag3ojzAq4
+        vqpRfG0gapKJMYDY5/96h5pjBY2SyLR7LYxn2fgDEakQb9kNxHH8T7aLlLVDhm75
+        7tBXP0Aes6TvM9chVc71v3tzQ3U20L4ygbBZdrpWZut7F/KR/J0yZjhZjBOmR00k
+        vuY6fTlUVjaHkd6F8D0q/qm8O5BqZACSMfb/VkyLojwPJJorGAaO3WRQXfCOKdS8
+        XaA6GlHykoAMpptk5k6upyGKl5ZbQ+t4KrWowRhm7OmE63sdIyuqzf/JVK0rRjcA
+        ==
+X-ME-Sender: <xms:niFXX_fz-lQYJtSWpVWcbIHXwYaPW-2fr_EmFiqS2A_gn_xIBDOUUw>
+    <xme:niFXX1PmswcgkPM5yObjWO9xiVfVJ1Ps6QtLQpo3g2dqi_TxJi3LQ7U_VbSg4H13O
+    PpXceE2A2xtIqM2Q8Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehuddguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtd
+    erredttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegt
+    vghrnhhordhtvggthheqnecuggftrfgrthhtvghrnhepleekgeehhfdutdeljefgleejff
+    ehfffgieejhffgueefhfdtveetgeehieehgedunecukfhppeeltddrkeelrdeikedrjeei
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgi
+    himhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:niFXX4j7ay4JwOVgMg4twDLEL9eckDyP0h33oIx1LfwTUCo_qknNzw>
+    <xmx:niFXXw-1Od6uGH8RcfgSCqIcnfnV2wzn97HSBDVb71cTwPRBml7pTQ>
+    <xmx:niFXX7tVVZ81ZuRyhDJyVBQ2ruZ7O6YFvqFIVByKAHETEmP8hxHXaQ>
+    <xmx:oCFXXxDWsNJ2_iVkJXv-LE6RR1Pn5GIvWILQNV1o_WVlkMMVK0Rz7-btApk>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 498C53280059;
+        Tue,  8 Sep 2020 02:15:58 -0400 (EDT)
+Date:   Tue, 8 Sep 2020 08:15:56 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        m.cerveny@computer.org
+Subject: Re: [PATCH v3] dt-bindings: crypto: Specify that
+ allwinner,sun8i-a33-crypto needs reset
+Message-ID: <20200908061556.btaokh5ftxng7t7m@gilmour.lan>
+References: <20200907175437.4464-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="apfc6x6gq7uthf7s"
 Content-Disposition: inline
-In-Reply-To: <20200907153701.2981205-3-arnd@arndb.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200907175437.4464-1-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static void dump_mem(const char *, const char *, unsigned long, unsigned long, bool kernel_mode);
 
-This adds a pointlessly long line.  
+--apfc6x6gq7uthf7s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And looking at the code I don't see why the argument is even needed.
+On Mon, Sep 07, 2020 at 07:54:37PM +0200, Corentin Labbe wrote:
+> When adding allwinner,sun8i-a33-crypto, I forgot to add that it needs res=
+et.
+> Furthermore, there are no need to use items to list only one compatible
+> in compatible list.
+>=20
+> Fixes: f81547ba7a98 ("dt-bindings: crypto: add new compatible for A33 SS")
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-dump_mem() currently does an unconditional set_fs(KERNEL_DS), so it
-should always use get_kernel_nofault.
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-> +static void dump_instr(const char *lvl, struct pt_regs *regs)
->  {
->  	unsigned long addr = instruction_pointer(regs);
->  	const int thumb = thumb_mode(regs);
-> @@ -173,10 +169,20 @@ static void __dump_instr(const char *lvl, struct pt_regs *regs)
->  	for (i = -4; i < 1 + !!thumb; i++) {
->  		unsigned int val, bad;
->  
-> -		if (thumb)
-> -			bad = get_user(val, &((u16 *)addr)[i]);
-> -		else
-> -			bad = get_user(val, &((u32 *)addr)[i]);
-> +		if (!user_mode(regs)) {
-> +			if (thumb) {
-> +				u16 val16;
-> +				bad = get_kernel_nofault(val16, &((u16 *)addr)[i]);
-> +				val = val16;
-> +			} else {
-> +				bad = get_kernel_nofault(val, &((u32 *)addr)[i]);
-> +			}
-> +		} else {
-> +			if (thumb)
-> +				bad = get_user(val, &((u16 *)addr)[i]);
-> +			else
-> +				bad = get_user(val, &((u32 *)addr)[i]);
-> +		}
+Thanks!
+Maxime
 
-When I looked at this earlier I just added a little helper to make
-this a little easier to read.   Here is my patch from an old tree:
+--apfc6x6gq7uthf7s
+Content-Type: application/pgp-signature; name="signature.asc"
 
-http://git.infradead.org/users/hch/misc.git/commitdiff/67413030ccb7a64a7eb828e13ff0795f4eadfeb7
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1chnAAKCRDj7w1vZxhR
+xfUvAQD8xxLoH6fbnPJmX6BVcYssd2Qs2CpluJZqLpfeHJCOCAEA5LM0Mwzzrnhe
+e8swy3maWAsWSzz/kE7LwoDYMGUApAM=
+=z7iT
+-----END PGP SIGNATURE-----
+
+--apfc6x6gq7uthf7s--
