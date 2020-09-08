@@ -2,178 +2,159 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1395C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B8DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E0F206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Ne0pGvO4";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="gjGez+WO"
+	by mail.kernel.org (Postfix) with ESMTP id A30E1206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbgIHQaI (ORCPT
+        id S1731958AbgIHQaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:30:08 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:3548 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731947AbgIHQ0U (ORCPT
+        Tue, 8 Sep 2020 12:30:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731929AbgIHQ1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:26:20 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088DtdCP027328;
-        Tue, 8 Sep 2020 06:57:57 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=0xCgDXvubvq4R0DhXqBhqzvbnRa8Xx6jIq7Fd73Lw/E=;
- b=Ne0pGvO4Q45+fD52G1WSz1z5aM3n7OCuAhEnNbjX7pc1TjIDm2PbunJsswN5DMGrewGl
- 78NC2F/avOzskO+P3ZL3GilKNFIqxZWYvuC5wEaLHqxY9JjrfWZFTPjJEeuuShVeG/6M
- QBpVBf7e49kfE8nmBfeQKjX6vzvv9lcM5aDQluMoeezp6ggbu/4dWyufDriHbKnHN5Ga
- koIb3avTfNO/OngjB3O9sBour99HpSIrzh0YCCdyNRTkydV/PQ2uE1QyyzB7/aVKh/s0
- wXnxUxVRp+gcTLEUzU5osV/yE9R8jiVC1CRt29ku++DhNuILHV0tasaZvZ2hJ+TNn0OL rg== 
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2170.outbound.protection.outlook.com [104.47.59.170])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 33c68whq59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 06:57:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KilSO6b7i8GKrfNhTTFWjJtVxO8D8mFFTqUKT9YFD10MOWU6iBfu08lRU/t/eK/eZt4FfXdR7hFr9i0HXlUEZr3AazTp3HuSikUZ6S2URMCn8VetZigGClZfuMuq20//djh1KpKicL3t2nFETCmwRE6xrFTckftDGroKg9CT3v8XtVsKbg3aGIZOz3XuV+doW+7v03ZfK/IrH1PH7YWnTYQ5FSO99+zCdVY27dv9T1Sc4isWzg+fjkY40jv5NkLmk4FQeh2HOZuX+zgkUmmLIwElIRE2Ypxe5wy8sP1b3dTwk/FAE9nDvue9javxtiKmY70UR1qWQsLJ5zknPYBkMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0xCgDXvubvq4R0DhXqBhqzvbnRa8Xx6jIq7Fd73Lw/E=;
- b=jCiFRdboLlqemf4rrPCIfVQvlpk5vXDCpLUmZSWEqR06+8HKb1EP5/B93eR9BoK3htlE0by2OaTZzgh2EHqlMTg4MvJOPYmcSPJQacfeW/0JCbspEOQGQt//Hokj2tUW2MfML2js/1oJmRfrOWfrUuxYtBzImlSNT1cm9OO0mCU+NTUAqNWUJzuOlZb12Uh6PX+XSREkBJNnfZO2ratLWbr+PSWL2pnXX/sJu95GC/x+N1y3BHanmj6y2RrWIx0J3RPgf0aNECZLA42tTGwDhNsnTZtxjxRO2n8E0CbIFMVz5Y1Z2V1rTNHG2XC2tGL77xa1NIEmmM2ye6/apyEp3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0xCgDXvubvq4R0DhXqBhqzvbnRa8Xx6jIq7Fd73Lw/E=;
- b=gjGez+WOVbAy6TwfRUaC574m+rxIoCqVX5FhxYy2Uy5hwHNb/8/HgBhGWkgSSwU0fkA/tx3cUmtFhWxXbXEhXJaDMyG3mFOvwL6vIDPzJdNv/s7cBHotz3IO7xcodUpDRGjeypZhvWK/5SS74SMH89nnKTPtSz+Aq+CWUkctpAQ=
-Received: from DM6PR07MB6154.namprd07.prod.outlook.com (2603:10b6:5:17e::20)
- by DM6PR07MB7017.namprd07.prod.outlook.com (2603:10b6:5:1e6::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
- 2020 13:57:55 +0000
-Received: from DM6PR07MB6154.namprd07.prod.outlook.com
- ([fe80::c0af:c085:c7a8:4bb6]) by DM6PR07MB6154.namprd07.prod.outlook.com
- ([fe80::c0af:c085:c7a8:4bb6%5]) with mapi id 15.20.3370.016; Tue, 8 Sep 2020
- 13:57:55 +0000
-From:   Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "kishon@ti.com" <kishon@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Milind Parab <mparab@cadence.com>,
-        Yuti Suresh Amonkar <yamonkar@cadence.com>,
-        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
-        "jsarha@ti.com" <jsarha@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>
-Subject: RE: [PATCH v2 0/7] PHY: Prepare Cadence Torrent PHY driver to support
- multilink configurations
-Thread-Topic: [PATCH v2 0/7] PHY: Prepare Cadence Torrent PHY driver to
- support multilink configurations
-Thread-Index: AQHWfHYF12exyhh3oEWcahnhwHvk/aleQnCAgACUHsA=
-Date:   Tue, 8 Sep 2020 13:57:55 +0000
-Message-ID: <DM6PR07MB61543BF71CE5CAE3611A7A31C5290@DM6PR07MB6154.namprd07.prod.outlook.com>
-References: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
- <20200908050533.GB77521@vkoul-mobl>
-In-Reply-To: <20200908050533.GB77521@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy00ODI2NmM1NS1mMWRiLTExZWEtODUyYS1jOGY3NTA0NDIyZDhcYW1lLXRlc3RcNDgyNjZjNTctZjFkYi0xMWVhLTg1MmEtYzhmNzUwNDQyMmQ4Ym9keS50eHQiIHN6PSIxNzYzIiB0PSIxMzI0NDA0NzA3MDg5NDAzMjAiIGg9Ii9RcG5ScElyamNlZWpvdk53d3NQY1lhMjhTRT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=cadence.com;
-x-originating-ip: [59.145.174.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 49231b4f-5cc0-4c24-d2ca-08d853ff2fe2
-x-ms-traffictypediagnostic: DM6PR07MB7017:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR07MB70178F8487FFA8B64DCC72F5C5290@DM6PR07MB7017.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2n2G+xoj0svr+wTGJ6FiOTnDv/MAx+NG3XpAEG7zan8+V7Z/YQI/nRZW8zL7EoSGXqb7W88ZRSv/aDeOq0mKFDM+fiO98+kae0I1wABQ/sBMP0/ivAHoOJAlLT23kRcjH+uuo/RTi9DLPvgFUfCgW2IBBCUy6BoJLj+5tYK5MlmkW/vAPyGaTz/R9Vs9pJ7jGT1d84aToSkgiDFYiLpd21fn6fGDaK39rc2A87RU48rDUnOYlWuA6IlotNzAjrrgbuiGnWqU0k6HkmDD4e6ZvPl4KpBgV69PC2tSXNsbs6g3Ytb59Blfs2hIEjxuR84OHF4X3q1JYoFQn3p/sMSITrolnU1wvB6+CJ54yzY+SRbOQrtuzN78d1vxEjzxPh5F
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB6154.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(366004)(136003)(396003)(346002)(36092001)(86362001)(5660300002)(33656002)(66476007)(66556008)(53546011)(6506007)(26005)(54906003)(478600001)(52536014)(83380400001)(2906002)(186003)(4326008)(8676002)(71200400001)(6916009)(7696005)(316002)(66446008)(66946007)(55016002)(8936002)(64756008)(9686003)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: NUmPXU6nfu3jgUO0OGY87p4RQQR7SMwa1BRyTHjWsD7fubQRSruuEOlZmoCaIizYEFb5M8RjHXYr1dJiIfdbfKmW2bmCSDEX5JYEtB+NDo6iPDcBDeAcQ6+WUhpeF0PSZvlMIndUlQP079+Um/U3jwmOSd3q3jVxXmImcaakhK9cI3Ee1xLgEzmsh4quCfn2m8pjVgm40aT4gqGJWm2VZam2iwSDqDmQ0z/+Rvy9s98SlQP6ARdjKWPb3rJsUGwUCQGnmTk/BafaqxA8UFS5Cl3H3ESiLp75KsonFK6fLvzTQZKqysVXXxA5jZuowrw4jnQntYYkNux6Vu5WCqAcAXqPoZ22ASEQop2A8gImcHnonHM4Pi4Dbh+EhTyP3Jd22Zp1to6bxaycps0kMNGMn32J17rtpxh70q2dPHIFyYK/uTev4eZaP4gutTEQ15SOf04ZMSr9Hzc0wkCIVM8Cp3Ha6swNoNVwRmawnZDYp4h6F+Du1Cu/IiD/i0NS2iVJtMsKFkuXnI0mV9/maiR0n1EaQFrs08ohXv4OeQxFj7OgOEsApq3XvnD6aMJnQ+mnQQeDMQ9I8umX85urX/3Z7t2lTzNM86ZBwdGmg1BHm4ba6217EbKm02AFxFNNqskaKGp0GfeccqnA6s53quHZtw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 8 Sep 2020 12:27:14 -0400
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [IPv6:2001:1600:3:17::190f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D25C0610EA
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:14:47 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Bm6bc3HDJzlhTgZ;
+        Tue,  8 Sep 2020 16:14:36 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Bm6bY253dzlh8TH;
+        Tue,  8 Sep 2020 16:14:33 +0200 (CEST)
+Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
+ faccessat2(2)
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@linux.microsoft.com>,
+        John Johansen <john.johansen@canonical.com>
+References: <20200908075956.1069018-1-mic@digikod.net>
+ <20200908075956.1069018-2-mic@digikod.net>
+ <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
+ <75451684-58f3-b946-dca4-4760fa0d7440@digikod.net>
+ <CAEjxPJ49_BgGX50ZAhHh79Qy3OMN6sssnUHT_2yXqdmgyt==9w@mail.gmail.com>
+ <CAEjxPJ6ZTKeunzJvWf_kS3QYjca6v1yJq=ad-jCCuDSgG6n60g@mail.gmail.com>
+ <bdc10ab89cf9197e104f02a751009cf0d549ddf5.camel@linux.ibm.com>
+ <CAEjxPJ5evWDSv-T-p=4OX29Pr584ZRAsnYoxSRd4qFDoryB+fQ@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <532eefa8-49ca-1c23-1228-d5a4e2d8af90@digikod.net>
+Date:   Tue, 8 Sep 2020 16:14:32 +0200
+User-Agent: 
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB6154.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49231b4f-5cc0-4c24-d2ca-08d853ff2fe2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 13:57:55.6176
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xliBL0VuHi1PRNy1teeonYEIuZTi4ez1M+myfqaIJ1TqzJ8aYLju3KufXdu3Ivdkymbww13TfBUUwdkUelSwBtCVy7ayfcsHOQ62dzsJIxY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB7017
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015
- phishscore=0 mlxlogscore=671 mlxscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009080132
+In-Reply-To: <CAEjxPJ5evWDSv-T-p=4OX29Pr584ZRAsnYoxSRd4qFDoryB+fQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
 
-Thanks for the review comments.
+On 08/09/2020 15:42, Stephen Smalley wrote:
+> On Tue, Sep 8, 2020 at 9:29 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>>
+>> On Tue, 2020-09-08 at 08:52 -0400, Stephen Smalley wrote:
+>>> On Tue, Sep 8, 2020 at 8:50 AM Stephen Smalley
+>>> <stephen.smalley.work@gmail.com> wrote:
+>>>>
+>>>> On Tue, Sep 8, 2020 at 8:43 AM Mickaël Salaün <mic@digikod.net> wrote:
+>>>>>
+>>>>>
+>>>>> On 08/09/2020 14:28, Mimi Zohar wrote:
+>>>>>> Hi Mickael,
+>>>>>>
+>>>>>> On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
+>>>>>>> +                    mode |= MAY_INTERPRETED_EXEC;
+>>>>>>> +                    /*
+>>>>>>> +                     * For compatibility reasons, if the system-wide policy
+>>>>>>> +                     * doesn't enforce file permission checks, then
+>>>>>>> +                     * replaces the execute permission request with a read
+>>>>>>> +                     * permission request.
+>>>>>>> +                     */
+>>>>>>> +                    mode &= ~MAY_EXEC;
+>>>>>>> +                    /* To be executed *by* user space, files must be readable. */
+>>>>>>> +                    mode |= MAY_READ;
+>>>>>>
+>>>>>> After this change, I'm wondering if it makes sense to add a call to
+>>>>>> security_file_permission().  IMA doesn't currently define it, but
+>>>>>> could.
+>>>>>
+>>>>> Yes, that's the idea. We could replace the following inode_permission()
+>>>>> with file_permission(). I'm not sure how this will impact other LSMs though.
+>>
+>> I wasn't suggesting replacing the existing security_inode_permission
+>> hook later, but adding a new security_file_permission hook here.
+>>
+>>>>
+>>>> They are not equivalent at least as far as SELinux is concerned.
+>>>> security_file_permission() was only to be used to revalidate
+>>>> read/write permissions previously checked at file open to support
+>>>> policy changes and file or process label changes.  We'd have to modify
+>>>> the SELinux hook if we wanted to have it check execute access even if
+>>>> nothing has changed since open time.
+>>>
+>>> Also Smack doesn't appear to implement file_permission at all, so it
+>>> would skip Smack checking.
+>>
+>> My question is whether adding a new security_file_permission call here
+>> would break either SELinux or Apparmor?
+> 
+> selinux_inode_permission() has special handling for MAY_ACCESS so we'd
+> need to duplicate that into selinux_file_permission() ->
+> selinux_revalidate_file_permission().  Also likely need to adjust
+> selinux_file_permission() to explicitly check whether the mask
+> includes any permissions not checked at open time.  So some changes
+> would be needed here.  By default, it would be a no-op unless there
+> was a policy reload or the file was relabeled between the open(2) and
+> the faccessat(2) call.
+> 
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Tuesday, September 8, 2020 10:36 AM
-> To: Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-> Cc: kishon@ti.com; robh+dt@kernel.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Milind Parab <mparab@cadence.com>; Yuti
-> Suresh Amonkar <yamonkar@cadence.com>; tomi.valkeinen@ti.com;
-> jsarha@ti.com; nsekhar@ti.com
-> Subject: Re: [PATCH v2 0/7] PHY: Prepare Cadence Torrent PHY driver to
-> support multilink configurations
->=20
-> EXTERNAL MAIL
->=20
->=20
-> On 27-08-20, 15:28, Swapnil Jakhade wrote:
-> > Cadence Torrent PHY is a multiprotocol PHY supporting different
-> > multilink PHY configurations including DisplayPort, PCIe, USB, SGMII,
-> QSGMII etc.
-> > Existing Torrent PHY driver supports only DisplayPort. This patch
-> > series prepares Torrent PHY driver so that different multilink
-> > configurations can be supported. It also updates DT bindings
-> > accordingly. This doesn't affect ABI as Torrent PHY driver has never
-> > been functional, and therefore do not exist in any active use case.
-> >
-> > Support for different multilink configurations with register sequences
-> > for protocols above will be added in a separate patch series.
->=20
-> Series looks good to me.
->=20
-> > This patch series is dependent on PHY attributes patch series [1].
->=20
-> I did not see any obvious depends in the series, if it is not maybe good =
-to
-> rebase and send without dependency
->=20
-
-Sure. I will resend the series removing dependency.
-
-Thanks & regards,
-Swapnil
-
-> --
-> ~Vinod
+We could create a new hook path_permission(struct path *path, int mask)
+as a superset of inode_permission(). To be more convenient, his new hook
+could then just call inode_permission() for every LSMs not implementing
+path_permission().
