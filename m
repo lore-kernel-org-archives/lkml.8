@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E2FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C6B2078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63FD32080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588390;
-	bh=eQe1wYGLHkgxe6Ouy//U4712xeQz8re6/WlsK2ceVuQ=;
+	s=default; t=1599588393;
+	bh=CyQWGRvj67cqowJfDn4vuv/txn4szGizTTVBdxHOyvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l32vJrIkr9TlEY+EbVwxCiWQDPQdfbKFC0FR7oby/rs4GkBTpYxt85ikvyxKq9A2q
-	 cZkwiUMEVxDGirip7P3+0BpvEjWQUgnsR2NQ+8QeZKJGNJ/N1mNHFAdlnKDc/tNty+
-	 QaG4ywfjGt/vIanP6E8KUzsiZm9QGkr2W0AadvOk=
+	b=yE3QSF5TRH4ffGW2liUpEt3zUFRCiJoK+kzYvvirgAejVnxvxIlnw56uG5WclrDar
+	 kVOWmvrasrKlTvz80Senzp4+qJyWk5avLUX8KOIOUVpfR3azwDfL+WR6euRFfIiRb1
+	 LiIZ5FazyNu/BDZ4AQ3aIx2yqasfHNOyW0r40Rck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732226AbgIHSGX (ORCPT
+        id S1732230AbgIHSGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731531AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:12:10 -0400
+        id S1731521AbgIHQMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:12:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A011247D4;
-        Tue,  8 Sep 2020 15:51:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215A3247C4;
+        Tue,  8 Sep 2020 15:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580291;
-        bh=eQe1wYGLHkgxe6Ouy//U4712xeQz8re6/WlsK2ceVuQ=;
+        s=default; t=1599580286;
+        bh=CyQWGRvj67cqowJfDn4vuv/txn4szGizTTVBdxHOyvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c+wRlImRNKLDhI9HWjUYdgpHxWtvcBYhxXt6PRIe4n4M5WKpp+1M/CAeVRjid7fJ3
-         QpNtvsmMNqpDRiUs2qQevFE+ogOkD7efbvTomwRTQiEalsTAshtHtNdQL6IAW49bQe
-         x1EbutwVzhntQpVq0FOsZvK9/YLHM7Z3lJxYoKfg=
+        b=th7dMz3k+8IOuzYO4UfKrHwcC1mNucMnaoxwDr/2cz1xmGbz3xqd/+CMU1Mx2i4gm
+         RrL+knsh7U7V6u1TJwZIQfmpeDYDO8HvJUIhOzrL9cGg33JCOyPVzKAOfgw4M0/mW5
+         dm7rhqNW415HPIR42eXlV/CJqAlpaIuutIB2CvsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Engel <amit.engel@dell.com>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/65] nvmet: Disable keep-alive timer when kato is cleared to 0h
-Date:   Tue,  8 Sep 2020 17:25:51 +0200
-Message-Id: <20200908152217.351593528@linuxfoundation.org>
+Subject: [PATCH 4.14 04/65] drm/msm: add shutdown support for display platform_driver
+Date:   Tue,  8 Sep 2020 17:25:49 +0200
+Message-Id: <20200908152217.254848720@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -60,45 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Engel <amit.engel@dell.com>
+From: Krishna Manikandan <mkrishn@codeaurora.org>
 
-[ Upstream commit 0d3b6a8d213a30387b5104b2fb25376d18636f23 ]
+[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
 
-Based on nvme spec, when keep alive timeout is set to zero
-the keep-alive timer should be disabled.
+Define shutdown callback for display drm driver,
+so as to disable all the CRTCS when shutdown
+notification is received by the driver.
 
-Signed-off-by: Amit Engel <amit.engel@dell.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This change will turn off the timing engine so
+that no display transactions are requested
+while mmu translations are getting disabled
+during reboot sequence.
+
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+
+Changes in v2:
+	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+	- Change commit text to reflect when this issue
+	  was uncovered (Sai Prakash Ranjan)
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 09a39f4aaf821..d0be85d0c289a 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -208,6 +208,9 @@ static void nvmet_keep_alive_timer(struct work_struct *work)
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index d9c0687435a05..c59240b566d83 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1134,6 +1134,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
- {
-+	if (unlikely(ctrl->kato == 0))
-+		return;
++static void msm_pdev_shutdown(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
 +
- 	pr_debug("ctrl %d start keep-alive timer for %d secs\n",
- 		ctrl->cntlid, ctrl->kato);
- 
-@@ -217,6 +220,9 @@ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
- 
- static void nvmet_stop_keep_alive_timer(struct nvmet_ctrl *ctrl)
- {
-+	if (unlikely(ctrl->kato == 0))
-+		return;
++	drm_atomic_helper_shutdown(drm);
++}
 +
- 	pr_debug("ctrl %d stop keep-alive\n", ctrl->cntlid);
- 
- 	cancel_delayed_work_sync(&ctrl->ka_work);
+ static const struct of_device_id dt_match[] = {
+ 	{ .compatible = "qcom,mdp4", .data = (void *)4 },	/* MDP4 */
+ 	{ .compatible = "qcom,mdss", .data = (void *)5 },	/* MDP5 MDSS */
+@@ -1144,6 +1151,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
+ static struct platform_driver msm_platform_driver = {
+ 	.probe      = msm_pdev_probe,
+ 	.remove     = msm_pdev_remove,
++	.shutdown   = msm_pdev_shutdown,
+ 	.driver     = {
+ 		.name   = "msm",
+ 		.of_match_table = dt_match,
 -- 
 2.25.1
 
