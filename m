@@ -2,99 +2,133 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E848EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A54C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A559620936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585684;
-	bh=8rZ08HburNd4t19qWY2jSL42tAVbf1sq2C5q0vdp868=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxK6cYml+HIhQjaVKMGC4+FskeKGFsEsbe32AMLR/qnl+ozwrXW9x67HodZFsaOib
-	 ZD6F9sMPV3sgj2VkMekk3b1z27sf19/B/KnAo/2whFAQvL6AVLd+ZRQu3B4N8JgP7Z
-	 siCj9Pfa3yYShjbzCPC/+nptJqGGnmjz7PaU4TdI=
+	by mail.kernel.org (Postfix) with ESMTP id 7BA6B206B5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NT+D1his"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731429AbgIHRVV (ORCPT
+        id S1728197AbgIHRWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:21:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:22:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58316 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731749AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:18:03 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1727940AbgIHRUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:20:52 -0400
+Received: from zn.tnic (p200300ec2f10bf0070b09dfd4356f225.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:70b0:9dfd:4356:f225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 899F024816;
-        Tue,  8 Sep 2020 15:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579830;
-        bh=8rZ08HburNd4t19qWY2jSL42tAVbf1sq2C5q0vdp868=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4lkCpLWqiQIa12r87PVKmTPmudrbU5SDqRi8jJRz/iOtHilr9pJKrVrgoyzKIIG3
-         6r9kLgGh1vBHkUesmrEzc8Gr/cPjaU3HnJ+94WpEy8skY0FEvI8YJDQtCI60CJj1He
-         MPlCz3VYk5oK2OQuQFHyB6mV9W10PBEse/rGZFW8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 043/129] bnxt_en: Check for zero dir entries in NVRAM.
-Date:   Tue,  8 Sep 2020 17:24:44 +0200
-Message-Id: <20200908152231.831201640@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6016C1EC0493;
+        Tue,  8 Sep 2020 19:20:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599585648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LmUlHAGcDfQUhA9DUzYK7oqYD6W3gPvxbkj2WBXLliI=;
+        b=NT+D1hisw4b0wW+6D7Ney6pv8pqgOWkQiIpZMVJFpu03DYUr3koV1ACECWUSItIFaW0klI
+        6lQvPBJz1xfNqiAypVEEPioZLzJhxPHQWnPMBFkqcSx5eFSdpW4Hse7mx++L7Y6j3zJfOv
+        V2b1QESn48gtV8CN2wkTeDHRDEKrGvo=
+Date:   Tue, 8 Sep 2020 19:20:42 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v7 67/72] x86/smpboot: Load TSS and getcpu GDT entry
+ before loading IDT
+Message-ID: <20200908172042.GF25236@zn.tnic>
+References: <20200907131613.12703-1-joro@8bytes.org>
+ <20200907131613.12703-68-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907131613.12703-68-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+On Mon, Sep 07, 2020 at 03:16:08PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> The IDT on 64bit contains vectors which use paranoid_entry() and/or IST
+> stacks. To make these vectors work the TSS and the getcpu GDT entry need
+> to be set up before the IDT is loaded.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/include/asm/processor.h |  1 +
+>  arch/x86/kernel/cpu/common.c     | 23 +++++++++++++++++++++++
+>  arch/x86/kernel/smpboot.c        |  2 +-
+>  3 files changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index d8a82e650810..5ac507586769 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -696,6 +696,7 @@ extern void load_direct_gdt(int);
+>  extern void load_fixmap_gdt(int);
+>  extern void load_percpu_segment(int);
+>  extern void cpu_init(void);
+> +extern void cpu_init_exception_handling(void);
+>  extern void cr4_init(void);
+>  
+>  static inline unsigned long get_debugctlmsr(void)
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 1d65365363a1..a9527c0c38fb 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -1854,6 +1854,29 @@ static inline void tss_setup_io_bitmap(struct tss_struct *tss)
+>  #endif
+>  }
+>  
+> +/*
+> + * Setup everything needed to handle exceptions from the IDT, including the IST
+> + * exceptions which use paranoid_entry()
+> + */
+> +void cpu_init_exception_handling(void)
+> +{
+> +	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
+> +	int cpu = raw_smp_processor_id();
+> +
+> +	/* paranoid_entry() gets the CPU number from the GDT */
+> +	setup_getcpu(cpu);
+> +
+> +	/* IST vectors need TSS to be set up. */
+> +	tss_setup_ist(tss);
+> +	tss_setup_io_bitmap(tss);
+> +	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+> +
+> +	load_TR_desc();
 
-[ Upstream commit dbbfa96ad920c50d58bcaefa57f5f33ceef9d00e ]
+Aha, this is what you mean here in your 0th message. I'm guessing it is
+ok to do those things twice in start_secondary...
 
-If firmware goes into unstable state, HWRM_NVM_GET_DIR_INFO firmware
-command may return zero dir entries. Return error in such case to
-avoid zero length dma buffer request.
-
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index de9b34a255cf1..fd01bcc8e28d4 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -2161,6 +2161,9 @@ static int bnxt_get_nvram_directory(struct net_device *dev, u32 len, u8 *data)
- 	if (rc != 0)
- 		return rc;
- 
-+	if (!dir_entries || !entry_length)
-+		return -EIO;
-+
- 	/* Insert 2 bytes of directory info (count and size of entries) */
- 	if (len < 2)
- 		return -EINVAL;
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
-
-
+https://people.kernel.org/tglx/notes-about-netiquette
