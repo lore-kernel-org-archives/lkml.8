@@ -2,136 +2,122 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A3FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C0FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F3F21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LgEG1tI4"
+	by mail.kernel.org (Postfix) with ESMTP id AE60A2137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgIHFtP (ORCPT
+        id S1728804AbgIHFxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 01:49:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30795 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728680AbgIHFtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 01:49:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599544151;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eQK1NPwmSWOx8INcFCnwK3inQ46y12Ng6QHkYnvGe3I=;
-        b=LgEG1tI4Zg9p7W0XFQUtFbSA9O19wnmfYk+arU225fe071UZkhTYVyVe9ozIFm6qvgBL9I
-        vFqaZ1bni8u1ptDth7cpUSare4TzzO1Eooo+g3VHSu5At+2xYJObBSk4R3HVt+MsB1AHm0
-        QghfE8aBXYJwxDxqzIyjUC/Dz9jvjKg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-r-VulFGYMA-fjnnBfjljEg-1; Tue, 08 Sep 2020 01:49:07 -0400
-X-MC-Unique: r-VulFGYMA-fjnnBfjljEg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E448D425D1;
-        Tue,  8 Sep 2020 05:49:02 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C936811BE;
-        Tue,  8 Sep 2020 05:48:58 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 0FDF617538; Tue,  8 Sep 2020 07:48:58 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 07:48:58 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
-        <etnaviv@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
-        <linux-tegra@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH v4 1/1] drm: allow limiting the scatter list size.
-Message-ID: <20200908054858.um34wojjv6uhi7d3@sirius.home.kraxel.org>
-References: <20200907112425.15610-1-kraxel@redhat.com>
- <20200907112425.15610-2-kraxel@redhat.com>
- <CAKMK7uGjT73rh=9iuCKAXvC_CaOuygm8PgOQgofkTgH7wRysFw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGjT73rh=9iuCKAXvC_CaOuygm8PgOQgofkTgH7wRysFw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Tue, 8 Sep 2020 01:53:17 -0400
+Received: from mga17.intel.com ([192.55.52.151]:17184 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728531AbgIHFxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 01:53:14 -0400
+IronPort-SDR: SjLQXLSRjh+Ct/S8j6wY4YOmaDKJ4S5Ncjczd5qMwO3TnYP8tRyDWoKaxB+3JybYix2mmAJfh1
+ CW07qNlWLErw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="138124882"
+X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
+   d="scan'208";a="138124882"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 22:53:14 -0700
+IronPort-SDR: EPRfI1Rg/d5lvXgNfvE/JbdSrnF/EzkAp76ndX952xC1Y/yMyA49IeJiTkTXSIZMmogWZ542dB
+ 5j8XKHsTBOnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
+   d="scan'208";a="504934381"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Sep 2020 22:53:12 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com,
+        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: [PATCH 1/3] fpga: dfl: move dfl_device_id to mod_devicetable.h
+Date:   Tue,  8 Sep 2020 13:48:47 +0800
+Message-Id: <1599544129-17594-2-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
+References: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 03:53:02PM +0200, Daniel Vetter wrote:
-> On Mon, Sep 7, 2020 at 1:24 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> >
-> > Add drm_device argument to drm_prime_pages_to_sg(), so we can
-> > call dma_max_mapping_size() to figure the segment size limit
-> > and call into __sg_alloc_table_from_pages() with the correct
-> > limit.
-> >
-> > This fixes virtio-gpu with sev.  Possibly it'll fix other bugs
-> > too given that drm seems to totaly ignore segment size limits
-> > so far ...
-> >
-> > v2: place max_segment in drm driver not gem object.
-> > v3: move max_segment next to the other gem fields.
-> > v4: just use dma_max_mapping_size().
-> >
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> 
-> Uh, are you sure this works in all cases for virtio?
+In order to support MODULE_DEVICE_TABLE() for dfl device driver, this
+patch moves struct dfl_device_id to mod_devicetable.h
 
-Sure, I've tested it ;)
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+---
+ drivers/fpga/dfl.h              | 13 +------------
+ include/linux/mod_devicetable.h | 12 ++++++++++++
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
-> The comments I've found suggest very much not ... Or is that all very
-> old stuff only that no one cares about anymore?
-
-I think these days it is possible to override dma_ops per device, which
-in turn allows virtio to deal with the quirks without the rest of the
-kernel knowing about these details.
-
-I also think virtio-gpu can drop the virtio_has_dma_quirk() checks, just
-use the dma api path unconditionally and depend on virtio core having
-setup dma_ops in a way that it JustWorks[tm].  I'll look into that next.
-
-take care,
-  Gerd
+diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+index 5dc758f..d5b0760 100644
+--- a/drivers/fpga/dfl.h
++++ b/drivers/fpga/dfl.h
+@@ -26,6 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/uuid.h>
+ #include <linux/fpga/fpga-region.h>
++#include <linux/mod_devicetable.h>
+ 
+ /* maximum supported number of ports */
+ #define MAX_DFL_FPGA_PORT_NUM 4
+@@ -526,18 +527,6 @@ enum dfl_id_type {
+ };
+ 
+ /**
+- * struct dfl_device_id -  dfl device identifier
+- * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
+- * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
+- * @driver_data: driver specific data.
+- */
+-struct dfl_device_id {
+-	u8 type;
+-	u16 feature_id;
+-	unsigned long driver_data;
+-};
+-
+-/**
+  * struct dfl_device - represent an dfl device on dfl bus
+  *
+  * @dev: generic device interface.
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 5b08a47..407d8dc 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -838,4 +838,16 @@ struct mhi_device_id {
+ 	kernel_ulong_t driver_data;
+ };
+ 
++/**
++ * struct dfl_device_id -  dfl device identifier
++ * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
++ * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
++ * @driver_data: driver specific data.
++ */
++struct dfl_device_id {
++	__u8 type;
++	__u16 feature_id;
++	kernel_ulong_t driver_data;
++};
++
+ #endif /* LINUX_MOD_DEVICETABLE_H */
+-- 
+2.7.4
 
