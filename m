@@ -2,102 +2,99 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0DAC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AB7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3482145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB30A2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588178;
-	bh=IBX1WGPmxvS3xq3KJipHAvSCKXBKoVkgP2Ym2HNLzUA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkqRLIENAoOpFg6woy4xQAEKRGk/LZcmLTjQBnLq14QtS8Emuaq21yobxN+hvuWBt
-	 EomAgs4nwhNgNjmoVOKKp0RGmRyEG/Pep6//Hx0cCvVc3iV/yF9I1M0dp2BKTodlJy
-	 Vdpj6IWPfmnvPtMWRF6N+0YBs2zMpDS7o34kHaVw=
+	s=default; t=1599588199;
+	bh=2jua/a8ieqTCv1Y0jPNStCYO5RkDB//YzS9CiJgoiuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wVRmW9ZG4+7pFtOLAH9UU23p+lnQJpsFl4vVKfMOcuBpkagt5BkptKwy/VztjddHD
+	 lT5MbqgoirFEexS5TBBUKR/KT3pdDob43h1dvbW82boAXuzDbHi42JfMUVx+RbfmUW
+	 E0BEvc5wqiufSTkbialnNUyCgWQBTRT5/6OXljXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbgIHSCZ (ORCPT
+        id S1729048AbgIHSDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731545AbgIHQMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:12:30 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14434247FA;
-        Tue,  8 Sep 2020 15:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580303;
-        bh=IBX1WGPmxvS3xq3KJipHAvSCKXBKoVkgP2Ym2HNLzUA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKY2puzXgGhjLVHSphR4cwLcWVYNvYIF2/hTh4SOTVZ1tcD9kOihQvHBWQuyxzpDK
-         WNRTJKCO2SgE6SaCSbVjVSFtkSMK9STvnjApzznOlWWjRPK+ovBLSpcmXvDvs+ZKlq
-         V3K4xX2caUlX2QOXc7C3f0A6crV50Cwv7sf9osJY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jussi Kivilinna <jussi.kivilinna@haltian.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/65] batman-adv: bla: use netif_rx_ni when not in interrupt context
-Date:   Tue,  8 Sep 2020 17:25:59 +0200
-Message-Id: <20200908152217.766744882@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 14:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731548AbgIHSDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:03:07 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA05C061573;
+        Tue,  8 Sep 2020 11:03:06 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id r8so3388485qtp.13;
+        Tue, 08 Sep 2020 11:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9mmDYx8WrU8rvHetKafuDvQNZNEWur0WVQdCgfEZspw=;
+        b=SPoVuP8Q6WzCw4D9NfkuXnNEptqRql+J4fajBqQc2kYsIhfgOYk0tEnacAbvowX1iH
+         2HgdyOoKtpvck6By0pNhFJcCOunkqWjl1JRzB0GS2+WGlkYvhTBUzobypXqZwLPOYibT
+         xt8Zl3up/YriK4ErSIiCCMeyzZTRfS3d4j3xIaFGJZbVBrYfKR4wOZkZXYMQ1AYpuiU7
+         8b6dAZPZMG5ggCV7UZI9MBPStx8lOwxR0DxqFyfvocgsBQy18+BFgkiSxtRpL4KUFzOM
+         UnZoy5BRkMnhnH5ejxOYYoUIK1COU05dLo0PqODWfSyByRIY7crPD5mm0SSR7OTFb536
+         Vzjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=9mmDYx8WrU8rvHetKafuDvQNZNEWur0WVQdCgfEZspw=;
+        b=YAwCdU41qNSS14LxDKYhMp9OHdRjbLjz+iEOmuQYWmyNkgI0c0BqVLxslf0CLhluTM
+         FuVHV0LOpGgRUmnGMa+5xPRiSAtdepkIHfngGM8R0hKvskjb9TEhtkcVPy7JmRIySx5r
+         Fqz1Wq/BuRtrjeBesIQHBMoaS6XrRKni829dhGlBOwZxi4I6nlaMy2He3+ljHnEWdnAr
+         9FOirRGl2ZsfVOOx5fIy9XfNs4mm/03GQA60fgwvldFMclNBsxARTmpqCBJF/Sz8T5gM
+         tDq8j3ps9la1LX6amJSBn1x9fLQm6keuNZkXuk3anqa1Oaq55Cy0Si3jYl5hjd2D4hwo
+         1WVA==
+X-Gm-Message-State: AOAM532bHMib3VUDjpadu/QHG/oUrqLtOTQlla77LOXzi4nsHxQa5Qmx
+        78az5ZQ//Qv0DmLk8FbSrZY=
+X-Google-Smtp-Source: ABdhPJxZp/BKi4pCSubL4sPpiZCHt5AmUer/L4tlgYku0XHZVMEBaXZZz/rd/r7R8Ru4Z+PNDK1nug==
+X-Received: by 2002:ac8:7388:: with SMTP id t8mr1294476qtp.187.1599588185280;
+        Tue, 08 Sep 2020 11:03:05 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:87d8])
+        by smtp.gmail.com with ESMTPSA id v16sm7627009qkg.37.2020.09.08.11.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 11:03:04 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 14:03:02 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Tianxianting <tian.xianting@h3c.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] blkcg: add plugging support for punt bio
+Message-ID: <20200908180302.GE4295@mtj.thefacebook.com>
+References: <1596722082-31817-1-git-send-email-xianting_tian@126.com>
+ <8f84e1fe-9fa5-b7e7-1f2f-b0c4a40614e2@kernel.dk>
+ <42b939c2.e08.173c6f79af9.Coremail.xianting_tian@126.com>
+ <1ded6246.2c67.17458ce4300.Coremail.xianting_tian@126.com>
+ <65e1e040da644ed9a05edd166d06b5e3@h3c.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65e1e040da644ed9a05edd166d06b5e3@h3c.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jussi Kivilinna <jussi.kivilinna@haltian.com>
+On Sat, Sep 05, 2020 at 11:25:03AM +0000, Tianxianting wrote:
+> Hi jens,tj
+> Could you share a couple of  minutes to comment it?
+> I really appreciate it
 
-[ Upstream commit 279e89b2281af3b1a9f04906e157992c19c9f163 ]
+The result looks fine to me but can you please summarize that in the commit
+message of the patch?
 
-batadv_bla_send_claim() gets called from worker thread context through
-batadv_bla_periodic_work(), thus netif_rx_ni needs to be used in that
-case. This fixes "NOHZ: local_softirq_pending 08" log messages seen
-when batman-adv is enabled.
+Thanks.
 
-Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
-Signed-off-by: Jussi Kivilinna <jussi.kivilinna@haltian.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/bridge_loop_avoidance.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
-index c761c0c233e4b..ae647fa69ce85 100644
---- a/net/batman-adv/bridge_loop_avoidance.c
-+++ b/net/batman-adv/bridge_loop_avoidance.c
-@@ -450,7 +450,10 @@ static void batadv_bla_send_claim(struct batadv_priv *bat_priv, u8 *mac,
- 	batadv_add_counter(bat_priv, BATADV_CNT_RX_BYTES,
- 			   skb->len + ETH_HLEN);
- 
--	netif_rx(skb);
-+	if (in_interrupt())
-+		netif_rx(skb);
-+	else
-+		netif_rx_ni(skb);
- out:
- 	if (primary_if)
- 		batadv_hardif_put(primary_if);
 -- 
-2.25.1
-
-
-
+tejun
