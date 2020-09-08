@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE6C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA65C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B47EB2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3952076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592561;
-	bh=eWXvw12jKk2fVfZJ6GFWhus/h0ADtQcj6KHW9wEg1eo=;
+	s=default; t=1599592576;
+	bh=RhBdTzOBIUYBiFyAjn7TezgNV/+k8I6vXffJEwalS9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FL48q0O0q4cLV0lezLOQ9VM4B5Mp2RBoUKapQ1ksm0VKE5yrSfiiYPOPgtcL6kaw/
-	 84/WiVTs7lxLMbPTP2wghW90OOhxCc9XHaj9caxNTH5zEGhH3TyGIsJO0oV0f8V4Cz
-	 UUdXCJOkbx1L29MH/eCuOT4N8Z5PUSjDk6XVAxuc=
+	b=Rw0OVSNqU+eZEi840I3sgSXXFDgx/QgafIkisCCxwSy2Hwrt8rycRtsC9coqXG2wU
+	 ye9Jevrajkp2XMBp/MIpz5bapEn20hPCy8qkDrLSSDiQyl3CLL0ZyyBKqTCwtNlWVR
+	 tAA0rneUK5QVpYmrwjsSkRbgDB8ooZx9FAQTxKfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbgIHTP7 (ORCPT
+        id S1731932AbgIHTQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:16:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgIHQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731100AbgIHQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:04:40 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB20C23CD3;
-        Tue,  8 Sep 2020 15:36:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A8F246A0;
+        Tue,  8 Sep 2020 15:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579413;
-        bh=eWXvw12jKk2fVfZJ6GFWhus/h0ADtQcj6KHW9wEg1eo=;
+        s=default; t=1599579594;
+        bh=RhBdTzOBIUYBiFyAjn7TezgNV/+k8I6vXffJEwalS9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MW3WLTghdqifSltS/70TCBQqVsUQdfCRPef8GO3+ix6ScXetJLMx8BtOiDAg19Iaa
-         TdS4FFsVSvq8D2KEg0CMx91gLYnk/96UKmWlju1MoIR8/8lRhDFsUtyMIAC5gcqwqG
-         5KEdTFU2qo9avZEuX2tlvgYCl4ySoPpb8rzSGTQU=
+        b=N2TN5j5lH+n/4ac+9k8HmM7eGBY4fchX0oJaQCanmdXt4zEb571tbgCgF9ImXp1qb
+         sAW7yIJ3YkjKHCRbs4/IKHGNjJSLHZQsIaLj0zhXm6PPee61ogJkHMPt1TGM89nWlx
+         0y+Yi023K2CA0uApPG+U90xEpSpI9sfOk0+rnAQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 067/186] bnxt_en: Dont query FW when netif_running() is false.
-Date:   Tue,  8 Sep 2020 17:23:29 +0200
-Message-Id: <20200908152244.906154725@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 113/186] iommu/amd: Restore IRTE.RemapEn bit after programming IRTE
+Date:   Tue,  8 Sep 2020 17:24:15 +0200
+Message-Id: <20200908152247.110342862@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,38 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavan Chebbi <pavan.chebbi@broadcom.com>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-[ Upstream commit c1c2d77408022a398a1a7c51cf20488c922629de ]
+[ Upstream commit 26e495f341075c09023ba16dee9a7f37a021e745 ]
 
-In rare conditions like two stage OS installation, the
-ethtool's get_channels function may be called when the
-device is in D3 state, leading to uncorrectable PCI error.
-Check netif_running() first before making any query to FW
-which involves writing to BAR.
+Currently, the RemapEn (valid) bit is accidentally cleared when
+programming IRTE w/ guestMode=0. It should be restored to
+the prior state.
 
-Fixes: db4723b3cd2d ("bnxt_en: Check max_tx_scheduler_inputs value from firmware.")
-Signed-off-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b9fc6b56f478 ("iommu/amd: Implements irq_set_vcpu_affinity() hook to setup vapic mode for pass-through devices")
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Link: https://lore.kernel.org/r/20200903093822.52012-2-suravee.suthikulpanit@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/amd/iommu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index b4aa56dc4f9fb..dcb3f61af7ab0 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -847,7 +847,7 @@ static void bnxt_get_channels(struct net_device *dev,
- 	int max_tx_sch_inputs;
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 2f22326ee4dfe..d7b037891fb7e 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3841,6 +3841,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
+ 	struct amd_ir_data *ir_data = (struct amd_ir_data *)data;
+ 	struct irte_ga *entry = (struct irte_ga *) ir_data->entry;
+ 	struct irq_cfg *cfg = ir_data->cfg;
++	u64 valid = entry->lo.fields_remap.valid;
  
- 	/* Get the most up-to-date max_tx_sch_inputs. */
--	if (BNXT_NEW_RM(bp))
-+	if (netif_running(dev) && BNXT_NEW_RM(bp))
- 		bnxt_hwrm_func_resc_qcaps(bp, false);
- 	max_tx_sch_inputs = hw_resc->max_tx_sch_inputs;
+ 	if (!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) ||
+ 	    !entry || !entry->lo.fields_vapic.guest_mode)
+@@ -3849,6 +3850,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
+ 	entry->lo.val = 0;
+ 	entry->hi.val = 0;
  
++	entry->lo.fields_remap.valid       = valid;
+ 	entry->lo.fields_remap.dm          = apic->irq_dest_mode;
+ 	entry->lo.fields_remap.int_type    = apic->irq_delivery_mode;
+ 	entry->hi.fields.vector            = cfg->vector;
 -- 
 2.25.1
 
