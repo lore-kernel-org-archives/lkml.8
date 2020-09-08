@@ -2,112 +2,143 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC49BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A68C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FFF2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074372137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="nCSLpNb+"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Lf6G5poV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbgIHTjI (ORCPT
+        id S1732370AbgIHTjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:39:08 -0400
-Received: from mail1.perex.cz ([77.48.224.245]:41508 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730951AbgIHPzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:39:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730187AbgIHPzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:55:36 -0400
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 74EBDA003F;
-        Tue,  8 Sep 2020 14:05:27 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 74EBDA003F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1599566727; bh=9b5Fqq5fU5wOYJ08GzQClBq0X5a2Ysj/PnRr3hJV/Bc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nCSLpNb+FHy8GvG62T86k1W+ona5zG0+IxqnC3fhMaBBcNgEzZcEH/DgVCNc7N0Y9
-         a7Wq5U1Gbje/+2hPO1vHYBMustZQq8fhy00UaKVidmRWis5Q/4QiEkkwZsuVVxMB+f
-         ZlkzkKw6BnpkO79CL00Q0fyMshTh0oz9kaHov2Io=
-Received: from p1gen2.perex-int.cz (unknown [192.168.100.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Tue,  8 Sep 2020 14:05:11 +0200 (CEST)
-Subject: Re: [PATCH 1/7] soundwire: bus: use property to set interrupt masks
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>, broonie@kernel.org
-Cc:     pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        tiwai@suse.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200818140656.29014-1-yung-chuan.liao@linux.intel.com>
- <20200818140656.29014-2-yung-chuan.liao@linux.intel.com>
- <20200828065125.GI2639@vkoul-mobl>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <ec5fe867-f2e4-4278-0376-e54bcdd7f94d@perex.cz>
-Date:   Tue, 8 Sep 2020 14:05:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A499C061231
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:26:12 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q5so13009895qkc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0Bd9eUG3DnE6D+neFj9R3QfT/oWxBp+wzdY7i+GsBSw=;
+        b=Lf6G5poVVU9DTO5y/Kk8H2Ke1/yuvwq44QRfLlgtzVksH3W4CflZYO6N1CS6Gkgf+O
+         36N3+8wD9pObYI1CMdwZYMYRu7HbXVUKEFPJ2AjNcK9X3BID5PsppQaFjSnqxa7JtCNT
+         aY2EX4mu669m3AJgX7WT/I/zIn+qpP2LPn3ueNiUgo8NZRJ/0OvY6GqXffz02hp9ASt6
+         Kw7kagCQ12/ztkbDpZvauMGFhf/ti5rup7TXyfyR2MZlnoY6C7+c78nhZr2bXok7Z+TB
+         z94051jMYxpI6fAzrkfx1CYHrWeWBF5AFFZLbShjEyTsCM8ydvp1pulj0ri7yDSPS5ma
+         HXGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0Bd9eUG3DnE6D+neFj9R3QfT/oWxBp+wzdY7i+GsBSw=;
+        b=jPAgKV9ruffeTfdAxG6OebWSrmV6IDhP0X2UIfrDPuHAiaQw/p3EragU/C7hDoHC0Q
+         hHli3pEdcGmiFFeYuqlqhSDNzKWvnx1AfMHm9YO23ig7+RSdEhmROUeQW1iRHWtClli2
+         cAWEKbwtogtLs6FKUv3So583dWmZ1bzmSGRjKYTlMEx1zV5CmUSAxbXXFzaZTDR8bVt5
+         OKEdp2wQowvxxIRToZvQ3HyJZVTZBAgjHUQ4iC8R6u3JZYDxL/9CUt4Sk2SdAftQf78d
+         B6AjZbT52fRilaWgazhTAjqeMdzrf2DbtCgAjYAKuAQXZyCElFxaznonG4L/eiZIH4Nl
+         apjw==
+X-Gm-Message-State: AOAM531b4fMZU2si5Su5Fd8WOBsVZ8l++rlf9IjDNTqLW6obnZQMDLxU
+        +WW5OwfmnaKJMbBISNVn6irxeg==
+X-Google-Smtp-Source: ABdhPJytassnqIHgDUzIEWSN+bwEo6szoZotvnjMoppJpA+RAkN2BANjzTq153kTDs5DZf5N4KZr1w==
+X-Received: by 2002:a05:620a:6d9:: with SMTP id 25mr18567qky.269.1599571572011;
+        Tue, 08 Sep 2020 06:26:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id j8sm14658360qth.90.2020.09.08.06.26.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 06:26:11 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kFddS-002zaX-9j; Tue, 08 Sep 2020 10:26:10 -0300
+Date:   Tue, 8 Sep 2020 10:26:10 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 2/3] mm: make pXd_addr_end() functions page-table
+ entry aware
+Message-ID: <20200908132610.GB87483@ziepe.ca>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200828065125.GI2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne 28. 08. 20 v 8:51 Vinod Koul napsal(a):
-> Hi Mark,
+On Mon, Sep 07, 2020 at 08:00:57PM +0200, Gerald Schaefer wrote:
+> From: Alexander Gordeev <agordeev@linux.ibm.com>
 > 
-> On 18-08-20, 22:06, Bard Liao wrote:
->> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>
->> Add a slave-level property and program the SCP_INT1_MASK as desired by
->> the codec driver. Since there is no DisCo property this has to be an
->> implementation-specific firmware property or hard-coded in the driver.
->>
->> The only functionality change is that implementation-defined
->> interrupts are no longer set for amplifiers - those interrupts are
->> typically for jack detection or acoustic event detection/hotwording.
->>
->> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
->> Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
->> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
->> ---
->>  drivers/soundwire/bus.c         | 12 ++++++------
->>  include/linux/soundwire/sdw.h   |  2 ++
->>  sound/soc/codecs/max98373-sdw.c |  3 +++
->>  sound/soc/codecs/rt1308-sdw.c   |  2 ++
->>  sound/soc/codecs/rt5682-sdw.c   |  4 ++++
->>  sound/soc/codecs/rt700-sdw.c    |  4 ++++
->>  sound/soc/codecs/rt711-sdw.c    |  4 ++++
->>  sound/soc/codecs/rt715-sdw.c    |  4 ++++
->>  sound/soc/codecs/wsa881x.c      |  1 +
+> Unlike all other page-table abstractions pXd_addr_end() do not take
+> into account a particular table entry in which context the functions
+> are called. On architectures with dynamic page-tables folding that
+> might lead to lack of necessary information that is difficult to
+> obtain other than from the table entry itself. That already led to
+> a subtle memory corruption issue on s390.
 > 
-> This touches codecs, can you Ack it please
-
-Mark, could you ack the ASoC change to accept this patch via the soundwire repo?
-
+> By letting pXd_addr_end() functions know about the page-table entry
+> we allow archs not only make extra checks, but also optimizations.
 > 
-> Ideally this should have been split up to header, the codec updates and
-> finally the bus change!
+> As result of this change the pXd_addr_end_folded() functions used
+> in gup_fast traversal code become unnecessary and get replaced with
+> universal pXd_addr_end() variants.
+> 
+> The arch-specific updates not only add dereferencing of page-table
+> entry pointers, but also small changes to the code flow to make those
+> dereferences possible, at least for x86 and powerpc. Also for arm64,
+> but in way that should not have any impact.
+> 
+> So, even though the dereferenced page-table entries are not used on
+> archs other than s390, and are optimized out by the compiler, there
+> is a small change in kernel size and this is what bloat-o-meter reports:
 
-I don't think that the split is ideal in this case. I tested the code and it
-looks straight enough.
+This looks pretty clean and straightfoward, only
+__munlock_pagevec_fill() had any real increased complexity.
 
-Acked-by: Jaroslav Kysela <perex@perex.cz>
-
--- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+Thanks,
+Jason
