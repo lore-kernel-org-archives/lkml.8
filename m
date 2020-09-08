@@ -2,89 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A0FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A1DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3BA2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3172080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599590490;
+	bh=/IvZsneCXeaOhikdorhW99mg/h1pdfob0kUSatt8uFU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TNrctG9EH6/icdV6h+MBgM4QLOAghz6cD+enOEoxrZ26fzKSjt8MYvSygtq6GU8AQ
+	 xxBcrOwSdIYTtzYY4LJc28uErLhfOBsKBKGUWrmwUur3LdpHHujRycnW/3OXzFAAO7
+	 PsvPgaRLEpjmQO6xOa9z5tXc+M0HCEzk1cjT8rzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731545AbgIHSlV (ORCPT
+        id S1731809AbgIHSl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:41:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:44110 "EHLO mga18.intel.com"
+        Tue, 8 Sep 2020 14:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731290AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:08:02 -0400
-IronPort-SDR: uLxPuV8d9XkW6JGSbKn9vizfXWT1McBTUjcaMaRCXJm0ufVZv7vWcqy5QTq2UpPc9Ly0A27bjb
- jNozPR3zfH7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="145840204"
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="145840204"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:50:28 -0700
-IronPort-SDR: pq8KqwTDLKt08i4BP3htSDweMGmnV1y1djrner8hpQN/ww/skM9AC3AdwSijS44hBYu4ALm5Jr
- +wiqc8WsZV7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="333478908"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2020 06:50:25 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFduY-00FDX6-P7; Tue, 08 Sep 2020 16:43:50 +0300
-Date:   Tue, 8 Sep 2020 16:43:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v1] x86/defconfigs: Unbreak 32-bit defconfig builds
-Message-ID: <20200908134350.GX1891694@smile.fi.intel.com>
-References: <20200908100018.50188-1-andriy.shevchenko@linux.intel.com>
- <20200908121354.GA3848343@gmail.com>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 078B123EF2;
+        Tue,  8 Sep 2020 15:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580062;
+        bh=/IvZsneCXeaOhikdorhW99mg/h1pdfob0kUSatt8uFU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WbOdr5nKF6S5cRJE6S2z6jvw+C2YkPQHkxlc4llJVmRow6be8B963ytMYNXgO8BhY
+         76/0f7HBWJCYwST7+xpaBGiKOG/Sfl8sJGaxGEE2T41HVg2K60xlWw/j1S7XIiyH2c
+         THR+DQq0jB7PISAMVG0qvRf5D8t8JB4mQzROm9GM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 07/88] drm/msm: add shutdown support for display platform_driver
+Date:   Tue,  8 Sep 2020 17:25:08 +0200
+Message-Id: <20200908152221.460370773@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908121354.GA3848343@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:13:54PM +0200, Ingo Molnar wrote:
-> 
-> * Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > After the commit 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
-> > 32-bit builds using defconfig become broken because on x86_64 build host
-> > with no ARCH provided the default behaviour is to assume 64-bit independently
-> > on the configuration file name. The crucial part is CONFIG_64BIT option
-> > that used to be explicit. Let restore the latter option in order to unbreak
-> > 32-bit builds.
-> 
-> So exactly which build method broke due to this? The typical way to do a defconfig build is:
-> 
->   make ARCH=i386 defconfig
-> 
-> which still works fine AFAICS.
+From: Krishna Manikandan <mkrishn@codeaurora.org>
 
-uname => x86_64
-make i386_defconfig
+[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
 
-It was very convenient to not supply ARCH when build on multi-arch host.
+Define shutdown callback for display drm driver,
+so as to disable all the CRTCS when shutdown
+notification is received by the driver.
 
+This change will turn off the timing engine so
+that no display transactions are requested
+while mmu translations are getting disabled
+during reboot sequence.
+
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+
+Changes in v2:
+	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+	- Change commit text to reflect when this issue
+	  was uncovered (Sai Prakash Ranjan)
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 6f81de85fb860..7f45486b6650b 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1358,6 +1358,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void msm_pdev_shutdown(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
++
++	drm_atomic_helper_shutdown(drm);
++}
++
+ static const struct of_device_id dt_match[] = {
+ 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
+ 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
+@@ -1369,6 +1376,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
+ static struct platform_driver msm_platform_driver = {
+ 	.probe      = msm_pdev_probe,
+ 	.remove     = msm_pdev_remove,
++	.shutdown   = msm_pdev_shutdown,
+ 	.driver     = {
+ 		.name   = "msm",
+ 		.of_match_table = dt_match,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
 
 
