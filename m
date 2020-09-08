@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5980C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84765C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAC12075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530E22076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592540;
-	bh=3KaYicKDGMNDnpLifiUlHK3tIkjkxgO2LtaIO+noLlg=;
+	s=default; t=1599592544;
+	bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUNMajMObpkUxsAK9MtzWnK0D2kfFBy9x5VT6gltapwFAMlwTNv1kzzRgAqAZze6p
-	 63hWha+ph38SityHuzNgrdRIM4/kA+vJc8TjkKF7jG9xkWGf14VIP52kxmxva3DQxg
-	 SslK34Ohb9qjiDYfVgTVz0IBxEpCKAG6JeIJJC2I=
+	b=uku3bECiuys5l5rmRLeXRiktMH1relgRbzcRrvXTUH/hZKAVuc8cW3J/UJuQ92yS6
+	 pQCNerZFPQJU1LrHyIxgPeU+c3kADYrMr0NqIkQvCq8stM8gDgAPmGsozoStqsoyxP
+	 kcd9ukb0fJbzeKJIlrD/giTvVdPgTF5FjmGjb1cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731918AbgIHTP2 (ORCPT
+        id S1731902AbgIHTPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:15:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731178AbgIHQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:04:45 -0400
+        id S1731187AbgIHQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:04:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3A3F2469A;
-        Tue,  8 Sep 2020 15:39:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AABD421919;
+        Tue,  8 Sep 2020 15:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579589;
-        bh=3KaYicKDGMNDnpLifiUlHK3tIkjkxgO2LtaIO+noLlg=;
+        s=default; t=1599579344;
+        bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUojeToZA7efW5HSzBGuaOSbxI1VkcQKbRBx0Czv6mgidGAtTpg3pstxYvSZIxShJ
-         4+C1XdlyiODeLVidz8uiDkKdr+X2buwdaye3qNi2ey8XRIG/kYQkJTqlsW0nog/NMl
-         wFKO0ZC5Jf5YZ6toRk5m+1kH6b+f4gQMLhd3+4sg=
+        b=htl0xrJns/Pp0UfM96E84utMsGjDi1vo6QbdqAcJbi1WJf2QU1R8mXG5coQ/n07mp
+         bEtxSVrpzo8cDXmY52/8SXSvkfH9i0LNlBOqO25To1bJuUybhXlDrtpQxHZpiucZM2
+         H/uwVyZjsrgAPRClUAuXmyOvxY9cwJPDg5dQWrYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 111/186] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
-Date:   Tue,  8 Sep 2020 17:24:13 +0200
-Message-Id: <20200908152247.014487473@linuxfoundation.org>
+Subject: [PATCH 5.8 038/186] fsldma: fix very broken 32-bit ppc ioread64 functionality
+Date:   Tue,  8 Sep 2020 17:23:00 +0200
+Message-Id: <20200908152243.525529018@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -63,108 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 30d24faba0532d6972df79a1bf060601994b5873 ]
+[ Upstream commit 0a4c56c80f90797e9b9f8426c6aae4c0cf1c9785 ]
 
-We can sometimes get bogus thermal shutdowns on omap4430 at least with
-droid4 running idle with a battery charger connected:
+Commit ef91bb196b0d ("kernel.h: Silence sparse warning in
+lower_32_bits") caused new warnings to show in the fsldma driver, but
+that commit was not to blame: it only exposed some very incorrect code
+that tried to take the low 32 bits of an address.
 
-thermal thermal_zone0: critical temperature reached (143 C), shutting down
+That made no sense for multiple reasons, the most notable one being that
+that code was intentionally limited to only 32-bit ppc builds, so "only
+low 32 bits of an address" was completely nonsensical.  There were no
+high bits to mask off to begin with.
 
-Dumping out the register values shows we can occasionally get a 0x7f value
-that is outside the TRM listed values in the ADC conversion table. And then
-we get a normal value when reading again after that. Reading the register
-multiple times does not seem help avoiding the bogus values as they stay
-until the next sample is ready.
+But even more importantly fropm a correctness standpoint, turning the
+address into an integer then caused the subsequent address arithmetic to
+be completely wrong too, and the "+1" actually incremented the address
+by one, rather than by four.
 
-Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
-should have values from 13 to 107 listed with a total of 95 values. But
-looking at the omap4430_adc_to_temp array, the values are off, and the
-end values are missing. And it seems that the 4430 ADC table is similar
-to omap3630 rather than omap4460.
+Which again was incorrect, since the code was reading two 32-bit values
+and trying to make a 64-bit end result of it all.  Surprisingly, the
+iowrite64() did not suffer from the same odd and incorrect model.
 
-Let's fix the issue by using values based on the omap3630 table and just
-ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
-the missing values added while the TRM table only shows every second
-value.
+This code has never worked, but it's questionable whether anybody cared:
+of the two users that actually read the 64-bit value (by way of some C
+preprocessor hackery and eventually the 'get_cdar()' inline function),
+one of them explicitly ignored the value, and the other one might just
+happen to work despite the incorrect value being read.
 
-Note that sometimes the ADC register values within the valid table can
-also be way off for about 1 out of 10 values. But it seems that those
-just show about 25 C too low values rather than too high values. So those
-do not cause a bogus thermal shutdown.
+This patch at least makes it not fail the build any more, and makes the
+logic superficially sane.  Whether it makes any difference to the code
+_working_ or not shall remain a mystery.
 
-Fixes: 1a31270e54d7 ("staging: omap-thermal: add OMAP4 data structures")
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200706183338.25622-1-tony@atomide.com
+Compile-tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ti-soc-thermal/omap4-thermal-data.c       | 23 ++++++++++---------
- .../thermal/ti-soc-thermal/omap4xxx-bandgap.h | 10 +++++---
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ drivers/dma/fsldma.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-index 63b02bfb2adf6..fdb8a495ab69a 100644
---- a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-+++ b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-@@ -37,20 +37,21 @@ static struct temp_sensor_data omap4430_mpu_temp_sensor_data = {
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 56f18ae992332..308bed0a560ac 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -205,10 +205,10 @@ struct fsldma_chan {
+ #else
+ static u64 fsl_ioread64(const u64 __iomem *addr)
+ {
+-	u32 fsl_addr = lower_32_bits(addr);
+-	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
++	u32 val_lo = in_le32((u32 __iomem *)addr);
++	u32 val_hi = in_le32((u32 __iomem *)addr + 1);
  
- /*
-  * Temperature values in milli degree celsius
-- * ADC code values from 530 to 923
-+ * ADC code values from 13 to 107, see TRM
-+ * "18.4.10.2.3 ADC Codes Versus Temperature".
-  */
- static const int
- omap4430_adc_to_temp[OMAP4430_ADC_END_VALUE - OMAP4430_ADC_START_VALUE + 1] = {
--	-38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000, -22000,
--	-20000, -18000, -17000, -15000, -13000, -12000, -10000, -8000, -6000,
--	-5000, -3000, -1000, 0, 2000, 3000, 5000, 6000, 8000, 10000, 12000,
--	13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28000, 30000,
--	32000, 33000, 35000, 37000, 38000, 40000, 42000, 43000, 45000, 47000,
--	48000, 50000, 52000, 53000, 55000, 57000, 58000, 60000, 62000, 64000,
--	66000, 68000, 70000, 71000, 73000, 75000, 77000, 78000, 80000, 82000,
--	83000, 85000, 87000, 88000, 90000, 92000, 93000, 95000, 97000, 98000,
--	100000, 102000, 103000, 105000, 107000, 109000, 111000, 113000, 115000,
--	117000, 118000, 120000, 122000, 123000,
-+	-40000, -38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000,
-+	-22000,	-20000, -18500, -17000, -15000, -13500, -12000, -10000, -8000,
-+	-6500, -5000, -3500, -1500, 0, 2000, 3500, 5000, 6500, 8500, 10000,
-+	12000, 13500, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28500,
-+	30000, 32000, 33500, 35000, 37000, 38500, 40000, 42000, 43500, 45000,
-+	47000, 48500, 50000, 52000, 53500, 55000, 57000, 58500, 60000, 62000,
-+	64000, 66000, 68000, 70000, 71500, 73500, 75000, 77000, 78500, 80000,
-+	82000, 83500, 85000, 87000, 88500, 90000, 92000, 93500, 95000, 97000,
-+	98500, 100000, 102000, 103500, 105000, 107000, 109000, 111000, 113000,
-+	115000, 117000, 118500, 120000, 122000, 123500, 125000,
- };
+-	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
++	return ((u64)val_hi << 32) + val_lo;
+ }
  
- /* OMAP4430 data */
-diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-index a453ff8eb313e..9a3955c3853ba 100644
---- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-+++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-@@ -53,9 +53,13 @@
-  * and thresholds for OMAP4430.
-  */
+ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+@@ -219,10 +219,10 @@ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
  
--/* ADC conversion table limits */
--#define OMAP4430_ADC_START_VALUE			0
--#define OMAP4430_ADC_END_VALUE				127
-+/*
-+ * ADC conversion table limits. Ignore values outside the TRM listed
-+ * range to avoid bogus thermal shutdowns. See omap4430 TRM chapter
-+ * "18.4.10.2.3 ADC Codes Versus Temperature".
-+ */
-+#define OMAP4430_ADC_START_VALUE			13
-+#define OMAP4430_ADC_END_VALUE				107
- /* bandgap clock limits (no control on 4430) */
- #define OMAP4430_MAX_FREQ				32768
- #define OMAP4430_MIN_FREQ				32768
+ static u64 fsl_ioread64be(const u64 __iomem *addr)
+ {
+-	u32 fsl_addr = lower_32_bits(addr);
+-	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
++	u32 val_hi = in_be32((u32 __iomem *)addr);
++	u32 val_lo = in_be32((u32 __iomem *)addr + 1);
+ 
+-	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
++	return ((u64)val_hi << 32) + val_lo;
+ }
+ 
+ static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
 -- 
 2.25.1
 
