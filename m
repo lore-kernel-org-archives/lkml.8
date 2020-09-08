@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBE9C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65A7A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82592080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590367;
-	bh=C+sspah+adC51dOr6AFQPhhK0rp0cgX9yAuNS66E3mY=;
+	s=default; t=1599590378;
+	bh=DfpBBXKFxbSZcaADyxqB6NIFxY7gupVzqMBwKBYbKwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0Iad9sztWMqARMmRfs69UeircC8TpgD+v103DzgDZ1O5+ZKEWjzmCMEVTuXfuQsG
-	 VLt1YwkUTjBPg4SxR83O+mZFumz5Gqu2m1pi32JvNyL2hfBj5jPHNz5kOUo11YvpUJ
-	 ujWG11BJvNoVb1PkZ4EiK9UIkU91x+80rQ1RX8Lc=
+	b=o7KSdQNT65YavKo+NSJezzyBskHOKcTG8shtZZiWWNy9gXYzrlgOUysSmYip4CSkP
+	 3M5W2z9QqN9LiUQcGLSqz0L3nB0XJIZ7TR1ueKSrN6Rk7yKi3xrPA7C6i0LyKKIgk9
+	 drO+VHSbQ50LDcU1DWrc44QLgp2ueermCivQxPb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbgIHSjZ (ORCPT
+        id S1731938AbgIHSjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:39:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731340AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731332AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924E02413F;
-        Tue,  8 Sep 2020 15:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 031752405F;
+        Tue,  8 Sep 2020 15:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580146;
-        bh=C+sspah+adC51dOr6AFQPhhK0rp0cgX9yAuNS66E3mY=;
+        s=default; t=1599580129;
+        bh=DfpBBXKFxbSZcaADyxqB6NIFxY7gupVzqMBwKBYbKwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+2Nl/nODGfQ20Q7dTFBTe80imYdOB+2kI1m0EKBEjyCEt+bZ95Xk6kcoaORb30VZ
-         OQP7EDa9QkUsBqmKrVS/wRcdtuynBvsczO83E54Djch2JuyiY47wNWSG37D9o9oV2h
-         p4QnBzyvR/dqAYZgqB6usUaF4JUj/4vEVckcZFX8=
+        b=Q7AMvSCXRWaRdUxphstQhn1hHtmEtc2qSSpmIiDo93QFd/RU97yvmsJtuWlDyP12M
+         UULC/FqJlvSquTBXQ7dcMaOqQ/udAvLuPAU0wWS4aU3l37GVH9SjcffPtcKpGR5ka0
+         DVWt1HjcNGvVr3e9X4b5PtoA/hy/zKG9tZfy6Y/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jussi Kivilinna <jussi.kivilinna@haltian.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Al Grant <al.grant@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/88] batman-adv: bla: use netif_rx_ni when not in interrupt context
-Date:   Tue,  8 Sep 2020 17:25:19 +0200
-Message-Id: <20200908152221.986029312@linuxfoundation.org>
+Subject: [PATCH 4.19 40/88] perf tools: Correct SNOOPX field offset
+Date:   Tue,  8 Sep 2020 17:25:41 +0200
+Message-Id: <20200908152223.128046647@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -62,40 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jussi Kivilinna <jussi.kivilinna@haltian.com>
+From: Al Grant <al.grant@foss.arm.com>
 
-[ Upstream commit 279e89b2281af3b1a9f04906e157992c19c9f163 ]
+[ Upstream commit 39c0a53b114d0317e5c4e76b631f41d133af5cb0 ]
 
-batadv_bla_send_claim() gets called from worker thread context through
-batadv_bla_periodic_work(), thus netif_rx_ni needs to be used in that
-case. This fixes "NOHZ: local_softirq_pending 08" log messages seen
-when batman-adv is enabled.
+perf_event.h has macros that define the field offsets in the data_src
+bitmask in perf records. The SNOOPX and REMOTE offsets were both 37.
 
-Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
-Signed-off-by: Jussi Kivilinna <jussi.kivilinna@haltian.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+These are distinct fields, and the bitfield layout in perf_mem_data_src
+confirms that SNOOPX should be at offset 38.
+
+Committer notes:
+
+This was extracted from a larger patch that also contained kernel
+changes.
+
+Fixes: 52839e653b5629bd ("perf tools: Add support for printing new mem_info encodings")
+Signed-off-by: Al Grant <al.grant@arm.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bridge_loop_avoidance.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/include/uapi/linux/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
-index 85faf25c29122..9b8bf06ccb613 100644
---- a/net/batman-adv/bridge_loop_avoidance.c
-+++ b/net/batman-adv/bridge_loop_avoidance.c
-@@ -450,7 +450,10 @@ static void batadv_bla_send_claim(struct batadv_priv *bat_priv, u8 *mac,
- 	batadv_add_counter(bat_priv, BATADV_CNT_RX_BYTES,
- 			   skb->len + ETH_HLEN);
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index f35eb72739c09..a45e7b4f03163 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1079,7 +1079,7 @@ union perf_mem_data_src {
  
--	netif_rx(skb);
-+	if (in_interrupt())
-+		netif_rx(skb);
-+	else
-+		netif_rx_ni(skb);
- out:
- 	if (primary_if)
- 		batadv_hardif_put(primary_if);
+ #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
+ /* 1 free */
+-#define PERF_MEM_SNOOPX_SHIFT	37
++#define PERF_MEM_SNOOPX_SHIFT	38
+ 
+ /* locked instruction */
+ #define PERF_MEM_LOCK_NA	0x01 /* not available */
 -- 
 2.25.1
 
