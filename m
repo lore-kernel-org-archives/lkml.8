@@ -2,142 +2,207 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E57C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1AA20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BA420738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CasPNC+K";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YYzpdjFd"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="jGg7ZsMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgIHRd2 (ORCPT
+        id S1726560AbgIHRdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:33:28 -0400
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:33420
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731315AbgIHQPT (ORCPT
+        Tue, 8 Sep 2020 13:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731605AbgIHQPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:15:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599566566;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=A0Pg1JJyx96lY6kzESsukz/fsFFg2QJ+mjpfboIMRWc=;
-        b=CasPNC+KAQLq7fbQs/ZX016E5VPiGOgnU5TVmOk/j+oOml3iVfZzlrrRGQNCL5s6
-        Zt56vN2zlw9t3LNw+4h9zWKeNgznCXpYEEb4Y18bGnI7I7HUFZE9g/fNHKOEvMsq5+p
-        LA9GVvP7LhuxaGQrvBo6wCCfCA9EStK1YF3KzOB8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599566566;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=A0Pg1JJyx96lY6kzESsukz/fsFFg2QJ+mjpfboIMRWc=;
-        b=YYzpdjFd4DrmPd7BeZp/TFeYAFS64CzYDs38adPNVsTPlEJoF1WGt/twkFHnsUpW
-        KzOAMQX2IPMZM+HFFzNjdSK1hw2DfdbXaqiRv0MdpJcSsaIDkCxIx9FL4DWZttXwmwW
-        08METUWReBt9Dt3nxeDNIhXDmKAGTfxTLJgYE/Ks=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FD10C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Subject: Re: [PATCH 16/28] wireless: marvell: mwifiex: init: Move 'tos_to_tid_inv' to where it's used
-References: <20200819072402.3085022-17-lee.jones@linaro.org>
-        <20200831155151.0DCB5C4339C@smtp.codeaurora.org>
-        <20200908084953.GJ4400@dell>
-Date:   Tue, 8 Sep 2020 12:02:46 +0000
-In-Reply-To: <20200908084953.GJ4400@dell> (Lee Jones's message of "Tue, 8 Sep
-        2020 09:49:53 +0100")
-Message-ID: <010101746d98d281-78bf23c9-db60-486f-ada9-fec0467131a4-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [IPv6:2a02:418:6a02::a2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF047C061377
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:49:32 -0700 (PDT)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id 7D87A5C4CC6;
+        Tue,  8 Sep 2020 14:49:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1599569369;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vohbHx+KdBMX2EzdqSsM6vNF04Tb3ZHZoZ6qz4lcfE0=;
+        b=jGg7ZsMQSOgS0AQe0NRuKBfBWFSH3JgUAWrcutRt+bVBtF4Fbjd5pYNqkPx3vn4sbSQuRl
+        oKey2G9a8ErcZm3pODU0VjUg2kmuOpd6DRK00WVlNd0/fzRIQLFXLsq77aKzwZ/ApAhjXA
+        20GY1GfnHBpIHu0jxOeQJx5HLInt8W0=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SES-Outgoing: 2020.09.08-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 08 Sep 2020 14:49:29 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Marek Vasut <marex@denx.de>,
+        Dave Airlie <airlied@linux.ie>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm: mxsfb: check framebuffer pitch
+In-Reply-To: <20200908123304.GG6047@pendragon.ideasonboard.com>
+References: <20200907160343.124405-1-stefan@agner.ch>
+ <20200907161712.GF6047@pendragon.ideasonboard.com>
+ <20200907181855.GE2352366@phenom.ffwll.local>
+ <86615b4b1551d4a6f1cfcc13b38e616c@agner.ch>
+ <dc5a16d0-4d2a-366a-7716-29dd8db1a12a@ti.com>
+ <20200908084855.GH2352366@phenom.ffwll.local>
+ <bed1ef4f988626962317519cb7d8928e@agner.ch>
+ <CAKMK7uG2NgN1fGFTDnP=0Yow4B051pHhYWw-Uu-cZT3t0UPKWg@mail.gmail.com>
+ <20200908123304.GG6047@pendragon.ideasonboard.com>
+User-Agent: Roundcube Webmail/1.4.1
+Message-ID: <545fd348c6bd51626cedc0fdcf3afa1d@agner.ch>
+X-Sender: stefan@agner.ch
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+On 2020-09-08 14:33, Laurent Pinchart wrote:
+> On Tue, Sep 08, 2020 at 02:29:02PM +0200, Daniel Vetter wrote:
+>> On Tue, Sep 8, 2020 at 2:07 PM Stefan Agner <stefan@agner.ch> wrote:
+>> > On 2020-09-08 10:48, Daniel Vetter wrote:
+>> >> On Tue, Sep 08, 2020 at 11:18:25AM +0300, Tomi Valkeinen wrote:
+>> >>> On 08/09/2020 10:55, Stefan Agner wrote:
+>> >>>> On 2020-09-07 20:18, Daniel Vetter wrote:
+>> >>>>> On Mon, Sep 07, 2020 at 07:17:12PM +0300, Laurent Pinchart wrote:
+>> >>>>>> Hi Stefan,
+>> >>>>>>
+>> >>>>>> Thank you for the patch.
+>> >>>>>>
+>> >>>>>> On Mon, Sep 07, 2020 at 06:03:43PM +0200, Stefan Agner wrote:
+>> >>>>>>> The lcdif IP does not support a framebuffer pitch (stride) other than
+>> >>>>>>> the CRTC width. Check for equality and reject the state otherwise.
+>> >>>>>>>
+>> >>>>>>> This prevents a distorted picture when using 640x800 and running the
+>> >>>>>>> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
+>> >>>>>>
+>> >>>>>> s/tires/tries/
+>> >>>>>>
+>> >>>>>>> leads at that particular resolution to width != stride. Currently
+>> >>>>>>> Mesa has no fallback behavior, but rejecting this configuration allows
+>> >>>>>>> userspace to handle the issue correctly.
+>> >>>>>>
+>> >>>>>> I'm increasingly impressed by how featureful this IP core is :-)
+>> >>>>>>
+>> >>>>>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> >>>>>>> ---
+>> >>>>>>>  drivers/gpu/drm/mxsfb/mxsfb_kms.c | 22 ++++++++++++++++++----
+>> >>>>>>>  1 file changed, 18 insertions(+), 4 deletions(-)
+>> >>>>>>>
+>> >>>>>>> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_kms.c b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
+>> >>>>>>> index b721b8b262ce..79aa14027f91 100644
+>> >>>>>>> --- a/drivers/gpu/drm/mxsfb/mxsfb_kms.c
+>> >>>>>>> +++ b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
+>> >>>>>>> @@ -403,14 +403,28 @@ static int mxsfb_plane_atomic_check(struct drm_plane *plane,
+>> >>>>>>>  {
+>> >>>>>>>         struct mxsfb_drm_private *mxsfb = to_mxsfb_drm_private(plane->dev);
+>> >>>>>>>         struct drm_crtc_state *crtc_state;
+>> >>>>>>> +       unsigned int pitch;
+>> >>>>>>> +       int ret;
+>> >>>>>>>
+>> >>>>>>>         crtc_state = drm_atomic_get_new_crtc_state(plane_state->state,
+>> >>>>>>>                                                    &mxsfb->crtc);
+>> >>>>>>>
+>> >>>>>>> -       return drm_atomic_helper_check_plane_state(plane_state, crtc_state,
+>> >>>>>>> -                                                  DRM_PLANE_HELPER_NO_SCALING,
+>> >>>>>>> -                                                  DRM_PLANE_HELPER_NO_SCALING,
+>> >>>>>>> -                                                  false, true);
+>> >>>>>>> +       ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
+>> >>>>>>> +                                                 DRM_PLANE_HELPER_NO_SCALING,
+>> >>>>>>> +                                                 DRM_PLANE_HELPER_NO_SCALING,
+>> >>>>>>> +                                                 false, true);
+>> >>>>>>> +       if (ret || !plane_state->visible)
+>> >>>>>>
+>> >>>>>> Would it be more explict to check for !plane_state->fb ? Otherwise I'll
+>> >>>>>> have to verify that !fb always implies !visible :-)
+>> >>>>>>
+>> >>>>>>> +               return ret;
+>> >>>>>>> +
+>> >>>>>>> +       pitch = crtc_state->mode.hdisplay *
+>> >>>>>>> +               plane_state->fb->format->cpp[0];
+>> >>>>>>
+>> >>>>>> This holds on a single line.
+>> >>>>>>
+>> >>>>>>> +       if (plane_state->fb->pitches[0] != pitch) {
+>> >>>>>>> +               dev_err(plane->dev->dev,
+>> >>>>>>> +                       "Invalid pitch: fb and crtc widths must be the same");
+>> >>>>>>
+>> >>>>>> I'd turn this into a dev_dbg(), printing error messages to the kernel
+>> >>>>>> log in response to user-triggered conditions is a bit too verbose and
+>> >>>>>> could flood the log.
+>> >>>>>>
+>> >>>>>> Wouldn't it be best to catch this issue when creating the framebuffer ?
+>> >>>>>
+>> >>>>> Yeah this should be verified at addfb time. We try to validate as early as
+>> >>>>> possible.
+>> >>>>> -Daniel
+>> >>>>>
+>> >>>>
+>> >>>> Sounds sensible. From what I can tell fb_create is the proper callback
+>> >>>> to implement this at addfb time. Will give this a try.
+>> >>>>
+>> >>>> FWIW, I got the idea from drivers/gpu/drm/tilcdc/tilcdc_plane.c. Maybe
+>> >>>> should be moved to addfb there too?
+>> >>>
+>> >>> But you don't know the crtc width when creating the framebuffer.
+>> >>
+>> >> Hm right this is a different check. What we could check in fb_create for
+>> >> both is that the logical fb size matches exactly the pitch. That's not
+>> >> sufficient criteria, but it will at least catch some of them already.
+>> >>
+>> >> But yeah we'd need both here.
+>> >
+>> > After validating width of framebuffer against pitch, the only thing we
+>> > need to check here is that the width matches. From what I can tell,
+>> > least for mxsfb, this should be covered by
+>> > drm_atomic_helper_check_plane_state's can_position parameter set to
+>> > false.
+>>
+>> This only checks against the src rectangle of the crtc state, there's
+>> nothing forcing that the size of the fb matches the src rectangle
+>> exactly. I guess we could maybe add that as another parameter for hw
+>> like yours or tilcdc. Naming is a bit tricky, maybe
+>> require_matching_fb or src_must_match_fb or something like that.
+> 
+> Can we turn those parameters into flags ? false, true, false is hard to
+> read.
+> 
 
-> On Mon, 31 Aug 2020, Kalle Valo wrote:
->
->> Lee Jones <lee.jones@linaro.org> wrote:
->>=20
->> > 'tos_to_tid_inv' is only used in 2 of 17 files it's current being
->> > included into.
->> >=20
->> > Fixes the following W=3D1 kernel build warning(s):
->> >=20
->> >  In file included from drivers/net/wireless/marvell/mwifiex/main.c:23:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/cmdevt.c:2=
-6:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/util.c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/txrx.c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/11n.c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/wmm.c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/11n_aggr.c=
-:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/11n_rxreor=
-der.c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/join.c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_cmd.c:=
-25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_ioctl.=
-c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_event.=
-c:25:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/uap_txrx.c=
-:23:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/sdio.c:27:
->> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_tx.c:2=
-5:
->> >  drivers/net/wireless/marvell/mwifiex/wmm.h:41:17: warning:
->> > =E2=80=98tos_to_tid_inv=E2=80=99 defined but not used [-Wunused-const-=
-variable=3D]
->> >  41 | static const u8 tos_to_tid_inv[] =3D {
->> >=20
->> >  NB: Snipped for brevity
->> >=20
->> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
->> > Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
->> > Cc: Xinming Hu <huxinming820@gmail.com>
->> > Cc: Kalle Valo <kvalo@codeaurora.org>
->> > Cc: "David S. Miller" <davem@davemloft.net>
->> > Cc: Jakub Kicinski <kuba@kernel.org>
->> > Cc: linux-wireless@vger.kernel.org
->> > Cc: netdev@vger.kernel.org
->> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>=20
->> The patch creates two duplicate arrays, this makes it worse than it was
->> before.
->
-> We have a choice (and you don't like either of them). :)
->
-> Either add the variable into the file(s) they are used or tell the
-> compiler that it's okay for other files to declare but not used them
-> (mark as __maybe_unused).
->
-> What is your preferred solution?
+Since it must match, in this case, it would be false, true, true,
+obviously ;-)
 
-Yue already sent a patch for this (at least I think so, not 100% sure if
-this is the same case):
+I guess this would mean to convert the two existing boolean parameters
+to flags first, and then introduce a new flag handling fb size vs. CRTC
+src.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next=
-.git/commit/?id=3Dd56ee19a148edaa9972ca12f817e395ba436078b
+Hm, this gets all a bit more involved. It is actually not the issue at
+hand (in my case the fb width does match the CRTC). Not sure if that
+case is actually a problem in real world? I can give this a shot still,
+if preferred. But I would do it independently of the framebuffer pitch
+validation.
 
-But that's the solution I like :) There's only one array and it's shared
-by all the users.
+--
+Stefan
 
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+>> > So I think in my case I can get away by only checking the framebuffer.
+>>
+>> You still need both I think.
