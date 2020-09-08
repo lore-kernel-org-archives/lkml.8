@@ -2,124 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D351C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E62FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAF3120738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE629206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oA245YJN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+xmTgpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbgIHP6S (ORCPT
+        id S1731038AbgIHP7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53406 "EHLO
+        Tue, 8 Sep 2020 11:59:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730936AbgIHPyo (ORCPT
+        with ESMTP id S1730938AbgIHPyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:54:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B8AC061234
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:28:01 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s12so732233wrw.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:28:01 -0700 (PDT)
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B07C06138E
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:33:24 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id l17so15751320edq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cu6qtzuHSpIxrLwUNTOO8k3jBCZ/URxPEoM+zt5iIyQ=;
-        b=oA245YJNIl81sFsge5Skr5CcilojbDrjtgLLDyV/vbCChg+D3qltoBRTQgdfxw5T1N
-         tgU+RYRvKRrJAMHe/JizkKIZq/1tBT53uhWEXJxpJEYdxoY2X0Oni6mveRV1YdA7bITT
-         IVU8zUdXtv1VHFgQKxB2Im3gseDNqZZLGgymHareitk2LFV9U1xNk7TJi/jj261QZED+
-         EHGt+/hqzA6/GL+rZxYatMu9LU+RWXjBIKQubbrFGSinF4SKS2L2Harc9yrkLVm2ITKy
-         np/OHFxYVuv+1kmYJCpcLiqhjCfGhESTQXVmJ6gQ4MmpFj+jO6hIgVF/5DMKgw7/Tl6Y
-         78Mg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CbHAntwE/i/0aOcErfQq5jTQMnZZWtdKrAQxbD+Urlc=;
+        b=J+xmTgpWIz9Bfj8KndmtxBj1SCYkernBnfaLUVEZ1RBJMr2xge19uixrG4oQBxWmxE
+         wlcVcXZsavOQxg4sIEhXmDFiYybKnat/o+TLE5MGXzt663viuveYHsIaoT7VX/+k0Sxb
+         dmsYrI4+WU3ck1uTe4hy+JbTz2wcuufFscmSCxrcRxFst9HEzxpsuMxMuF1wXZpg1jt6
+         FkIqMsDT/Cm2vCccRKFUz7St6nLxmBuWa+u0DPge8QTUdOqNslY518gM4zEem1PYnC7/
+         odBsMsJQMswlXhDy1m+xg3viqA4ZteEcF4gs6E5YhPBg/KlxCGcfN6LbGUP7ncOv15md
+         NX/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cu6qtzuHSpIxrLwUNTOO8k3jBCZ/URxPEoM+zt5iIyQ=;
-        b=augbbMUKFpC0R2UjYclMXAsUXUsShNC8kryZIk34RykF7etI0WoUIYe92czp5f5jkc
-         0m1tHLHYWk1MLjeEuvfS0+1NgQQaSNFgsFqRSTZRBUlz+5KJa5dElTGNmNStQqiSkyfO
-         +W6XjyKKOe05ZmHske5GmOdV8V1vSqDPTV++wF0xqei58xbI9yRvwVbJKe+LL8ZLmebc
-         lq2namjdRD0GObNxTYOP14GWuXLNke+iQt+FcMOa7UMXE/RvBnofd+lf1soilIku/3O3
-         CdeIvHzmR0e/udjhighl6UhNJBjBKgFmR1g1+wDHcWtKEl+MX8N94G7nMoXuWsNwQJLf
-         CwdA==
-X-Gm-Message-State: AOAM5330SE1Mmpk7IWL3YZH5AqrZdQIHCIvGm+JKiuiL4kJJ6W2EoNTC
-        c+2epimPlHcKn2P1XfxwM6ZbvGpLSym5fg==
-X-Google-Smtp-Source: ABdhPJxYCfLbCqSpwLjMwHYAhoT2kee8zWH+Wn3HQDgrBioo4CJzH5Ig5tVEm0cDPisJIqvnZRONXQ==
-X-Received: by 2002:adf:db43:: with SMTP id f3mr29009759wrj.219.1599571679421;
-        Tue, 08 Sep 2020 06:27:59 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id y1sm34225387wru.87.2020.09.08.06.27.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CbHAntwE/i/0aOcErfQq5jTQMnZZWtdKrAQxbD+Urlc=;
+        b=G5jOW7JOl4GKpSM94+Ks3fQtbENENOMk3XW4v1/esvvF3gStgmXfNvLFmhvzEd+J+S
+         QEKqEBm2gaeCC/iY2I+2eB4uuyAk80opfSaA7YpwQQM2dAA1FydGO+uhynEO552iaAHn
+         BIVh3m9RWxc0rqKqX9irQeaOdt2rscJrGzQMsh+hj23QxygNYertp7oQFkUV2u5r7UuF
+         TJvkk7NvquKSGUzaTp5uyDiKg4ma7FddojuVWwoUIqnCW/JiGHzjBlF4Tyf+mYsmr85U
+         HIcJN7qz3dyZNMA6E5J4CZF2B/Y/JLZt5PuKciA2m3RMHqXeuppmL4Ik9dfHUz4YihYD
+         iC/w==
+X-Gm-Message-State: AOAM531Im56bj0tMQ6H+RO4HWLmc/Tt+SuWVlYvtysKQD5X8pFP6FObI
+        wWxrn3Bm3Ck+O2yJcdKM1zPobA==
+X-Google-Smtp-Source: ABdhPJyire6a1xGmOn/Oizs1+bSA9Zj7VgW0Nwa4xh6mFyM9pB0RqkBU2ggzqp6YMpsH7c/DBqKZXg==
+X-Received: by 2002:a50:c182:: with SMTP id m2mr26187244edf.70.1599568403518;
+        Tue, 08 Sep 2020 05:33:23 -0700 (PDT)
+Received: from localhost.localdomain ([195.24.90.54])
+        by smtp.gmail.com with ESMTPSA id y9sm17499744edo.37.2020.09.08.05.33.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 06:27:58 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] nvmem: switch to simpler IDA interface
-Date:   Tue,  8 Sep 2020 15:27:55 +0200
-Message-Id: <20200908132755.11944-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 08 Sep 2020 05:33:22 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        nicolas.dufresne@collabora.com,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v3 0/6] Add VP9 codec levels
+Date:   Tue,  8 Sep 2020 15:32:15 +0300
+Message-Id: <20200908123221.2793-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello,
 
-We don't need to specify any ranges when allocating IDs so we can switch
-to ida_alloc() and ida_free() instead of the ida_simple_ counterparts.
+This new v3 now contains the implementation for VP9 profile and levels
+in the Venus driver as has been requested by Nicolas at [1].
 
-ida_simple_get(ida, 0, 0, gfp) is equivalent to
-ida_alloc_range(ida, 0, UINT_MAX, gfp) which is equivalent to
-ida_alloc(ida, gfp). Note: IDR will never actually allocate an ID
-larger than INT_MAX.
+Comments are welcome!
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/nvmem/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+regards,
+Stan
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 6cd3edb2eaf6..cd332d711dd1 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -321,7 +321,7 @@ static void nvmem_release(struct device *dev)
- {
- 	struct nvmem_device *nvmem = to_nvmem_device(dev);
- 
--	ida_simple_remove(&nvmem_ida, nvmem->id);
-+	ida_free(&nvmem_ida, nvmem->id);
- 	gpiod_put(nvmem->wp_gpio);
- 	kfree(nvmem);
- }
-@@ -596,7 +596,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 	if (!nvmem)
- 		return ERR_PTR(-ENOMEM);
- 
--	rval  = ida_simple_get(&nvmem_ida, 0, 0, GFP_KERNEL);
-+	rval  = ida_alloc(&nvmem_ida, GFP_KERNEL);
- 	if (rval < 0) {
- 		kfree(nvmem);
- 		return ERR_PTR(rval);
-@@ -608,7 +608,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
- 						    GPIOD_OUT_HIGH);
- 	if (IS_ERR(nvmem->wp_gpio)) {
--		ida_simple_remove(&nvmem_ida, nvmem->id);
-+		ida_free(&nvmem_ida, nvmem->id);
- 		rval = PTR_ERR(nvmem->wp_gpio);
- 		kfree(nvmem);
- 		return ERR_PTR(rval);
+[1] https://patchwork.kernel.org/patch/11717307/
+
+Stanimir Varbanov (6):
+  v4l2-ctrl: Add VP9 codec levels
+  venus: hfi_helper: Add VP9 profile and levels
+  venus: helpers: Add a helper to map v4l2 ids to HFI ids
+  venus: vdec: Set/Get VP9 profile/level
+  venus: vdec: Use helper to get profile and level
+  venus: venc: Use helper to set profile and level
+
+ .../media/v4l/ext-ctrls-codec.rst             |  43 ++++
+ drivers/media/platform/qcom/venus/core.h      |  13 +-
+ drivers/media/platform/qcom/venus/helpers.c   | 239 ++++++++++++++++++
+ drivers/media/platform/qcom/venus/helpers.h   |   2 +
+ .../media/platform/qcom/venus/hfi_helper.h    |  18 ++
+ .../media/platform/qcom/venus/vdec_ctrls.c    |  31 ++-
+ drivers/media/platform/qcom/venus/venc.c      | 159 +-----------
+ .../media/platform/qcom/venus/venc_ctrls.c    |  14 +-
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  21 ++
+ include/uapi/linux/v4l2-controls.h            |  17 ++
+ 10 files changed, 370 insertions(+), 187 deletions(-)
+
 -- 
 2.17.1
 
