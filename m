@@ -2,274 +2,165 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97022C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390FAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCD020578
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:44:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V0EtTOmL";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Muz/MSAL"
+	by mail.kernel.org (Postfix) with ESMTP id 02D0A2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599594292;
+	bh=TwSgaQVWEpyncboF4JaD9IhTXHoxnoQIBmEUk68HUJI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=IUvROjUbPXig0hNEyaj9c2sRqOEl/UU8fM0WxT5RZbN+8VcZOvd7+gWYtvAflGQAV
+	 ZXHvAVaNHtTpz5w9vjkQzd6GP3hy1vzHng3SMSybAU8ikbDT1Z/TphrcMkx1luhsd2
+	 Yed6fvy+lATxSbMWBYUWFOcoIpTSLZuwtQ20jnoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbgIHTok (ORCPT
+        id S1732145AbgIHTor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:44:40 -0400
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:42522
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729791AbgIHTo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:44:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599594265;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=8WW0GBw5JW+XfqzWOS9BQy4RMnqMxVS+U0EKG5ssuts=;
-        b=V0EtTOmLUISmAvKqj8LnPw1JdslnsO9WEqu9bVZ6h/NSyLkUmTXlSudalbe0JnNd
-        eJxBiHxYmbweJqvHSC8NxytAZEdhuDYpro5/gtItEMCKPeq0RzUrxSdNeGHWUQcSjce
-        dEX/0C6jo87tlXJhQOsiO8lQH9H8jlBvoHHmHmns=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599594265;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=8WW0GBw5JW+XfqzWOS9BQy4RMnqMxVS+U0EKG5ssuts=;
-        b=Muz/MSALldRwagEcsnImKPvqrJmjX2OXkRJwnBtNpPl0npszw4kMxuCK48hrkOR4
-        3YT5xbg7l0BfgVkcdEKFS7CajAsRDt8jJm3OLmkDm9yssriOppuNmYffa023KTsbmab
-        aJowRO2g5DypQnRl98F4qK+6GG/i0PG8NMcNDcdQ=
+        Tue, 8 Sep 2020 15:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731791AbgIHTof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:44:35 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D1E720578;
+        Tue,  8 Sep 2020 19:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599594273;
+        bh=TwSgaQVWEpyncboF4JaD9IhTXHoxnoQIBmEUk68HUJI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=CvcYBcII98mNXdOt3ahcND/odmUUtF1qJ7jdSiGu5rWQigwBgkEIGnxpVHeYd2rj2
+         BSuXy9Eu/sB6mfBPSMnCgiune1xkJVc0Frzvajn6liJxdAa5Xy6U2YFaQd5sWObBlO
+         ey0gPuJXFnLabJ79cydkxypftdh00fQbSdgW+K9o=
+Message-ID: <e4f5ccb298170357ba16ae2870fde6a90ca2aa81.camel@kernel.org>
+Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Jan Kara <jack@suse.cz>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Date:   Tue, 08 Sep 2020 15:44:32 -0400
+In-Reply-To: <20200908112742.GA2956@quack2.suse.cz>
+References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+         <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
+         <20200908112742.GA2956@quack2.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 8 Sep 2020 19:44:25 +0000
-From:   abhinavk@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 2/2] drm/msm/dpu: clean up some impossibilities
-In-Reply-To: <20200907170450.370122-2-robdclark@gmail.com>
-References: <20200907170450.370122-1-robdclark@gmail.com>
- <20200907170450.370122-2-robdclark@gmail.com>
-Message-ID: <010101746f3f7b59-bd6c1de2-1fae-4733-ba95-a4802b81b892-000000@us-west-2.amazonses.com>
-X-Sender: abhinavk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.08-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-07 10:04, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On Tue, 2020-09-08 at 13:27 +0200, Jan Kara wrote:
+> Added Jeff to CC since he has written the code...
 > 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 81 ++++--------------------
->  1 file changed, 12 insertions(+), 69 deletions(-)
+> On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
+> > [Widening the CC to include Andrew and linux-fsdevel@]
+> > [Milan: thanks for the patch, but it's unclear to me from your commit
+> > message how/if you verified the details.]
+> > 
+> > Andrew, maybe you (or someone else) can comment, since long ago your
+> > 
+> >     commit f79e2abb9bd452d97295f34376dedbec9686b986
+> >     Author: Andrew Morton <akpm@osdl.org>
+> >     Date:   Fri Mar 31 02:30:42 2006 -0800
+> > 
+> > included a comment that is referred to in  stackoverflow discussion
+> > about this topic (that SO discussion is in turn referred to by
+> > https://bugzilla.kernel.org/show_bug.cgi?id=194757).
+> > 
+> > The essence as I understand it, is this:
+> > (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
+> > has not been synced.
+> > (2) In this case, the EIO/ENOSPC setting is cleared so that...
+> > (3) A subsequent fsync() might return success, but...
+> > (4) That doesn't mean that the data in (1) landed on the disk.
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index 89c0245b5de5..ad49b0e17fcb 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -265,11 +265,6 @@ enum dpu_intf_mode dpu_crtc_get_intf_mode(struct
-> drm_crtc *crtc)
->  {
->  	struct drm_encoder *encoder;
+> Correct.
 > 
-> -	if (!crtc) {
-> -		DPU_ERROR("invalid crtc\n");
-> -		return INTF_MODE_NONE;
-> -	}
-> -
->  	/*
->  	 * TODO: This function is called from dpu debugfs and as part of 
-> atomic
->  	 * check. When called from debugfs, the crtc->mutex must be held to
-> @@ -500,12 +495,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc 
-> *crtc,
->  	struct dpu_crtc_state *cstate;
->  	struct drm_encoder *encoder;
->  	struct drm_device *dev;
-> -	unsigned long flags;
-> -
-> -	if (!crtc) {
-> -		DPU_ERROR("invalid crtc\n");
-> -		return;
-> -	}
+> > The proposed manual page patch below wants to document this, but I'd
+> > be happy to have an FS-knowledgeable person comment before I apply.
 > 
->  	if (!crtc->state->enable) {
->  		DPU_DEBUG("crtc%d -> enable %d, skip atomic_begin\n",
-> @@ -521,15 +510,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc 
-> *crtc,
+> Just a small comment below:
 > 
->  	_dpu_crtc_setup_lm_bounds(crtc, crtc->state);
+> > On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
+> > > From: Milan Shah <milan.opensource@gmail.com>
+> > > 
+> > > This Fix addresses Bug 194757.
+> > > Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
+> > > ---
+> > >  man2/fsync.2 | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > > 
+> > > diff --git a/man2/fsync.2 b/man2/fsync.2
+> > > index 96401cd..f38b3e4 100644
+> > > --- a/man2/fsync.2
+> > > +++ b/man2/fsync.2
+> > > @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
+> > >  or
+> > >  .BR sdparm (8)
+> > >  to guarantee safe operation.
+> > > +
+> > > +When
+> > > +.BR fsync ()
+> > > +or
+> > > +.BR fdatasync ()
+> > > +returns
+> > > +.B EIO
+> > > +or
+> > > +.B ENOSPC
+> > > +any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
+> > > +will return without error. It is
+> > > +.I not
+> > > +safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
+> > >  .SH SEE ALSO
+> > >  .BR sync (1),
+> > >  .BR bdflush (2),
 > 
-> -	if (dpu_crtc->event) {
-> -		WARN_ON(dpu_crtc->event);
-> -	} else {
-> -		spin_lock_irqsave(&dev->event_lock, flags);
-> -		dpu_crtc->event = crtc->state->event;
-> -		crtc->state->event = NULL;
-> -		spin_unlock_irqrestore(&dev->event_lock, flags);
-> -	}
-> -
->  	/* encoder will trigger pending mask now */
->  	drm_for_each_encoder_mask(encoder, crtc->dev, 
-> crtc->state->encoder_mask)
->  		dpu_encoder_trigger_kickoff_pending(encoder);
-> @@ -583,14 +563,11 @@ static void dpu_crtc_atomic_flush(struct drm_crtc 
-> *crtc,
->  		return;
->  	}
+> So the error state isn't really stored "on pages in the file mapping".
+> Current implementation (since 4.14) is that error state is stored in struct
+> file (I think this tends to be called "file description" in manpages) and
+> so EIO / ENOSPC is reported once for each file description of the file that
+> was open before the error happened. Not sure if we want to be so precise in
+> the manpages or if it just confuses people. Anyway your takeway that no
+> error on subsequent fsync() does not mean data was written is correct.
 > 
-> -	if (dpu_crtc->event) {
-> -		DPU_DEBUG("already received dpu_crtc->event\n");
-> -	} else {
-> -		spin_lock_irqsave(&dev->event_lock, flags);
-> -		dpu_crtc->event = crtc->state->event;
-> -		crtc->state->event = NULL;
-> -		spin_unlock_irqrestore(&dev->event_lock, flags);
-> -	}
-> +	WARN_ON(dpu_crtc->event);
-before the patch "move vblank events to complete_commit()", the dpu_crtc 
-events
-were consumed in the _dpu_crtc_complete_flip(). So there was a chance 
-that if the vblank event
-did not come in time before the next commit, dpu_crtc->event will not be 
-consumed.
+> 
 
-But after the patch, _dpu_crtc_complete_flip() is being signaled in 
-dpu_crtc_complete_commit()
-which will always happen, so is there any case where we will hit this 
-warning at all or will this
-catch some other condition?
+Thinking about it more, I think we ought to spell this out explicitly as
+we can in the manpage. This is a point of confusion for a lot of people
+and not understanding this can lead to data integrity bugs. Maybe
+something like this in the NOTES section?
 
-> +	spin_lock_irqsave(&dev->event_lock, flags);
-> +	dpu_crtc->event = crtc->state->event;
-> +	crtc->state->event = NULL;
-> +	spin_unlock_irqrestore(&dev->event_lock, flags);
-> 
->  	/*
->  	 * If no mixers has been allocated in dpu_crtc_atomic_check(),
-> @@ -635,14 +612,7 @@ static void dpu_crtc_atomic_flush(struct drm_crtc 
-> *crtc,
->  static void dpu_crtc_destroy_state(struct drm_crtc *crtc,
->  		struct drm_crtc_state *state)
->  {
-> -	struct dpu_crtc_state *cstate;
-> -
-> -	if (!crtc || !state) {
-> -		DPU_ERROR("invalid argument(s)\n");
-> -		return;
-> -	}
-> -
-> -	cstate = to_dpu_crtc_state(state);
-> +	struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
-> 
->  	DPU_DEBUG("crtc%d\n", crtc->base.id);
-> 
-> @@ -731,14 +701,8 @@ static void dpu_crtc_reset(struct drm_crtc *crtc)
->   */
->  static struct drm_crtc_state *dpu_crtc_duplicate_state(struct drm_crtc 
-> *crtc)
->  {
-> -	struct dpu_crtc_state *cstate, *old_cstate;
-> -
-> -	if (!crtc || !crtc->state) {
-> -		DPU_ERROR("invalid argument(s)\n");
-> -		return NULL;
-> -	}
-> +	struct dpu_crtc_state *cstate, *old_cstate = 
-> to_dpu_crtc_state(crtc->state);
-> 
-> -	old_cstate = to_dpu_crtc_state(crtc->state);
->  	cstate = kmemdup(old_cstate, sizeof(*old_cstate), GFP_KERNEL);
->  	if (!cstate) {
->  		DPU_ERROR("failed to allocate state\n");
-> @@ -754,19 +718,12 @@ static struct drm_crtc_state
-> *dpu_crtc_duplicate_state(struct drm_crtc *crtc)
->  static void dpu_crtc_disable(struct drm_crtc *crtc,
->  			     struct drm_crtc_state *old_crtc_state)
->  {
-> -	struct dpu_crtc *dpu_crtc;
-> -	struct dpu_crtc_state *cstate;
-> +	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
-> +	struct dpu_crtc_state *cstate = to_dpu_crtc_state(crtc->state);
->  	struct drm_encoder *encoder;
->  	unsigned long flags;
->  	bool release_bandwidth = false;
-> 
-> -	if (!crtc || !crtc->state) {
-> -		DPU_ERROR("invalid crtc\n");
-> -		return;
-> -	}
-> -	dpu_crtc = to_dpu_crtc(crtc);
-> -	cstate = to_dpu_crtc_state(crtc->state);
-> -
->  	DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
-> 
->  	/* Disable/save vblank irq handling */
-> @@ -825,19 +782,13 @@ static void dpu_crtc_disable(struct drm_crtc 
-> *crtc,
->  static void dpu_crtc_enable(struct drm_crtc *crtc,
->  		struct drm_crtc_state *old_crtc_state)
->  {
-> -	struct dpu_crtc *dpu_crtc;
-> +	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
->  	struct drm_encoder *encoder;
->  	bool request_bandwidth = false;
-> 
-> -	if (!crtc) {
-> -		DPU_ERROR("invalid crtc\n");
-> -		return;
-> -	}
-> -
->  	pm_runtime_get_sync(crtc->dev->dev);
-> 
->  	DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
-> -	dpu_crtc = to_dpu_crtc(crtc);
-> 
->  	drm_for_each_encoder_mask(encoder, crtc->dev, 
-> crtc->state->encoder_mask) {
->  		/* in video mode, we hold an extra bandwidth reference
-> @@ -873,9 +824,9 @@ struct plane_state {
->  static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
->  		struct drm_crtc_state *state)
->  {
-> -	struct dpu_crtc *dpu_crtc;
-> +	struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
-> +	struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
->  	struct plane_state *pstates;
-> -	struct dpu_crtc_state *cstate;
-> 
->  	const struct drm_plane_state *pstate;
->  	struct drm_plane *plane;
-> @@ -889,16 +840,8 @@ static int dpu_crtc_atomic_check(struct drm_crtc 
-> *crtc,
->  	int left_zpos_cnt = 0, right_zpos_cnt = 0;
->  	struct drm_rect crtc_rect = { 0 };
-> 
-> -	if (!crtc) {
-> -		DPU_ERROR("invalid crtc\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	pstates = kzalloc(sizeof(*pstates) * DPU_STAGE_MAX * 4, GFP_KERNEL);
-> 
-> -	dpu_crtc = to_dpu_crtc(crtc);
-> -	cstate = to_dpu_crtc_state(state);
-> -
->  	if (!state->enable || !state->active) {
->  		DPU_DEBUG("crtc%d -> enable %d, active %d, skip atomic_check\n",
->  				crtc->base.id, state->enable, state->active);
+'''
+When fsync returns an error, the file is considered to be "clean". A
+subsequent call to fsync will not result in a reattempt to write out the
+data, unless that data has been rewritten. Applications that want to
+reattempt writing to the file after a transient error must re-write
+their data.
+'''
+
+To be clear:
+
+In practice, you'd only have to write enough to redirty each page in
+most cases.
+
+Also, it is hard to claim that the above behavior is universally true. A
+filesystem could opt to keep the pages dirty for some errors, but the
+vast majority just toss out the data whenever there is a writeback
+problem.
+
+
+-- 
+Jeff Layton <jlayton@kernel.org>
+
