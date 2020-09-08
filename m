@@ -2,162 +2,110 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF37C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DC3C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A17F20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C263B2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sITCjv2G"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="J4Aozqdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgIHVQx (ORCPT
+        id S1729912AbgIHVWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:16:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48326 "EHLO
+        Tue, 8 Sep 2020 17:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728631AbgIHVQr (ORCPT
+        with ESMTP id S1728390AbgIHVWh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:16:47 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE58C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:16:46 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id kk9so241389pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:16:46 -0700 (PDT)
+        Tue, 8 Sep 2020 17:22:37 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4893FC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:22:35 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id nw23so479254ejb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:22:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2efFs7I/aVceVr/UA1FiVN+0BylwZxjeaszZFFD+TI8=;
-        b=sITCjv2Gw9n5L/AbRCZ60B2tM96FOIAmZJP0xe2pWojsuA5XzhXqrZIsezZXCVNKFJ
-         oTkLfrCwO3b29MBCWYBtrLpvexnpWu8O5O9PQPbfZcg2StDIQ5hvVUVYZF2KMkZQM3jA
-         Y0n9t1cvTsIau5HLXC3w1BW386YBX5etGcBDupIed7NhVvmW3Sze/9BeRrY+3eebmC54
-         A3rg+0Q2or5ANiemPjDYOHk9RJ87YkzEsypOP9ODMDA2xV0LR5EzXHAisx/02MWDtifr
-         c59B02GuTqOPM7NTMhmOA+z/kS+V8qF7KI7GgYITYiOU1zTcJV35HGMVQ8GGwXhyPLWc
-         L4uQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oqOh6m3rLnlC8ajqd5NeDF4oaHEgZ3CJ+Z2OjKrzUuc=;
+        b=J4AozqdwEKhDUAF8qiC996g76KjEa+7fEqijzj1IFbCJEoXLhNG+Nrp0d50v6SzQzQ
+         0uMGM41XDzGUpPiQtyQbPJ0eME8YRxb1Cnjz2IE6qrdgGZYl1ejj6n2uUX6pmNj+8rqH
+         z0x+ZG76FWV/i42HQSlOGyd4mIfoB3DMKskJQMoYkyIA4qDxccFXw3QsJxJa7JJNdaJg
+         mRjXd9Dgsr1QqCoTmoxMC8l3Xd/GAJnafq2Gxr6w5P42JzdZY8kHj6qyZJ+pXhdWhIVE
+         jOXyBnV+6IKcft3XKG87pIdf6nyFg5pkYc2zr76bhSk6vtD7FJETscD3DmITNWD4nkPF
+         rbPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2efFs7I/aVceVr/UA1FiVN+0BylwZxjeaszZFFD+TI8=;
-        b=TjZwHTHBm8QfXvIDDtSfq4tSZOsQYe18c0RLc++Zsn4w5bcCJCRzcivkIeFWvqK0Qz
-         coIolR99f28nD1N9E0RPTQn5YPX7cL+h9FZx2xYCSsf2u/GrzRGreDhvw3pqNZ9fuPso
-         bxGHmAz4RXB+z/fW6+tgVk1ILCFEon6R/1UJlaBds0P2csprir986iF+9vCS8C2nAWJj
-         2lNTrHw/esndOsT2kX0s0nJi1Ax9ahMhbc+amYZWRBaE58LgAtJyh+UyMUIVoJWSl9yk
-         cjNZVHskjoeBXxf/4bG9OxpqLfnb3zce+/LMwsdr6fx0LMbCWmndCit3OrGewxuzePAX
-         nzFA==
-X-Gm-Message-State: AOAM532EwheFfWj+vnIZssdgznQUS0MBGB0cuBwuzExeJw1l2rhp+Ls7
-        PVhbW7KZzPxZBSnhGtT2A1r4dQ==
-X-Google-Smtp-Source: ABdhPJyWG8mI3H/BsY+oT/o/ksZJ0zCieLkhk5hIgmn2bkbuRWqCNofmO6IoZa9/Ax5C5W1FdW8cWQ==
-X-Received: by 2002:a17:90a:f486:: with SMTP id bx6mr641742pjb.130.1599599806032;
-        Tue, 08 Sep 2020 14:16:46 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id 137sm315259pfu.149.2020.09.08.14.16.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 14:16:45 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 14:16:38 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 15/28] init: lto: ensure initcall ordering
-Message-ID: <20200908211638.GC1060586@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-16-samitolvanen@google.com>
- <202009031532.CD2A5F372D@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oqOh6m3rLnlC8ajqd5NeDF4oaHEgZ3CJ+Z2OjKrzUuc=;
+        b=fi2OjzGZ8eEacj8ji6ytg6HXczPI2p9FXCQsYR1Qu9R9PwupcpKWFAW5glCPzAy0+T
+         J1653BRbv+vN/vi/9iYH8h/cO2tT3T6vYi/NF5vm7n4N8dwgue7GErpWGKVjQ92udzHi
+         G348bC2ZUVGMtHim3RtHnMm7GewfrNl6tJWyqO9QddnXfbhUmTHJnDYQDv770LhbiP8z
+         vmAEYcyoESAyIVfiM2TSiUCNNN0v2boXbqBI7qRbpdQLzxwy1nC3kzkT5pe0he+x7G+6
+         qZDyyy22bDbcixy2HoLuf53oQ+4KFYuwm1O8/kLfygqlwqXWAsuFJOp364aub/JbBtVy
+         cm3w==
+X-Gm-Message-State: AOAM53078bsiGGBkacrRORLhEnIQYmpjGWuFejYkXxhvU57L9CPq54ee
+        mHbpRwe1FlAGMu0wueJ4JdO5jBdjIC2YLBcJj/Ak
+X-Google-Smtp-Source: ABdhPJyKvVm5mCUhxRz1wocuTCtuocuPD14pIldrj3Y3TUjT2RAvb0w0smMDFxSMcrS2qzG/vcpJ24LMokTS4CQ84OI=
+X-Received: by 2002:a17:906:a415:: with SMTP id l21mr375281ejz.431.1599600153969;
+ Tue, 08 Sep 2020 14:22:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202009031532.CD2A5F372D@keescook>
+References: <20200908135915.22039-1-wanghai38@huawei.com>
+In-Reply-To: <20200908135915.22039-1-wanghai38@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 8 Sep 2020 17:22:22 -0400
+Message-ID: <CAHC9VhTMmChHskO2K8GchSxX06C-XdAVVQu9Gfih1BH-=eb+uw@mail.gmail.com>
+Subject: Re: [PATCH net-next] cipso: fix 'audit_secid' kernel-doc warning in cipso_ipv4.c
+To:     Wang Hai <wanghai38@huawei.com>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 03:40:31PM -0700, Kees Cook wrote:
-> On Thu, Sep 03, 2020 at 01:30:40PM -0700, Sami Tolvanen wrote:
-> > With LTO, the compiler doesn't necessarily obey the link order for
-> > initcalls, and initcall variables need globally unique names to avoid
-> > collisions at link time.
-> > 
-> > This change exports __KBUILD_MODNAME and adds the initcall_id() macro,
-> > which uses it together with __COUNTER__ and __LINE__ to help ensure
-> > these variables have unique names, and moves each variable to its own
-> > section when LTO is enabled, so the correct order can be specified using
-> > a linker script.
-> > 
-> > The generate_initcall_ordering.pl script uses nm to find initcalls from
-> > the object files passed to the linker, and generates a linker script
-> > that specifies the intended order. With LTO, the script is called in
-> > link-vmlinux.sh.
-> 
-> I think I asked before about this being made unconditional, but the hit
-> on final link time was noticeable. Am I remembering that right? If so,
-> sure, let's keep it separate.
+On Tue, Sep 8, 2020 at 10:02 AM Wang Hai <wanghai38@huawei.com> wrote:
+>
+> Fixes the following W=1 kernel build warning(s):
+>
+> net/ipv4/cipso_ipv4.c:510: warning: Excess function parameter 'audit_secid' description in 'cipso_v4_doi_remove'
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> ---
+>  net/ipv4/cipso_ipv4.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, it was noticeable when compiling on systems with fewer CPU cores,
-so I would prefer to keep it separate.
+Thanks for catching this and submitting the fix.
 
-> > +## forks a child to process each file passed in the command line and collects
-> > +## the results
-> > +sub process_files {
-> > +	my $index = 0;
-> > +	my $njobs = get_online_processors();
-> > +	my $select = IO::Select->new();
-> > +
-> > +	while (my $file = shift(@ARGV)) {
-> > +		# fork a child process and read it's stdout
-> > +		my $pid = open(my $fh, '-|');
-> 
-> /me makes noises about make -jN and the jobserver and not using all
-> processors on a machine if we were asked nicely not to.
-> 
-> I wrote a jobserver aware tool for the documentation builds, but it's in
-> python (scripts/jobserver-exec). Instead of reinventing that wheel (and
-> in Perl), we could:
-> 
-> 1) ignore this problem and assume anyone using LTO is fine with using all CPUs
-> 
-> 2) implement a jobserver-aware Perl script to do this
-> 
-> 3) make Python a build dependency of CONFIG_LTO and re-use scripts/jobserver-exec
+Acked-by: Paul Moore <paul@paul-moore.com>
 
-I'm fine with any of these options, although I'm not sure why anyone
-would want to compile an LTO kernel without using all the available
-cores... :)
+> diff --git a/net/ipv4/cipso_ipv4.c b/net/ipv4/cipso_ipv4.c
+> index 2eb71579f4d2..471d33a0d095 100644
+> --- a/net/ipv4/cipso_ipv4.c
+> +++ b/net/ipv4/cipso_ipv4.c
+> @@ -498,7 +498,7 @@ static void cipso_v4_doi_free_rcu(struct rcu_head *entry)
+>  /**
+>   * cipso_v4_doi_remove - Remove an existing DOI from the CIPSO protocol engine
+>   * @doi: the DOI value
+> - * @audit_secid: the LSM secid to use in the audit message
+> + * @audit_info: NetLabel audit information
+>   *
+>   * Description:
+>   * Removes a DOI definition from the CIPSO engine.  The NetLabel routines will
+> --
+> 2.17.1
+>
 
-Using jobserver-exec seems like the easiest option if we want to limit
-the number of cores used here. Any preferences?
 
-> >  # If CONFIG_LTO_CLANG is selected, collect generated symbol versions into
-> >  # .tmp_symversions.lds
-> >  gen_symversions()
-> > @@ -74,6 +84,9 @@ modpost_link()
-> >  		--end-group"
-> >  
-> >  	if [ -n "${CONFIG_LTO_CLANG}" ]; then
-> > +		gen_initcalls
-> > +		lds="-T .tmp_initcalls.lds"
-> 
-> Oh, I think lds should be explicitly a "local" at the start of this
-> function, perhaps back in the symversions patch that touches this?
-
-It's already local, that part is just not visible in this patch.
-
-Sami
+-- 
+paul moore
+www.paul-moore.com
