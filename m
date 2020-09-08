@@ -2,113 +2,100 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96372C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4003DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651B92087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592705;
-	bh=R4RDt6MB6w6jlYYnXl0Sp5AbezBpq9SsMLs9+AC9t24=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqfjsQ4SlqF4GBO18M328KxgRYA6OQD2YxxpBGU5GI0Hs8SD1nYU4NZAJjOvjMHNk
-	 0JXRG23FDwmEE3FzxlFf+mnreakW+0yc6Vgm+A98Qu6iZoOKQItp0WzeXqVMrNVtQd
-	 7JiCR5m9Hgg7toupN6thuwZmTDfCs22wl/TMkv/E=
+	by mail.kernel.org (Postfix) with ESMTP id 12E7C21D46
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732006AbgIHTSY (ORCPT
+        id S1732009AbgIHTS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:18:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:59407 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731140AbgIHQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731142AbgIHQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:02:52 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFCF823EF1;
-        Tue,  8 Sep 2020 15:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579478;
-        bh=R4RDt6MB6w6jlYYnXl0Sp5AbezBpq9SsMLs9+AC9t24=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uj2DTWBH77JI6Hk5bvkYkRb3PfVd7aB4c5+8hQxEz6vB06W+B+aDWKTr2+FVQLqIq
-         x9eT2iHwkEJDMKTuacMCE7MmZPS76LzLqkyacp4017Lp5suXRE4eD8xYX5Dc6Tq6Zp
-         RKyC7bskXGgjz2ME62i++kDv4aesZ2QrbUuA4vTo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 077/186] media: cedrus: Add missing v4l2_ctrl_request_hdl_put()
-Date:   Tue,  8 Sep 2020 17:23:39 +0200
-Message-Id: <20200908152245.381408480@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+IronPort-SDR: po/k/mVz/rKQaNpunDFGyqwHb7oftmN3x2KIS4nbF4kaHt0gr1UPXQFvpe6SXoijBbRbG+rTUl
+ bDB2wMf4hAtQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="145860470"
+X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
+   d="scan'208";a="145860470"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 07:41:11 -0700
+IronPort-SDR: GwGJVhQl5LsZCtYfS7A9iPjpGOoLjIqPKg8jU0lNh+QzaUUg/j/tOkU/84RoXAzvNqvUBXGq2n
+ hbejdvwrRCjQ==
+X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
+   d="scan'208";a="480050658"
+Received: from dpdesmon-mobl1.amr.corp.intel.com (HELO [10.212.58.192]) ([10.212.58.192])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 07:41:03 -0700
+Subject: Re: [PATCH] tracing: fix double free
+To:     trix@redhat.com, rostedt@goodmis.org, mingo@redhat.com,
+        natechancellor@gmail.com, ndesaulniers@google.com,
+        baohong.liu@intel.com
+Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20200907135845.15804-1-trix@redhat.com>
+From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
+Message-ID: <84df7ef3-0a36-0929-3fa9-74ab773ca12e@linux.intel.com>
+Date:   Tue, 8 Sep 2020 09:41:01 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200907135845.15804-1-trix@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+Hi Tom,
 
-[ Upstream commit b30063976f29fc221a99d18d37d22ca035068aa9 ]
+On 9/7/2020 8:58 AM, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> clang static analyzer reports this problem
+> 
+> trace_events_hist.c:3824:3: warning: Attempt to free
+>    released memory
+>      kfree(hist_data->attrs->var_defs.name[i]);
+> 
+> In parse_var_defs() if there is a problem allocating
+> var_defs.expr, the earlier var_defs.name is freed.
+> This free is duplicated by free_var_defs() which frees
+> the rest of the list.
+> 
+> Because free_var_defs() has to run anyway, remove the
+> second free fom parse_var_defs().
+> 
+> Fixes: 30350d65ac56 ("tracing: Add variable support to hist triggers")
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-The check for a required control in the request was missing a call to
-v4l2_ctrl_request_hdl_put() in the error path. Fix it.
+Good catch, thanks for fixing this!
 
-Fixes: 50e761516f2b8c ("media: platform: Add Cedrus VPU decoder driver")
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/media/sunxi/cedrus/cedrus.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-index bc27f9430eeb1..7c6b91f0e780a 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -199,6 +199,7 @@ static int cedrus_request_validate(struct media_request *req)
- 	struct v4l2_ctrl *ctrl_test;
- 	unsigned int count;
- 	unsigned int i;
-+	int ret = 0;
- 
- 	list_for_each_entry(obj, &req->objects, list) {
- 		struct vb2_buffer *vb;
-@@ -243,12 +244,16 @@ static int cedrus_request_validate(struct media_request *req)
- 		if (!ctrl_test) {
- 			v4l2_info(&ctx->dev->v4l2_dev,
- 				  "Missing required codec control\n");
--			return -ENOENT;
-+			ret = -ENOENT;
-+			break;
- 		}
- 	}
- 
- 	v4l2_ctrl_request_hdl_put(hdl);
- 
-+	if (ret)
-+		return ret;
-+
- 	return vb2_request_validate(req);
- }
- 
--- 
-2.25.1
-
-
-
+> ---
+>   kernel/trace/trace_events_hist.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 0b933546142e..1b2ef6490229 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -3865,7 +3865,6 @@ static int parse_var_defs(struct hist_trigger_data *hist_data)
+>   
+>   			s = kstrdup(field_str, GFP_KERNEL);
+>   			if (!s) {
+> -				kfree(hist_data->attrs->var_defs.name[n_vars]);
+>   				ret = -ENOMEM;
+>   				goto free;
+>   			}
+> 
