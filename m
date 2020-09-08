@@ -2,54 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5319AC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB7CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD282078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A9A2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593318;
-	bh=jnjSkwltB+DWNdnXNza90QAvc1SVRp5+CIRQcpUCmaQ=;
+	s=default; t=1599593324;
+	bh=rfQrTDsy7LmPQLr7yjcnM0Glk1dzh2rcpHJLjnpn68A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rSwl9bUGRKMj2lndjFzdYIHOADieNeQbafEkbwj4sH60FwduC8wB2UCtveHIaPnHV
-	 uvPS3UcwVNriGhisJli0bCoJsYhboST+zSay/ox1O/udRfnGPDDGbkus7temPn1lAm
-	 WPfQRlUpp7xYZHAxl4ZKB/JqqCAoddjb/dJwrv4s=
+	b=TPkfmK4UjQWlC5j8rkEywC+nTEQO9NFbTeivB6PxNNtaDiWBoEjGeKpsp0L5AQZ0F
+	 3OwTldQxH3Ui8S5SSndZB4UXELOPjwpVC+5p9Qtk6L3Ws9A9LJusP3fCw/awPFM5uC
+	 2kow3KJMNwhT9iX/+ATOoYTHkXNoasy+CEJ+AGvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731665AbgIHT2g (ORCPT
+        id S1732209AbgIHT2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47734 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731068AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731061AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F34B2416C;
-        Tue,  8 Sep 2020 15:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5154124692;
+        Tue,  8 Sep 2020 15:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579517;
-        bh=jnjSkwltB+DWNdnXNza90QAvc1SVRp5+CIRQcpUCmaQ=;
+        s=default; t=1599579581;
+        bh=rfQrTDsy7LmPQLr7yjcnM0Glk1dzh2rcpHJLjnpn68A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lz69e8832DoHIBN2yNmOPesPz3nEo233cuqVeJbPl25RoWHIcjY/rkZXmpuGN0mLT
-         IJsv+NFyQ8tju+uAkppkxXTNVmG9QAxfqlz/hg8TQWt7bLnne/KxNJy2OOwcObQMoQ
-         kO5OOrKAowLb7YrNwbhEva+4gjWXZkF8RzTGb/Y0=
+        b=rg2jF/u4Pixi3JW9ygKeW5V7eb2RpRTQgeXj3o48Rgmpge3Dyy3RlYrHJPkiBFpuc
+         KVTzmSemxKXIHfrQ3mvBdRMN/+90bih1VaNQS09Q3xEzwPxlpQiJPeYhayO6haDC5C
+         5NVzjnDXKu+iKwzJnjBmImlAzirtlO+ppQajA4gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Landen Chao <landen.chao@mediatek.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 081/186] net: dsa: mt7530: fix advertising unsupported 1000baseT_Half
-Date:   Tue,  8 Sep 2020 17:23:43 +0200
-Message-Id: <20200908152245.570536621@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 110/186] iommu/vt-d: Serialize IOMMU GCMD register modifications
+Date:   Tue,  8 Sep 2020 17:24:12 +0200
+Message-Id: <20200908152246.966312595@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,36 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Landen Chao <landen.chao@mediatek.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit f272285f6abb9178d029375599626baf3d5f4e8a ]
+[ Upstream commit 6e4e9ec65078093165463c13d4eb92b3e8d7b2e8 ]
 
-Remove 1000baseT_Half to advertise correct hardware capability in
-phylink_validate() callback function.
+The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
+Description) that:
 
-Fixes: 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
-Signed-off-by: Landen Chao <landen.chao@mediatek.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+If multiple control fields in this register need to be modified, software
+must serialize the modifications through multiple writes to this register.
+
+However, in irq_remapping.c, modifications of IRE and CFI are done in one
+write. We need to do two separate writes with STS checking after each. It
+also checks the status register before writing command register to avoid
+unnecessary register write.
+
+Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Link: https://lore.kernel.org/r/20200828000615.8281-1-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mt7530.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel/irq_remapping.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 8dcb8a49ab67f..238417db26f9b 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -1501,7 +1501,7 @@ unsupported:
- 		phylink_set(mask, 100baseT_Full);
+diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+index aa096b333a991..4828f4fe09ab5 100644
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -507,12 +507,18 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
  
- 		if (state->interface != PHY_INTERFACE_MODE_MII) {
--			phylink_set(mask, 1000baseT_Half);
-+			/* This switch only supports 1G full-duplex. */
- 			phylink_set(mask, 1000baseT_Full);
- 			if (port == 5)
- 				phylink_set(mask, 1000baseX_Full);
+ 	/* Enable interrupt-remapping */
+ 	iommu->gcmd |= DMA_GCMD_IRE;
+-	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
+ 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
+-
+ 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
+ 		      readl, (sts & DMA_GSTS_IRES), sts);
+ 
++	/* Block compatibility-format MSIs */
++	if (sts & DMA_GSTS_CFIS) {
++		iommu->gcmd &= ~DMA_GCMD_CFI;
++		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
++		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
++			      readl, !(sts & DMA_GSTS_CFIS), sts);
++	}
++
+ 	/*
+ 	 * With CFI clear in the Global Command register, we should be
+ 	 * protected from dangerous (i.e. compatibility) interrupts
 -- 
 2.25.1
 
