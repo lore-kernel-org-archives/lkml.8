@@ -2,163 +2,160 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB615C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CF7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950CD2177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D911E2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zRfCxghf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJgUDYj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgIHJgC (ORCPT
+        id S1728876AbgIHJi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        Tue, 8 Sep 2020 05:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgIHJfx (ORCPT
+        with ESMTP id S1727995AbgIHJi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:35:53 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EC1C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 02:35:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a9so16458748wmm.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 02:35:43 -0700 (PDT)
+        Tue, 8 Sep 2020 05:38:26 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02874C061573;
+        Tue,  8 Sep 2020 02:38:23 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id u3so4513709pjr.3;
+        Tue, 08 Sep 2020 02:38:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BeqWiKyy2q9h196I07hlm698YeqsB6n9xDnRMOn41fE=;
-        b=zRfCxghfDE520rmBsbZWLpRUQoNwbS7ZJswAcOp3EFCxZF/qxDkslg0bMkhEaPbnvQ
-         uQoIootj9J20mEuW52nBQncMupNt1Z/lrCEUp/hTHF2cbW4ze5phqMwUHXT88Onf6T6U
-         XPt1SuCD3Pnx/vROIgCZq2UKCI8XwvSjGmQKOioKp15LciAkortrb6a+oqK2wy+7ceiI
-         6hNREpWE+8PRikBCPMWWciaHI7emd+oSPkxLRmdsOyvZBcQbUOS4zc4yyIT4eFeywSTO
-         0Inzytl0SCyaQ4Yegfmjydgu/XZk4F5SHVzA2/rJ6rW8YxtvwaYnGVSSvD2+AazINpeM
-         5Kag==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jApnbaGdNy0XZvmrHRfVLH08NM0ISkHskFMyba/3Dz8=;
+        b=MJgUDYj8lMeog10h/pcRqjqbqd4X6zcLeZsrh/MY0BGBr/BLaGO/3pkJz37iAaPw7O
+         OKhZsUpuQ2bIXXpe9BNkGpRexLHz10IX4Pa1nflggIzhohPRQmZzpDSo0CSz+x/ap6D8
+         2y8YaVq1RHfwDSZ3pYjVMWqanp5hDxiIRqmXANxRiAaeSoxxHpCFxIxXistH/ZCdro4L
+         JJ20dsUOKC3/2LZjn2zl6a3T9LEZmIIEX35TFizLxw1yTErjuHlmGmEKMVQXGbfA3vZZ
+         6D3AucxfnJP7UApg9bsullWCQBoQGs2Fi8iq8w5RRA9jkDeeMTonTWpEjbf6Q6THXiK6
+         s9Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BeqWiKyy2q9h196I07hlm698YeqsB6n9xDnRMOn41fE=;
-        b=ZzPhQFVuIbrFrHiKBuVU7X+kp1xbvugw3yoaAKhT5dc15KP8mXAJXn4MzEPWw8wZvV
-         w4cc3J5kHvp/NgDXXoxgc16mJyqqDy0EQXU2hIt6ImH1b9KEFUqvRo1Klp2ZZbT6N+E8
-         rFwiUsZEwyrcs8zoiYAmoAzxjbHSl02N9MylP7PC7SmlynrFrWRya6mQZdMp+5JC68sf
-         ViFfxAwOpIQpmFPt+IoHiHAWijvWkJhDNSDumw+ttXC8Tlu0hmIT8g1nV+mpkCRarjML
-         zRHef30NHihY0g/EvpzDN18oUsI6ucS8oKzeOxH631s7BAVODTNmlhpdLmzXDhY6cV4v
-         2NYg==
-X-Gm-Message-State: AOAM533f/oZ8KRYfEr2ftLAxWXpfUegMPfG6ti3Awjo3djQxNAIIAQ67
-        9e7Wu0cEenbz0/hwPfEZduzMng==
-X-Google-Smtp-Source: ABdhPJwSGVcSB7tECrf90WTk449mkRJzFsiMZbiOsDL0m1RNcYjJzM6A1ZUkahuSc+wylUXYyogdpQ==
-X-Received: by 2002:a1c:7d0c:: with SMTP id y12mr3504117wmc.103.1599557742367;
-        Tue, 08 Sep 2020 02:35:42 -0700 (PDT)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q12sm32786028wrp.17.2020.09.08.02.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 02:35:41 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 10:35:38 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: Re: [PATCH v2 05/10] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <20200908093538.GM4400@dell>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
- <20200905133230.1014581-6-j.neuschaefer@gmx.net>
- <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
- <20200908081445.GC4400@dell>
- <CAHp75Veb5nVasy28FSksf06eVVhC8N5hHsEPM-2YcFbMjZ5Rhw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jApnbaGdNy0XZvmrHRfVLH08NM0ISkHskFMyba/3Dz8=;
+        b=r152M3A7NeNPMJvwp8R0RUSdQWTtdrgJntrgUt2wEbBgEwpsf6tJGsrgFoLtsWUcXV
+         b9m+68WRQkIy7VWu+PWv4j2a2KI0l/q7d1Ly4S/M9TdKf3gyOemTowqYCs9EF/TeUHol
+         9zXwNXN2hKigwQZKjAgDY5k7LwS4f3c91/ASWgfvqU7NffU9iVe0uofDdQTKPgS1UiVZ
+         vKtAsg4gtXM1XA0+TpwsYxOKzk93O94hC5VLB8SyDcyOmGD08c+3Kkv8QPd7YZxf2A4S
+         pVI3TLWIaj5krdA74tYNI7yBtUkRuA5stv+D1lYW2kuqMINWtGZvhkye4bmnX5I8/9n/
+         aQyg==
+X-Gm-Message-State: AOAM531O6QZOPEx/fO86+lwHtBjPbZU9B6GuP7vAh+20lW5Z6bI7vfRB
+        +0JpnDI2YyiIW3MMoVCxc816B8jvdf+7JacDkpY=
+X-Google-Smtp-Source: ABdhPJyxAbCwnDQR7EXhbAKVRK/L1mgougVfa4ksNuqH1dcnUnGkAUwBxsj7BOSjmWVm1lw4MgxRSvmwQq4xy2GW4u4=
+X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr3015644pjb.181.1599557902306;
+ Tue, 08 Sep 2020 02:38:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Veb5nVasy28FSksf06eVVhC8N5hHsEPM-2YcFbMjZ5Rhw@mail.gmail.com>
+References: <20200904165222.18444-1-vadym.kochan@plvision.eu>
+ <20200904165222.18444-2-vadym.kochan@plvision.eu> <CAHp75Vc_MN-tD+iQNbUcB6fbYizyfKJSJnm1W7uXCT6JAvPauA@mail.gmail.com>
+ <20200908083514.GB3562@plvision.eu>
+In-Reply-To: <20200908083514.GB3562@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 8 Sep 2020 12:38:04 +0300
+Message-ID: <CAHp75VdyahsNyOK9_7mFGHFg_O47jVQWro-mhU0n=1K17Eeg8Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 08 Sep 2020, Andy Shevchenko wrote:
+On Tue, Sep 8, 2020 at 11:35 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> On Fri, Sep 04, 2020 at 10:12:07PM +0300, Andy Shevchenko wrote:
+> > On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
-> On Tue, Sep 8, 2020 at 11:14 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Sat, 05 Sep 2020, Andy Shevchenko wrote:
-> > > On Saturday, September 5, 2020, Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> > > wrote:
-> 
-> ...
-> 
-> > > > +config PWM_NTXEC
-> > > > +       tristate "Netronix embedded controller PWM support"
-> > >
-> > >
-> > >
-> > >
-> > > > +       depends on MFD_NTXEC && OF
-> > >
-> > >
-> > > I don’t see need to reduce test coverage and use of the driver by sticking
-> > > with OF. Actually it’s not used.
+...
+
+> > > +       words[3] |= FIELD_PREP(PRESTERA_W3_HW_DEV_NUM, (dsa->hw_dev_num >> 5));
 > >
-> > If the device is only known to boot with OF, then it's pointless
-> > building it when !OF.
-> 
-> No, it's not. As I pointed out the (compilation) test coverage is better.
+> > Ditto.
+> >
+> I am not sure 5 needs to be defined as macro as it just moves
+> hw_dev_num's higher bits into the last word.
 
-No, it's a waste of disk space.
+And why 5? I want 6, for example!
 
-Why would you knowingly compile something you know you can't use?
+...
 
-That's the whole point of COMPILE_TEST.
+> > > +       err = prestera_switch_init(sw);
+> > > +       if (err) {
+> > > +               kfree(sw);
+> >
+> > > +               return err;
+> > > +       }
+> > > +
+> > > +       return 0;
+> >
+> > return err;
+> >
+> why not keep 'return 0' as indication of success point ?
 
-Note that when you want real coverage and you use `allyesconfig`
-and/or `allmodconfig` then CONFIG_OF is also enabled on platforms
-which support it.
+Simple longer, but I'm not insisting. Your choice.
 
-> > If you want to increase test coverage enable
-> > COMPILE_TEST instead.
-> 
-> It is one way to achieve that, yes;
-> 
->        depends on OF || COMPILE_TEST
->        depends on MFD_NTXEC
+...
 
-This is better.
+> > > +                       if (b == 0)
+> > > +                               continue;
+> > > +
+> > > +                       prestera_sdma_rx_desc_set_next(sdma,
+> > > +                                                      ring->bufs[b - 1].desc,
+> > > +                                                      buf->desc_dma);
+> > > +
+> > > +                       if (b == PRESTERA_SDMA_RX_DESC_PER_Q - 1)
+> > > +                               prestera_sdma_rx_desc_set_next(sdma, buf->desc,
+> > > +                                                              head->desc_dma);
+> >
+> > I guess knowing what the allowed range of bnum the above can be optimized.
+> >
+> You mean to replace PRESTERA_SDMA_RX_DESC_PER_Q by bnum ?
+
+I don't know what you meant in above. It might be a bug, it might be
+that bnum is redundant and this definition may be used everywhere...
+But I believe there is room for improvement when I see pattern like
+
+  for (i < X) {
+    ...
+    if (i == 0) {
+      ...
+    } else if (i == X - 1) {
+      ...
+    }
+  }
+
+Either it can be while-loop (or do-while) with better semantics for
+the first and last item to handle or something else.
+Example from another review [1] in case you wonder how changes can be
+made. Just think about it.
+
+[1]: https://www.spinics.net/lists/linux-pci/msg60826.html (before)
+https://www.spinics.net/lists/linux-pci/msg62043.html (after)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
