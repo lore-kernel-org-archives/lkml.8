@@ -2,100 +2,110 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B64C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30035C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F29E32080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590045;
-	bh=YQm2xnSsC7JdTQ9gVr+99YbUrnBi7Xrz9a7cQX14VMY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1GhkppUZuGaOisgFK2V6/Zy6HeJqxrQz3vsmkpZM6pgPcJsNAfJrbh0g2d9cQUUHE
-	 St1uUEfP1FCEPdyNDI+c6ykIlkFd0rHVtV8l6IFxH3yT5LR9bMHkb8+syqXrEKC2/2
-	 LEsYmXv1KzIYYTLpwwtiD3Tx4geAi0WQRPmBAhnk=
+	by mail.kernel.org (Postfix) with ESMTP id F3C7D2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FtDS7Wje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbgIHSdy (ORCPT
+        id S1726714AbgIHSej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:33:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731366AbgIHQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:28 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 8 Sep 2020 14:34:39 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27535 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731498AbgIHScr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:32:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599589964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B2G7IynuJTWu26rmvtUiX/MucuRuUehwK9kbE6Qud0s=;
+        b=FtDS7Wje+PuV4AOJ7uRqTdpSZT6sfgdUNAsnlTymcuJuLu5mVrNpAiQ++LqNM8cFXaqhOI
+        5oezQox3ydvj6wzmjvjXrL44u3gqzxvWnqcZxfn+joe5B/IogWM6uRdfKIfF62p0XTXic7
+        wxAjlCqbO3nrLqxV2nkcXNWWsU0e7Bw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-BEmFX_K2Mwiz9tXCT2NziQ-1; Tue, 08 Sep 2020 14:32:42 -0400
+X-MC-Unique: BEmFX_K2Mwiz9tXCT2NziQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1078E2417B;
-        Tue,  8 Sep 2020 15:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580169;
-        bh=YQm2xnSsC7JdTQ9gVr+99YbUrnBi7Xrz9a7cQX14VMY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7+FTIdPnIqiH20XZMbqXcJ07PnFQaBZAWdKH5gc3wWqPRjGmMtyngyXjuPDS5/0R
-         N/4GA0IQq+ac3L3F9LfxbSar6XaK9vDStB3+Nc/E4h6j4d3CAelst0w9caZa4SJ3k5
-         xtXFrPb97wJWh2znqJ9DtrfuZqx0SEuViUcdCBiM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/88] btrfs: Remove redundant extent_buffer_get in get_old_root
-Date:   Tue,  8 Sep 2020 17:25:59 +0200
-Message-Id: <20200908152224.031893625@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E13010050EC;
+        Tue,  8 Sep 2020 18:32:41 +0000 (UTC)
+Received: from treble (ovpn-117-163.rdu2.redhat.com [10.10.117.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F63E27CC3;
+        Tue,  8 Sep 2020 18:32:41 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 13:32:39 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org
+Subject: Re: [GIT PULL] livepatching for 5.9-rc5
+Message-ID: <20200908183239.vhy2txzcmlliul7d@treble>
+References: <20200907082036.GC8084@alley>
+ <CAHk-=wiZUYjmPLiEaN5uHM4mGyYq8RBFvk=iZKkm9=8NxvcoZQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiZUYjmPLiEaN5uHM4mGyYq8RBFvk=iZKkm9=8NxvcoZQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+On Tue, Sep 08, 2020 at 11:13:58AM -0700, Linus Torvalds wrote:
+> Josh,
+> 
+> On Mon, Sep 7, 2020 at 1:20 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > - Workaround "unreachable instruction" objtool warnings that happen
+> >   with some compiler versions.
+> 
+> I know I said this fixes things for me, but I just realized it doesn't entirely.
+> 
+> I wonder how I missed the remaining one:
+> 
+>    arch/x86/kvm/vmx/vmx.o: warning: objtool:
+> vmx_handle_exit_irqoff()+0x142: unreachable instruction
+> 
+> so apparently gcc and objtool can still disagree even without that
+> '-flive-patching'.
+> 
+> The unreachable code in question is after the call to
+> handle_external_interrupt_irqoff(), and while that function is a bit
+> odd, in this case I think it's objtool that is wrong.
+> 
+> I think that what happens is that the function doesn't have a 'ret'
+> instruction, and instead returns by doing a tail-call to
+> __sanitizer_cov_trace_pc with my config. And maybe that is what
+> confuses objtool.
+> 
+> This is current tip-of-git of my tree, with a allmodconfig build (but
+> the actual config will then depend on things like the gcc plugins
+> being there too, so you may not get exactly the same thing as I do)
+> 
+> Josh? Am I missing something, and the objtool warning is valid? But
+> yes, that code is doing some very very special stuff with that thunk
+> call asm, so it's hard to read the asm.
 
-[ Upstream commit 6c122e2a0c515cfb3f3a9cefb5dad4cb62109c78 ]
+Hm, I don't think I've seen that one.  We saw a similar warning in that
+function before, but it was caused by the combination of
+CONFIG_UBSAN_ALIGNMENT and CONFIG_UBSAN_TRAP, which I think Kees fixed.
 
-get_old_root used used only by btrfs_search_old_slot to initialise the
-path structure. The old root is always a cloned buffer (either via alloc
-dummy or via btrfs_clone_extent_buffer) and its reference count is 2: 1
-from allocation, 1 from extent_buffer_get call in get_old_root.
+Can you share the .o file?  At least I can't recreate with GCC 9.3.1,
+which is all I have at the moment.
 
-This latter explicit ref count acquire operation is in fact unnecessary
-since the semantic is such that the newly allocated buffer is handed
-over to the btrfs_path for lifetime management. Considering this just
-remove the extra extent_buffer_get in get_old_root.
-
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/ctree.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
-index c9943d70e2cb2..6c13d7d83f5ca 100644
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -1421,7 +1421,6 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
- 
- 	if (!eb)
- 		return NULL;
--	extent_buffer_get(eb);
- 	btrfs_tree_read_lock(eb);
- 	if (old_root) {
- 		btrfs_set_header_bytenr(eb, eb->start);
 -- 
-2.25.1
-
-
+Josh
 
