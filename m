@@ -2,160 +2,164 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B711BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 585332078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593270;
-	bh=2S3ivuzEZGfnY77yUs2AAU8aYTRtxOGZowmybDPmTt0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGaTHbCkvLXRJfXpkGRnCtRXtXikGmfXv1in8X6d3pwGwm7ueWy6bfPgHtZA6DWDW
-	 Ul15BcL4J7S4vXQkbJKt8gOf1aqvHdyQBmEMJDaa8YRrb3+2B/OdkFsKTDvOHANfJh
-	 FoUzmn7PldlmgwKZkDMCnKyFbZHDBcWPf1J1/NY0=
+	by mail.kernel.org (Postfix) with ESMTP id 6F12F2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZnrFESfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732195AbgIHT1m (ORCPT
+        id S1731659AbgIHT15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731041AbgIHQAE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51F5E22B2A;
-        Tue,  8 Sep 2020 15:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579348;
-        bh=2S3ivuzEZGfnY77yUs2AAU8aYTRtxOGZowmybDPmTt0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Om2Tj7dATFSAPmiEOtz4FCN6rH38bRSo2ueD9vlGsWt04xtr7vxWgHT0O79g17Q6c
-         R3Uq/v7PTgpusdPMWvaVa7xF8exTr/j7z3haXa5JGwV3dR643hkdYIY63Wv6PIsB71
-         inR0//sZmTJxgQepUy5SdwJxmPYyXDKXjsVm1/Xw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ofir Bitton <obitton@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 013/186] habanalabs: set clock gating according to mask
-Date:   Tue,  8 Sep 2020 17:22:35 +0200
-Message-Id: <20200908152242.296583945@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8713C06179E
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:54:45 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id nw23so23269883ejb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:54:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=17XSh9T9gNq415bfysrvgCiRW+EHfAHcluquDHGHNnU=;
+        b=ZnrFESfj2n78+Vm/aeBARRjr0Cl6BRKSKMzxUenn2YsqHz8Pl5VtWf2kgaAcBY42tG
+         B6CWuSSZlDpqHRQb6BvAO8Qj0aSubGzT2OhkHzSatWgHZuhO2NLDDWNtkzr4B3imS/ar
+         vl/89rmyhmxmIqD0cMqudwdc04Tupg9qwaODQQgwyE2ZseTX3Oi4XRaKk99z2tCwuCfj
+         xF3ioMRogkeEctXIZNPqqZoa8qg7SATyuUHcJvqPp0NZvi3TzX7TxnBmmb77PTiAyqqS
+         DDuXcYW5+1LtcAKBO7gHRXJ7JKmKD3P/Xjy6nG/2KEc5U2+vRVO9A35znCSC6HNByGzJ
+         3lgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=17XSh9T9gNq415bfysrvgCiRW+EHfAHcluquDHGHNnU=;
+        b=rnT3s1sWX8zFG0wDSkuuKNXYASPujgqr3vI9bvMMHXXG4WH9nY+OfK1Htm/2AyXi5t
+         HbeQOXHXJxZA2qt1VnY1tCXm4fcjsCXBEa/xotGiTX5osk6zM1pvAGLn8alsh80FaIGa
+         A5rfB8Ba+eNzOIdbTavOu81tPbUAwXnN4w58fyh9eZJin1fwV6SwZpUpwKlkEAvRnjLX
+         iNEf8yXC7v2LWfYx6aOcokB6vm82cOYDSruH80oSxMxMes436j2NTUO1P5j7ByrUx0oJ
+         jJ0znwhdLcLMHVl//ShGW4MkKFnsbm0KHaWW08rQfookblBLohQGVInT7s7y5z4sLiXZ
+         w0Qg==
+X-Gm-Message-State: AOAM533Y3ZUNyZHDKapGW2Sz85jDF+puDnvN0Z3yu3sFBnT6JxBwVjzM
+        zZ70u5U8SfSUyuAEe/6Xjr0eQEkzD/9Ft+0qUTanLA==
+X-Google-Smtp-Source: ABdhPJxOnl/Db9+LhMKu/mSd4ErqUeNGdtKZz7PhLmJ8sKtuj9avhfTUo76ZISBf0rvnNW6uboUfYq0v27quH+bjBW0=
+X-Received: by 2002:a17:906:3e90:: with SMTP id a16mr17063280ejj.363.1599580484242;
+ Tue, 08 Sep 2020 08:54:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200831032006.1019978-1-warthog618@gmail.com>
+ <CAMpxmJUETJgmxzWzHumOVr+vWFQ27P71MtcdSdf_=jvtrSfRPg@mail.gmail.com>
+ <20200903083750.GA17445@sol> <20200904125250.GA323947@sol>
+ <CAMpxmJWVZ8Bf1gPibvbk=E5XNvQ_i76E430MMhUWwE1ACoPTQg@mail.gmail.com> <9db62b42-9a1e-0264-e88c-e636004cb629@linuxfoundation.org>
+In-Reply-To: <9db62b42-9a1e-0264-e88c-e636004cb629@linuxfoundation.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 8 Sep 2020 17:54:33 +0200
+Message-ID: <CAMpxmJVbujnp+Z0b3utDsGmhUgCbhydorOo-9e-=gVctT55NAg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/20] gpio: cdev: add uAPI v2
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+On Tue, Sep 8, 2020 at 5:24 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> On 9/4/20 7:02 AM, Bartosz Golaszewski wrote:
+> > On Fri, Sep 4, 2020 at 2:52 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >>
+> >> On Thu, Sep 03, 2020 at 04:37:50PM +0800, Kent Gibson wrote:
+> >>> On Thu, Sep 03, 2020 at 10:02:04AM +0200, Bartosz Golaszewski wrote:
+> >>>> On Mon, Aug 31, 2020 at 5:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >>>>>
+> >> [snip]
+> >>>>
+> >>>> To me it looks good, just a couple nits here and there and some questions.
+> >>>>
+> >>>> I think it's worth deciding whether we want to keep the selftests in
+> >>>> tools/testing/selftests/gpio/ and then maybe consider porting
+> >>>> gpio-mockup-chardev.c to V2 or simply outsource it entirely to
+> >>>> libgpiod.
+> >>>>
+> >>>
+> >>> Ooops - I wasn't even aware they existed - though it had crossed my mind
+> >>> that the kernel should have some selftests somewhere - I use the libgpiod
+> >>> tests, from my libgpiod port, and my own Go based test suite for my testing,
+> >>> as well as some smoke tests with the tools/gpio.
+> >>>
+> >>> The libgpiod tests only cover v1 equivalent functionality, while my Go
+> >>> tests cover the complete uAPI, and both v1 and v2.
+> >>>
+> >>> It would be good for the kernel to at least have some smoke tests to
+> >>> confirm basic functionality, even thorough testing is left to a
+> >>> userspace library.  So the existing tests should be ported to v2, though
+> >>> should also retain the v1 tests if v1 is still compiled in.
+> >>>
+> >>
+> >> I've got a v7 ready to submit that includes a couple of patches for the
+> >> gpio-mockup selftests (their primary purpose appears to be testing the
+> >> mockup module, rather than the GPIO ABI), but I now notice that the
+> >> selftests/gpio section of the tree has a different maintainer:
+> >>
+> >> scripts/get_maintainer.pl 0021-selftests-gpio-port-to-GPIO-uAPI-v2.patch
+> >> Bamvor Jian Zhang <bamv2005@gmail.com> (maintainer:GPIO MOCKUP DRIVER)
+> >> Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
+> >> linux-gpio@vger.kernel.org (open list:GPIO MOCKUP DRIVER)
+> >> linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
+> >> linux-kernel@vger.kernel.org (open list)
+> >
+> > Bamvor, Shuah: do you still have interest in maintaining these, or can
+> > we update MAINTAINERS?
+> >
+>
+> I maintain kselftests and gpio selftest falls under that. Please send
+> selftest patches to me so I can review them.
+>
+> As for the gpio mock driver and test itself, you will have to wait for
+> Bamvor to respond.
+>
 
-[ Upstream commit f44d23b9095abd91dad9f5f3add2a3149833ec83 ]
+Hi Shuah,
 
-Once clock gating is set we enable clock gating according to mask,
-we should also disable clock gating according to relevant bits.
+I've been de facto maintaining gpio-mockup for a couple years now.
+Bamvor has been quite inactive as far as gpio testing goes. I think
+it's fine if you ack the selftests changes.
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/misc/habanalabs/gaudi/gaudi.c | 44 +++++++++++++--------------
- 1 file changed, 21 insertions(+), 23 deletions(-)
+In fact: I don't want selftests to block getting V2 uAPI upstream so
+if that'll look like it's going to take more time then I'm for merging
+V2 without any changes to selftests - in the end we have tests in
+user-space already.
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 0261f60df5633..8b6cf722ddf8e 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -2564,6 +2564,7 @@ static void gaudi_set_clock_gating(struct hl_device *hdev)
- {
- 	struct gaudi_device *gaudi = hdev->asic_specific;
- 	u32 qman_offset;
-+	bool enable;
- 	int i;
- 
- 	/* In case we are during debug session, don't enable the clock gate
-@@ -2573,46 +2574,43 @@ static void gaudi_set_clock_gating(struct hl_device *hdev)
- 		return;
- 
- 	for (i = GAUDI_PCI_DMA_1, qman_offset = 0 ; i < GAUDI_HBM_DMA_1 ; i++) {
--		if (!(hdev->clock_gating_mask &
--					(BIT_ULL(gaudi_dma_assignment[i]))))
--			continue;
-+		enable = !!(hdev->clock_gating_mask &
-+				(BIT_ULL(gaudi_dma_assignment[i])));
- 
- 		qman_offset = gaudi_dma_assignment[i] * DMA_QMAN_OFFSET;
--		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset, QMAN_CGM1_PWR_GATE_EN);
-+		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset,
-+				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
- 		WREG32(mmDMA0_QM_CGM_CFG + qman_offset,
--				QMAN_UPPER_CP_CGM_PWR_GATE_EN);
-+				enable ? QMAN_UPPER_CP_CGM_PWR_GATE_EN : 0);
- 	}
- 
- 	for (i = GAUDI_HBM_DMA_1 ; i < GAUDI_DMA_MAX ; i++) {
--		if (!(hdev->clock_gating_mask &
--					(BIT_ULL(gaudi_dma_assignment[i]))))
--			continue;
-+		enable = !!(hdev->clock_gating_mask &
-+				(BIT_ULL(gaudi_dma_assignment[i])));
- 
- 		qman_offset = gaudi_dma_assignment[i] * DMA_QMAN_OFFSET;
--		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset, QMAN_CGM1_PWR_GATE_EN);
-+		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset,
-+				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
- 		WREG32(mmDMA0_QM_CGM_CFG + qman_offset,
--				QMAN_COMMON_CP_CGM_PWR_GATE_EN);
-+				enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
- 	}
- 
--	if (hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_0))) {
--		WREG32(mmMME0_QM_CGM_CFG1, QMAN_CGM1_PWR_GATE_EN);
--		WREG32(mmMME0_QM_CGM_CFG, QMAN_COMMON_CP_CGM_PWR_GATE_EN);
--	}
-+	enable = !!(hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_0)));
-+	WREG32(mmMME0_QM_CGM_CFG1, enable ? QMAN_CGM1_PWR_GATE_EN : 0);
-+	WREG32(mmMME0_QM_CGM_CFG, enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
- 
--	if (hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_2))) {
--		WREG32(mmMME2_QM_CGM_CFG1, QMAN_CGM1_PWR_GATE_EN);
--		WREG32(mmMME2_QM_CGM_CFG, QMAN_COMMON_CP_CGM_PWR_GATE_EN);
--	}
-+	enable = !!(hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_2)));
-+	WREG32(mmMME2_QM_CGM_CFG1, enable ? QMAN_CGM1_PWR_GATE_EN : 0);
-+	WREG32(mmMME2_QM_CGM_CFG, enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
- 
- 	for (i = 0, qman_offset = 0 ; i < TPC_NUMBER_OF_ENGINES ; i++) {
--		if (!(hdev->clock_gating_mask &
--					(BIT_ULL(GAUDI_ENGINE_ID_TPC_0 + i))))
--			continue;
-+		enable = !!(hdev->clock_gating_mask &
-+				(BIT_ULL(GAUDI_ENGINE_ID_TPC_0 + i)));
- 
- 		WREG32(mmTPC0_QM_CGM_CFG1 + qman_offset,
--				QMAN_CGM1_PWR_GATE_EN);
-+				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
- 		WREG32(mmTPC0_QM_CGM_CFG + qman_offset,
--				QMAN_COMMON_CP_CGM_PWR_GATE_EN);
-+				enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
- 
- 		qman_offset += TPC_QMAN_OFFSET;
- 	}
--- 
-2.25.1
+Bart
 
-
-
+> >>
+> >> The v7 patch up to that point restores the functions that the selftests
+> >> are using so that they build and run again.
+>
+> This test has been problematic because of its dependency on tools/gpio.
+>
+> >> So I should hold off on the selftest patches and submit them separately
+> >> after the GPIO changes are in?
+> >>
+>
+> Please send me the selftest patches. Also see the comments in
+> selftests/Makefile about excluding the gpio test from default run.
+>
+> thanks,
+> -- Shuah
+>
+>
