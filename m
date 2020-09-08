@@ -2,55 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB2C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C15C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF822080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387982080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589312;
-	bh=2zNZNlshENQ4BdNhq0uNZVcTwMOZmuMEilTYlq1Botk=;
+	s=default; t=1599589319;
+	bh=uB2QOgx5HvuM4Y4IZJTTuR3ftpGuETMv9FN5lvux/fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I2sKCC+Bdw74xsaVRnLuDqVm+n2nmSahH2SWVOotU0TTFMHj3zqUCRxCjr25sFEjS
-	 ew2426GvXia+xqXVuS/bCCY9P8VX7MPFwBv+Skeko0vgh6PdcS9Cr3F8SW89LLEtBh
-	 wGX2qzSnBRmcrTyv1KvDtt0siQJ3oioxG1MVVVX8=
+	b=dnlAr7HZVkrAra0fkmWNmSQhu5W4+75SNVDx9f3XAJh1dN+bTjzoQOJ9vyHjX/ELD
+	 nCKJUssN4ITvG/f+EhKvx7LvEZZHaYT1y38kvytmVQpZWAYKU56p0OALGliIZxrz/p
+	 6e61smytlEeoIiTx7A+rZBfXPHYKaRbFZSCnjGbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732217AbgIHSVt (ORCPT
+        id S1732250AbgIHSV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731460AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731457AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ADAB24728;
-        Tue,  8 Sep 2020 15:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720F2247F6;
+        Tue,  8 Sep 2020 15:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579641;
-        bh=2zNZNlshENQ4BdNhq0uNZVcTwMOZmuMEilTYlq1Botk=;
+        s=default; t=1599579772;
+        bh=uB2QOgx5HvuM4Y4IZJTTuR3ftpGuETMv9FN5lvux/fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DngTeLivGK3ScPZqQ6m5BQRSPPsoa+qD9TirRfhRweQbcWkyMucoSOzmkzt0CpFh1
-         zRKDikFL8kvgeQAKnzU4SCsBobGPXhvmp0lc2D6VpIKLGJ9M4npJPNKB/W2oHkl6T0
-         KQiZdMB4hWF/6l4CHPOKeg9GdOs+bc1NKmkgOrg8=
+        b=zF4TvRzDKg7CJkqXp32r4NxXpGjd0Pnhlz3X5HiMwbOIIP37bZSokNYrYMB9x/vxY
+         m6iGvhpBzHatBYN81rYkeAE+HqAUEoRUjSr5QqX+qL0MzPfl9NwWicKAAtbiry0sTL
+         sBNPwHpn4bshAHBZ/EIM9zoq0rmg5dgTHeunv+uo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.8 161/186] dmaengine: dw-edma: Fix scatter-gather address calculation
-Date:   Tue,  8 Sep 2020 17:25:03 +0200
-Message-Id: <20200908152249.469134687@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 028/129] rxrpc: Make rxrpc_kernel_get_srtt() indicate validity
+Date:   Tue,  8 Sep 2020 17:24:29 +0200
+Message-Id: <20200908152231.095042252@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,71 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 05655541c9503bfd01af4e6cbd7f5a29ac748e6c upstream.
+[ Upstream commit 1d4adfaf65746203861c72d9d78de349eb97d528 ]
 
-Fix the source and destination physical address calculation of a
-peripheral device on scatter-gather implementation.
+Fix rxrpc_kernel_get_srtt() to indicate the validity of the returned
+smoothed RTT.  If we haven't had any valid samples yet, the SRTT isn't
+useful.
 
-This issue manifested during tests using a 64 bits architecture system.
-The abnormal behavior wasn't visible before due to all previous tests
-were done using 32 bits architecture system, that masked his effect.
-
-Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Link: https://lore.kernel.org/r/8d3ab7e2ba96563fe3495b32f60077fffb85307d.1597327623.git.gustavo.pimentel@synopsys.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c410bf01933e ("rxrpc: Fix the excessive initial retransmission timeout")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw-edma/dw-edma-core.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ fs/afs/fs_probe.c       |  4 ++--
+ fs/afs/vl_probe.c       |  4 ++--
+ include/net/af_rxrpc.h  |  2 +-
+ net/rxrpc/peer_object.c | 16 +++++++++++++---
+ 4 files changed, 18 insertions(+), 8 deletions(-)
 
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -405,7 +405,7 @@ dw_edma_device_transfer(struct dw_edma_t
- 			if (xfer->cyclic) {
- 				burst->dar = xfer->xfer.cyclic.paddr;
- 			} else {
--				burst->dar = sg_dma_address(sg);
-+				burst->dar = dst_addr;
- 				/* Unlike the typical assumption by other
- 				 * drivers/IPs the peripheral memory isn't
- 				 * a FIFO memory, in this case, it's a
-@@ -413,14 +413,13 @@ dw_edma_device_transfer(struct dw_edma_t
- 				 * and destination addresses are increased
- 				 * by the same portion (data length)
- 				 */
--				src_addr += sg_dma_len(sg);
- 			}
- 		} else {
- 			burst->dar = dst_addr;
- 			if (xfer->cyclic) {
- 				burst->sar = xfer->xfer.cyclic.paddr;
- 			} else {
--				burst->sar = sg_dma_address(sg);
-+				burst->sar = src_addr;
- 				/* Unlike the typical assumption by other
- 				 * drivers/IPs the peripheral memory isn't
- 				 * a FIFO memory, in this case, it's a
-@@ -428,12 +427,14 @@ dw_edma_device_transfer(struct dw_edma_t
- 				 * and destination addresses are increased
- 				 * by the same portion (data length)
- 				 */
--				dst_addr += sg_dma_len(sg);
- 			}
+diff --git a/fs/afs/fs_probe.c b/fs/afs/fs_probe.c
+index 02e976ca5732f..51ee3dd79700f 100644
+--- a/fs/afs/fs_probe.c
++++ b/fs/afs/fs_probe.c
+@@ -92,8 +92,8 @@ responded:
  		}
- 
--		if (!xfer->cyclic)
-+		if (!xfer->cyclic) {
-+			src_addr += sg_dma_len(sg);
-+			dst_addr += sg_dma_len(sg);
- 			sg = sg_next(sg);
-+		}
  	}
  
- 	return vchan_tx_prep(&chan->vc, &desc->vd, xfer->flags);
+-	rtt_us = rxrpc_kernel_get_srtt(call->net->socket, call->rxcall);
+-	if (rtt_us < server->probe.rtt) {
++	if (rxrpc_kernel_get_srtt(call->net->socket, call->rxcall, &rtt_us) &&
++	    rtt_us < server->probe.rtt) {
+ 		server->probe.rtt = rtt_us;
+ 		alist->preferred = index;
+ 		have_result = true;
+diff --git a/fs/afs/vl_probe.c b/fs/afs/vl_probe.c
+index e3aa013c21779..081b7e5b13f58 100644
+--- a/fs/afs/vl_probe.c
++++ b/fs/afs/vl_probe.c
+@@ -92,8 +92,8 @@ responded:
+ 		}
+ 	}
+ 
+-	rtt_us = rxrpc_kernel_get_srtt(call->net->socket, call->rxcall);
+-	if (rtt_us < server->probe.rtt) {
++	if (rxrpc_kernel_get_srtt(call->net->socket, call->rxcall, &rtt_us) &&
++	    rtt_us < server->probe.rtt) {
+ 		server->probe.rtt = rtt_us;
+ 		alist->preferred = index;
+ 		have_result = true;
+diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
+index ab988940bf045..55b980b21f4b4 100644
+--- a/include/net/af_rxrpc.h
++++ b/include/net/af_rxrpc.h
+@@ -59,7 +59,7 @@ bool rxrpc_kernel_abort_call(struct socket *, struct rxrpc_call *,
+ void rxrpc_kernel_end_call(struct socket *, struct rxrpc_call *);
+ void rxrpc_kernel_get_peer(struct socket *, struct rxrpc_call *,
+ 			   struct sockaddr_rxrpc *);
+-u32 rxrpc_kernel_get_srtt(struct socket *, struct rxrpc_call *);
++bool rxrpc_kernel_get_srtt(struct socket *, struct rxrpc_call *, u32 *);
+ int rxrpc_kernel_charge_accept(struct socket *, rxrpc_notify_rx_t,
+ 			       rxrpc_user_attach_call_t, unsigned long, gfp_t,
+ 			       unsigned int);
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index efce27802a74f..e011594adcd13 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -500,11 +500,21 @@ EXPORT_SYMBOL(rxrpc_kernel_get_peer);
+  * rxrpc_kernel_get_srtt - Get a call's peer smoothed RTT
+  * @sock: The socket on which the call is in progress.
+  * @call: The call to query
++ * @_srtt: Where to store the SRTT value.
+  *
+- * Get the call's peer smoothed RTT.
++ * Get the call's peer smoothed RTT in uS.
+  */
+-u32 rxrpc_kernel_get_srtt(struct socket *sock, struct rxrpc_call *call)
++bool rxrpc_kernel_get_srtt(struct socket *sock, struct rxrpc_call *call,
++			   u32 *_srtt)
+ {
+-	return call->peer->srtt_us >> 3;
++	struct rxrpc_peer *peer = call->peer;
++
++	if (peer->rtt_count == 0) {
++		*_srtt = 1000000; /* 1S */
++		return false;
++	}
++
++	*_srtt = call->peer->srtt_us >> 3;
++	return true;
+ }
+ EXPORT_SYMBOL(rxrpc_kernel_get_srtt);
+-- 
+2.25.1
+
 
 
