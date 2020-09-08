@@ -2,100 +2,109 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB3C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFED8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42AE820738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C6020738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586179;
-	bh=Mjj6isNwDffeAOtdV0P2jtlwiRjss5m7SJ9I3ziDE20=;
+	s=default; t=1599586189;
+	bh=DmJzJmf2KKQ5j6OGtkcShLF/eJKI7z/6XBYXt7bWGcE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MyEL7KwTVX4dQ8PVv67WaqnoawB5zRZADDEXlaroNQOgex9qx1hrE2uAEptrVa9Zn
-	 YF4tI1z3lnAD2yEvb7ZSJU54AmC9MNJfeD0bQj0tilzDkx4+ompN5uKsngi39laEJj
-	 LoiBECoO5XSWCvmtNm1QBEcUwJ1HPL18P2d0dsf0=
+	b=tbaRBj77SgMK4IEY0xoRXpso9q2AIpy0zJw6jqS5UoFluJp1LE+iFJmIFRgE6/XFF
+	 zT/veNIcA16A05ht4yJBOaXpacjGwKBcGNSDEP6J2G2GjONLGlmoO3aJVAjwRNQRjU
+	 yB94qeNFWnFRe1lFchZMzXxnJ8zm69lGwk7S7/cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732047AbgIHR3c (ORCPT
+        id S1731712AbgIHR3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731548AbgIHQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:16:09 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE40222597;
-        Tue,  8 Sep 2020 13:03:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599570205;
-        bh=Mjj6isNwDffeAOtdV0P2jtlwiRjss5m7SJ9I3ziDE20=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tYB4yF899rvv7EuFVWA4A63efOaGo9YF6nOXNCWrneHHV+LlFHuwCpjtJNa/3tPLP
-         mYVqIC/HBmH9ce9qyRQMgITuyG1GepgzcxT/XXbGDNgAOhojhyPcsMAZnVYZopJqK/
-         WYdl2OUrhmAhqd5BR+BEx/6/uKR8OVoajwV9XOWQ=
-Date:   Tue, 8 Sep 2020 15:03:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     sashal@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
-        peterx@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        srivatsab@vmware.com, srivatsa@csail.mit.edu,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v4.9.y 0/3] vfio: Fix for CVE-2020-12888
-Message-ID: <20200908130337.GB3075407@kroah.com>
-References: <1599510917-23734-1-git-send-email-akaher@vmware.com>
- <1599510917-23734-4-git-send-email-akaher@vmware.com>
+        Tue, 8 Sep 2020 13:29:43 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35012 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732104AbgIHR2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:28:43 -0400
+Received: by mail-il1-f195.google.com with SMTP id l4so16191005ilq.2;
+        Tue, 08 Sep 2020 10:28:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZDRFa+2FuzyOVKxJ4jjiTbradJpie+kd91cLXtCONaU=;
+        b=MNrhi8BZ7Tz6mLA/WimQFYJfX4ENA6lfT6CxAJFanlTigaG667DdzBfQXeWUj39as8
+         7GbpGTwYjkTXE0TalTtrdz+jw4z4xwyAwMdZtoqqhkyziQ6HF4sqnZJPk/kGG3vL64n1
+         w1OT2TJJEiPRHhmzrXAYpgq4XPhJS2cgv8lvKTL7R7gUgPOPfvjMpfywEdWf882iJLgD
+         rrOQ6j+cGR04569qTtdeLokdH32St+iPqXWPDQQLcbdwJJ2vR/z/4HPz5MNyPP5MxuRP
+         wWelGlYHDYEa4wDQO07BA47lVFZT5ztu+NoXSqKLOzhixIlsH9KqSFGB07Qy8kGRnyDZ
+         KIjg==
+X-Gm-Message-State: AOAM532bqNz+mprR5g2eDmtqVp6cS9F6YZCkWzOJcFD5odVTpoYYce7L
+        HxSSKmazYwt147TUOF/vfw==
+X-Google-Smtp-Source: ABdhPJzg6HCD8rHyQwEcjNJ3z57BYcVVla1+9asQ4qGPgxwd6B9R8Mq1CaVfa/5tR2qePaTbBRyesA==
+X-Received: by 2002:a92:480f:: with SMTP id v15mr22411134ila.123.1599586121806;
+        Tue, 08 Sep 2020 10:28:41 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id j20sm2678815ilq.6.2020.09.08.10.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:28:41 -0700 (PDT)
+Received: (nullmailer pid 576505 invoked by uid 1000);
+        Tue, 08 Sep 2020 17:28:39 -0000
+Date:   Tue, 8 Sep 2020 11:28:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Ray Jui <rjui@broadcom.com>,
+        devicetree@vger.kernel.org,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: timers: sp-804: Convert to
+ json-schema
+Message-ID: <20200908172839.GA575693@bogus>
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+ <20200828142018.43298-2-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599510917-23734-4-git-send-email-akaher@vmware.com>
+In-Reply-To: <20200828142018.43298-2-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:05:17AM +0530, Ajay Kaher wrote:
-> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
-> devices may lead to DoS scenario
->     
-> The VFIO modules allow users (guest VMs) to enable or disable access to the
-> devices' MMIO memory address spaces. If a user attempts to access (read/write)
-> the devices' MMIO address space when it is disabled, some h/w devices issue an
-> interrupt to the CPU to indicate a fatal error condition, crashing the system.
-> This flaw allows a guest user or process to crash the host system resulting in
-> a denial of service.
->     
-> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
-> before user access.
->     
-> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
-> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
-> can later use to invalidate those mappings.
->     
-> Patch 3/ block the user from accessing memory spaces which is disabled by using
-> new vma list support to zap, or invalidate, those memory mappings in order to
-> force them to be faulted back in on access.
->     
-> Upstreamed patches link:
-> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
->         
-> [PATCH v4.9.y 1/3]:
-> Backporting of upsream commit 41311242221e:
-> vfio/type1: Support faulting PFNMAP vmas
->         
-> [PATCH v4.9.y 2/3]:
-> Backporting of upsream commit 11c4cd07ba11:
-> vfio-pci: Fault mmaps to enable vma tracking
->         
-> [PATCH v4.9.y 3/3]:
-> Backporting of upsream commit abafbc551fdd:
-> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+On Fri, 28 Aug 2020 15:20:13 +0100, Andre Przywara wrote:
+> This converts the DT binding documentation for the ARM SP-804 timer IP
+> over to json-schema.
+> Most properties are just carried over, the clocks property requirement
+> (either one or three clocks) is now formalised and enforced.
+> As the former binding didn't specify clock-names, and there is no
+> common name used by the existing DTs, I refrained from adding them in
+> detail (just allowing the property).
+> The requirement for the APB clock is enforced by the primecell binding
+> already.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../devicetree/bindings/timer/arm,sp804.txt   | 29 ------
+>  .../devicetree/bindings/timer/arm,sp804.yaml  | 93 +++++++++++++++++++
+>  2 files changed, 93 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.yaml
+> 
 
-All now queued up, thanks.
+Applied, thanks!
 
-greg k-h
+I dropped the primecell.yaml ref as it is redundant.
+
+Rob
