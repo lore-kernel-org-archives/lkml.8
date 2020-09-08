@@ -2,156 +2,178 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2423BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8ED2206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="NDNqSTa7"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF31206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbgIHQlY (ORCPT
+        id S1732126AbgIHQm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60580 "EHLO
+        Tue, 8 Sep 2020 12:42:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732042AbgIHQhP (ORCPT
+        with ESMTP id S1731514AbgIHQmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:15 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02372C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:04:14 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id t16so11314375edw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pFSueD/PsgBNg5dRi4zohukePJNmnDKu8o6l7DjyJKo=;
-        b=NDNqSTa7fZTWmXjbEiT8n88ebqol0L6AQtiZu/8Oqe+mwkyHcxNQJF45p8QJ0vEHmj
-         7vURBe4Ohu2fjAEu7i/ry1GBIIfFl5TaPBxPz79QVbYcSu/nefGedb+ubeX8CBrtqttl
-         vRGrgNRtPpVQZ+TMKn4V+lOBfVl8T3XmT0sIYxxoJEu8HiVHdWijgtU1BxjViT0f9tcH
-         voD1jgHdPNU8GQLdGstctvcCBJ8Zt6MVhQfE/PW9Z+rDarmVbuJR0lGYHgfbnujN7om3
-         y37QDLUOfw5y6g0/x4GMg5xEeVirg0uNqjcdA2LuSj5fJgji6JndSYaglSRH3naDUxq7
-         R8/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pFSueD/PsgBNg5dRi4zohukePJNmnDKu8o6l7DjyJKo=;
-        b=JJCgCG5XR+x2Qasdzm1tAvGGvP7apT4KclppTUL/85VuzBZWRdAJhLTHaQzIsqdeKj
-         UXpxVptG+54YU5ijLuuK5LpI7HeNyfpaBFIOt+GCbtF8J7ZQvLywcQpUmoP/7VyU8Dfz
-         tlA1vvh7vKA9A6DJuPoCDM6wV1Y0CjpJsLK4w/XFtSEGWZDM2kiH90uIk/VLB8BaMGRb
-         XPJQ4QrRD6lRbqL1ZbTFDB5KRux9DqkRv5Irpxa25flMR6YYCn0mwbM5LNRN8ZHENyMS
-         BXA26wFdLEGb++S7Ff97NgKmqGo8picCjnJD8A03tqVpOC9QiiPQni8YrFEuZTtxTm3q
-         yg9g==
-X-Gm-Message-State: AOAM533siiGgx2fn95nv/AHbvv7gvv3eKdVLayfdIvpEnJzmOfvO6wz6
-        6uOYOSQMeMaP8UHWIZIFr0HgrQ==
-X-Google-Smtp-Source: ABdhPJyJCTFd0pn3p9yrebWEYoQaThaFvclLZLNU4bDenEbLK2WJOX0hyPvDit0IltNHfqOzyUsBQQ==
-X-Received: by 2002:a50:8e17:: with SMTP id 23mr26671696edw.42.1599573851439;
-        Tue, 08 Sep 2020 07:04:11 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id v4sm17839598eje.39.2020.09.08.07.04.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 07:04:10 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 16:04:09 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     Aya Levin <ayal@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v1 2/4] devlink: Add devlink traps under
- devlink_ports context
-Message-ID: <20200908140409.GN2997@nanopsycho.orion>
-References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
- <1599060734-26617-3-git-send-email-ayal@mellanox.com>
- <20200906154428.GA2431016@shredder>
+        Tue, 8 Sep 2020 12:42:18 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77677C061371;
+        Tue,  8 Sep 2020 05:44:39 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 86023344; Tue,  8 Sep 2020 14:35:18 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 14:35:17 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v7.2 39/74] x86/sev-es: Setup early #VC handler
+Message-ID: <20200908123517.GA3764@8bytes.org>
+References: <20200907131613.12703-1-joro@8bytes.org>
+ <20200907131613.12703-40-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200906154428.GA2431016@shredder>
+In-Reply-To: <20200907131613.12703-40-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sun, Sep 06, 2020 at 05:44:28PM CEST, idosch@idosch.org wrote:
->On Wed, Sep 02, 2020 at 06:32:12PM +0300, Aya Levin wrote:
+From: Joerg Roedel <jroedel@suse.de>
 
-[...]
+Setup an early handler for #VC exceptions. There is no GHCB mapped
+yet, so just re-use the vc_no_ghcb_handler. It can only handle CPUID
+exit-codes, but that should be enough to get the kernel through
+verify_cpu() and __startup_64() until it runs on virtual addresses.
 
->
->I understand how this struct allows you to re-use a lot of code between
->per-device and per-port traps, but it's mainly enabled by the fact that
->you use the same netlink commands for both per-device and per-port
->traps. Is this OK?
->
->I see this is already done for health reporters, but it's inconsistent
->with the devlink-param API:
->
->DEVLINK_CMD_PARAM_GET
->DEVLINK_CMD_PARAM_SET
->DEVLINK_CMD_PARAM_NEW
->DEVLINK_CMD_PARAM_DEL
->
->DEVLINK_CMD_PORT_PARAM_GET
->DEVLINK_CMD_PORT_PARAM_SET
->DEVLINK_CMD_PORT_PARAM_NEW
->DEVLINK_CMD_PORT_PARAM_DEL
->
->And also with the general device/port commands:
->
->DEVLINK_CMD_GET
->DEVLINK_CMD_SET
->DEVLINK_CMD_NEW
->DEVLINK_CMD_DEL
->
->DEVLINK_CMD_PORT_GET
->DEVLINK_CMD_PORT_SET
->DEVLINK_CMD_PORT_NEW
->DEVLINK_CMD_PORT_DEL
->
->Wouldn't it be cleaner to add new commands?
->
->DEVLINK_CMD_PORT_TRAP_GET
->DEVLINK_CMD_PORT_TRAP_SET
->DEVLINK_CMD_PORT_TRAP_NEW
->DEVLINK_CMD_PORT_TRAP_DEL
->
->I think the health API is the exception in this case and therefore might
->not be the best thing to mimic. IIUC, existing per-port health reporters
->were exposed as per-device and later moved to be exposed as per-port
->[1]:
->
->"This patchset comes to fix a design issue as some health reporters
->report on errors and run recovery on device level while the actual
->functionality is on port level. As for the current implemented devlink
->health reporters it is relevant only to Tx and Rx reporters of mlx5,
->which has only one port, so no real effect on functionality, but this
->should be fixed before more drivers will use devlink health reporters."
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/sev-es.h |  3 +++
+ arch/x86/kernel/head64.c      | 25 ++++++++++++++++++++++++-
+ arch/x86/kernel/head_64.S     | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+), 1 deletion(-)
 
-Yeah, this slipped trough my fingers unfortunatelly :/ But with
-introduction of per-port health reporters, we could introduce new
-commands, that would be no problem. Pity :/
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 6dc52440c4b4..7175d432ebfe 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -73,4 +73,7 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+ 	return (val & mask);
+ }
+ 
++/* Early IDT entry points for #VC handler */
++extern void vc_no_ghcb(void);
++
+ #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 4282dac694c3..fc55cc9ccb0f 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -40,6 +40,7 @@
+ #include <asm/desc.h>
+ #include <asm/extable.h>
+ #include <asm/trapnr.h>
++#include <asm/sev-es.h>
+ 
+ /*
+  * Manage page tables very early on.
+@@ -540,12 +541,34 @@ static struct desc_ptr bringup_idt_descr = {
+ 	.address	= 0, /* Set at runtime */
+ };
+ 
++static void set_bringup_idt_handler(gate_desc *idt, int n, void *handler)
++{
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	struct idt_data data;
++	gate_desc desc;
++
++	init_idt_data(&data, n, handler);
++	idt_init_desc(&desc, &data);
++	native_write_idt_entry(idt, n, &desc);
++#endif
++}
++
+ /* This runs while still in the direct mapping */
+ static void startup_64_load_idt(unsigned long physbase)
+ {
+ 	struct desc_ptr *desc = fixup_pointer(&bringup_idt_descr, physbase);
++	gate_desc *idt = fixup_pointer(bringup_idt_table, physbase);
++
++
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
++		void *handler;
++
++		/* VMM Communication Exception */
++		handler = fixup_pointer(vc_no_ghcb, physbase);
++		set_bringup_idt_handler(idt, X86_TRAP_VC, handler);
++	}
+ 
+-	desc->address = (unsigned long)fixup_pointer(bringup_idt_table, physbase);
++	desc->address = (unsigned long)idt;
+ 	native_load_idt(desc);
+ }
+ 
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 3b40ec44a67d..6e68bca64ae4 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -348,6 +348,36 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/*
++ * VC Exception handler used during very early boot. The
++ * early_idt_handler_array can't be used because it returns via the
++ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
++ *
++ * This handler will end up in the .init.text section and not be
++ * available to boot secondary CPUs.
++ */
++SYM_CODE_START_NOALIGN(vc_no_ghcb)
++	UNWIND_HINT_IRET_REGS offset=8
++
++	/* Build pt_regs */
++	PUSH_AND_CLEAR_REGS
++
++	/* Call C handler */
++	movq    %rsp, %rdi
++	movq	ORIG_RAX(%rsp), %rsi
++	call    do_vc_no_ghcb
++
++	/* Unwind pt_regs */
++	POP_REGS
++
++	/* Remove Error Code */
++	addq    $8, %rsp
++
++	/* Pure iret required here - don't use INTERRUPT_RETURN */
++	iretq
++SYM_CODE_END(vc_no_ghcb)
++#endif
+ 
+ #define SYM_DATA_START_PAGE_ALIGNED(name)			\
+ 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
+-- 
+2.28.0
 
-
->
->[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ac4cd4781eacd1fd185c85522e869bd5d3254b96
->
->Since we still don't have per-port traps, we can design it better from
->the start.
-
-I agree. Let's have a separate commands for per-port.
-
-
-[...]
