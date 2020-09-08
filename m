@@ -2,134 +2,115 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1226DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0878521532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27EF2177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:36:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khM1iowT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgIHGfg (ORCPT
+        id S1728966AbgIHGgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:35:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17470 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbgIHGff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:35:35 -0400
-IronPort-SDR: f2pUWdu8IlQQNG4E833Qzfi5KlPYf+c72EtfaQxYIt3m6Ic76xr/IyWeekRFyA++sn4a0VYqTY
- 7gEQ/NlhH1ag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="242896564"
-X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
-   d="scan'208";a="242896564"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 23:35:35 -0700
-IronPort-SDR: 2tklKCq80yWYYcZRQVGfrPHW3ZIYTzXBpEWakjj88WThKyQckhPXbkSJVRJh9vrhxpzJWWLGvK
- jrKRu/xsKSHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
-   d="scan'208";a="333369975"
-Received: from yhuang-mobile.sh.intel.com ([10.238.4.22])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 23:35:31 -0700
-From:   Huang Ying <ying.huang@intel.com>
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH] x86, fakenuma: Avoid too large emulated node
-Date:   Tue,  8 Sep 2020 14:09:12 +0800
-Message-Id: <20200908060912.12200-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.28.0
+        Tue, 8 Sep 2020 02:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbgIHGgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:36:12 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A1AC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 23:36:11 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 37so13976218oto.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 23:36:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=FXRGk/mcZqtGVK0Pfsx/t/t3xjkBJkZX90W+LIJkKWc=;
+        b=khM1iowTzcl7lEIPB9WuChKeXOvVObXNvfAYDQn1DLcwxkKR+ZgLS6SMCjfMuJynGL
+         hZlUNE2ATidQ4nq40mSMdf/KRZX8XV8ONGM0UOBjjTtykUus3ZcM3Dn03gWTVQ7dKyb2
+         H2a0V1mhNMqqZYvua9Nr1EdjM/NrKEa2/tbrt27Pd8R/OFH3qaT92nRMEAUXtnyif11S
+         lIPZcAVmyBZNLvWDCmr4wp8FwTCYLhrbBWqVtIAa08J7InIyNurzMFOyvAeUeRvokEq+
+         42vbWLC692YakX/mjeaxQ6Aq5/oCPJLHWn7tK1guTemtKanxsYd4cGhJwkHiv17yJGwh
+         3ZFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=FXRGk/mcZqtGVK0Pfsx/t/t3xjkBJkZX90W+LIJkKWc=;
+        b=C024K7vslLOpTaQacl3b751sLEMFkDRZx6YnJS8ShqgQXmSGkIfAPOKilPCsY0Wmi8
+         i78/huWt8L/Q03lf0jA+/ftxQQJ4SiBURwQ7pO1mJWEglQ0Gw27GCvTevf0xgBRyvb2x
+         1f7bOJV0KmoBjIu6bpG32E44uOQHc2MeiIcp/wOTudLAOdet88IoRPdoiolXpup1pzKl
+         4sgbo8jmnMfvIaJHxbSDiVASeQRLais7dmBNaUW2FGBq8jfqD7KbpOKQG4A+Zvr/7Ilf
+         CNyOBNl1OTT5jeqM5rYh511KY1DTp1+C8hko7KCLi2Xj1hSXslHbdYulfY9b2s/yQRhA
+         PrOA==
+X-Gm-Message-State: AOAM530/AKto3Hnt++NVeLmrKJIUGbJJQvTS0BmAZ684MbptU1Hlr0dD
+        JPSjdqaO9HlI66w0kKfcp3JyJbTblZI3DwoPGP8=
+X-Google-Smtp-Source: ABdhPJwg9SHSpM3hrzuhuGbH/Zf2VBcEiDVfAOrQkih76xQZuKIoVD4i+Io3P6/4U620db3sTks2pm/DyaGhe1H15dI=
+X-Received: by 2002:a05:6830:1d5:: with SMTP id r21mr18117971ota.244.1599546970601;
+ Mon, 07 Sep 2020 23:36:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Grant Grundler <grantgrundler@gmail.com>
+Date:   Mon, 7 Sep 2020 23:35:59 -0700
+Message-ID: <CAP6odjjZAZ4fcAdoFETzbX0_e-VPsrvJ0Fh1_ZXfeAZKLppj3A@mail.gmail.com>
+Subject: Apply from 2018? [V2,0/3] phy: qcom-ipq4019-usb: add new driver
+To:     Alban Bedel <albeu@free.fr>, Andy Gross <andy.gross@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Matthew McClintock <mmcclint@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a testing system with 2 physical NUMA node, 8GB memory, a small
-memory hole from 640KB to 1MB, and a large memory hole from 3GB to
-4GB.  If "numa=fake=1G" is used in kernel command line, the resulting
-fake NUMA nodes are as follows,
+Alban, Andy,
+Can you please apply this patch series from 2018 or please explain
+what I (or John) have to do so this series can be applied?
 
-    NUMA: Node 0 [mem 0x00000000-0x0009ffff] + [mem 0x00100000-0xbfffffff] -> [mem 0x00000000-0xbfffffff]
-    NUMA: Node 0 [mem 0x00000000-0xbfffffff] + [mem 0x100000000-0x13fffffff] -> [mem 0x00000000-0x13fffffff]
-    Faking node 0 at [mem 0x0000000000000000-0x0000000041ffffff] (1056MB)
-    Faking node 1 at [mem 0x0000000140000000-0x000000017fffffff] (1024MB)
-    Faking node 2 at [mem 0x0000000042000000-0x0000000081ffffff] (1024MB)
-    Faking node 3 at [mem 0x0000000180000000-0x00000001bfffffff] (1024MB)
-    Faking node 4 at [mem 0x0000000082000000-0x000000013fffffff] (3040MB)
-    Faking node 5 at [mem 0x00000001c0000000-0x00000001ffffffff] (1024MB)
-    Faking node 6 at [mem 0x0000000200000000-0x000000023fffffff] (1024MB)
+   https://patchwork.kernel.org/cover/10552139/
+   [V2,0/3] phy: qcom-ipq4019-usb: add new driver=EF=BF=BC
 
-Where, 7 fake NUMA nodes are emulated, the size of fake node 4 is 3040
-- 1024 = 2016MB.  This is nearly 2 times of the size of the other fake
-nodes (about 1024MB).  This isn't a reasonable splitting.  The better
-way is to make the fake node size not too large or small.  So in this
-patch, the splitting algorithm is changed to make the fake node size
-between 1/2 to 3/2 of the specified node size.  After applying this
-patch, the resulting fake NUMA nodes become,
+OpenWRT has been applying this code to all ipq4019 targets since Jul 2018:
+    https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dcommitdiff;h=3D956=
+72e04335ea0d7d8f468cec8f63d593cc6ede6
 
-    Faking node 0 at [mem 0x0000000000000000-0x0000000041ffffff] (1056MB)
-    Faking node 1 at [mem 0x0000000140000000-0x000000017fffffff] (1024MB)
-    Faking node 2 at [mem 0x0000000042000000-0x0000000081ffffff] (1024MB)
-    Faking node 3 at [mem 0x0000000180000000-0x00000001bfffffff] (1024MB)
-    Faking node 4 at [mem 0x0000000082000000-0x0000000103ffffff] (2080MB)
-    Faking node 5 at [mem 0x00000001c0000000-0x00000001ffffffff] (1024MB)
-    Faking node 6 at [mem 0x0000000104000000-0x000000013fffffff] (960MB)
-    Faking node 7 at [mem 0x0000000200000000-0x000000023fffffff] (1024MB)
+I expect if there were problems with it, we'd know by now.
 
-The newly added node 6 is a little smaller than the specified node
-size (960MB vs. 1024MB).  But the overall results look more
-reasonable.
+$ find -name \*qcom-ipq4019-usb\*
+./target/linux/ipq40xx/patches-5.4/076-phy-qcom-ipq4019-usb-add-driver-for-=
+QCOM-IPQ4019.patch
+./target/linux/ipq40xx/patches-5.4/075-dt-bindings-phy-qcom-ipq4019-usb-add=
+-binding-documen.patch
+./target/linux/ipq40xx/patches-4.19/076-phy-qcom-ipq4019-usb-add-driver-for=
+-QCOM-IPQ4019.patch
+./target/linux/ipq40xx/patches-4.19/075-dt-bindings-phy-qcom-ipq4019-usb-ad=
+d-binding-documen.patch
+...
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
----
- arch/x86/mm/numa_emulation.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+In 2018, Rob Herring reviewed (and approved):
+   [V2,1/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
 
-diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
-index 683cd12f4793..231469e1de6a 100644
---- a/arch/x86/mm/numa_emulation.c
-+++ b/arch/x86/mm/numa_emulation.c
-@@ -300,9 +300,10 @@ static int __init split_nodes_size_interleave_uniform(struct numa_meminfo *ei,
- 			/*
- 			 * If there won't be enough non-reserved memory for the
- 			 * next node, this one must extend to the end of the
--			 * physical node.
-+			 * physical node.  The size of the emulated node should
-+			 * be between size/2 and size*3/2.
- 			 */
--			if ((limit - end - mem_hole_size(end, limit) < size)
-+			if ((limit - end - mem_hole_size(end, limit) < size / 2)
- 					&& !uniform)
- 				end = limit;
- 
--- 
-2.28.0
+I've just reviewed 2/3 and 3/3. You can add to those:
+  Reviewed-by: Grant Grundler <grantgrundler@gmail.com>
 
+I compared 3/3 with the DTS entries that were submitted (and I
+approved) to chromeos-3.18 kernel tree in 2016:
+   https://chromium-review.googlesource.com/337605
+   https://chromium-review.googlesource.com/344471
+
+While not identical, the important bits (reg values) are.
+
+(I would reply to the original thread but I don't have it in a format
+I can easily reply to.)
+
+cheers,
+grant
