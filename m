@@ -2,394 +2,291 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3FEC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39932C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA2E2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="irEMCuJI"
+	by mail.kernel.org (Postfix) with ESMTP id DECA22064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:49:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599587366;
+	bh=DSHNCY6AGJI7hm+OVkjHcXqm9RlSQaINL3epwKx1aiU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QH1v9UWhZRaMyS4TsPua4fs4j0rsPtS9cPN9WUiOGgoYT/V9+w21HDFCF3aNHw9OY
+	 zlCf0ZdMJWWrk4nfbf28gEW36fHMfgaQKS0qVyQM9w4gw/FPjvO12JOfF4in/WF86r
+	 WbMOCz+lUkiPCSZjpq/vxDQZvPKEC0Pojy9CA4eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbgIHRsf (ORCPT
+        id S1731835AbgIHRtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:48:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44016 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731895AbgIHRq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:46:28 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088HkE44119394;
-        Tue, 8 Sep 2020 12:46:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599587174;
-        bh=JSK4zZz0DmlXd+/r9esxNG7uNdhv0jL7DGIuM4OcCRY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=irEMCuJIBEd+i4bNkCwzbuDp4ErOp3HKCQs8vnuNMPhR0Ugmt6kZ0CEgNE0CiQYtj
-         GVTpY0MHLHkAD5yZVYQfy0WcQWsiisR5dygEs4WMFl6zT4tRG2XzVDCELjWHJW7Z1E
-         zXNu13tXAPDjNTutu8eRn5R3FioF0avP2u2MLXEU=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088HkEKf114984
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Sep 2020 12:46:14 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
- 2020 12:46:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Sep 2020 12:46:14 -0500
-Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088HkEBX115946;
-        Tue, 8 Sep 2020 12:46:14 -0500
-Received: from localhost ([10.250.34.59])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 088HkETZ040325;
-        Tue, 8 Sep 2020 12:46:14 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH v4 1/4] dt-bindings: remoteproc: Add bindings for R5F subsystem on TI K3 SoCs
-Date:   Tue, 8 Sep 2020 12:45:53 -0500
-Message-ID: <20200908174556.21277-2-s-anna@ti.com>
+        Tue, 8 Sep 2020 13:49:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731613AbgIHQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:13:59 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99F22248F1;
+        Tue,  8 Sep 2020 15:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580391;
+        bh=DSHNCY6AGJI7hm+OVkjHcXqm9RlSQaINL3epwKx1aiU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LEbOVx/eDZfmTxEd3K8tnndP83aSfjEhrkTBDTowHyhZmkrFeF6rHnAlbLp3Ez946
+         jWVK+PLCt5y7WoU2AJKPtHSuR4fcWonLoQ32b9TZ6Uzu/b0eU7A4Xst/0V1UEdqL0z
+         Fh9viBxWt34G4bZd1l6vGCikStsT/RRerQQxZi+w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH 4.14 58/65] KVM: arm64: Add kvm_extable for vaxorcism code
+Date:   Tue,  8 Sep 2020 17:26:43 +0200
+Message-Id: <20200908152220.085736401@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908174556.21277-1-s-anna@ti.com>
-References: <20200908174556.21277-1-s-anna@ti.com>
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Texas Instruments K3 family of SoCs have one or more dual-core
-Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
-can be split between multiple voltage domains as well. Add the device
-tree bindings document for these R5F subsystem devices. These R5F
-processors do not have an MMU, and so require fixed memory carveout
-regions matching the firmware image addresses. The nodes require more
-than one memory region, with the first memory region used for DMA
-allocations at runtime. The remaining memory regions are reserved
-and are used for the loading and running of the R5F remote processors.
-The R5F processors can also optionally use any internal on-chip SRAM
-memories either for executing code or using it as fast-access data.
+From: James Morse <james.morse@arm.com>
 
-The added example illustrates the DT nodes for the single R5FSS device
-present on K3 AM65x family of SoCs.
+commit e9ee186bb735bfc17fa81dbc9aebf268aee5b41e upstream.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
+KVM has a one instruction window where it will allow an SError exception
+to be consumed by the hypervisor without treating it as a hypervisor bug.
+This is used to consume asynchronous external abort that were caused by
+the guest.
+
+As we are about to add another location that survives unexpected exceptions,
+generalise this code to make it behave like the host's extable.
+
+KVM's version has to be mapped to EL2 to be accessible on nVHE systems.
+
+The SError vaxorcism code is a one instruction window, so has two entries
+in the extable. Because the KVM code is copied for VHE and nVHE, we end up
+with four entries, half of which correspond with code that isn't mapped.
+
+Cc: stable@vger.kernel.org # v4.14
+Signed-off-by: James Morse <james.morse@arm.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-v4: Fixed whitespace indentation (added one extra space) on required list
-v3: https://patchwork.kernel.org/patch/11679331/
- - Replaced ti,k3-sci-proc.yaml references with the new ti,k3-sci-common.yaml
- - Updated required list to include the three ti,sci properties
-v2: https://patchwork.kernel.org/patch/11632997/
-v1: https://patchwork.kernel.org/patch/11456381/
+ arch/arm64/include/asm/kvm_asm.h |   15 +++++++++++
+ arch/arm64/kernel/vmlinux.lds.S  |    8 ++++++
+ arch/arm64/kvm/hyp/entry.S       |   16 +++++++-----
+ arch/arm64/kvm/hyp/hyp-entry.S   |   51 ++++++++++++++++++++++++---------------
+ arch/arm64/kvm/hyp/switch.c      |   31 +++++++++++++++++++++++
+ 5 files changed, 96 insertions(+), 25 deletions(-)
 
- .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 281 ++++++++++++++++++
- 1 file changed, 281 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -107,6 +107,21 @@ extern u32 __init_stage2_translation(voi
+ 	kern_hyp_va	\vcpu
+ .endm
+ 
++/*
++ * KVM extable for unexpected exceptions.
++ * In the same format _asm_extable, but output to a different section so that
++ * it can be mapped to EL2. The KVM version is not sorted. The caller must
++ * ensure:
++ * x18 has the hypervisor value to allow any Shadow-Call-Stack instrumented
++ * code to write to it, and that SPSR_EL2 and ELR_EL2 are restored by the fixup.
++ */
++.macro	_kvm_extable, from, to
++	.pushsection	__kvm_ex_table, "a"
++	.align		3
++	.long		(\from - .), (\to - .)
++	.popsection
++.endm
++
+ #endif
+ 
+ #endif /* __ARM_KVM_ASM_H__ */
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -24,6 +24,13 @@ ENTRY(_text)
+ 
+ jiffies = jiffies_64;
+ 
++
++#define HYPERVISOR_EXTABLE					\
++	. = ALIGN(SZ_8);					\
++	VMLINUX_SYMBOL(__start___kvm_ex_table) = .;		\
++	*(__kvm_ex_table)					\
++	VMLINUX_SYMBOL(__stop___kvm_ex_table) = .;
++
+ #define HYPERVISOR_TEXT					\
+ 	/*						\
+ 	 * Align to 4 KB so that			\
+@@ -39,6 +46,7 @@ jiffies = jiffies_64;
+ 	VMLINUX_SYMBOL(__hyp_idmap_text_end) = .;	\
+ 	VMLINUX_SYMBOL(__hyp_text_start) = .;		\
+ 	*(.hyp.text)					\
++	HYPERVISOR_EXTABLE				\
+ 	VMLINUX_SYMBOL(__hyp_text_end) = .;
+ 
+ #define IDMAP_TEXT					\
+--- a/arch/arm64/kvm/hyp/entry.S
++++ b/arch/arm64/kvm/hyp/entry.S
+@@ -135,18 +135,22 @@ ENTRY(__guest_exit)
+ 	// This is our single instruction exception window. A pending
+ 	// SError is guaranteed to occur at the earliest when we unmask
+ 	// it, and at the latest just after the ISB.
+-	.global	abort_guest_exit_start
+ abort_guest_exit_start:
+ 
+ 	isb
+ 
+-	.global	abort_guest_exit_end
+ abort_guest_exit_end:
++	msr	daifset, #4	// Mask aborts
++	ret
+ 
+-	// If the exception took place, restore the EL1 exception
+-	// context so that we can report some information.
+-	// Merge the exception code with the SError pending bit.
+-	tbz	x0, #ARM_EXIT_WITH_SERROR_BIT, 1f
++	_kvm_extable	abort_guest_exit_start, 9997f
++	_kvm_extable	abort_guest_exit_end, 9997f
++9997:
++	msr	daifset, #4	// Mask aborts
++	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
++
++	// restore the EL1 exception context so that we can report some
++	// information. Merge the exception code with the SError pending bit.
+ 	msr	elr_el2, x2
+ 	msr	esr_el2, x3
+ 	msr	spsr_el2, x4
+--- a/arch/arm64/kvm/hyp/hyp-entry.S
++++ b/arch/arm64/kvm/hyp/hyp-entry.S
+@@ -25,6 +25,30 @@
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_mmu.h>
+ 
++.macro save_caller_saved_regs_vect
++	stp	x0, x1,   [sp, #-16]!
++	stp	x2, x3,   [sp, #-16]!
++	stp	x4, x5,   [sp, #-16]!
++	stp	x6, x7,   [sp, #-16]!
++	stp	x8, x9,   [sp, #-16]!
++	stp	x10, x11, [sp, #-16]!
++	stp	x12, x13, [sp, #-16]!
++	stp	x14, x15, [sp, #-16]!
++	stp	x16, x17, [sp, #-16]!
++.endm
++
++.macro restore_caller_saved_regs_vect
++	ldp	x16, x17, [sp], #16
++	ldp	x14, x15, [sp], #16
++	ldp	x12, x13, [sp], #16
++	ldp	x10, x11, [sp], #16
++	ldp	x8, x9,   [sp], #16
++	ldp	x6, x7,   [sp], #16
++	ldp	x4, x5,   [sp], #16
++	ldp	x2, x3,   [sp], #16
++	ldp	x0, x1,   [sp], #16
++.endm
++
+ 	.text
+ 	.pushsection	.hyp.text, "ax"
+ 
+@@ -184,25 +208,14 @@ el1_error:
+ 	b	__guest_exit
+ 
+ el2_error:
+-	/*
+-	 * Only two possibilities:
+-	 * 1) Either we come from the exit path, having just unmasked
+-	 *    PSTATE.A: change the return code to an EL2 fault, and
+-	 *    carry on, as we're already in a sane state to handle it.
+-	 * 2) Or we come from anywhere else, and that's a bug: we panic.
+-	 *
+-	 * For (1), x0 contains the original return code and x1 doesn't
+-	 * contain anything meaningful at that stage. We can reuse them
+-	 * as temp registers.
+-	 * For (2), who cares?
+-	 */
+-	mrs	x0, elr_el2
+-	adr	x1, abort_guest_exit_start
+-	cmp	x0, x1
+-	adr	x1, abort_guest_exit_end
+-	ccmp	x0, x1, #4, ne
+-	b.ne	__hyp_panic
+-	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
++	save_caller_saved_regs_vect
++	stp     x29, x30, [sp, #-16]!
++
++	bl	kvm_unexpected_el2_exception
++
++	ldp     x29, x30, [sp], #16
++	restore_caller_saved_regs_vect
++
+ 	eret
+ 
+ ENTRY(__hyp_do_panic)
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -22,11 +22,15 @@
+ 
+ #include <kvm/arm_psci.h>
+ 
++#include <asm/extable.h>
+ #include <asm/kvm_asm.h>
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
+ #include <asm/fpsimd.h>
+ 
++extern struct exception_table_entry __start___kvm_ex_table;
++extern struct exception_table_entry __stop___kvm_ex_table;
++
+ static bool __hyp_text __fpsimd_enabled_nvhe(void)
+ {
+ 	return !(read_sysreg(cptr_el2) & CPTR_EL2_TFP);
+@@ -486,3 +490,30 @@ void __hyp_text __noreturn hyp_panic(str
+ 
+ 	unreachable();
+ }
++
++asmlinkage void __hyp_text kvm_unexpected_el2_exception(void)
++{
++	unsigned long addr, fixup;
++	struct kvm_cpu_context *host_ctxt;
++	struct exception_table_entry *entry, *end;
++	unsigned long elr_el2 = read_sysreg(elr_el2);
++
++	entry = hyp_symbol_addr(__start___kvm_ex_table);
++	end = hyp_symbol_addr(__stop___kvm_ex_table);
++	host_ctxt = __hyp_this_cpu_ptr(kvm_host_cpu_state);
++
++	while (entry < end) {
++		addr = (unsigned long)&entry->insn + entry->insn;
++		fixup = (unsigned long)&entry->fixup + entry->fixup;
++
++		if (addr != elr_el2) {
++			entry++;
++			continue;
++		}
++
++		write_sysreg(fixup, elr_el2);
++		return;
++	}
++
++	hyp_panic(host_ctxt);
++}
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
-new file mode 100644
-index 000000000000..c743b7f9e8a6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
-@@ -0,0 +1,281 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/ti,k3-r5f-rproc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI K3 R5F processor subsystems
-+
-+maintainers:
-+  - Suman Anna <s-anna@ti.com>
-+
-+description: |
-+  The TI K3 family of SoCs usually have one or more dual-core Arm Cortex R5F
-+  processor subsystems/clusters (R5FSS). The dual core cluster can be used
-+  either in a LockStep mode providing safety/fault tolerance features or in a
-+  Split mode providing two individual compute cores for doubling the compute
-+  capacity. These are used together with other processors present on the SoC
-+  to achieve various system level goals.
-+
-+  Each Dual-Core R5F sub-system is represented as a single DTS node
-+  representing the cluster, with a pair of child DT nodes representing
-+  the individual R5F cores. Each node has a number of required or optional
-+  properties that enable the OS running on the host processor to perform
-+  the device management of the remote processor and to communicate with the
-+  remote processor.
-+
-+properties:
-+  $nodename:
-+    pattern: "^r5fss(@.*)?"
-+
-+  compatible:
-+    enum:
-+      - ti,am654-r5fss
-+      - ti,j721e-r5fss
-+
-+  power-domains:
-+    description: |
-+      Should contain a phandle to a PM domain provider node and an args
-+      specifier containing the R5FSS device id value.
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges:
-+    description: |
-+      Standard ranges definition providing address translations for
-+      local R5F TCM address spaces to bus addresses.
-+
-+# Optional properties:
-+# --------------------
-+
-+  ti,cluster-mode:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1]
-+    description: |
-+      Configuration Mode for the Dual R5F cores within the R5F cluster.
-+      Should be either a value of 1 (LockStep mode) or 0 (Split mode),
-+      default is LockStep mode if omitted.
-+
-+# R5F Processor Child Nodes:
-+# ==========================
-+
-+patternProperties:
-+  "^r5f@[a-f0-9]+$":
-+    type: object
-+    description: |
-+      The R5F Sub-System device node should define two R5F child nodes, each
-+      node representing a TI instantiation of the Arm Cortex R5F core. There
-+      are some specific integration differences for the IP like the usage of
-+      a Region Address Translator (RAT) for translating the larger SoC bus
-+      addresses into a 32-bit address space for the processor.
-+
-+      Each R5F core has an associated 64 KB of Tightly-Coupled Memory (TCM)
-+      internal memories split between two banks - TCMA and TCMB (further
-+      interleaved into two banks TCMB0 and TCMB1). These memories (also called
-+      ATCM and BTCM) provide read/write performance on par with the core's L1
-+      caches. Each of the TCMs can be enabled or disabled independently and
-+      either of them can be configured to appear at that R5F's address 0x0.
-+
-+      The cores do not use an MMU, but has a Region Address Translater
-+      (RAT) module that is accessible only from the R5Fs for providing
-+      translations between 32-bit CPU addresses into larger system bus
-+      addresses. Cache and memory access settings are provided through a
-+      Memory Protection Unit (MPU), programmable only from the R5Fs.
-+
-+    allOf:
-+      - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
-+
-+    properties:
-+      compatible:
-+        enum:
-+          - ti,am654-r5f
-+          - ti,j721e-r5f
-+
-+      reg:
-+        items:
-+          - description: Address and Size of the ATCM internal memory region
-+          - description: Address and Size of the BTCM internal memory region
-+
-+      reg-names:
-+        items:
-+          - const: atcm
-+          - const: btcm
-+
-+      resets:
-+        description: |
-+          Should contain the phandle to the reset controller node managing the
-+          local resets for this device, and a reset specifier.
-+        maxItems: 1
-+
-+      firmware-name:
-+        description: |
-+          Should contain the name of the default firmware image
-+          file located on the firmware search path
-+
-+# The following properties are mandatory for R5F Core0 in both LockStep and Split
-+# modes, and are mandatory for R5F Core1 _only_ in Split mode. They are unused for
-+# R5F Core1 in LockStep mode:
-+
-+      mboxes:
-+        description: |
-+          OMAP Mailbox specifier denoting the sub-mailbox, to be used for
-+          communication with the remote processor. This property should match
-+          with the sub-mailbox node used in the firmware image.
-+        maxItems: 1
-+
-+      memory-region:
-+        description: |
-+          phandle to the reserved memory nodes to be associated with the
-+          remoteproc device. There should be at least two reserved memory nodes
-+          defined. The reserved memory nodes should be carveout nodes, and
-+          should be defined with a "no-map" property as per the bindings in
-+          Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+        minItems: 2
-+        maxItems: 8
-+        items:
-+          - description: region used for dynamic DMA allocations like vrings and
-+                         vring buffers
-+          - description: region reserved for firmware image sections
-+        additionalItems: true
-+
-+
-+# Optional properties:
-+# --------------------
-+# The following properties are optional properties for each of the R5F cores:
-+
-+      ti,atcm-enable:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [0, 1]
-+        description: |
-+          R5F core configuration mode dictating if ATCM should be enabled. The
-+          R5F address of ATCM is dictated by ti,loczrama property. Should be
-+          either a value of 1 (enabled) or 0 (disabled), default is disabled
-+          if omitted. Recommended to enable it for maximizing TCMs.
-+
-+      ti,btcm-enable:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [0, 1]
-+        description: |
-+          R5F core configuration mode dictating if BTCM should be enabled. The
-+          R5F address of BTCM is dictated by ti,loczrama property. Should be
-+          either a value of 1 (enabled) or 0 (disabled), default is enabled if
-+          omitted.
-+
-+      ti,loczrama:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [0, 1]
-+        description: |
-+          R5F core configuration mode dictating which TCM should appear at
-+          address 0 (from core's view). Should be either a value of 1 (ATCM
-+          at 0x0) or 0 (BTCM at 0x0), default value is 1 if omitted.
-+
-+      sram:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        minItems: 1
-+        maxItems: 4
-+        description: |
-+          phandles to one or more reserved on-chip SRAM regions. The regions
-+          should be defined as child nodes of the respective SRAM node, and
-+          should be defined as per the generic bindings in,
-+          Documentation/devicetree/bindings/sram/sram.yaml
-+
-+    required:
-+      - compatible
-+      - reg
-+      - reg-names
-+      - ti,sci
-+      - ti,sci-dev-id
-+      - ti,sci-proc-ids
-+      - resets
-+      - firmware-name
-+
-+    unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - power-domains
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    / {
-+        model = "Texas Instruments K3 AM654 SoC";
-+        compatible = "ti,am654";
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        bus@100000 {
-+            compatible = "simple-bus";
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
-+                     <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
-+                     <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
-+                     <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>;
-+
-+            bus@28380000 {
-+                compatible = "simple-bus";
-+                #address-cells = <2>;
-+                #size-cells = <2>;
-+                ranges = <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>, /* MCU NAVSS */
-+                         <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>, /* MCU R5F Core0 */
-+                         <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>, /* MCU R5F Core1 */
-+                         <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>; /* MCU SRAM */
-+
-+                /* AM65x MCU R5FSS node */
-+                mcu_r5fss0: r5fss@41000000 {
-+                    compatible = "ti,am654-r5fss";
-+                    power-domains = <&k3_pds 129>;
-+                    ti,cluster-mode = <1>;
-+                    #address-cells = <1>;
-+                    #size-cells = <1>;
-+                    ranges = <0x41000000 0x00 0x41000000 0x20000>,
-+                             <0x41400000 0x00 0x41400000 0x20000>;
-+
-+                    mcu_r5f0: r5f@41000000 {
-+                        compatible = "ti,am654-r5f";
-+                        reg = <0x41000000 0x00008000>,
-+                              <0x41010000 0x00008000>;
-+                        reg-names = "atcm", "btcm";
-+                        ti,sci = <&dmsc>;
-+                        ti,sci-dev-id = <159>;
-+                        ti,sci-proc-ids = <0x01 0xFF>;
-+                        resets = <&k3_reset 159 1>;
-+                        firmware-name = "am65x-mcu-r5f0_0-fw";
-+                        ti,atcm-enable = <1>;
-+                        ti,btcm-enable = <1>;
-+                        ti,loczrama = <1>;
-+                        mboxes = <&mailbox0 &mbox_mcu_r5fss0_core0>;
-+                        memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
-+                                        <&mcu_r5fss0_core0_memory_region>;
-+                        sram = <&mcu_r5fss0_core0_sram>;
-+                    };
-+
-+                    mcu_r5f1: r5f@41400000 {
-+                        compatible = "ti,am654-r5f";
-+                        reg = <0x41400000 0x00008000>,
-+                              <0x41410000 0x00008000>;
-+                        reg-names = "atcm", "btcm";
-+                        ti,sci = <&dmsc>;
-+                        ti,sci-dev-id = <245>;
-+                        ti,sci-proc-ids = <0x02 0xFF>;
-+                        resets = <&k3_reset 245 1>;
-+                        firmware-name = "am65x-mcu-r5f0_1-fw";
-+                        ti,atcm-enable = <1>;
-+                        ti,btcm-enable = <1>;
-+                        ti,loczrama = <1>;
-+                        mboxes = <&mailbox1 &mbox_mcu_r5fss0_core1>;
-+                    };
-+                };
-+            };
-+        };
-+    };
--- 
-2.28.0
 
