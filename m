@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9759CC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B4EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 516D12137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB2E2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592929;
-	bh=+dkjo+9wKwzMF7/iOmzd7vXy4vP/yHkMeeSBvWP+irk=;
+	s=default; t=1599592934;
+	bh=HdHRm4k1Unbl63MLg8T1pZK1Y+sHxgKhhFb6EWvWNXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcRNDSTZSR02F5AZ4z4R6zw8g7PIa1VDRftOn4YcUJ3+XMXGith+QiUSOqAgvVbAi
-	 vPKQGCzYJ0WqGPXr/fMvl5TiMowRr2eDeU8Gle6JLiE665R7mU0ZpHBXE9mdGl5VM5
-	 yXMwlu56N5ag5+LvXeTk+XsHTllPYY1ABp4xlZN0=
+	b=H7Ps7fia6H6UrUgRvXP2366ebfgriy3B5eZfgVGR0fYzIPinTD2KCFJ8p/Dn996NB
+	 m5OkpzhCnUiMKL41Cl1eAB3ArEbqCr1Z36JdMa9NUiKSl3zw2Jsf93Lkkngnl7Wih4
+	 hrRQdNGsL/os6hBq5dG6MuIqXLdzFM0yna7icxAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbgIHTWG (ORCPT
+        id S1731717AbgIHTV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47744 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbgIHQBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:01:35 -0400
+        id S1731107AbgIHQBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3849623C83;
-        Tue,  8 Sep 2020 15:36:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3C123F2A;
+        Tue,  8 Sep 2020 15:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579386;
-        bh=+dkjo+9wKwzMF7/iOmzd7vXy4vP/yHkMeeSBvWP+irk=;
+        s=default; t=1599579482;
+        bh=HdHRm4k1Unbl63MLg8T1pZK1Y+sHxgKhhFb6EWvWNXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kyuA6MyptTbAD/peoW7oGFiK3YPgmkh3f5aKoUFVkPjcDlfpIBFESJYYx3pIbu7ic
-         r1Bmm3/7qAVZpt23mOlrxR0J7BPo+1UTz0JJ5vWnMgcHAljSSEjXyJAcYTVTgYR+K1
-         OOkZ0jqMBGd4+SsvJkimvNjOdz1pQ+KvQVfSkO/c=
+        b=dcUDEq1nLBjxNgqS/7x8c9Eu+/f9dhtVFo5xbsz7/TH+AgnJPAjEJr32lze9yLrid
+         CK9ThfhIDkirqrI8lONXritzwvNt8Wc4wmpydc7HH0DZkeBZy2SYNG7y+I0rUKkUxp
+         4Le8zOxaZl0cRxOzNmwiiC9SLVFkgTtwGYc0lowc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 057/186] net: hns: Fix memleak in hns_nic_dev_probe
-Date:   Tue,  8 Sep 2020 17:23:19 +0200
-Message-Id: <20200908152244.433555126@linuxfoundation.org>
+Subject: [PATCH 5.8 096/186] fix regression in "epoll: Keep a reference on files added to the check list"
+Date:   Tue,  8 Sep 2020 17:23:58 +0200
+Message-Id: <20200908152246.285858895@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,48 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 100e3345c6e719d2291e1efd5de311cc24bb9c0b ]
+[ Upstream commit 77f4689de17c0887775bb77896f4cc11a39bf848 ]
 
-hns_nic_dev_probe allocates ndev, but not free it on
-two error handling paths, which may lead to memleak.
+epoll_loop_check_proc() can run into a file already committed to destruction;
+we can't grab a reference on those and don't need to add them to the set for
+reverse path check anyway.
 
-Fixes: 63434888aaf1b ("net: hns: net: hns: enet adds support of acpi")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Tested-by: Marc Zyngier <maz@kernel.org>
+Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/eventpoll.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 23f278e46975b..22522f8a52999 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -2282,8 +2282,10 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
- 			priv->enet_ver = AE_VERSION_1;
- 		else if (acpi_dev_found(hns_enet_acpi_match[1].id))
- 			priv->enet_ver = AE_VERSION_2;
--		else
--			return -ENXIO;
-+		else {
-+			ret = -ENXIO;
-+			goto out_read_prop_fail;
-+		}
- 
- 		/* try to find port-idx-in-ae first */
- 		ret = acpi_node_get_property_reference(dev->fwnode,
-@@ -2299,7 +2301,8 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
- 		priv->fwnode = args.fwnode;
- 	} else {
- 		dev_err(dev, "cannot read cfg data from OF or acpi\n");
--		return -ENXIO;
-+		ret = -ENXIO;
-+		goto out_read_prop_fail;
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index e0decff22ae27..8107e06d7f6f5 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1995,9 +1995,9 @@ static int ep_loop_check_proc(void *priv, void *cookie, int call_nests)
+ 			 * during ep_insert().
+ 			 */
+ 			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
+-				get_file(epi->ffd.file);
+-				list_add(&epi->ffd.file->f_tfile_llink,
+-					 &tfile_check_list);
++				if (get_file_rcu(epi->ffd.file))
++					list_add(&epi->ffd.file->f_tfile_llink,
++						 &tfile_check_list);
+ 			}
+ 		}
  	}
- 
- 	ret = device_property_read_u32(dev, "port-idx-in-ae", &port_id);
 -- 
 2.25.1
 
