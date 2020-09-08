@@ -2,109 +2,106 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BEAC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4517EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A840720768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C9A20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599594834;
+	bh=Nlb6PMQ+/rxBZwsrcxH1F/mJAmYV/dDxE1otVQrU4fY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FVCvqi95rX2QdwTZ5lePfzR9SgfYf0uqsKkujBe4Y5mb6ZeN5HKURyFR5EE7S7sDy
+	 4kN7ygsOMufCAg3KDudt+fbBTJWIUrZt0nlqbKaaFEeD0mRRE1CrXqyvJmZ6XbgZ6B
+	 FHTK4NCJ+WpCacqNQZKRs+wtOKHZEbQYwmuLSLhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbgIHTxe (ORCPT
+        id S1732366AbgIHTxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:53:34 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46598 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730662AbgIHTxR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:53:17 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9157E1C0B87; Tue,  8 Sep 2020 21:53:11 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 21:53:11 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 41/88] net: ethernet: mlx4: Fix memory allocation in
- mlx4_buddy_init()
-Message-ID: <20200908195311.GC6758@duo.ucw.cz>
-References: <20200908152221.082184905@linuxfoundation.org>
- <20200908152223.178555420@linuxfoundation.org>
+        Tue, 8 Sep 2020 15:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730461AbgIHPmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:42:33 -0400
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33DBE22CA1;
+        Tue,  8 Sep 2020 13:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599573425;
+        bh=Nlb6PMQ+/rxBZwsrcxH1F/mJAmYV/dDxE1otVQrU4fY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ysKrBTL0aVtHER0C6nREvCT5i7bCJNKHt5vIDFQa/AXN/GkdMPbQCRt+CQMpGVhy7
+         pcNR/ll6hCNdA+6fIO0QWqFi4PAH7uGFv03RXgTvMBxBHDBb9aONpD0qMZjIqHFnDR
+         U44LpeiJKNPRcjLukNI0vWll/S/plDkC4wuoqVGM=
+Received: by mail-ej1-f42.google.com with SMTP id i22so22665206eja.5;
+        Tue, 08 Sep 2020 06:57:05 -0700 (PDT)
+X-Gm-Message-State: AOAM533nTNSMB3oaPlh9q/j+1ETOTbklqnLStP4EJ0S4uXFs8+ZGxTET
+        PWd8H4NbuK2KWPCwc6+y/nLh+gTlINihhUS55v4=
+X-Google-Smtp-Source: ABdhPJxw+CVnvHvS0mxWVnK6lDtq/Q+r0QWlwGxtDfUXEv06P0SO8wK83EymMr8l5SGfDRCjuUgniQlH27jDHyXS5c4=
+X-Received: by 2002:a17:906:8401:: with SMTP id n1mr25369176ejx.215.1599573423778;
+ Tue, 08 Sep 2020 06:57:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
-Content-Disposition: inline
-In-Reply-To: <20200908152223.178555420@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200907105254.31097-1-krzk@kernel.org> <CAPDyKFowS-psoJqVUChU35Xp92nrvH5r5eY=_8bMKU0SVBxLcw@mail.gmail.com>
+In-Reply-To: <CAPDyKFowS-psoJqVUChU35Xp92nrvH5r5eY=_8bMKU0SVBxLcw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 8 Sep 2020 15:56:51 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdX7UOkTNMVS_uLi7sG_h0bHCs_b6R0uL2B241y_+niqg@mail.gmail.com>
+Message-ID: <CAJKOXPdX7UOkTNMVS_uLi7sG_h0bHCs_b6R0uL2B241y_+niqg@mail.gmail.com>
+Subject: Re: [PATCH v3] mmc: host: Enable compile testing of multiple drivers
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 8 Sep 2020 at 15:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> + Arnd
+>
+> On Mon, 7 Sep 2020 at 12:53, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Multiple MMC host controller driver can be compile tested as they do not
+> > depend on architecture specific headers.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> It seems like this is causing build errors for my next branch when
+> running allmod config [1].
+>
+> [...]
+>
+> >
+> >  config MMC_S3C
+> >         tristate "Samsung S3C SD/MMC Card Interface support"
+> > -       depends on ARCH_S3C24XX
+> > +       depends on ARCH_S3C24XX || COMPILE_TEST
+> >         depends on S3C24XX_DMAC
+> >         help
+> >           This selects a driver for the MCI interface found in
+>
+> [...]
+>
+> The problem doesn't exist in linux-next, since it has the
+> corresponding cleanup/rework patches for MMC_S3C from Arnd.
+>
+> To fix the problem, we should probably remove COMPILE_TEST for
+> MMC_S3C, for now. Then we can add it again and send it as a fix for
+> v5.10-rc1.
+>
+> What do you think?
 
---UPT3ojh+0CqEDtpF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> On machines with much memory (> 2 TByte) and log_mtts_per_seg =3D=3D 0, a
-> max_order of 31 will be passed to mlx_buddy_init(), which results in
-> s =3D BITS_TO_LONGS(1 << 31) becoming a negative value, leading to
-> kvmalloc_array() failure when it is converted to size_t.
->=20
->   mlx4_core 0000:b1:00.0: Failed to initialize memory region table, abort=
-ing
->   mlx4_core: probe of 0000:b1:00.0 failed with error -12
->=20
-> Fix this issue by changing the left shifting operand from a signed litera=
-l to
-> an unsigned one.
-
-Will we still have problems with > 4 TByte machines? Should the
-computation be done in u64?
+Yes, better to remove it otherwise it will pop up when Linus merges
+your tree. Do you want a patch for this or you fix it up by yourself?
 
 Best regards,
-									Pavel
-
-> Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand =
-adapters")
-> Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-> +++ b/drivers/net/ethernet/mellanox/mlx4/mr.c
-> @@ -114,7 +114,7 @@ static int mlx4_buddy_init(struct mlx4_buddy *buddy, =
-int max_order)
->  		goto err_out;
-> =20
->  	for (i =3D 0; i <=3D buddy->max_order; ++i) {
-> -		s =3D BITS_TO_LONGS(1 << (buddy->max_order - i));
-> +		s =3D BITS_TO_LONGS(1UL << (buddy->max_order - i));
->  		buddy->bits[i] =3D kvmalloc_array(s, sizeof(long), GFP_KERNEL | __GFP_=
-ZERO);
->  		if (!buddy->bits[i])
->  			goto err_out_free;
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UPT3ojh+0CqEDtpF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1fhJwAKCRAw5/Bqldv6
-8rSiAJ0SDlKpMvw+OEk/HI9lrjlcK2+O6wCguY0eWqm2yogCIc5Ym9GDPYo7I2k=
-=xI+r
------END PGP SIGNATURE-----
-
---UPT3ojh+0CqEDtpF--
+Krzysztof
