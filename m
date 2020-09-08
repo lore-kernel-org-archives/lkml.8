@@ -2,122 +2,127 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C537EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953E2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91CA02080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F12B204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e8WxUJ04"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CrmexfeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbgIHUHO (ORCPT
+        id S1731233AbgIHUHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:07:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46876 "EHLO
+        Tue, 8 Sep 2020 16:07:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730240AbgIHPUw (ORCPT
+        with ESMTP id S1730240AbgIHUHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:20:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A968FC0A3BE6;
-        Tue,  8 Sep 2020 07:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=CokwUhLtLY+HJBUS4+kWwYLSBZUJwKz5SbJHqq17dNs=; b=e8WxUJ04cgOn5PPMEkZOv1VJAx
-        xPxEtTVTtYeROSAdSqWsWh2V/9iTgmtfw0EV9V4V+gHWIbd4Y36s4uqASOey8kQ1lDmrihyyHrA/o
-        N2i/G/DSmmZb/GOC6nyU1q90mg/zIRgocv2+SIZWG85W8CCc2HtKxebIpn9AkFIF8/BB6yiv0sJMb
-        ThBFmrg7Z7gjKogjX4Mw426+cNBvX8T0DaUVGod+G7YPLHm8rWFTaV6hjvwnKWp70gJUbf5a42J93
-        b6al7WYDCfltB0lHajfE3Pv3W74poknrXE23A30KOkElM4jEDJXLp0YhBOhVIBjsRB7VPrHvzHVw7
-        7kn1Gz2g==;
-Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf0b-0002wi-Qz; Tue, 08 Sep 2020 14:54:15 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
+        Tue, 8 Sep 2020 16:07:15 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33C1C061573;
+        Tue,  8 Sep 2020 13:07:14 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f18so61712pfa.10;
+        Tue, 08 Sep 2020 13:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=J2k9xpa9l+tbRJ/+vvItQDXmC64/jEuH8zJsr0tf6oA=;
+        b=CrmexfeQlkBwXK5cG+ePO2sdpsUPZnONXxWr/hg8KJjUjcaV7j/aXOa2NIQiuCONLC
+         90PGOGuGJhs+tn/dOaOybPQI3hkDS9/DYthQ4whqkws8ZDBOxHCqgZ9XQE/r1QO1SGHt
+         X3nIm8ttt4u91GG04u4UY4Bz9DZFr8zMg4JqV2Hd+WSMRI7t2FqSQW3pqmmHs0NvrUia
+         zwRwSHSpIbU9SQm2gT3tA6M+scVRa1erkkve0Ylf9GJqUJJOxh5ecCoK+RqswTulVpFI
+         bKRF/HqLkmb2i/japcvxpqX7E6ulyFgq1VRhJcXTzZ77FJH0PuByZFK1tQlTpc1PoKty
+         IXFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=J2k9xpa9l+tbRJ/+vvItQDXmC64/jEuH8zJsr0tf6oA=;
+        b=efQAlW8HF63VCa6F4rU2vQT476JUqY63uTwkyTbsEnNT+TolPp3D8nblkpKEnokPcF
+         E0HspIzVt4Dkbv8nbpLfTrB/4eOu78G+T/urfDKbmICNMMtYOfDg9fHiOiTDkYA0pikf
+         jKEGFDmc3ViXgIFCzC1ksE/ztBqSAsDlNJFiwIqq/x9nWkdCsZKFo3jv3hcgT9vbcAi6
+         VJdRAwuuv5sBR3j5h1ZlPCG8L1MmmhTWxZTZt3/pir9DgM0HnbLi61ElDCEO1Lk3RKNF
+         XlZc3964Kec3swq6rwerFXFMGNP3E69OLpdqzUtguVgKRIYaZuhz3AkFkQyPEuUTt/Xr
+         dDdg==
+X-Gm-Message-State: AOAM530Xo81Rne4sQfcR2XX3hUHEu1Uiha+hY/76F2YZhXpJwDs1rOR8
+        7YXWTioBLgPLQ9tdLBrp4g==
+X-Google-Smtp-Source: ABdhPJxwCwMDHBJXt83pjdnBKyh00EzfcLx4+iauDRFDYP1OihfBxFjkVtwmkrQFVz2ZgIbAEjY48w==
+X-Received: by 2002:a63:fd01:: with SMTP id d1mr319176pgh.350.1599595634182;
+        Tue, 08 Sep 2020 13:07:14 -0700 (PDT)
+Received: from localhost.localdomain (n11212042027.netvigator.com. [112.120.42.27])
+        by smtp.gmail.com with ESMTPSA id y24sm237023pfn.161.2020.09.08.13.07.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:07:13 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Miao-chen Chou <mcchou@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 04/19] floppy: use bdev_check_media_change
-Date:   Tue,  8 Sep 2020 16:53:32 +0200
-Message-Id: <20200908145347.2992670-5-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
-References: <20200908145347.2992670-1-hch@lst.de>
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com
+Subject: [Linux-kernel-mentees] [PATCH] Bluetooth: Fix memory leak in read_adv_mon_features()
+Date:   Tue,  8 Sep 2020 16:06:35 -0400
+Message-Id: <20200908200635.1099360-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <00000000000033913705acedbd6b@google.com>
+References: <00000000000033913705acedbd6b@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to use bdev_check_media_change instead of check_disk_change and
-call floppy_revalidate manually.  Given that floppy_revalidate only
-deals with media change events, the extra call into ->revalidate_disk
-from bdev_disk_changed is not required either, so stop wiring up the
-method.
+read_adv_mon_features() is leaking memory. Free `rp` before returning.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: e5e1e7fd470c ("Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES")
+Reported-and-tested-by: syzbot+f7f6e564f4202d8601c6@syzkaller.appspotmail.com
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 ---
- drivers/block/floppy.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/bluetooth/mgmt.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index a563b023458a8b..7df79ae6b0a1e1 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -561,6 +561,7 @@ static void floppy_release_irq_and_dma(void);
-  * output_byte is automatically disabled when reset is set.
-  */
- static void reset_fdc(void);
-+static int floppy_revalidate(struct gendisk *disk);
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 5bbe71002fb9..f96251f818fc 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -4157,7 +4157,7 @@ static int read_adv_mon_features(struct sock *sk, struct hci_dev *hdev,
+ {
+ 	struct adv_monitor *monitor = NULL;
+ 	struct mgmt_rp_read_adv_monitor_features *rp = NULL;
+-	int handle;
++	int handle, err;
+ 	size_t rp_size = 0;
+ 	__u32 supported = 0;
+ 	__u16 num_handles = 0;
+@@ -4192,9 +4192,13 @@ static int read_adv_mon_features(struct sock *sk, struct hci_dev *hdev,
+ 	if (num_handles)
+ 		memcpy(&rp->handles, &handles, (num_handles * sizeof(u16)));
  
- /*
-  * These are global variables, as that's the easiest way to give
-@@ -3275,7 +3276,8 @@ static int invalidate_drive(struct block_device *bdev)
- 	/* invalidate the buffer track to force a reread */
- 	set_bit((long)bdev->bd_disk->private_data, &fake_change);
- 	process_fd_request();
--	check_disk_change(bdev);
-+	if (bdev_check_media_change(bdev))
-+		floppy_revalidate(bdev->bd_disk);
- 	return 0;
+-	return mgmt_cmd_complete(sk, hdev->id,
+-				 MGMT_OP_READ_ADV_MONITOR_FEATURES,
+-				 MGMT_STATUS_SUCCESS, rp, rp_size);
++	err = mgmt_cmd_complete(sk, hdev->id,
++				MGMT_OP_READ_ADV_MONITOR_FEATURES,
++				MGMT_STATUS_SUCCESS, rp, rp_size);
++
++	kfree(rp);
++
++	return err;
  }
  
-@@ -4123,7 +4125,8 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
- 			drive_state[drive].last_checked = 0;
- 			clear_bit(FD_OPEN_SHOULD_FAIL_BIT,
- 				  &drive_state[drive].flags);
--			check_disk_change(bdev);
-+			if (bdev_check_media_change(bdev))
-+				floppy_revalidate(bdev->bd_disk);
- 			if (test_bit(FD_DISK_CHANGED_BIT, &drive_state[drive].flags))
- 				goto out;
- 			if (test_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags))
-@@ -4291,7 +4294,6 @@ static const struct block_device_operations floppy_fops = {
- 	.ioctl			= fd_ioctl,
- 	.getgeo			= fd_getgeo,
- 	.check_events		= floppy_check_events,
--	.revalidate_disk	= floppy_revalidate,
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl		= fd_compat_ioctl,
- #endif
+ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
 -- 
-2.28.0
+2.25.1
 
