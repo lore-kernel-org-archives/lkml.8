@@ -2,97 +2,148 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F002C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73278C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDAF2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D19B2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="2HYi7leT"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="N+Mcjpgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732318AbgIHTe6 (ORCPT
+        id S1732321AbgIHTfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
+        Tue, 8 Sep 2020 15:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730901AbgIHP5a (ORCPT
+        with ESMTP id S1730898AbgIHP5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:57:30 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545DDC0612B0
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:11:29 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id f2so15185559qkh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:11:29 -0700 (PDT)
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA59C0610E4
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:12:46 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id z23so22701851ejr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D6PZaXfU9lSNNM5STxKLHSbdmpPO4mfVbzPzM2HEmOU=;
-        b=2HYi7leTJH91BZbuOyAcGGekgns8wnQpVx1NmiD8t2s1KvGXkPdU2GaaIyofGc1rFY
-         1HAA71lu4tUzVwKGXzVA8BP3rqDCZa9jJ+zXWeTc+uSdDdhb2xyZl22TPhng6UWSfUCF
-         n+/NB8u/8bpw9L+plqC2Ho7/gCiLgBm28fQjdqo7+ZfKukrrYeUin0giOkSdHOE3vo3J
-         sN8mCXqMRxUY+v5A00+qx3Zyx0vD/ffQY4JWuMVnjqZbjcO1526wjzMNObXMjnTCN0gk
-         /rparC5vd39212atJ4ua76HwUZdqBKv+Z2IoZoIt5hhTOSmfPSWBlxCjvLB93b4yek2h
-         PY0w==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3sHaSQTtEpVgxZUhYIXCbmOjlv1gJeOQFw7S/Ryj3Pc=;
+        b=N+McjpguiDc1n2EPL915Ma7152SAViSTeH5vg+8E2QpOulQuWlPUZ3LyTfQVBU+7m6
+         +M9vLe8Pja0QusLmo+vTDbDgyyLzhiOiEypL8xPNu6N3QXXgG3MrnudvKDgVjprnS0Hm
+         QCzY2WSk02O3OpNLKbcRu6PBeXb1bqiUtfIPErkmpkBjggnmbeJCXAwk/9J8LEGHiZ0o
+         QfRVvy6MUF4lPe/vMD8uXnFrvsoq+0iADzFL+EOuwtcNnRrwblYGBN2ZDZUda4lWArS7
+         +4e+KhcoqGkTtd6H3/OcOsFq7Ahnhb0q1JCtMoBoQ4E31Yirm4gnEqXYhX4EyIPuIGOB
+         FHmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D6PZaXfU9lSNNM5STxKLHSbdmpPO4mfVbzPzM2HEmOU=;
-        b=laOfD1F+WPJs8hLr+5tA7+c2uUdlIweia8RlY0kI4SRePGWuZ21Kjdl7RiaN6HGhDa
-         wXwC4ruBauBl/cdbEtnpKxew/KiF0bR0vVWrbPgjGplSO0hKtQisopg1II34hzI50SyI
-         q8uzanPdL7oTPq0PAvg/yNsBjveFhuN+rQkNLiwsyx9zjZM8Q7MvbEz0XAPnZc9qEW5c
-         1nVo05rs3s119aJBjC82l4YhNy3w/xKA+vrFjDCn3wyQtUoBN082IDT4Tw+DbIGT8Ayo
-         egOQb8bHDTXGv02+VHne+/UCxqI6QBqY50QLKXlfagQ//1rgJFBA2CGghPSqt12X71Q9
-         KwIw==
-X-Gm-Message-State: AOAM533TpSmhxO6dVI2kPAdCW7fNsKJu0NFwPsYWWeYCkxtz1eAUV+mB
-        oiyXLCnrvFIOhsIlZaMTs8oBnw==
-X-Google-Smtp-Source: ABdhPJxIqsYRJmgOMoluDb68Y23V5yFz/PWJz14N3xZDX7JJaWWTqdlV3IIK76fYQLTTBEeS2i8B/g==
-X-Received: by 2002:a37:4b84:: with SMTP id y126mr4100qka.148.1599570688312;
-        Tue, 08 Sep 2020 06:11:28 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id m196sm13394069qke.87.2020.09.08.06.11.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3sHaSQTtEpVgxZUhYIXCbmOjlv1gJeOQFw7S/Ryj3Pc=;
+        b=VQXWL3h+zTeChTSEhnKkzDAwAGNfrPzelcihCZhT58+h0uXUGoU+aeNGuP6iW3iy6l
+         g5ALsg03ZDRS9Wn6AR7ZM+23j/TR8gVTsLEO512RXRTQcVY4bt5JnMTbovbMolhhHBgX
+         rMvE+xom0B7ibf20TLZf9m8rZbTqctGyIZDDwkH1dVL6P44S0i1OWrVgRefqK+X46drR
+         wGcttDb8zQj4AntGnBHjLjQIIReoitpvAkCVxLFPRcTq87Z3AVMAN9kKAJnwCGQ2YVjk
+         ZQ8N1p9Zz6poMXz8ZNFPq0iTHTt8zgXiMA5IYA3DW5w2LRy/sKJl4aTpONECTuTxHuoT
+         H4Vw==
+X-Gm-Message-State: AOAM532cn7obhTB7dEOeGqz8nnuP3gMINTm54wstYl3wE74gY1/9lEw+
+        os8NF+bmgp8FYX7VVCXhe2bBtQpm0GMUY5P3
+X-Google-Smtp-Source: ABdhPJz+/Ym87EdWBFw9jeyyDYLiDue8fyg2iZF9/6qckGGEuWKGDmW4AoA72uFBjuToGO5yEP8i5Q==
+X-Received: by 2002:a17:906:2b06:: with SMTP id a6mr25615230ejg.209.1599574365078;
+        Tue, 08 Sep 2020 07:12:45 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id w14sm17826958ejn.36.2020.09.08.07.12.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 06:11:27 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        linux-kernel@vger.kernel.org (open list),
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 0/3] misc: fastrpc: add ioctl for attaching to sensors pd
-Date:   Tue,  8 Sep 2020 09:10:08 -0400
-Message-Id: <20200908131013.19630-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        Tue, 08 Sep 2020 07:12:44 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 16:12:43 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Aya Levin <ayal@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v1 1/4] devlink: Wrap trap related lists and
+ ops in trap_mngr
+Message-ID: <20200908141243.GO2997@nanopsycho.orion>
+References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+ <1599060734-26617-2-git-send-email-ayal@mellanox.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599060734-26617-2-git-send-email-ayal@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initializing sensors requires attaching to pd 2. Add an ioctl for that.
+Wed, Sep 02, 2020 at 05:32:11PM CEST, ayal@mellanox.com wrote:
+>Bundle the trap related lists: trap_list, trap_group_list and
+>trap_policer_list and trap ops like: trap_init, trap_fini,
+>trap_action_set... together in trap_mngr. This will be handy in the
+>coming patches in the set introducing traps in devlink port context.
+>With trap_mngr, code reuse is much simpler.
+>
+>Signed-off-by: Aya Levin <ayal@mellanox.com>
+>---
+> drivers/net/ethernet/mellanox/mlxsw/core.c |   4 +
+> include/net/devlink.h                      |  59 ++++---
+> net/core/devlink.c                         | 255 +++++++++++++++++------------
 
-This corresponds to FASTRPC_INIT_ATTACH_SENSORS in the downstream driver.
+You need to split this. You do at least 2 separate things in one patch.
+Please check it.
 
-v2:
- - define names of PD values in a separate patch
- - split out identation fix in a separate patch
 
-Jonathan Marek (3):
-  misc: fastrpc: fix indentation error in uapi header
-  misc: fastrpc: define names for protection domain ids
-  misc: fastrpc: add ioctl for attaching to sensors pd
+> 3 files changed, 188 insertions(+), 130 deletions(-)
+>
+>diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+>index 08d101138fbe..97460f47e537 100644
+>--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
+>+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+>@@ -1285,6 +1285,9 @@ static const struct devlink_ops mlxsw_devlink_ops = {
+> 	.sb_occ_tc_port_bind_get	= mlxsw_devlink_sb_occ_tc_port_bind_get,
+> 	.info_get			= mlxsw_devlink_info_get,
+> 	.flash_update			= mlxsw_devlink_flash_update,
+>+};
+>+
+>+static const struct devlink_trap_ops mlxsw_devlink_traps_ops = {
+> 	.trap_init			= mlxsw_devlink_trap_init,
+> 	.trap_fini			= mlxsw_devlink_trap_fini,
+> 	.trap_action_set		= mlxsw_devlink_trap_action_set,
+>@@ -1321,6 +1324,7 @@ __mlxsw_core_bus_device_register(const struct mlxsw_bus_info *mlxsw_bus_info,
+> 			err = -ENOMEM;
+> 			goto err_devlink_alloc;
+> 		}
+>+		devlink_traps_ops(devlink, &mlxsw_devlink_traps_ops);
+> 	}
+> 
+> 	mlxsw_core = devlink_priv(devlink);
+>diff --git a/include/net/devlink.h b/include/net/devlink.h
+>index 8f3c8a443238..d387ea5518c3 100644
+>--- a/include/net/devlink.h
+>+++ b/include/net/devlink.h
+>@@ -21,6 +21,13 @@
+> #include <linux/xarray.h>
+> 
+> struct devlink_ops;
+>+struct devlink_trap_ops;
+>+struct devlink_trap_mngr {
 
- drivers/misc/fastrpc.c      | 16 ++++++++++++----
- include/uapi/misc/fastrpc.h |  5 +++--
- 2 files changed, 15 insertions(+), 6 deletions(-)
+"Mngr" is odd. This is not a manager. Just a common place to store
+trap-related things. Perhaps just "devlink_traps"?
 
--- 
-2.26.1
+
+>+	struct list_head trap_list;
+>+	struct list_head trap_group_list;
+>+	struct list_head trap_policer_list;
+>+	const struct devlink_trap_ops *trap_ops;
+>+};
+
+[...]
 
