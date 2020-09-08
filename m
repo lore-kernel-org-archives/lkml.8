@@ -2,91 +2,79 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38DBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC52C2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6fK6CUz"
+	by mail.kernel.org (Postfix) with ESMTP id 434BB2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbgIHIv6 (ORCPT
+        id S1730172AbgIHIwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730054AbgIHIv4 (ORCPT
+        Tue, 8 Sep 2020 04:52:32 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54814 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729831AbgIHIwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:51:56 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8275C061573;
-        Tue,  8 Sep 2020 01:51:55 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d9so4117785pfd.3;
-        Tue, 08 Sep 2020 01:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rbIICoIBBZ5GNj9XF7FvYyv62Fc59HG0vpn/olGWwH4=;
-        b=G6fK6CUzeTZ4EOsL2aQLd7TiWXtS19culOtXYNIy5V2cg/RT4hS+92jOKdhafB9kjG
-         pOZ7O8xnirjsXoUjdqeTJVvA6kVXaGY6Nvn8csW7nMsqJI3+zTZYrwqDGAkC9HGsmiAF
-         3yCTI/ahUgKoi94Coa05G1lr9yM4bk6vsYTWEQuCUAfKJmyh7DyN/ObeR7hA5CSAUQE0
-         DEYxBKAYBd0zNk1Qea59f8IqxiN72cydOyYqwKYbShGuSWWCo2MiHQB47r1tjyRTvaT0
-         qmDw2AGfS1XC2cR5yp88ZC5lh6q17LePP0bE0F3AEUc/AcspGPgIUSqZymOXVJkYOX/v
-         RyVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rbIICoIBBZ5GNj9XF7FvYyv62Fc59HG0vpn/olGWwH4=;
-        b=CL2nzLbXwXRBGnB9vpCI9Fj9EtZDAxkEC7bW7nuqBDA05ZbmKuAJf3wCg4rDh/Adr0
-         7D57Sr1LhF7q8AmqDEYBI6KTp630iWNyFyvlyrw+caJndMbIz8YefYtD2hUz5doaFPvP
-         O+QR0Pw/3vn8vCC8ZN++dYmVdPDuNg3jhe+FchjfIa9M0I26zfqW7MqFHeXmFwta5NhF
-         MK1zyGUIDLt4zsmXu1yXGhC5rkmv5kXyp794e7xBpDcin3sWwOPk14nhVQHoWfwsVQ1x
-         eaJ13OrS+1UsJULThFWiJfMCuJVH052V5ZZKujS8DZ19SAVNuzhs3gP0fXhAzLk+xGhZ
-         4cOA==
-X-Gm-Message-State: AOAM5336VJ+0jZMndclc6t+nQm11xJf8Zya+feZw507WcNp09EF1tjws
-        uN01icj422niwoq1KcsFFnW9g8A5tSJGd3znESE=
-X-Google-Smtp-Source: ABdhPJyO2SAle5+IZyYDqfFOgNEwCXJ4lPQkEuklkNnNAIux8iHnnhoHlYtGoxZ1/EJONsStIacrzU1LrXQMi8aUcoE=
-X-Received: by 2002:a17:902:6bc1:b029:d0:cbe1:e76e with SMTP id
- m1-20020a1709026bc1b02900d0cbe1e76emr226751plt.21.1599555115180; Tue, 08 Sep
- 2020 01:51:55 -0700 (PDT)
+        Tue, 8 Sep 2020 04:52:25 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id F0CA21C0B7F; Tue,  8 Sep 2020 10:52:20 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 10:52:20 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
+Subject: Re: [PATCHv3 0/3] Lost key-up interrupt handling for omap4-keypad
+Message-ID: <20200908085220.GA31790@duo.ucw.cz>
+References: <20200318225727.29327-1-tony@atomide.com>
 MIME-Version: 1.0
-References: <20200908021021.9123-1-digetx@gmail.com> <20200908021021.9123-28-digetx@gmail.com>
-In-Reply-To: <20200908021021.9123-28-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 8 Sep 2020 11:51:38 +0300
-Message-ID: <CAHp75VeMZhVvysVHZawutvPpO4MPeTit5OqOJQxqRW3RL_iE-Q@mail.gmail.com>
-Subject: Re: [PATCH v6 27/35] i2c: tegra: Factor out register polling into
- separate function
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Disposition: inline
+In-Reply-To: <20200318225727.29327-1-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 5:12 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> Factor out register polling into a separate function in order to remove
-> boilerplate code and make code cleaner.
 
-I'm wondering if you can make it before the patch that touches one of
-these conditionals.
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hi!
+
+> This series updates omap4-keypad to disable unused long interrupts, and
+> implements the missing parts for the lost key-up interrupt quirk as
+> described in the silicon errata pdf.
+
+I do not see this in 5.9-rc4; problem is real, could we get this
+merged?
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1dGRAAKCRAw5/Bqldv6
+8mhuAJ0bd0adr/q5qzqRpWKN76Rv7KHL3QCgv6h/HnTSYDg2UPC1NWKtXP8ISAs=
+=4jTF
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
