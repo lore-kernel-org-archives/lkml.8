@@ -2,123 +2,135 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE428C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C790C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 771102137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 485442098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="wivPxHYd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j7xh1mez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbgIHThA (ORCPT
+        id S1732282AbgIHThT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53400 "EHLO
+        Tue, 8 Sep 2020 15:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730896AbgIHP5Q (ORCPT
+        with ESMTP id S1730975AbgIHP4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:57:16 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3405C0610E2
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:30:02 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u27so9384243lfm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:30:02 -0700 (PDT)
+        Tue, 8 Sep 2020 11:56:53 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7039FC061A20
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:29:57 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id jw11so2311439pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Di/sRB46OQMighQk5dHQr7eSM0Xs2HG6mVJOqpHAQVA=;
-        b=wivPxHYd6n7P0VAEx89iYB0CDqiBmKAo8bMzcLJfB2IiCRpxk5jYQTa829s47y/wno
-         40r/qjNvtJXqW07sGgOhSY/HZAjUZxaTZhtMPSqKN9fEpuZ4CSnpLMNQuWlpJzLMM7fs
-         IjlQCq8zRJb/BaBSivOSB4R5Wwu4b1YYCM8rPodch7mYWFCK70cCGVs8t8TZjLu7WN1e
-         SiYzFROl6IUYKLWKvvO61Za6fBzGcFbxWI2+IBQ9rr45F6MlSdVG6CUeyWlEB/Wpi3UY
-         quha/AzAYYYLaGPkTLNp/jY5SKnnT236N0YwjedIYIuNHh+ogwxXas/gPuTCgKN9zRYj
-         CLJg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=NfYkZqMIYJWE0D6hAZLp/L+b7/9lJ1uqdfG5LMXNgTI=;
+        b=j7xh1mezDjKnq8jlEyx3H7PuoKGQjIYYsw35I2dMoIM1UN9WYzIjFvAn03GXXuq9yJ
+         mqhaMLnzZT38dHrvFh+bK60nqJ/8lpK15o+FGGp+4i2JqPBztH9gy1AtLWpd5GTs63T3
+         n9+m9g3wrBRCi9s3EuhzbkZkrvLTU1GQBmyhB9jwGAHGyIEMUCwOQAwxjxt+ncA7Hp+i
+         MUGb3ghi19LyECNbZeYA5fh311uFHZNyRgajh3nuFepjp4xfUzVfKeXJkU6HiR4QAAZQ
+         emdqELmuOR1N0AnYwTsV2PpATECgkYBSgk+7ONtkvWJew8lQh/RusK6saWuItXajVSit
+         JiaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Di/sRB46OQMighQk5dHQr7eSM0Xs2HG6mVJOqpHAQVA=;
-        b=n66aFW55I/yolWk1LycNO9P5i4ria/6Sn2IaPLZ6HS9eq4vAU5solmAcW21WaqugeS
-         U5rZDDPRKsBFAxGdQGKhV8dDu3ml6k1bVKo2/3s6qpPRnPkMC1Rz6fP2bCKa6E5yd5jw
-         x11Ge9Y1BoVXVpixKydpSsk6L8eedMRZmRLbEPjNz15QeChrJTZmFomRZVl1KmnApHtO
-         h9Kp9ZLwo0+4gLGkTzrgU7oWjzkZ5/2UJDsarT55K+IvGjJ6YsX0Iy7S8qdk3w0XutFU
-         FZuZ1mbTHEHnQdxU/APUpZeInrV3ATEMdtiuOYTqHShNuVxJBq6DAiGSaszA+m3ZsPxr
-         WuKQ==
-X-Gm-Message-State: AOAM530c7oTSU4+pC5tN/gNzmzc09ImKlAztjr/kdRiRCWTXprjpjxat
-        gXLbAyEaZKubNyonnym3Mwi8Zw==
-X-Google-Smtp-Source: ABdhPJwjWseqWyMRsUahDpNm7GhAt9M3g9XoH9LfcntDMA996o6s40LVXSJbHhYXWYKWxabeQtFRwg==
-X-Received: by 2002:ac2:5327:: with SMTP id f7mr12488078lfh.8.1599579000908;
-        Tue, 08 Sep 2020 08:30:00 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id l4sm10066362ljg.42.2020.09.08.08.30.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 08:30:00 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 17:29:59 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NfYkZqMIYJWE0D6hAZLp/L+b7/9lJ1uqdfG5LMXNgTI=;
+        b=efH6FvymGAryVsl330KeQOYxCILNd1VZwBSWM/f1+1sJ37v4Iapb2kA/F6keiy0CjV
+         dEHT6ht1OPW/VTwLJpcpILflaOTp2vpOtqky2Pd/YqoeNM3Sj79qglTWFP9WqkwEHEhl
+         StrsKziDfFHg1wJ/OZBF/KsDwUrqa4xVgNDVXFMGfTGKJxotoIXu5SkPVbviR/qiZQyz
+         HmflDiuzYMc0seG0NsBALxPsaNfHB92nxbJT6ZoPtzXiWoK83af6sOkqRffEnzkfJqvV
+         7sRi2WqEQfgJeyhsS7JsoJt2SRN8XuYMyxVosURuxAqgq2x0ZFRqBJlNmZO7O6v/vKfz
+         q1CQ==
+X-Gm-Message-State: AOAM5322Ba6Zj1a2tqi+yQVLmWLEfMmV+bT3xtTOfYYhn5PfOWgF6LUA
+        Bj3KAld2219ZNFpwZGB5Zjng
+X-Google-Smtp-Source: ABdhPJwvA55i99BI5DTakOAt3ONRK/7kr2GEgohy/WyiAcHOxFtI1VU+SLt/pjiJAsV6uwWlM4oDEQ==
+X-Received: by 2002:a17:90a:fe04:: with SMTP id ck4mr4687810pjb.210.1599578996799;
+        Tue, 08 Sep 2020 08:29:56 -0700 (PDT)
+Received: from mani-NUC7i5DNKE ([2409:4072:6213:6149:94b7:eeb3:82a5:2b53])
+        by smtp.gmail.com with ESMTPSA id c199sm19091498pfc.128.2020.09.08.08.29.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Sep 2020 08:29:56 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 20:59:47 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, amitk@kernel.org, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 0/2] Add VIN instances to r8a7742 SoC
-Message-ID: <20200908152959.GC2984648@oden.dyn.berto.se>
-References: <20200907144509.8861-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org,
+        tdas@codeaurora.org
+Subject: Re: [PATCH 6/7] cpufreq: qcom-hw: Add cpufreq support for SM8250 SoC
+Message-ID: <20200908152926.GD2352@mani-NUC7i5DNKE>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-7-manivannan.sadhasivam@linaro.org>
+ <20200908152217.GO3715@yoga>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200907144509.8861-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200908152217.GO3715@yoga>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
-
-Thanks for your work.
-
-On 2020-09-07 15:45:07 +0100, Lad Prabhakar wrote:
-> Hi All,
+On 0908, Bjorn Andersson wrote:
+> On Tue 08 Sep 02:57 CDT 2020, Manivannan Sadhasivam wrote:
 > 
-> This patch series adds support for VIN to r8a7742 (RZ/G1H) SoC.
+> > SM8250 SoC uses EPSS block for carrying out the cpufreq duties. Hence, add
+> > support for it in the driver with relevant of_match data.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Patches apply on top of [1].
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
->     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-
-For the whole series,
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
+> > ---
+> >  drivers/cpufreq/qcom-cpufreq-hw.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> > index de816bcafd33..c3c397cc3dc6 100644
+> > --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> > +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> > @@ -285,8 +285,17 @@ static const struct qcom_cpufreq_soc_data qcom_soc_data = {
+> >  	.lut_row_size = 32,
+> >  };
+> >  
+> > +static const struct qcom_cpufreq_soc_data sm8250_soc_data = {
 > 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (2):
->   dt-bindings: media: renesas,vin: Add device tree support for r8a7742
->   ARM: dts: r8a7742: Add VIN DT nodes
-> 
->  .../bindings/media/renesas,vin.yaml           |  1 +
->  arch/arm/boot/dts/r8a7742.dtsi                | 44 +++++++++++++++++++
->  2 files changed, 45 insertions(+)
-> 
-> -- 
-> 2.17.1
+> Could it be that this is the "epss_soc_data" (i.e. not sm8250 specific)?
+> (We should still use/include the platform specific compatible though).
 > 
 
--- 
-Regards,
-Niklas Söderlund
+Hmm, makes sense. Will change it.
+
+Thanks,
+Mani
+
+> Regards,
+> Bjorn
+> 
+> > +	.reg_enable = 0x0,
+> > +	.reg_freq_lut = 0x100,
+> > +	.reg_volt_lut = 0x200,
+> > +	.reg_perf_state = 0x320,
+> > +	.lut_row_size = 4,
+> > +};
+> > +
+> >  static const struct of_device_id qcom_cpufreq_hw_match[] = {
+> >  	{ .compatible = "qcom,cpufreq-hw", .data = &qcom_soc_data },
+> > +	{ .compatible = "qcom,sm8250-epss", .data = &sm8250_soc_data },
+> >  	{}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
+> > -- 
+> > 2.17.1
+> > 
