@@ -2,109 +2,144 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C33C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AD3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB1421741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91123215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s8WJM4Fx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm9/FIKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgIHCLi (ORCPT
+        id S1728394AbgIHCMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:11:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
+        Mon, 7 Sep 2020 22:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgIHCLh (ORCPT
+        with ESMTP id S1728210AbgIHCLi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 22:11:37 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B835EC061573;
-        Mon,  7 Sep 2020 19:11:36 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BlpYL2qfRz9sR4;
-        Tue,  8 Sep 2020 12:11:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599531094;
-        bh=HLnxUEsN4jtlio8BiweoeszpyAofnT5Xx6AYfXs5j6I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=s8WJM4Fxu8qTZzZ8n5kKqgUmea0HlzaTpMNuLAdIyjtt5LeWi5fwfvYapfZw/LQdS
-         LpQeiBvh5dezC3Hqg6ipYqvvpXD3jX056SMcM6evJ4SsW87THmCvaS90V5aDXuMzMd
-         +HzWtaImRkb5Gr2UAFJ/eHP4/OnJgZlWfy/V5iPWl9Ellfl7sKqDDkb8pfK7/c3/MJ
-         2ERPFF/TE25rlt7N9+L9+sDkxtcknlileU9wIoRsP5movIvrRO4tZc/kkzCpCjuMG3
-         /jk7odE4vdDTtkiXpRpihxulp9sGUEfuzUITPnMJwQNkVVBDVKbp/kr8QZ4741nLC9
-         PjWwrC3zZf4Hw==
-Date:   Tue, 8 Sep 2020 12:11:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the v4l-dvb tree
-Message-ID: <20200908121133.7cf400d8@canb.auug.org.au>
+        Mon, 7 Sep 2020 22:11:38 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7E8C061573;
+        Mon,  7 Sep 2020 19:11:38 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id q8so8317345lfb.6;
+        Mon, 07 Sep 2020 19:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gfmOtG2LX9A+Kel844rjarke+NfElZZeKMZp8MuQx6I=;
+        b=Tm9/FIKEgk29yAi0gO/78j3swf1duBjircnaXPLyClkolmcK28ErMw5bcOf2C7Ujpt
+         fT7XSGveqqyhId/l/DXscLwXQwo83fWp5Ww+uMvDGag9Ugz290vefzuwFOxDL1ieovFl
+         2s7D2ZHoiClBXuGrWyqZB6i0CGMNzUWmQdmTozRaiAktWvDUDimVv9zyiZ7I9cIQZpW5
+         9zHQgnkWqVv5XPnpLiJ32Z38cnPOyRHIwm8gPO8exALfsyoEwSkYfCEEWZ8d3jigCMY8
+         ENvjAgGCg+TRnw/SZLrsJ5hhhFbsYvTg8jHMG8XmQ2cb5iyvn7wrj03vgDNjeZ6d712q
+         3cDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gfmOtG2LX9A+Kel844rjarke+NfElZZeKMZp8MuQx6I=;
+        b=F+SIGO/aUG9vOpEIxSyJyy8OURR43NUGGy16Oode2pNCtLsrCaHE1UOujM+GUZ1F/Z
+         OE1Zb/cEJlTiYHmOh7KxMMP7x7V4lGH3/FBs4eh4c215O3saH9utbyiMQNqZNP0V5Bbj
+         0JaBMyigKxTnBFbcdOF1YiAuQPPPflqBGnbMZ3iHQ/MSNzsGtrXPq05LZE13yrvBaidG
+         3T/11Y8wfnWzaQvWGz9t9Car2874XECDUjP0ZwK6zQbEZf7ZUe7IKPsNm+Bs4D3K6SXc
+         lrUa8W4CsJKuhV/3svxbVTG2Gr+4W8bvfuAFRazhPqEVJAk9ZRO4Lj9jJPwW+Rys1g7S
+         IbBw==
+X-Gm-Message-State: AOAM530vpHawqz4C0ePE4du2MDTimzBJPsElmAftj5+j2eWH0IDklZyB
+        VeOVGS4fTv80n3eVXmlL7YVVgcLUuGc=
+X-Google-Smtp-Source: ABdhPJxbhNZzdrhpduoiWG3QfFL5U8JRQEbaHSxR1Ll28MYeIk+N2mqh1fi5WIu0cCDDAw5IH+v7aA==
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr11233554lfc.28.1599531096485;
+        Mon, 07 Sep 2020 19:11:36 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 19:11:35 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 01/35] i2c: tegra: Make tegra_i2c_flush_fifos() usable in atomic transfer
+Date:   Tue,  8 Sep 2020 05:09:47 +0300
+Message-Id: <20200908021021.9123-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200908021021.9123-1-digetx@gmail.com>
+References: <20200908021021.9123-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HB_4KZ/yH6E1RbsTGB=pUa_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/HB_4KZ/yH6E1RbsTGB=pUa_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The tegra_i2c_flush_fifos() shouldn't sleep in atomic transfer and jiffies
+are not updating if interrupts are disabled. Let's switch to use iopoll
+API helpers for register-polling. The iopoll API provides helpers for both
+atomic and non-atomic cases.
 
-Hi all,
+Note that this patch doesn't fix any known problem because normally FIFO
+is flushed at the time of starting a new transfer.
 
-After merging the v4l-dvb tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-drivers/media/test-drivers/vivid/vivid-core.c: In function 'vivid_create_de=
-vnodes':
-drivers/media/test-drivers/vivid/vivid-core.c:1318:11: warning: unused vari=
-able 'i' [-Wunused-variable]
- 1318 |  int ret, i;
-      |           ^
-drivers/media/test-drivers/vivid/vivid-core.c: In function 'vivid_create_in=
-stance':
-drivers/media/test-drivers/vivid/vivid-core.c:1885:47: error: 'cec_tx_bus_c=
-nt' undeclared (first use in this function)
- 1885 |  ret =3D vivid_create_devnodes(pdev, dev, inst, cec_tx_bus_cnt,
-      |                                               ^~~~~~~~~~~~~~
-drivers/media/test-drivers/vivid/vivid-core.c:1885:47: note: each undeclare=
-d identifier is reported only once for each function it appears in
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 00d3e4d7a01e..ab88cdd70376 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -470,9 +470,9 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
+ 
+ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ {
+-	unsigned long timeout = jiffies + HZ;
+-	unsigned int offset;
+-	u32 mask, val;
++	u32 mask, val, offset, reg_offset;
++	void __iomem *addr;
++	int err;
+ 
+ 	if (i2c_dev->hw->has_mst_fifo) {
+ 		mask = I2C_MST_FIFO_CONTROL_TX_FLUSH |
+@@ -488,12 +488,19 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 	val |= mask;
+ 	i2c_writel(i2c_dev, val, offset);
+ 
+-	while (i2c_readl(i2c_dev, offset) & mask) {
+-		if (time_after(jiffies, timeout)) {
+-			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
+-			return -ETIMEDOUT;
+-		}
+-		usleep_range(1000, 2000);
++	reg_offset = tegra_i2c_reg_addr(i2c_dev, offset);
++	addr = i2c_dev->base + reg_offset;
++
++	if (i2c_dev->is_curr_atomic_xfer)
++		err = readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
++							1000, 1000000);
++	else
++		err = readl_relaxed_poll_timeout(addr, val, !(val & mask),
++						 1000, 1000000);
++
++	if (err) {
++		dev_err(i2c_dev->dev, "failed to flush FIFO\n");
++		return err;
+ 	}
+ 	return 0;
+ }
+-- 
+2.27.0
 
-Caused by commit
-
-  62c6b4c9e3c8 ("media: vivid: move the devnode creation logic to a separat=
-e function")
-
-I have used the v4l-dvb tree from next-20200903 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/HB_4KZ/yH6E1RbsTGB=pUa_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9W6FUACgkQAVBC80lX
-0GxPqgf+MsVF/aNFfC/xK9PFDhAcgSwjLuBkfrqMit+Tw7zA93EKbFSlt28ZMB1a
-rkIN0l2kJSZ8HWEb6TChhk/hk9rJ4f52X1xsGryBLA/6PCHXRJ7e3244E+WZCjp8
-U7QbkyAyLriOmrqyCiDrn4/QqHlpt/51q4pNmA4ILgRULJOT6N1NADQ0wU/nfRIY
-RIRT+6ZIymSDQBMvBX7VO9h2k2WvNcNAE1+i0SDJbjzQRZtlIqBb+1WQjtvNZ8Vw
-H1W1+95dEqLAvQ3hWUHR1Kjdlb+8VR0qTFIrskuA8i9q+m2Yj8ZY4HshlhA0AExT
-MF8ZdisnOeHbZdcoytAaScAOkykDhw==
-=yP0M
------END PGP SIGNATURE-----
-
---Sig_/HB_4KZ/yH6E1RbsTGB=pUa_--
