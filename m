@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D6FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9843B20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739142087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585343;
-	bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
+	s=default; t=1599585353;
+	bh=cCRwyX5JqDlrIsMkrQUCSuP6rXkvUd/btO1Tmdo9eW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKah8HeCpf7ZG7TJ5QoOWvqk+8VxdLJEq6N0acG8ROBmsX0/uKmwOcrOuaKkoRmIV
-	 Q+nydEuIB0ksQtW9E6xshzGCH28mjvoN4OGdSXqGBGF5w/XOu02M1jyBDhk4w5vHmm
-	 zAW9ILSMc2D3LSYnv9VAhSSG5QQq41XXH0qIyUIU=
+	b=xt8zJzeCqjfO69iFMkAI3xf7CGqjy3nV1c8ZrKjqQxP9Np35o0sBLxxRM/J1KfsZL
+	 72TkZ/pOaWG9rapEV3bzpAr/aMiATMpFl9bwqqrN1vv6AG2aTpiXhoX5jlvS6O9m5o
+	 BSaxbJG82mycmZp/7M0Pqdcio4ImbvbP1ywLyJ3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbgIHRPl (ORCPT
+        id S1731806AbgIHRPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731776AbgIHQSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731326AbgIHQSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:53 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB23524813;
-        Tue,  8 Sep 2020 15:43:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AC6E24836;
+        Tue,  8 Sep 2020 15:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579814;
-        bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
+        s=default; t=1599579902;
+        bh=cCRwyX5JqDlrIsMkrQUCSuP6rXkvUd/btO1Tmdo9eW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0Ys7pcb0ubYNFV4AXTAscpPRTJfFE1X2tBBdCazkwRB3nveHyL7LlAO4Vqs221Tz
-         HjBi2s5Wi9UQg/m8aLeejTdKtnYtLPb6OjDrSsYHdYBop0onHNUJsSl/N9mB4KaBfW
-         1v/KTLyb/bfebsNgRvDRIqgwyal2JKENP8vOvft4=
+        b=Yw+oOx/zVgC1lv8h43wRRTIxz0rGZBNnNY7cF1fFwiKaYEbEjd6yfTL5sBrBYuWuA
+         5euFW7qKyfAXYxn9zQFjJHnIJQBTfXSnfYXZClMcEKYzr8qN53xZULLHvYPCRAF5/6
+         Va+8ubqsEUq3PznMbHQIza9A09si5ChBgbU9vUOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 015/129] s390: dont trace preemption in percpu macros
-Date:   Tue,  8 Sep 2020 17:24:16 +0200
-Message-Id: <20200908152230.456715774@linuxfoundation.org>
+Subject: [PATCH 5.4 050/129] media: cedrus: Add missing v4l2_ctrl_request_hdl_put()
+Date:   Tue,  8 Sep 2020 17:24:51 +0200
+Message-Id: <20200908152232.211011409@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,136 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit 1196f12a2c960951d02262af25af0bb1775ebcc2 ]
+[ Upstream commit b30063976f29fc221a99d18d37d22ca035068aa9 ]
 
-Since commit a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context}
-to per-cpu variables") the lockdep code itself uses percpu variables. This
-leads to recursions because the percpu macros are calling preempt_enable()
-which might call trace_preempt_on().
+The check for a required control in the request was missing a call to
+v4l2_ctrl_request_hdl_put() in the error path. Fix it.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 50e761516f2b8c ("media: platform: Add Cedrus VPU decoder driver")
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/percpu.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/staging/media/sunxi/cedrus/cedrus.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 50b4ce8cddfdc..918f0ba4f4d20 100644
---- a/arch/s390/include/asm/percpu.h
-+++ b/arch/s390/include/asm/percpu.h
-@@ -29,7 +29,7 @@
- 	typedef typeof(pcp) pcp_op_T__;					\
- 	pcp_op_T__ old__, new__, prev__;				\
- 	pcp_op_T__ *ptr__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	prev__ = *ptr__;						\
- 	do {								\
-@@ -37,7 +37,7 @@
- 		new__ = old__ op (val);					\
- 		prev__ = cmpxchg(ptr__, old__, new__);			\
- 	} while (prev__ != old__);					\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	new__;								\
- })
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+index 3439f6ad63380..e80e82a276e93 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -159,6 +159,7 @@ static int cedrus_request_validate(struct media_request *req)
+ 	struct v4l2_ctrl *ctrl_test;
+ 	unsigned int count;
+ 	unsigned int i;
++	int ret = 0;
  
-@@ -68,7 +68,7 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp)); 				\
- 	if (__builtin_constant_p(val__) &&				\
- 	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
-@@ -84,7 +84,7 @@
- 			: [val__] "d" (val__)				\
- 			: "cc");					\
- 	}								\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
+ 	list_for_each_entry(obj, &req->objects, list) {
+ 		struct vb2_buffer *vb;
+@@ -203,12 +204,16 @@ static int cedrus_request_validate(struct media_request *req)
+ 		if (!ctrl_test) {
+ 			v4l2_info(&ctx->dev->v4l2_dev,
+ 				  "Missing required codec control\n");
+-			return -ENOENT;
++			ret = -ENOENT;
++			break;
+ 		}
+ 	}
+ 
+ 	v4l2_ctrl_request_hdl_put(hdl);
+ 
++	if (ret)
++		return ret;
++
+ 	return vb2_request_validate(req);
  }
- 
- #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
-@@ -95,14 +95,14 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
- 	asm volatile(							\
- 		op "    %[old__],%[val__],%[ptr__]\n"			\
- 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
- 		: [val__] "d" (val__)					\
- 		: "cc");						\
--	preempt_enable();						\
-+	preempt_enable_notrace();						\
- 	old__ + val__;							\
- })
- 
-@@ -114,14 +114,14 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
- 	asm volatile(							\
- 		op "    %[old__],%[val__],%[ptr__]\n"			\
- 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
- 		: [val__] "d" (val__)					\
- 		: "cc");						\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- }
- 
- #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
-@@ -136,10 +136,10 @@
- 	typedef typeof(pcp) pcp_op_T__;					\
- 	pcp_op_T__ ret__;						\
- 	pcp_op_T__ *ptr__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	ret__ = cmpxchg(ptr__, oval, nval);				\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
-@@ -152,10 +152,10 @@
- ({									\
- 	typeof(pcp) *ptr__;						\
- 	typeof(pcp) ret__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	ret__ = xchg(ptr__, nval);					\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
-@@ -171,11 +171,11 @@
- 	typeof(pcp1) *p1__;						\
- 	typeof(pcp2) *p2__;						\
- 	int ret__;							\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	p1__ = raw_cpu_ptr(&(pcp1));					\
- 	p2__ = raw_cpu_ptr(&(pcp2));					\
- 	ret__ = __cmpxchg_double(p1__, p2__, o1__, o2__, n1__, n2__);	\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
  
 -- 
 2.25.1
