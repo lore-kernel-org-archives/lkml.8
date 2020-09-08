@@ -2,283 +2,144 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87110C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8002177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5AC21532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pV2KhJ9S"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="E69661ws"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgIHGgV (ORCPT
+        id S1728963AbgIHGlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:36:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728501AbgIHGgR (ORCPT
+        Tue, 8 Sep 2020 02:41:52 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:46882 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728759AbgIHGlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:36:17 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D246C061755;
-        Mon,  7 Sep 2020 23:36:16 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id w5so6418576ilo.5;
-        Mon, 07 Sep 2020 23:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PGqCKR+oi7f83mYcMwbSlRNW02PpemrpYhf3i5/jzuk=;
-        b=pV2KhJ9SrtmvbmUsAtr12ux66l1lf2l1xIIR7iWMPEtJg/V5E7J+tpgdAyLBXGAjze
-         pJm7vS13OQSHj7Q8yV8mXipXHc3PrAThoQtDL8prqMGJAp/cZvhFbJ5pn3v9NSk6JNOI
-         fSEP+EMs6wV5Gumgebx/YEizGrvOh+tzvD3o2E+2a3O7ZQ51WvDZHhRhw0THZc+RqgA1
-         tjEve8VLOrW5yNLxIYz9BcgTIc7OwBLqEewl90tbTbTp9REBV966xz+9VnVvQ2Ztwbkd
-         wqLL+GjPhj+mrC9Kf1VfAmKBq8OrmXaBqNQcRz7pjJImt+a4HZWxFrJ6H9E90/GtcoJ3
-         iXpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PGqCKR+oi7f83mYcMwbSlRNW02PpemrpYhf3i5/jzuk=;
-        b=E4knjikESt8WvnurtQXTTWIXczCr/HJ7x9rS/dIAlKyxb/NFDGG3q8n6xa289kINWa
-         JOa9dg2Js+4yOiJUI1zNCmuUj4n9gi9yevh/MGFuPIEAlv8Z3b98zgZ8C41K7RLk7KMK
-         g2JRsoQq46xiiFgIciNeKTujljdMWF/GzR+jmhN3ONtPZYGXURsRXGUHsv8BDUYT0myt
-         9UEL5ZxVf/we6w75dmQOFWr9OeEw3cqF/CWAsiW28Hcs6ANpqDcFT8YTLzo1CjbHPG3C
-         zsIYCBzBrsLvukFTI3AClH831gjqRz/Z9rLBU0041JCTTKdcEroQyVjA4JfHz+67zFGf
-         bD6Q==
-X-Gm-Message-State: AOAM533XX6j1Q+swuVdRX7BTH2Fqx4bsZxxua0EUVLbrgZWYb3u0wnAX
-        QRzEz5ofHdtywR3MSV7PjzEiraRKA64=
-X-Google-Smtp-Source: ABdhPJyywHMU5J1meOxViJPUjSThzVAlURHRxBO5Lg6H7Nu6CjX2zr0HrDy55LVpcNYfDaogYfIz5w==
-X-Received: by 2002:a92:9992:: with SMTP id t18mr22908981ilk.170.1599546974392;
-        Mon, 07 Sep 2020 23:36:14 -0700 (PDT)
-Received: from james-x399.localdomain (71-218-238-150.hlrn.qwest.net. [71.218.238.150])
-        by smtp.gmail.com with ESMTPSA id i10sm1350814ioi.39.2020.09.07.23.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 23:36:13 -0700 (PDT)
-From:   James Hilliard <james.hilliard1@gmail.com>
-To:     linux-usb@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        James Hilliard <james.hilliard1@gmail.com>,
-        Russ Dill <Russ.Dill@gmail.com>,
-        Hector Martin <hector@marcansoft.com>
-Subject: [PATCH] usb: serial: Repair FTDI FT232R bricked eeprom
-Date:   Tue,  8 Sep 2020 00:36:09 -0600
-Message-Id: <20200908063609.2817032-1-james.hilliard1@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 8 Sep 2020 02:41:50 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886f5Rn009656;
+        Mon, 7 Sep 2020 23:41:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=3P+b5DAtUyAJOjDDAer4aU9l5JZPTV5HDqbmbz05Tz0=;
+ b=E69661wsx+IXZSrIfdQnqtjxkdrqttjj7ZBhj53381LyeW3PTm93uoygxiK3qJBXXz7O
+ ocnstlUmsnPGxu2bX09YfqGDgChieXPVDCR453Pw1AEehjl+T+GMnBzMpwiGfwL1X2dN
+ l2bNrFr7AB9IyLElSbVSutZ0s3e140wRydiGJq5KSCAddHGTBOYiF4m0hh+XpjqAaX2H
+ 4lInd79fD/cEjlA+clOV0zGYfGl0FHoJL955WFb9zuRdBt/g4BFm56nE/zRKuwWpqsvg
+ INN5CvLPEaNGFZZr5btp/nCPJvkQ7OSnB1eNEZJ59kh+5PWNHvjqfaAwZdf7w5Obltpt Dg== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 33c81ptfv9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 23:41:44 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:41:43 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:41:43 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 7 Sep 2020 23:41:43 -0700
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id E24D33F703F;
+        Mon,  7 Sep 2020 23:41:42 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0886fgu2019828;
+        Mon, 7 Sep 2020 23:41:42 -0700
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Mon, 7 Sep 2020 23:41:42 -0700
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     Daniel Wagner <dwagner@suse.de>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Nilesh Javali" <njavali@marvell.com>,
+        Martin Wilck <mwilck@suse.com>
+Subject: Re: [PATCH v2 0/4] qla2xxx: A couple crash fixes
+In-Reply-To: <20200831161854.70879-1-dwagner@suse.de>
+Message-ID: <alpine.LRH.2.21.9999.2009072340490.28578@irv1user01.caveonetworks.com>
+References: <20200831161854.70879-1-dwagner@suse.de>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_02:2020-09-08,2020-09-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch detects end reverses the effects of the malicious FTDI
-Windows driver version 2.12.00(FTDIgate).
+Hi Daniel,
 
-While we currently load the ftdi_sio driver for devices with
-FTDI_BRICK_PID(0x0000) userspace applications that expect the
-appropriate FTDI_8U232AM_PID(0x6001) PID may not work properly.
+On Mon, 31 Aug 2020, 9:18am, Daniel Wagner wrote:
 
-Since the malicious FTDI driver modifies the PID without modifying
-the normal checksum field we can detect and limit the unbricking
-to devices that were bricked specifically using the FTDI checksum
-preimage attack technique used by the official Windows drivers.
+> changes since v1:
+> 
+>  - added dummy warn function to patch#1
+>  - added log entry to patch#4
+> 
+> as suggested by Martin
+> 
+> 
+> 
+> Initial cover letter:
+> 
+> The first crash we observed is due memory corruption in the srb memory
+> pool. Unforuntatly, I couldn't find the source of the problem but the
+> workaround by resetting the cleanup callbacks 'fixes' this problem
+> (patch #1). I think as intermeditate step this should be merged until
+> the real cause can be identified.
+> 
+> The second crash is due a race condition(?) in the firmware. The sts
+> entries are not updated in time which leads to this crash pattern
+> which several customers have reported:
+> 
+>  #0 [c00000ffffd1bb80] scsi_dma_unmap at d00000001e4904d4 [scsi_mod]
+>  #1 [c00000ffffd1bbe0] qla2x00_sp_compl at d0000000204803cc [qla2xxx]
+>  #2 [c00000ffffd1bc20] qla24xx_process_response_queue at d0000000204c5810 [qla2xxx]
+>  #3 [c00000ffffd1bd50] qla24xx_msix_rsp_q at d0000000204c8fd8 [qla2xxx]
+>  #4 [c00000ffffd1bde0] __handle_irq_event_percpu at c000000000189510
+>  #5 [c00000ffffd1bea0] handle_irq_event_percpu at c00000000018978c
+>  #6 [c00000ffffd1bee0] handle_irq_event at c00000000018984c
+>  #7 [c00000ffffd1bf10] handle_fasteoi_irq at c00000000018efc0
+>  #8 [c00000ffffd1bf40] generic_handle_irq at c000000000187f10
+>  #9 [c00000ffffd1bf60] __do_irq at c000000000018784
+>  #10 [c00000ffffd1bf90] call_do_irq at c00000000002caa4
+>  #11 [c00000ecca417a00] do_IRQ at c000000000018970
+>  #12 [c00000ecca417a50] restore_check_irq_replay at c00000000000de98
+> 
+> From analyzing the crash dump it was clear that
+> qla24xx_mbx_iocb_entry() calls sp->done (qla2x00_sp_compl) which
+> crashes because the response is not a mailbox entry, it is a status
+> entry. Patch #4 changes the process logic for mailbox commands so that
+> the sp is parsed before calling the correct proccess function.
+> 
+> Thanks,
+> Daniel
+> 
+> Daniel Wagner (4):
+>   qla2xxx: Warn if done() or free() are called on an already freed srb
+>   qla2xxx: Simplify return value logic in qla2x00_get_sp_from_handle()
+>   qla2xxx: Drop unused function argument from
+>     qla2x00_get_sp_from_handle()
+>   qla2xxx: Handle incorrect entry_type entries
+> 
+>  drivers/scsi/qla2xxx/qla_gbl.h    |  3 +-
+>  drivers/scsi/qla2xxx/qla_init.c   | 10 ++++++
+>  drivers/scsi/qla2xxx/qla_inline.h |  5 +++
+>  drivers/scsi/qla2xxx/qla_isr.c    | 74 +++++++++++++++++++++++----------------
+>  drivers/scsi/qla2xxx/qla_mr.c     |  9 ++---
+>  5 files changed, 62 insertions(+), 39 deletions(-)
+> 
+> 
 
-This should have no effect on devices where the PID was deliberately
-set to FTDI_BRICK_PID(0x0000) as the checksum would normally change
-and the preimage target(address 62) should be 0. We validate that
-the preimage target is not 0 before attempting to unbrick.
+Thanks for the patches, my comments in the respective patches.
 
-Since we only write to even addresses this should have no effect at
-all on non-counterfeit FTDI hardware due to the hardware only
-committing EEPROM writes when odd addresses are written.
-
-References:
-https://marcan.st/transf/detect_ftdi_clone.py
-https://hackaday.com/2014/10/22/watch-that-windows-update-ftdi-drivers-are-killing-fake-chips/
-https://www.eevblog.com/forum/reviews/ftdi-driver-kills-fake-ftdi-ft232/msg535270/#msg535270
-https://lkml.org/lkml/2014/10/23/266
-https://lore.kernel.org/patchwork/patch/509929/
-https://lore.kernel.org/patchwork/patch/510097/
-
-Signed-off-by: Russ Dill <Russ.Dill@gmail.com>
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Cc: Hector Martin <hector@marcansoft.com>
----
- drivers/usb/serial/ftdi_sio.c | 112 ++++++++++++++++++++++++++++++++++
- drivers/usb/serial/ftdi_sio.h |   4 ++
- 2 files changed, 116 insertions(+)
-
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 871cdccf3a5f..39fc14af6185 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2029,6 +2029,22 @@ static int ftdi_read_eeprom(struct usb_serial *serial, void *dst, u16 addr,
- 	return 0;
- }
- 
-+static int ftdi_write_eeprom(struct usb_serial_port *port, u8 addr, u16 data)
-+{
-+	struct usb_device *udev = port->serial->dev;
-+	int rv;
-+
-+	rv = usb_control_msg(udev,
-+			     usb_sndctrlpipe(udev, 0),
-+			     FTDI_SIO_WRITE_EEPROM_REQUEST,
-+			     FTDI_SIO_WRITE_EEPROM_REQUEST_TYPE,
-+			     data, addr,
-+			     NULL, 0, WDR_TIMEOUT);
-+	if (rv < 0)
-+		dev_err(&port->dev, "Unable to write EEPROM: %i\n", rv);
-+	return rv;
-+}
-+
- static int ftdi_gpio_init_ft232h(struct usb_serial_port *port)
- {
- 	struct ftdi_private *priv = usb_get_serial_port_data(port);
-@@ -2234,10 +2250,100 @@ static int ftdi_sio_probe(struct usb_serial *serial,
- 	return 0;
- }
- 
-+static u16 ftdi_checksum(u16 *data, int n)
-+{
-+	u16 checksum;
-+	int i;
-+
-+	checksum = 0xaaaa;
-+	for (i = 0; i < n - 1; i++) {
-+		checksum ^= be16_to_cpu(data[i]);
-+		checksum = (checksum << 1) | (checksum >> 15);
-+	}
-+
-+	return cpu_to_be16(checksum);
-+}
-+
-+static int ftdi_repair_brick(struct usb_serial_port *port)
-+{
-+	struct ftdi_private *priv = usb_get_serial_port_data(port);
-+	int orig_latency;
-+	int rv;
-+	u16 *eeprom_data;
-+	u16 checksum;
-+	int eeprom_size;
-+	int result;
-+
-+	switch (priv->chip_type) {
-+	case FT232RL:
-+		eeprom_size = 0x40;
-+		break;
-+	default:
-+		/* Unsupported for brick repair */
-+		return 0;
-+	}
-+
-+	/* Latency timer needs to be 0x77 to unlock EEPROM programming */
-+	if (priv->latency != 0x77) {
-+		orig_latency = priv->latency;
-+		priv->latency = 0x77;
-+		rv = write_latency_timer(port);
-+		priv->latency = orig_latency;
-+		if (rv < 0)
-+			return -EIO;
-+	}
-+
-+	eeprom_data = kmalloc(eeprom_size * 2, GFP_KERNEL);
-+	if (!eeprom_data)
-+		return -ENOMEM;
-+
-+	/* Read in EEPROM */
-+	result = ftdi_read_eeprom(port->serial, eeprom_data, 0x00, eeprom_size * 2);
-+	if (result < 0)
-+		goto end_repair_brick;
-+
-+	/* Verify EEPROM is valid */
-+	checksum = ftdi_checksum(eeprom_data, eeprom_size);
-+	if (checksum != eeprom_data[eeprom_size - 1])
-+		goto end_repair_brick;
-+
-+	/* FTDI driver checksum preimage attack targets address 62 */
-+	if (eeprom_data[62] == 0)
-+		goto end_repair_brick;
-+
-+	/* Attempt to restore Product ID to 0x6001 */
-+	eeprom_data[2] = FTDI_8U232AM_PID;
-+
-+	/* Clear preimage attack target address */
-+	eeprom_data[62] = 0;
-+
-+	/* Calculate and verify new checksum */
-+	checksum = ftdi_checksum(eeprom_data, eeprom_size);
-+	if (checksum != eeprom_data[eeprom_size - 1])
-+		goto end_repair_brick;
-+
-+	/* Restore EEPROM PID to original pre-brick state */
-+	if (ftdi_write_eeprom(port, 2, eeprom_data[2]) < 0)
-+		goto end_repair_brick;
-+
-+	/* Restore EEPROM preimage target address to original pre-brick state */
-+	if (ftdi_write_eeprom(port, 62, eeprom_data[62]) < 0)
-+		goto end_repair_brick;
-+
-+	dev_info(&port->dev, "Successfully repaired eeprom bricked by FTDI's malicious Windows driver.\n");
-+
-+end_repair_brick:
-+	kfree(eeprom_data);
-+
-+	return result;
-+}
-+
- static int ftdi_sio_port_probe(struct usb_serial_port *port)
- {
- 	struct ftdi_private *priv;
- 	const struct ftdi_sio_quirk *quirk = usb_get_serial_data(port->serial);
-+	u16 vendor_id;
-+	u16 product_id;
- 	int result;
- 
- 	priv = kzalloc(sizeof(struct ftdi_private), GFP_KERNEL);
-@@ -2255,6 +2361,12 @@ static int ftdi_sio_port_probe(struct usb_serial_port *port)
- 	ftdi_set_max_packet_size(port);
- 	if (read_latency_timer(port) < 0)
- 		priv->latency = 16;
-+	vendor_id = le16_to_cpu(port->serial->dev->descriptor.idVendor);
-+	product_id = le16_to_cpu(port->serial->dev->descriptor.idProduct);
-+	if (vendor_id == FTDI_VID &&
-+		product_id == FTDI_BRICK_PID &&
-+		priv->chip_type == FT232RL)
-+		ftdi_repair_brick(port);
- 	write_latency_timer(port);
- 	create_sysfs_attrs(port);
- 
-diff --git a/drivers/usb/serial/ftdi_sio.h b/drivers/usb/serial/ftdi_sio.h
-index be1641e0408b..40c6c4372a34 100644
---- a/drivers/usb/serial/ftdi_sio.h
-+++ b/drivers/usb/serial/ftdi_sio.h
-@@ -39,6 +39,7 @@
- #define FTDI_SIO_SET_BITMODE		0x0b /* Set bitbang mode */
- #define FTDI_SIO_READ_PINS		0x0c /* Read immediate value of pins */
- #define FTDI_SIO_READ_EEPROM		0x90 /* Read EEPROM */
-+#define FTDI_SIO_WRITE_EEPROM		0x91 /* Write EEPROM */
- 
- /* Interface indices for FT2232, FT2232H and FT4232H devices */
- #define INTERFACE_A		1
-@@ -457,6 +458,9 @@ enum ftdi_sio_baudrate {
- #define FTDI_SIO_READ_EEPROM_REQUEST_TYPE 0xc0
- #define FTDI_SIO_READ_EEPROM_REQUEST FTDI_SIO_READ_EEPROM
- 
-+#define FTDI_SIO_WRITE_EEPROM_REQUEST_TYPE 0x40
-+#define FTDI_SIO_WRITE_EEPROM_REQUEST FTDI_SIO_WRITE_EEPROM
-+
- #define FTDI_FTX_CBUS_MUX_GPIO		0x8
- #define FTDI_FT232R_CBUS_MUX_GPIO	0xa
- 
--- 
-2.25.1
-
+Regards,
+-Arun
