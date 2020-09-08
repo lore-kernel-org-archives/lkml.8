@@ -2,114 +2,113 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377F6C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE78C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE4D2206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C028D206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="vnAzXgXn"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u5cgThpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731765AbgIHQfu (ORCPT
+        id S1731514AbgIHQgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732040AbgIHQdU (ORCPT
+        Tue, 8 Sep 2020 12:36:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51706 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732026AbgIHQcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:33:20 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26955C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 09:33:06 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id c190so11028977pfa.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=CANcWdmkfHocbgVKTAAE9dJkc5hHdQokKhQjsEB1KnE=;
-        b=vnAzXgXnVVnlPrwhtix3PGdB4bxu4RglJmzXo+f+f7F62CokdgVLb0tuJRPbdPVbc8
-         w06zo1pPDysBOFCrFK+32SwVnFYivbrZgchZrc6wXnWsxHwUz4EquvDbTasycuKnL6EB
-         3y0vyptT80/i8+m6Cn6cg6d6oMwQbmp9s6KjhtexFhZHOVO3rdKIq5m96j1Z4Z6dwsVx
-         //IQzVHpk3ZwqP0quOFuiboaKe2Jxa0HRvGfxJ7HWrMvNqmQQ/eMf7gdU9r6kA1+t1+4
-         xGWOovztoXUJSS3lNX+GXa0WcGF4XLFhumezuuM6Uy1y5gJ4pYUqRbX8fs6XIpVmAjP6
-         ZdQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=CANcWdmkfHocbgVKTAAE9dJkc5hHdQokKhQjsEB1KnE=;
-        b=sedhcjd7NQP43DleiGjRbSMVed7kNvJkqZMULuh3fmSRRglvcRuKVaM1PQBEtcpdaM
-         n6HwugRhjP/TZgTesMFQdjt1nAc83dHRa8TdJD3H10vZpZHYsQdkfBp53M6U66xtO0UL
-         GXGbUUdlJgNh2P5JSqqOJHkhK1pJBCfWaSIguSso+vtWd3ptsaVjzr/fv11tMn6XguSw
-         KP+d3sMlalZ8Nvc6v2bQK4re/uRHH0ckCfZlrlednYd6GGzPA55UiIx4sn5MD0rGDI44
-         qSLejxrL7MyIldE3pP6eNhaCpJ4pD3odRV4s8KlfE7K7yrkNBGO1k6x0pdaFY88ZdYbg
-         qplw==
-X-Gm-Message-State: AOAM530Q5nPuZ+K+GwwIKq5Gug6K3snWFxb64kXo/OlBJraL7NsSn1/L
-        uAKvbYpmS1UlLXnQ2dmqNaZQJ48t0S9N
-X-Google-Smtp-Source: ABdhPJw8HTxak1y58y4eThfivoBBfNjQI2nL+3HJ5ywB683wMLKEawkjBkDqxjTuYE1x3wZHkXnL1MGaRodZ
-X-Received: from brianvv.svl.corp.google.com ([2620:15c:2c4:201:a28c:fdff:fee1:c370])
- (user=brianvv job=sendgmr) by 2002:a17:90b:80f:: with SMTP id
- bk15mr8833pjb.36.1599582784358; Tue, 08 Sep 2020 09:33:04 -0700 (PDT)
-Date:   Tue,  8 Sep 2020 09:33:00 -0700
-Message-Id: <20200908163300.729113-1-brianvv@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v2] fib: fix fib_rule_ops indirect call wrappers when CONFIG_IPV6=m
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Sven Joachim <svenjoac@gmx.de>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 8 Sep 2020 12:32:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088Ewtci011590;
+        Tue, 8 Sep 2020 09:58:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599577135;
+        bh=fKarsEyMOJcKTwtf5n0tGq73QBl/jjsYYqxZnKWLtfU=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=u5cgThpU3AlHzuETTDonZHqMfFUtNgZRBjQwQyWHhuJeOoNft0cOIeqIVbic0RiB7
+         JvMJ80lOItnioC30vw/zZJU6VnY303X8j/ZkIqIZ0T2otDT/oYoekdZHQJC3wYPGEa
+         UqbCO2fBUSWG8TEtgpZNpcBy843k6qnVy/gatlt8=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088EwtaO121227
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 09:58:55 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 09:58:55 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 09:58:55 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088EwtuK053861;
+        Tue, 8 Sep 2020 09:58:55 -0500
+Subject: Re: [PATCH 2/2] ASoC: tlv320adcx140: Wake up codec before accessing
+ register
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Camel Guo <camel.guo@axis.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@axis.com>, Camel Guo <camelg@axis.com>
+References: <20200908083521.14105-1-camel.guo@axis.com>
+ <20200908083521.14105-2-camel.guo@axis.com>
+ <89f8cce0-2407-15f5-a8e5-0aa17a2eb2c4@ti.com>
+Message-ID: <8160bf81-a72d-2db0-0767-79b0509ff143@ti.com>
+Date:   Tue, 8 Sep 2020 09:58:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <89f8cce0-2407-15f5-a8e5-0aa17a2eb2c4@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_IPV6=m, the IPV6 functions won't be found by the linker:
+Camel
 
-ld: net/core/fib_rules.o: in function `fib_rules_lookup':
-fib_rules.c:(.text+0x606): undefined reference to `fib6_rule_match'
-ld: fib_rules.c:(.text+0x611): undefined reference to `fib6_rule_match'
-ld: fib_rules.c:(.text+0x68c): undefined reference to `fib6_rule_action'
-ld: fib_rules.c:(.text+0x693): undefined reference to `fib6_rule_action'
-ld: fib_rules.c:(.text+0x6aa): undefined reference to `fib6_rule_suppress'
-ld: fib_rules.c:(.text+0x6bc): undefined reference to `fib6_rule_suppress'
-make: *** [Makefile:1166: vmlinux] Error 1
+On 9/8/20 6:49 AM, Dan Murphy wrote:
+> Camel
+>
+> On 9/8/20 3:35 AM, Camel Guo wrote:
+>> From: Camel Guo <camelg@axis.com>
+>>
+>> According to its datasheet, after reset this codec goes into sleep
+>> mode. In this mode, any register accessing should be avoided except for
+>> exiting sleep mode. Hence this commit moves SLEEP_CFG access before any
+>> register accessing.
+>
+> This is interesting because our HW team suggested putting the device 
+> into sleep mode when doing register writes/reads because they were 
+> finding abnormalities in the register settings when the device is active.
+>
+> I have a local patch that changes this as well that the HW team 
+> requested.
 
-Reported-by: Sven Joachim <svenjoac@gmx.de>
-Fixes: 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers")
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Signed-off-by: Brian Vazquez <brianvv@google.com>
----
-v2:
--amend fixes tag to the right one
 
- net/core/fib_rules.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK I have clarification on this now.  Their original request was 
+incorrect they indicate the BIAS, ADC and PLLs be powered down during 
+writes and reads.
 
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index 51678a528f85..7bcfb16854cb 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -16,7 +16,7 @@
- #include <net/ip_tunnels.h>
- #include <linux/indirect_call_wrapper.h>
- 
--#ifdef CONFIG_IPV6_MULTIPLE_TABLES
-+#if defined(CONFIG_IPV6) && defined(CONFIG_IPV6_MULTIPLE_TABLES)
- #ifdef CONFIG_IP_MULTIPLE_TABLES
- #define INDIRECT_CALL_MT(f, f2, f1, ...) \
- 	INDIRECT_CALL_INET(f, f2, f1, __VA_ARGS__)
--- 
-2.28.0.526.ge36021eeef-goog
 
+>
+> Mark
+>
+> Let me run this by the HW team first before applying this patch.
+
+Mark
+
+Acked-by: Dan Murphy <dmurphy@ti.com>
+
+
+>
+> Dan
+>
