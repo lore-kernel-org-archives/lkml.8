@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A405C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D148AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1DB206B5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975D020768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585880;
-	bh=7c1BGpJQSitJm8WZfS40hY8FLPji/njUbJyQSgZSof4=;
+	s=default; t=1599585894;
+	bh=yQDsG4Dukt9Zl7PbICuxCz2UQrfZce1uCsChE6idIWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCBtVc1d+3s9eDiVWkdIP21MiW6EN5bsjP1zUoQxMz9JUgQsTUL9TZ9DIwdnI6fOn
-	 kMxtQTaRosPZf9Wmyx9H3A1qwoDOg6pwbaYjlRxSKhkIsMGg4QiIanrE0ZBMEtAnCL
-	 1+Y0Ux18hBgrhB4AKmZGQ3GybLTOvMgHZbmR+SoY=
+	b=bEL9u8+V/UPz/yWDIlT5rpslOSFkeK//jphxfqbQFYxlH/bC/irugM4AKglLsz/3Z
+	 jsku2u2aNcHkCzGEW987XbjNO7RmEzSm9EeBdPV7wOneOBWALnGOCifHt+yij41wPc
+	 /MNYMtU4/Dh8NNx2brQctcI4DzudopmAO2E+cs9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgIHRYi (ORCPT
+        id S1731365AbgIHRYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731699AbgIHQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731740AbgIHQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50C1C24843;
-        Tue,  8 Sep 2020 15:45:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DDCE247FE;
+        Tue,  8 Sep 2020 15:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579907;
-        bh=7c1BGpJQSitJm8WZfS40hY8FLPji/njUbJyQSgZSof4=;
+        s=default; t=1599579822;
+        bh=yQDsG4Dukt9Zl7PbICuxCz2UQrfZce1uCsChE6idIWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OP9wROykNmTwsuuRpM20ymg/XBh6Tsw7ZW3c0CcfH5mIwC/nfeFqBr1qhbhR5WpCf
-         HOt3rQv0dTm5Eu6lCERJhzpOmqYJquuSMQDLUmgXgyNlnstSipUPrZT8WxoqukBMaJ
-         Bmx/CSwUsDCr1jdU445KFhPiSNGKd2PNhhLpBDwE=
+        b=WghZCykpfBygmcevXnNI5n+paTBdt9qd3roSQIJtbsGHUM7KHc75qN95QOfwHNkFx
+         YBSbtvXSd3KgFox2J6+mRTr7P8AZGaUITAf0uEFplUJc/3+KMly25JWLXvP32hUYVp
+         TCiLWsy1SPkpYZy5UBhBwwgOrEdQaFXAZvhuAmf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 042/129] bnxt_en: Dont query FW when netif_running() is false.
-Date:   Tue,  8 Sep 2020 17:24:43 +0200
-Message-Id: <20200908152231.779287458@linuxfoundation.org>
+Subject: [PATCH 5.4 018/129] drm/amd/display: Retry AUX write when fail occurs
+Date:   Tue,  8 Sep 2020 17:24:19 +0200
+Message-Id: <20200908152230.613105567@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -61,38 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavan Chebbi <pavan.chebbi@broadcom.com>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-[ Upstream commit c1c2d77408022a398a1a7c51cf20488c922629de ]
+[ Upstream commit ef67d792a2fc578319399f605fbec2f99ecc06ea ]
 
-In rare conditions like two stage OS installation, the
-ethtool's get_channels function may be called when the
-device is in D3 state, leading to uncorrectable PCI error.
-Check netif_running() first before making any query to FW
-which involves writing to BAR.
+[Why]
+In dm_dp_aux_transfer() now, we forget to handle AUX_WR fail cases. We
+suppose every write wil get done successfully and hence some AUX
+commands might not sent out indeed.
 
-Fixes: db4723b3cd2d ("bnxt_en: Check max_tx_scheduler_inputs value from firmware.")
-Signed-off-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[How]
+Check if AUX_WR success. If not, retry it.
+
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 1f512e7c3d434..de9b34a255cf1 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -769,7 +769,7 @@ static void bnxt_get_channels(struct net_device *dev,
- 	int max_tx_sch_inputs;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 28a6c7b2ef4bb..2f858507ca702 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -101,7 +101,7 @@ static ssize_t dm_dp_aux_transfer(struct drm_dp_aux *aux,
+ 	result = dc_link_aux_transfer_raw(TO_DM_AUX(aux)->ddc_service, &payload,
+ 				      &operation_result);
  
- 	/* Get the most up-to-date max_tx_sch_inputs. */
--	if (BNXT_NEW_RM(bp))
-+	if (netif_running(dev) && BNXT_NEW_RM(bp))
- 		bnxt_hwrm_func_resc_qcaps(bp, false);
- 	max_tx_sch_inputs = hw_resc->max_tx_sch_inputs;
+-	if (payload.write)
++	if (payload.write && result >= 0)
+ 		result = msg->size;
  
+ 	if (result < 0)
 -- 
 2.25.1
 
