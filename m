@@ -2,57 +2,67 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA2DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6F321897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FAE21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599544984;
-	bh=mW67zDPy19xrTyXDGAMLyh553gQEFgf/Dow7ph9VSos=;
+	s=default; t=1599545399;
+	bh=cbwWWZVrztgxZWhAchx9nUFgipYCruP9jrLcQ7v9QIs=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=SUT7o2odeAQnqP/5/cte1SgVB/7kw3+mBQX+NS4GS108iht/ZchXSMdpJoNhOURLK
-	 yt9KJCa7WM1OXpbxcA1K66nguQ8s/g3+Pv5B3l3E7pGQhJgCL9Chi3QeZFZ+Q2ox4n
-	 Ldir1y9HfuMVHqyy8iVVhqDZLO61cSfb86kGC7rE=
+	b=VVn/1QeoAEiw3hDvS15BEci9gJXEGGvb62StOKY3qPuJdvNKwkCZeaao9Dz/U/Pbb
+	 2ZfwKs1/PErr1e6WUJkrnLJsPxdMZq/QsDOneUCOCV5ahoEmZ5V9JM6ADyAtUgRouU
+	 aPJjnbixkmklQt3inZ4y4SkBZGutTD7MZeJl4dbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgIHGDD (ORCPT
+        id S1728851AbgIHGJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 02:09:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbgIHGC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:02:59 -0400
+        id S1728712AbgIHGJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:09:57 -0400
 Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0C12137B;
-        Tue,  8 Sep 2020 06:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7FEF2137B;
+        Tue,  8 Sep 2020 06:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599544979;
-        bh=mW67zDPy19xrTyXDGAMLyh553gQEFgf/Dow7ph9VSos=;
+        s=default; t=1599545396;
+        bh=cbwWWZVrztgxZWhAchx9nUFgipYCruP9jrLcQ7v9QIs=;
         h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=h/dnpTzqrDk6lp9WKT2V/5WQ3Zipd7dBVaNne1ma/9LlPVAEjm8YANsMKf1RiiBle
-         QRWrGwMrlIX2aXlzK6NfPcQeEx/nSC1TPm6x5ombPpyeMjNo2wWfE8I1M5WSeLSH5M
-         HSGEIXKvvKpH6JJQ7sonja5FYygCoZHp37GSNIKQ=
+        b=fB/Wf2iVNRZH3c8P8edyQCLJMVTpJsWnr04wOmtAkM5CuFvSgu1UdvXWrmX9DoX2y
+         I3dPSG4JcUr3NcPJedVudZbDV4m3oNtvk272dfx6BCXqAeatnJXYavx0gJ9/56z6eW
+         zoBrQ7th8dGZHoucA5Kttkq9fvTM3epC/Kmw79/I=
 From:   Felipe Balbi <balbi@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/11] dwc3-of-simple: add support for Hikey 970
-In-Reply-To: <83393769e4391d038c4ab69a67ac77e2ca34efd4.1599493845.git.mchehab+huawei@kernel.org>
-References: <cover.1599493845.git.mchehab+huawei@kernel.org>
- <83393769e4391d038c4ab69a67ac77e2ca34efd4.1599493845.git.mchehab+huawei@kernel.org>
-Date:   Tue, 08 Sep 2020 09:02:49 +0300
-Message-ID: <87tuw8n6uu.fsf@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Yu Chen <chenyu56@huawei.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
+        suzhuangluan@hisilicon.com, kongfei@hisilicon.com,
+        liuyu712@hisilicon.com, wanghu17@hisilicon.com,
+        butao@hisilicon.com, chenyao11@huawei.com,
+        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
+        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
+        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
+        zangleigang@hisilicon.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>
+Subject: Re: [PATCH v6 04/13] usb: dwc3: Add splitdisable quirk for
+ Hisilicon Kirin Soc
+In-Reply-To: <20200907165000.7c42a6da@coco.lan>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+ <20190420064019.57522-5-chenyu56@huawei.com>
+ <20200907150631.70e1bce0@coco.lan> <874ko9of80.fsf@kernel.org>
+ <20200907165000.7c42a6da@coco.lan>
+Date:   Tue, 08 Sep 2020 09:09:46 +0300
+Message-ID: <87r1rcn6j9.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -69,76 +79,99 @@ Content-Transfer-Encoding: quoted-printable
 Hi,
 
 Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> This binding driver is needed for Hikey 970 to work,
-> as otherwise a Serror is produced:
+>> > I tested here, together with the Hikey 970 phy RFC patches I sent
+>> > last week.
+>> >
+>> > Without this patch, the USB HID driver receives -EPROTO from
+>> > submitted URBs, causing it to enter into an endless reset cycle
+>> > on every 500 ms, at the hid_io_error() logic.=20=20
+>>=20
+>> > Tested-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>> >
+>> > If you prefer, I can re-submit this one with my SOB.=20=20
+>>=20
+>> Please do, but since you're changing device tree, I need Rob's acked-by.
 >
->     [    1.837458] SError Interrupt on CPU0, code 0xbf000002 -- SError
->     [    1.837462] CPU: 0 PID: 74 Comm: kworker/0:1 Not tainted 5.8.0+ #2=
-05
->     [    1.837463] Hardware name: HiKey970 (DT)
->     [    1.837465] Workqueue: events deferred_probe_work_func
->     [    1.837467] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=3D--)
->     [    1.837468] pc : _raw_spin_unlock_irqrestore+0x18/0x50
->     [    1.837469] lr : regmap_unlock_spinlock+0x14/0x20
->     [    1.837470] sp : ffff8000124dba60
->     [    1.837471] x29: ffff8000124dba60 x28: 0000000000000000
->     [    1.837474] x27: ffff0001b7e854c8 x26: ffff80001204ea18
->     [    1.837476] x25: 0000000000000005 x24: ffff800011f918f8
->     [    1.837479] x23: ffff800011fbb588 x22: ffff0001b7e40e00
->     [    1.837481] x21: 0000000000000100 x20: 0000000000000000
->     [    1.837483] x19: ffff0001b767ec00 x18: 00000000ff10c000
->     [    1.837485] x17: 0000000000000002 x16: 0000b0740fdb9950
->     [    1.837488] x15: ffff8000116c1198 x14: ffffffffffffffff
->     [    1.837490] x13: 0000000000000030 x12: 0101010101010101
->     [    1.837493] x11: 0000000000000020 x10: ffff0001bf17d130
->     [    1.837495] x9 : 0000000000000000 x8 : ffff0001b6938080
->     [    1.837497] x7 : 0000000000000000 x6 : 000000000000003f
->     [    1.837500] x5 : 0000000000000000 x4 : 0000000000000000
->     [    1.837502] x3 : ffff80001096a880 x2 : 0000000000000000
->     [    1.837505] x1 : ffff0001b7e40e00 x0 : 0000000100000001
->     [    1.837507] Kernel panic - not syncing: Asynchronous SError Interr=
-upt
->     [    1.837509] CPU: 0 PID: 74 Comm: kworker/0:1 Not tainted 5.8.0+ #2=
-05
->     [    1.837510] Hardware name: HiKey970 (DT)
->     [    1.837511] Workqueue: events deferred_probe_work_func
->     [    1.837513] Call trace:
->     [    1.837514]  dump_backtrace+0x0/0x1e0
->     [    1.837515]  show_stack+0x18/0x24
->     [    1.837516]  dump_stack+0xc0/0x11c
->     [    1.837517]  panic+0x15c/0x324
->     [    1.837518]  nmi_panic+0x8c/0x90
->     [    1.837519]  arm64_serror_panic+0x78/0x84
->     [    1.837520]  do_serror+0x158/0x15c
->     [    1.837521]  el1_error+0x84/0x100
->     [    1.837522]  _raw_spin_unlock_irqrestore+0x18/0x50
->     [    1.837523]  regmap_write+0x58/0x80
->     [    1.837524]  hi3660_reset_deassert+0x28/0x34
->     [    1.837526]  reset_control_deassert+0x50/0x260
->     [    1.837527]  reset_control_deassert+0xf4/0x260
->     [    1.837528]  dwc3_probe+0x5dc/0xe6c
->     [    1.837529]  platform_drv_probe+0x54/0xb0
->     [    1.837530]  really_probe+0xe0/0x490
->     [    1.837531]  driver_probe_device+0xf4/0x160
->     [    1.837532]  __device_attach_driver+0x8c/0x114
->     [    1.837533]  bus_for_each_drv+0x78/0xcc
->     [    1.837534]  __device_attach+0x108/0x1a0
->     [    1.837535]  device_initial_probe+0x14/0x20
->     [    1.837537]  bus_probe_device+0x98/0xa0
->     [    1.837538]  deferred_probe_work_func+0x88/0xe0
->     [    1.837539]  process_one_work+0x1cc/0x350
->     [    1.837540]  worker_thread+0x2c0/0x470
->     [    1.837541]  kthread+0x154/0x160
->     [    1.837542]  ret_from_fork+0x10/0x30
->     [    1.837569] SMP: stopping secondary CPUs
->     [    1.837570] Kernel Offset: 0x1d0000 from 0xffff800010000000
->     [    1.837571] PHYS_OFFSET: 0x0
->     [    1.837572] CPU features: 0x240002,20882004
->     [    1.837573] Memory Limit: none
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Ok, I'll do that.
 
-applied for v5.9-rc
+thanks
+
+>> > Em Sat, 20 Apr 2019 14:40:10 +0800
+>> > Yu Chen <chenyu56@huawei.com> escreveu:
+>> >=20=20
+>> >> SPLIT_BOUNDARY_DISABLE should be set for DesignWare USB3 DRD Core
+>> >> of Hisilicon Kirin Soc when dwc3 core act as host.=20=20
+>>=20
+>> is this Kirin-specific or is this something that we should do a revision
+>> check?=20
+>
+> I've no idea. I don't have any datasheets from this device.
+
+I see
+
+>> Why does it affect only Hikey kirin?=20
+>
+> As John Stultz didn't re-submit this one (and looking at the DT
+> between Kirin 960 and 970 from the original Kernel 4.9 official
+> drivers), I suspect that only Kirin 970 requires this quirk.
+>
+> It could well be due to some Dwc3 revision, but it could also be due
+> to some differences at the USB part of the SoC, as there are a
+
+the reason I ask is that if it's caused by dwc3 revision, then we don't
+need the extra dt property, we can rely on a revision check. If it's
+something that can't be detected in runtime, then we need a property.
+
+> few other things different between hikey 960 and 970: it has a
+> different PHY driver, and there are also some differences at the
+> USB HUB which is connected into it.
+>
+> On both devices, the USB physical ports are actually connected
+> into a HUB. In the case of Hikey 970, the hub seems to be a
+> TI TUSB8041 4-Port Hub:
+>=20=09
+> 	$ lsusb
+> 	Bus 002 Device 002: ID 0451:8140 Texas Instruments, Inc. TUSB8041 4-Port=
+ Hub
+> 	Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> 	Bus 001 Device 004: ID 090c:1000 Silicon Motion, Inc. - Taiwan (formerly=
+ Feiya Technology Corp.) Flash Drive
+> 	Bus 001 Device 003: ID 413c:301a Dell Computer Corp. Dell MS116 Optical =
+Mouse
+> 	Bus 001 Device 002: ID 0451:8142 Texas Instruments, Inc. TUSB8041 4-Port=
+ Hub
+> 	Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+>
+>> What's the dwc3 revision on
+>> that SoC (grep SNPSID /sys/kernel/debugfs/*dwc3/regdump)?
+>
+> 	GSNPSID =3D 0x33313130
+
+This isn't even listed as a known revision in dwc3/core.h. Thinh, could
+the issue being described here caused by a known Erratum with this
+particular revision?
+
+>> >> +		reg =3D dwc3_readl(dwc->regs, DWC3_GUCTL3);
+>> >> +		reg |=3D DWC3_GUCTL3_SPLITDISABLE;
+>> >> +		dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
+>> >> +	}
+>> >> +}
+>> >> +#else
+>> >> +#define dwc3_complete NULL
+>> >>  #endif /* CONFIG_PM_SLEEP */
+>> >>=20=20
+>> >>  static const struct dev_pm_ops dwc3_dev_pm_ops =3D {
+>> >>  	SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
+>> >> +	.complete =3D dwc3_complete,=20=20
+>>=20
+>> why is this done on complete? Why can't it be done at the end of
+>> dwc3_resume()?
+>
+> Again, no idea. I didn't actually tried to suspend/resume.
+>
+> Maybe the original author can shed a light on it.
+
+yeah, would be nice :-)
 
 =2D-=20
 balbi
@@ -148,19 +181,19 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9XHokRHGJhbGJpQGtl
-cm5lbC5vcmcACgkQzL64meEamQYAKA//SJqujeOjKMno3JlLsTq/B4NUQ7Nqa++6
-NxZYcbt2/umlpkf1tHUMldVCNl/vjFNmYp3zarlhd1iVeCuROaWGGEJ384QZ6nnt
-moEsDsb0TPS7RSNBPjymtLtH7+fqFqg3GP5ZuMKhK5OPAKgwHGEGNBho8lQGlpo3
-xrUQ83IkyK5hLmO6DMlcsiwXhgQHcJzzyREcl/NkYyp2Kd2Mm3dYcvJm4P0zptEq
-zheHRWz02xRIuFL3MItsFFsZrloTDrd0K+apyoAiufw7bpyloZ3IasKQ9xjnygje
-iEr/qkMVWvRTBWyZUyJnLVXhEOx9joOslvY9sqN3FJbym702xo7O/nxy8+2yvswp
-y+9aQfqpPZp5KRKwBS5Ce/mtVcRzXJaJlDFlGS/FVw9ogFTKxND1wO9bCHROM/Ih
-okNlkzG3zaxvOAPiRZ1dkxGdg2+jPo7dCs1wuJPwPRDW2oZL9XrtCGu+GIFuGhA6
-K30EFUlmCz3bG72wU13CoMnsdemxiYPUHzL3Y0VsZYE+D2RU1amEDslZyJzzDeiP
-pM/2AsqJ8ru6sOqtFQIQHruU487QemsVeg0bImWmjHl+Aw9hP+5Utnj4E2j0mv9I
-Ak7G91hAv+uUSg2Fqeg2Yw1ogL/5QF1k642M2PIH+hmBXB6bKvKM8yCmaPGUOWpz
-iQi/BDWB0ko=
-=VUox
+iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9XICoRHGJhbGJpQGtl
+cm5lbC5vcmcACgkQzL64meEamQbqjg/+Nz3qyEteRV+PAFeR5rNbxxOQPDsAV+FO
+sv1dxiF55jeVJJ+VY+EZ1+QmRAr+9ESjI+AE2RgFiRKZIKXjnsulbS6Q3nPPigvk
+ymqMP+K/RrXrSrQ6+I+jRcfoPZRkbrYrSmlo78DEZzclPNMz9habgCWXv+BlUbu5
+m5JEQDbMG7ruZ8tkXVOfYbNVHW06fckfuAB5kUzMdXyf4H2ABFXk8/1g+BbT1+Ti
+uS6HoGety8QfVpKsgQd2LTUyTqVLSk4pP5sd9T4zn1wTpz0EYSgwnddwYj4GTYVQ
+bCTmj5IIpoDwSiyj4AK6Wga5CEhR7RsLwQVjfEBFgWKFnNfvvYjSaihcUihaU7rH
+ScTqceTDS3U43k2yApIBHxyJgkxPPec1EA7F9B5CfQwxi8isNYqgB7wQtVk4r+mI
+fPA997nlSLxIsVRhAlv0/jeSgawOjSAh200ewlm9CBIIiHO1qjmDkhRoEsOVyIU5
++8B1lcKwAfNzS+IZLERsj2QUoezwk7wxh2nynxO7aHzVOCGurpa9t4Sdb2OJzBix
+PRFQnhxmD6gdB3jnvM74kDHas+UkAer9AHK3WcR9kS8VpxUIm8Vb+9zM0oJYTA4D
+rkB62QWR2gHktUE97m/fe3DCMbur3acopubrIW98EEippnEc8FoK9fsHLtFabXhH
+ACJpamEPnZI=
+=mVgw
 -----END PGP SIGNATURE-----
 --=-=-=--
