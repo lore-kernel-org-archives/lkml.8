@@ -2,148 +2,123 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D91C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D5FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A613121D42
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6278C218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KVuqoG65"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgIHHdo (ORCPT
+        id S1729614AbgIHHeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:33:44 -0400
-Received: from mail-il1-f208.google.com ([209.85.166.208]:51675 "EHLO
-        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbgIHHdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:33:21 -0400
-Received: by mail-il1-f208.google.com with SMTP id i80so487875ild.18
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:33:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=DrM2WCpXJni+pWF+DYDXi6ZPwROH9NKgPGVrwdvcC8Y=;
-        b=Ih4V8EzZHKA0BKJcdOeqZ3qR+xG3jZJ12NjCIQ5t/ePMCmSNDC++EDRJszUqmEvBi2
-         Mm00htAgljutrel4l4/IC5GR2ixmjWjNcLD9Qk/jW2tUAX3C48MOQqmb16FkLBjwP2Si
-         UpKcTfgqEByhLlP3qOhGH3jzLRjRO5kEwRtj0XSfhUKMJZ86BDvZKJJPuYTeYPnRlLGy
-         NFxBBZElxW7bV0BzXn9KwmB9VIpcDRvhFu8fg3T3sVS8dh1im0IL51vWTaV5E9+8d08j
-         /f5V8glIndjlTIUEx0IFcRtrdKnmfaradWY9CqZ3s37YxTC4JsG6p87h2Xc3zMzGoqdY
-         0CBA==
-X-Gm-Message-State: AOAM530oxLVjJjd0A4Hu3gq1qeXnNCCVcMdq5lJQfpvXYOriH0E9UWjJ
-        EoeOnlD/sVj1PB5jTEqjFXkBAT1Mq6SGwRmLvnZTugIJsnTU
-X-Google-Smtp-Source: ABdhPJxwxola6tjl5Xs6+98Cwd4t1PyoPXL1Rdc31C+ffEV6FNz4YYMQcG8FHq4dtiLGPk6Dfu1FjSLLkOH+GfEAiInawEhOqtpv
+        Tue, 8 Sep 2020 03:34:07 -0400
+Received: from mail-db8eur05on2052.outbound.protection.outlook.com ([40.107.20.52]:26113
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728786AbgIHHeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:34:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YfgB/y5LTQV08UIhbpEXznP0RebQfZ0Vh+s2EOXJEdvODIkUxAXQ/VjzhLGqXTgxcF0dWBUty7HsElmtWhIZduhCKfmExNq/uDnaVxi6Xc3mCBf0DpvFvTqV19eblcqCquoJBlq2Zfn7kq22ORx7iJYHfYK1ctH1UKUtEHWh4QqmmSkh8hAMi2S9w8n24BaXk+O0JFCesNp5Bn5bqACV3iTOHa8DzW5lNb73zo5VAu4Y4B2KVfzXTaI66AZVriBLGvo+PaJrRczlg/D0kCoymcmV3BhZGXynOuMfsSQXu0sPnG1EaroHE8Qzam8SHzFfN+ZTLenqvUJENmnQB2PIUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3hoc8VoCXauKqwpqcqKTbknuM3ZlEZm4R967f5KIPIk=;
+ b=gElysDy64H+kZQORnKK+2zkNG/3F1AhhZmZwrBeqOYSwaTFJttajRWHA5rAuHdpeJIJUT6A8wdKHfFtmAHleyggIL9M7TW7Ml8RAkjzDaBq6tUcexfAOaG+O7ul9Bkrv0HPlyKnheX/5aaNBdvlc02zdAC4XZz6omYK2Gp7FgLTg2zdEsl2D8IIpBKCQDiuLmdl693n5rlNz9IyjiqUm9sHz47RppKIBNBWAnwdt3rYS0dUv/EVtKXYGKIicY0RP93Uml9+0w8ltDmQdFba44SqAvroWWFPqyRtnbobV/d8IGyMmiNYSo58ApsHdD7wVrbGQsaGDLdwc2KAWYzSjGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3hoc8VoCXauKqwpqcqKTbknuM3ZlEZm4R967f5KIPIk=;
+ b=KVuqoG65g0wEiX+lRXUSCGGYNUvPhf7j8nOy3+ZsP5mDaqXlAkOLOoDpr81t1k4dROFO9CBWKWy78fxrkM118p6fxm6+k/VK7MN79YRxnHwEpy00KmrNwBGoXBupLKoJWOTLe2nHed9jU6XGkH09FS/dzVBI9IAnVm17gOpW64g=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB7PR04MB4761.eurprd04.prod.outlook.com (2603:10a6:10:23::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
+ 2020 07:34:01 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::9c75:8bb2:aff6:450d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::9c75:8bb2:aff6:450d%3]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 07:34:01 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
+ driver as module
+Thread-Topic: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
+ driver as module
+Thread-Index: AQHWhbBDjiUh5DFSJEaP/TwCOvRVnqleWKmAgAAAdkA=
+Date:   Tue, 8 Sep 2020 07:34:01 +0000
+Message-ID: <DB3PR0402MB3916716E9FC26ADF9161B4A4F5290@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1599549126-17413-1-git-send-email-Anson.Huang@nxp.com>
+ <1599549126-17413-3-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
+In-Reply-To: <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 32a87816-8d74-418d-45ba-08d853c98e85
+x-ms-traffictypediagnostic: DB7PR04MB4761:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4761FD2E7DCAF10D66DAF227F5290@DB7PR04MB4761.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8Sud2kjoulGRg7amCh7H2x5ZEvo0IGrlzwjiTzR0PQ+01lX+dFWbAQu9qklpmOqmYv+k9dOiLmer0X381jeiTrRETiAsaHsYi+H8ezsd3BqQRuzJ5kObSjDIx6BQZy7cQjIKmUTFfJNNW1F+QRorjrpnofgbmLPobvMEfRFghcoFZYpB45QV47sfBHXm4QIWTT+FVnxxHJPPwHAbdwj8hPqgnqHO60APkUYmV2VFmYx8nDvSD+FlU/Ma28g0sNHr8xY2ICGtr7M/5tI2HBh0gWj3cpxuBtT37joedKGK8L5q2SD7MPbZJq/LIxvbFxVo
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(8936002)(44832011)(7416002)(5660300002)(4326008)(71200400001)(86362001)(52536014)(55016002)(6916009)(9686003)(4744005)(186003)(76116006)(8676002)(26005)(2906002)(66946007)(7696005)(316002)(478600001)(33656002)(64756008)(66476007)(6506007)(54906003)(66556008)(53546011)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 4PvMD2zw4n6EDyeY2RCt2it86Vz85INeyQkAR5giC8NVOf3sxt6boVY246IjCFpIjXuWR3wEb78RYR474OyxHSyrfQRhk9Q3t9rO2CTidPsqJmFbDffAleBiKWywPOHPP6z6USaP7HVUoAAj9DODnwDmhRSdEe0Oa1B/BMT0w43Nz/4HcLmIOopsc3Tn90H5Su+r5psBt1VyM2DPJZLArkR9of2U2gSd721pRd4nl9S6uErPuKHcIm6xDwiamRbQ0hDPGMe0f8D2tojK26LSGEhO3DAN2jaMm0eb4YbVNIobrpd1Cmxbw4+blU1EPbDhoYqZ5BhMcW8EHay/JH4bzKw9gW1+qicuMeb8CkuS7FioTNBiRNMiL+X2v7HIFRMPSGtwQJQvkQLYPrc8bmNnY8HyWNFv1mUMm03AiUGIYdlxxcQCuupmTCluAuK1di2gR3ua+fM+Wmnj7ls+FhxiTwkITfkOcUMNdTQ0ZNZx3dAww/FUBnGD+pTs/W9zr5p4vLhoHdTLKeu+gjgNmm6TIN0nUW0gQRED3W0b2sZnqUdEuXaAt44DX5Zet/RgtfoYHvQnEGhl4uV5wk1LoE0tJRnShw+wPMrwinPHLvlPoabQnLqo+OE1v1o+oM7uLNADvoeIVgPQF38aaNEmDrW0Tg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e718:: with SMTP id b24mr20719449ioh.9.1599550399960;
- Tue, 08 Sep 2020 00:33:19 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 00:33:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000063dca305aec85988@google.com>
-Subject: BUG: spinlock bad magic in lock_sock_nested
-From:   syzbot <syzbot+eb47d1a545390e9fd5bf@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32a87816-8d74-418d-45ba-08d853c98e85
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 07:34:01.6156
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PW1c6bfu1Czq4RdYNvRFidcEVrAuLqus77jbjTciqOt/zIM4TUIfwkys8ndTKQMQmjsPLb7gT/nO5OOs1ftGXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4761
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    0f091e43 netlabel: remove unused param from audit_log_form..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1171cbb6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61025c6fd3261bb1
-dashboard link: https://syzkaller.appspot.com/bug?extid=eb47d1a545390e9fd5bf
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+eb47d1a545390e9fd5bf@syzkaller.appspotmail.com
-
-BUG: spinlock bad magic on CPU#0, kworker/0:2/2721
- lock: 0xffff88809395b088, .magic: ffff8880, .owner: <none>/-1, .owner_cpu: 4
-CPU: 0 PID: 2721 Comm: kworker/0:2 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
- do_raw_spin_lock+0x216/0x2b0 kernel/locking/spinlock_debug.c:112
- spin_lock_bh include/linux/spinlock.h:359 [inline]
- lock_sock_nested+0x3b/0x110 net/core/sock.c:3034
- l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
- l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
- l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
- l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-general protection fault, probably for non-canonical address 0xff16fb65bf176ca9: 0000 [#1] PREEMPT SMP KASAN
-KASAN: maybe wild-memory-access in range [0xf8b7fb2df8bb6548-0xf8b7fb2df8bb654f]
-CPU: 0 PID: 2721 Comm: kworker/0:2 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-RIP: 0010:__pv_queued_spin_lock_slowpath+0x538/0xaf0 kernel/locking/qspinlock.c:471
-Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 50 05 00 00 4a 03 1c e5 00 59 84 89 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 20 05 00 00 4c 8d 6b 14 48 89 6c 24 08 48 8b 2c
-RSP: 0018:ffffc9000947f9c8 EFLAGS: 00010a07
-RAX: dffffc0000000000 RBX: f8b7fb2df8bb654f RCX: ffffffff815b03df
-RDX: 1f16ff65bf176ca9 RSI: 0000000000000002 RDI: ffffffff8984fd38
-RBP: ffff88809395b088 R08: 0000000000000001 R09: ffff88809395b08b
-R10: ffffed101272b611 R11: 0000000000000160 R12: 0000000000001487
-R13: 0000000000000001 R14: 0000000000040000 R15: ffff8880ae636b80
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb5e095ddb8 CR3: 000000005badb000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:656 [inline]
- queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:51 [inline]
- queued_spin_lock include/asm-generic/qspinlock.h:85 [inline]
- do_raw_spin_lock+0x200/0x2b0 kernel/locking/spinlock_debug.c:113
- spin_lock_bh include/linux/spinlock.h:359 [inline]
- lock_sock_nested+0x3b/0x110 net/core/sock.c:3034
- l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
- l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
- l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
- l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
----[ end trace cdfef0620d680c8c ]---
-RIP: 0010:__pv_queued_spin_lock_slowpath+0x538/0xaf0 kernel/locking/qspinlock.c:471
-Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 50 05 00 00 4a 03 1c e5 00 59 84 89 48 b8 00 00 00 00 00 fc ff df 48 89 da 48 c1 ea 03 <80> 3c 02 00 0f 85 20 05 00 00 4c 8d 6b 14 48 89 6c 24 08 48 8b 2c
-RSP: 0018:ffffc9000947f9c8 EFLAGS: 00010a07
-RAX: dffffc0000000000 RBX: f8b7fb2df8bb654f RCX: ffffffff815b03df
-RDX: 1f16ff65bf176ca9 RSI: 0000000000000002 RDI: ffffffff8984fd38
-RBP: ffff88809395b088 R08: 0000000000000001 R09: ffff88809395b08b
-R10: ffffed101272b611 R11: 0000000000000160 R12: 0000000000001487
-R13: 0000000000000001 R14: 0000000000040000 R15: ffff8880ae636b80
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb5e095ddb8 CR3: 000000005badb000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+DQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAzLzNdIHBpbmN0cmw6IGlteDogU3VwcG9ydCBi
+dWlsZGluZyBpLk1YIHBpbmN0cmwgY29yZQ0KPiBkcml2ZXIgYXMgbW9kdWxlDQo+IA0KPiBPbiBU
+dWUsIFNlcCA4LCAyMDIwIGF0IDk6MjAgQU0gQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5j
+b20+DQo+IHdyb3RlOg0KPiANCj4gPiAgIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MC1vbmx5ICBjb25maWcgUElOQ1RSTF9JTVgNCj4gPiAtICAgICAgIGJvb2wNCj4gPiArICAgICAg
+IHRyaXN0YXRlICJJTVggcGluY3RybCBjb3JlIGRyaXZlciINCj4gPiArICAgICAgIGRlcGVuZHMg
+b24gT0YNCj4gPiAgICAgICAgIHNlbGVjdCBHRU5FUklDX1BJTkNUUkxfR1JPVVBTDQo+ID4gICAg
+ICAgICBzZWxlY3QgR0VORVJJQ19QSU5NVVhfRlVOQ1RJT05TDQo+ID4gICAgICAgICBzZWxlY3Qg
+R0VORVJJQ19QSU5DT05GDQo+IA0KPiBJIGRvbid0IHNlZSB3aHkgeW91IG5lZWQgdG8gbWFrZSB0
+aGlzIG9wdGlvbiB1c2VyLXZpc2libGUgd2hlbiBpdCBpcyBhbHJlYWR5DQo+IHNlbGVjdGVkIGJ5
+IHRoZSBkcml2ZXJzIHRoYXQgbmVlZCBpdC4gV291bGRuJ3QgaXQgYmUgZW5vdWdoIHRvIGNoYW5n
+ZSB0aGUgJ2Jvb2wnDQo+IHRvICd0cmlzdGF0ZScgd2l0aG91dCBhZGRpbmcgYSBwcm9tcHQ/DQoN
+Ck1ha2Ugc2Vuc2UsIHNvIGl0IGlzIHNhbWUgZm9yIFBJTkNUUkxfSU1YX1NDVSwgcmlnaHQ/DQoN
+CkFuc29uDQoNCg==
