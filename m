@@ -2,100 +2,123 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79099C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A10F205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PxQ3DtuI"
+	by mail.kernel.org (Postfix) with ESMTP id 968A4205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599582088;
+	bh=+1qqW08XaJbFPXWV7FokG0oQI71X8xNLdv48jtPlH94=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=x0Q/mOVHJiUSqdDh65JwE+DsUkBCKwJCkUHYYhVkatMAtsZ/b8XaOJ5yZHJeczE/v
+	 UgaCqwLfALYzoRUJ6AmPD38S+5RE6hfkS98JOpH/2MibsdEyvbSBi5f9l7Z4A+sOws
+	 eQFi0JqLATTkEwVcZnLES+7inh1aeFKAptvSDnWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbgIHQUz (ORCPT
+        id S1731709AbgIHQVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:20:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17062 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730607AbgIHQJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:47 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088DVXE9184251;
-        Tue, 8 Sep 2020 09:41:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=b3/S8z+XcaaneUPd0EkP9D6v+v/IBiNDUrZwO6+VVqU=;
- b=PxQ3DtuIBtdFPySbUQO+rKJRdIUg9KQ8b2RVHhIxmeJ3XpQYz57ze6WAW7AHBAD2EqMU
- ho5QC+zU9Q6L54085XtrhluZ6ynYToJU0MIf9HoQ9t9OlVx3ZnJ+3LIdd9dytpAplxnc
- 4zfD+xMMhALdVm0RE0z78h25N7F8JGBLBtjgaaeBDN0cXkdwJKU/r8Zx/+W1ZlnRDwal
- EvAZPmsmCfEKf9QOt6zOlkXdduHB6AUiL8JaN0iBHdO5zDxxO+DQqkN/Uj9qrliDY8G7
- THM84qhlk79sI4/1wqYkLV+wigcbB5XEIiH/IECfucDCbA0A0f3yyLenDhYOo2jSzxgp zQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33eat2gk3x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 09:41:50 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088DcMhS019719;
-        Tue, 8 Sep 2020 13:41:48 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8bgev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 13:41:48 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Dfkjf36897102
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 13:41:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D4CC4C059;
-        Tue,  8 Sep 2020 13:41:46 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D07984C040;
-        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
-Received: from osiris (unknown [9.171.47.162])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
-Date:   Tue, 8 Sep 2020 15:41:44 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        rafael.j.wysocki@intel.com, svens@linux.ibm.com
-Subject: Re: [PATCH] s390/idle: Fix suspicious RCU usage
-Message-ID: <20200908134144.GH14136@osiris>
-References: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
+        Tue, 8 Sep 2020 12:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731400AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:10:25 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5462024684;
+        Tue,  8 Sep 2020 15:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580220;
+        bh=+1qqW08XaJbFPXWV7FokG0oQI71X8xNLdv48jtPlH94=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FbQI9Sqv4nNqJOW4t45jB2s9TNYzgPRwvrbYZTF55jKMcfVl8nWAg+Agse7PmMU10
+         shK4deYTTWpQ92o9uFL4kAVJUYA3mgqJH2eRGdrsQSP2ylkYa6E7KPrGsACOR7qjnp
+         zEiu+lXRC0qaI35rajYuDtDEm8uF8Jdu1puIK6Zk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 49/88] iommu/vt-d: Serialize IOMMU GCMD register modifications
+Date:   Tue,  8 Sep 2020 17:25:50 +0200
+Message-Id: <20200908152223.581632057@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_06:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- adultscore=0 mlxlogscore=863 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 suspectscore=3 mlxscore=0 bulkscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080124
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 03:30:31PM +0200, peterz@infradead.org wrote:
-> 
-> After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
-> lock tracepoints are visible to lockdep and RCU-lockdep is finding a
-> bunch more RCU violations that were previously hidden.
-> 
-> Switch the idle->seqcount over to using raw_write_*() to avoid the
-> lockdep annotation and thus the lock tracepoints.
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/s390/kernel/idle.c |    5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-Applied, thank you!
+[ Upstream commit 6e4e9ec65078093165463c13d4eb92b3e8d7b2e8 ]
+
+The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
+Description) that:
+
+If multiple control fields in this register need to be modified, software
+must serialize the modifications through multiple writes to this register.
+
+However, in irq_remapping.c, modifications of IRE and CFI are done in one
+write. We need to do two separate writes with STS checking after each. It
+also checks the status register before writing command register to avoid
+unnecessary register write.
+
+Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Link: https://lore.kernel.org/r/20200828000615.8281-1-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/intel_irq_remapping.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
+index 15a4ad31c510a..9d2d03545bb07 100644
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -479,12 +479,18 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
+ 
+ 	/* Enable interrupt-remapping */
+ 	iommu->gcmd |= DMA_GCMD_IRE;
+-	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
+ 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
+-
+ 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
+ 		      readl, (sts & DMA_GSTS_IRES), sts);
+ 
++	/* Block compatibility-format MSIs */
++	if (sts & DMA_GSTS_CFIS) {
++		iommu->gcmd &= ~DMA_GCMD_CFI;
++		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
++		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
++			      readl, !(sts & DMA_GSTS_CFIS), sts);
++	}
++
+ 	/*
+ 	 * With CFI clear in the Global Command register, we should be
+ 	 * protected from dangerous (i.e. compatibility) interrupts
+-- 
+2.25.1
+
+
+
