@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46065C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968A4205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF6120678
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599582088;
-	bh=+1qqW08XaJbFPXWV7FokG0oQI71X8xNLdv48jtPlH94=;
+	s=default; t=1599582115;
+	bh=bW1+2zZIvWQxURE22rAzvlWE41uFtJmY9vyudATADtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0Q/mOVHJiUSqdDh65JwE+DsUkBCKwJCkUHYYhVkatMAtsZ/b8XaOJ5yZHJeczE/v
-	 UgaCqwLfALYzoRUJ6AmPD38S+5RE6hfkS98JOpH/2MibsdEyvbSBi5f9l7Z4A+sOws
-	 eQFi0JqLATTkEwVcZnLES+7inh1aeFKAptvSDnWE=
+	b=s7D1ex0R5oHzcmMLciUce2ivUY1zFZk4y17aIUIqpol4ewbrWOKHIR1kvg0zDzu6r
+	 lt7vU96f4z11uM8sJ4P2tYvt6ulYsXxhC9Qf80Qet9BY1oEtcgfQpmf8Nt0N4j6zno
+	 +bxh93iEKxJ+OCkFDYxtpXwop79BMEYKF9r9xubE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731709AbgIHQVR (ORCPT
+        id S1731765AbgIHQVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:21:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:21:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731400AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731404AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:10:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5462024684;
-        Tue,  8 Sep 2020 15:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94064247F3;
+        Tue,  8 Sep 2020 15:42:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580220;
-        bh=+1qqW08XaJbFPXWV7FokG0oQI71X8xNLdv48jtPlH94=;
+        s=default; t=1599579767;
+        bh=bW1+2zZIvWQxURE22rAzvlWE41uFtJmY9vyudATADtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FbQI9Sqv4nNqJOW4t45jB2s9TNYzgPRwvrbYZTF55jKMcfVl8nWAg+Agse7PmMU10
-         shK4deYTTWpQ92o9uFL4kAVJUYA3mgqJH2eRGdrsQSP2ylkYa6E7KPrGsACOR7qjnp
-         zEiu+lXRC0qaI35rajYuDtDEm8uF8Jdu1puIK6Zk=
+        b=0H/KxwNI9AXnmbZrf/d5Ae5qmLNZEhh8IOqk2MWS/bYWVlvh1vZ2nAGxesn87p1JX
+         sGfD60TBVFpfBOMAYBO0SgwjJSq8njBG59z9smRG6u9vCKYg7vwCPMnfEuVwdr8PGa
+         KJPi4ZQAuwZqGsR4ucXGqTxZE0qRYCrr1wIn9LmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/88] iommu/vt-d: Serialize IOMMU GCMD register modifications
-Date:   Tue,  8 Sep 2020 17:25:50 +0200
-Message-Id: <20200908152223.581632057@linuxfoundation.org>
+        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 026/129] dmaengine: at_hdmac: check return value of of_find_device_by_node() in at_dma_xlate()
+Date:   Tue,  8 Sep 2020 17:24:27 +0200
+Message-Id: <20200908152230.998470857@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,60 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit 6e4e9ec65078093165463c13d4eb92b3e8d7b2e8 ]
+[ Upstream commit 0cef8e2c5a07d482ec907249dbd6687e8697677f ]
 
-The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
-Description) that:
+The reurn value of of_find_device_by_node() is not checked, thus null
+pointer dereference will be triggered if of_find_device_by_node()
+failed.
 
-If multiple control fields in this register need to be modified, software
-must serialize the modifications through multiple writes to this register.
-
-However, in irq_remapping.c, modifications of IRE and CFI are done in one
-write. We need to do two separate writes with STS checking after each. It
-also checks the status register before writing command register to avoid
-unnecessary register write.
-
-Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Link: https://lore.kernel.org/r/20200828000615.8281-1-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: bbe89c8e3d59 ("at_hdmac: move to generic DMA binding")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/20200817115728.1706719-2-yukuai3@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel_irq_remapping.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/dma/at_hdmac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-index 15a4ad31c510a..9d2d03545bb07 100644
---- a/drivers/iommu/intel_irq_remapping.c
-+++ b/drivers/iommu/intel_irq_remapping.c
-@@ -479,12 +479,18 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
+diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+index 672c73b4a2d4f..ff366c2f58c18 100644
+--- a/drivers/dma/at_hdmac.c
++++ b/drivers/dma/at_hdmac.c
+@@ -1667,6 +1667,8 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+ 		return NULL;
  
- 	/* Enable interrupt-remapping */
- 	iommu->gcmd |= DMA_GCMD_IRE;
--	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
- 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
--
- 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
- 		      readl, (sts & DMA_GSTS_IRES), sts);
+ 	dmac_pdev = of_find_device_by_node(dma_spec->np);
++	if (!dmac_pdev)
++		return NULL;
  
-+	/* Block compatibility-format MSIs */
-+	if (sts & DMA_GSTS_CFIS) {
-+		iommu->gcmd &= ~DMA_GCMD_CFI;
-+		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-+		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-+			      readl, !(sts & DMA_GSTS_CFIS), sts);
-+	}
-+
- 	/*
- 	 * With CFI clear in the Global Command register, we should be
- 	 * protected from dangerous (i.e. compatibility) interrupts
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
 -- 
 2.25.1
 
