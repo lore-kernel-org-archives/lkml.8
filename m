@@ -2,128 +2,108 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9822BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E131C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6204E21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7D2F207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:31:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZYveQDH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729049AbgIHG2B (ORCPT
+        id S1728960AbgIHGbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:28:01 -0400
-Received: from mail.windriver.com ([147.11.1.11]:40652 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgIHG2B (ORCPT
+        Tue, 8 Sep 2020 02:31:43 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53472 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728501AbgIHGbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:28:01 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0886ROT5009147
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Mon, 7 Sep 2020 23:27:25 -0700 (PDT)
-Received: from pek-qzhang2-d1.wrs.com (128.224.162.183) by
- ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 23:27:11 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <tglx@linutronix.de>, <longman@redhat.com>, <mingo@kernel.org>,
-        <elver@google.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] debugobjects: install CPU hotplug callback
-Date:   Tue, 8 Sep 2020 14:27:09 +0800
-Message-ID: <20200908062709.11441-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 8 Sep 2020 02:31:42 -0400
+X-UUID: 0261aafbd25f48abb6b2b3ea0e3e5a84-20200908
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=UZzo7qmXCyALSuToyb3vvmrBpWA69LVmzt4LRB/qeiQ=;
+        b=ZYveQDH6XVVIMBwYuEOqnQrp53Y5yIcV6hrCQ5hnjYZ3leSxv8vATtmGBNcWoGEufJsIAhdJHSqVwKD9xT6uCyZvCjc3XLAVwqLwnUPcCTZ1sFWIkbDKcbZ8E2fLAYfucpcT78EJC0PB9pjMT3QR/hX8bV62YQJ3Axb9v/ECets=;
+X-UUID: 0261aafbd25f48abb6b2b3ea0e3e5a84-20200908
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1594504922; Tue, 08 Sep 2020 14:31:38 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 8 Sep 2020 14:31:35 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 8 Sep 2020 14:31:36 +0800
+Message-ID: <1599546695.24690.5.camel@mtkswgap22>
+Subject: Re: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+CC:     CC Hwang <cc.hwang@mediatek.com>, <wsd_upstream@mediatek.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 8 Sep 2020 14:31:35 +0800
+In-Reply-To: <1596114272.18804.1.camel@mtkswgap22>
+References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
+         <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
+         <1595416581.5511.6.camel@mtkswgap22>
+         <252ba954-ae8f-18a3-55a3-9dd844a4d5b6@gmail.com>
+         <1596114272.18804.1.camel@mtkswgap22>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-TM-SNTS-SMTP: 76787EE110FFF9F4F0880A7419F16CD0727562E97C40491A1E90F6A9E641C2B82000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
-
-Due to CPU hotplug, it may never be online after it's offline,
-some objects in percpu pool is never free. in order to avoid
-this happening, install CPU hotplug callback, call this callback
-func to free objects in percpu pool when CPU going offline.
-
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
----
- v1->v2:
- Modify submission information.
-
- v2->v3:
- In CPU hotplug callback func, add clear percpu pool "obj_free" operation.
- capitalize 'CPU', and use shorter preprocessor sequence.
-
- include/linux/cpuhotplug.h |  1 +
- lib/debugobjects.c         | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
-
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 3215023d4852..0c39d57e5342 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -36,6 +36,7 @@ enum cpuhp_state {
- 	CPUHP_X86_MCE_DEAD,
- 	CPUHP_VIRT_NET_DEAD,
- 	CPUHP_SLUB_DEAD,
-+	CPUHP_DEBUG_OBJ_DEAD,
- 	CPUHP_MM_WRITEBACK_DEAD,
- 	CPUHP_MM_VMSTAT_DEAD,
- 	CPUHP_SOFTIRQ_DEAD,
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index fe4557955d97..bb69a02c3e7b 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- #include <linux/hash.h>
- #include <linux/kmemleak.h>
-+#include <linux/cpu.h>
- 
- #define ODEBUG_HASH_BITS	14
- #define ODEBUG_HASH_SIZE	(1 << ODEBUG_HASH_BITS)
-@@ -433,6 +434,24 @@ static void free_object(struct debug_obj *obj)
- 	}
- }
- 
-+#ifdef CONFIG_HOTPLUG_CPU
-+static int object_cpu_offline(unsigned int cpu)
-+{
-+	struct debug_percpu_free *percpu_pool;
-+	struct hlist_node *tmp;
-+	struct debug_obj *obj;
-+
-+	percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
-+	hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
-+		hlist_del(&obj->node);
-+		kmem_cache_free(obj_cache, obj);
-+	}
-+	percpu_pool->obj_free = 0;
-+
-+	return 0;
-+}
-+#endif
-+
- /*
-  * We run out of memory. That means we probably have tons of objects
-  * allocated.
-@@ -1367,6 +1386,11 @@ void __init debug_objects_mem_init(void)
- 	} else
- 		debug_objects_selftest();
- 
-+#ifdef CONFIG_HOTPLUG_CPU
-+	cpuhp_setup_state_nocalls(CPUHP_DEBUG_OBJ_DEAD, "object:offline", NULL,
-+					object_cpu_offline);
-+#endif
-+
- 	/*
- 	 * Increase the thresholds for allocating and freeing objects
- 	 * according to the number of possible CPUs available in the system.
--- 
-2.17.1
+SGkgYWxsLA0KDQpHZW50bGUgcGluZyBvbiB0aGlzIHBhdGNoIHNldC4NCg0KVGhhbmtzIQ0KDQoN
+CkhhbmtzIENoZW4NCg0KDQpPbiBUaHUsIDIwMjAtMDctMzAgYXQgMjE6MDQgKzA4MDAsIEhhbmtz
+IENoZW4gd3JvdGU6DQo+IEhpIGFsbCwNCj4gDQo+IEdlbnRsZSBwaW5nIG9uIHRoaXMgcGF0Y2gu
+DQo+IA0KPiBUaGFua3MhDQo+IA0KPiBIYW5rcyBDaGVuDQo+IA0KPiANCj4gT24gV2VkLCAyMDIw
+LTA3LTIyIGF0IDE3OjIxICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0KPiA+IA0KPiA+
+IE9uIDIyLzA3LzIwMjAgMTM6MTYsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4gPiBPbiBXZWQsIDIw
+MjAtMDctMjIgYXQgMTA6NDMgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+ID4gPj4N
+Cj4gPiA+PiBPbiAyMi8wNy8yMDIwIDA1OjA5LCBIYW5rcyBDaGVuIHdyb3RlOg0KPiA+ID4+PiBy
+ZW1vdmUgdGhlIHJlZHVuZGFudCBjbGsgaW50ZXJmYWNlIG9mIHVhcnQuDQo+ID4gPj4+IENMS19J
+TkZSQV9VQVJUMyBpcyBhIGR1bW15IGNsayBpbnRlcmZhY2UsDQo+ID4gPj4+IGl0IGhhcyBubyBl
+ZmZlY3Qgb24gdGhlIG9wZXJhdGlvbiBvZiB0aGUgcmVhZC93cml0ZSBpbnN0cnVjdGlvbi4NCj4g
+PiA+Pj4NCj4gPiA+Pj4gQ2hhbmdlIHNpbmNlIHYyOg0KPiA+ID4+PiBDb21taXQgImR0LWJpbmRp
+bmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQiDQo+ID4gPj4NCj4gPiA+PiBT
+b3JyeSBqdXN0IGFub3RoZXIgY29tbWVudC4gSSB0aGluayB3ZSBjYW4gbWFrZSB0aGlzIG9uZSBw
+YXRjaCBkZWxldGluZyBldmVyeXRoaW5nLg0KPiA+ID4+DQo+ID4gPiBTb3JyeSwgSSBkb24ndCB1
+bmRlcnN0YW5kIHRoZSBjb21tZW50LiBEbyBJIG5lZWQgdG8gbWVyZ2UgdGhlbSBpbnRvIG9uZQ0K
+PiA+ID4gYmlnIHBhdGNoPw0KPiA+ID4gQnR3LCBpZiBJIHVzZSBvbmUgcGF0Y2gsIEkgd291bGQg
+Z2V0IGNoZWNrIHBhdGNoIGZhaWwuDQo+ID4gPiAtLS0NCj4gPiA+IFsyMDIwLTA3LTIyIDE5OjEy
+OjQ5LDA0NiBFUlJPUl0gUnVuIGNoZWNrIHBhdGNoIHJlc3VsdHM6DQo+ID4gPiBXQVJOSU5HOkRU
+X1NQTElUX0JJTkRJTkdfUEFUQ0g6IERUIGJpbmRpbmcgZG9jcyBhbmQgaW5jbHVkZXMgc2hvdWxk
+IGJlIGENCj4gPiA+IHNlcGFyYXRlIHBhdGNoLiBTZWU6DQo+ID4gPiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdA0KPiA+ID4gLS0tDQo+ID4g
+DQo+ID4gSG0sIEkgdGhpbmsgdGhhdCdzIGEgZGViYXRhYmxlIGVycm9yIG1lc3NhZ2UgZnJvbSBj
+aGVja3BhdGNoLCBidXQgbGV0J3MgbGVhdmUgaXQgDQo+ID4gYXMgaXQgaXMuDQo+ID4gDQo+ID4g
+UmVnYXJkcywNCj4gPiBNYXR0aGlhcw0KPiA+IA0KPiA+IA0KPiA+ID4gDQo+ID4gPiBIYW5rcw0K
+PiA+ID4gDQo+ID4gPj4+IC0tIHJlbW92ZSBGaXhlcyB0YWcNCj4gPiA+Pj4gQ29tbWl0ICJjbGs6
+IG1lZGlhdGVrOiByZW1vdmUgVUFSVDMgY2xvY2sgc3VwcG9ydCINCj4gPiA+Pj4gLS0gcmVtb3Zl
+IEZpeGVzIHRhZw0KPiA+ID4+Pg0KPiA+ID4+PiBIYW5rcyBDaGVuICgyKToNCj4gPiA+Pj4gICAg
+IGR0LWJpbmRpbmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQNCj4gPiA+Pj4g
+ICAgIGNsazogbWVkaWF0ZWs6IHJlbW92ZSBVQVJUMyBjbG9jayBzdXBwb3J0DQo+ID4gPj4+DQo+
+ID4gPj4+ICAgIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyAgICAgIHwgMiAtLQ0K
+PiA+ID4+PiAgICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaCB8IDEgLQ0K
+PiA+ID4+PiAgICAyIGZpbGVzIGNoYW5nZWQsIDMgZGVsZXRpb25zKC0pDQo+ID4gPj4+DQo+ID4g
+PiANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+DQo+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5p
+bmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtbWVkaWF0ZWsNCg0K
 
