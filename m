@@ -2,138 +2,109 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C9AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D1BC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C23C207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vHlbvsKx"
+	by mail.kernel.org (Postfix) with ESMTP id 10C4C204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599595690;
+	bh=ygSqGvXe2eiw11gl73xv8ND+uiCYj5lsp6k+Fw3NqBY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=BDNcLFSVvb0wgpZcInqV9ozSF/Xc/YKZFO00jB+elWlQOZH/FjPCEtBD0UnedN7GU
+	 IqIRBzvWyLzuETHeIzdQuj1XORjciJv3ZX1+D5bYueM+s3E/dQ7OV4W7SPY12duqQx
+	 5NqBao3N8WWWiDttropSiYfYqQjAFsvKVV6M/x9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731421AbgIHUHw (ORCPT
+        id S1731556AbgIHUIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
+        Tue, 8 Sep 2020 16:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730177AbgIHPTw (ORCPT
+        with ESMTP id S1730210AbgIHUIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:19:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D30DC0A3BEE;
-        Tue,  8 Sep 2020 07:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=G29JkSXO5mbjv1FoDpuAl//FXROAUm+3biOsauwhg0s=; b=vHlbvsKxwv08eqpmwor/rS181u
-        pd6OA/e5ygfhGkp0yWDJtY6SOc0uxzQrsYBb7B/GyBogtpahlEe1wZyshJTc+l2/qb8LpJkMczBaa
-        2BYlSu0JKMKOkz932zO2kPeMys9d1Euva1Bg2RiXaS6D1X/KKlY7DYmulVzLwq7SuTqI0bFWQ5yRz
-        9G9a7Ing/LxxOL5huRbqHUbpVNHIB3qU37xrAgf4zvFaufvYbS8OilLBXz9fctloFDbzz2eiRNamR
-        BLu/np9dSOF9/rDyTaDdKv/VNTdwB1vIer09rQhs1/MEZ27xXbSQ6RP+NrYfGNPhUm4Te92A6goxH
-        7Kirw/mQ==;
-Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf0x-0002y5-Gx; Tue, 08 Sep 2020 14:54:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 09/19] xsysace: simplify media change handling
-Date:   Tue,  8 Sep 2020 16:53:37 +0200
-Message-Id: <20200908145347.2992670-10-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
-References: <20200908145347.2992670-1-hch@lst.de>
+        Tue, 8 Sep 2020 16:08:00 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587D1C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 13:08:00 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id h4so717791ioe.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 13:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uaM8vUsFC56bK1f61nDas4I4sfPBn95e3OUH/QbJ7q0=;
+        b=JU8Eo3SAZSpvZFivo74bcIxLxvbhmvpW9bsQuZKHtZ/P3PFj4ISG2HqIfo7MPTUWOG
+         dn+1cLKJtqYCjk3DOnJelHE9KNVj8Sn2gkBEiqupXcGmPah1QjGCPfwFjoOXFNh6GYWn
+         Us/xQ1r9EFANyxmzRNNGTQsWSjVWHjIyIBVzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uaM8vUsFC56bK1f61nDas4I4sfPBn95e3OUH/QbJ7q0=;
+        b=VSg9ypQJBOWkL4K8esDjxAybUv8QogJHU3cGSjO2DsZh9Z5x/6Qi6iDU/SxN2oTNBu
+         zfwJux/x/ODNcjVTG71kusMRzqUiYS6M+nlui2M/fhWaQgkmeB/7u7EqWMcTXxVsCXyi
+         2ODywqC96lDUFvKMBGVhE+RYiKq/PEak4CfWbYSHZaUlkx8LI/aZzaUhzAp+Z5Jpxwk/
+         OWoqD2rb3KfbN9qqJDHhGXBBsIasm6TpfVRR3+5MwWnllYZ+iJBtQ7bquT5uDQpvpRkv
+         7Q7La7qME0iH1n4xuYNBYE0BgfuWsQlV/A8H+Kggr14KddEd0oi91fk7yIqMtoWiAQJz
+         qiKw==
+X-Gm-Message-State: AOAM530HCasKOAHCpTxRDG+phsF3j2QOhINKZVWV/wmJpnHbevGPPL9k
+        cij2Jivmp1uc7tzTdLGi+M/xvTl1k2leag==
+X-Google-Smtp-Source: ABdhPJxdJXco5oWWxCEmLUw9bkzoqXLBitkSsdbtacHo7fw6PgnUfniVyhJfviUHS65OCv7RhPMU7w==
+X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr492794ioq.41.1599595679503;
+        Tue, 08 Sep 2020 13:07:59 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id w15sm88442ilq.46.2020.09.08.13.07.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 13:07:58 -0700 (PDT)
+Subject: Re: [PATCH] selftests/seccomp: Add test for unknown SECCOMP_RET kill
+ behavior
+To:     Kees Cook <keescook@chromium.org>, Rich Felker <dalias@libc.org>
+Cc:     Kyle Huey <me@kylehuey.com>,
+        Robert O'Callahan <robert@ocallahan.org>,
+        Christian Brauner <christian@brauner.io>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <202009081232.92206075F7@keescook>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <486baf92-5051-e099-628a-ccee4eada6f3@linuxfoundation.org>
+Date:   Tue, 8 Sep 2020 14:07:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <202009081232.92206075F7@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass a struct ace_device to ace_revalidate_disk, move the media changed
-check into the one caller that needs it, and give the routine a better
-name.
+On 9/8/20 1:35 PM, Kees Cook wrote:
+> While we testing for the behavior of unknown seccomp filter return
+> values, there was no test for how it acted in a thread group. Add
+> a test in the thread group tests for this.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> (This is going via the seccomp tree.)
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/block/xsysace.c | 26 ++++++++++----------------
- 1 file changed, 10 insertions(+), 16 deletions(-)
+Cool.
 
-diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
-index eefe542f2d9fff..8d581c7536fb51 100644
---- a/drivers/block/xsysace.c
-+++ b/drivers/block/xsysace.c
-@@ -888,26 +888,20 @@ static unsigned int ace_check_events(struct gendisk *gd, unsigned int clearing)
- 	return ace->media_change ? DISK_EVENT_MEDIA_CHANGE : 0;
- }
- 
--static int ace_revalidate_disk(struct gendisk *gd)
-+static void ace_media_changed(struct ace_device *ace)
- {
--	struct ace_device *ace = gd->private_data;
- 	unsigned long flags;
- 
--	dev_dbg(ace->dev, "ace_revalidate_disk()\n");
--
--	if (ace->media_change) {
--		dev_dbg(ace->dev, "requesting cf id and scheduling tasklet\n");
-+	dev_dbg(ace->dev, "requesting cf id and scheduling tasklet\n");
- 
--		spin_lock_irqsave(&ace->lock, flags);
--		ace->id_req_count++;
--		spin_unlock_irqrestore(&ace->lock, flags);
-+	spin_lock_irqsave(&ace->lock, flags);
-+	ace->id_req_count++;
-+	spin_unlock_irqrestore(&ace->lock, flags);
- 
--		tasklet_schedule(&ace->fsm_tasklet);
--		wait_for_completion(&ace->id_completion);
--	}
-+	tasklet_schedule(&ace->fsm_tasklet);
-+	wait_for_completion(&ace->id_completion);
- 
- 	dev_dbg(ace->dev, "revalidate complete\n");
--	return ace->id_result;
- }
- 
- static int ace_open(struct block_device *bdev, fmode_t mode)
-@@ -922,8 +916,8 @@ static int ace_open(struct block_device *bdev, fmode_t mode)
- 	ace->users++;
- 	spin_unlock_irqrestore(&ace->lock, flags);
- 
--	if (bdev_check_media_change(bdev))
--		ace_revalidate_disk(bdev->bd_disk);
-+	if (bdev_check_media_change(bdev) && ace->media_change)
-+		ace_media_changed(ace);
- 	mutex_unlock(&xsysace_mutex);
- 
- 	return 0;
-@@ -1080,7 +1074,7 @@ static int ace_setup(struct ace_device *ace)
- 		(unsigned long long) ace->physaddr, ace->baseaddr, ace->irq);
- 
- 	ace->media_change = 1;
--	ace_revalidate_disk(ace->gd);
-+	ace_media_changed(ace);
- 
- 	/* Make the sysace device 'live' */
- 	add_disk(ace->gd);
--- 
-2.28.0
+> ---
+>   tools/testing/selftests/seccomp/seccomp_bpf.c | 43 ++++++++++++++++---
+>   1 file changed, 37 insertions(+), 6 deletions(-)
 
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
