@@ -2,221 +2,106 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1027C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20FBC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B72F2074D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB9C2074D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599588131;
+	bh=fDqoV5fVIw6t9pvVgOsGrg3g0OZCcVnoJBrIK2iPz5E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ISGx+pb1P2q9tsvH1jIUdvlnUM0a8rovgy7fk0xIA6owABpFHjIhjPIuFDITdb0KE
+	 h7qknvxleLaWJN0oqxVSymCwfJKGnIelpiAeVh5Yay4kRMl1UTh3IfnA/CV7saT1oa
+	 mjHrj8WVGEZN7jHXFRMpR8zs6Fv9WtrrUvVmCmWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbgIHSB7 (ORCPT
+        id S1731540AbgIHSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:01:59 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17156 "EHLO mga05.intel.com"
+        Tue, 8 Sep 2020 14:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731606AbgIHR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:59:28 -0400
-IronPort-SDR: dxWIhuJ9uEGq59T5BmAc1ktPKug225/8S+3XFDwiK6p0jd/CvhXieFMVJ5RG7GlNxq1pSaICh3
- 5DnZKZSxkF8Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="243012923"
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="243012923"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:59:21 -0700
-IronPort-SDR: WARO9DJMBbdZU31c3kTwLwETLAhMPcS0hnrIUw7KAImr2M0Q6PsVL7nJiRlxDio9c6MmQ0fotY
- hqlbo+byZkkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="304175944"
-Received: from lkp-server01.sh.intel.com (HELO fc0154cbc871) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 08 Sep 2020 10:59:20 -0700
-Received: from kbuild by fc0154cbc871 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kFhtn-0000Ce-Cv; Tue, 08 Sep 2020 17:59:19 +0000
-Date:   Wed, 09 Sep 2020 01:58:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.09.04b] BUILD SUCCESS
- e6195051140a6189b588b79e208e380dd8504a13
-Message-ID: <5f57c661.egqPb8FPh/s3aoyZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1731560AbgIHQMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:12:46 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC32D24869;
+        Tue,  8 Sep 2020 15:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580317;
+        bh=fDqoV5fVIw6t9pvVgOsGrg3g0OZCcVnoJBrIK2iPz5E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O/QxIcSKfcDT2SF364HACPU6MeMlZhWz3rw9Aypaxux44o01/tS9F9qFeXwfT9ax1
+         K/OEslPtxpO5RncF3CXDYKFCSQNU96V89hQI4EkkhUmFZEAzUG5FqCQH31wCa7Tswv
+         WbAa8B37+yF6pKK9yMObrbqX5GzpydFCv/h6JDPQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/65] bnxt_en: Fix PCI AER error recovery flow
+Date:   Tue,  8 Sep 2020 17:26:13 +0200
+Message-Id: <20200908152218.488197386@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.09.04b
-branch HEAD: e6195051140a6189b588b79e208e380dd8504a13  squash! scftorture: Add an alternative IPI vector
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-elapsed time: 720m
+[ Upstream commit df3875ec550396974b1d8a518bd120d034738236 ]
 
-configs tested: 147
-configs skipped: 10
+When a PCI error is detected the PCI state could be corrupt, save
+the PCI state after initialization and restore it after the slot
+reset.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                          pxa3xx_defconfig
-x86_64                           allyesconfig
-m68k                          amiga_defconfig
-xtensa                              defconfig
-sh                        edosk7705_defconfig
-arm                         nhk8815_defconfig
-mips                           ip27_defconfig
-arm                   milbeaut_m10v_defconfig
-arc                              alldefconfig
-m68k                        m5272c3_defconfig
-mips                 decstation_r4k_defconfig
-alpha                               defconfig
-mips                malta_qemu_32r6_defconfig
-powerpc                     ep8248e_defconfig
-arm                          pxa910_defconfig
-arm                        spear3xx_defconfig
-arm                         lpc18xx_defconfig
-m68k                       m5208evb_defconfig
-mips                        bcm47xx_defconfig
-powerpc                      tqm8xx_defconfig
-mips                           rs90_defconfig
-xtensa                       common_defconfig
-arm                            u300_defconfig
-c6x                        evmc6457_defconfig
-sh                   sh7724_generic_defconfig
-mips                          ath79_defconfig
-openrisc                    or1ksim_defconfig
-sh                          lboxre2_defconfig
-powerpc                     mpc5200_defconfig
-h8300                     edosk2674_defconfig
-sh                          urquell_defconfig
-sh                        apsh4ad0a_defconfig
-c6x                        evmc6472_defconfig
-xtensa                           alldefconfig
-powerpc                      ppc64e_defconfig
-mips                       capcella_defconfig
-arm                         assabet_defconfig
-riscv                          rv32_defconfig
-m68k                       m5275evb_defconfig
-arm                            hisi_defconfig
-arm                       spear13xx_defconfig
-arm                          pxa168_defconfig
-arm                      pxa255-idp_defconfig
-arm                  colibri_pxa270_defconfig
-powerpc                     powernv_defconfig
-arm                            lart_defconfig
-csky                             alldefconfig
-arm                         lubbock_defconfig
-arm                          badge4_defconfig
-xtensa                           allyesconfig
-mips                malta_kvm_guest_defconfig
-s390                          debug_defconfig
-c6x                        evmc6678_defconfig
-arc                              allyesconfig
-arm                        spear6xx_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                    gamecube_defconfig
-s390                       zfcpdump_defconfig
-arm                       mainstone_defconfig
-sh                            shmin_defconfig
-mips                           ci20_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a006-20200907
-x86_64               randconfig-a004-20200907
-x86_64               randconfig-a003-20200907
-x86_64               randconfig-a005-20200907
-x86_64               randconfig-a001-20200907
-x86_64               randconfig-a002-20200907
-i386                 randconfig-a004-20200908
-i386                 randconfig-a005-20200908
-i386                 randconfig-a006-20200908
-i386                 randconfig-a002-20200908
-i386                 randconfig-a001-20200908
-i386                 randconfig-a003-20200908
-i386                 randconfig-a004-20200907
-i386                 randconfig-a005-20200907
-i386                 randconfig-a006-20200907
-i386                 randconfig-a002-20200907
-i386                 randconfig-a003-20200907
-i386                 randconfig-a001-20200907
-x86_64               randconfig-a013-20200908
-x86_64               randconfig-a016-20200908
-x86_64               randconfig-a011-20200908
-x86_64               randconfig-a012-20200908
-x86_64               randconfig-a015-20200908
-x86_64               randconfig-a014-20200908
-i386                 randconfig-a016-20200907
-i386                 randconfig-a015-20200907
-i386                 randconfig-a011-20200907
-i386                 randconfig-a013-20200907
-i386                 randconfig-a014-20200907
-i386                 randconfig-a012-20200907
-i386                 randconfig-a016-20200908
-i386                 randconfig-a015-20200908
-i386                 randconfig-a011-20200908
-i386                 randconfig-a013-20200908
-i386                 randconfig-a014-20200908
-i386                 randconfig-a012-20200908
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a013-20200907
-x86_64               randconfig-a011-20200907
-x86_64               randconfig-a016-20200907
-x86_64               randconfig-a012-20200907
-x86_64               randconfig-a015-20200907
-x86_64               randconfig-a014-20200907
-
+Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index a189061d8f97e..7de38ae5c18f2 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -8251,6 +8251,7 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	bnxt_parse_log_pcie_link(bp);
+ 
++	pci_save_state(pdev);
+ 	return 0;
+ 
+ init_err_cleanup_tc:
+@@ -8412,6 +8413,8 @@ static pci_ers_result_t bnxt_io_slot_reset(struct pci_dev *pdev)
+ 			"Cannot re-enable PCI device after reset.\n");
+ 	} else {
+ 		pci_set_master(pdev);
++		pci_restore_state(pdev);
++		pci_save_state(pdev);
+ 
+ 		err = bnxt_hwrm_func_reset(bp);
+ 		if (!err && netif_running(netdev))
+-- 
+2.25.1
+
+
+
