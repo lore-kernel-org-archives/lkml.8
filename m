@@ -2,125 +2,82 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C64C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BC4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22352078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586623;
-	bh=humf0A3eNdO8QjtSSneT0F+BBfk0pmqd3HPslVbaHBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0T90NUz2AA5CAJbPE+bjp/lGR90ziOC47FLHTedlzyJP7zQbfH99aUlDcKyADjpn
-	 HHHV38HM1T0++KutObcVemphCbGq9z2Zo2zRDPr5Ri2B2s1nOVIWB/1TuHH5cIjdWF
-	 zvADDeUhUqEoGDKNKZp9X4ekbrwzuAYA3PFCVIsU=
+	by mail.kernel.org (Postfix) with ESMTP id D7E6920738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YDxIuM6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbgIHRhA (ORCPT
+        id S1731907AbgIHRhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731792AbgIHRgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:36:38 -0400
-Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.6])
+        Tue, 8 Sep 2020 13:37:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731835AbgIHRg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:36:59 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8128EC061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:36:58 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f10bf0070b09dfd4356f225.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:70b0:9dfd:4356:f225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74EA020738;
-        Tue,  8 Sep 2020 17:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599586597;
-        bh=humf0A3eNdO8QjtSSneT0F+BBfk0pmqd3HPslVbaHBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DciE04eFKvHvjJ7XF6N0n3Si+qtHP9qGXwdngsUmp+sAPCiJpzZ0Lnf1LlQXuixLU
-         emhBnuqX8+n90KJXCys2P5uVNRbfcN4s/r3deI31XhIjzLFcN65eCf2g5Kd1KJfo3b
-         lRUvkTrPdssWJQMoaqD/rHGw2DbZC5peMFgsd3kc=
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, paulmck@kernel.org, joel@joelfernandes.org,
-        josh@joshtriplett.org, peterz@infradead.org,
-        christian.brauner@ubuntu.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nikolay@cumulusnetworks.com,
-        sfr@canb.auug.org.au, roopa@nvidia.com,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH net-next] rcu: prevent RCU_LOCKDEP_WARN() from swallowing the condition
-Date:   Tue,  8 Sep 2020 10:36:24 -0700
-Message-Id: <20200908173624.160024-1-kuba@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200908090049.7e528e7f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20200908090049.7e528e7f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DFA881EC0489;
+        Tue,  8 Sep 2020 19:36:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599586617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Vrj3035BsDcdrz0VpAXQtCkSg5zN1Pm7pcoGPlszHkk=;
+        b=YDxIuM6lZ+gB0DKwdbm9IwN7GvlMIKA5A3+upt1bsXJzCzj74ffgVcZNn11kQwlT8julbg
+        QvO7lMl2HokGbuwr5v1b7J0/Fk0Yh/bBUCl8QWO444YR7wRPRVXVSAGzYYCodTiyjEbvYl
+        JULC6n0O2JfAFH53ngqQrD2NJCme2iY=
+Date:   Tue, 8 Sep 2020 19:36:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        kitsunyan <kitsunyan@airmail.cc>,
+        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>
+Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
+Message-ID: <20200908173656.GI25236@zn.tnic>
+References: <20200907094843.1949-1-Jason@zx2c4.com>
+ <20200907100647.GB10657@zn.tnic>
+ <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
+ <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
+ <20200908172558.GG25236@zn.tnic>
+ <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We run into a unused variable warning in bridge code when
-variable is only used inside the condition of
-rcu_dereference_protected().
+On Tue, Sep 08, 2020 at 07:29:11PM +0200, Jason A. Donenfeld wrote:
+> Well that's not cool.
 
- #define mlock_dereference(X, br) \
-	rcu_dereference_protected(X, lockdep_is_held(&br->multicast_lock))
+So you're saying that if someone wants to kill its box by poking at that
+MSR, we should just let her/him?
 
-Since on builds with CONFIG_PROVE_RCU=n rcu_dereference_protected()
-compiles to nothing the compiler doesn't see the variable use.
+If anything, I think that a BIG FAT WARNING at least would make sense.
 
-Prevent the warning by adding the condition as dead code.
-We need to un-hide the declaration of lockdep_tasklist_lock_is_held()
-and fix a bug the crept into a net/sched header.
+Now, if there were a proper interface which would allow only valid
+commands, now that would be optimal...
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
- include/linux/rcupdate.h   | 2 +-
- include/linux/sched/task.h | 2 --
- include/net/sch_generic.h  | 2 +-
- 3 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index d15d46db61f7..cf3d3ba3f3e4 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -320,7 +320,7 @@ static inline void rcu_preempt_sleep_check(void) { }
- 
- #else /* #ifdef CONFIG_PROVE_RCU */
- 
--#define RCU_LOCKDEP_WARN(c, s) do { } while (0)
-+#define RCU_LOCKDEP_WARN(c, s) do { } while (0 && (c))
- #define rcu_sleep_check() do { } while (0)
- 
- #endif /* #else #ifdef CONFIG_PROVE_RCU */
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index a98965007eef..9f943c391df9 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -47,9 +47,7 @@ extern spinlock_t mmlist_lock;
- extern union thread_union init_thread_union;
- extern struct task_struct init_task;
- 
--#ifdef CONFIG_PROVE_RCU
- extern int lockdep_tasklist_lock_is_held(void);
--#endif /* #ifdef CONFIG_PROVE_RCU */
- 
- extern asmlinkage void schedule_tail(struct task_struct *prev);
- extern void init_idle(struct task_struct *idle, int cpu);
-diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
-index d60e7c39d60c..eb68cc6e4e79 100644
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -443,7 +443,7 @@ static inline bool lockdep_tcf_proto_is_locked(struct tcf_proto *tp)
- 	return lockdep_is_held(&tp->lock);
- }
- #else
--static inline bool lockdep_tcf_chain_is_locked(struct tcf_block *chain)
-+static inline bool lockdep_tcf_chain_is_locked(struct tcf_chain *chain)
- {
- 	return true;
- }
 -- 
-2.24.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
