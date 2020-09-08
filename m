@@ -2,118 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB7DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51238C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131A22087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0509D2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="mCT551VG"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bun7s7XH";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="ASXpXfyY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgIHTHU (ORCPT
+        id S1731691AbgIHTHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:07:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731259AbgIHQHN (ORCPT
+        Tue, 8 Sep 2020 15:07:25 -0400
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:45196
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731676AbgIHTG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:07:13 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57200C0619EE
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:58:38 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 16so5985058qkf.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:58:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+0VeQsmoLvQuU6aBo8zkUNaslkMwNc2y2ovMYLqi8XU=;
-        b=mCT551VGMZB94T4mxoyukc4bwxgzEzUfWwL2NvOY75ZaeJdpVQG9CBGM1bGuJrJs2d
-         vIOmu8PzXYmtEsQLa/m2JAQSu0eJCPrcPkfvV9Ijc4QajjV3687zmTDPrqeSq1uJuG91
-         dsViQvLDQdy6yiU6PEXgnu4e/No+wesobtdBRKR8F3GKNMVVobwe4Q1QlOXue+A4zk2K
-         aYi1G2PgHsePs/N6bKyI3DvK2mxmNGCtZMk5tgCkOnw4yYsxg/YOAyvDPeqBTNZj0uyF
-         +N6GfQAzFQn/Ey3fK4fQ10k+G/OswU60JOly4rzK2N70fyiOx+Ce+/BJY+P/ccnOv329
-         b9ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+0VeQsmoLvQuU6aBo8zkUNaslkMwNc2y2ovMYLqi8XU=;
-        b=hTRc/w8zDLifilSN81DUUq/70NWbUQgwDVCQ3pH+mOjUjqflOaCYPyY4w9ZAgGAUyW
-         Jriyu2tHYpbQr56466RC50eqwemIrChRDKl3cjWdW4q90qUHta5QZniSSzuNL72sXhr8
-         TeOVgmLij73kX1XRvPwAVcI1LK3JQIYWi1ZYrIx/6ALJfLuDXIh7zv6KZy9W0s4/MrZW
-         BhTLfUCJpiETAqfzyI8e1ACfmN/acc62+NWmSQTtMUTR8/bQnm8AJBb/9TNLDjTvlEmz
-         a2s2SpWhKdWRe3iwWN/VJOAZ1C+wq4BhTnV2Pcaru+xBYwLexZNz0qcYCDMFyvI97/FM
-         PywQ==
-X-Gm-Message-State: AOAM5313MaSLxbNknQOWwFpbeV2mFCRU/1ZeruMP0xAA1b2hzyS4dWYu
-        a7TUPk5tz2acJTBB402DX4eUMA==
-X-Google-Smtp-Source: ABdhPJzENRkC0WQz6clGvHTyG+K0LCw8iXyZ0zOHXituNkpO4M4F4y2QK9X/EX38k0eqbQaYJJPsSw==
-X-Received: by 2002:a37:b201:: with SMTP id b1mr224085qkf.10.1599573517558;
-        Tue, 08 Sep 2020 06:58:37 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id m1sm10014629qkn.89.2020.09.08.06.58.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 06:58:36 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] soundwire: qcom: add support for mmio soundwire
- master devices
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-arm-msm@vger.kernel.org
-Cc:     "moderated list:SOUNDWIRE SUBSYSTEM" <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-References: <20200905173905.16541-1-jonathan@marek.ca>
- <20200905173905.16541-4-jonathan@marek.ca>
- <ad39f109-bfc9-332e-adc2-355499db1ab7@linux.intel.com>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <4bf165c2-1458-442b-5c85-5cebabda7232@marek.ca>
-Date:   Tue, 8 Sep 2020 09:57:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 8 Sep 2020 15:06:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599592015;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=lWsMChywupzdHzp7I9YzcKd0Y+ARnhQXfU8/OA9aDl4=;
+        b=bun7s7XHXTFbXJ0s25yJSwDDBqtqeEAQEO7ORPqELvQrtNKTRSHqgzyvIo9T/90M
+        dYyB1gonJMSVirDBgo4QFVSu7VffhZAKMJVwEk4TDGFEx97fuZEZXKQc7KNown28JxG
+        31m3b45MQHWtpC6JQeVOldzJAilRpxqjA+L8jGME=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599592015;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=lWsMChywupzdHzp7I9YzcKd0Y+ARnhQXfU8/OA9aDl4=;
+        b=ASXpXfyYPuEX7KzVTeQlzNrPjG1Z499KXtA7pWdQH0vChrBex7uZcLZKV8vPa3Mf
+        Bt0UTYHvT2iqXwEGN+QjK/nJjb3tNaL9AdBbztUJQml6uF/fWtn82PU2UAdhkfIWwD/
+        q8MnvDFS39H0cTohS2+zGd0G/LxemiZDFm95XM2I=
 MIME-Version: 1.0
-In-Reply-To: <ad39f109-bfc9-332e-adc2-355499db1ab7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 8 Sep 2020 19:06:55 +0000
+From:   abhinavk@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>,
+        Hongbo Yao <yaohongbo@huawei.com>, Bernard <bernard@vivo.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] drm/msm/dpu: move vblank events to complete_commit()
+In-Reply-To: <20200907170450.370122-1-robdclark@gmail.com>
+References: <20200907170450.370122-1-robdclark@gmail.com>
+Message-ID: <010101746f1d268a-8a3ad278-cd47-4688-af9d-531567f0307c-000000@us-west-2.amazonses.com>
+X-Sender: abhinavk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.08-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-09-07 10:04, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> We could get a vblank event racing with the current atomic commit,
+> resulting in sending the pageflip event to userspace early, causing
+> tearing.  On the other hand, complete_commit() ensures that the
+> pending flush is complete.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-
-On 9/8/20 9:56 AM, Pierre-Louis Bossart wrote:
+I checked our downstream code as well and yes we are not signaling
+page flips inside the vblank_cb and are doing it after 
+wait_for_commit_done
+This aligns with that.
+Hence,
+Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index c2729f71e2fa..89c0245b5de5 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -297,7 +297,6 @@ void dpu_crtc_vblank_callback(struct drm_crtc 
+> *crtc)
+>  		dpu_crtc->vblank_cb_time = ktime_get();
+>  	else
+>  		dpu_crtc->vblank_cb_count++;
+> -	_dpu_crtc_complete_flip(crtc);
+>  	drm_crtc_handle_vblank(crtc);
+>  	trace_dpu_crtc_vblank_cb(DRMID(crtc));
+>  }
+> @@ -402,6 +401,7 @@ static void dpu_crtc_frame_event_cb(void *data, u32 
+> event)
+>  void dpu_crtc_complete_commit(struct drm_crtc *crtc)
+>  {
+>  	trace_dpu_crtc_complete_commit(DRMID(crtc));
+> +	_dpu_crtc_complete_flip(crtc);
+>  }
 > 
-> 
->> @@ -764,8 +786,11 @@ static int qcom_swrm_probe(struct platform_device 
->> *pdev)
->>           if (!ctrl->regmap)
->>               return -EINVAL;
->>       } else {
->> -        /* Only WCD based SoundWire controller is supported */
->> -        return -ENOTSUPP;
->> +        ctrl->reg_read = qcom_swrm_cpu_reg_read;
->> +        ctrl->reg_write = qcom_swrm_cpu_reg_write;
->> +        ctrl->mmio = devm_platform_ioremap_resource(pdev, 0);
->> +        if (IS_ERR(ctrl->mmio))
->> +            return PTR_ERR(ctrl->mmio);
-> 
-> Shouldn't this be conditional on SLIMBUS being enabled, as done in your 
-> patch2?
-> 
-
-No, the case above is the SLIMBUS case. This patch is adding support for 
-the non-SLIMBUS case.
-
->>       }
->>       ctrl->irq = of_irq_get(dev->of_node, 0);
->>
+>  static void _dpu_crtc_setup_lm_bounds(struct drm_crtc *crtc,
