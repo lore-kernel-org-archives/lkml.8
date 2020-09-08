@@ -2,160 +2,221 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D79AC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DF6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 484962087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599584426;
-	bh=Jg8BNBodxDZ/GGpfckXL+ebbKwfd4lexIss3kIlGxE0=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=1gQzdRNS1VnTzQ03qzhqPVU9ywYquKthqNz2l6QOM+RDMH3+ZdCN5g6fwdTVyKl9s
-	 ArRAKUnIbWuHc0uP7tzQ/yrcA5KA11/2n7Koyz6/ZFbSyT3fP0S8+z+TK+EzMfdV/x
-	 XoF8zbmKFignqKrVTih60hag8A4+pAqbdTKnyhVM=
+	by mail.kernel.org (Postfix) with ESMTP id 230192080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R0j7oOiO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgIHRAX (ORCPT
+        id S1731903AbgIHRAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731855AbgIHRAH (ORCPT
+        Tue, 8 Sep 2020 13:00:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47806 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731849AbgIHRAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:00:07 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D776C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:00:07 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id z13so58923iom.8
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language;
-        bh=zjq4DzIinEMqpDJU3zU+23BVrao+KvP+z5FcMsfqmE0=;
-        b=Nb+n3/NHiN9bu4+RIqX6szk1vTvrTcd6sXWpCcI4yqQVb09LahRRNpE/lh2yA6Avel
-         Fgh0/FolUbn8iFrRZpAHdVkidweTg7oSm/86i6DPegl1dutiGqgd2Hd1OrIrMts0N8dI
-         09huBeg5qq6ZXf3vaMLVHJIjvUUBaeyCNd1xI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language;
-        bh=zjq4DzIinEMqpDJU3zU+23BVrao+KvP+z5FcMsfqmE0=;
-        b=udpkB1w/R28gDzmExpmBQq4vzW5NyPfaMQL9sUQnWsWTTIiR8TaMGx1OytVvYn+jRs
-         9I/QkYnHKiqc9nlVAfT0OaOsRDQHmml+SiZMD14epQkUzAzogfbXHxD6k7sLvbiZMKFJ
-         JJFbXzbNIBabbPcrUhZrK+LI5Uqf3BqmMLM5INFMo3UJb0ftxPPQh/V3Ok4/XQAPK5sB
-         XE00aKBTVMYUZGjr96AtWIs7aapPdFwH0Mgi2CJJ2BRUQxzcQncKnYgtsFLvFgGIDpiq
-         VPb0eZLleyrI3CiuVxo56EWt2fp0dv8AYT5NVV21P/EO0Pi7prAWzOJ9Q6icLSotwCj/
-         Db4g==
-X-Gm-Message-State: AOAM531kmOTeNX6oXPUkbi1BeBF1yFPGsyzfsnlcVY/zZTEbNUncBXsB
-        4h198v6ER3ybbib5dLEtOC6diJwtuZ8Wpg==
-X-Google-Smtp-Source: ABdhPJztZWe5lGNDj0ylu2qS3tuULJ0NRrAt+xkkHGboY3AFX7CH+Cf9DEjPH/a+NB5ZHflRxnee1Q==
-X-Received: by 2002:a05:6602:2043:: with SMTP id z3mr20919824iod.93.1599584406537;
-        Tue, 08 Sep 2020 10:00:06 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id o12sm5559429ilq.29.2020.09.08.10.00.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 10:00:05 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] Kselftest update for Linux 5.9-rc5
-Message-ID: <12c8266f-de6e-176a-f45b-06b3887f5008@linuxfoundation.org>
-Date:   Tue, 8 Sep 2020 11:00:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 13:00:06 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088H032E003661;
+        Tue, 8 Sep 2020 12:00:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599584403;
+        bh=QZWuH3KY1sKtXDptWtQX4dYKsXnLQg4YPCavbKV70cg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=R0j7oOiOfAoeyB0UIzudIgJZHTQLHX+xtRRaWEcnlm/hbhdS/iE0prF/3nfi2MTfL
+         YsRbuSqbgE0AYDsSmR69F0g1HGsVOphG2IfdJFByh20oNezTLqdE47+qxJ2SHo0Kkf
+         qzLu7qdO9j7RBd+M/gORqsTYfCAIp3NiTNsV+dTg=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088H02FC048821
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 12:00:03 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 12:00:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 12:00:01 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088H00bs031667;
+        Tue, 8 Sep 2020 12:00:01 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Suman Anna <s-anna@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2 1/4] arm64: dts: ti: k3-j7200: add DMA support
+Date:   Tue, 8 Sep 2020 19:59:39 +0300
+Message-ID: <20200908165942.32368-2-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200908165942.32368-1-grygorii.strashko@ti.com>
+References: <20200908165942.32368-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------9D366DBA0A3A14B11E39DC4A"
-Content-Language: en-US
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------9D366DBA0A3A14B11E39DC4A
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Hi Linus,
+Add the intr, inta, ringacc and udmap nodes for main and mcu NAVSS.
 
-Please pull the following Kselftest update for Linux 5.9-rc5.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 61 +++++++++++++++++++
+ .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      | 44 +++++++++++++
+ 2 files changed, 105 insertions(+)
 
-This kselftest fixes update for Linux 5.9-rc5 consists of a single
-fix to timers test to disable timeout setting for tests to run and
-report accurate results.
-
-diff is attached.
-
-thanks,
--- Shuah
-
-
-----------------------------------------------------------------
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-
-   Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest 
-tags/linux-kselftest-5.9-rc5
-
-for you to fetch changes up to 5c1e4f7e9e49b6925b1fb5c507d2c614f3edb292:
-
-   selftests/timers: Turn off timeout setting (2020-08-20 15:49:28 -0600)
-
-----------------------------------------------------------------
-linux-kselftest-5.9-rc5
-
-This kselftest fixes update for Linux 5.9-rc5 consists of a single
-fix to timers test to disable timeout setting for tests to run and
-report accurate results.
-
-----------------------------------------------------------------
-Po-Hsu Lin (1):
-       selftests/timers: Turn off timeout setting
-
-  tools/testing/selftests/timers/Makefile | 1 +
-  tools/testing/selftests/timers/settings | 1 +
-  2 files changed, 2 insertions(+)
-  create mode 100644 tools/testing/selftests/timers/settings
-
-----------------------------------------------------------------
-
---------------9D366DBA0A3A14B11E39DC4A
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux-kselftest-5.9-rc5.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="linux-kselftest-5.9-rc5.diff"
-
-diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
-index 7656c7ce79d9..0e73a16874c4 100644
---- a/tools/testing/selftests/timers/Makefile
-+++ b/tools/testing/selftests/timers/Makefile
-@@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+index 70c8f7e941fb..cc4ff380a7bc 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+@@ -45,6 +45,31 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges = <0x00 0x30000000 0x00 0x30000000 0x00 0x0c400000>;
++		ti,sci-dev-id = <199>;
++
++		main_navss_intr: interrupt-controller1 {
++			compatible = "ti,sci-intr";
++			ti,intr-trigger-type = <4>;
++			interrupt-controller;
++			interrupt-parent = <&gic500>;
++			#interrupt-cells = <1>;
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <213>;
++			ti,interrupt-ranges = <0 64 64>,
++					      <64 448 64>,
++					      <128 672 64>;
++		};
++
++		main_udmass_inta: interrupt-controller@33d00000 {
++			compatible = "ti,sci-inta";
++			reg = <0x0 0x33d00000 0x0 0x100000>;
++			interrupt-controller;
++			interrupt-parent = <&main_navss_intr>;
++			msi-controller;
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <209>;
++			ti,interrupt-ranges = <0 0 256>;
++		};
  
- TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
+ 		secure_proxy_main: mailbox@32c00000 {
+ 			compatible = "ti,am654-secure-proxy";
+@@ -56,6 +81,42 @@
+ 			interrupt-names = "rx_011";
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
++
++		main_ringacc: ringacc@3c000000 {
++			compatible = "ti,am654-navss-ringacc";
++			reg =	<0x0 0x3c000000 0x0 0x400000>,
++				<0x0 0x38000000 0x0 0x400000>,
++				<0x0 0x31120000 0x0 0x100>,
++				<0x0 0x33000000 0x0 0x40000>;
++			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
++			ti,num-rings = <1024>;
++			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <211>;
++			msi-parent = <&main_udmass_inta>;
++		};
++
++		main_udmap: dma-controller@31150000 {
++			compatible = "ti,j721e-navss-main-udmap";
++			reg =	<0x0 0x31150000 0x0 0x100>,
++				<0x0 0x34000000 0x0 0x100000>,
++				<0x0 0x35000000 0x0 0x100000>;
++			reg-names = "gcfg", "rchanrt", "tchanrt";
++			msi-parent = <&main_udmass_inta>;
++			#dma-cells = <1>;
++
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <212>;
++			ti,ringacc = <&main_ringacc>;
++
++			ti,sci-rm-range-tchan = <0x0d>, /* TX_CHAN */
++						<0x0f>, /* TX_HCHAN */
++						<0x10>; /* TX_UHCHAN */
++			ti,sci-rm-range-rchan = <0x0a>, /* RX_CHAN */
++						<0x0b>, /* RX_HCHAN */
++						<0x0c>; /* RX_UHCHAN */
++			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
++		};
+ 	};
  
-+TEST_FILES := settings
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
-new file mode 100644
-index 000000000000..e7b9417537fb
---- /dev/null
-+++ b/tools/testing/selftests/timers/settings
-@@ -0,0 +1 @@
-+timeout=0
+ 	main_pmx0: pinmux@11c000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+index 670e4c7cd9fe..9ecb7e0c9cf7 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+@@ -81,4 +81,48 @@
+ 		clocks = <&k3_clks 149 2>;
+ 		clock-names = "fclk";
+ 	};
++
++	cbass_mcu_navss: navss@28380000 {
++		compatible = "simple-mfd";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		dma-coherent;
++		dma-ranges;
++		ti,sci-dev-id = <232>;
++
++		mcu_ringacc: ringacc@2b800000 {
++			compatible = "ti,am654-navss-ringacc";
++			reg =	<0x0 0x2b800000 0x0 0x400000>,
++				<0x0 0x2b000000 0x0 0x400000>,
++				<0x0 0x28590000 0x0 0x100>,
++				<0x0 0x2a500000 0x0 0x40000>;
++			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
++			ti,num-rings = <286>;
++			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <235>;
++			msi-parent = <&main_udmass_inta>;
++		};
++
++		mcu_udmap: dma-controller@285c0000 {
++			compatible = "ti,j721e-navss-mcu-udmap";
++			reg =	<0x0 0x285c0000 0x0 0x100>,
++				<0x0 0x2a800000 0x0 0x40000>,
++				<0x0 0x2aa00000 0x0 0x40000>;
++			reg-names = "gcfg", "rchanrt", "tchanrt";
++			msi-parent = <&main_udmass_inta>;
++			#dma-cells = <1>;
++
++			ti,sci = <&dmsc>;
++			ti,sci-dev-id = <236>;
++			ti,ringacc = <&mcu_ringacc>;
++
++			ti,sci-rm-range-tchan = <0x0d>, /* TX_CHAN */
++						<0x0f>; /* TX_HCHAN */
++			ti,sci-rm-range-rchan = <0x0a>, /* RX_CHAN */
++						<0x0b>; /* RX_HCHAN */
++			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
++		};
++	};
+ };
+-- 
+2.17.1
 
---------------9D366DBA0A3A14B11E39DC4A--
