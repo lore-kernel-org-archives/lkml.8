@@ -2,104 +2,108 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0CEC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616D4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8342D208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2D020659
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eAxiKa4w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZsEpHsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgIHU75 (ORCPT
+        id S1730170AbgIHVBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:59:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34004 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725997AbgIHU74 (ORCPT
+        Tue, 8 Sep 2020 17:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728390AbgIHVBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:59:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599598795;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QDxqJJtxikAk+TP8erWdser2zhhtAWwdtKyMtfuzbSY=;
-        b=eAxiKa4wGXd1aN0BYtBDeGjs6cgu+oli/ieZKp+sk4TbZ5WvIaGqlnOH2ZlPz0cSFOJK/p
-        Pfsqg3s6K1AL+LMso/vbPpxxvoiJZDQkopF1xdwnQlGP6S5aiPDuwqk3uKVxIkAP2t2d9f
-        eSnZHJaS6JpwKg0H5zHPBwKMdhig9qA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-cNX-G96bOXm-dG0MkvF8ZA-1; Tue, 08 Sep 2020 16:59:51 -0400
-X-MC-Unique: cNX-G96bOXm-dG0MkvF8ZA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D320A8018A1;
-        Tue,  8 Sep 2020 20:59:49 +0000 (UTC)
-Received: from treble (ovpn-117-163.rdu2.redhat.com [10.10.117.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 561CE7EEAC;
-        Tue,  8 Sep 2020 20:59:49 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 15:59:47 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org
-Subject: Re: [GIT PULL] livepatching for 5.9-rc5
-Message-ID: <20200908205947.arryy75c5cvldps7@treble>
-References: <20200907082036.GC8084@alley>
- <CAHk-=wiZUYjmPLiEaN5uHM4mGyYq8RBFvk=iZKkm9=8NxvcoZQ@mail.gmail.com>
- <20200908183239.vhy2txzcmlliul7d@treble>
- <CAHk-=wi==UJf0fWUGn6RhQ2hvLW7PA9Yj4GWaTJxa3roENAHDg@mail.gmail.com>
+        Tue, 8 Sep 2020 17:01:09 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B92AFC061573;
+        Tue,  8 Sep 2020 14:01:08 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id gr14so429862ejb.1;
+        Tue, 08 Sep 2020 14:01:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yuZq5gRtjnAOy/yKCa2afgQGQUjqZmPhiIecQIYO4eA=;
+        b=qZsEpHsLLfxCed5410SrA8rAmZ525i2i7c4wbc8OXp8N6SlmVDp7h0875MI+d+P1AS
+         yxU3wkXW4yiC+OW0P3j5dz9gOgAbwa1iNrlGZoAtC7msxKu+2dvktj66eIX2ytjX1E/9
+         tlhUG1EWTLUt2uNd2eqM3WIyc/KT3lRvmJawNkK1qRtTlpUbJx333MGi2U++GtNkJzUy
+         sGoKssErH5fzsyim9s8uSE9ZKabk2XzzJd8SS7nR+YI01aoe2wNNm2CZdHxQ0uf/2J8q
+         p2iYtl/pXLibEbGb1vYO+scourbh+gHjRlX1qwaizNbyoVtz1VHcqi9rEv24HjIgIIwE
+         yciw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yuZq5gRtjnAOy/yKCa2afgQGQUjqZmPhiIecQIYO4eA=;
+        b=Cb6vozJOaeXOdLgj6vwxPZeXjPElhw0QIsjCWog3519ITh13njLSUkgdB/qI0z7rL1
+         A/Jbu1H4Ev+5nOR2R4fzjkQYuhN28ZlXdFJuHXX9mj0yc/6Kus2CK917QKf26ydC2ZKG
+         8zWX9a1/EgiChRAsY7Ob9caX03FNcfwVeH8HVuBLPKXEhDHGgMTU/UFYoiS+yp88+nsy
+         /WuW0hLwvcRsGRxx6SHopYIaExkbsZMbhCjGxlxshObkfh+ulLxbw2L13q8Ko+e0a4S/
+         3IsLABTo9VI1k7234VlewlRSp+gd2rOvR+KLy/AA6hnKis/MoOKE7Fua2CeBVRHBaCl8
+         zDeg==
+X-Gm-Message-State: AOAM530LwXPg6u43RY6wi0YjZZPoKWrwk+tIT5/f1wEKg3DQydm6fT4N
+        5+r71flYmFbov45gyt9vf7s=
+X-Google-Smtp-Source: ABdhPJxd/YVT4oASVxc+tdLEjp4ZtwajtJ+9bkMQrQ6WgK3fNzWkGQeJPkcAanshpa+NFiZECBmYgg==
+X-Received: by 2002:a17:906:fcc7:: with SMTP id qx7mr377519ejb.254.1599598864615;
+        Tue, 08 Sep 2020 14:01:04 -0700 (PDT)
+Received: from [192.168.43.239] ([5.100.193.184])
+        by smtp.gmail.com with ESMTPSA id bx24sm257157ejb.51.2020.09.08.14.01.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 14:01:03 -0700 (PDT)
+Subject: Re: [PATCH next] io_uring: fix task hung in io_uring_setup
+To:     Hillf Danton <hdanton@sina.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk,
+        syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+References: <20200903132119.14564-1-hdanton@sina.com>
+ <9bef23b1-6791-6601-4368-93de53212b22@kernel.dk>
+ <8031fbe7-9e69-4a79-3b42-55b2a1a690e3@gmail.com>
+ <20200908000339.2260-1-hdanton@sina.com>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <778a8166-e031-e691-a44b-1199c68d6a29@gmail.com>
+Date:   Tue, 8 Sep 2020 23:58:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20200908000339.2260-1-hdanton@sina.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi==UJf0fWUGn6RhQ2hvLW7PA9Yj4GWaTJxa3roENAHDg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 11:42:00AM -0700, Linus Torvalds wrote:
-> On Tue, Sep 8, 2020 at 11:32 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > Can you share the .o file?  At least I can't recreate with GCC 9.3.1,
-> > which is all I have at the moment.
+On 08/09/2020 03:03, Hillf Danton wrote:
 > 
-> Done off-list in private, because I don't think anybody else wants
-> object files flying around on the mailing lists..
+> On Mon, 7 Sep 2020 06:55:04 Jens Axboe wrote:
+>> On 9/7/20 2:50 AM, Pavel Begunkov wrote:
+>>>
+>>> BTW, I don't see the patch itself, and it's neither in io_uring, block
+>>> nor fs mailing lists. Hillf, could you please CC proper lists next time?
+> 
+> Yes, I can. So will I send io_uring patches with Pavel Cced.
 
-The problem is that objtool ignores handle_external_interrupt_irqoff()
-(because it has the STACK_FRAME_NON_STANDARD annotation), and the
-'ignore' logic is a bit crude.
+Thanks
 
-Because that function is ignored, the tail call isn't detected (as you
-pointed out).  Which confuses the static noreturn detection logic.
+>>
+>> He did, but I'm guessing that vger didn't like the email for whatever
+>> reason. Hillf, did you get an error back from vger when sending the pat	
+> 
+> My inbox, a simple free mail, is perhaps blocked as spam at the vger end.
 
-The proper fix would be to move that thunk call code to proper asm,
-where we can add some unwind hints, and then get rid of the
-STACK_FRAME_NON_STANDARD.
-
-But, in the interest of being lazy, here's the easiest fix for now.
-I'll need to run some builds to make sure it doesn't break anything.
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e034a8f24f46..90a66891441a 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -619,7 +619,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 		if (!is_static_jump(insn))
- 			continue;
- 
--		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
-+		if (insn->offset == FAKE_JUMP_OFFSET)
- 			continue;
- 
- 		reloc = find_reloc_by_dest_range(file->elf, insn->sec,
-
+-- 
+Pavel Begunkov
