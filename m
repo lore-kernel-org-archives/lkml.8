@@ -2,182 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548EBC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8621C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1328B2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826952076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CMnJ8NZ5"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Hb83dQ9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbgIHTZb (ORCPT
+        id S1732139AbgIHTZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:25:31 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1578 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731071AbgIHQAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:25:45 -0400
+Received: from mout.gmx.net ([212.227.15.15]:57997 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731022AbgIHQAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f57768b0001>; Tue, 08 Sep 2020 05:18:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 08 Sep 2020 05:18:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 08 Sep 2020 05:18:33 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
- 2020 12:18:33 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
- by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 8 Sep 2020 12:18:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UXd/XWXr/mBggv1sn8fyBs1aNz5iidvgxMgRLcfNliErEqRiBOxMR+qfZYBckPQwbjsmetaypx2cGt8PAr2U3+92BdD7ije2MKO0Mjit6NInhpEHQ8Z3Sa2Q3YpRxAVA2BpwMg/PV1+8nTVIZn55AoD27qI4zzQAe9vtI7re5IB8uHmkQxkQ+n72fxKdZ2FLUJGJuV+/+WLTsgUEdMaBkX5XMuCIx+H9u7H2BE3jFxKnq6A/y4kMI/e8c5LRK4kVMRwmIPX3f0FZ8iQfKhAZCdOdrzTWsEq0mwYFcc3/b+MmVg93TgyHR9tDeHZmDVh3gy4mcmkd2hwvlmjFwmYPTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CGsNcIwdPaEJi8jThsV1uqtWfah3BveIJqAAU0lUZNM=;
- b=aTttXlY+Tv/KGJxBAi5lXgNaxsLT/kZInSGMGRD/ah9qinKa0488njunIgHMJe9lhcDi6lDQEXc4WhG/D13ZdCu/FkG1+kT7XvV/1l1AUfsQjdXoaIlTAOYrle1VR923fkhq3njt23lcWo/dtYiQsuz8aqq5u6nxXiU9YwVxu2/qrkVdT5rPPaYKsALgEYntwrgpTIrU+sf4E8P4mFQN1yQIJGcGkY8TXARNnutUelyBhklScUKr5gHTl23AOY1Q67+hZntoyCQ1FlTDmuyfSVDcvAWl1TX5mlMsSnSXBhklg+vWM2x8hH8Yw462Rh5833A+ol3exAvxxJCwlu2CxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2823.namprd12.prod.outlook.com (2603:10b6:a03:96::33)
- by BYAPR12MB2919.namprd12.prod.outlook.com (2603:10b6:a03:12c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
- 2020 12:18:31 +0000
-Received: from BYAPR12MB2823.namprd12.prod.outlook.com
- ([fe80::7dd0:ad41:3d71:679b]) by BYAPR12MB2823.namprd12.prod.outlook.com
- ([fe80::7dd0:ad41:3d71:679b%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 12:18:31 +0000
-From:   Nikolay Aleksandrov <nikolay@nvidia.com>
-To:     "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "henrik.bjoernlund@microchip.com" <henrik.bjoernlund@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        "idosch@mellanox.com" <idosch@mellanox.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>
-CC:     "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>
-Subject: Re: [PATCH RFC 2/7] bridge: cfm: Add BRIDGE_CFM to Kconfig.
-Thread-Topic: [PATCH RFC 2/7] bridge: cfm: Add BRIDGE_CFM to Kconfig.
-Thread-Index: AQHWgpx4vaCTm02ulUKOejWt4a0/5KlerxoA
-Date:   Tue, 8 Sep 2020 12:18:31 +0000
-Message-ID: <e145b130ba56460ecf11318f9a4550d2637aa222.camel@nvidia.com>
-References: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
-         <20200904091527.669109-3-henrik.bjoernlund@microchip.com>
-In-Reply-To: <20200904091527.669109-3-henrik.bjoernlund@microchip.com>
-Reply-To: Nikolay Aleksandrov <nikolay@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: lists.linux-foundation.org; dkim=none (message not
- signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
- header.from=nvidia.com;
-x-originating-ip: [84.238.136.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fff34f1f-cea5-4c23-b150-08d853f14d0d
-x-ms-traffictypediagnostic: BYAPR12MB2919:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB29192E463CB886ECEEF65991DF290@BYAPR12MB2919.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LEFyC4iE4I3XhaKXg2dYrt+wVbEQ42F8J2ZivdD+OuXGcD/7cU/jfCCy62gJPvv2bAhOq12aeB/B1lHZ691lnPJG41tc2W+Cb1GO+4MvYXbB+H1wcPOzKQJn38gvGUXytJV/1BjVQhxiLtI+nLtHmgqV26NCg8xgCGJV7ryAiN8KlVbGUFmFKcOcsRBsJoJYna9W5S1nVAsWugAYgFJ5MsDcg38/uTLImpNYUGMAzfnVEumcYCX6H2oz/ZbEkSzTV7WdpUX6XThQVyXeXCWXgGdtECwNbJh8d5TwsPv7ZeKAbOdFoMjp8CzCeO3LbMDBBvNN5TVwLy4pZ/5MYCBvKw6jn9R2tHU5QUfmM/eWGVYySO4dZrnCISpnd1Byv0Uj
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2823.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(2906002)(3450700001)(83380400001)(36756003)(6512007)(5660300002)(186003)(6506007)(2616005)(71200400001)(478600001)(26005)(316002)(4326008)(86362001)(110136005)(66476007)(91956017)(76116006)(66556008)(66446008)(64756008)(6486002)(66946007)(8936002)(8676002)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 9N5gt9gFwc9fYN4YUVdSBpvRsbk9hWNBKkdr2oqJaqxZhnJ3IUNUy8r6TipVdWDG2TMOn3N1E4qii1QvnK26TLFqdqz5ZL+xP3br2Y1GSkO+RjZPnxc3h+Vl/qcZBJBIEEkrxr7GdVQE21lrk3mOXpQUakse4QJdT9zuUdlGN23dn8rzppHqMf9ld6GB+VvtsFmAirDj1QTFIgN9OKakvbRH4D1tP+t9YsCwBusA7ETyOZ5R/P2v9sBVxgncbE2kWOnfm9cl2pxOSjI7tJUXjXaO7ZB7HZvhDwPMeQVJ/r/5eGffVsOII3z6BmNu8SZhnGFycCk7UMH8Re+6I9r3B8qJrMqC+h6Nyo18g9inKISA5MwRYh4cunN1DlQO1E8tEkqnsHkJtp/Mxe7TbIEsPc/hGlrIbFeF8MN8kyTewp8gxf1ueY3zJpZT2KTPH4A92Hbrmx1zyWBM5Yh26D6AbA9lW9SWURnSBGeM5G1+1lRybsoy4ZGrpCWFIqQxPfl5aJc8aAysPiYykgtTZP4wc0K2jD507ZKd7CjwKiYit/IeHPvKQXd7RXJiLLKIrF6A3KI5qJORTMf0sv2Jj8EggaqUE3EUji7OOQnV9Deq7bvIL0qlEVcxGkg2ue+W8GIlyl7aLtNjlLfPx1kRc9xXhw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D9027594D27E84448F9D96A1042E8A31@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599580772;
+        bh=oKw/yzYD6eOW39I8U2TosMiSpWSrS9JUrnApsFbd3ks=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=Hb83dQ9YTcTOvkLigukuawO5OCt08jdArJZ08Sq7E+LBXEmeiaBr05ZcKv/ndZQOB
+         Pb7bbyA3xu/1NpUvJZnMh8bLOgqQeyXeRSyvRtPzuPTIPlDL31IXuBQPgKa90gfLRu
+         KPWFiD1P+eiQq6rRQwNSUR4nkKo6A2n1+RoXnFyg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.simpson.net ([185.191.217.72]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPXhA-1jtDCY0Kri-00MbOz; Tue, 08
+ Sep 2020 17:59:32 +0200
+Message-ID: <a79815352e2f238b7f108e6e7202f6655f26159d.camel@gmx.de>
+Subject: Re: v5.9-rc3-rt3 boot time networking lockdep splat
+From:   Mike Galbraith <efault@gmx.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Tue, 08 Sep 2020 17:59:31 +0200
+In-Reply-To: <20200908151229.g24j4n4fderlm2pe@linutronix.de>
+References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+         <46a2b89ec8d953a4be18c7389c7d8c66310a7ff0.camel@gmx.de>
+         <b989e196a8b9cceda35152de9202d7a67ca32196.camel@gmx.de>
+         <20200908151229.g24j4n4fderlm2pe@linutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2823.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fff34f1f-cea5-4c23-b150-08d853f14d0d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 12:18:31.5483
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1JofDo4dbbFfrSMD1x7ncVO0hcE/ggC4ZhbYv+y1mttByQT79FXJ+W2yiQBhy0RdTj2WfyKJcQFFoPTsWOilHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2919
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599567499; bh=CGsNcIwdPaEJi8jThsV1uqtWfah3BveIJqAAU0lUZNM=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:Reply-To:
-         Accept-Language:Content-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:user-agent:authentication-results:
-         x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-ms-exchange-senderadcheck:
-         x-microsoft-antispam:x-microsoft-antispam-message-info:
-         x-forefront-antispam-report:x-ms-exchange-antispam-messagedata:
-         Content-Type:Content-ID:Content-Transfer-Encoding:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=CMnJ8NZ5vxNX8NJxJ9dYpmSrif7oWknRklFZWx4/TOVT/8fkMW27uFoGqmBvZAOi6
-         z/wOtbLO0PBd1hIyWlGogoeBIWOfddmFi6cDzO5DqCxRg1hqDm1mZsvfUdDwYRLxQN
-         EmPEOz++dtpeqStEIsRBv6Vf5xmV3LTfgqv4V095UoxSI/P7dmdNhCYF9M3QAJIlms
-         wx9fyZPm6WyLrw5vVzPunSjot39KGLEMD+gmdxtn8ebEfkc3PEDufYZSkciIF2I1os
-         3BRmc5PjG+sDM0ew0lxmCpPG/XLA/pL3U5oBznSiQriYsUsvmqdNgqKcaSJtIQTgu7
-         aEKe8laa95/Kg==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dpbJGdyniN1L8GgtVO9C42d9xu0vTjB2nNyE9vu9ukXbtho5I7V
+ 3g3nNwehyDv1LlKRhz2iBO+CoPaS2JC+NQEjExZ8lAR/BgwIs2qGR0ouuiijgb4r3GBmPl/
+ HVNLR8CGpRGT0HihPMrs9G/J+bxbrUbAk62tZEUY0oUlOuCiCHCoHHDDTmoTE43eR7xcx/+
+ m6rLsKSq6JKLRw6GGAegg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bBQiVy6+LQg=:yQDEL/dplQfSmsutFc7m8V
+ OXvgj0VTwHR0PVbycsGQQtwxJZaYYeNup5Xa4TFu+Lb4Kr3/ZK4bwKYd8wDBg6yAqlREHg/5f
+ J/V+aNnxANtj8yYGgCTPjXz4CxvXKU2gIlTlqE4HHbAIOk/kL5C9TxW7VDqtSooFPdAiVG5jc
+ fTwOVU28LVzFlc55iG+85DAiGd6UWSUP0lpCQzVBQAu7n83Fv5QgQNQmcnvLmSa7VhOyvmvNb
+ 5UDkpj9VjEM0ydQOVxf52U25ApynjvjPVVcJ56/atAbgr8sV3p4yWk8TfOBylBnrWaNY2+uPA
+ InhMEomAG43bQjyGlPf2hcopVN3SqrqsGqcqytWp+nxoLr8PR2A7YOoySzal1VQ7YRIDQA4Xj
+ DVuK5rn19tiy9ccFuCRT4jNad3RwYPFc2UBBPV/fa8/ga8MKcPX3AjWxDRuxv+4LrR435dmmZ
+ 6IaQjG8q0btTXq5aV7SU9ZeK/CEJuFZvlMxX99M2sD7neLLbVfdJDyz5f2HNJR98IA2K6vU83
+ nAll1UgzuH3vASsMNeAvKU2D+OxKx4nXGMjMgTMwHRss4+r6W/CEFbJvlB8N80v8EsWTywgHu
+ AZ4pY4dX9yD8702AmcfKanHOyX1MTx4LLyTpTJAEQC3jB7XbneqdZ2oINzCfzjuCCiYNNVc3/
+ bnJHhplbIYWyJ3ityd/cOvLuUT8MTn6KqJXMh+EQPyowey0NzvuUk+rvovPrZRw481YC2ViPU
+ VlcHnP7cOaAQFT3C1XOZRRRC3+7SFaSA9i6t5T6pEKtUlJBg13jKSvsQMJh+kYQR3YJ9bDrei
+ 92F2qGB6lh0IxixrEknzaCb1qa7SoLWPk8ty+VaEnZ0ylOQJOxr5fGcpypNYZMB6x3QCsaA7L
+ t79lXMdlXiDxewO2aVor2fN4JcKnbqbAYuZuQBK32t/sL0Qtr9L/eljc/mWsI+NWvZJuqQrDq
+ 11+Qe/173cI+WgS4oaFJzik0bbVMTUKPlBjnD9L3TnwFBp8eYZsVi+PEHrRjI10h6g6p3EtzH
+ JMemM5B1n5K4VgDaMomabAiLLK4Fl4/BTVHqvP6FIGd3DPqhntmIbesrG6bK909axlWO14L/i
+ XqyryG9+EVza5H9VhPYXl/AGnIX438JVNxEp7YKp6zGNiwunj+Rvi7ws23DrvKScm280vCfo1
+ 3euTjN6pyCsSQrMPO49WRagdRf+xZmgTWmHsomNxzLMlYiogod+sGaW5/lTrEufSAb8Coi3qt
+ /hFlu/JxuXRM8Fpbm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA5LTA0IGF0IDA5OjE1ICswMDAwLCBIZW5yaWsgQmpvZXJubHVuZCB3cm90
-ZToNCj4gVGhpcyBtYWtlcyBpdCBwb3NzaWJsZSB0byBpbmNsdWRlIG9yIGV4Y2x1ZGUgdGhlIENG
-TQ0KPiBwcm90b2NvbCBhY2NvcmRpbmcgdG8gODAyLjFRIHNlY3Rpb24gMTIuMTQuDQo+IA0KPiBT
-aWduZWQtb2ZmLWJ5OiBIZW5yaWsgQmpvZXJubHVuZCAgPGhlbnJpay5iam9lcm5sdW5kQG1pY3Jv
-Y2hpcC5jb20+DQo+IC0tLQ0KPiAgbmV0L2JyaWRnZS9LY29uZmlnICAgICAgfCAxMSArKysrKysr
-KysrKw0KPiAgbmV0L2JyaWRnZS9icl9kZXZpY2UuYyAgfCAgMyArKysNCj4gIG5ldC9icmlkZ2Uv
-YnJfcHJpdmF0ZS5oIHwgIDMgKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDE3IGluc2VydGlvbnMo
-KykNCj4gDQo+IGRpZmYgLS1naXQgYS9uZXQvYnJpZGdlL0tjb25maWcgYi9uZXQvYnJpZGdlL0tj
-b25maWcNCj4gaW5kZXggODA4NzkxOTY1NjBjLi4zYzhkZWQ3ZDNlODQgMTAwNjQ0DQo+IC0tLSBh
-L25ldC9icmlkZ2UvS2NvbmZpZw0KPiArKysgYi9uZXQvYnJpZGdlL0tjb25maWcNCj4gQEAgLTcz
-LDMgKzczLDE0IEBAIGNvbmZpZyBCUklER0VfTVJQDQo+ICAJICBTYXkgTiB0byBleGNsdWRlIHRo
-aXMgc3VwcG9ydCBhbmQgcmVkdWNlIHRoZSBiaW5hcnkgc2l6ZS4NCj4gIA0KPiAgCSAgSWYgdW5z
-dXJlLCBzYXkgTi4NCj4gKw0KPiArY29uZmlnIEJSSURHRV9DRk0NCj4gKwlib29sICJDRk0gcHJv
-dG9jb2wiDQo+ICsJZGVwZW5kcyBvbiBCUklER0UNCj4gKwloZWxwDQo+ICsJICBJZiB5b3Ugc2F5
-IFkgaGVyZSwgdGhlbiB0aGUgRXRoZXJuZXQgYnJpZGdlIHdpbGwgYmUgYWJsZSB0byBydW4gQ0ZN
-DQo+ICsJICBwcm90b2NvbCBhY2NvcmRpbmcgdG8gODAyLjFRIHNlY3Rpb24gMTIuMTQNCj4gKw0K
-PiArCSAgU2F5IE4gdG8gZXhjbHVkZSB0aGlzIHN1cHBvcnQgYW5kIHJlZHVjZSB0aGUgYmluYXJ5
-IHNpemUuDQo+ICsNCj4gKwkgIElmIHVuc3VyZSwgc2F5IE4uDQo+IGRpZmYgLS1naXQgYS9uZXQv
-YnJpZGdlL2JyX2RldmljZS5jIGIvbmV0L2JyaWRnZS9icl9kZXZpY2UuYw0KPiBpbmRleCBhOTIz
-MmRiMDMxMDguLmQxMmY1NjI2YTRiMSAxMDA2NDQNCj4gLS0tIGEvbmV0L2JyaWRnZS9icl9kZXZp
-Y2UuYw0KPiArKysgYi9uZXQvYnJpZGdlL2JyX2RldmljZS5jDQo+IEBAIC00NzYsNiArNDc2LDkg
-QEAgdm9pZCBicl9kZXZfc2V0dXAoc3RydWN0IG5ldF9kZXZpY2UgKmRldikNCj4gIAlJTklUX0xJ
-U1RfSEVBRCgmYnItPmZ0eXBlX2xpc3QpOw0KPiAgI2lmIElTX0VOQUJMRUQoQ09ORklHX0JSSURH
-RV9NUlApDQo+ICAJSU5JVF9MSVNUX0hFQUQoJmJyLT5tcnBfbGlzdCk7DQo+ICsjZW5kaWYNCj4g
-KyNpZiBJU19FTkFCTEVEKENPTkZJR19CUklER0VfQ0ZNKQ0KPiArCUlOSVRfTElTVF9IRUFEKCZi
-ci0+bWVwX2xpc3QpOw0KPiAgI2VuZGlmDQo+ICAJc3Bpbl9sb2NrX2luaXQoJmJyLT5oYXNoX2xv
-Y2spOw0KPiAgDQo+IGRpZmYgLS1naXQgYS9uZXQvYnJpZGdlL2JyX3ByaXZhdGUuaCBiL25ldC9i
-cmlkZ2UvYnJfcHJpdmF0ZS5oDQo+IGluZGV4IGU2N2M2ZDllOGJlYS4uNjI5NGEzZTUxYTMzIDEw
-MDY0NA0KPiAtLS0gYS9uZXQvYnJpZGdlL2JyX3ByaXZhdGUuaA0KPiArKysgYi9uZXQvYnJpZGdl
-L2JyX3ByaXZhdGUuaA0KPiBAQCAtNDQ1LDYgKzQ0NSw5IEBAIHN0cnVjdCBuZXRfYnJpZGdlIHsN
-Cj4gICNpZiBJU19FTkFCTEVEKENPTkZJR19CUklER0VfTVJQKQ0KPiAgCXN0cnVjdCBsaXN0X2hl
-YWQJCW1ycF9saXN0Ow0KPiAgI2VuZGlmDQo+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfQlJJREdF
-X0NGTSkNCj4gKwlzdHJ1Y3QgbGlzdF9oZWFkCQltZXBfbGlzdDsNCj4gKyNlbmRpZg0KPiAgfTsN
-Cj4gIA0KPiAgc3RydWN0IGJyX2lucHV0X3NrYl9jYiB7DQoNCkxvb2tzIGdvb2QsIHBlcmhhcHMg
-YWxzbyBjYW4gdXNlIGhsaXN0IHRvIHJlZHVjZSB0aGUgaGVhZCBzaXplIGluIG5ldF9icmlkZ2Uu
-DQoNCg==
+On Tue, 2020-09-08 at 17:12 +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-09-05 07:19:10 [+0200], Mike Galbraith wrote:
+> > Lappy, which does not use bridge, boots clean... but lock leakage
+> > pretty darn quickly inspires lockdep to craps its drawers.
+> >
+> > [  209.001111] BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+> > [  209.001113] turning off the locking correctness validator.
+> > [  209.001114] CPU: 2 PID: 3773 Comm: Socket Thread Tainted: G S      =
+  I E     5.9.0.gc70672d-rt3-rt #8
+> > [  209.001117] Hardware name: HP HP Spectre x360 Convertible/804F, BIO=
+S F.47 11/22/2017
+> > [  209.001118] Call Trace:
+> > [  209.001123]  dump_stack+0x77/0x9b
+> > [  209.001129]  validate_chain+0xf60/0x1230
+>
+> I have no idea how to debug this based on this report. Can you narrow
+> it down to something?
+
+I instrumented what I presume is still this problem once upon a time,
+structures containing locks are allocated/initialized/freed again and
+again with no cleanup until we increment into the wall.
+
+> Is Lappy new, got a new something or has a new config switch? I'm just
+> curious if this something or something that was always there but
+> remained undetected.
+
+Nah, this is nothing new.  Turn lockdep on in RT, it's just a matter of
+time before it turns itself off.  It's usually just not _that_ quick.
+
+	-Mike
+
