@@ -2,155 +2,126 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97530C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276ECC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 581332087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599602038;
-	bh=sfvm274C1Tz6nYEHQDlYeKRgwYTGtjxgvO4OaIbh6ws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NVVzoFA0cpEbnce+w2jriuo+cEVJYKcAfIstLbS4NU44fc37smkcCNbFTzjC/7eGn
-	 NIQB02VYdnxUAjCRBREWb+B1RYB6Yg8fYh8G9UxGSNDDlXwFT4zBAp2/gj1WQebIzq
-	 z52rwwtqSriSpxwlbUsR82/rrt1X0v9j+TTd5hko=
+	by mail.kernel.org (Postfix) with ESMTP id DCCED2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lfCJDFSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgIHVx5 (ORCPT
+        id S1728620AbgIHV6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:53:57 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40547 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgIHVx4 (ORCPT
+        Tue, 8 Sep 2020 17:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgIHV6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:53:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id j2so998828ioj.7;
-        Tue, 08 Sep 2020 14:53:55 -0700 (PDT)
+        Tue, 8 Sep 2020 17:58:37 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC15DC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:58:36 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e23so601883eja.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:58:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jS8sUgXZwYogdhE8faZPSTSu9lavhbYazTXnxbo7L0Y=;
+        b=lfCJDFSH4WNRTmbAcJYjRD+buzZb/gDYcKGttjCwJY3pdH2uFHyyQPqQxoVS8Kuh7/
+         jkwWA1Xsn4mL6jHX5FZ7TdoDtYqIk8aG99uJdx93Wwtkq1DUZVoNyodIQuqU1CKwDBkM
+         Lgy6IydpZ+3XwxYW6e2HTHgSR6cnKySHDqsVc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wiPcYtXUmUOhYk2NP+zdXxVU6WZbJLZv+xg4idR2sPs=;
-        b=NZD0FdOVuldf3/HVH7XxcuDnX+3RM9gRK8/2OMElQADDboO8pCTVnwSFBuSZGi/kGe
-         Ik1PQqb3Wh2Tb7dfGZ968dCZJs2FNDYdnd4U5/wRPX2nFZ0VEmCA8XWTq025kb7mpMwR
-         GtCbfyMHlz61sCSf6vlOAKLUpDGUCeLOkcr2vY1NbRgnWwZFKc/v4++wHDMYfZL3EO09
-         xYcWSZLqG90D0K7wVbrnrMA0Nwlg8slBegmsrd7Nrz+WCI6F67wyTOE21s85qslDOCLi
-         BD/2Yfu0V9dZf93kqF90OmPd9gSD6/UH+MQwbfOQclhcoW/pNVPvNet5yVe4Gi1GlcVB
-         JGYQ==
-X-Gm-Message-State: AOAM531tYKMoSnNPw3RdhlF3GHNvoe+R5vE/6QwjmnyaLRZGbNG3Nhy1
-        WFWqk9tWWWiF1WLY+kLISw==
-X-Google-Smtp-Source: ABdhPJwVWjjp5FxJlVlmFFdvHZsCnIqr88iEcaRkpM6x7dcQaMo4X89epeMAF5S/GKo8UmohORtsuA==
-X-Received: by 2002:a05:6602:2e81:: with SMTP id m1mr893664iow.64.1599602034449;
-        Tue, 08 Sep 2020 14:53:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id e14sm232699ilr.42.2020.09.08.14.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 14:53:53 -0700 (PDT)
-Received: (nullmailer pid 995501 invoked by uid 1000);
-        Tue, 08 Sep 2020 21:53:52 -0000
-Date:   Tue, 8 Sep 2020 15:53:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 4/6] dt-bindings: mfd: ene-kb3930: Add compatibles for
- KB930 and Acer A500
-Message-ID: <20200908215352.GA989862@bogus>
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-5-digetx@gmail.com>
- <20200823182050.GA210632@demiurge.local>
- <b91b96d2-89e1-feb7-a4d0-6fd19a173ab4@gmail.com>
- <20200823211629.GA240555@demiurge.local>
- <c536557c-de42-d6bd-890c-ef71ca0e3116@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jS8sUgXZwYogdhE8faZPSTSu9lavhbYazTXnxbo7L0Y=;
+        b=n5xmCQSg9mm/OE2ArEGGaLUJksnIIuynxNafvxrhHkHGyCrGx198WFpPLoi6pn6y9q
+         6N4TNGCE+Cf56Fw4DSN5S8KkZq1fKAs6GDJl7GHMiq/WpyTaf6rMwlfLqEp+hVeFxESF
+         WX23yQQjAJEzcwdWevKi4dRg88YMG82j1dX/VAVGRKQs1q9hRVVHUY4/dAKpAXbqAubQ
+         ikBuLdhweCXosLaRGv7Ka/MX7JHKoOZvsweYaUNaS9/OL5b9JwpSwSSRU1xW9uj7/tY/
+         /cXG469kbnfrtXSjgLx0Dr/euDABkHbK+WzYmnj2b9xLTZgnCvQzYsKgOpgeVDH6wv+/
+         gFeA==
+X-Gm-Message-State: AOAM532WIIVvhd7h17+LceczWTRifn/eJoDz8dekqbXKEV+p56UuDQLO
+        iWHsYnH7P4W4jOHnt1eKm+O0WnO8wc+uMA==
+X-Google-Smtp-Source: ABdhPJxwYBtPQDd0rzvKpjV4aCpwr0p9rZD+zBR4AGq/AoZ6uQDbTTC642RfXmfhS4e8eIzUnOv/0g==
+X-Received: by 2002:a17:906:9604:: with SMTP id s4mr593227ejx.182.1599602315085;
+        Tue, 08 Sep 2020 14:58:35 -0700 (PDT)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id ec11sm323966ejb.123.2020.09.08.14.58.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 14:58:33 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id e17so431990wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:58:33 -0700 (PDT)
+X-Received: by 2002:a1c:c20a:: with SMTP id s10mr433507wmf.55.1599602313215;
+ Tue, 08 Sep 2020 14:58:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c536557c-de42-d6bd-890c-ef71ca0e3116@gmail.com>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de>
+ <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
+ <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
+ <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de>
+ <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
+ <20200820165407.GD12693@lst.de> <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
+ <20200901110617.GA13232@lst.de> <CAAFQd5CmPVSxmZJVn7HnNUn8srZbAbnfzpNMYw3KcDzn7xD2cg@mail.gmail.com>
+In-Reply-To: <CAAFQd5CmPVSxmZJVn7HnNUn8srZbAbnfzpNMYw3KcDzn7xD2cg@mail.gmail.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 8 Sep 2020 23:58:22 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
+Message-ID: <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
+Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 01:09:22PM +0300, Dmitry Osipenko wrote:
-> 24.08.2020 00:16, Lubomir Rintel пишет:
-> > Hello,
-> > 
-> > On Sun, Aug 23, 2020 at 10:31:36PM +0300, Dmitry Osipenko wrote:
-> >> 23.08.2020 21:20, Lubomir Rintel пишет:
-> >>> On Sun, Aug 23, 2020 at 05:08:44PM +0300, Dmitry Osipenko wrote:
-> >>>> The ENE KB930 hardware is compatible with KB3930.
-> >>>>
-> >>>> Acer A500 Iconia Tab is Android tablet device, it has KB930 controller
-> >>>> that is running firmware specifically customized for the needs of the
-> >>>> Acer A500 hardware. This means that firmware interface isn't re-usable
-> >>>> by other non-Acer devices. Some akin models of Acer tablets should be
-> >>>> able to re-use the FW interface of A500 model, like A200 for example.
-> >>>>
-> >>>> This patch adds the new compatibles to the binding.
-> >>>
-> >>> I've responded to patch 5/6 with what should've been said here [1].
-> >>> Sorry for the confusion.
-> >>>
-> >>> In any case please consider adding a new binding file instead of
-> >>> modifying the kb3930 binding doc. It would also remove a dependency on
-> >>> my patch set which should have slipped out of maintainers' radar.
-> >>>
-> >>> [1] https://lore.kernel.org/lkml/20200823180041.GB209852@demiurge.local/
-> >>
-> >> Hello, Lubomir! I was doing some research about the differences of
-> >> KB3930 and KB930 before created this patch and my understanding is that
-> >> the controllers are mostly identical. I've seen posts from people who
-> >> replaced KB3930 with KB930 (and vice versa) on various notebooks and it
-> >> worked, although not always.
-> >>
-> >> It's a very common practice to re-use binding in a case of a sibling
-> >> hardware. Do you know what are the exact differences between KB3930 and
-> >> KB930 which could justify having separate bindings?
-> >>
-> >> The firmware implementation varies a lot from device to device,
-> > 
-> > It sometimes does. The ENE's downstream driver suggests there are parts
-> > that run more-or-less stock firmware that are comatible with each other.
-> > That is why I grabbed the generic kb3930 name.
-> > 
-> >> and
-> >> thus, each device needs to have its own driver in order to talk to the
-> >> firmware, but hardware description (i.e. DT binding) should be common
-> >> for all devices.
-> > 
-> > Note the DT is not the hardware description. It's the description of how
-> > the hardware presents itself, from the software's perspective. As far as
-> > that is concerned, the devices don't seem to have anything in common at
-> > all (other than the bus address). The fact that you need an entirely
-> > different driver implies this.
-> > 
-> > This would be the case even if the A500 EC was based directly on a KB3930.
-> > 
-> > A good reason to keep bindings for different yet somewhat similar devices in
-> > a single document is to avoid duplication. Yet here there's very little to
-> > share here. If you've done your bindings correctly, you'd need to
-> > conditionalize the monitored-battery and power-supplies properties for
-> > acer,a500-iconia-ec, complicating the binding too much. It makes more
-> > sense to just add a new document.
-> 
-> Alright, I don't mind to separate the bindings. Although, before doing
-> that, I'd want to get opinion from the device-tree experts, i.e. from
-> Rob Herring :)
-> 
-> Rob, will it be fine to have separate bindings for each firmware version
-> of the ENE controller given that firmware is individual for every device
-> and given that FW has no compatibility with other devices?
+Hi Hans, Mauro,
 
-Seems like separate bindings makes sense here.
+On Tue, Sep 1, 2020 at 5:02 PM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> On Tue, Sep 1, 2020 at 1:06 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Thu, Aug 20, 2020 at 07:33:48PM +0200, Tomasz Figa wrote:
+> > > > It wasn't meant to be too insulting, but I found this out when trying
+> > > > to figure out how to just disable it.  But it also ends up using
+> > > > the actual dma attr flags for it's own consistency checks, so just
+> > > > not setting the flag did not turn out to work that easily.
+> > > >
+> > >
+> > > Yes, sadly the videobuf2 ended up becoming quite counterintuitive
+> > > after growing for the long years and that is reflected in the design
+> > > of this feature as well. I think we need to do something about it.
+> >
+> > So I'm about to respin the series and wonder how we should proceed.
+> > I've failed to come up with a clean patch to keep the flag and make
+> > it a no-op.  Can you or your team give it a spin?
+> >
+>
+> Okay, I'll take a look.
+>
+> > Also I wonder if the flag should be renamed from NON_CONSISTENT
+> > to NON_COHERENT - the consistent thing is a weird wart from the times
+> > the old PCI DMA API that is mostly gone now.
+>
+> It originated from the DMA_ATTR_NON_CONSISTENT flag, but agreed that
+> NON_COHERENT would be more consistent (pun not intended) with the rest
+> of the DMA API given the removal of that flag. Let me see if we can
+> still change it.
 
-Rob
+Given the above, we would like to make changes that affect the UAPI.
+Would you still be able to revert this series?
+
+Best regards,
+Tomasz
