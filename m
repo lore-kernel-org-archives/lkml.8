@@ -2,138 +2,217 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6049AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E78C216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5765F215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aCPQy7fz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="owLSs17e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgIHKOI (ORCPT
+        id S1729344AbgIHKOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:14:08 -0400
-Received: from mail-eopbgr80058.outbound.protection.outlook.com ([40.107.8.58]:22439
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728137AbgIHKNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:13:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m/ePwKhOcxX8WAgymyfcRbiPQ+rqPCUVUxb+neHQ47SveD8ywLCn8njMyCsG/70hHtFUPpw97HpLz51SLwAsx2xNCK5n3AgZPy+cfWMvQr8cXoWjrmD8DRWw/Fr/5TO5t06zE2t9kyrNXgMEqnE9GGhfEWJIvz/n7zPmkcROiREtOGbUOB2WZ7JI2Ifye9IK4b7X6/QhpfnVsyRwL84g7DrJI9+Rwdwk4IM9kNTje+DR/beHgH6DLXTEZzl7zjWMzha/tC1i9FFbzvJfVT/vP3kX4WEFsNaKUmCwiVWOF7JIJML5p+ma9ZIhenIXcOMZ7GUHPopddSiUias9jOE32Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tCiT4REc0nG3TmvPSa+/XSIhaZHwKH+zkES3VWoXkug=;
- b=amAGgUXII50aG63/mEb4gA27xu2/rsCI+yEKjhgPtt2JF98wfmuUCS5vTJQ5Sz2abWyDBSaCSCs8hPPznLPy8YGyE3gmYdsapiuxpTAQCPv2WjiFVpFPbefP5I4T21+CPeVdgSLRRNSU9+a+9kebR4UGV5kxcXuu8lRdpwkOplGQdl6JVOgwhqThB4i5BKsS4l8S8EvStGeSs4O3WpIpcds8/V7UFICrPSROJmno4WvMWbgORB+STuJujp4gDJyztlyI0Mg3SE1g1m5P3WJVcaDIVOqZRsnXkFcnOnrZ3nyU+mNSDcMRlKHsPKl41HXIBne5VwiqthWIkGMphNW1Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tCiT4REc0nG3TmvPSa+/XSIhaZHwKH+zkES3VWoXkug=;
- b=aCPQy7fziEzobR2q17j2BxiPQO6jVtuUYbZKdlzgLI9bse9Z2u81ZS3k9WGBm9yxx3Xrk4Tq6NLcUGwa0fcBCN3SCsDmFIBLZictoPqX5r56/VfjNw4RKRxS8eM67zBTjP9W82CD3Toec0uwQDKBSXcGR6wajLg9ZOA9jv7hMQs=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB3PR0402MB3659.eurprd04.prod.outlook.com (2603:10a6:8:5::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Tue, 8 Sep
- 2020 10:13:29 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 10:13:29 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        abel.vesa@nxp.com
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, Anson.Huang@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        aisheng.dong@nxp.com, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] firmware: imx: scu-pd: ignore power domain not owned
-Date:   Tue,  8 Sep 2020 18:07:01 +0800
-Message-Id: <1599559621-1397-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0152.apcprd04.prod.outlook.com (2603:1096:4::14)
- To DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 10.192.242.69 (119.31.174.67) by SG2PR04CA0152.apcprd04.prod.outlook.com (2603:1096:4::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Tue, 8 Sep 2020 10:13:26 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4c70527c-9b7e-4d48-edec-08d853dfd51d
-X-MS-TrafficTypeDiagnostic: DB3PR0402MB3659:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB3PR0402MB36595C71688CBB060F9DCA9588290@DB3PR0402MB3659.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZmC4smHnwBIEVNgnBd6nTEHnV2MivUC49jPOjhD3sgHXOiclRVWqk5eGIlSY8XvOOQHRceaqh/VDDNp2uK8Gz/4WM6tA4E3QSvUeNIYAHcC9Htu+SFcFXJEHuSHxL4VAhg9UsnkcUsYw662RTpruPfVvAGFPfekxey0hLEDYB1oi7oPIuedm7YEgWCEHaU3uk/PSo78xp/g2Nkx6HdTzPJKH+dMEV1/6d0UbF1uOMhI46vGmxEtlOn8kN76oQRfNuwmutmmo1cuMye1BSJ6ocv5y6ETFoMQoz/rJefRnION9sYkOU98imH6Ssmy0chcwX+Wrx9p4yxAdP0uJGNXPSw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(366004)(136003)(396003)(376002)(52116002)(16576012)(36756003)(26005)(478600001)(6666004)(16526019)(186003)(5660300002)(8676002)(83380400001)(9686003)(956004)(4326008)(6486002)(66476007)(66556008)(8936002)(316002)(66946007)(2616005)(2906002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: bZj6Je1GfARe+kXL+bB9G0sLcawEEwHz/8ZY/6qNuteuUMeBqyyEBFEpXdOZYqM5LXIF63Eog1RwLiyubdHTpHJwvvytC4nhXFCDKa9jT60Jq6pZ08hsM7hGZu78Ar5gixApO8Qzmcz/3QREMAiV+Rv06sAW6hzlpY2KglqK6rVwJRmkKTjlxMth1sPFfpbBGr/i5Ftu5sa5XW5YVCzOJABGpMwoyGQ0flekNM+kYxO94Cahv6oU/SYjSE8qVGZLTRVw3jgdBZbk2L3uEe+mJtgLNsb9dOOvAEZkMKi+S7tN9WmUV9nFCokYkrE8SpSgEkCBw73k6RQmDxPZX+A46OZbOe1mZTVbVbZqgjiXF7skydOLvKrcZpQ5uMYMPvN7uzAeQzIf+9mPlYXtAmHP4RqCS/J7O2ccLw3jHZVJEckN+PEbVpFokB2ksclFBioGji1nHt3T7Mokkl0q4j157fNUh0wHuXh99hxrvpEjPaPtCi6zJ05MdRg7wZywM0vlyF3YIiwuYU/W6tgkU9aYIzhI1vY8Xr7GkAorjWNbdgBU984lobJmVqvOb4lIatYRGcgQy93Vcun1v5jtDq6tIUSsTo7T3JklEOO4vKhPoEKf2Rib5T1iGJLem84dYOfYQmn2gcinvBh8CBB9F0Ti5A==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c70527c-9b7e-4d48-edec-08d853dfd51d
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 10:13:29.4854
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WVsL+yNTFHVUGDek8IIx1HCj3DRbxvWdKIp/Va1POS3DoRoLVWT3wWuYvrUP+B64zF93JypTTJcQFqZR/PQC1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3659
+        Tue, 8 Sep 2020 06:14:19 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:39213 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729132AbgIHKMo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:12:44 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200908101235epoutp01f95ecb7718184677e49c06d3735cfa92~yx03y67RV1439114391epoutp013
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:12:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200908101235epoutp01f95ecb7718184677e49c06d3735cfa92~yx03y67RV1439114391epoutp013
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599559955;
+        bh=uI09m4rEErR3++Jvp7IJlofxtUSCl4SrKX/A6hkpczo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=owLSs17em1pKu96QDjm4+F1iDw4IjZ76ls/gUsScDAcjyCeDb1wvnDbSOEiVkd/+0
+         HbibgJxfcYHjDB1+0edqFaq2uEv46XJOZG0F605elI471zGgYwA3ArUqGL9cCOVpvV
+         cqWmRfDwaydWNgFJs3zLwD+zIEWu6EPQoP9YUhrk=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200908101234epcas1p49442d07d33998406b761fe5afa7d7c55~yx0232-uv1796017960epcas1p4W;
+        Tue,  8 Sep 2020 10:12:34 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4Bm1DH2klxzMqYkk; Tue,  8 Sep
+        2020 10:12:31 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2A.DE.20696.F09575F5; Tue,  8 Sep 2020 19:12:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200908101230epcas1p3d1fc20eb523c4bccf043ada808611e96~yx0zyAHI02954229542epcas1p3m;
+        Tue,  8 Sep 2020 10:12:30 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200908101230epsmtrp29ec50113b5870fbdbe4160e4be046aef~yx0zxazSS2650426504epsmtrp2D;
+        Tue,  8 Sep 2020 10:12:30 +0000 (GMT)
+X-AuditID: b6c32a39-eebff700000050d8-bd-5f57590f3497
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.99.08382.E09575F5; Tue,  8 Sep 2020 19:12:30 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200908101230epsmtip2faef9f14462d0f7f64b1ef8d2bd90b69~yx0zl7kDf1358513585epsmtip2q;
+        Tue,  8 Sep 2020 10:12:30 +0000 (GMT)
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, krzk@kernel.org, lukasz.luba@arm.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 2/3] PM / devfreq: Change prototype of
+ devfreq_get_devfreq_by_phandle function
+Date:   Tue,  8 Sep 2020 19:24:46 +0900
+Message-Id: <20200908102447.15097-3-cw00.choi@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200908102447.15097-1-cw00.choi@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGKsWRmVeSWpSXmKPExsWy7bCmni5/ZHi8wcc2AYvrX56zWpw/v4Hd
+        4mzTG3aLTY+vsVpc3jWHzeJz7xFGixnn9zFZLGxqYbe43biCzYHTY828NYwem1Z1snlsXlLv
+        0bdlFaPH501yAaxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkou
+        PgG6bpk5QPcoKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgosC/SKE3OLS/PS9ZLz
+        c60MDQyMTIEKE7Iz5h7ZyFjwWabi276prA2M0yW6GDk5JARMJP4vWczSxcjFISSwg1Hi3fYO
+        VgjnE6NEx/IvjBDON0aJ08+/AGU4wFpaW9kg4nsZJRZ/XgnV8YVRYsPLE6wgc9kEtCT2v7jB
+        BmKLCJRJ3P5ylRmkiFmglVHi3vNrTCAJYYFkiW+XpoHZLAKqEj8mbmcE2cArYCXxaCMPxH3y
+        Eqs3HGAGsTkFrCW2r1oItllC4Bq7xMdPR5kgilwk5j1vYYGwhSVeHd/CDmFLSXx+t5cNwq6W
+        WHnyCFRzB6PElv0XWCESxhL7l05mAlnMLKApsX6XPkRYUWLn77mMIDazAJ/Eu689UN/zSnS0
+        CUGUKEtcfnAX6gRJicXtnVCrPCQOXDgMDbk+RomVd9cyTWCUm4WwYQEj4ypGsdSC4tz01GLD
+        AlPkKNvECE5wWpY7GKe//aB3iJGJg/EQowQHs5IIb9eh0Hgh3pTEyqrUovz4otKc1OJDjKbA
+        wJvILCWanA9MsXkl8YamRsbGxhYmhmamhoZK4rwPbynECwmkJ5akZqemFqQWwfQxcXBKNTAl
+        VPmqe1yYKrxs0YwdrbMN5tQxrNJjSpv47phgq7XCE16f9gqF6YKn16jbX5viOUXP6efqDU+Y
+        2xb+Sm6Zcehf1w6/iICJ9bfzOdd8uskccl3cVer4PXG1mqwbv2ZLHtFYV+hZsrnLcsbnqelX
+        1xrW7ri1JCdcYGIiQ2jDsjeX4hN8C1yDebeUJe2ZaTPhqGyEfaCR496PT6wPb0w70v2QrXVN
+        RavbIqddB2IaJcVWnAq/udxIm3ERU+Rq9mSzhwovXkpNX5JqJ57TsmWJ9OGnuvHKuw/MErfZ
+        zVu1KUvllP7KySdMr1nrv9v89vZ81s3cN1iTuevfrHyupSv07+qjjY/PFz+yqq/1sf36JOaY
+        EktxRqKhFnNRcSIAp4gZRvkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHLMWRmVeSWpSXmKPExsWy7bCSvC5fZHi8wYmXphbXvzxntTh/fgO7
+        xdmmN+wWmx5fY7W4vGsOm8Xn3iOMFjPO72OyWNjUwm5xu3EFmwOnx5p5axg9Nq3qZPPYvKTe
+        o2/LKkaPz5vkAlijuGxSUnMyy1KL9O0SuDLmHtnIWPBZpuLbvqmsDYzTJboYOTgkBEwkWlvZ
+        uhi5OIQEdjNKdM89w9TFyAkUl5SYdvEoM0SNsMThw8UQNZ8YJT40PQCrYRPQktj/4gYbiC0i
+        UCOxbO4esEHMAp2MEienvQRLCAskSvRtPghmswioSvyYuJ0RZCivgJXEo408ELvkJVZvOMAM
+        YnMKWEtsX7UQrFwIqOTakh2MExj5FjAyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93E
+        CA5CLc0djNtXfdA7xMjEwXiIUYKDWUmEt+tQaLwQb0piZVVqUX58UWlOavEhRmkOFiVx3huF
+        C+OEBNITS1KzU1MLUotgskwcnFINTOpO84/IFr20nN79+Hfsec0zoUfzOTYeVZGWnd8t8oUn
+        d1FA97qnB0rNj05XfFp/rbr9oKd7y9r3OT8D19cf2MK9peyP98t6K55PZ/5rzGo1lumML87w
+        8PpXwi+9PzxD4tVJx40r9m1eeOiwimdfd79++Qu1x6aM9+7/TFrT+myex7Lwj393Plihd+LE
+        hylBOfciF//p/7tmivb/Q1GX1fe371OTNvjrPf1oleqfW/91pj/eq21jdlil8fGmV/eEUldz
+        H/s3NXVCqLjYQfnr3o+3L/+SderUnJXzT6z4pxX95FVYqEbVZVEPr6bPnCZnThRWM/uyT7z4
+        Qk5Q1mvm+X1bbGbPZuFi7UjZb8HasXaSEktxRqKhFnNRcSIAvVob2LECAAA=
+X-CMS-MailID: 20200908101230epcas1p3d1fc20eb523c4bccf043ada808611e96
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200908101230epcas1p3d1fc20eb523c4bccf043ada808611e96
+References: <20200908102447.15097-1-cw00.choi@samsung.com>
+        <CGME20200908101230epcas1p3d1fc20eb523c4bccf043ada808611e96@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Previously, devfreq core support 'devfreq' property in order to get
+the devfreq device by phandle. But, 'devfreq' property name is not proper
+on devicetree binding because this name doesn't mean the any h/w attribute.
 
-Should not register power domain that not owned by current
-partition.
+The devfreq core hand over the right to decide the property name
+for getting the devfreq device on devicetree. Each devfreq driver
+will decide the property name on devicetree binding and pass
+the their own property name to devfreq_get_devfreq_by_phandle function.
 
-Alought power domains will not be registered when power on failure,
-we have to let CPU waste more cycles.
-
-Whether power on or owned check, both need communicate with SCU,
-but with owned check, we no need to run more code path to save CPU
-cycles.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- drivers/firmware/imx/scu-pd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/devfreq/devfreq.c    | 11 +++++++----
+ drivers/devfreq/exynos-bus.c |  2 +-
+ include/linux/devfreq.h      |  5 +++--
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-index af3d6d9ead28..946eea292b52 100644
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -46,6 +46,7 @@
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index b9b27fb3291e..d22bf3ce0404 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1012,22 +1012,24 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+ /*
+  * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+  * @dev - instance to the given device
++ * @phandle_name - name of property holding a phandle value
+  * @index - index into list of devfreq
+  *
+  * return the instance of devfreq device
+  */
+-struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
++struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
++					const char *phandle_name, int index)
+ {
+ 	struct device_node *node;
+ 	struct devfreq *devfreq;
  
- #include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/firmware/imx/sci.h>
-+#include <linux/firmware/imx/svc/rm.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -256,6 +257,9 @@ imx_scu_add_pm_domain(struct device *dev, int idx,
- 	struct imx_sc_pm_domain *sc_pd;
- 	int ret;
+-	if (!dev)
++	if (!dev || !phandle_name)
+ 		return ERR_PTR(-EINVAL);
  
-+	if (!imx_sc_rm_is_resource_owned(pm_ipc_handle, pd_ranges->rsrc + idx))
-+		return NULL;
-+
- 	sc_pd = devm_kzalloc(dev, sizeof(*sc_pd), GFP_KERNEL);
- 	if (!sc_pd)
- 		return ERR_PTR(-ENOMEM);
+ 	if (!dev->of_node)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	node = of_parse_phandle(dev->of_node, "devfreq", index);
++	node = of_parse_phandle(dev->of_node, phandle_name, index);
+ 	if (!node)
+ 		return ERR_PTR(-ENODEV);
+ 
+@@ -1043,7 +1045,8 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
+-struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
++struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
++					const char *phandle_name, int index)
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index 8fa8eb541373..58dbf51f0983 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -360,7 +360,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+ 	profile->exit = exynos_bus_passive_exit;
+ 
+ 	/* Get the instance of parent devfreq device */
+-	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
++	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, "devfreq", 0);
+ 	if (IS_ERR(parent_devfreq))
+ 		return -EPROBE_DEFER;
+ 
+diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+index eb971b8e5051..2f4a74efa6be 100644
+--- a/include/linux/devfreq.h
++++ b/include/linux/devfreq.h
+@@ -262,7 +262,8 @@ void devm_devfreq_unregister_notifier(struct device *dev,
+ 				struct notifier_block *nb,
+ 				unsigned int list);
+ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node);
+-struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index);
++struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
++				const char *phandle_name, int index);
+ 
+ #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
+ /**
+@@ -421,7 +422,7 @@ static inline struct devfreq *devfreq_get_devfreq_by_node(struct device_node *no
+ }
+ 
+ static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
+-					int index)
++					const char *phandle_name, int index)
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
 -- 
-2.28.0
+2.17.1
 
