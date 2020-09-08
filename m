@@ -2,143 +2,99 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A68C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074372137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Lf6G5poV"
+	by mail.kernel.org (Postfix) with ESMTP id 532402098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599593986;
+	bh=jM6IB0v+v1V4/B12e5UVcDfxYlq6ajKbVOXUjhGpzwk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=avU1n9MXL1GbU4e+V1hxpx7Ip+PUxr/QiiRTSEpeMBIvruip8jfWQzje5qwKuQ3hK
+	 XHuGaut+h5rIbMNcAB72atB/0aohAxRzX2T+pYczqF9hqxPuBe5s4LuCOFjST+MFO8
+	 3DJso91dLx5PbV7ieD8BniSvqHHD8oypUZrQLy4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbgIHTjP (ORCPT
+        id S1732200AbgIHTjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgIHPzg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:55:36 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A499C061231
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:26:12 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q5so13009895qkc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:26:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0Bd9eUG3DnE6D+neFj9R3QfT/oWxBp+wzdY7i+GsBSw=;
-        b=Lf6G5poVVU9DTO5y/Kk8H2Ke1/yuvwq44QRfLlgtzVksH3W4CflZYO6N1CS6Gkgf+O
-         36N3+8wD9pObYI1CMdwZYMYRu7HbXVUKEFPJ2AjNcK9X3BID5PsppQaFjSnqxa7JtCNT
-         aY2EX4mu669m3AJgX7WT/I/zIn+qpP2LPn3ueNiUgo8NZRJ/0OvY6GqXffz02hp9ASt6
-         Kw7kagCQ12/ztkbDpZvauMGFhf/ti5rup7TXyfyR2MZlnoY6C7+c78nhZr2bXok7Z+TB
-         z94051jMYxpI6fAzrkfx1CYHrWeWBF5AFFZLbShjEyTsCM8ydvp1pulj0ri7yDSPS5ma
-         HXGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0Bd9eUG3DnE6D+neFj9R3QfT/oWxBp+wzdY7i+GsBSw=;
-        b=jPAgKV9ruffeTfdAxG6OebWSrmV6IDhP0X2UIfrDPuHAiaQw/p3EragU/C7hDoHC0Q
-         hHli3pEdcGmiFFeYuqlqhSDNzKWvnx1AfMHm9YO23ig7+RSdEhmROUeQW1iRHWtClli2
-         cAWEKbwtogtLs6FKUv3So583dWmZ1bzmSGRjKYTlMEx1zV5CmUSAxbXXFzaZTDR8bVt5
-         OKEdp2wQowvxxIRToZvQ3HyJZVTZBAgjHUQ4iC8R6u3JZYDxL/9CUt4Sk2SdAftQf78d
-         B6AjZbT52fRilaWgazhTAjqeMdzrf2DbtCgAjYAKuAQXZyCElFxaznonG4L/eiZIH4Nl
-         apjw==
-X-Gm-Message-State: AOAM531b4fMZU2si5Su5Fd8WOBsVZ8l++rlf9IjDNTqLW6obnZQMDLxU
-        +WW5OwfmnaKJMbBISNVn6irxeg==
-X-Google-Smtp-Source: ABdhPJytassnqIHgDUzIEWSN+bwEo6szoZotvnjMoppJpA+RAkN2BANjzTq153kTDs5DZf5N4KZr1w==
-X-Received: by 2002:a05:620a:6d9:: with SMTP id 25mr18567qky.269.1599571572011;
-        Tue, 08 Sep 2020 06:26:12 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id j8sm14658360qth.90.2020.09.08.06.26.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 06:26:11 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kFddS-002zaX-9j; Tue, 08 Sep 2020 10:26:10 -0300
-Date:   Tue, 8 Sep 2020 10:26:10 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 2/3] mm: make pXd_addr_end() functions page-table
- entry aware
-Message-ID: <20200908132610.GB87483@ziepe.ca>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
+        Tue, 8 Sep 2020 15:39:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730771AbgIHPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:54:44 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1027423D39;
+        Tue,  8 Sep 2020 15:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579415;
+        bh=jM6IB0v+v1V4/B12e5UVcDfxYlq6ajKbVOXUjhGpzwk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gNqzvqMg+0d+O6Q5asU4ovo1H2nDSFUCCujRmetiQivrGL4VrZ84050iUa1M6j6Oe
+         +QH+TarNHs7jZLVjjMhAgL/+7BZiBDQfy/I9zVKldkFBMOAFOHTYEaXGgQIohFEiMm
+         AIxecoK/xw4drRIZsGh3AvaxHkUqhhZH6BvCLL7g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 068/186] bnxt_en: Check for zero dir entries in NVRAM.
+Date:   Tue,  8 Sep 2020 17:23:30 +0200
+Message-Id: <20200908152244.954126578@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 08:00:57PM +0200, Gerald Schaefer wrote:
-> From: Alexander Gordeev <agordeev@linux.ibm.com>
-> 
-> Unlike all other page-table abstractions pXd_addr_end() do not take
-> into account a particular table entry in which context the functions
-> are called. On architectures with dynamic page-tables folding that
-> might lead to lack of necessary information that is difficult to
-> obtain other than from the table entry itself. That already led to
-> a subtle memory corruption issue on s390.
-> 
-> By letting pXd_addr_end() functions know about the page-table entry
-> we allow archs not only make extra checks, but also optimizations.
-> 
-> As result of this change the pXd_addr_end_folded() functions used
-> in gup_fast traversal code become unnecessary and get replaced with
-> universal pXd_addr_end() variants.
-> 
-> The arch-specific updates not only add dereferencing of page-table
-> entry pointers, but also small changes to the code flow to make those
-> dereferences possible, at least for x86 and powerpc. Also for arm64,
-> but in way that should not have any impact.
-> 
-> So, even though the dereferenced page-table entries are not used on
-> archs other than s390, and are optimized out by the compiler, there
-> is a small change in kernel size and this is what bloat-o-meter reports:
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-This looks pretty clean and straightfoward, only
-__munlock_pagevec_fill() had any real increased complexity.
+[ Upstream commit dbbfa96ad920c50d58bcaefa57f5f33ceef9d00e ]
 
-Thanks,
-Jason
+If firmware goes into unstable state, HWRM_NVM_GET_DIR_INFO firmware
+command may return zero dir entries. Return error in such case to
+avoid zero length dma buffer request.
+
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index dcb3f61af7ab0..309b73a665ba2 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -2270,6 +2270,9 @@ static int bnxt_get_nvram_directory(struct net_device *dev, u32 len, u8 *data)
+ 	if (rc != 0)
+ 		return rc;
+ 
++	if (!dir_entries || !entry_length)
++		return -EIO;
++
+ 	/* Insert 2 bytes of directory info (count and size of entries) */
+ 	if (len < 2)
+ 		return -EINVAL;
+-- 
+2.25.1
+
+
+
