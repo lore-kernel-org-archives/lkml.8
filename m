@@ -2,110 +2,146 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AEAC2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C674EC2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9A520936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E8A208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:17:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nDBz80Kv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZ/9AznD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbgIHURU (ORCPT
+        id S1730721AbgIHURl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
+        Tue, 8 Sep 2020 16:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgIHPKB (ORCPT
+        with ESMTP id S1729057AbgIHURi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:10:01 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60BBC061A1C
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:22:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=yLRn39Afrdj+Ne8GAyMtKL8Y0JA13SEQt+AfAa1rXaw=; b=nDBz80KvfiVjxRsEPIF7SX1Frj
-        ZFbTcxq30u1Z8LaFy58OseFcRMBFhPFGCOpYrPlro9QCccDQ7WMJszzfA+KUmqojvyIu4yqeWfZKq
-        mbRMkfCKYucXiiZOSq3s3yC4kcVKVEAb2BeOtuTuRlTe9W2sJfqj/rblA6OUdroJClEv7/ySYqf3p
-        xYsKXHp2VVdVVnDHTIeC2fixoCHwQ10XI4NSbDcMvurlUVy0YaSWyNfr6WaGLQsPWA6iacim41Rgy
-        hSPbqjnjShB+eG8wb8mNouFVVwVsS2MJhj26YtZfFUspzh8rm/jfpWPAH3usZy/Rz4f+NAo+JFYu0
-        O7N6VAVQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFeVm-0001Kt-PN; Tue, 08 Sep 2020 14:22:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B2F2301A27;
-        Tue,  8 Sep 2020 16:22:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E3BA72B5FC944; Tue,  8 Sep 2020 16:22:15 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 16:22:15 +0200
-From:   peterz@infradead.org
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
-        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
-        davem@davemloft.net
-Subject: Re: [PATCH v2 10/11] lockdep: Only trace IRQ edges
-Message-ID: <20200908142215.GU1362448@hirez.programming.kicks-ass.net>
-References: <20200821084738.508092956@infradead.org>
- <20200821085348.723775490@infradead.org>
- <20200902042137.GA163925@roeck-us.net>
- <20200902090935.GW1362448@hirez.programming.kicks-ass.net>
- <20200902091247.GX35926@hirez.programming.kicks-ass.net>
- <559ff09a-275b-21bf-15f1-daa0d02d1c76@roeck-us.net>
+        Tue, 8 Sep 2020 16:17:38 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE5EC061573;
+        Tue,  8 Sep 2020 13:17:37 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g72so348805qke.8;
+        Tue, 08 Sep 2020 13:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/08OEII2Gc2davobAmINkHdHlTLoM3yBel115LZWEGE=;
+        b=qZ/9AznDVXFtr6CrHuhiw4QW5HmClw8tl/kn16sP+vAL9BwyB1TalbAKldIgIIFtb+
+         4gbcw6Ixl7WWm6+eR7AOeeEgNHRd9KO82LOanYAhZnktvDEwnWkiDthqJWrrSp8D42u4
+         fIeAiy4POw3wf4Z6SvhKEEye1aUrwOIWslhBv+79RaCXHWn4YpCcP2k1rJp/fR64lnQC
+         8jnqEJ5IzfX5q10Y72vrRW9J8/NnBj7zCdAZsoK7DHNMvg7HjynBh+r4iRBw+V66mCG0
+         KesRtoiYqBsl5xile5AfugcBIKBCC3vQzS/rH6rs/JmItACffhMLEWNQHzOwlPtwLyAt
+         KhyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=/08OEII2Gc2davobAmINkHdHlTLoM3yBel115LZWEGE=;
+        b=K925NchmjXWEiCGzH/kNzYavYK/+3NvvHQbPDKJID+oSaUT+/F7KgHrJeQq6W4BUd3
+         HVUWnSZUpFirCvHtH6NXxK2lTqJGjxBCCyEd0vmtXN/MZPj+9JqZ5SUmtNXuEr3PAi7l
+         QVig32ntP3fPbaJ8MZzx7i4Msq5VVP/kqO/bncdGSdDlu2rYTgAZup6YnMMwIHuRYRj0
+         NB71p+E7fxsbYAKUN9dePcukfKFUQqkHVS7UJixLzmnlGr1PB+7e/EhWxaNa+r163tp3
+         W1BfEXyKu4jLczdr/Sv8p4NB+h54CBFjccKqaITKNI6FYftKGc1a8/yNuszY6CcJNR4N
+         nV5w==
+X-Gm-Message-State: AOAM531Bd7P55qEyfZpPCr0xrPOYptsEA+iNJgs4TwdAy+YLtD91YELP
+        UZz7Cb72I157G9mxj1cT1n4=
+X-Google-Smtp-Source: ABdhPJwNSgWEhWS2D5NSJFniOHBOS9/EWNgGqZsCsA91Ij4q3VjCGMYQaXbuPxF07dtwVNjz7gPPBQ==
+X-Received: by 2002:a05:620a:955:: with SMTP id w21mr302081qkw.69.1599596256656;
+        Tue, 08 Sep 2020 13:17:36 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id z6sm335661qkl.39.2020.09.08.13.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:17:35 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 8 Sep 2020 16:17:34 -0400
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/5] x86/build: Warn on orphan section placement
+Message-ID: <20200908201734.GA87825@rani.riverdale.lan>
+References: <20200902025347.2504702-1-keescook@chromium.org>
+ <20200902025347.2504702-5-keescook@chromium.org>
+ <20200905224835.GA1500331@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <559ff09a-275b-21bf-15f1-daa0d02d1c76@roeck-us.net>
+In-Reply-To: <20200905224835.GA1500331@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 06:48:30AM -0700, Guenter Roeck wrote:
-> On 9/2/20 2:12 AM, peterz@infradead.org wrote:
-> > On Wed, Sep 02, 2020 at 11:09:35AM +0200, peterz@infradead.org wrote:
-> >> On Tue, Sep 01, 2020 at 09:21:37PM -0700, Guenter Roeck wrote:
-> >>> [    0.000000] WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4875 check_flags.part.39+0x280/0x2a0
-> >>> [    0.000000] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
-> >>
-> >>> [    0.000000] [<00000000004cff18>] lock_acquire+0x218/0x4e0
-> >>> [    0.000000] [<0000000000d740c8>] _raw_spin_lock+0x28/0x40
-> >>> [    0.000000] [<00000000009870f4>] p1275_cmd_direct+0x14/0x60
-> >>
-> >> Lol! yes, I can see that going side-ways... let me poke at that.
+On Sat, Sep 05, 2020 at 06:48:35PM -0400, Arvind Sankar wrote:
+> On Tue, Sep 01, 2020 at 07:53:46PM -0700, Kees Cook wrote:
+> > We don't want to depend on the linker's orphan section placement
+> > heuristics as these can vary between linkers, and may change between
+> > versions. All sections need to be explicitly handled in the linker script.
 > > 
-> > I suspect this will do.
+> > Now that all sections are explicitly handled, enable orphan section
+> > warnings.
 > > 
-> > diff --git a/arch/sparc/prom/p1275.c b/arch/sparc/prom/p1275.c
-> > index 889aa602f8d8..7cfe88e30b52 100644
-> > --- a/arch/sparc/prom/p1275.c
-> > +++ b/arch/sparc/prom/p1275.c
-> > @@ -38,7 +38,7 @@ void p1275_cmd_direct(unsigned long *args)
-> >  	unsigned long flags;
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/Makefile | 4 ++++
+> >  1 file changed, 4 insertions(+)
 > > 
-> >  	local_save_flags(flags);
-> > -	local_irq_restore((unsigned long)PIL_NMI);
-> > +	arch_local_irq_restore((unsigned long)PIL_NMI);
-> >  	raw_spin_lock(&prom_entry_lock);
+> > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> > index 4346ffb2e39f..154259f18b8b 100644
+> > --- a/arch/x86/Makefile
+> > +++ b/arch/x86/Makefile
+> > @@ -209,6 +209,10 @@ ifdef CONFIG_X86_64
+> >  LDFLAGS_vmlinux += -z max-page-size=0x200000
+> >  endif
+> >  
+> > +# We never want expected sections to be placed heuristically by the
+> > +# linker. All sections should be explicitly named in the linker script.
+> > +LDFLAGS_vmlinux += $(call ld-option, --orphan-handling=warn)
+> > +
+> >  archscripts: scripts_basic
+> >  	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
+> >  
+> > -- 
+> > 2.25.1
 > > 
-> >  	prom_world(1);
-> > 
-> No, that doesn't help. Even removing that line entirely doesn't help.
-> The problem seems to be that interrupts are not enabled in the first
-> place. But why wasn't this a problem before ?
+> 
+> With LLVM=1 and GCOV_KERNEL/GCOV_PROFILE_ALL enabled, there are
+> .eh_frame sections created. I see that KASAN and KCSAN currently discard
+> them. Does GCOV actually need them or should it also discard?
+> 
+> Thanks.
 
-Previously every interrupt opt would disable/enable things, now we only
-update state when something actually changes.
+Also, with LLD 10.0.1 which is going to be the minimum supported
+version, the relocation sections etc still generate warnings.
 
-Anyway, I'm struggling with qemu-system-sparc64, I've got a sparc64
-cross booting to mount, but I'm not seeing this, could you get me your
-specific qemu cmdline please?
+ld.lld: warning:
+arch/x86/video/built-in.a(fbdev.o):(.rela.orc_unwind_ip) is being placed
+in '.rela.orc_unwind_ip'
+ld.lld: warning: .tmp_vmlinux.kallsyms2.o:(.rela.rodata) is being placed
+in '.rela.rodata'
+ld.lld: warning: <internal>:(.bss.rel.ro) is being placed in
+'.bss.rel.ro'
+ld.lld: warning: <internal>:(.eh_frame) is being placed in '.eh_frame'
+ld.lld: warning: <internal>:(.symtab_shndx) is being placed in
+'.symtab_shndx'
