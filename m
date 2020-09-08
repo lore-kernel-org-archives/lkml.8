@@ -2,119 +2,70 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7136EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D260C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42063208C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FF521532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgIHGZ3 (ORCPT
+        id S1728911AbgIHG0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:25:29 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:44291 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728101AbgIHGZ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:25:26 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 612B1D58;
-        Tue,  8 Sep 2020 02:25:25 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 08 Sep 2020 02:25:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=hNVS1LALOKoEOdYgVE2OXyWLilR
-        AzZVlV5wSwWON+Ag=; b=GGqrEaLV1fzvyYsFs4OE7FpgeDvHB1wK7jsVq5edtP1
-        h758o82qNL+jK17DROvZyuXKAAGtrlW1rA6iOh4wu7CPRYovDpVaa2xyMM7Zt9az
-        EYxjr/Bbgn2YcUKKrESMbz2Xfd9pYiiwcntgiifAEA4tY2ibb1wqGVYkuSvVxWNj
-        oe1/XGhp2yyIHu4sNzbwKALsH1oSvzhvvifnfQwbpfVJldNygi0PBX/LScFCq3A8
-        FpDZ6sq2YgUOxu2wuiluhvLTywPE0C0MpT6RhxYHdq0bPrLge13v2IsBFMRrV/uz
-        qXK3zCXeqifXIppZnKFyvJ/EaWAaB53pZrzvfNpE8fg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=hNVS1L
-        ALOKoEOdYgVE2OXyWLilRAzZVlV5wSwWON+Ag=; b=LfV9SjhtwSGAVMKjn6O/b0
-        11ZIfI0S1TUQ/KWQoDlf3pnKU/sH45Bk2kWpkedZlEHw4K4gmz0yal1xwjShOHwv
-        4hstwS39h4iHSNrC1MHgQKH79oNvh6VYyCheUNJhOTinhdxs/1kXkeg4n/Q8KeAF
-        OYNfx1bQmpa/MQOmpVVbI9JWyjwh8M713ZrCsV8OKs/R8UKaJaygQWIsQRb3lrKr
-        XdLCgrUovMiysMQ0sfcxEBL4giwQSwVVV3+OWVguKqZqvo5C/pwweB94VMxnouvW
-        FeQrFzHbre6WuvzBdzxCbAnK5LoKkA1EwaMyKUDXBXjvQbdFU47ff1jrpTZXZL/A
-        ==
-X-ME-Sender: <xms:0yNXX5vG-m3C5Wbvq-DJcaNLLYtxtIdTwYFcXAm5VNZ7Hb0zCuugQg>
-    <xme:0yNXXyfuD-vj9l9ClR5meVzT_Z1-qddGb4OSOFSun9pcRDvw_j5qTzVev14JFd0Kr
-    ytVNxD96EL0GU8DnfI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehuddguddtiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
-    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:0yNXX8zIE7teX7FlRdE70LOTe9KBtSlcQs9txVJaFX9fE7Jz9Gdajw>
-    <xmx:0yNXXwMzx7Y9HlwWGd6KooCYMs0tgylh9tTnf4BluhPaWXggdbVPrg>
-    <xmx:0yNXX58uracR1rsvj8TGc1M19JWxluukPx-4gOTQY0LPeXFLEGr1og>
-    <xmx:1SNXX1R8tlsW3X0GC9b-HXTSGwr6DlljD1D9AiWnvoQ9QXlojMQ8SPujL4g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9F5C306467D;
-        Tue,  8 Sep 2020 02:25:23 -0400 (EDT)
-Date:   Tue, 8 Sep 2020 08:25:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Martin Cerveny <m.cerveny@computer.org>
-Cc:     devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 5/6] media: allwinner,sun4i-a10-video-engine: Add V3s
- compatible
-Message-ID: <20200908062522.kv6uoguwpx5rs5dp@gilmour.lan>
-References: <20200904200112.5563-1-m.cerveny@computer.org>
- <20200904200112.5563-6-m.cerveny@computer.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="534emqo4lhxvqkah"
-Content-Disposition: inline
-In-Reply-To: <20200904200112.5563-6-m.cerveny@computer.org>
+        Tue, 8 Sep 2020 02:26:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26026 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728101AbgIHG0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:26:50 -0400
+IronPort-SDR: eCDVWCL9kDvUFHjlPhiKJhMvZR125qpSx0tK4zStkCJH+jvJJMTySUOs/FeY0coRZxvwEGgGoP
+ GlntqM9NK4QQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="159053539"
+X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
+   d="scan'208";a="159053539"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 23:26:48 -0700
+IronPort-SDR: fc74VQJEc3y6muJp54WxDSpLpx9WSNv932o3ClKvgBDSvBaU1B18kJ1s/998YT0r5R3D0Rr5gL
+ r3gSiUAXqmow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
+   d="scan'208";a="317081205"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by orsmga002.jf.intel.com with ESMTP; 07 Sep 2020 23:26:45 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     linux@roeck-us.net, jdelvare@suse.com, lee.jones@linaro.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, yilun.xu@intel.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, hao.wu@intel.com, mdf@kernel.org
+Subject: [PATCH] add hwmon support for Intel MAX 10 BMC
+Date:   Tue,  8 Sep 2020 14:22:19 +0800
+Message-Id: <1599546140-18804-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch depends on the patch "add Intel MAX 10 BMC chip support for
+Intel FPGA PAC".
 
---534emqo4lhxvqkah
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+https://lore.kernel.org/lkml/1599491813-20819-1-git-send-email-yilun.xu@intel.com/
 
-On Fri, Sep 04, 2020 at 10:01:11PM +0200, Martin Cerveny wrote:
-> Allwinner V3s SoC contains video engine. Add compatible for it.
->=20
-> Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
+This patch adds support for the hwmon sub device in Intel MAX 10 BMC
 
-The prefix isn't the right one, it shouldn't be media: but dt-bindings: med=
-ia: cedrus:
+Xu Yilun (1):
+  hwmon: intel-m10-bmc-hwmon: add hwmon support for Intel MAX 10 BMC
 
-Maxime
+ drivers/hwmon/Kconfig               |  11 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/intel-m10-bmc-hwmon.c | 516 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 528 insertions(+)
+ create mode 100644 drivers/hwmon/intel-m10-bmc-hwmon.c
 
---534emqo4lhxvqkah
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.7.4
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1cj0gAKCRDj7w1vZxhR
-xZ6qAP9w/SdVObCwq+uvKsVNTyvlmtJ2IIUTrjRni/9AU31L/QD9FEHvC9B/ptoJ
-+QsDpuO3jcMhHYR11nr+v/qude8mRgw=
-=q4VF
------END PGP SIGNATURE-----
-
---534emqo4lhxvqkah--
