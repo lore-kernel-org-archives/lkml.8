@@ -2,203 +2,260 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50396C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52648C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE500207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BXC2F2wK";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="TNI/I6C4"
+	by mail.kernel.org (Postfix) with ESMTP id 14D6D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599584944;
+	bh=YnJRsJUG1pSW75HhPkDqFEpQnLbYGnKtTbKpi28dmLo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IwzIxtj/YTQKL5CAaj888iRH9YlyLmS7tomtdGj96380NkRa9T2NbEUstcHes1URF
+	 ShtwiqDbLoTFteL7d/PLE2HHz3YWrVNcvcD2+2uxiLGgxwk/rEJpWERHDjAi2VH4ni
+	 BChWoYjlDMtbB1MP9yjs+IiQSW4+l2yNc+yQAhKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731700AbgIHRIp (ORCPT
+        id S1732150AbgIHRIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:08:45 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:60186
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731817AbgIHRHx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:07:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599584872;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=bZEmMytqxn4kWANtqg4eCYokeY63ldxomhOzIQHADBM=;
-        b=BXC2F2wKK9zXrFdvqTcc4KRL/5ZusZrvpwejLyFDjiyvHlDYq6KOocRPkChAr1NQ
-        tfh9vmCO/hATlkH/BtwYgoMSVKn+OvAlqnOx0omVlOQQcTxemWsWjLleXivEDmj/D8A
-        h6asTgbbZEuEMojgogstXSiqygwJmsfQr8CzIf6I=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599584872;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=bZEmMytqxn4kWANtqg4eCYokeY63ldxomhOzIQHADBM=;
-        b=TNI/I6C4AnhsCgalruJNZ4w4qrutaF+F3QGBEYnjnt3Yj/oBfQQy8VcMoRltbwuK
-        4pSoU4IzxB+QXMXWQX3mynRZdleTakUKmnuXnzlrlp/TKVQ+JyZprexz0UzJmcG3PzX
-        xUk3nFCg58SFXg7lvH7wwXAU8EyfoE7YJMfVYQ9k=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9677CC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
+        Tue, 8 Sep 2020 13:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732065AbgIHRHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:07:07 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACE72192A
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 17:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599584825;
+        bh=YnJRsJUG1pSW75HhPkDqFEpQnLbYGnKtTbKpi28dmLo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WlhLwMSx0iwCqa8K3DJcD/KhLX8X+kUPN0Q76NNXA4e9e0P2AQk6NfTsRdyYZYYw7
+         bIJRCogunOkjudd91T3Ji1HMrpxMrzItxVIf/qrLN40efCcjJI8IeOoZtwEYb7QxL1
+         IuaDXCzPyBTRTvH8Y4YFWGqnt3e1tjDnrV4vOLdU=
+Received: by mail-vs1-f53.google.com with SMTP id y194so9430669vsc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:07:05 -0700 (PDT)
+X-Gm-Message-State: AOAM532bWTprAe8eIljAO4MKHRZm8I7yNdKije4dmVwoms8SuY0k+yls
+        v5XfRXESvX4esGiBKK2zCAbIEpqX8/JPhmhNSq7xBw==
+X-Google-Smtp-Source: ABdhPJzDh4z5smAq+NO3nlyaPUB6zWghkiwltuG1BO8M1na3KvNjpxAboIuZLLXfHc5OZyl+pxScVD25k1EO2UK82qc=
+X-Received: by 2002:a67:7fd0:: with SMTP id a199mr90272vsd.98.1599584824457;
+ Tue, 08 Sep 2020 10:07:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-5-manivannan.sadhasivam@linaro.org> <CAHLCerP7frrGyUBKbcurKhpkuGtJZjB+D82smnJ5U5CeL2bQgA@mail.gmail.com>
+ <20200908150945.GB2352@mani-NUC7i5DNKE>
+In-Reply-To: <20200908150945.GB2352@mani-NUC7i5DNKE>
+From:   Amit Kucheria <amitk@kernel.org>
+Date:   Tue, 8 Sep 2020 22:36:53 +0530
+X-Gmail-Original-Message-ID: <CAHLCerN+sfk5bOg6-Exgdy+fWJO4e29qRYkaycjWbG3MoZFikg@mail.gmail.com>
+Message-ID: <CAHLCerN+sfk5bOg6-Exgdy+fWJO4e29qRYkaycjWbG3MoZFikg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] cpufreq: qcom-hw: Make use of of_match data for
+ offsets and row size
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 1/3] clk: qcom: clk-alpha-pll: Add support for controlling Agera PLLs
-Date:   Tue, 8 Sep 2020 17:07:52 +0000
-Message-ID: <010101746eb0276a-510c98e1-9db0-4bbb-a0f4-51e9536d68ca-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599584848-15530-1-git-send-email-tdas@codeaurora.org>
-References: <1599584848-15530-1-git-send-email-tdas@codeaurora.org>
-X-SES-Outgoing: 2020.09.08-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add programming sequence support for managing the Agera PLLs.
+On Tue, Sep 8, 2020 at 8:40 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On 0908, Amit Kucheria wrote:
+> > On Tue, Sep 8, 2020 at 1:27 PM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > For preparing the driver to handle further SoC revisions, let's use the
+> > > of_match data for getting the device specific offsets and row size instead
+> > > of defining them globally.
+> > >
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >
+> >
+> >
+> > > ---
+> > >  drivers/cpufreq/qcom-cpufreq-hw.c | 96 +++++++++++++++++++++----------
+> > >  1 file changed, 66 insertions(+), 30 deletions(-)
+> > >
+> > > diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> > > index ccea34f61152..41853db7c9b8 100644
+> > > --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> > > +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> > > @@ -19,15 +19,21 @@
+> > >  #define LUT_L_VAL                      GENMASK(7, 0)
+> > >  #define LUT_CORE_COUNT                 GENMASK(18, 16)
+> > >  #define LUT_VOLT                       GENMASK(11, 0)
+> > > -#define LUT_ROW_SIZE                   32
+> > >  #define CLK_HW_DIV                     2
+> > >  #define LUT_TURBO_IND                  1
+> > >
+> > > -/* Register offsets */
+> > > -#define REG_ENABLE                     0x0
+> > > -#define REG_FREQ_LUT                   0x110
+> > > -#define REG_VOLT_LUT                   0x114
+> > > -#define REG_PERF_STATE                 0x920
+> > > +struct qcom_cpufreq_soc_data {
+> > > +       u32 reg_enable;
+> > > +       u32 reg_freq_lut;
+> > > +       u32 reg_volt_lut;
+> > > +       u32 reg_perf_state;
+> > > +       u8 lut_row_size;
+> > > +};
+> > > +
+> > > +struct qcom_cpufreq_data {
+> > > +       void __iomem *base;
+> > > +       const struct qcom_cpufreq_soc_data *soc_data;
+> > > +};
+> > >
+> > >  static unsigned long cpu_hw_rate, xo_rate;
+> > >  static bool icc_scaling_enabled;
+> > > @@ -76,10 +82,11 @@ static int qcom_cpufreq_update_opp(struct device *cpu_dev,
+> > >  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> > >                                         unsigned int index)
+> > >  {
+> > > -       void __iomem *perf_state_reg = policy->driver_data;
+> > > +       struct qcom_cpufreq_data *data = policy->driver_data;
+> > > +       const struct qcom_cpufreq_soc_data *soc_data = data->soc_data;
+> > >         unsigned long freq = policy->freq_table[index].frequency;
+> > >
+> > > -       writel_relaxed(index, perf_state_reg);
+> > > +       writel_relaxed(index, data->base + soc_data->reg_perf_state);
+> > >
+> > >         if (icc_scaling_enabled)
+> > >                 qcom_cpufreq_set_bw(policy, freq);
+> > > @@ -91,7 +98,8 @@ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> > >
+> > >  static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> > >  {
+> > > -       void __iomem *perf_state_reg;
+> > > +       struct qcom_cpufreq_data *data;
+> > > +       const struct qcom_cpufreq_soc_data *soc_data;
+> > >         struct cpufreq_policy *policy;
+> > >         unsigned int index;
+> > >
+> > > @@ -99,9 +107,10 @@ static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> > >         if (!policy)
+> > >                 return 0;
+> > >
+> > > -       perf_state_reg = policy->driver_data;
+> > > +       data = policy->driver_data;
+> > > +       soc_data = data->soc_data;
+> > >
+> > > -       index = readl_relaxed(perf_state_reg);
+> > > +       index = readl_relaxed(data->base + soc_data->reg_perf_state);
+> > >         index = min(index, LUT_MAX_ENTRIES - 1);
+> > >
+> > >         return policy->freq_table[index].frequency;
+> > > @@ -110,12 +119,13 @@ static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> > >  static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+> > >                                                 unsigned int target_freq)
+> > >  {
+> > > -       void __iomem *perf_state_reg = policy->driver_data;
+> > > +       struct qcom_cpufreq_data *data = policy->driver_data;
+> > > +       const struct qcom_cpufreq_soc_data *soc_data = data->soc_data;
+> > >         unsigned int index;
+> > >         unsigned long freq;
+> > >
+> > >         index = policy->cached_resolved_idx;
+> > > -       writel_relaxed(index, perf_state_reg);
+> > > +       writel_relaxed(index, data->base + soc_data->reg_perf_state);
+> > >
+> > >         freq = policy->freq_table[index].frequency;
+> > >         arch_set_freq_scale(policy->related_cpus, freq,
+> > > @@ -125,8 +135,7 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+> > >  }
+> > >
+> > >  static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+> > > -                                   struct cpufreq_policy *policy,
+> > > -                                   void __iomem *base)
+> > > +                                   struct cpufreq_policy *policy)
+> > >  {
+> > >         u32 data, src, lval, i, core_count, prev_freq = 0, freq;
+> > >         u32 volt;
+> > > @@ -134,6 +143,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+> > >         struct dev_pm_opp *opp;
+> > >         unsigned long rate;
+> > >         int ret;
+> > > +       struct qcom_cpufreq_data *drv_data = policy->driver_data;
+> > > +       const struct qcom_cpufreq_soc_data *soc_data = drv_data->soc_data;
+> > >
+> > >         table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+> > >         if (!table)
+> > > @@ -160,14 +171,14 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
+> > >         }
+> > >
+> > >         for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> > > -               data = readl_relaxed(base + REG_FREQ_LUT +
+> > > -                                     i * LUT_ROW_SIZE);
+> > > +               data = readl_relaxed(drv_data->base + soc_data->reg_freq_lut +
+> > > +                                     i * soc_data->lut_row_size);
+> > >                 src = FIELD_GET(LUT_SRC, data);
+> > >                 lval = FIELD_GET(LUT_L_VAL, data);
+> > >                 core_count = FIELD_GET(LUT_CORE_COUNT, data);
+> > >
+> > > -               data = readl_relaxed(base + REG_VOLT_LUT +
+> > > -                                     i * LUT_ROW_SIZE);
+> > > +               data = readl_relaxed(drv_data->base + soc_data->reg_volt_lut +
+> > > +                                     i * soc_data->lut_row_size);
+> > >                 volt = FIELD_GET(LUT_VOLT, data) * 1000;
+> > >
+> > >                 if (src)
+> > > @@ -237,6 +248,20 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
+> > >         }
+> > >  }
+> > >
+> > > +static const struct qcom_cpufreq_soc_data qcom_soc_data = {
+> >
+> > rename this to sdm845_soc_data?
+> >
+>
+> Nah, this is not specific to SDM845. Atleast in mainline, there are 3 SoCs
+> using this compatible.
+>
+> > Or even better, maybe just use the IP version number for this IP block
+> > so that all SoCs using that IP version can use this struct?
+> >
+>
+> Since the SoCs are using the same compatible it makes sense to use the same
+> name for the of_data. I don't think it is a good idea to use different name
+> for the of_data since the differentiation has to happen at compatible level.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/clk-alpha-pll.c | 82 ++++++++++++++++++++++++++++++++++++++++
- drivers/clk/qcom/clk-alpha-pll.h |  4 ++
- 2 files changed, 86 insertions(+)
+You are using the name sm8250_soc_data in a subsequent patch, though ;-)
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index 26139ef..fb27fcf 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -116,6 +116,16 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
- 		[PLL_OFF_OPMODE] = 0x38,
- 		[PLL_OFF_ALPHA_VAL] = 0x40,
- 	},
-+	[CLK_ALPHA_PLL_TYPE_AGERA] =  {
-+		[PLL_OFF_L_VAL] = 0x04,
-+		[PLL_OFF_ALPHA_VAL] = 0x08,
-+		[PLL_OFF_USER_CTL] = 0x0c,
-+		[PLL_OFF_CONFIG_CTL] = 0x10,
-+		[PLL_OFF_CONFIG_CTL_U] = 0x14,
-+		[PLL_OFF_TEST_CTL] = 0x18,
-+		[PLL_OFF_TEST_CTL_U] = 0x1c,
-+		[PLL_OFF_STATUS] = 0x2c,
-+	},
- };
- EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
+So I think it would make sense for compatible "qcom,cpufreq-hw" to use
+data "osm_soc_data" and compatible "qcom,sm8250-epss" to use data
+"epss_soc_data" as suggested by Bjorn.
 
-@@ -1561,3 +1571,75 @@ const struct clk_ops clk_alpha_pll_postdiv_lucid_ops = {
- 	.set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
- };
- EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_lucid_ops);
-+
-+void clk_agera_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-+			const struct alpha_pll_config *config)
-+{
-+	if (config->l)
-+		regmap_write(regmap, PLL_L_VAL(pll), config->l);
-+
-+	if (config->alpha)
-+		regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
-+
-+	if (config->user_ctl_val)
-+		regmap_write(regmap, PLL_USER_CTL(pll), config->user_ctl_val);
-+
-+	if (config->config_ctl_val)
-+		regmap_write(regmap, PLL_CONFIG_CTL(pll),
-+						config->config_ctl_val);
-+
-+	if (config->config_ctl_hi_val)
-+		regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
-+						config->config_ctl_hi_val);
-+
-+	if (config->test_ctl_val)
-+		regmap_write(regmap, PLL_TEST_CTL(pll),
-+						config->test_ctl_val);
-+
-+	if (config->test_ctl_hi_val)
-+		regmap_write(regmap,  PLL_TEST_CTL_U(pll),
-+						config->test_ctl_hi_val);
-+}
-+EXPORT_SYMBOL_GPL(clk_agera_pll_configure);
-+
-+static int alpha_pll_agera_set_rate(struct clk_hw *hw, unsigned long rate,
-+							unsigned long prate)
-+{
-+	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
-+	u32 l, alpha_width = pll_alpha_width(pll);
-+	unsigned long rrate;
-+	u64 a;
-+
-+	rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
-+
-+	/*
-+	 * Due to limited number of bits for fractional rate programming, the
-+	 * rounded up rate could be marginally higher than the requested rate.
-+	 */
-+	if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
-+		pr_err("Call set rate on the PLL with rounded rates!\n");
-+		return -EINVAL;
-+	}
-+
-+	/* change L_VAL without having to go through the power on sequence */
-+	regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
-+	regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
-+
-+	/* Ensure that the write above goes through before proceeding. */
-+	mb();
-+
-+	if (clk_hw_is_enabled(hw))
-+		return wait_for_pll_enable_lock(pll);
-+
-+	return 0;
-+}
-+
-+const struct clk_ops clk_alpha_pll_agera_ops = {
-+	.enable = clk_alpha_pll_enable,
-+	.disable = clk_alpha_pll_disable,
-+	.is_enabled = clk_alpha_pll_is_enabled,
-+	.recalc_rate = alpha_pll_fabia_recalc_rate,
-+	.round_rate = clk_alpha_pll_round_rate,
-+	.set_rate = alpha_pll_agera_set_rate,
-+};
-+EXPORT_SYMBOL_GPL(clk_alpha_pll_agera_ops);
-diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-index d3201b8..0ea30d2 100644
---- a/drivers/clk/qcom/clk-alpha-pll.h
-+++ b/drivers/clk/qcom/clk-alpha-pll.h
-@@ -15,6 +15,7 @@ enum {
- 	CLK_ALPHA_PLL_TYPE_FABIA,
- 	CLK_ALPHA_PLL_TYPE_TRION,
- 	CLK_ALPHA_PLL_TYPE_LUCID = CLK_ALPHA_PLL_TYPE_TRION,
-+	CLK_ALPHA_PLL_TYPE_AGERA,
- 	CLK_ALPHA_PLL_TYPE_MAX,
- };
+Regards,
+Amit
 
-@@ -141,6 +142,7 @@ extern const struct clk_ops clk_alpha_pll_postdiv_trion_ops;
- extern const struct clk_ops clk_alpha_pll_lucid_ops;
- #define clk_alpha_pll_fixed_lucid_ops clk_alpha_pll_fixed_trion_ops
- extern const struct clk_ops clk_alpha_pll_postdiv_lucid_ops;
-+extern const struct clk_ops clk_alpha_pll_agera_ops;
 
- void clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 			     const struct alpha_pll_config *config);
-@@ -148,6 +150,8 @@ void clk_fabia_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 				const struct alpha_pll_config *config);
- void clk_trion_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
- 			     const struct alpha_pll_config *config);
-+void clk_agera_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
-+				const struct alpha_pll_config *config);
- #define clk_lucid_pll_configure(pll, regmap, config) \
- 	clk_trion_pll_configure(pll, regmap, config)
-
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
-
+>
+> > > +       .reg_enable = 0x0,
+> > > +       .reg_freq_lut = 0x110,
+> > > +       .reg_volt_lut = 0x114,
+> > > +       .reg_perf_state = 0x920,
+> > > +       .lut_row_size = 32,
+> > > +};
+> > > +
+> > > +static const struct of_device_id qcom_cpufreq_hw_match[] = {
+> > > +       { .compatible = "qcom,cpufreq-hw", .data = &qcom_soc_data },
+> > > +       {}
+> > > +};
