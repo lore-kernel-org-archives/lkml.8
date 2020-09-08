@@ -2,179 +2,71 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDFDC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9099C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E735C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586835;
-	bh=2/EZfOMfZSXsfmCfmlwhpwTJKIm0HRK1uYuSw88X5b4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ro1ERQEpAh2/5UcQQCL4HYJIMgR/ibzunvkvnH45NslP8p67GAAbIp6izNOPoET2r
-	 iXJYCjcy79z2ujmGKik70bNtdOphapilB2NuRaLNN/mN4oDx81VxpJ4OVMCybrQEz0
-	 9dyAFBsqVo/QvYc0emZiDIkuemk0DVYDSYKlQYVU=
+	by mail.kernel.org (Postfix) with ESMTP id 90D8D2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbgIHRkY (ORCPT
+        id S1731947AbgIHRko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731678AbgIHQOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:14:08 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06BC424900;
-        Tue,  8 Sep 2020 15:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580403;
-        bh=2/EZfOMfZSXsfmCfmlwhpwTJKIm0HRK1uYuSw88X5b4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6jsNqu1vspBZAkOxqCzT+kydojGb9MS3fEp19oGaI0b2Tc8IRV7s0AyUJ7qW69m+
-         Akves4ok1zx2cNa9lSFtTgZX32WHRdIoibKMv6QqxnLaYm2Sxba+tMlhwMAI2/7FTy
-         8sfbzXU/ekdrBugXlauamGb2S7cGc/MjyL0259Gg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 63/65] mm/hugetlb: fix a race between hugetlb sysctl handlers
-Date:   Tue,  8 Sep 2020 17:26:48 +0200
-Message-Id: <20200908152220.353480920@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 13:40:44 -0400
+Received: from mailoutvs45.siol.net ([185.57.226.236]:53937 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731649AbgIHQOF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:14:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id D70145261C6;
+        Tue,  8 Sep 2020 18:13:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ojy5au4NP2nS; Tue,  8 Sep 2020 18:13:55 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 97A1952625E;
+        Tue,  8 Sep 2020 18:13:55 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe1-5-97.cable.triera.net [213.161.5.97])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 0B6EC5261C6;
+        Tue,  8 Sep 2020 18:13:53 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Martin Cerveny <m.cerveny@computer.org>
+Cc:     Martin Cerveny <m.cerveny@computer.org>,
+        Chen-Yu Tsai <wens@csie.org>, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] drm/sun4i: sun8i-csc: Secondary CSC register correction
+Date:   Tue, 08 Sep 2020 18:13:53 +0200
+Message-ID: <2725694.hAE4Gzk0mI@jernej-laptop>
+In-Reply-To: <20200906162140.5584-2-m.cerveny@computer.org>
+References: <20200906162140.5584-1-m.cerveny@computer.org> <20200906162140.5584-2-m.cerveny@computer.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+>"Allwinner V3s" has secondary video layer (VI).
+>Decoded video is displayed in wrong colors until
+>secondary CSC registers are programmed correctly.
+>
+>Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
 
-commit 17743798d81238ab13050e8e2833699b54e15467 upstream.
+Following tag should be added:
+Fixes: 883029390550 ("drm/sun4i: Add DE2 CSC library")
 
-There is a race between the assignment of `table->data` and write value
-to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
-the other thread.
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-  CPU0:                                 CPU1:
-                                        proc_sys_write
-  hugetlb_sysctl_handler                  proc_sys_call_handler
-  hugetlb_sysctl_handler_common             hugetlb_sysctl_handler
-    table->data = &tmp;                       hugetlb_sysctl_handler_common
-                                                table->data = &tmp;
-      proc_doulongvec_minmax
-        do_proc_doulongvec_minmax           sysctl_head_finish
-          __do_proc_doulongvec_minmax         unuse_table
-            i = table->data;
-            *i = val;  // corrupt CPU1's stack
-
-Fix this by duplicating the `table`, and only update the duplicate of
-it.  And introduce a helper of proc_hugetlb_doulongvec_minmax() to
-simplify the code.
-
-The following oops was seen:
-
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    #PF: supervisor instruction fetch in kernel mode
-    #PF: error_code(0x0010) - not-present page
-    Code: Bad RIP value.
-    ...
-    Call Trace:
-     ? set_max_huge_pages+0x3da/0x4f0
-     ? alloc_pool_huge_page+0x150/0x150
-     ? proc_doulongvec_minmax+0x46/0x60
-     ? hugetlb_sysctl_handler_common+0x1c7/0x200
-     ? nr_hugepages_store+0x20/0x20
-     ? copy_fd_bitmaps+0x170/0x170
-     ? hugetlb_sysctl_handler+0x1e/0x20
-     ? proc_sys_call_handler+0x2f1/0x300
-     ? unregister_sysctl_table+0xb0/0xb0
-     ? __fd_install+0x78/0x100
-     ? proc_sys_write+0x14/0x20
-     ? __vfs_write+0x4d/0x90
-     ? vfs_write+0xef/0x240
-     ? ksys_write+0xc0/0x160
-     ? __ia32_sys_read+0x50/0x50
-     ? __close_fd+0x129/0x150
-     ? __x64_sys_write+0x43/0x50
-     ? do_syscall_64+0x6c/0x200
-     ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Link: http://lkml.kernel.org/r/20200828031146.43035-1-songmuchun@bytedance.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/hugetlb.c |   26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
-
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2911,6 +2911,22 @@ static unsigned int cpuset_mems_nr(unsig
- }
- 
- #ifdef CONFIG_SYSCTL
-+static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
-+					  void *buffer, size_t *length,
-+					  loff_t *ppos, unsigned long *out)
-+{
-+	struct ctl_table dup_table;
-+
-+	/*
-+	 * In order to avoid races with __do_proc_doulongvec_minmax(), we
-+	 * can duplicate the @table and alter the duplicate of it.
-+	 */
-+	dup_table = *table;
-+	dup_table.data = out;
-+
-+	return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
-+}
-+
- static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
- 			 struct ctl_table *table, int write,
- 			 void __user *buffer, size_t *length, loff_t *ppos)
-@@ -2922,9 +2938,8 @@ static int hugetlb_sysctl_handler_common
- 	if (!hugepages_supported())
- 		return -EOPNOTSUPP;
- 
--	table->data = &tmp;
--	table->maxlen = sizeof(unsigned long);
--	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
-+	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
-+					     &tmp);
- 	if (ret)
- 		goto out;
- 
-@@ -2968,9 +2983,8 @@ int hugetlb_overcommit_handler(struct ct
- 	if (write && hstate_is_gigantic(h))
- 		return -EINVAL;
- 
--	table->data = &tmp;
--	table->maxlen = sizeof(unsigned long);
--	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
-+	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
-+					     &tmp);
- 	if (ret)
- 		goto out;
- 
+Best regards,
+Jernej
 
 
