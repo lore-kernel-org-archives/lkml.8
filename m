@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3986C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0940AC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AECD82080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B765C2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589697;
-	bh=i/iSAcRSNQtgeSaHtVlew7ecZjdIBqe0JatNzf05h4k=;
+	s=default; t=1599589706;
+	bh=fAwFO1P7fVr5Y3Eo8Ta4MRRO6FnQf2ilbIIAN3MRW8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZbbPhhj1A82SW18kwvB8lS+4Z9UVcpXOLUVUdJiDZbucHVCMVfX2CsN6KIYiBsVjo
-	 pqQOzEiF0rDThgAelyERfw9S7h8AIXjyA2v1Xa1jz4YaXAprPRVAeso+bRVaAaK7ZN
-	 sq2odRVyXK0TN8Wh5Uc/XaObyKP/am+ike9qKs1s=
+	b=q+7chNRxmhNfoZrHDR+4S86lFM49cl3BR3VwASnDFT0eF0AyN+7DLrxHVbIB1+GYf
+	 mj+T8FfMNMqWmvhXbT97WZv5iH6+fsHskIMn7Txr3JfgbMRmwEO+C2fJ8l0hOlRak7
+	 f1J3jq1c8G8tINM+BcrH5Q3lKMSoGUcaJDUVO/4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbgIHS2O (ORCPT
+        id S1731701AbgIHS2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbgIHQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:26 -0400
+        id S1731408AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:10:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1C3D24753;
-        Tue,  8 Sep 2020 15:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91C1424743;
+        Tue,  8 Sep 2020 15:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579685;
-        bh=i/iSAcRSNQtgeSaHtVlew7ecZjdIBqe0JatNzf05h4k=;
+        s=default; t=1599579668;
+        bh=fAwFO1P7fVr5Y3Eo8Ta4MRRO6FnQf2ilbIIAN3MRW8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbz5pEKcaq8aVk5ob2/Z0fHikWzT22V9nTtXeVULOc68K3PcFtsj/IqO+wtNw6w92
-         KwrNNI66+uAAbA3JEelS1bJ1j/NsxJDRjmCQDOXcEmaLk9i+ZkbLQXAIVPrSVyvuER
-         SM761YsugavnGJ9lsk/z8h9OERHz+buyQbkUboAY=
+        b=MhHjaWlF49E73yoDL7VvR1JLPukZyjk0ZrFTL2Z43E8rtOng3sMb5JL2eXKcfdGbt
+         2AkKPh7kADft2kYHzZ8zmapp72k2BiO14Q3vB46+L4kvbt5X8LMYUiJD25IxtwFPCg
+         4WU2saQIo3sSd8en+hWVijtDewydVyu47VfRDUds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 172/186] mm: slub: fix conversion of freelist_corrupted()
-Date:   Tue,  8 Sep 2020 17:25:14 +0200
-Message-Id: <20200908152249.997094184@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Adrien Crivelli <adrien.crivelli@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 143/186] ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion NT950XCJ-X716A
+Date:   Tue,  8 Sep 2020 17:24:45 +0200
+Message-Id: <20200908152248.594845012@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -65,76 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Adrien Crivelli <adrien.crivelli@gmail.com>
 
-commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
+commit 8bcea6cb2cbc1f749e574954569323dec5e2920e upstream.
 
-Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
-deactivate_slab()") suffered an update when picked up from LKML [1].
+The Galaxy Book Ion NT950XCJ-X716A (15 inches) uses the same ALC298
+codec as other Samsung laptops which have the no headphone sound bug. I
+confirmed on my own hardware that this fixes the bug.
 
-Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
-created a no-op statement.  Fix it by sticking to the behavior intended
-in the original patch [1].  In addition, make freelist_corrupted()
-immune to passing NULL instead of &freelist.
+This also correct the model name for the 13 inches version. It was
+incorrectly referenced as NT950XCJ-X716A in commit e17f02d05. But it
+should have been NP930XCJ-K01US.
 
-The issue has been spotted via static analysis and code review.
-
-[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
-
-Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Fixes: e17f02d0559c ("ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
+Signed-off-by: Adrien Crivelli <adrien.crivelli@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200826084014.211217-1-adrien.crivelli@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/slub.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ sound/pci/hda/patch_realtek.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -680,12 +680,12 @@ static void slab_fix(struct kmem_cache *
- }
- 
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
--	    !check_valid_pointer(s, page, nextfree)) {
--		object_err(s, page, freelist, "Freechain corrupt");
--		freelist = NULL;
-+	    !check_valid_pointer(s, page, nextfree) && freelist) {
-+		object_err(s, page, *freelist, "Freechain corrupt");
-+		*freelist = NULL;
- 		slab_fix(s, "Isolate corrupted freechain");
- 		return true;
- 	}
-@@ -1425,7 +1425,7 @@ static inline void dec_slabs_node(struct
- 							int objects) {}
- 
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	return false;
- }
-@@ -2117,7 +2117,7 @@ static void deactivate_slab(struct kmem_
- 		 * 'freelist' is already corrupted.  So isolate all objects
- 		 * starting at 'freelist'.
- 		 */
--		if (freelist_corrupted(s, page, freelist, nextfree))
-+		if (freelist_corrupted(s, page, &freelist, nextfree))
- 			break;
- 
- 		do {
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7708,7 +7708,8 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc189, "Samsung Galaxy Flex Book (NT950QCG-X716)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+-	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NP930XCJ-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc830, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
+ 	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
 
 
