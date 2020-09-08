@@ -2,146 +2,169 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C674EC2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E8A208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57F8208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZ/9AznD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3xGDY6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730721AbgIHURl (ORCPT
+        id S1729971AbgIHUTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:17:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39286 "EHLO
+        Tue, 8 Sep 2020 16:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgIHURi (ORCPT
+        with ESMTP id S1729305AbgIHUTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:17:38 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE5EC061573;
-        Tue,  8 Sep 2020 13:17:37 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g72so348805qke.8;
-        Tue, 08 Sep 2020 13:17:37 -0700 (PDT)
+        Tue, 8 Sep 2020 16:19:31 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37EA1C061573;
+        Tue,  8 Sep 2020 13:19:31 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id u21so264252eja.2;
+        Tue, 08 Sep 2020 13:19:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/08OEII2Gc2davobAmINkHdHlTLoM3yBel115LZWEGE=;
-        b=qZ/9AznDVXFtr6CrHuhiw4QW5HmClw8tl/kn16sP+vAL9BwyB1TalbAKldIgIIFtb+
-         4gbcw6Ixl7WWm6+eR7AOeeEgNHRd9KO82LOanYAhZnktvDEwnWkiDthqJWrrSp8D42u4
-         fIeAiy4POw3wf4Z6SvhKEEye1aUrwOIWslhBv+79RaCXHWn4YpCcP2k1rJp/fR64lnQC
-         8jnqEJ5IzfX5q10Y72vrRW9J8/NnBj7zCdAZsoK7DHNMvg7HjynBh+r4iRBw+V66mCG0
-         KesRtoiYqBsl5xile5AfugcBIKBCC3vQzS/rH6rs/JmItACffhMLEWNQHzOwlPtwLyAt
-         KhyA==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AjIPp6Eyls79nuZJqGgOMonyVj5blXaXyZkArJ7OmMI=;
+        b=k3xGDY6xo2owK5AkMpWvsnO3hcN771NeaL5eGo5K7dFhQMEejE3AR31sOcgdJhXyjx
+         6xPTDW6YsTt554gSRhqoP3vIQwQ6uwdL18IxQzFojUEAM0GDgsnptbxFBMmCHh2gA/SX
+         jVMzW19yly/C5z/Hq5evRAumGSaxo7XWMqjume3rwOi2IPl3o9gureJ3GUV/WAgJt8Gx
+         dD4EoY+ndMIbPVZUi2+BVaD0Nck3t6o71HG7hwVz9o41BMqZNV2Ax2qvgfnnd9Sc/Tpq
+         y71e28R5lgY2yVzMN2Yz1O6MHwwodPOz2ryfVlc7YZr0iGFMD8YVml8qJyLLT4GVg7T4
+         mb/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=/08OEII2Gc2davobAmINkHdHlTLoM3yBel115LZWEGE=;
-        b=K925NchmjXWEiCGzH/kNzYavYK/+3NvvHQbPDKJID+oSaUT+/F7KgHrJeQq6W4BUd3
-         HVUWnSZUpFirCvHtH6NXxK2lTqJGjxBCCyEd0vmtXN/MZPj+9JqZ5SUmtNXuEr3PAi7l
-         QVig32ntP3fPbaJ8MZzx7i4Msq5VVP/kqO/bncdGSdDlu2rYTgAZup6YnMMwIHuRYRj0
-         NB71p+E7fxsbYAKUN9dePcukfKFUQqkHVS7UJixLzmnlGr1PB+7e/EhWxaNa+r163tp3
-         W1BfEXyKu4jLczdr/Sv8p4NB+h54CBFjccKqaITKNI6FYftKGc1a8/yNuszY6CcJNR4N
-         nV5w==
-X-Gm-Message-State: AOAM531Bd7P55qEyfZpPCr0xrPOYptsEA+iNJgs4TwdAy+YLtD91YELP
-        UZz7Cb72I157G9mxj1cT1n4=
-X-Google-Smtp-Source: ABdhPJwNSgWEhWS2D5NSJFniOHBOS9/EWNgGqZsCsA91Ij4q3VjCGMYQaXbuPxF07dtwVNjz7gPPBQ==
-X-Received: by 2002:a05:620a:955:: with SMTP id w21mr302081qkw.69.1599596256656;
-        Tue, 08 Sep 2020 13:17:36 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z6sm335661qkl.39.2020.09.08.13.17.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 13:17:35 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 8 Sep 2020 16:17:34 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/5] x86/build: Warn on orphan section placement
-Message-ID: <20200908201734.GA87825@rani.riverdale.lan>
-References: <20200902025347.2504702-1-keescook@chromium.org>
- <20200902025347.2504702-5-keescook@chromium.org>
- <20200905224835.GA1500331@rani.riverdale.lan>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AjIPp6Eyls79nuZJqGgOMonyVj5blXaXyZkArJ7OmMI=;
+        b=pqVwjO8SahmQel43K7W9s9W9ASqvB1dy1zBVG6a2ku2CEDXjkwucynJwm47wMmoqvI
+         vOrk1Sd+kQt13ayUeSQujEhJ/OJJU3pDAV8TTMpGaHRgl5gEKt+NMEuYxjearxah685b
+         /mItXgYmsu7iqkd7ZWZSBo2igZGNLNpA+cr+LhtMmpWMIaYxjQ1iWh3egXtv8uMXjbxN
+         fO6jvxaA6bRarGMs0FEZiVa6GIAbGCNI6COXNz9nvUodSKZCBCgpOcLmfsR1D73J7BwW
+         iLvoOEYldhIsNF5zMeaM2FKExGs+pWzz9j54aKLXuWo85HZUK8w3JRzlOQ+/A0P+ulth
+         TViA==
+X-Gm-Message-State: AOAM531W1RMRqcm+ezJ4zIFwm6QxAKu1BwS1k+Thq6d+YICoy2aDaq6j
+        G8Iqu8Uoy8tkvCq+rWZekQBXV8xC0nU=
+X-Google-Smtp-Source: ABdhPJz5hML8XQIhRFBwbylroe6NBneVR57ta9d1HSXVfjAYlds1OuSG3jAAuAzY5e4wjchfC3BR5A==
+X-Received: by 2002:a17:906:2818:: with SMTP id r24mr233628ejc.100.1599596369435;
+        Tue, 08 Sep 2020 13:19:29 -0700 (PDT)
+Received: from [192.168.2.202] (p5487bef6.dip0.t-ipconnect.de. [84.135.190.246])
+        by smtp.gmail.com with ESMTPSA id lg22sm199449ejb.48.2020.09.08.13.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 13:19:28 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH] platform/x86: Add Driver to set up lid GPEs on MS Surface
+ device
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200908171934.1661509-1-luzmaximilian@gmail.com>
+ <CAHp75VevrwKaba_FsZj-nPqJGR9fkmFPzvdCew0wCqF_L6QLbA@mail.gmail.com>
+Message-ID: <d1d3b1bb-1d7b-ae8d-fbe4-23f995df47fb@gmail.com>
+Date:   Tue, 8 Sep 2020 22:19:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200905224835.GA1500331@rani.riverdale.lan>
+In-Reply-To: <CAHp75VevrwKaba_FsZj-nPqJGR9fkmFPzvdCew0wCqF_L6QLbA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 06:48:35PM -0400, Arvind Sankar wrote:
-> On Tue, Sep 01, 2020 at 07:53:46PM -0700, Kees Cook wrote:
-> > We don't want to depend on the linker's orphan section placement
-> > heuristics as these can vary between linkers, and may change between
-> > versions. All sections need to be explicitly handled in the linker script.
-> > 
-> > Now that all sections are explicitly handled, enable orphan section
-> > warnings.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/x86/Makefile | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> > index 4346ffb2e39f..154259f18b8b 100644
-> > --- a/arch/x86/Makefile
-> > +++ b/arch/x86/Makefile
-> > @@ -209,6 +209,10 @@ ifdef CONFIG_X86_64
-> >  LDFLAGS_vmlinux += -z max-page-size=0x200000
-> >  endif
-> >  
-> > +# We never want expected sections to be placed heuristically by the
-> > +# linker. All sections should be explicitly named in the linker script.
-> > +LDFLAGS_vmlinux += $(call ld-option, --orphan-handling=warn)
-> > +
-> >  archscripts: scripts_basic
-> >  	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
-> >  
-> > -- 
-> > 2.25.1
-> > 
-> 
-> With LLVM=1 and GCOV_KERNEL/GCOV_PROFILE_ALL enabled, there are
-> .eh_frame sections created. I see that KASAN and KCSAN currently discard
-> them. Does GCOV actually need them or should it also discard?
-> 
-> Thanks.
+On 9/8/20 8:40 PM, Andy Shevchenko wrote:
+> On Tue, Sep 8, 2020 at 8:20 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 
-Also, with LLD 10.0.1 which is going to be the minimum supported
-version, the relocation sections etc still generate warnings.
+...
 
-ld.lld: warning:
-arch/x86/video/built-in.a(fbdev.o):(.rela.orc_unwind_ip) is being placed
-in '.rela.orc_unwind_ip'
-ld.lld: warning: .tmp_vmlinux.kallsyms2.o:(.rela.rodata) is being placed
-in '.rela.rodata'
-ld.lld: warning: <internal>:(.bss.rel.ro) is being placed in
-'.bss.rel.ro'
-ld.lld: warning: <internal>:(.eh_frame) is being placed in '.eh_frame'
-ld.lld: warning: <internal>:(.symtab_shndx) is being placed in
-'.symtab_shndx'
+>> +       .gpe_number = 0x17,
+>> +       .gpe_number = 0x4D,
+>> +       .gpe_number = 0x4F,
+>> +       .gpe_number = 0x57,
+> 
+>  From where these numbers come from? Can we get them from firmware (ACPI)?
+
+Yes, they are obtained from ACPI/the DSDT. Specifically from the name of
+the GPE handler notifying the lid device. See [1] for a repo full of
+Surface ACPI dumps (source for this). I'll add a comment pointing this out
+in v2.
+
+[1]: https://github.com/linux-surface/acpidumps
+
+...
+
+>> +static int surface_gpe_probe(struct platform_device *pdev)
+>> +{
+>> +       const struct surface_lid_device *lid;
+>> +       int status;
+>> +
+> 
+>> +       lid = dev_get_platdata(&pdev->dev);
+>> +       if (!lid)
+>> +               return -ENODEV;
+> 
+> Can we use software nodes?
+
+As far as I can tell this would work via fwnode_create_software_node /
+fwnode_remove_software_node and device properties? I don't seem to find
+much documentation on this (there doesn't seem to be an entry for
+software nodes in the official docs?), but I think I should be able to
+make this work.
+
+>> +       status = acpi_mark_gpe_for_wake(NULL, lid->gpe_number);
+>> +       if (status) {
+>> +               dev_err(&pdev->dev, "failed to mark GPE for wake: %d\n", status);
+>> +               return -EINVAL;
+>> +       }
+>> +
+> 
+>> +       status = acpi_enable_gpe(NULL, lid->gpe_number);
+> 
+> Did I miss anything or all calls of enable / disable GPE are using
+> NULL as a first parameter? What the point in such case?
+
+As far as I can tell, some of the more generic uses have a non-NULL
+gpe_device parameter (acpi/device_pm.c, acpi/wakeup.c) and NULL just
+means index-0/main device? Not an expert on that though, so probably
+just ignore me here and let the ACPI guys answer this.
+
+...
+
+>> +MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurfacePro:*");
+>> +MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurfacePro4:*");
+> 
+> Can simply
+> 
+> MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurface*:*");
+> 
+> work?
+
+Depends on your preference, really. That would also auto-load the module
+on Surface Pro 3 and earlier devices (just won't do anything on those).
+So it's a trade-off between unnecessary loading of the module and
+maintainability/readability. Let me know what you prefer and I'll switch
+to that.
+
+Style and other issues are noted, I'll fix them for v2.
+
+Regards,
+Max
