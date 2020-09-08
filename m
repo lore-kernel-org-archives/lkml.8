@@ -2,54 +2,53 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F7AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4770BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13A4B20C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABC82087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592734;
-	bh=PvPPG3nMBDVF9kyjupiA0DfWma9fnhZtAJj0a4ZnnTI=;
+	s=default; t=1599592740;
+	bh=VrAc+1HbRpsHN7xllXr/88rtU1oY2rZQa7jbx6YbZ0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xiOz4xsvpkGWd9p8PNGlA+QRR55/bRkdBJiWpYkXROIAgj4lMEGxL15f+mwk4iFFT
-	 oEak+pO5u8J1qBCvOwMSw/SQ1NkESRx3Skr54F1QfPtb2GPoxO2E8r974Z+IW3kqUX
-	 cKO1t7/prJfubSToD3IqWm5DaMc0F535SlF5dOmQ=
+	b=QeNoV3ZPrqQF5K0VFt2CLbGkTBEnkGwLIrAcH9a6PzcD5+MPhZg9l2J2e6ij8iFp6
+	 Ferx8rneYOK9Yw733u9kQrbGhyzzzWZJMcS49JJVCGUrTnSkgs3O5hSO9qLe0xRmYi
+	 p5yOADEUz97S40m2EtyuBFwTApe87MzcRNZ246XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731604AbgIHTSv (ORCPT
+        id S1731559AbgIHTS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731137AbgIHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731133AbgIHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:02:51 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B65EE2419B;
-        Tue,  8 Sep 2020 15:38:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD78923C85;
+        Tue,  8 Sep 2020 15:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579534;
-        bh=PvPPG3nMBDVF9kyjupiA0DfWma9fnhZtAJj0a4ZnnTI=;
+        s=default; t=1599579391;
+        bh=VrAc+1HbRpsHN7xllXr/88rtU1oY2rZQa7jbx6YbZ0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvUoAUgz2c5/riLh12k8uGqPu/RTlUjbeepWVjfPn0+vfINrC05FlVVgYeK8reCAX
-         jitXCN5IJi/LdxN6UBxAjXqaq13/ywYI9KMqiI5zoi/q1vn3vl0x5uiMLHQ4n0KDqo
-         ifbFEpT6DxIhI4SXyGVz2UchzobwOwwBf2saPjJI=
+        b=kJ4ZDr5n8ijjfHcwtqpdpJNDSKwaceOpoOPqyIxx9jLcQxzIn4YsXcsGnYmfBujBZ
+         pkkV+jPpr2h4qMwJ4EZBwNloLXF9xlWbxDb7zgAZzWZiJlyoKeDWniTMJFz5Hb93bx
+         B8lbALGzvkYVxUVILBuBCQUrjmZSxoO2gkLH+6Ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.8 118/186] tracing/kprobes, x86/ptrace: Fix regs argument order for i386
-Date:   Tue,  8 Sep 2020 17:24:20 +0200
-Message-Id: <20200908152247.355631145@linuxfoundation.org>
+        stable@vger.kernel.org, Yuusuke Ashizuka <ashiduka@fujitsu.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 059/186] ravb: Fixed to be able to unload modules
+Date:   Tue,  8 Sep 2020 17:23:21 +0200
+Message-Id: <20200908152244.532633611@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,43 +61,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+From: Yuusuke Ashizuka <ashiduka@fujitsu.com>
 
-commit 2356bb4b8221d7dc8c7beb810418122ed90254c9 upstream.
+[ Upstream commit 1838d6c62f57836639bd3d83e7855e0ee4f6defc ]
 
-On i386, the order of parameters passed on regs is eax,edx,and ecx
-(as per regparm(3) calling conventions).
+When this driver is built as a module, I cannot rmmod it after insmoding
+it.
+This is because that this driver calls ravb_mdio_init() at the time of
+probe, and module->refcnt is incremented by alloc_mdio_bitbang() called
+after that.
+Therefore, even if ifup is not performed, the driver is in use and rmmod
+cannot be performed.
 
-Change the mapping in regs_get_kernel_argument(), so that arg1=ax
-arg2=dx, and arg3=cx.
+$ lsmod
+Module                  Size  Used by
+ravb                   40960  1
+$ rmmod ravb
+rmmod: ERROR: Module ravb is in use
 
-Running the selftests testcase kprobes_args_use.tc shows the result
-as passed.
+Call ravb_mdio_init() at open and free_mdio_bitbang() at close, thereby
+rmmod is possible in the ifdown state.
 
-Fixes: 3c88ee194c28 ("x86: ptrace: Add function argument access API")
-Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200828113242.GA1424@cosmos
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Yuusuke Ashizuka <ashiduka@fujitsu.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/ptrace.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 110 +++++++++++------------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
 
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -322,8 +322,8 @@ static inline unsigned long regs_get_ker
- 	static const unsigned int argument_offs[] = {
- #ifdef __i386__
- 		offsetof(struct pt_regs, ax),
--		offsetof(struct pt_regs, cx),
- 		offsetof(struct pt_regs, dx),
-+		offsetof(struct pt_regs, cx),
- #define NR_REG_ARGUMENTS 3
- #else
- 		offsetof(struct pt_regs, di),
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 99f7aae102ce1..df89d09b253e2 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1342,6 +1342,51 @@ static inline int ravb_hook_irq(unsigned int irq, irq_handler_t handler,
+ 	return error;
+ }
+ 
++/* MDIO bus init function */
++static int ravb_mdio_init(struct ravb_private *priv)
++{
++	struct platform_device *pdev = priv->pdev;
++	struct device *dev = &pdev->dev;
++	int error;
++
++	/* Bitbang init */
++	priv->mdiobb.ops = &bb_ops;
++
++	/* MII controller setting */
++	priv->mii_bus = alloc_mdio_bitbang(&priv->mdiobb);
++	if (!priv->mii_bus)
++		return -ENOMEM;
++
++	/* Hook up MII support for ethtool */
++	priv->mii_bus->name = "ravb_mii";
++	priv->mii_bus->parent = dev;
++	snprintf(priv->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
++		 pdev->name, pdev->id);
++
++	/* Register MDIO bus */
++	error = of_mdiobus_register(priv->mii_bus, dev->of_node);
++	if (error)
++		goto out_free_bus;
++
++	return 0;
++
++out_free_bus:
++	free_mdio_bitbang(priv->mii_bus);
++	return error;
++}
++
++/* MDIO bus release function */
++static int ravb_mdio_release(struct ravb_private *priv)
++{
++	/* Unregister mdio bus */
++	mdiobus_unregister(priv->mii_bus);
++
++	/* Free bitbang info */
++	free_mdio_bitbang(priv->mii_bus);
++
++	return 0;
++}
++
+ /* Network device open function for Ethernet AVB */
+ static int ravb_open(struct net_device *ndev)
+ {
+@@ -1350,6 +1395,13 @@ static int ravb_open(struct net_device *ndev)
+ 	struct device *dev = &pdev->dev;
+ 	int error;
+ 
++	/* MDIO bus init */
++	error = ravb_mdio_init(priv);
++	if (error) {
++		netdev_err(ndev, "failed to initialize MDIO\n");
++		return error;
++	}
++
+ 	napi_enable(&priv->napi[RAVB_BE]);
+ 	napi_enable(&priv->napi[RAVB_NC]);
+ 
+@@ -1427,6 +1479,7 @@ out_free_irq:
+ out_napi_off:
+ 	napi_disable(&priv->napi[RAVB_NC]);
+ 	napi_disable(&priv->napi[RAVB_BE]);
++	ravb_mdio_release(priv);
+ 	return error;
+ }
+ 
+@@ -1736,6 +1789,8 @@ static int ravb_close(struct net_device *ndev)
+ 	ravb_ring_free(ndev, RAVB_BE);
+ 	ravb_ring_free(ndev, RAVB_NC);
+ 
++	ravb_mdio_release(priv);
++
+ 	return 0;
+ }
+ 
+@@ -1887,51 +1942,6 @@ static const struct net_device_ops ravb_netdev_ops = {
+ 	.ndo_set_features	= ravb_set_features,
+ };
+ 
+-/* MDIO bus init function */
+-static int ravb_mdio_init(struct ravb_private *priv)
+-{
+-	struct platform_device *pdev = priv->pdev;
+-	struct device *dev = &pdev->dev;
+-	int error;
+-
+-	/* Bitbang init */
+-	priv->mdiobb.ops = &bb_ops;
+-
+-	/* MII controller setting */
+-	priv->mii_bus = alloc_mdio_bitbang(&priv->mdiobb);
+-	if (!priv->mii_bus)
+-		return -ENOMEM;
+-
+-	/* Hook up MII support for ethtool */
+-	priv->mii_bus->name = "ravb_mii";
+-	priv->mii_bus->parent = dev;
+-	snprintf(priv->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
+-		 pdev->name, pdev->id);
+-
+-	/* Register MDIO bus */
+-	error = of_mdiobus_register(priv->mii_bus, dev->of_node);
+-	if (error)
+-		goto out_free_bus;
+-
+-	return 0;
+-
+-out_free_bus:
+-	free_mdio_bitbang(priv->mii_bus);
+-	return error;
+-}
+-
+-/* MDIO bus release function */
+-static int ravb_mdio_release(struct ravb_private *priv)
+-{
+-	/* Unregister mdio bus */
+-	mdiobus_unregister(priv->mii_bus);
+-
+-	/* Free bitbang info */
+-	free_mdio_bitbang(priv->mii_bus);
+-
+-	return 0;
+-}
+-
+ static const struct of_device_id ravb_match_table[] = {
+ 	{ .compatible = "renesas,etheravb-r8a7790", .data = (void *)RCAR_GEN2 },
+ 	{ .compatible = "renesas,etheravb-r8a7794", .data = (void *)RCAR_GEN2 },
+@@ -2174,13 +2184,6 @@ static int ravb_probe(struct platform_device *pdev)
+ 		eth_hw_addr_random(ndev);
+ 	}
+ 
+-	/* MDIO bus init */
+-	error = ravb_mdio_init(priv);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to initialize MDIO\n");
+-		goto out_dma_free;
+-	}
+-
+ 	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll, 64);
+ 	netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll, 64);
+ 
+@@ -2202,8 +2205,6 @@ static int ravb_probe(struct platform_device *pdev)
+ out_napi_del:
+ 	netif_napi_del(&priv->napi[RAVB_NC]);
+ 	netif_napi_del(&priv->napi[RAVB_BE]);
+-	ravb_mdio_release(priv);
+-out_dma_free:
+ 	dma_free_coherent(ndev->dev.parent, priv->desc_bat_size, priv->desc_bat,
+ 			  priv->desc_bat_dma);
+ 
+@@ -2235,7 +2236,6 @@ static int ravb_remove(struct platform_device *pdev)
+ 	unregister_netdev(ndev);
+ 	netif_napi_del(&priv->napi[RAVB_NC]);
+ 	netif_napi_del(&priv->napi[RAVB_BE]);
+-	ravb_mdio_release(priv);
+ 	pm_runtime_disable(&pdev->dev);
+ 	free_netdev(ndev);
+ 	platform_set_drvdata(pdev, NULL);
+-- 
+2.25.1
+
 
 
