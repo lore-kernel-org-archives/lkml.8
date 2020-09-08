@@ -2,54 +2,58 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D96C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D5FC2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6321D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEA821D46
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589756;
-	bh=Z7fcGyBzWC/5EPyO4e2m3x70szWWlKx1AVC3oQn09dU=;
+	s=default; t=1599589768;
+	bh=MJVGnzaJOkv3FPR+rvswywclXBmirNau/rV/Ud7h3RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BkjoDENez8XRp3zQ2RIUVOCbADPoNmSpBKmEfYaRq11uwb3Xqdd+0HHSNb3zr/pPv
-	 33t6k3uXvOrntwB3lhYVStiRpdQhJs98CyPv5DOFBMhp/oDhy7wWQiYCTx9CCHHph5
-	 tVSsdR0472Tx8H5GZO5vfSCmuXR5BBSHchkP4yUE=
+	b=0ubVaTqPBjyv7M5eEMZAuzo6f5gpjsTRmYitA0k7dim8c9KiAN9mlfos61hbm38R4
+	 twGDDJQJRxBCvbziPL65pzyEaxBzRU986ByXqOEO836C8PZMO3pPWAs5zP/DNxNl3/
+	 PQT7cX2/o/LMAaCN5Q5bKjqb/peLE1gljXoYDO5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731775AbgIHS3P (ORCPT
+        id S1731303AbgIHS2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:28:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731416AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731419AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:10:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C657B24721;
-        Tue,  8 Sep 2020 15:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAA94247E8;
+        Tue,  8 Sep 2020 15:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579639;
-        bh=Z7fcGyBzWC/5EPyO4e2m3x70szWWlKx1AVC3oQn09dU=;
+        s=default; t=1599579759;
+        bh=MJVGnzaJOkv3FPR+rvswywclXBmirNau/rV/Ud7h3RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BHjQHO0aRQGxZEYVBixBXTXnlcLOqFBI63K5BoNjN1NFkzGHPApJpldRXDqiKOPV4
-         E7wUa2NvqzDwWsXznt+vkUO806jrZFprI+UINmFwykz7TieC0AkFJx0YUUY+ceyqYx
-         ZAOqYxET5SEaAc2D7W0MFc7Z34Y0jpTsP6nKM0mA=
+        b=HZwSwC+Tsrt/LE/b1kG9o46GRIUBpvSBww280LWxU/fRZdGOR++gTImFCQih0M+Kv
+         PZk/nbk4CfW0KxoTtluS03kGhoa2Uf32jHzzbjLoeTo/0A+eowKbmrdJhUE/JkOqaB
+         i1IX1qUBD4iiSlpKZyJoa1W123Y5Rj6xDPh3amRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 160/186] blk-stat: make q->stats->lock irqsafe
-Date:   Tue,  8 Sep 2020 17:25:02 +0200
-Message-Id: <20200908152249.419945317@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ab16e463b903f5a37036@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 023/129] batman-adv: Avoid uninitialized chaddr when handling DHCP
+Date:   Tue,  8 Sep 2020 17:24:24 +0200
+Message-Id: <20200908152230.860876221@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,75 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit e11d80a849e010f78243bb6f6af7dccef3a71a90 upstream.
+[ Upstream commit 303216e76dcab6049c9d42390b1032f0649a8206 ]
 
-blk-iocost calls blk_stat_enable_accounting() while holding an irqsafe lock
-which triggers a lockdep splat because q->stats->lock isn't irqsafe. Let's
-make it irqsafe.
+The gateway client code can try to optimize the delivery of DHCP packets to
+avoid broadcasting them through the whole mesh. But also transmissions to
+the client can be optimized by looking up the destination via the chaddr of
+the DHCP packet.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: cd006509b0a9 ("blk-iocost: account for IO size when testing latencies")
-Cc: stable@vger.kernel.org # v5.8+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But the chaddr is currently only done when chaddr is fully inside the
+non-paged area of the skbuff. Otherwise it will not be initialized and the
+unoptimized path should have been taken.
 
+But the implementation didn't handle this correctly. It didn't retrieve the
+correct chaddr but still tried to perform the TT lookup with this
+uninitialized memory.
+
+Reported-by: syzbot+ab16e463b903f5a37036@syzkaller.appspotmail.com
+Fixes: 6c413b1c22a2 ("batman-adv: send every DHCP packet as bat-unicast")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-stat.c |   17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ net/batman-adv/gateway_client.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/block/blk-stat.c
-+++ b/block/blk-stat.c
-@@ -137,6 +137,7 @@ void blk_stat_add_callback(struct reques
- 			   struct blk_stat_callback *cb)
- {
- 	unsigned int bucket;
-+	unsigned long flags;
- 	int cpu;
+diff --git a/net/batman-adv/gateway_client.c b/net/batman-adv/gateway_client.c
+index 47df4c6789886..89c9097007c3a 100644
+--- a/net/batman-adv/gateway_client.c
++++ b/net/batman-adv/gateway_client.c
+@@ -703,8 +703,10 @@ batadv_gw_dhcp_recipient_get(struct sk_buff *skb, unsigned int *header_len,
  
- 	for_each_possible_cpu(cpu) {
-@@ -147,20 +148,22 @@ void blk_stat_add_callback(struct reques
- 			blk_rq_stat_init(&cpu_stat[bucket]);
- 	}
- 
--	spin_lock(&q->stats->lock);
-+	spin_lock_irqsave(&q->stats->lock, flags);
- 	list_add_tail_rcu(&cb->list, &q->stats->callbacks);
- 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
--	spin_unlock(&q->stats->lock);
-+	spin_unlock_irqrestore(&q->stats->lock, flags);
- }
- 
- void blk_stat_remove_callback(struct request_queue *q,
- 			      struct blk_stat_callback *cb)
- {
--	spin_lock(&q->stats->lock);
-+	unsigned long flags;
+ 	chaddr_offset = *header_len + BATADV_DHCP_CHADDR_OFFSET;
+ 	/* store the client address if the message is going to a client */
+-	if (ret == BATADV_DHCP_TO_CLIENT &&
+-	    pskb_may_pull(skb, chaddr_offset + ETH_ALEN)) {
++	if (ret == BATADV_DHCP_TO_CLIENT) {
++		if (!pskb_may_pull(skb, chaddr_offset + ETH_ALEN))
++			return BATADV_DHCP_NO;
 +
-+	spin_lock_irqsave(&q->stats->lock, flags);
- 	list_del_rcu(&cb->list);
- 	if (list_empty(&q->stats->callbacks) && !q->stats->enable_accounting)
- 		blk_queue_flag_clear(QUEUE_FLAG_STATS, q);
--	spin_unlock(&q->stats->lock);
-+	spin_unlock_irqrestore(&q->stats->lock, flags);
- 
- 	del_timer_sync(&cb->timer);
- }
-@@ -183,10 +186,12 @@ void blk_stat_free_callback(struct blk_s
- 
- void blk_stat_enable_accounting(struct request_queue *q)
- {
--	spin_lock(&q->stats->lock);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&q->stats->lock, flags);
- 	q->stats->enable_accounting = true;
- 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
--	spin_unlock(&q->stats->lock);
-+	spin_unlock_irqrestore(&q->stats->lock, flags);
- }
- EXPORT_SYMBOL_GPL(blk_stat_enable_accounting);
- 
+ 		/* check if the DHCP packet carries an Ethernet DHCP */
+ 		p = skb->data + *header_len + BATADV_DHCP_HTYPE_OFFSET;
+ 		if (*p != BATADV_DHCP_HTYPE_ETHERNET)
+-- 
+2.25.1
+
 
 
