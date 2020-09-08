@@ -2,99 +2,110 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C527CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE9FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8095F2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590223;
-	bh=bKU7rHDuIb84x8A+wT1iF7rOZljg5I0QY2Pox4v0Wak=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaWoElJuM0CIhr1KKbGt4sqqOdMvF0gSnS77eRcHXSB5DeudP0L3V2niUIY0qsgwZ
-	 YAw7U98PTcmV+dVB0CywrUuthtpH75amMWh0q4zZQJQD8feT3iV2FUQ5euX1BlfXms
-	 9f+TPnt3IFJ05mJ6GG8Cu0d27ec8AmUCaFm6ESD0=
+	by mail.kernel.org (Postfix) with ESMTP id 523902080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oo/DQrZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731869AbgIHShB (ORCPT
+        id S1731536AbgIHShH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731198AbgIHQJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:03 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF2624141;
-        Tue,  8 Sep 2020 15:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580150;
-        bh=bKU7rHDuIb84x8A+wT1iF7rOZljg5I0QY2Pox4v0Wak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J5zYMiz55pEyHiGNJrOb2KhTorwldl9CG1AKZCURK0q9XzpYkrQwy7oTyQj6L7pIc
-         4exwdQVIUSF88MaaBi40VbqlQlorldAN1HKHuizoSoNL/sQa5XL63+MlinclTen//g
-         RrdHPD4VloV1edqWZmvc5TnuulTbqsyojJCWXtx4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/88] MIPS: mm: BMIPS5000 has inclusive physical caches
-Date:   Tue,  8 Sep 2020 17:25:21 +0200
-Message-Id: <20200908152222.086901083@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 14:37:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731698AbgIHScm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:32:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6845FC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:23:15 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id c196so6186296pfc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:23:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mfB0S2TmcGDxX8xZkZ/chTU0dmPHOOO8nuKSmYrB2mM=;
+        b=Oo/DQrZCB0KIovn2oIQvAUWTptWqamehVi+n9pOLZRf1yPmAlsDgequytTa8T71Hfc
+         MnZ8qfVQW2q6h/Gb3s3xMzJv0ALrHyHScJJ+WdbP6brRxtmNudTvVWKGbUjfoC5KHF4b
+         uGSGjTSSevWadA70wvgbB72exIK9HnLgQdo9pBIgjKkAOXHzO50M1u7BZGl1okDbUiqz
+         czRJlEsh6kR0+ujAUZ5GoU2okMRHEd7MJeAWIce5U7hvYLvI/36yTxGrED/UXTfJN1Pp
+         +8kHwWJ0fqPNtnwRBmLuZUKXP2wEoOXwXAgDcmvidR+BlAhYV4QFIECLoW9snCOd1lTW
+         zkcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mfB0S2TmcGDxX8xZkZ/chTU0dmPHOOO8nuKSmYrB2mM=;
+        b=LetHXZKczNxvV/5XDznd0k92nBQjs0kEYwav3ascvVNrXAt/2ATNLPyxiCH6i4/LyG
+         X3JPQyK+D6Ta6fSPAORN9eEUQJ5n499JhHfmhVaubJGjGp1RZAVBzjQBE2fBET7hfKm+
+         n+ueTibbCAmkr3qBi3dnuNk5O1b+6f8qXtEzWd9KwF3mgnZYuongJ34Mj+Nd1SSrQAIz
+         kyXBMroshXI2iPsPElUJsSZskEsVfSBYNW/s0k8yHAmHhfO/0Y6CQajJ3l7pJdeNbgP+
+         jw5aCngpTTOJ0Xf5kwiVE1t7ErxCixN8JfQ3An10gpF+R+NUHZyaPlgid6uQcJFhSS+Q
+         2OIQ==
+X-Gm-Message-State: AOAM530Nmo4H5G0sV3qkUGlyuZGrmy9RalQWGgR/3y+6Jhai2e/k7/Z9
+        nUm/MHGUD0jrEKxYtupluFurTg==
+X-Google-Smtp-Source: ABdhPJwprY99iDi73Le2vnSOxXHnK9OCb6eXlfe519dNjZDsp0xdQH72w/MWOHjt+KXl9278n5yCtw==
+X-Received: by 2002:a17:902:10f:: with SMTP id 15mr24890192plb.121.1599589394447;
+        Tue, 08 Sep 2020 11:23:14 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id h11sm108910pfe.185.2020.09.08.11.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 11:23:13 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 11:23:08 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v2 10/28] kbuild: lto: fix module versioning
+Message-ID: <20200908182308.GA1227805@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-11-samitolvanen@google.com>
+ <202009031510.32523E45EC@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202009031510.32523E45EC@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+On Thu, Sep 03, 2020 at 03:11:54PM -0700, Kees Cook wrote:
+> On Thu, Sep 03, 2020 at 01:30:35PM -0700, Sami Tolvanen wrote:
+> > With CONFIG_MODVERSIONS, version information is linked into each
+> > compilation unit that exports symbols. With LTO, we cannot use this
+> > method as all C code is compiled into LLVM bitcode instead. This
+> > change collects symbol versions into .symversions files and merges
+> > them in link-vmlinux.sh where they are all linked into vmlinux.o at
+> > the same time.
+> > 
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> 
+> The only thought I have here is I wonder if this change could be made
+> universally instead of gating on LTO? (i.e. is it noticeably slower to
+> do it this way under non-LTO?)
 
-[ Upstream commit dbfc95f98f0158958d1f1e6bf06d74be38dbd821 ]
+I don't think it's noticeably slower, but keeping the version information
+in object files when possible is cleaner, in my opinion.
 
-When the BMIPS generic cpu-feature-overrides.h file was introduced,
-cpu_has_inclusive_caches/MIPS_CPU_INCLUSIVE_CACHES was not set for
-BMIPS5000 CPUs. Correct this when we have initialized the MIPS secondary
-cache successfully.
-
-Fixes: f337967d6d87 ("MIPS: BMIPS: Add cpu-feature-overrides.h")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/mm/c-r4k.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
-index 05a539d3a5970..7650edd5cf7ff 100644
---- a/arch/mips/mm/c-r4k.c
-+++ b/arch/mips/mm/c-r4k.c
-@@ -1789,7 +1789,11 @@ static void setup_scache(void)
- 				printk("MIPS secondary cache %ldkB, %s, linesize %d bytes.\n",
- 				       scache_size >> 10,
- 				       way_string[c->scache.ways], c->scache.linesz);
-+
-+				if (current_cpu_type() == CPU_BMIPS5000)
-+					c->options |= MIPS_CPU_INCLUSIVE_CACHES;
- 			}
-+
- #else
- 			if (!(c->scache.flags & MIPS_CACHE_NOT_PRESENT))
- 				panic("Dunno how to handle MIPS32 / MIPS64 second level cache");
--- 
-2.25.1
-
-
-
+Sami
