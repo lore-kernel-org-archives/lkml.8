@@ -2,197 +2,200 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A969C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B75AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD712137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6CB21973
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H0qo4CTA";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="F/OdUYS3"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SC00cIb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIHFgz (ORCPT
+        id S1728756AbgIHFii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 01:36:55 -0400
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:51030
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725938AbgIHFgs (ORCPT
+        Tue, 8 Sep 2020 01:38:38 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:36097 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728712AbgIHFif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 01:36:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599543408;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
-        bh=A6Xgkj5tRedzTXTr+PtsbaW7vc2IQ8D/TM5K5CiUam8=;
-        b=H0qo4CTAFkMqIGb9LTC/pCsSRulBD+w2P7tWhj7CIZNcbgyUPHZfEZLEzXUfHE0n
-        eC2R9vVBjkPvqU02uzUS9yo7Z19dmRDYPEtp2/bKRSBPR5AqVGGHH5UAtPovGlLygyV
-        t1OGnGOnlXFoPuB/qU8VDSlLkagUrr03939U6/Nc=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599543408;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=A6Xgkj5tRedzTXTr+PtsbaW7vc2IQ8D/TM5K5CiUam8=;
-        b=F/OdUYS3Ud0fdErUdlPHkGDonjS7xnP2clsvhX2Bapr3gzRLywehebszY4GScDCn
-        NdtP6bdyHHsQCmJ9kSWKaFIlr5yFcPa1eqNfbEgY6SL/uyIv8uSY6nzY2LHHcPNHtah
-        Tjg7mniT2VVq87mNEuUS2jPW6s6OHaWRNxb6DbIE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 44C81C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to llcc registers
-Date:   Tue, 8 Sep 2020 05:36:48 +0000
-Message-ID: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 8 Sep 2020 01:38:35 -0400
+X-UUID: 1e52e0a625644801be7fb10483c43e75-20200908
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vXxcXjp/u4tUTeNK/WwgFqe99QTu92iZSo4LzEOqHcQ=;
+        b=SC00cIb1DdLbVkCvelNk0WpsvUQlLHam3z1EB4hxDQldxQwgsHh3ZMDXCQqmcK3XHUSTmI5mVkw81HZyzjskxjpp/3hmnpT9tdsmvesQ4DmzAAJRHDhLOaBEBwf6MV1lFebxxGoT9mmtY36PfGiDe16Hz49RERro2FZTQbBlzaQ=;
+X-UUID: 1e52e0a625644801be7fb10483c43e75-20200908
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <frankie.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1623823333; Tue, 08 Sep 2020 13:38:26 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 8 Sep 2020 13:38:24 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 8 Sep 2020 13:38:25 +0800
+Message-ID: <1599543504.16905.65.camel@mtkswgap22>
+Subject: Re: [PATCH v8 3/3] binder: add transaction latency tracer
+From:   Frankie Chang <Frankie.Chang@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+Date:   Tue, 8 Sep 2020 13:38:24 +0800
+In-Reply-To: <20200907140920.GC3719869@kroah.com>
+References: <20200907070045.GA605692@kroah.com>
+         <1599480055-25781-1-git-send-email-Frankie.Chang@mediatek.com>
+         <1599480055-25781-4-git-send-email-Frankie.Chang@mediatek.com>
+         <20200907122557.GC2029056@kroah.com> <1599486675.16905.34.camel@mtkswgap22>
+         <20200907140920.GC3719869@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2020.09.08-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
-
-Older chipsets may not be allowed to configure certain LLCC registers
-as that is handled by the secure side software. However, this is not
-the case for newer chipsets and they must configure these registers
-according to the contents of the SCT table, while keeping in mind that
-older targets may not have these capabilities. So add support to allow
-such configuration of registers to enable capacity based allocation
-and power collapse retention for capable chipsets.
-
-Reason for choosing capacity based allocation rather than the default
-way based allocation is because capacity based allocation allows more
-finer grain partition and provides more flexibility in configuration.
-As for the retention through power collapse, it has an advantage where
-the cache hits are more when we wake up from power collapse although
-it does burn more power but the exact power numbers are not known at
-the moment.
-
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-(sai: use existing config instead of dt property and commit msg change)
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
-
-Changes in v3:
- * Drop separate table and use existing qcom_llcc_config (Doug)
- * More descriptive commit msg (Doug)
- * Directly set the config instead of '|=' (Doug)
-
-Changes in v2:
- * Fix build errors reported by kernel test robot.
-
----
- drivers/soc/qcom/llcc-qcom.c       | 23 +++++++++++++++++++++++
- include/linux/soc/qcom/llcc-qcom.h |  2 ++
- 2 files changed, 25 insertions(+)
-
-diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-index 429b5a60a1ba..b908656ce519 100644
---- a/drivers/soc/qcom/llcc-qcom.c
-+++ b/drivers/soc/qcom/llcc-qcom.c
-@@ -45,6 +45,9 @@
- #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
- #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
- 
-+#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
-+#define LLCC_TRP_PCB_ACT              0x21F04
-+
- #define BANK_OFFSET_STRIDE	      0x80000
- 
- /**
-@@ -89,6 +92,7 @@ struct llcc_slice_config {
- struct qcom_llcc_config {
- 	const struct llcc_slice_config *sct_data;
- 	int size;
-+	bool need_llcc_cfg;
- };
- 
- static const struct llcc_slice_config sc7180_data[] =  {
-@@ -122,11 +126,13 @@ static const struct llcc_slice_config sdm845_data[] =  {
- static const struct qcom_llcc_config sc7180_cfg = {
- 	.sct_data	= sc7180_data,
- 	.size		= ARRAY_SIZE(sc7180_data),
-+	.need_llcc_cfg	= true,
- };
- 
- static const struct qcom_llcc_config sdm845_cfg = {
- 	.sct_data	= sdm845_data,
- 	.size		= ARRAY_SIZE(sdm845_data),
-+	.need_llcc_cfg	= false,
- };
- 
- static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
-@@ -327,6 +333,7 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
- 	u32 attr0_val;
- 	u32 max_cap_cacheline;
- 	u32 sz;
-+	u32 disable_cap_alloc, retain_pc;
- 	int ret = 0;
- 	const struct llcc_slice_config *llcc_table;
- 	struct llcc_slice_desc desc;
-@@ -369,6 +376,21 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
- 					attr0_val);
- 		if (ret)
- 			return ret;
-+
-+		if (drv_data->need_llcc_config) {
-+			disable_cap_alloc = llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
-+			ret = regmap_write(drv_data->bcast_regmap,
-+						LLCC_TRP_SCID_DIS_CAP_ALLOC, disable_cap_alloc);
-+			if (ret)
-+				return ret;
-+
-+			retain_pc = llcc_table[i].retain_on_pc << llcc_table[i].slice_id;
-+			ret = regmap_write(drv_data->bcast_regmap,
-+						LLCC_TRP_PCB_ACT, retain_pc);
-+			if (ret)
-+				return ret;
-+		}
-+
- 		if (llcc_table[i].activate_on_init) {
- 			desc.slice_id = llcc_table[i].slice_id;
- 			ret = llcc_slice_activate(&desc);
-@@ -474,6 +496,7 @@ static int qcom_llcc_probe(struct platform_device *pdev)
- 
- 	drv_data->cfg = llcc_cfg;
- 	drv_data->cfg_size = sz;
-+	drv_data->need_llcc_config = cfg->need_llcc_cfg;
- 	mutex_init(&drv_data->lock);
- 	platform_set_drvdata(pdev, drv_data);
- 
-diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-index 90b864655822..52c780085f61 100644
---- a/include/linux/soc/qcom/llcc-qcom.h
-+++ b/include/linux/soc/qcom/llcc-qcom.h
-@@ -73,6 +73,7 @@ struct llcc_edac_reg_data {
-  * @bitmap: Bit map to track the active slice ids
-  * @offsets: Pointer to the bank offsets array
-  * @ecc_irq: interrupt for llcc cache error detection and reporting
-+ * @need_llcc_config: check if llcc configuration is required
-  */
- struct llcc_drv_data {
- 	struct regmap *regmap;
-@@ -85,6 +86,7 @@ struct llcc_drv_data {
- 	unsigned long *bitmap;
- 	u32 *offsets;
- 	int ecc_irq;
-+	bool need_llcc_config;
- };
- 
- #if IS_ENABLED(CONFIG_QCOM_LLCC)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+T24gTW9uLCAyMDIwLTA5LTA3IGF0IDE2OjA5ICswMjAwLCBHcmVnIEtyb2FoLUhhcnRtYW4gd3Jv
+dGU6DQo+IE9uIE1vbiwgU2VwIDA3LCAyMDIwIGF0IDA5OjUxOjE1UE0gKzA4MDAsIEZyYW5raWUg
+Q2hhbmcgd3JvdGU6DQo+ID4gT24gTW9uLCAyMDIwLTA5LTA3IGF0IDE0OjI1ICswMjAwLCBHcmVn
+IEtyb2FoLUhhcnRtYW4gd3JvdGU6DQo+ID4gPiBPbiBNb24sIFNlcCAwNywgMjAyMCBhdCAwODow
+MDo1NVBNICswODAwLCBGcmFua2llIENoYW5nIHdyb3RlOg0KPiA+ID4gPiBGcm9tOiAiRnJhbmtp
+ZS5DaGFuZyIgPEZyYW5raWUuQ2hhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPiANCj4gPiA+ID4g
+UmVjb3JkIHN0YXJ0L2VuZCB0aW1lc3RhbXAgZm9yIGJpbmRlciB0cmFuc2FjdGlvbi4NCj4gPiA+
+ID4gV2hlbiB0cmFuc2FjdGlvbiBpcyBjb21wbGV0ZWQgb3IgdHJhbnNhY3Rpb24gaXMgZnJlZSwN
+Cj4gPiA+ID4gaXQgd291bGQgYmUgY2hlY2tlZCBpZiB0cmFuc2FjdGlvbiBsYXRlbmN5IG92ZXIg
+dGhyZXNob2xkDQo+ID4gPiA+IChkZWZhdWx0IDIgc2VjKSwgaWYgeWVzLCBwcmludGluZyByZWxh
+dGVkIGluZm9ybWF0aW9uIGZvciB0cmFjaW5nLg0KPiA+ID4gPiANCj4gPiA+ID4gLyogSW1wbGVt
+ZW50IGRldGFpbHMgKi8NCj4gPiA+ID4gLSBBZGQgbGF0ZW5jeSB0cmFjZXIgbW9kdWxlIHRvIG1v
+bml0b3IgdHJhbnNhY3Rpb24NCj4gPiA+ID4gICBieSBhdHRhY2hpbmcgdG8gbmV3IHRyYWNlcG9p
+bnRzIGludHJvZHVjZWQNCj4gPiA+ID4gICB3aGVuIHRyYW5zYWN0aW9ucyBhcmUgYWxsb2NhdGVk
+IGFuZCBmcmVlZC4NCj4gPiA+ID4gICBUaGUgdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUg
+d291bGQgbm90IGJlIGVuYWJsZWQNCj4gPiA+ID4gICBieSBkZWZhdWx0LiBNb25pdG9yaW5nIHdo
+aWNoIHRyYW5zYWN0aW9uIGlzIHRvbyBzbG93IHRvDQo+ID4gPiA+ICAgY2F1c2Ugc29tZSBvZiBl
+eGNlcHRpb25zIGlzIGltcG9ydGFudC4gU28gd2UgaG9vayB0aGUNCj4gPiA+ID4gICB0cmFjZXBv
+aW50IHRvIGNhbGwgdGhlIG1vbml0b3IgZnVuY3Rpb24uDQo+ID4gPiA+IA0KPiA+ID4gPiAtIFNp
+bmNlIHNvbWUgb2YgbW9kdWxlcyB3b3VsZCB0cmlnZ2VyIHRpbWVvdXQgTkUNCj4gPiA+ID4gICBp
+ZiB0aGVpciBiaW5kZXIgdHJhbnNhY3Rpb24gZG9uJ3QgZmluaXNoIGluIHRpbWUsDQo+ID4gPiA+
+ICAgc3VjaCBhcyBhdWRpbyB0aW1lb3V0ICg1IHNlYyksIGV2ZW4gQlQgY29tbWFuZA0KPiA+ID4g
+PiAgIHRpbWVvdXQgKDIgc2VjKSwgZXRjLg0KPiA+ID4gPiAgIFRoZXJlZm9yZSwgc2V0dGluZyB0
+aGUgdGltZW91dCB0aHJlc2hvbGQgYXMgZGVmYXVsdA0KPiA+ID4gPiAgIDIgc2Vjb25kcyBjb3Vs
+ZCBiZSBoZWxwZnVsIHRvIGRlYnVnLg0KPiA+ID4gPiAgIEJ1dCB0aGlzIHRpbWVvdXQgdGhyZXNo
+b2xkIGlzIGNvbmZpZ3VyYWJsZSwgdG8gbGV0DQo+ID4gPiA+ICAgYWxsIHVzZXJzIGRldGVybWlu
+ZSB0aGUgbW9yZSBzdWl0YWJsZSB0aHJlc2hvbGQuDQo+ID4gPiA+IA0KPiA+ID4gPiAtIFRoZSBy
+ZWFzb24gd2h5IHByaW50aW5nIHRoZSByZWxhdGVkIGluZm9ybWF0aW9uIHRvDQo+ID4gPiA+ICAg
+a2VybmVsIGluZm9ybWF0aW9uIGxvZyBidXQgbm90IHRyYWNlIGJ1ZmZlciBpcyB0aGF0DQo+ID4g
+PiA+ICAgc29tZSBhYm5vcm1hbCB0cmFuc2FjdGlvbnMgbWF5IGJlIHBlbmRpbmcgZm9yIGEgbG9u
+Zw0KPiA+ID4gPiAgIHRpbWUgYWdvLCB0aGV5IGNvdWxkIG5vdCBiZSByZWNvcmRlZCBkdWUgdG8g
+YnVmZmVyDQo+ID4gPiA+ICAgbGltaXRlZC4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IEZyYW5raWUuQ2hhbmcgPEZyYW5raWUuQ2hhbmdAbWVkaWF0ZWsuY29tPg0KPiA+ID4gPiBB
+Y2tlZC1ieTogVG9kZCBLam9zIDx0a2pvc0Bnb29nbGUuY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+
+ID4gIGRyaXZlcnMvYW5kcm9pZC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgIDggKysrDQo+
+ID4gPiA+ICBkcml2ZXJzL2FuZHJvaWQvTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgICAxICsN
+Cj4gPiA+ID4gIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYyAgICAgICAgICAgICAgICB8ICAgIDYg
+KysNCj4gPiA+ID4gIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfaW50ZXJuYWwuaCAgICAgICB8ICAg
+MTMgKysrKw0KPiA+ID4gPiAgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5j
+IHwgIDExMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICBkcml2ZXJz
+L2FuZHJvaWQvYmluZGVyX3RyYWNlLmggICAgICAgICAgfCAgIDI2ICsrKysrKy0NCj4gPiA+ID4g
+IDYgZmlsZXMgY2hhbmdlZCwgMTYzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4g
+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3Ry
+YWNlci5jDQo+ID4gPiA+IA0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL0tj
+b25maWcgYi9kcml2ZXJzL2FuZHJvaWQvS2NvbmZpZw0KPiA+ID4gPiBpbmRleCA1M2IyMmUyLi44
+YWFkYWY0IDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL2FuZHJvaWQvS2NvbmZpZw0KPiA+
+ID4gPiArKysgYi9kcml2ZXJzL2FuZHJvaWQvS2NvbmZpZw0KPiA+ID4gPiBAQCAtNTQsNiArNTQs
+MTQgQEAgY29uZmlnIEFORFJPSURfQklOREVSX0lQQ19TRUxGVEVTVA0KPiA+ID4gPiAgCSAgZXho
+YXVzdGl2ZWx5IHdpdGggY29tYmluYXRpb25zIG9mIHZhcmlvdXMgYnVmZmVyIHNpemVzIGFuZA0K
+PiA+ID4gPiAgCSAgYWxpZ25tZW50cy4NCj4gPiA+ID4gIA0KPiA+ID4gPiArY29uZmlnIEJJTkRF
+Ul9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HDQo+ID4gPiA+ICsJdHJpc3RhdGUgIkFuZHJv
+aWQgQmluZGVyIHRyYW5zYWN0aW9uIHRyYWNraW5nIg0KPiA+ID4gPiArCWhlbHANCj4gPiA+ID4g
+KwkgIFVzZWQgZm9yIHRyYWNrIGFibm9ybWFsIGJpbmRlciB0cmFuc2FjdGlvbiB3aGljaCBpcyBv
+dmVyIHRocmVzaG9sZCwNCj4gPiA+ID4gKwkgIHdoZW4gdGhlIHRyYW5zYWN0aW9uIGlzIGRvbmUg
+b3IgYmUgZnJlZSwgdGhpcyB0cmFuc2FjdGlvbiB3b3VsZCBiZQ0KPiA+ID4gPiArCSAgY2hlY2tl
+ZCB3aGV0aGVyIGl0IGV4ZWN1dGVkIG92ZXJ0aW1lLg0KPiA+ID4gPiArCSAgSWYgeWVzLCBwcmlu
+dGluZyBvdXQgdGhlIGRldGFpbGVkIGluZm8uDQo+ID4gPiA+ICsNCj4gPiA+ID4gIGVuZGlmICMg
+aWYgQU5EUk9JRA0KPiA+ID4gPiAgDQo+ID4gPiA+ICBlbmRtZW51DQo+ID4gPiA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2FuZHJvaWQvTWFrZWZpbGUgYi9kcml2ZXJzL2FuZHJvaWQvTWFrZWZpbGUN
+Cj4gPiA+ID4gaW5kZXggYzlkM2QwYzkuLmMyZmZkYjYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2Ry
+aXZlcnMvYW5kcm9pZC9NYWtlZmlsZQ0KPiA+ID4gPiArKysgYi9kcml2ZXJzL2FuZHJvaWQvTWFr
+ZWZpbGUNCj4gPiA+ID4gQEAgLTQsMyArNCw0IEBAIGNjZmxhZ3MteSArPSAtSSQoc3JjKQkJCSMg
+bmVlZGVkIGZvciB0cmFjZSBldmVudHMNCj4gPiA+ID4gIG9iai0kKENPTkZJR19BTkRST0lEX0JJ
+TkRFUkZTKQkJKz0gYmluZGVyZnMubw0KPiA+ID4gPiAgb2JqLSQoQ09ORklHX0FORFJPSURfQklO
+REVSX0lQQykJKz0gYmluZGVyLm8gYmluZGVyX2FsbG9jLm8NCj4gPiA+ID4gIG9iai0kKENPTkZJ
+R19BTkRST0lEX0JJTkRFUl9JUENfU0VMRlRFU1QpICs9IGJpbmRlcl9hbGxvY19zZWxmdGVzdC5v
+DQo+ID4gPiA+ICtvYmotJChDT05GSUdfQklOREVSX1RSQU5TQUNUSU9OX0xBVEVOQ1lfVFJBQ0tJ
+TkcpCSs9IGJpbmRlcl9sYXRlbmN5X3RyYWNlci5vDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2FuZHJvaWQvYmluZGVyLmMgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVyLmMNCj4gPiA+ID4g
+aW5kZXggMGNhYjkwMC4uNjVhZDM4YyAxMDA2NDQNCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9hbmRy
+b2lkL2JpbmRlci5jDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYw0KPiA+
+ID4gPiBAQCAtMjY3NCw2ICsyNjc0LDcgQEAgc3RhdGljIHZvaWQgYmluZGVyX3RyYW5zYWN0aW9u
+KHN0cnVjdCBiaW5kZXJfcHJvYyAqcHJvYywNCj4gPiA+ID4gIAkJcmV0dXJuX2Vycm9yX2xpbmUg
+PSBfX0xJTkVfXzsNCj4gPiA+ID4gIAkJZ290byBlcnJfYWxsb2NfdF9mYWlsZWQ7DQo+ID4gPiA+
+ICAJfQ0KPiA+ID4gPiArCXRyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9hbGxvYyh0KTsNCj4gPiA+
+ID4gIAlJTklUX0xJU1RfSEVBRCgmdC0+ZmRfZml4dXBzKTsNCj4gPiA+ID4gIAliaW5kZXJfc3Rh
+dHNfY3JlYXRlZChCSU5ERVJfU1RBVF9UUkFOU0FDVElPTik7DQo+ID4gPiA+ICAJc3Bpbl9sb2Nr
+X2luaXQoJnQtPmxvY2spOw0KPiA+ID4gPiBAQCAtNTE3Nyw2ICs1MTc4LDcgQEAgc3RhdGljIHZv
+aWQgcHJpbnRfYmluZGVyX3RyYW5zYWN0aW9uX2lsb2NrZWQoc3RydWN0IHNlcV9maWxlICptLA0K
+PiA+ID4gPiAgCQkgICB0b19wcm9jID8gdG9fcHJvYy0+cGlkIDogMCwNCj4gPiA+ID4gIAkJICAg
+dC0+dG9fdGhyZWFkID8gdC0+dG9fdGhyZWFkLT5waWQgOiAwLA0KPiA+ID4gPiAgCQkgICB0LT5j
+b2RlLCB0LT5mbGFncywgdC0+cHJpb3JpdHksIHQtPm5lZWRfcmVwbHkpOw0KPiA+ID4gPiArCXRy
+YWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9pbmZvKG0sIHQpOw0KPiA+ID4gPiAgCXNwaW5fdW5sb2Nr
+KCZ0LT5sb2NrKTsNCj4gPiA+ID4gIA0KPiA+ID4gPiAgCWlmIChwcm9jICE9IHRvX3Byb2MpIHsN
+Cj4gPiA+ID4gQEAgLTU4MTgsNCArNTgyMCw4IEBAIHN0YXRpYyBpbnQgX19pbml0IGJpbmRlcl9p
+bml0KHZvaWQpDQo+ID4gPiA+ICAjZGVmaW5lIENSRUFURV9UUkFDRV9QT0lOVFMNCj4gPiA+ID4g
+ICNpbmNsdWRlICJiaW5kZXJfdHJhY2UuaCINCj4gPiA+ID4gIA0KPiA+ID4gPiArRVhQT1JUX1RS
+QUNFUE9JTlRfU1lNQk9MKGJpbmRlcl90eG5fbGF0ZW5jeV9hbGxvYyk7DQo+ID4gPiA+ICtFWFBP
+UlRfVFJBQ0VQT0lOVF9TWU1CT0woYmluZGVyX3R4bl9sYXRlbmN5X2luZm8pOw0KPiA+ID4gPiAr
+RVhQT1JUX1RSQUNFUE9JTlRfU1lNQk9MKGJpbmRlcl90eG5fbGF0ZW5jeV9mcmVlKTsNCj4gPiA+
+ID4gKw0KPiA+ID4gPiAgTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiA+ID4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oIGIvZHJpdmVycy9hbmRyb2lk
+L2JpbmRlcl9pbnRlcm5hbC5oDQo+ID4gPiA+IGluZGV4IDg3MjIzMmYuLjMwOWQxYjEwIDEwMDY0
+NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJzL2FuZHJvaWQvYmluZGVyX2ludGVybmFsLmgNCj4gPiA+
+ID4gKysrIGIvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9pbnRlcm5hbC5oDQo+ID4gPiA+IEBAIC0x
+NSw2ICsxNSwxMSBAQA0KPiA+ID4gPiAgI2luY2x1ZGUgPHVhcGkvbGludXgvYW5kcm9pZC9iaW5k
+ZXJmcy5oPg0KPiA+ID4gPiAgI2luY2x1ZGUgImJpbmRlcl9hbGxvYy5oIg0KPiA+ID4gPiAgDQo+
+ID4gPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfQklOREVSX1RSQU5TQUNUSU9OX0xBVEVOQ1lf
+VFJBQ0tJTkcpDQo+ID4gPiA+ICsjaW5jbHVkZSA8dWFwaS9saW51eC90aW1lX3R5cGVzLmg+DQo+
+ID4gPiA+ICsjaW5jbHVkZSA8bGludXgvcnRjLmg+DQo+ID4gPiA+ICsjZW5kaWYNCj4gPiA+ID4g
+Kw0KPiA+ID4gPiAgc3RydWN0IGJpbmRlcl9jb250ZXh0IHsNCj4gPiA+ID4gIAlzdHJ1Y3QgYmlu
+ZGVyX25vZGUgKmJpbmRlcl9jb250ZXh0X21ncl9ub2RlOw0KPiA+ID4gPiAgCXN0cnVjdCBtdXRl
+eCBjb250ZXh0X21ncl9ub2RlX2xvY2s7DQo+ID4gPiA+IEBAIC01MjQsNiArNTI5LDE0IEBAIHN0
+cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gew0KPiA+ID4gPiAgCSAqIGR1cmluZyB0aHJlYWQgdGVh
+cmRvd24NCj4gPiA+ID4gIAkgKi8NCj4gPiA+ID4gIAlzcGlubG9ja190IGxvY2s7DQo+ID4gPiA+
+ICsJLyoqDQo+ID4gPiA+ICsJICogQHRpbWVzdGFtcCBhbmQgQHR2IGFyZSB1c2VkIHRvIHJlY29y
+ZCB0aGUgdGltZQ0KPiA+ID4gPiArCSAqIHRoYXQgdGhlIGJpbmRlciB0cmFuc2FjdGlvbiBzdGFy
+dHVwDQo+ID4gPiA+ICsJICovDQo+ID4gPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfQklOREVS
+X1RSQU5TQUNUSU9OX0xBVEVOQ1lfVFJBQ0tJTkcpDQo+ID4gPiA+ICsJc3RydWN0IHRpbWVzcGVj
+NjQgdGltZXN0YW1wOw0KPiA+ID4gPiArCXN0cnVjdCBfX2tlcm5lbF9vbGRfdGltZXZhbCB0djsN
+Cj4gPiA+IA0KPiA+ID4gQXMgSSBzdGF0ZWQgaW4gdGhlIDAvMyBlbWFpbCwgcGxlYXNlIHVzZSB0
+aGUgY29ycmVjdCBpbi1rZXJuZWwgc3RydWN0dXJlDQo+ID4gPiBmb3IgdGhpcy4gIFRoYXQgc3Ry
+dWN0dXJlIGlzIF9PTkxZXyBmb3Igb2xkIHVzZXJzcGFjZSBhcGkgY29tcGF0aWJpbGl0eQ0KPiA+
+ID4gaXNzdWVzLiAgV2hpY2ggaXMgbm90IHRoZSBjYXNlIGhlcmUgYXQgYWxsLg0KPiA+ID4gDQo+
+ID4gPiB0aGFua3MsDQo+ID4gPiBncmVnIGstaA0KPiA+IA0KPiA+IFNpbmNlIGl0J3Mgbm90IHBy
+b3BlciB0byB1c2UgdGltZXZhbCAmIF9fa2VybmVsX29sZF90aW1ldmFsLg0KPiA+IFRoZSByZW1h
+aW5pbmcgc3RydWN0dXJlIHdpdGggdHZfdXNlYyB0aGF0IEkgZm91bmQgaXMNCj4gPiBfX2tlcm5l
+bF90aW1leF90aW1ldmFsLCBidXQgSSdtIG5vdCBzdXJlIGlmIHRoaXMgaXMgcHJvcGVyIG9uZSBv
+ciBub3QuDQo+ID4gQWxsIEkgY2FuIHNlZSBpcyBpbg0KPiA+IGh0dHBzOi8vbHduLm5ldC9tbC9s
+aW51eC1rZXJuZWwvMjAxODA3MDUyMTM2MDQuMTg4ODMtNi1kZWVwYS5rZXJuZWxAZ21haWwuY29t
+Lw0KPiA+IA0KPiA+IEknbSBhZnJhaWQgb2YgdXNpbmcgd3Jvbmcgc3RydWN0dXJlIGFnYWluLg0K
+PiA+IENvdWxkIHlvdSBnaXZlIG1lIHNvbWUgYWR2aWNlcyBhYm91dCB0aGlzPw0KPiA+IA0KPiA+
+IE9yIGlzIHRoZXJlIGFub3RoZXIgc3VpdGFibGUgd2F5IHRvIHJlcGxhY2UgdGltZXZhbA0KPiAN
+Cj4gV2hhdCBleGFjdGx5IGFyZSB5b3UgdHJ5aW5nIHRvIG1lYXN1cmUgc3VjaCB0aGF0IHlvdSBm
+ZWVsIHlvdSBuZWVkIGENCj4gdGltZXZhbCBzdHJ1Y3R1cmU/DQo+IA0KQWN0dWFsbHkgSSdkIGxp
+a2UgdG8gcmVjb3JkIHRpbWVzdGFtcCB3aXRoIHN0YW5kYXJkIHRpbWUgc3RydWN0dXJlLCBzbyBJ
+DQp1c2VkICdzdHJ1Y3QgdGltZXZhbCcgaW4gdGhlIHBhc3QgcGF0Y2guIEhvd2V2ZXIgaXQncyBk
+ZXByZWNhdGVkLCBzbyBJDQphbSBsb29raW5nIGZvciB0aGUgYWx0ZXJuYXRpdmVzLg0KDQpBZGRp
+dGlvbmFsbHksIEkgaGF2ZSBhbHJlYWR5IGxvb2tlZCBzb21lIHBhdGNoZXMgdGhhdCByZXBsYWNp
+bmcgdGltZXZhbA0Kd2l0aCB0aW1lc3BlYzY0LiBJJ2xsIGRvIHRoZSBzYW1lIHdheSBpbiBuZXh0
+IHZlcnNpb24gcGF0Y2guDQoNCk1hbnkgdGhhbmtzLA0KRnJhbmtpZQ0K
 
