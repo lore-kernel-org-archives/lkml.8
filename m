@@ -2,82 +2,140 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8342C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B527C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1B3206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TgU0nbUg"
+	by mail.kernel.org (Postfix) with ESMTP id 5C72E2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599587935;
+	bh=+MrB/epwZGnWNjliNYOnomMJj4dTtuCW5Vy/7/WAXYo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a6gVduWT48fcq7uWK/Lcuzexy+4unCYczCaXelWOmiCRUBMb3VprTf1Dg4b/cWSY4
+	 QpSIzKTCWEZHXvgKn9Vdmgwt+MlMRoSrwj4SB4hblT/4DDneYCIHjJYtgMaik7odmS
+	 vWwuAPAQKa7IRnTmhAs/AkrS6O53CJV8EFUAmytY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbgIHR63 (ORCPT
+        id S1732280AbgIHR6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:58:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgIHR6V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:58:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD62C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DO6W80RdfG9P9Z4fc9rbaY/MdeJfPrgZXo3Rg960r0c=; b=TgU0nbUgP8phE3d+0e2QoGBHwD
-        feFtPdBAtdEUbNiMqPm/NVSd+CE+MM4/wZoKFaY/3kaNkarsSzAEcimpK4Do9wIl8maTrW1Du71hI
-        zYZecYMsVtVLhzfUUyza+suNgTeHebQ9tS/p/NnPhV46tR8hb5sGj6vP7cQQJ7v3VRm4/NQZE4o0z
-        MiknYyoeDKA44fWsJis4tcZnyeeGSMzSmr+aBA6WwkfNnxOv3vVdchd4A4Mtx9/JxBIMB6UqHe9uN
-        IEoyAnN5V/5vTSoXA58/nEkv6c8+IFyOe0p9BxadW9g/kkC1i3MHF8x/igPFUkuECYrfkt6caA2j2
-        Js+InoZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFhsh-0006Ym-Vv; Tue, 08 Sep 2020 17:58:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 8 Sep 2020 13:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731563AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:12:47 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9ED99307590;
-        Tue,  8 Sep 2020 19:58:08 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8601D24C37E82; Tue,  8 Sep 2020 19:58:08 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 19:58:08 +0200
-From:   peterz@infradead.org
-To:     Qian Cai <cai@lca.pw>
-Cc:     mark.rutland@arm.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH -next] fork: silence a false postive warning in __mmdrop
-Message-ID: <20200908175808.GX1362448@hirez.programming.kicks-ass.net>
-References: <20200604150344.1796-1-cai@lca.pw>
- <20200722100637.GR119549@hirez.programming.kicks-ass.net>
- <20200722131900.GA4041@lca.pw>
- <20200722134406.GN10769@hirez.programming.kicks-ass.net>
- <20200908165043.GD5147@lca.pw>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1456F2488D;
+        Tue,  8 Sep 2020 15:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580335;
+        bh=+MrB/epwZGnWNjliNYOnomMJj4dTtuCW5Vy/7/WAXYo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G1xH9X7+pNO9fLRdWHF8M9+dusD8Eru2AdOXrqy1YMhtqUP4k0QLRbIpkAPac0Y1N
+         KKNzODmJ6084ERJLQJEgrApydMx16DaTzfPu6l5vvWO366CavVnHfq4LrX3h4krY+S
+         H67/6j5VxM7SNG55xMC+k3e5OkUKqlh/6ohX7J2M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Christensen <drc@linux.vnet.ibm.com>,
+        Baptiste Covolato <baptiste@arista.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 34/65] tg3: Fix soft lockup when tg3_reset_task() fails.
+Date:   Tue,  8 Sep 2020 17:26:19 +0200
+Message-Id: <20200908152218.805421265@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908165043.GD5147@lca.pw>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 12:50:44PM -0400, Qian Cai wrote:
-> > No, you're talking nonsense. We must not free @mm when
-> > 'current->active_mm == mm', never.
-> 
-> Yes, you are right. It still trigger this below on powerpc with today's
-> linux-next by fuzzing for a while (saw a few times on recent linux-next before
-> as well but so far mostly reproducible on powerpc here). Any idea?
+From: Michael Chan <michael.chan@broadcom.com>
 
-If you can reliably reproduce this, the next thing is to trace mm_count
-and figure out where it goes side-ways. I suppose we're looking for an
-'extra' decrement.
+[ Upstream commit 556699341efa98243e08e34401b3f601da91f5a3 ]
 
-Mark tried this for a while but gave up because he couldn't reliably
-reproduce.
+If tg3_reset_task() fails, the device state is left in an inconsistent
+state with IFF_RUNNING still set but NAPI state not enabled.  A
+subsequent operation, such as ifdown or AER error can cause it to
+soft lock up when it tries to disable NAPI state.
+
+Fix it by bringing down the device to !IFF_RUNNING state when
+tg3_reset_task() fails.  tg3_reset_task() running from workqueue
+will now call tg3_close() when the reset fails.  We need to
+modify tg3_reset_task_cancel() slightly to avoid tg3_close()
+calling cancel_work_sync() to cancel tg3_reset_task().  Otherwise
+cancel_work_sync() will wait forever for tg3_reset_task() to
+finish.
+
+Reported-by: David Christensen <drc@linux.vnet.ibm.com>
+Reported-by: Baptiste Covolato <baptiste@arista.com>
+Fixes: db2199737990 ("tg3: Schedule at most one tg3_reset_task run")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/tg3.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index e40d31b405253..480179ddc45b6 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -7204,8 +7204,8 @@ static inline void tg3_reset_task_schedule(struct tg3 *tp)
+ 
+ static inline void tg3_reset_task_cancel(struct tg3 *tp)
+ {
+-	cancel_work_sync(&tp->reset_task);
+-	tg3_flag_clear(tp, RESET_TASK_PENDING);
++	if (test_and_clear_bit(TG3_FLAG_RESET_TASK_PENDING, tp->tg3_flags))
++		cancel_work_sync(&tp->reset_task);
+ 	tg3_flag_clear(tp, TX_RECOVERY_PENDING);
+ }
+ 
+@@ -11182,18 +11182,27 @@ static void tg3_reset_task(struct work_struct *work)
+ 
+ 	tg3_halt(tp, RESET_KIND_SHUTDOWN, 0);
+ 	err = tg3_init_hw(tp, true);
+-	if (err)
++	if (err) {
++		tg3_full_unlock(tp);
++		tp->irq_sync = 0;
++		tg3_napi_enable(tp);
++		/* Clear this flag so that tg3_reset_task_cancel() will not
++		 * call cancel_work_sync() and wait forever.
++		 */
++		tg3_flag_clear(tp, RESET_TASK_PENDING);
++		dev_close(tp->dev);
+ 		goto out;
++	}
+ 
+ 	tg3_netif_start(tp);
+ 
+-out:
+ 	tg3_full_unlock(tp);
+ 
+ 	if (!err)
+ 		tg3_phy_start(tp);
+ 
+ 	tg3_flag_clear(tp, RESET_TASK_PENDING);
++out:
+ 	rtnl_unlock();
+ }
+ 
+-- 
+2.25.1
+
+
+
