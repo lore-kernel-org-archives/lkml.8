@@ -2,113 +2,206 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169E5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBB8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBBFD2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3E72137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgIHVfi (ORCPT
+        id S1728643AbgIHVh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:35:38 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:43482 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726490AbgIHVff (ORCPT
+        Tue, 8 Sep 2020 17:37:58 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:35399 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgIHVhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:35:35 -0400
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.143])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 407E8200C8;
-        Tue,  8 Sep 2020 21:35:33 +0000 (UTC)
-Received: from us4-mdac16-57.at1.mdlocal (unknown [10.110.50.149])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 3E7538009B;
-        Tue,  8 Sep 2020 21:35:33 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.49.6])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id C04CC40072;
-        Tue,  8 Sep 2020 21:35:32 +0000 (UTC)
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 7ED40B00080;
-        Tue,  8 Sep 2020 21:35:32 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Sep 2020
- 22:35:25 +0100
-Subject: Re: [PATCH 5.4 086/129] net: core: use listified Rx for GRO_NORMAL in
- napi_gro_receive()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, Alexander Lobakin <alobakin@dlink.ru>,
-        "David S. Miller" <davem@davemloft.net>,
-        Hyunsoon Kim <h10.kim@samsung.com>
-References: <20200908152229.689878733@linuxfoundation.org>
- <20200908152234.000867723@linuxfoundation.org>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <70529b6c-7b00-d760-c0c0-42f0ea5784f3@solarflare.com>
-Date:   Tue, 8 Sep 2020 22:35:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 8 Sep 2020 17:37:55 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MSZDt-1k8m772Fsf-00Ssj4; Tue, 08 Sep 2020 23:37:20 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Balsundar P <balsundar.p@microsemi.com>
+Cc:     hch@infradead.org, Arnd Bergmann <arnd@arndb.de>,
+        Zou Wei <zou_wei@huawei.com>, Hannes Reinecke <hare@suse.de>,
+        Sagar Biradar <Sagar.Biradar@microchip.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] scsi: aacraid: improve compat_ioctl handlers
+Date:   Tue,  8 Sep 2020 23:36:21 +0200
+Message-Id: <20200908213715.3553098-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200908152234.000867723@linuxfoundation.org>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25652.007
-X-TM-AS-Result: No-1.974400-8.000000-10
-X-TMASE-MatchedRID: zGP2F0O7j/v4ECMHJTM/ufZvT2zYoYOwC/ExpXrHizwZFDQxUvPcmL6Y
-        VRYkPkYCSCF6HRRH3gIN25tj8sME0lpGtZpuPG16tKV49RpAH3tOxMIe1e/Q+lT4wXE1Q3+tocP
-        Vrs+9l2WrarPPtIvi4uYoVJQ9TcQivz6xGurTfloBnSWdyp4eoWgU1o1xV13fYcgF3TR2TfI5pz
-        FMSqNkwrysmJ3Ri+UacaFM17gO4IyR9GF2J2xqM4MbH85DUZXyseWplitmp0j6C0ePs7A07Sib6
-        hcH39TzeqiyYsWDasnfZjOmAfXU7ARUs+MuSyMTpgHjzELc15CjObMcXmcytw5LZNIb/Wv0bMa8
-        YIGFldTr/ToUHXs83CgS77Whwf5LUdNvZjjOj9C63BPMcrcQuXeYWV2RaAfD8VsfdwUmMsnAvpL
-        E+mvX8g==
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--1.974400-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25652.007
-X-MDID: 1599600933-oajcFjSGPQmL
+X-Provags-ID: V03:K1:KRcdwEjkKj9+XoPTDAYicg3zaMW+8aDN7KFTDFdvtQylHXBrceI
+ 4d8eunLAXcM9jP6dDtH+8xmH6N+5+Ao6vVxs4IdympM60xBQnobDY+FN5htDyO4Z9o/PVTC
+ Svxotml9vbAurjzKdHkv2jkFKiF0mLWpVHpCF5JzIn8pjfrK0QYnzJy/PMMe41SHwCcSM1J
+ mgL0yMlSogNhxz1j5/wsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Son/2bucWXE=:OTWFTbHTBU5W/x1+wSmX61
+ n854zU9YhMAAMMGHbpF+rRAAVaTaxn1hsv1mDzufM8Vv/1e87bT2fyl01TMoyyijVGG/IUSSN
+ C/TRFFWsB9LLcWv11jwHRu8JwC3GSGyQ+HoZ2SMJfQ0IXMzWyCWK+I+wWG28/61dOKaSqDl9C
+ CIjjK2kHy0im1xEZ+zoEH+Tqchj/DEE50sXWU7sAmmM7ao9y6Nk/1ckwc196Uif0Ahk/4xoVm
+ tV73tyRXAezE/lt48vEN1BS8s1LsqP+SlKGFmq7FurWjtexBPF36ktnMxymszfz90J1pYd7Km
+ larvBBPrb8QXfWl6K48iPnXGb9aQsZ2mS56fg0U8ANhsxLdajgpXelYeklp8az5XFiEIiJvhS
+ 04fKPSN81HLvABlkGAppA+VdXY+epXySk2bVkjdv9r4w00EFMWaQI6YFNylTWPfPJktIiti/o
+ 6pmpiIrgLWHUnmvbHvTNlaM7blRU1pXJAhm9wWwkKSqFyTK2VxHWNv6Kj6cxllRk/J8x1jl/O
+ UmF6UGzlRZcvkVS/aLCehAN/L8+JI/i0ISqPWQqclnXWifOC3PQCpN/mkSkoWg6iMdstrW/47
+ oO424NllNUX+86z4cr2TgHs/rvdQusIdewL3WrIKMmJ2PIHz2uxWOKBpFfZRKggD9sf2ARhwY
+ vnHAdDU0lX9dXVsW+gVfdVSoJNdsnasZFumOdZ/2uZ9pAhqkQJKecYDpuBZxNEKlS56y+d4Ix
+ EwfVKiLlli97rjsMmOq98EFcUyzWd+SGvkQFz2U6O0bS0LLenxbDo39pXCogLCWummQ6ssaJL
+ 0f5BVExDQaaTOOadR5zu/dJicHBqU/CtvPIsnzos7195rZ5x3t4OXrFrKRNs5tvbSmUaP3Y
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/09/2020 16:25, Greg Kroah-Hartman wrote:
-> From: Alexander Lobakin <alobakin@dlink.ru>
->
-> commit 6570bc79c0dfff0f228b7afd2de720fb4e84d61d upstream.
->
-> Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
-> skbs") made use of listified skb processing for the users of
-> napi_gro_frags().
-> The same technique can be used in a way more common napi_gro_receive()
-> to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers
-> including gro_cells and mac80211 users.
-> This slightly changes the return value in cases where skb is being
-> dropped by the core stack, but it seems to have no impact on related
-> drivers' functionality.
-> gro_normal_batch is left untouched as it's very individual for every
-> single system configuration and might be tuned in manual order to
-> achieve an optimal performance.
->
-> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-> Acked-by: Edward Cree <ecree@solarflare.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Hyunsoon Kim <h10.kim@samsung.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-I'm not quite sure why this is stable material(it's a performance
- enhancement, rather than a fix).  But if you do want to take it,
- make sure you've also got
-c80794323e82 ("net: Fix packet reordering caused by GRO and listified RX cooperation")
-b167191e2a85 ("net: wireless: intel: iwlwifi: fix GRO_NORMAL packet stalling")
- in your tree, particularly the latter as without it this commit
- triggers a severe regression in iwlwifi.
+The use of compat_alloc_user_space() can be easily replaced by
+handling compat arguments in the regular handler, and this will
+make it work for big-endian kernels as well, which at the moment
+get an invalid indirect pointer argument.
 
--ed
+Calling aac_ioctl() instead of aac_compat_do_ioctl() means the
+compat and native code paths behave the same way again, which
+they stopped when the adapter health check was added only
+in the native function.
+
+Fixes: 572ee53a9bad ("scsi: aacraid: check adapter health")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/scsi/aacraid/commctrl.c | 20 +++++++++--
+ drivers/scsi/aacraid/linit.c    | 61 ++-------------------------------
+ 2 files changed, 20 insertions(+), 61 deletions(-)
+
+diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
+index 59e82a832042..6d6f72d68164 100644
+--- a/drivers/scsi/aacraid/commctrl.c
++++ b/drivers/scsi/aacraid/commctrl.c
+@@ -25,6 +25,7 @@
+ #include <linux/completion.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/blkdev.h>
++#include <linux/compat.h>
+ #include <linux/delay.h> /* ssleep prototype */
+ #include <linux/kthread.h>
+ #include <linux/uaccess.h>
+@@ -243,8 +244,23 @@ static int next_getadapter_fib(struct aac_dev * dev, void __user *arg)
+ 	struct list_head * entry;
+ 	unsigned long flags;
+ 
+-	if(copy_from_user((void *)&f, arg, sizeof(struct fib_ioctl)))
+-		return -EFAULT;
++	if (in_compat_syscall()) {
++		struct compat_fib_ioctl {
++			u32	fibctx;
++			s32	wait;
++			compat_uptr_t fib;
++		} cf;
++
++		if (copy_from_user(&f, arg, sizeof(struct compat_fib_ioctl)))
++			return -EFAULT;
++
++		f.fibctx = cf.fibctx;
++		f.wait = cf.wait;
++		f.fib = compat_ptr(cf.fib);
++	} else {
++		if (copy_from_user(&f, arg, sizeof(struct fib_ioctl)))
++			return -EFAULT;
++	}
+ 	/*
+ 	 *	Verify that the HANDLE passed in was a valid AdapterFibContext
+ 	 *
+diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+index 8588da0a0655..8c0f55845138 100644
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -1182,63 +1182,6 @@ static long aac_cfg_ioctl(struct file *file,
+ 	return aac_do_ioctl(aac, cmd, (void __user *)arg);
+ }
+ 
+-#ifdef CONFIG_COMPAT
+-static long aac_compat_do_ioctl(struct aac_dev *dev, unsigned cmd, unsigned long arg)
+-{
+-	long ret;
+-	switch (cmd) {
+-	case FSACTL_MINIPORT_REV_CHECK:
+-	case FSACTL_SENDFIB:
+-	case FSACTL_OPEN_GET_ADAPTER_FIB:
+-	case FSACTL_CLOSE_GET_ADAPTER_FIB:
+-	case FSACTL_SEND_RAW_SRB:
+-	case FSACTL_GET_PCI_INFO:
+-	case FSACTL_QUERY_DISK:
+-	case FSACTL_DELETE_DISK:
+-	case FSACTL_FORCE_DELETE_DISK:
+-	case FSACTL_GET_CONTAINERS:
+-	case FSACTL_SEND_LARGE_FIB:
+-		ret = aac_do_ioctl(dev, cmd, (void __user *)arg);
+-		break;
+-
+-	case FSACTL_GET_NEXT_ADAPTER_FIB: {
+-		struct fib_ioctl __user *f;
+-
+-		f = compat_alloc_user_space(sizeof(*f));
+-		ret = 0;
+-		if (clear_user(f, sizeof(*f)))
+-			ret = -EFAULT;
+-		if (copy_in_user(f, (void __user *)arg, sizeof(struct fib_ioctl) - sizeof(u32)))
+-			ret = -EFAULT;
+-		if (!ret)
+-			ret = aac_do_ioctl(dev, cmd, f);
+-		break;
+-	}
+-
+-	default:
+-		ret = -ENOIOCTLCMD;
+-		break;
+-	}
+-	return ret;
+-}
+-
+-static int aac_compat_ioctl(struct scsi_device *sdev, unsigned int cmd,
+-			    void __user *arg)
+-{
+-	struct aac_dev *dev = (struct aac_dev *)sdev->host->hostdata;
+-	if (!capable(CAP_SYS_RAWIO))
+-		return -EPERM;
+-	return aac_compat_do_ioctl(dev, cmd, (unsigned long)arg);
+-}
+-
+-static long aac_compat_cfg_ioctl(struct file *file, unsigned cmd, unsigned long arg)
+-{
+-	if (!capable(CAP_SYS_RAWIO))
+-		return -EPERM;
+-	return aac_compat_do_ioctl(file->private_data, cmd, arg);
+-}
+-#endif
+-
+ static ssize_t aac_show_model(struct device *device,
+ 			      struct device_attribute *attr, char *buf)
+ {
+@@ -1523,7 +1466,7 @@ static const struct file_operations aac_cfg_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.unlocked_ioctl	= aac_cfg_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.compat_ioctl   = aac_compat_cfg_ioctl,
++	.compat_ioctl   = aac_cfg_ioctl,
+ #endif
+ 	.open		= aac_cfg_open,
+ 	.llseek		= noop_llseek,
+@@ -1536,7 +1479,7 @@ static struct scsi_host_template aac_driver_template = {
+ 	.info				= aac_info,
+ 	.ioctl				= aac_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.compat_ioctl			= aac_compat_ioctl,
++	.compat_ioctl			= aac_ioctl,
+ #endif
+ 	.queuecommand			= aac_queuecommand,
+ 	.bios_param			= aac_biosparm,
+-- 
+2.27.0
+
