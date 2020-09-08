@@ -2,192 +2,176 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C8CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450B620658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4CF20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4/dhoVw"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="n5qGCXo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732496AbgIHT72 (ORCPT
+        id S1732601AbgIHT7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:59:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43110 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730456AbgIHPfi (ORCPT
+        Tue, 8 Sep 2020 15:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730486AbgIHPfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:35:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599579302;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=4kpP9XU0+UuUolyV891ejphwy2iWWA+w3mapvFltoqQ=;
-        b=M4/dhoVwiFPAC9o5sjMN/6iemYg0PzrppMy0JwjxQ3Iw75jvaWTTKMB92Ko/bRzKQQrOdc
-        Vgl1LEEvBKsIS1t4TuqNnzR9Yo7cwXcCeGVOLhsQPBTmeYwgsBSDs85ZstGzEuu0C98yMe
-        gB5l3P0PrZxVrTlhdUgKVKQTlKwkGy0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-537-cDJyKfWiMiKkwKb5iKQU2Q-1; Tue, 08 Sep 2020 10:22:16 -0400
-X-MC-Unique: cDJyKfWiMiKkwKb5iKQU2Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DF0B10ABDA1;
-        Tue,  8 Sep 2020 14:22:14 +0000 (UTC)
-Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E9A917ED84;
-        Tue,  8 Sep 2020 14:22:11 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <32e979c4-68c0-f309-d9d7-d274724bd23e@redhat.com>
-Date:   Tue, 8 Sep 2020 16:22:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 11:35:37 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAC2C09B04B
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:35:06 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id k25so20579978ljg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=tGrF/vntbxcaJrg5poH7gCu+VWyo9L1BGQaIoIoS0bQ=;
+        b=n5qGCXo1v/X8PSEimLNceYfoLFK43B7g0eyI3jYR3uW14XAA4IE07X48ZKE7YJ70UB
+         JEcRKUHQT4cygg8gCURGdeBaerT9Borb6Apcl4jO+AitKEYcyKR+v/V0SsZeW1b9KTKZ
+         T4u/4yQeetA+aH1V5kXiKSA9NeqInShUo9Jj/fF24oDmWL98A/DUSelSqCmPdxjADtXt
+         5egM5+0P5ils3V8bietOEkG7u8rodrCT2oQDTRr94vaFewKmE9Oka8lHZDq/Jryg7P64
+         fBY0QMSrFBHO0ym10Uy5IR1zGhIxxftr1aETdSpB11o9cbC3wy6bK/RXkPmDvIKhlbcJ
+         cRqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=tGrF/vntbxcaJrg5poH7gCu+VWyo9L1BGQaIoIoS0bQ=;
+        b=X4+rGx8JomYr593q4uh4QlRyR2z0HvcwX3rlnZlwiy+ythK4DNR/zO2N4hIis+++Sv
+         1CA7KxkdllfGBlKfKnnnZjYaiATOodUUdhe2cdl5FJBNfoMGCKCJ7if6sVNPLstUTVen
+         ph13Etkl7sIWFFjwJgKK0SknWwURARvGYLCvezgTuZeQ2sQS/dxVOEWTY+8S5jCr/vER
+         23/4Dn9tVxQaivQwtKTZa7gfQZZ5fcIiQRSs9RCbyIWdI3XOcrclkuKyfZIzLyMnuFSA
+         qesq09Kk/4SjnPV+8R3RfcRrzH4g9EXV595lT+Gsm3CUlKoX7Q6u9b3D6bvhEH9CZWC0
+         f6/g==
+X-Gm-Message-State: AOAM533B6/PbGgZfzMsm2KMNiCNVYKsX2R0HuskJZgNEcJL99/fJayGl
+        xkG5ACj1YwhKPqsTu6L7am4pRw==
+X-Google-Smtp-Source: ABdhPJy1r23FBDpD0AieNv6pKwgAOMIvS4RqWasIIr61zMeo/9UcX+kJabzQIpPXrPEHYKTDEOtgpA==
+X-Received: by 2002:a2e:9110:: with SMTP id m16mr13370093ljg.173.1599579304860;
+        Tue, 08 Sep 2020 08:35:04 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id y4sm10537582ljk.61.2020.09.08.08.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 08:35:04 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 17:35:03 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
+ every s_fmt call
+Message-ID: <20200908153503.GA3399240@oden.dyn.berto.se>
+References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200801090456.GB1379367@oden.dyn.berto.se>
+ <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
+ <20200803192108.GB2297236@oden.dyn.berto.se>
+ <6d659e56-1e1f-c9c7-2e66-4ddc4e7fad15@xs4all.nl>
+ <CA+V-a8uzznUvzGgZ5A4B8ASEDbmMCrQPSAcEjO7v45zmAkdGDQ@mail.gmail.com>
+ <20200904022522.GD9369@pendragon.ideasonboard.com>
+ <CA+V-a8tTKu5FeEs+Hi2AwXy-i5OFufeyhTKGC6D4C5fK81895g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <CA+V-a8tTKu5FeEs+Hi2AwXy-i5OFufeyhTKGC6D4C5fK81895g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.09.20 16:05, Zi Yan wrote:
-> On 8 Sep 2020, at 7:57, David Hildenbrand wrote:
+Hi Lad,
+
+On 2020-09-06 20:12:35 +0100, Lad, Prabhakar wrote:
+> Hi Laurent,
 > 
->> On 03.09.20 18:30, Roman Gushchin wrote:
->>> On Thu, Sep 03, 2020 at 05:23:00PM +0300, Kirill A. Shutemov wrote:
->>>> On Wed, Sep 02, 2020 at 02:06:12PM -0400, Zi Yan wrote:
->>>>> From: Zi Yan <ziy@nvidia.com>
->>>>>
->>>>> Hi all,
->>>>>
->>>>> This patchset adds support for 1GB THP on x86_64. It is on top of
->>>>> v5.9-rc2-mmots-2020-08-25-21-13.
->>>>>
->>>>> 1GB THP is more flexible for reducing translation overhead and increasing the
->>>>> performance of applications with large memory footprint without application
->>>>> changes compared to hugetlb.
->>>>
->>>> This statement needs a lot of justification. I don't see 1GB THP as viable
->>>> for any workload. Opportunistic 1GB allocation is very questionable
->>>> strategy.
->>>
->>> Hello, Kirill!
->>>
->>> I share your skepticism about opportunistic 1 GB allocations, however it might be useful
->>> if backed by an madvise() annotations from userspace application. In this case,
->>> 1 GB THPs might be an alternative to 1 GB hugetlbfs pages, but with a more convenient
->>> interface.
->>
->> I have concerns if we would silently use 1~GB THPs in most scenarios
->> where be would have used 2~MB THP. I'd appreciate a trigger to
->> explicitly enable that - MADV_HUGEPAGE is not sufficient because some
->> applications relying on that assume that the THP size will be 2~MB
->> (especially, if you want sparse, large VMAs).
+> On Fri, Sep 4, 2020 at 3:25 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Prabhakar,
+> >
+> > On Thu, Sep 03, 2020 at 03:53:18PM +0100, Lad, Prabhakar wrote:
+> > > On Wed, Aug 19, 2020 at 3:08 PM Hans Verkuil wrote:
+> > > > On 03/08/2020 21:21, Niklas wrote:
+> > > > > On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
+> > > > >> On Sat, Aug 1, 2020 at 10:04 AM Niklas wrote:
+> > > > >>> On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
+> > > > >>>> The crop and compose settings for VIN in non mc mode werent updated
+> > > > >>>> in s_fmt call this resulted in captured images being clipped.
+> > > > >>>>
+> > > > >>>> With the below sequence on the third capture where size is set to
+> > > > >>>> 640x480 resulted in clipped image of size 320x240.
+> > > > >>>>
+> > > > >>>> high(640x480) -> low (320x240) -> high (640x480)
+> > > > >>>>
+> > > > >>>> This patch makes sure the VIN crop and compose settings are updated.
+> > > > >>>
+> > > > >>> This is clearly an inconsistency in the VIN driver that should be fixed.
+> > > > >>> But I think the none-mc mode implements the correct behavior. That is
+> > > > >>> that S_FMT should not modify the crop/compose rectangles other then make
+> > > > >>> sure they don't go out of bounds. This is an area we tried to clarify in
+> > > > >>> the past but I'm still not sure what the correct answer to.
+> > > > >>>
+> > > > >> What should be the exact behaviour of the bridge driver  for s_fmt
+> > > > >> call. Should the crop/compose settings be updated for every s_fmt
+> > > > >> callback or should they be only updated on s_selection callback.
+> > > > >> Currently the non-mc rcar-vin doesnt update the crop/compose setting
+> > > > >> in s_fmt callback due to which I see the above issue as mentioned.
+> > > > >
+> > > > > This is not entirely correct. It does update the crop and compose
+> > > > > rectangles on s_fmt, it makes sure they are not out-of-bounds for the
+> > > > > new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls
+> > > > > in the snippet bellow.
+> > > >
+> > > > For non-mc mode s_fmt must update any crop/compose rectangles to ensure that
+> > > > they are not out-of-bounds. But for mc mode the validation is done when you
+> > > > start streaming, so I think s_fmt won't make any changes in that mode.
+> > >
+> > > Thank you Hans.
+> > >
+> > > > Double-check that with Laurent, though...
+> > >
+> > > Niklas/Laurent - How do we proceed on this ?
+> >
+> > MC devices rely on userspace to propagate formats between entities, and
+> > on kernelspace to propagate formats within entities. This is documented
+> > in https://linuxtv.org/downloads/v4l-dvb-apis/userspace-api/v4l/dev-subdev.html.
+> > The configuration of an entity (formats and selection rectangles) must
+> > be valid at all times. Subdev drivers should thus either adjust or reset
+> > the crop and selection rectangles. The specification isn't clear on
+> > which behaviour should be implemented, the only related text is
+> >
+> > "Sub-devices that scale frames using variable scaling factors should
+> > reset the scale factors to default values when sink pads formats are
+> > modified. If the 1:1 scaling ratio is supported, this means that source
+> > pads formats should be reset to the sink pads formats."
+> >
+> > I would recommend resetting as the default behaviour. In any case,
+> > adjustements are needed to ensure that the configuration remains valid.
+> >
+> In that case can I have your Ack to the patch please.
+
+If this is the approach we wish to take here you should remove the code 
+above and bellow the added block as it becomes redundant whit this 
+change.
+
 > 
-> This patchset is not intended to silently use 1GB THP in place of 2MB THP.
-> First of all, there is a knob /sys/kernel/mm/transparent_hugepage/enable_1GB
-> to enable 1GB THP explicitly. Also, 1GB THP is allocated from a reserved CMA
-> region (although I had alloc_contig_pages as a fallback, which can be removed
-> in next version), so users need to add hugepage_cma=nG kernel parameter to
-> enable 1GB THP allocation. If a finer control is necessary, we can add
-> a new MADV_HUGEPAGE_1GB for 1GB THP.
-
-Thanks for the information - I would have loved to see important
-information like that (esp. how to use) in the cover letter.
-
-So what you propose is (excluding alloc_contig_pages()) really just
-automatically using (previously reserved) 1GB huge pages as 1GB THP
-instead of explicitly using them in an application using hugetlbfs.
-Still, not convinced how helpful that actually is - most certainly you
-really want a mechanism to control this per application (+ maybe make
-the application indicate actual ranges where it makes sense - but then
-you can directly modify the application to use hugetlbfs).
-
-I guess the interesting thing of this approach is that we can
-mix-and-match THP of differing granularity within a single mapping -
-whereby a hugetlbfs allocation would fail in case there isn't sufficient
-1GB pages available. However, there are no guarantees for applications
-anymore (thinking about RT KVM and similar, we really want gigantic
-pages and cannot tolerate falling back to smaller granularity).
-
-What are intended use cases/applications that could benefit? I doubt
-databases and virtualization are really a good fit - they know how to
-handle hugetlbfs just fine.
+> Cheers,
+> Prabhakar
 
 -- 
-Thanks,
-
-David / dhildenb
-
+Regards,
+Niklas Söderlund
