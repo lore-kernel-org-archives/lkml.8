@@ -2,182 +2,210 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32084C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D798FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB71A206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="0Mh/WjQW"
+	by mail.kernel.org (Postfix) with ESMTP id 789E3206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731719AbgIHQjS (ORCPT
+        id S1731928AbgIHQjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732074AbgIHQh1 (ORCPT
+        Tue, 8 Sep 2020 12:39:54 -0400
+Received: from mail-il1-f206.google.com ([209.85.166.206]:34938 "EHLO
+        mail-il1-f206.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731985AbgIHQip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:27 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13083C0612FE
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:58:32 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k15so18966468wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rWwIjxnFTzbkw/BaFxCLOnaCoWy8p8lKDcXzU2XY9Ow=;
-        b=0Mh/WjQW7cqk7vvIT6ANfMSVJkivRyR0vHLEVsdr4dQX1OjZzRdtoApwZqXslIjZiP
-         kSZOOLWhDdsQhdveRqN2HDp+l1m4GDuFBCtEWiCxsbFzs3ur0KxcpCzb6c8q8K1eMfHb
-         WJyVFrutCBoOHu92bew55PlZ7yTm06sJc9i8roPiLYbIczeSsyP/PEr+Os3UB91wFSgs
-         wjmAvSeT25kS/NqvOh0sZOSZWVE/OzMwqKgrcmh6hMvUmzGAnKNCQBUX7BcTkcm5x6pk
-         5zkAr2JrAuvIFfnGvLpiFHfVMmQL0uNF5z5eds0QYZIkSxxH6ubB3r+8FQmICgldecH7
-         HbRA==
+        Tue, 8 Sep 2020 12:38:45 -0400
+Received: by mail-il1-f206.google.com with SMTP id p16so12569991ilp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:38:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rWwIjxnFTzbkw/BaFxCLOnaCoWy8p8lKDcXzU2XY9Ow=;
-        b=cIb14K60Qaw9gSAczb6Uqj2vSh1fVApEfKDEpgg0QGumJvnlYrqJMqULuC0WmUxrW0
-         AYGJH29s+2QkGaivaapPNTVBBBLx3gtQVsZRgSsf9lS+5LJxDhEh+y4cjVMI07sW3OTB
-         S0mGLQc41WT34RA0ftajXUgeDhxisR54qxAOpdk9BTe3iYvVSgyfQ81JqpKauHYpyxpa
-         /WETT9aPQVzHyvLW+5dBHZsOE2QdgkB8/i7/VySXziq2MUXkQneZtLF1G9P7hTuSZSOb
-         cpGgZ3z290RvBkx0QIgD4cedPfr5COOuUMwrgeroEHdsa8mj90FAks1dTQTVmhGVt1gH
-         /+rw==
-X-Gm-Message-State: AOAM531o3K/MuAA4646jmt9c1qXCjE4yxF6RQHao4AvqwUmpeNc8I2kO
-        JBR/idPpCwHxU35D1W53XiogIw==
-X-Google-Smtp-Source: ABdhPJx0tjO6B48c1MN/4xfKk3sKOEne5d+CNPDJ1Yw4DodcBAvPnRi/imY5s2CtNkv8XAEb4aSFng==
-X-Received: by 2002:adf:84c3:: with SMTP id 61mr26170029wrg.131.1599569909956;
-        Tue, 08 Sep 2020 05:58:29 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id y207sm34817875wmc.17.2020.09.08.05.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 05:58:29 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 3/3] gpiolib: unexport devprop_gpiochip_set_names()
-Date:   Tue,  8 Sep 2020 14:58:13 +0200
-Message-Id: <20200908125813.8809-4-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200908125813.8809-1-brgl@bgdev.pl>
-References: <20200908125813.8809-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=dpvampSRKqk3hzME8jOMKeKyXBOan8WOEO3RmX+EpEQ=;
+        b=eIHC3GPuEB/JclMAXKWsJg4xkfclyLCYSVvJ4aqnRPiqrhBA9BgJ+qTIlA3DRgDA8l
+         U2yW69cunc4BKFoDAqbQ4hj1Ks+Fh/Bs2E/vWwit9f+H1eJZROQkwFV68RisEXH7I5l4
+         gMEVt7DkJqSsSDNGL8v5ZPAoXDoJip1Bu2WjR4V69Re/pxjyl5AuxllIxYbRJh7/ZE9t
+         38rH41MMxQa7mvxc+Xa63WMaBJxATTDjJbOhBkLC8Vc0mpSocoJxY0wtz3KfhKEHB2R5
+         OM5Q0V65ndTFCKRxYNfQwG/iKCCu5DsiuLHJChyhm9JGDPvNsY7yKqJLKIdBc07GCtYx
+         KcPA==
+X-Gm-Message-State: AOAM532IZO5oQePcwIK3Zeb+sNcqDt+9upOS3zbNafScqhG37RX8/vKN
+        xvvOjeYViaR1jL4WW2ZFWB2bVQOdtwkutpcHIXjeXZfJyx6u
+X-Google-Smtp-Source: ABdhPJzSeK7K4ZGg1Vx9wgZ8X7yGBL1crrrDuoMF53SkFzGfiL1P9GtdMKI47aeeSCZ4n42sNkGGFKFmpYxTQIlpFIxu0Sa3xW+o
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2d4e:: with SMTP id d14mr21327976iow.127.1599572961722;
+ Tue, 08 Sep 2020 06:49:21 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 06:49:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002d04cc05aecd9a28@google.com>
+Subject: INFO: rcu detected stall in security_file_free (2)
+From:   syzbot <syzbot+f590c1bada839a48b7b1@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, mbenes@suse.cz, mingo@redhat.com,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        shile.zhang@linux.alibaba.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello,
 
-Now that devprop_gpiochip_set_names() is only used in a single place
-inside drivers/gpio/gpiolib.c, there's no need anymore for it to be
-exported or to even live in its own source file. Pull this function into
-the core source file for gpiolib.
+syzbot found the following issue on:
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+HEAD commit:    e6135df4 Merge branch 'hashmap_iter_bucket_lock_fix'
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e3dbf5900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
+dashboard link: https://syzkaller.appspot.com/bug?extid=f590c1bada839a48b7b1
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=174fea59900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12153819900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f590c1bada839a48b7b1@syzkaller.appspotmail.com
+
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	0-...!: (3 ticks this GP) idle=382/1/0x4000000000000002 softirq=9307/9307 fqs=0 
+	(detected by 1, t=10502 jiffies, g=11173, q=564)
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 8139 Comm: syz-executor202 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:unwind_next_frame+0x7d/0x1f90 arch/x86/kernel/unwind_orc.c:426
+Code: 48 89 fa 65 48 8b 34 25 28 00 00 00 48 89 b4 24 98 00 00 00 31 f6 48 c1 ea 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e 54 0b 00 00 <41> 8b 2f 31 c0 85 ed 75 3b 48 ba 00 00 00 00 00 fc ff df 48 c7 04
+RSP: 0018:ffffc90000007048 EFLAGS: 00000046
+RAX: 0000000000000000 RBX: 1ffff92000000e11 RCX: 1ffff11011ba10a0
+RDX: 1ffff92000000e30 RSI: 0000000000000000 RDI: ffffc90000007180
+RBP: ffffc90000007248 R08: ffffffff8b9bff4c R09: ffffffff8b9bff50
+R10: 0000000000000000 R11: 0000000000000001 R12: ffffffff81b40fac
+R13: dffffc0000000000 R14: 0000000000000000 R15: ffffc90000007180
+FS:  000000000227e880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a468a000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ perf_callchain_kernel+0x444/0x6a0 arch/x86/events/core.c:2449
+ get_perf_callchain+0x16e/0x620 kernel/events/callchain.c:200
+ perf_callchain+0x165/0x1c0 kernel/events/core.c:6985
+ perf_prepare_sample+0x8fd/0x1d40 kernel/events/core.c:7012
+ __perf_event_output kernel/events/core.c:7170 [inline]
+ perf_event_output_forward+0xf3/0x270 kernel/events/core.c:7190
+ __perf_event_overflow+0x13c/0x370 kernel/events/core.c:8845
+ perf_swevent_overflow kernel/events/core.c:8921 [inline]
+ perf_swevent_event+0x347/0x550 kernel/events/core.c:8949
+ perf_tp_event+0x2e4/0xb50 kernel/events/core.c:9377
+ perf_trace_run_bpf_submit+0x11c/0x200 kernel/events/core.c:9351
+ perf_trace_preemptirq_template+0x289/0x440 include/trace/events/preemptirq.h:14
+ trace_irq_enable_rcuidle include/trace/events/preemptirq.h:40 [inline]
+ trace_irq_enable_rcuidle include/trace/events/preemptirq.h:40 [inline]
+ trace_hardirqs_on+0x18a/0x220 kernel/trace/trace_preemptirq.c:44
+ asm_sysvec_irq_work+0x12/0x20 arch/x86/include/asm/idtentry.h:611
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
+RIP: 0010:rcu_read_unlock_special kernel/rcu/tree_plugin.h:630 [inline]
+RIP: 0010:__rcu_read_unlock+0x488/0x560 kernel/rcu/tree_plugin.h:395
+Code: 48 c7 c0 c8 3b b6 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 53 48 83 3d 47 75 54 08 00 74 13 4c 89 e7 57 9d <0f> 1f 44 00 00 e9 ed fb ff ff 0f 0b 0f 0b 0f 0b 0f 0b 4c 89 ef e8
+RSP: 0018:ffffc90000007b40 EFLAGS: 00000286
+RAX: 1ffffffff136c779 RBX: ffffffff89bd9901 RCX: 0000000000000002
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000286
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffffffff8c5f3a97
+R10: fffffbfff18be752 R11: 0000000000000001 R12: 0000000000000286
+R13: 0000000000000200 R14: ffff8880ae636c00 R15: 0000000000000000
+ rcu_read_unlock include/linux/rcupdate.h:687 [inline]
+ mld_sendpack+0x742/0xdb0 net/ipv6/mcast.c:1690
+ mld_send_initial_cr.part.0+0x106/0x150 net/ipv6/mcast.c:2096
+ mld_send_initial_cr net/ipv6/mcast.c:1191 [inline]
+ mld_dad_timer_expire+0x1c7/0x6a0 net/ipv6/mcast.c:2115
+ call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
+ expire_timers kernel/time/timer.c:1458 [inline]
+ __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
+ __run_timers kernel/time/timer.c:1736 [inline]
+ run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
+ __do_softirq+0x2de/0xa24 kernel/softirq.c:298
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:393 [inline]
+ __irq_exit_rcu kernel/softirq.c:423 [inline]
+ irq_exit_rcu+0x1f3/0x230 kernel/softirq.c:435
+ sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
+RIP: 0010:__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:169 [inline]
+RIP: 0010:_raw_spin_unlock_irq+0x4b/0x80 kernel/locking/spinlock.c:199
+Code: c0 d8 3b b6 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 31 48 83 3d 46 f6 bf 01 00 74 25 fb 66 0f 1f 44 00 00 <bf> 01 00 00 00 e8 db 6d 59 f9 65 8b 05 d4 b8 0b 78 85 c0 74 02 5d
+RSP: 0018:ffffc90009cf7c00 EFLAGS: 00000286
+RAX: 1ffffffff136c77b RBX: ffff8880a95ea1c0 RCX: 1ffffffff1563fd1
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffffff87f6456f
+RBP: ffff8880ae635e00 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff8880ae635e00
+R13: ffff88808850a440 R14: 0000000000000000 R15: 0000000000000001
+ finish_lock_switch kernel/sched/core.c:3517 [inline]
+ finish_task_switch+0x147/0x750 kernel/sched/core.c:3617
+ context_switch kernel/sched/core.c:3781 [inline]
+ __schedule+0x8ed/0x21e0 kernel/sched/core.c:4527
+ preempt_schedule_irq+0xb0/0x150 kernel/sched/core.c:4785
+ irqentry_exit_cond_resched kernel/entry/common.c:333 [inline]
+ irqentry_exit_cond_resched kernel/entry/common.c:325 [inline]
+ irqentry_exit+0x65/0x90 kernel/entry/common.c:363
+ asm_sysvec_reschedule_ipi+0x12/0x20 arch/x86/include/asm/idtentry.h:586
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
+RIP: 0010:kmem_cache_free.part.0+0x8c/0x1f0 mm/slab.c:3694
+Code: e8 89 25 00 00 84 c0 74 76 41 f7 c4 00 02 00 00 74 4e e8 a7 f6 c5 ff 48 83 3d 27 2c 02 08 00 0f 84 2f 01 00 00 4c 89 e7 57 9d <0f> 1f 44 00 00 4c 8b 64 24 20 0f 1f 44 00 00 65 8b 05 9e 83 4d 7e
+RSP: 0018:ffffc90009cf7e20 EFLAGS: 00000286
+RAX: 000000000000168d RBX: ffff88809f747380 RCX: 1ffffffff1563fd1
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000286
+RBP: ffff8880aa241e00 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000286
+R13: ffffffff8358c3f4 R14: ffff88808828d600 R15: ffff8880896a26a0
+ security_file_free+0xa4/0xd0 security/security.c:1474
+ file_free fs/file_table.c:55 [inline]
+ __fput+0x3d7/0x920 fs/file_table.c:299
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x403fc0
+Code: 01 f0 ff ff 0f 83 40 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 83 3d cd 9f 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 14 0d 00 00 c3 48 83 ec 08 e8 7a 02 00 00
+RSP: 002b:00007ffe459c68a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000403fc0
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000400326777
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000004
+R13: 00000000004051f0 R14: 0000000000000000 R15: 0000000000000000
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
+rcu: rcu_preempt kthread starved for 10502 jiffies! g11173 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:I stack:29664 pid:   10 ppid:     2 flags:0x00004000
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+ schedule_timeout+0x148/0x250 kernel/time/timer.c:1879
+ rcu_gp_fqs_loop kernel/rcu/tree.c:1888 [inline]
+ rcu_gp_kthread+0xae5/0x1b50 kernel/rcu/tree.c:2058
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+
 ---
- drivers/gpio/Makefile       |  1 -
- drivers/gpio/gpiolib.c      | 47 +++++++++++++++++++++++++++++++++++++
- include/linux/gpio/driver.h |  2 --
- 3 files changed, 47 insertions(+), 3 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 4f9abff4f2dc..639275eb4e4d 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -6,7 +6,6 @@ ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
- obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-devres.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
--obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
- obj-$(CONFIG_GPIOLIB)		+= gpiolib-cdev.o
- obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 0d390f0ec32c..2b2526c5de51 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -358,6 +358,53 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
- 	return 0;
- }
- 
-+/*
-+ * devprop_gpiochip_set_names - Set GPIO line names using device properties
-+ * @chip: GPIO chip whose lines should be named, if possible
-+ *
-+ * Looks for device property "gpio-line-names" and if it exists assigns
-+ * GPIO line names for the chip. The memory allocated for the assigned
-+ * names belong to the underlying software node and should not be released
-+ * by the caller.
-+ */
-+static int devprop_gpiochip_set_names(struct gpio_chip *chip)
-+{
-+	struct gpio_device *gdev = chip->gpiodev;
-+	struct device *dev = chip->parent;
-+	const char **names;
-+	int ret, i;
-+	int count;
-+
-+	count = device_property_count_strings(dev, "gpio-line-names");
-+	if (count < 0)
-+		return 0;
-+
-+	if (count > gdev->ngpio) {
-+		dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
-+			 count, gdev->ngpio);
-+		count = gdev->ngpio;
-+	}
-+
-+	names = kcalloc(count, sizeof(*names), GFP_KERNEL);
-+	if (!names)
-+		return -ENOMEM;
-+
-+	ret = device_property_read_string_array(dev, "gpio-line-names",
-+						names, count);
-+	if (ret < 0) {
-+		dev_warn(&gdev->dev, "failed to read GPIO line names\n");
-+		kfree(names);
-+		return ret;
-+	}
-+
-+	for (i = 0; i < count; i++)
-+		gdev->descs[i].name = names[i];
-+
-+	kfree(names);
-+
-+	return 0;
-+}
-+
- static unsigned long *gpiochip_allocate_mask(struct gpio_chip *gc)
- {
- 	unsigned long *p;
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 56485a040b82..4a7e295c3640 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -756,8 +756,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 					    enum gpiod_flags dflags);
- void gpiochip_free_own_desc(struct gpio_desc *desc);
- 
--int devprop_gpiochip_set_names(struct gpio_chip *gc);
--
- #ifdef CONFIG_GPIOLIB
- 
- /* lock/unlock as IRQ */
--- 
-2.26.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
