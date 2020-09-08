@@ -2,107 +2,115 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA1FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4746AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3703224D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0204D23C41
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:04:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="XXNR65cR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYKxTMjh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgIHNtI (ORCPT
+        id S1729655AbgIHOCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 09:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60640 "EHLO
+        Tue, 8 Sep 2020 10:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729875AbgIHNmM (ORCPT
+        with ESMTP id S1729913AbgIHN7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 09:42:12 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07603C0619C3
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:36:12 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 34so636033pgo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:36:12 -0700 (PDT)
+        Tue, 8 Sep 2020 09:59:33 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC261C061374;
+        Tue,  8 Sep 2020 05:45:38 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id b16so8234990pjp.0;
+        Tue, 08 Sep 2020 05:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ehTU8VuqCe4uQqnVpDe9geOxORvh8qag6CqSgGb/x38=;
-        b=XXNR65cRXkVSPXHNMlGccTpQI7cOqRyhk5d8MsIws07AR035m+bxTug70SDBbKciK5
-         2lYRSm8fhoP+SbAUu7pr7CorYMYDf8ArGi3ZDTGpK4TqR6w3vHrr/iW4tbDJwhKJjYVE
-         ryBEybf6RG9DjezNonEi/3yWFDJBF0DAYhs6k=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jhHypeLTRA4WXxhhuo6Z6j83RXXSW7eZ7o0xAUpwRko=;
+        b=WYKxTMjhCEq3m5vySflh4N7bV6WzAwoHVDwnzWmDuvMlUJQQTYUjRRQrQ1HRFyImD6
+         ARHK1Gga6jFz0A0tT9XZCQOyxKpp2fSboNAWVfGB7Fc9x5CDDDVQTESefH43SmG5Ubag
+         0O7upG16zrl5k74HF5oKkZlLqAYvSAv9dK2XPLZSOC6w1xowlI4LXHsW1Z7CqsmB03Vh
+         +3OTgSWBIMK36QOK71xW0sjXtkESECjQEqIycmMsrjdzZc/+KT54hSVfaOj0R6Aro5Mb
+         2ZXppdSSRwH+2qL2ZJqr6KHK4j8mLTt5Dh19wFsqNl5SjHS542eBkah5tHd30rej+n+7
+         uwHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ehTU8VuqCe4uQqnVpDe9geOxORvh8qag6CqSgGb/x38=;
-        b=tSJ1TdGmRNGAU2GHXQcyu2xSTwtkXGsBLDgW5gkpdIFlUqY79HR5izjaHx4uk5okIm
-         x9zN7tRHCDxUVq13MFcSOc8P65Y2P3KC9disyQSwWMdLXWfveEyp2IW810qLGngwC0q6
-         6j9tEoAjNWd/wGAB9qZxZ0UBA2wHBGiRjJBtGRS4O2KsNFNQp4j2Un/raFLotyaVLJ/7
-         7vw8DMXTynTmirJqL+vtn50XJq3tITIPocNHg0hvOmVQO2e7OuzrEqAGos7THlQiwXIY
-         zf6RrwZpGKIb+6sWK9NzRd0OUM+pK1uZQf7Iw+nVaylhN+IdIHaMlM7CqPxbuq4tEzua
-         MXcQ==
-X-Gm-Message-State: AOAM533OhPCeNfGHcYKL9+HEf7bznPx7tbqGx11AXWfepb2PuYOrjIF5
-        /+hfZlhsysYc6ClCcDOPdDU3SA==
-X-Google-Smtp-Source: ABdhPJwhXtG+H2LqAISEDK2z1kRlZcOQuBM48N1pdIL7c/KejeE7ihVjm7S4Fd1HckDMPESkOFR8iA==
-X-Received: by 2002:a17:902:c410:: with SMTP id k16mr24241546plk.123.1599572171471;
-        Tue, 08 Sep 2020 06:36:11 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id b20sm19856758pfb.198.2020.09.08.06.36.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 06:36:10 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi@sslab.ics.keio.ac.jp, Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: hpsa: fix memory leak in hpsa_init_one
-Date:   Tue,  8 Sep 2020 13:35:32 +0000
-Message-Id: <20200908133533.16744-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jhHypeLTRA4WXxhhuo6Z6j83RXXSW7eZ7o0xAUpwRko=;
+        b=r+4yPV9ulkUASdNbZ3E6zAO5hYQ6kobKbCu6LKqhgAiZc+tnCm+3GxZNs7EkPjLTsJ
+         4heTHCTF97pUsCZfdjKo9TJFMnlcYw+GLI4IbIukRAvPimrWT9n4698Rb3XIkIjjm2WU
+         Nstaqd/qUV7+MK4IOHDWHHTYOLSEk4is8U4X8RgcmedKZF4ceIvzjaRHjV6UbJJ8zBhZ
+         ukPRjJPpCoY4AmsR57L613auaQDKqmccStMP7jhsJvWHrCfs1uHcD+DbjLr8NJTYjfop
+         NP5n1iQPRgRVnntY9ZkdwXtmnIQ975Ooj3lJyZlSg7orjwSNyRlxvDNf2xB35X1GwTa9
+         Fq3Q==
+X-Gm-Message-State: AOAM533UOHS4nPtWAp7ePBuOz8Zx9YTMgoUYFCf+OYu30lDW3uDF7q4r
+        7STX9k/9fw8vi8zkozGbj9iezMbJbej068VC21Y=
+X-Google-Smtp-Source: ABdhPJw8LTt+XXaAgFIKLhZcvCAflJODmJdMFXBFRgAFnhCwPcvxTBBWUsyrjeSl3fonexRUaflNzJYkjYk5w6tS5WE=
+X-Received: by 2002:a17:90a:bd02:: with SMTP id y2mr3900886pjr.66.1599569138277;
+ Tue, 08 Sep 2020 05:45:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAJht_EOu8GKvdTAeF_rHsaKu7iYOmW8C64bQA21bgKuiANE5Zw@mail.gmail.com>
+ <CAJht_EP=g02o2ygihNo=EWd1OuL3HSjmhqgGiwUGrMde=urSUA@mail.gmail.com>
+ <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
+ <CAJht_EPEqUMXNdQLL9d5OtzbZ92Jms7nSUR8bS+cw2Ah5mv6cQ@mail.gmail.com>
+ <CA+FuTSeJS22R2VYSzcEVvXiUhX79RYE0o3G6V3NKGzQ4UGaJQg@mail.gmail.com>
+ <CAJht_EN7SXAex-1W49eY7q5p2UqLYvXA8D6hptJGquXdJULLcA@mail.gmail.com> <CA+FuTSfgxt6uqcxy=wnOXo8HxMJ3J0HAqQNiDJBLCs22Ukb_gQ@mail.gmail.com>
+In-Reply-To: <CA+FuTSfgxt6uqcxy=wnOXo8HxMJ3J0HAqQNiDJBLCs22Ukb_gQ@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 8 Sep 2020 05:45:27 -0700
+Message-ID: <CAJht_EN-aBo8rfHAxYxwW2Jb38S2PW3WtxhWuHn5HS1fAWeA1w@mail.gmail.com>
+Subject: Re: Question about dev_validate_header used in af_packet.c
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When hpsa_scsi_add_host fails, h->lastlogicals is leaked since it lacks
-free in the error handler.
+On Tue, Sep 8, 2020 at 4:53 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> On Tue, Sep 8, 2020 at 1:04 PM Xie He <xie.he.0141@gmail.com> wrote:
+> >
+> > I was recently looking at some drivers, and I felt that if af_packet.c
+> > could help me filter out the invalid RAW frames, I didn't need to
+> > check the validity of the frames myself (in the driver when
+> > transmitting). But now I guess I still need to check that.
+> >
+> > I feel this makes the dev_validate_header's variable-length header
+> > check not very useful, because drivers need to do this check again
+> > (when transmitting) anyway.
+> >
+> > I was thinking, after I saw dev_validate_header, that we could
+> > eventually make it completely take over the responsibility for a
+> > driver to validate the header when transmitting RAW frames. But now it
+> > seems we would not be able to do this.
+>
+> Agreed. As is, it is mainly useful to block users who are ns_capable,
+> but not capable.
+>
+> A third option is to move it behind a sysctl (with static_branch). Your
+> point is valid that there really is no need for testing of drivers against
+> bad packets if the data is validated directly on kernel entry.
 
-Fix this by adding free when hpsa_scsi_add_host fails.
-
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
----
- drivers/scsi/hpsa.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 48d5da59262b..aed59ec20ad9 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -8854,7 +8854,7 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	/* hook into SCSI subsystem */
- 	rc = hpsa_scsi_add_host(h);
- 	if (rc)
--		goto clean7; /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
-+		goto clean8; /* lastlogicals, perf, sg, cmd, irq, shost, pci, lu, aer/h */
- 
- 	/* Monitor the controller for firmware lockups */
- 	h->heartbeat_sample_interval = HEARTBEAT_SAMPLE_INTERVAL;
-@@ -8869,6 +8869,8 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 				HPSA_EVENT_MONITOR_INTERVAL);
- 	return 0;
- 
-+clean8: /* lastlogicals, perf, sg, cmd, irq, shost, pci, lu, aer/h */
-+	kfree(h->lastlogicals);
- clean7: /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
- 	hpsa_free_performant_mode(h);
- 	h->access.set_intr_mask(h, HPSA_INTR_OFF);
--- 
-2.17.1
-
+I was thinking about this again and it came to me that maybe sometimes
+people actually wanted to send invalid frames on wire (for testing the
+network device on the other end of the wire)? Having thought about
+this possibility I think it might be good to keep the ability for
+people to have 2 choices (either having their RAW frames validated, or
+not validated) through "capability" or through "sysctl" as you
+mentioned. We can keep the default to be not validating the RAW frames
+because RAW sockets are already intended for very special use and are
+not for normal use.
