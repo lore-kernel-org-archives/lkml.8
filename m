@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B6EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7121FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC062098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23BAA2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592596;
-	bh=E0S5fTo0mX+8r5130quZXaxIlSmWMKiZqSWg4n8H/MU=;
+	s=default; t=1599592605;
+	bh=wkAzy+/lV7e2qMtMdBz3rknYjw51l58UVEVCpQvBVJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=coRMSJm1B9bzUpLWbxc9U3IPF70/7+tcA1SmQ2pP40f6aRWqdlmDcYeX17QHlwcdI
-	 VXpRAkCG6Bn3A6QEyFUzVFEINtLLLc4BE7QiYUNfSvPOFqTYuxT/rgK0zXrN9s7O4C
-	 MqROmBpy1XRvF3ZlcbE4oF/VnnmojEuLfqfwEicA=
+	b=izFYJ6F1+d98JnrcuaNU7I6PGfWqG35/w+Hcp1DnDAKdSjZnbuFJ/lIgmyBf3nAED
+	 obX7Wsy4rhTxJWFhfVr7ikQp3i45hrQJ79PjRTyHvhlPyccXqi0KXk0r2BkN2RGwAt
+	 6PQ+CdC5xjytaP2OqZomloL1/m+Syg8/LxKo8ubU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbgIHTQc (ORCPT
+        id S1731761AbgIHTQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731174AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730963AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:04:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8C3E23C3F;
-        Tue,  8 Sep 2020 15:36:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA59E2467C;
+        Tue,  8 Sep 2020 15:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579365;
-        bh=E0S5fTo0mX+8r5130quZXaxIlSmWMKiZqSWg4n8H/MU=;
+        s=default; t=1599579570;
+        bh=wkAzy+/lV7e2qMtMdBz3rknYjw51l58UVEVCpQvBVJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yc3FY8Et+gMhOBdliRNBI/a3MEFHpTfTCE7gHhU7o70veGouVXDifnTfr8QLvWnet
-         m2lVenA/jINz/1mGKibW4Zep1esxbTiaYvwS6pfE2z/noIh2a/fZ3U+fUwFQJi1vFG
-         OqRpf+wVj/gLBIhVX91Q+nZZ/LWI8TVaQFNf/QIY=
+        b=1jLgQH/3hm5vAancixbCF0MBeOT3nRWpM29jtUFitA+y+w691qZF4+u/dbkUUO3TH
+         pG3ijwnNvWkF1ELr93WTmQjZZH1g1XWejli3xv2G+M2sTRtRqsE/cl7XiQiMg3qpsm
+         9DuAuZ9dlAa61It8oAj4S3p/7IraLnXzAk8xFz7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Max Chou <max.chou@realtek.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 018/186] drm/msm/a6xx: fix gmu start on newer firmware
-Date:   Tue,  8 Sep 2020 17:22:40 +0200
-Message-Id: <20200908152242.542199045@linuxfoundation.org>
+Subject: [PATCH 5.8 132/186] Bluetooth: Return NOTIFY_DONE for hci_suspend_notifier
+Date:   Tue,  8 Sep 2020 17:24:34 +0200
+Message-Id: <20200908152248.042281584@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,50 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Max Chou <max.chou@realtek.com>
 
-[ Upstream commit f5749d6181fa7df5ae741788e5d96f593d3a60b6 ]
+[ Upstream commit 24b065727ceba53cc5bec0e725672417154df24f ]
 
-New Qualcomm firmware has changed a way it reports back the 'started'
-event. Support new register values.
+The original return is NOTIFY_STOP, but notifier_call_chain would stop
+the future call for register_pm_notifier even registered on other Kernel
+modules with the same priority which value is zero.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Max Chou <max.chou@realtek.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 1d330204c465c..2dd1cf1ffbe25 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -207,6 +207,16 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
- {
- 	int ret;
- 	u32 val;
-+	u32 mask, reset_val;
-+
-+	val = gmu_read(gmu, REG_A6XX_GMU_CM3_DTCM_START + 0xff8);
-+	if (val <= 0x20010004) {
-+		mask = 0xffffffff;
-+		reset_val = 0xbabeface;
-+	} else {
-+		mask = 0x1ff;
-+		reset_val = 0x100;
-+	}
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 41fba93d857a6..fc28dc201b936 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3370,7 +3370,7 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
+ 		bt_dev_err(hdev, "Suspend notifier action (%lu) failed: %d",
+ 			   action, ret);
  
- 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
+-	return NOTIFY_STOP;
++	return NOTIFY_DONE;
+ }
  
-@@ -218,7 +228,7 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
- 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
- 
- 	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
--		val == 0xbabeface, 100, 10000);
-+		(val & mask) == reset_val, 100, 10000);
- 
- 	if (ret)
- 		DRM_DEV_ERROR(gmu->dev, "GMU firmware initialization timed out\n");
+ /* Alloc HCI device */
 -- 
 2.25.1
 
