@@ -2,128 +2,77 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3353FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE09FC2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EF821897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809902137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A7cOmnVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgIHFWw (ORCPT
+        id S1728670AbgIHFg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 01:22:52 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:65048 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgIHFWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 01:22:50 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bltny2bk8z9tyfS;
-        Tue,  8 Sep 2020 07:22:46 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zhKYZbflWiU8; Tue,  8 Sep 2020 07:22:46 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bltny1W9Lz9tyfR;
-        Tue,  8 Sep 2020 07:22:46 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 073A98B793;
-        Tue,  8 Sep 2020 07:22:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 5cxa6T4RQxxI; Tue,  8 Sep 2020 07:22:46 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BACC88B768;
-        Tue,  8 Sep 2020 07:22:44 +0200 (CEST)
-Subject: Re: [RFC PATCH v2 0/3] mm/gup: fix gup_fast with dynamic page table
- folding
-To:     Mike Rapoport <rppt@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907201256.GC1976319@kernel.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <9bde9857-fdfd-e384-ea27-a14e5a06f1e6@csgroup.eu>
-Date:   Tue, 8 Sep 2020 07:22:39 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 8 Sep 2020 01:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgIHFg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 01:36:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBC5C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 22:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tnIhBm/D9q30OCjl0Uvk6IczrpKqywtr99E3Z7cDOcY=; b=A7cOmnVXCZtWAnsWTe66XL2mO2
+        EfgFVttWjeSLSSOW7M36RucpwOpruW5Go8mkpQ5cD7T0J+07ypNo8hiB1Xuxa62/LM3ciqjLddxHv
+        xRrWNTfI9+FCCIHBqmRat5fAniV5XoT3gd4rkXV0XBIex7sniDbxfzTpR9WqhPmTk0d8tJXk7y1oZ
+        jwShC3NettOOKABfpiYOFXx730naA1c5vdvjOVfcLXmzLB70bqh/LkhPpc6V6jKL77EIL+9N/T6Fi
+        lxgKjyEDm7kq9V2R/eQojzNIjMHQCRKlWOLKzMxzwKo6SZzs1YMFkDgc6hzdfs7ZnDpdIS3qBRgdJ
+        WWIrZI2g==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFWIl-00044r-4s; Tue, 08 Sep 2020 05:36:19 +0000
+Date:   Tue, 8 Sep 2020 06:36:19 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
+ dma-iommu
+Message-ID: <20200908053619.GA15418@infradead.org>
+References: <20200903201839.7327-1-murphyt7@tcd.ie>
+ <20200903201839.7327-6-murphyt7@tcd.ie>
+ <20200907070035.GA25114@infradead.org>
+ <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907201256.GC1976319@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 07, 2020 at 09:18:50PM +0100, Tom Murphy wrote:
+> Yeah we talked about passing an attr to map_sg to disable merging at
+> the following microconfernce:
+> https://linuxplumbersconf.org/event/7/contributions/846/
+> As far as I can remember everyone seemed happy with that solution. I
+> won't be working on this though as I don't have any more time to
+> dedicate to this. It seems Lu Baolu will take over this.
 
-
-Le 07/09/2020 à 22:12, Mike Rapoport a écrit :
-> On Mon, Sep 07, 2020 at 08:00:55PM +0200, Gerald Schaefer wrote:
->> This is v2 of an RFC previously discussed here:
->> https://lore.kernel.org/lkml/20200828140314.8556-1-gerald.schaefer@linux.ibm.com/
->>
->> Patch 1 is a fix for a regression in gup_fast on s390, after our conversion
->> to common gup_fast code. It will introduce special helper functions
->> pXd_addr_end_folded(), which have to be used in places where pagetable walk
->> is done w/o lock and with READ_ONCE, so currently only in gup_fast.
->>
->> Patch 2 is an attempt to make that more generic, i.e. change pXd_addr_end()
->> themselves by adding an extra pXd value parameter. That was suggested by
->> Jason during v1 discussion, because he is already thinking of some other
->> places where he might want to switch to the READ_ONCE logic for pagetable
->> walks. In general, that would be the cleanest / safest solution, but there
->> is some impact on other architectures and common code, hence the new and
->> greatly enlarged recipient list.
->>
->> Patch 3 is a "nice to have" add-on, which makes pXd_addr_end() inline
->> functions instead of #defines, so that we get some type checking for the
->> new pXd value parameter.
->>
->> Not sure about Fixes/stable tags for the generic solution. Only patch 1
->> fixes a real bug on s390, and has Fixes/stable tags. Patches 2 + 3 might
->> still be nice to have in stable, to ease future backports, but I guess
->> "nice to have" does not really qualify for stable backports.
-> 
-> I also think that adding pXd parameter to pXd_addr_end() is a cleaner
-> way and with this patch 1 is not really required. I would even merge
-> patches 2 and 3 into a single patch and use only it as the fix.
-
-Why not merging patches 2 and 3, but I would keep patch 1 separate but 
-after the generic changes, so that we first do the generic changes, then 
-we do the specific S390 use of it.
-
-Christophe
+I'm absolutely again passing a flag.  Tha just invites further
+abuse.  We need a PCI ID based quirk or something else that can't
+be as easily abused.
