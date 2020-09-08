@@ -2,84 +2,197 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCE1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 01:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 01:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B7B9208C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 01:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62B6208C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 01:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgIHBF1 (ORCPT
+        id S1728250AbgIHBNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 21:05:27 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10833 "EHLO huawei.com"
+        Mon, 7 Sep 2020 21:13:30 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10834 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726918AbgIHBF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 21:05:26 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8B5548295C3B4781B870;
-        Tue,  8 Sep 2020 09:05:24 +0800 (CST)
-Received: from [127.0.0.1] (10.174.179.103) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 09:05:15 +0800
-Subject: Re: [PATCH] drm/mediatek: add missing put_device() call in
- mtk_ddp_comp_init()
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <yt.shen@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        "DRI Development" <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <yi.zhang@huawei.com>
-References: <20200905083058.1631726-1-yukuai3@huawei.com>
- <CAAOTY_-BQx0rozw0qoGj1bt4hO2rFmYvKrjQHbA-K04txUWW+w@mail.gmail.com>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <e10c0375-8ef3-a2ba-b23f-f80d082e1ba7@huawei.com>
-Date:   Tue, 8 Sep 2020 09:05:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728056AbgIHBN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 21:13:27 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 11018EBBDC1252A3F360;
+        Tue,  8 Sep 2020 09:13:25 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
+ 09:13:18 +0800
+Subject: Re: [PATCH] PCI: Factor functions of PCI function reset
+To:     <helgaas@kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1599477387-49777-1-git-send-email-yangyicong@hisilicon.com>
+CC:     <linuxarm@huawei.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <541a6bfc-c39f-f827-6cd0-d88216bbc7cf@hisilicon.com>
+Date:   Tue, 8 Sep 2020 09:13:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY_-BQx0rozw0qoGj1bt4hO2rFmYvKrjQHbA-K04txUWW+w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.103]
+In-Reply-To: <1599477387-49777-1-git-send-email-yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/09/08 6:56, Chun-Kuang Hu wrote:
-> Hi Yu Kuai:
-> 
-> Yu Kuai <yukuai3@huawei.com> 於 2020年9月5日 週六 下午4:31寫道：
->>
->> if of_find_device_by_node() succeed, mtk_ddp_comp_init() doesn't have
->> a corresponding put_device(). Thus add put_device() to fix the exception
->> handling for this function implementation.
->>
-> 
-> This patch looks good to me, but I find another thing related to this.
-> mtk_ddp_comp_init() is called in a loop in mtk_drm_probe(), when this
-> component init fail, I think we should uninitialize previous
-> successive init component and put their device. Would you like to make
-> this patch more complete?
++cc linux-pci as I forgot to 
 
-Hi,
 
-Of course, thank you for your review.
-
-Best regards,
-Yu Kuai
+On 2020/9/7 19:16, Yicong Yang wrote:
+> Previosly we use pci_probe_reset_function() to probe whehter a function
+> can be reset and use __pci_reset_function_locked() to perform a function
+> reset. These two functions have lots of common lines.
+>
+> Factor the two functions and reduce the redundancy.
+>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  drivers/pci/pci.c   | 61 ++++++++++++++++-------------------------------------
+>  drivers/pci/pci.h   |  2 +-
+>  drivers/pci/probe.c |  2 +-
+>  3 files changed, 20 insertions(+), 45 deletions(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e39c549..e3e5f0f 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5006,9 +5006,11 @@ static void pci_dev_restore(struct pci_dev *dev)
+>  }
+>  
+>  /**
+> - * __pci_reset_function_locked - reset a PCI device function while holding
+> - * the @dev mutex lock.
+> + * pci_probe_reset_function - check whether the device can be safely reset
+> + *                            or reset a PCI device function while holding
+> + *                            the @dev mutex lock.
+>   * @dev: PCI device to reset
+> + * @probe: Probe or not whether the device can be reset.
+>   *
+>   * Some devices allow an individual function to be reset without affecting
+>   * other functions in the same device.  The PCI device must be responsive
+> @@ -5022,10 +5024,10 @@ static void pci_dev_restore(struct pci_dev *dev)
+>   * device including MSI, bus mastering, BARs, decoding IO and memory spaces,
+>   * etc.
+>   *
+> - * Returns 0 if the device function was successfully reset or negative if the
+> - * device doesn't support resetting a single function.
+> + * Returns 0 if the device function can be reset or was successfully reset.
+> + * negative if the device doesn't support resetting a single function.
+>   */
+> -int __pci_reset_function_locked(struct pci_dev *dev)
+> +int pci_probe_reset_function(struct pci_dev *dev, int probe)
+>  {
+>  	int rc;
+>  
+> @@ -5039,61 +5041,34 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+>  	 * other error, we're also finished: this indicates that further
+>  	 * reset mechanisms might be broken on the device.
+>  	 */
+> -	rc = pci_dev_specific_reset(dev, 0);
+> +	rc = pci_dev_specific_reset(dev, probe);
+>  	if (rc != -ENOTTY)
+>  		return rc;
+>  	if (pcie_has_flr(dev)) {
+> +		if (probe)
+> +			return 0;
+>  		rc = pcie_flr(dev);
+>  		if (rc != -ENOTTY)
+>  			return rc;
+>  	}
+> -	rc = pci_af_flr(dev, 0);
+> +	rc = pci_af_flr(dev, probe);
+>  	if (rc != -ENOTTY)
+>  		return rc;
+> -	rc = pci_pm_reset(dev, 0);
+> +	rc = pci_pm_reset(dev, probe);
+>  	if (rc != -ENOTTY)
+>  		return rc;
+> -	rc = pci_dev_reset_slot_function(dev, 0);
+> +	rc = pci_dev_reset_slot_function(dev, probe);
+>  	if (rc != -ENOTTY)
+>  		return rc;
+> -	return pci_parent_bus_reset(dev, 0);
+> +
+> +	return pci_parent_bus_reset(dev, probe);
+>  }
+> -EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+>  
+> -/**
+> - * pci_probe_reset_function - check whether the device can be safely reset
+> - * @dev: PCI device to reset
+> - *
+> - * Some devices allow an individual function to be reset without affecting
+> - * other functions in the same device.  The PCI device must be responsive
+> - * to PCI config space in order to use this function.
+> - *
+> - * Returns 0 if the device function can be reset or negative if the
+> - * device doesn't support resetting a single function.
+> - */
+> -int pci_probe_reset_function(struct pci_dev *dev)
+> +int __pci_reset_function_locked(struct pci_dev *dev)
+>  {
+> -	int rc;
+> -
+> -	might_sleep();
+> -
+> -	rc = pci_dev_specific_reset(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	if (pcie_has_flr(dev))
+> -		return 0;
+> -	rc = pci_af_flr(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_pm_reset(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -	rc = pci_dev_reset_slot_function(dev, 1);
+> -	if (rc != -ENOTTY)
+> -		return rc;
+> -
+> -	return pci_parent_bus_reset(dev, 1);
+> +	return pci_probe_reset_function(dev, 0);
+>  }
+> +EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
+>  
+>  /**
+>   * pci_reset_function - quiesce and reset a PCI device function
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fa12f7c..73740dd 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -39,7 +39,7 @@ enum pci_mmap_api {
+>  int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
+>  		  enum pci_mmap_api mmap_api);
+>  
+> -int pci_probe_reset_function(struct pci_dev *dev);
+> +int pci_probe_reset_function(struct pci_dev *dev, int probe);
+>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+>  int pci_bus_error_reset(struct pci_dev *dev);
+>  
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 03d3712..793cc8a 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2403,7 +2403,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+>  
+>  	pcie_report_downtraining(dev);
+>  
+> -	if (pci_probe_reset_function(dev) == 0)
+> +	if (pci_probe_reset_function(dev, 1) == 0)
+>  		dev->reset_fn = 1;
+>  }
+>  
 
