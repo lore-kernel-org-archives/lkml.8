@@ -2,108 +2,125 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A62C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78426C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A63A20708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436F7206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pRRFZdvz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBXhwrse"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731965AbgIHQqy (ORCPT
+        id S1731986AbgIHQrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731949AbgIHQ1O (ORCPT
+        Tue, 8 Sep 2020 12:47:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55082 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731949AbgIHQrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:27:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D52DC08EC65;
-        Tue,  8 Sep 2020 07:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=y4d0IpUN2yx9YRU65V5SiTPs5ZTZxBRK5kB3YxXQmEM=; b=pRRFZdvzJdD3AVoWZ9jUzrp/Q0
-        HKk1CID4JuLaYa0Mrj5PUoI6oQA5ciqJLBt5n5ag5rsIR1An2Ka5mAEm2114XrYmUFMhl45Xo5Tgw
-        1f/vNIsf9lGV3nxP8kEE6lE06fxMwHrKgMQu0pm3I0x/IyhLrqz+KKXAANGDWrG7AVVjPFzF5xi3j
-        b+2cyyoXEAUSsyUS34TeeH0WHmQnA7c49k8282aVWJL0Rr7DiG9/VGMMMa2l+P0T1l1zriMKbxZya
-        xNWqdb2Fviuue9DuvWQYMq8RKd6rulRyNI2IoQ+PtU88jlKEYqHk3sh4DyJcAunFrK+qy1HINMR77
-        ZUuxAv5A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFeld-00026L-QW; Tue, 08 Sep 2020 14:39:04 +0000
-Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-References: <20200902180950.4bc7c4de@canb.auug.org.au>
- <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
- <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
- <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org>
-Date:   Tue, 8 Sep 2020 07:38:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 12:47:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599583621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=G4z0R4ULl6ssTJu5oaK+D6sBXkjeMYkO19vzwQBeYp4=;
+        b=XBXhwrseid5kTFY29lsZUSLLspVyrUMbZkaWOr+oieCVkFNkv/N4mn/V99px13HQtO8dLk
+        Qq/T+Yc9J9TzqnTaJCYH1n9XKGAKOfAs1v/Xfc48NSU6SbGXUCJH+YUJa5zMKLNDj9zQYq
+        TI0yVWc9RdkKXcvX3Dlq15aOpZfqZss=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-Im3WMzNYN7WVf2AUAgsCtg-1; Tue, 08 Sep 2020 09:19:58 -0400
+X-MC-Unique: Im3WMzNYN7WVf2AUAgsCtg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D300810BBED3;
+        Tue,  8 Sep 2020 13:19:56 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-113-114.phx2.redhat.com [10.3.113.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ED5B027BCB;
+        Tue,  8 Sep 2020 13:19:55 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 09:19:54 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        vincent.donnefort@arm.com, mingo@redhat.com, peterz@infradead.org,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
+        valentin.schneider@arm.com
+Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
+Message-ID: <20200908131954.GA147026@lorien.usersys.redhat.com>
+References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
+ <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
+ <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
+ <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
+ <58f5d2e8-493b-7ce1-6abd-57705e5ab437@arm.com>
+ <20200902135423.GB93959@lorien.usersys.redhat.com>
+ <20200907110223.gtdgqod2iv2w7xmg@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907110223.gtdgqod2iv2w7xmg@e107158-lin.cambridge.arm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/20 12:59 AM, Brendan Higgins wrote:
-> On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 9/2/20 8:44 AM, Randy Dunlap wrote:
->>> On 9/2/20 1:09 AM, Stephen Rothwell wrote:
->>>> Hi all,
->>>>
->>>> Changes since 20200828:
->>>>
->>>
->>>
->>> on i386:
->>>
->>> ../lib/ubsan.c: In function ‘ubsan_prologue’:
->>> ../lib/ubsan.c:141:2: error: implicit declaration of function ‘kunit_fail_current_test’; did you mean ‘kunit_init_test’? [-Werror=implicit-function-declaration]
->>>   kunit_fail_current_test();
->>>
->>>
->>> Full randconfig file is attached.
->>>
->>
->> Hi Brendan,
->>
->> Do you know anything about this build error?
->>
->> I can't find kunit_fail_current_test() anywhere.
-> 
-> Yeah, this got applied for some reason without the prerequisite
-> patches. It is from a two patch series, the other being here:
-> 
-> https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielguajardojr@gmail.com/
-> 
-> which in turn depends on another patchset which didn't make it into 5.9.
-> 
-> Again, I don't know why this was applied without it's prereqs. Sorry about that.
-> 
+Hi Quais,
 
-Well.  Who is responsible for this small mess?
-It is still killing linux-next builds for me (2020-0908).
+On Mon, Sep 07, 2020 at 12:02:24PM +0100 Qais Yousef wrote:
+> On 09/02/20 09:54, Phil Auld wrote:
+> > > 
+> > > I think this decoupling is not necessary. The natural place for those
+> > > scheduler trace_event based on trace_points extension files is
+> > > kernel/sched/ and here the internal sched.h can just be included.
+> > > 
+> > > If someone really wants to build this as an out-of-tree module there is
+> > > an easy way to make kernel/sched/sched.h visible.
+> > >
+> > 
+> > It's not so much that we really _want_ to do this in an external module.
+> > But we aren't adding more trace events and my (limited) knowledge of
+> > BPF let me to the conclusion that its raw tracepoint functionality
+> > requires full events.  I didn't see any other way to do it.
+> 
+> I did have a patch that allowed that. It might be worth trying to upstream it.
+> It just required a new macro which could be problematic.
+> 
+> https://github.com/qais-yousef/linux/commit/fb9fea29edb8af327e6b2bf3bc41469a8e66df8b
+> 
+> With the above I could attach using bpf::RAW_TRACEPOINT mechanism.
+>
+
+Yeah, that could work. I meant there was no way to do it with what was there :)
+
+In our initial attempts at using BPF to get at nr_running (which I was not
+involved in and don't have all the details...) there were issues being able to
+keep up and losing events.  That may have been an implementation issue, but
+using the module and trace-cmd doesn't have that problem. Hopefully you don't
+see that using RAW_TRACEPOINTs.
+
+
+Fwiw, I don't think these little helper routines are all that hard to maintain.
+If something changes in those fields, which seems moderately unlikely at least
+for many of them, the compiler will complain.
+
+And I agree with you about preferring to use the public headers for the module.
+I think we can work around it though, if needed.
+
+
+Cheers,
+Phil
+
+> Cheers
+> 
+> --
+> Qais Yousef
+> 
 
 -- 
-~Randy
 
