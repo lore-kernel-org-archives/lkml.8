@@ -2,170 +2,157 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E251EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7EDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A27FD2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52CFC2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V6h7jQlf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mzZH0W5X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lYC28hVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgIHRmR (ORCPT
+        id S1731955AbgIHRmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:42:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56694 "EHLO
+        Tue, 8 Sep 2020 13:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731660AbgIHQOE (ORCPT
+        with ESMTP id S1731666AbgIHQOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:14:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF4AC061383;
-        Tue,  8 Sep 2020 05:18:13 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 12:13:08 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599567190;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DB6ES7hSkk/mpQh9A6SXST0ZjAghkapEmOy8PiLFuHE=;
-        b=V6h7jQlf39pcKu8jw6Joj5JY5PmKEt3fWRyCr2ghOoRtF1uFd50CjolCpSyhl1svf2as47
-        PuCktBLbLh7+OXiUMd83Tt5rU9ewRaizm5FEsqAMx+XnwtF/YgJetbwdmFWLrouCyzjqvW
-        MAvJMgibo5NlAvkF3iFJREuEzWzaG5OUYLLXw8gWTIElizNv8gzbPn7mHFXXunBoOefeDe
-        Uvm3od6RRkq/vaAqpI+n+/8UvCjV9Zn9GH8t+RFRN1xKLlyGGMSvttSPack4xKBl9Zbdpr
-        RfUIJhchoDhSWGJJRV7OTkg7du8A9akLNYSTXxHVCiKrUnKuPa+xsxxaleYoAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599567190;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DB6ES7hSkk/mpQh9A6SXST0ZjAghkapEmOy8PiLFuHE=;
-        b=mzZH0W5XRcqSaj8BChN8h4rA25qus3hcHLB3tmgOYRXST/687NLLzFeFXHZHGHAq/0NZP/
-        8yY8o2s6MbNnzCBA==
-From:   "tip-bot2 for peterz@infradead.org" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/static_call] tracepoint: Fix overly long tracepoint names
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200908105743.GW2674@hirez.programming.kicks-ass.net>
-References: <20200908105743.GW2674@hirez.programming.kicks-ass.net>
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C70C0617BB
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:17:19 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id c19so14211633wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:17:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Xc7i9lFK8Z9R/MbK0MEH717j2fSmQT53OR6EzTp19b0=;
+        b=lYC28hVZNplpFlJguFTo17ufEt4v1awGCLlyg53LDahG1qLKkk2iSqo4q5/BXpF1tP
+         mYYZh6zrtoYhycnLgwHULltqyyIyWY6Yo5mxnHZMOBx3b3nPR3Oc/IhnvmR0JqAkoVew
+         JHhfPTj/embJyrxkmS1f5C9vrO1r0N2xl5Athz/e5qwnJuYUmjzaCZeYqCsMHUsljg96
+         eRbZrszeSGw76h3YoKo9+GB/gnsos1P2uVf4FurbAeWGkBuGDP5Tw/Hzw9xq5vdUCMzb
+         OY5dq7iH6YNBm0tXXp4cJ71ksPLYvIx1E8P+FIOn+xFjqmLEVPnO3GdXjtY0FUpJA5Jz
+         x4OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Xc7i9lFK8Z9R/MbK0MEH717j2fSmQT53OR6EzTp19b0=;
+        b=J9JIeVIrXIFvVMnKYQZ4G535qXD6sizk5FbtWufUV/1xCIpkDRwgZv38ik2xQzAzJI
+         6ubyAzH6O4MIlnlbN1urh+7FmEiSYEcw4d1Y6lfD7EfcL8VDM7p9pFlZX1YOjDsBS3lT
+         gbuHVBu3+RZvHI0hsSTXZsqvDYENEwLSH+cSb9D3WqPY5ysuJDjTRlcM7IwhSka6gQan
+         dUdRxUlFctSyXBDojV6oEMFAcOI9bFI+grkSSjL9lU5kEWlO5+IHwyzxDMkpPPlpk167
+         3sBWu7utgitGQmLqUhar6oPBQsmDE3sYzPMzPxBTi/qE2K9PypyBJocQ2+z13VXGXj/C
+         Mwwg==
+X-Gm-Message-State: AOAM531rjYu7b0xgleMS+W+vTSQ6ja8aRKmghsbFjIVsnEc4DbogaX4j
+        jbRB5QwwS/a3FSUzJZsyW090Pg==
+X-Google-Smtp-Source: ABdhPJxyI6Xo3tu8zWV1QA/p9cNs1Pi+FbS/Si2RJHDJ9AAZhjuqTxhTHzOs3t4qITlTvFu8PwIiCA==
+X-Received: by 2002:a05:600c:c5:: with SMTP id u5mr4044015wmm.14.1599567438139;
+        Tue, 08 Sep 2020 05:17:18 -0700 (PDT)
+Received: from dell ([91.110.221.179])
+        by smtp.gmail.com with ESMTPSA id g186sm13774918wmg.25.2020.09.08.05.17.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 05:17:17 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:17:15 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Subject: Re: [PATCH 16/28] wireless: marvell: mwifiex: init: Move
+ 'tos_to_tid_inv' to where it's used
+Message-ID: <20200908121715.GS4400@dell>
+References: <20200819072402.3085022-17-lee.jones@linaro.org>
+ <20200831155151.0DCB5C4339C@smtp.codeaurora.org>
+ <20200908084953.GJ4400@dell>
+ <010101746d98d278-67bb0cbd-fe22-4344-8c2a-9c65e04ff501-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Message-ID: <159956718882.20229.3629672356074809317.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <010101746d98d278-67bb0cbd-fe22-4344-8c2a-9c65e04ff501-000000@us-west-2.amazonses.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/static_call branch of tip:
+On Tue, 08 Sep 2020, Kalle Valo wrote:
 
-Commit-ID:     de394e7568ce2cdb4643ed230169f484f25f9442
-Gitweb:        https://git.kernel.org/tip/de394e7568ce2cdb4643ed230169f484f25f9442
-Author:        peterz@infradead.org <peterz@infradead.org>
-AuthorDate:    Tue, 08 Sep 2020 12:57:43 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Sep 2020 14:10:59 +02:00
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > On Mon, 31 Aug 2020, Kalle Valo wrote:
+> >
+> >> Lee Jones <lee.jones@linaro.org> wrote:
+> >> 
+> >> > 'tos_to_tid_inv' is only used in 2 of 17 files it's current being
+> >> > included into.
+> >> > 
+> >> > Fixes the following W=1 kernel build warning(s):
+> >> > 
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/main.c:23:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/cmdevt.c:26:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/util.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/txrx.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/11n.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/wmm.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/11n_aggr.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/join.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_cmd.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_ioctl.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_event.c:25:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/uap_txrx.c:23:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/sdio.c:27:
+> >> >  In file included from drivers/net/wireless/marvell/mwifiex/sta_tx.c:25:
+> >> >  drivers/net/wireless/marvell/mwifiex/wmm.h:41:17: warning:
+> >> > ‘tos_to_tid_inv’ defined but not used [-Wunused-const-variable=]
+> >> >  41 | static const u8 tos_to_tid_inv[] = {
+> >> > 
+> >> >  NB: Snipped for brevity
+> >> > 
+> >> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> >> > Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> >> > Cc: Xinming Hu <huxinming820@gmail.com>
+> >> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> >> > Cc: "David S. Miller" <davem@davemloft.net>
+> >> > Cc: Jakub Kicinski <kuba@kernel.org>
+> >> > Cc: linux-wireless@vger.kernel.org
+> >> > Cc: netdev@vger.kernel.org
+> >> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> >> 
+> >> The patch creates two duplicate arrays, this makes it worse than it was
+> >> before.
+> >
+> > We have a choice (and you don't like either of them). :)
+> >
+> > Either add the variable into the file(s) they are used or tell the
+> > compiler that it's okay for other files to declare but not used them
+> > (mark as __maybe_unused).
+> >
+> > What is your preferred solution?
+> 
+> Yue already sent a patch for this (at least I think so, not 100% sure if
+> this is the same case):
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.git/commit/?id=d56ee19a148edaa9972ca12f817e395ba436078b
+> 
+> But that's the solution I like :) There's only one array and it's shared
+> by all the users.
 
-tracepoint: Fix overly long tracepoint names
+Any idea if this results in anything different from making use of
+__maybe_unused once compiled?
 
-Stephen Rothwell reported:
-
-> Exported symbols need to be <= (64 - sizeof(Elf_Addr)) long.  This is
-> presumably 56 on 64 bit arches and the above symbol (including the '.')
-> is 56 characters long.
-
-Shorten the tracepoint symbol name.
-
-Fixes: d25e37d89dd2 ("tracepoint: Optimize using static_call()")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200908105743.GW2674@hirez.programming.kicks-ass.net
----
- include/linux/tracepoint.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 3722a10..81fa0b2 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -154,7 +154,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- #ifdef CONFIG_HAVE_STATIC_CALL
- #define __DO_TRACE_CALL(name)	static_call(tp_func_##name)
- #else
--#define __DO_TRACE_CALL(name)	__tracepoint_iter_##name
-+#define __DO_TRACE_CALL(name)	__traceiter_##name
- #endif /* CONFIG_HAVE_STATIC_CALL */
- 
- /*
-@@ -232,8 +232,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  * poking RCU a bit.
-  */
- #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
--	extern int __tracepoint_iter_##name(data_proto);		\
--	DECLARE_STATIC_CALL(tp_func_##name, __tracepoint_iter_##name); \
-+	extern int __traceiter_##name(data_proto);			\
-+	DECLARE_STATIC_CALL(tp_func_##name, __traceiter_##name);	\
- 	extern struct tracepoint __tracepoint_##name;			\
- 	static inline void trace_##name(proto)				\
- 	{								\
-@@ -288,19 +288,19 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	static const char __tpstrtab_##_name[]				\
- 	__section(__tracepoints_strings) = #_name;			\
- 	extern struct static_call_key STATIC_CALL_KEY(tp_func_##_name);	\
--	int __tracepoint_iter_##_name(void *__data, proto);		\
-+	int __traceiter_##_name(void *__data, proto);			\
- 	struct tracepoint __tracepoint_##_name	__used			\
- 	__section(__tracepoints) = {					\
- 		.name = __tpstrtab_##_name,				\
- 		.key = STATIC_KEY_INIT_FALSE,				\
- 		.static_call_key = &STATIC_CALL_KEY(tp_func_##_name),	\
- 		.static_call_tramp = STATIC_CALL_TRAMP_ADDR(tp_func_##_name), \
--		.iterator = &__tracepoint_iter_##_name,			\
-+		.iterator = &__traceiter_##_name,			\
- 		.regfunc = _reg,					\
- 		.unregfunc = _unreg,					\
- 		.funcs = NULL };					\
- 	__TRACEPOINT_ENTRY(_name);					\
--	int __tracepoint_iter_##_name(void *__data, proto)		\
-+	int __traceiter_##_name(void *__data, proto)			\
- 	{								\
- 		struct tracepoint_func *it_func_ptr;			\
- 		void *it_func;						\
-@@ -314,18 +314,18 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		} while ((++it_func_ptr)->func);			\
- 		return 0;						\
- 	}								\
--	DEFINE_STATIC_CALL(tp_func_##_name, __tracepoint_iter_##_name);
-+	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
- 
- #define DEFINE_TRACE(name, proto, args)		\
- 	DEFINE_TRACE_FN(name, NULL, NULL, PARAMS(proto), PARAMS(args));
- 
- #define EXPORT_TRACEPOINT_SYMBOL_GPL(name)				\
- 	EXPORT_SYMBOL_GPL(__tracepoint_##name);				\
--	EXPORT_SYMBOL_GPL(__tracepoint_iter_##name);			\
-+	EXPORT_SYMBOL_GPL(__traceiter_##name);				\
- 	EXPORT_STATIC_CALL_GPL(tp_func_##name)
- #define EXPORT_TRACEPOINT_SYMBOL(name)					\
- 	EXPORT_SYMBOL(__tracepoint_##name);				\
--	EXPORT_SYMBOL(__tracepoint_iter_##name);			\
-+	EXPORT_SYMBOL(__traceiter_##name);				\
- 	EXPORT_STATIC_CALL(tp_func_##name)
- 
- 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
