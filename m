@@ -2,52 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B420CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391DDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB722080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3E82080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590187;
-	bh=cNMG3aGwW2iOudGRfRSdU1ldC+QY0NSEFEw8CW4f2ME=;
+	s=default; t=1599590190;
+	bh=8zvpcl6toyUsWQBCfpbR+A65ytO5PdnPF2ek3AtYh+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejtyQQMwq8jg+lrGpTMM3ndKCwg21MVfdeu36GAhdGYM4KxcPPunWgJ5snBXFF56Q
-	 tZGm4i3CWoa6k1RtlsI/VMAKUSGhtpyjqNvF4EKnRvNYbYj8+2D1kZm5dbV054EskU
-	 guhYBf46xelZnAU5i3/E8GLmMl19ctjeWgY58rXs=
+	b=RsOs35Rzjc65wXObyFJSs7Oe7ExjnTPGPmVzH4A5KIb+KPaHhy9LIajfAhK4rd1D5
+	 TmJsHARiZdqoQ3Q7UpL46XMODNWlL91OCyMlYknks/n0XohTyv98dAJzitiEgA0n+U
+	 Gl6kXKX0jIyF+vUIHNP0DY8tysT2SMOtaQP8o48M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgIHSgY (ORCPT
+        id S1731649AbgIHSg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:36:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731357AbgIHQJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:21 -0400
+        id S1731351AbgIHQJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:13 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEA5624178;
-        Tue,  8 Sep 2020 15:49:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49A224171;
+        Tue,  8 Sep 2020 15:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580162;
-        bh=cNMG3aGwW2iOudGRfRSdU1ldC+QY0NSEFEw8CW4f2ME=;
+        s=default; t=1599580160;
+        bh=8zvpcl6toyUsWQBCfpbR+A65ytO5PdnPF2ek3AtYh+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0G1Ff9OYUlUkt6Gc8fv6pPW8WxJhRFRAKay8heMSqt/J9+vPLEUbwfjvCgn9HGjZ
-         lWv9GllU/+kkrG3ub3WqqsYrm2lQAftb01NpMGt2BKUVvPTCjJszH03Qyc+mFMxCEy
-         qQWV9WxQgwt/2c+qMyMLZYxEI5ezBy1jhII5Iad0=
+        b=W9n15n7qymnBxDNi9369KAsGIZzBf+L8W7RVf0BUi4wwwwfnhUHDGHY74Ds3LXVDS
+         c2uKWChjTSe3xU44htN/nu5luidHjMr1sN9aIZxgM1IkMPPAFoGL4w/zT9yQmnfC7r
+         AiPNjsfPLHThLqKa/qO4ZYZIjbRkmitmrhwKSwp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/88] vfio/type1: Support faulting PFNMAP vmas
-Date:   Tue,  8 Sep 2020 17:25:56 +0200
-Message-Id: <20200908152223.885686657@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 54/88] btrfs: drop path before adding new uuid tree entry
+Date:   Tue,  8 Sep 2020 17:25:55 +0200
+Message-Id: <20200908152223.825528369@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -60,82 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
+commit 9771a5cf937129307d9f58922d60484d58ababe7 upstream.
 
-With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
-the range being faulted into the vma.  Add support to manually provide
-that, in the same way as done on KVM with hva_to_pfn_remapped().
+With the conversion of the tree locks to rwsem I got the following
+lockdep splat:
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[Ajay: Regenerated the patch for v4.19]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925 Not tainted
+  ------------------------------------------------------
+  btrfs-uuid/7955 is trying to acquire lock:
+  ffff88bfbafec0f8 (btrfs-root-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  but task is already holding lock:
+  ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #1 (btrfs-uuid-00){++++}-{3:3}:
+	 down_read_nested+0x3e/0x140
+	 __btrfs_tree_read_lock+0x39/0x180
+	 __btrfs_read_lock_root_node+0x3a/0x50
+	 btrfs_search_slot+0x4bd/0x990
+	 btrfs_uuid_tree_add+0x89/0x2d0
+	 btrfs_uuid_scan_kthread+0x330/0x390
+	 kthread+0x133/0x150
+	 ret_from_fork+0x1f/0x30
+
+  -> #0 (btrfs-root-00){++++}-{3:3}:
+	 __lock_acquire+0x1272/0x2310
+	 lock_acquire+0x9e/0x360
+	 down_read_nested+0x3e/0x140
+	 __btrfs_tree_read_lock+0x39/0x180
+	 __btrfs_read_lock_root_node+0x3a/0x50
+	 btrfs_search_slot+0x4bd/0x990
+	 btrfs_find_root+0x45/0x1b0
+	 btrfs_read_tree_root+0x61/0x100
+	 btrfs_get_root_ref.part.50+0x143/0x630
+	 btrfs_uuid_tree_iterate+0x207/0x314
+	 btrfs_uuid_rescan_kthread+0x12/0x50
+	 kthread+0x133/0x150
+	 ret_from_fork+0x1f/0x30
+
+  other info that might help us debug this:
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(btrfs-uuid-00);
+				 lock(btrfs-root-00);
+				 lock(btrfs-uuid-00);
+    lock(btrfs-root-00);
+
+   *** DEADLOCK ***
+
+  1 lock held by btrfs-uuid/7955:
+   #0: ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  stack backtrace:
+  CPU: 73 PID: 7955 Comm: btrfs-uuid Kdump: loaded Not tainted 5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925
+  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
+  Call Trace:
+   dump_stack+0x78/0xa0
+   check_noncircular+0x165/0x180
+   __lock_acquire+0x1272/0x2310
+   lock_acquire+0x9e/0x360
+   ? __btrfs_tree_read_lock+0x39/0x180
+   ? btrfs_root_node+0x1c/0x1d0
+   down_read_nested+0x3e/0x140
+   ? __btrfs_tree_read_lock+0x39/0x180
+   __btrfs_tree_read_lock+0x39/0x180
+   __btrfs_read_lock_root_node+0x3a/0x50
+   btrfs_search_slot+0x4bd/0x990
+   btrfs_find_root+0x45/0x1b0
+   btrfs_read_tree_root+0x61/0x100
+   btrfs_get_root_ref.part.50+0x143/0x630
+   btrfs_uuid_tree_iterate+0x207/0x314
+   ? btree_readpage+0x20/0x20
+   btrfs_uuid_rescan_kthread+0x12/0x50
+   kthread+0x133/0x150
+   ? kthread_create_on_node+0x60/0x60
+   ret_from_fork+0x1f/0x30
+
+This problem exists because we have two different rescan threads,
+btrfs_uuid_scan_kthread which creates the uuid tree, and
+btrfs_uuid_tree_iterate that goes through and updates or deletes any out
+of date roots.  The problem is they both do things in different order.
+btrfs_uuid_scan_kthread() reads the tree_root, and then inserts entries
+into the uuid_root.  btrfs_uuid_tree_iterate() scans the uuid_root, but
+then does a btrfs_get_fs_root() which can read from the tree_root.
+
+It's actually easy enough to not be holding the path in
+btrfs_uuid_scan_kthread() when we add a uuid entry, as we already drop
+it further down and re-start the search when we loop.  So simply move
+the path release before we add our entry to the uuid tree.
+
+This also fixes a problem where we're holding a path open after we do
+btrfs_end_transaction(), which has it's own problems.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/vfio/vfio_iommu_type1.c | 36 ++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ fs/btrfs/volumes.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 52083b710b87e..05d8553635ee7 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -343,6 +343,32 @@ static int put_pfn(unsigned long pfn, int prot)
- 	return 0;
- }
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4172,6 +4172,7 @@ static int btrfs_uuid_scan_kthread(void
+ 			goto skip;
+ 		}
+ update_tree:
++		btrfs_release_path(path);
+ 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
+ 			ret = btrfs_uuid_tree_add(trans, root_item.uuid,
+ 						  BTRFS_UUID_KEY_SUBVOL,
+@@ -4196,6 +4197,7 @@ update_tree:
+ 		}
  
-+static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
-+			    unsigned long vaddr, unsigned long *pfn,
-+			    bool write_fault)
-+{
-+	int ret;
-+
-+	ret = follow_pfn(vma, vaddr, pfn);
-+	if (ret) {
-+		bool unlocked = false;
-+
-+		ret = fixup_user_fault(NULL, mm, vaddr,
-+				       FAULT_FLAG_REMOTE |
-+				       (write_fault ?  FAULT_FLAG_WRITE : 0),
-+				       &unlocked);
-+		if (unlocked)
-+			return -EAGAIN;
-+
-+		if (ret)
-+			return ret;
-+
-+		ret = follow_pfn(vma, vaddr, pfn);
-+	}
-+
-+	return ret;
-+}
-+
- static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
- 			 int prot, unsigned long *pfn)
- {
-@@ -382,12 +408,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ skip:
++		btrfs_release_path(path);
+ 		if (trans) {
+ 			ret = btrfs_end_transaction(trans);
+ 			trans = NULL;
+@@ -4203,7 +4205,6 @@ skip:
+ 				break;
+ 		}
  
- 	down_read(&mm->mmap_sem);
- 
-+retry:
- 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
- 
- 	if (vma && vma->vm_flags & VM_PFNMAP) {
--		if (!follow_pfn(vma, vaddr, pfn) &&
--		    is_invalid_reserved_pfn(*pfn))
--			ret = 0;
-+		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
-+		if (ret == -EAGAIN)
-+			goto retry;
-+
-+		if (!ret && !is_invalid_reserved_pfn(*pfn))
-+			ret = -EFAULT;
- 	}
- 
- 	up_read(&mm->mmap_sem);
--- 
-2.25.1
-
+-		btrfs_release_path(path);
+ 		if (key.offset < (u64)-1) {
+ 			key.offset++;
+ 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
 
 
