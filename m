@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AFDC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABFEC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE66215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8F7215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599560101;
-	bh=VuGxZvo9yHiaoeDqVaq0mRPlaYO1KqH47p+IwFf+LRE=;
+	s=default; t=1599560115;
+	bh=0yVg4VB9wLo7/HcSqfX02PS0qyjpPXXI+/tghmjqUsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUBdriqgshs5tHFZ4jXzi51ssoI+GLYPz4F8874+PV3r2CxeFKWGNTOlTlJJLChdr
-	 UmS0ui/iRIwfXA1JwdIPZwNfQ9mayK4H2wFn1kDQwqOc3sZY3viTgr8Tr/mLr4/rIh
-	 MV1CvPeGSXWsUh3M0o+BF5cECcS2lZqOvOc03P4U=
+	b=rC9Q2lrE6hGnYfIN4pfJYxvmMN9beO5RDNye664bPm24m1i757/tz905OfCbHZiyY
+	 ON/uxDLlgP+2HxrrlBMhp41IUP2yCx8hXHuzkCGIxJaj36P6a2uWJphaV8yCeO39WH
+	 8EmifvbMC127/tUydECyU78b62OiOxrHVxGic/Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgIHKO5 (ORCPT
+        id S1729246AbgIHKPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59862 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 06:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729104AbgIHKMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728966AbgIHKMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 06:12:35 -0400
 Received: from mail.kernel.org (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEAD21D79;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8156321D7B;
         Tue,  8 Sep 2020 10:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599559952;
-        bh=VuGxZvo9yHiaoeDqVaq0mRPlaYO1KqH47p+IwFf+LRE=;
+        bh=0yVg4VB9wLo7/HcSqfX02PS0qyjpPXXI+/tghmjqUsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qzFJPKrMSr98zhIOKH91ICQ4+dUN9MrDjIB/ZpEjGHbUcxSKgLKJWASEVBm/49Lf/
-         orclnub6zmuCD25OU1d74vpEhrZu+b+o/EFvWYj6mpnRE26K8k7lbpsvfx6n01vTvS
-         zEoa6Wn7M/+rFAJ1GRB8eJvzsVUKZqdRU8K6wQwc=
+        b=e38+G2nCFBUoDUoF+fz5A8o5ijqJDQaNcvCHxYr26na4YykpjN8D/WJrud+bKE1ah
+         fwhId2ca83Oz7WvoTX8OcFe8qKZEQSeLqFwWaJMF0uDwC2suV3t2EEcJvvHWTUV+Lv
+         7yFg8uXyuQWYa0pEy5v1eCRfL1NdEegkPQtCcGq4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kFac1-00B3qj-5f; Tue, 08 Sep 2020 12:12:29 +0200
+        id 1kFac1-00B3qd-2i; Tue, 08 Sep 2020 12:12:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] media: atomisp: get rid of -Wsuggest-attribute=format warnings
-Date:   Tue,  8 Sep 2020 12:12:26 +0200
-Message-ID: <6c77d765707b1e6b2901fd23d85b4d032f1a1799.1599141140.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 2/5] media: atomisp: print a warning if error while setting downscaler
+Date:   Tue,  8 Sep 2020 12:12:23 +0200
+Message-ID: <20d420b6ccec9c8013336437781da0f0c7ffabac.1599141140.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
 References: <cover.1599141140.git.mchehab+huawei@kernel.org>
@@ -63,91 +63,45 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200908101226.b9z79ZPuOjk_RK9v-zaoYf_aOP-7_8egigSitWwPO2w@z>
+Message-ID: <20200908101223.-boY-j80RM79vWn_bA4YCwy1nJzJ7KUUjdlF0YSGnh8@z>
 
-There are some warnings reported by gcc:
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:164:2: warning: function ‘atomisp_css2_dbg_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
-	drivers/staging/media/atomisp//pci/atomisp_compat_css20.c:176:2: warning: function ‘atomisp_css2_err_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+As warned by gcc:
 
-That are due to the usage of printf-like messages without
-enabling the error checking logic.
+    drivers/staging/media/atomisp//pci/isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c:237:31: warning: variable ‘isp_data_ptr’ set but not used [-Wunused-but-set-variable]
 
-Add the proper attributes in order to shut up such warnings.
+ia_css_vf_configure() logic has an error var that detects troubles
+when setting the kernel for downscaling. The driver just ignores
+it, without producing any warning. Add at least a warning message
+on such cases.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../media/atomisp/pci/atomisp_compat_css20.c  | 20 ++++---------------
- .../staging/media/atomisp/pci/ia_css_env.h    |  4 ++--
- 2 files changed, 6 insertions(+), 18 deletions(-)
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-index e54242dc0888..5a730e17cc6e 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-@@ -159,24 +159,13 @@ static void atomisp_css2_hw_load(hrt_address addr, void *to, uint32_t n)
- 	spin_unlock_irqrestore(&mmio_lock, flags);
- }
- 
--static int atomisp_css2_dbg_print(const char *fmt, va_list args)
--{
--	vprintk(fmt, args);
--	return 0;
--}
--
--static int atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
-+static int  __attribute__((format (printf, 1, 0)))
-+atomisp_css2_dbg_ftrace_print(const char *fmt, va_list args)
- {
- 	ftrace_vprintk(fmt, args);
- 	return 0;
- }
- 
--static int atomisp_css2_err_print(const char *fmt, va_list args)
--{
--	vprintk(fmt, args);
--	return 0;
--}
--
- void atomisp_load_uint32(hrt_address addr, uint32_t *data)
- {
- 	*data = atomisp_css2_hw_load_32(addr);
-@@ -869,8 +858,7 @@ static inline int __set_css_print_env(struct atomisp_device *isp, int opt)
- 		isp->css_env.isp_css_env.print_env.debug_print =
- 		    atomisp_css2_dbg_ftrace_print;
- 	else if (opt == 2)
--		isp->css_env.isp_css_env.print_env.debug_print =
--		    atomisp_css2_dbg_print;
-+		isp->css_env.isp_css_env.print_env.debug_print = vprintk;
- 	else
- 		ret = -EINVAL;
- 
-@@ -903,7 +891,7 @@ int atomisp_css_load_firmware(struct atomisp_device *isp)
- 
- 	__set_css_print_env(isp, dbg_func);
- 
--	isp->css_env.isp_css_env.print_env.error_print = atomisp_css2_err_print;
-+	isp->css_env.isp_css_env.print_env.error_print = vprintk;
- 
- 	/* load isp fw into ISP memory */
- 	err = ia_css_load_firmware(isp->dev, &isp->css_env.isp_css_env,
-diff --git a/drivers/staging/media/atomisp/pci/ia_css_env.h b/drivers/staging/media/atomisp/pci/ia_css_env.h
-index 8debf334c15c..9808ff9e0492 100644
---- a/drivers/staging/media/atomisp/pci/ia_css_env.h
-+++ b/drivers/staging/media/atomisp/pci/ia_css_env.h
-@@ -75,9 +75,9 @@ struct ia_css_hw_access_env {
- /* Environment with function pointers to print error and debug messages.
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index 3b850bb2d39d..dd3670972936 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -13,6 +13,8 @@
+  * more details.
   */
- struct ia_css_print_env {
--	int (*debug_print)(const char *fmt, va_list args);
-+	int (*debug_print)(const char *fmt, va_list args) __attribute__((format (printf, 1, 0)));
- 	/** Print a debug message. */
--	int (*error_print)(const char *fmt, va_list args);
-+	int (*error_print)(const char *fmt, va_list args) __attribute__((format (printf, 1, 0)));
- 	/** Print an error message.*/
- };
  
++#include "atomisp_internal.h"
++
+ #include "ia_css_vf.host.h"
+ #include <assert_support.h>
+ #include <ia_css_err.h>
+@@ -129,6 +131,9 @@ ia_css_vf_configure(
+ 	const struct ia_css_binary_info *info = &binary->info->sp;
+ 
+ 	err = configure_kernel(info, out_info, vf_info, downscale_log2, &config);
++	if (err)
++		dev_warn(atomisp_dev, "Couldn't setup downscale\n");
++
+ 	configure_dma(&config, vf_info);
+ 
+ 	if (vf_info)
 -- 
 2.26.2
 
