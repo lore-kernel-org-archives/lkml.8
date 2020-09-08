@@ -2,166 +2,87 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D66FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC12C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF1020738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585994;
-	bh=OkqeuIqrKR7bGs2ubOleM1hudzXsytRwrAN1s4XP4Ew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u1333vXdj/Rbxlrwz2zUxWYUR89ui2zfD1OiaW2TNNKOkIK1lJzctcxYj1uw7Agvm
-	 GUy/tzoCEF5TAsMKQQiFJyGXc39Y/dIGeYkaa0J2FRKsAs06cNp6tBan2y30eS7Z//
-	 SeelIXf+z+5IAcGmpnD7YQLaBf96qTkvSo3OhNyk=
+	by mail.kernel.org (Postfix) with ESMTP id 9B7A121741
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LQ1D4gtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbgIHR0d (ORCPT
+        id S1731748AbgIHR0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:26:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731826AbgIHRZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:25:50 -0400
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 8 Sep 2020 13:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731808AbgIHR0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:26:00 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F8BC061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:25:59 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f10bf0070b09dfd4356f225.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:70b0:9dfd:4356:f225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAE0B21532;
-        Tue,  8 Sep 2020 17:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599585950;
-        bh=OkqeuIqrKR7bGs2ubOleM1hudzXsytRwrAN1s4XP4Ew=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0xHHYNITz4itRKxva3t4URtYS103wLewnyrgiygYiKvhKVI7JeZpkP/yX2GV4GX/2
-         K4eQyyfFSccATam4yXejQzqCOWCX4Qw20q1/byuFbssHLnmIXN8zcZp/LGgZdCxAzc
-         1U8AzrQ4EONXky+XP2je6zf3U6yBH8nplFaczOZs=
-Received: by mail-oo1-f52.google.com with SMTP id z1so4124563ooj.3;
-        Tue, 08 Sep 2020 10:25:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533c9Nco+s4z/pBgVg7SKB2T1vLRH4Stst9YKGZwU0/tmRRvi5ml
-        hvR1/a/N1XoG8xTlv10GcmTTm+kzJYbJRAibVA==
-X-Google-Smtp-Source: ABdhPJz3mC3Je19t37DdXhi+vmTjFLXH5RMTrow7KHwUv8p1SJN+XNllTeJU4l6nK8rRcXYxxrGxHfHxeWKrKZcLv8k=
-X-Received: by 2002:a4a:9d48:: with SMTP id f8mr18836211ook.50.1599585949221;
- Tue, 08 Sep 2020 10:25:49 -0700 (PDT)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 776091EC0489;
+        Tue,  8 Sep 2020 19:25:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599585958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=CDPHzVOtjsYxVqMtTeVl7g411FkW4WHmSDs5Qd5T+KA=;
+        b=LQ1D4gtne1y2gBQFmGW6p4rvLKM9mrwANcc1dl80u88eOSkzSRibQ2cxgLLhczSnW5Bv7S
+        cb0LPDvm17Rxy3NfnVG4RGBiXJHkxgtCY02oh/AWtD79iroosjS0DT9gMSP9hoZsh0mBKR
+        tir9k29H8eWXFBKswCucewg91YfKiwU=
+Date:   Tue, 8 Sep 2020 19:25:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     kitsunyan <kitsunyan@airmail.cc>,
+        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
+Message-ID: <20200908172558.GG25236@zn.tnic>
+References: <20200907094843.1949-1-Jason@zx2c4.com>
+ <20200907100647.GB10657@zn.tnic>
+ <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
+ <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200828130602.42203-1-andre.przywara@arm.com>
- <20200828130602.42203-2-andre.przywara@arm.com> <CAL_Jsq+jjzFR0ZdFO5dEp2w2D2uzSAB9tdih9tnuN987LABbiA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+jjzFR0ZdFO5dEp2w2D2uzSAB9tdih9tnuN987LABbiA@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Sep 2020 11:25:38 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJfY=DTKeuGmkwn-tcDG_SAbHJqASH2zKgwU-78qqwxOw@mail.gmail.com>
-Message-ID: <CAL_JsqJfY=DTKeuGmkwn-tcDG_SAbHJqASH2zKgwU-78qqwxOw@mail.gmail.com>
-Subject: Re: [PATCH 01/10] dt-bindings: watchdog: sp-805: Convert to Json-schema
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 11:20 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Aug 28, 2020 at 7:06 AM Andre Przywara <andre.przywara@arm.com> wrote:
-> >
-> > Convert the ARM SP-805 watchdog IP DT binding over to Json-schema.
-> >
-> > A straight-forward conversion, but the requirement for providing two
-> > clocks got strengthened from "should" to "must".
-> >
-> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > ---
-> >  .../bindings/watchdog/arm,sp805.txt           | 32 --------
-> >  .../bindings/watchdog/arm,sp805.yaml          | 75 +++++++++++++++++++
-> >  2 files changed, 75 insertions(+), 32 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> > deleted file mode 100644
-> > index bee6f1f0e41b..000000000000
-> > --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> > +++ /dev/null
-> > @@ -1,32 +0,0 @@
-> > -ARM AMBA Primecell SP805 Watchdog
-> > -
-> > -SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
-> > -can be used to identify the peripheral type, vendor, and revision.
-> > -This value can be used for driver matching.
-> > -
-> > -As SP805 WDT is a primecell IP, it follows the base bindings specified in
-> > -'arm/primecell.txt'
-> > -
-> > -Required properties:
-> > -- compatible:  Should be "arm,sp805" & "arm,primecell"
-> > -- reg:         Should contain location and length for watchdog timer register
-> > -- clocks:      Clocks driving the watchdog timer hardware. This list should be
-> > -               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
-> > -               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
-> > -               frequency
-> > -- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
-> > -               second one
-> > -
-> > -Optional properties:
-> > -- interrupts:  Should specify WDT interrupt number
-> > -- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
-> > -               default timeout is determined by the driver
-> > -
-> > -Example:
-> > -       watchdog@66090000 {
-> > -               compatible = "arm,sp805", "arm,primecell";
-> > -               reg = <0x66090000 0x1000>;
-> > -               interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
-> > -               clocks = <&wdt_clk>, <&apb_pclk>;
-> > -               clock-names = "wdog_clk", "apb_pclk";
-> > -       };
-> > diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-> > new file mode 100644
-> > index 000000000000..980e155d3387
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-> > @@ -0,0 +1,75 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/watchdog/arm,sp805.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM AMBA Primecell SP805 Watchdog
-> > +
-> > +maintainers:
-> > +  - Viresh Kumar <vireshk@kernel.org>
-> > +
-> > +description: |+
-> > +  The Arm SP805 IP implements a watchdog device, which triggers an interrupt
-> > +  after a configurable time period. If that interrupt has not been serviced
-> > +  when the next interrupt would be triggered, the reset signal is asserted.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/arm/primecell.yaml#
->
-> Should also ref watchdog.yaml here.
+On Tue, Sep 08, 2020 at 07:12:44PM +0200, Jason A. Donenfeld wrote:
+> > Overclocking is not architectural I/F and is supported by some special
+> > CPU skews. I can't find any public document to specify the commands
+> > which can be used via this OC mailbox. I have to check internally to
+> > see if there is any. To add a proper sysfs interface we have to make
+> > sure that we are not allowing some random commands to hardware and
+> > crash the system.
+> 
+> Well you can definitely crash the system this way -- undervolting can
+> result in all sorts of nice glitching. You might be able to even
+> programmatically undervolt to compromise the kernel in clever ways (a
+> lockdown bypass, I guess, but who cares).
+> 
+> That's why I initially suggested this was pretty squarely in the realm
+> of hobbyists and should just be added to that whitelist.
 
-Actually, you should also drop primecell.yaml as that will get applied
-already with the 'arm,primecell' compatible match.
+If that MSR can cause all kinds of crazy, I'd prefer writes to it from
+userspace to be completely forbidden, actually. And if force-enabled,
+with a BIG FAT WARNING each time userspace writes to it.
 
-Rob
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
