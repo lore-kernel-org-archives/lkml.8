@@ -2,107 +2,118 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E959C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E25C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4D8222E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPLtU7p7"
+	by mail.kernel.org (Postfix) with ESMTP id E6C2E20738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgIHPRd (ORCPT
+        id S1730303AbgIHPSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:17:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730205AbgIHPOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:14:12 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D0EC0611E2;
-        Tue,  8 Sep 2020 06:33:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a9so5094701pjg.1;
-        Tue, 08 Sep 2020 06:33:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=+6DdVEAHk114MPmsPvfVgelrnLIdaVwBYKUdcVJCimM=;
-        b=HPLtU7p7+fZmlpVKGRJgNBrW9pG+Pguf8LaEfIFwclcfVemFqf6hA9KIkFKJbdA5N+
-         cnvbL6ax5PILNSwlu6yYTmSXX5MHWydlptjrYmj/nhqNmMKdFK/XDIWD84yQU6bZ2HTr
-         eeKLOni7tBf/Id+S5ooNK1z4U4n2Yo+xgTwDf3V9nWDGICmjNZ1NLZFDkBwp/CxKv5Zi
-         rSQcp/aQ5m+S0CC2TOjS+6R6cV3WDdHohNaNexMB3SpT84nHcJr9iNKMl3mKOGh4xKw0
-         tIR6Fmh3AuWLgCnVNoWVlMLZEbGh06xkPT66Bm9MQUVqOQdYTtql2qSEu593Nvq335Db
-         avBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=+6DdVEAHk114MPmsPvfVgelrnLIdaVwBYKUdcVJCimM=;
-        b=c2qXAb3vUROEAKed+gCjgIRuhZ0Hclur9JOM/y9cgd16qZixIKof66VlZQNjIQdGhX
-         151rWneR+2FnHSNMi3/icC5ronPHKYuIS5lTYS/6Fwv/suK67PtWrI7C222nANjpMURz
-         8kihN8yLbXgI0H6GaGjyYL0SG8RFZVN1lAKVuxiD2y6FEyfCCprzIEDhOubcbER/oYrX
-         35+tgNiryqFJih/1kuHwf6H0xcqn+BPcaJO023y2MIWdTfmbF/nO7HyEdN53s2zp/TBw
-         MI35CFznZ1W1SJYDex8qR76bs17h99C3yS8gmp5s1EdG7BuaReGEWoFrL7qD49hc1rqy
-         hZ2g==
-X-Gm-Message-State: AOAM533YoKWXUqf9f2LhZR9sVN+MDXE/MwEd6wgiwSkHXReze6qrpq8H
-        Yjgd3G5Qc4DfQPraaAnN2t4=
-X-Google-Smtp-Source: ABdhPJwTXYa4lO4knRCcBa5iPixZ88RGvHy6LjK6qutEkRkK3Nn8SIimQXDpp101uHSY9lceL/4/nQ==
-X-Received: by 2002:a17:90a:5216:: with SMTP id v22mr3918168pjh.97.1599572032159;
-        Tue, 08 Sep 2020 06:33:52 -0700 (PDT)
-Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
-        by smtp.gmail.com with ESMTPSA id mt8sm1324037pjb.17.2020.09.08.06.33.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 06:33:51 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 13:33:50 +0000
-From:   Hao Lee <haolee.swjtu@gmail.com>
-To:     tj@kernel.org
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, haolee.swjtu@gmail.com
-Subject: [PATCH] cgroup: Remove unnecessary call to strstrip()
-Message-ID: <20200908133350.GA22979@haolee.github.io>
+        Tue, 8 Sep 2020 11:18:35 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60752 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730188AbgIHPQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:16:19 -0400
+IronPort-SDR: TxPoHQfAnCF44btYfNAdQr+nDHxb8GZxdL1bMW3UyVEyrxW+mRkY6gMD4jzkDad6wI/cgWQ8sj
+ nip2iAAflY9Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="176183609"
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="176183609"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:49:48 -0700
+IronPort-SDR: EE1FhTZi6ME/V9j17PG5lGjFOgXCqdwuuvE4gN5Bd70E2i+arsePUQFkObp4QM5EI0+fNbFIt9
+ rgnFi1Ov6STQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="333478724"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2020 06:49:46 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kFdy9-00FDZZ-Ef; Tue, 08 Sep 2020 16:47:33 +0300
+Date:   Tue, 8 Sep 2020 16:47:33 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] gpiolib: switch to simpler IDA interface
+Message-ID: <20200908134733.GA1891694@smile.fi.intel.com>
+References: <20200908131225.10870-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200908131225.10870-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The string buf will be stripped in cgroup_procs_write_start() before it
-is converted to int, so remove this unnecessary call to strstrip().
+On Tue, Sep 08, 2020 at 03:12:25PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> We don't need to specify any ranges when allocating IDs so we can switch
+> to ida_alloc() and ida_free() instead of the ida_simple_ counterparts.
+> 
+> ida_simple_get(ida, 0, 0, gfp) is equivalent to
+> ida_alloc_range(ida, 0, UINT_MAX, gfp) which is equivalent to
+> ida_alloc(ida, gfp). Note: IDR will never actually allocate an ID
+> larger than INT_MAX.
 
-Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
----
- kernel/cgroup/cgroup.c | 2 --
- 1 file changed, 2 deletions(-)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index b6714166106d..90ee7e73eb2e 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4772,14 +4772,12 @@ static ssize_t cgroup_threads_write(struct kernfs_open_file *of,
- {
- 	struct cgroup *src_cgrp, *dst_cgrp;
- 	struct task_struct *task;
- 	ssize_t ret;
- 	bool locked;
- 
--	buf = strstrip(buf);
--
- 	dst_cgrp = cgroup_kn_lock_live(of->kn, false);
- 	if (!dst_cgrp)
- 		return -ENODEV;
- 
- 	task = cgroup_procs_write_start(buf, false, &locked);
- 	ret = PTR_ERR_OR_ZERO(task);
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpiolib.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 80137c1b3cdc..97f76334ec7e 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -426,7 +426,7 @@ static void gpiodevice_release(struct device *dev)
+>  	struct gpio_device *gdev = dev_get_drvdata(dev);
+>  
+>  	list_del(&gdev->list);
+> -	ida_simple_remove(&gpio_ida, gdev->id);
+> +	ida_free(&gpio_ida, gdev->id);
+>  	kfree_const(gdev->label);
+>  	kfree(gdev->descs);
+>  	kfree(gdev);
+> @@ -537,7 +537,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  		gc->of_node = gdev->dev.of_node;
+>  #endif
+>  
+> -	gdev->id = ida_simple_get(&gpio_ida, 0, 0, GFP_KERNEL);
+> +	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
+>  	if (gdev->id < 0) {
+>  		ret = gdev->id;
+>  		goto err_free_gdev;
+> @@ -705,7 +705,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  err_free_descs:
+>  	kfree(gdev->descs);
+>  err_free_ida:
+> -	ida_simple_remove(&gpio_ida, gdev->id);
+> +	ida_free(&gpio_ida, gdev->id);
+>  err_free_gdev:
+>  	/* failures here can mean systems won't boot... */
+>  	pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
+> -- 
+> 2.26.1
+> 
+
 -- 
-2.24.1
+With Best Regards,
+Andy Shevchenko
+
 
