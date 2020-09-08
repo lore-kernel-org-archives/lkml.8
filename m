@@ -2,550 +2,242 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E54C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12B0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 534892166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C262166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:09:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c8AONDqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgIHJIu convert rfc822-to-8bit (ORCPT
+        id S1728971AbgIHJJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:08:50 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2780 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728490AbgIHJIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:08:49 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 98026CC5F8DCFCC28E86;
-        Tue,  8 Sep 2020 10:08:47 +0100 (IST)
-Received: from localhost (10.52.124.38) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 8 Sep 2020
- 10:08:46 +0100
-Date:   Tue, 8 Sep 2020 10:07:12 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Gene Chen" <gene_chen@richtek.com>, <Wilma.Wu@mediatek.com>,
-        <shufan_lee@richtek.com>, <cy_huang@richtek.com>,
-        <benjamin.chao@mediatek.com>
-Subject: Re: [PATCH v3 1/2] iio: adc: mt6360: Add ADC driver for MT6360
-Message-ID: <20200908100712.00007a7b@Huawei.com>
-In-Reply-To: <CAE+NS36j4a6k-JSUbjxzpfbqtE-xMW7qxUUhHPAnc_9V-Lv7LQ@mail.gmail.com>
-References: <1598259985-12517-1-git-send-email-gene.chen.richtek@gmail.com>
-        <1598259985-12517-2-git-send-email-gene.chen.richtek@gmail.com>
-        <20200829181157.1b653a88@archlinux>
-        <CAE+NS36j4a6k-JSUbjxzpfbqtE-xMW7qxUUhHPAnc_9V-Lv7LQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 8 Sep 2020 05:09:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28616 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728490AbgIHJJi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 05:09:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599556175;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=cRDtdR6wTLU9IRX/JjyB2JuVfrGlE34QbR2ewYFxEPM=;
+        b=c8AONDqfBEFhqHR3fFEZqF8IGwQe3LOjOy2jDXV5MSFS/s9rYfr25tNf2k9qhukvT0002u
+        UnCB5zyidGcS5eF/Dcr8h59hXVWZs8ECzR61ErfxuXYbydqmJlvnQRsdPFQ7Q1ONeViOei
+        jfcfIetbO4F8C6QIIt6ClBFBkgKHgGE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-teqCorgwNEqDKSqOOWZICA-1; Tue, 08 Sep 2020 05:09:31 -0400
+X-MC-Unique: teqCorgwNEqDKSqOOWZICA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A96501007465;
+        Tue,  8 Sep 2020 09:09:27 +0000 (UTC)
+Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FD335C1BB;
+        Tue,  8 Sep 2020 09:09:20 +0000 (UTC)
+Subject: Re: [PATCH v4 6/6] mm: secretmem: add ability to reserve memory at
+ boot
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org
+References: <20200818141554.13945-1-rppt@kernel.org>
+ <20200818141554.13945-7-rppt@kernel.org>
+ <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
+ <20200819115335.GU752365@kernel.org>
+ <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
+ <20200819173347.GW752365@kernel.org>
+ <6c8b30fb-1b6c-d446-0b09-255b79468f7c@redhat.com>
+ <20200820155228.GZ752365@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <fdda6ba7-9418-2b52-eee8-ce5e9bfdb6ad@redhat.com>
+Date:   Tue, 8 Sep 2020 11:09:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.124.38]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200820155228.GZ752365@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 14:17:42 +0800
-Gene Chen <gene.chen.richtek@gmail.com> wrote:
-
-> Jonathan Cameron <jic23@kernel.org> 於 2020年8月30日 週日 上午1:12寫道：
-> >
-> > On Mon, 24 Aug 2020 17:06:24 +0800
-> > Gene Chen <gene.chen.richtek@gmail.com> wrote:
-> >  
-> > > From: Gene Chen <gene_chen@richtek.com>
-> > >
-> > > Add MT6360 ADC driver include Charger Current, Voltage, and
-> > > Temperature.
-> > >
-> > > Signed-off-by: Gene Chen <gene_chen@richtek.com>  
-> > Hi Gene,
-> >
-> > A few comments inline.  The big one centres on why we can't
-> > expose the channels as _raw, _offset and _scale?
-> >  
+On 20.08.20 17:52, Mike Rapoport wrote:
+> On Wed, Aug 19, 2020 at 07:45:29PM +0200, David Hildenbrand wrote:
+>> On 19.08.20 19:33, Mike Rapoport wrote:
+>>> On Wed, Aug 19, 2020 at 02:10:43PM +0200, David Hildenbrand wrote:
+>>>> On 19.08.20 13:53, Mike Rapoport wrote:
+>>>>> On Wed, Aug 19, 2020 at 12:49:05PM +0200, David Hildenbrand wrote:
+>>>>>> On 18.08.20 16:15, Mike Rapoport wrote:
+>>>>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+>>>>>>>
+>>>>>>> Taking pages out from the direct map and bringing them back may create
+>>>>>>> undesired fragmentation and usage of the smaller pages in the direct
+>>>>>>> mapping of the physical memory.
+>>>>>>>
+>>>>>>> This can be avoided if a significantly large area of the physical memory
+>>>>>>> would be reserved for secretmem purposes at boot time.
+>>>>>>>
+>>>>>>> Add ability to reserve physical memory for secretmem at boot time using
+>>>>>>> "secretmem" kernel parameter and then use that reserved memory as a global
+>>>>>>> pool for secret memory needs.
+>>>>>>
+>>>>>> Wouldn't something like CMA be the better fit? Just wondering. Then, the
+>>>>>> memory can actually be reused for something else while not needed.
+>>>>>
+>>>>> The memory allocated as secret is removed from the direct map and the
+>>>>> boot time reservation is intended to reduce direct map fragmentatioan
+>>>>> and to avoid splitting 1G pages there. So with CMA I'd still need to
+>>>>> allocate 1G chunks for this and once 1G page is dropped from the direct
+>>>>> map it still cannot be reused for anything else until it is freed.
+>>>>>
+>>>>> I could use CMA to do the boot time reservation, but doing the
+>>>>> reservesion directly seemed simpler and more explicit to me.
+>>>>
+>>>> Well, using CMA would give you the possibility to let the memory be used
+>>>> for other purposes until you decide it's the right time to take it +
+>>>> remove the direct mapping etc.
+>>>
+>>> I still can't say I follow you here. If I reseve a CMA area as a pool
+>>> for secret memory 1G pages, it is still reserved and it still cannot be
+>>> used for other purposes, right?
+>>
+>> So, AFAIK, if you create a CMA pool it can be used for any MOVABLE
+>> allocations (similar to ZONE_MOVABLE) until you actually allocate CMA
+>> memory from that region. Other allocations on that are will then be
+>> migrated away (using alloc_contig_range()).
+>>
+>> For example, if you have a 1~GiB CMA area, you could allocate 4~MB pages
+>> from that CMA area on demand (removing the direct mapping, etc ..), and
+>> free when no longer needed (instantiating the direct mapping). The free
+>> memory in that area could used for MOVABLE allocations.
 > 
-> I think i have 3 reason for use real value,
-> ADC is used to get real value rather than raw data which is not meaningful.
-> And I can decide which formula needs apply according to different condition.
-> Also the junction temperature channel _scale is floating point 1.05
-> which is not easy to express.
-
-See below.
-
+> The boot time resrvation is intended to avoid splitting 1G pages in the
+> direct map. Without the boot time reservation, we maintain a pool of 2M
+> pages so the 1G pages are split and 2M pages remain unsplit.
 > 
-> > Thanks,
-> >
-> > Jonathan
-> >  
-> > > ---
-> > >  drivers/iio/adc/Kconfig      |  11 ++
-> > >  drivers/iio/adc/Makefile     |   1 +
-> > >  drivers/iio/adc/mt6360-adc.c | 366 +++++++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 378 insertions(+)
-> > >  create mode 100644 drivers/iio/adc/mt6360-adc.c
-> > >
-> > > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > > index 66d9cc0..07dcea7 100644
-> > > --- a/drivers/iio/adc/Kconfig
-> > > +++ b/drivers/iio/adc/Kconfig
-> > > @@ -703,6 +703,17 @@ config MCP3911
-> > >         This driver can also be built as a module. If so, the module will be
-> > >         called mcp3911.
-> > >
-> > > +config MEDIATEK_MT6360_ADC
-> > > +     tristate "Mediatek MT6360 ADC Part"
-> > > +     depends on MFD_MT6360
-> > > +     select IIO_BUFFER
-> > > +     select IIO_TRIGGERED_BUFFER
-> > > +     help
-> > > +       Say Y here to enable MT6360 ADC Part.
-> > > +       Integrated for System Monitoring include
-> > > +       Charger and Battery Current, Voltage and
-> > > +       Temperature
-> > > +
-> > >  config MEDIATEK_MT6577_AUXADC
-> > >       tristate "MediaTek AUXADC driver"
-> > >       depends on ARCH_MEDIATEK || COMPILE_TEST
-> > > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> > > index 90f94ad..5fca90a 100644
-> > > --- a/drivers/iio/adc/Makefile
-> > > +++ b/drivers/iio/adc/Makefile
-> > > @@ -65,6 +65,7 @@ obj-$(CONFIG_MAX9611) += max9611.o
-> > >  obj-$(CONFIG_MCP320X) += mcp320x.o
-> > >  obj-$(CONFIG_MCP3422) += mcp3422.o
-> > >  obj-$(CONFIG_MCP3911) += mcp3911.o
-> > > +obj-$(CONFIG_MEDIATEK_MT6360_ADC) += mt6360-adc.o
-> > >  obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
-> > >  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
-> > >  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
-> > > diff --git a/drivers/iio/adc/mt6360-adc.c b/drivers/iio/adc/mt6360-adc.c
-> > > new file mode 100644
-> > > index 0000000..5eed812
-> > > --- /dev/null
-> > > +++ b/drivers/iio/adc/mt6360-adc.c
-> > > @@ -0,0 +1,366 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2020 MediaTek Inc.
-> > > + *
-> > > + * Author: Gene Chen <gene_chen@richtek.com>
-> > > + */
-> > > +
-> > > +#include <linux/completion.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/iio/buffer.h>
-> > > +#include <linux/iio/iio.h>
-> > > +#include <linux/iio/trigger_consumer.h>
-> > > +#include <linux/iio/triggered_buffer.h>
-> > > +#include <linux/irq.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/ktime.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/mutex.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +#define MT6360_REG_PMUCHGCTRL3       0x313
-> > > +#define MT6360_REG_PMUADCCFG 0x356
-> > > +#define MT6360_REG_PMUADCRPT1        0x35A
-> > > +
-> > > +/* PMUCHGCTRL3 0x313 */
-> > > +#define MT6360_AICR_MASK     0xFC
-> > > +#define MT6360_AICR_SHFT     2
-> > > +#define MT6360_AICR_400MA    0x6
-> > > +/* PMUADCCFG 0x356 */
-> > > +#define MT6360_ADCEN_MASK    0x8000
-> > > +/* PMUADCRPT1 0x35A */
-> > > +#define MT6360_PREFERCH_MASK 0xF0
-> > > +#define MT6360_PREFERCH_SHFT 4
-> > > +#define MT6360_RPTCH_MASK    0x0F
-> > > +
-> > > +enum {
-> > > +     MT6360_CHAN_USBID = 0,
-> > > +     MT6360_CHAN_VBUSDIV5,
-> > > +     MT6360_CHAN_VBUSDIV2,
-> > > +     MT6360_CHAN_VSYS,
-> > > +     MT6360_CHAN_VBAT,
-> > > +     MT6360_CHAN_IBUS,
-> > > +     MT6360_CHAN_IBAT,
-> > > +     MT6360_CHAN_CHG_VDDP,
-> > > +     MT6360_CHAN_TEMP_JC,
-> > > +     MT6360_CHAN_VREF_TS,
-> > > +     MT6360_CHAN_TS,
-> > > +     MT6360_CHAN_MAX,
-> > > +};
-> > > +
-> > > +struct mt6360_adc_data {
-> > > +     struct device *dev;
-> > > +     struct regmap *regmap;
-> > > +     struct completion adc_complete;
-> > > +     struct mutex adc_lock;
-> > > +     ktime_t last_off_timestamps[MT6360_CHAN_MAX];
-> > > +     int irq;
-> > > +};
-> > > +
-> > > +static inline int mt6360_adc_val_converter(int val, int multiplier, int offset, int divisor)
-> > > +{
-> > > +     return ((val * multiplier) + offset) / divisor;  
-> >
-> > Why could we not report these values to userspace or consumer drivers and let
-> > them deal with the conversion if they actually needed it?
-> > Mapping this to
-> >
-> > (val + new_offset) * multiplier would be a little messy, but not too bad.
-> >
-> > The advantage would be that we would then be providing the data needed
-> > to get real units for values read from the buffers without having to
-> > do all the maths in kernel (without access to floating point).
-> >
-> >  
+> If I scale your example to match the requirement to avoid splitting 1G
+> pages in the direct map, that would mean creating a CMA area of several
+> tens of gigabytes and then doing cma_alloc() of 1G each time we need to
+> refill the secretmem pool. 
 > 
-> As above, if I use formula "(val + new_offset) * multiplier",
-> the junction temperature channel multiplier will be floating point
-> 1.05, i don't know how to express.
+> It is quite probable that we won't be able to get 1G from CMA after the
+> system worked for some time.
 
-As Andy mentioned, we do this all over the place.
-IIO_VAL_INT_PLUS_MICRO
-
-The key is that we want to push the burden of doing this maths to the user
-not the source.
-
-Often what is actually of interest is whether a temperature passed a threshold.
-In that case, you can transform the threshold into the units of the ADC (so the
-reverse directly to you would do with processed data) and only have to do the
-maths once per change of the threshold instead of for every sample.
-
-There are helper functions to do the maths for you, should you actually
-need SI units.
+Why? It should only contain movable pages, and if that is not the case,
+it's a bug we have to fix. It should behave just as ZONE_MOVABLE.
+(although I agree that in corner cases, alloc_contig_pages() might
+temporarily fail on some chunks - e.g., with long/short-term page
+pinnings - in contrast to memory offlining, it won't retry forever)
 
 > 
-> > > +}
-> > > +
-> > > +static int mt6360_adc_convert_processed_val(struct mt6360_adc_data *info, int chan_idx, int *val)
-> > > +{
-> > > +     unsigned int regval = 0;
-> > > +     const struct converter {
-> > > +             int multiplier;
-> > > +             int offset;
-> > > +             int divisor;
-> > > +     } adc_converter[MT6360_CHAN_MAX] = {
-> > > +             { 1250, 0, 1}, /* USBID */
-> > > +             { 6250, 0, 1}, /* VBUSDIV5 */
-> > > +             { 2500, 0, 1}, /* VBUSDIV2 */
-> > > +             { 1250, 0, 1}, /* VSYS */
-> > > +             { 1250, 0, 1}, /* VBAT */
-> > > +             { 2500, 0, 1}, /* IBUS */
-> > > +             { 2500, 0, 1}, /* IBAT */
-> > > +             { 1250, 0, 1}, /* CHG_VDDP */
-> > > +             { 105, -8000, 100}, /* TEMP_JC */
-> > > +             { 1250, 0, 1}, /* VREF_TS */
-> > > +             { 1250, 0, 1}, /* TS */
-> > > +     }, sp_ibus_adc_converter = { 1900, 0, 1 }, *sel_converter;
-> > > +     int ret;
-> > > +
-> > > +     sel_converter = adc_converter + chan_idx;
-> > > +     if (chan_idx == MT6360_CHAN_IBUS) {
-> > > +             /* ibus chan will be affected by aicr config */
-> > > +             /* if aicr < 400, apply the special ibus converter */
-> > > +             ret = regmap_read(info->regmap, MT6360_REG_PMUCHGCTRL3, &regval);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +
-> > > +             regval = (regval & MT6360_AICR_MASK) >> MT6360_AICR_SHFT;
-> > > +             if (regval < MT6360_AICR_400MA)
-> > > +                     sel_converter = &sp_ibus_adc_converter;
-> > > +     }
-> > > +
-> > > +     *val = mt6360_adc_val_converter(*val, sel_converter->multiplier, sel_converter->offset,
-> > > +                                     sel_converter->divisor);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int mt6360_adc_read_processed(struct mt6360_adc_data *mad, int channel, int *val)
-> > > +{
-> > > +     u16 adc_enable;
-> > > +     u8 rpt[3];
-> > > +     ktime_t start_t, predict_end_t;
-> > > +     long timeout;
-> > > +     int value, ret;
-> > > +
-> > > +     mutex_lock(&mad->adc_lock);
-> > > +
-> > > +     /* select preferred channel that we want */
-> > > +     ret = regmap_update_bits(mad->regmap, MT6360_REG_PMUADCRPT1, MT6360_PREFERCH_MASK,
-> > > +                              channel << MT6360_PREFERCH_SHFT);
-> > > +     if (ret)
-> > > +             goto out_adc;
-> > > +
-> > > +     /* enable adc channel we want and adc_en */
-> > > +     adc_enable = MT6360_ADCEN_MASK | BIT(channel);
-> > > +     adc_enable = cpu_to_be16(adc_enable);  
-> >
-> > Use a local be16 to store that. It will make it a little clearer
-> > that we are doing something 'unusual' here.  Perhaps a comment on
-> > why this odd code exists would also help?
-> >  
-> 
-> ACK
-> 
-> > > +     ret = regmap_raw_write(mad->regmap, MT6360_REG_PMUADCCFG, (void *)&adc_enable, sizeof(u16));
-> > > +     if (ret)
-> > > +             goto out_adc;
-> > > +
-> > > +     start_t = ktime_get();
-> > > +     predict_end_t = ktime_add_ms(mad->last_off_timestamps[channel], 50);
-> > > +
-> > > +     if (ktime_after(start_t, predict_end_t))
-> > > +             predict_end_t = ktime_add_ms(start_t, 25);
-> > > +     else
-> > > +             predict_end_t = ktime_add_ms(start_t, 75);
-> > > +
-> > > +     enable_irq(mad->irq);
-> > > +adc_retry:
-> > > +     reinit_completion(&mad->adc_complete);
-> > > +
-> > > +     /* wait for conversion to complete */
-> > > +     timeout = wait_for_completion_timeout(&mad->adc_complete, msecs_to_jiffies(200));
-> > > +     if (timeout == 0) {
-> > > +             ret = -ETIMEDOUT;
-> > > +             goto out_adc_conv;
-> > > +     } else if (timeout < 0) {
-> > > +             ret = -EINTR;
-> > > +             goto out_adc_conv;
-> > > +     }
-> > > +
-> > > +     ret = regmap_raw_read(mad->regmap, MT6360_REG_PMUADCRPT1, rpt, sizeof(rpt));
-> > > +     if (ret)
-> > > +             goto out_adc_conv;
-> > > +
-> > > +     /* check the current reported channel */
-> > > +     if ((rpt[0] & MT6360_RPTCH_MASK) != channel) {
-> > > +             dev_dbg(mad->dev, "not wanted channel report [%02x]\n", rpt[0]);  
-> >
-> > This and the one below feel like error messages rather than debug ones.
-> >  
-> 
-> We have two function "battery zero current voltage(ZCV)" and "TypeC
-> OTP" will auto run ADC at background.
-> ZCV_EN will run VBAT_ADC when TA plug in, TypeC OTP will run TS_ADC
-> when TypeC attach.
-> We need to check report channel for ADC report data match is our desire channel.
+> With boot time reservation we won't need physcally contiguous 1G to
+> satisfy smaller allocation requests for secretmem because we don't need
+> to maintain 1G mappings in the secretmem pool.
 
-So there is firmware messing with it underneath?  Oh goody.
-Add a comment explaining this.
+You can allocate within your CMA area however you want - doesn't need to
+be whole gigabytes in case there is no need for it.
+
+Again, the big benefit of CMA is that the reserved memory can be reused
+for other purpose while nobody is actually making use of it.
 
 > 
-> > > +             goto adc_retry;
-> > > +     }
-> > > +
-> > > +     if (!ktime_after(ktime_get(), predict_end_t)) {
-> > > +             dev_dbg(mad->dev, "time is not after one adc_conv_t\n");  
-> >
-> > Does this actually happen? If feels like we are being a bit over protective
-> > here.  I'd definitely like to see a comment saying why this protection
-> > might be needed.
-> >  
-> 
-> When ADC_EN and MT6360_CHANx_EN is enable, the channel x will keep
-> running again and again
-> I supposed to get immediate data which is generated after I start it.
+> That said, I believe the addition of the boot time reservation, either
+> direct or with CMA, can be added as an incrememntal patch after the
+> "core" functionality is merged.
 
-Just to check my understanding.
+I am not convinced that we want to let random processes to do
+alloc_pages() in the range of tens of gigabytes. It's not just mlocked
+memory. I prefer either using CMA or relying on the boot time
+reservations. But let's see if there are other opinions and people just
+don't care.
 
-This is an edge triggered interrupt and it triggers every time a new sample
-is taken.  Those samples are taken on a fixed frequency irrespective of whether
-we have read the previous one?
+Having that said, I have no further comments.
 
-> 
-> When I disable ADC_CHANx_EN, the H/W logical ADC is still running.
-> If I run the same ADC immediately, I may get the old result about this channel.
-> MT6360 ADC typical conversation time is about 25ms.
-> So We need ignore which irq trigger below 25ms.
+-- 
+Thanks,
 
-Normal trick for this sort of case is to just not use the interrupt.
-Just read after 25+delta msecs and you are guaranteed to get the right answer.
-
-
-> 
-> > > +             goto adc_retry;
-> > > +     }
-> > > +
-> > > +     value = (rpt[1] << 8) | rpt[2];
-> > > +
-> > > +     ret = mt6360_adc_convert_processed_val(mad, channel, &value);
-> > > +     if (ret)
-> > > +             goto out_adc_conv;
-> > > +
-> > > +     *val = value;
-> > > +     ret = IIO_VAL_INT;
-> > > +
-> > > +out_adc_conv:
-> > > +     disable_irq(mad->irq);
-> > > +     adc_enable = MT6360_ADCEN_MASK;
-> > > +     adc_enable = cpu_to_be16(adc_enable);
-> > > +     regmap_raw_write(mad->regmap, MT6360_REG_PMUADCCFG, (void *)&adc_enable, sizeof(u16));
-> > > +     mad->last_off_timestamps[channel] = ktime_get();
-> > > +     /* set prefer channel to 0xf */
-> > > +     regmap_update_bits(mad->regmap, MT6360_REG_PMUADCRPT1, MT6360_PREFERCH_MASK,
-> > > +                        0xF << MT6360_PREFERCH_SHFT);
-> > > +out_adc:
-> > > +     mutex_unlock(&mad->adc_lock);
-> > > +
-> > > +     return ret;
-> > > +}
-> > > +
-> > > +static int mt6360_adc_read_raw(struct iio_dev *iio_dev, const struct iio_chan_spec *chan,
-> > > +                            int *val, int *val2, long mask)
-> > > +{
-> > > +     struct mt6360_adc_data *mad = iio_priv(iio_dev);
-> > > +
-> > > +     if (mask == IIO_CHAN_INFO_PROCESSED)
-> > > +             return mt6360_adc_read_processed(mad, chan->channel, val);
-> > > +
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static const struct iio_info mt6360_adc_iio_info = {
-> > > +     .read_raw = mt6360_adc_read_raw,
-> > > +};
-> > > +
-> > > +#define MT6360_ADC_CHAN(_idx, _type) {                               \
-> > > +     .type = _type,                                          \
-> > > +     .channel = MT6360_CHAN_##_idx,                          \
-> > > +     .scan_index = MT6360_CHAN_##_idx,                       \
-> > > +     .extend_name = #_idx,                                   \
-> > > +     .datasheet_name = #_idx,                                \
-> > > +     .scan_type =  {                                         \
-> > > +             .sign = 's',                                    \
-> > > +             .realbits = 32,                                 \
-> > > +             .storagebits = 32,                              \
-> > > +             .endianness = IIO_CPU,                          \
-> > > +     },                                                      \
-> > > +     .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),     \
-> > > +     .indexed = 1,                                           \
-> > > +}
-> > > +
-> > > +static const struct iio_chan_spec mt6360_adc_channels[] = {
-> > > +     MT6360_ADC_CHAN(USBID, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(VBUSDIV5, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(VBUSDIV2, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(VSYS, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(VBAT, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(IBUS, IIO_CURRENT),
-> > > +     MT6360_ADC_CHAN(IBAT, IIO_CURRENT),
-> > > +     MT6360_ADC_CHAN(CHG_VDDP, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(TEMP_JC, IIO_TEMP),
-> > > +     MT6360_ADC_CHAN(VREF_TS, IIO_VOLTAGE),
-> > > +     MT6360_ADC_CHAN(TS, IIO_VOLTAGE),
-> > > +     IIO_CHAN_SOFT_TIMESTAMP(MT6360_CHAN_MAX),
-> > > +};
-> > > +
-> > > +static irqreturn_t mt6360_pmu_adc_donei_handler(int irq, void *data)
-> > > +{
-> > > +     struct mt6360_adc_data *mad = iio_priv(data);
-> > > +
-> > > +     complete(&mad->adc_complete);
-> > > +     return IRQ_HANDLED;
-> > > +}
-> > > +  
-> > ...
-> >  
-> > > +
-> > > +static int mt6360_adc_probe(struct platform_device *pdev)
-> > > +{
-> > > +     struct mt6360_adc_data *mad;
-> > > +     struct iio_dev *indio_dev;
-> > > +     int ret;
-> > > +
-> > > +     indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*mad));
-> > > +     if (!indio_dev)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     mad = iio_priv(indio_dev);
-> > > +     mad->dev = &pdev->dev;
-> > > +     init_completion(&mad->adc_complete);
-> > > +     mutex_init(&mad->adc_lock);
-> > > +
-> > > +     mad->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> > > +     if (!mad->regmap) {
-> > > +             dev_err(&pdev->dev, "Failed to get parent regmap\n");
-> > > +             return -ENODEV;
-> > > +     }
-> > > +
-> > > +     ret = mt6360_adc_reset(mad);
-> > > +     if (ret < 0) {
-> > > +             dev_err(&pdev->dev, "Failed to reset adc\n");
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     mad->irq = platform_get_irq_byname(pdev, "adc_donei");
-> > > +     if (mad->irq < 0) {
-> > > +             dev_err(&pdev->dev, "Failed to get adc_done irq\n");
-> > > +             return mad->irq;
-> > > +     }
-> > > +
-> > > +     irq_set_status_flags(mad->irq, IRQ_NOAUTOEN);  
-> >
-> > As we are going to have a v5 anyway to clean up that endian warning,
-> > please could you add a comment to explain the need for IRQ_NOAUTOEN?
-> >  
-> 
-> Same as above "Enable ADC will run again and again until clear
-> ADC__CHANx_EN bit"
-> So After I get the ADC result, I disable irq in order to handle only
-> oneshot data.
-
-As mentioned a above I suspect you may be better off just not using
-the interrupt at all.
-
-> 
-> > > +     ret = devm_request_threaded_irq(&pdev->dev, mad->irq, NULL, mt6360_pmu_adc_donei_handler, 0,
-> > > +                                     "adc_donei", indio_dev);
-> > > +     if (ret) {
-> > > +             dev_err(&pdev->dev, "Failed to register adc_done irq\n");
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     indio_dev->name = dev_name(&pdev->dev);
-> > > +     indio_dev->dev.parent = &pdev->dev;
-> > > +     indio_dev->info = &mt6360_adc_iio_info;
-> > > +     indio_dev->modes = INDIO_DIRECT_MODE;
-> > > +     indio_dev->channels = mt6360_adc_channels;
-> > > +     indio_dev->num_channels = ARRAY_SIZE(mt6360_adc_channels);
-> > > +
-> > > +     ret = devm_iio_triggered_buffer_setup(&pdev->dev, indio_dev, NULL,
-> > > +                                           mt6360_adc_trigger_handler, NULL);
-> > > +     if (ret) {
-> > > +             dev_err(&pdev->dev, "Failed to allocate iio trigger buffer\n");
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     ret = devm_iio_device_register(&pdev->dev, indio_dev);
-> > > +     if (ret) {
-> > > +             dev_err(&pdev->dev, "Failed to register iio device\n");
-> > > +             return ret;
-> > > +     }
-> > > +
-> > > +     return 0;
-> > > +}  
-> > ...  
-
+David / dhildenb
 
