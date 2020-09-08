@@ -2,194 +2,267 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04054C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE47C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65342080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vicZtndQ"
+	by mail.kernel.org (Postfix) with ESMTP id 338A72080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599589804;
+	bh=8+AkhgUIhgTVZ2+quXtztFRcd7ygbhF922i/sPhRJxY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=s4nDFZ4f40JQAXCkGXfd3TFdDishBUpQC9CUgNkFW4i0LiA94t6uZucHLNLjLtXEj
+	 gT1SL9D/YNXtJCe27dSIOycYL+FZkdl04RFcViNN8ggUVo/F+leuP8aUVoVW8M/K5c
+	 OXg1SEhzc1nlYeL8wpcw0/wiWUUR7Y5G0OUvlCUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbgIHS3u (ORCPT
+        id S1731474AbgIHSaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:29:50 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38584 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgIHS3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:29:42 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 088IOSNn069846;
-        Tue, 8 Sep 2020 18:29:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ohq2ao/eaVnIH4UHr6dDfMQ4sB6oBXKsUC8ttv8M1Fc=;
- b=vicZtndQBnYa5kXKqC/l7R2Y8l1E6jOqxrXwDwytZ07G5SEUwOU8OmNcXs6vlktnxOBr
- uHdv/7VjMxCc/LDRyXua+Gv6LnlQOdUzJ1DeKlQ64E+jFi26B7WkOKJvh4jGWkldEDFA
- jqkxrmRreRUZ4cIoGC0B2fiZ5UGVoEj1McT+9GFy3lWLuDU2ObwhX9cGBfWG31Vh1yUd
- S508D2GtUfUZzavzMHx9n/UFnohPKFXbeNZ8euKUwtrXwsOo50jbeMUqyPJ67Cfmmm8s
- S2UJ06LPc0jyU6hx7OLXdEogVtQYz3Yl9Dzy93rG5qTw362KpOnrjFaJTFwzF6Xi3+0S FA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 33c2mkwava-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 08 Sep 2020 18:29:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 088IPQYD029944;
-        Tue, 8 Sep 2020 18:29:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 33cmeravtn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Sep 2020 18:29:20 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 088ITHgh027728;
-        Tue, 8 Sep 2020 18:29:17 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Sep 2020 11:29:17 -0700
-Subject: Re: [RFC PATCH] cma: make number of CMA areas dynamic, remove
- CONFIG_CMA_AREAS
-To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>, Joonsoo Kim <js1304@gmail.com>,
-        Rik van Riel <riel@surriel.com>,
-        Aslan Bakirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200903030204.253433-1-mike.kravetz@oracle.com>
- <6b4f0324c6db41a7975267f2ec42e577@hisilicon.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <b2f18f10-5ccc-d3ea-c60b-5fd230a2b20a@oracle.com>
-Date:   Tue, 8 Sep 2020 11:29:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 14:30:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731405AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:10:25 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AF482480F;
+        Tue,  8 Sep 2020 15:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579797;
+        bh=8+AkhgUIhgTVZ2+quXtztFRcd7ygbhF922i/sPhRJxY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Hqrhz3WhgJHD+a/oZ/T1izr69CeGv6n5ksD74QCmT+IboBrGdUdELZiVlgaJRUg65
+         NvdTgWQ8TaEx/rZ59Ki6W7pgaJuzk/ufE6KWrYOEdiQgGxEQfygV1RzKWYwpF27Zrh
+         zeGg7k9FTp7sSAl58nEYQKxpHpb4UzUNzbjxDMbU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yuusuke Ashizuka <ashiduka@fujitsu.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 037/129] ravb: Fixed to be able to unload modules
+Date:   Tue,  8 Sep 2020 17:24:38 +0200
+Message-Id: <20200908152231.530211051@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <6b4f0324c6db41a7975267f2ec42e577@hisilicon.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 adultscore=0
- bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009080173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080173
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 6:58 PM, Song Bao Hua (Barry Song) wrote:
-> 
->> -----Original Message-----
->> From: Mike Kravetz [mailto:mike.kravetz@oracle.com]
->> Sent: Thursday, September 3, 2020 3:02 PM
->> To: linux-mm@kvack.org; linux-kernel@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org; linux-mips@vger.kernel.org
->> Cc: Roman Gushchin <guro@fb.com>; Song Bao Hua (Barry Song)
->> <song.bao.hua@hisilicon.com>; Joonsoo Kim <js1304@gmail.com>; Rik van
->> Riel <riel@surriel.com>; Aslan Bakirov <aslan@fb.com>; Michal Hocko
->> <mhocko@kernel.org>; Andrew Morton <akpm@linux-foundation.org>; Mike
->> Kravetz <mike.kravetz@oracle.com>
->> Subject: [RFC PATCH] cma: make number of CMA areas dynamic, remove
->> CONFIG_CMA_AREAS
->>
->> The number of distinct CMA areas is limited by the constant
->> CONFIG_CMA_AREAS.  In most environments, this was set to a default
->> value of 7.  Not too long ago, support was added to allocate hugetlb
->> gigantic pages from CMA.  More recent changes to make dma_alloc_coherent
->> NUMA-aware on arm64 added more potential users of CMA areas.  Along
->> with the dma_alloc_coherent changes, the default value of CMA_AREAS
->> was bumped up to 19 if NUMA is enabled.
->>
->> It seems that the number of CMA users is likely to grow.  Instead of
->> using a static array for cma areas, use a simple linked list.  These
->> areas are used before normal memory allocators, so use the memblock
->> allocator.
-> 
-> Hello Mike, It seems it is a good idea. Thanks for addressing this.
-> 
-> I was focusing on per-numa cma feature in my patchset and I didn't take care of this
-> while I thought we should do something for the number of cma areas.
-> 
+From: Yuusuke Ashizuka <ashiduka@fujitsu.com>
 
-Thanks for taking a look.
+[ Upstream commit 1838d6c62f57836639bd3d83e7855e0ee4f6defc ]
 
-One area where I could use some help is testing/verifying on arm.  See the
-changes to arch/arm/mm/dma-mapping.c.  I have tested the generic changes on
-my x86 platform, but do not have an arm platform for easy testing.
+When this driver is built as a module, I cannot rmmod it after insmoding
+it.
+This is because that this driver calls ravb_mdio_init() at the time of
+probe, and module->refcnt is incremented by alloc_mdio_bitbang() called
+after that.
+Therefore, even if ifup is not performed, the driver is in use and rmmod
+cannot be performed.
 
->>  void __init dma_contiguous_early_fixup(phys_addr_t base, unsigned long
->> size)
->>  {
->> -	dma_mmu_remap[dma_mmu_remap_num].base = base;
->> -	dma_mmu_remap[dma_mmu_remap_num].size = size;
->> -	dma_mmu_remap_num++;
->> +	struct dma_contig_early_reserve *d;
->> +
->> +	d = memblock_alloc(sizeof(struct dma_contig_early_reserve),
-> 
-> sizeof(*d)?
+$ lsmod
+Module                  Size  Used by
+ravb                   40960  1
+$ rmmod ravb
+rmmod: ERROR: Module ravb is in use
 
-Yes.  thanks.
+Call ravb_mdio_init() at open and free_mdio_bitbang() at close, thereby
+rmmod is possible in the ifdown state.
 
->> @@ -172,15 +173,14 @@ int __init cma_init_reserved_mem(phys_addr_t
->> base, phys_addr_t size,
->>  	struct cma *cma;
->>  	phys_addr_t alignment;
->>
->> -	/* Sanity checks */
->> -	if (cma_area_count == ARRAY_SIZE(cma_areas)) {
->> -		pr_err("Not enough slots for CMA reserved regions!\n");
->> -		return -ENOSPC;
->> -	}
->> +	/* Do not attempt allocations after memblock allocator is torn down */
->> +	if (slab_is_available())
->> +		return -EINVAL;
->>
->>  	if (!size || !memblock_is_region_reserved(base, size))
->>  		return -EINVAL;
->>
->> +
-> 
-> Is this empty line relevant?
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Yuusuke Ashizuka <ashiduka@fujitsu.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/renesas/ravb_main.c | 110 +++++++++++------------
+ 1 file changed, 55 insertions(+), 55 deletions(-)
 
-No, added by mistake.
-
->> @@ -192,12 +192,17 @@ int __init cma_init_reserved_mem(phys_addr_t
->> base, phys_addr_t size,
->>  	if (ALIGN(base, alignment) != base || ALIGN(size, alignment) != size)
->>  		return -EINVAL;
->>
->> +	cma = memblock_alloc(sizeof(struct cma), sizeof(long));
-> 
-> sizeof(*cma)?
-
-Yes, thanks.
-
-> It seems we are going to write cma-> count, order_per_bit, debugfs fields.
-> To avoid false sharing of the cacheline of struct cma, it is better to align with
-> SMP_CACHE_BYTES.
-> 
-> On the other hand, it seems we are unlikely to write the cma 
-
-I thought about using SMP_CACHE_BYTES, but the structures are simply defined
-as an array today.  This should not be any worse.  I do not believe access
-to the structures is performance sensitive.
-
-Thanks,
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 30cdabf64ccc1..907ae1359a7c1 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1336,6 +1336,51 @@ static inline int ravb_hook_irq(unsigned int irq, irq_handler_t handler,
+ 	return error;
+ }
+ 
++/* MDIO bus init function */
++static int ravb_mdio_init(struct ravb_private *priv)
++{
++	struct platform_device *pdev = priv->pdev;
++	struct device *dev = &pdev->dev;
++	int error;
++
++	/* Bitbang init */
++	priv->mdiobb.ops = &bb_ops;
++
++	/* MII controller setting */
++	priv->mii_bus = alloc_mdio_bitbang(&priv->mdiobb);
++	if (!priv->mii_bus)
++		return -ENOMEM;
++
++	/* Hook up MII support for ethtool */
++	priv->mii_bus->name = "ravb_mii";
++	priv->mii_bus->parent = dev;
++	snprintf(priv->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
++		 pdev->name, pdev->id);
++
++	/* Register MDIO bus */
++	error = of_mdiobus_register(priv->mii_bus, dev->of_node);
++	if (error)
++		goto out_free_bus;
++
++	return 0;
++
++out_free_bus:
++	free_mdio_bitbang(priv->mii_bus);
++	return error;
++}
++
++/* MDIO bus release function */
++static int ravb_mdio_release(struct ravb_private *priv)
++{
++	/* Unregister mdio bus */
++	mdiobus_unregister(priv->mii_bus);
++
++	/* Free bitbang info */
++	free_mdio_bitbang(priv->mii_bus);
++
++	return 0;
++}
++
+ /* Network device open function for Ethernet AVB */
+ static int ravb_open(struct net_device *ndev)
+ {
+@@ -1344,6 +1389,13 @@ static int ravb_open(struct net_device *ndev)
+ 	struct device *dev = &pdev->dev;
+ 	int error;
+ 
++	/* MDIO bus init */
++	error = ravb_mdio_init(priv);
++	if (error) {
++		netdev_err(ndev, "failed to initialize MDIO\n");
++		return error;
++	}
++
+ 	napi_enable(&priv->napi[RAVB_BE]);
+ 	napi_enable(&priv->napi[RAVB_NC]);
+ 
+@@ -1421,6 +1473,7 @@ out_free_irq:
+ out_napi_off:
+ 	napi_disable(&priv->napi[RAVB_NC]);
+ 	napi_disable(&priv->napi[RAVB_BE]);
++	ravb_mdio_release(priv);
+ 	return error;
+ }
+ 
+@@ -1730,6 +1783,8 @@ static int ravb_close(struct net_device *ndev)
+ 	ravb_ring_free(ndev, RAVB_BE);
+ 	ravb_ring_free(ndev, RAVB_NC);
+ 
++	ravb_mdio_release(priv);
++
+ 	return 0;
+ }
+ 
+@@ -1881,51 +1936,6 @@ static const struct net_device_ops ravb_netdev_ops = {
+ 	.ndo_set_features	= ravb_set_features,
+ };
+ 
+-/* MDIO bus init function */
+-static int ravb_mdio_init(struct ravb_private *priv)
+-{
+-	struct platform_device *pdev = priv->pdev;
+-	struct device *dev = &pdev->dev;
+-	int error;
+-
+-	/* Bitbang init */
+-	priv->mdiobb.ops = &bb_ops;
+-
+-	/* MII controller setting */
+-	priv->mii_bus = alloc_mdio_bitbang(&priv->mdiobb);
+-	if (!priv->mii_bus)
+-		return -ENOMEM;
+-
+-	/* Hook up MII support for ethtool */
+-	priv->mii_bus->name = "ravb_mii";
+-	priv->mii_bus->parent = dev;
+-	snprintf(priv->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
+-		 pdev->name, pdev->id);
+-
+-	/* Register MDIO bus */
+-	error = of_mdiobus_register(priv->mii_bus, dev->of_node);
+-	if (error)
+-		goto out_free_bus;
+-
+-	return 0;
+-
+-out_free_bus:
+-	free_mdio_bitbang(priv->mii_bus);
+-	return error;
+-}
+-
+-/* MDIO bus release function */
+-static int ravb_mdio_release(struct ravb_private *priv)
+-{
+-	/* Unregister mdio bus */
+-	mdiobus_unregister(priv->mii_bus);
+-
+-	/* Free bitbang info */
+-	free_mdio_bitbang(priv->mii_bus);
+-
+-	return 0;
+-}
+-
+ static const struct of_device_id ravb_match_table[] = {
+ 	{ .compatible = "renesas,etheravb-r8a7790", .data = (void *)RCAR_GEN2 },
+ 	{ .compatible = "renesas,etheravb-r8a7794", .data = (void *)RCAR_GEN2 },
+@@ -2166,13 +2176,6 @@ static int ravb_probe(struct platform_device *pdev)
+ 		eth_hw_addr_random(ndev);
+ 	}
+ 
+-	/* MDIO bus init */
+-	error = ravb_mdio_init(priv);
+-	if (error) {
+-		dev_err(&pdev->dev, "failed to initialize MDIO\n");
+-		goto out_dma_free;
+-	}
+-
+ 	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll, 64);
+ 	netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll, 64);
+ 
+@@ -2194,8 +2197,6 @@ static int ravb_probe(struct platform_device *pdev)
+ out_napi_del:
+ 	netif_napi_del(&priv->napi[RAVB_NC]);
+ 	netif_napi_del(&priv->napi[RAVB_BE]);
+-	ravb_mdio_release(priv);
+-out_dma_free:
+ 	dma_free_coherent(ndev->dev.parent, priv->desc_bat_size, priv->desc_bat,
+ 			  priv->desc_bat_dma);
+ 
+@@ -2227,7 +2228,6 @@ static int ravb_remove(struct platform_device *pdev)
+ 	unregister_netdev(ndev);
+ 	netif_napi_del(&priv->napi[RAVB_NC]);
+ 	netif_napi_del(&priv->napi[RAVB_BE]);
+-	ravb_mdio_release(priv);
+ 	pm_runtime_disable(&pdev->dev);
+ 	free_netdev(ndev);
+ 	platform_set_drvdata(pdev, NULL);
 -- 
-Mike Kravetz
+2.25.1
+
+
+
