@@ -2,106 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1F7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E2CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECE172068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A4720936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FSjMfGsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgIHUKg (ORCPT
+        id S1730501AbgIHUKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:10:36 -0400
-Received: from mga06.intel.com ([134.134.136.31]:21610 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730201AbgIHPQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:16:19 -0400
-IronPort-SDR: XKwwhD+FXuOQkBN/paSmOFeWfPxkx6SHIjyNHHgqR30LVerybp3K/9s+s1teeKdSx3smZOBEEp
- 9qmXF4kucdhQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="219688132"
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="219688132"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:45:25 -0700
-IronPort-SDR: bjY/o98d8EepQt7h8nZWe0WdED9G0VcFr6vdeMg5RIll0WD6OZt6R9YMnT6KCnIbqCn6xPlap7
- 6pBxoEdWtS/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="333477551"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2020 06:45:23 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFdw0-00FDYM-Me; Tue, 08 Sep 2020 16:45:20 +0300
-Date:   Tue, 8 Sep 2020 16:45:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] gpio: mockup: fix resource leak in error path
-Message-ID: <20200908134520.GY1891694@smile.fi.intel.com>
-References: <20200908130749.9948-1-brgl@bgdev.pl>
+        Tue, 8 Sep 2020 16:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729808AbgIHPPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:15:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B33C0617A3
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:12:20 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b124so10761661pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4cTTNM2LfB0ZKQtokAlGtAKTl5Gj9gXx4yYPrBUZ2LI=;
+        b=FSjMfGshmgfnWWC3U1YIBx7DE7b7W/6phz3fnwef0gKYOPsk8l7rM9PaF1LdGQy6XF
+         WmriscNv+tWq3wLFbD3vC0aszsLJds7gWEYwfq3AfjZz1C6EWnzGFboWt+UsVWUFseaj
+         1sBDmcRmbvonzTJacW/pB9DmX3xU4DO3FX3ko=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4cTTNM2LfB0ZKQtokAlGtAKTl5Gj9gXx4yYPrBUZ2LI=;
+        b=awRu7HOTRI43P6MEgzLjacmEczlqAakhEF4FEx8+2ZTueNEdypCwTHj4hCS5P/R0th
+         u4neHX7mXyK/0N7DzZvrR7ipGsKyvtEbQbNluvELB4S2ZCsJJPuqXZSp0cSf7ZWiZbLg
+         83Q6nRpsFa1QhzBxvMYT2Q3JGs1RXRh5lYfoYEpcAbMdzhTWh1QNTNfvI9kXkpDAs5iS
+         hob5PP3XrOSDbMLCLIK6Munm5VloOt5miJJiYbfv4vrmYZOAXua+un8UC1E7tNg34bhY
+         ey8zYIjiQge9zjbd0XD0K43U7Q8vzQTwLMOEJ23C2BPY1b3guCCPHOIh9RqaEmfyLzqe
+         eysw==
+X-Gm-Message-State: AOAM5339rfNqtYp+WvuVtzjtsZSXJaouy/yeiicsZ5tBhU6VCiVAR/JJ
+        jZkwOJCk6JzLNYDWlllk/a9SWG+/R3jTU4pcYSRHVWIgxLIrpQLkSpkAMrvCTA43tD/IfqXo39d
+        opcDRrLAxnGJ7jzT4iqG8NHEEVD6xRoIEdRaQucmtg+091vGeDELC7lDB52DenAKgMJF/sNJk95
+        NjOF6YPN/6GFiBCA==
+X-Google-Smtp-Source: ABdhPJzaP8k6OK/iQH1v2SvEVSnGPEtqyLPkJUIOp6ScETEYqxTNqDc4Tope5wDw9XDBQ7aoitAf2Q==
+X-Received: by 2002:a17:902:d702:: with SMTP id w2mr24215594ply.53.1599567139350;
+        Tue, 08 Sep 2020 05:12:19 -0700 (PDT)
+Received: from [10.230.32.194] ([192.19.148.250])
+        by smtp.gmail.com with ESMTPSA id z9sm12049463pfk.118.2020.09.08.05.12.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 05:12:18 -0700 (PDT)
+Subject: Re: [PATCH] brcmsmac: fix memory leak in wlc_phy_attach_lcnphy
+To:     Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Cc:     Takafumi Kubota <takafumi@sslab.ics.keio.ac.jp>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <brcm80211-dev-list@cypress.com>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <bad4e33a-af2f-b44f-63e5-56386c312a91@broadcom.com>
+ <20200908001324.8215-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
+ <c13ee142-d69d-6d21-6373-acb56507c9ec@broadcom.com>
+ <CAEYrHjmG-R4RHn=59AGK8E0jKDXE5sbxQj49VpBvDMvBuBGiig@mail.gmail.com>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <2a11074f-e155-0af1-aa37-108c8cd120e7@broadcom.com>
+Date:   Tue, 8 Sep 2020 14:12:14 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908130749.9948-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAEYrHjmG-R4RHn=59AGK8E0jKDXE5sbxQj49VpBvDMvBuBGiig@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 03:07:49PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> If the module init function fails after creating the debugs directory,
-> it's never removed. Add proper cleanup calls to avoid this resource
-> leak.
+On 9/8/2020 2:02 PM, Keita Suzuki wrote:
+> Thank you for your comment. I am relatively new to the Linux
+> kernel community, so I am more than happy to receive comments.
+> Please let me know if I'm violating any other rules.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Sure ;-)
 
-> Fixes: 9202ba2397d1 ("gpio: mockup: implement event injecting over debugfs")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/gpio/gpio-mockup.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index bc345185db26..1652897fdf90 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -552,6 +552,7 @@ static int __init gpio_mockup_init(void)
->  	err = platform_driver_register(&gpio_mockup_driver);
->  	if (err) {
->  		gpio_mockup_err("error registering platform driver\n");
-> +		debugfs_remove_recursive(gpio_mockup_dbg_dir);
->  		return err;
->  	}
->  
-> @@ -582,6 +583,7 @@ static int __init gpio_mockup_init(void)
->  			gpio_mockup_err("error registering device");
->  			platform_driver_unregister(&gpio_mockup_driver);
->  			gpio_mockup_unregister_pdevs();
-> +			debugfs_remove_recursive(gpio_mockup_dbg_dir);
->  			return PTR_ERR(pdev);
->  		}
->  
-> -- 
-> 2.26.1
-> 
+Here a useful link that Kalle (wireless drivers maintainer) is always 
+sharing in his email signature:
 
--- 
-With Best Regards,
-Andy Shevchenko
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-
+Regards,
+Arend
