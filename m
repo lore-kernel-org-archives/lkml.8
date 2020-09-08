@@ -2,127 +2,196 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF395C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2132FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF991208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4F720936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A42L4iBc"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uJazPLWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbgIHUNF (ORCPT
+        id S1730865AbgIHUNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46876 "EHLO
+        Tue, 8 Sep 2020 16:13:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729422AbgIHPLR (ORCPT
+        with ESMTP id S1729990AbgIHPLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:11:17 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4BD1C0619ED
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:11:08 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id n14so3250990pff.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:11:08 -0700 (PDT)
+        Tue, 8 Sep 2020 11:11:12 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD28DC0619EC
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:57:14 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id h4so17169243ioe.5
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DqQzdsNyVZxQfTKZQ3YstL3rPQCUat0ck3Wbh+a/dRg=;
-        b=A42L4iBc1CLoIwG4vjkgmHVXssQmnn3pAMqht8EDGn5jdLIp0DEMm5fr4fRpNNZ6GB
-         cYpBWQkG770jRLy7OaKNz1ax7PjmhebIMH94oOt0oJsVF+Dwlh/vxyjmbAEUSlWYeX7j
-         nrYDiolhDL3/k31KAqubdudhePJwyIK4M16TzYv5GMRUnXe56k6P77Mwl6Dvu7VEGcgq
-         bEapsJBiR0hlNw0O9U16OsSNqLJc2hWQmHmQZyXyzvMHCvFZEJxBP9L4835Zv9l944bW
-         h6pGAmzhouGRV/7qtqbJ86YEqHShEZKpc1wDIxcNthdw4Kb+uUMDhUZ4ixEXFRS0sHq7
-         pWog==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lLPV/2TbMLCWwjxZmMjGQAv9RQQ5QdmKtS2Q2m060x4=;
+        b=uJazPLWezWgC/PxcgavzXTzULVjK+HH/0rnfAycuhBQCpgkDFk/fvQpqKS7RzEpiXG
+         ERAROiLm7VLunZJpzttkIeY7b1VyZ7vdAdTmly29bZuLWeEEHdxvjUkOpVL/XgnAQLYP
+         U563XLl1LCPU1Vs+xCapjB1tF5YvK5Li0o6rXx6tkcIIdFWG/q5TU59d1Vbfyhey0Iqk
+         FjDr8t0q6o0KqVSUzgviXQkWRhNR4U26NzOXYB0n6lNBNEhD4nJZeQCKGy7YfpsuHGrd
+         n/zLgKw2/0PIclu34Gpdgs81l5h979bDDAONUe9gK227ECpK+s8PjAKkmwpLLY/KXPFR
+         17Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DqQzdsNyVZxQfTKZQ3YstL3rPQCUat0ck3Wbh+a/dRg=;
-        b=NuQKajCoIvxeFMq4R50NUAQISaWvcXlc5m7T0dfeYyjf6TscsPHXalCFK2zEeOxois
-         7fgWGyJMOjynd9POYVJJkkUzf9s7ixArRCH+lo5jOoPveqTyfy0H9MIiLWGt7Rct2yuv
-         zPDMq8qctaW1HfQEeSnH5sgB97uT9mYqSzm11eYVUui+LJ8zOkWpJXrQPAzVfyWrRLoz
-         2KmughScJ45cjfP7G/HWy0Hybd7z8uzGO9fmN3QtXPa8sfU6WCQRr4q8atQvEkfim+DJ
-         LLgfcciqqWd2Oz7UFVU7t8ZwoS8POeZPsoV0Lu9rG/9kkrKRb8ARSaAJ5nPgTl72hkDb
-         HEvQ==
-X-Gm-Message-State: AOAM530SEEEHf9kNglGO5e3IARJsuHoMx+Jnys8I2BqhfDfm66RdhM/S
-        wrnNUFvC7OPKMpNri8pNkF4K
-X-Google-Smtp-Source: ABdhPJygg2wc2pJ6EFNe7SN5QXwBrjuD9HtWHBZlXZcCYsz145npyX1ctKgCmabtN4zCr836QQoSxA==
-X-Received: by 2002:aa7:9201:0:b029:13e:d13d:a10c with SMTP id 1-20020aa792010000b029013ed13da10cmr1456521pfo.40.1599577868308;
-        Tue, 08 Sep 2020 08:11:08 -0700 (PDT)
-Received: from mani-NUC7i5DNKE ([2409:4072:6213:6149:cb0:8a44:a6a5:e3bd])
-        by smtp.gmail.com with ESMTPSA id t25sm15461220pgn.13.2020.09.08.08.11.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Sep 2020 08:11:07 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 20:40:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, amitk@kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org,
-        tdas@codeaurora.org
-Subject: Re: [PATCH 1/7] dt-bindings: cpufreq: cpufreq-qcom-hw: Document
- SM8250 compatible
-Message-ID: <20200908151050.GC2352@mani-NUC7i5DNKE>
-References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
- <20200908075716.30357-2-manivannan.sadhasivam@linaro.org>
- <20200908145819.GN3715@yoga>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lLPV/2TbMLCWwjxZmMjGQAv9RQQ5QdmKtS2Q2m060x4=;
+        b=YFMCQzl9vfK27MG9rsHJD9t650DpdRaZ3ZOc3hAuJV2HvbOApfz645XXoeZUgwnnOZ
+         Puo5frVbiOHsq+YeFOALxUa4ULPBw1/IqS+15K5Ory0dvwm6ij43WOYjKRAtRQe5Z6qp
+         JcjAWUk88xiq3gTFBb5xMDgCX2H8JjagSYiaEq61hCYONw7bKT2W+fus+aYQyWkMzfA1
+         NCWVQm+dmMaEb83EXhk3qeSzqAugNzfSW7VuB6b450nxXsNRm5KIRA90g8i0sVky2Joj
+         JGiOhJaw2TYl+d7qhKU45oVOF2z3wt2OsaRwWRD9GelHbj2Y3yAS6Z6lh4ZkAjBKz6F/
+         lIIg==
+X-Gm-Message-State: AOAM532xtG8Vvy0fitN/Ph2j+Hv84/xC5zy2ZoVLUTHddZM5bnjp6Cru
+        S38w1opIkGgXevaLgixqrDlMmw==
+X-Google-Smtp-Source: ABdhPJxhox+LWrxM6t17Fh8h96lJUzdn1I3RGOvUMfkfWJnmtrv7CdbTJs/zo6NSzHwk+R3I3Syr5A==
+X-Received: by 2002:a6b:c8d6:: with SMTP id y205mr527426iof.177.1599573430313;
+        Tue, 08 Sep 2020 06:57:10 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e28sm10512528ill.79.2020.09.08.06.57.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 06:57:09 -0700 (PDT)
+Subject: Re: [PATCH v6 3/3] io_uring: allow disabling rings during the
+ creation
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
+        Aleksa Sarai <asarai@suse.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20200827145831.95189-1-sgarzare@redhat.com>
+ <20200827145831.95189-4-sgarzare@redhat.com>
+ <20200908134448.sg7evdrfn6xa67sn@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <045e0907-4771-0b7f-d52a-4af8197e6954@kernel.dk>
+Date:   Tue, 8 Sep 2020 07:57:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908145819.GN3715@yoga>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200908134448.sg7evdrfn6xa67sn@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 0908, Bjorn Andersson wrote:
-> On Tue 08 Sep 02:57 CDT 2020, Manivannan Sadhasivam wrote:
+On 9/8/20 7:44 AM, Stefano Garzarella wrote:
+> Hi Jens,
 > 
-> > Document the SM8250 SoC specific compatible for Qualcomm Cpufreq HW. The
-> > hardware block which carries out CPUFreq operations on SM8250 SoC is
-> > called EPSS.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> On Thu, Aug 27, 2020 at 04:58:31PM +0200, Stefano Garzarella wrote:
+>> This patch adds a new IORING_SETUP_R_DISABLED flag to start the
+>> rings disabled, allowing the user to register restrictions,
+>> buffers, files, before to start processing SQEs.
+>>
+>> When IORING_SETUP_R_DISABLED is set, SQE are not processed and
+>> SQPOLL kthread is not started.
+>>
+>> The restrictions registration are allowed only when the rings
+>> are disable to prevent concurrency issue while processing SQEs.
+>>
+>> The rings can be enabled using IORING_REGISTER_ENABLE_RINGS
+>> opcode with io_uring_register(2).
+>>
+>> Suggested-by: Jens Axboe <axboe@kernel.dk>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>> ---
+>> v4:
+>>  - fixed io_uring_enter() exit path when ring is disabled
+>>
+>> v3:
+>>  - enabled restrictions only when the rings start
+>>
+>> RFC v2:
+>>  - removed return value of io_sq_offload_start()
+>> ---
+>>  fs/io_uring.c                 | 52 ++++++++++++++++++++++++++++++-----
+>>  include/uapi/linux/io_uring.h |  2 ++
+>>  2 files changed, 47 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index 5f62997c147b..b036f3373fbe 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -226,6 +226,7 @@ struct io_restriction {
+>>  	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
+>>  	u8 sqe_flags_allowed;
+>>  	u8 sqe_flags_required;
+>> +	bool registered;
+>>  };
+>>  
+>>  struct io_ring_ctx {
+>> @@ -7497,8 +7498,8 @@ static int io_init_wq_offload(struct io_ring_ctx *ctx,
+>>  	return ret;
+>>  }
+>>  
+>> -static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>> -			       struct io_uring_params *p)
+>> +static int io_sq_offload_create(struct io_ring_ctx *ctx,
+>> +				struct io_uring_params *p)
+>>  {
+>>  	int ret;
+>>  
+>> @@ -7532,7 +7533,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>>  			ctx->sqo_thread = NULL;
+>>  			goto err;
+>>  		}
+>> -		wake_up_process(ctx->sqo_thread);
+>>  	} else if (p->flags & IORING_SETUP_SQ_AFF) {
+>>  		/* Can't have SQ_AFF without SQPOLL */
+>>  		ret = -EINVAL;
+>> @@ -7549,6 +7549,12 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>>  	return ret;
+>>  }
+>>  
+>> +static void io_sq_offload_start(struct io_ring_ctx *ctx)
+>> +{
+>> +	if ((ctx->flags & IORING_SETUP_SQPOLL) && ctx->sqo_thread)
+>> +		wake_up_process(ctx->sqo_thread);
+>> +}
+>> +
+>>  static inline void __io_unaccount_mem(struct user_struct *user,
+>>  				      unsigned long nr_pages)
+>>  {
+>> @@ -8295,6 +8301,9 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+>>  	if (!percpu_ref_tryget(&ctx->refs))
+>>  		goto out_fput;
+>>  
+>> +	if (ctx->flags & IORING_SETUP_R_DISABLED)
+>> +		goto out_fput;
+>> +
 > 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> While writing the man page paragraph, I discovered that if the rings are
+> disabled I returned ENXIO error in io_uring_enter(), coming from the previous
+> check.
 > 
-> Please follow up, after this has been accepted, with a conversion of
-> this binding to yaml.
+> I'm not sure it is the best one, maybe I can return EBADFD or another
+> error.
 > 
+> What do you suggest?
 
-Sure.
+EBADFD seems indeed the most appropriate - the fd is valid, but not in the
+right state to do this.
 
-Thanks,
-Mani
+> I'll add a test for this case.
 
-> Regards,
-> Bjorn
-> 
-> > ---
-> >  Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > index 33856947c561..aea4ddb2b9e8 100644
-> > --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> > @@ -8,7 +8,7 @@ Properties:
-> >  - compatible
-> >  	Usage:		required
-> >  	Value type:	<string>
-> > -	Definition:	must be "qcom,cpufreq-hw".
-> > +	Definition:	must be "qcom,cpufreq-hw" or "qcom,sm8250-epss".
-> >  
-> >  - clocks
-> >  	Usage:		required
-> > -- 
-> > 2.17.1
-> > 
+Thanks!
+
+-- 
+Jens Axboe
+
