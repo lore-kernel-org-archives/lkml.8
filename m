@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A99C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E8FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B6C72145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC012137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593643;
-	bh=NSBuye3y5qXgCTXV6CZRQCd0s3rA8j6SnAcyR7nKAY0=;
+	s=default; t=1599593660;
+	bh=4l/U46XanlA4DH8H4B0VrxArJ8T6qxn2PzfMC1WuoQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ty3D3I4Xb8Y3WTslI7DPmgB1pFW9kSo+xFDtMSjWQCcW8Fp9tCmH6k0rS8MmPr7KG
-	 2hx+sKwW55+d76KLoL8SRsD5YG4AedecjxD0IgQgi/TNajW8Av8N7TZdxANXFhWJhT
-	 O42lxI6o2MO03l0+eNb2X0iF8oXp6YVy287VXglk=
+	b=FQrbTQqoJ4fDmm0z0o6Te5b0LYbtfFIYn8kNSxBYYsoU9bC5C7ZkZPX4trkPetikB
+	 mBOwKkV/Ng/k6p5JHWqddtGIwIG5CB7/VCl9kKRLvLi0YeGqL/xaaR1XxKOjv1KCFm
+	 67PnNNL1AYY97njJez6+Zo68VQTMI1eXAtiFAX2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbgIHTdj (ORCPT
+        id S1732206AbgIHTeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48730 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:34:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731005AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731018AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:58:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0D9B22460;
-        Tue,  8 Sep 2020 15:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 709DA2405E;
+        Tue,  8 Sep 2020 15:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579372;
-        bh=NSBuye3y5qXgCTXV6CZRQCd0s3rA8j6SnAcyR7nKAY0=;
+        s=default; t=1599579504;
+        bh=4l/U46XanlA4DH8H4B0VrxArJ8T6qxn2PzfMC1WuoQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lKMz0qvjbsaOKmCjxovccsX9kOQG/67l9Z/Aoh6grgYEZVrygHdzQZDEQiSNSP1ij
-         MTWbl50rJUz9NaRlVOsshbTB4q/kbEQTZyzTlqbTtck0FtqZgWhZ1LF5PWu2nR8bkQ
-         D7bskpo235w2uASLBhd7lm6Ke8o0Q+eVJxjiq6V8=
+        b=Vlls4VxWhXKYqRl13CjuNMVARoU4pImjO5smgp7704RYI10v05AHoYGzJRtB1J7m6
+         SuilgCUL8Xpmk046/KqUj116UzEcmn9xxKH1YlnZTcYpX7WDWhR/X0CBx5LeLWZ7LX
+         7c1shIL8fKsuNQ411h24nqr1Cx1KYx/FhSpL3OJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 043/186] dmaengine: at_hdmac: check return value of of_find_device_by_node() in at_dma_xlate()
-Date:   Tue,  8 Sep 2020 17:23:05 +0200
-Message-Id: <20200908152243.754111179@linuxfoundation.org>
+        stable@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 078/186] net: ethernet: ti: cpsw_new: fix error handling in cpsw_ndo_vlan_rx_kill_vid()
+Date:   Tue,  8 Sep 2020 17:23:40 +0200
+Message-Id: <20200908152245.429151911@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,36 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
 
-[ Upstream commit 0cef8e2c5a07d482ec907249dbd6687e8697677f ]
+[ Upstream commit af8ea111134624855710a0ef5543b871d49b0162 ]
 
-The reurn value of of_find_device_by_node() is not checked, thus null
-pointer dereference will be triggered if of_find_device_by_node()
-failed.
+This patch fixes a bunch of issues in cpsw_ndo_vlan_rx_kill_vid()
 
-Fixes: bbe89c8e3d59 ("at_hdmac: move to generic DMA binding")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20200817115728.1706719-2-yukuai3@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+ - pm_runtime_get_sync() returns non zero value. This results in
+   non zero value return to caller which will be interpreted as error.
+   So overwrite ret with zero.
+ - If VID matches with port VLAN VID, then set error code.
+ - Currently when VLAN interface is deleted, all of the VLAN mc addresses
+   are removed from ALE table, however the return values from ale function
+   calls are not checked. These functions can return error code -ENOENT.
+   But that shouldn't happen in a normal case. So add error print to
+   catch the situations so that these can be investigated and addressed.
+   return zero in these cases as these are not real error case, but only
+   serve to catch ALE table update related issues and help address the
+   same in the driver.
+
+Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_hdmac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ti/cpsw_new.c | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 73a20780744bf..22c1c507055a3 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -1650,6 +1650,8 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
- 		return NULL;
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index 8d0a2bc7128d4..8ed78577cdedf 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1032,19 +1032,34 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
+ 		return ret;
+ 	}
  
- 	dmac_pdev = of_find_device_by_node(dma_spec->np);
-+	if (!dmac_pdev)
-+		return NULL;
++	/* reset the return code as pm_runtime_get_sync() can return
++	 * non zero values as well.
++	 */
++	ret = 0;
+ 	for (i = 0; i < cpsw->data.slaves; i++) {
+ 		if (cpsw->slaves[i].ndev &&
+-		    vid == cpsw->slaves[i].port_vlan)
++		    vid == cpsw->slaves[i].port_vlan) {
++			ret = -EINVAL;
+ 			goto err;
++		}
+ 	}
  
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
+ 	dev_dbg(priv->dev, "removing vlanid %d from vlan filter\n", vid);
+-	cpsw_ale_del_vlan(cpsw->ale, vid, 0);
+-	cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
+-			   HOST_PORT_NUM, ALE_VLAN, vid);
+-	cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
+-			   0, ALE_VLAN, vid);
++	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
++	if (ret)
++		dev_err(priv->dev, "cpsw_ale_del_vlan() failed: ret %d\n", ret);
++	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
++				 HOST_PORT_NUM, ALE_VLAN, vid);
++	if (ret)
++		dev_err(priv->dev, "cpsw_ale_del_ucast() failed: ret %d\n",
++			ret);
++	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
++				 0, ALE_VLAN, vid);
++	if (ret)
++		dev_err(priv->dev, "cpsw_ale_del_mcast failed. ret %d\n",
++			ret);
+ 	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
++	ret = 0;
+ err:
+ 	pm_runtime_put(cpsw->dev);
+ 	return ret;
 -- 
 2.25.1
 
