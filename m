@@ -2,126 +2,93 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8B5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5838C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB44215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793D6215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkL9TzTO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR5nnWXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgIHIoy (ORCPT
+        id S1729808AbgIHIqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        Tue, 8 Sep 2020 04:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729390AbgIHIow (ORCPT
+        with ESMTP id S1729775AbgIHIp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:44:52 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2910C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:44:51 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m8so4268354pgi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:44:51 -0700 (PDT)
+        Tue, 8 Sep 2020 04:45:56 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56887C061573;
+        Tue,  8 Sep 2020 01:45:56 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e33so9578437pgm.0;
+        Tue, 08 Sep 2020 01:45:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=PiRn9NwzKohrwBuFF5bFBZNNmANW0xplBGn4HXUwbyY=;
-        b=lkL9TzTOhf4dkeNPtCdPcsSlTqHtEC3Af69+imHnsfVc4F94f5/uTawrqMRt05G5Bf
-         /qaZ53cp41K2BtaTuxHKI6SIFU2/JREPuLvrJY4NitPTxqv5gYoomX4xuz/gpgJecN3i
-         eP28Rkfm6Cy4k3eh7YbN2LMnakrJcXtDXzMGn2OPeG3QPdlbAiFlVPc5etn9ivr941Fs
-         SS9pgsRNxYVBWFzJUuDj78/LkJ3c2935s12UMZlGaq4+SOm8gpNG/TtrtZDdh0HwkrZM
-         SRzcendWednW5KpWFaKBv4RryDecjCJmJLPB6o6ob39pQvvSgLBSfSkMTgqlEjyUrudF
-         NCTQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9CmeY/WTDoYECSjvqqIxqdwSFM0WARVNjGLbs9KdPkQ=;
+        b=RR5nnWXuJXQJb9BMiL3TX2LGldgr/CH4nU9KIiA0/jpKWegyEo1Bpp67zySDAMHni3
+         zX0UwspZq0KVDxv72Yr7v+nTPWhsMfaTIeh7eA5ZHriCVVF+SVIvmfF5OzJtilPb55sj
+         RFNSYZZT6+LIT+z18qVP/OfLjNoFxdBrXH85+YLMCVB82y613R/c0qbgpC1Qvc7GluDS
+         DzD5OJp0UblvOB4MLHFU8fG7JE3/PSRNxN82tikp9KB/5YI+MUCpObY8oDZWlMECU39w
+         L5rq53S9ISOHsku+00np1qCC1Y5NHe95iUI2S18FOHYvzumLUc4T9Tlq4r+HgvBaw+qh
+         9r4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=PiRn9NwzKohrwBuFF5bFBZNNmANW0xplBGn4HXUwbyY=;
-        b=TkdE1QqjhHynZJw9aihoHEd8mwMhStcCw4yWItphZIE1R63+ohXyHepZrPTmbZGu/I
-         mbJq2ANbb2GFp50OmtF7yeSR5Gpztg5ObBTnB6aNghR/dVOGKKzrSX6zC65tn+EggxQI
-         2PEUIa53T51/oO/aGelmp9nRKczS0/1s3vPRJccCRyeaNfSjw85bR6t4/m0VBmt8UCib
-         yClA/U56l4duP4QM/lbdDwhI0BSbzAPqGJ7uUHbJTP3GYXUxrpytPQ+xIFYX4lQ8g8mh
-         4iAC9IBzWzUwWUP0ygRIUn3mtVf2WT5q92Y9RjXCm/jCr/+pUOrH7YMDabTOUcpZKtss
-         KNyA==
-X-Gm-Message-State: AOAM533BKQafIRqC27gtcjNA+UFGQfzCtDuSS+mlD5EEpCUh83qwyUjw
-        vg2upDIPNhzmIS3DrSztUhA=
-X-Google-Smtp-Source: ABdhPJxVM8x5twFdRZ5+HrEYOCxGbZDu70wGmAmIaGeAjbvnI0yPo6twAe3uTH9ciTVhFg1ASQWuUw==
-X-Received: by 2002:a63:6d0d:: with SMTP id i13mr19811682pgc.372.1599554691406;
-        Tue, 08 Sep 2020 01:44:51 -0700 (PDT)
-Received: from localhost ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id 82sm14468515pgd.6.2020.09.08.01.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 01:44:50 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 18:44:45 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v1 2/5] powerpc/fault: Unnest definition of
- page_fault_is_write() and page_fault_is_bad()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
-        <4cd127f8988b7b5d3a9b24b67dbad81fef3aee7f.1596734104.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <4cd127f8988b7b5d3a9b24b67dbad81fef3aee7f.1596734104.git.christophe.leroy@csgroup.eu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9CmeY/WTDoYECSjvqqIxqdwSFM0WARVNjGLbs9KdPkQ=;
+        b=EPo7sgI3GQNdtgSmqaX8jYd9saBTRCnkxIJQAJAv5g9Yjfy00ETu4qaZDf9+dzKzIq
+         zHB25+Icpa2Qs7bLF/QaaaMui/vmqI0iqlVVJwNEKV8mNBnJ6u1GUEBzDd+SUA+kfc+t
+         SXC7LXoNfpvJEhXU2gGNZc+SBNRxHRqCOBnnHGjTfmV9IVMY8S823X0oiFhbViDFgWbf
+         FMhGcYiDw2OsMi0K1eRifZCHohsY0U58lYAfhhox6fhbGEj6n+kLxDTOiSbFU3C9pAGK
+         XqzdxRLy3+vmRYoqRzgqOQ476GVSVU5F9Zt7DXBGf3U26F7k3ABz8qu2zdt3XbozQz98
+         htmg==
+X-Gm-Message-State: AOAM533upLJ/l4dQo5ocLcsVCKcL/xvf8JpNOqEF7Td6srR8lNlxXECz
+        dx0rtv/DZHggqYlZfHli1uTWRxEx+yV/c5Kt5Iw=
+X-Google-Smtp-Source: ABdhPJwO4Jiln87NzX4UzdJDznGaPX+7YG0t3I4pVshrrtRG3atvAmMNnE/YGPS3Y/sRdxzOn1z4D+z0zrqglHza178=
+X-Received: by 2002:a63:c543:: with SMTP id g3mr19781155pgd.203.1599554755929;
+ Tue, 08 Sep 2020 01:45:55 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1599554667.yx7o7g5m0l.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200908021021.9123-1-digetx@gmail.com> <20200908021021.9123-25-digetx@gmail.com>
+In-Reply-To: <20200908021021.9123-25-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 8 Sep 2020 11:45:38 +0300
+Message-ID: <CAHp75VeVckiwqDpu8Qt+7Zh+YGiD2q4C6RrANTf5uF4gE99hPA@mail.gmail.com>
+Subject: Re: [PATCH v6 24/35] i2c: tegra: Rename wait/poll functions
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
-> To make it more readable, separate page_fault_is_write() and page_fault_i=
-s_bad()
-> to avoir several levels of #ifdefs
+On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Drop '_timeout' postfix from the wait/poll completion function names in
+> order to make the names shorter, making code cleaner a tad.
 
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+...
 
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/powerpc/mm/fault.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> index 2efa34d7e644..9ef9ee244f72 100644
-> --- a/arch/powerpc/mm/fault.c
-> +++ b/arch/powerpc/mm/fault.c
-> @@ -363,17 +363,19 @@ static void sanity_check_fault(bool is_write, bool =
-is_user,
->   */
->  #if (defined(CONFIG_4xx) || defined(CONFIG_BOOKE))
->  #define page_fault_is_write(__err)	((__err) & ESR_DST)
-> -#define page_fault_is_bad(__err)	(0)
->  #else
->  #define page_fault_is_write(__err)	((__err) & DSISR_ISSTORE)
-> -#if defined(CONFIG_PPC_8xx)
-> +#endif
-> +
-> +#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
-> +#define page_fault_is_bad(__err)	(0)
-> +#elif defined(CONFIG_PPC_8xx)
->  #define page_fault_is_bad(__err)	((__err) & DSISR_NOEXEC_OR_G)
->  #elif defined(CONFIG_PPC64)
->  #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_64S)
->  #else
->  #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_32S)
->  #endif
-> -#endif
-> =20
->  /*
->   * For 600- and 800-family processors, the error_code parameter is DSISR
-> --=20
-> 2.25.0
->=20
->=20
+> +       time_left = tegra_i2c_wait_completion(i2c_dev, &i2c_dev->msg_complete,
+> +                                             50);
+
+Why not one line?
+
+-- 
+With Best Regards,
+Andy Shevchenko
