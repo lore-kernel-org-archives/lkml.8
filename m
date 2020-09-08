@@ -7,59 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDC6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AC8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D2F2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E642D2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593043;
-	bh=3ahDVtPdEadssd8Vxb18CRDen5htLpWbWq5DrbGDtUo=;
+	s=default; t=1599593055;
+	bh=1VUBi6fqR7yZIoBA187luCNz/xF8VTAhf9Sv8APOTzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CA1U1pI05v5UlF5uFRuT6/pl8sqEhMQlLY23lQZZUi2pc7geLh10mGrbsfkUwiPvl
-	 Dk906NBadV0nDRGYq5neC2k0kyxaljHcIBhs/8z/bDLKNAwDyfOW/LJy9QcqfA/HNC
-	 olIIErRcCs91Cye+dQBu3HERN+cxER/NlvHPQY48=
+	b=gbfbzG/AYkzFyH/XMXT5PMfbljrWbW4JGWbdNm61NvUVMUGvmKlzYYYHs+0sjSjfO
+	 wYkIj/5nK0+Ji6TjpTmDJByw4LWBTcCOgEPrIT/8E0BbJA0Tfo/0YDCYWCMRpW6viv
+	 gAU+AxYHuIrBkqPC/WdxCbPkI/PeDULbjP25JI9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732126AbgIHTXz (ORCPT
+        id S1731989AbgIHTXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 15:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731096AbgIHQBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731092AbgIHQBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:01:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04DA423EAF;
-        Tue,  8 Sep 2020 15:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EE8E23E21;
+        Tue,  8 Sep 2020 15:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579473;
-        bh=3ahDVtPdEadssd8Vxb18CRDen5htLpWbWq5DrbGDtUo=;
+        s=default; t=1599579466;
+        bh=1VUBi6fqR7yZIoBA187luCNz/xF8VTAhf9Sv8APOTzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MMsLE2Q0RC7Fn506i55HCvjukvjWUwyw5gCRcVc10uoVO7xjWglbWs2wzbbWtoFTx
-         EYVbFti24aXsst6HBdaj2R+TwQl5NKsEPwJbsKTJbr+wIl/rfbMmqHaJqCzHCYmrXK
-         KOXelm4fjAl8z4HJZz7s69fVZOtjQuM6JyDsYci0=
+        b=1oY9hhu4VtqkC/1hzc5b2CmP1DKl9jiNm5QWpz3gpEVc5AfYCaq8EMYNvXtVItsgk
+         aLpsc4mn3cB0x2CuUExY80QdBbJD6t3ZOO0nTSLZnJHpLyD4cvyTK3sDgVe/4//kh0
+         pV1BODINiZtwLNgLUNusysG0fW3etDz4ovzLC2Zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Grant <al.grant@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 093/186] perf intel-pt: Fix corrupt data after perf inject from
-Date:   Tue,  8 Sep 2020 17:23:55 +0200
-Message-Id: <20200908152246.140021403@linuxfoundation.org>
+Subject: [PATCH 5.8 090/186] block: fix locking in bdev_del_partition
+Date:   Tue,  8 Sep 2020 17:23:52 +0200
+Message-Id: <20200908152246.007784365@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -72,63 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Grant <al.grant@arm.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit a347306fbec5dcaf7c276777b11d530eab6a4526 ]
+[ Upstream commit 08fc1ab6d748ab1a690fd483f41e2938984ce353 ]
 
-Commit 42bbabed09ce6208 ("perf tools: Add hw_idx in struct branch_stack")
-changed the format of branch stacks in perf samples. When samples use
-this new format, a flag must be set in the corresponding event.
+We need to hold the whole device bd_mutex to protect against
+other thread concurrently deleting out partition before we get
+to it, and thus causing a use after free.
 
-Synthesized branch stacks generated from Intel PT were using the new
-format, but not setting the event attribute, leading to consumers
-seeing corrupt data. This patch fixes the issue by setting the event
-attribute to indicate use of the new format.
-
-Fixes: 42bbabed09ce6208 ("perf tools: Add hw_idx in struct branch_stack")
-Signed-off-by: Al Grant <al.grant@arm.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20200819084751.17686-2-leo.yan@linaro.org
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: cddae808aeb7 ("block: pass a hd_struct to delete_partition")
+Reported-by: syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/intel-pt.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ block/partitions/core.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index cb3c1e569a2db..9357b5f62c273 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -2913,8 +2913,15 @@ static int intel_pt_synth_events(struct intel_pt *pt,
+diff --git a/block/partitions/core.c b/block/partitions/core.c
+index 78951e33b2d7c..534e11285a8d4 100644
+--- a/block/partitions/core.c
++++ b/block/partitions/core.c
+@@ -524,19 +524,20 @@ int bdev_add_partition(struct block_device *bdev, int partno,
+ int bdev_del_partition(struct block_device *bdev, int partno)
+ {
+ 	struct block_device *bdevp;
+-	struct hd_struct *part;
+-	int ret = 0;
+-
+-	part = disk_get_part(bdev->bd_disk, partno);
+-	if (!part)
+-		return -ENXIO;
++	struct hd_struct *part = NULL;
++	int ret;
  
- 	if (pt->synth_opts.callchain)
- 		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
--	if (pt->synth_opts.last_branch)
-+	if (pt->synth_opts.last_branch) {
- 		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-+		/*
-+		 * We don't use the hardware index, but the sample generation
-+		 * code uses the new format branch_stack with this field,
-+		 * so the event attributes must indicate that it's present.
-+		 */
-+		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
-+	}
+-	ret = -ENOMEM;
+-	bdevp = bdget(part_devt(part));
++	bdevp = bdget_disk(bdev->bd_disk, partno);
+ 	if (!bdevp)
+-		goto out_put_part;
++		return -ENOMEM;
  
- 	if (pt->synth_opts.instructions) {
- 		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+ 	mutex_lock(&bdevp->bd_mutex);
++	mutex_lock_nested(&bdev->bd_mutex, 1);
++
++	ret = -ENXIO;
++	part = disk_get_part(bdev->bd_disk, partno);
++	if (!part)
++		goto out_unlock;
+ 
+ 	ret = -EBUSY;
+ 	if (bdevp->bd_openers)
+@@ -545,16 +546,14 @@ int bdev_del_partition(struct block_device *bdev, int partno)
+ 	sync_blockdev(bdevp);
+ 	invalidate_bdev(bdevp);
+ 
+-	mutex_lock_nested(&bdev->bd_mutex, 1);
+ 	delete_partition(bdev->bd_disk, part);
+-	mutex_unlock(&bdev->bd_mutex);
+-
+ 	ret = 0;
+ out_unlock:
++	mutex_unlock(&bdev->bd_mutex);
+ 	mutex_unlock(&bdevp->bd_mutex);
+ 	bdput(bdevp);
+-out_put_part:
+-	disk_put_part(part);
++	if (part)
++		disk_put_part(part);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
