@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD525C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F84C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B36207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2D4207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599581831;
-	bh=Tei+YkRbVwQNRj+U+djwbgtzP0V+bTZ1sVJJ9lII7OE=;
+	s=default; t=1599581882;
+	bh=vJitGi6HoHhou8yOBfLEmrf3ya1C/eGIv+uiqN/Adck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yCsD0XeIMPJuX5iCkDa/V8CHDfwF2zNXUeDfMfbHarPRbyt50yZRfeGJmeMsNA9aG
-	 6ocTB5CeYiMAi+7STkptKOHf+Bqc/qcFQqK/PPhzJtbd9SxzH+V+biOJMTpn49JiDJ
-	 65t4FCUDFtPGGqVHx8zj0zTDzkGsz6uXkm3Ly5nk=
+	b=v0F/+UkuL9NxDfG++tBbbQFbFFHsxifOrm6ERgzr+Ghfuv5x4Jj4O91PV2SuMQDuu
+	 0S+nhpC7CQvTJyujsWNLQN87rw9pvugH65z2eOOGX9axVTxAqUVIPJy+UaQnVhqSCv
+	 CY9ry5/DNN2bLhgisyDOYvRpTFyw7LcFzb9C/OBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbgIHQRH (ORCPT
+        id S1731544AbgIHQRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52184 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731272AbgIHQH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731038AbgIHQH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:07:27 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CAF23EB2;
-        Tue,  8 Sep 2020 15:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF3B23E55;
+        Tue,  8 Sep 2020 15:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580043;
-        bh=Tei+YkRbVwQNRj+U+djwbgtzP0V+bTZ1sVJJ9lII7OE=;
+        s=default; t=1599580038;
+        bh=vJitGi6HoHhou8yOBfLEmrf3ya1C/eGIv+uiqN/Adck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMVZJqL5JKs6eEIq3rM6bUkkwAepJvBVy/n9YxTm7P0y3oVSW61Yhj2iF6ABspYN/
-         KsAMiEKKx21VdG4vlXPLtRDDU3x9cLeVVi4kALogcWOpY79XpzPcmRC9gbfRUamAB5
-         mMnVrDbpXwFB0aRB+V5TezL3xNiM/RiBKT4w8xJQ=
+        b=UqtBepm4uVAPnooM0cQD2W8m67+gj4+1Vg2zsl4g+D/NZvrgJxVaflCsiBz4sCrWl
+         GmXT5GL5nkm8vufq9uOUGj7e+UoUrZyND2PBstzTSfnMdgaOUyD0QyL4wEl4XZj7+x
+         iUCrN3YG24MAvesmbX9YbHzoM/GwQLlQRRvJl8ZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Staudt <max@enpas.org>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 106/129] affs: fix basic permission bits to actually work
-Date:   Tue,  8 Sep 2020 17:25:47 +0200
-Message-Id: <20200908152235.132873066@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Marzinski <bmarzins@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 114/129] dm mpath: fix racey management of PG initialization
+Date:   Tue,  8 Sep 2020 17:25:55 +0200
+Message-Id: <20200908152235.549282325@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -59,171 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Staudt <max@enpas.org>
+From: Mike Snitzer <snitzer@redhat.com>
 
-commit d3a84a8d0dde4e26bc084b36ffcbdc5932ac85e2 upstream.
+commit c322ee9320eaa4013ca3620b1130992916b19b31 upstream.
 
-The basic permission bits (protection bits in AmigaOS) have been broken
-in Linux' AFFS - it would only set bits, but never delete them.
-Also, contrary to the documentation, the Archived bit was not handled.
+Commit 935fcc56abc3 ("dm mpath: only flush workqueue when needed")
+changed flush_multipath_work() to avoid needless workqueue
+flushing (of a multipath global workqueue). But that change didn't
+realize the surrounding flush_multipath_work() code should also only
+run if 'pg_init_in_progress' is set.
 
-Let's fix this for good, and set the bits such that Linux and classic
-AmigaOS can coexist in the most peaceful manner.
+Fix this by only doing all of flush_multipath_work()'s PG init related
+work if 'pg_init_in_progress' is set.
 
-Also, update the documentation to represent the current state of things.
+Otherwise multipath_wait_for_pg_init_completion() will run
+unconditionally but the preceeding flush_workqueue(kmpath_handlerd)
+may not. This could lead to deadlock (though only if kmpath_handlerd
+never runs a corresponding work to decrement 'pg_init_in_progress').
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+It could also be, though highly unlikely, that the kmpath_handlerd
+work that does PG init completes before 'pg_init_in_progress' is set,
+and then an intervening DM table reload's multipath_postsuspend()
+triggers flush_multipath_work().
+
+Fixes: 935fcc56abc3 ("dm mpath: only flush workqueue when needed")
 Cc: stable@vger.kernel.org
-Signed-off-by: Max Staudt <max@enpas.org>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Ben Marzinski <bmarzins@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/filesystems/affs.txt |   16 ++++++++++------
- fs/affs/amigaffs.c                 |   27 +++++++++++++++++++++++++++
- fs/affs/file.c                     |   26 +++++++++++++++++++++++++-
- 3 files changed, 62 insertions(+), 7 deletions(-)
+ drivers/md/dm-mpath.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
---- a/Documentation/filesystems/affs.txt
-+++ b/Documentation/filesystems/affs.txt
-@@ -93,13 +93,15 @@ The Amiga protection flags RWEDRWEDHSPAR
- 
-   - R maps to r for user, group and others. On directories, R implies x.
- 
--  - If both W and D are allowed, w will be set.
-+  - W maps to w.
- 
-   - E maps to x.
- 
--  - H and P are always retained and ignored under Linux.
-+  - D is ignored.
- 
--  - A is always reset when a file is written to.
-+  - H, S and P are always retained and ignored under Linux.
-+
-+  - A is cleared when a file is written to.
- 
- User id and group id will be used unless set[gu]id are given as mount
- options. Since most of the Amiga file systems are single user systems
-@@ -111,11 +113,13 @@ Linux -> Amiga:
- 
- The Linux rwxrwxrwx file mode is handled as follows:
- 
--  - r permission will set R for user, group and others.
-+  - r permission will allow R for user, group and others.
-+
-+  - w permission will allow W for user, group and others.
- 
--  - w permission will set W and D for user, group and others.
-+  - x permission of the user will allow E for plain files.
- 
--  - x permission of the user will set E for plain files.
-+  - D will be allowed for user, group and others.
- 
-   - All other flags (suid, sgid, ...) are ignored and will
-     not be retained.
---- a/fs/affs/amigaffs.c
-+++ b/fs/affs/amigaffs.c
-@@ -420,24 +420,51 @@ affs_mode_to_prot(struct inode *inode)
- 	u32 prot = AFFS_I(inode)->i_protect;
- 	umode_t mode = inode->i_mode;
- 
-+	/*
-+	 * First, clear all RWED bits for owner, group, other.
-+	 * Then, recalculate them afresh.
-+	 *
-+	 * We'll always clear the delete-inhibit bit for the owner, as that is
-+	 * the classic single-user mode AmigaOS protection bit and we need to
-+	 * stay compatible with all scenarios.
-+	 *
-+	 * Since multi-user AmigaOS is an extension, we'll only set the
-+	 * delete-allow bit if any of the other bits in the same user class
-+	 * (group/other) are used.
-+	 */
-+	prot &= ~(FIBF_NOEXECUTE | FIBF_NOREAD
-+		  | FIBF_NOWRITE | FIBF_NODELETE
-+		  | FIBF_GRP_EXECUTE | FIBF_GRP_READ
-+		  | FIBF_GRP_WRITE   | FIBF_GRP_DELETE
-+		  | FIBF_OTR_EXECUTE | FIBF_OTR_READ
-+		  | FIBF_OTR_WRITE   | FIBF_OTR_DELETE);
-+
-+	/* Classic single-user AmigaOS flags. These are inverted. */
- 	if (!(mode & 0100))
- 		prot |= FIBF_NOEXECUTE;
- 	if (!(mode & 0400))
- 		prot |= FIBF_NOREAD;
- 	if (!(mode & 0200))
- 		prot |= FIBF_NOWRITE;
-+
-+	/* Multi-user extended flags. Not inverted. */
- 	if (mode & 0010)
- 		prot |= FIBF_GRP_EXECUTE;
- 	if (mode & 0040)
- 		prot |= FIBF_GRP_READ;
- 	if (mode & 0020)
- 		prot |= FIBF_GRP_WRITE;
-+	if (mode & 0070)
-+		prot |= FIBF_GRP_DELETE;
-+
- 	if (mode & 0001)
- 		prot |= FIBF_OTR_EXECUTE;
- 	if (mode & 0004)
- 		prot |= FIBF_OTR_READ;
- 	if (mode & 0002)
- 		prot |= FIBF_OTR_WRITE;
-+	if (mode & 0007)
-+		prot |= FIBF_OTR_DELETE;
- 
- 	AFFS_I(inode)->i_protect = prot;
- }
---- a/fs/affs/file.c
-+++ b/fs/affs/file.c
-@@ -428,6 +428,24 @@ static int affs_write_begin(struct file
- 	return ret;
- }
- 
-+static int affs_write_end(struct file *file, struct address_space *mapping,
-+			  loff_t pos, unsigned int len, unsigned int copied,
-+			  struct page *page, void *fsdata)
-+{
-+	struct inode *inode = mapping->host;
-+	int ret;
-+
-+	ret = generic_write_end(file, mapping, pos, len, copied, page, fsdata);
-+
-+	/* Clear Archived bit on file writes, as AmigaOS would do */
-+	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
-+		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
-+		mark_inode_dirty(inode);
-+	}
-+
-+	return ret;
-+}
-+
- static sector_t _affs_bmap(struct address_space *mapping, sector_t block)
+--- a/drivers/md/dm-mpath.c
++++ b/drivers/md/dm-mpath.c
+@@ -1190,17 +1190,25 @@ static void multipath_wait_for_pg_init_c
+ static void flush_multipath_work(struct multipath *m)
  {
- 	return generic_block_bmap(mapping,block,affs_get_block);
-@@ -437,7 +455,7 @@ const struct address_space_operations af
- 	.readpage = affs_readpage,
- 	.writepage = affs_writepage,
- 	.write_begin = affs_write_begin,
--	.write_end = generic_write_end,
-+	.write_end = affs_write_end,
- 	.direct_IO = affs_direct_IO,
- 	.bmap = _affs_bmap
- };
-@@ -794,6 +812,12 @@ done:
- 	if (tmp > inode->i_size)
- 		inode->i_size = AFFS_I(inode)->mmu_private = tmp;
- 
-+	/* Clear Archived bit on file writes, as AmigaOS would do */
-+	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
-+		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
-+		mark_inode_dirty(inode);
-+	}
+ 	if (m->hw_handler_name) {
+-		set_bit(MPATHF_PG_INIT_DISABLED, &m->flags);
+-		smp_mb__after_atomic();
++		unsigned long flags;
 +
- err_first_bh:
- 	unlock_page(page);
- 	put_page(page);
++		if (!atomic_read(&m->pg_init_in_progress))
++			goto skip;
++
++		spin_lock_irqsave(&m->lock, flags);
++		if (atomic_read(&m->pg_init_in_progress) &&
++		    !test_and_set_bit(MPATHF_PG_INIT_DISABLED, &m->flags)) {
++			spin_unlock_irqrestore(&m->lock, flags);
+ 
+-		if (atomic_read(&m->pg_init_in_progress))
+ 			flush_workqueue(kmpath_handlerd);
+-		multipath_wait_for_pg_init_completion(m);
++			multipath_wait_for_pg_init_completion(m);
+ 
+-		clear_bit(MPATHF_PG_INIT_DISABLED, &m->flags);
+-		smp_mb__after_atomic();
++			spin_lock_irqsave(&m->lock, flags);
++			clear_bit(MPATHF_PG_INIT_DISABLED, &m->flags);
++		}
++		spin_unlock_irqrestore(&m->lock, flags);
+ 	}
+-
++skip:
+ 	if (m->queue_mode == DM_TYPE_BIO_BASED)
+ 		flush_work(&m->process_queued_bios);
+ 	flush_work(&m->trigger_event);
 
 
