@@ -2,129 +2,87 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF49EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541EAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91E0B206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iK7u8gqp"
+	by mail.kernel.org (Postfix) with ESMTP id 1F70D207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732006AbgIHQoj (ORCPT
+        id S1731998AbgIHQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:44:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36016 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731771AbgIHQb3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:31:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599582670;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UXzNpJhj5sowidUDfDEXaS6phGxQ0LavcBR8ek7/U9c=;
-        b=iK7u8gqpTdfoXtYU7OEq1JMZEKUJ/jsz2+CmjRLgK0vnEdBMfK+xTHflvuSIQPLCQXQfKI
-        USZG0O04bXNJOlvoGMTFRjaBw7T40JaXY42xiTQfpf4AohMPEtBxaRPxNgnOL7Zhri5m+g
-        MiUFwMRms28BSiokT5MqTL9KorYiJ3Q=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-NTz7vs9qOBO87HqdsTWTiw-1; Tue, 08 Sep 2020 10:15:58 -0400
-X-MC-Unique: NTz7vs9qOBO87HqdsTWTiw-1
-Received: by mail-wr1-f70.google.com with SMTP id n15so6987947wrv.23
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:15:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UXzNpJhj5sowidUDfDEXaS6phGxQ0LavcBR8ek7/U9c=;
-        b=Au6uLxctztv6jf5BDxOLkYBGxoMPEYRgWfmOG8QaGXaWAwg4lxn1uovcAfD1FmvhfM
-         qnPI6rz8alZU7HSJwHPpB0JiAKVSRVfdtdmulrNHNDvC9IaXGgoNBbfgbu//+SbAumo9
-         WCf1DVTrM1zyM5YDwp1ROSGe9vRV+o9JHiJHMts6M8LeHnNLsb4CZ+zxeHvBpiNYWz/z
-         F3oltTX9ezT53NWilRQ32DmUdBDieKQ8UO1MSJdp+XWY+WnDfmz1eKVlTiRJ+Frl8sKM
-         BhNnNhVFMwOADzqn5xkIYEjjd5ghkLeHo1Gi7sKErB9jL1vyvKqE0X3nOTZyWYZNPJaw
-         ctRg==
-X-Gm-Message-State: AOAM5303nggodCpw46pZ29hIGD/quAVk5vE2Ml7IO0Elze+UmcarbKRv
-        NWWsEpZsZzUdITanQHW3l1CVORTVjFDqxYwvbaWrirdKBYaayrzxqkbS6Sc3ZS1ENm9uHVZwk4D
-        O3B8F6EGgqxHk0WRADXAtPy50
-X-Received: by 2002:adf:ba10:: with SMTP id o16mr26932376wrg.100.1599574557186;
-        Tue, 08 Sep 2020 07:15:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzqEKlAdEL5xW+LjUpamB0FNN2eHC7z5gQAJUS0ZT9mISMnhGZ2hx0LZial5U4dn8IDd/bz+A==
-X-Received: by 2002:adf:ba10:: with SMTP id o16mr26932354wrg.100.1599574557014;
-        Tue, 08 Sep 2020 07:15:57 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-218-236.inter.net.il. [80.230.218.236])
-        by smtp.gmail.com with ESMTPSA id a20sm30604272wmm.40.2020.09.08.07.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 07:15:55 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 10:15:50 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Matej Genci <matej.genci@nutanix.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Felipe Franciosi <felipe@nutanix.com>
-Subject: Re: [PATCH] Rescan the entire target on transport reset when LUN is 0
-Message-ID: <20200908101531-mutt-send-email-mst@kernel.org>
-References: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
+        Tue, 8 Sep 2020 12:44:52 -0400
+Received: from verein.lst.de ([213.95.11.211]:53340 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731773AbgIHQoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:44:20 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 026F868B02; Tue,  8 Sep 2020 14:20:45 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 14:20:45 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Julien Grall <julien.grall@arm.com>,
+        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
+Message-ID: <20200908122045.GA31727@lst.de>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com> <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com> <20200827063517.GA4637@lst.de> <CA+-6iNy3U9pO0Bykzgvb9n9fcsBi6FiatLdpA1s0HgQNWZ49mg@mail.gmail.com> <20200907091649.GA6428@e121166-lin.cambridge.arm.com> <CA+-6iNzoz3pM2pJksXogeuou6wB9W-59rN-amCLERFLuY5zLMg@mail.gmail.com> <00e49acb-c659-de10-3e87-76bfd82e4a76@gmail.com> <20200908104226.GB22909@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
+In-Reply-To: <20200908104226.GB22909@e121166-lin.cambridge.arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 12:21:35PM +0000, Matej Genci wrote:
-> VirtIO 1.0 spec says
->     The removed and rescan events ... when sent for LUN 0, they MAY
->     apply to the entire target so the driver can ask the initiator
->     to rescan the target to detect this.
+On Tue, Sep 08, 2020 at 11:42:26AM +0100, Lorenzo Pieralisi wrote:
+> > Maybe we can parallelize the PCIe driver review while the DMA changes
+> > are being worked on in Christoph's branch. Lorenzo, are you fine with
+> > the PCIe changes proper?
 > 
-> This change introduces the behaviour described above by scanning the
-> entire scsi target when LUN is set to 0. This is both a functional and a
-> performance fix. It aligns the driver with the spec and allows control
-> planes to hotplug targets with large numbers of LUNs without having to
-> request a RESCAN for each one of them.
-> 
-> Signed-off-by: Matej Genci <matej@nutanix.com>
-> Suggested-by: Felipe Franciosi <felipe@nutanix.com>
+> I will have a look - the main contentious point was about the DMA
+> changes - if Christoph is happy with them I am OK with them
+> too - I hope there is not anything controversial in the host
+> bridge driver itself but I will look into it.
 
-Stefan, Paolo, could you review this pls?
-
-> ---
->  drivers/scsi/virtio_scsi.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-> index bfec84aacd90..a4b9bc7b4b4a 100644
-> --- a/drivers/scsi/virtio_scsi.c
-> +++ b/drivers/scsi/virtio_scsi.c
-> @@ -284,7 +284,12 @@ static void virtscsi_handle_transport_reset(struct virtio_scsi *vscsi,
->  
->  	switch (virtio32_to_cpu(vscsi->vdev, event->reason)) {
->  	case VIRTIO_SCSI_EVT_RESET_RESCAN:
-> -		scsi_add_device(shost, 0, target, lun);
-> +		if (lun == 0) {
-> +			scsi_scan_target(&shost->shost_gendev, 0, target,
-> +					 SCAN_WILD_CARD, SCSI_SCAN_INITIAL);
-> +		} else {
-> +			scsi_add_device(shost, 0, target, lun);
-> +		}
->  		break;
->  	case VIRTIO_SCSI_EVT_RESET_REMOVED:
->  		sdev = scsi_device_lookup(shost, 0, target, lun);
-> -- 
-> 2.20.1
-
+I'm pretty happy with the overall shape.  Now we just need to squeeze
+out the regressions..
