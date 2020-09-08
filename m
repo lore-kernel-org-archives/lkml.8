@@ -2,167 +2,214 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB63C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72205C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57FC020768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590156;
-	bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bm7TqrpBERYQ8O/veHTefK7FV/y0vfyWH7YU5fJe8hVmbrFwlICVxbO9EVUkj/QD+
-	 rivfbjjWUwYullGJqcSxu/eKpLWsWJMqG3RdzqloDEB41oOB/Ohh1MKUmRgUq6f1Y+
-	 Ckurf5BAlU1R2fvJwSQhlpdzBxEKbRPwzkIQr050=
+	by mail.kernel.org (Postfix) with ESMTP id 2C30D2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pYExEl4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731723AbgIHScJ (ORCPT
+        id S1731732AbgIHSgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731379AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:35 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B002417F;
-        Tue,  8 Sep 2020 15:49:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580199;
-        bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cfe2M1xjPKfRY9UPwb2ELVn+dJnDTbD81a67MASP7pZsCK9C1dcIXYoijkMzA8jP9
-         dpi8cmyvC1inB8vFPhPSd6TSyK9HX46lT75HjjmiuuQwxPS00QqHodDEQu2+Xob8FY
-         CoPW0kvrLsZ1L6uyqeNe62m7QEKHBKIINW8LEgqY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 69/88] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
-Date:   Tue,  8 Sep 2020 17:26:10 +0200
-Message-Id: <20200908152224.621006485@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Tue, 8 Sep 2020 14:36:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64168 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731363AbgIHQJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:28 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088FV4J6007885;
+        Tue, 8 Sep 2020 11:38:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=O7XJu38SFyTf1J7F17Pgsezh+TcCF29rZjjKnS09FC4=;
+ b=pYExEl4GEir85/Swt3pY2PU9iGqB8dcyGYsI82ZJjGwQGRLzF9mkEp53MznyY4r4vDmx
+ /sX1HujoahyPL9VqjGnWudxMPW9mI1xs/37j5Y2bTk9wnGlFZ7ekTMXxwdVAw4CkMXCW
+ RwSLMCm/4GRxExwvGpwnQvMiABZjDGYjB6X91q8R3lkYbBCJjWCyzRvAvxBUbfHCMDCd
+ hB5w/QLMPlGTxAx6lu8hPwArF6/igmizfH0NSxE5PMYZHUvDtuB8Mn8dSb46R/NmD4GJ
+ t5X5Mz4miQWpT3g6A/G6hVqZVqxuH90bSxYBcSJwCeKBdhK4ien0Hk0/cYwrsa4QlOpp Aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnbmv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 11:38:44 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088FVCaN008753;
+        Tue, 8 Sep 2020 11:38:43 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnbkh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 11:38:43 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088FbHIt023938;
+        Tue, 8 Sep 2020 15:38:40 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 33c2a8a6j1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 15:38:39 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088FcbWi18153774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 15:38:37 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59CBF4C04E;
+        Tue,  8 Sep 2020 15:38:37 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1125C4C04A;
+        Tue,  8 Sep 2020 15:38:29 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.24.202])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  8 Sep 2020 15:38:28 +0000 (GMT)
+Message-ID: <4ba95bc2071185a7819261c4e008ec9aa452b30e.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
+ faccessat2(2)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Philippe =?ISO-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@linux.microsoft.com>,
+        John Johansen <john.johansen@canonical.com>
+Date:   Tue, 08 Sep 2020 11:38:28 -0400
+In-Reply-To: <532eefa8-49ca-1c23-1228-d5a4e2d8af90@digikod.net>
+References: <20200908075956.1069018-1-mic@digikod.net>
+         <20200908075956.1069018-2-mic@digikod.net>
+         <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
+         <75451684-58f3-b946-dca4-4760fa0d7440@digikod.net>
+         <CAEjxPJ49_BgGX50ZAhHh79Qy3OMN6sssnUHT_2yXqdmgyt==9w@mail.gmail.com>
+         <CAEjxPJ6ZTKeunzJvWf_kS3QYjca6v1yJq=ad-jCCuDSgG6n60g@mail.gmail.com>
+         <bdc10ab89cf9197e104f02a751009cf0d549ddf5.camel@linux.ibm.com>
+         <CAEjxPJ5evWDSv-T-p=4OX29Pr584ZRAsnYoxSRd4qFDoryB+fQ@mail.gmail.com>
+         <532eefa8-49ca-1c23-1228-d5a4e2d8af90@digikod.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+[Cc'ing Casey]
 
-commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
+On Tue, 2020-09-08 at 16:14 +0200, Mickaël Salaün wrote:
+> On 08/09/2020 15:42, Stephen Smalley wrote:
+> > On Tue, Sep 8, 2020 at 9:29 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >>
+> >> On Tue, 2020-09-08 at 08:52 -0400, Stephen Smalley wrote:
+> >>> On Tue, Sep 8, 2020 at 8:50 AM Stephen Smalley
+> >>> <stephen.smalley.work@gmail.com> wrote:
+> >>>>
+> >>>> On Tue, Sep 8, 2020 at 8:43 AM Mickaël Salaün <mic@digikod.net> wrote:
+> >>>>>
+> >>>>>
+> >>>>> On 08/09/2020 14:28, Mimi Zohar wrote:
+> >>>>>> Hi Mickael,
+> >>>>>>
+> >>>>>> On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
+> >>>>>>> +                    mode |= MAY_INTERPRETED_EXEC;
+> >>>>>>> +                    /*
+> >>>>>>> +                     * For compatibility reasons, if the system-wide policy
+> >>>>>>> +                     * doesn't enforce file permission checks, then
+> >>>>>>> +                     * replaces the execute permission request with a read
+> >>>>>>> +                     * permission request.
+> >>>>>>> +                     */
+> >>>>>>> +                    mode &= ~MAY_EXEC;
+> >>>>>>> +                    /* To be executed *by* user space, files must be readable. */
+> >>>>>>> +                    mode |= MAY_READ;
+> >>>>>>
+> >>>>>> After this change, I'm wondering if it makes sense to add a call to
+> >>>>>> security_file_permission().  IMA doesn't currently define it, but
+> >>>>>> could.
+> >>>>>
+> >>>>> Yes, that's the idea. We could replace the following inode_permission()
+> >>>>> with file_permission(). I'm not sure how this will impact other LSMs though.
+> >>
+> >> I wasn't suggesting replacing the existing security_inode_permission
+> >> hook later, but adding a new security_file_permission hook here.
+> >>
+> >>>>
+> >>>> They are not equivalent at least as far as SELinux is concerned.
+> >>>> security_file_permission() was only to be used to revalidate
+> >>>> read/write permissions previously checked at file open to support
+> >>>> policy changes and file or process label changes.  We'd have to modify
+> >>>> the SELinux hook if we wanted to have it check execute access even if
+> >>>> nothing has changed since open time.
+> >>>
+> >>> Also Smack doesn't appear to implement file_permission at all, so it
+> >>> would skip Smack checking.
+> >>
+> >> My question is whether adding a new security_file_permission call here
+> >> would break either SELinux or Apparmor?
+> > 
+> > selinux_inode_permission() has special handling for MAY_ACCESS so we'd
+> > need to duplicate that into selinux_file_permission() ->
+> > selinux_revalidate_file_permission().  Also likely need to adjust
+> > selinux_file_permission() to explicitly check whether the mask
+> > includes any permissions not checked at open time.  So some changes
+> > would be needed here.  By default, it would be a no-op unless there
+> > was a policy reload or the file was relabeled between the open(2) and
+> > the faccessat(2) call.
+> > 
+> 
+> We could create a new hook path_permission(struct path *path, int mask)
+> as a superset of inode_permission(). To be more convenient, his new hook
+> could then just call inode_permission() for every LSMs not implementing
+> path_permission().
 
-Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
-However, as long as he investigated, the design of this model is hardly
-similar to the one of Digi 00x family. It's better to exclude the model
-from modalias of ALSA firewire-digi00x driver.
+The LSM maintainers need to chime in here on this suggestion.  In terms
+of the name, except for one hook, all the security_path_XXXX() hooks
+are dependent on CONFIG_SECURITY_PATH being configured.
 
-This commit changes device entries so that the model is excluded.
-
-$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
-404  31333934  bus_name "1394"
-408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
-40c  00a07e01  company_id 00a07e     |
-410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
-
-               root directory
-               -----------------------------------------------------------------
-414  0005d08c  directory_length 5, crc 53388
-418  0300a07e  vendor
-41c  8100000c  --> descriptor leaf at 44c
-420  0c008380  node capabilities
-424  8d000002  --> eui-64 leaf at 42c
-428  d1000004  --> unit directory at 438
-
-               eui-64 leaf at 42c
-               -----------------------------------------------------------------
-42c  0002410f  leaf_length 2, crc 16655
-430  00a07e01  company_id 00a07e     |
-434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
-
-               unit directory at 438
-               -----------------------------------------------------------------
-438  0004d6c9  directory_length 4, crc 54985
-43c  1200a02d  specifier id: 1394 TA
-440  13014001  version: Vender Unique and AV/C
-444  17000001  model
-448  81000009  --> descriptor leaf at 46c
-
-               descriptor leaf at 44c
-               -----------------------------------------------------------------
-44c  00077205  leaf_length 7, crc 29189
-450  00000000  textual descriptor
-454  00000000  minimal ASCII
-458  41766964  "Avid"
-45c  20546563  " Tec"
-460  686e6f6c  "hnol"
-464  6f677900  "ogy"
-468  00000000
-
-               descriptor leaf at 46c
-               -----------------------------------------------------------------
-46c  000599a5  leaf_length 5, crc 39333
-470  00000000  textual descriptor
-474  00000000  minimal ASCII
-478  41647265  "Adre"
-47c  6e616c69  "nali"
-480  6e650000  "ne"
-
-Reported-by: Simon Wood <simon@mungewell.org>
-Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
-Cc: <stable@vger.kernel.org> # 4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/firewire/digi00x/digi00x.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/sound/firewire/digi00x/digi00x.c
-+++ b/sound/firewire/digi00x/digi00x.c
-@@ -15,6 +15,7 @@ MODULE_LICENSE("GPL v2");
- #define VENDOR_DIGIDESIGN	0x00a07e
- #define MODEL_CONSOLE		0x000001
- #define MODEL_RACK		0x000002
-+#define SPEC_VERSION		0x000001
- 
- static int name_card(struct snd_dg00x *dg00x)
- {
-@@ -185,14 +186,18 @@ static const struct ieee1394_device_id s
- 	/* Both of 002/003 use the same ID. */
- 	{
- 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
-+			       IEEE1394_MATCH_VERSION |
- 			       IEEE1394_MATCH_MODEL_ID,
- 		.vendor_id = VENDOR_DIGIDESIGN,
-+		.version = SPEC_VERSION,
- 		.model_id = MODEL_CONSOLE,
- 	},
- 	{
- 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
-+			       IEEE1394_MATCH_VERSION |
- 			       IEEE1394_MATCH_MODEL_ID,
- 		.vendor_id = VENDOR_DIGIDESIGN,
-+		.version = SPEC_VERSION,
- 		.model_id = MODEL_RACK,
- 	},
- 	{}
-
+Mimi
 
