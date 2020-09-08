@@ -2,182 +2,176 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980CEC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E87AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED76206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66FF2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:40:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RMq48vfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgIHKj5 (ORCPT
+        id S1729876AbgIHKkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:39:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37308 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729775AbgIHKir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:38:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CB8FDAF3F;
-        Tue,  8 Sep 2020 10:38:16 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 12:38:15 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH] mm/memcg: rename watermark as max_usage
-Message-ID: <20200908103815.GC26850@dhcp22.suse.cz>
-References: <1599560721-68915-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 8 Sep 2020 06:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729719AbgIHKiq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:38:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E253C061573;
+        Tue,  8 Sep 2020 03:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5ISh9u6ihC6dsEdEFWUT5lsWp0yYMA219sfvjogaE8k=; b=RMq48vfEHkq10ewZxKMyV0cJTU
+        d77ECXoAzBMqZ1yIhTkuY5cN6cMbnEBH8jiPxfD9YmPzbhUrJpMvWby2OzIs2NdgJob0ckc1t4fec
+        V+ibArMDnCJEgpQd9gHFKX1H4u+o4ncbUO1ONCh53IyHT7pHg15uySS//p2zEgjML8jxKQMbExswQ
+        8JHGvmr4wnEJrBoKylE/SyaBQ3O5nrksh1fC9SRIV3H/J9y7p0YMcKxMqDbyWaMUKnUdEQjqY63Z0
+        galX/vXXWZ056/5fU3dwLHeI/3QTEPQbpag6X3mvm+JKWgTjJrDB3MVGVU/Ws2BA6CnNzs220DepV
+        g8XJBbEw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFb0L-0006I4-VN; Tue, 08 Sep 2020 10:37:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A9D87305C10;
+        Tue,  8 Sep 2020 12:37:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5D77520240A53; Tue,  8 Sep 2020 12:37:36 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 12:37:36 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
+        paulmck@kernel.org, systemtap@sourceware.org
+Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
+ and make kretprobe lockless
+Message-ID: <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
+References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
+ <20200901190808.GK29142@worktop.programming.kicks-ass.net>
+ <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
+ <20200902070226.GG2674@hirez.programming.kicks-ass.net>
+ <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
+ <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
+ <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
+ <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
+ <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599560721-68915-1-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 08-09-20 18:25:21, Alex Shi wrote:
-> The page_counter's watermark used to show as max_usage_in_bytes in memory
-> cgroup. named as watermark is a kind of misleadking. So, let's rename it
-> as it usage.
+On Thu, Sep 03, 2020 at 10:39:54AM +0900, Masami Hiramatsu wrote:
 
-Is this really necessary? This just adds a code churn for something that
-is highly subjective.
-
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org> 
-> Cc: Johannes Weiner <hannes@cmpxchg.org> 
-> Cc: Michal Hocko <mhocko@kernel.org> 
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com> 
-> Cc: linux-kernel@vger.kernel.org 
-> Cc: linux-mm@kvack.org 
-> Cc: cgroups@vger.kernel.org 
-> ---
->  include/linux/page_counter.h |  6 +++---
->  mm/hugetlb_cgroup.c          |  8 ++++----
->  mm/memcontrol.c              |  4 ++--
->  mm/page_counter.c            | 12 ++++++------
->  4 files changed, 15 insertions(+), 15 deletions(-)
+> > There's a bug, that might make it miss it. I have a patch. I'll send it
+> > shortly.
 > 
-> diff --git a/include/linux/page_counter.h b/include/linux/page_counter.h
-> index 85bd413e784e..813f2da26c36 100644
-> --- a/include/linux/page_counter.h
-> +++ b/include/linux/page_counter.h
-> @@ -25,7 +25,7 @@ struct page_counter {
->  	atomic_long_t children_low_usage;
->  
->  	/* legacy */
-> -	unsigned long watermark;
-> +	unsigned long max_usage;	/* max_usage_in_bytes */
->  	unsigned long failcnt;
->  };
->  
-> @@ -67,9 +67,9 @@ static inline void page_counter_set_high(struct page_counter *counter,
->  int page_counter_memparse(const char *buf, const char *max,
->  			  unsigned long *nr_pages);
->  
-> -static inline void page_counter_reset_watermark(struct page_counter *counter)
-> +static inline void page_counter_reset_max_usage(struct page_counter *counter)
->  {
-> -	counter->watermark = page_counter_read(counter);
-> +	counter->max_usage = page_counter_read(counter);
->  }
->  
->  #endif /* _LINUX_PAGE_COUNTER_H */
-> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-> index 1f87aec9ab5c..c7484f5eb8ef 100644
-> --- a/mm/hugetlb_cgroup.c
-> +++ b/mm/hugetlb_cgroup.c
-> @@ -437,9 +437,9 @@ static u64 hugetlb_cgroup_read_u64(struct cgroup_subsys_state *css,
->  	case RES_RSVD_LIMIT:
->  		return (u64)rsvd_counter->max * PAGE_SIZE;
->  	case RES_MAX_USAGE:
-> -		return (u64)counter->watermark * PAGE_SIZE;
-> +		return (u64)counter->max_usage * PAGE_SIZE;
->  	case RES_RSVD_MAX_USAGE:
-> -		return (u64)rsvd_counter->watermark * PAGE_SIZE;
-> +		return (u64)rsvd_counter->max_usage * PAGE_SIZE;
->  	case RES_FAILCNT:
->  		return counter->failcnt;
->  	case RES_RSVD_FAILCNT:
-> @@ -553,10 +553,10 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
->  
->  	switch (MEMFILE_ATTR(of_cft(of)->private)) {
->  	case RES_MAX_USAGE:
-> -		page_counter_reset_watermark(counter);
-> +		page_counter_reset_max_usage(counter);
->  		break;
->  	case RES_RSVD_MAX_USAGE:
-> -		page_counter_reset_watermark(rsvd_counter);
-> +		page_counter_reset_max_usage(rsvd_counter);
->  		break;
->  	case RES_FAILCNT:
->  		counter->failcnt = 0;
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 8c74f1200261..21b73de53073 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -3559,7 +3559,7 @@ static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
->  	case RES_LIMIT:
->  		return (u64)counter->max * PAGE_SIZE;
->  	case RES_MAX_USAGE:
-> -		return (u64)counter->watermark * PAGE_SIZE;
-> +		return (u64)counter->max_usage * PAGE_SIZE;
->  	case RES_FAILCNT:
->  		return counter->failcnt;
->  	case RES_SOFT_LIMIT:
-> @@ -3839,7 +3839,7 @@ static ssize_t mem_cgroup_reset(struct kernfs_open_file *of, char *buf,
->  
->  	switch (MEMFILE_ATTR(of_cft(of)->private)) {
->  	case RES_MAX_USAGE:
-> -		page_counter_reset_watermark(counter);
-> +		page_counter_reset_max_usage(counter);
->  		break;
->  	case RES_FAILCNT:
->  		counter->failcnt = 0;
-> diff --git a/mm/page_counter.c b/mm/page_counter.c
-> index afe22ad335cc..d88ee074f4a6 100644
-> --- a/mm/page_counter.c
-> +++ b/mm/page_counter.c
-> @@ -75,10 +75,10 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
->  		propagate_protected_usage(c, new);
->  		/*
->  		 * This is indeed racy, but we can live with some
-> -		 * inaccuracy in the watermark.
-> +		 * inaccuracy in the max_usage.
->  		 */
-> -		if (new > READ_ONCE(c->watermark))
-> -			WRITE_ONCE(c->watermark, new);
-> +		if (new > READ_ONCE(c->max_usage))
-> +			WRITE_ONCE(c->max_usage, new);
->  	}
->  }
->  
-> @@ -129,10 +129,10 @@ bool page_counter_try_charge(struct page_counter *counter,
->  		propagate_protected_usage(c, new);
->  		/*
->  		 * Just like with failcnt, we can live with some
-> -		 * inaccuracy in the watermark.
-> +		 * inaccuracy in the max_usage.
->  		 */
-> -		if (new > READ_ONCE(c->watermark))
-> -			WRITE_ONCE(c->watermark, new);
-> +		if (new > READ_ONCE(c->max_usage))
-> +			WRITE_ONCE(c->max_usage, new);
->  	}
->  	return true;
->  
-> -- 
-> 1.8.3.1
+> OK, I've confirmed that the lockdep warns on kretprobe from INT3
+> with your fix.
 
--- 
-Michal Hocko
-SUSE Labs
+I'm now trying and failing to reproduce.... I can't seem to make it use
+int3 today. It seems to want to use ftrace or refuses everything. I'm
+probably doing it wrong.
+
+Could you verify the below actually works? It's on top of the first 16
+patches.
+
+> Of course make it lockless then warning is gone.
+> But even without the lockless patch, this warning can be false-positive
+> because we prohibit nested kprobe call, right?
+
+Yes, because the actual nesting is avoided by kprobe_busy, but lockdep
+can't tell. Lockdep sees a regular lock user and an in-nmi lock user and
+figures that's a bad combination.
+
+
+---
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1241,48 +1241,47 @@ void recycle_rp_inst(struct kretprobe_in
+ }
+ NOKPROBE_SYMBOL(recycle_rp_inst);
+ 
+-void kretprobe_hash_lock(struct task_struct *tsk,
+-			 struct hlist_head **head, unsigned long *flags)
+-__acquires(hlist_lock)
+-{
+-	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
+-	raw_spinlock_t *hlist_lock;
+-
+-	*head = &kretprobe_inst_table[hash];
+-	hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_lock_irqsave(hlist_lock, *flags);
+-}
+-NOKPROBE_SYMBOL(kretprobe_hash_lock);
+-
+ static void kretprobe_table_lock(unsigned long hash,
+ 				 unsigned long *flags)
+ __acquires(hlist_lock)
+ {
+ 	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_lock_irqsave(hlist_lock, *flags);
++	/*
++	 * HACK, due to kprobe_busy we'll never actually recurse, make NMI
++	 * context use a different lock class to avoid it reporting.
++	 */
++	raw_spin_lock_irqsave_nested(hlist_lock, *flags, !!in_nmi());
+ }
+ NOKPROBE_SYMBOL(kretprobe_table_lock);
+ 
+-void kretprobe_hash_unlock(struct task_struct *tsk,
+-			   unsigned long *flags)
++static void kretprobe_table_unlock(unsigned long hash,
++				   unsigned long *flags)
+ __releases(hlist_lock)
+ {
++	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
++	raw_spin_unlock_irqrestore(hlist_lock, *flags);
++}
++NOKPROBE_SYMBOL(kretprobe_table_unlock);
++
++void kretprobe_hash_lock(struct task_struct *tsk,
++			 struct hlist_head **head, unsigned long *flags)
++__acquires(hlist_lock)
++{
+ 	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
+-	raw_spinlock_t *hlist_lock;
+ 
+-	hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_unlock_irqrestore(hlist_lock, *flags);
++	*head = &kretprobe_inst_table[hash];
++	kretprobe_table_lock(hash, flags);
+ }
+-NOKPROBE_SYMBOL(kretprobe_hash_unlock);
++NOKPROBE_SYMBOL(kretprobe_hash_lock);
+ 
+-static void kretprobe_table_unlock(unsigned long hash,
+-				   unsigned long *flags)
++void kretprobe_hash_unlock(struct task_struct *tsk,
++			   unsigned long *flags)
+ __releases(hlist_lock)
+ {
+-	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_unlock_irqrestore(hlist_lock, *flags);
++	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
++	kretprobe_table_unlock(hash, flags);
+ }
+-NOKPROBE_SYMBOL(kretprobe_table_unlock);
++NOKPROBE_SYMBOL(kretprobe_hash_unlock);
+ 
+ struct kprobe kprobe_busy = {
+ 	.addr = (void *) get_kprobe,
