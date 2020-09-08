@@ -2,148 +2,131 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7B8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7436C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116A6206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC8C206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cE8tyE/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731708AbgIHQ3H (ORCPT
+        id S1731979AbgIHQ3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:29:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43854 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731931AbgIHQXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:23:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E81E7AFED;
-        Tue,  8 Sep 2020 12:16:23 +0000 (UTC)
-Message-ID: <49b99d5a87f349bf9ede2a5f737e4f1981a12441.camel@suse.de>
-Subject: Re: [RFC] arm64: mm: Do not use both DMA zones when 30-bit address
- space unavailable
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com, hch@lst.de,
-        linux-rpi-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, robh@kernel.org,
-        Robin Murphy <robin.murphy@arm.com>
-Date:   Tue, 08 Sep 2020 14:15:57 +0200
-In-Reply-To: <20200908111454.GB25591@gaia>
-References: <20200819182434.28196-1-nsaenzjulienne@suse.de>
-         <20200828174338.GK3169@gaia>
-         <1ae30b3bfd97aba56323422baeb5b48b787c7561.camel@suse.de>
-         <20200908111454.GB25591@gaia>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-rb/XBEX16UjId/WsOdIB"
-User-Agent: Evolution 3.36.5 
+        Tue, 8 Sep 2020 12:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731643AbgIHQXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:23:49 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D6FC061573;
+        Tue,  8 Sep 2020 09:23:47 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id v123so4397715qkd.9;
+        Tue, 08 Sep 2020 09:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fG9sh+VJ6ct/M0MnobHjuUiWeXeXy8C/WxdALo1qBnU=;
+        b=cE8tyE/9HSYIG8dk3jsI1IxOkrH/eptnzh4Gvmdc/AbZVFA6bAqu5dG7OZZmqU6x+s
+         uhEaBckRV9fI7izootzbkWI0/Gu7bWIsC6MqvRZE5TaNFrX5VjIbTHQC+QtCS+9bnfgH
+         mWDRlS1vbqKv33sfcSbLJZVY52ns82Zb4XwWKLKm78ai0sTE3lRnZFLYEriGvssZvDOm
+         HbcmgN+ualzlwRwasHwef0u4ab5YywzT8VwK/+uwiTnAH7YuKkJu7060G2eX6yNDF/3e
+         HlPXnSqpoOLlI1BCJ172oG2mcfpscGHHCp8YE53Jxjh+ZfdxNN4mtPvU9HsdBuULEHLt
+         uO3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fG9sh+VJ6ct/M0MnobHjuUiWeXeXy8C/WxdALo1qBnU=;
+        b=GKyOqpWpTfUJiWV50KYDSOy0sUhZrEamDxqDQbBZH53hrcQkQZ1KjopVrsOC6NstVY
+         pNuKDyRmW1u1+LO3HyljxBFSGBXiJxGjXW0EMwPEM3YT11N+oazyoQtXxPa2zl8oGO7C
+         S4/yADN6zRRrcQnCqOiNy2NmyAcKMmOzFKxCG1noWR2Ywu3LgHjlEbBtwXRchonqh+3x
+         6jhVP5NdiqdoQ5ja5sDiQS2qehwua0/zdt1Jd0z+lb6MFfJ/sBHL4NAKF3rsbps35cUo
+         j+qOECTTeSJSQKS1UgXu5pVsJaRB+iryF9zqsfrxohJ7QFF46YjKq6wbO7SG36CH+QDZ
+         srKQ==
+X-Gm-Message-State: AOAM532ktdjSI475jyld5JsMR+H2Btf2XwEsoeaT9ei/lj+y3icwf4wg
+        N1DOkzwuRQHq4evIaiwqjGI=
+X-Google-Smtp-Source: ABdhPJxpfm3QpXHAuIeFeYJLCfoUzaXZ4W3uRDAZdu3BeDGMwUmXEx9JOTLuway4RWSv8KI1muehmw==
+X-Received: by 2002:a37:62c3:: with SMTP id w186mr803137qkb.227.1599582227058;
+        Tue, 08 Sep 2020 09:23:47 -0700 (PDT)
+Received: from tong-desktop.local ([2601:5c0:c100:b9d:393c:836a:3c13:11a6])
+        by smtp.googlemail.com with ESMTPSA id z3sm6186348qkf.92.2020.09.08.09.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 09:23:46 -0700 (PDT)
+From:   Tong Zhang <ztong0001@gmail.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ztong0001@gmail.com
+Subject: [PATCH] e1000e: do not panic on malformed rx_desc
+Date:   Tue,  8 Sep 2020 12:23:30 -0400
+Message-Id: <20200908162330.4681-1-ztong0001@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+length may be corrupted in rx_desc and lead to panic, so check the
+sanity before passing it to skb_put
 
---=-rb/XBEX16UjId/WsOdIB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[  103.840572] skbuff: skb_over_panic: text:ffffffff8f432cc1 len:61585 put:61585 head:ffff88805642b800 data:ffff88805642b840 tail:0xf0d1 end:0x6c0 dev:e
+th0
+[  103.841283] ------------[ cut here ]------------
+[  103.841515] kernel BUG at net/core/skbuff.c:109!
+[  103.841749] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[  103.842063] CPU: 1 PID: 276 Comm: ping Tainted: G        W         5.8.0+ #4
+[  103.842857] RIP: 0010:skb_panic+0xc4/0xc6
+[  103.843022] Code: 89 f0 48 c7 c7 60 f2 3e 90 55 48 8b 74 24 18 4d 89 f9 56 48 8b 54 24 18 4c 89 e6 52 48 8b 44 24 18 4c 89 ea 50 e8 01 c5 2a ff <0f>
+0b 4c 8b 64 24 18 e8 c1 b4 48 ff 48 c7 c1 e0 fc 3e 90 44 89 ee
+[  103.843766] RSP: 0018:ffff88806d109c58 EFLAGS: 00010282
+[  103.843976] RAX: 000000000000008c RBX: ffff8880683407c0 RCX: 0000000000000000
+[  103.844262] RDX: 1ffff1100da24c91 RSI: 0000000000000008 RDI: ffffed100da2137e
+[  103.844548] RBP: ffff88806bdcc000 R08: 000000000000008c R09: ffffed100da25cfb
+[  103.844834] R10: ffff88806d12e7d7 R11: ffffed100da25cfa R12: ffffffff903efd20
+[  103.845123] R13: ffffffff8f432cc1 R14: 000000000000f091 R15: ffff88805642b800
+[  103.845410] FS:  00007efcd06852c0(0000) GS:ffff88806d100000(0000) knlGS:0000000000000000
+[  103.845734] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  103.845966] CR2: 00007efccf94f8dc CR3: 0000000064810000 CR4: 00000000000006e0
+[  103.846254] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  103.846539] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  103.846823] Call Trace:
+[  103.846925]  <IRQ>
+[  103.847013]  ? e1000_clean_rx_irq+0x311/0x630
+[  103.847190]  skb_put.cold+0x2b/0x4d
+[  103.847334]  e1000_clean_rx_irq+0x311/0x630
 
-Hi Catalin, thanks for taking the time.
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+---
+ drivers/net/ethernet/intel/e1000e/netdev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Tue, 2020-09-08 at 12:14 +0100, Catalin Marinas wrote:
-> > Also note the usage of 'zone_dma_bits' in the DMA code, which assumes t=
-hat
-> > ZONE_DMA's physical address space is always smaller than (1 << zone_dma=
-_bits) -
-> > 1.
->=20
-> I think part of those uses are broken. dma_direct_supported() does the
-> right thing and uses the DMA address instead of the physical one. Here
-> __phys_to_dma() subtracts the dma_pfn_offset, which in my above example
-> would be (0b10 << (30 - PAGE_SHIFT)).
->=20
-> dma_direct_optimal_gfp_mask(), OTOH, seems to start ok with a
-> __dma_to_phys() on the dma_limit but it ends up comparing the physical
-> address with the DMA mask. This gives the wrong result on arm64
-> platforms where RAM starts above 4GB and still expect a ZONE_DMA32. It
-> should compare *phys_limit with __dma_to_phys(DMA_BIT_MASK(...)). I
-> guess it ends up bouncing via swiotlb more often.
-
-I'll look into this.
-
-> We assumed such offsets on arm64 since commit d50314a6b070 ("arm64:
-> Create non-empty ZONE_DMA when DRAM starts above 4GB").
->=20
-> > > An alternative (and I think we had a patch at some point) is to make =
-it
-> > > generic and parse the dma-range in the DT to identify the minimum mas=
-k
-> > > and set ZONE_DMA accordingly. But this doesn't solve ACPI, so if Linu=
-x
-> > > can boot with ACPI on RPi4 it would still be broken.
-> >=20
-> > ACPI is being worked on by, among others, Jeremy Linton (one of your co=
-lleagues
-> > I believe).
-> >=20
-> > We could always use sane defaults for ACPI and be smarter with DT. Yet,
-> > implementing this entails translating nested dma-ranges with the only h=
-elp of
-> > libfdt, which isn't trivial (see devices/of/address.c). IIRC RobH said =
-that it
-> > wasn't worth the effort just for a board.
->=20
-> That would have been the ideal, more generic solution. But I agree that
-> it's not worth the effort if the only SoC affected is RPi4.
->=20
-> To summarise, I'd like ZONE_DMA to overlap with ZONE_DMA32 (i.e. expand
-> zone_dma_bits to 32 and drop ZONE_DMA32) for all SoCs other than RPi4.
-> The solutions so far:
->=20
-> 1. Assume that, if RAM starts at 0, we need a zone_dma_bits =3D=3D 30. Th=
-is
->    also assumes that it's only RPi4 in this category or that any such
->    future SoC has a need for 30-bit DMA.
->=20
-> 2. Adjust zone_dma_bits at boot-time only if the SoC is RPi4.
->=20
-> 3. Use the more complex dma-ranges approach to calculate the correct
->    zone_dma_bits as a minimum of all dma masks in the DT.
->=20
-> We can discount (3) as not worth the effort. I'd go with (1) (this
-> patch) if we can guarantee that no current or future SoC has RAM
-> starting at 0 while not needing 30-bit DMA masks. If not, we can go with
-> (2) unless others have a better suggestion.
-
-After a quick check at the devices we have for testing at suse it's clear t=
-hat
-(1) is impossible. So I'll push for solution (2).
-
-Regards,
-Nicolas
-
-
---=-rb/XBEX16UjId/WsOdIB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl9Xdf0ACgkQlfZmHno8
-x/5FBgf/cwDBci7PK4a6ppnpfI3QWSqAQO/qfY2bb5We8JnAwqWAFwxChmY1AfIw
-PtKwHTZW+5BppSEzvrWiQTDg0NEEJmYKp3eoVf7Sn5QpWh8vzz2GHHZv+gbAt7n2
-y8qIboeCtLbZcjHPUu8YxMnUG9z6pdz/wIrG76/HTucaUZkS0gbM8C7N6PljVK0v
-v+ErRhBrUFfocKCC694ZzomuEnzh7wRN3D0JZlKRFXSsgtrV19DcR8hQ/a6vK+q9
-at1pcoOtMwI52WngNqQRmkUpnA+A8bliFukG9ZLx63elITkLjrngd+VHps63uI1W
-6OoxRbUu/ss8iU7QoO1dEup5q5KQyQ==
-=KAwd
------END PGP SIGNATURE-----
-
---=-rb/XBEX16UjId/WsOdIB--
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 664e8ccc88d2..f12bd00b2dbf 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -1047,6 +1047,10 @@ static bool e1000_clean_rx_irq(struct e1000_ring *rx_ring, int *work_done,
+ 			}
+ 			/* else just continue with the old one */
+ 		}
++		/* check length sanity */
++		if (skb->tail + length > skb->end) {
++			length = skb->end - skb->tail;
++		}
+ 		/* end copybreak code */
+ 		skb_put(skb, length);
+ 
+-- 
+2.25.1
 
