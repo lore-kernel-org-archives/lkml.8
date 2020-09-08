@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA6AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B756BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F12DD20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8173820738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586141;
-	bh=gZXMhSZLkLMQmCr5NLeirVitRVQYr117gEwuikXZ4c4=;
+	s=default; t=1599586159;
+	bh=KzG/T3Soqo1YupOU7YWJJa7dc0wh1hTNzVJEFlGPp1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W4GCw+cw5+dJ55sy3aQb8SCQvxBwSvVGukbJbHkF1LsahdYfHZlOr8H8V5WJrq6cx
-	 NMrs83GlO+jh+VtuU9FA2tzVdqZs2SC3GQb2t7FLu/VKeow/afhNc/yvxstryNzUE1
-	 HLp0PXO+RIw0GsISj0KdeoYTAxCxwkpt/VT0tkT0=
+	b=L5GUByKosdULs24ecRz6ImvJLKyLbg05mhbhDgEMwci4Mg8nOCt4FRiodG9S/Gol6
+	 aDApicbifxRDMmgV+AbcKWXJaEdEsowhU6vCrABdIHUXwAvkTH8unGoqNK1Y9LV5jV
+	 MgbOUcc2Tz8kudnYf6GygvszJa8PaWttj+LgSTkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731932AbgIHR26 (ORCPT
+        id S1731785AbgIHR3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731711AbgIHQQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:16:20 -0400
+        id S1730655AbgIHQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:16:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA1DA24811;
-        Tue,  8 Sep 2020 15:43:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CACC524833;
+        Tue,  8 Sep 2020 15:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579809;
-        bh=gZXMhSZLkLMQmCr5NLeirVitRVQYr117gEwuikXZ4c4=;
+        s=default; t=1599579870;
+        bh=KzG/T3Soqo1YupOU7YWJJa7dc0wh1hTNzVJEFlGPp1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FrfaX/OE/mMt92svTtZFM1fKB4vet2ZLO52GRe5ZQjXCYW6bid+kQiU5mK+C0zves
-         yNLe2DJereLmaZnNgtwd5cZfsY5n/pLMRTVNzA0aw7GU1CuTVToN/ILayRn5w/kqvJ
-         LFql60TfS/8VdrKuMomJOXkOYUEeeILeZdUHcxg8=
+        b=MW7d5q0R/TEYJpu+z4TfjhSx/uVsfUamiKjVaO5n14TOLeUE4RcVBWrChCsqCZqV7
+         DWVA0hMCjjG5E3Tj3qjA2m0J2zzY2Qu3Q3h6DRlPnOszQZR1CHav0wyOLU6+tEoQt1
+         TPd/ZwDsIAiD87c2RXD6Tk95iIAq0pfMRdT/csZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/129] net: ethernet: ti: cpsw: fix clean up of vlan mc entries for host port
-Date:   Tue,  8 Sep 2020 17:24:42 +0200
-Message-Id: <20200908152231.729986772@linuxfoundation.org>
+        stable@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 066/129] x86, fakenuma: Fix invalid starting node ID
+Date:   Tue,  8 Sep 2020 17:25:07 +0200
+Message-Id: <20200908152232.993279347@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,38 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
+From: Huang Ying <ying.huang@intel.com>
 
-[ Upstream commit 99d469fc64d06f0c81c0fe2a1c01645a67e0cbf0 ]
+[ Upstream commit ccae0f36d500aef727f98acd8d0601e6b262a513 ]
 
-To flush the vid + mc entries from ALE, which is required when a VLAN
-interface is removed, driver needs to call cpsw_ale_flush_multicast()
-with ALE_PORT_HOST for port mask as these entries are added only for
-host port. Without this, these entries remain in the ALE table even
-after removing the VLAN interface. cpsw_ale_flush_multicast() calls
-cpsw_ale_flush_mcast which expects a port mask to do the job.
+Commit:
 
-Fixes: 15180eca569b ("net: ethernet: ti: cpsw: fix vlan mcast")
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
+
+uses "-1" as the starting node ID, which causes the strange kernel log as
+follows, when "numa=fake=32G" is added to the kernel command line:
+
+    Faking node -1 at [mem 0x0000000000000000-0x0000000893ffffff] (35136MB)
+    Faking node 0 at [mem 0x0000001840000000-0x000000203fffffff] (32768MB)
+    Faking node 1 at [mem 0x0000000894000000-0x000000183fffffff] (64192MB)
+    Faking node 2 at [mem 0x0000002040000000-0x000000283fffffff] (32768MB)
+    Faking node 3 at [mem 0x0000002840000000-0x000000303fffffff] (32768MB)
+
+And finally the kernel crashes:
+
+    BUG: Bad page state in process swapper  pfn:00011
+    page:(____ptrval____) refcount:0 mapcount:1 mapping:(____ptrval____) index:0x55cd7e44b270 pfn:0x11
+    failed to read mapping contents, not a valid kernel address?
+    flags: 0x5(locked|uptodate)
+    raw: 0000000000000005 000055cd7e44af30 000055cd7e44af50 0000000100000006
+    raw: 000055cd7e44b270 000055cd7e44b290 0000000000000000 000055cd7e44b510
+    page dumped because: page still charged to cgroup
+    page->mem_cgroup:000055cd7e44b510
+    Modules linked in:
+    CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
+    Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+    Call Trace:
+     dump_stack+0x57/0x80
+     bad_page.cold+0x63/0x94
+     __free_pages_ok+0x33f/0x360
+     memblock_free_all+0x127/0x195
+     mem_init+0x23/0x1f5
+     start_kernel+0x219/0x4f5
+     secondary_startup_64+0xb6/0xc0
+
+Fix this bug via using 0 as the starting node ID.  This restores the
+original behavior before cc9aec03e58f.
+
+[ mingo: Massaged the changelog. ]
+
+Fixes: cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200904061047.612950-1-ying.huang@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 2 +-
+ arch/x86/mm/numa_emulation.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 39df8c8feb6ce..e7b4d93e3f288 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2209,7 +2209,7 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
- 				  HOST_PORT_NUM, ALE_VLAN, vid);
- 	ret |= cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
- 				  0, ALE_VLAN, vid);
--	ret |= cpsw_ale_flush_multicast(cpsw->ale, 0, vid);
-+	ret |= cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
- err:
- 	pm_runtime_put(cpsw->dev);
- 	return ret;
+diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
+index abffa0be80da1..87282258d5bea 100644
+--- a/arch/x86/mm/numa_emulation.c
++++ b/arch/x86/mm/numa_emulation.c
+@@ -321,7 +321,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
+ 					      u64 addr, u64 max_addr, u64 size)
+ {
+ 	return split_nodes_size_interleave_uniform(ei, pi, addr, max_addr, size,
+-			0, NULL, NUMA_NO_NODE);
++			0, NULL, 0);
+ }
+ 
+ int __init setup_emu2phys_nid(int *dfl_phys_nid)
 -- 
 2.25.1
 
