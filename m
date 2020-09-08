@@ -3,823 +3,232 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA1AC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A584C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF1A215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5F521D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:47:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fBtJVR0h"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="fbf0AvO3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgIHIq6 (ORCPT
+        id S1730175AbgIHIrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730175AbgIHIqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:46:47 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA62C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:46:46 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a17so18171658wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WsjbvmmZKMC8MceZdsV0yPxKISX87E/DDuYAfGmxSEY=;
-        b=fBtJVR0hdGCRQN6pQejVwyqvj4WARlY7n3kR5Jq6DLPNpw/t/j7MeChvHRdzRZDPBs
-         P3CS2hNHu4yzXcjzDQYEKra3JyH7GWLo8t1YJgPVWDWBVZM8fKghLGZYxNa5weIiCmC2
-         dHQD21mCUbCQIUpsW1v3omqZ+25OJkI/yQbMw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=WsjbvmmZKMC8MceZdsV0yPxKISX87E/DDuYAfGmxSEY=;
-        b=jAphjSWBF70Rd26oNfZK2BiMA7LY5RmyekeJlnCDDoeGirluo4+A8Noqx04WeXr8Ng
-         oeo/GNCqWd6YWPH9/7Nvu8fDjFaKKVX4sX4n/oH2qOZStpenLR4WuygX001ejJTyqrZT
-         /An0Nor758v4MLzbRheYCmvX4Cb8dG5BXFc5YIO2zI3DYwa9601C2kHbpjFedRmg+sEn
-         MJYpLODbi8FLmAM9W4ChQHRelxmyS3NhT59t+nMMDVwEt8La5IfJMF3tYR2juLCYzJIf
-         cpMR+H6G8N2FZA2G0oK9HaQT2eohKiDxPTnJT9qa01juRem2Fu9luXXeZAnPpC3S0T0W
-         QGhg==
-X-Gm-Message-State: AOAM530/OIziwlUswcGEL5aWT1V8P8zEjqhM/vOVHQfGEuoPiKh2DSab
-        Zvyv7vIU/7vzjsNLYiImAetKxg==
-X-Google-Smtp-Source: ABdhPJwlRwBcD/dkDnmeNt/pmsZ/RICLEMEd9+YvOB934Q64ggiWpJyKdIPX011RteQqsUvs1SSr2Q==
-X-Received: by 2002:adf:81e6:: with SMTP id 93mr25732190wra.412.1599554804650;
-        Tue, 08 Sep 2020 01:46:44 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id f19sm31169981wmh.44.2020.09.08.01.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 01:46:43 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 10:46:42 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] drm/meson: add support for MIPI-DSI transceiver
-Message-ID: <20200908084642.GG2352366@phenom.ffwll.local>
-Mail-Followup-To: Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200907081825.1654-1-narmstrong@baylibre.com>
- <20200907081825.1654-7-narmstrong@baylibre.com>
- <20200907084351.GV2352366@phenom.ffwll.local>
- <20200907084423.GW2352366@phenom.ffwll.local>
- <cd760a71-217f-40cf-3470-b131a6853cc1@baylibre.com>
- <20200907180315.GY2352366@phenom.ffwll.local>
- <fd8070dc-8e93-2f66-1c11-d008374d6881@baylibre.com>
+        Tue, 8 Sep 2020 04:47:40 -0400
+Received: from mga05.intel.com ([192.55.52.43]:29892 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729662AbgIHIri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 04:47:38 -0400
+IronPort-SDR: /ORe5YLbKLaCDWJrWzZ1xCbcKkLWHMaQ2pnLysh++upYaDaPu9IzBhI4I8YgUi9dnlmTJNj1c3
+ XFUM/S+LVK3w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="242910828"
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="242910828"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 01:47:38 -0700
+IronPort-SDR: vE09PPBJDzahLqkit5OAflGGoMblk9vNYynS/5AcPR2kcmyPDsKs60G1JWpaInOgpf7lP3vKsD
+ 6qea05l238zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="317119238"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga002.jf.intel.com with ESMTP; 08 Sep 2020 01:47:37 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Sep 2020 01:47:37 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 8 Sep 2020 01:47:37 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Tue, 8 Sep 2020 01:47:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g64UXxc3WxKkQCV9ix2S9GRjgaMY/p9lLp+dQGw6KR4Xa91yjJIDYeNoh0hK6Il1gmY88ejZFIkiEIO18kDWxkNqiDidzQhxb+8GmMVGY9j1kuDBPs7Ru7X6Icpwk7YXqi/aUhM7TpBVOwBairXO61KVkiMHA6RLBj1avbMdHvbWx91hnriwi4vKl5nslqyYQ/ghgLD4bPyFtK2A24gSa8QQOlWk5Nr9gdDlCmGJ8Zx9HuGhHigNpIDz8pI1SWGtxdAP9xFp9O90OEi2+ramlTFQiFIXYOcXXJiUqFAMfMhoJSRCO4DhCKMkjc0qs86JcHDSWYrM/zUxQS3MIxZD4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cwvz12wsEJ5pPOAVkqyZ/83eTDtaSXYPqjq9KwPpAyw=;
+ b=S8D2Qvbc/Mqh9rq81NVFGNblW7G7EKby1vvYcBIjsLDSR1SS1i/pV8qfaeqvdTYXR5W9AVn76Hz2gdMw5GzjQ+7LjQelKXLR3rWALg/qNJr8bSPV3lTkRk3gVv7u4Cf8QGPvDUHTrU8YAExKLcO19e5fIvQdMZM4ee5ElGGHHCq9IYW4B++rVNwUMfSuZ9PWLJuuN1xrL0xKyBEVYXPXHmakhgqyTPg1RJxnnHv9VDiYz+I3DYbM4vHQFWJ/6/pM4lMfGetVfGFoD8cCKjeVPZxXzUoFuh6u6A8TXXKi4bFSRYt0ao1eknwiutbMb/2Ymb9cN9Ljyk9vfI1xKHg2nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cwvz12wsEJ5pPOAVkqyZ/83eTDtaSXYPqjq9KwPpAyw=;
+ b=fbf0AvO3S1PbbSdqwtMKw53gvRLfQ3Dy3/Jlhh1uKQo+LgkZGa2I06IhmrkSU1e3sn84ZxaA3cmM9rPib6CTiuSzM2gR7pXeHSoEr/X0tp5wq0KCnpmd7D5jg7Khhnvl80Z8aZXWb+vtsj8lzPC75502U84TOGptDLrP3ZSXGw4=
+Received: from DM6PR11MB3721.namprd11.prod.outlook.com (2603:10b6:5:142::10)
+ by DM6PR11MB3548.namprd11.prod.outlook.com (2603:10b6:5:143::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Tue, 8 Sep
+ 2020 08:47:30 +0000
+Received: from DM6PR11MB3721.namprd11.prod.outlook.com
+ ([fe80::7883:72bf:ad85:5166]) by DM6PR11MB3721.namprd11.prod.outlook.com
+ ([fe80::7883:72bf:ad85:5166%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 08:47:30 +0000
+From:   "Wan Mohamad, Wan Ahmad Zainie" 
+        <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     "kishon@ti.com" <kishon@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "vadivel.muruganx.ramuthevar@linux.intel.com" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        "eswara.kota@linux.intel.com" <eswara.kota@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>
+Subject: RE: [PATCH v8 1/3] phy: intel: Rename phy-intel to phy-intel-lgm
+Thread-Topic: [PATCH v8 1/3] phy: intel: Rename phy-intel to phy-intel-lgm
+Thread-Index: AQHWgBqEjgxb/tv0dEi6tzrcohnkZKlTbo0AgAsKcnA=
+Date:   Tue, 8 Sep 2020 08:47:30 +0000
+Message-ID: <DM6PR11MB372169AD9B77DF5237763364DD290@DM6PR11MB3721.namprd11.prod.outlook.com>
+References: <20200901044201.20978-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200901044201.20978-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200901081040.GN1891694@smile.fi.intel.com>
+In-Reply-To: <20200901081040.GN1891694@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [14.1.225.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 18e78e0f-8fc8-4d8c-c298-08d853d3d242
+x-ms-traffictypediagnostic: DM6PR11MB3548:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB35480C09B0C71F815B1DA37EDD290@DM6PR11MB3548.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5fzOw8ZT+roP+nR+kU7npObFRMKrk0n6oxoVDGHtkaKdAJ5U7SRgGwgSSuWI/QgNNUVS9R0vk/jrZtXvbP2tKuF/UytOzYGwwNCf01IoFNJTFE1fLt0MPu7j2ruvJNuxiwFfBh5Kbjuua31+HloPvdtAQGoQKbuMKp4yHvwCHBkNswGZX8lWYMxeKqwnjCpMGlRD0tK5ZcsDcIII6/UNf/Cvc9gSsyczLPZ6bxqA114kyf+syuFOU1nzQjDgvzqry6UoG1Lx63rgLrf1b6Q/sJRkMSMULeua0pc3NVbKyyAIQEIjNj8gPl59Xaz3tncH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3721.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(4326008)(66556008)(64756008)(6916009)(33656002)(71200400001)(7696005)(186003)(52536014)(478600001)(76116006)(86362001)(66946007)(8936002)(66446008)(66476007)(54906003)(53546011)(2906002)(8676002)(55016002)(83380400001)(26005)(6506007)(5660300002)(316002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: LvzV8tkJgsW3yTPOAq9F3XmA43W16EzT4d7YqzqTT98uh8x0gxy/l+7SkwWYfgyGLXCBkkY8ot5fjlpRw2DdOdBS5uetFaJWJpATs4xQcr31r0qaoKbeklVJHPg+EaQwD9GD61oWy0w4Y/D/dz5F7cqYNFQzYrBiTCSpibaFQWyo1d5UPYmL5JRKlhulqtCJjUK6LQMwqV+0DSRc0gw6dgXtVgk7Snv0Q0lyHs+Gq2tsvmYhpzo01YFNmBtltGfOJEEyA09ZgKhsEKxW2hRyFgz12zKQrXXfyKpTKex7cXl1fgN9ORWuh865v4yPc1vSSzA4Njo0XpbAnssgSE7c6njPUjmQBLY8vqk+ILiTCWckgSDr+fnJGMKzUw3fdQxged2m2D9EzuKf0Af9bug3d/E2cfuTVtuqYf/T6mGQuBOeBJlPudgWKlfF2EtlVFLMGcYDbZH2SmzjfB43Nxk3Tt3IlsImFZUc8X5RccJqoO8B+qFdo9jeqlhkvRdKVjA0F2SbpwfY3jb/VJs2oGdsFAidHuZq1EItOTd3lUkRRJQz3rinmTAuRI72RtICtcIzQ6qr2Eg6QTwJTMbvhwJWfUtZN+NNm1UmxG6BFjSKD62kNc4oy+qtThn/oG5PH52p7B6IIIZrQFoqMwXCQt0EzA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fd8070dc-8e93-2f66-1c11-d008374d6881@baylibre.com>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3721.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18e78e0f-8fc8-4d8c-c298-08d853d3d242
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 08:47:30.1761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ujPaZ8ICficM6xH/pfnjKBxtYmn5D275fIjsGZXyB6lwoxMO+vFbS9gUCrYmgKdSI3E4cwF7BL5OaifQhXJA+O48MgDAKqHHQ7KEm312rsxdqHPOLNhB8TPjjjH3zDhE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3548
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:06:03AM +0200, Neil Armstrong wrote:
-> Hi,
-> 
-> On 07/09/2020 20:03, Daniel Vetter wrote:
-> > On Mon, Sep 07, 2020 at 11:03:29AM +0200, Neil Armstrong wrote:
-> >> On 07/09/2020 10:44, Daniel Vetter wrote:
-> >>> On Mon, Sep 07, 2020 at 10:43:51AM +0200, Daniel Vetter wrote:
-> >>>> On Mon, Sep 07, 2020 at 10:18:25AM +0200, Neil Armstrong wrote:
-> >>>>> The Amlogic AXg SoCs embeds a Synopsys DW-MIPI-DSI transceiver (ver 1.21a), with a custom
-> >>>>> glue managing the IP resets, clock and data input similar to the DW-HDMI Glue on other
-> >>>>> Amlogic SoCs.
-> >>>>>
-> >>>>> This adds support for the Glue managing the transceiver, mimicing the init flow provided
-> >>>>> by Amlogic to setup the ENCl encoder, the glue, the transceiver, the digital D-PHY and the
-> >>>>> Analog PHY in the proper way.
-> >>>>>
-> >>>>> The DW-MIPI-DSI transceiver + D-PHY are directly clocked by the VCLK2 clock, which pixel clock
-> >>>>> is derived and feeds the ENCL encoder and the VIU pixel reader.
-> >>>>>
-> >>>>> An optional "MEAS" clock can be enabled to measure the delay between each vsync feeding the
-> >>>>> DW-MIPI-DSI transceiver.
-> >>>>>
-> >>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> >>>>
-> >>>> More dw-hdmi drivers which aren't bridges but components, and the thing is
-> >>>> still midlayer-y as heck :-/
-> >>>
-> >>> *dw-dsi, but really they both work the same way and should both be fixed
-> >>> ...
-> >>
-> >> They are bridges but since they have platform-dependent code due to theirs's generic IP
-> >> nature, they need to be intanciated by components to sync with the platform code.
-> > 
-> > Yeah that's how it currently works, but there's not much reason why it
-> > needs to work like that. That platform glue code can also be put behind
-> > the drm_bridge abstraction, and we could use the normal dt based bridge
-> > lookup like for everything else.
-> > 
-> > Afaiui the only reason dw-* bridge drivers work like that is because for
-> > historical reasons we only had component.c at first, and none of the more
-> > fancy dynamic bridge lookup. So would be really good to switch this all
-> > over to a proper&clean bridge abstraction, and not leak everything around.
-> 
-> Does it mean we should avoit using components, right ?
-
-Yup, at least when there's an established specific mechanism to handle
-cross-driver interactions/EPROBE_DEFER.
-
-So if you want a drm_panel or drm_bridge or a clock or i2c or anything
-else standardized like that, no component.c please. That's just for the
-driver-specific glue when you have entirely IP-specific way of building up
-a driver from components, which will never be reused outside of that
-overall driver.
-
-Hence why dw-* using components is rather uncool.
- 
-> > I've typed up what I think should be the way forward a few times already,
-> > but thus far not even the todo.rst entry materialized:
-> > 
-> > https://lore.kernel.org/dri-devel/20200430135841.GE10381@phenom.ffwll.local/
-> > 
-> > If everyone is always about "not in my patch series" it'll never happen.
-> 
-> Today, the dw-mipi-dsi and dw-mipi-hdmi has mandatory callbacks to implement
-> vendor specific features, like :
-> - hdmi/dsi phy handling when mixed into the glue/custom/synopsys but with platform specific values
-> - platform specific mode validation
-> - hpd setup => could use laurent's work here with no_connector, but how do we handle rxsense ???
-> - dsi timings/lane mbps ? these are platform phy specific
-> 
-> For amlogic, I can split the "component" code handling venc/vclk into a primary bridge and add a
-> secondary driver only handling the glue around dw-mipi-dsi/dw-mipi-hdmi, would that be a good start ?
-
-I think what we should do here:
-
-- type up todo.rst with the overall structure we want to aim for, i.e.
-  where is the code, who sets up what, how are the bridges bound into the
-  overall driver.
-
-- demidlayer dw-* enough so that the callbacks are gone, and it becomes
-  more a toolbox/library for building a dw-* driver. Maybe we're there
-  already.
-
-- All new drivers then need to use the toolbox and have everything behind
-  a drm_bridge driver in drm/bridge/, with just default binding exposed to
-  drivers, no EXPORT_SYMBOL at all. Also no exported symbols used, this
-  should all be directly linked into the dw-*.ko imo and treated as
-  internals.
-
-- We might need to split the header files to make that clean enough.
-
-- Once all existing dw-* users are converted, we ditch the EXPORT_SYMBOL
-  stuff completely (since I expect we'll just have one overall dw-dsi.ko
-  module with all bridge driver variants).
-
-Cheers, Daniel
 
 
+> -----Original Message-----
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Tuesday, September 1, 2020 4:11 PM
+> To: Wan Mohamad, Wan Ahmad Zainie
+> <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Cc: kishon@ti.com; vkoul@kernel.org; robh+dt@kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> vadivel.muruganx.ramuthevar@linux.intel.com;
+> eswara.kota@linux.intel.com; Raja Subramanian, Lakshmi Bai
+> <lakshmi.bai.raja.subramanian@intel.com>
+> Subject: Re: [PATCH v8 1/3] phy: intel: Rename phy-intel to phy-intel-lgm
+>=20
+> On Tue, Sep 01, 2020 at 12:41:59PM +0800, Wan Ahmad Zainie wrote:
+> > Rename phy-intel-{combo,emmc}.c to phy-intel-lgm-{combo,emmc}.c to
+> > make drivers/phy/intel directory more generic for future use.
+> >
+> > Signed-off-by: Wan Ahmad Zainie
+> > <wan.ahmad.zainie.wan.mohamad@intel.com>
+>=20
+> > Reviewed-by: Ramuthevar Vadivel Murugan
+> > <vadivel.muruganx.ramuthevar@linux.intel.com>
+>=20
+> This shall be one line.
 
-> 
-> Neil
-> 
-> > 
-> > Cheers, Daniel
-> > 
-> > 
-> >>
-> >> Neil
-> >>
-> >>>
-> >>>>
-> >>>> Can we try to fix this? There's a ton of this going on, and the more we
-> >>>> add the old fashioned way the harder this gets to fix up for real.
-> >>>> -Daniel
-> >>>>
-> >>>>> ---
-> >>>>>  drivers/gpu/drm/meson/Kconfig             |   7 +
-> >>>>>  drivers/gpu/drm/meson/Makefile            |   1 +
-> >>>>>  drivers/gpu/drm/meson/meson_dw_mipi_dsi.c | 562 ++++++++++++++++++++++
-> >>>>>  3 files changed, 570 insertions(+)
-> >>>>>  create mode 100644 drivers/gpu/drm/meson/meson_dw_mipi_dsi.c
-> >>>>>
-> >>>>> diff --git a/drivers/gpu/drm/meson/Kconfig b/drivers/gpu/drm/meson/Kconfig
-> >>>>> index 9f9281dd49f8..385f6f23839b 100644
-> >>>>> --- a/drivers/gpu/drm/meson/Kconfig
-> >>>>> +++ b/drivers/gpu/drm/meson/Kconfig
-> >>>>> @@ -16,3 +16,10 @@ config DRM_MESON_DW_HDMI
-> >>>>>  	default y if DRM_MESON
-> >>>>>  	select DRM_DW_HDMI
-> >>>>>  	imply DRM_DW_HDMI_I2S_AUDIO
-> >>>>> +
-> >>>>> +config DRM_MESON_DW_MIPI_DSI
-> >>>>> +	tristate "MIPI DSI Synopsys Controller support for Amlogic Meson Display"
-> >>>>> +	depends on DRM_MESON
-> >>>>> +	default y if DRM_MESON
-> >>>>> +	select DRM_DW_MIPI_DSI
-> >>>>> +	select GENERIC_PHY_MIPI_DPHY
-> >>>>> diff --git a/drivers/gpu/drm/meson/Makefile b/drivers/gpu/drm/meson/Makefile
-> >>>>> index 28a519cdf66b..2cc870e91182 100644
-> >>>>> --- a/drivers/gpu/drm/meson/Makefile
-> >>>>> +++ b/drivers/gpu/drm/meson/Makefile
-> >>>>> @@ -5,3 +5,4 @@ meson-drm-y += meson_rdma.o meson_osd_afbcd.o
-> >>>>>  
-> >>>>>  obj-$(CONFIG_DRM_MESON) += meson-drm.o
-> >>>>>  obj-$(CONFIG_DRM_MESON_DW_HDMI) += meson_dw_hdmi.o
-> >>>>> +obj-$(CONFIG_DRM_MESON_DW_MIPI_DSI) += meson_dw_mipi_dsi.o
-> >>>>> diff --git a/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c b/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..bbe1294fce7c
-> >>>>> --- /dev/null
-> >>>>> +++ b/drivers/gpu/drm/meson/meson_dw_mipi_dsi.c
-> >>>>> @@ -0,0 +1,562 @@
-> >>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
-> >>>>> +/*
-> >>>>> + * Copyright (C) 2016 BayLibre, SAS
-> >>>>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
-> >>>>> + * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
-> >>>>> + */
-> >>>>> +
-> >>>>> +#include <linux/clk.h>
-> >>>>> +#include <linux/component.h>
-> >>>>> +#include <linux/kernel.h>
-> >>>>> +#include <linux/module.h>
-> >>>>> +#include <linux/of_device.h>
-> >>>>> +#include <linux/of_graph.h>
-> >>>>> +#include <linux/reset.h>
-> >>>>> +#include <linux/phy/phy.h>
-> >>>>> +
-> >>>>> +#include <video/mipi_display.h>
-> >>>>> +
-> >>>>> +#include <drm/bridge/dw_mipi_dsi.h>
-> >>>>> +#include <drm/drm_mipi_dsi.h>
-> >>>>> +
-> >>>>> +#include <drm/drm_atomic_helper.h>
-> >>>>> +#include <drm/drm_device.h>
-> >>>>> +#include <drm/drm_probe_helper.h>
-> >>>>> +#include <drm/drm_print.h>
-> >>>>> +
-> >>>>> +#include "meson_drv.h"
-> >>>>> +#include "meson_dw_mipi_dsi.h"
-> >>>>> +#include "meson_registers.h"
-> >>>>> +#include "meson_venc.h"
-> >>>>> +
-> >>>>> +#define DRIVER_NAME "meson-dw-mipi-dsi"
-> >>>>> +#define DRIVER_DESC "Amlogic Meson MIPI-DSI DRM driver"
-> >>>>> +
-> >>>>> +/*  MIPI DSI/VENC Color Format Definitions */
-> >>>>> +#define MIPI_DSI_VENC_COLOR_30B   0x0
-> >>>>> +#define MIPI_DSI_VENC_COLOR_24B   0x1
-> >>>>> +#define MIPI_DSI_VENC_COLOR_18B   0x2
-> >>>>> +#define MIPI_DSI_VENC_COLOR_16B   0x3
-> >>>>> +
-> >>>>> +#define COLOR_16BIT_CFG_1         0x0
-> >>>>> +#define COLOR_16BIT_CFG_2         0x1
-> >>>>> +#define COLOR_16BIT_CFG_3         0x2
-> >>>>> +#define COLOR_18BIT_CFG_1         0x3
-> >>>>> +#define COLOR_18BIT_CFG_2         0x4
-> >>>>> +#define COLOR_24BIT               0x5
-> >>>>> +#define COLOR_20BIT_LOOSE         0x6
-> >>>>> +#define COLOR_24_BIT_YCBCR        0x7
-> >>>>> +#define COLOR_16BIT_YCBCR         0x8
-> >>>>> +#define COLOR_30BIT               0x9
-> >>>>> +#define COLOR_36BIT               0xa
-> >>>>> +#define COLOR_12BIT               0xb
-> >>>>> +#define COLOR_RGB_111             0xc
-> >>>>> +#define COLOR_RGB_332             0xd
-> >>>>> +#define COLOR_RGB_444             0xe
-> >>>>> +
-> >>>>> +/*  MIPI DSI Relative REGISTERs Definitions */
-> >>>>> +/* For MIPI_DSI_TOP_CNTL */
-> >>>>> +#define BIT_DPI_COLOR_MODE        20
-> >>>>> +#define BIT_IN_COLOR_MODE         16
-> >>>>> +#define BIT_CHROMA_SUBSAMPLE      14
-> >>>>> +#define BIT_COMP2_SEL             12
-> >>>>> +#define BIT_COMP1_SEL             10
-> >>>>> +#define BIT_COMP0_SEL              8
-> >>>>> +#define BIT_DE_POL                 6
-> >>>>> +#define BIT_HSYNC_POL              5
-> >>>>> +#define BIT_VSYNC_POL              4
-> >>>>> +#define BIT_DPICOLORM              3
-> >>>>> +#define BIT_DPISHUTDN              2
-> >>>>> +#define BIT_EDPITE_INTR_PULSE      1
-> >>>>> +#define BIT_ERR_INTR_PULSE         0
-> >>>>> +
-> >>>>> +/* HHI Registers */
-> >>>>> +#define HHI_VIID_CLK_DIV	0x128 /* 0x4a offset in data sheet */
-> >>>>> +#define VCLK2_DIV_MASK		0xff
-> >>>>> +#define VCLK2_DIV_EN		BIT(16)
-> >>>>> +#define VCLK2_DIV_RESET		BIT(17)
-> >>>>> +#define CTS_ENCL_SEL_MASK	(0xf << 12)
-> >>>>> +#define CTS_ENCL_SEL_SHIFT	12
-> >>>>> +#define HHI_VIID_CLK_CNTL	0x12c /* 0x4b offset in data sheet */
-> >>>>> +#define VCLK2_EN		BIT(19)
-> >>>>> +#define VCLK2_SEL_MASK		(0x7 << 16)
-> >>>>> +#define VCLK2_SEL_SHIFT		16
-> >>>>> +#define VCLK2_SOFT_RESET	BIT(15)
-> >>>>> +#define VCLK2_DIV1_EN		BIT(0)
-> >>>>> +#define HHI_VID_CLK_CNTL2	0x194 /* 0x65 offset in data sheet */
-> >>>>> +#define CTS_ENCL_EN		BIT(3)
-> >>>>> +
-> >>>>> +/**
-> >>>>> + * DOC: MIPI DSI
-> >>>>> + *
-> >>>>> + */
-> >>>>> +
-> >>>>> +struct meson_dw_mipi_dsi {
-> >>>>> +	struct drm_encoder encoder;
-> >>>>> +	struct meson_drm *priv;
-> >>>>> +	struct device *dev;
-> >>>>> +	void __iomem *base;
-> >>>>> +	struct phy *phy;
-> >>>>> +	union phy_configure_opts phy_opts;
-> >>>>> +	struct dw_mipi_dsi *dmd;
-> >>>>> +	struct dw_mipi_dsi_plat_data pdata;
-> >>>>> +	struct mipi_dsi_device *dsi_device;
-> >>>>> +	unsigned long mode_flags;
-> >>>>> +	struct clk *px_clk;
-> >>>>> +};
-> >>>>> +#define encoder_to_meson_dw_mipi_dsi(x) \
-> >>>>> +	container_of(x, struct meson_dw_mipi_dsi, encoder)
-> >>>>> +
-> >>>>> +static void dw_mipi_dsi_set_vclk(struct meson_dw_mipi_dsi *mipi_dsi,
-> >>>>> +				 struct drm_display_mode *mode)
-> >>>>> +{
-> >>>>> +	struct meson_drm *priv = mipi_dsi->priv;
-> >>>>> +	unsigned int vclk2_div;
-> >>>>> +	unsigned int pll_rate;
-> >>>>> +	int ret;
-> >>>>> +
-> >>>>> +	pll_rate = mipi_dsi->phy_opts.mipi_dphy.hs_clk_rate;
-> >>>>> +	vclk2_div = pll_rate / (mode->clock * 1000);
-> >>>>> +
-> >>>>> +	ret = clk_set_rate(mipi_dsi->px_clk, pll_rate);
-> >>>>> +	if (ret) {
-> >>>>> +		pr_err("Failed to set DSI PLL rate %lu\n",
-> >>>>> +		       mipi_dsi->phy_opts.mipi_dphy.hs_clk_rate);
-> >>>>> +
-> >>>>> +		return;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	/* Disable VCLK2 */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_CNTL, VCLK2_EN, 0);
-> >>>>> +
-> >>>>> +	/* Setup the VCLK2 divider value */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_DIV,
-> >>>>> +				VCLK2_DIV_MASK, (vclk2_div - 1));
-> >>>>> +
-> >>>>> +	/* select gp0 for vclk2 */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_CNTL,
-> >>>>> +				VCLK2_SEL_MASK, (0 << VCLK2_SEL_SHIFT));
-> >>>>> +
-> >>>>> +	/* enable vclk2 gate */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_CNTL, VCLK2_EN, VCLK2_EN);
-> >>>>> +
-> >>>>> +	/* select vclk2_div1 for encl */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_DIV,
-> >>>>> +				CTS_ENCL_SEL_MASK, (8 << CTS_ENCL_SEL_SHIFT));
-> >>>>> +
-> >>>>> +	/* release vclk2_div_reset and enable vclk2_div */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_DIV,
-> >>>>> +				VCLK2_DIV_EN | VCLK2_DIV_RESET, VCLK2_DIV_EN);
-> >>>>> +
-> >>>>> +	/* enable vclk2_div1 gate */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_CNTL,
-> >>>>> +				VCLK2_DIV1_EN, VCLK2_DIV1_EN);
-> >>>>> +
-> >>>>> +	/* reset vclk2 */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_CNTL,
-> >>>>> +				VCLK2_SOFT_RESET, VCLK2_SOFT_RESET);
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VIID_CLK_CNTL,
-> >>>>> +				VCLK2_SOFT_RESET, 0);
-> >>>>> +
-> >>>>> +	/* enable encl_clk */
-> >>>>> +	regmap_update_bits(priv->hhi, HHI_VID_CLK_CNTL2,
-> >>>>> +				CTS_ENCL_EN, CTS_ENCL_EN);
-> >>>>> +
-> >>>>> +	usleep_range(10000, 11000);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int dw_mipi_dsi_phy_init(void *priv_data)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = priv_data;
-> >>>>> +	struct meson_drm *priv = mipi_dsi->priv;
-> >>>>> +
-> >>>>> +
-> >>>>> +	phy_power_on(mipi_dsi->phy);
-> >>>>> +
-> >>>>> +	writel_relaxed(1, priv->io_base + _REG(ENCL_VIDEO_EN));
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void dw_mipi_dsi_phy_power_off(void *priv_data)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = priv_data;
-> >>>>> +
-> >>>>> +	phy_power_off(mipi_dsi->phy);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int
-> >>>>> +dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
-> >>>>> +			  unsigned long mode_flags, u32 lanes, u32 format,
-> >>>>> +			  unsigned int *lane_mbps)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = priv_data;
-> >>>>> +
-> >>>>> +	*lane_mbps = mipi_dsi->phy_opts.mipi_dphy.hs_clk_rate / 1000000;
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int
-> >>>>> +dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mbps,
-> >>>>> +			   struct dw_mipi_dsi_dphy_timing *timing)
-> >>>>> +{
-> >>>>> +	/* TOFIX handle other cases */
-> >>>>> +
-> >>>>> +	timing->clk_lp2hs = 37;
-> >>>>> +	timing->clk_hs2lp = 135;
-> >>>>> +	timing->data_lp2hs = 50;
-> >>>>> +	timing->data_hs2lp = 3;
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int
-> >>>>> +dw_mipi_dsi_get_esc_clk_rate(void *priv_data, unsigned int *esc_clk_rate)
-> >>>>> +{
-> >>>>> +	*esc_clk_rate = 4; /* Mhz */
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static const struct dw_mipi_dsi_phy_ops meson_dw_mipi_dsi_phy_ops = {
-> >>>>> +	.init = dw_mipi_dsi_phy_init,
-> >>>>> +	.power_off = dw_mipi_dsi_phy_power_off,
-> >>>>> +	.get_lane_mbps = dw_mipi_dsi_get_lane_mbps,
-> >>>>> +	.get_timing = dw_mipi_dsi_phy_get_timing,
-> >>>>> +	.get_esc_clk_rate = dw_mipi_dsi_get_esc_clk_rate,
-> >>>>> +};
-> >>>>> +
-> >>>>> +/* Encoder */
-> >>>>> +
-> >>>>> +static void meson_mipi_dsi_encoder_destroy(struct drm_encoder *encoder)
-> >>>>> +{
-> >>>>> +	drm_encoder_cleanup(encoder);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static const struct drm_encoder_funcs meson_mipi_dsi_encoder_funcs = {
-> >>>>> +	.destroy        = meson_mipi_dsi_encoder_destroy,
-> >>>>> +};
-> >>>>> +
-> >>>>> +static int meson_mipi_dsi_encoder_atomic_check(struct drm_encoder *encoder,
-> >>>>> +					struct drm_crtc_state *crtc_state,
-> >>>>> +					struct drm_connector_state *conn_state)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi =
-> >>>>> +			encoder_to_meson_dw_mipi_dsi(encoder);
-> >>>>> +
-> >>>>> +	switch (mipi_dsi->dsi_device->format) {
-> >>>>> +	case MIPI_DSI_FMT_RGB888:
-> >>>>> +		break;
-> >>>>> +	case MIPI_DSI_FMT_RGB666:
-> >>>>> +		break;
-> >>>>> +	case MIPI_DSI_FMT_RGB666_PACKED:
-> >>>>> +	case MIPI_DSI_FMT_RGB565:
-> >>>>> +	default:
-> >>>>> +		DRM_DEV_ERROR(mipi_dsi->dev,
-> >>>>> +				"invalid pixel format %d\n",
-> >>>>> +				mipi_dsi->dsi_device->format);
-> >>>>> +		return -EINVAL;
-> >>>>> +	};
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void meson_mipi_dsi_encoder_disable(struct drm_encoder *encoder)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi =
-> >>>>> +			encoder_to_meson_dw_mipi_dsi(encoder);
-> >>>>> +	struct meson_drm *priv = mipi_dsi->priv;
-> >>>>> +
-> >>>>> +	writel_relaxed(0, priv->io_base + _REG(ENCL_VIDEO_EN));
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void meson_mipi_dsi_encoder_enable(struct drm_encoder *encoder)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi =
-> >>>>> +			encoder_to_meson_dw_mipi_dsi(encoder);
-> >>>>> +	struct meson_drm *priv = mipi_dsi->priv;
-> >>>>> +
-> >>>>> +	writel_bits_relaxed(BIT(3), BIT(3),
-> >>>>> +			priv->io_base + _REG(ENCL_VIDEO_MODE_ADV));
-> >>>>> +	writel_relaxed(0, priv->io_base + _REG(ENCL_TST_EN));
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void meson_dw_mipi_dsi_init(struct meson_dw_mipi_dsi *mipi_dsi)
-> >>>>> +{
-> >>>>> +	writel_relaxed((1 << 4) | (1 << 5) | (0 << 6),
-> >>>>> +			mipi_dsi->base + MIPI_DSI_TOP_CNTL);
-> >>>>> +
-> >>>>> +	writel_bits_relaxed(0xf, 0xf,
-> >>>>> +			    mipi_dsi->base + MIPI_DSI_TOP_SW_RESET);
-> >>>>> +	writel_bits_relaxed(0xf, 0,
-> >>>>> +			    mipi_dsi->base + MIPI_DSI_TOP_SW_RESET);
-> >>>>> +
-> >>>>> +	writel_bits_relaxed(0x3, 0x3,
-> >>>>> +			    mipi_dsi->base + MIPI_DSI_TOP_CLK_CNTL);
-> >>>>> +
-> >>>>> +	writel_relaxed(0, mipi_dsi->base + MIPI_DSI_TOP_MEM_PD);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void meson_mipi_dsi_encoder_mode_set(struct drm_encoder *encoder,
-> >>>>> +				   struct drm_display_mode *mode,
-> >>>>> +				   struct drm_display_mode *adjusted_mode)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = encoder_to_meson_dw_mipi_dsi(encoder);
-> >>>>> +	unsigned int dpi_data_format, venc_data_width;
-> >>>>> +	struct meson_drm *priv = mipi_dsi->priv;
-> >>>>> +	int bpp;
-> >>>>> +	u32 reg;
-> >>>>> +
-> >>>>> +	mipi_dsi->mode_flags = mode->flags;
-> >>>>> +
-> >>>>> +	bpp = mipi_dsi_pixel_format_to_bpp(mipi_dsi->dsi_device->format);
-> >>>>> +
-> >>>>> +	phy_mipi_dphy_get_default_config(mode->clock * 1000,
-> >>>>> +					 bpp, mipi_dsi->dsi_device->lanes,
-> >>>>> +					 &mipi_dsi->phy_opts.mipi_dphy);
-> >>>>> +
-> >>>>> +	phy_configure(mipi_dsi->phy, &mipi_dsi->phy_opts);
-> >>>>> +
-> >>>>> +	switch (mipi_dsi->dsi_device->format) {
-> >>>>> +	case MIPI_DSI_FMT_RGB888:
-> >>>>> +		dpi_data_format = COLOR_24BIT;
-> >>>>> +		venc_data_width = MIPI_DSI_VENC_COLOR_24B;
-> >>>>> +		break;
-> >>>>> +	case MIPI_DSI_FMT_RGB666:
-> >>>>> +		dpi_data_format = COLOR_18BIT_CFG_2;
-> >>>>> +		venc_data_width = MIPI_DSI_VENC_COLOR_18B;
-> >>>>> +		break;
-> >>>>> +	case MIPI_DSI_FMT_RGB666_PACKED:
-> >>>>> +	case MIPI_DSI_FMT_RGB565:
-> >>>>> +		/* invalid */
-> >>>>> +		break;
-> >>>>> +	};
-> >>>>> +
-> >>>>> +	dw_mipi_dsi_set_vclk(mipi_dsi, mode);
-> >>>>> +	meson_venc_mipi_dsi_mode_set(priv, mode);
-> >>>>> +
-> >>>>> +	meson_encl_load_gamma(priv);
-> >>>>> +
-> >>>>> +	writel_relaxed(0, priv->io_base + _REG(ENCL_VIDEO_EN));
-> >>>>> +
-> >>>>> +	meson_dw_mipi_dsi_init(mipi_dsi);
-> >>>>> +
-> >>>>> +	/* Configure Set color format for DPI register */
-> >>>>> +	reg = readl_relaxed(mipi_dsi->base + MIPI_DSI_TOP_CNTL) &
-> >>>>> +		~(0xf<<BIT_DPI_COLOR_MODE) &
-> >>>>> +		~(0x7<<BIT_IN_COLOR_MODE) &
-> >>>>> +		~(0x3<<BIT_CHROMA_SUBSAMPLE);
-> >>>>> +
-> >>>>> +	writel_relaxed(reg |
-> >>>>> +		(dpi_data_format  << BIT_DPI_COLOR_MODE)  |
-> >>>>> +		(venc_data_width  << BIT_IN_COLOR_MODE) |
-> >>>>> +		0 << BIT_COMP0_SEL |
-> >>>>> +		1 << BIT_COMP1_SEL |
-> >>>>> +		2 << BIT_COMP2_SEL |
-> >>>>> +		(mipi_dsi->mode_flags & DRM_MODE_FLAG_NHSYNC ? 0 : BIT(BIT_HSYNC_POL)) |
-> >>>>> +		(mipi_dsi->mode_flags & DRM_MODE_FLAG_NVSYNC ? 0 : BIT(BIT_VSYNC_POL)),
-> >>>>> +		mipi_dsi->base + MIPI_DSI_TOP_CNTL);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static const struct drm_encoder_helper_funcs
-> >>>>> +				meson_mipi_dsi_encoder_helper_funcs = {
-> >>>>> +	.atomic_check	= meson_mipi_dsi_encoder_atomic_check,
-> >>>>> +	.disable	= meson_mipi_dsi_encoder_disable,
-> >>>>> +	.enable		= meson_mipi_dsi_encoder_enable,
-> >>>>> +	.mode_set	= meson_mipi_dsi_encoder_mode_set,
-> >>>>> +};
-> >>>>> +
-> >>>>> +static int meson_dw_mipi_dsi_bind(struct device *dev, struct device *master,
-> >>>>> +				void *data)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = dev_get_drvdata(dev);
-> >>>>> +	struct drm_device *drm = data;
-> >>>>> +	struct meson_drm *priv = drm->dev_private;
-> >>>>> +	struct drm_encoder *encoder;
-> >>>>> +	int ret;
-> >>>>> +
-> >>>>> +	/* Check before if we are supposed to have a sub-device... */
-> >>>>> +	if (!mipi_dsi->dsi_device)
-> >>>>> +		return -EPROBE_DEFER;
-> >>>>> +
-> >>>>> +	encoder = &mipi_dsi->encoder;
-> >>>>> +	mipi_dsi->priv = priv;
-> >>>>> +
-> >>>>> +	/* Encoder */
-> >>>>> +	ret = drm_encoder_init(drm, encoder, &meson_mipi_dsi_encoder_funcs,
-> >>>>> +			       DRM_MODE_ENCODER_DSI, "meson_mipi_dsi");
-> >>>>> +	if (ret) {
-> >>>>> +		dev_err(priv->dev, "Failed to init DSI encoder\n");
-> >>>>> +		return ret;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	drm_encoder_helper_add(encoder, &meson_mipi_dsi_encoder_helper_funcs);
-> >>>>> +
-> >>>>> +	encoder->possible_crtcs = BIT(0);
-> >>>>> +
-> >>>>> +	ret = dw_mipi_dsi_bind(mipi_dsi->dmd, encoder);
-> >>>>> +	if (ret) {
-> >>>>> +		DRM_DEV_ERROR(dev, "Failed to bind: %d\n", ret);
-> >>>>> +		return ret;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	phy_init(mipi_dsi->phy);
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static void meson_dw_mipi_dsi_unbind(struct device *dev, struct device *master,
-> >>>>> +				   void *data)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = dev_get_drvdata(dev);
-> >>>>> +
-> >>>>> +	dw_mipi_dsi_remove(mipi_dsi->dmd);
-> >>>>> +
-> >>>>> +	phy_exit(mipi_dsi->phy);
-> >>>>> +}
-> >>>>> +
-> >>>>> +static const struct component_ops meson_dw_mipi_dsi_ops = {
-> >>>>> +	.bind	= meson_dw_mipi_dsi_bind,
-> >>>>> +	.unbind	= meson_dw_mipi_dsi_unbind,
-> >>>>> +};
-> >>>>> +
-> >>>>> +static int meson_dw_mipi_dsi_host_attach(void *priv_data,
-> >>>>> +					 struct mipi_dsi_device *device)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = priv_data;
-> >>>>> +
-> >>>>> +	mipi_dsi->dsi_device = device;
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int meson_dw_mipi_dsi_host_detach(void *priv_data,
-> >>>>> +					 struct mipi_dsi_device *device)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = priv_data;
-> >>>>> +
-> >>>>> +	if (device == mipi_dsi->dsi_device)
-> >>>>> +		mipi_dsi->dsi_device = NULL;
-> >>>>> +	else
-> >>>>> +		return -EINVAL;
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static const struct dw_mipi_dsi_host_ops meson_dw_mipi_dsi_host_ops = {
-> >>>>> +	.attach = meson_dw_mipi_dsi_host_attach,
-> >>>>> +	.detach = meson_dw_mipi_dsi_host_detach,
-> >>>>> +};
-> >>>>> +
-> >>>>> +static int meson_dw_mipi_dsi_probe(struct platform_device *pdev)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi;
-> >>>>> +	struct reset_control *top_rst;
-> >>>>> +	struct resource *res;
-> >>>>> +	int ret;
-> >>>>> +
-> >>>>> +	mipi_dsi = devm_kzalloc(&pdev->dev, sizeof(*mipi_dsi), GFP_KERNEL);
-> >>>>> +	if (!mipi_dsi)
-> >>>>> +		return -ENOMEM;
-> >>>>> +
-> >>>>> +	mipi_dsi->dev = &pdev->dev;
-> >>>>> +
-> >>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >>>>> +	mipi_dsi->base = devm_ioremap_resource(&pdev->dev, res);
-> >>>>> +	if (IS_ERR(mipi_dsi->base))
-> >>>>> +		return PTR_ERR(mipi_dsi->base);
-> >>>>> +
-> >>>>> +	mipi_dsi->phy = devm_phy_get(&pdev->dev, "dphy");
-> >>>>> +	if (IS_ERR(mipi_dsi->phy)) {
-> >>>>> +		ret = PTR_ERR(mipi_dsi->phy);
-> >>>>> +		dev_err(&pdev->dev, "failed to get mipi dphy: %d\n", ret);
-> >>>>> +		return ret;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	mipi_dsi->px_clk = devm_clk_get(&pdev->dev, "px_clk");
-> >>>>> +	if (IS_ERR(mipi_dsi->px_clk)) {
-> >>>>> +		dev_err(&pdev->dev, "Unable to get PLL clk\n");
-> >>>>> +		return PTR_ERR(mipi_dsi->px_clk);
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	/*
-> >>>>> +	 * We use a TOP reset signal because the APB reset signal
-> >>>>> +	 * is handled by the TOP control registers.
-> >>>>> +	 */
-> >>>>> +	top_rst = devm_reset_control_get_exclusive(&pdev->dev, "top");
-> >>>>> +	if (IS_ERR(top_rst)) {
-> >>>>> +		ret = PTR_ERR(top_rst);
-> >>>>> +
-> >>>>> +		if (ret != -EPROBE_DEFER)
-> >>>>> +			dev_err(&pdev->dev, "Unable to get reset control: %d\n", ret);
-> >>>>> +
-> >>>>> +		return ret;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	ret = clk_prepare_enable(mipi_dsi->px_clk);
-> >>>>> +	if (ret) {
-> >>>>> +		dev_err(&pdev->dev, "Unable to prepare/enable PX clock\n");
-> >>>>> +		goto err_clkdisable;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	reset_control_assert(top_rst);
-> >>>>> +	usleep_range(10, 20);
-> >>>>> +	reset_control_deassert(top_rst);
-> >>>>> +
-> >>>>> +	/* MIPI DSI Controller */
-> >>>>> +
-> >>>>> +	mipi_dsi->pdata.base = mipi_dsi->base;
-> >>>>> +	mipi_dsi->pdata.max_data_lanes = 4;
-> >>>>> +	mipi_dsi->pdata.phy_ops = &meson_dw_mipi_dsi_phy_ops;
-> >>>>> +	mipi_dsi->pdata.host_ops = &meson_dw_mipi_dsi_host_ops;
-> >>>>> +	mipi_dsi->pdata.priv_data = mipi_dsi;
-> >>>>> +	platform_set_drvdata(pdev, mipi_dsi);
-> >>>>> +
-> >>>>> +	mipi_dsi->dmd = dw_mipi_dsi_probe(pdev, &mipi_dsi->pdata);
-> >>>>> +	if (IS_ERR(mipi_dsi->dmd)) {
-> >>>>> +		ret = PTR_ERR(mipi_dsi->dmd);
-> >>>>> +		if (ret != -EPROBE_DEFER)
-> >>>>> +			dev_err(&pdev->dev,
-> >>>>> +				"Failed to probe dw_mipi_dsi: %d\n", ret);
-> >>>>> +		goto err_clkdisable;
-> >>>>> +	}
-> >>>>> +
-> >>>>> +	return component_add(mipi_dsi->dev, &meson_dw_mipi_dsi_ops);
-> >>>>> +
-> >>>>> +err_clkdisable:
-> >>>>> +	clk_disable_unprepare(mipi_dsi->px_clk);
-> >>>>> +
-> >>>>> +	return ret;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int meson_dw_mipi_dsi_remove(struct platform_device *pdev)
-> >>>>> +{
-> >>>>> +	struct meson_dw_mipi_dsi *mipi_dsi = dev_get_drvdata(&pdev->dev);
-> >>>>> +
-> >>>>> +	component_del(mipi_dsi->dev, &meson_dw_mipi_dsi_ops);
-> >>>>> +
-> >>>>> +	clk_disable_unprepare(mipi_dsi->px_clk);
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static const struct of_device_id meson_dw_mipi_dsi_of_table[] = {
-> >>>>> +	{ .compatible = "amlogic,meson-axg-dw-mipi-dsi", },
-> >>>>> +	{ }
-> >>>>> +};
-> >>>>> +MODULE_DEVICE_TABLE(of, meson_dw_mipi_dsi_of_table);
-> >>>>> +
-> >>>>> +static struct platform_driver meson_dw_mipi_dsi_platform_driver = {
-> >>>>> +	.probe		= meson_dw_mipi_dsi_probe,
-> >>>>> +	.remove		= meson_dw_mipi_dsi_remove,
-> >>>>> +	.driver		= {
-> >>>>> +		.name		= DRIVER_NAME,
-> >>>>> +		.of_match_table	= meson_dw_mipi_dsi_of_table,
-> >>>>> +	},
-> >>>>> +};
-> >>>>> +module_platform_driver(meson_dw_mipi_dsi_platform_driver);
-> >>>>> +
-> >>>>> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
-> >>>>> +MODULE_DESCRIPTION(DRIVER_DESC);
-> >>>>> +MODULE_LICENSE("GPL");
-> >>>>> -- 
-> >>>>> 2.22.0
-> >>>>>
-> >>>>
-> >>>> -- 
-> >>>> Daniel Vetter
-> >>>> Software Engineer, Intel Corporation
-> >>>> http://blog.ffwll.ch
-> >>>
-> >>
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I will fix this in v9.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>=20
+> > ---
+> >  drivers/phy/intel/Kconfig                              | 10 +++++-----
+> >  drivers/phy/intel/Makefile                             |  4 ++--
+> >  .../intel/{phy-intel-combo.c =3D> phy-intel-lgm-combo.c} |  0
+> >  .../intel/{phy-intel-emmc.c =3D> phy-intel-lgm-emmc.c}   |  0
+> >  4 files changed, 7 insertions(+), 7 deletions(-)  rename
+> > drivers/phy/intel/{phy-intel-combo.c =3D> phy-intel-lgm-combo.c} (100%)
+> > rename drivers/phy/intel/{phy-intel-emmc.c =3D> phy-intel-lgm-emmc.c}
+> > (100%)
+> >
+> > diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
+> > index 7b47682a4e0e..db8586c3eed8 100644
+> > --- a/drivers/phy/intel/Kconfig
+> > +++ b/drivers/phy/intel/Kconfig
+> > @@ -1,9 +1,9 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  #
+> > -# Phy drivers for Intel Lightning Mountain(LGM) platform
+> > +# Phy drivers for Intel platforms
+> >  #
+> > -config PHY_INTEL_COMBO
+> > -	bool "Intel ComboPHY driver"
+> > +config PHY_INTEL_LGM_COMBO
+> > +	bool "Intel Lightning Mountain ComboPHY driver"
+> >  	depends on X86 || COMPILE_TEST
+> >  	depends on OF && HAS_IOMEM
+> >  	select MFD_SYSCON
+> > @@ -16,8 +16,8 @@ config PHY_INTEL_COMBO
+> >  	  chipsets which provides PHYs for various controllers, EMAC,
+> >  	  SATA and PCIe.
+> >
+> > -config PHY_INTEL_EMMC
+> > -	tristate "Intel EMMC PHY driver"
+> > +config PHY_INTEL_LGM_EMMC
+> > +	tristate "Intel Lightning Mountain EMMC PHY driver"
+> >  	depends on X86 || COMPILE_TEST
+> >  	select GENERIC_PHY
+> >  	help
+> > diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
+> > index 233d530dadde..662385d0a366 100644
+> > --- a/drivers/phy/intel/Makefile
+> > +++ b/drivers/phy/intel/Makefile
+> > @@ -1,3 +1,3 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > -obj-$(CONFIG_PHY_INTEL_COMBO)		+=3D phy-intel-combo.o
+> > -obj-$(CONFIG_PHY_INTEL_EMMC)            +=3D phy-intel-emmc.o
+> > +obj-$(CONFIG_PHY_INTEL_LGM_COMBO)	+=3D phy-intel-lgm-combo.o
+> > +obj-$(CONFIG_PHY_INTEL_LGM_EMMC)	+=3D phy-intel-lgm-emmc.o
+> > diff --git a/drivers/phy/intel/phy-intel-combo.c
+> > b/drivers/phy/intel/phy-intel-lgm-combo.c
+> > similarity index 100%
+> > rename from drivers/phy/intel/phy-intel-combo.c
+> > rename to drivers/phy/intel/phy-intel-lgm-combo.c
+> > diff --git a/drivers/phy/intel/phy-intel-emmc.c
+> > b/drivers/phy/intel/phy-intel-lgm-emmc.c
+> > similarity index 100%
+> > rename from drivers/phy/intel/phy-intel-emmc.c
+> > rename to drivers/phy/intel/phy-intel-lgm-emmc.c
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
+
