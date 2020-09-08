@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C1C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E094C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E38820658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AF520658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599595040;
-	bh=0vtMZTzu1NrMLLIC1iLpFv/vqWhtJrj/0g35C6ArFy0=;
+	s=default; t=1599595052;
+	bh=L0Iz0oktZ4DsRF8xV00NFozhcnwlPIlJfnhtNskrnaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LH6bjpNJoPY7XyVkujj8wgRS5Jk0psONh5tVdOhnrKEckDf+rZ++ibs3TdOy3NC6o
-	 nOhcFL7giSBY2GcsFdkoqX8ZkRXMwX3CcXfaMRKvKoi7mwFMYUsLYEONT1keqlE+4v
-	 PUGdBQ4yVX+ez7skN41ouyDfs0Gr06Ytdh+6/pl8=
+	b=Su2m31sk/mtbaQgIkejWXJY2Gv2f+5vTDjkRgk1rkZDTgslLnxt21FxM5N6fl+h41
+	 aP+0VgAul5/KdVuAq+hxdgrjJskTwP9YqJiS1UwE4YM30XWfyBUZ6hYon9Wj6aqHoC
+	 xJchc6XMNBq4fNc8wKB1bJ5iHvnyQOpjMZKLEtFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgIHT5O (ORCPT
+        id S1731905AbgIHT52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:57:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58866 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:57:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730395AbgIHPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730541AbgIHPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:35:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E23D224DF;
-        Tue,  8 Sep 2020 15:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDE8224BE;
+        Tue,  8 Sep 2020 15:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579304;
-        bh=0vtMZTzu1NrMLLIC1iLpFv/vqWhtJrj/0g35C6ArFy0=;
+        s=default; t=1599579297;
+        bh=L0Iz0oktZ4DsRF8xV00NFozhcnwlPIlJfnhtNskrnaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2eGpcpywsmwLob4ix25t5dDnw3RX9f/39gmGVU/BMi/hsU7ol0rUUBQlWXCbsp8J
-         KALpvP4bFJY6xA5W1HAcxuvZsXhPya5BtC5MpNVk3rx89TBCAQ8JIdmXm1SdAtZMwD
-         awxu+BPOElm9p1LsJyvOzDo6jdGNjJYaP96kEBk4=
+        b=f44uc6s8xOa/6oq6ffwDvvYogd1pk2NIW2kBqXJju2BXRumNhnLWMyRL/HtRK7MhM
+         6GzQOxDpSm5+26amSQjXx5ci88BUcY1ETywCJ7/evJ9tmkgzAIhLSr7T22CECNt1lt
+         VMiMkswr1uuHGskd+U/cv/kr5Un3vYUXtb5jC7uY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Ofir Bitton <obitton@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 022/186] ceph: dont allow setlease on cephfs
-Date:   Tue,  8 Sep 2020 17:22:44 +0200
-Message-Id: <20200908152242.732686168@linuxfoundation.org>
+Subject: [PATCH 5.8 011/186] habanalabs: unmap PCI bars upon iATU failure
+Date:   Tue,  8 Sep 2020 17:22:33 +0200
+Message-Id: <20200908152242.199967391@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,37 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Ofir Bitton <obitton@habana.ai>
 
-[ Upstream commit 496ceaf12432b3d136dcdec48424312e71359ea7 ]
+[ Upstream commit f1aae40e8dbd2655e3b10cae381a1e8292b19d57 ]
 
-Leases don't currently work correctly on kcephfs, as they are not broken
-when caps are revoked. They could eventually be implemented similarly to
-how we did them in libcephfs, but for now don't allow them.
+In case the driver fails to configure the PCI controller iATU, it needs to
+unmap the PCI bars before exiting so if the driver is removed, the bars
+won't be left mapped.
 
-[ idryomov: no need for simple_nosetlease() in ceph_dir_fops and
-  ceph_snapdir_fops ]
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/habanalabs/pci.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index d51c3f2fdca02..327649883ec7c 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -2507,6 +2507,7 @@ const struct file_operations ceph_file_fops = {
- 	.mmap = ceph_mmap,
- 	.fsync = ceph_fsync,
- 	.lock = ceph_lock,
-+	.setlease = simple_nosetlease,
- 	.flock = ceph_flock,
- 	.splice_read = generic_file_splice_read,
- 	.splice_write = iter_file_splice_write,
+diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
+index 9f634ef6f5b37..77022c0b42027 100644
+--- a/drivers/misc/habanalabs/pci.c
++++ b/drivers/misc/habanalabs/pci.c
+@@ -378,15 +378,17 @@ int hl_pci_init(struct hl_device *hdev)
+ 	rc = hdev->asic_funcs->init_iatu(hdev);
+ 	if (rc) {
+ 		dev_err(hdev->dev, "Failed to initialize iATU\n");
+-		goto disable_device;
++		goto unmap_pci_bars;
+ 	}
+ 
+ 	rc = hl_pci_set_dma_mask(hdev);
+ 	if (rc)
+-		goto disable_device;
++		goto unmap_pci_bars;
+ 
+ 	return 0;
+ 
++unmap_pci_bars:
++	hl_pci_bars_unmap(hdev);
+ disable_device:
+ 	pci_clear_master(pdev);
+ 	pci_disable_device(pdev);
 -- 
 2.25.1
 
