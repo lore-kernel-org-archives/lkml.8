@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782FDC2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6C8206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5162F2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgIHDTz (ORCPT
+        id S1728452AbgIHDex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 23:19:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55430 "EHLO huawei.com"
+        Mon, 7 Sep 2020 23:34:53 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55186 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728417AbgIHDTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 23:19:55 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2C1BBABCE4975FAC3F91;
-        Tue,  8 Sep 2020 11:19:53 +0800 (CST)
-Received: from [127.0.0.1] (10.174.176.220) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 11:19:44 +0800
-Subject: Re: [PATCH v12 1/9] x86: kdump: move CRASH_ALIGN to 2M
-To:     Dave Young <dyoung@redhat.com>
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
- <20200907134745.25732-2-chenzhou10@huawei.com>
- <20200908012138.GA3058@dhcp-128-65.nay.redhat.com>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bhe@redhat.com>, <corbet@lwn.net>, <John.P.donnelly@oracle.com>,
-        <prabhakar.pkin@gmail.com>, <bhsharma@redhat.com>,
-        <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
-        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
-        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
-        <wangkefeng.wang@huawei.com>
-From:   chenzhou <chenzhou10@huawei.com>
-Message-ID: <c0fc35d0-a9e3-6349-08bc-d2f7a12e3680@huawei.com>
-Date:   Tue, 8 Sep 2020 11:19:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1728327AbgIHDew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 23:34:52 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E7AD9E161FE542E2FA04;
+        Tue,  8 Sep 2020 11:34:49 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.253) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
+ 11:34:48 +0800
+Subject: Re: [PATCH 1/1] watchdog: remove unneeded inclusion of
+ <uapi/linux/sched/types.h>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-watchdog <linux-watchdog@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200827062154.1847-1-thunder.leizhen@huawei.com>
+ <55ad40ff-dcc1-5051-65d2-24201c471a8f@roeck-us.net>
+ <f80cc7ea-9d1f-64a4-7c18-faf672bf8cf6@huawei.com>
+ <18762ecb-9b47-18ed-6fbf-7cb4ee561a10@roeck-us.net>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <1098f1d5-0c36-d5b4-741a-4f2f6f42b428@huawei.com>
+Date:   Tue, 8 Sep 2020 11:34:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200908012138.GA3058@dhcp-128-65.nay.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <18762ecb-9b47-18ed-6fbf-7cb4ee561a10@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.176.220]
+X-Originating-IP: [10.174.177.253]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,86 +57,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2020/9/8 9:21, Dave Young wrote:
-> Hi,
->
-> On 09/07/20 at 09:47pm, Chen Zhou wrote:
->> CONFIG_PHYSICAL_ALIGN can be selected from 2M to 16M and default
->> value is 2M, so move CRASH_ALIGN to 2M, with smaller value reservation
->> can have more chance to succeed.
-> Seems still some misunderstanding about the change :(  I'm sorry if I
-> did not explain it clearly.
->
-> Previously I missed the PHYSICAL_ALIGN can change according to .config
-> I mean we should change the value to CONFIG_PHYSICAL_ALIGN for X86
-> And I suggest to move back to keep using 16M.  And do not change it in
-> this series.
-Hi Dave,
-
-Sorry, i misunderstood about this.
-
-Ok, this patch will keep the value of CRASH_ALIGN as it is,
-just move CRASH_ALIGN to header asm/kexec.h and replace the hard-coded alignment
-with macro CRASH_ALIGN in function reserve_crashkernel().
-
-Thanks,
-Chen Zhou
->
->> And replace the hard-coded alignment with macro CRASH_ALIGN in function
->> reserve_crashkernel().
+On 2020/9/8 10:40, Guenter Roeck wrote:
+> On 9/7/20 12:50 AM, Leizhen (ThunderTown) wrote:
+>> Hi, Wim Van Sebroeck, Guenter Roeck:
+>>   What's your opinion? Guenter Roeck given "Reviewed-by" two weeks ago.
 >>
->> Suggested-by: Dave Young <dyoung@redhat.com>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/x86/include/asm/kexec.h | 3 +++
->>  arch/x86/kernel/setup.c      | 5 +----
->>  2 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
->> index 6802c59e8252..83f200dd54a1 100644
->> --- a/arch/x86/include/asm/kexec.h
->> +++ b/arch/x86/include/asm/kexec.h
->> @@ -18,6 +18,9 @@
->>  
->>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
->>  
->> +/* 2M alignment for crash kernel regions */
->> +#define CRASH_ALIGN		SZ_2M
->> +
->>  #ifndef __ASSEMBLY__
->>  
->>  #include <linux/string.h>
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 3511736fbc74..296294ad0dd8 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -402,9 +402,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->>  
->> -/* 16M alignment for crash kernel regions */
->> -#define CRASH_ALIGN		SZ_16M
->> -
->>  /*
->>   * Keep the crash kernel below this limit.
->>   *
->> @@ -530,7 +527,7 @@ static void __init reserve_crashkernel(void)
->>  
->>  		start = memblock_find_in_range(crash_base,
->>  					       crash_base + crash_size,
->> -					       crash_size, 1 << 20);
->> +					       crash_size, CRASH_ALIGN);
->>  		if (start != crash_base) {
->>  			pr_info("crashkernel reservation failed - memory is in use.\n");
->>  			return;
->> -- 
->> 2.20.1
->>
-> Thanks
-> Dave
->
->
-> .
->
+> 
+> The patch is in my watchdog-next branch, and Wim usually picks it up
+> from there.
 
+Oh, thanks.
+
+> 
+> Guenter
+> 
+>>
+>> On 2020/8/27 21:40, Guenter Roeck wrote:
+>>> On 8/26/20 11:21 PM, Zhen Lei wrote:
+>>>> There has been no reference to "struct sched_param" since
+>>>> commit 94beddacb53c ("sched,watchdog: Convert to sched_set_fifo()"), so
+>>>> there's no need to include <uapi/linux/sched/types.h> any more, delete
+>>>> it.
+>>>>
+>>>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>>>
+>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>>
+>>>> ---
+>>>>  drivers/watchdog/watchdog_dev.c | 2 --
+>>>>  1 file changed, 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+>>>> index 6798addabd5a067..0f18fa2433310b0 100644
+>>>> --- a/drivers/watchdog/watchdog_dev.c
+>>>> +++ b/drivers/watchdog/watchdog_dev.c
+>>>> @@ -43,8 +43,6 @@
+>>>>  #include <linux/watchdog.h>	/* For watchdog specific items */
+>>>>  #include <linux/uaccess.h>	/* For copy_to_user/put_user/... */
+>>>>  
+>>>> -#include <uapi/linux/sched/types.h>	/* For struct sched_param */
+>>>> -
+>>>>  #include "watchdog_core.h"
+>>>>  #include "watchdog_pretimeout.h"
+>>>>  
+>>>>
+>>>
+>>>
+>>>
+>>
+> 
+> 
+> 
 
