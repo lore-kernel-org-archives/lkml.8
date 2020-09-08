@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A063C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CD8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69E5B20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AAE02145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591919;
-	bh=6atoX8XP8FftWBIJU03GqQ6Sc/P+z9fAOVR09T3a6kQ=;
+	s=default; t=1599591927;
+	bh=/Ow/lijeSaiywMPPJbECOmMdH5AK3m0GXUZw93uyVAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XeUKggile0Gl2z0hL5Vgl+UT19Q41rfPwTB1Hh/bXZ6rl+10JOl1hH3essl1MORyf
-	 OFFXe36qbi8nfUILDS6aKoofN5xX97bf0Kiv0dSmB3Yrm8oKmr61oXgQN0qxb4IZkx
-	 1pCt1b1iqZR8hskRjGgjlZovAFuNU+zuVZercavU=
+	b=j5qhhWzRA+kvpDaTLe7Zu9GnCg5eLIMbDgM1DQELQUWO3btYQyvxRCOqWreWPZPG8
+	 PnVL7idgWpQU28U4UiWWJVQQAkVROAjv7S+C6+jc0Uwd0uw8cVxBoevvBfdqq9c193
+	 FcaJQEKBjYiaoeZoXbNjcCyn6FaKvqulUyCR/L84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgIHTFR (ORCPT
+        id S1731764AbgIHTFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:05:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731270AbgIHQH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:07:26 -0400
+        id S1731263AbgIHQHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:07:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B68F923E52;
-        Tue,  8 Sep 2020 15:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2747723E20;
+        Tue,  8 Sep 2020 15:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580031;
-        bh=6atoX8XP8FftWBIJU03GqQ6Sc/P+z9fAOVR09T3a6kQ=;
+        s=default; t=1599580016;
+        bh=/Ow/lijeSaiywMPPJbECOmMdH5AK3m0GXUZw93uyVAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNK4e6AhwBBjG+VWbLhxMdODC7SQlQpDRClQ+62w3oVlh3fgW49xcCGNDdXN3Yc0P
-         HswaSYRVj5T7ytCBrpxw0fOIc2hn7vJ15Eza0rk1fg3Z+jEFIw9Paq8NPFsng+MJ5l
-         APX2TNqpDkUUtM7nUS8qYTTCy+RKzjaY5DdQJBvU=
+        b=rhMvfx5KL+Zw8Dem/1G2uDkp6uFllLp8ibGR9S6ykAxywwgpoKAz7iVGbU+XyyY3Y
+         5d3tHB5f/vfS5KIMVhqtHMr1Wb8JlacWhMebiYguS65gPkxRqPp9e73lSGxNU+LilY
+         uOmREJD+OHJHnEPMP0GAzZjXn/OX52SsN2r9dMJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 111/129] dmaengine: dw-edma: Fix scatter-gather address calculation
-Date:   Tue,  8 Sep 2020 17:25:52 +0200
-Message-Id: <20200908152235.387749205@linuxfoundation.org>
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 126/129] mm/hugetlb: fix a race between hugetlb sysctl handlers
+Date:   Tue,  8 Sep 2020 17:26:07 +0200
+Message-Id: <20200908152236.156999518@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,71 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-commit 05655541c9503bfd01af4e6cbd7f5a29ac748e6c upstream.
+commit 17743798d81238ab13050e8e2833699b54e15467 upstream.
 
-Fix the source and destination physical address calculation of a
-peripheral device on scatter-gather implementation.
+There is a race between the assignment of `table->data` and write value
+to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
+the other thread.
 
-This issue manifested during tests using a 64 bits architecture system.
-The abnormal behavior wasn't visible before due to all previous tests
-were done using 32 bits architecture system, that masked his effect.
+  CPU0:                                 CPU1:
+                                        proc_sys_write
+  hugetlb_sysctl_handler                  proc_sys_call_handler
+  hugetlb_sysctl_handler_common             hugetlb_sysctl_handler
+    table->data = &tmp;                       hugetlb_sysctl_handler_common
+                                                table->data = &tmp;
+      proc_doulongvec_minmax
+        do_proc_doulongvec_minmax           sysctl_head_finish
+          __do_proc_doulongvec_minmax         unuse_table
+            i = table->data;
+            *i = val;  // corrupt CPU1's stack
 
-Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Link: https://lore.kernel.org/r/8d3ab7e2ba96563fe3495b32f60077fffb85307d.1597327623.git.gustavo.pimentel@synopsys.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fix this by duplicating the `table`, and only update the duplicate of
+it.  And introduce a helper of proc_hugetlb_doulongvec_minmax() to
+simplify the code.
+
+The following oops was seen:
+
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor instruction fetch in kernel mode
+    #PF: error_code(0x0010) - not-present page
+    Code: Bad RIP value.
+    ...
+    Call Trace:
+     ? set_max_huge_pages+0x3da/0x4f0
+     ? alloc_pool_huge_page+0x150/0x150
+     ? proc_doulongvec_minmax+0x46/0x60
+     ? hugetlb_sysctl_handler_common+0x1c7/0x200
+     ? nr_hugepages_store+0x20/0x20
+     ? copy_fd_bitmaps+0x170/0x170
+     ? hugetlb_sysctl_handler+0x1e/0x20
+     ? proc_sys_call_handler+0x2f1/0x300
+     ? unregister_sysctl_table+0xb0/0xb0
+     ? __fd_install+0x78/0x100
+     ? proc_sys_write+0x14/0x20
+     ? __vfs_write+0x4d/0x90
+     ? vfs_write+0xef/0x240
+     ? ksys_write+0xc0/0x160
+     ? __ia32_sys_read+0x50/0x50
+     ? __close_fd+0x129/0x150
+     ? __x64_sys_write+0x43/0x50
+     ? do_syscall_64+0x6c/0x200
+     ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20200828031146.43035-1-songmuchun@bytedance.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dw-edma/dw-edma-core.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ mm/hugetlb.c |   26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -391,7 +391,7 @@ dw_edma_device_transfer(struct dw_edma_t
- 			if (xfer->cyclic) {
- 				burst->dar = xfer->xfer.cyclic.paddr;
- 			} else {
--				burst->dar = sg_dma_address(sg);
-+				burst->dar = dst_addr;
- 				/* Unlike the typical assumption by other
- 				 * drivers/IPs the peripheral memory isn't
- 				 * a FIFO memory, in this case, it's a
-@@ -399,14 +399,13 @@ dw_edma_device_transfer(struct dw_edma_t
- 				 * and destination addresses are increased
- 				 * by the same portion (data length)
- 				 */
--				src_addr += sg_dma_len(sg);
- 			}
- 		} else {
- 			burst->dar = dst_addr;
- 			if (xfer->cyclic) {
- 				burst->sar = xfer->xfer.cyclic.paddr;
- 			} else {
--				burst->sar = sg_dma_address(sg);
-+				burst->sar = src_addr;
- 				/* Unlike the typical assumption by other
- 				 * drivers/IPs the peripheral memory isn't
- 				 * a FIFO memory, in this case, it's a
-@@ -414,12 +413,14 @@ dw_edma_device_transfer(struct dw_edma_t
- 				 * and destination addresses are increased
- 				 * by the same portion (data length)
- 				 */
--				dst_addr += sg_dma_len(sg);
- 			}
- 		}
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3082,6 +3082,22 @@ static unsigned int cpuset_mems_nr(unsig
+ }
  
--		if (!xfer->cyclic)
-+		if (!xfer->cyclic) {
-+			src_addr += sg_dma_len(sg);
-+			dst_addr += sg_dma_len(sg);
- 			sg = sg_next(sg);
-+		}
- 	}
+ #ifdef CONFIG_SYSCTL
++static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
++					  void *buffer, size_t *length,
++					  loff_t *ppos, unsigned long *out)
++{
++	struct ctl_table dup_table;
++
++	/*
++	 * In order to avoid races with __do_proc_doulongvec_minmax(), we
++	 * can duplicate the @table and alter the duplicate of it.
++	 */
++	dup_table = *table;
++	dup_table.data = out;
++
++	return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
++}
++
+ static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
+ 			 struct ctl_table *table, int write,
+ 			 void __user *buffer, size_t *length, loff_t *ppos)
+@@ -3093,9 +3109,8 @@ static int hugetlb_sysctl_handler_common
+ 	if (!hugepages_supported())
+ 		return -EOPNOTSUPP;
  
- 	return vchan_tx_prep(&chan->vc, &desc->vd, xfer->flags);
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -3139,9 +3154,8 @@ int hugetlb_overcommit_handler(struct ct
+ 	if (write && hstate_is_gigantic(h))
+ 		return -EINVAL;
+ 
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
 
 
