@@ -2,148 +2,98 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F186C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F0AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD96C2068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:56:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vrb0alsf"
+	by mail.kernel.org (Postfix) with ESMTP id 2EC6121919
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599548252;
+	bh=o6mAew2lMKKYAMTkRd6PG3NmJjMJBBmt33Nluw5zleA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GViB+VwckBL5mrRULuE4FgQ40lVT2uySYWElTA4B8h0O73Qio15bOA9oOgqLP26eJ
+	 AVaw5CuZgQphQw9tv1Qvazx+FNURSSLprXFimkXwOsIuxauOjrMzrM0yIPTOBsXlkW
+	 K21xne1jOL5lp1rDyHt7JwUG5wtFleA3RqXf0H7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgIHG4Y (ORCPT
+        id S1729197AbgIHG5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:56:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33502 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728562AbgIHG4Y (ORCPT
+        Tue, 8 Sep 2020 02:57:30 -0400
+Received: from mail-ed1-f47.google.com ([209.85.208.47]:43807 "EHLO
+        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbgIHG52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:56:24 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886h7FX132359;
-        Tue, 8 Sep 2020 02:56:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=zJa4EgsFOxCK5aElUhhJCn5CwSplmXoTNrszQTtnxhw=;
- b=Vrb0alsfzPMt1a4kaCt+8AabrusCBJ8Hgoh9kGnZ99X0gdSIUCDt0p7/vrgTJ98Ju5KR
- ZAYm3KFWIxj7HpJbCp74TTm0lQ4o/MEqJfj+57Qr6RxuAiaJhY/rbYXew4cxiFnPsW/7
- 20Qac8v5QkmMLYFvOb0NE7nVDlzUbGxhaJNAJ7m2ROSYmt9IrFV4so3BJoQK0t4iouuY
- IUXtqopzPN03muk0fXqIRPqMSREtK+scG2DNnXUzXhSEj0mLZACS28wXlZEe0QAY77JT
- t/F2A/4dlhvGLztrhaxWp0dwFWDXugD/iUlgreeQNYp4uU146CV8/2zjagOoUglvlAD7 vw== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33e4x70b6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 02:56:13 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0886gKsY015931;
-        Tue, 8 Sep 2020 06:56:11 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8b4yr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 06:56:11 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0886u8Ul36503812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 06:56:09 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF84452054;
-        Tue,  8 Sep 2020 06:56:08 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.82.85])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 83B755204F;
-        Tue,  8 Sep 2020 06:56:08 +0000 (GMT)
-Subject: Re: [PATCH] mm: check for memory's node later during boot
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200902090911.11363-1-ldufour@linux.ibm.com>
- <20200903143523.02e163bf06be3b48bac7f967@linux-foundation.org>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <2abef8b6-932d-2aac-68d0-e8d202aab76e@linux.ibm.com>
-Date:   Tue, 8 Sep 2020 08:56:08 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Tue, 8 Sep 2020 02:57:28 -0400
+Received: by mail-ed1-f47.google.com with SMTP id n13so14848751edo.10;
+        Mon, 07 Sep 2020 23:57:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=umGp2mRac5tjGgvL1953FmzEeKMsaUQqM0ZLASNYOdw=;
+        b=N5fqJEZG7B7/XsNoynwNGrDwdYwKYI0k2+m058IJt7fmvML1HP74NBozLoAOSuJK1a
+         QPFpJVVmpyIlvq5Y0cI2TTLsDuegaDqEDlZwjQMCeEgs+4tQnMrxhQL8BKvRCMYTyszE
+         lFBbhusQq3/GjDc+QrmRifs8YIDN1mOAjgyQkPkNt8gkWt9+9O3I7yuzW1g29FiW33nK
+         9REI+OURjC44wtMREFGCFzB62qT90llzw7ot+twtQfDpBaBip1oDxdp2pSf4GI5LxiH2
+         MOKW/v7Y5/MRIqXnnGiWqXbbhOvkzZtJZN+G+YZro5cQXTsWexgcSPxyNP47RFaW1px/
+         xFHg==
+X-Gm-Message-State: AOAM533WY4OCuvvxLNCeQi+p5tOkd5iX618ycdMOipkav38oIAchdgBC
+        /5hum4UfFtx126vxWkw9SP0=
+X-Google-Smtp-Source: ABdhPJwQKk7dDYAUqS1F8cS+l02dQ8Fkn0v4UEjEo7y2l4To8N85pyzNNjSurB/LEnao9OgD3/0vtw==
+X-Received: by 2002:a05:6402:1859:: with SMTP id v25mr16745883edy.118.1599548245356;
+        Mon, 07 Sep 2020 23:57:25 -0700 (PDT)
+Received: from pi3 ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id r16sm8407822edc.57.2020.09.07.23.57.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 23:57:24 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 08:57:22 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [RFT 25/25] ARM: dts: s5pv210: align DMA channels with dtschema
+Message-ID: <20200908065722.GD24227@pi3>
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-26-krzk@kernel.org>
+ <25178674-e4af-ba35-b7f0-42091208e0e8@live.ca>
+ <BN6PR04MB06601A7FC9D1A697481EA37FCB290@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200903143523.02e163bf06be3b48bac7f967@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_02:2020-09-07,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 mlxlogscore=999 adultscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080059
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB06601A7FC9D1A697481EA37FCB290@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 03/09/2020 à 23:35, Andrew Morton a écrit :
-> On Wed,  2 Sep 2020 11:09:11 +0200 Laurent Dufour <ldufour@linux.ibm.com> wrote:
-> 
->> register_mem_sect_under_nodem() is checking the memory block's node id only
->> if the system state is "SYSTEM_BOOTING". On PowerPC, the memory blocks are
->> registered while the system state is "SYSTEM_SCHEDULING", the one before
->> SYSTEM_RUNNING.
->>
->> The consequence on PowerPC guest with interleaved memory node's ranges is
->> that some memory block could be assigned to multiple nodes on sysfs. This
->> lately prevents some memory hot-plug and hot-unplug to succeed because
->> links are remaining. Such a panic is then displayed:
->>
->> ------------[ cut here ]------------
->> kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
->> Oops: Exception in kernel mode, sig: 5 [#1]
->> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
->> Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
->> CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
->> NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
->> REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
->> MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
->> CFAR: c000000000846d20 IRQMASK: 0
->> GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
->> GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
->> GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
->> GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
->> GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
->> GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
->> GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
->> GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
->> NIP [c000000000403f34] add_memory_resource+0x244/0x340
->> LR [c000000000403f2c] add_memory_resource+0x23c/0x340
->> Call Trace:
->> [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
->> [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
->> [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
->> [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
->> [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
->> [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
->> [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
->> [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
->> [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
->> [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
->> [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
->> [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
->> [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
->> Instruction dump:
->> 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
->> 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
->> ---[ end trace 562fd6c109cd0fb2 ]---
->>
->> To prevent this multiple links, make the node checking done for states
->> prior to SYSTEM_RUNNING.
-> 
-> Did you consider adding a cc:stable to this fix?
+On Mon, Sep 07, 2020 at 05:28:54PM -0700, Jonathan Bakker wrote:
+> Ah, I figured out why the dma stopped working.  In s5pv210-aries.dtsi the dma's for i2s0
+> are overriden to use pdma0 instead of pdma1.  That also needs changing for this to
+> work properly.
 
-I should have, but now I've to review the fix based on David's comment.
+Indeed I missed this, thanks for review and tests.
 
+Best regards,
+Krzysztof
+
+> 
+> Thanks,
+> Jonathan
+> 
+> On 2020-09-07 5:17 p.m., Jonathan Bakker wrote:
+> > Initial testing on both an i9000 and an SGH-T959P are showing that the audio has
+> > stopped working with this.  I'm not 100% convinced as I've had DMA issues in the
+> > past.  However trying to play something just results in a hang after 1.5s while
+> > it works just fine without this patch.
+> > 
+> > Thanks,
+> > Jonathan
