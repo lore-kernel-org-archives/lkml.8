@@ -2,101 +2,150 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85427C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412D02080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589507;
-	bh=BaR3Q+Wii/OZ1NeyQdL6A+0hfF+tUl1OXApdXXhNhBU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8wNSIHAIy34CvjbXzotpqOpgfwY03Jsh3e2XZOHq045xZklZmbhkfoCpe1h7yIiN
-	 nzd4xfOKuizjRbdF9hFCcvB1VbYhrJcppa3GmOvsdcR4M4uJ4jOdIc34LhUFQ9X7KK
-	 OSPFp4UOcPRXhZ/8X+SQ11OIRa4A2hWUU+7zcqhM=
+	by mail.kernel.org (Postfix) with ESMTP id 2899321D41
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732162AbgIHSWZ (ORCPT
+        id S1731788AbgIHSZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:25:07 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50582 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731463AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:11 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F1F224734;
-        Tue,  8 Sep 2020 15:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579658;
-        bh=BaR3Q+Wii/OZ1NeyQdL6A+0hfF+tUl1OXApdXXhNhBU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eShw3GQcqroG6qw5IFcNo07m0xSd6xHmVIHrUtTVzVNcRnK0OvbV2hwm8LlGqtKnx
-         5TTNRtUHbT/FVeovLaW/XeOHVeQwv2L0h4pmQ81LwDCLUJ+bRl4uoMR4MS4xjaNFzj
-         YjUGjVs1FmvTpWYI8j4jgswWfaFP8Y41CXnictRE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.8 168/186] dm crypt: Initialize crypto wait structures
-Date:   Tue,  8 Sep 2020 17:25:10 +0200
-Message-Id: <20200908152249.802852415@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730748AbgIHSWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:22:25 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kFiG4-00Dp7f-7W; Tue, 08 Sep 2020 20:22:20 +0200
+Date:   Tue, 8 Sep 2020 20:22:20 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        b.zolnierkie@samsung.com, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+Message-ID: <20200908182220.GA3290129@lunn.ch>
+References: <20200907181854.GD3254313@lunn.ch>
+ <CGME20200908174935eucas1p2f24d79b234152148b060c45863e3efeb@eucas1p2.samsung.com>
+ <dleftj8sdkqhun.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <dleftj8sdkqhun.fsf%l.stelmach@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+On Tue, Sep 08, 2020 at 07:49:20PM +0200, Lukasz Stelmach wrote:
+> It was <2020-09-07 pon 20:18>, when Andrew Lunn wrote:
+> >> > On Tue, Aug 25, 2020 at 07:03:09PM +0200, Łukasz Stelmach wrote:
+> >> >> +++ b/drivers/net/ethernet/asix/ax88796c_ioctl.c
+> >> >
+> >> > This is an odd filename. The ioctl code is wrong anyway, but there is
+> >> > a lot more than ioctl in here. I suggest you give it a new name.
+> >> >
+> >> 
+> >> Sure, any suggestions?
+> >
+> > Sorry, i have forgotten what is actually contained. 
+> 
+> IOCTL handler (.ndo_do_ioctl), ethtool ops, and a bunch of hw control
+> functions.
+> 
+> > Does it even need to be a separate file?
+> 
+> It doesn't need, but I think it makes sense to keep ioctl and ethtool
+> stuff in a separate file. Some of the hw control function look like they
+> might change after using phylib.
 
-commit 7785a9e4c228db6d01086a52d5685cd7336a08b7 upstream.
+<driver>_ethtool.c is a common file name.
 
-Use the DECLARE_CRYPTO_WAIT() macro to properly initialize the crypto
-wait structures declared on stack before their use with
-crypto_wait_req().
+> Good point. I need to figure out how to do it. Can you point (from the
+> top fou your head) a driver which does it for a simmilarly integrated
+> device?
 
-Fixes: 39d13a1ac41d ("dm crypt: reuse eboiv skcipher for IV generation")
-Fixes: bbb1658461ac ("dm crypt: Implement Elephant diffuser for Bitlocker compatibility")
-Cc: stable@vger.kernel.org
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Being integrated or not makes no difference. The API usage is the
+same. drivers/net/usb/smsc95xx.c has an integrated PHY i think.
 
----
- drivers/md/dm-crypt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> I am not arguing to keep the parameter at any cost, but I would really
+> like to know if there is a viable alternative for DT and ACPI. This chip
+> is for smaller systems which not necessarily implement advanced
+> bootloaders (and DT).
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -736,7 +736,7 @@ static int crypt_iv_eboiv_gen(struct cry
- 	u8 buf[MAX_CIPHER_BLOCKSIZE] __aligned(__alignof__(__le64));
- 	struct skcipher_request *req;
- 	struct scatterlist src, dst;
--	struct crypto_wait wait;
-+	DECLARE_CRYPTO_WAIT(wait);
- 	int err;
- 
- 	req = skcipher_request_alloc(any_tfm(cc), GFP_NOIO);
-@@ -933,7 +933,7 @@ static int crypt_iv_elephant(struct cryp
- 	u8 *es, *ks, *data, *data2, *data_offset;
- 	struct skcipher_request *req;
- 	struct scatterlist *sg, *sg2, src, dst;
--	struct crypto_wait wait;
-+	DECLARE_CRYPTO_WAIT(wait);
- 	int i, r;
- 
- 	req = skcipher_request_alloc(elephant->tfm, GFP_NOIO);
+What bootload is being used, if not uboot or bearbox?
 
+> According to module.h
+> 
+> /*
+>  * Author(s), use "Name <email>" or just "Name", for multiple
+>  * authors use multiple MODULE_AUTHOR() statements/lines.
+>  */
 
+Thanks, did not know that.
+> >> >> +	struct net_device *ndev = ax_local->ndev;
+> >> >> +	int status;
+> >> >> +
+> >> >> +	do {
+> >> >> +		if (!(ax_local->checksum & AX_RX_CHECKSUM))
+> >> >> +			break;
+> >> >> +
+> >> >> +		/* checksum error bit is set */
+> >> >> +		if ((rxhdr->flags & RX_HDR3_L3_ERR) ||
+> >> >> +		    (rxhdr->flags & RX_HDR3_L4_ERR))
+> >> >> +			break;
+> >> >> +
+> >> >> +		if ((rxhdr->flags & RX_HDR3_L4_TYPE_TCP) ||
+> >> >> +		    (rxhdr->flags & RX_HDR3_L4_TYPE_UDP)) {
+> >> >> +			skb->ip_summed = CHECKSUM_UNNECESSARY;
+> >> >> +		}
+> >> >> +	} while (0);
+> >> >
+> >> >
+> >> > ??
+> >> >
+> >> 
+> >> if() break; Should I use goto?
+> >
+> > Sorry, i was too ambiguous. Why:
+> >
+> > do {
+> > } while (0);
+> >
+> > It is an odd construct.
+> 
+> As to "why" — you have correctly spotted, this is a vendor driver I am
+> porting. Although it's not like I am trying to avoid any changes, but
+> because this driver worked for us on older kernels (v3.10.9) I am trying
+> not to touch pieces which IMHO are good enough.
+
+My experience with vendor drivers is you nearly end up rewriting it to
+bring it up to mainline standards. I would suggest first setting up
+some automated tests, and then make lots of small changes, committed
+to git. You can then go backwards and find where regressions have been
+introduced and found by the automated tests. And then every so often
+squash it all together, ready for submission.
+
+> To avoid using do{}while(0) it requires either goto (instead of breaks),
+> nesting those if()s in one another or a humongous single if(). Neither
+> looks pretty and the last one is even less readable than
+> do()while.
+
+I removed too much context. Does anything useful happen afterwards?
+Maybe you can just use return? Or put that code into a helper which
+can use return rather than break?
+
+      Andrew
