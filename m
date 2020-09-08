@@ -2,104 +2,102 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF77C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F7AC2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 343432076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iYMrYMz9"
+	by mail.kernel.org (Postfix) with ESMTP id EC0642087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599593085;
+	bh=i+H5koQax4E1xZlNxo71mIVDMgy5YRr0zxNBvBBJNNg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H3ZSPalsKuSFlIPGsnqvX9rvmBVQCb/a9FDgBZUULT/xsCwONQdXTPBsYGnynBX82
+	 D3gW56IQY8iN+8ISmohTdInlde+2PLXsOqHe/pcMmuS6Su8idZv9yHAxiuLPD2ZaWb
+	 UiD8R2gT1TM2tZRco1etOk2kCrUFlm0XA3igyaCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731937AbgIHTYa (ORCPT
+        id S1732103AbgIHTYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:24:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731044AbgIHTYI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:24:08 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82BD6C061573;
-        Tue,  8 Sep 2020 12:24:08 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f10bf0059bdf9fa8e813382.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:59bd:f9fa:8e81:3382])
+        Tue, 8 Sep 2020 15:24:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730845AbgIHQBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:24 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 023761EC02B9;
-        Tue,  8 Sep 2020 21:24:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599593046;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ro+A4oaZan++1bEEF78omLXWyttKgPI68af9UKTgJos=;
-        b=iYMrYMz9RzyMu+adm6Rv7xJxg/qLEoDX6oFI8DRIhty6zebS5PUUSzW93MiQ+drODzcq4v
-        bWzhGMUw4zUKSLuDxsGDAsgRQM40ganzushZ2UZ4x5NkvR1X94uT7ueS+4np5IcF/XTPtD
-        hctrYRFJhtan1tDX8AzHYFvTM5BCNRI=
-Date:   Tue, 8 Sep 2020 21:24:00 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Cc:     "york.sun@nxp.com" <york.sun@nxp.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "rrichter@marvell.com" <rrichter@marvell.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data message
-Message-ID: <20200908192400.GL25236@zn.tnic>
-References: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
- <20200904091718.GC21499@zn.tnic>
- <20200904133258.GA21716@herburgerg-w.tq-net.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 075C723EF6;
+        Tue,  8 Sep 2020 15:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579480;
+        bh=i+H5koQax4E1xZlNxo71mIVDMgy5YRr0zxNBvBBJNNg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kaM9w2v1gsAeURcufYPUf+SnIdy+zcviQIauE7P5K0h3kKy9wSQeTbJXVVBEtOAAw
+         m8C4WhfcqY1FG67N/keyA10EMf7IouraDLS9DMSgcp0sAfI9omdz2LNrF8thcIHV2O
+         QARwxHKBSa+1rzR2GWqX4Lw8g3X+NzF/KUIfiwlM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 095/186] net: ethernet: mlx4: Fix memory allocation in mlx4_buddy_init()
+Date:   Tue,  8 Sep 2020 17:23:57 +0200
+Message-Id: <20200908152246.239084509@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200904133258.GA21716@herburgerg-w.tq-net.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:32:58PM +0200, Gregor Herburger wrote:
-> That shouldn't happen. The whole if-block is only executed when a single 
-> bit correctable error has occured (DDR_EDE_SBE). So we always should have
-> bad_data_bit or bad_ecc_bit (exclusively).
+From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
 
-Ooh, that sbe_ecc_decode() function would give you either the data bit
-- if that one is in error - and if not the data bit, then the ECC bit.
-Aha.
+[ Upstream commit cbedcb044e9cc4e14bbe6658111224bb923094f4 ]
 
-Ok, so what the driver should do, IMO, is this:
+On machines with much memory (> 2 TByte) and log_mtts_per_seg == 0, a
+max_order of 31 will be passed to mlx_buddy_init(), which results in
+s = BITS_TO_LONGS(1 << 31) becoming a negative value, leading to
+kvmalloc_array() failure when it is converted to size_t.
 
-	if (bad_data_bit != -1) {
-		...
+  mlx4_core 0000:b1:00.0: Failed to initialize memory region table, aborting
+  mlx4_core: probe of 0000:b1:00.0 failed with error -12
 
-		fsl_mc_printk("Single-bit data error, ... ", bad_data_bit);
-		fsl_mc_printk("Expected Data/Captured Data, ... ", exp_high, exp_low, cap_high, cap_low);
-	}
+Fix this issue by changing the left shifting operand from a signed literal to
+an unsigned one.
 
-	if (bad_ecc_bit != -1) {
-		...
+Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
+Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx4/mr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-		fsl_mc_printk("Single-bit ECC error, ... ", bad_ecc_bit);
-		fsl_mc_printk("Expected ECC/Captured ECC, ... ", exp_syndrome, syndrome);
-	}
-
-This way you only print either the data or the ECC value which was in
-error but not both.
-
-Makes sense?
-
-> Also i just noticed in the kernel log is no hint that this is an
-> single bit error. Maybe we should add this too?
-
-Yap, see above.
-
+diff --git a/drivers/net/ethernet/mellanox/mlx4/mr.c b/drivers/net/ethernet/mellanox/mlx4/mr.c
+index d2986f1f2db02..d7444782bfdd0 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/mr.c
++++ b/drivers/net/ethernet/mellanox/mlx4/mr.c
+@@ -114,7 +114,7 @@ static int mlx4_buddy_init(struct mlx4_buddy *buddy, int max_order)
+ 		goto err_out;
+ 
+ 	for (i = 0; i <= buddy->max_order; ++i) {
+-		s = BITS_TO_LONGS(1 << (buddy->max_order - i));
++		s = BITS_TO_LONGS(1UL << (buddy->max_order - i));
+ 		buddy->bits[i] = kvmalloc_array(s, sizeof(long), GFP_KERNEL | __GFP_ZERO);
+ 		if (!buddy->bits[i])
+ 			goto err_out_free;
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+
