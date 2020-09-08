@@ -2,51 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029DCC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58049C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C49E62080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AE12080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589835;
-	bh=2P2BZZfNXyPtf+p4CljuT/G1wY2tFHlLAPot6gRYIXc=;
+	s=default; t=1599589841;
+	bh=Tei+YkRbVwQNRj+U+djwbgtzP0V+bTZ1sVJJ9lII7OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uPh4jrDRUPOEiWw+Q1qFZyfTnEgyazGN1jd7A76IlmF7lFyMag75lqQRuP6klbKCp
-	 wQcKgH273X1hzCq/K7X5FhWQhA5W4BIhmmMNRpSE7HDyZHlkTr5KG9wFLPxv+PsPfm
-	 P6/zc9CKanbzDAooehbzBG9ZMwyHpqcdMtaONnrg=
+	b=qthUcNpvtubjKJG2Seg1GETw5w4t9er+XssiiBx4awEnz6ug7OzEnqDXcB6jf0QMZ
+	 D0UGc4eIAzkcYQdN27zkugFY4Wm9E3G/aQv5mMMkXMgyGaqq4d2fT5+vlQNJY1JYSj
+	 KxhwYZ8rCeAB6vpn1VEwu5OHr1iQqb/P6pi0SZQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbgIHSac (ORCPT
+        id S1731271AbgIHSag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731373AbgIHQJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:42 -0400
+        id S1731386AbgIHQJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:40 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC7D12467F;
-        Tue,  8 Sep 2020 15:50:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87EDD24658;
+        Tue,  8 Sep 2020 15:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580218;
-        bh=2P2BZZfNXyPtf+p4CljuT/G1wY2tFHlLAPot6gRYIXc=;
+        s=default; t=1599580211;
+        bh=Tei+YkRbVwQNRj+U+djwbgtzP0V+bTZ1sVJJ9lII7OE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzNVQldi3ePhx3cZPtjkNwHqmqUzO0RRpIuR7TayqjR6WsEu66Enl8easCQB4wyTN
-         EjZjIxbkO1CBNIkZVOZ15M4F18/tBCTRk+3cLclinYMnIDKAQnSmA/1PQlkMjiUIGF
-         GTxIrGqvp/TFCsC57AgiawTuE3uFT6UxRWZN6n9E=
+        b=cp1IPkb0pVIxb2826pMtAbKB3+lKyLmvznSVNGNY8ZKRlQ1zI219P/PmVSxnO0Ofx
+         SiAyklUvSIzmkiPv3K5EJ0MN/kXuoIxkyBqxxtNNQ/vqILcUQRkbnrnSsBib7t3JHp
+         SDMSpj+CpJ/7ibBJijjx6TmJyQykXJiSXNA9ICq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 48/88] x86, fakenuma: Fix invalid starting node ID
-Date:   Tue,  8 Sep 2020 17:25:49 +0200
-Message-Id: <20200908152223.532659859@linuxfoundation.org>
+        stable@vger.kernel.org, Max Staudt <max@enpas.org>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 73/88] affs: fix basic permission bits to actually work
+Date:   Tue,  8 Sep 2020 17:26:14 +0200
+Message-Id: <20200908152224.825827075@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -59,74 +59,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+From: Max Staudt <max@enpas.org>
 
-[ Upstream commit ccae0f36d500aef727f98acd8d0601e6b262a513 ]
+commit d3a84a8d0dde4e26bc084b36ffcbdc5932ac85e2 upstream.
 
-Commit:
+The basic permission bits (protection bits in AmigaOS) have been broken
+in Linux' AFFS - it would only set bits, but never delete them.
+Also, contrary to the documentation, the Archived bit was not handled.
 
-  cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
+Let's fix this for good, and set the bits such that Linux and classic
+AmigaOS can coexist in the most peaceful manner.
 
-uses "-1" as the starting node ID, which causes the strange kernel log as
-follows, when "numa=fake=32G" is added to the kernel command line:
+Also, update the documentation to represent the current state of things.
 
-    Faking node -1 at [mem 0x0000000000000000-0x0000000893ffffff] (35136MB)
-    Faking node 0 at [mem 0x0000001840000000-0x000000203fffffff] (32768MB)
-    Faking node 1 at [mem 0x0000000894000000-0x000000183fffffff] (64192MB)
-    Faking node 2 at [mem 0x0000002040000000-0x000000283fffffff] (32768MB)
-    Faking node 3 at [mem 0x0000002840000000-0x000000303fffffff] (32768MB)
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Staudt <max@enpas.org>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-And finally the kernel crashes:
-
-    BUG: Bad page state in process swapper  pfn:00011
-    page:(____ptrval____) refcount:0 mapcount:1 mapping:(____ptrval____) index:0x55cd7e44b270 pfn:0x11
-    failed to read mapping contents, not a valid kernel address?
-    flags: 0x5(locked|uptodate)
-    raw: 0000000000000005 000055cd7e44af30 000055cd7e44af50 0000000100000006
-    raw: 000055cd7e44b270 000055cd7e44b290 0000000000000000 000055cd7e44b510
-    page dumped because: page still charged to cgroup
-    page->mem_cgroup:000055cd7e44b510
-    Modules linked in:
-    CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
-    Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-    Call Trace:
-     dump_stack+0x57/0x80
-     bad_page.cold+0x63/0x94
-     __free_pages_ok+0x33f/0x360
-     memblock_free_all+0x127/0x195
-     mem_init+0x23/0x1f5
-     start_kernel+0x219/0x4f5
-     secondary_startup_64+0xb6/0xc0
-
-Fix this bug via using 0 as the starting node ID.  This restores the
-original behavior before cc9aec03e58f.
-
-[ mingo: Massaged the changelog. ]
-
-Fixes: cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200904061047.612950-1-ying.huang@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/numa_emulation.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/filesystems/affs.txt |   16 ++++++++++------
+ fs/affs/amigaffs.c                 |   27 +++++++++++++++++++++++++++
+ fs/affs/file.c                     |   26 +++++++++++++++++++++++++-
+ 3 files changed, 62 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
-index d71d72cf6c666..4686757a74d75 100644
---- a/arch/x86/mm/numa_emulation.c
-+++ b/arch/x86/mm/numa_emulation.c
-@@ -322,7 +322,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
- 					      u64 addr, u64 max_addr, u64 size)
- {
- 	return split_nodes_size_interleave_uniform(ei, pi, addr, max_addr, size,
--			0, NULL, NUMA_NO_NODE);
-+			0, NULL, 0);
+--- a/Documentation/filesystems/affs.txt
++++ b/Documentation/filesystems/affs.txt
+@@ -93,13 +93,15 @@ The Amiga protection flags RWEDRWEDHSPAR
+ 
+   - R maps to r for user, group and others. On directories, R implies x.
+ 
+-  - If both W and D are allowed, w will be set.
++  - W maps to w.
+ 
+   - E maps to x.
+ 
+-  - H and P are always retained and ignored under Linux.
++  - D is ignored.
+ 
+-  - A is always reset when a file is written to.
++  - H, S and P are always retained and ignored under Linux.
++
++  - A is cleared when a file is written to.
+ 
+ User id and group id will be used unless set[gu]id are given as mount
+ options. Since most of the Amiga file systems are single user systems
+@@ -111,11 +113,13 @@ Linux -> Amiga:
+ 
+ The Linux rwxrwxrwx file mode is handled as follows:
+ 
+-  - r permission will set R for user, group and others.
++  - r permission will allow R for user, group and others.
++
++  - w permission will allow W for user, group and others.
+ 
+-  - w permission will set W and D for user, group and others.
++  - x permission of the user will allow E for plain files.
+ 
+-  - x permission of the user will set E for plain files.
++  - D will be allowed for user, group and others.
+ 
+   - All other flags (suid, sgid, ...) are ignored and will
+     not be retained.
+--- a/fs/affs/amigaffs.c
++++ b/fs/affs/amigaffs.c
+@@ -420,24 +420,51 @@ affs_mode_to_prot(struct inode *inode)
+ 	u32 prot = AFFS_I(inode)->i_protect;
+ 	umode_t mode = inode->i_mode;
+ 
++	/*
++	 * First, clear all RWED bits for owner, group, other.
++	 * Then, recalculate them afresh.
++	 *
++	 * We'll always clear the delete-inhibit bit for the owner, as that is
++	 * the classic single-user mode AmigaOS protection bit and we need to
++	 * stay compatible with all scenarios.
++	 *
++	 * Since multi-user AmigaOS is an extension, we'll only set the
++	 * delete-allow bit if any of the other bits in the same user class
++	 * (group/other) are used.
++	 */
++	prot &= ~(FIBF_NOEXECUTE | FIBF_NOREAD
++		  | FIBF_NOWRITE | FIBF_NODELETE
++		  | FIBF_GRP_EXECUTE | FIBF_GRP_READ
++		  | FIBF_GRP_WRITE   | FIBF_GRP_DELETE
++		  | FIBF_OTR_EXECUTE | FIBF_OTR_READ
++		  | FIBF_OTR_WRITE   | FIBF_OTR_DELETE);
++
++	/* Classic single-user AmigaOS flags. These are inverted. */
+ 	if (!(mode & 0100))
+ 		prot |= FIBF_NOEXECUTE;
+ 	if (!(mode & 0400))
+ 		prot |= FIBF_NOREAD;
+ 	if (!(mode & 0200))
+ 		prot |= FIBF_NOWRITE;
++
++	/* Multi-user extended flags. Not inverted. */
+ 	if (mode & 0010)
+ 		prot |= FIBF_GRP_EXECUTE;
+ 	if (mode & 0040)
+ 		prot |= FIBF_GRP_READ;
+ 	if (mode & 0020)
+ 		prot |= FIBF_GRP_WRITE;
++	if (mode & 0070)
++		prot |= FIBF_GRP_DELETE;
++
+ 	if (mode & 0001)
+ 		prot |= FIBF_OTR_EXECUTE;
+ 	if (mode & 0004)
+ 		prot |= FIBF_OTR_READ;
+ 	if (mode & 0002)
+ 		prot |= FIBF_OTR_WRITE;
++	if (mode & 0007)
++		prot |= FIBF_OTR_DELETE;
+ 
+ 	AFFS_I(inode)->i_protect = prot;
+ }
+--- a/fs/affs/file.c
++++ b/fs/affs/file.c
+@@ -428,6 +428,24 @@ static int affs_write_begin(struct file
+ 	return ret;
  }
  
- int __init setup_emu2phys_nid(int *dfl_phys_nid)
--- 
-2.25.1
-
++static int affs_write_end(struct file *file, struct address_space *mapping,
++			  loff_t pos, unsigned int len, unsigned int copied,
++			  struct page *page, void *fsdata)
++{
++	struct inode *inode = mapping->host;
++	int ret;
++
++	ret = generic_write_end(file, mapping, pos, len, copied, page, fsdata);
++
++	/* Clear Archived bit on file writes, as AmigaOS would do */
++	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
++		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
++		mark_inode_dirty(inode);
++	}
++
++	return ret;
++}
++
+ static sector_t _affs_bmap(struct address_space *mapping, sector_t block)
+ {
+ 	return generic_block_bmap(mapping,block,affs_get_block);
+@@ -437,7 +455,7 @@ const struct address_space_operations af
+ 	.readpage = affs_readpage,
+ 	.writepage = affs_writepage,
+ 	.write_begin = affs_write_begin,
+-	.write_end = generic_write_end,
++	.write_end = affs_write_end,
+ 	.direct_IO = affs_direct_IO,
+ 	.bmap = _affs_bmap
+ };
+@@ -794,6 +812,12 @@ done:
+ 	if (tmp > inode->i_size)
+ 		inode->i_size = AFFS_I(inode)->mmu_private = tmp;
+ 
++	/* Clear Archived bit on file writes, as AmigaOS would do */
++	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
++		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
++		mark_inode_dirty(inode);
++	}
++
+ err_first_bh:
+ 	unlock_page(page);
+ 	put_page(page);
 
 
