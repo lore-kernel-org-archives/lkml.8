@@ -2,287 +2,226 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF4BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EB1C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92A9E2087C
+	by mail.kernel.org (Postfix) with ESMTP id BACB22080A
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589482;
-	bh=io22j2W5J0jUP4Xcc0zjYON9kfoXqTdxAT6+zgSmmts=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTMVzKdXIp5XfOSczSXohIszdKM0MSvlUrvWkTFVthdsBw3Q1YIgpkOITLuAtZ1mA
-	 prq1j6AWNXhSFe4ZLt7/DFNUiKrCp1rHnjlKpSLpxo8KN+v/sAvUo5eHdcHZYLmTXM
-	 wilBdZh+8m38mGKtvB8Pdbb40Av7o8B811ZT26g8=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h5ETJitS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbgIHSWv (ORCPT
+        id S1732320AbgIHSWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:22:52 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:15656 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbgIHQKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:38 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642F824763;
-        Tue,  8 Sep 2020 15:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579702;
-        bh=io22j2W5J0jUP4Xcc0zjYON9kfoXqTdxAT6+zgSmmts=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UaecDKJa8tBmEoGf4AQZxGnmWVEFI7zKxY/uK9qrseCibtqV92oq6KUd4n49aiFw0
-         FCcziO/J6G+0YzMzbLJFLw9rgx8bvHuBfUX6No9Zcdl0NF1pak0RUV6by/B75xsoWd
-         M11JgcU26+A5zC68ounAKKG+RzdlmgqZjWdvqjI0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: [PATCH 5.8 173/186] mm: track page table modifications in __apply_to_page_range()
-Date:   Tue,  8 Sep 2020 17:25:15 +0200
-Message-Id: <20200908152250.046403540@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1732292AbgIHSWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:22:43 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f57cbef0000>; Wed, 09 Sep 2020 02:22:39 +0800
+Received: from HKMAIL103.nvidia.com ([10.18.16.12])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 08 Sep 2020 11:22:39 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Tue, 08 Sep 2020 11:22:39 -0700
+Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
+ 2020 18:22:36 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
+ by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 8 Sep 2020 18:22:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fQVHsMKUqPMTZ6PepGmxpcKUv7dYCMsx5vEaDc9f+Rn2dAdVBSYrrMWS7NGu/AS50HAoOFN8AY0yWdYmY41KWYOn2FqGemTufquk3NBCu7o2pGCZ0koq4fFEE1Dw+KJ1Y+sbiosLBYtUuVgRp3LR6brYBBGPizit8M7eiGHJOetkyHavXSu/yLYKvbPbaikTeWV/bxt+o9HVy7zM3Q0AXg0iDdoBI5P3u6G+NRy/RDwlJ27iWpTsvjDrHnwp9e6hI8ZB7e5TIbwd+lCxTc9R/SfoMztYuASyVYE1M5BJrx0s2ZSYH+OrrdyPeM+Wav+FIyv+D1JvgbYDfLPer7qABA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DrNqa2tfpqI0xmVcbkSOzziJOYMY7RmZ+mD5/66IPj4=;
+ b=ilqcm0ztprLng6cTMd8B+4Qkdx+yHC/SQsnNei9tiPQltmbRYLLEuDfesfS1eDJ0j0sotvZ6GpEySulO3o8XqrKZqGW8ZOdltrIjascH2/n+TudUm23sWoyFlyFQwpIBnfVkaMM6p1sAjltpwR+MA8mqtWZDaLFrqqq0TxU/ZT7FXysVvUwQPG8f4aJpV8NNCXmQaOLANSJpV5yQ4AhEcoOOeQG4j6aqiiZ98bkuEo5V5eODPYk94KNRtfzUTacRhuIUJ1JJqZX589LpwBRK2/l0TdG1E5p4wSlftO4d1+L43MV3manOrwgNT55LZKi1GrKov09woOXrW2QayxM8mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: acm.org; dkim=none (message not signed)
+ header.d=none;acm.org; dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB3827.namprd12.prod.outlook.com (2603:10b6:a03:1ab::16)
+ by BYAPR12MB2631.namprd12.prod.outlook.com (2603:10b6:a03:6b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Tue, 8 Sep
+ 2020 18:22:34 +0000
+Received: from BY5PR12MB3827.namprd12.prod.outlook.com
+ ([fe80::445b:111e:a091:66f9]) by BY5PR12MB3827.namprd12.prod.outlook.com
+ ([fe80::445b:111e:a091:66f9%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 18:22:33 +0000
+Date:   Tue, 8 Sep 2020 15:22:32 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+CC:     Sagi Grimberg <sagi@grimberg.me>,
+        Yamin Friedman <yaminf@mellanox.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg+lists@ziepe.ca>,
+        <linux-rdma@vger.kernel.org>, <lkp@lists.01.org>
+Subject: Re: [IB/srpt] c804af2c1d: last_state.test.blktests.exit_code.143
+Message-ID: <20200908182232.GP9166@nvidia.com>
+References: <20200802060925.GW23458@shao2-debian>
+ <f8ef3284-4646-94d9-7eea-14ac0873b03b@acm.org>
+ <ed6002b6-cd0c-55c5-c5a5-9c974a476a95@mellanox.com>
+ <0c42aeb4-23a5-b9d5-bc17-ef58a04db8e8@grimberg.me>
+ <128192ad-05ff-fa8e-14fc-479a115311e0@acm.org>
+ <20200824133019.GH1152540@nvidia.com>
+ <2a2ff3a5-f58e-8246-fd09-87029b562347@acm.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2a2ff3a5-f58e-8246-fd09-87029b562347@acm.org>
+X-ClientProxiedBy: MN2PR12CA0010.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::23) To BY5PR12MB3827.namprd12.prod.outlook.com
+ (2603:10b6:a03:1ab::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR12CA0010.namprd12.prod.outlook.com (2603:10b6:208:a8::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend Transport; Tue, 8 Sep 2020 18:22:33 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kFiGG-0034RU-1w; Tue, 08 Sep 2020 15:22:32 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cdf295b5-d919-4996-be48-08d8542427bd
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2631:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB263196681196454DF88120F6C2290@BYAPR12MB2631.namprd12.prod.outlook.com>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3mi0gn1+u0BsiJfXkFdQGuJoTzEaZIZPCnK0DNvCzdY1U1IjMlGZNT9ywgVEs0m0YCla3PWb9PPXT+jUDTwhDwLBtN6BkhDz0s0EanPcGuUCgQFgRAFPeET7LgRY3cmYdSFAZIsl2ILaVlkQjWqIs9FqVj9xQWmIY5XcNm/thmUP9uDHGsZWkN4UpvZQG9NEpYbW7eV/fDy0M2MsGPIz5ZNHZg4MFY8Ss6UVnJfA1ETx3XJTdYHTbW/Me7pg1jJhkrisIu9bYB8jy1xfX4X+b7KLgB/SJU73BwP1agb28C6kPuXocCXr0uXB23Fcm4I0LZG89g0MfVoMtwX8VAthNA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB3827.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(396003)(346002)(39860400002)(136003)(1076003)(66946007)(8676002)(5660300002)(66476007)(66556008)(2906002)(36756003)(54906003)(186003)(6916009)(2616005)(8936002)(86362001)(426003)(478600001)(316002)(26005)(83380400001)(9746002)(33656002)(9786002)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: uvwcwRcHpyZuia+J5Cl1cPw/6JfzkbLVoFByM8zoW2YeDX+yfH/X0v3w0yChcbb815045KKT+LLOCL+vaT/zFgxY5Jk+1D+MREmFgien34XoSpV96RcwNVr4toR/O4GG+O4ix7xUuYl861DAuLBfxYUITAniS6G25I5Zjt5IDlDuK0Xi6+3ZOZ+nxkKrmS9qXd0RcBl+YUjf+9An5oDgKLs7FIZWLpE3eOo5qIBUbihO/MyhewdMlN11sVxVppQEkaRboI/ruIeppggxCHYtzvt2GxkYvLSt0pXAP+JAOkIEGSU6cwRN8O5K2+SHF4QaCkMeDrcY0ve55BSuawFNFBVZLpfQLQAzlJ9KJCBLWs4xA8j1QotWfpOg2qQPJAjW+K57sfz1NbfbLNJShaVlnKGFcFPerktAuWYUqfcW1H+B1u36vxdSGTJ2wB0i09EqzzJOi4IfOKR+wAiGY3+ZEI96ow0uVZmJG6l/9M7TN8vbAKefwWXxJ3wCRJO83dOGMLGrcq/iN86YqiGHzs32DMX8XY1zEf0NSodRKiucm0Gg8deq8/NaoZGj3kFfUDZLilSq8I9sVsZOd2S31y1LndygZfS4IRWnBrRF+CWDZX0t4dADiHOnCU39VhBRhSqjHa0/n6ZrNDeRULa5a9+MHw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdf295b5-d919-4996-be48-08d8542427bd
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB3827.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 18:22:33.7905
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0aMgjKbtHYUWBgwQdTg0YhjJxTppAn7FJZxemfNKGuahmv08W1YDxCZELd32OQsb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2631
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599589359; bh=DrNqa2tfpqI0xmVcbkSOzziJOYMY7RmZ+mD5/66IPj4=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Exchange-Transport-Forked:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=h5ETJitSxWq0Jrac/Z0e0pf3gIKYHCNZBvycwFaPjzq77jbJjlWIwrRHZoMirvB6f
+         nI27pe/jCy6hQyIL22w6hHVfTQhxKo4QY+XgD7Jx1U5eloYs+Vq5yiF+K/om7/ryTJ
+         nvfAV1uKAlynoukIVMQSoqBblEkNMjlfPh39OzX30PDSxb20FYNm0YMJqnMAzG7n/l
+         /LxpWPcCFRBGKzqmRJreolmkwt/ptHMSxzFU2Jy0PV9La29gLbNfhTTdlRQRBYDBzD
+         l1eUCFnS6nlM8n/nGRgBybH6G/PZzzKZTkYq5KAPDYYdztDhMRN2I048NKgpeLieky
+         JLbS9QcUw3DGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Sun, Sep 06, 2020 at 07:58:12PM -0700, Bart Van Assche wrote:
 
-commit e80d3909be42f7e38cc350c1ba109cf0aa51956a upstream.
+> The following appeared:
+> 
+> WARNING: CPU: 5 PID: 1760 at drivers/infiniband/core/device.c:335 ib_device_put+0xf2/0x100 [ib_core]
+> 
+> Call Trace:
+>  rxe_elem_release+0x76/0x90 [rdma_rxe]
+>  rxe_destroy_cq+0x4f/0x70 [rdma_rxe]
+>  ib_free_cq_user+0x12b/0x2b0 [ib_core]
+>  ib_cq_pool_destroy+0xa8/0x140 [ib_core]
+>  __ib_unregister_device+0x9c/0x1c0 [ib_core]
+>  ib_unregister_driver+0x181/0x1a0 [ib_core]
+>  rxe_module_exit+0x31/0x50 [rdma_rxe]
+>  __x64_sys_delete_module+0x22a/0x310
+>  do_syscall_64+0x36/0x80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-__apply_to_page_range() is also used to change and/or allocate
-page-table pages in the vmalloc area of the address space.  Make sure
-these changes get synchronized to other page-tables in the system by
-calling arch_sync_kernel_mappings() when necessary.
+Oh interesting..
 
-The impact appears limited to x86-32, where apply_to_page_range may miss
-updating the PMD.  That leads to explosions in drivers like
+> Do you agree that the above proves that the hang-on-unload is a
+> regression that has been introduced by the cq-pool patches? Is the patch
+> below a good way to fix this?
 
-  BUG: unable to handle page fault for address: fe036000
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  *pde = 00000000
-  Oops: 0002 [#1] SMP
-  CPU: 3 PID: 1300 Comm: gem_concurrent_ Not tainted 5.9.0-rc1+ #16
-  Hardware name:  /NUC6i3SYB, BIOS SYSKLi35.86A.0024.2015.1027.2142 10/27/2015
-  EIP: __execlists_context_alloc+0x132/0x2d0 [i915]
-  Code: 31 d2 89 f0 e8 2f 55 02 00 89 45 e8 3d 00 f0 ff ff 0f 87 11 01 00 00 8b 4d e8 03 4b 30 b8 5a 5a 5a 5a ba 01 00 00 00 8d 79 04 <c7> 01 5a 5a 5a 5a c7 81 fc 0f 00 00 5a 5a 5a 5a 83 e7 fc 29 f9 81
-  EAX: 5a5a5a5a EBX: f60ca000 ECX: fe036000 EDX: 00000001
-  ESI: f43b7340 EDI: fe036004 EBP: f6389cb8 ESP: f6389c9c
-  DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010286
-  CR0: 80050033 CR2: fe036000 CR3: 2d361000 CR4: 001506d0
-  DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-  DR6: fffe0ff0 DR7: 00000400
-  Call Trace:
-    execlists_context_alloc+0x10/0x20 [i915]
-    intel_context_alloc_state+0x3f/0x70 [i915]
-    __intel_context_do_pin+0x117/0x170 [i915]
-    i915_gem_do_execbuffer+0xcc7/0x2500 [i915]
-    i915_gem_execbuffer2_ioctl+0xcd/0x1f0 [i915]
-    drm_ioctl_kernel+0x8f/0xd0
-    drm_ioctl+0x223/0x3d0
-    __ia32_sys_ioctl+0x1ab/0x760
-    __do_fast_syscall_32+0x3f/0x70
-    do_fast_syscall_32+0x29/0x60
-    do_SYSENTER_32+0x15/0x20
-    entry_SYSENTER_32+0x9f/0xf2
-  EIP: 0xb7f28559
-  Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
-  EAX: ffffffda EBX: 00000005 ECX: c0406469 EDX: bf95556c
-  ESI: b7e68000 EDI: c0406469 EBP: 00000005 ESP: bf9554d8
-  DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
-  Modules linked in: i915 x86_pkg_temp_thermal intel_powerclamp crc32_pclmul crc32c_intel intel_cstate intel_uncore intel_gtt drm_kms_helper intel_pch_thermal video button autofs4 i2c_i801 i2c_smbus fan
-  CR2: 00000000fe036000
+> +++ b/drivers/infiniband/core/device.c
+> @@ -1454,8 +1454,8 @@ static void __ib_unregister_device(struct ib_device *ib_dev)
+>  	if (!refcount_read(&ib_dev->refcount))
+>  		goto out;
+> 
+> -	disable_device(ib_dev);
+>  	ib_cq_pool_destroy(ib_dev);
+> +	disable_device(ib_dev);
+> 
+>  	/* Expedite removing unregistered pointers from the hash table */
+>  	free_netdevs(ib_dev);
 
-It looks like kasan, xen and i915 are vulnerable.
+Hum. Not quite..
 
-Actual impact is "on thinkpad X60 in 5.9-rc1, screen starts blinking
-after 30-or-so minutes, and machine is unusable"
+disable_device() ensures that all ib_clients have disconnected from
+the device, up until the clients have disconnected the cq_pool must
+remain operational.
 
-[sfr@canb.auug.org.au: ARCH_PAGE_TABLE_SYNC_MASK needs vmalloc.h]
-  Link: https://lkml.kernel.org/r/20200825172508.16800a4f@canb.auug.org.au
-[chris@chris-wilson.co.uk: changelog addition]
-[pavel@ucw.cz: changelog addition]
+It is reasonable to consider the cq_pool as a built-in client, so I
+would suggest moving it to right around the time the dynamic clients
+are handled. Something like this:
 
-Fixes: 2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
-Fixes: 86cf69f1d893 ("x86/mm/32: implement arch_sync_kernel_mappings()")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Chris Wilson <chris@chris-wilson.co.uk>	[x86-32]
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <stable@vger.kernel.org>	[5.8+]
-Link: https://lkml.kernel.org/r/20200821123746.16904-1-joro@8bytes.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/memory.c |   36 +++++++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
-
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -71,6 +71,7 @@
- #include <linux/dax.h>
- #include <linux/oom.h>
- #include <linux/numa.h>
-+#include <linux/vmalloc.h>
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index c36b4d2b61e0c0..e3651dacad1da6 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -1285,6 +1285,8 @@ static void disable_device(struct ib_device *device)
+ 		remove_client_context(device, cid);
+ 	}
  
- #include <trace/events/kmem.h>
- 
-@@ -2201,7 +2202,8 @@ EXPORT_SYMBOL(vm_iomap_memory);
- 
- static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	pte_t *pte;
- 	int err = 0;
-@@ -2209,7 +2211,7 @@ static int apply_to_pte_range(struct mm_
- 
- 	if (create) {
- 		pte = (mm == &init_mm) ?
--			pte_alloc_kernel(pmd, addr) :
-+			pte_alloc_kernel_track(pmd, addr, mask) :
- 			pte_alloc_map_lock(mm, pmd, addr, &ptl);
- 		if (!pte)
- 			return -ENOMEM;
-@@ -2230,6 +2232,7 @@ static int apply_to_pte_range(struct mm_
- 				break;
- 		}
- 	} while (addr += PAGE_SIZE, addr != end);
-+	*mask |= PGTBL_PTE_MODIFIED;
- 
- 	arch_leave_lazy_mmu_mode();
- 
-@@ -2240,7 +2243,8 @@ static int apply_to_pte_range(struct mm_
- 
- static int apply_to_pmd_range(struct mm_struct *mm, pud_t *pud,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	pmd_t *pmd;
- 	unsigned long next;
-@@ -2249,7 +2253,7 @@ static int apply_to_pmd_range(struct mm_
- 	BUG_ON(pud_huge(*pud));
- 
- 	if (create) {
--		pmd = pmd_alloc(mm, pud, addr);
-+		pmd = pmd_alloc_track(mm, pud, addr, mask);
- 		if (!pmd)
- 			return -ENOMEM;
- 	} else {
-@@ -2259,7 +2263,7 @@ static int apply_to_pmd_range(struct mm_
- 		next = pmd_addr_end(addr, end);
- 		if (create || !pmd_none_or_clear_bad(pmd)) {
- 			err = apply_to_pte_range(mm, pmd, addr, next, fn, data,
--						 create);
-+						 create, mask);
- 			if (err)
- 				break;
- 		}
-@@ -2269,14 +2273,15 @@ static int apply_to_pmd_range(struct mm_
- 
- static int apply_to_pud_range(struct mm_struct *mm, p4d_t *p4d,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	pud_t *pud;
- 	unsigned long next;
- 	int err = 0;
- 
- 	if (create) {
--		pud = pud_alloc(mm, p4d, addr);
-+		pud = pud_alloc_track(mm, p4d, addr, mask);
- 		if (!pud)
- 			return -ENOMEM;
- 	} else {
-@@ -2286,7 +2291,7 @@ static int apply_to_pud_range(struct mm_
- 		next = pud_addr_end(addr, end);
- 		if (create || !pud_none_or_clear_bad(pud)) {
- 			err = apply_to_pmd_range(mm, pud, addr, next, fn, data,
--						 create);
-+						 create, mask);
- 			if (err)
- 				break;
- 		}
-@@ -2296,14 +2301,15 @@ static int apply_to_pud_range(struct mm_
- 
- static int apply_to_p4d_range(struct mm_struct *mm, pgd_t *pgd,
- 				     unsigned long addr, unsigned long end,
--				     pte_fn_t fn, void *data, bool create)
-+				     pte_fn_t fn, void *data, bool create,
-+				     pgtbl_mod_mask *mask)
- {
- 	p4d_t *p4d;
- 	unsigned long next;
- 	int err = 0;
- 
- 	if (create) {
--		p4d = p4d_alloc(mm, pgd, addr);
-+		p4d = p4d_alloc_track(mm, pgd, addr, mask);
- 		if (!p4d)
- 			return -ENOMEM;
- 	} else {
-@@ -2313,7 +2319,7 @@ static int apply_to_p4d_range(struct mm_
- 		next = p4d_addr_end(addr, end);
- 		if (create || !p4d_none_or_clear_bad(p4d)) {
- 			err = apply_to_pud_range(mm, p4d, addr, next, fn, data,
--						 create);
-+						 create, mask);
- 			if (err)
- 				break;
- 		}
-@@ -2326,8 +2332,9 @@ static int __apply_to_page_range(struct
- 				 void *data, bool create)
- {
- 	pgd_t *pgd;
--	unsigned long next;
-+	unsigned long start = addr, next;
- 	unsigned long end = addr + size;
-+	pgtbl_mod_mask mask = 0;
- 	int err = 0;
- 
- 	if (WARN_ON(addr >= end))
-@@ -2338,11 +2345,14 @@ static int __apply_to_page_range(struct
- 		next = pgd_addr_end(addr, end);
- 		if (!create && pgd_none_or_clear_bad(pgd))
- 			continue;
--		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create);
-+		err = apply_to_p4d_range(mm, pgd, addr, next, fn, data, create, &mask);
- 		if (err)
- 			break;
- 	} while (pgd++, addr = next, addr != end);
- 
-+	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
-+		arch_sync_kernel_mappings(start, start + size);
++	ib_cq_pool_destroy(ib_dev);
 +
- 	return err;
- }
+ 	/* Pairs with refcount_set in enable_device */
+ 	ib_device_put(device);
+ 	wait_for_completion(&device->unreg_completion);
+@@ -1328,6 +1330,8 @@ static int enable_device_and_get(struct ib_device *device)
+ 			goto out;
+ 	}
  
-
-
++	ib_cq_pool_init(device);
++
+ 	down_read(&clients_rwsem);
+ 	xa_for_each_marked (&clients, index, client, CLIENT_REGISTERED) {
+ 		ret = add_client_context(device, client);
+@@ -1400,7 +1404,6 @@ int ib_register_device(struct ib_device *device, const char *name)
+ 		goto dev_cleanup;
+ 	}
+ 
+-	ib_cq_pool_init(device);
+ 	ret = enable_device_and_get(device);
+ 	dev_set_uevent_suppress(&device->dev, false);
+ 	/* Mark for userspace that device is ready */
+@@ -1455,7 +1458,6 @@ static void __ib_unregister_device(struct ib_device *ib_dev)
+ 		goto out;
+ 
+ 	disable_device(ib_dev);
+-	ib_cq_pool_destroy(ib_dev);
+ 
+ 	/* Expedite removing unregistered pointers from the hash table */
+ 	free_netdevs(ib_dev);
