@@ -2,164 +2,143 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B711BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1455C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F12F2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B19C2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZnrFESfj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VB4HA7ZY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbgIHT15 (ORCPT
+        id S1732216AbgIHT2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54342 "EHLO
+        Tue, 8 Sep 2020 15:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731041AbgIHQAE (ORCPT
+        with ESMTP id S1731042AbgIHQAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8713C06179E
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:54:45 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id nw23so23269883ejb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:54:45 -0700 (PDT)
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4CBC004592
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:03:40 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id jw11so2270356pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=17XSh9T9gNq415bfysrvgCiRW+EHfAHcluquDHGHNnU=;
-        b=ZnrFESfj2n78+Vm/aeBARRjr0Cl6BRKSKMzxUenn2YsqHz8Pl5VtWf2kgaAcBY42tG
-         B6CWuSSZlDpqHRQb6BvAO8Qj0aSubGzT2OhkHzSatWgHZuhO2NLDDWNtkzr4B3imS/ar
-         vl/89rmyhmxmIqD0cMqudwdc04Tupg9qwaODQQgwyE2ZseTX3Oi4XRaKk99z2tCwuCfj
-         xF3ioMRogkeEctXIZNPqqZoa8qg7SATyuUHcJvqPp0NZvi3TzX7TxnBmmb77PTiAyqqS
-         DDuXcYW5+1LtcAKBO7gHRXJ7JKmKD3P/Xjy6nG/2KEc5U2+vRVO9A35znCSC6HNByGzJ
-         3lgw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YnSMm4ogisR5W8OzFSgC2w8o0qTW3G5f4K1/tGLIEYA=;
+        b=VB4HA7ZYUddQ/czN0QR6hFOtLPOVBlc7yLlibZ8LGNe7lrh/c+qET5DMkAXLxTmt7c
+         2My3M29VqYQtJyC2HUJaeqWuSn+14HZLUiuedh3TdzD9kopJC9AfijVLH4nCSa4SzDr7
+         CyzRiOKsGvrjC/qzkt0HKNyrW6VRexUTgx+p1tuEC0nso2zv0fhCkNFmuqGKI6ZYrPG1
+         R4PSFPcQyjzmbmpJNvZBSXlLgo6rkjfVad941h7r8FI3PqAb3aU7MvPrNtHPe/fULAlV
+         AzbextZqwrYLgzq9E47RsEi0rt0YEJvllqQkaID87k25MLGjR0sydF6xl/dg04qRjQ8n
+         zaKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=17XSh9T9gNq415bfysrvgCiRW+EHfAHcluquDHGHNnU=;
-        b=rnT3s1sWX8zFG0wDSkuuKNXYASPujgqr3vI9bvMMHXXG4WH9nY+OfK1Htm/2AyXi5t
-         HbeQOXHXJxZA2qt1VnY1tCXm4fcjsCXBEa/xotGiTX5osk6zM1pvAGLn8alsh80FaIGa
-         A5rfB8Ba+eNzOIdbTavOu81tPbUAwXnN4w58fyh9eZJin1fwV6SwZpUpwKlkEAvRnjLX
-         iNEf8yXC7v2LWfYx6aOcokB6vm82cOYDSruH80oSxMxMes436j2NTUO1P5j7ByrUx0oJ
-         jJ0znwhdLcLMHVl//ShGW4MkKFnsbm0KHaWW08rQfookblBLohQGVInT7s7y5z4sLiXZ
-         w0Qg==
-X-Gm-Message-State: AOAM533Y3ZUNyZHDKapGW2Sz85jDF+puDnvN0Z3yu3sFBnT6JxBwVjzM
-        zZ70u5U8SfSUyuAEe/6Xjr0eQEkzD/9Ft+0qUTanLA==
-X-Google-Smtp-Source: ABdhPJxOnl/Db9+LhMKu/mSd4ErqUeNGdtKZz7PhLmJ8sKtuj9avhfTUo76ZISBf0rvnNW6uboUfYq0v27quH+bjBW0=
-X-Received: by 2002:a17:906:3e90:: with SMTP id a16mr17063280ejj.363.1599580484242;
- Tue, 08 Sep 2020 08:54:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YnSMm4ogisR5W8OzFSgC2w8o0qTW3G5f4K1/tGLIEYA=;
+        b=U9Ws8OI9RYuQ1TfCOIMOUoEIyVCTo98jJ9vXd06eKqfi6zsF+cbwxWdEYb0X3ITEsU
+         CqqnDEB9M+em2EJsld11MASSVzj3Zb+SaSNEkDUAbhrKxm8Z2fvAzxKY+tNq6S4FI0af
+         f6wHp9rYI7E/EdtA1CtVXpzKDy8i/FrJ5EhKu3bpdFIi/3KsHLSJoEn+2m+beuf5zTlq
+         nT22Cs1ZNlmE9YKvxzS9D07KynP4M++0tPDBpI2AmIM/mToIk92prHq9JUyycWfIYbq0
+         /7wGXGFTrieyIj015EsuqT74sFkqBsZcnKqAayeGN4N9IUiB68TYl/WX6QnRVUJW8jfZ
+         PV/A==
+X-Gm-Message-State: AOAM5333Yr6PZYx/992qzoGyXiJOHhIRpAIzaE/IRDllOFQ31X5YqZQV
+        NvxGmKwm8GVFZ2A6J/V3OtKW
+X-Google-Smtp-Source: ABdhPJwaSMvsTZUDr7jKf0C5tA5mVnmNXNN7uyn6m0m5LM0pEXGmuIkqRDs+yGpf3+HmM9uGWPhsig==
+X-Received: by 2002:a17:90b:4b82:: with SMTP id lr2mr4319741pjb.184.1599577419882;
+        Tue, 08 Sep 2020 08:03:39 -0700 (PDT)
+Received: from mani-NUC7i5DNKE ([2409:4072:6213:6149:94b7:eeb3:82a5:2b53])
+        by smtp.gmail.com with ESMTPSA id a18sm4160368pgw.50.2020.09.08.08.03.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Sep 2020 08:03:39 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 20:33:30 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Amit Kucheria <amitk@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH 5/7] cpufreq: qcom-hw: Use regmap for accessing hardware
+ registers
+Message-ID: <20200908150321.GA2352@mani-NUC7i5DNKE>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-6-manivannan.sadhasivam@linaro.org>
+ <20200908103444.5e526uawa45om6lt@vireshk-i7>
+ <20200908111141.GB23095@mani>
+ <20200908111813.bbgfxo5v7qt6ujpc@vireshk-i7>
+ <CAHLCerMndYeEBOxtj8mV7OdOP9pufx+C7n1F9m+CFAneuh8DnA@mail.gmail.com>
+ <CAHLCerPm6MXr662CaA3zZm4fQ3dJ_StJt3Ehutc3xnc0L9wj3Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200831032006.1019978-1-warthog618@gmail.com>
- <CAMpxmJUETJgmxzWzHumOVr+vWFQ27P71MtcdSdf_=jvtrSfRPg@mail.gmail.com>
- <20200903083750.GA17445@sol> <20200904125250.GA323947@sol>
- <CAMpxmJWVZ8Bf1gPibvbk=E5XNvQ_i76E430MMhUWwE1ACoPTQg@mail.gmail.com> <9db62b42-9a1e-0264-e88c-e636004cb629@linuxfoundation.org>
-In-Reply-To: <9db62b42-9a1e-0264-e88c-e636004cb629@linuxfoundation.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 8 Sep 2020 17:54:33 +0200
-Message-ID: <CAMpxmJVbujnp+Z0b3utDsGmhUgCbhydorOo-9e-=gVctT55NAg@mail.gmail.com>
-Subject: Re: [PATCH v6 00/20] gpio: cdev: add uAPI v2
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerPm6MXr662CaA3zZm4fQ3dJ_StJt3Ehutc3xnc0L9wj3Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 5:24 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> On 9/4/20 7:02 AM, Bartosz Golaszewski wrote:
-> > On Fri, Sep 4, 2020 at 2:52 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >>
-> >> On Thu, Sep 03, 2020 at 04:37:50PM +0800, Kent Gibson wrote:
-> >>> On Thu, Sep 03, 2020 at 10:02:04AM +0200, Bartosz Golaszewski wrote:
-> >>>> On Mon, Aug 31, 2020 at 5:21 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >>>>>
-> >> [snip]
-> >>>>
-> >>>> To me it looks good, just a couple nits here and there and some questions.
-> >>>>
-> >>>> I think it's worth deciding whether we want to keep the selftests in
-> >>>> tools/testing/selftests/gpio/ and then maybe consider porting
-> >>>> gpio-mockup-chardev.c to V2 or simply outsource it entirely to
-> >>>> libgpiod.
-> >>>>
-> >>>
-> >>> Ooops - I wasn't even aware they existed - though it had crossed my mind
-> >>> that the kernel should have some selftests somewhere - I use the libgpiod
-> >>> tests, from my libgpiod port, and my own Go based test suite for my testing,
-> >>> as well as some smoke tests with the tools/gpio.
-> >>>
-> >>> The libgpiod tests only cover v1 equivalent functionality, while my Go
-> >>> tests cover the complete uAPI, and both v1 and v2.
-> >>>
-> >>> It would be good for the kernel to at least have some smoke tests to
-> >>> confirm basic functionality, even thorough testing is left to a
-> >>> userspace library.  So the existing tests should be ported to v2, though
-> >>> should also retain the v1 tests if v1 is still compiled in.
-> >>>
-> >>
-> >> I've got a v7 ready to submit that includes a couple of patches for the
-> >> gpio-mockup selftests (their primary purpose appears to be testing the
-> >> mockup module, rather than the GPIO ABI), but I now notice that the
-> >> selftests/gpio section of the tree has a different maintainer:
-> >>
-> >> scripts/get_maintainer.pl 0021-selftests-gpio-port-to-GPIO-uAPI-v2.patch
-> >> Bamvor Jian Zhang <bamv2005@gmail.com> (maintainer:GPIO MOCKUP DRIVER)
-> >> Shuah Khan <shuah@kernel.org> (maintainer:KERNEL SELFTEST FRAMEWORK)
-> >> linux-gpio@vger.kernel.org (open list:GPIO MOCKUP DRIVER)
-> >> linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-> >> linux-kernel@vger.kernel.org (open list)
+On 0908, Amit Kucheria wrote:
+> On Tue, Sep 8, 2020 at 5:18 PM Amit Kucheria <amitk@kernel.org> wrote:
 > >
-> > Bamvor, Shuah: do you still have interest in maintaining these, or can
-> > we update MAINTAINERS?
+> > On Tue, Sep 8, 2020 at 4:48 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 08-09-20, 16:41, Manivannan Sadhasivam wrote:
+> > > > On 0908, Viresh Kumar wrote:
+> > > > > On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
+> > > > > > Use regmap for accessing cpufreq registers in hardware.
+> > > > >
+> > > > > Why ? Please mention why a change is required in the log.
+> > > > >
+> > > >
+> > > > Only because it is recommended to use regmap for abstracting the hw access.
+> > >
+> > > Yes it can be very useful in abstracting the hw access in case of
+> > > busses like SPI/I2C, others, but in this case there is only one way of
+> > > doing it with the exact same registers. I am not sure it is worth it
+> > > here. FWIW, I have never played with regmaps personally, and so every
+> > > chance I can be wrong here.
 > >
->
-> I maintain kselftests and gpio selftest falls under that. Please send
-> selftest patches to me so I can review them.
->
-> As for the gpio mock driver and test itself, you will have to wait for
-> Bamvor to respond.
->
+> > One could handle the reg offsets through a struct initialisation, but
+> > then you end up with lots of #defines for bitmasks and bits for each
+> > version of the IP. And the core code becomes a bit convoluted IMO,
+> > trying to handle the differences.
+> >
+> > regmap hides the differences of the bit positions and register offsets
+> > between several IP versions.
+> >
+> > > > Moreover it handles the proper locking for us in the core (spinlock vs mutex).
+> > >
+> > > What locking do you need here ?
+> >
+> > Right, locking isn't the main reason here.
+> 
+> Having said this, perhaps this patch can be held back for now, since
+> we're not yet using some of the features of regmap to abstract away
+> bit fields and such.
+> 
 
-Hi Shuah,
+Okay. Dropping this patch for now (in v2)!
 
-I've been de facto maintaining gpio-mockup for a couple years now.
-Bamvor has been quite inactive as far as gpio testing goes. I think
-it's fine if you ack the selftests changes.
+Thanks,
+Mani
 
-In fact: I don't want selftests to block getting V2 uAPI upstream so
-if that'll look like it's going to take more time then I'm for merging
-V2 without any changes to selftests - in the end we have tests in
-user-space already.
-
-Bart
-
-> >>
-> >> The v7 patch up to that point restores the functions that the selftests
-> >> are using so that they build and run again.
->
-> This test has been problematic because of its dependency on tools/gpio.
->
-> >> So I should hold off on the selftest patches and submit them separately
-> >> after the GPIO changes are in?
-> >>
->
-> Please send me the selftest patches. Also see the comments in
-> selftests/Makefile about excluding the gpio test from default run.
->
-> thanks,
-> -- Shuah
->
->
+> We don't strictly need it for just different register offsets.
+> 
+> Regards,
+> Amit
