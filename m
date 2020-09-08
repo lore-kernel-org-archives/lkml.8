@@ -2,82 +2,253 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B59208C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6FA2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IGQBYkGX"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kvtUP+uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgIHKIk (ORCPT
+        id S1729223AbgIHKKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56470 "EHLO
+        Tue, 8 Sep 2020 06:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728828AbgIHKIj (ORCPT
+        with ESMTP id S1728904AbgIHKJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:08:39 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA175C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 03:08:38 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f10bf005903392eda591655.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:5903:392e:da59:1655])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 8 Sep 2020 06:09:58 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79922C061573;
+        Tue,  8 Sep 2020 03:09:58 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 64D6C1EC0428;
-        Tue,  8 Sep 2020 12:08:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599559717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=VOcGA+H2HtnCYJQ+in3FX6Ci+Wut7LjFO5TvqGEf1E8=;
-        b=IGQBYkGXWxs4Nohn6b3ekc2sk3kMSkNxdmfLHqeMzYX/4urjbvQpt2K0oSRUWNUXqH92YC
-        43atIvkNOja5TwYcZiPZwZgl6iLIxe9CGax2ym+GnJmE1IjPIlZh1MmnYYxyiGieJ5wweK
-        /Z55g+HogcnZ7pTvI5IGLQxJ2Qanh9w=
-Date:   Tue, 8 Sep 2020 12:08:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
-Message-ID: <20200908100837.GC25236@zn.tnic>
-References: <20200906212130.GA28456@zn.tnic>
- <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
- <20200908094650.GA25236@zn.tnic>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bm19C57rzz9sSn;
+        Tue,  8 Sep 2020 20:09:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599559795;
+        bh=lZRo1AJe7NLghAYxOdxi4cCYXbYQD+UNnbH2B1wnMj0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kvtUP+uoKjyjyJARJFVxeb0aD7q+MFWOU5DWMkgCceUDlPDvEfMysVBzqe/2GnT/z
+         DhqwqIqhlMs87rWP1PC+upmkLhVKB00lkveXP/ze6H4DOeOO/PJPecZpVDh+mksOB4
+         TjIvtYunH+2QZhpc5EJsfrYZkiJQhhOR93CxSndYNx9Sbcpu0LdbQGFxVJJzanto2s
+         ZK0WJEXTVAMbInCFXJDxtoRathJV9Vlr6Fiz6st42hI4ZtP2p/YcrwP8E0yvHUYTXz
+         mOMkVIdQlfdWl1nIheTSawvQ/mSeHQJljDzR4SRlQCHxye0Rx1arnsbxuzBmV/Rfrt
+         YHINsBKoq8oMQ==
+Date:   Tue, 8 Sep 2020 20:09:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Roger Pau Monne <roger.pau@citrix.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200908200950.1368e71b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200908094650.GA25236@zn.tnic>
+Content-Type: multipart/signed; boundary="Sig_/463AYpVOlzwrXrwSpvMOZun";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 11:46:50AM +0200, Borislav Petkov wrote:
-> So, Andy suggested we do a simple .fixup so that when the RDMSR fails,
-> in the fixup we panic directly.
+--Sig_/463AYpVOlzwrXrwSpvMOZun
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok, so I think this is what Andy meant last night and PeterZ just
-suggested it too:
+Hi all,
 
-We do a:
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-	 _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_panic)
+drivers/xen/unpopulated-alloc.c: In function 'fill_list':
+drivers/xen/unpopulated-alloc.c:30:9: error: 'struct dev_pagemap' has no me=
+mber named 'res'; did you mean 'ref'?
+   30 |  pgmap->res.name =3D "Xen scratch";
+      |         ^~~
+      |         ref
+drivers/xen/unpopulated-alloc.c:31:9: error: 'struct dev_pagemap' has no me=
+mber named 'res'; did you mean 'ref'?
+   31 |  pgmap->res.flags =3D IORESOURCE_MEM | IORESOURCE_BUSY;
+      |         ^~~
+      |         ref
+drivers/xen/unpopulated-alloc.c:33:51: error: 'struct dev_pagemap' has no m=
+ember named 'res'; did you mean 'ref'?
+   33 |  ret =3D allocate_resource(&iomem_resource, &pgmap->res,
+      |                                                   ^~~
+      |                                                   ref
+In file included from include/asm-generic/memory_model.h:5,
+                 from arch/x86/include/asm/page.h:76,
+                 from arch/x86/include/asm/thread_info.h:12,
+                 from include/linux/thread_info.h:38,
+                 from arch/x86/include/asm/preempt.h:7,
+                 from include/linux/preempt.h:78,
+                 from include/linux/spinlock.h:51,
+                 from include/linux/mmzone.h:8,
+                 from include/linux/gfp.h:6,
+                 from drivers/xen/unpopulated-alloc.c:3:
+drivers/xen/unpopulated-alloc.c:53:35: error: 'struct dev_pagemap' has no m=
+ember named 'res'; did you mean 'ref'?
+   53 |   xen_pfn_t pfn =3D PFN_DOWN(pgmap->res.start);
+      |                                   ^~~
+include/linux/pfn.h:20:23: note: in definition of macro 'PFN_DOWN'
+   20 | #define PFN_DOWN(x) ((x) >> PAGE_SHIFT)
+      |                       ^
+drivers/xen/unpopulated-alloc.c:58:30: error: 'struct dev_pagemap' has no m=
+ember named 'res'; did you mean 'ref'?
+   58 |     release_resource(&pgmap->res);
+      |                              ^~~
+      |                              ref
+drivers/xen/unpopulated-alloc.c:69:28: error: 'struct dev_pagemap' has no m=
+ember named 'res'; did you mean 'ref'?
+   69 |   release_resource(&pgmap->res);
+      |                            ^~~
+      |                            ref
+fs/fuse/virtio_fs.c: In function 'virtio_fs_setup_dax':
+fs/fuse/virtio_fs.c:838:9: error: 'struct dev_pagemap' has no member named =
+'res'; did you mean 'ref'?
+  838 |  pgmap->res =3D (struct resource){
+      |         ^~~
+      |         ref
 
-which panics straight in the #GP handler and avoids the IRET.
+Caused by commit
 
-I mean, we want to panic there because architectural violation and we
-won't have to deal with the IRET...
+  b3e022c5a68c ("mm/memremap_pages: convert to 'struct range'")
 
-Hohumm, sounds like the right thing to do in the face of the brokenness
-of this magnificent architecture.</maxed out sarcasm>.
+interacting with commit
 
--- 
-Regards/Gruss,
-    Boris.
+  9e2369c06c8a ("xen: add helpers to allocate unpopulated memory")
 
-https://people.kernel.org/tglx/notes-about-netiquette
+from Linus' tree (in v5.9-rc4) and commit
+
+  7e833303db20 ("virtiofs: set up virtio_fs dax_device")
+
+from the fuse tree.
+
+I have added the following patch which may require more work but at
+least makes it all build.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 8 Sep 2020 20:00:20 +1000
+Subject: [PATCH] merge fix up for "mm/memremap_pages: convert to 'struct
+ range'"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/xen/unpopulated-alloc.c | 15 +++++++++------
+ fs/fuse/virtio_fs.c             |  3 +--
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/xen/unpopulated-alloc.c b/drivers/xen/unpopulated-allo=
+c.c
+index 3b98dc921426..9fa7ce330628 100644
+--- a/drivers/xen/unpopulated-alloc.c
++++ b/drivers/xen/unpopulated-alloc.c
+@@ -18,6 +18,7 @@ static unsigned int list_count;
+ static int fill_list(unsigned int nr_pages)
+ {
+ 	struct dev_pagemap *pgmap;
++	struct resource res;
+ 	void *vaddr;
+ 	unsigned int i, alloc_pages =3D round_up(nr_pages, PAGES_PER_SECTION);
+ 	int ret;
+@@ -27,10 +28,10 @@ static int fill_list(unsigned int nr_pages)
+ 		return -ENOMEM;
+=20
+ 	pgmap->type =3D MEMORY_DEVICE_GENERIC;
+-	pgmap->res.name =3D "Xen scratch";
+-	pgmap->res.flags =3D IORESOURCE_MEM | IORESOURCE_BUSY;
++	res.name =3D "Xen scratch";
++	res.flags =3D IORESOURCE_MEM | IORESOURCE_BUSY;
+=20
+-	ret =3D allocate_resource(&iomem_resource, &pgmap->res,
++	ret =3D allocate_resource(&iomem_resource, &res,
+ 				alloc_pages * PAGE_SIZE, 0, -1,
+ 				PAGES_PER_SECTION * PAGE_SIZE, NULL, NULL);
+ 	if (ret < 0) {
+@@ -38,6 +39,8 @@ static int fill_list(unsigned int nr_pages)
+ 		kfree(pgmap);
+ 		return ret;
+ 	}
++	pgmap->range.start =3D res.start;
++	pgmap->range.end =3D res.end;
+=20
+ #ifdef CONFIG_XEN_HAVE_PVMMU
+         /*
+@@ -50,12 +53,12 @@ static int fill_list(unsigned int nr_pages)
+          * conflict with any devices.
+          */
+ 	if (!xen_feature(XENFEAT_auto_translated_physmap)) {
+-		xen_pfn_t pfn =3D PFN_DOWN(pgmap->res.start);
++		xen_pfn_t pfn =3D PFN_DOWN(res.start);
+=20
+ 		for (i =3D 0; i < alloc_pages; i++) {
+ 			if (!set_phys_to_machine(pfn + i, INVALID_P2M_ENTRY)) {
+ 				pr_warn("set_phys_to_machine() failed, no memory added\n");
+-				release_resource(&pgmap->res);
++				release_resource(&res);
+ 				kfree(pgmap);
+ 				return -ENOMEM;
+ 			}
+@@ -66,7 +69,7 @@ static int fill_list(unsigned int nr_pages)
+ 	vaddr =3D memremap_pages(pgmap, NUMA_NO_NODE);
+ 	if (IS_ERR(vaddr)) {
+ 		pr_err("Cannot remap memory range\n");
+-		release_resource(&pgmap->res);
++		release_resource(&res);
+ 		kfree(pgmap);
+ 		return PTR_ERR(vaddr);
+ 	}
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index da3ede268604..8f27478497fa 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -835,8 +835,7 @@ static int virtio_fs_setup_dax(struct virtio_device *vd=
+ev, struct virtio_fs *fs)
+ 	 * initialize a struct resource from scratch (only the start
+ 	 * and end fields will be used).
+ 	 */
+-	pgmap->res =3D (struct resource){
+-		.name =3D "virtio-fs dax window",
++	pgmap->range =3D (struct range){
+ 		.start =3D (phys_addr_t) cache_reg.addr,
+ 		.end =3D (phys_addr_t) cache_reg.addr + cache_reg.len - 1,
+ 	};
+--=20
+2.28.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/463AYpVOlzwrXrwSpvMOZun
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XWG4ACgkQAVBC80lX
+0Gxhmwf+NLeJukOXVPVJpQjC16HWxFr2fVzBlL1BbTvwoJu2+SdA3yB8sSNMuaCN
+qiQG4Kh85SCiy5yMOcUTr2Jz7L8Zifngm+D/dElX+h4Tofx1x3Ns5aE+JA6cH16T
+KUIyJ1FbuEKAVloc8IGTDxrZUk7nr8dYFbix6riC4lbAtka6REz8uvZP1p0wgruu
+D3cvcZJ1DlOBG7B6Lk02HxocnajBZIm6VO6ASy6h4oDq8coC456VaXc+7CEdw1CI
+xkbO9T+d01AGKKSN5NjPvUbAZFFVKnL64TuUmRq4CLbfbusYWwbdKXHv4SIt4h5J
+guVYTeALpDbTndVVOiPuJ/YtedtdZw==
+=l7Y1
+-----END PGP SIGNATURE-----
+
+--Sig_/463AYpVOlzwrXrwSpvMOZun--
