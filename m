@@ -2,312 +2,181 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCE3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A4FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0200721741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A473421741
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:21:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="KECIOW3I"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QGTi26q9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgIHJSU (ORCPT
+        id S1728844AbgIHJVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:18:20 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:26636 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbgIHJSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:18:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=6903; q=dns/txt; s=axis-central1;
-  t=1599556696; x=1631092696;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TEEozU67nGxX3siJVtdFbZmHHEp3Nx0htJv3gTsxY1w=;
-  b=KECIOW3I1tsm0+cJOzsTx9zDLEER565Tlj90KbbRGL7Qs4Rj0iCwLb8P
-   vuwd1fcpujZsszwm+QpH15vyFEEmikWzeGCX6Op1oewE/eb/SOBRekLmX
-   eTluJpT/ud6WaWDnqx1ZrNcdLd9WSLYpQf7NoJ8uJ9aepo+9Ed807uhi+
-   y4Lw5wONBmYESIEa6eN7BGytem4thCXc90XEj5tvGFla/6TLpoLONaRHM
-   3lCDuI2OQuhjyse5NYs118Foz0vJ+3VzfB8WmJ0HIQu7TasDl9dQULI/o
-   6UvUDusI8LHTQqUdFBhfamTBlhnq83rMZmwcmvzqYQIH30rDYfGrElO5q
-   g==;
-IronPort-SDR: 8ihknXVvMLPdLUhNh8gjuGhyi4/EgqK6hB6R3X5BMhXKfnUBABR2KLGJtza23yQrPOrQlsfPCz
- yykSr4Zpbt9SLBRLJP+foAFxFRzrn0dkA9bo+OAdAu3EHIgg0Qxz8lFzt1ks709U+oXX4iGIaT
- VrtgJAFVQ+q2Z3BZNC+tGGXSNH2DaSrTa3kaqniQi79lPG1AGRyXyVuc76XQlnGqOGOYJxtNMb
- CNMI8ZdJuBwtV573AgKSfIfa4CCIpvyA7MIk826ezYlWxqHEulVMBEDtY2oyFVJKkpxSlSRVLa
- v/M=
-X-IronPort-AV: E=Sophos;i="5.76,405,1592863200"; 
-   d="scan'208";a="12654985"
-From:   Camel Guo <camel.guo@axis.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <tiwai@suse.com>,
-        <dmurphy@ti.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@axis.com>, Camel Guo <camelg@axis.com>
-Subject: [PATCH] ASoC: tlv320adcx140: Add support for master mode
-Date:   Tue, 8 Sep 2020 11:18:12 +0200
-Message-ID: <20200908091812.1441-1-camel.guo@axis.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 8 Sep 2020 05:21:25 -0400
+Received: from mail-eopbgr130044.outbound.protection.outlook.com ([40.107.13.44]:46734
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728556AbgIHJVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 05:21:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=li4o5Tof4axTSqe4YWwxob7A4IWIFvrAnzn4ouMqdMP+KX0ya1uvSBq15itxSYYc6qpuICMROYSFI6NHVwiYSEwpuD30tqFGEiNWTFlhDC78AkgwpCz3Acpe6dc35Uxy3CBy47Vn52Xz/DDWt6swhn3Ml1LBtGQp8NM6L/u4gixRMFv3ntXlHV2QBB5fIh02k9+x6K0KeJOqRiUB1ksJwA1ZLZOtAs65QVRsAVVeL9CPpJBfI/jI5IAabmieFyaySu4JOvsUqaCBO0vowaj6YQ6d0JMpLbQ6JwOfiInHGNpnYXaE6FGP7bkpNnnkovtxhjA8CBTu+VVak7TIpS9g2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EwC+CLnLZujvR+x644yqOwTf8zKz86MxU3oi5BhmBfg=;
+ b=IkFN0BckljdauLp3P3APka5CBrhDOWZLxxL2MiQrYhd/ACkkqhjfxVkoG09hrGVWqYm6PwQUfNiaowca+hRH1/MKqMYjc37vaIelesSHL5WI27r2Rz4DPZkV8JFj7JbUthe2Agf31gelAu1tr7Xmr35tBkx8lbsVY/evy7ABensbMLP26LPBEEcHA6fCDuEYAWabdcd9bUwVBG5NJlLoFifK26WH8GgaTiPuvhrpxJnXmTPm5jGRvhomLxfGOPJghjBbrFB3VJsTWDvk0f9lhWw08qVrzYvwcL7HCOuLaQ367SJsZ5xFrnzSgSHbLZ4Kt82QIhcKyx5kjKqXPzOv0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EwC+CLnLZujvR+x644yqOwTf8zKz86MxU3oi5BhmBfg=;
+ b=QGTi26q9CL6YLdxt2raigSb0sZ1/FTo0LCDqoUw2Iw8VrJxIM92KJkzwiMz+JqKUHryEtPnGhZOEMI+YQpnnSL9NuooCAFQKmQu6J0fLLgIJ3Q8hByMRy8S4MPo1tLDhPM1LSBBqQktzXyaF7erkKo46XGqQ0WZ2gbXGDbj3sw0=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB7PR04MB4937.eurprd04.prod.outlook.com (2603:10a6:10:18::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
+ 2020 09:21:16 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 09:21:16 +0000
+From:   peng.fan@nxp.com
+To:     sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, abel.vesa@nxp.com
+Cc:     kernel@pengutronix.de, linux-imx@nxp.com, Anson.Huang@nxp.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, aisheng.dong@nxp.com,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] clk: imx: lpcg-scu: SW workaround for errata (e10858)
+Date:   Tue,  8 Sep 2020 17:14:47 +0800
+Message-Id: <1599556487-31364-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
 Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0003.apcprd02.prod.outlook.com
+ (2603:1096:3:17::15) To DB6PR0402MB2760.eurprd04.prod.outlook.com
+ (2603:10a6:4:a1::14)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 10.192.242.69 (119.31.174.66) by SG2PR02CA0003.apcprd02.prod.outlook.com (2603:1096:3:17::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3348.15 via Frontend Transport; Tue, 8 Sep 2020 09:21:12 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fe998cae-0d69-49f9-a8ac-08d853d88967
+X-MS-TrafficTypeDiagnostic: DB7PR04MB4937:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR04MB4937F4D53A56D1DBEB3C6AEC88290@DB7PR04MB4937.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QGM7MJ5Fn8qh97WIYvIeId0dnNQH3O3ycA06OWblaO9Sk8Wy25t4PGVYnVXxxtk9POylBZ2KeWcldSUAQ9knP6AbJQaDzy1O7B+mfIjuoXGbEp/lA3gPqrWnaADjXxT3cDALcgb62qxPtXc1qLgomn0gZy0l9bqB/MA7hSyRRokAWAXGd/+yNKadcNXKjXXruP4UZlvhPcPbfmHOT6Md3eykSX7OaocR2N/OUGy8Y/hZOIzTOcI/iP6QzGokd6biyS0rZ/wtkfH+ajCFMcKr/rdoWrZhH+FCwcauzmIn4etXXrVNLaMK4W8KLaD/ZcxIE7cdPklP9FjUZlNuOt5lzQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(956004)(52116002)(16526019)(4326008)(5660300002)(66946007)(2906002)(6486002)(16576012)(8936002)(36756003)(478600001)(26005)(6666004)(66476007)(86362001)(2616005)(186003)(9686003)(316002)(66556008)(8676002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: p7jEZWPUxybH5aOvBeLrIQD4rjLQ4qUAoazdRy81D7EGOiaLuDToFt90DTuit4eACs49nAvC9xGa7qBbaENVVtgKUZWX/VOBFKptGz02S26L4Kq4eKH4V2dQ01bUU1U7xCB4qMcntsn+i1gAKW5Qi1at5snOxAdl8hVseTUK8z+GICvDZlTKmfuJ+3QsAEyi6VVjnE4V/a0Ts3v3UNT1tgLeVYYcb3KHHo+8LRjWAmuGyX0NSDBui0uIM8XUilUNcCKr/8ltKR3P8OT54VCTzUGDZrpQTbAAL0ptYSxqOlcqWwG3vF9OgSGlhPxXTV89RHNYv+Xc5agK++qHl2QzrTHbrrjxmJC8mviFg07JDrlSYrcsFUYVlKlE762gKSA1eB0EssGsNAWf0Wl8U5MhapIxzYmnrO5xVAjHSx/BWHGFaPR0lYwwpXCziLqcitPrxFJOhGXcyt1teT3dESyrAQoOdxohw5y3qs3/YIK0boUC6YmPk5BeJU5hJFBYN9jv+Lk5FFKHFe46hAXPjlgSAkXkB6ce5j+ULG5SVM2Kp2sURjUThlhPvOVGLFZMsSmKgO6D6PN3oUuxTmSGeo5qjs7oh8PaboaoVxv3jiMDjJyn0gzLZ+veQeCUyISZCaL37pcSzWsRThOoU8pxNpvhbw==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe998cae-0d69-49f9-a8ac-08d853d88967
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 09:21:15.9726
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hd+NMvzmdMmk1TR48p2GhGIsrGuyGK9yQWbskAq+W86OeaaaY4Z93tmT9EfRTmpwXWgustiJt2USu2Pm3T66Vg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4937
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Camel Guo <camelg@axis.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-Add setup of bclk-to-ws ratio and sample rate when in master mode,
-as well as MCLK input pin setup.
+Back-to-back LPCG writes can be ignored by the LPCG register due to
+a HW bug. The writes need to be separated by at least 4 cycles of
+the gated clock.
 
-Limitations:
+The workaround is implemented as follows:
+1. For clocks running greater than or equal to 24MHz, a read
+followed by the write will provide sufficient delay.
+2. For clocks running below 24MHz, add a delay of 4 clock cylces
+after the write to the LPCG register.
 
-- MCLK is assumed to be connected to GPIO1 (other possible choices
-  would be GPI0..3 if they weren't used for analog positive inputs).
-- PLL is always enabled, and clock generation is in automatic mode.
-
-Signed-off-by: Camel Guo <camelg@axis.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- sound/soc/codecs/tlv320adcx140.c | 134 ++++++++++++++++++++++++++++++-
- sound/soc/codecs/tlv320adcx140.h |  35 ++++++++
- 2 files changed, 165 insertions(+), 4 deletions(-)
+ drivers/clk/imx/clk-lpcg-scu.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 13ece039e9fe..f143b6b62f84 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -35,6 +35,7 @@ struct adcx140_priv {
- 	unsigned int dai_fmt;
- 	unsigned int tdm_delay;
- 	unsigned int slot_width;
-+	int master;
- };
+diff --git a/drivers/clk/imx/clk-lpcg-scu.c b/drivers/clk/imx/clk-lpcg-scu.c
+index 1f0e44f921ae..6ee9d2caedf2 100644
+--- a/drivers/clk/imx/clk-lpcg-scu.c
++++ b/drivers/clk/imx/clk-lpcg-scu.c
+@@ -6,6 +6,7 @@
  
- static const char * const gpo_config_names[] = {
-@@ -614,12 +615,85 @@ static int adcx140_reset(struct adcx140_priv *adcx140)
- 	return ret;
- }
+ #include <linux/bits.h>
+ #include <linux/clk-provider.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+@@ -38,6 +39,31 @@ struct clk_lpcg_scu {
  
-+static int adcx140_fs_bclk_ratio(unsigned int bclk_ratio)
+ #define to_clk_lpcg_scu(_hw) container_of(_hw, struct clk_lpcg_scu, hw)
+ 
++/* e10858 -LPCG clock gating register synchronization errata */
++static void do_lpcg_workaround(u32 rate, void __iomem *reg, u32 val)
 +{
-+	switch (bclk_ratio) {
-+	case 16:
-+		return ADCX140_RATIO_16;
-+	case 24:
-+		return ADCX140_RATIO_24;
-+	case 32:
-+		return ADCX140_RATIO_32;
-+	case 48:
-+		return ADCX140_RATIO_48;
-+	case 64:
-+		return ADCX140_RATIO_64;
-+	case 96:
-+		return ADCX140_RATIO_96;
-+	case 128:
-+		return ADCX140_RATIO_128;
-+	case 192:
-+		return ADCX140_RATIO_192;
-+	case 256:
-+		return ADCX140_RATIO_256;
-+	case 384:
-+		return ADCX140_RATIO_384;
-+	case 512:
-+		return ADCX140_RATIO_512;
-+	case 1024:
-+		return ADCX140_RATIO_1024;
-+	case 2048:
-+		return ADCX140_RATIO_2048;
-+	default:
-+		break;
++	writel(val, reg);
++
++	if (rate >= 24000000 || rate == 0) {
++		u32 reg1;
++
++		/*
++		 * The time taken to access the LPCG registers from the AP core
++		 * through the interconnect is longer than the minimum delay
++		 * of 4 clock cycles required by the errata.
++		 * Adding a readl will provide sufficient delay to prevent
++		 * back-to-back writes.
++		 */
++		reg1 = readl(reg);
++	} else {
++		/*
++		 * For clocks running below 24MHz, wait a minimum of
++		 * 4 clock cycles.
++		 */
++		ndelay(4 * (DIV_ROUND_UP(1000000000, rate)));
 +	}
-+	return -EINVAL;
 +}
 +
-+static int adcx140_fs_rate(unsigned int rate)
-+{
-+	switch (rate) {
-+	case 7350:
-+	case 8000:
-+		return ADCX140_8_OR_7_35KHZ;
-+	case 14700:
-+	case 16000:
-+		return ADCX140_16_OR_14_7KHZ;
-+	case 22050:
-+	case 24000:
-+		return ADCX140_24_OR_22_05KHZ;
-+	case 29400:
-+	case 32000:
-+		return ADCX140_32_OR_29_4KHZ;
-+	case 44100:
-+	case 48000:
-+		return ADCX140_48_OR_44_1KHZ;
-+	case 88200:
-+	case 96000:
-+		return ADCX140_96_OR_88_2KHZ;
-+	case 176400:
-+	case 192000:
-+		return ADCX140_192_OR_176_4KHZ;
-+	case 352800:
-+	case 384000:
-+		return ADCX140_384_OR_352_8KHZ;
-+	case 705600:
-+	case 768000:
-+		return ADCX140_768_OR_705_6KHZ;
-+	default:
-+		break;
-+	}
-+	return -EINVAL;
-+}
-+
- static int adcx140_hw_params(struct snd_pcm_substream *substream,
- 			     struct snd_pcm_hw_params *params,
- 			     struct snd_soc_dai *dai)
+ static int clk_lpcg_scu_enable(struct clk_hw *hw)
  {
- 	struct snd_soc_component *component = dai->component;
-+	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
- 	u8 data = 0;
-+	u8 mst_cfg0 = 0;
+ 	struct clk_lpcg_scu *clk = to_clk_lpcg_scu(hw);
+@@ -54,7 +80,8 @@ static int clk_lpcg_scu_enable(struct clk_hw *hw)
+ 		val |= CLK_GATE_SCU_LPCG_HW_SEL;
  
- 	switch (params_width(params)) {
- 	case 16:
-@@ -640,6 +714,60 @@ static int adcx140_hw_params(struct snd_pcm_substream *substream,
- 		return -EINVAL;
- 	}
+ 	reg |= val << clk->bit_idx;
+-	writel(reg, clk->reg);
++
++	do_lpcg_workaround(clk_hw_get_rate(hw), clk->reg, reg);
  
-+	if (adcx140->master) {
-+		u8 mst_cfg1 = 0;
-+		u8 gpio_cfg0 = 0;
-+		unsigned int bclk_ratio;
-+		int ret;
-+
-+		mst_cfg0 = ADCX140_MST_SLV_CFG_BIT;
-+		if (params_rate(params) % 1000)
-+			mst_cfg0 |= ADCX140_FS_MODE_BIT; /* 44.1 kHz et al */
-+
-+		ret = adcx140_fs_rate(params_rate(params));
-+		if (ret < 0) {
-+			dev_err(component->dev, "%s: Unsupported rate %d\n",
-+				__func__, params_rate(params));
-+			return ret;
-+		}
-+		mst_cfg1 |= ret;
-+
-+		/* In slave mode when using automatic clock configuration,
-+		 * the codec figures out the BCLK to FSYNC ratio itself. But
-+		 * here in master mode, we need to tell it.
-+		 */
-+
-+		bclk_ratio = snd_soc_params_to_frame_size(params);
-+		ret = adcx140_fs_bclk_ratio(bclk_ratio);
-+		if (ret < 0) {
-+			dev_err(component->dev, "%s: Unsupported bclk_ratio %d\n",
-+				__func__, bclk_ratio);
-+			return ret;
-+		}
-+		mst_cfg1 |= ret;
-+
-+		/* The codec can receive MCLK on any input: GPIO, GPI0..3.
-+		 * While in future it would be nice to have these selectable
-+		 * via clk_id for instance, for now we fix GPIO1 as the MCLK
-+		 * source.
-+		 */
-+		gpio_cfg0 |= ADCX140_GPIO1_MCLK;
-+
-+		snd_soc_component_update_bits(component, ADCX140_MST_CFG1,
-+					      ADCX140_FS_RATE_MSK |
-+					      ADCX140_RATIO_MSK,
-+					      mst_cfg1);
-+
-+		snd_soc_component_update_bits(component, ADCX140_GPIO_CFG0,
-+					      ADCX140_GPIO1_CFG_MSK,
-+					      gpio_cfg0);
-+	}
-+
-+	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
-+				      ADCX140_FS_MODE_BIT |
-+				      ADCX140_MST_SLV_CFG_BIT,
-+				      mst_cfg0);
-+
- 	snd_soc_component_update_bits(component, ADCX140_ASI_CFG0,
- 			    ADCX140_WORD_LEN_MSK, data);
+ 	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
  
-@@ -652,16 +780,16 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	struct snd_soc_component *component = codec_dai->component;
- 	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
- 	u8 iface_reg1 = 0;
--	u8 iface_reg2 = 0;
- 	int offset = 0;
- 	int width = adcx140->slot_width;
+@@ -71,7 +98,7 @@ static void clk_lpcg_scu_disable(struct clk_hw *hw)
  
- 	/* set master/slave audio interface */
- 	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
- 	case SND_SOC_DAIFMT_CBM_CFM:
--		iface_reg2 |= ADCX140_BCLK_FSYNC_MASTER;
-+		adcx140->master = 1;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFS:
-+		adcx140->master = 0;
- 		break;
- 	case SND_SOC_DAIFMT_CBS_CFM:
- 	case SND_SOC_DAIFMT_CBM_CFS:
-@@ -714,8 +842,6 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 				      ADCX140_BCLKINV_BIT |
- 				      ADCX140_ASI_FORMAT_MSK,
- 				      iface_reg1);
--	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
--				      ADCX140_BCLK_FSYNC_MASTER, iface_reg2);
+ 	reg = readl_relaxed(clk->reg);
+ 	reg &= ~(CLK_GATE_SCU_LPCG_MASK << clk->bit_idx);
+-	writel(reg, clk->reg);
++	do_lpcg_workaround(clk_hw_get_rate(hw), clk->reg, reg);
  
- 	/* Configure data offset */
- 	snd_soc_component_update_bits(component, ADCX140_ASI_CFG1,
-diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
-index eedbc1d7221f..bac34800b189 100644
---- a/sound/soc/codecs/tlv320adcx140.h
-+++ b/sound/soc/codecs/tlv320adcx140.h
-@@ -145,4 +145,39 @@
- #define ADCX140_GPO_CFG_MAX		4
- #define ADCX140_GPO_DRV_MAX		5
- 
-+/* MST_CFG0 */
-+#define ADCX140_MST_SLV_CFG_BIT	BIT(7)
-+#define ADCX140_FS_MODE_BIT	BIT(3)
-+
-+/* MST_CFG1 */
-+#define ADCX140_8_OR_7_35KHZ	(0 << 4)
-+#define ADCX140_16_OR_14_7KHZ	(1 << 4)
-+#define ADCX140_24_OR_22_05KHZ	(2 << 4)
-+#define ADCX140_32_OR_29_4KHZ	(3 << 4)
-+#define ADCX140_48_OR_44_1KHZ	(4 << 4)
-+#define ADCX140_96_OR_88_2KHZ	(5 << 4)
-+#define ADCX140_192_OR_176_4KHZ	(6 << 4)
-+#define ADCX140_384_OR_352_8KHZ	(7 << 4)
-+#define ADCX140_768_OR_705_6KHZ	(8 << 4)
-+#define ADCX140_FS_RATE_MSK	GENMASK(7, 4)
-+
-+#define ADCX140_RATIO_16	0
-+#define ADCX140_RATIO_24	1
-+#define ADCX140_RATIO_32	2
-+#define ADCX140_RATIO_48	3
-+#define ADCX140_RATIO_64	4
-+#define ADCX140_RATIO_96	5
-+#define ADCX140_RATIO_128	6
-+#define ADCX140_RATIO_192	7
-+#define ADCX140_RATIO_256	8
-+#define ADCX140_RATIO_384	9
-+#define ADCX140_RATIO_512	10
-+#define ADCX140_RATIO_1024	11
-+#define ADCX140_RATIO_2048	12
-+#define ADCX140_RATIO_MSK	GENMASK(3, 0)
-+
-+/* GPIO_CFG0 */
-+#define ADCX140_GPIO1_MCLK	(10 << 4)
-+#define ADCX140_GPIO1_CFG_MSK	GENMASK(7, 4)
-+
- #endif /* _TLV320ADCX140_ */
+ 	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
+ }
 -- 
-2.20.1
+2.28.0
 
