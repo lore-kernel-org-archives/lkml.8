@@ -2,169 +2,236 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F10C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FF3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB95D20658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593433;
-	bh=ll9lBgH6i+mGd8nKNN1KIhl0Mfw1fYx2x8JO9azJV3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5AnQfPpRhItwFO+Q0W7E9uV4kz3wWV1THIVC3Pw+TRYeHfRLNR2wCA92tlrNz3h8
-	 MHqOr3HZzFnjkt5fr7s9PoH0q6omS5VNRU8eXheZbe2XcBf/UQPzzNdTcT9vuoMWGT
-	 8xlpdLUGbm7tx92zvMjfutbo0ZZRM5H/5Si5P4yM=
+	by mail.kernel.org (Postfix) with ESMTP id 7DE652078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:30:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I2A6OrWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbgIHTaU (ORCPT
+        id S1732215AbgIHTaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731013AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:58:05 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB86323DB4;
-        Tue,  8 Sep 2020 15:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579459;
-        bh=ll9lBgH6i+mGd8nKNN1KIhl0Mfw1fYx2x8JO9azJV3M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsTaIIn9UhRGWBwXGD2OYhtGQHgFkn6OeRTgnq8hbwlXK6UPzpVpdk6iZnJnSmylE
-         Bkhj3UBvM3Dp5PmhfFyShcc7qakf6xayUF25Ut05DXvjTayg2Irl4e/q+AImDOFyOt
-         G4tGopOet4fDGclVLdZMHZdY+dk5eYVdTXqIj26Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 087/186] cxgb4: fix thermal zone device registration
-Date:   Tue,  8 Sep 2020 17:23:49 +0200
-Message-Id: <20200908152245.859859818@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 15:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732248AbgIHTaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:30:22 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16081C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:30:21 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x123so1674870pfc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=SsOjzOVIq97WOAc6WZeXaOq483i3DuOEILRijMKc8+c=;
+        b=I2A6OrWWp9ZhN3tycDzSBFzxFhAVc4uVVlf6QeuGM+05TNovmH2B+uVYHRSjh8Tfa4
+         3rbgHqE43zixo0WWMEH/uPn6zQ+k8rp6mukpfWZWv8M5OQw4plGz5nLDUFU8TKhOG76x
+         kbIHeGgSSQCfV0ICNIztWj0FF4yY6nAq3J+2c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=SsOjzOVIq97WOAc6WZeXaOq483i3DuOEILRijMKc8+c=;
+        b=ZJU41dtIkjizVr1/Y8TIz6+HNOaWEu/3yPH59vrPO7H5klLPwJ5p+GX2HBf69xZ8yh
+         Ta6lkf+TvL8kdQHFMzpKf8tw2+xrZk2WtAFxJWHaonImBKihtMwx945im8NpXaOca4i6
+         4eM62a/xoNMc2YjvNUxcrM+YlWYpYivmhgQNG6Mg7gle9/WZdYnjsVTlgnYoUBSeXdoo
+         RKiLw1j/39SaB+JkTBGvrGmfqnZ8TWi0wOnKjoudFuZWVJYf2hxixzEEX/taiOGy++T8
+         rA9L2Z3XvbMlHbdreNdt3YGMZURQ8+Yue/M4VQ0Bj+sKO13UWhkXmFcMAou5fAcIo3an
+         wJ0g==
+X-Gm-Message-State: AOAM530WBI8idqg/wHvmWzMjbxFtwE/IhASX1u50eRLBQzE66mYO0pqA
+        YbKxBVfecy+icbseSFwwUuPIgQ==
+X-Google-Smtp-Source: ABdhPJxHIdKSrBuYxJO9MpvlN9pOkwSjhGrSBHPFd2611Mm9W5IYS0c3yvOL6x5Xbpknc67grJnfiw==
+X-Received: by 2002:a62:6003:: with SMTP id u3mr279604pfb.55.1599593421304;
+        Tue, 08 Sep 2020 12:30:21 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id r3sm208389pfh.88.2020.09.08.12.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 12:30:20 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200907130731.2607-1-rojay@codeaurora.org>
+References: <20200907130731.2607-1-rojay@codeaurora.org>
+Subject: Re: [PATCH V3] i2c: i2c-qcom-geni: Add shutdown callback for i2c
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     dianders@chromium.org, saiprakash.ranjan@codeaurora.org,
+        gregkh@linuxfoundation.org, mka@chromium.org,
+        akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
+        skakit@codeaurora.org, rnayak@codeaurora.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>, wsa@kernel.org
+Date:   Tue, 08 Sep 2020 12:30:18 -0700
+Message-ID: <159959341894.454335.3250696075143737399@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Potnuri Bharat Teja <bharat@chelsio.com>
+Why is dri-devel on here? And linaro-mm-sig?
 
-[ Upstream commit 6b6382a857d824c0866056d5736bbcb597a922ed ]
+Quoting Roja Rani Yarubandi (2020-09-07 06:07:31)
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
+qcom-geni.c
+> index dead5db3315a..b3609760909f 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+>  struct geni_i2c_err_log {
+> @@ -384,7 +387,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *g=
+i2c, struct i2c_msg *msg,
+>         if (dma_buf) {
+>                 if (gi2c->err)
+>                         geni_i2c_rx_fsm_rst(gi2c);
+> -               geni_se_rx_dma_unprep(se, rx_dma, len);
+> +               geni_se_rx_dma_unprep(se, gi2c->rx_dma, len);
+> +               gi2c->rx_dma =3D (dma_addr_t)NULL;
+>                 i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+>         }
+> =20
+> @@ -394,12 +398,12 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev =
+*gi2c, struct i2c_msg *msg,
+>  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg=
+ *msg,
+>                                 u32 m_param)
+>  {
+> -       dma_addr_t tx_dma;
+>         unsigned long time_left;
+>         void *dma_buf =3D NULL;
+>         struct geni_se *se =3D &gi2c->se;
+>         size_t len =3D msg->len;
+> =20
+> +       gi2c->xfer_len =3D len;
+>         if (!of_machine_is_compatible("lenovo,yoga-c630"))
+>                 dma_buf =3D i2c_get_dma_safe_msg_buf(msg, 32);
+> =20
+> @@ -410,7 +414,7 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *g=
+i2c, struct i2c_msg *msg,
+> =20
+>         writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
+> =20
+> -       if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
+> +       if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &gi2c->tx_dm=
+a)) {
+>                 geni_se_select_mode(se, GENI_SE_FIFO);
+>                 i2c_put_dma_safe_msg_buf(dma_buf, msg, false);
+>                 dma_buf =3D NULL;
+> @@ -429,7 +433,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *g=
+i2c, struct i2c_msg *msg,
+>         if (dma_buf) {
+>                 if (gi2c->err)
+>                         geni_i2c_tx_fsm_rst(gi2c);
+> -               geni_se_tx_dma_unprep(se, tx_dma, len);
+> +               geni_se_tx_dma_unprep(se, gi2c->tx_dma, len);
+> +               gi2c->tx_dma =3D (dma_addr_t)NULL;
+>                 i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+>         }
+> =20
+> @@ -479,6 +484,51 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
+>         return ret;
+>  }
+> =20
+> +static void geni_i2c_stop_xfer(struct geni_i2c_dev *gi2c)
+> +{
+> +       int ret;
+> +       u32 dma;
+> +       u32 val;
+> +       u32 geni_status;
+> +       struct geni_se *se =3D &gi2c->se;
+> +
+> +       ret =3D pm_runtime_get_sync(gi2c->se.dev);
+> +       if (ret < 0) {
+> +               dev_err(gi2c->se.dev, "Failed to resume device: %d\n", re=
+t);
 
-When multiple adapters are present in the system, pci hot-removing second
-adapter leads to the following warning as both the adapters registered
-thermal zone device with same thermal zone name/type.
-Therefore, use unique thermal zone name during thermal zone device
-initialization. Also mark thermal zone dev NULL once unregistered.
+Is this print really necessary? Doesn't PM core already print this sort
+of information?
 
-[  414.370143] ------------[ cut here ]------------
-[  414.370944] sysfs group 'power' not found for kobject 'hwmon0'
-[  414.371747] WARNING: CPU: 9 PID: 2661 at fs/sysfs/group.c:281
- sysfs_remove_group+0x76/0x80
-[  414.382550] CPU: 9 PID: 2661 Comm: bash Not tainted 5.8.0-rc6+ #33
-[  414.383593] Hardware name: Supermicro X10SRA-F/X10SRA-F, BIOS 2.0a 06/23/2016
-[  414.384669] RIP: 0010:sysfs_remove_group+0x76/0x80
-[  414.385738] Code: 48 89 df 5b 5d 41 5c e9 d8 b5 ff ff 48 89 df e8 60 b0 ff ff
- eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 90 ae 13 bb e8 6a 27 d0 ff <0f> 0b 5b 5d
- 41 5c c3 0f 1f 00 0f 1f 44 00 00 48 85 f6 74 31 41 54
-[  414.388404] RSP: 0018:ffffa22bc080fcb0 EFLAGS: 00010286
-[  414.389638] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[  414.390829] RDX: 0000000000000001 RSI: ffff8ee2de3e9510 RDI: ffff8ee2de3e9510
-[  414.392064] RBP: ffffffffbaef2ee0 R08: 0000000000000000 R09: 0000000000000000
-[  414.393224] R10: 0000000000000000 R11: 000000002b30006c R12: ffff8ee260720008
-[  414.394388] R13: ffff8ee25e0a40e8 R14: ffffa22bc080ff08 R15: ffff8ee2c3be5020
-[  414.395661] FS:  00007fd2a7171740(0000) GS:ffff8ee2de200000(0000)
- knlGS:0000000000000000
-[  414.396825] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  414.398011] CR2: 00007f178ffe5020 CR3: 000000084c5cc003 CR4: 00000000003606e0
-[  414.399172] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  414.400352] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  414.401473] Call Trace:
-[  414.402685]  device_del+0x89/0x400
-[  414.403819]  device_unregister+0x16/0x60
-[  414.405024]  hwmon_device_unregister+0x44/0xa0
-[  414.406112]  thermal_remove_hwmon_sysfs+0x196/0x200
-[  414.407256]  thermal_zone_device_unregister+0x1b5/0x1f0
-[  414.408415]  cxgb4_thermal_remove+0x3c/0x4f [cxgb4]
-[  414.409668]  remove_one+0x212/0x290 [cxgb4]
-[  414.410875]  pci_device_remove+0x36/0xb0
-[  414.412004]  device_release_driver_internal+0xe2/0x1c0
-[  414.413276]  pci_stop_bus_device+0x64/0x90
-[  414.414433]  pci_stop_and_remove_bus_device_locked+0x16/0x30
-[  414.415609]  remove_store+0x75/0x90
-[  414.416790]  kernfs_fop_write+0x114/0x1b0
-[  414.417930]  vfs_write+0xcf/0x210
-[  414.419059]  ksys_write+0xa7/0xe0
-[  414.420120]  do_syscall_64+0x4c/0xa0
-[  414.421278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  414.422335] RIP: 0033:0x7fd2a686afd0
-[  414.423396] Code: Bad RIP value.
-[  414.424549] RSP: 002b:00007fffc1446148 EFLAGS: 00000246 ORIG_RAX:
- 0000000000000001
-[  414.425638] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fd2a686afd0
-[  414.426830] RDX: 0000000000000002 RSI: 00007fd2a7196000 RDI: 0000000000000001
-[  414.427927] RBP: 00007fd2a7196000 R08: 000000000000000a R09: 00007fd2a7171740
-[  414.428923] R10: 00007fd2a7171740 R11: 0000000000000246 R12: 00007fd2a6b43400
-[  414.430082] R13: 0000000000000002 R14: 0000000000000001 R15: 0000000000000000
-[  414.431027] irq event stamp: 76300
-[  414.435678] ---[ end trace 13865acb4d5ab00f ]---
+> +               return;
+> +       }
+> +
+> +       geni_status =3D readl_relaxed(gi2c->se.base + SE_GENI_STATUS);
+> +       if (geni_status & M_GENI_CMD_ACTIVE) {
 
-Fixes: b18719157762 ("cxgb4: Add thermal zone support")
-Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Please try to de-indent all this.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c
-index 3de8a5e83b6c7..d7fefdbf3e575 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c
-@@ -62,6 +62,7 @@ static struct thermal_zone_device_ops cxgb4_thermal_ops = {
- int cxgb4_thermal_init(struct adapter *adap)
- {
- 	struct ch_thermal *ch_thermal = &adap->ch_thermal;
-+	char ch_tz_name[THERMAL_NAME_LENGTH];
- 	int num_trip = CXGB4_NUM_TRIPS;
- 	u32 param, val;
- 	int ret;
-@@ -82,7 +83,8 @@ int cxgb4_thermal_init(struct adapter *adap)
- 		ch_thermal->trip_type = THERMAL_TRIP_CRITICAL;
- 	}
- 
--	ch_thermal->tzdev = thermal_zone_device_register("cxgb4", num_trip,
-+	snprintf(ch_tz_name, sizeof(ch_tz_name), "cxgb4_%s", adap->name);
-+	ch_thermal->tzdev = thermal_zone_device_register(ch_tz_name, num_trip,
- 							 0, adap,
- 							 &cxgb4_thermal_ops,
- 							 NULL, 0, 0);
-@@ -97,7 +99,9 @@ int cxgb4_thermal_init(struct adapter *adap)
- 
- int cxgb4_thermal_remove(struct adapter *adap)
- {
--	if (adap->ch_thermal.tzdev)
-+	if (adap->ch_thermal.tzdev) {
- 		thermal_zone_device_unregister(adap->ch_thermal.tzdev);
-+		adap->ch_thermal.tzdev = NULL;
-+	}
- 	return 0;
- }
--- 
-2.25.1
+	if (!(geni_status & M_GENI_CMD_ACTIVE))
+		goto out;
 
+> +               geni_i2c_abort_xfer(gi2c);
+> +               dma =3D readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
+> +               if (dma) {
 
+	if (!dma)
+		goto out;
 
+> +                       val =3D readl_relaxed(gi2c->se.base + SE_DMA_DEBU=
+G_REG0);
+> +                       if (val & DMA_TX_ACTIVE) {
+> +                               gi2c->cur_wr =3D 0;
+> +                               if (gi2c->err)
+> +                                       geni_i2c_tx_fsm_rst(gi2c);
+> +                               if (gi2c->tx_dma) {
+> +                                       geni_se_tx_dma_unprep(se,
+> +                                                gi2c->tx_dma, gi2c->xfer=
+_len);
+> +                                       gi2c->tx_dma =3D (dma_addr_t)NULL;
+
+Almost nobody does this. In fact, grep shows me one hit in the kernel.
+If nobody else is doing it something is probably wrong. When would dma
+mode be active and tx_dma not be set to something that should be
+stopped? If it really is necessary I suppose we should assign this to
+DMA_MAPPING_ERROR instead of casting NULL. Then the check above for
+tx_dma being valid can be dropped because geni_se_tx_dma_unprep()
+already checks for a valid mapping before doing anything. But really, we
+should probably be tracking the dma buffer mapped to the CPU as well as
+the dma address that was used for the mapping. Not storing both is a
+problem, see below.
+
+> +                               }
+> +                       } else if (val & DMA_RX_ACTIVE) {
+> +                               gi2c->cur_rd =3D 0;
+> +                               if (gi2c->err)
+> +                                       geni_i2c_rx_fsm_rst(gi2c);
+> +                               if (gi2c->rx_dma) {
+> +                                       geni_se_rx_dma_unprep(se,
+> +                                               gi2c->rx_dma, gi2c->xfer_=
+len);
+
+Looking closely it seems that the geni dma wrappers shouldn't even be
+checking for an iova being non-zero. Instead they should make sure that
+it just isn't invalid with !dma_mapping_error().
+
+> +                                       gi2c->rx_dma =3D (dma_addr_t)NULL;
+
+If we're stopping some dma transaction doesn't that mean the=20
+
+                 i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+
+code needs to run also? I fail to see where we free the buffer that has
+been mapped for DMA.
+
+> +                               }
+> +                       }
+> +               }
+> +       }
+> +
+
+out:
+
+> +       pm_runtime_put_sync_suspend(gi2c->se.dev);
+> +}
+> +
