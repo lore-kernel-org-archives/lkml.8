@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC6FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9759CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC97A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516D12137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592924;
-	bh=LNfpDdOcd2Tj+mjwph6GeGR2gp+07qJzQK877hYzwGM=;
+	s=default; t=1599592929;
+	bh=+dkjo+9wKwzMF7/iOmzd7vXy4vP/yHkMeeSBvWP+irk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZK2cZLJLnLLtixFBU9rWIiPIXROmEy9iO2OucXmQ2QuMw53dFV07YhScWofcrgTl
-	 zUmZ9Bg/6iGrg10HNg3zHPf7SPS3YgHGTKQ0hZs4t2y0K6q4olnS9lygePat8Z/gB/
-	 wSLpRylRtfT06rWnhRwcR7CJcMjNTbVnwD3vcepY=
+	b=vcRNDSTZSR02F5AZ4z4R6zw8g7PIa1VDRftOn4YcUJ3+XMXGith+QiUSOqAgvVbAi
+	 vPKQGCzYJ0WqGPXr/fMvl5TiMowRr2eDeU8Gle6JLiE665R7mU0ZpHBXE9mdGl5VM5
+	 yXMwlu56N5ag5+LvXeTk+XsHTllPYY1ABp4xlZN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbgIHTWB (ORCPT
+        id S1732096AbgIHTWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47740 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbgIHQBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731105AbgIHQBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:01:35 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 376E424170;
-        Tue,  8 Sep 2020 15:38:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3849623C83;
+        Tue,  8 Sep 2020 15:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579524;
-        bh=LNfpDdOcd2Tj+mjwph6GeGR2gp+07qJzQK877hYzwGM=;
+        s=default; t=1599579386;
+        bh=+dkjo+9wKwzMF7/iOmzd7vXy4vP/yHkMeeSBvWP+irk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hhj0k4MLhVkri4x6sWn13tdvF5EuMFTgT3OR+25MIezs19CYZeI2gsd3RLcyJbkgx
-         d0Qd1El3gyeytF7UyHj+FpC/iCkeYZr2yfpYckxzwoAck15kSgCrJtWQv/1cnfYK5Z
-         bkFoy0HwBtxYmdPTjT4ujqEyeHoh4YCDMEyvnMj0=
+        b=kyuA6MyptTbAD/peoW7oGFiK3YPgmkh3f5aKoUFVkPjcDlfpIBFESJYYx3pIbu7ic
+         r1Bmm3/7qAVZpt23mOlrxR0J7BPo+1UTz0JJ5vWnMgcHAljSSEjXyJAcYTVTgYR+K1
+         OOkZ0jqMBGd4+SsvJkimvNjOdz1pQ+KvQVfSkO/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 084/186] nvme: fix controller instance leak
-Date:   Tue,  8 Sep 2020 17:23:46 +0200
-Message-Id: <20200908152245.714419643@linuxfoundation.org>
+Subject: [PATCH 5.8 057/186] net: hns: Fix memleak in hns_nic_dev_probe
+Date:   Tue,  8 Sep 2020 17:23:19 +0200
+Message-Id: <20200908152244.433555126@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,38 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <kbusch@kernel.org>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 192f6c29bb28bfd0a17e6ad331d09f1ec84143d0 ]
+[ Upstream commit 100e3345c6e719d2291e1efd5de311cc24bb9c0b ]
 
-If the driver has to unbind from the controller for an early failure
-before the subsystem has been set up, there won't be a subsystem holding
-the controller's instance, so the controller needs to free its own
-instance in this case.
+hns_nic_dev_probe allocates ndev, but not free it on
+two error handling paths, which may lead to memleak.
 
-Fixes: 733e4b69d508d ("nvme: Assign subsys instance from first ctrl")
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 63434888aaf1b ("net: hns: net: hns: enet adds support of acpi")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index f38548e6d55ec..fa0039dcacc66 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -4148,7 +4148,7 @@ static void nvme_free_ctrl(struct device *dev)
- 		container_of(dev, struct nvme_ctrl, ctrl_device);
- 	struct nvme_subsystem *subsys = ctrl->subsys;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 23f278e46975b..22522f8a52999 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -2282,8 +2282,10 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ 			priv->enet_ver = AE_VERSION_1;
+ 		else if (acpi_dev_found(hns_enet_acpi_match[1].id))
+ 			priv->enet_ver = AE_VERSION_2;
+-		else
+-			return -ENXIO;
++		else {
++			ret = -ENXIO;
++			goto out_read_prop_fail;
++		}
  
--	if (subsys && ctrl->instance != subsys->instance)
-+	if (!subsys || ctrl->instance != subsys->instance)
- 		ida_simple_remove(&nvme_instance_ida, ctrl->instance);
+ 		/* try to find port-idx-in-ae first */
+ 		ret = acpi_node_get_property_reference(dev->fwnode,
+@@ -2299,7 +2301,8 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ 		priv->fwnode = args.fwnode;
+ 	} else {
+ 		dev_err(dev, "cannot read cfg data from OF or acpi\n");
+-		return -ENXIO;
++		ret = -ENXIO;
++		goto out_read_prop_fail;
+ 	}
  
- 	kfree(ctrl->effects);
+ 	ret = device_property_read_u32(dev, "port-idx-in-ae", &port_id);
 -- 
 2.25.1
 
