@@ -2,137 +2,186 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6E4C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3236C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 171372087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591971;
-	bh=cFbV4bMzr3uLQwoyjcoR+aScCk6g1+iDXnHpLnB7Wg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9D0GfO3rTf0szGXvwrS06VzUYXcrXPzrAXLNeHHPu64NxCher8BEF6IiPAZHTmuX
-	 5MR8YEKI7LBRZs0Ny89KwoZE2j1XyQ7gyJyKwek8kzEBnVUAGvri4SKuig7Z/sW0x8
-	 AYektVcFLlNlmwEKvvL8gG/SzIaiLP3ecmd8a8hM=
+	by mail.kernel.org (Postfix) with ESMTP id 7D1FD2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:06:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AEymAD0a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731597AbgIHTGJ (ORCPT
+        id S1731143AbgIHTGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731264AbgIHQHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:07:21 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9B0323E25;
-        Tue,  8 Sep 2020 15:47:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580026;
-        bh=cFbV4bMzr3uLQwoyjcoR+aScCk6g1+iDXnHpLnB7Wg8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLGKfRwt5JDmEYti+nsql4dr74BW+jGgKzZG4KppT9yE0dTpsO9Jhd1S0mjEm79M7
-         3KXcoN3TxMEYov26OofUfk2TX1VM7KGtzJ/pjiF1qKiqoJLTyUKwc6RNuJxj5Ol0bk
-         0qrqzpF0o4NT9ZGEZ2LVyTBpSOXVbBpZLZJE5HFQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Karthik Shivaram <karthikgs@fb.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 109/129] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-Date:   Tue,  8 Sep 2020 17:25:50 +0200
-Message-Id: <20200908152235.284614536@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 15:06:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgIHTFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:05:51 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0797DC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:05:39 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id s62so9609244vsc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:05:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=11UezPkShRZ1XbTMFLAIvgFJ6S7F6Qj5hmTERAqAcf0=;
+        b=AEymAD0aEUUcB63HmREI5LL3aPUIdQW8ooUB2Efwl6Hq2GHsbZMN2synFWhVWmMwJa
+         FgxW9xAqeVKYQ8JsT9hPGY3MQQq6G9q6bmsLIpT+YUp2YO5IaRBQT2Q8AeGbQbcoGyir
+         y4VAHqKYOzaA5NnqkCFbAMNU89unydaEBQxRA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=11UezPkShRZ1XbTMFLAIvgFJ6S7F6Qj5hmTERAqAcf0=;
+        b=kT+a383y1Hktn8zG83w29a2B8N5BXpWRSSLiAYYRk0djHScbhLZjRIc6OjCvqKJAiA
+         4IuQ7xwx1WzNnlL9JdrZxg8AhIOaUv5eaxI8bN0rjckf4NzYfmFM6zHtnLOlc9wFIywn
+         3p/3eJ+RGLo9XobkdCwoKJv32Q3VTZv4Crtc+dX6yUIO45f3NdF5za1337oWc03N55Pp
+         4KAhddCX5lECd56mHma/3ADh2PNAd+ucsopanhAgSeVw21R37KV0E+V1afqMATw6gGA+
+         xLES8VMjPLWBIjWhesgSxHeK15Tm5aFKeo350E9vDakCzZbY2swhU3iH70we2mjqaIAf
+         0A9g==
+X-Gm-Message-State: AOAM531gOhSKHp1YnSQoRrXWj+Je06bLiihGZ9pz3iyrLJY6Jzuu1PGv
+        XXyVXG3NyKKc++VFou76yP3aeMOqdCjWVQ==
+X-Google-Smtp-Source: ABdhPJymOfUgVd5Acu+TT4DXWnUP7gfR7RNjydswWXYhYFM9WBRbKO8XD+XrnPp3YM7OGgjHDEOItA==
+X-Received: by 2002:a1f:4357:: with SMTP id q84mr415625vka.4.1599591935851;
+        Tue, 08 Sep 2020 12:05:35 -0700 (PDT)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id b17sm28876vsr.17.2020.09.08.12.05.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 12:05:35 -0700 (PDT)
+Received: by mail-vs1-f47.google.com with SMTP id e23so3622570vsk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:05:34 -0700 (PDT)
+X-Received: by 2002:a67:d907:: with SMTP id t7mr423806vsj.8.1599591934367;
+ Tue, 08 Sep 2020 12:05:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+ <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
+ <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
+ <87y2m1vhkm.fsf@nanos.tec.linutronix.de> <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com>
+ <877dtdj042.fsf@nanos.tec.linutronix.de> <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com>
+ <87zh67uife.fsf@nanos.tec.linutronix.de> <CAD=FV=U8vchyRXOjozYYroq3Mit_gt=XXADLfn0W4N4TyQzyjQ@mail.gmail.com>
+ <87pn7150li.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87pn7150li.fsf@nanos.tec.linutronix.de>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 8 Sep 2020 12:05:21 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X0wjOYC9u1y=fhDTVSW+jd5G8ydSYJEE-a8BTfnhRgTA@mail.gmail.com>
+Message-ID: <CAD=FV=X0wjOYC9u1y=fhDTVSW+jd5G8ydSYJEE-a8BTfnhRgTA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
+ flag
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+Hi,
 
-commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
+On Fri, Sep 4, 2020 at 2:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Doug,
+>
+> On Thu, Sep 03 2020 at 16:19, Doug Anderson wrote:
+> > On Thu, Sep 3, 2020 at 5:57 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>    That pending interrupt will not prevent the machine from going into
+> >>    suspend and if it's an edge interrupt then an unmask in
+> >>    suspend_device_irq() won't help. Edge interrupts are not resent in
+> >>    hardware. They are fire and forget from the POV of the device
+> >>    hardware.
+> >
+> > Ah, interesting.  I didn't think about this case exactly.  I might
+> > have a fix for it anyway.  At some point in time I was thinking that
+> > the world could be solved by relying on lazily-disabled interrupts and
+> > I wrote up a patch to make sure that they woke things up.  If you're
+> > willing to check out our gerrit you can look at:
+> >
+> > https://crrev.com/c/2314693
+> >
+> > ...if not I can post it as a RFC for you.
+>
+> I actually tried despite my usual aversion against web
+> interfaces. Aversion confirmed :)
+>
+> You could have included the 5 lines of patch into your reply to spare me
+> the experience. :)
 
-All three generations of Sandisk SSDs lock up hard intermittently.
-Experiments showed that disabling NCQ lowered the failure rate significantly
-and the kernel has been disabling NCQ for some models of SD7's and 8's,
-which is obviously undesirable.
-
-Karthik worked with Sandisk to root cause the hard lockups to trim commands
-larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
-limits max trim size to 128M and applies it to all three generations of
-Sandisk SSDs.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Karthik Shivaram <karthikgs@fb.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/ata/libata-core.c |    5 ++---
- drivers/ata/libata-scsi.c |    8 +++++++-
- include/linux/libata.h    |    1 +
- 3 files changed, 10 insertions(+), 4 deletions(-)
-
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4474,9 +4474,8 @@ static const struct ata_blacklist_entry
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
- 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
- 
--	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
--	   SD7SN6S256G and SD8SN8U256G */
--	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
-+	/* Sandisk SD7/8/9s lock up hard on large trims */
-+	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
- 
- 	/* devices which puke on READ_NATIVE_MAX */
- 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -2374,6 +2374,7 @@ static unsigned int ata_scsiop_inq_89(st
- 
- static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
- {
-+	struct ata_device *dev = args->dev;
- 	u16 min_io_sectors;
- 
- 	rbuf[1] = 0xb0;
-@@ -2399,7 +2400,12 @@ static unsigned int ata_scsiop_inq_b0(st
- 	 * with the unmap bit set.
- 	 */
- 	if (ata_id_has_trim(args->id)) {
--		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
-+		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
-+
-+		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
-+			max_blocks = 128 << (20 - SECTOR_SHIFT);
-+
-+		put_unaligned_be64(max_blocks, &rbuf[36]);
- 		put_unaligned_be32(1, &rbuf[28]);
- 	}
- 
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -422,6 +422,7 @@ enum {
- 	ATA_HORKAGE_NO_DMA_LOG	= (1 << 23),	/* don't use DMA for log read */
- 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
- 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
-+	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
- 
- 	 /* DMA mask for user DMA control: User visible values; DO NOT
- 	    renumber */
+Sorry!  :(  Inline patches are a bit of a pain for me since I'm
+certifiably insane and use the gmail web interface for kernel mailing
+lists.  Everyone has their pet aversions, I guess.  ;-)
 
 
+> > I'm sure I've solved the problem in a completely incorrect and broken
+> > way, but hopefully the idea makes sense.  In discussion we decided not
+> > to go this way because it looked like IRQ clients could request an IRQ
+> > with IRQ_DISABLE_UNLAZY and then that'd break us.  :( ...but even so I
+> > think the patch is roughly right and would address your point #1.
+>
+> Kinda :) But that's still incomplete because it does not handle the case
+> where the interrupt arrives between disable_irq() and enable_irq_wake().
+> See below.
+
+Huh, I thought I'd handled this with the code in irq_set_irq_wake()
+which checked if it was pending and did a wakeup.  In any case, I
+trust your understanding of this code far better than I trust mine.
+How should we proceed then?  Do you want to post up an official patch?
+
+At the moment I don't have any test cases that need your patch since
+the interrupts I'm dealing with are not lazily disabled.  However, I
+still do agree that it's the right thing to do.
+
+
+> >> 2) irq chip has a irq_disable() callback or has IRQ_DISABLE_UNLAZY set
+> >>
+> >>    In that case disable_irq() will mask it at the hardware level and it
+> >>    stays that way until enable_irq() is invoked.
+> >>
+> >> #1 kinda works and the gap is reasonably trivial to fix in
+> >>    suspend_device_irq() by checking the pending state and telling the PM
+> >>    core that there is a wakeup pending.
+> >>
+> >> #2 Needs an indication from the chip flags that an interrupt which is
+> >>    masked has to be unmasked when it is a enabled wakeup source.
+> >>
+> >> I assume your problem is #2, right? If it's #1 then UNMASK_IF_WAKEUP is
+> >> the wrong answer.
+> >
+> > Right, the problem is #2.  We're not in the lazy mode.
+>
+> Right and that's where we want the new chip flag with the unmask if
+> armed.
+
+OK, so we're back in Maulik's court to spin, right?  I think the last
+word before our tangent was at:
+
+http://lore.kernel.org/r/87y2m1vhkm.fsf@nanos.tec.linutronix.de
+
+There you were leaning towards #2 ("a new function
+disable_wakeup_irq_for_suspend()").  Presumably you'd now be
+suggesting #1 ("Do the symmetric thing") since I've pointed out the
+bunch of drivers that would need to change.
+
+
+-Doug
