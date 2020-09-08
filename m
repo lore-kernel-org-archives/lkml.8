@@ -2,57 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6B5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 164DFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4ACB2078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FCD21D43
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588523;
-	bh=1Z+DMCVOmFTDk1xzzyxtRiA/TPGGjSkbdbu8sDF+7eM=;
+	s=default; t=1599588538;
+	bh=C3CcciRVixUYp6L5MEomGa9r80COzfaklmvDwSBzuPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zU6L2I2wpR0m4yQ8cgf8PLSRkvJYta12feKJSM1T562ou+0C+Bp/wS3ph92QpJnyn
-	 tLPJnBYds2IN37RRTbCw0zrmtOPuHoII7V9f0qC483GN+hxuFg00Wg/fDFm0BMUMEh
-	 MsHRKGDVl89NEA9SkjVSVJ/WaGkBVPfL9xgoaliw=
+	b=wsqfa18K5IGzAySQ4ZkYaMO4Ce6e3DM38JPFY7GvcmjjWsAg2Z7gxD3qeeth5DQfR
+	 lrLbR6or6ZKQbTnBYy2U0URW5afgc7c8DwHIBgiJfZy3H3kQapRrVyo1Nq+8/NkucL
+	 fg+kKnbxIJzggGdQDlCTic0OUGaQzgrqI+y/KYL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgIHSIk (ORCPT
+        id S1731725AbgIHSIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731474AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731350AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:49 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A967824755;
-        Tue,  8 Sep 2020 15:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A92D9247FC;
+        Tue,  8 Sep 2020 15:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579690;
-        bh=1Z+DMCVOmFTDk1xzzyxtRiA/TPGGjSkbdbu8sDF+7eM=;
+        s=default; t=1599579777;
+        bh=C3CcciRVixUYp6L5MEomGa9r80COzfaklmvDwSBzuPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+Qh0K40i1tU57aQKEbxd2nm3q9/3lJtsTWLSgwcTI4Dp+BbbvkDMaKZsNF6JxLqc
-         sBOFnUOgvAXdRaJ7m+FWbFZbxcBe30tcfsJBNR8BPz0vgjSBrcjVNUTC8EMfetsxRG
-         bdyc2o7SuCkh3LDPlxZpCi9oN67GL8990DrLvtuE=
+        b=fUj+FBRRHzcxsjOhFWWvfH15EQMTkgJhf/qukBFpxAfFt5nUCCxZH2jtC0wHj6nFm
+         uMXqRI2eCKsNW+i+Ondsz9dZwx/YxV7DHsuxjYb594gEvRXLaxdPl7uTP8p9aYAaFO
+         DiEAE+0jVSMkzvtbsdDreZ5mobHkYK+0cHx65gAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Xinhai <lixinhai.lxh@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 182/186] mm/hugetlb: try preferred node first when alloc gigantic page from cma
-Date:   Tue,  8 Sep 2020 17:25:24 +0200
-Message-Id: <20200908152250.494645111@linuxfoundation.org>
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 012/129] drm/omap: fix incorrect lock state
+Date:   Tue,  8 Sep 2020 17:24:13 +0200
+Message-Id: <20200908152230.311363985@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,79 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Xinhai <lixinhai.lxh@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-commit 953f064aa6b29debcc211869b60bd59f26d19c34 upstream.
+[ Upstream commit 7fd5b25499bcec157dd4de9a713425efcf4571cd ]
 
-Since commit cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic
-hugepages using cma"), the gigantic page would be allocated from node
-which is not the preferred node, although there are pages available from
-that node.  The reason is that the nid parameter has been ignored in
-alloc_gigantic_page().
+After commit 92cc68e35863c1c61c449efa2b2daef6e9926048 ("drm/vblank: Use
+spin_(un)lock_irq() in drm_crtc_vblank_on()") omapdrm locking is broken:
 
-Besides, the __GFP_THISNODE also need be checked if user required to
-alloc only from the preferred node.
+WARNING: inconsistent lock state
+5.8.0-rc2-00483-g92cc68e35863 #13 Tainted: G        W
+--------------------------------
+inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
+swapper/0/0 [HC1[1]:SC0[0]:HE0:SE1] takes:
+ea98222c (&dev->event_lock#2){?.+.}-{2:2}, at: drm_handle_vblank+0x4c/0x520 [drm]
+{HARDIRQ-ON-W} state was registered at:
+  trace_hardirqs_on+0x9c/0x1ec
+  _raw_spin_unlock_irq+0x20/0x58
+  omap_crtc_atomic_enable+0x54/0xa0 [omapdrm]
+  drm_atomic_helper_commit_modeset_enables+0x218/0x270 [drm_kms_helper]
+  omap_atomic_commit_tail+0x48/0xc4 [omapdrm]
+  commit_tail+0x9c/0x190 [drm_kms_helper]
+  drm_atomic_helper_commit+0x154/0x188 [drm_kms_helper]
+  drm_client_modeset_commit_atomic+0x228/0x268 [drm]
+  drm_client_modeset_commit_locked+0x60/0x1d0 [drm]
+  drm_client_modeset_commit+0x24/0x40 [drm]
+  drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa8 [drm_kms_helper]
+  drm_fb_helper_set_par+0x2c/0x5c [drm_kms_helper]
+  drm_fb_helper_hotplug_event.part.0+0xa0/0xbc [drm_kms_helper]
+  drm_kms_helper_hotplug_event+0x24/0x30 [drm_kms_helper]
+  output_poll_execute+0x1a8/0x1c0 [drm_kms_helper]
+  process_one_work+0x268/0x800
+  worker_thread+0x30/0x4e0
+  kthread+0x164/0x190
+  ret_from_fork+0x14/0x20
 
-After this patch, the preferred node is tried first before other allowed
-nodes, and don't try to allocate from other nodes if __GFP_THISNODE is
-specified.  If user don't specify the preferred node, the current node
-will be used as preferred node, which makes sure consistent behavior of
-allocating gigantic and non-gigantic hugetlb page.
+The reason for this is that omapdrm calls drm_crtc_vblank_on() while
+holding event_lock taken with spin_lock_irq().
 
-Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
-Signed-off-by: Li Xinhai <lixinhai.lxh@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Roman Gushchin <guro@fb.com>
-Link: https://lkml.kernel.org/r/20200902025016.697260-1-lixinhai.lxh@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It is not clear why drm_crtc_vblank_on() and drm_crtc_vblank_get() are
+called while holding event_lock. I don't see any problem with moving
+those calls outside the lock, which is what this patch does.
 
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200819103021.440288-1-tomi.valkeinen@ti.com
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/hugetlb.c |   23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/omapdrm/omap_crtc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1251,21 +1251,32 @@ static struct page *alloc_gigantic_page(
- 		int nid, nodemask_t *nodemask)
- {
- 	unsigned long nr_pages = 1UL << huge_page_order(h);
-+	if (nid == NUMA_NO_NODE)
-+		nid = numa_mem_id();
+diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
+index 3c5ddbf30e974..f5e18802e7bc6 100644
+--- a/drivers/gpu/drm/omapdrm/omap_crtc.c
++++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
+@@ -451,11 +451,12 @@ static void omap_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	if (omap_state->manually_updated)
+ 		return;
  
- #ifdef CONFIG_CMA
- 	{
- 		struct page *page;
- 		int node;
- 
--		for_each_node_mask(node, *nodemask) {
--			if (!hugetlb_cma[node])
--				continue;
--
--			page = cma_alloc(hugetlb_cma[node], nr_pages,
--					 huge_page_order(h), true);
-+		if (hugetlb_cma[nid]) {
-+			page = cma_alloc(hugetlb_cma[nid], nr_pages,
-+					huge_page_order(h), true);
- 			if (page)
- 				return page;
- 		}
+-	spin_lock_irq(&crtc->dev->event_lock);
+ 	drm_crtc_vblank_on(crtc);
 +
-+		if (!(gfp_mask & __GFP_THISNODE)) {
-+			for_each_node_mask(node, *nodemask) {
-+				if (node == nid || !hugetlb_cma[node])
-+					continue;
-+
-+				page = cma_alloc(hugetlb_cma[node], nr_pages,
-+						huge_page_order(h), true);
-+				if (page)
-+					return page;
-+			}
-+		}
- 	}
- #endif
+ 	ret = drm_crtc_vblank_get(crtc);
+ 	WARN_ON(ret != 0);
  
++	spin_lock_irq(&crtc->dev->event_lock);
+ 	omap_crtc_arm_event(crtc);
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+ }
+-- 
+2.25.1
+
 
 
