@@ -2,50 +2,53 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AA9C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAC1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6C520768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B74420658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594697;
-	bh=Q0s+No+VwSBihjIHi1xxZfkgr3aWqm7PPMb0lJeQw4A=;
+	s=default; t=1599594715;
+	bh=x6dG5iZPys6XcszX9f3KVT/6LcOENDa9YEo2YC63G9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Ap8uF3PtG0+ZP+uOTSwOXhcEobvJaKPtc3ZZGUozLDCHzayVmyJmev6WmOKWT4v1
-	 9B5GafSrXPwC6lzN3CNXeTUZGs9us1JChFyBKzN1S2iakK/sns7k7ZrFXKahday7jE
-	 2Z3GYfJHYVQrZ4EG1Co30wwyyk9PPzGlyE8hb3f8=
+	b=USAfxy1I5HMXLdViMiScxDSjhFYDe5rR2/Ga6nXzjzvSIwn4Lqm0BQ+u10TwB3fGT
+	 oF6UnIRsmzauk7Fr/W4Ev7nlOt5ggO6dcKvcdD4Omz228vKse8alepWVNNzFZ4DFp1
+	 +1PJ0VeIa/HXhLb6su2ReMeW8YPVU7vDFpMIr/30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgIHTvf (ORCPT
+        id S1732388AbgIHTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:51:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:51:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730304AbgIHPt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730702AbgIHPt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:49:57 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE7B2485D;
-        Tue,  8 Sep 2020 15:45:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B1C324859;
+        Tue,  8 Sep 2020 15:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579922;
-        bh=Q0s+No+VwSBihjIHi1xxZfkgr3aWqm7PPMb0lJeQw4A=;
+        s=default; t=1599579917;
+        bh=x6dG5iZPys6XcszX9f3KVT/6LcOENDa9YEo2YC63G9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rzKiQ7792d/hIt6YLu5j5PDIAUfhGYHYOliWXFlEiDEFbWV2c3742XUtasR5gDzMp
-         YYxj9qITEVHBNH4uhxwT7EIg3t5PYq1zzG/X/eRRZ8JvakUOgXHIq96MVVXKveeJFp
-         Z8pso5kZBaX7FYFPa+8WTlCEG5ZEVhJWonqzvBKg=
+        b=EJC+SgjWj8lTrsk5TGrEdrnSLrfEOuAdBHLj6Yd7kSEAYq06NUWZYPi02x1qJpdYd
+         Pn/Tqg3eUxu9Wvq+vtld1RBervnmRts7E79z0qBxGYxRiX8v7cUaeVjCYgcN1SDWY/
+         OTzRIyEFH6UdR2IvoYRI+rKldSkO7ApjdHS5/elA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/129] Revert "net: dsa: microchip: set the correct number of ports"
-Date:   Tue,  8 Sep 2020 17:25:29 +0200
-Message-Id: <20200908152234.112893103@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Edward Cree <ecree@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Hyunsoon Kim <h10.kim@samsung.com>
+Subject: [PATCH 5.4 086/129] net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()
+Date:   Tue,  8 Sep 2020 17:25:27 +0200
+Message-Id: <20200908152234.000867723@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -58,48 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d55dad8b1d893fae0c4e778abf2ace048bcbad86.
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-Upstream commit af199a1a9cb0 ("net: dsa: microchip: set the correct
-number of ports") seems to have been applied twice on top of the 5.4
-branch. This revert the second instance of said commit.
+commit 6570bc79c0dfff0f228b7afd2de720fb4e84d61d upstream.
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Commit 323ebb61e32b4 ("net: use listified RX for handling GRO_NORMAL
+skbs") made use of listified skb processing for the users of
+napi_gro_frags().
+The same technique can be used in a way more common napi_gro_receive()
+to speed up non-merged (GRO_NORMAL) skbs for a wide range of drivers
+including gro_cells and mac80211 users.
+This slightly changes the return value in cases where skb is being
+dropped by the core stack, but it seems to have no impact on related
+drivers' functionality.
+gro_normal_batch is left untouched as it's very individual for every
+single system configuration and might be tuned in manual order to
+achieve an optimal performance.
+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Acked-by: Edward Cree <ecree@solarflare.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hyunsoon Kim <h10.kim@samsung.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/dsa/microchip/ksz8795.c | 3 ---
- drivers/net/dsa/microchip/ksz9477.c | 3 ---
- 2 files changed, 6 deletions(-)
+ net/core/dev.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index 8d50aacd19e51..84c4319e3b31f 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -1270,9 +1270,6 @@ static int ksz8795_switch_init(struct ksz_device *dev)
- 	/* set the real number of ports */
- 	dev->ds->num_ports = dev->port_cnt;
- 
--	/* set the real number of ports */
--	dev->ds->num_ports = dev->port_cnt;
--
- 	return 0;
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5602,12 +5602,13 @@ static void napi_skb_free_stolen_head(st
+ 	kmem_cache_free(skbuff_head_cache, skb);
  }
  
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index b15da9a8e3bb9..49ab1346dc3f7 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -515,9 +515,6 @@ static int ksz9477_port_vlan_filtering(struct dsa_switch *ds, int port,
- 			     PORT_VLAN_LOOKUP_VID_0, false);
- 	}
+-static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
++static gro_result_t napi_skb_finish(struct napi_struct *napi,
++				    struct sk_buff *skb,
++				    gro_result_t ret)
+ {
+ 	switch (ret) {
+ 	case GRO_NORMAL:
+-		if (netif_receive_skb_internal(skb))
+-			ret = GRO_DROP;
++		gro_normal_one(napi, skb);
+ 		break;
  
--	/* set the real number of ports */
--	dev->ds->num_ports = dev->port_cnt;
--
- 	return 0;
- }
+ 	case GRO_DROP:
+@@ -5639,7 +5640,7 @@ gro_result_t napi_gro_receive(struct nap
  
--- 
-2.25.1
-
+ 	skb_gro_reset_offset(skb);
+ 
+-	ret = napi_skb_finish(dev_gro_receive(napi, skb), skb);
++	ret = napi_skb_finish(napi, skb, dev_gro_receive(napi, skb));
+ 	trace_napi_gro_receive_exit(ret);
+ 
+ 	return ret;
 
 
