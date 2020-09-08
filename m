@@ -2,104 +2,99 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A68BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4198C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54442087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BF982080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589548;
-	bh=u/PWZb7114iK1yOzgf7Cmth9CCerX2WYzrhq1M1BPqk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VibQDdxAEu93SfYpSm7Hpg2BruiwOrO+aH7NuGLjwflADfzyNLXhwIdVRUtelwwgn
-	 hFVC2V1UDdzmXEYTy+o3dAtWrcNm8NL7/aUHoDsRJYeW9yCK4fB5gVIuZFlkf2gXAi
-	 3LQ3CfYYfPKmghGJBVLSHzf0wDTyYbn2Hbhau+Ao=
+	s=default; t=1599589574;
+	bh=+k7C/qwwLHxtgwfWm617WiC6zqONmRvoVFwEBC/ZrEs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RzFz8cGBdJ6kD31Z0eCETzWbtZ+02Dj5LGfv9GDLrk6lc5wxyNm1hEz+LkjOmTXQl
+	 OsN2TPYE6PTPZc7LgR2cITFmEjudpbvQbKtz67l6VpbjwjCvMSSXyH2yhw7wtU7gTI
+	 YbvtcJpFlnclgs9OQJzRPPOf8w0ZZxyn8OP6Lqj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732237AbgIHSV4 (ORCPT
+        id S1729207AbgIHS0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731466AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:11 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59251247E6;
-        Tue,  8 Sep 2020 15:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579756;
-        bh=u/PWZb7114iK1yOzgf7Cmth9CCerX2WYzrhq1M1BPqk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywErtKghSksULK11KWhR5ggbjJ8m/a8fvCyDfd54rG4ty2WOO7FngXE1Ki1uFss/y
-         5dXwV8QEn/HqvrRlfjL6mRATJ1I8hGEjxwxihpuaqd7/hcsQLcPibB/j2dpUiRP5EN
-         llEjcfHG5j8TaU2c5OtejDPu1gWtu/FBY3BEzE+8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 022/129] dmaengine: of-dma: Fix of_dma_router_xlates of_dma_xlate handling
-Date:   Tue,  8 Sep 2020 17:24:23 +0200
-Message-Id: <20200908152230.812631778@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 14:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731222AbgIHST4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:19:56 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05097C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:19:50 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v23so176815ljd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j4ZG7pHNKJrTC8ewi1bAxI1rmelsYImAuRVz1o61Rvw=;
+        b=AdYfsYsp+iKIH8WN3gypyY9mlMeSR1eCJHUXHjzjx3BSS0OC/iBPzRzVULBH6L6iSh
+         RrevIvrJ7CAbiyPP2mSYuwOxD6YFOdh7Dttw3IwSvOtDRS9R9zLc5hV/T6Nqo8pMez0S
+         6dW9/gN7Ikd2Mi/GEilIJvAWLv+OpE8VCFjqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j4ZG7pHNKJrTC8ewi1bAxI1rmelsYImAuRVz1o61Rvw=;
+        b=QNA7y6yTz3KxRJsjyYrsHLEIs9lnDT6pl+MPUAX6eNpbmHveG/VgWfYbwBi1+EOn+u
+         MQfbvfdhbUolth4J2ZG2Isa9CLiqlKk2ag9cBeJQthqwYEJkMpRDfY3w2X4P0nPwxlfk
+         TesSUGb4hKOtgMM1dYNBrnEEkzCqreC73U/db6aD2Gcbpdxj35NW/In7AL5Iqd38O3T/
+         BtG9N1AGFsa4uoBjsigVNsPfFET8leSFkpGPOvb7v4OdXDCYMzTauBCrRBqnHhTu/y/+
+         PPP+uXGfwB+gDVjYzPrCAR7bxB9ErHEFZVuRf+4QLe2z63nN0IXFOMazqQZ8vnToB40G
+         9ANA==
+X-Gm-Message-State: AOAM531dvyJfhlq+JgvkZ9BEF920jmtFeiw9k8i7tKUd4mnTLlwnUck8
+        z3s7P8/LSiHjXZGuGGYBiWfTMMUFCuvw9g==
+X-Google-Smtp-Source: ABdhPJznSSKGREpzspZ8IjUsV5VBmvo8xYVqyiv0JUcTGuBJqvXwpuBLgYgBzbv7iLM12HKAjS7sFA==
+X-Received: by 2002:a2e:97d0:: with SMTP id m16mr14022783ljj.277.1599589186684;
+        Tue, 08 Sep 2020 11:19:46 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id 190sm69147lfa.81.2020.09.08.11.19.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 11:19:45 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id u27so147582lfm.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:19:45 -0700 (PDT)
+X-Received: by 2002:a19:4a88:: with SMTP id x130mr133090lfa.31.1599589185184;
+ Tue, 08 Sep 2020 11:19:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAPM=9tz0whDeamM+k_8Wu8TVzz0TDr+qMNMXo8rKeeNRKxBuiQ@mail.gmail.com>
+ <CAHk-=wh2EH9DKRpJQ7+X+NWjjduLPy_Ncv1GzxnXBg-3mTn0Fw@mail.gmail.com> <cfcea1be-e02f-b391-ab1f-780888da138d@skogtun.org>
+In-Reply-To: <cfcea1be-e02f-b391-ab1f-780888da138d@skogtun.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 8 Sep 2020 11:19:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjRLmayxnChONeb24pFPv=o733ptzpAyuAebrxWzhPYtw@mail.gmail.com>
+Message-ID: <CAHk-=wjRLmayxnChONeb24pFPv=o733ptzpAyuAebrxWzhPYtw@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 5.9-rc4
+To:     Harald Arnesen <harald@skogtun.org>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Fri, Sep 4, 2020 at 2:51 PM Harald Arnesen <harald@skogtun.org> wrote:
+>
+> Still doesn't work without the three reverts
+> (763fedd6a216, 9e0f9464e2ab, 7ac2d2536dfa)...
 
-[ Upstream commit 5b2aa9f918f6837ae943557f8cec02c34fcf80e7 ]
+So this didn't make rc4, but it's in my tree now.
 
-of_dma_xlate callback can return ERR_PTR as well NULL in case of failure.
+Harald, I'm assuming things work for you again now with the current
+git tree, but it is always good to double-check in case something else
+interacted with the reverts...
 
-If error code is returned (not NULL) then the route should be released and
-the router should not be registered for the channel.
-
-Fixes: 56f13c0d9524c ("dmaengine: of_dma: Support for DMA routers")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200806104928.25975-1-peter.ujfalusi@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/of-dma.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index c2d779daa4b51..4bbf4172b9bf9 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -69,12 +69,12 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
- 		return NULL;
- 
- 	chan = ofdma_target->of_dma_xlate(&dma_spec_target, ofdma_target);
--	if (chan) {
--		chan->router = ofdma->dma_router;
--		chan->route_data = route_data;
--	} else {
-+	if (IS_ERR_OR_NULL(chan)) {
- 		ofdma->dma_router->route_free(ofdma->dma_router->dev,
- 					      route_data);
-+	} else {
-+		chan->router = ofdma->dma_router;
-+		chan->route_data = route_data;
- 	}
- 
- 	/*
--- 
-2.25.1
-
-
-
+                      Linus
