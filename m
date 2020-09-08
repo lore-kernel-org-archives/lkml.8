@@ -2,94 +2,157 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8117C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3447C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E59B20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA9C20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ak3qkOov"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fToRuRTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbgIHTo7 (ORCPT
+        id S1731257AbgIHTpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33276 "EHLO
+        Tue, 8 Sep 2020 15:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731791AbgIHTou (ORCPT
+        with ESMTP id S1730776AbgIHPvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:44:50 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B368C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:44:49 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b124so2129pfg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2RAh9VxYe6YP3CQOqoPiJgS/OiFbrrin8Z9n6iaYo5M=;
-        b=ak3qkOov/dSJu+P+iQr+bMPZsrf0r3uxQjSSawEZ313S717j11P5xv13s0bIThq041
-         JQWiNt6rvsUa87j+AKNInb8B0hmZOLSiYMWoh09BhNCNHqV+b5ZAZhJTEuP0A+2L+w2R
-         voncG799mvL/eZRxEPzWTjNtx4Sf6N6CVI5TQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2RAh9VxYe6YP3CQOqoPiJgS/OiFbrrin8Z9n6iaYo5M=;
-        b=ddwbZIE/NGJgExfO2wjRrBLEp6/ECp5gBhXuoT2Ej8zW693A+3eCTz5szziMtHXh2F
-         +BaHUalX79HWMChXReuIMVfcUNNs+ZV+nxJNZTeScy6NsZgauCfTm+49CV3uvjClYeNn
-         A2Q0NO3fu5GsR2gF4/XsKb0ShvTVMvY0D4p+Y0YpdrO7J8hgoixid3/0iL1cNtORwFIx
-         9cKyOyHaaEBzT5gruHb0blVjyOM9HxfM2AkE2zlhjbwb42nyfehHDTnE+3DnEIMkSK5l
-         EROpuiWY0R+Hpp/X70wfNVU9Hhht4tdo5+khHfxLjXcA1+L8SCe1Y9CePiP7jkOzBPEk
-         dLiA==
-X-Gm-Message-State: AOAM530dDYVWDwUQPAzKvKaCbu6BVuc1kItG5Pzb+55AHd/4yWE0aUDG
-        dB0tRny5t6t2cDhUp3R4Fd+kFw==
-X-Google-Smtp-Source: ABdhPJxVV2IHdBHOtNGRGXN1IUlBfQlG699HAitMd8MACvmx3uO30Lg9o4pb84yyKXNWsBXBENJzhg==
-X-Received: by 2002:a63:7f59:: with SMTP id p25mr268271pgn.146.1599594288289;
-        Tue, 08 Sep 2020 12:44:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j144sm224712pfd.106.2020.09.08.12.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 12:44:47 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-kernel@vger.kernel.org, Rich Felker <dalias@libc.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: [PATCH] seccomp: kill process instead of thread for unknown actions
-Date:   Tue,  8 Sep 2020 12:43:43 -0700
-Message-Id: <159959421548.1668991.14680355869966635620.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200829015609.GA32566@brightrain.aerifal.cx>
-References: <20200829015609.GA32566@brightrain.aerifal.cx>
+        Tue, 8 Sep 2020 11:51:42 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB37C0A3BF7;
+        Tue,  8 Sep 2020 07:55:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=fs8KDvUlBtih+JNIUNQobEQslvMWHTx5fiB3hsIGlEU=; b=fToRuRTLBzkwhKm/TBMIAObCfx
+        47SjRyodcVFkso9Pdp1Z4yO8OZ3afLCOAU2HivmVTsp3tP1Bs88OMnOZB7haSutu6gHet6t4VM3wp
+        yw1Wa+3VlMgjCzG1XqrEZAep3+D15GDpvLTW/mHCdv6Urlj/XZbc1Mi4vvIbLWP2FZPmjUyJsZ1Vv
+        yi0qc4NmeefS23wziWDUVQUXwMIwfzTbyLWpaBN3N8hJtzG+iTWHHG4AwwJjrYLudG25EJeXDoso9
+        RVK0YroYrfuP2PbYDLdLaevlsiDgFf5Jm5RM70YkGXbQXegJusJEa/ZMQ6NYGQUa1p9Yi1HBUDqt/
+        tlSbZePw==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf1I-00030J-0O; Tue, 08 Sep 2020 14:54:58 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 18/19] sr: simplify sr_block_revalidate_disk
+Date:   Tue,  8 Sep 2020 16:53:46 +0200
+Message-Id: <20200908145347.2992670-19-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 21:56:13 -0400, Rich Felker wrote:
-> Asynchronous termination of a thread outside of the userspace thread
-> library's knowledge is an unsafe operation that leaves the process in
-> an inconsistent, corrupt, and possibly unrecoverable state. In order
-> to make new actions that may be added in the future safe on kernels
-> not aware of them, change the default action from
-> SECCOMP_RET_KILL_THREAD to SECCOMP_RET_KILL_PROCESS.
+Both callers have a valid CD struture available, so rely on that instead
+of getting another reference.  Also move the function to avoid a forward
+declaration.
 
-Applied, thanks!
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ drivers/scsi/sr.c | 36 +++++++++++++-----------------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-[1/1] seccomp: kill process instead of thread for unknown actions
-      https://git.kernel.org/kees/c/4d671d922d51
-
-I tweaked the coredump logic and added a selftest (and CCed you) for
-the behavior (since it wasn't included in the existing tests).
-
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 34be94b62523fa..2b43c0f97442d4 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -86,7 +86,6 @@ static int sr_remove(struct device *);
+ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt);
+ static int sr_done(struct scsi_cmnd *);
+ static int sr_runtime_suspend(struct device *dev);
+-static int sr_block_revalidate_disk(struct gendisk *disk);
+ 
+ static const struct dev_pm_ops sr_pm_ops = {
+ 	.runtime_suspend	= sr_runtime_suspend,
+@@ -518,6 +517,17 @@ static blk_status_t sr_init_command(struct scsi_cmnd *SCpnt)
+ 	return ret;
+ }
+ 
++static void sr_revalidate_disk(struct scsi_cd *cd)
++{
++	struct scsi_sense_hdr sshdr;
++
++	/* if the unit is not ready, nothing more to do */
++	if (scsi_test_unit_ready(cd->device, SR_TIMEOUT, MAX_RETRIES, &sshdr))
++		return;
++	sr_cd_check(&cd->cdi);
++	get_sectorsize(cd);
++}
++
+ static int sr_block_open(struct block_device *bdev, fmode_t mode)
+ {
+ 	struct scsi_cd *cd;
+@@ -531,7 +541,7 @@ static int sr_block_open(struct block_device *bdev, fmode_t mode)
+ 	sdev = cd->device;
+ 	scsi_autopm_get_device(sdev);
+ 	if (bdev_check_media_change(bdev))
+-		sr_block_revalidate_disk(bdev->bd_disk);
++		sr_revalidate_disk(cd);
+ 
+ 	mutex_lock(&cd->lock);
+ 	ret = cdrom_open(&cd->cdi, bdev, mode);
+@@ -660,26 +670,6 @@ static unsigned int sr_block_check_events(struct gendisk *disk,
+ 	return ret;
+ }
+ 
+-static int sr_block_revalidate_disk(struct gendisk *disk)
+-{
+-	struct scsi_sense_hdr sshdr;
+-	struct scsi_cd *cd;
+-
+-	cd = scsi_cd_get(disk);
+-	if (!cd)
+-		return -ENXIO;
+-
+-	/* if the unit is not ready, nothing more to do */
+-	if (scsi_test_unit_ready(cd->device, SR_TIMEOUT, MAX_RETRIES, &sshdr))
+-		goto out;
+-
+-	sr_cd_check(&cd->cdi);
+-	get_sectorsize(cd);
+-out:
+-	scsi_cd_put(cd);
+-	return 0;
+-}
+-
+ static const struct block_device_operations sr_bdops =
+ {
+ 	.owner		= THIS_MODULE,
+@@ -803,7 +793,7 @@ static int sr_probe(struct device *dev)
+ 
+ 	dev_set_drvdata(dev, cd);
+ 	disk->flags |= GENHD_FL_REMOVABLE;
+-	sr_block_revalidate_disk(disk);
++	sr_revalidate_disk(cd);
+ 	device_add_disk(&sdev->sdev_gendev, disk, NULL);
+ 
+ 	sdev_printk(KERN_DEBUG, sdev,
 -- 
-Kees Cook
+2.28.0
 
