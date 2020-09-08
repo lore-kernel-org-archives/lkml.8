@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4353C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E074C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFF0218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D12E521D1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgIHHd3 (ORCPT
+        id S1729561AbgIHHdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:33:29 -0400
-Received: from mail-il1-f206.google.com ([209.85.166.206]:51673 "EHLO
-        mail-il1-f206.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729499AbgIHHdU (ORCPT
+        Tue, 8 Sep 2020 03:33:32 -0400
+Received: from mail-il1-f207.google.com ([209.85.166.207]:36483 "EHLO
+        mail-il1-f207.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729496AbgIHHdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:33:20 -0400
-Received: by mail-il1-f206.google.com with SMTP id i80so487866ild.18
+        Tue, 8 Sep 2020 03:33:21 -0400
+Received: by mail-il1-f207.google.com with SMTP id f20so11443698ilg.3
         for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:33:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Qdoy1fNxR3DbTJRTFFfZS+5ZeYZDGPLwqlgNTZKWLDU=;
-        b=R+U3Dl2jro8DBzboTEdG/IHlua+7hz/unXV1quFEafATRc9ccYlScM1h6qxONLqYIn
-         h3kkdYfLjy+GlZQ7bCCi4C7h3plsnFjBIzqvJflnKqmwLJy4jHQwWX0RdKm0MGXIeX4x
-         97BatmX7Fd4jxzV95VbyKSEJEaYopp/IcumReW8L36LKrrg6PrRcsl5DJESlnqmHTmgH
-         UZig8L8iQCv+++MxmOX++3+GT5rEVVOkZHMBx104sp6EFsR7YGjCS7kxKBiMHvBunvF2
-         KKyLN6f4+96UG1mZaXkqYESkN7dE3nsg7aI94y50IkrbA4inhoU66N8SbbDmS/MY6eqq
-         gbUg==
-X-Gm-Message-State: AOAM530FqWUVIpH0K7qXNaX+BgTsu0ku6c+rKDO3FDzWk/w/H2gZ4i2Z
-        LUUSILZS0qMG+oSVwOZs+OqcwV0BDkQH9HdvBIA9KynHaaZW
-X-Google-Smtp-Source: ABdhPJzNnCpdH5w3DalyoAVHVYiUvdBRPjrYY6mrYRfFNWcBJhzvqUZZ8/+vQ61IuBKCzHHHj+BeITDmjqvKk0tmzVW3q0rM4zcb
+        bh=BOREg4ynb+fPnN3e6LDGE1Wyh7kbbVZvm+CMgLSzhTY=;
+        b=TRwjzgDDpIdYc/4SRc4q3CJFwTJX7o6wHdK11sfyiFudmorTm61n4aZZgdxwhVpRj6
+         LUOIE1TXoOGz5Fcck8+A39Z4pJKsyIhgZS7HHXhMUt4VvX1dtjjGlMxIkOK8YwUtmzTA
+         Jg/tdDmPdAuNRHiuyHV10yAiQhBLhbLwaMpZ5w3HFcacyFMApz2XdcZvMZnhyUgrKaEe
+         uq3ehN2PUq8807tg6MB3RSKH1JzYA7OgtE/rN4LzAy1dC3bK/qojPcH9GdynyRtwRFSe
+         +0MRAhSe71nSDK/jlGyZi2PHJy762G/GVkIeCE0Y/E8pvMOGL8YvbFH5vQshrtg+Rw/T
+         aygA==
+X-Gm-Message-State: AOAM531AgJAt/HiT06CHThbzV8VMg6k9SC/kZa1eK9af7Cx6Kw11t/bB
+        QbCsySdseeq7xfcXJtnEHKc4MQznR0D3TWWrY7JuUYp2Uv/4
+X-Google-Smtp-Source: ABdhPJwaTImHa51NL/wpTIwANersbSYjuM915z1X5HNmgz9VWgEKlDBrYRSzvTFLD0PjXXNrskhwTGUMvkvCt9jKLsX2U7M894mG
 MIME-Version: 1.0
-X-Received: by 2002:a92:2905:: with SMTP id l5mr21982823ilg.80.1599550399534;
+X-Received: by 2002:a05:6638:1381:: with SMTP id w1mr1167608jad.34.1599550399784;
  Tue, 08 Sep 2020 00:33:19 -0700 (PDT)
 Date:   Tue, 08 Sep 2020 00:33:19 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005d5b5905aec85912@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in kvm_vm_worker_thread
-From:   syzbot <syzbot+e4a6c438918d1db4e4fc@syzkaller.appspotmail.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000061311205aec85935@google.com>
+Subject: WARNING: refcount bug in smc_release (3)
+From:   syzbot <syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,55 +61,62 @@ syzbot found the following issue on:
 
 HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d432fe900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=114602f2900000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=e4a6c438918d1db4e4fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=8b963fe6ec74e5dac8d7
 compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 Unfortunately, I don't have any reproducer for this issue yet.
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e4a6c438918d1db4e4fc@syzkaller.appspotmail.com
+Reported-by: syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 5d428067 P4D 5d428067 PUD 5d429067 PMD 0 
-Oops: 0002 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 7418 Comm: kvm-nx-lpage-re Not tainted 5.9.0-rc2-syzkaller #0
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 1 PID: 28422 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 28422 Comm: syz-executor.3 Not tainted 5.9.0-rc2-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:kvm_vm_worker_thread+0xe9/0x270 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4912
-Code: 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 37 01 00 00 48 8b 7b 08 4c 89 ee e8 23 99 67 00 31 ff 41 89 c4 89 c6 e8 a7 4b 6d 00 <00> 00 00 0f 85 97 31 02 00 e8 19 4f 6d 00 48 8b 54 24 08 48 b8 00
-RSP: 0018:ffffc90012097ed0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffffc90011e87cf8 RCX: ffffffff8106efe9
-RDX: 0000000000000000 RSI: ffff88804c02e040 RDI: 0000000000000005
-RBP: ffffc90011e87d08 R08: 0000000000000001 R09: ffffffff89bfd407
-R10: 0000000000000000 R11: 0000000000000160 R12: 0000000000000000
-R13: ffff88804c02e040 R14: ffffc90012081000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000005d427000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
-CR2: 0000000000000000
----[ end trace 7a7affa1f4a7d557 ]---
-RIP: 0010:kvm_vm_worker_thread+0xe9/0x270 arch/x86/kvm/../../../virt/kvm/kvm_main.c:4912
-Code: 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 37 01 00 00 48 8b 7b 08 4c 89 ee e8 23 99 67 00 31 ff 41 89 c4 89 c6 e8 a7 4b 6d 00 <00> 00 00 0f 85 97 31 02 00 e8 19 4f 6d 00 48 8b 54 24 08 48 b8 00
-RSP: 0018:ffffc90012097ed0 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffffc90011e87cf8 RCX: ffffffff8106efe9
-RDX: 0000000000000000 RSI: ffff88804c02e040 RDI: 0000000000000005
-RBP: ffffc90011e87d08 R08: 0000000000000001 R09: ffffffff89bfd407
-R10: 0000000000000000 R11: 0000000000000160 R12: 0000000000000000
-R13: ffff88804c02e040 R14: ffffc90012081000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000005d427000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Code: 07 31 ff 89 de e8 97 d2 d8 fd 84 db 0f 85 36 ff ff ff e8 4a d6 d8 fd 48 c7 c7 a0 da 93 88 c6 05 43 e5 11 07 01 e8 39 e7 a9 fd <0f> 0b e9 17 ff ff ff e8 2b d6 d8 fd 0f b6 1d 28 e5 11 07 31 ff 89
+RSP: 0018:ffffc90017fafdd8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff8880477d43c0 RSI: ffffffff815dafc7 RDI: fffff52002ff5fad
+RBP: 0000000000000002 R08: 0000000000000001 R09: ffff8880ae720f8b
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff888084ef0540
+R13: ffff88800011aa80 R14: ffff888084ef0558 R15: 0000000000000000
+ refcount_add include/linux/refcount.h:204 [inline]
+ refcount_inc include/linux/refcount.h:241 [inline]
+ sock_hold include/net/sock.h:692 [inline]
+ smc_release+0x41d/0x490 net/smc/af_smc.c:180
+ __sock_release+0xcd/0x280 net/socket.c:596
+ sock_close+0x18/0x20 net/socket.c:1277
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x416f01
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:000000000169fbe0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000416f01
+RDX: 0000000000000000 RSI: 000000000000097b RDI: 0000000000000004
+RBP: 0000000000000001 R08: 0000000000d9297a R09: 0000000000d9297e
+R10: 000000000169fcd0 R11: 0000000000000293 R12: 000000000118d940
+R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118cfec
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
