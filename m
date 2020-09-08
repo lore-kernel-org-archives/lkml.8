@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B09C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B7EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75F12098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7952078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593206;
-	bh=UqqMPAtWDqzA6uUdK9GV+TVqxsDEdKr1IAB3nfSBPuo=;
+	s=default; t=1599593214;
+	bh=fT+Gl91n+3w+s/Fj+AVwPmeQvf8Pt8+tmLBCik5m63s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W3egR7p9eFHeAaKrNRbvrjGctbv04gPTrLuotHRRHVJbYi6paKne2JUjtLnEKQU0c
-	 zYUJB32OiNupRgm7TkBNkqUsDOiVBzrUZe9pU6AqEJ/fdbyNMPscqj+ZaTD74zIQff
-	 /e5mhJLWkhO/8JfB/9q3owjfV2jFmE8PC0YJtqOk=
+	b=2LesLXEF8QmSYJtqxu577CH60afqFSGAKWvg6W9OszCkYJYvauV3Q6dMkv3aeiAkE
+	 dI/yn7LgvM6SjFwXnkMQhInnq7qcnZzpbIuKryma125TSNUMVi4sZG03Ch9MTrPWvK
+	 Lq8y6oQ1m7QamG5HxRmdjUu9GaV28VUmwwSU35C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732115AbgIHT0n (ORCPT
+        id S1731779AbgIHT0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:26:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48724 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731055AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5435421D90;
-        Tue,  8 Sep 2020 15:35:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BA9121D7A;
+        Tue,  8 Sep 2020 15:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579341;
-        bh=UqqMPAtWDqzA6uUdK9GV+TVqxsDEdKr1IAB3nfSBPuo=;
+        s=default; t=1599579334;
+        bh=fT+Gl91n+3w+s/Fj+AVwPmeQvf8Pt8+tmLBCik5m63s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FpoaftvDyfdJIuJ8TmmPOVjj+mOqWRtZ5vVd7lQR66Aa1Y/2Q2vUSujUnqv0FLYsb
-         3SFtbzKOfATu0nZimyqAq6kgJn3HmfoqZ04VnCVaMFgb5JIYq3KIptCdRdbYyepaPb
-         GAG2VCepBLplcuHG/QFpDqddDsu302E6CCga+Klw=
+        b=Qe+4BuHXEeJAdvZSaFqnYRpqnOlE/rRyQEqrG5a58P3bNUAgAqERXWPgYeDPveDCG
+         2OqJhfGm/V3N8jh33AR1NEvFN5nJiWrOey7A0dzSAm/gc0QAoihGGez+qe1z0pneqb
+         z2pIxDDSl7rmabfdBOFgY5QLHZvxhaXtaKZ59HR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Leiner <simon@leiner.me>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org, Brandon Syu <Brandon.Syu@amd.com>,
+        Josip Pavic <Josip.Pavic@amd.com>,
+        Eryk Brol <eryk.brol@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 037/186] xen/xenbus: Fix granting of vmallocd memory
-Date:   Tue,  8 Sep 2020 17:22:59 +0200
-Message-Id: <20200908152243.477022134@linuxfoundation.org>
+Subject: [PATCH 5.8 034/186] drm/amd/display: Keep current gain when ABM disable immediately
+Date:   Tue,  8 Sep 2020 17:22:56 +0200
+Message-Id: <20200908152243.331005239@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,45 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Leiner <simon@leiner.me>
+From: Brandon Syu <Brandon.Syu@amd.com>
 
-[ Upstream commit d742db70033c745e410523e00522ee0cfe2aa416 ]
+[ Upstream commit cba4b52e431e5de3d8012281cfe194f1c39a9052 ]
 
-On some architectures (like ARM), virt_to_gfn cannot be used for
-vmalloc'd memory because of its reliance on virt_to_phys. This patch
-introduces a check for vmalloc'd addresses and obtains the PFN using
-vmalloc_to_pfn in that case.
+[Why]
+When system enters s3/s0i3, backlight PWM would set user level.
 
-Signed-off-by: Simon Leiner <simon@leiner.me>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Link: https://lore.kernel.org/r/20200825093153.35500-1-simon@leiner.me
-Signed-off-by: Juergen Gross <jgross@suse.com>
+[How]
+ABM disable function add keep current gain to avoid it.
+
+Signed-off-by: Brandon Syu <Brandon.Syu@amd.com>
+Reviewed-by: Josip Pavic <Josip.Pavic@amd.com>
+Acked-by: Eryk Brol <eryk.brol@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_client.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dc_stream.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index 786fbb7d8be06..907bcbb93afbf 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -379,8 +379,14 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
- 	int i, j;
+diff --git a/drivers/gpu/drm/amd/display/dc/dc_stream.h b/drivers/gpu/drm/amd/display/dc/dc_stream.h
+index 49aad691e687e..ccac2315a903a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc_stream.h
++++ b/drivers/gpu/drm/amd/display/dc/dc_stream.h
+@@ -222,7 +222,7 @@ struct dc_stream_state {
+ 	union stream_update_flags update_flags;
+ };
  
- 	for (i = 0; i < nr_pages; i++) {
--		err = gnttab_grant_foreign_access(dev->otherend_id,
--						  virt_to_gfn(vaddr), 0);
-+		unsigned long gfn;
-+
-+		if (is_vmalloc_addr(vaddr))
-+			gfn = pfn_to_gfn(vmalloc_to_pfn(vaddr));
-+		else
-+			gfn = virt_to_gfn(vaddr);
-+
-+		err = gnttab_grant_foreign_access(dev->otherend_id, gfn, 0);
- 		if (err < 0) {
- 			xenbus_dev_fatal(dev, err,
- 					 "granting access to ring page");
+-#define ABM_LEVEL_IMMEDIATE_DISABLE 0xFFFFFFFF
++#define ABM_LEVEL_IMMEDIATE_DISABLE 255
+ 
+ struct dc_stream_update {
+ 	struct dc_stream_state *stream;
 -- 
 2.25.1
 
