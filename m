@@ -2,162 +2,237 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4837FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD8AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE222177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0D02177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgIHIRp (ORCPT
+        id S1729913AbgIHISb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:17:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:20076 "EHLO pegase1.c-s.fr"
+        Tue, 8 Sep 2020 04:18:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:32796 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729432AbgIHIRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:17:31 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BlygQ2VM3z9tyfZ;
-        Tue,  8 Sep 2020 10:17:22 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 8E9ZAY1YbiyQ; Tue,  8 Sep 2020 10:17:22 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BlygQ1YKJz9tyfY;
-        Tue,  8 Sep 2020 10:17:22 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2B1BE8B7A1;
-        Tue,  8 Sep 2020 10:17:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id k9FC2ZI-dL_g; Tue,  8 Sep 2020 10:17:23 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D4E3E8B768;
-        Tue,  8 Sep 2020 10:17:20 +0200 (CEST)
-Subject: Re: [RFC PATCH v2 2/3] mm: make pXd_addr_end() functions page-table
- entry aware
-To:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
- <31dfb3ed-a0cc-3024-d389-ab9bd19e881f@csgroup.eu>
- <20200908074638.GA19099@oc3871087118.ibm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <5d4f5546-afd0-0b8f-664d-700ae346b9ec@csgroup.eu>
-Date:   Tue, 8 Sep 2020 10:16:49 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20200908074638.GA19099@oc3871087118.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        id S1729432AbgIHIS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 04:18:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5B2B51A0226;
+        Tue,  8 Sep 2020 10:18:25 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 513D91A0134;
+        Tue,  8 Sep 2020 10:18:20 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0E5E74024E;
+        Tue,  8 Sep 2020 10:18:13 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        arnd@arndb.de
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V4 1/3] pinctrl: imx: Use function callbacks for SCU related functions
+Date:   Tue,  8 Sep 2020 16:11:59 +0800
+Message-Id: <1599552721-24872-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use function callbacks for SCU related functions in pinctrl-imx.c
+in order to support the scenario of PINCTRL_IMX is built in while
+PINCTRL_IMX_SCU is built as module, all drivers using SCU pinctrl
+driver need to initialize the SCU related function callback, and
+no need to check CONFIG_PINCTRL_IMX_SCU anymore, hence stub functions
+also can be removed.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No change.
+---
+ drivers/pinctrl/freescale/pinctrl-imx.c     |  8 ++--
+ drivers/pinctrl/freescale/pinctrl-imx.h     | 57 +++++++++++------------------
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  3 ++
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  3 ++
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  3 ++
+ 5 files changed, 35 insertions(+), 39 deletions(-)
 
-Le 08/09/2020 à 09:46, Alexander Gordeev a écrit :
-> On Tue, Sep 08, 2020 at 07:14:38AM +0200, Christophe Leroy wrote:
->> You forgot arch/powerpc/mm/book3s64/subpage_prot.c it seems.
-> 
-> Yes, and also two more sources :/
-> 	arch/powerpc/mm/kasan/8xx.c
-> 	arch/powerpc/mm/kasan/kasan_init_32.c
-> 
-> But these two are not quite obvious wrt pgd_addr_end() used
-> while traversing pmds. Could you please clarify a bit?
-> 
-> 
-> diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
-> index 2784224..89c5053 100644
-> --- a/arch/powerpc/mm/kasan/8xx.c
-> +++ b/arch/powerpc/mm/kasan/8xx.c
-> @@ -15,8 +15,8 @@
->   	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd += 2, block += SZ_8M) {
->   		pte_basic_t *new;
->   
-> -		k_next = pgd_addr_end(k_cur, k_end);
-> -		k_next = pgd_addr_end(k_next, k_end);
-> +		k_next = pmd_addr_end(k_cur, k_end);
-> +		k_next = pmd_addr_end(k_next, k_end);
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 507e4af..b80c450 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -373,7 +373,7 @@ static int imx_pinconf_get(struct pinctrl_dev *pctldev,
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
+ 
+ 	if (info->flags & IMX_USE_SCU)
+-		return imx_pinconf_get_scu(pctldev, pin_id, config);
++		return info->imx_pinconf_get(pctldev, pin_id, config);
+ 	else
+ 		return imx_pinconf_get_mmio(pctldev, pin_id, config);
+ }
+@@ -423,7 +423,7 @@ static int imx_pinconf_set(struct pinctrl_dev *pctldev,
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
+ 
+ 	if (info->flags & IMX_USE_SCU)
+-		return imx_pinconf_set_scu(pctldev, pin_id,
++		return info->imx_pinconf_set(pctldev, pin_id,
+ 					   configs, num_configs);
+ 	else
+ 		return imx_pinconf_set_mmio(pctldev, pin_id,
+@@ -440,7 +440,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+ 	int ret;
+ 
+ 	if (info->flags & IMX_USE_SCU) {
+-		ret = imx_pinconf_get_scu(pctldev, pin_id, &config);
++		ret = info->imx_pinconf_get(pctldev, pin_id, &config);
+ 		if (ret) {
+ 			dev_err(ipctl->dev, "failed to get %s pinconf\n",
+ 				pin_get_name(pctldev, pin_id));
+@@ -629,7 +629,7 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
+ 	for (i = 0; i < grp->num_pins; i++) {
+ 		pin = &((struct imx_pin *)(grp->data))[i];
+ 		if (info->flags & IMX_USE_SCU)
+-			imx_pinctrl_parse_pin_scu(ipctl, &grp->pins[i],
++			info->imx_pinctrl_parse_pin(ipctl, &grp->pins[i],
+ 						  pin, &list);
+ 		else
+ 			imx_pinctrl_parse_pin_mmio(ipctl, &grp->pins[i],
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 333d32b..fd8c4b6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -75,6 +75,21 @@ struct imx_cfg_params_decode {
+ 	bool invert;
+ };
+ 
++/**
++ * @dev: a pointer back to containing device
++ * @base: the offset to the controller in virtual memory
++ */
++struct imx_pinctrl {
++	struct device *dev;
++	struct pinctrl_dev *pctl;
++	void __iomem *base;
++	void __iomem *input_sel_base;
++	const struct imx_pinctrl_soc_info *info;
++	struct imx_pin_reg *pin_regs;
++	unsigned int group_index;
++	struct mutex mutex;
++};
++
+ struct imx_pinctrl_soc_info {
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int npins;
+@@ -98,21 +113,13 @@ struct imx_pinctrl_soc_info {
+ 				  struct pinctrl_gpio_range *range,
+ 				  unsigned offset,
+ 				  bool input);
+-};
+-
+-/**
+- * @dev: a pointer back to containing device
+- * @base: the offset to the controller in virtual memory
+- */
+-struct imx_pinctrl {
+-	struct device *dev;
+-	struct pinctrl_dev *pctl;
+-	void __iomem *base;
+-	void __iomem *input_sel_base;
+-	const struct imx_pinctrl_soc_info *info;
+-	struct imx_pin_reg *pin_regs;
+-	unsigned int group_index;
+-	struct mutex mutex;
++	int (*imx_pinconf_get)(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			       unsigned long *config);
++	int (*imx_pinconf_set)(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			       unsigned long *configs, unsigned int num_configs);
++	void (*imx_pinctrl_parse_pin)(struct imx_pinctrl *ipctl,
++				      unsigned int *pin_id, struct imx_pin *pin,
++				      const __be32 **list_p);
+ };
+ 
+ #define IMX_CFG_PARAMS_DECODE(p, m, o) \
+@@ -137,7 +144,6 @@ struct imx_pinctrl {
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 			const struct imx_pinctrl_soc_info *info);
+ 
+-#ifdef CONFIG_PINCTRL_IMX_SCU
+ #define BM_PAD_CTL_GP_ENABLE		BIT(30)
+ #define BM_PAD_CTL_IFMUX_ENABLE		BIT(31)
+ #define BP_PAD_CTL_IFMUX		27
+@@ -150,23 +156,4 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
+ void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+ 			       unsigned int *pin_id, struct imx_pin *pin,
+ 			       const __be32 **list_p);
+-#else
+-static inline int imx_pinconf_get_scu(struct pinctrl_dev *pctldev,
+-				      unsigned pin_id, unsigned long *config)
+-{
+-	return -EINVAL;
+-}
+-static inline int imx_pinconf_set_scu(struct pinctrl_dev *pctldev,
+-				      unsigned pin_id, unsigned long *configs,
+-				      unsigned num_configs)
+-{
+-	return -EINVAL;
+-}
+-static inline void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+-					    unsigned int *pin_id,
+-					    struct imx_pin *pin,
+-					    const __be32 **list_p)
+-{
+-}
+-#endif
+ #endif /* __DRIVERS_PINCTRL_IMX_H */
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
+index 12b97da..d3020c0 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
+@@ -159,6 +159,9 @@ static struct imx_pinctrl_soc_info imx8dxl_pinctrl_info = {
+ 	.pins = imx8dxl_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8dxl_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8dxl_pinctrl_of_match[] = {
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qm.c b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
+index 095acf4..8f46b940 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8qm.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
+@@ -292,6 +292,9 @@ static const struct imx_pinctrl_soc_info imx8qm_pinctrl_info = {
+ 	.pins = imx8qm_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8qm_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8qm_pinctrl_of_match[] = {
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
+index 81ebd4c..6776ad6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
+@@ -198,6 +198,9 @@ static struct imx_pinctrl_soc_info imx8qxp_pinctrl_info = {
+ 	.pins = imx8qxp_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8qxp_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8qxp_pinctrl_of_match[] = {
+-- 
+2.7.4
 
-No, I don't think so.
-On powerpc32 we have only two levels, so pgd and pmd are more or less 
-the same.
-But pmd_addr_end() as defined in include/asm-generic/pgtable-nopmd.h is 
-a no-op, so I don't think it will work.
-
-It is likely that this function should iterate on pgd, then you get pmd 
-= pmd_offset(pud_offset(p4d_offset(pgd)));
-
->   		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
->   			continue;
->   
-> diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-> index fb29404..3f7d6dc6 100644
-> --- a/arch/powerpc/mm/kasan/kasan_init_32.c
-> +++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-> @@ -38,7 +38,7 @@ int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_
->   	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
->   		pte_t *new;
->   
-> -		k_next = pgd_addr_end(k_cur, k_end);
-> +		k_next = pmd_addr_end(k_cur, k_end);
-
-Same here I get, iterate on pgd then get pmd = 
-pmd_offset(pud_offset(p4d_offset(pgd)));
-
->   		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
->   			continue;
->   
-> @@ -196,7 +196,7 @@ void __init kasan_early_init(void)
->   	kasan_populate_pte(kasan_early_shadow_pte, PAGE_KERNEL);
->   
->   	do {
-> -		next = pgd_addr_end(addr, end);
-> +		next = pmd_addr_end(addr, end);
->   		pmd_populate_kernel(&init_mm, pmd, kasan_early_shadow_pte);
->   	} while (pmd++, addr = next, addr != end);
->   
-> 
-
-Christophe
