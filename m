@@ -2,185 +2,130 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AB7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9931C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEDE2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961CA2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:30:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599593416;
+	bh=f6GXLjPnwDckJXfqaCiej5T99kNCaF2Wd8VaNkz/nI8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FyhpxQDMS4hgChrVd5H4pW0uXMnv9fRQ5WFas75nhWEQtOFFLzt83nRsTrBVRCJ12
+	 0YN3Q8muuGfZG8gi0NGLw9QrHG1i7/K8IGppJeD3QYRK4kk3UhcNMmIL5MoIQpv8O9
+	 FYHJXOLX4tSPJJkmRJHutvuTTKiJPAfgw9yRGWv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbgIHT3n (ORCPT
+        id S1731909AbgIHTaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730857AbgIHP71 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:59:27 -0400
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc0f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA766C0619E4
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:45:28 -0700 (PDT)
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Bm8bC0hq3zlhP6d;
-        Tue,  8 Sep 2020 17:44:23 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Bm8b8365Jzlh8TD;
-        Tue,  8 Sep 2020 17:44:20 +0200 (CEST)
-Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
- faccessat2(2)
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@linux.microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-References: <20200908075956.1069018-1-mic@digikod.net>
- <20200908075956.1069018-2-mic@digikod.net>
- <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
- <75451684-58f3-b946-dca4-4760fa0d7440@digikod.net>
- <01c23b2607a7dbf734722399931473c053d9b362.camel@linux.ibm.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <ed832b7f-dc47-fe54-468b-41de3b64fd83@digikod.net>
-Date:   Tue, 8 Sep 2020 17:44:19 +0200
-User-Agent: 
+        Tue, 8 Sep 2020 15:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731003AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:58:05 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68449241A6;
+        Tue,  8 Sep 2020 15:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579543;
+        bh=f6GXLjPnwDckJXfqaCiej5T99kNCaF2Wd8VaNkz/nI8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MLc0lQvSB124mDWLv5nuVP2POi1qW/bzNB7Gw8+9mhMI0DbbPXLhyhK/pEyscjITT
+         I5aabCSOEqffO/oqhCCbQzpp7CTNH74B+Lhc1kcQQOGloWnJ/wXkIn5SbUnPCV3Djm
+         Hu3R5TBtgdnx/ovC3KzIBFG1qAcKddTGFnYB6Eb4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 122/186] xfs: dont update mtime on COW faults
+Date:   Tue,  8 Sep 2020 17:24:24 +0200
+Message-Id: <20200908152247.550362107@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <01c23b2607a7dbf734722399931473c053d9b362.camel@linux.ibm.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-On 08/09/2020 17:24, Mimi Zohar wrote:
-> On Tue, 2020-09-08 at 14:43 +0200, Mickaël Salaün wrote:
->> On 08/09/2020 14:28, Mimi Zohar wrote:
->>> Hi Mickael,
->>>
->>> On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
->>>> diff --git a/fs/open.c b/fs/open.c
->>>> index 9af548fb841b..879bdfbdc6fa 100644
->>>> --- a/fs/open.c
->>>> +++ b/fs/open.c
->>>> @@ -405,9 +405,13 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
->>>>  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
->>>>  		return -EINVAL;
->>>>  
->>>> -	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
->>>> +	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH |
->>>> +				AT_INTERPRETED))
->>>>  		return -EINVAL;
->>>>  
->>>> +	/* Only allows X_OK with AT_INTERPRETED for now. */
->>>> +	if ((flags & AT_INTERPRETED) && !(mode & S_IXOTH))
->>>> +		return -EINVAL;
->>>>  	if (flags & AT_SYMLINK_NOFOLLOW)
->>>>  		lookup_flags &= ~LOOKUP_FOLLOW;
->>>>  	if (flags & AT_EMPTY_PATH)
->>>> @@ -426,7 +430,30 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
->>>>  
->>>>  	inode = d_backing_inode(path.dentry);
->>>>  
->>>> -	if ((mode & MAY_EXEC) && S_ISREG(inode->i_mode)) {
->>>> +	if ((flags & AT_INTERPRETED)) {
->>>> +		/*
->>>> +		 * For compatibility reasons, without a defined security policy
->>>> +		 * (via sysctl or LSM), using AT_INTERPRETED must map the
->>>> +		 * execute permission to the read permission.  Indeed, from
->>>> +		 * user space point of view, being able to execute data (e.g.
->>>> +		 * scripts) implies to be able to read this data.
->>>> +		 *
->>>> +		 * The MAY_INTERPRETED_EXEC bit is set to enable LSMs to add
->>>> +		 * custom checks, while being compatible with current policies.
->>>> +		 */
->>>> +		if ((mode & MAY_EXEC)) {
->>>
->>> Why is the ISREG() test being dropped?   Without dropping it, there
->>> would be no reason for making the existing test an "else" clause.
->>
->> The ISREG() is not dropped, it is just moved below with the rest of the
->> original code. The corresponding code (with the path_noexec call) for
->> AT_INTERPRETED is added with the next commit, and it relies on the
->> sysctl configuration for compatibility reasons.
-> 
-> Dropping the S_ISREG() check here without an explanation is wrong and
-> probably unsafe, as it is only re-added in the subsequent patch and
-> only for the "sysctl_interpreted_access" case.  Adding this new test
-> after the existing test is probably safer.  If the original test fails,
-> it returns the same value as this test -EACCES.
+commit b17164e258e3888d376a7434415013175d637377 upstream.
 
-The original S_ISREG() is ANDed with a MAY_EXEC check and with
-path_noexec(). The goal of this patch is indeed to have a different
-behavior than the original faccessat2(2) thanks to the AT_INTERPRETED
-flag. This can't work if we add the sysctl check after the current
-path_noexec() check. Moreover, in this patch an exec check is translated
-to a read check. This new behavior is harmless because using
-AT_INTERPRETED with the current faccessat2(2) would return -EINVAL. The
-current vanilla behavior is then unchanged.
+When running in a dax mode, if the user maps a page with MAP_PRIVATE and
+PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
+when the user hits a COW fault.
 
-The whole point of this patch series is to have a policy which do not
-break current systems and is easy to configure by the sysadmin through
-sysctl. This patch series also enable LSMs to take advantage of it
-without the current faccess* limitations. For instance, it is then
-possible for an LSM to implement more complex policies which may allow
-execution of data from pipes or sockets, while verifying the source of
-this data. Enforcing S_ISREG() in this patch would forbid such policies
-to be implemented. In the case of IMA, you may want to add the same
-S_ISREG() check.
+This breaks building of the Linux kernel.  How to reproduce:
 
-> 
-> Mimi
-> 
->>
->>>
->>>> +			mode |= MAY_INTERPRETED_EXEC;
->>>> +			/*
->>>> +			 * For compatibility reasons, if the system-wide policy
->>>> +			 * doesn't enforce file permission checks, then
->>>> +			 * replaces the execute permission request with a read
->>>> +			 * permission request.
->>>> +			 */
->>>> +			mode &= ~MAY_EXEC;
->>>> +			/* To be executed *by* user space, files must be readable. */
->>>> +			mode |= MAY_READ;
-> 
-> 
+ 1. extract the Linux kernel tree on dax-mounted xfs filesystem
+ 2. run make clean
+ 3. run make -j12
+ 4. run make -j12
+
+at step 4, make would incorrectly rebuild the whole kernel (although it
+was already built in step 3).
+
+The reason for the breakage is that almost all object files depend on
+objtool.  When we run objtool, it takes COW page fault on its .data
+section, and these faults will incorrectly update the timestamp of the
+objtool binary.  The updated timestamp causes make to rebuild the whole
+tree.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/xfs/xfs_file.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1220,6 +1220,14 @@ __xfs_filemap_fault(
+ 	return ret;
+ }
+ 
++static inline bool
++xfs_is_write_fault(
++	struct vm_fault		*vmf)
++{
++	return (vmf->flags & FAULT_FLAG_WRITE) &&
++	       (vmf->vma->vm_flags & VM_SHARED);
++}
++
+ static vm_fault_t
+ xfs_filemap_fault(
+ 	struct vm_fault		*vmf)
+@@ -1227,7 +1235,7 @@ xfs_filemap_fault(
+ 	/* DAX can shortcut the normal fault path on write faults! */
+ 	return __xfs_filemap_fault(vmf, PE_SIZE_PTE,
+ 			IS_DAX(file_inode(vmf->vma->vm_file)) &&
+-			(vmf->flags & FAULT_FLAG_WRITE));
++			xfs_is_write_fault(vmf));
+ }
+ 
+ static vm_fault_t
+@@ -1240,7 +1248,7 @@ xfs_filemap_huge_fault(
+ 
+ 	/* DAX can shortcut the normal fault path on write faults! */
+ 	return __xfs_filemap_fault(vmf, pe_size,
+-			(vmf->flags & FAULT_FLAG_WRITE));
++			xfs_is_write_fault(vmf));
+ }
+ 
+ static vm_fault_t
+
+
