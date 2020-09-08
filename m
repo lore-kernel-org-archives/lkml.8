@@ -2,124 +2,136 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA16C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A3FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECCE621897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F3F21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jv-coder.de header.i=@jv-coder.de header.b="q8PkaB+W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LgEG1tI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgIHFsc (ORCPT
+        id S1728798AbgIHFtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 01:48:32 -0400
-Received: from mail.jv-coder.de ([5.9.79.73]:45364 "EHLO mail.jv-coder.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgIHFsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 01:48:30 -0400
-Received: from [10.61.40.7] (unknown [37.156.92.209])
-        by mail.jv-coder.de (Postfix) with ESMTPSA id A265CA3403;
-        Tue,  8 Sep 2020 05:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jv-coder.de; s=dkim;
-        t=1599544102; bh=5olWPIBIDOBpJ/u/jO0SIMS2OiTZyBP0n7I5ctG990A=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version;
-        b=q8PkaB+W/1AgQd4h5AFDos1ediFHia+Q8K6R1z4Q0EXzSxWsugUbhITGKcFFJtxqA
-         akjCeaN7nVe6p+vEWQ10Ic4zx7ypWrA9P3Gpa6npVwOILrHEDp5sASZhVrRMhjeonR
-         QNqI+T7d52Qgifs4/kzT106aUO1Hy858zwAyMMzE=
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in interrupt
- context
-To:     peterz@infradead.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Huang Ying <ying.huang@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Joerg Vehlow <joerg.vehlow@aox-tech.de>
-References: <20200528084614.0c949e8d@gandalf.local.home>
- <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
- <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
- <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
- <20200821110848.6c3183d1@oasis.local.home>
- <20200821134753.9547695c9b782275be3c95b5@linux-foundation.org>
- <20200821170334.73b52fdd@oasis.local.home>
- <95d7a489-a295-1c11-ac62-83e941ed3a87@jv-coder.de>
- <20200907114618.GR2674@hirez.programming.kicks-ass.net>
- <5c3a502f-2255-5aae-3599-5220aa4b8328@jv-coder.de>
- <20200907162338.GN1362448@hirez.programming.kicks-ass.net>
-From:   Joerg Vehlow <lkml@jv-coder.de>
-Message-ID: <5600c9f8-2c9d-7776-161a-5f5c1be62c10@jv-coder.de>
-Date:   Tue, 8 Sep 2020 07:48:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 8 Sep 2020 01:49:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30795 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728680AbgIHFtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 01:49:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599544151;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eQK1NPwmSWOx8INcFCnwK3inQ46y12Ng6QHkYnvGe3I=;
+        b=LgEG1tI4Zg9p7W0XFQUtFbSA9O19wnmfYk+arU225fe071UZkhTYVyVe9ozIFm6qvgBL9I
+        vFqaZ1bni8u1ptDth7cpUSare4TzzO1Eooo+g3VHSu5At+2xYJObBSk4R3HVt+MsB1AHm0
+        QghfE8aBXYJwxDxqzIyjUC/Dz9jvjKg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-r-VulFGYMA-fjnnBfjljEg-1; Tue, 08 Sep 2020 01:49:07 -0400
+X-MC-Unique: r-VulFGYMA-fjnnBfjljEg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E448D425D1;
+        Tue,  8 Sep 2020 05:49:02 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C936811BE;
+        Tue,  8 Sep 2020 05:48:58 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 0FDF617538; Tue,  8 Sep 2020 07:48:58 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 07:48:58 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
+        <etnaviv@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        "moderated list:ARM/Rockchip SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
+        <linux-tegra@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH v4 1/1] drm: allow limiting the scatter list size.
+Message-ID: <20200908054858.um34wojjv6uhi7d3@sirius.home.kraxel.org>
+References: <20200907112425.15610-1-kraxel@redhat.com>
+ <20200907112425.15610-2-kraxel@redhat.com>
+ <CAKMK7uGjT73rh=9iuCKAXvC_CaOuygm8PgOQgofkTgH7wRysFw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907162338.GN1362448@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGjT73rh=9iuCKAXvC_CaOuygm8PgOQgofkTgH7wRysFw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter
+On Mon, Sep 07, 2020 at 03:53:02PM +0200, Daniel Vetter wrote:
+> On Mon, Sep 7, 2020 at 1:24 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> >
+> > Add drm_device argument to drm_prime_pages_to_sg(), so we can
+> > call dma_max_mapping_size() to figure the segment size limit
+> > and call into __sg_alloc_table_from_pages() with the correct
+> > limit.
+> >
+> > This fixes virtio-gpu with sev.  Possibly it'll fix other bugs
+> > too given that drm seems to totaly ignore segment size limits
+> > so far ...
+> >
+> > v2: place max_segment in drm driver not gem object.
+> > v3: move max_segment next to the other gem fields.
+> > v4: just use dma_max_mapping_size().
+> >
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> 
+> Uh, are you sure this works in all cases for virtio?
 
-On 9/7/2020 6:23 PM, peterz@infradead.org wrote:
->> According to the original comment in __crash_kexec, the mutex was used to
->> prevent a sys_kexec_load, while crash_kexec is executed. Your proposed patch
->> does not lock the mutex in crash_kexec.
-> Sure, but any mutex taker will (spin) wait for panic_cpu==CPU_INVALID.
-> And if the mutex is already held, we'll not run __crash_kexec() just
-> like the trylock() would do today.
-Yes you are right, it should work.
->> This does not cover the original use
->> case anymore. The only thing that is protected now are two panicing cores at
->> the same time.
-> I'm not following. AFAICT it does exactly what the old code did.
-> Although maybe I didn't replace all kexec_mutex users, I now see that
-> thing isn't static.
-Same thing here.
->
->> Actually, this implementation feels even more hacky to me....
-> It's more minimal ;-) It's simpler in that it only provides the required
-> semantics (as I understand them) and does not attempt to implement a
-> more general trylock() like primitive that isn't needed.
-Here I cannot agree with you. There is a second trylock in kernel_kexec, 
-that cannot
-be protected using the panic_cpu, but it actually could still use 
-mutex_trylock and check
-the panic_cpu. This should work I guess:
+Sure, I've tested it ;)
 
-int kexec_trylock(void) {
-     if (!mutex_trylock(&kexec_mutex)) {
-         return 0;
-     }
-     smp_mb();
-     if (panic_cpu != PANIC_CPU_INVALID) {
-          mutex_unlock(&kexec_mutex);
-          return 0;
-     }
-     return 1;
-}
+> The comments I've found suggest very much not ... Or is that all very
+> old stuff only that no one cares about anymore?
 
-Or do I miss something now? All functions protected by mutex_lock cannot 
-be executed, after
-kexec_trylock resturned 1. kexec_crash will execute up to 
-mutex_is_locked and then roll back.
-The only thing that can go wrong now is: kexec_trylock executes up to 
-smb_mb. At the same time
-kexec_crash executes mutex_is_locked, which returns false now and then 
-before panic_cpu is reset,
-kexec_trylock executes the panic_cpu check, and returns. Now both 
-functions did not get the lock and
-nothing is executed.
+I think these days it is possible to override dma_ops per device, which
+in turn allows virtio to deal with the quirks without the rest of the
+kernel knowing about these details.
 
-Does that sound right to you? If you have no further objections I will 
-post it here
+I also think virtio-gpu can drop the virtio_has_dma_quirk() checks, just
+use the dma api path unconditionally and depend on virtio core having
+setup dma_ops in a way that it JustWorks[tm].  I'll look into that next.
 
-Jörg
+take care,
+  Gerd
+
