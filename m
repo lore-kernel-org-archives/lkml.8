@@ -2,129 +2,143 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658E7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA82C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF3E2192A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599548804;
-	bh=fqYvBYmENcUKuM05hBKTFF4834yUPOhVdHnQb6n0AlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q7wkbFymRgdHEreZlhcRh+atPzzYprZPQ7wTooAGuS77aCWW2MbnlJLnCW9k89OSD
-	 tapAJhWaXMlxNg0bWNP+unADiM1mv6uB+wBxm5NvhFLNf7fhu0oEgwze5TXRmMQLY0
-	 xC9maXEJz79RbkV2FNTbAPzoEDRHOBMzlpBT3n5c=
+	by mail.kernel.org (Postfix) with ESMTP id D728F2192A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fwyLT1s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgIHHGk (ORCPT
+        id S1729158AbgIHHHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:06:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbgIHHGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:06:39 -0400
-Received: from localhost (p5486cc72.dip0.t-ipconnect.de [84.134.204.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 8 Sep 2020 03:07:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57073 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728115AbgIHHHc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:07:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599548850;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kffflXJQA9mHzXutJDI5yKO9Fa0soJ0Z8mgh5sqbbw0=;
+        b=fwyLT1s5VIeWphNW2c0z1zfH8HN2Zhz4VlwzsBFRwa4XEmEO7GEq+TdEBgJnYN3ONSfJlJ
+        Sd2QrnPVX72NyJwMhpLfCv3Ow0FiFhWe12XWrOMg5bQssb4YmLsYelCDsPVGDWnuX7gmQr
+        ZcZiULXogBhRzPDEhYZhd10DK2n1tGY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-L9QCSGZ3O6mgMlJv14p_Jw-1; Tue, 08 Sep 2020 03:07:28 -0400
+X-MC-Unique: L9QCSGZ3O6mgMlJv14p_Jw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A56542078E;
-        Tue,  8 Sep 2020 07:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599548798;
-        bh=fqYvBYmENcUKuM05hBKTFF4834yUPOhVdHnQb6n0AlQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S1FWuPl0lCeMAFrCseZLRH5u42zbxXf8aFyHvBionCIvL7rP9HrMAhFnR2DlZLSDC
-         SUFOVFAWrvq5nqtjw+ra4FGAUniVLWY6D/E1fK3xPmvmSq2uNrTA8+TQ2UPpfp+YFM
-         WF+7FAaLdP5DQ0o4nBLybvrBcoB3Vs9H6cu33PjI=
-Date:   Tue, 8 Sep 2020 09:06:35 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
-Cc:     andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
-        jdelvare@suse.de, chris.packham@alliedtelesis.co.nz,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] i2c: algo-pca: Reapply i2c bus settings after
- reset
-Message-ID: <20200908070634.GC5936@ninjato>
-References: <20200902211532.22684-1-evan.nimmo@alliedtelesis.co.nz>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 795751007461;
+        Tue,  8 Sep 2020 07:07:27 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 693785C1BB;
+        Tue,  8 Sep 2020 07:07:24 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 9C75D9C87; Tue,  8 Sep 2020 09:07:23 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/3] drm/virtio: use drmm_mode_config_init
+Date:   Tue,  8 Sep 2020 09:07:21 +0200
+Message-Id: <20200908070723.6394-2-kraxel@redhat.com>
+In-Reply-To: <20200908070723.6394-1-kraxel@redhat.com>
+References: <20200908070723.6394-1-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
-Content-Disposition: inline
-In-Reply-To: <20200902211532.22684-1-evan.nimmo@alliedtelesis.co.nz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.h     |  2 +-
+ drivers/gpu/drm/virtio/virtgpu_display.c | 11 +++++++----
+ drivers/gpu/drm/virtio/virtgpu_kms.c     |  6 +++++-
+ 3 files changed, 13 insertions(+), 6 deletions(-)
 
---c3bfwLpm8qysLVxt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+index a52b7a39f286..55c34b4fc3e9 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.h
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+@@ -352,7 +352,7 @@ virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
+ 				    struct virtio_gpu_object_array *objs);
+ 
+ /* virtgpu_display.c */
+-void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
++int virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
+ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev);
+ 
+ /* virtgpu_plane.c */
+diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+index effea07abe62..f84b7e61311b 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_display.c
++++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+@@ -325,11 +325,14 @@ static const struct drm_mode_config_funcs virtio_gpu_mode_funcs = {
+ 	.atomic_commit = drm_atomic_helper_commit,
+ };
+ 
+-void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev)
++int virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev)
+ {
+-	int i;
++	int i, ret;
++
++	ret = drmm_mode_config_init(vgdev->ddev);
++	if (ret)
++		return ret;
+ 
+-	drm_mode_config_init(vgdev->ddev);
+ 	vgdev->ddev->mode_config.quirk_addfb_prefer_host_byte_order = true;
+ 	vgdev->ddev->mode_config.funcs = &virtio_gpu_mode_funcs;
+ 
+@@ -343,6 +346,7 @@ void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev)
+ 		vgdev_output_init(vgdev, i);
+ 
+ 	drm_mode_config_reset(vgdev->ddev);
++	return 0;
+ }
+ 
+ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev)
+@@ -351,5 +355,4 @@ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev)
+ 
+ 	for (i = 0 ; i < vgdev->num_scanouts; ++i)
+ 		kfree(vgdev->outputs[i].edid);
+-	drm_mode_config_cleanup(vgdev->ddev);
+ }
+diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+index 75d0dc2f6d28..6ea74a99d8ad 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_kms.c
++++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+@@ -184,7 +184,11 @@ int virtio_gpu_init(struct drm_device *dev)
+ 			num_capsets, &num_capsets);
+ 	DRM_INFO("number of cap sets: %d\n", num_capsets);
+ 
+-	virtio_gpu_modeset_init(vgdev);
++	ret = virtio_gpu_modeset_init(vgdev);
++	if (ret) {
++		DRM_ERROR("modeset init failed\n");
++		goto err_scanouts;
++	}
+ 
+ 	virtio_device_ready(vgdev->vdev);
+ 
+-- 
+2.27.0
 
-Hi Evan,
-
-> changes in v2:
-> - changed lowercase "pca to uppercase "PCA".
-> - reworded and reformatted the multiline comment.
-> - moved the clock frequency KERN_INFO closer to the call that sets this.
-> - moved the i2c_bus_settings struct to the more generic i2c.h and removed
-> - the comments indicating this as being for the pca chip.
-
-As mentioned in v1, I think we should not have it in the generic i2c
-headers yet. a) it makes backporting more difficult and b) we need to
-find the optimal generic set of parameters which is a seperate issue.
-
-> =20
-> -		pca_reset(pca_data);
-> -
->  		clock =3D pca_clock(pca_data);
-> +
->  		printk(KERN_INFO "%s: Clock frequency is %dkHz\n",
->  		     adap->name, freqs[clock]);
-
-Minor nit: I think there is no need for the extra blank line, but I'll
-let you decide.
-
-> +/**
-> + * struct i2c_bus_settings - The configured i2c bus settings
-> + * @mode: Configured i2c bus mode
-> + * @tlow: Configured SCL LOW period
-> + * @thi: Configured SCL HIGH period
-> + * @clock_freq: The configured clock frequency
-> + */
-> +struct i2c_bus_settings {
-
-'pca_i2c_bus_settings' or similar?
-
-Rest looks good!
-
-Thanks,
-
-   Wolfram
-
-
---c3bfwLpm8qysLVxt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9XLXcACgkQFA3kzBSg
-KbYlJQ//S6vZ98amQPpR33oXQtLX0cUQPC0OE9kkMetgOLuJlvVt5bDF8y7FsPwn
-BS/Bt6JLD2UPptlxLzRfB7t7LcerN1vhqS4pHPoqArhJioI1oOS62Luje1Ae4+vN
-cRigGgr5UUCUkCSVfiIP1n7f1eDdrmhkEs2LSiSEdUHJPtsXeMJaT/485lnGXyID
-wviXyjrAaobvSPcm0QtvvqT4gPhnQZS7DVxyTY9sDdQat+azMxE358KxOwvcBdKs
-pEQxhlnubSoA9PMmXsz6HIqyA4vtSEB0afBsz3qVzKm6nzDB5CJbve3YymBsIiYH
-n+gpMnt2sxPZ6AVHLCWH/mrqBJXgkxlBKZX0g9zZsnQmnl7ilX7GjVBxh5wyFgwq
-2U108E0OX1p6I6eu6GOWJFwKKGZC1Oc0rS3NTs4ez7Y5vpmd6ILB8glfx4TTwFRK
-5Y5qekyrjHHH40JGm/tJpjjs4jPwKjt8u+kQscoMr0TTncgSCTdKySYJ34SZ2r9y
-b7LtUeqktrqbZm9y3ull71O7PG/ZwCVKJm8TCwJdFRsNeTT+KnCJSynbfL8rThPg
-vjVSRHbFB/gc9HZD10vrDiaCanoZeLYDkUQk3opNvmu2oF8spSLFA2kfKanQL5q0
-hTCa8wTtFWe0mnY+bBMm6dnKduEx6WljyuRxwF7rP7eCLnz1FAs=
-=lT2Z
------END PGP SIGNATURE-----
-
---c3bfwLpm8qysLVxt--
