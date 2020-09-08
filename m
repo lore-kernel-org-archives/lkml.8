@@ -2,73 +2,82 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA35C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C708C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCAD2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:29:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RV4MIZfo"
+	by mail.kernel.org (Postfix) with ESMTP id 2153820936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgIHL3j (ORCPT
+        id S1730076AbgIHLav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:29:39 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:32150 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729372AbgIHLV2 (ORCPT
+        Tue, 8 Sep 2020 07:30:51 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40567 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729991AbgIHLWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:21:28 -0400
-X-UUID: cd19ca6877cb4c87a84d88385cff48e4-20200908
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=J6PetP5hY2T+2YPn7CjXIDc6ZgTmKvWDCgSOANgtWDU=;
-        b=RV4MIZfopVZVu1atLbAv7iS3QiYc90+A8iHdZINNf2k+aBQ9lKJqNDPAST3Q/YwhEQgwoFHMCYBdgX6o5fLfcDt8xSrNC+8Yy2Z64FYrkavqh+iQZ7mmmQVz8v7Hu8NCfBQtWtkQo+2Wqr6jCN1Ja3YrzdJOO5aRov2KH4KyydE=;
-X-UUID: cd19ca6877cb4c87a84d88385cff48e4-20200908
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 687616419; Tue, 08 Sep 2020 19:21:25 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 8 Sep 2020 19:21:19 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 8 Sep 2020 19:21:20 +0800
-Message-ID: <1599564080.2621.9.camel@mtkswgap22>
-Subject: Re: [PATCH v4 1/2] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rob Herring" <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Date:   Tue, 8 Sep 2020 19:21:20 +0800
-In-Reply-To: <20200908111331.rdvtrvttoapqxaib@vireshk-i7>
-References: <1599550547-27767-1-git-send-email-hector.yuan@mediatek.com>
-         <1599550547-27767-2-git-send-email-hector.yuan@mediatek.com>
-         <20200908102752.r2n6xvghl4fcdrcv@vireshk-i7>
-         <1599563425.2621.5.camel@mtkswgap22>
-         <20200908111331.rdvtrvttoapqxaib@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 8 Sep 2020 07:22:17 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t76so16064284oif.7;
+        Tue, 08 Sep 2020 04:22:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iU+porO3OzIDM39i0qpuDlqKoX1If0peyqlGwOFV2Lw=;
+        b=kpDYvuUEGqjdO7D1hj8onhlr1k82Fs3TYJa0vBr2trIwIt2f7ufO7bnReWQVJeibW1
+         AEZCc1QdwzVuMjUPqfcsrzNcLP0eeYQ2T3TkRKrWXb6/8Ns951D13FqLqECj/qBSejyH
+         VnVRVqUKCYkLGfZKx/hSEmAguiWWJ0oJ8OgmQpHNlFgLDh2dSnuvtWyS2FXQEQXsjM3C
+         RImKl0bbgC55MrEzcxZpDarYVdU7Za9y8PlW4zoBtIofqp9Ci6Hmg8uPk1K1iKpk92ok
+         rXmoH612Fv2KzFxQrrUcwXno+bRNTa471rFCswS3yy/55NxSWsJ87d2qEq1tNKfavsu2
+         xwqA==
+X-Gm-Message-State: AOAM5313UZh4wVTgs36a59g8L2aLvtLRF6B/IYbXUSSaOe0L7Gclkgyv
+        /bYPMpltXeo2XdkmU25E6VLhonkkMPqUXQGYyiyREyi4
+X-Google-Smtp-Source: ABdhPJzZZY3uxx6kly6khprrbhuaY+7eyHBu4Rltm/o5KeWvkoCBkCalHfuYR627xJRHUxvwfL6/+vqNOdMkD266n98=
+X-Received: by 2002:aca:52d6:: with SMTP id g205mr2331146oib.54.1599564136491;
+ Tue, 08 Sep 2020 04:22:16 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200908110640.5003-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200908110640.5003-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 8 Sep 2020 13:22:05 +0200
+Message-ID: <CAMuHMdXD88LKVUcXTa=yWreqWZ0O0G+dF7WK=ioVwJo2OTd_PQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: Kconfig: Update description for RCAR_DMAC config
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA5LTA4IGF0IDE2OjQzICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+
-IE9uIDA4LTA5LTIwLCAxOToxMCwgSGVjdG9yIFl1YW4gd3JvdGU6DQo+ID4gT0ssIEkgd2lsbCBk
-ZWZpbmUgdGhlIGNvcnJlc3BvbmRpbmcgZXhpdCBmdW5jdGlvbi4gDQo+IA0KPiBBbHNvIHBsZWFz
-ZSBhZGQgcmVtb3ZlKCkgY29ycmVzcG9uZGluZyB0byBwcm9iZSgpLg0KPiANCk9LLCB0aGFua3Mg
-Zm9yIHlvdXIga2luZCByZW1pbmRlci4NCg0K
+Hi Prabhakar,
 
+On Tue, Sep 8, 2020 at 1:06 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> rcar-dmac driver is used on Renesas R-Car Gen2 and Gen3 devices
+> update the same to reflect the description for RCAR_DMAC config.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Do you want to mention RZ/G1 and RZ/G2?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
