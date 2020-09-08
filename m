@@ -2,122 +2,124 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED147C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD339C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5DFA21582
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E35321973
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="diLF5Vbk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n9XFDaCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgIHEoo (ORCPT
+        id S1726879AbgIHEq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:44:44 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44740 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgIHEom (ORCPT
+        Tue, 8 Sep 2020 00:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgIHEq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:44:42 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 76A902074C73;
-        Mon,  7 Sep 2020 21:44:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76A902074C73
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1599540281;
-        bh=TEOOR8j/hWPxlCxwN4TevnXBuQUcVlAC+4yB4apsr3s=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=diLF5VbkJv/7uC5w7isWgG+P1DKYZZIUXljR0d6IQedJ+8aqBnqdVKSrfQoPEmchd
-         urkdbKP642eoCaULdCP0ynG4xZ4G4r8GPSSH6FZgd8jbyYAa5ivVvIdkbeT35Tx8eN
-         6SuswUvYGNutjw+txEQJtUvqlco0NWd6L0vsAw1M=
-Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200907213855.3572-1-nramas@linux.microsoft.com>
- <CAEjxPJ5C64AmmVKuuPmtbfnY06w49ziryRAnARurWxpQumzfow@mail.gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <7c4e2e9f-54e1-1dee-c33c-64dac0fe9678@linux.microsoft.com>
-Date:   Mon, 7 Sep 2020 21:44:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 00:46:27 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953B2C061573;
+        Mon,  7 Sep 2020 21:46:26 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Blszy6yL7z9sSP;
+        Tue,  8 Sep 2020 14:46:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599540383;
+        bh=008NKnJE31ueTtAb1ZIhem6ygft7V7iwf/aAlWlUcs0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=n9XFDaCooE+FKUqUBff1q/EdGt3YaGWAxTdpZmbh/R0En+r+abfFoHnykKeAhTv4T
+         zKObm85WfRYBszfdTLQpnf7rD8d3mBFxbFFvUIlFyTc1b+8f+/AT8YjLc4foAJG2Za
+         A0qe5kI4+ynvYS6Tqy0+kiV6Uvd0+IGPYG2O8ny85+iVxhnVDfnwBYskbot9YkKJQE
+         zMd98igKxksw/Odpa9sTofnz6tBMMbasoAhnsEs2DNevz8UWPLdu+7OKFRso4sCgTo
+         EsJFJ0vyMrR+eE44JDCjVJBPjJbQnFx6eS5XSDKgxZojNNyQFH4rgby2biG1YA2acc
+         VzpSW//6KdIRw==
+Date:   Tue, 8 Sep 2020 14:46:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the mmc tree with the samsung-krzk tree
+Message-ID: <20200908144622.09385c88@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ5C64AmmVKuuPmtbfnY06w49ziryRAnARurWxpQumzfow@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/J=0aav4tGkOolwnBXDQHDlc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/7/20 3:32 PM, Stephen Smalley wrote:
+--Sig_/J=0aav4tGkOolwnBXDQHDlc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
->> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
->> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'vfree'
->> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'crypto_alloc_shash'
->> Reported-by: kernel test robot <lkp@intel.com> # sparse: symbol 'security_read_selinux_policy' was not declared. Should it be static?
-> 
-> Not sure these Reported-by lines are useful since they were just on
-> submitted versions of the patch not on an actual merged commit.
+Hi all,
 
-I'll remove them when I update the patch.
+Today's linux-next merge of the mmc tree got a conflict in:
 
-> 
->> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
->> new file mode 100644
->> index 000000000000..caf9107937d9
->> --- /dev/null
->> +++ b/security/selinux/measure.c
-> <snip>
->> +void selinux_measure_state(struct selinux_state *state, bool policy_mutex_held)
->> +{
-> <snip>
->> +
->> +       if (!policy_mutex_held)
->> +               mutex_lock(&state->policy_mutex);
->> +
->> +       rc = security_read_policy_kernel(state, &policy, &policy_len);
->> +
->> +       if (!policy_mutex_held)
->> +               mutex_unlock(&state->policy_mutex);
-> 
-> This kind of conditional taking of a mutex is generally frowned upon
-> in my experience.
-> You should likely just always take the mutex in the callers of
-> selinux_measure_state() instead.
-> In some cases, it may be the caller of the caller.  Arguably selinuxfs
-> could be taking it around all state modifying operations (e.g.
-> enforce, checkreqprot) not just policy modifying ones although it
-> isn't strictly for that purpose.
+  drivers/mmc/host/Kconfig
 
-Since currently policy_mutex is not used to synchronize access to state 
-variables (enforce, checkreqprot, etc.) I am wondering if 
-selinux_measure_state() should measure only state if policy_mutex is not 
-held by the caller - similar to how we skip measuring policy if 
-initialization is not yet completed.
+between commits:
 
-	/*
-	 * Measure SELinux policy only after initialization is
-          * completed.
-	 */
-	if (!initialized)
-		goto out;
+  cb6c03019cdd ("ARM: exynos: stop selecting PLAT_SAMSUNG")
+  db8230d29c3a ("ARM: s5pv210: don't imply CONFIG_PLAT_SAMSUNG")
 
-  -lakshmi
+from the samsung-krzk tree and commit:
 
+  54d8454436a2 ("mmc: host: Enable compile testing of multiple drivers")
 
+from the mmc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/mmc/host/Kconfig
+index 0d7c61d8d1d9,dc646359b4ff..000000000000
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@@ -289,7 -301,8 +301,8 @@@ config MMC_SDHCI_TEGR
+ =20
+  config MMC_SDHCI_S3C
+  	tristate "SDHCI support on Samsung S3C SoC"
+- 	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS)
++ 	depends on MMC_SDHCI
+ -	depends on PLAT_SAMSUNG || COMPILE_TEST
+++	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+  	help
+  	  This selects the Secure Digital Host Controller Interface (SDHCI)
+  	  often referrered to as the HSMMC block in some of the Samsung S3C
+
+--Sig_/J=0aav4tGkOolwnBXDQHDlc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XDJ4ACgkQAVBC80lX
+0Gwi4wf/YHbYgyckzto3cmzEuFntJtIXBkO1zLL7mAbBrKTvqcTLXSrHoYFh995R
+Pk00TfXu2A7532xpW6BnGg/j3aCDqLxf7wa5HFyZYrOQHNphRZqrbDtWE35zkIk+
+a8EhqbVPAlYh8SQHP9taTfiwzwVltmVUexGueuNT9WsvNCO0QYqQXNVGSH+IQS02
+7mgJtzJEjsswGxngtd0ooPt2q9IVujGNERxSrV7RtntwYcYA2sbB++nbD9yWMqum
+Rb1zW7myPsrouh8wcksP5a5MPx/gm+dkjIJlVpvE8SYkOntaOTK+KKxl4zeyVlV6
+CrA3tU2g9NbKBtQ9hja7QYEveDPeww==
+=5waX
+-----END PGP SIGNATURE-----
+
+--Sig_/J=0aav4tGkOolwnBXDQHDlc--
