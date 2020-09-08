@@ -2,152 +2,160 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1055C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4D1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65598221E5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 665EF22AAC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:34:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="TcMeF22U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgIHOai (ORCPT
+        id S1729275AbgIHOco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 10:30:38 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:35692 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729725AbgIHOY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 10:24:56 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bm4Vr1mvXz9tysg;
-        Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cIMhaNVcmlrN; Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bm4Vr0fBLz9tysZ;
-        Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5BBAE8B7C1;
-        Tue,  8 Sep 2020 14:40:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xwRqAZ7QC05H; Tue,  8 Sep 2020 14:40:21 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B7AA88B7BE;
-        Tue,  8 Sep 2020 14:40:18 +0200 (CEST)
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
- <82fbe8f9-f199-5fc2-4168-eb43ad0b0346@csgroup.eu>
- <70a3dcb5-5ed1-6efa-6158-d0573d6927da@de.ibm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <96b80926-cf5b-1afa-9b7a-949a2188e61f@csgroup.eu>
-Date:   Tue, 8 Sep 2020 14:40:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 8 Sep 2020 10:32:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729719AbgIHO0E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 10:26:04 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BA0C08E818
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:25:10 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j34so4760616pgi.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qbyfb7IENIIZnzycuSlXwlchWqptmqZvtFIJsiTST2Q=;
+        b=TcMeF22UNZIEg9d0gzz98TwFeIxyqfPvLagxomEInN8Jz1RMp7VDdtXA6EehKzjSG8
+         /5SlRkTXBSFEzI7pP7AjUsnj7qEH/1FwaqMYorliQ5tbjGHarxMvO8K2yyl3kx+Odxn2
+         3p+pVF9186L5mOvCvvk4+cuQxqF1uHjnnMNSMl/4X7ONNFqdgPB5cc4Rdoy/RJMqBX7L
+         bEIWU1IN9uRC1oJ6e3XY9xep4JvDEaHn65KJdAK/LLiIaIQAFmKTXm5LoKEfec4Q8zPo
+         Af1hYqV97gBqQ2vTs0XQpUYzWpFqhNlJegb6cSioxGUw8S/cvolkKosVgz5eZAOnnSmN
+         NcTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qbyfb7IENIIZnzycuSlXwlchWqptmqZvtFIJsiTST2Q=;
+        b=VhKgYKcrWlRgwFv7THtlgALXJHdamqslide4B7eVDKyzPpi88cPYg0308F7zIzjJSN
+         FqM2XJ29IKD8WRYRdTj9jV5WZUr7tE2BtJaF5lJihUaMohmhP0jR2faJzXgvgSVYPRYN
+         zyI8H1awCwD6jlYtayNWhBHvTM3XSo6yOTECmZt6y4Jxdnmk3zb3u5alFh6fMSt4jRaI
+         bnaKT0Det1E4BSLg+ymcSLvi+pbRPZnZR5KCCkHuQWBQzXwGHlNd5Ic5uQXWG8hJI4vd
+         mg22laKx2LXIdy4N2Wg8SBfjvJ2PJVtUPW6RmyHiQj5LgJPER2u2KUreIn6/9zXsXRhQ
+         hCYA==
+X-Gm-Message-State: AOAM531RYn9caQfqIAh9t+ukWnJ5hz+4foxwRz1OR9IaxekpfJXv/ZWi
+        xyMg/k2hAf6uzkJBkx3YD4oROmnzLvagf9HH
+X-Google-Smtp-Source: ABdhPJxgxtlU8ucp+kFiZL0rAJPS9+qutAhqRqo5Pl2vMcjnCNUKCP13XLhDLlCxt6b4VxJLHDqNIQ==
+X-Received: by 2002:aa7:8e85:: with SMTP id a5mr23961248pfr.96.1599575109593;
+        Tue, 08 Sep 2020 07:25:09 -0700 (PDT)
+Received: from localhost.localdomain ([103.136.220.67])
+        by smtp.gmail.com with ESMTPSA id v26sm6120436pgo.83.2020.09.08.07.25.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 07:25:08 -0700 (PDT)
+From:   zangchunxin@bytedance.com
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Chunxin Zang <zangchunxin@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH] mm/vmscan: fix infinite loop in drop_slab_node
+Date:   Tue,  8 Sep 2020 22:24:56 +0800
+Message-Id: <20200908142456.89626-1-zangchunxin@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-In-Reply-To: <70a3dcb5-5ed1-6efa-6158-d0573d6927da@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Chunxin Zang <zangchunxin@bytedance.com>
 
+On our server, there are about 10k memcg in one machine. They use memory
+very frequently. When I tigger drop caches，the process will infinite loop
+in drop_slab_node.
+There are two reasons:
+1.We have too many memcgs, even though one object freed in one memcg, the
+  sum of object is bigger than 10.
+2.We spend a lot of time in traverse memcg once. So, the memcg who
+  traversed at the first have been freed many objects. Traverse memcg next
+  time, the freed count bigger than 10 again.
 
-Le 08/09/2020 à 14:09, Christian Borntraeger a écrit :
-> 
-> 
-> On 08.09.20 07:06, Christophe Leroy wrote:
->>
->>
->> Le 07/09/2020 à 20:00, Gerald Schaefer a écrit :
->>> From: Alexander Gordeev <agordeev@linux.ibm.com>
->>>
->>> Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
->>> code") introduced a subtle but severe bug on s390 with gup_fast, due to
->>> dynamic page table folding.
->>>
->>> The question "What would it require for the generic code to work for s390"
->>> has already been discussed here
->>> https://lkml.kernel.org/r/20190418100218.0a4afd51@mschwideX1
->>> and ended with a promising approach here
->>> https://lkml.kernel.org/r/20190419153307.4f2911b5@mschwideX1
->>> which in the end unfortunately didn't quite work completely.
->>>
->>> We tried to mimic static level folding by changing pgd_offset to always
->>> calculate top level page table offset, and do nothing in folded pXd_offset.
->>> What has been overlooked is that PxD_SIZE/MASK and thus pXd_addr_end do
->>> not reflect this dynamic behaviour, and still act like static 5-level
->>> page tables.
->>>
->>
->> [...]
->>
->>>
->>> Fix this by introducing new pXd_addr_end_folded helpers, which take an
->>> additional pXd entry value parameter, that can be used on s390
->>> to determine the correct page table level and return corresponding
->>> end / boundary. With that, the pointer iteration will always
->>> happen in gup_pgd_range for s390. No change for other architectures
->>> introduced.
->>
->> Not sure pXd_addr_end_folded() is the best understandable name, allthough I don't have any alternative suggestion at the moment.
->> Maybe could be something like pXd_addr_end_fixup() as it will disappear in the next patch, or pXd_addr_end_gup() ?
->>
->> Also, if it happens to be acceptable to get patch 2 in stable, I think you should switch patch 1 and patch 2 to avoid the step through pXd_addr_end_folded()
-> 
-> given that this fixes a data corruption issue, wouldnt it be the best to go forward
-> with this patch ASAP and then handle the other patches on top with all the time that
-> we need?
+We can get the following info through 'ps':
 
-I have no strong opinion on this, but I feel rather tricky to have to 
-change generic part of GUP to use a new fonction then revert that change 
-in the following patch, just because you want the first patch in stable 
-and not the second one.
+  root:~# ps -aux | grep drop
+  root  357956 ... R    Aug25 21119854:55 echo 3 > /proc/sys/vm/drop_caches
+  root 1771385 ... R    Aug16 21146421:17 echo 3 > /proc/sys/vm/drop_caches
+  root 1986319 ... R    18:56 117:27 echo 3 > /proc/sys/vm/drop_caches
+  root 2002148 ... R    Aug24 5720:39 echo 3 > /proc/sys/vm/drop_caches
+  root 2564666 ... R    18:59 113:58 echo 3 > /proc/sys/vm/drop_caches
+  root 2639347 ... R    Sep03 2383:39 echo 3 > /proc/sys/vm/drop_caches
+  root 3904747 ... R    03:35 993:31 echo 3 > /proc/sys/vm/drop_caches
+  root 4016780 ... R    Aug21 7882:18 echo 3 > /proc/sys/vm/drop_caches
 
-Regardless, I was wondering, why do we need a reference to the pXd at 
-all when calling pXd_addr_end() ?
+Use bpftrace follow 'freed' value in drop_slab_node:
 
-Couldn't S390 retrieve the pXd by using the pXd_offset() dance with the 
-passed addr ?
+  root:~# bpftrace -e 'kprobe:drop_slab_node+70 {@ret=hist(reg("bp")); }'
+  Attaching 1 probe...
+  ^B^C
 
-Christophe
+  @ret:
+  [64, 128)        1 |                                                    |
+  [128, 256)      28 |                                                    |
+  [256, 512)     107 |@                                                   |
+  [512, 1K)      298 |@@@                                                 |
+  [1K, 2K)       613 |@@@@@@@                                             |
+  [2K, 4K)      4435 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+  [4K, 8K)       442 |@@@@@                                               |
+  [8K, 16K)      299 |@@@                                                 |
+  [16K, 32K)     100 |@                                                   |
+  [32K, 64K)     139 |@                                                   |
+  [64K, 128K)     56 |                                                    |
+  [128K, 256K)    26 |                                                    |
+  [256K, 512K)     2 |                                                    |
+
+In one drop caches action, only traverse memcg once maybe is better.
+If user need more memory, they can do drop caches again.
+
+Signed-off-by: Chunxin Zang <zangchunxin@bytedance.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ mm/vmscan.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b6d84326bdf2..9d8ee2ae5824 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -699,17 +699,12 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+ 
+ void drop_slab_node(int nid)
+ {
+-	unsigned long freed;
++	struct mem_cgroup *memcg = NULL;
+ 
++	memcg = mem_cgroup_iter(NULL, NULL, NULL);
+ 	do {
+-		struct mem_cgroup *memcg = NULL;
+-
+-		freed = 0;
+-		memcg = mem_cgroup_iter(NULL, NULL, NULL);
+-		do {
+-			freed += shrink_slab(GFP_KERNEL, nid, memcg, 0);
+-		} while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)) != NULL);
+-	} while (freed > 10);
++		shrink_slab(GFP_KERNEL, nid, memcg, 0);
++	} while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)) != NULL);
+ }
+ 
+ void drop_slab(void)
+-- 
+2.11.0
+
