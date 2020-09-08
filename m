@@ -2,133 +2,228 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A54C43461
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0963C433E2
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA6B206B5
+	by mail.kernel.org (Postfix) with ESMTP id A75AE2087D
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NT+D1his"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599585739;
+	bh=qJw7qTW8sm4UzUgyNcs+J5DGwug32eonDnzevDjI8II=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y9WHAYVpO5rPzel/sPy9TkRLQubVhVwSuabvkCn7dCj9RLLhNK0S/HBLXSr0LAvlq
+	 2mgvrIu0g7pLQazePkMyIXbWo49tOzZ+f/SKlRDlYe38clyJh+33YtqEuq9qYHcAh7
+	 LUmr4A3SySg5T/KmCFVVjhf/wY942DzFQv5j+MyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgIHRWJ (ORCPT
+        id S1731816AbgIHRV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:22:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58316 "EHLO mail.skyhub.de"
+        Tue, 8 Sep 2020 13:21:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgIHRUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728643AbgIHRUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 13:20:52 -0400
-Received: from zn.tnic (p200300ec2f10bf0070b09dfd4356f225.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:70b0:9dfd:4356:f225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6016C1EC0493;
-        Tue,  8 Sep 2020 19:20:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599585648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=LmUlHAGcDfQUhA9DUzYK7oqYD6W3gPvxbkj2WBXLliI=;
-        b=NT+D1hisw4b0wW+6D7Ney6pv8pqgOWkQiIpZMVJFpu03DYUr3koV1ACECWUSItIFaW0klI
-        6lQvPBJz1xfNqiAypVEEPioZLzJhxPHQWnPMBFkqcSx5eFSdpW4Hse7mx++L7Y6j3zJfOv
-        V2b1QESn48gtV8CN2wkTeDHRDEKrGvo=
-Date:   Tue, 8 Sep 2020 19:20:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v7 67/72] x86/smpboot: Load TSS and getcpu GDT entry
- before loading IDT
-Message-ID: <20200908172042.GF25236@zn.tnic>
-References: <20200907131613.12703-1-joro@8bytes.org>
- <20200907131613.12703-68-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id C697221924;
+        Tue,  8 Sep 2020 17:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599585651;
+        bh=qJw7qTW8sm4UzUgyNcs+J5DGwug32eonDnzevDjI8II=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PO5JNwXw5QbIuu/2RcDr0bbx7ZRzu2Y5qqEYxKk+cMJTbCZWGXrXryK1XiV7DO/h2
+         yEMYiTExVead0rncQ7oGzITXa9RgcVq1Z0JbOVxzCJnJ3swB/L3W0vpZTp8TzB9RxE
+         mLxcAmKAl3SfFk1rGVjQzGNsblf9wGM/uW0mjJv4=
+Received: by mail-ot1-f45.google.com with SMTP id c10so15495951otm.13;
+        Tue, 08 Sep 2020 10:20:51 -0700 (PDT)
+X-Gm-Message-State: AOAM532/4o/0A5g0Z73XgdibTZm+WXuKTX2jtGL/CYvgJAJrkQwA8hlH
+        uwVs8vYhkXso+sTbl/4c1367IVb3ugnvyqKKUA==
+X-Google-Smtp-Source: ABdhPJyvfyNrPjsoWHvCG23p12ZjQDxYACacWE/DdrBGJM1e/5IFpmq/yWxgunlZEazC1D1a52yjOXSbSDklAC/HUH0=
+X-Received: by 2002:a9d:411:: with SMTP id 17mr84031otc.192.1599585651032;
+ Tue, 08 Sep 2020 10:20:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200907131613.12703-68-joro@8bytes.org>
+References: <20200828130602.42203-1-andre.przywara@arm.com> <20200828130602.42203-2-andre.przywara@arm.com>
+In-Reply-To: <20200828130602.42203-2-andre.przywara@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 8 Sep 2020 11:20:39 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+jjzFR0ZdFO5dEp2w2D2uzSAB9tdih9tnuN987LABbiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+jjzFR0ZdFO5dEp2w2D2uzSAB9tdih9tnuN987LABbiA@mail.gmail.com>
+Subject: Re: [PATCH 01/10] dt-bindings: watchdog: sp-805: Convert to Json-schema
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 03:16:08PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The IDT on 64bit contains vectors which use paranoid_entry() and/or IST
-> stacks. To make these vectors work the TSS and the getcpu GDT entry need
-> to be set up before the IDT is loaded.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+On Fri, Aug 28, 2020 at 7:06 AM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> Convert the ARM SP-805 watchdog IP DT binding over to Json-schema.
+>
+> A straight-forward conversion, but the requirement for providing two
+> clocks got strengthened from "should" to "must".
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
->  arch/x86/include/asm/processor.h |  1 +
->  arch/x86/kernel/cpu/common.c     | 23 +++++++++++++++++++++++
->  arch/x86/kernel/smpboot.c        |  2 +-
->  3 files changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index d8a82e650810..5ac507586769 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -696,6 +696,7 @@ extern void load_direct_gdt(int);
->  extern void load_fixmap_gdt(int);
->  extern void load_percpu_segment(int);
->  extern void cpu_init(void);
-> +extern void cpu_init_exception_handling(void);
->  extern void cr4_init(void);
->  
->  static inline unsigned long get_debugctlmsr(void)
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 1d65365363a1..a9527c0c38fb 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -1854,6 +1854,29 @@ static inline void tss_setup_io_bitmap(struct tss_struct *tss)
->  #endif
->  }
->  
-> +/*
-> + * Setup everything needed to handle exceptions from the IDT, including the IST
-> + * exceptions which use paranoid_entry()
-> + */
-> +void cpu_init_exception_handling(void)
-> +{
-> +	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
-> +	int cpu = raw_smp_processor_id();
+>  .../bindings/watchdog/arm,sp805.txt           | 32 --------
+>  .../bindings/watchdog/arm,sp805.yaml          | 75 +++++++++++++++++++
+>  2 files changed, 75 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> deleted file mode 100644
+> index bee6f1f0e41b..000000000000
+> --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+> +++ /dev/null
+> @@ -1,32 +0,0 @@
+> -ARM AMBA Primecell SP805 Watchdog
+> -
+> -SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+> -can be used to identify the peripheral type, vendor, and revision.
+> -This value can be used for driver matching.
+> -
+> -As SP805 WDT is a primecell IP, it follows the base bindings specified in
+> -'arm/primecell.txt'
+> -
+> -Required properties:
+> -- compatible:  Should be "arm,sp805" & "arm,primecell"
+> -- reg:         Should contain location and length for watchdog timer register
+> -- clocks:      Clocks driving the watchdog timer hardware. This list should be
+> -               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
+> -               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
+> -               frequency
+> -- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
+> -               second one
+> -
+> -Optional properties:
+> -- interrupts:  Should specify WDT interrupt number
+> -- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
+> -               default timeout is determined by the driver
+> -
+> -Example:
+> -       watchdog@66090000 {
+> -               compatible = "arm,sp805", "arm,primecell";
+> -               reg = <0x66090000 0x1000>;
+> -               interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
+> -               clocks = <&wdt_clk>, <&apb_pclk>;
+> -               clock-names = "wdog_clk", "apb_pclk";
+> -       };
+> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
+> new file mode 100644
+> index 000000000000..980e155d3387
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/arm,sp805.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	/* paranoid_entry() gets the CPU number from the GDT */
-> +	setup_getcpu(cpu);
+> +title: ARM AMBA Primecell SP805 Watchdog
 > +
-> +	/* IST vectors need TSS to be set up. */
-> +	tss_setup_ist(tss);
-> +	tss_setup_io_bitmap(tss);
-> +	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+> +maintainers:
+> +  - Viresh Kumar <vireshk@kernel.org>
 > +
-> +	load_TR_desc();
+> +description: |+
+> +  The Arm SP805 IP implements a watchdog device, which triggers an interrupt
+> +  after a configurable time period. If that interrupt has not been serviced
+> +  when the next interrupt would be triggered, the reset signal is asserted.
+> +
+> +allOf:
+> +  - $ref: /schemas/arm/primecell.yaml#
 
-Aha, this is what you mean here in your 0th message. I'm guessing it is
-ok to do those things twice in start_secondary...
+Should also ref watchdog.yaml here.
 
--- 
-Regards/Gruss,
-    Boris.
+> +
+> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: arm,sp805
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: arm,sp805
+> +      - const: arm,primecell
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: |
+> +      Clocks driving the watchdog timer hardware. The first clock is used
+> +      for the actual watchdog counter. The second clock drives the register
+> +      interface.
+> +    minItems: 2
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: wdog_clk
+> +      - const: apb_pclk
+> +
+> +  timeout-sec:
+> +    description: |
+> +      Should specify default WDT timeout in seconds. If unset, the default
+> +      timeout is determined by the driver.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-https://people.kernel.org/tglx/notes-about-netiquette
+You can drop this as it is part of watchdog.yaml.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+
+Add:
+
+unevaluatedProperties: false
+
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    watchdog@66090000 {
+> +        compatible = "arm,sp805", "arm,primecell";
+> +        reg = <0x66090000 0x1000>;
+> +        interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&wdt_clk>, <&apb_pclk>;
+> +        clock-names = "wdog_clk", "apb_pclk";
+> +    };
+> --
+> 2.17.1
+>
