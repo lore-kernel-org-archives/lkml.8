@@ -2,134 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B90C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD1BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33F5E20936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BD320936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:32:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QgRU3QLm"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fjSVHbuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgIHXbR (ORCPT
+        id S1729457AbgIHXcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40818 "EHLO
+        Tue, 8 Sep 2020 19:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgIHXbQ (ORCPT
+        with ESMTP id S1726591AbgIHXcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:31:16 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAAAC061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:31:15 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id o20so465768pfp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:31:15 -0700 (PDT)
+        Tue, 8 Sep 2020 19:32:23 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09C12C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:32:23 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id o5so797059qke.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=fpQH/xPexxyTS1Nk2wAyu0L+S9B78VfQtAtHXc1iQHU=;
-        b=QgRU3QLmEG8rJaIf9I7wydr8fbjEPJ2rN2WWI1phbuI3euh/n64HmPR5QWarkP8CcJ
-         heToUVxBAMMlf0frKJs86rwZNPfIu7396CEXUnQ2kkvodaz7PPKnq6plhr72k7nT4b5c
-         jkHh0mZmu1zY2Kx+dDO8TaVIylNWZLakQYb6M=
+        bh=o8jHrcuT+UhHm+x4p55K5Cj+RnXI4w9eRakLutqS70Q=;
+        b=fjSVHbuknhuGPTE8g56tCpaf7IzInC7bCV7CouEraDVgjHPM8nUB8dIS/iH38ZK3xM
+         DBszpcs6gE03JkVE5Fm8RFdEEKqswgNUEQ75tG5V1QoOmFo+boXLEX6xtFTBuQgzdiOr
+         YaxlzXset6AhJ50QnlFDGq4s9+hsDMqyjeGTVCmZtpIgeu0jc11/+Lct/6zj0UMOSvo3
+         1RXJGwNM3+1D/YgII9Paa2mKaIEbH8F1UWDAl4YycHvPpbgbIyKCfpFLIFeKganR2XNL
+         WJmj5Wl5y9BpW1eotsz9oSKFzMVj3kfBAgTUgJ1qQSjEJmmIyvBU6MVukOa4OciisnuV
+         N30w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fpQH/xPexxyTS1Nk2wAyu0L+S9B78VfQtAtHXc1iQHU=;
-        b=uoJYLXFU83+jmqM/KKmvfRlhCBmKEvPhP383AJU3kAuM8Ski9dKtWg+mjc8eK+9sZC
-         /Tuev+H5tXNu5FmuAYn3zDVgRLypecGHPla7JjRa8EnmFiSKtlxdKnoWQX+jD+uD2sNG
-         jRg4nJYndRTMqJ6LE0FCpn0CcOpzL7ql54x6XvU+G/noRjS4Jg6kJXvGrydN/r+aYIdt
-         P4RKHsiS7wdSiW9/2eG5CT1i1y9+QSuZTIxrRDglHCi0B7c1TBiRhuqNWlbfPJkR5gJ+
-         p3zEIFHViObQwgrpe52tvwDGrJYOFyUllhAlDyPpK919ntgmBYBNvhrfm4eVY+lz+WMX
-         UK0w==
-X-Gm-Message-State: AOAM5336wXpCqEdNu1qPLqRGs/ChGJuRkEIaQLLNFuo4aVdJyriAl7He
-        nQS8PgTAC7JOkZXVfYyLaQ9gxA==
-X-Google-Smtp-Source: ABdhPJxep1Fdns5TluQtMHf70Q0VevYoKZi2UXc9tTGNFES8CXtqDvuC2HYp6GSBf9oLl5Zir1T+KA==
-X-Received: by 2002:a17:902:c3d3:: with SMTP id j19mr1010227plj.59.1599607874840;
-        Tue, 08 Sep 2020 16:31:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e14sm326516pgu.47.2020.09.08.16.31.13
+        bh=o8jHrcuT+UhHm+x4p55K5Cj+RnXI4w9eRakLutqS70Q=;
+        b=kP/cTL61lc3esoSkqccsjXtf6J1yaQDxwf/Mv4TF3ly/ljO6t/7P2xzjf5BtVo5bAk
+         hIulj40S8EsxC4kwBBtVkulKbrD3OpR9fOnmc9nLylm7CG0ZTsfyMVc/TH7NjxSGStEb
+         9RHzfUVVgavBrkIU8tPxuhptGDQFW2wO660Rns8rcV89ICr+kLqoPHIo15rCQ5oeC807
+         iVsX5hNW0/2v+vDr5fG7LqYv+Qoc57yRo2xqMsviLmSEZNft5YLK/hX9nOo7gSf/fo56
+         MeJhxkXji+eL2Xzj2QDDL7hX4EPPM7oYrG4DtfQZjaKcJsxqt3fhcJbaakPDtNY8jP+x
+         05eQ==
+X-Gm-Message-State: AOAM530wf0mWRx+/7M3E6dXmYVDcfXCCrWXhkeW2ZA43hAejydLTrRWc
+        oo0Dim32P8oshZOKk6a/Rwf1Hw==
+X-Google-Smtp-Source: ABdhPJyaIuJjWPQ2j+zsck3b5R1hIgcLf9K+Aq2lUdkNJPfgl1QB/eHwhvXDWRRr2hKtT1Tmp68ZNg==
+X-Received: by 2002:a05:620a:14b0:: with SMTP id x16mr852709qkj.441.1599607942247;
+        Tue, 08 Sep 2020 16:32:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id i10sm783768qkh.15.2020.09.08.16.32.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 16:31:13 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 16:31:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Eugene Syromyatnikov <esyr@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kbuild test robot <lkp@intel.com>, lkp@01.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [ptrace] 201766a20e: kernel_selftests.seccomp.make_fail
-Message-ID: <202009081629.4A31845@keescook>
-References: <20190729093530.GL22106@shao2-debian>
- <20190805094719.GA1693@altlinux.org>
+        Tue, 08 Sep 2020 16:32:21 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kFn64-0038Dy-MG; Tue, 08 Sep 2020 20:32:20 -0300
+Date:   Tue, 8 Sep 2020 20:32:20 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/mmu_notifier.c: micro-optimization substitute kzalloc
+ with kmalloc
+Message-ID: <20200908233220.GC87483@ziepe.ca>
+References: <20200906114321.16493-1-mateusznosek0@gmail.com>
+ <20200906142645.GA1976319@kernel.org>
+ <39c79454-9a97-2c06-3186-939c1f3a2b27@gmail.com>
+ <20200908064245.GE1976319@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190805094719.GA1693@altlinux.org>
+In-Reply-To: <20200908064245.GE1976319@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 12:47:19PM +0300, Dmitry V. Levin wrote:
-> On Mon, Jul 29, 2019 at 05:35:30PM +0800, kernel test robot wrote:
-> > FYI, we noticed the following commit (built with gcc-7):
+On Tue, Sep 08, 2020 at 09:42:45AM +0300, Mike Rapoport wrote:
+> On Sun, Sep 06, 2020 at 06:06:39PM +0200, Mateusz Nosek wrote:
+> > Hi,
 > > 
-> > commit: 201766a20e30f982ccfe36bebfad9602c3ff574a ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-> > https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > I performed simple benchmarks using custom kernel module with the code
+> > fragment in question 'copy-pasted' in there in both versions. In case of 1k,
+> > 10k and 100k iterations the average time for kzalloc version was 5.1 and for
+> > kmalloc 3.9, for each iterations number.
+> > The time was measured using 'ktime_get(void)' function and the results given
+> > here are in ktime_t units.
+> > The machine I use has 4 core Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz CPU.
 > > 
-> > in testcase: kernel_selftests
-> > with following parameters:
-> > 
-> > 	group: kselftests-02
-> > 
-> > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> > The performance increase happens, but as you wrote it is probably not really
+> > noticeable.
 > 
-> The URL above also says: "Tests are intended to be run after building,
-> installing and booting a kernel".
-> 
-> Please build selftests with installed kernel headers corresponding to the
-> installed kernel.
-> 
-> Alternatively, tools/testing/selftests/lib.mk could be extended
-> to include uapi headers from the kernel tree into CPPFLAGS, e.g.
-> 
-> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-> index 1c8a1963d03f..b5f4f0fb8eeb 100644
-> --- a/tools/testing/selftests/lib.mk
-> +++ b/tools/testing/selftests/lib.mk
-> @@ -10,6 +10,9 @@ ifeq (0,$(MAKELEVEL))
->  endif
->  selfdir = $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
->  
-> +uapi_dir = $(realpath $(selfdir)/../../../include/uapi)
-> +CPPFLAGS += -I$(uapi_dir)
-> +
->  # The following are built by lib.mk common compile rules.
->  # TEST_CUSTOM_PROGS should be used by tests that require
->  # custom build rule and prevent common build rule use.
+> I don't think that saving a few cylces of memset() in a function that
+> called only on the initialization path in very particular cases is worth
+> risking uninitialized variables when somebody will add a new field to
+> the 'struct mmu_notifier_subscriptions' and will forget to explicitly
+> set it.
 
-*thread necromancy*
+Indeed, it is not a common path, it is already very expensive if code
+is running here (eg it does mm_take_all_locks()).
 
-I think this is fixed in the selftest tree itself now (though
-differently), in that it depends on having build the headers first.
+So there is no reason at all to optimize this and risk problems down
+the road.
 
-Anyway, please let me know if this is still a problem, and I'll take
-another look (and hopefully I also won't lose the thread for a year...)
-
-Thanks!
-
--- 
-Kees Cook
+Jason
