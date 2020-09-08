@@ -2,171 +2,128 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8D3C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5AAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D4224954
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599580528;
-	bh=3KaYicKDGMNDnpLifiUlHK3tIkjkxgO2LtaIO+noLlg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBLaM40I6Z9w2UXj0AlNiSzdxwhLQNPszsKMYT54Pxak3EPFY0VKw9KpGRNKZolvQ
-	 VNhqpLSBLopIxkjPeBlTo+zHSqh6ZziGrmd+iRzuQWSYFRljUdKVbtrxxSkOIt1+0X
-	 K5AjXGN/2fKE3xvNIqypWM3V/2S5upwdJ6oB/ANQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8EC8522527
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:57:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H9ETdmVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbgIHPxc (ORCPT
+        id S1730555AbgIHP4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730688AbgIHPtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:49:13 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7BE32482C;
-        Tue,  8 Sep 2020 15:44:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579875;
-        bh=3KaYicKDGMNDnpLifiUlHK3tIkjkxgO2LtaIO+noLlg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ji2BhEAsoxe3KITYItQMtiG9WxIcWfiLDH2GjhSUwUjet3IF39qFy1GSgeNo1thfT
-         2w9hMeb34R21F5KbO0kQvSdaGRZsT/qTdAAKv4V8GFYN9LYEtXydOicBXP2o9iBWkt
-         IHfVcLc4pD2lKAbPLLfX/bkMrUkg59pGc48AwOpc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/129] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
-Date:   Tue,  8 Sep 2020 17:25:09 +0200
-Message-Id: <20200908152233.093509491@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 11:56:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730934AbgIHPyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:54:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A8DC06179B
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:05:29 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z4so18845504wrr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Dzf69p8DNT8Do9xrYpRbV+rMbyUvt/wN7daUUl+w+dg=;
+        b=H9ETdmVI8BId28iTo3Zu6qZv/+rGY229afKm5vV9Z+QenIhPAYxe/hPK1MKwCytWBK
+         j+Swk/rQsA7HSQjpSSmBUAOk40qoVfixEMbApR0gBkPQwERqpE2tmezN0hKDu+49PsEU
+         KuBSdprN9XyHpjMBbsFidVMN6XaS/7sBEiVM6TUZ57yjMeM4M7Gy3J0fNzw9nb0XKZPB
+         r8hAGwUB3HcJMtgMYYziVeThu5YWAmAJkiIk5UoZS97dVAsyN7LkHJBkaJtm9tlRVdbE
+         IsqtUrErv531hDeDmm9Cay2noqilnb/a0iaT99OlepdJBI7V4Zs/pLpPINiYDcy1hLwt
+         8NFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Dzf69p8DNT8Do9xrYpRbV+rMbyUvt/wN7daUUl+w+dg=;
+        b=X1yIIFVNsS6S+IBqhCXG0k+MIjTNwQxRlRbLgj7Ao/nOORuTck8G4mbTh9QNgIsUco
+         sDoPfNQfI1J73FeQFmHBCN2tBnNO1FPLS6ki05igKLVFXuz8lxXkBJrsEvpk1j22w3CX
+         yDV8JJjHNfwDFtAEVLVUkCHF6zATSObQ+ADh0TQF3rJElhTfzw6sdTda1NcBB/RGIzU2
+         rW05uQjh2Nh6iwFVtowNNo+mDb5P1t8tqMqalRwy56mzieL3DhQ1Qt0z8ToSHoBdVjGh
+         nuG07YC/bhblf1QkvrdzHRMaRmLM+YivUBda1dWw/ZqABmodE2b4Tasec+N3uhqEWw7T
+         HTxQ==
+X-Gm-Message-State: AOAM531zMnD262RHHY+VVUjGxLN8cTBxN44HLXR/I8XdQgJvEMaE/bUZ
+        1aH9PKK1ytD427mFue/5XkGK3hvTE8md+g==
+X-Google-Smtp-Source: ABdhPJzzWcd0zTBjjYKwVxdn9+AR5zPayy2PhXx2uYvGZTGzGsGUFprCVJHUkyMp1UqcejiPTa0XgQ==
+X-Received: by 2002:adf:dcd1:: with SMTP id x17mr28367403wrm.150.1599566727894;
+        Tue, 08 Sep 2020 05:05:27 -0700 (PDT)
+Received: from dell ([91.110.221.179])
+        by smtp.gmail.com with ESMTPSA id h5sm33702555wrt.31.2020.09.08.05.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 05:05:27 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:05:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, hao.wu@intel.com, mdf@kernel.org
+Subject: Re: [PATCH v5] mfd: intel-m10-bmc: add Intel MAX 10 BMC chip support
+ for Intel FPGA PAC
+Message-ID: <20200908120524.GR4400@dell>
+References: <1599491813-20819-1-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1599491813-20819-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+On Mon, 07 Sep 2020, Xu Yilun wrote:
 
-[ Upstream commit 30d24faba0532d6972df79a1bf060601994b5873 ]
+> This patch implements the basic functions of the BMC chip for some Intel
+> FPGA PCIe Acceleration Cards (PAC). The BMC is implemented using the
+> Intel MAX 10 CPLD.
+> 
+> This BMC chip is connected to the FPGA by a SPI bus. To provide direct
+> register access from the FPGA, the "SPI slave to Avalon Master Bridge"
+> (spi-avmm) IP is integrated in the chip. It converts encoded streams of
+> bytes from the host to the internal register read/write on the Avalon
+> bus. So This driver uses the regmap-spi-avmm for register accessing.
+> 
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> Reviewed-by: Tom Rix <trix@redhat.com>
+> ---
+> v2: Split out the regmap-spi-avmm part.
+>     Rename the file intel-m10-bmc-main.c to intel-m10-bmc.c, cause
+>      there is only one source file left for this module now.
+> v3: Add the sub devices in mfd_cell.
+>     Some minor fixes.
+> v4: No change.
+> v5: Changes the names of mfd_cell.
+>     Use ATTRIBUTE_GROUPS() to simplify the code.
+>     Use the generic 'ddata' for the instance of struct intel_m10bmc.
+>     More comments to clarify the function check_m10bmc_version().
+>     Some minor fixes.
+> ---
+>  .../ABI/testing/sysfs-driver-intel-m10-bmc         |  15 ++
+>  drivers/mfd/Kconfig                                |  13 ++
+>  drivers/mfd/Makefile                               |   2 +
+>  drivers/mfd/intel-m10-bmc.c                        | 162 +++++++++++++++++++++
+>  include/linux/mfd/intel-m10-bmc.h                  |  56 +++++++
+>  5 files changed, 248 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
+>  create mode 100644 drivers/mfd/intel-m10-bmc.c
+>  create mode 100644 include/linux/mfd/intel-m10-bmc.h
 
-We can sometimes get bogus thermal shutdowns on omap4430 at least with
-droid4 running idle with a battery charger connected:
+Please see my replies for v4.
 
-thermal thermal_zone0: critical temperature reached (143 C), shutting down
-
-Dumping out the register values shows we can occasionally get a 0x7f value
-that is outside the TRM listed values in the ADC conversion table. And then
-we get a normal value when reading again after that. Reading the register
-multiple times does not seem help avoiding the bogus values as they stay
-until the next sample is ready.
-
-Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
-should have values from 13 to 107 listed with a total of 95 values. But
-looking at the omap4430_adc_to_temp array, the values are off, and the
-end values are missing. And it seems that the 4430 ADC table is similar
-to omap3630 rather than omap4460.
-
-Let's fix the issue by using values based on the omap3630 table and just
-ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
-the missing values added while the TRM table only shows every second
-value.
-
-Note that sometimes the ADC register values within the valid table can
-also be way off for about 1 out of 10 values. But it seems that those
-just show about 25 C too low values rather than too high values. So those
-do not cause a bogus thermal shutdown.
-
-Fixes: 1a31270e54d7 ("staging: omap-thermal: add OMAP4 data structures")
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200706183338.25622-1-tony@atomide.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../ti-soc-thermal/omap4-thermal-data.c       | 23 ++++++++++---------
- .../thermal/ti-soc-thermal/omap4xxx-bandgap.h | 10 +++++---
- 2 files changed, 19 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-index 63b02bfb2adf6..fdb8a495ab69a 100644
---- a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-+++ b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-@@ -37,20 +37,21 @@ static struct temp_sensor_data omap4430_mpu_temp_sensor_data = {
- 
- /*
-  * Temperature values in milli degree celsius
-- * ADC code values from 530 to 923
-+ * ADC code values from 13 to 107, see TRM
-+ * "18.4.10.2.3 ADC Codes Versus Temperature".
-  */
- static const int
- omap4430_adc_to_temp[OMAP4430_ADC_END_VALUE - OMAP4430_ADC_START_VALUE + 1] = {
--	-38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000, -22000,
--	-20000, -18000, -17000, -15000, -13000, -12000, -10000, -8000, -6000,
--	-5000, -3000, -1000, 0, 2000, 3000, 5000, 6000, 8000, 10000, 12000,
--	13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28000, 30000,
--	32000, 33000, 35000, 37000, 38000, 40000, 42000, 43000, 45000, 47000,
--	48000, 50000, 52000, 53000, 55000, 57000, 58000, 60000, 62000, 64000,
--	66000, 68000, 70000, 71000, 73000, 75000, 77000, 78000, 80000, 82000,
--	83000, 85000, 87000, 88000, 90000, 92000, 93000, 95000, 97000, 98000,
--	100000, 102000, 103000, 105000, 107000, 109000, 111000, 113000, 115000,
--	117000, 118000, 120000, 122000, 123000,
-+	-40000, -38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000,
-+	-22000,	-20000, -18500, -17000, -15000, -13500, -12000, -10000, -8000,
-+	-6500, -5000, -3500, -1500, 0, 2000, 3500, 5000, 6500, 8500, 10000,
-+	12000, 13500, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28500,
-+	30000, 32000, 33500, 35000, 37000, 38500, 40000, 42000, 43500, 45000,
-+	47000, 48500, 50000, 52000, 53500, 55000, 57000, 58500, 60000, 62000,
-+	64000, 66000, 68000, 70000, 71500, 73500, 75000, 77000, 78500, 80000,
-+	82000, 83500, 85000, 87000, 88500, 90000, 92000, 93500, 95000, 97000,
-+	98500, 100000, 102000, 103500, 105000, 107000, 109000, 111000, 113000,
-+	115000, 117000, 118500, 120000, 122000, 123500, 125000,
- };
- 
- /* OMAP4430 data */
-diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-index a453ff8eb313e..9a3955c3853ba 100644
---- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-+++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-@@ -53,9 +53,13 @@
-  * and thresholds for OMAP4430.
-  */
- 
--/* ADC conversion table limits */
--#define OMAP4430_ADC_START_VALUE			0
--#define OMAP4430_ADC_END_VALUE				127
-+/*
-+ * ADC conversion table limits. Ignore values outside the TRM listed
-+ * range to avoid bogus thermal shutdowns. See omap4430 TRM chapter
-+ * "18.4.10.2.3 ADC Codes Versus Temperature".
-+ */
-+#define OMAP4430_ADC_START_VALUE			13
-+#define OMAP4430_ADC_END_VALUE				107
- /* bandgap clock limits (no control on 4430) */
- #define OMAP4430_MAX_FREQ				32768
- #define OMAP4430_MIN_FREQ				32768
 -- 
-2.25.1
-
-
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
