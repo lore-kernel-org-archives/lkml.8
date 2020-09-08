@@ -2,83 +2,89 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885FFC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4171CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4323120732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:13:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="j+jw864N"
+	by mail.kernel.org (Postfix) with ESMTP id 0A2F420732
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgIHGN4 (ORCPT
+        id S1728893AbgIHGPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:13:56 -0400
-Received: from mout.gmx.net ([212.227.15.19]:34653 "EHLO mout.gmx.net"
+        Tue, 8 Sep 2020 02:15:33 -0400
+Received: from verein.lst.de ([213.95.11.211]:51452 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbgIHGNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:13:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599545604;
-        bh=FtvlKZBcLfL0ZeBa4yq1cs6S15KNeaEEgYiZUVowl6I=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=j+jw864NiUmoSbdyiy0n/Y/cYEeJYNPiZ1fYd50O8pvUU+cdWu+B3xd1wJTfRz8O5
-         52QOkU7N4XxgFVYSLgNbwHBLL8qsOjLe0HZej2aITTpDBGVswKVcmmzctpShpwOYkw
-         c5hFh4zKsBOMUe2ehpvXUAmm4XB7ri2V1mnKxZK8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.76.97.104] ([185.76.97.104]) by web-mail.gmx.net
- (3c-app-gmx-bs38.server.lan [172.19.170.90]) (via HTTP); Tue, 8 Sep 2020
- 08:13:24 +0200
+        id S1728775AbgIHGPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:15:31 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BA83B68AFE; Tue,  8 Sep 2020 08:15:28 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 08:15:28 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <rmk@arm.linux.org.uk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/9] ARM: traps: use get_kernel_nofault instead of
+ set_fs()
+Message-ID: <20200908061528.GB13930@lst.de>
+References: <20200907153701.2981205-1-arnd@arndb.de> <20200907153701.2981205-3-arnd@arndb.de>
 MIME-Version: 1.0
-Message-ID: <trinity-74abdbb2-2ddc-440a-85c8-97e80e9eb2ed-1599545604475@3c-app-gmx-bs38>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Chuanjia Liu <Chuanjia.Liu@mediatek.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jianjun.wang@mediatek.com, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org, yong.wu@mediatek.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Aw: Re: [PATCH v4 0/4] Split PCIe node to comply with hardware
- design
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 8 Sep 2020 08:13:24 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <1596440772.7361.35.camel@mhfsdcap03>
-References: <20200721074915.14516-1-Chuanjia.Liu@mediatek.com>
- <1596440772.7361.35.camel@mhfsdcap03>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:i6KFmqNKBH4PPSKlvcjghT5P+X5pFNBaGxFipv86Hh4ReWRpG5btRSd5XiIXZJ19HB0fq
- lgu0117WGrFBfEeINB8o1KuUaaV7TDQ+uJfn2owNCVVBEH787lTai5JXTDzUs5z06ifZ6KkqM068
- CHEfY3tbNEchcofDgcxvyl1DyaeDsar+qW8RT1V4FwRahaaQCfEJSgVT4HuK6aL23QBZCK30Qbk6
- ADW5xYBonXsg7PVN/KC8zKrwMmW2+e+k2ZeFaiOGPrySBzn3oEwhiDFz5sdPNs7RNV7AY7gvORiL
- ls=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UuOHfeuoCbE=:9+dhFkMTeCWaxGimh72pme
- AXCI9Y9xGHGWKFDqsMgQqnWZrJY2YqBq76iSi1YO5tOrNKXrTSX3uqbY8fS/jP1WX2iMC9DYR
- +pX7nJGZ40FTXl+MGsiXRhVx7EviYmeoLucDYKbSX/S39Sn6YJvoegAOFfuXo1QwVFnLRmp/c
- HbxmmPfLit37E7Bqz6XkNszj9lsQId47HEH05CJyWDSb28/ugBq0fUAcyb3m09PslVweJv1rk
- qHaZddgaFRHrenOpq3ypq4qmj9nIenbCmmTL5ghmu2r3TcThugrBUHf7qboUSVQjZCyAuqpED
- auxdiMgcwe5tZ2YpuQT8qmidOi4snmZkPdUhay9XVMrm/2QA1FjHUphWv9swexNLYN8vsJoga
- zpk41DbFHEhCt/jlWLMkGVk0/P5BhfwQg4jLzaHctQfs4dNGsv4IZsG6wLCISutSVE54Ljri6
- aWuaF03BXX/k7NJIQniJIajWZnD1CpRHj77qSLYH58vyIXl6UwgHqNZ45x0fgE8hmkYIw2KHW
- nzldWFN0Z734a4GtfYqmFYrUW5zpU/997Jcj4nUOvbxLIM42TgZ7k5KTc7fqCmMDiPO+Bhy06
- kKlLKUW+gz+xbE3KHJoWQVdvX1PAA/8wnqhPtKeOZdtbYUUvlwWBrpqL4Qp7DWrg2n9wDXPdS
- N6xjzIeB54WE6YbyD7LPBooLeXbpWBqIw3ypLvZNrWWcqtbeof5OMzbKHbash1xbryAE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907153701.2981205-3-arnd@arndb.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> +static void dump_mem(const char *, const char *, unsigned long, unsigned long, bool kernel_mode);
 
-i don't see this Patchset in 5.9-rc4
+This adds a pointlessly long line.  
 
-is anything missing?
+And looking at the code I don't see why the argument is even needed.
 
-regards Frank
+dump_mem() currently does an unconditional set_fs(KERNEL_DS), so it
+should always use get_kernel_nofault.
+
+> +static void dump_instr(const char *lvl, struct pt_regs *regs)
+>  {
+>  	unsigned long addr = instruction_pointer(regs);
+>  	const int thumb = thumb_mode(regs);
+> @@ -173,10 +169,20 @@ static void __dump_instr(const char *lvl, struct pt_regs *regs)
+>  	for (i = -4; i < 1 + !!thumb; i++) {
+>  		unsigned int val, bad;
+>  
+> -		if (thumb)
+> -			bad = get_user(val, &((u16 *)addr)[i]);
+> -		else
+> -			bad = get_user(val, &((u32 *)addr)[i]);
+> +		if (!user_mode(regs)) {
+> +			if (thumb) {
+> +				u16 val16;
+> +				bad = get_kernel_nofault(val16, &((u16 *)addr)[i]);
+> +				val = val16;
+> +			} else {
+> +				bad = get_kernel_nofault(val, &((u32 *)addr)[i]);
+> +			}
+> +		} else {
+> +			if (thumb)
+> +				bad = get_user(val, &((u16 *)addr)[i]);
+> +			else
+> +				bad = get_user(val, &((u32 *)addr)[i]);
+> +		}
+
+When I looked at this earlier I just added a little helper to make
+this a little easier to read.   Here is my patch from an old tree:
+
+http://git.infradead.org/users/hch/misc.git/commitdiff/67413030ccb7a64a7eb828e13ff0795f4eadfeb7
