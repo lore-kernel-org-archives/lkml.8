@@ -2,127 +2,145 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08231C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E3C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCB32177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194072098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:45:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUXYT5RH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbgIHLjF (ORCPT
+        id S1729027AbgIHLk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:39:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53366 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgIHL1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:27:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id ED701AD7A;
-        Tue,  8 Sep 2020 11:27:43 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id E8CDF1E1325; Tue,  8 Sep 2020 13:27:42 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 13:27:42 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-Message-ID: <20200908112742.GA2956@quack2.suse.cz>
-References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
- <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
+        Tue, 8 Sep 2020 07:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729726AbgIHL1Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 07:27:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E88BC061573;
+        Tue,  8 Sep 2020 04:27:24 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w186so9817453pgb.8;
+        Tue, 08 Sep 2020 04:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cNJiQKqHXl3ggB9gGPvJiEIlNs0EsVy+KN+3KvCkwEU=;
+        b=BUXYT5RHI+HUP8HnCHtAN6P1ciD15/HRohJqCiUqRSdYTr0DygENXAcOXXNpeEAojD
+         qlxYEdApMKcWYf2tKEnIFrjpqUIFTJQTAep6mNJFid2UZHLNDRFBboUt55zwL26Y3JQB
+         HRt17SPwFnvP6w22HD0+E11txvpDngX4Pxdk3izcZrzZ3qrH06tjVbNayKIwVZkQmEGC
+         E05HffwerN44agqMkRtUBYtDADLHBQJiReLYOWAamztj/PFBmSYHfRceB7iR7wRqzn2W
+         6zTW2H2n8t/aAL/uJ4pygNySoJW8xFn1FYkJqRx3vrFLiLl5dZcNLGsJTyy71TEoZBoR
+         xBig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cNJiQKqHXl3ggB9gGPvJiEIlNs0EsVy+KN+3KvCkwEU=;
+        b=EdbjEtmWlg2RIt8j5gckemDJ4cVnkuN4KkQ+QdUwXTQVsfybooQgvBj6JGnsRuXUv2
+         0Y9ydnTE5uNPExKR88zmY3YePwVmZYQgrIjO2+IWcVKaDVRu8JJIvhix6WsjUY04po92
+         QU34fj/ROyfySbYMYxjQADqpu6nnw+5MY2qh28EydukVPPuoDexj2C0Rh8wPvqlr9zOt
+         lEp+ZZ/TUJaRigkOPMhvF078bunYYKqr5/xw0xzGYKlB7kajMQVpJOSGtXLzscLzuyR8
+         AgAjdBEj6X44T3aYiT91iz4PaWPbYAAnJTguy752eZ6qwQ2IRX7Zg4GFZU6TQxJOKAE/
+         2nHA==
+X-Gm-Message-State: AOAM530NcuiXGO5HUk1tOdLpZd5B1gKiLikRhh4gS0gbi4mu2/Opqf3r
+        RZMjVEwuVtzokAGi/IVHginJNetHj8Pj0lrKqRw=
+X-Google-Smtp-Source: ABdhPJzzc1klIcCXlVU0nr/4aY+iDqUFyN7Lkl/liw19bGK80Iep5eMlAXkUmFpxvJvldQTQkpu9g/NssTR+16PUCMw=
+X-Received: by 2002:a62:cfc5:0:b029:13e:d13d:a083 with SMTP id
+ b188-20020a62cfc50000b029013ed13da083mr695254pfg.26.1599564443620; Tue, 08
+ Sep 2020 04:27:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200906031827.16819-1-xie.he.0141@gmail.com> <CA+FuTSfOeMB7Wv1t12VCTOqPYcTLq2WKdG4AJUO=gxotVRZiQw@mail.gmail.com>
+ <CAJht_EO13aYPXBV7sEgOTuUhuHFTFFfdg7NBN2cEKAo6LK0DMQ@mail.gmail.com> <CA+FuTSdK6qgKwgie5Bqof8V5FR__dx-HgHUcDS5sgTQmH9B9uQ@mail.gmail.com>
+In-Reply-To: <CA+FuTSdK6qgKwgie5Bqof8V5FR__dx-HgHUcDS5sgTQmH9B9uQ@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 8 Sep 2020 04:27:12 -0700
+Message-ID: <CAJht_ENHmL322bS4BnarXLW+GjOC4ioQ8MMtnsqwOhF_gee5Yw@mail.gmail.com>
+Subject: Re: [PATCH net] net/packet: Fix a comment about hard_header_len and
+ headroom allocation
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Eric Dumazet <edumazet@google.com>,
+        Or Cohen <orcohen@paloaltonetworks.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added Jeff to CC since he has written the code...
-
-On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
-> [Widening the CC to include Andrew and linux-fsdevel@]
-> [Milan: thanks for the patch, but it's unclear to me from your commit
-> message how/if you verified the details.]
-> 
-> Andrew, maybe you (or someone else) can comment, since long ago your
-> 
->     commit f79e2abb9bd452d97295f34376dedbec9686b986
->     Author: Andrew Morton <akpm@osdl.org>
->     Date:   Fri Mar 31 02:30:42 2006 -0800
-> 
-> included a comment that is referred to in  stackoverflow discussion
-> about this topic (that SO discussion is in turn referred to by
-> https://bugzilla.kernel.org/show_bug.cgi?id=194757).
-> 
-> The essence as I understand it, is this:
-> (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
-> has not been synced.
-> (2) In this case, the EIO/ENOSPC setting is cleared so that...
-> (3) A subsequent fsync() might return success, but...
-> (4) That doesn't mean that the data in (1) landed on the disk.
-
-Correct.
-
-> The proposed manual page patch below wants to document this, but I'd
-> be happy to have an FS-knowledgeable person comment before I apply.
-
-Just a small comment below:
-
-> On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
+On Tue, Sep 8, 2020 at 1:56 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> > > >  /*
+> > > >     Assumptions:
+> > > > -   - if device has no dev->hard_header routine, it adds and removes ll header
+> > > > -     inside itself. In this case ll header is invisible outside of device,
+> > > > -     but higher levels still should reserve dev->hard_header_len.
+> > > > -     Some devices are enough clever to reallocate skb, when header
+> > > > -     will not fit to reserved space (tunnel), another ones are silly
+> > > > -     (PPP).
+> > > > +   - If the device has no dev->header_ops, there is no LL header visible
+> > > > +     outside of the device. In this case, its hard_header_len should be 0.
+> > >
+> > > Such a constraint is more robustly captured with a compile time
+> > > BUILD_BUG_ON check. Please do add a comment that summarizes why the
+> > > invariant holds.
 > >
-> > From: Milan Shah <milan.opensource@gmail.com>
+> > I'm not sure how to do this. I guess both header_ops and
+> > hard_header_len are assigned at runtime. (Right?) I guess we are not
+> > able to check this at compile-time.
+>
+> header_ops should be compile constant, and most devices use
+> struct initializers for hard_header_len, but of course you're right.
+>
+> Perhaps a WARN_ON_ONCE, then.
+
+OK. Thank you for your suggestion! Actually I was not aware of these
+macros. So thank you for introducing them to me! I'll surely add this
+warning.
+
+> > > More about the older comment, but if reusing: it's not entirely clear
+> > > to me what "outside of the device" means. The upper layers that
+> > > receive data from the device and send data to it, including
+> > > packet_snd, I suppose? Not the lower layers, clearly. Maybe that can
+> > > be more specific.
 > >
-> > This Fix addresses Bug 194757.
-> > Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
-> > ---
-> >  man2/fsync.2 | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/man2/fsync.2 b/man2/fsync.2
-> > index 96401cd..f38b3e4 100644
-> > --- a/man2/fsync.2
-> > +++ b/man2/fsync.2
-> > @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
-> >  or
-> >  .BR sdparm (8)
-> >  to guarantee safe operation.
-> > +
-> > +When
-> > +.BR fsync ()
-> > +or
-> > +.BR fdatasync ()
-> > +returns
-> > +.B EIO
-> > +or
-> > +.B ENOSPC
-> > +any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
-> > +will return without error. It is
-> > +.I not
-> > +safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
-> >  .SH SEE ALSO
-> >  .BR sync (1),
-> >  .BR bdflush (2),
+> > Yes, right. If a header is visible "outside of the device", it means
+> > the header is exposed to upper layers via "header_ops". If a header is
+> > not visible "outside of the device" and is only used "internally", it
+> > means the header is not exposed to upper layers via "header_ops".
+> > Maybe we can change it to "outside of the device driver"? We can
+> > borrow the idea of encapsulation in object-oriented programming - some
+> > things that happen inside a software component should not be visible
+> > outside of that software component.
+>
+> How about "above"? If sketched as a network stack diagram, the code
+> paths and devices below the (possibly tunnel) device do see packets
+> with link layer header.
 
-So the error state isn't really stored "on pages in the file mapping".
-Current implementation (since 4.14) is that error state is stored in struct
-file (I think this tends to be called "file description" in manpages) and
-so EIO / ENOSPC is reported once for each file description of the file that
-was open before the error happened. Not sure if we want to be so precise in
-the manpages or if it just confuses people. Anyway your takeway that no
-error on subsequent fsync() does not mean data was written is correct.
+OK. I understand what you mean now. We need to make it clear that the
+header is only invisible to upper layers but not to "lower layers"
+that the device may rely on.
 
-								Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+I'm thinking about a way to clearly phrase this. "Above the device"
+might be confusing to people. Do you think this is good: "invisible to
+upper-layer code including the code in af_packet.c"? Or simply
+"invisible to upper-layer code"? Or just "invisible to upper layers"?
+(I don't like the last one because I feel according to the network
+stack diagram "upper layers" should already and always not care about
+the LL header.)
