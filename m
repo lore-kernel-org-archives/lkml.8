@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59022C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC3DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0862166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709DD2137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592287;
-	bh=8ldGaysk1rOS0RCdkgORFtYP2YNgBG8K1SiOLUDPewA=;
+	s=default; t=1599592300;
+	bh=P5jnhtT33Oq8lnZmSI2Idi6KUJNovb0cJrHELk4FGGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tcEIcfTjSx/A41NVv+lofOTikTeV3fgKoODZvkvwqVFo5+fOnkcILw2lfnvU1k8DS
-	 KItL5JPDGzlzbKl8ioczes8m4PdTlKPz1xo/yZ+7vBu/+fquy7wa4qkAH7lIGPTaSv
-	 hzSpXG3kNqgevHQVijUCerwIAEKFP+nSb5HTDIdQ=
+	b=YsPG+Q02W9RMtrhIaXw5RW6EeYqGAT+tOhJog/6IdP0gufqIa+6CglBJd6JJ63678
+	 qlg2wctDB6ZqRjMMGiMR6TAMselDfU2uyC9cCLuR8/02OYTsq4M2SRXGnwuSlXWWMz
+	 sEYiEWld6ubV+RMIoCpoeilzlVCrf3ckt0SCLcRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbgIHTLD (ORCPT
+        id S1731515AbgIHTLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51454 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731227AbgIHQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:24 -0400
+        id S1731218AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D599B227C3;
-        Tue,  8 Sep 2020 15:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96722223C7;
+        Tue,  8 Sep 2020 15:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579964;
-        bh=8ldGaysk1rOS0RCdkgORFtYP2YNgBG8K1SiOLUDPewA=;
+        s=default; t=1599579947;
+        bh=P5jnhtT33Oq8lnZmSI2Idi6KUJNovb0cJrHELk4FGGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lSkDFdFW4e1k+RdTTD2Zyx8nfjJB6CWWpCovFLI4sOhvn6+nF2B1mkTKUxIQVNmHU
-         4xdlBWIZEPpWvM7qB5Tpy2QhcGNiP4GaH11QxKMUalNvW80MTKfRWndRn53Ir3SphO
-         8k06ws1djVhO+pThVnzcl+OeJc0OXV6pKgnNIJHg=
+        b=OyHzLwVZn21T08fuf0e336bwx6hcfLvuzT9MLuwlNTiAFGylcBMWDwROr12SS5qQ1
+         hQApGA+HKA2nu8Qt1ErzPldvsKPctv7k52/2XKLVhxCf+kfoW2ArYyfMYx6u8HY/MD
+         u91kEqTUKLjH6pDFUI1AQdMlgCMVDAFgdHoKoxeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 077/129] tracing/kprobes, x86/ptrace: Fix regs argument order for i386
-Date:   Tue,  8 Sep 2020 17:25:18 +0200
-Message-Id: <20200908152233.543918093@linuxfoundation.org>
+        Adrien Crivelli <adrien.crivelli@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 097/129] ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion NT950XCJ-X716A
+Date:   Tue,  8 Sep 2020 17:25:38 +0200
+Message-Id: <20200908152234.646756609@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -62,43 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+From: Adrien Crivelli <adrien.crivelli@gmail.com>
 
-commit 2356bb4b8221d7dc8c7beb810418122ed90254c9 upstream.
+commit 8bcea6cb2cbc1f749e574954569323dec5e2920e upstream.
 
-On i386, the order of parameters passed on regs is eax,edx,and ecx
-(as per regparm(3) calling conventions).
+The Galaxy Book Ion NT950XCJ-X716A (15 inches) uses the same ALC298
+codec as other Samsung laptops which have the no headphone sound bug. I
+confirmed on my own hardware that this fixes the bug.
 
-Change the mapping in regs_get_kernel_argument(), so that arg1=ax
-arg2=dx, and arg3=cx.
+This also correct the model name for the 13 inches version. It was
+incorrectly referenced as NT950XCJ-X716A in commit e17f02d05. But it
+should have been NP930XCJ-K01US.
 
-Running the selftests testcase kprobes_args_use.tc shows the result
-as passed.
-
-Fixes: 3c88ee194c28 ("x86: ptrace: Add function argument access API")
-Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: e17f02d0559c ("ALSA: hda/realtek: Add quirk for Samsung Galaxy Book Ion")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
+Signed-off-by: Adrien Crivelli <adrien.crivelli@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200828113242.GA1424@cosmos
+Link: https://lore.kernel.org/r/20200826084014.211217-1-adrien.crivelli@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/ptrace.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -309,8 +309,8 @@ static inline unsigned long regs_get_ker
- 	static const unsigned int argument_offs[] = {
- #ifdef __i386__
- 		offsetof(struct pt_regs, ax),
--		offsetof(struct pt_regs, cx),
- 		offsetof(struct pt_regs, dx),
-+		offsetof(struct pt_regs, cx),
- #define NR_REG_ARGUMENTS 3
- #else
- 		offsetof(struct pt_regs, di),
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7678,7 +7678,8 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc189, "Samsung Galaxy Flex Book (NT950QCG-X716)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+-	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc18a, "Samsung Galaxy Book Ion (NP930XCJ-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
++	SND_PCI_QUIRK(0x144d, 0xc830, "Samsung Galaxy Book Ion (NT950XCJ-X716A)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
+ 	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+ 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
 
 
