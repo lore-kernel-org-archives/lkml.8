@@ -2,167 +2,154 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB45EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91781C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6682F20C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592121;
-	bh=QUNd9U2D0FIKd8CMrZu8G74GmA9dtKwfLxlZRU8UKMw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlSxG0LEWsYRiYPbeSU42PBubtFxUFtHRyIUaXPLONfIVv78tfaiQY8fpplcAitY0
-	 iuPTA1NzK7BSLkJSNZPWvxg5udKgf4A0l8EDItGlq1c2MS5DG17n4ikgZ61oy06ZKX
-	 sXXDHmo4u2P0z1Y+ePsnaHQgd8pNC67HPFK0jZj4=
+	by mail.kernel.org (Postfix) with ESMTP id D3F8020C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbgIHTIj (ORCPT
+        id S1731734AbgIHTIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730964AbgIHQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:06:58 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EF3723DC1;
-        Tue,  8 Sep 2020 15:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579997;
-        bh=QUNd9U2D0FIKd8CMrZu8G74GmA9dtKwfLxlZRU8UKMw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eo6xyPhAg5WO9UH8c/j8+72Io0Tb+xlPR2JT52cPyhuyC0sMao6Ya/43lyQsx+9dP
-         W4ZKJsWsI7pW6ldnxZZruHCgT8o+bp56xIvE18xnoHZKhM8u+p2t3sqb+BqfeR4rss
-         FHFo3LaJ+zHF/oqXfYzWSmjOn9HzzRvpbhhRk9Co=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ye Bin <yebin10@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 119/129] dm thin metadata: Fix use-after-free in dm_bm_set_read_only
-Date:   Tue,  8 Sep 2020 17:26:00 +0200
-Message-Id: <20200908152235.796309786@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 15:08:42 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49939 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730734AbgIHQGs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:06:48 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4E264580441;
+        Tue,  8 Sep 2020 08:00:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 08 Sep 2020 08:00:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=A
+        t0ECiv86wOydFiONx1rKX74GnbiUZGiVwaMOztKjuk=; b=A28HdI8alVUfO+NGz
+        jhOSfc5vwRPeVN7GA2rcjgFsQTj4DmJjpoyrEQkyjXPCh3ig+997suzCFj225jSs
+        LIeEQWtGZev9qkXT288I3DiK25ASbo1vLbs+21RikvLtgfYvZJcLqnuWwVkkKZjV
+        kBIuYuOqUKkofKQ7/5qvIgUXphgJKKsh1GC2K8wV7VANnkV90ZCfKsQJ+WyggWSj
+        bEk/rdkOr5PrzRiAHdmPd7EAd6kV/ATbM9lgGss/QODATDhCzzsGwxQHTGHinFeB
+        p6GuTicJXU0TkVP+vI13kbKL8Tpa2zf47B+QJMZmUCXLsHqrJ7qSvWf4dgsSX40w
+        h1GYA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=At0ECiv86wOydFiONx1rKX74GnbiUZGiVwaMOztKj
+        uk=; b=dhghoUJmS7jVoxYnaqVEzRC1l/H3fLlqWDpRqZ+MysnqvW7+KIG3BEF2L
+        79nCo2PnEFKJCFGixMT6iyQYtYfujiYACHcKSVRWmyKRSVtSSOD9spYoMkQCxAjI
+        fuu32uUrij8KOA92gAPsDg4uMz+iTnJR3Qx/sOUG3/9dWaYbO4nnkRhYd8Sd/ebv
+        mehj32n2xTqDORYsIBS3q58wEnFCg2ScmAVMLzoILwbZ8wlhpTrg1VnRTInQT7ms
+        AcI8M8/qs+KBhM2uRhcIqMmfzlhP1uGMY7aozWmPavKmnHP/zIYDxP5LD5dNMHJ2
+        GX7R7lhLgdUgZdYHI7gKYEl+H+G3Q==
+X-ME-Sender: <xms:VnJXX9Snuh4Cse39j9YfRGTXSrPqxCxPAeYkDMDL2TQWOY0JWoHOQw>
+    <xme:VnJXX2wJqJ89WKHQlrOSPRKliK6E18tW7Ny8iUSWdNx0Nhkl1-rliKRfrvys2OLmR
+    6EDFwifw5WC5x7lNok>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehfedgfedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
+    gedvudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:VnJXXy1j80EPqHy8o0z4n9Uud9Z1vczcgHt2eYwuUIsMgOlvFJZGXA>
+    <xmx:VnJXX1AUG3iZSUaVW69wOb0p4qmgeWVSwqTlOqtDSaVdwzDYZ9-f-w>
+    <xmx:VnJXX2hKy80dBWfVA0hBxnuXwHSqNVFVeMUADbN8CKENBj6PIFT4YA>
+    <xmx:V3JXX3bXx01SDa8CprDSFTPaGFIoJl2eQ0TFaUDkdyDdzLnkqJS8lw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BE0F33280060;
+        Tue,  8 Sep 2020 08:00:21 -0400 (EDT)
+Date:   Tue, 8 Sep 2020 14:00:19 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 00/80] drm/vc4: Support BCM2711 Display Pipeline
+Message-ID: <20200908120019.3rmhzoijoijrbb7d@gilmour.lan>
+References: <CGME20200904071259epcas1p3de4209531c0bc5ed6ea9ef19827b6ed5@epcas1p3.samsung.com>
+ <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
+ <cca5234f-e1e8-b642-048b-b710f402409d@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cca5234f-e1e8-b642-048b-b710f402409d@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+Hi Hoegeun,
 
-commit 3a653b205f29b3f9827a01a0c88bfbcb0d169494 upstream.
+On Mon, Sep 07, 2020 at 08:49:12PM +0900, Hoegeun Kwon wrote:
+> On 9/3/20 5:00 PM, Maxime Ripard wrote:
+> > Hi everyone,
+> >
+> > Here's a (pretty long) series to introduce support in the VC4 DRM driver
+> > for the display pipeline found in the BCM2711 (and thus the RaspberryPi=
+ 4).
+> >
+> > The main differences are that there's two HDMI controllers and that the=
+re's
+> > more pixelvalve now. Those pixelvalve come with a mux in the HVS that s=
+till
+> > have only 3 FIFOs. Both of those differences are breaking a bunch of
+> > expectations in the driver, so we first need a good bunch of cleanup and
+> > reworks to introduce support for the new controllers.
+> >
+> > Similarly, the HDMI controller has all its registers shuffled and split=
+ in
+> > multiple controllers now, so we need a bunch of changes to support this=
+ as
+> > well.
+> >
+> > Only the HDMI support is enabled for now (even though the DPI and DSI
+> > outputs have been tested too).
+> >
+> > Let me know if you have any comments
+> > Maxime
+> >
+> > Cc: bcm-kernel-feedback-list@broadcom.com
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> >
+> > Changes from v4:
+> >    - Rebased on top of next-20200828
+> >    - Collected the various tags
+> >    - Fixed some issues with 4k support and dual output (thanks Hoegeun!)
+>=20
+> Thanks for your v5 patchset.
+>=20
+> I tested all patches based on the next-20200812.
 
-The following error ocurred when testing disk online/offline:
+Thanks again for testing all the patches
 
-[  301.798344] device-mapper: thin: 253:5: aborting current metadata transaction
-[  301.848441] device-mapper: thin: 253:5: failed to abort metadata transaction
-[  301.849206] Aborting journal on device dm-26-8.
-[  301.850489] EXT4-fs error (device dm-26) in __ext4_new_inode:943: Journal has aborted
-[  301.851095] EXT4-fs (dm-26): Delayed block allocation failed for inode 398742 at logical offset 181 with max blocks 19 with error 30
-[  301.854476] BUG: KASAN: use-after-free in dm_bm_set_read_only+0x3a/0x40 [dm_persistent_data]
+> Everything else is fine, but the dual hdmi modetest doesn't work well in =
+my
+> environment...
+>=20
+> In my environment, dsi is not connected, I have seen your answer[1].
 
-Reason is:
+Can you share a bit more your setup? What monitors are being connected
+to each HDMI port? Do you hotplug any?
 
- metadata_operation_failed
-    abort_transaction
-        dm_pool_abort_metadata
-	    __create_persistent_data_objects
-	        r = __open_or_format_metadata
-	        if (r) --> If failed will free pmd->bm but pmd->bm not set NULL
-		    dm_block_manager_destroy(pmd->bm);
-    set_pool_mode
-	dm_pool_metadata_read_only(pool->pmd);
-	dm_bm_set_read_only(pmd->bm);  --> use-after-free
-
-Add checks to see if pmd->bm is NULL in dm_bm_set_read_only and
-dm_bm_set_read_write functions.  If bm is NULL it means creating the
-bm failed and so dm_bm_is_read_only must return true.
-
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/dm-thin-metadata.c                 |    2 +-
- drivers/md/persistent-data/dm-block-manager.c |   14 ++++++++------
- 2 files changed, 9 insertions(+), 7 deletions(-)
-
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -958,7 +958,7 @@ int dm_pool_metadata_close(struct dm_poo
- 	}
- 
- 	pmd_write_lock_in_core(pmd);
--	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
-+	if (!pmd->fail_io && !dm_bm_is_read_only(pmd->bm)) {
- 		r = __commit_transaction(pmd);
- 		if (r < 0)
- 			DMWARN("%s: __commit_transaction() failed, error = %d",
---- a/drivers/md/persistent-data/dm-block-manager.c
-+++ b/drivers/md/persistent-data/dm-block-manager.c
-@@ -493,7 +493,7 @@ int dm_bm_write_lock(struct dm_block_man
- 	void *p;
- 	int r;
- 
--	if (bm->read_only)
-+	if (dm_bm_is_read_only(bm))
- 		return -EPERM;
- 
- 	p = dm_bufio_read(bm->bufio, b, (struct dm_buffer **) result);
-@@ -562,7 +562,7 @@ int dm_bm_write_lock_zero(struct dm_bloc
- 	struct buffer_aux *aux;
- 	void *p;
- 
--	if (bm->read_only)
-+	if (dm_bm_is_read_only(bm))
- 		return -EPERM;
- 
- 	p = dm_bufio_new(bm->bufio, b, (struct dm_buffer **) result);
-@@ -602,7 +602,7 @@ EXPORT_SYMBOL_GPL(dm_bm_unlock);
- 
- int dm_bm_flush(struct dm_block_manager *bm)
- {
--	if (bm->read_only)
-+	if (dm_bm_is_read_only(bm))
- 		return -EPERM;
- 
- 	return dm_bufio_write_dirty_buffers(bm->bufio);
-@@ -616,19 +616,21 @@ void dm_bm_prefetch(struct dm_block_mana
- 
- bool dm_bm_is_read_only(struct dm_block_manager *bm)
- {
--	return bm->read_only;
-+	return (bm ? bm->read_only : true);
- }
- EXPORT_SYMBOL_GPL(dm_bm_is_read_only);
- 
- void dm_bm_set_read_only(struct dm_block_manager *bm)
- {
--	bm->read_only = true;
-+	if (bm)
-+		bm->read_only = true;
- }
- EXPORT_SYMBOL_GPL(dm_bm_set_read_only);
- 
- void dm_bm_set_read_write(struct dm_block_manager *bm)
- {
--	bm->read_only = false;
-+	if (bm)
-+		bm->read_only = false;
- }
- EXPORT_SYMBOL_GPL(dm_bm_set_read_write);
- 
-
-
+Maxime
