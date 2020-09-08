@@ -2,111 +2,129 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B3AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26534C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EE72137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51882137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599593568;
+	bh=/CmNhgqxZ+7MyzWgmRTnoJ1IsBiQQimdXO1C8uYuIbo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WbGLA8Ye7tXydQYVEDoa7ExYErr2HkoIHnj4Unoa916XR4u+SQtMhINgL5K2ZzjrG
+	 y4w0aiEWqgJNHnSTgbXxDMBYmgeEzKuMxpU/tWhlTfdMADFjgv7i/czpyoM6OG4fUo
+	 MYYuWCPtqB7Umgiyf/QIpZ0aLRG/36DHkkC+YOCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgIHTcm (ORCPT
+        id S1732193AbgIHTcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:32:42 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44768 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731012AbgIHTcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:32:17 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 00C0F1C0B7F; Tue,  8 Sep 2020 21:32:14 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 21:32:14 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Al Grant <al.grant@arm.com>, Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 40/88] perf tools: Correct SNOOPX field offset
-Message-ID: <20200908193214.GA6758@duo.ucw.cz>
-References: <20200908152221.082184905@linuxfoundation.org>
- <20200908152223.128046647@linuxfoundation.org>
+        Tue, 8 Sep 2020 15:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731012AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:58:05 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0B27241A7;
+        Tue,  8 Sep 2020 15:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579546;
+        bh=/CmNhgqxZ+7MyzWgmRTnoJ1IsBiQQimdXO1C8uYuIbo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rHEf+EnRp5wwbO0V361Hjc3RDvIznJLQMLKuHBW+0x6n5iwEoD23RMLY8vmAxGNWr
+         y81ZM3dznFuZoXI2v0cAKRo50v1E3IPZtj5MluTkbNUdo8abievTq4npmfDDB47NLa
+         jhZOUimSzRJMlvoCDh2+CiP0CD54Po7QoQ+71Nvw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 5.8 123/186] ARC: perf: dont bail setup if pct irq missing in device-tree
+Date:   Tue,  8 Sep 2020 17:24:25 +0200
+Message-Id: <20200908152247.597184161@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-In-Reply-To: <20200908152223.128046647@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vineet Gupta <vgupta@synopsys.com>
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit feb92d7d3813456c11dce215b3421801a78a8986 upstream.
 
-Hi!
+Current code inadventely bails if hardware supports sampling/overflow
+interrupts, but the irq is missing from device tree.
 
-> From: Al Grant <al.grant@foss.arm.com>
->=20
-> [ Upstream commit 39c0a53b114d0317e5c4e76b631f41d133af5cb0 ]
->=20
-> perf_event.h has macros that define the field offsets in the data_src
-> bitmask in perf records. The SNOOPX and REMOTE offsets were both 37.
->=20
-> These are distinct fields, and the bitfield layout in perf_mem_data_src
-> confirms that SNOOPX should be at offset 38.
->=20
-> Committer notes:
->=20
-> This was extracted from a larger patch that also contained kernel
-> changes.
->=20
-> Fixes: 52839e653b5629bd ("perf tools: Add support for printing new
-> mem_info encodings")
+|
+| # perf stat -e cycles,instructions,major-faults,minor-faults ../hackbench
+| Running with 10 groups 400 process
+| Time: 0.921
+|
+| Performance counter stats for '../hackbench':
+|
+|   <not supported>      cycles
+|   <not supported>      instructions
+|                 0      major-faults
+|              8679      minor-faults
 
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -1079,7 +1079,7 @@ union perf_mem_data_src {
-> =20
->  #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
->  /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT	37
-> +#define PERF_MEM_SNOOPX_SHIFT	38
-> =20
+This need not be as we can still do simple counting based perf stat.
+This unborks perf on HSDK-4xD
 
-We still have:
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-=2E/include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT	37
+---
+ arch/arc/kernel/perf_event.c |   14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-(note tools/include vs. include).
+--- a/arch/arc/kernel/perf_event.c
++++ b/arch/arc/kernel/perf_event.c
+@@ -562,7 +562,7 @@ static int arc_pmu_device_probe(struct p
+ {
+ 	struct arc_reg_pct_build pct_bcr;
+ 	struct arc_reg_cc_build cc_bcr;
+-	int i, has_interrupts;
++	int i, has_interrupts, irq;
+ 	int counter_size;	/* in bits */
+ 
+ 	union cc_name {
+@@ -637,13 +637,7 @@ static int arc_pmu_device_probe(struct p
+ 		.attr_groups	= arc_pmu->attr_groups,
+ 	};
+ 
+-	if (has_interrupts) {
+-		int irq = platform_get_irq(pdev, 0);
+-
+-		if (irq < 0) {
+-			pr_err("Cannot get IRQ number for the platform\n");
+-			return -ENODEV;
+-		}
++	if (has_interrupts && (irq = platform_get_irq(pdev, 0) >= 0)) {
+ 
+ 		arc_pmu->irq = irq;
+ 
+@@ -652,9 +646,9 @@ static int arc_pmu_device_probe(struct p
+ 				   this_cpu_ptr(&arc_pmu_cpu));
+ 
+ 		on_each_cpu(arc_cpu_pmu_irq_init, &irq, 1);
+-
+-	} else
++	} else {
+ 		arc_pmu->pmu.capabilities |= PERF_PMU_CAP_NO_INTERRUPT;
++	}
+ 
+ 	/*
+ 	 * perf parser doesn't really like '-' symbol in events name, so let's
 
-Should those be in sync before merging this to stable?
 
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1fcPgAKCRAw5/Bqldv6
-8janAJ0SZLRix7HkKpoh8hwE2zOl5qd5qwCffo1hrLj9rLNHSbavYFi1ysLKXOk=
-=wnJl
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
