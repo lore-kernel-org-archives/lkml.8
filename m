@@ -2,127 +2,95 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5421C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD50C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 996EB20C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QWWeBAOx"
+	by mail.kernel.org (Postfix) with ESMTP id 788512076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592971;
+	bh=yVzu16jkR+ZSizyDraX6CgN0pG7oqdVsMdzwGZ9bSn4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IpnLKVvqHo0GwxqOQb+Ewx6jx2ki91xbo6RuVituiwGsa2miOhrb3MOBzNA/5R00X
+	 nWwzxmLEObmMegfaV1+l5NT15wyXrHP9cokL0II3TWLnBSesHRo9CYBl7+WKvAzaDj
+	 VoG2FNfYDuay7rGIlgmmSxKV8XXbnwQtVR38XT4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbgIHTW3 (ORCPT
+        id S1731590AbgIHTWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:22:29 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:43752 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730674AbgIHQBd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731101AbgIHQBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:01:33 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CB5FD210673B;
-        Tue,  8 Sep 2020 09:01:31 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB5FD210673B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1599580892;
-        bh=61crOJK2+7vw9hc/ODsziF6zsYb82tEg9dWjpx09vvc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QWWeBAOxsyPwEyUYV7vVrvR0dUM6QcQSdGsrJtMy5SKKLVFc7rQ0MInMc1xNG4FTv
-         DndDNLh9anNe5VKf/WTCJuToPec8pGSPSfpXT1BzP8Diy8HKWLTkmSUAo0H3rzYjqO
-         tZHvsayiFpwmoA2I+9g6VsmSknteJPGQSZHrQyKQ=
-Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200907213855.3572-1-nramas@linux.microsoft.com>
- <CAEjxPJ5C64AmmVKuuPmtbfnY06w49ziryRAnARurWxpQumzfow@mail.gmail.com>
- <7c4e2e9f-54e1-1dee-c33c-64dac0fe9678@linux.microsoft.com>
- <CAEjxPJ6eGcmbtGX7Kvn8e=ZxBUQD5G=8D+o9-BsVXyDFcyPYMw@mail.gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <995481a9-5418-5705-81c2-ba931488779e@linux.microsoft.com>
-Date:   Tue, 8 Sep 2020 09:01:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EBFB23C8D;
+        Tue,  8 Sep 2020 15:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579393;
+        bh=yVzu16jkR+ZSizyDraX6CgN0pG7oqdVsMdzwGZ9bSn4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WzHR0AUbgFf7HYltKwBPMcg4VPUcO3du228zvqkhwcqane7LvdRz7qFEqzutB/XV1
+         zHZfvGVLbPthQ/hr73eJuMq08Drl8jD7817yKl034ZA0KzPTlgqE4liZBwpqu42BeO
+         qglUX/v1FPYifNy2SyU99myWlFduL5QTwKAr1huE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 060/186] net: arc_emac: Fix memleak in arc_mdio_probe
+Date:   Tue,  8 Sep 2020 17:23:22 +0200
+Message-Id: <20200908152244.579849161@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ6eGcmbtGX7Kvn8e=ZxBUQD5G=8D+o9-BsVXyDFcyPYMw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 4:58 AM, Stephen Smalley wrote:
-> On Tue, Sep 8, 2020 at 12:44 AM Lakshmi Ramasubramanian
-> <nramas@linux.microsoft.com> wrote:
->>
->> On 9/7/20 3:32 PM, Stephen Smalley wrote:
->>
->>>> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->>>> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
->>>> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'vfree'
->>>> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'crypto_alloc_shash'
->>>> Reported-by: kernel test robot <lkp@intel.com> # sparse: symbol 'security_read_selinux_policy' was not declared. Should it be static?
->>>
->>> Not sure these Reported-by lines are useful since they were just on
->>> submitted versions of the patch not on an actual merged commit.
->>
->> I'll remove them when I update the patch.
->>
->>>
->>>> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
->>>> new file mode 100644
->>>> index 000000000000..caf9107937d9
->>>> --- /dev/null
->>>> +++ b/security/selinux/measure.c
->>> <snip>
->>>> +void selinux_measure_state(struct selinux_state *state, bool policy_mutex_held)
->>>> +{
->>> <snip>
->>>> +
->>>> +       if (!policy_mutex_held)
->>>> +               mutex_lock(&state->policy_mutex);
->>>> +
->>>> +       rc = security_read_policy_kernel(state, &policy, &policy_len);
->>>> +
->>>> +       if (!policy_mutex_held)
->>>> +               mutex_unlock(&state->policy_mutex);
->>>
->>> This kind of conditional taking of a mutex is generally frowned upon
->>> in my experience.
->>> You should likely just always take the mutex in the callers of
->>> selinux_measure_state() instead.
->>> In some cases, it may be the caller of the caller.  Arguably selinuxfs
->>> could be taking it around all state modifying operations (e.g.
->>> enforce, checkreqprot) not just policy modifying ones although it
->>> isn't strictly for that purpose.
->>
->> Since currently policy_mutex is not used to synchronize access to state
->> variables (enforce, checkreqprot, etc.) I am wondering if
->> selinux_measure_state() should measure only state if policy_mutex is not
->> held by the caller - similar to how we skip measuring policy if
->> initialization is not yet completed.
-> 
-> No, we want to measure policy whenever there is a policy to measure.
-> Just move the taking of the mutex to the callers of
-> selinux_measure_state() so that it can be unconditional.
-> 
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-Will do.
+[ Upstream commit e2d79cd8875fa8c3cc7defa98a8cc99a1ed0c62f ]
 
-  -lakshmi
+When devm_gpiod_get_optional() fails, bus should be
+freed just like when of_mdiobus_register() fails.
+
+Fixes: 1bddd96cba03d ("net: arc_emac: support the phy reset for emac driver")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/arc/emac_mdio.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/arc/emac_mdio.c b/drivers/net/ethernet/arc/emac_mdio.c
+index 0187dbf3b87df..54cdafdd067db 100644
+--- a/drivers/net/ethernet/arc/emac_mdio.c
++++ b/drivers/net/ethernet/arc/emac_mdio.c
+@@ -153,6 +153,7 @@ int arc_mdio_probe(struct arc_emac_priv *priv)
+ 	if (IS_ERR(data->reset_gpio)) {
+ 		error = PTR_ERR(data->reset_gpio);
+ 		dev_err(priv->dev, "Failed to request gpio: %d\n", error);
++		mdiobus_free(bus);
+ 		return error;
+ 	}
+ 
+-- 
+2.25.1
+
+
 
