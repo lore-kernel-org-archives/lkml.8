@@ -2,93 +2,126 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A0BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8B5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBD02166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB44215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+0aFjCm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkL9TzTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbgIHIoO (ORCPT
+        id S1730083AbgIHIoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
+        Tue, 8 Sep 2020 04:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729390AbgIHIoN (ORCPT
+        with ESMTP id S1729390AbgIHIow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:44:13 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08FAC061573;
-        Tue,  8 Sep 2020 01:44:11 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d6so3332497pfn.9;
-        Tue, 08 Sep 2020 01:44:11 -0700 (PDT)
+        Tue, 8 Sep 2020 04:44:52 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2910C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:44:51 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m8so4268354pgi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XuTzQQBdP+WWoANigEsq6MwgFpHmqQvWwyaZXCBXPHE=;
-        b=l+0aFjCmt8YftXSxAK+F1TTeN+lfDarbyMXferg638jFZw7DqYI6bYPXtgYmM7SrBh
-         qvXzVK+gLgQR2/0OgA2EgQNcQkcpEqzEBH/iKMJaZzz6DrqTfC9iy8E7CQPM3d83mX1U
-         vuiqC2a1PQVjnY8wzAqjeV19MjUMGC1TTS1yt7aZuEsq3iatIcWNjwmt4UGg6tLILvKZ
-         epiRbtZQdkSrIAJyW8n3bjz7034moF8o0g3ElZr+hTVd/42rLS21QtC3888C3wT0Cs2s
-         77ma0dnaK7JlyRVbSEyL7MjAD0vWSoMReCQq5WX9RsMBSd8CXV6EtmRnFT/dQsyvxskY
-         snMw==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=PiRn9NwzKohrwBuFF5bFBZNNmANW0xplBGn4HXUwbyY=;
+        b=lkL9TzTOhf4dkeNPtCdPcsSlTqHtEC3Af69+imHnsfVc4F94f5/uTawrqMRt05G5Bf
+         /qaZ53cp41K2BtaTuxHKI6SIFU2/JREPuLvrJY4NitPTxqv5gYoomX4xuz/gpgJecN3i
+         eP28Rkfm6Cy4k3eh7YbN2LMnakrJcXtDXzMGn2OPeG3QPdlbAiFlVPc5etn9ivr941Fs
+         SS9pgsRNxYVBWFzJUuDj78/LkJ3c2935s12UMZlGaq4+SOm8gpNG/TtrtZDdh0HwkrZM
+         SRzcendWednW5KpWFaKBv4RryDecjCJmJLPB6o6ob39pQvvSgLBSfSkMTgqlEjyUrudF
+         NCTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XuTzQQBdP+WWoANigEsq6MwgFpHmqQvWwyaZXCBXPHE=;
-        b=W5uMLu+odPRU1GmrTEX4AHJXyZ8cLn0KgBd+Eyt16Yn899zkslvyw/wqm8SeskGrjQ
-         7bn5UxeTWPzAWVITQiY+wGxbd80ixGGFYUqsi1uL1Va9enCJKAYBuS+oVuOO95BEjLyB
-         ekFKr2DQXwz2FjgHpafvLKwt29xOV0W1Qhx9sk6SZn7hX7mf9tEXc9aRpXRm3A2zk5Qp
-         UjJmnfyUTxRKqgqmrPrKh61mAhd+O0Uuy8CvYaLya7ppz8AcxfzXazbW6xvv3ve+xgNE
-         3sZzCp2E2LHBB5zuomvY/+8a/uH6PsIRKE33WSLBa94fP/A7vmkiXop26/tfIcGCu00u
-         ziyg==
-X-Gm-Message-State: AOAM532K/JM0XJf1ZHyDtyorXIJHLUC/L89/9mXJkQAYc0yxeyS0ysiE
-        NkpjvAbVVsJPmbdBBaHpHDSTvIAWzWNus4AAgck=
-X-Google-Smtp-Source: ABdhPJxte4NMjBFH89t5XT3Rh0sUdCmWtYid4nnWQLKkT5VZ1TD2vb0mIcEp7C1RwxbePlBPfkkntHqqX4r+/xbAxlw=
-X-Received: by 2002:a17:902:28:: with SMTP id 37mr23483544pla.107.1599554651533;
- Tue, 08 Sep 2020 01:44:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=PiRn9NwzKohrwBuFF5bFBZNNmANW0xplBGn4HXUwbyY=;
+        b=TkdE1QqjhHynZJw9aihoHEd8mwMhStcCw4yWItphZIE1R63+ohXyHepZrPTmbZGu/I
+         mbJq2ANbb2GFp50OmtF7yeSR5Gpztg5ObBTnB6aNghR/dVOGKKzrSX6zC65tn+EggxQI
+         2PEUIa53T51/oO/aGelmp9nRKczS0/1s3vPRJccCRyeaNfSjw85bR6t4/m0VBmt8UCib
+         yClA/U56l4duP4QM/lbdDwhI0BSbzAPqGJ7uUHbJTP3GYXUxrpytPQ+xIFYX4lQ8g8mh
+         4iAC9IBzWzUwWUP0ygRIUn3mtVf2WT5q92Y9RjXCm/jCr/+pUOrH7YMDabTOUcpZKtss
+         KNyA==
+X-Gm-Message-State: AOAM533BKQafIRqC27gtcjNA+UFGQfzCtDuSS+mlD5EEpCUh83qwyUjw
+        vg2upDIPNhzmIS3DrSztUhA=
+X-Google-Smtp-Source: ABdhPJxVM8x5twFdRZ5+HrEYOCxGbZDu70wGmAmIaGeAjbvnI0yPo6twAe3uTH9ciTVhFg1ASQWuUw==
+X-Received: by 2002:a63:6d0d:: with SMTP id i13mr19811682pgc.372.1599554691406;
+        Tue, 08 Sep 2020 01:44:51 -0700 (PDT)
+Received: from localhost ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id 82sm14468515pgd.6.2020.09.08.01.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 01:44:50 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 18:44:45 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v1 2/5] powerpc/fault: Unnest definition of
+ page_fault_is_write() and page_fault_is_bad()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
+        <4cd127f8988b7b5d3a9b24b67dbad81fef3aee7f.1596734104.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <4cd127f8988b7b5d3a9b24b67dbad81fef3aee7f.1596734104.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-References: <20200908021021.9123-1-digetx@gmail.com> <20200908021021.9123-17-digetx@gmail.com>
-In-Reply-To: <20200908021021.9123-17-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 8 Sep 2020 11:43:54 +0300
-Message-ID: <CAHp75VefU+iXpngPnzQRBfrg3OgLUBqhOCJpPo8natfCBr6Q5w@mail.gmail.com>
-Subject: Re: [PATCH v6 16/35] i2c: tegra: Reorder location of functions in the code
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <1599554667.yx7o7g5m0l.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> Reorder location of functions in the code in order to have definition
-> of functions closer to the place of the invocation. This change makes
-> easier to navigate around the code and removes the need to have a
-> prototype for tegra_i2c_init().
+Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
+> To make it more readable, separate page_fault_is_write() and page_fault_i=
+s_bad()
+> to avoir several levels of #ifdefs
 
-Still seems to have ordering issues (it moves pieces you actually
-change in the next patches).
-Have you considered which one looks neat this variant or if you move
-it closer to the end of the series?
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  arch/powerpc/mm/fault.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+> index 2efa34d7e644..9ef9ee244f72 100644
+> --- a/arch/powerpc/mm/fault.c
+> +++ b/arch/powerpc/mm/fault.c
+> @@ -363,17 +363,19 @@ static void sanity_check_fault(bool is_write, bool =
+is_user,
+>   */
+>  #if (defined(CONFIG_4xx) || defined(CONFIG_BOOKE))
+>  #define page_fault_is_write(__err)	((__err) & ESR_DST)
+> -#define page_fault_is_bad(__err)	(0)
+>  #else
+>  #define page_fault_is_write(__err)	((__err) & DSISR_ISSTORE)
+> -#if defined(CONFIG_PPC_8xx)
+> +#endif
+> +
+> +#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
+> +#define page_fault_is_bad(__err)	(0)
+> +#elif defined(CONFIG_PPC_8xx)
+>  #define page_fault_is_bad(__err)	((__err) & DSISR_NOEXEC_OR_G)
+>  #elif defined(CONFIG_PPC64)
+>  #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_64S)
+>  #else
+>  #define page_fault_is_bad(__err)	((__err) & DSISR_BAD_FAULT_32S)
+>  #endif
+> -#endif
+> =20
+>  /*
+>   * For 600- and 800-family processors, the error_code parameter is DSISR
+> --=20
+> 2.25.0
+>=20
+>=20
