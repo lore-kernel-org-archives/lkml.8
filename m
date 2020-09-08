@@ -2,114 +2,152 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32BFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DE0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB9720578
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5030C20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:43:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XIEgSW1K"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="o9fodx6a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732239AbgIHTne (ORCPT
+        id S1732393AbgIHTnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730869AbgIHPwh (ORCPT
+        Tue, 8 Sep 2020 15:43:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49038 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730833AbgIHPvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:52:37 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A43C0068C2
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:00:17 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id j185so9170388vsc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tJRPLo+J0AriJzHTz4tB+cqM6v8af2cuqs5qOTFB1iE=;
-        b=XIEgSW1KV88kuUzhoRuadz6lGFrG4VliZ7auCmMMAlPJEGo9Fv+rD3RcpZVWzKa/jC
-         Hc4MsaNyKgjUL9Gn6+/+FjrCQay1ygjM05S2Fmb4xe4LHoXfPt9CFBa2hoBZZIA4/sCO
-         Um5z7+bxy8muKu9ywGVyDQe/KVjKJh+B916q0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tJRPLo+J0AriJzHTz4tB+cqM6v8af2cuqs5qOTFB1iE=;
-        b=q44yuGLyG3ZrlSDxkequCwDxJKNrCSA/yj/DLectMdsumxcP2zjkCwlo1PhcoOItWm
-         F4KVM0yjuh8J/ayW4k6l2k4tSAYmt9kd6siQpYfER9h5U6QL28USxPfHHWL4gI4JcM71
-         8O0b5S0m0W9Zq8BiDYpSwiee0Y+A8tXgSlkAWWpF530QM9tK+yKUG23b/3kZnHO3d8Re
-         G/QOiUF4W8u1gpGI9EyLkUpud2Rggfth6mss8m08ro8eqPHyqu1VcfVsK7tooboCbd14
-         GRaZlCxWpsX4hy2qnzTxgcjrv2UayR0u4OA4XABwzr6RiLPJM5NqUR7ZTNiKT6b5Xijm
-         nMTg==
-X-Gm-Message-State: AOAM5307wjpaM91JjzxWglIjp0U8n8lRwp5sQLivXSZrbfT7VZLoIVBO
-        QppUtZOtIQW09x2XapjH8QkpZC+9GIx4yQ==
-X-Google-Smtp-Source: ABdhPJwvWr0WDk/zj0fcTKzKuPp9Ru9uhS9Evxup349l28qUEnip/DFRvOQNc1Q2E9oU1/nTwY+jEA==
-X-Received: by 2002:a05:6102:40e:: with SMTP id d14mr1107778vsq.30.1599577216241;
-        Tue, 08 Sep 2020 08:00:16 -0700 (PDT)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id f190sm1528698vka.1.2020.09.08.08.00.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 08:00:15 -0700 (PDT)
-Received: by mail-vk1-f179.google.com with SMTP id s127so4144745vkg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:00:15 -0700 (PDT)
-X-Received: by 2002:a1f:e641:: with SMTP id d62mr15027301vkh.30.1599577214628;
- Tue, 08 Sep 2020 08:00:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
-In-Reply-To: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 8 Sep 2020 08:00:02 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WsUopZPHJzHe1+pa=pzKQda0yQKUCtnPrni3Dmx7aV3g@mail.gmail.com>
-Message-ID: <CAD=FV=WsUopZPHJzHe1+pa=pzKQda0yQKUCtnPrni3Dmx7aV3g@mail.gmail.com>
-Subject: Re: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to
- llcc registers
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        Tue, 8 Sep 2020 11:51:50 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088FmxJI086290;
+        Tue, 8 Sep 2020 11:49:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=x24BGm+Fgj3ZmsKuCsewlqbYqVJ7sKXiAIAB+WpCSQQ=;
+ b=o9fodx6aD+G5ovOeGdx+fReCygo8F9juW4hJnKEQD/cPODCcYnB/bESRUSSg0txDwJ3T
+ s3+8p48PIEQWOvgrXNsEgEOlEzy9WhCb+NqT4vAKVPisD+cU5b/bX7skoEK8XLbP+Y2/
+ z4thcEr1pcmoVBsucNvfM7/C+irxyK4o0Mp5+etHK2oTpTvs2PA5zNNYd/qI0Cb/fq4r
+ 9yKNDycsJ40VLR6idpwh8cvjjexSVGQm/V5bFxNG58QYlfmrKN9+JGS+EOXURr3eSM2O
+ 1S2JxrYWDL29kHIrcM4vKfxAe9F4fONUsRq7PHz468Oh8/bKKjjJy4VhxIp+qO9wdxci Nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnp3s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 11:49:09 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088Fn8gU087247;
+        Tue, 8 Sep 2020 11:49:08 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnp29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 11:49:08 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088FlvUq015855;
+        Tue, 8 Sep 2020 15:49:05 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 33dxdr0ryw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 15:49:05 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Fn2TJ55312698
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 15:49:02 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B866C52050;
+        Tue,  8 Sep 2020 15:49:02 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.58.21])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 3B0BF52054;
+        Tue,  8 Sep 2020 15:49:01 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 17:48:59 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC PATCH v2 3/3] mm: make generic pXd_addr_end() macros inline
+ functions
+Message-ID: <20200908154859.GA11583@oc3871087118.ibm.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-4-gerald.schaefer@linux.ibm.com>
+ <4c101685-5b29-dace-9dd2-b6f0ae193a9c@csgroup.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c101685-5b29-dace-9dd2-b6f0ae193a9c@csgroup.eu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_08:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Sep 08, 2020 at 07:19:38AM +0200, Christophe Leroy wrote:
 
-On Mon, Sep 7, 2020 at 10:36 PM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> --- a/include/linux/soc/qcom/llcc-qcom.h
-> +++ b/include/linux/soc/qcom/llcc-qcom.h
-> @@ -73,6 +73,7 @@ struct llcc_edac_reg_data {
->   * @bitmap: Bit map to track the active slice ids
->   * @offsets: Pointer to the bank offsets array
->   * @ecc_irq: interrupt for llcc cache error detection and reporting
-> + * @need_llcc_config: check if llcc configuration is required
->   */
->  struct llcc_drv_data {
->         struct regmap *regmap;
-> @@ -85,6 +86,7 @@ struct llcc_drv_data {
->         unsigned long *bitmap;
->         u32 *offsets;
->         int ecc_irq;
-> +       bool need_llcc_config;
+[...]
 
-Do you really need to add this into "struct llcc_drv_data"?  You use
-it once at probe time and you could just pass it in to
-qcom_llcc_cfg_program(), or just pass the "struct qcom_llcc_config" to
-qcom_llcc_cfg_program()?  It's not a huge deal, but it would make your
-patch simpler and keep an extra element out of the include file.
+> >diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> >index 67ebc22cf83d..d9e7d16c2263 100644
+> >--- a/include/linux/pgtable.h
+> >+++ b/include/linux/pgtable.h
+> >@@ -656,31 +656,35 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+> >   */
+> >  #ifndef pgd_addr_end
+> >-#define pgd_addr_end(pgd, addr, end)					\
+> >-({	unsigned long __boundary = ((addr) + PGDIR_SIZE) & PGDIR_MASK;	\
+> >-	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+> >-})
+> >+#define pgd_addr_end pgd_addr_end
+> 
+> I think that #define is pointless, usually there is no such #define
+> for the default case.
 
-In any case:
+Default pgd_addr_end() gets overriden on s390 (arch/s390/include/asm/pgtable.h):
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+#define pgd_addr_end pgd_addr_end
+static inline unsigned long pgd_addr_end(pgd_t pgd, unsigned long addr, unsigned long end)
+{
+	return rste_addr_end_folded(pgd_val(pgd), addr, end);
+}
+
+> >+static inline unsigned long pgd_addr_end(pgd_t pgd, unsigned long addr, unsigned long end)
+> >+{	unsigned long __boundary = (addr + PGDIR_SIZE) & PGDIR_MASK;
+> >+	return (__boundary - 1 < end - 1) ? __boundary : end;
+> >+}
