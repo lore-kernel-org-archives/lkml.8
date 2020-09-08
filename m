@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E55EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85DF62087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4452087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592379;
-	bh=iPx38k3mMcCJ+riztXVJPgkP4xb3An7I8mthAfHsqDs=;
+	s=default; t=1599592397;
+	bh=FylbTEiD/DWhvOUoe0WCFuShSIlax8Y8+fievbYrx4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YqGF7++FPDssAtb1GNYsLi6wcAPNRs49u1vknNDPYp+/cg0NL31dQwt2c3hkaKC9e
-	 B88KaxIdyEhWELhT8UfQBHAYAQzSMPE5TXwFGXI+/5vw3iLa9M4kU3IE/1a1ma115o
-	 2gmcKXicjylKScINNZVKBWiy3YIQznnTjRMtxCpQ=
+	b=aKtbCQckhISocRSETezPwyP1YMiy22TVaVtUUYOdEM31GUdtlrUATh732COhpiQkZ
+	 +cDk8vZFfw2gf69hdCvx+67jOPG3YJFBEYi5vpRoEfCpCVfnp1En5RNoHVhuRoD42z
+	 oai2VlGhryEcUQbohEBFVKnbGXfDDrW7AilY1X14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbgIHTLz (ORCPT
+        id S1731543AbgIHTNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731223AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731216AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:05:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F046722583;
-        Tue,  8 Sep 2020 15:45:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783ED223FB;
+        Tue,  8 Sep 2020 15:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579959;
-        bh=iPx38k3mMcCJ+riztXVJPgkP4xb3An7I8mthAfHsqDs=;
+        s=default; t=1599579952;
+        bh=FylbTEiD/DWhvOUoe0WCFuShSIlax8Y8+fievbYrx4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlbG6LtmsmMQ+fBxhQ0XNZ5OXK2/lbT5BDJ72HpdyUz2TYkGPELoNB2mFRk3Ev6Ka
-         DcqiUCFKjv+E2v9U3WhklD8UR5SM3mKByN688TQT1Mhf/uIEG1MQkxWCyVLMyICgnW
-         Ij8zZafaUg+vn4JmQbH1e8YPKkSYY/AaK1vpxkyY=
+        b=sY4H5PXP63ku9hSmDKToYKpgEDyVn1zby9PuV67dxmMniat1Aqb1BQ+ykYs5s06tF
+         UGtxVVhCrbV3zzaPQ37B98T4f4OMKzdhBB8XRcPGnmMoxnRNIO2qh+R1Qn9xuD2+Ys
+         jY3BuDKAkQhJ7X3NMKVGM30vR89MO+GJog3rKAwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 102/129] mmc: cqhci: Add cqhci_deactivate()
-Date:   Tue,  8 Sep 2020 17:25:43 +0200
-Message-Id: <20200908152234.933730101@linuxfoundation.org>
+Subject: [PATCH 5.4 099/129] arm64: dts: mt7622: add reset node for mmc device
+Date:   Tue,  8 Sep 2020 17:25:40 +0200
+Message-Id: <20200908152234.752514916@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,61 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Wenbin Mei <wenbin.mei@mediatek.com>
 
-commit 0ffa6cfbd94982e6c028a8924b06a96c1b91bed8 upstream.
+commit d6f6cbeee4e5ee6976792851e0461c19f1ede864 upstream.
 
-Host controllers can reset CQHCI either directly or as a consequence of
-host controller reset. Add cqhci_deactivate() which puts the CQHCI
-driver into a state that is consistent with that.
+This commit adds reset node for mmc device.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Link: https://lore.kernel.org/r/1583503724-13943-2-git-send-email-vbadigan@codeaurora.org
+Cc: <stable@vger.kernel.org> # v5.4+
+Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
+Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+Link: https://lore.kernel.org/r/20200814014346.6496-3-wenbin.mei@mediatek.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/cqhci.c |    6 +++---
- drivers/mmc/host/cqhci.h |    6 +++++-
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/mmc/host/cqhci.c
-+++ b/drivers/mmc/host/cqhci.c
-@@ -299,16 +299,16 @@ static void __cqhci_disable(struct cqhci
- 	cq_host->activated = false;
- }
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -686,6 +686,8 @@
+ 		clocks = <&pericfg CLK_PERI_MSDC30_0_PD>,
+ 			 <&topckgen CLK_TOP_MSDC50_0_SEL>;
+ 		clock-names = "source", "hclk";
++		resets = <&pericfg MT7622_PERI_MSDC0_SW_RST>;
++		reset-names = "hrst";
+ 		status = "disabled";
+ 	};
  
--int cqhci_suspend(struct mmc_host *mmc)
-+int cqhci_deactivate(struct mmc_host *mmc)
- {
- 	struct cqhci_host *cq_host = mmc->cqe_private;
- 
--	if (cq_host->enabled)
-+	if (cq_host->enabled && cq_host->activated)
- 		__cqhci_disable(cq_host);
- 
- 	return 0;
- }
--EXPORT_SYMBOL(cqhci_suspend);
-+EXPORT_SYMBOL(cqhci_deactivate);
- 
- int cqhci_resume(struct mmc_host *mmc)
- {
---- a/drivers/mmc/host/cqhci.h
-+++ b/drivers/mmc/host/cqhci.h
-@@ -230,7 +230,11 @@ irqreturn_t cqhci_irq(struct mmc_host *m
- 		      int data_error);
- int cqhci_init(struct cqhci_host *cq_host, struct mmc_host *mmc, bool dma64);
- struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev);
--int cqhci_suspend(struct mmc_host *mmc);
-+int cqhci_deactivate(struct mmc_host *mmc);
-+static inline int cqhci_suspend(struct mmc_host *mmc)
-+{
-+	return cqhci_deactivate(mmc);
-+}
- int cqhci_resume(struct mmc_host *mmc);
- 
- #endif
 
 
