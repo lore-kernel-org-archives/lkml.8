@@ -2,122 +2,122 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3140EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED147C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC42521532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DFA21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="diLF5Vbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgIHEnL (ORCPT
+        id S1728676AbgIHEoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:43:11 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:64482 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbgIHEnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:43:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Blsw04dynz9v07M;
-        Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1zRgiYU2XgXP; Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Blsw02Lphz9v07L;
-        Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0E1EE8B775;
-        Tue,  8 Sep 2020 06:42:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id IWq5rXD7F6WV; Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D80618B768;
-        Tue,  8 Sep 2020 06:42:54 +0200 (CEST)
-Subject: Re: [RFC PATCH v2 0/3] mm/gup: fix gup_fast with dynamic page table
- folding
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <9f9acde7-c400-53b0-38ec-ad3e48de5371@csgroup.eu>
-Date:   Tue, 8 Sep 2020 06:42:50 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 8 Sep 2020 00:44:44 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44740 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgIHEom (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 00:44:42 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 76A902074C73;
+        Mon,  7 Sep 2020 21:44:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76A902074C73
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1599540281;
+        bh=TEOOR8j/hWPxlCxwN4TevnXBuQUcVlAC+4yB4apsr3s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=diLF5VbkJv/7uC5w7isWgG+P1DKYZZIUXljR0d6IQedJ+8aqBnqdVKSrfQoPEmchd
+         urkdbKP642eoCaULdCP0ynG4xZ4G4r8GPSSH6FZgd8jbyYAa5ivVvIdkbeT35Tx8eN
+         6SuswUvYGNutjw+txEQJtUvqlco0NWd6L0vsAw1M=
+Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200907213855.3572-1-nramas@linux.microsoft.com>
+ <CAEjxPJ5C64AmmVKuuPmtbfnY06w49ziryRAnARurWxpQumzfow@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <7c4e2e9f-54e1-1dee-c33c-64dac0fe9678@linux.microsoft.com>
+Date:   Mon, 7 Sep 2020 21:44:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+In-Reply-To: <CAEjxPJ5C64AmmVKuuPmtbfnY06w49ziryRAnARurWxpQumzfow@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/7/20 3:32 PM, Stephen Smalley wrote:
+
+>> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+>> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'vfree'
+>> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declaration of function 'crypto_alloc_shash'
+>> Reported-by: kernel test robot <lkp@intel.com> # sparse: symbol 'security_read_selinux_policy' was not declared. Should it be static?
+> 
+> Not sure these Reported-by lines are useful since they were just on
+> submitted versions of the patch not on an actual merged commit.
+
+I'll remove them when I update the patch.
+
+> 
+>> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
+>> new file mode 100644
+>> index 000000000000..caf9107937d9
+>> --- /dev/null
+>> +++ b/security/selinux/measure.c
+> <snip>
+>> +void selinux_measure_state(struct selinux_state *state, bool policy_mutex_held)
+>> +{
+> <snip>
+>> +
+>> +       if (!policy_mutex_held)
+>> +               mutex_lock(&state->policy_mutex);
+>> +
+>> +       rc = security_read_policy_kernel(state, &policy, &policy_len);
+>> +
+>> +       if (!policy_mutex_held)
+>> +               mutex_unlock(&state->policy_mutex);
+> 
+> This kind of conditional taking of a mutex is generally frowned upon
+> in my experience.
+> You should likely just always take the mutex in the callers of
+> selinux_measure_state() instead.
+> In some cases, it may be the caller of the caller.  Arguably selinuxfs
+> could be taking it around all state modifying operations (e.g.
+> enforce, checkreqprot) not just policy modifying ones although it
+> isn't strictly for that purpose.
+
+Since currently policy_mutex is not used to synchronize access to state 
+variables (enforce, checkreqprot, etc.) I am wondering if 
+selinux_measure_state() should measure only state if policy_mutex is not 
+held by the caller - similar to how we skip measuring policy if 
+initialization is not yet completed.
+
+	/*
+	 * Measure SELinux policy only after initialization is
+          * completed.
+	 */
+	if (!initialized)
+		goto out;
+
+  -lakshmi
 
 
-Le 07/09/2020 à 20:00, Gerald Schaefer a écrit :
-> This is v2 of an RFC previously discussed here:
-> https://lore.kernel.org/lkml/20200828140314.8556-1-gerald.schaefer@linux.ibm.com/
-> 
-> Patch 1 is a fix for a regression in gup_fast on s390, after our conversion
-> to common gup_fast code. It will introduce special helper functions
-> pXd_addr_end_folded(), which have to be used in places where pagetable walk
-> is done w/o lock and with READ_ONCE, so currently only in gup_fast.
-> 
-> Patch 2 is an attempt to make that more generic, i.e. change pXd_addr_end()
-> themselves by adding an extra pXd value parameter. That was suggested by
-> Jason during v1 discussion, because he is already thinking of some other
-> places where he might want to switch to the READ_ONCE logic for pagetable
-> walks. In general, that would be the cleanest / safest solution, but there
-> is some impact on other architectures and common code, hence the new and
-> greatly enlarged recipient list.
-> 
-> Patch 3 is a "nice to have" add-on, which makes pXd_addr_end() inline
-> functions instead of #defines, so that we get some type checking for the
-> new pXd value parameter.
-> 
-> Not sure about Fixes/stable tags for the generic solution. Only patch 1
-> fixes a real bug on s390, and has Fixes/stable tags. Patches 2 + 3 might
-> still be nice to have in stable, to ease future backports, but I guess
-> "nice to have" does not really qualify for stable backports.
-
-If one day you have to backport a fix that requires patch 2 and/or 3, 
-just mark it "depends-on:" and the patches will go in stable at the 
-relevant time.
-
-Christophe
