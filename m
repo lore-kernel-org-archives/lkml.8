@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12438C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0B3A21D1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2757C218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgIHHcg (ORCPT
+        id S1729397AbgIHHce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:32:36 -0400
-Received: from mail-io1-f80.google.com ([209.85.166.80]:46679 "EHLO
-        mail-io1-f80.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbgIHHcY (ORCPT
+        Tue, 8 Sep 2020 03:32:34 -0400
+Received: from mail-io1-f79.google.com ([209.85.166.79]:47558 "EHLO
+        mail-io1-f79.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729346AbgIHHcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:32:24 -0400
-Received: by mail-io1-f80.google.com with SMTP id c22so2330607iom.13
+        Tue, 8 Sep 2020 03:32:23 -0400
+Received: by mail-io1-f79.google.com with SMTP id a15so9179334ioc.14
         for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:32:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=lOlyfhahYs6/L5AwmyUXKM8XGv3jZMcGEniCSrR6SP4=;
-        b=t2ohb3aZExS6VDD3sLDRrZ8cMetMms0oT1tC1AtQTRJgbAk0M2F/MoiwWudAs73sEt
-         OCNSg1HStGM3sL9kweLohxp8hY4RGVg7ee5d5ET9wCbCtA6aRDj8q/XmEWWaK9JRPC0B
-         msnfZQdVJV1/QDu0J3B/1Gmrw8/G35N1+hk5W8lDRyFcKAHrUGp3Ncu98+X4ZVnFhhXn
-         BsZcAsCUh3+BaFqNln5OfjEv3NbhdnhFnL0o3/jQSFC5IG6dSFxKu7VDhi5OIPR3T/k7
-         5CTSpPcSUbvsgWyTeEgt/mFpnFByps2HhJMgcYHCXzD4CK2ZC0mXgUnqYyDJj0kngc2n
-         OWVg==
-X-Gm-Message-State: AOAM532d2Y4P1bvGU9XC8S+gbw7w3t3sCMGx48bK5fM8VYuNg26Y9yhz
-        xLqKqONtBBzdRfkVoNKEHT7lRdMEFsBqAXNA7QyP1yf+eb86
-X-Google-Smtp-Source: ABdhPJyZYiNu6GwZpuOrRS1rAR/sZ9tIPJUCZuurIg9PNiGfqGcVTVcL64VyimeR6S1zJyehjbQx4l0sAKZ8TvL3twhsrHl52NIJ
+        bh=Is3sKluxmo/Sgyis/64QgcAteh9E7NYmVlcCgIbI76A=;
+        b=Wsh+bQXXq/te4vRBdd5Q+hoxxb5TzskmBOyBTuDPSxL1Ql534XgzDUrD+xA1HlfZS9
+         36F+yXQSU838UTKPtRUMf9QE23RkOVi1bfbzhfhkXxE221V3KYUABSM97mmReFPkpeKM
+         Ci5GTi+g9/m3yWuvoA7Zmg8fLVodi9dCIWNhUVG5Z5nvN1AKYjAxymyGAnF9CR9PZEcv
+         U6J+4j021y+AgLVjr785/L2p7RWZ0CQC6bmFVmNfXzwZwaSuugx54DDQXdbI9zbonyR1
+         ZreLL9aTX6sa8vHZgI4YRQC6O1sSMq97Y8ifdFL8iB4r4LjRzDJE56jQGuVhnfbZuDct
+         FgQg==
+X-Gm-Message-State: AOAM5333te1SEdBCsXVvNAL0SAC6s+Mx0vNAVh1M0zC0u69Lfqp75lxU
+        sSCoPQc1J2mLPx0rH71/GQJrrfXwpWPEy1Oy3T1Dn83+BYy5
+X-Google-Smtp-Source: ABdhPJwehF8qBd34Td1pqDCsc9b55sQOW2TUpmPUth121FvqphHKiBAoTrQl0J/HGbqivvEOqFQc6l4jL26O/Bt7mnUPTA1rr8m+
 MIME-Version: 1.0
-X-Received: by 2002:a92:d48e:: with SMTP id p14mr23282855ilg.259.1599550343103;
- Tue, 08 Sep 2020 00:32:23 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 00:32:23 -0700
+X-Received: by 2002:a92:1fd6:: with SMTP id f83mr22289717ilf.261.1599550342667;
+ Tue, 08 Sep 2020 00:32:22 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 00:32:22 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000049a305aec856c6@google.com>
-Subject: general protection fault in page_mkclean_one
-From:   syzbot <syzbot+4d44c88e23baffecc385@syzkaller.appspotmail.com>
+Message-ID: <000000000000f9a36005aec8556d@google.com>
+Subject: WARNING: locking bug in unmap_page_range
+From:   syzbot <syzbot+a3ab428a038913cb91a7@syzkaller.appspotmail.com>
 To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
@@ -57,76 +57,80 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    e28f0104 Merge tag 'fixes-2020-09-03' of git://git.kernel...
+HEAD commit:    b765a32a Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1702c9e1900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=147272c9900000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d44c88e23baffecc385
+dashboard link: https://syzkaller.appspot.com/bug?extid=a3ab428a038913cb91a7
 compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 Unfortunately, I don't have any reproducer for this issue yet.
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4d44c88e23baffecc385@syzkaller.appspotmail.com
+Reported-by: syzbot+a3ab428a038913cb91a7@syzkaller.appspotmail.com
 
-general protection fault, probably for non-canonical address 0xdffffc000a02191d: 0000 [#1] PREEMPT SMP KASAN
-KASAN: probably user-memory-access in range [0x000000005010c8e8-0x000000005010c8ef]
-CPU: 1 PID: 8540 Comm: kworker/u4:0 Not tainted 5.9.0-rc3-syzkaller #0
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 0 PID: 12877 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:183 [inline]
+WARNING: CPU: 0 PID: 12877 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:172 [inline]
+WARNING: CPU: 0 PID: 12877 at kernel/locking/lockdep.c:183 check_wait_context kernel/locking/lockdep.c:4100 [inline]
+WARNING: CPU: 0 PID: 12877 at kernel/locking/lockdep.c:183 __lock_acquire+0x155f/0x5570 kernel/locking/lockdep.c:4376
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12877 Comm: syz-executor.5 Not tainted 5.9.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-RIP: 0010:mm_has_notifiers include/linux/mmu_notifier.h:277 [inline]
-RIP: 0010:mmu_notifier_invalidate_range_start include/linux/mmu_notifier.h:451 [inline]
-RIP: 0010:page_mkclean_one+0x271/0x6c0 mm/rmap.c:916
-Code: 89 41 b8 01 00 00 00 e8 fd b9 b1 ff 48 8b 5c 24 68 58 48 b8 00 00 00 00 00 fc ff df 48 8d bb a8 05 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 f9 03 00 00 48 83 bb a8 05 00 00 00 0f 85 37 03
-RSP: 0018:ffffc9001875ee60 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 000000005010c340 RCX: ffffffff815a184b
-RDX: 000000000a02191d RSI: 0000000000000001 RDI: 000000005010c8e8
-RBP: ffffea00017a7740 R08: 0000000000000000 R09: ffffffff8c5f49ff
-R10: fffffbfff18be93f R11: 000000000000016e R12: 0000001b30823000
-R13: 0000000000001000 R14: ffff88800017c420 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000746918 CR3: 00000002026b8000 CR4: 00000000001526e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- rmap_walk_file+0x562/0xbf0 mm/rmap.c:1928
- rmap_walk+0x105/0x190 mm/rmap.c:1946
- page_mkclean+0x21c/0x2b0 mm/rmap.c:998
- clear_page_dirty_for_io+0x31f/0x920 mm/page-writeback.c:2698
- mpage_submit_page+0x80/0x2c0 fs/ext4/inode.c:2061
- mpage_process_page_bufs+0x656/0x780 fs/ext4/inode.c:2195
- mpage_prepare_extent_to_map+0x8fa/0xde0 fs/ext4/inode.c:2607
- ext4_writepages+0x90f/0x3960 fs/ext4/inode.c:2735
- do_writepages+0xec/0x290 mm/page-writeback.c:2352
- __writeback_single_inode+0x125/0x1400 fs/fs-writeback.c:1461
- writeback_sb_inodes+0x53d/0xf40 fs/fs-writeback.c:1721
- __writeback_inodes_wb+0xc6/0x280 fs/fs-writeback.c:1790
- wb_writeback+0x8bb/0xd40 fs/fs-writeback.c:1896
- wb_check_old_data_flush fs/fs-writeback.c:1998 [inline]
- wb_do_writeback fs/fs-writeback.c:2051 [inline]
- wb_workfn+0x8f5/0x13e0 fs/fs-writeback.c:2080
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
----[ end trace aa72a7d82af80156 ]---
-RIP: 0010:mm_has_notifiers include/linux/mmu_notifier.h:277 [inline]
-RIP: 0010:mmu_notifier_invalidate_range_start include/linux/mmu_notifier.h:451 [inline]
-RIP: 0010:page_mkclean_one+0x271/0x6c0 mm/rmap.c:916
-Code: 89 41 b8 01 00 00 00 e8 fd b9 b1 ff 48 8b 5c 24 68 58 48 b8 00 00 00 00 00 fc ff df 48 8d bb a8 05 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 f9 03 00 00 48 83 bb a8 05 00 00 00 0f 85 37 03
-RSP: 0018:ffffc9001875ee60 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 000000005010c340 RCX: ffffffff815a184b
-RDX: 000000000a02191d RSI: 0000000000000001 RDI: 000000005010c8e8
-RBP: ffffea00017a7740 R08: 0000000000000000 R09: ffffffff8c5f49ff
-R10: fffffbfff18be93f R11: 000000000000016e R12: 0000001b30823000
-R13: 0000000000001000 R14: ffff88800017c420 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fbc5e0b6d70 CR3: 00000000a3ffa000 CR4: 00000000001526e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x198/0x1fd lib/dump_stack.c:118
+ panic+0x347/0x7c0 kernel/panic.c:231
+ __warn.cold+0x20/0x46 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:hlock_class kernel/locking/lockdep.c:183 [inline]
+RIP: 0010:hlock_class kernel/locking/lockdep.c:172 [inline]
+RIP: 0010:check_wait_context kernel/locking/lockdep.c:4100 [inline]
+RIP: 0010:__lock_acquire+0x155f/0x5570 kernel/locking/lockdep.c:4376
+Code: d2 0f 85 62 2f 00 00 44 8b 15 85 52 58 09 45 85 d2 0f 85 da fa ff ff 48 c7 c6 60 ad 4b 88 48 c7 c7 20 a8 4b 88 e8 f3 36 eb ff <0f> 0b e9 c0 fa ff ff e8 25 a4 99 06 85 c0 0f 84 fd fa ff ff 48 c7
+RSP: 0018:ffffc90009b3f538 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000000000
+RDX: ffff888028c78200 RSI: ffffffff815db9a7 RDI: fffff52001367e99
+RBP: ffff888028c78ae8 R08: 0000000000000000 R09: ffffffff89bcb4a3
+R10: 00000000000021c7 R11: 0000000000000001 R12: 0000000000000000
+R13: 00000000000017c0 R14: ffff888028c78200 R15: 0000000000040000
+ lock_acquire+0x1f3/0xae0 kernel/locking/lockdep.c:5006
+ __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+ _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+ spin_lock include/linux/spinlock.h:354 [inline]
+ zap_pte_range mm/memory.c:1049 [inline]
+ zap_pmd_range mm/memory.c:1195 [inline]
+ zap_pud_range mm/memory.c:1224 [inline]
+ zap_p4d_range mm/memory.c:1245 [inline]
+ unmap_page_range+0xa74/0x2b20 mm/memory.c:1266
+ unmap_single_vma+0x198/0x300 mm/memory.c:1311
+ unmap_vmas+0x168/0x2e0 mm/memory.c:1343
+ exit_mmap+0x2b1/0x530 mm/mmap.c:3183
+ __mmput+0x122/0x470 kernel/fork.c:1076
+ mmput+0x53/0x60 kernel/fork.c:1097
+ exit_mm kernel/exit.c:483 [inline]
+ do_exit+0xa8b/0x29f0 kernel/exit.c:793
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x428/0x1f00 kernel/signal.c:2757
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:136 [inline]
+ exit_to_user_mode_prepare+0x1ae/0x200 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: Bad RIP value.
+RSP: 002b:00007fdc658b0c78 EFLAGS: 00000246 ORIG_RAX: 000000000000013d
+RAX: 0000000000000000 RBX: 0000000000027440 RCX: 000000000045d5b9
+RDX: 0000000020000080 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 000000000118d020 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cfec
+R13: 000000000169fb6f R14: 00007fdc658b19c0 R15: 000000000118cfec
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
