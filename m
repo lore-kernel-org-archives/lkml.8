@@ -2,95 +2,56 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79829C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FC0C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4023E20759
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF246206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:49:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CXPtfQKn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PdVMXl2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgIHKrA (ORCPT
+        id S1729316AbgIHKtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:47:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46039 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729650AbgIHKqo (ORCPT
+        Tue, 8 Sep 2020 06:49:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20099 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729189AbgIHKs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:46:44 -0400
+        Tue, 8 Sep 2020 06:48:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599561986;
+        s=mimecast20190719; t=1599562133;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=+6Gv2kEINyzTI8X0o0qvP4LBrcsHQuR8t59d0gVrO7Y=;
-        b=CXPtfQKnvEUx+tstcnIS+DQkMVAk6zA345jZKmd9YKuDk/j0pWcHYNey35rE/dhUZiL1J2
-        83U+adOXSh/2ItGiGHJ827bZqc5DhPRcvCc5b0i4m0O/Qgoz+00rx7DrL/kGxDVh1n9Yjr
-        mACA8235v2iXvZwZTFwfci4MGFomnU4=
+        bh=ybSOEqAGunx5x8hnbfmKb5dvLAh/55pJvdpB5yxrLkE=;
+        b=PdVMXl2ZFuA/i/viOe2AqcyXqCw8RO3yTmPcdT487axsM41DL9rCb6dCf+cmR+WTm3t9bv
+        MglGk+sJRDsLYc7O2b561+MdQviQJdiPYKRVoDwZLO6dJWyqD1uADeKzydB2rWGkUNPYiN
+        ScoITYLxDuYT9mJ+oB8c2GaVFBzg2sQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-372-EfoSdPOaNNSmGkQtAIc0gA-1; Tue, 08 Sep 2020 06:46:22 -0400
-X-MC-Unique: EfoSdPOaNNSmGkQtAIc0gA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-58-eIH3M3hLPX6hOWuEtuZKfw-1; Tue, 08 Sep 2020 06:48:51 -0400
+X-MC-Unique: eIH3M3hLPX6hOWuEtuZKfw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0969F64091;
-        Tue,  8 Sep 2020 10:46:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 739E38018AB;
+        Tue,  8 Sep 2020 10:48:50 +0000 (UTC)
 Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39C9A5C26C;
-        Tue,  8 Sep 2020 10:46:03 +0000 (UTC)
-Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved
- ranges
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>
-References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
- <c59111f9-7c94-8b9e-2b8c-4cb96b9aa848@redhat.com>
- <CAPcyv4j8-5nWU5GPDBoFicwR84qM=hWRtd78DkcCg4PW-8i6Vg@mail.gmail.com>
- <20200821162134.97d551c6fe45b489992841a8@linux-foundation.org>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B0F710013C4;
+        Tue,  8 Sep 2020 10:48:48 +0000 (UTC)
+Subject: Re: [PATCH] mm: madvise: fix vma user-after-free
+To:     Yang Shi <shy828301@gmail.com>, jack@suse.cz,
+        akpm@linux-foundation.org
+Cc:     stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200816141204.162624-1-shy828301@gmail.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -137,41 +98,122 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <7d51834a-9544-b2e8-bfba-1c3e2da0e470@redhat.com>
-Date:   Tue, 8 Sep 2020 12:45:58 +0200
+Message-ID: <90653e03-1a7c-01b4-546d-d725475e65e1@redhat.com>
+Date:   Tue, 8 Sep 2020 12:48:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200821162134.97d551c6fe45b489992841a8@linux-foundation.org>
+In-Reply-To: <20200816141204.162624-1-shy828301@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.20 01:21, Andrew Morton wrote:
-> On Wed, 19 Aug 2020 18:53:57 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
+On 16.08.20 16:12, Yang Shi wrote:
+> The syzbot reported the below use-after-free:
 > 
->>> I think I am missing some important pieces. Bear with me.
->>
->> No worries, also bear with me, I'm going to be offline intermittently
->> until at least mid-September. Hopefully Joao and/or Vishal can jump in
->> on this discussion.
+> BUG: KASAN: use-after-free in madvise_willneed mm/madvise.c:293 [inline]
+> BUG: KASAN: use-after-free in madvise_vma mm/madvise.c:942 [inline]
+> BUG: KASAN: use-after-free in do_madvise.part.0+0x1c8b/0x1cf0 mm/madvise.c:1145
+> Read of size 8 at addr ffff8880a6163eb0 by task syz-executor.0/9996
 > 
-> Ordinarily I'd prefer a refresh&resend for 2+ week-old series such as
-> this.
+> CPU: 0 PID: 9996 Comm: syz-executor.0 Not tainted 5.9.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+>  __kasan_report mm/kasan/report.c:513 [inline]
+>  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+>  madvise_willneed mm/madvise.c:293 [inline]
+>  madvise_vma mm/madvise.c:942 [inline]
+>  do_madvise.part.0+0x1c8b/0x1cf0 mm/madvise.c:1145
+>  do_madvise mm/madvise.c:1169 [inline]
+>  __do_sys_madvise mm/madvise.c:1171 [inline]
+>  __se_sys_madvise mm/madvise.c:1169 [inline]
+>  __x64_sys_madvise+0xd9/0x110 mm/madvise.c:1169
+>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x45d4d9
+> Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f04f7464c78 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
+> RAX: ffffffffffffffda RBX: 0000000000020800 RCX: 000000000045d4d9
+> RDX: 0000000000000003 RSI: 0000000000600003 RDI: 0000000020000000
+> RBP: 000000000118d020 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cfec
+> R13: 00007ffc579cce7f R14: 00007f04f74659c0 R15: 000000000118cfec
 > 
-> But given that v4 all applies OK and that Dan has pending outages, I'll
-> scoop up this version, even though at least one change has been suggested.
+> Allocated by task 9992:
+>  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  kasan_set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+>  slab_post_alloc_hook mm/slab.h:518 [inline]
+>  slab_alloc mm/slab.c:3312 [inline]
+>  kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
+>  vm_area_alloc+0x1c/0x110 kernel/fork.c:347
+>  mmap_region+0x8e5/0x1780 mm/mmap.c:1743
+>  do_mmap+0xcf9/0x11d0 mm/mmap.c:1545
+>  vm_mmap_pgoff+0x195/0x200 mm/util.c:506
+>  ksys_mmap_pgoff+0x43a/0x560 mm/mmap.c:1596
+>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Freed by task 9992:
+>  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+>  kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+>  __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+>  __cache_free mm/slab.c:3418 [inline]
+>  kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
+>  remove_vma+0x132/0x170 mm/mmap.c:184
+>  remove_vma_list mm/mmap.c:2613 [inline]
+>  __do_munmap+0x743/0x1170 mm/mmap.c:2869
+>  do_munmap mm/mmap.c:2877 [inline]
+>  mmap_region+0x257/0x1780 mm/mmap.c:1716
+>  do_mmap+0xcf9/0x11d0 mm/mmap.c:1545
+>  vm_mmap_pgoff+0x195/0x200 mm/util.c:506
+>  ksys_mmap_pgoff+0x43a/0x560 mm/mmap.c:1596
+>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> It is because vma is accessed after releasing mmap_sem, but someone else
+> acquired the mmap_sem and the vma is gone.
+> 
+> Releasing mmap_sem after accessing vma should fix the problem.
+> 
+> Fixes: 692fe62433d4c ("mm: Handle MADV_WILLNEED through vfs_fadvise()")
+> Reported-by: syzbot+b90df26038d1d5d85c97@syzkaller.appspotmail.com
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: <stable@vger.kernel.org> v5.4+
+> Signed-off-by: Yang Shi <shy828301@gmail.com>
+> ---
+>  mm/madvise.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index dd1d43cf026d..d4aa5f776543 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -289,9 +289,9 @@ static long madvise_willneed(struct vm_area_struct *vma,
+>  	 */
+>  	*prev = NULL;	/* tell sys_madvise we drop mmap_lock */
+>  	get_file(file);
+> -	mmap_read_unlock(current->mm);
+>  	offset = (loff_t)(start - vma->vm_start)
+>  			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
+> +	mmap_read_unlock(current->mm);
+>  	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
+>  	fput(file);
+>  	mmap_read_lock(current->mm);
 > 
 
-Should I try to fix patch #11 while Dan is away? Because I think at
-least two things in there are wrong (and it would have been better to
-split that patch into reviewable pieces).
+Late to the party, nice finding and fix
 
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
