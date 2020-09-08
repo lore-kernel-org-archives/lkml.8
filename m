@@ -2,144 +2,124 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87110C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BFC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5AC21532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDC121532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="E69661ws"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cRYjRdKK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgIHGlw (ORCPT
+        id S1729017AbgIHGl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:41:52 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:46882 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728759AbgIHGlu (ORCPT
+        Tue, 8 Sep 2020 02:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbgIHGl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:41:50 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886f5Rn009656;
-        Mon, 7 Sep 2020 23:41:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=pfpt0220; bh=3P+b5DAtUyAJOjDDAer4aU9l5JZPTV5HDqbmbz05Tz0=;
- b=E69661wsx+IXZSrIfdQnqtjxkdrqttjj7ZBhj53381LyeW3PTm93uoygxiK3qJBXXz7O
- ocnstlUmsnPGxu2bX09YfqGDgChieXPVDCR453Pw1AEehjl+T+GMnBzMpwiGfwL1X2dN
- l2bNrFr7AB9IyLElSbVSutZ0s3e140wRydiGJq5KSCAddHGTBOYiF4m0hh+XpjqAaX2H
- 4lInd79fD/cEjlA+clOV0zGYfGl0FHoJL955WFb9zuRdBt/g4BFm56nE/zRKuwWpqsvg
- INN5CvLPEaNGFZZr5btp/nCPJvkQ7OSnB1eNEZJ59kh+5PWNHvjqfaAwZdf7w5Obltpt Dg== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 33c81ptfv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 23:41:44 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
- 2020 23:41:43 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
- 2020 23:41:43 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 7 Sep 2020 23:41:43 -0700
-Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
-        by maili.marvell.com (Postfix) with ESMTP id E24D33F703F;
-        Mon,  7 Sep 2020 23:41:42 -0700 (PDT)
-Received: from localhost (aeasi@localhost)
-        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0886fgu2019828;
-        Mon, 7 Sep 2020 23:41:42 -0700
-X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
-Date:   Mon, 7 Sep 2020 23:41:42 -0700
-From:   Arun Easi <aeasi@marvell.com>
-X-X-Sender: aeasi@irv1user01.caveonetworks.com
-To:     Daniel Wagner <dwagner@suse.de>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Nilesh Javali" <njavali@marvell.com>,
-        Martin Wilck <mwilck@suse.com>
-Subject: Re: [PATCH v2 0/4] qla2xxx: A couple crash fixes
-In-Reply-To: <20200831161854.70879-1-dwagner@suse.de>
-Message-ID: <alpine.LRH.2.21.9999.2009072340490.28578@irv1user01.caveonetworks.com>
-References: <20200831161854.70879-1-dwagner@suse.de>
-User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
+        Tue, 8 Sep 2020 02:41:58 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF7FC061573;
+        Mon,  7 Sep 2020 23:41:57 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id u28so3700974ooe.12;
+        Mon, 07 Sep 2020 23:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Z4woB6C8Tv6F/Z/MvCwCzucOF/m1MsrTyEtPgxnRS4k=;
+        b=cRYjRdKKvdQhonEZL4Ha0EgTiq1jGo8Cay+/b9o00euZBc0KmnBhPvP33oO8kItJlD
+         m5gkUUTVppXImLuasS0nE4b5VV4ex5lw9AdJsaPpA9BVktnuQGpJQ4TwVlDeAKPGw9e0
+         h5a4CkJwojSGPPMu58xK4iR2xBq6+DU/0y5bZBq/M7X7aJFh79NqhMLU8mMjHgZpRQZL
+         lxjVXzXmr0WYmFgm3PR9O0t+6tMSl57zKL7knMAocj9M7d7YKj7IsvBawu9FZZ2y62+V
+         urqaFZyRQpeHwecLFznjYyvLfrTTv6Ql0q7lgrvga5wjsZ7aPqpWdMQLKMvZ+HIaNU08
+         vdzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Z4woB6C8Tv6F/Z/MvCwCzucOF/m1MsrTyEtPgxnRS4k=;
+        b=gEsVd2W7ZfCnbW+dpkeRVdBcKFCliefoIiYaX4+yYH2DbrpqHRc6pOl8Sox3//APZc
+         Q/2u1J8kG1jAQ9Cic3rU4OidX9goRyH6+nV6wchyVPMh+fm+HO9z17fp6rLvwcSGP39d
+         l9Q6+QI/I8StvP8Fq7sinhV9YtBW3Tz6RVnXykvq/Ef4InGS7J5aOioBtJwpWc1SJdFC
+         a+XXqMB+OdOfPobgsoQps0/lsxINJlKBjReyOyENoubniiCbW7FLYP6iqXX3ypFdgvF4
+         8lZ5FOVTRcSM8esexw/loERq+NRRq1fjWzaJFeAJ8VznEq4m5bc+UO0LotNLgtQvbo+G
+         3Pgw==
+X-Gm-Message-State: AOAM530v0doe/ghJqKCP4WnuM8Clw0vQtiM5SVpqKUYv5E2gvPzoY+4Q
+        nqBLTV82//6HHTr0IgmWO0eARfZY3yBpA8AU+ug=
+X-Google-Smtp-Source: ABdhPJyyo86yjdnfYeJdb2lbLD7KXA4jOdvTgpqKfAGrDtRhvcjvgLVVPdzbGLOZDTeO8wykvnQKnCVmo02w8jVXUKU=
+X-Received: by 2002:a4a:3e13:: with SMTP id t19mr17278220oot.49.1599547317033;
+ Mon, 07 Sep 2020 23:41:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_02:2020-09-08,2020-09-08 signatures=0
+References: <CAP6odjjZAZ4fcAdoFETzbX0_e-VPsrvJ0Fh1_ZXfeAZKLppj3A@mail.gmail.com>
+In-Reply-To: <CAP6odjjZAZ4fcAdoFETzbX0_e-VPsrvJ0Fh1_ZXfeAZKLppj3A@mail.gmail.com>
+From:   Grant Grundler <grantgrundler@gmail.com>
+Date:   Mon, 7 Sep 2020 23:41:46 -0700
+Message-ID: <CAP6odjibYc6gMeSHqsjeZyA0YDpD_teeix8_RFkY=8UfV-xq-g@mail.gmail.com>
+Subject: Re: Apply from 2018? [V2,0/3] phy: qcom-ipq4019-usb: add new driver
+To:     Alban Bedel <albeu@free.fr>, linux-soc <linux-soc@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Matthew McClintock <matthew@mcclintock.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Adding linux-soc@vger.kernel.org since Andy's email in MAINTAINERs bounced.
+Using Matthew's personal email since his codeaurora email bounced.
 
-On Mon, 31 Aug 2020, 9:18am, Daniel Wagner wrote:
-
-> changes since v1:
-> 
->  - added dummy warn function to patch#1
->  - added log entry to patch#4
-> 
-> as suggested by Martin
-> 
-> 
-> 
-> Initial cover letter:
-> 
-> The first crash we observed is due memory corruption in the srb memory
-> pool. Unforuntatly, I couldn't find the source of the problem but the
-> workaround by resetting the cleanup callbacks 'fixes' this problem
-> (patch #1). I think as intermeditate step this should be merged until
-> the real cause can be identified.
-> 
-> The second crash is due a race condition(?) in the firmware. The sts
-> entries are not updated in time which leads to this crash pattern
-> which several customers have reported:
-> 
->  #0 [c00000ffffd1bb80] scsi_dma_unmap at d00000001e4904d4 [scsi_mod]
->  #1 [c00000ffffd1bbe0] qla2x00_sp_compl at d0000000204803cc [qla2xxx]
->  #2 [c00000ffffd1bc20] qla24xx_process_response_queue at d0000000204c5810 [qla2xxx]
->  #3 [c00000ffffd1bd50] qla24xx_msix_rsp_q at d0000000204c8fd8 [qla2xxx]
->  #4 [c00000ffffd1bde0] __handle_irq_event_percpu at c000000000189510
->  #5 [c00000ffffd1bea0] handle_irq_event_percpu at c00000000018978c
->  #6 [c00000ffffd1bee0] handle_irq_event at c00000000018984c
->  #7 [c00000ffffd1bf10] handle_fasteoi_irq at c00000000018efc0
->  #8 [c00000ffffd1bf40] generic_handle_irq at c000000000187f10
->  #9 [c00000ffffd1bf60] __do_irq at c000000000018784
->  #10 [c00000ffffd1bf90] call_do_irq at c00000000002caa4
->  #11 [c00000ecca417a00] do_IRQ at c000000000018970
->  #12 [c00000ecca417a50] restore_check_irq_replay at c00000000000de98
-> 
-> From analyzing the crash dump it was clear that
-> qla24xx_mbx_iocb_entry() calls sp->done (qla2x00_sp_compl) which
-> crashes because the response is not a mailbox entry, it is a status
-> entry. Patch #4 changes the process logic for mailbox commands so that
-> the sp is parsed before calling the correct proccess function.
-> 
-> Thanks,
-> Daniel
-> 
-> Daniel Wagner (4):
->   qla2xxx: Warn if done() or free() are called on an already freed srb
->   qla2xxx: Simplify return value logic in qla2x00_get_sp_from_handle()
->   qla2xxx: Drop unused function argument from
->     qla2x00_get_sp_from_handle()
->   qla2xxx: Handle incorrect entry_type entries
-> 
->  drivers/scsi/qla2xxx/qla_gbl.h    |  3 +-
->  drivers/scsi/qla2xxx/qla_init.c   | 10 ++++++
->  drivers/scsi/qla2xxx/qla_inline.h |  5 +++
->  drivers/scsi/qla2xxx/qla_isr.c    | 74 +++++++++++++++++++++++----------------
->  drivers/scsi/qla2xxx/qla_mr.c     |  9 ++---
->  5 files changed, 62 insertions(+), 39 deletions(-)
-> 
-> 
-
-Thanks for the patches, my comments in the respective patches.
-
-Regards,
--Arun
+On Mon, Sep 7, 2020 at 11:35 PM Grant Grundler <grantgrundler@gmail.com> wr=
+ote:
+>
+> Alban, Andy,
+> Can you please apply this patch series from 2018 or please explain
+> what I (or John) have to do so this series can be applied?
+>
+>    https://patchwork.kernel.org/cover/10552139/
+>    [V2,0/3] phy: qcom-ipq4019-usb: add new driver=EF=BF=BC
+>
+> OpenWRT has been applying this code to all ipq4019 targets since Jul 2018=
+:
+>     https://git.openwrt.org/?p=3Dopenwrt/openwrt.git;a=3Dcommitdiff;h=3D9=
+5672e04335ea0d7d8f468cec8f63d593cc6ede6
+>
+> I expect if there were problems with it, we'd know by now.
+>
+> $ find -name \*qcom-ipq4019-usb\*
+> ./target/linux/ipq40xx/patches-5.4/076-phy-qcom-ipq4019-usb-add-driver-fo=
+r-QCOM-IPQ4019.patch
+> ./target/linux/ipq40xx/patches-5.4/075-dt-bindings-phy-qcom-ipq4019-usb-a=
+dd-binding-documen.patch
+> ./target/linux/ipq40xx/patches-4.19/076-phy-qcom-ipq4019-usb-add-driver-f=
+or-QCOM-IPQ4019.patch
+> ./target/linux/ipq40xx/patches-4.19/075-dt-bindings-phy-qcom-ipq4019-usb-=
+add-binding-documen.patch
+> ...
+>
+> In 2018, Rob Herring reviewed (and approved):
+>    [V2,1/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
+>
+> I've just reviewed 2/3 and 3/3. You can add to those:
+>   Reviewed-by: Grant Grundler <grantgrundler@gmail.com>
+>
+> I compared 3/3 with the DTS entries that were submitted (and I
+> approved) to chromeos-3.18 kernel tree in 2016:
+>    https://chromium-review.googlesource.com/337605
+>    https://chromium-review.googlesource.com/344471
+>
+> While not identical, the important bits (reg values) are.
+>
+> (I would reply to the original thread but I don't have it in a format
+> I can easily reply to.)
+>
+> cheers,
+> grant
