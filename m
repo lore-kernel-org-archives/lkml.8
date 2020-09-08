@@ -2,162 +2,107 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57480C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F24AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F1420768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57C232087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cVBATJMn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwwFp358"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbgIHLDR (ORCPT
+        id S1729342AbgIHLFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35798 "EHLO
+        Tue, 8 Sep 2020 07:05:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729125AbgIHK6F (ORCPT
+        with ESMTP id S1729479AbgIHLAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:58:05 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D27C061573;
-        Tue,  8 Sep 2020 03:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=h0VvsYSE+w3nFKH9YA+g18tRVTSKMLX/aErXMNaKl3o=; b=cVBATJMnNT7ngYwKMX50JOE42s
-        w38L4tGQY28hDLRNIXlIkkftUq/sBQfzuP7UOR07E+tF8u1i5SeGvsBqoWNn/oLBddhUImsB3w2KP
-        233TSw6q9lHcauEnzc4OAQNMIb6VNP0fwm0midNEEVVEKaCSzgitu/m7UPQZtwCjrIOn9bcUbjLW3
-        4k1UwS/1hED6NWgpN0lk2j/zMJPXANny1rIHdViofPpZ/uKMb8gO7OkGsWkS5zAJ4plzNDON1dYQw
-        rVMvE8xaAjGijkNJ1OR3XVbjTQlw37Fxir17521GQRZCG8VZqoVrO4QbmW9SqkZ/P7RTFP8sxEMNe
-        AU6F1ORw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFbJq-0008Mk-3L; Tue, 08 Sep 2020 10:57:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 82AEC3010D2;
-        Tue,  8 Sep 2020 12:57:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2AF8A23D54AA4; Tue,  8 Sep 2020 12:57:43 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 12:57:43 +0200
-From:   peterz@infradead.org
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20200908105743.GW2674@hirez.programming.kicks-ass.net>
-References: <20200908191223.0e7a9640@canb.auug.org.au>
+        Tue, 8 Sep 2020 07:00:32 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48F0C061573;
+        Tue,  8 Sep 2020 04:00:29 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id l126so3630128pfd.5;
+        Tue, 08 Sep 2020 04:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7P+HyTNGtG0TbTo1ltjHRYMV5rgT/s2SfZTbcF+5SnY=;
+        b=jwwFp3586/x/n+b9Tn93XWRg6mQQyMXg/b3SxsHRQjc/SUTnyv8C7D9VHMKSQSw8iM
+         VvKKkKdG8IFdID9WKJjJdly5ue9AMZpfewGJvB8G5LzVgUw83+QzdYYhJFsfEgW0kKYR
+         EVrf432HRoksV34dRIrT8HwFU0autE4mdlWzJg6VxuxArB7YknY+eSdFE36N7zJ7nbZB
+         TUBTG7Htv+0fen0CfURZySfQiv9qy4VZyn2u0u93ko7dDvh/gerr6dxzAlc/kximIhcv
+         6c8YSF/5X+e7oq2fYr5FQC5J/YtPBrR7kI4gex/KVjMmOuuqsLjNixJHWtyLHm3bnF1v
+         vCUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7P+HyTNGtG0TbTo1ltjHRYMV5rgT/s2SfZTbcF+5SnY=;
+        b=G/73GfjTPnESJrGMCzeMy9GzUDeWKZS8dYtDlzeYpzntgHgnW/W0y+uMqCIkFiGS4p
+         02ql8AwUR/tQykuiervJ5BQb4+FDrF/UVxlRedzuJe9NuwSO1RNEf0dNhDvsJXBnq8py
+         tOKYvTn8baRC9NTaWqYNeZ50a1QNQBHZ/w6/FxzgwiwN+JVGTtkVCa4qNAgr0P55INBc
+         9tCKUV1ckAkIKx6Q6KkjVkYm4wdHz2MPJT0Ul6jIazxAXPYORxd2XE+OWbVWWwz+AhXO
+         MY3R2E+jMsbMCaXajrB/IJsZ2cwAAHc2v8wtawGaiwJFUv6vIAN6tybPh6F4QnY0IAfv
+         KNxA==
+X-Gm-Message-State: AOAM532blKO4nfeiOkoRj+FE2tO+sA35d4g7AR4mpltYB/4262ofoCVV
+        ojiuQNZ30QTts8Lcbjpf/sVJ72Q6dOO7a6Rd4u8=
+X-Google-Smtp-Source: ABdhPJwsEpXaiJLryhaI0pj5sh7Z33Qq5glUERK4QTaOGvBUWws8u2uEs+dNKUu13UyQHrVNBBqlhbRxW30vLrhFc90=
+X-Received: by 2002:a17:902:7083:b029:d0:cbe1:e7b5 with SMTP id
+ z3-20020a1709027083b02900d0cbe1e7b5mr670449plk.38.1599562824414; Tue, 08 Sep
+ 2020 04:00:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200908191223.0e7a9640@canb.auug.org.au>
+References: <CAJht_EOu8GKvdTAeF_rHsaKu7iYOmW8C64bQA21bgKuiANE5Zw@mail.gmail.com>
+ <CAJht_EP=g02o2ygihNo=EWd1OuL3HSjmhqgGiwUGrMde=urSUA@mail.gmail.com>
+ <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
+ <CAJht_EPEqUMXNdQLL9d5OtzbZ92Jms7nSUR8bS+cw2Ah5mv6cQ@mail.gmail.com> <CA+FuTSeJS22R2VYSzcEVvXiUhX79RYE0o3G6V3NKGzQ4UGaJQg@mail.gmail.com>
+In-Reply-To: <CA+FuTSeJS22R2VYSzcEVvXiUhX79RYE0o3G6V3NKGzQ4UGaJQg@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 8 Sep 2020 04:00:13 -0700
+Message-ID: <CAJht_EN7SXAex-1W49eY7q5p2UqLYvXA8D6hptJGquXdJULLcA@mail.gmail.com>
+Subject: Re: Question about dev_validate_header used in af_packet.c
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 07:12:23PM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> After merging the tip tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->=20
-> ERROR: modpost: too long symbol ".__tracepoint_iter_pnfs_mds_fallback_pg_=
-get_mirror_count" [fs/nfs/flexfilelayout/nfs_layout_flexfiles.ko]
->=20
-> Caused by commit
->=20
->   d25e37d89dd2 ("tracepoint: Optimize using static_call()")
->=20
-> Exported symbols need to be <=3D (64 - sizeof(Elf_Addr)) long.  This is
-> presumably 56 on 64 bit arches and the above symbol (including the '.')
-> is 56 characters long.
+On Tue, Sep 8, 2020 at 1:41 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> The intent is to bypass such validation to be able to test device
+> drivers. Note that removing that may cause someone's test to start
+> failing.
+>
+> >  So there's no point in
+> > keeping the ability to test this, either.
+>
+> I don't disagree in principle, but do note the failing tests. Bar any
+> strong reasons for change, I'd leave as is.
 
-I suppose something like the below ought to cure that. Still, stupid
-long tracename that.
+OK. I got what you mean. You don't want to make people's test cases fail.
 
----
+I was recently looking at some drivers, and I felt that if af_packet.c
+could help me filter out the invalid RAW frames, I didn't need to
+check the validity of the frames myself (in the driver when
+transmitting). But now I guess I still need to check that.
 
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 3722a10fc46d..81fa0b2f271e 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -154,7 +154,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(t=
-racepoint_ptr_t *p)
- #ifdef CONFIG_HAVE_STATIC_CALL
- #define __DO_TRACE_CALL(name)	static_call(tp_func_##name)
- #else
--#define __DO_TRACE_CALL(name)	__tracepoint_iter_##name
-+#define __DO_TRACE_CALL(name)	__traceiter_##name
- #endif /* CONFIG_HAVE_STATIC_CALL */
-=20
- /*
-@@ -232,8 +232,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(t=
-racepoint_ptr_t *p)
-  * poking RCU a bit.
-  */
- #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
--	extern int __tracepoint_iter_##name(data_proto);		\
--	DECLARE_STATIC_CALL(tp_func_##name, __tracepoint_iter_##name); \
-+	extern int __traceiter_##name(data_proto);			\
-+	DECLARE_STATIC_CALL(tp_func_##name, __traceiter_##name);	\
- 	extern struct tracepoint __tracepoint_##name;			\
- 	static inline void trace_##name(proto)				\
- 	{								\
-@@ -288,19 +288,19 @@ static inline struct tracepoint *tracepoint_ptr_deref=
-(tracepoint_ptr_t *p)
- 	static const char __tpstrtab_##_name[]				\
- 	__section(__tracepoints_strings) =3D #_name;			\
- 	extern struct static_call_key STATIC_CALL_KEY(tp_func_##_name);	\
--	int __tracepoint_iter_##_name(void *__data, proto);		\
-+	int __traceiter_##_name(void *__data, proto);			\
- 	struct tracepoint __tracepoint_##_name	__used			\
- 	__section(__tracepoints) =3D {					\
- 		.name =3D __tpstrtab_##_name,				\
- 		.key =3D STATIC_KEY_INIT_FALSE,				\
- 		.static_call_key =3D &STATIC_CALL_KEY(tp_func_##_name),	\
- 		.static_call_tramp =3D STATIC_CALL_TRAMP_ADDR(tp_func_##_name), \
--		.iterator =3D &__tracepoint_iter_##_name,			\
-+		.iterator =3D &__traceiter_##_name,			\
- 		.regfunc =3D _reg,					\
- 		.unregfunc =3D _unreg,					\
- 		.funcs =3D NULL };					\
- 	__TRACEPOINT_ENTRY(_name);					\
--	int __tracepoint_iter_##_name(void *__data, proto)		\
-+	int __traceiter_##_name(void *__data, proto)			\
- 	{								\
- 		struct tracepoint_func *it_func_ptr;			\
- 		void *it_func;						\
-@@ -314,18 +314,18 @@ static inline struct tracepoint *tracepoint_ptr_deref=
-(tracepoint_ptr_t *p)
- 		} while ((++it_func_ptr)->func);			\
- 		return 0;						\
- 	}								\
--	DEFINE_STATIC_CALL(tp_func_##_name, __tracepoint_iter_##_name);
-+	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
-=20
- #define DEFINE_TRACE(name, proto, args)		\
- 	DEFINE_TRACE_FN(name, NULL, NULL, PARAMS(proto), PARAMS(args));
-=20
- #define EXPORT_TRACEPOINT_SYMBOL_GPL(name)				\
- 	EXPORT_SYMBOL_GPL(__tracepoint_##name);				\
--	EXPORT_SYMBOL_GPL(__tracepoint_iter_##name);			\
-+	EXPORT_SYMBOL_GPL(__traceiter_##name);				\
- 	EXPORT_STATIC_CALL_GPL(tp_func_##name)
- #define EXPORT_TRACEPOINT_SYMBOL(name)					\
- 	EXPORT_SYMBOL(__tracepoint_##name);				\
--	EXPORT_SYMBOL(__tracepoint_iter_##name);			\
-+	EXPORT_SYMBOL(__traceiter_##name);				\
- 	EXPORT_STATIC_CALL(tp_func_##name)
-=20
-=20
+I feel this makes the dev_validate_header's variable-length header
+check not very useful, because drivers need to do this check again
+(when transmitting) anyway.
+
+I was thinking, after I saw dev_validate_header, that we could
+eventually make it completely take over the responsibility for a
+driver to validate the header when transmitting RAW frames. But now it
+seems we would not be able to do this.
