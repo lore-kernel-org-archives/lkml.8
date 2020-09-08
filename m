@@ -2,203 +2,185 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FF9C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6E4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22608206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587635;
-	bh=tJeB+CAlsKIHOKpJcSG7HjtM4OMNYiYbT2EYatNwtKU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VUP5eOgT6PbYoDC976xjM6xUK2+6IbSIAC9KR5pnqyTLsOIcYfixZVhnfcDXEy5A8
-	 isPrezsqJPIyMxELqob9IGiltNpzusfqYe8KLMd4wwtBN/Mv5qirzm923HVFfdsKe7
-	 c2T6f+hAVF7H0aLG/YgO+se3z29yjS5vdY2yI6xc=
+	by mail.kernel.org (Postfix) with ESMTP id D9FC7206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="Sq4RSBxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732199AbgIHRxw (ORCPT
+        id S1732132AbgIHRyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731587AbgIHQNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:13:09 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B9842489F;
-        Tue,  8 Sep 2020 15:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580345;
-        bh=tJeB+CAlsKIHOKpJcSG7HjtM4OMNYiYbT2EYatNwtKU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+MvAT7UAP/GVADTsHF/e9Y6Tvj5ZcH9bpdy7DmS8XGb6y0KZhvhaiXZAnk1svUka
-         SCh5xvKpeNM8W+ZlCyQeukQDh3QhCTvV2DwygSIkklFTZHehz1WqficSjRLQ3sTcw3
-         PV0LhQiu/fPCSq1VrnGQyttPTKhmJCOf8ugFwaVk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 38/65] btrfs: drop path before adding new uuid tree entry
-Date:   Tue,  8 Sep 2020 17:26:23 +0200
-Message-Id: <20200908152218.999136573@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 13:54:36 -0400
+Received: from mx0b-002c1b01.pphosted.com ([148.163.155.12]:39436 "EHLO
+        mx0b-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731600AbgIHRxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:53:33 -0400
+Received: from pps.filterd (m0127841.ppops.net [127.0.0.1])
+        by mx0b-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088Hoxon006256;
+        Tue, 8 Sep 2020 10:53:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version;
+ s=proofpoint20171006; bh=koXXIwNSHx1ZEUjyncLcH7GEnDnLa+UYnqwSfQnX1lc=;
+ b=Sq4RSBxrzXW42yrFPKOXgA0KSKY+y/QqRwwvOtbIVaUvjzcoE/WWprjX2eksW+hjZzZu
+ isp5QwKapOFyyFX6IAlrAjDLK6NeGLrPkZRCMCadB8+3NnbcamsjBxKzmrsux7LZ5+CX
+ KlRxJs0e9l+UK1Q3sx0vdtaFDtknneekjiFjBI7wX+lhY7oNcDWswJGhGRUi1CoHJkiJ
+ xLmoIN0vlYD5rcctRlrG/BUJhYOYsghz3PI5+u/aBmdGxOElEuXO7OfUpMHcxhNJ36+y
+ +YhN6ZnxIYBgHh8K/qlY4WE7EmJZxlRkDc097XJ4PIJ8/JIva/ZDqGnwayu8XrhBdgeE 5w== 
+Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2051.outbound.protection.outlook.com [104.47.44.51])
+        by mx0b-002c1b01.pphosted.com with ESMTP id 33c879xcp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 10:53:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JNk83o1a1RTW/bgU/FMUb70QCKWk9Jsp9F6ibVUn9zKBLjPQBTHZKeUYGedDCwPqDfMbCKdZqus446is6CsLqCGnA9PBnXUnSvXV8Thh01eecZN5xDgD/8tRhrR/PEI380z+pPlN5kz1av7GMX2Q5KZeHbv/8CrtRYVUf6Y8LEFD7Bh+Fm2q48Hsri+EJzOyZCVsHTxJiM/Fj8w+uK9ANaQh/q2ceHfgyjOPWEOyZivS833HWFZeWW5UY6GkdX0nwdChsg9K6x9Ew1O94DzPbyxT4OpWtsXRwFGUal23uO78R3izTmorkqlLAk3+nhpdFvW2+MqbofQ6LPo3fFV1iA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=koXXIwNSHx1ZEUjyncLcH7GEnDnLa+UYnqwSfQnX1lc=;
+ b=PZCx/9xfO/hm8OM3pk28BKIMb7rNQept2xvKDJp9LxcwZ00m7OkDcFKV/EONEtjarWyUbJPcmy0ZhWGPy1/gtLLOImg2O7/UeXR1n78DhMvmfSsXBRxecS4OVLHdJ3RIGL+SVFEeaIis+Mjg+ed7S8itxUHzprxHamDB8Dny+rVplAf+GW2tALVZo5dAc3lrAB8CwF4q8o5fuU91XxO9yQZq6S0dNcu/w++7IHAblLlrsJIKOVqvgATBoGpC3jWhdja2GTE/ZsHMC41wCEfvwefB+JFfH8FNYf5uvXAI+iV3ULeZcBxih5B1SDkr9xCjLWiyw6HpZ88TbpKrxgGhGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+Received: from BYAPR02MB4358.namprd02.prod.outlook.com (2603:10b6:a03:11::17)
+ by BYAPR02MB5847.namprd02.prod.outlook.com (2603:10b6:a03:11f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
+ 2020 17:53:17 +0000
+Received: from BYAPR02MB4358.namprd02.prod.outlook.com
+ ([fe80::10ac:913c:6898:decd]) by BYAPR02MB4358.namprd02.prod.outlook.com
+ ([fe80::10ac:913c:6898:decd%3]) with mapi id 15.20.3305.032; Tue, 8 Sep 2020
+ 17:53:17 +0000
+From:   Felipe Franciosi <felipe@nutanix.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC:     Matej Genci <matej.genci@nutanix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH] Rescan the entire target on transport reset when LUN is 0
+Thread-Topic: [PATCH] Rescan the entire target on transport reset when LUN is
+ 0
+Thread-Index: AdZ9NZ5vwNLMSE8+SVisPIkQE+RzLgItcvIAAAdguYA=
+Date:   Tue, 8 Sep 2020 17:53:16 +0000
+Message-ID: <CCFAFEBB-8250-4627-B25D-3B9054954C45@nutanix.com>
+References: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
+ <200ad446-1242-9555-96b6-4fa94ee27ec7@redhat.com>
+In-Reply-To: <200ad446-1242-9555-96b6-4fa94ee27ec7@redhat.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.120.23.2.1)
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nutanix.com;
+x-originating-ip: [82.9.225.166]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 85c0e595-523f-417b-3e18-08d8542010c6
+x-ms-traffictypediagnostic: BYAPR02MB5847:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB58476B89F81EE2A162CCAFC7D7290@BYAPR02MB5847.namprd02.prod.outlook.com>
+x-proofpoint-crosstenant: true
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8oBDGg2yo4iz3DkhfT2vWRCp8Oagwf0vuH+5yoCtsjbKfdKvMCeo4l39Fb8rOHhkX2XCriFmyeUF9jxXKVeLgVJaRp+3WMm8AQLsXVahemLJjDa2a3WrkfmBE0VrpAJvdptqa20K7WLbAqAvq/N+OUiFpUwgEj+FZLwniMQsT3DBSGJV0/3o4lJhXUKZJDPXn12Rh7r3uW/hSWdp5XTfw3z2lLNX5dW/Dy5x3eEbB8r5oeKNxZ2ZuqrOlUFs/MbTs8yACCBVId+SnETgpiANnBie0iX4Qn52Dpg3u8gCGKCgr+aHI2SzaDB7ywQYWUha8TEVyw0LY/RsLqHnACHMUvge0lcsqic1KLmcIAXv6XWQpM6tUe+mmIFjNwVR1Li7n1dYV4TagdWyJHA8rOHUTw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB4358.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39860400002)(376002)(136003)(346002)(366004)(53546011)(54906003)(33656002)(6506007)(478600001)(2616005)(8936002)(966005)(6486002)(316002)(7416002)(8676002)(83380400001)(110136005)(186003)(26005)(4326008)(6512007)(64756008)(71200400001)(86362001)(66946007)(5660300002)(2906002)(66476007)(66556008)(66446008)(36756003)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: HWf/0jLefwfV2/suSnp0sCThr8QPx+hI+gv0DwkTUueuMGEdaGnd4IjW6DFo9PQqlbkxsrch5epaDHHNU0+TMPZDcyLKWbKgCw8m7p9MIFqGPucBM/QYLdKPfBbotUVz49eunyIuyLEyN50EfiUTEoNThD2wa3wNCKYPik/oA4hfUsNcWm3jbe3G7ibJHqzYe0tdBSGkSK2isvv+ohXS4ZSOsS/qr//A2F96MWpa0m9B3+I7PieEH3sp+rGa4jmYn6KuqBZ3Wifg84Jw2++NiFJf/ry9mj/LlU49BrgfQTDs6ro9gvQ7JTtXRcQir4ldm107C1tW/SkD8poODnzmhJ5Ra1oytwT4a+KcSZ7NhCoTzwVOMDniYP2fwQTLWSHz7CHKDxRuhmTtf6fOrNRwOniD4MBf4f1wHhyyMH6dRiWZwelhbmjl1LwTihJFUK9lrQ99O8U/gwVaBq6JMV7vnmkOWRxV7XB3S//5SC1DoamSx3Yca8YjH/Dbe4X7ogp5wXsb06xELYLGRXKv8BEd7GN1VojPuA0kROklzwiSXDMQZ72e8pF41a6njDTol0wJnRsms8FJfBJb2dGtdtliNXDwoVxIhJE6uM0nOY7JwtlficT4ADettGwobIcIgICJBUu9uZztELemBeB8X4CMqA==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <111E2BF6B540CF429832F4411553C8D4@namprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB4358.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85c0e595-523f-417b-3e18-08d8542010c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 17:53:16.7820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VauQjLFhF18gT5sYjfva4OWq/By0fakS0Wmbj6RiaNkPP/Coet79hHut+BKpeG/ZWgXoca9t2+yvil0f0jSGx4u0ZweNNktdAlL1RTRZ2pM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5847
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_09:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
 
-commit 9771a5cf937129307d9f58922d60484d58ababe7 upstream.
 
-With the conversion of the tree locks to rwsem I got the following
-lockdep splat:
+> On Sep 8, 2020, at 3:22 PM, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>=20
+> On 28/08/20 14:21, Matej Genci wrote:
+>> VirtIO 1.0 spec says
+>>    The removed and rescan events ... when sent for LUN 0, they MAY
+>>    apply to the entire target so the driver can ask the initiator
+>>    to rescan the target to detect this.
+>>=20
+>> This change introduces the behaviour described above by scanning the
+>> entire scsi target when LUN is set to 0. This is both a functional and a
+>> performance fix. It aligns the driver with the spec and allows control
+>> planes to hotplug targets with large numbers of LUNs without having to
+>> request a RESCAN for each one of them.
+>>=20
+>> Signed-off-by: Matej Genci <matej@nutanix.com>
+>> Suggested-by: Felipe Franciosi <felipe@nutanix.com>
+>> ---
+>> drivers/scsi/virtio_scsi.c | 7 ++++++-
+>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+>> index bfec84aacd90..a4b9bc7b4b4a 100644
+>> --- a/drivers/scsi/virtio_scsi.c
+>> +++ b/drivers/scsi/virtio_scsi.c
+>> @@ -284,7 +284,12 @@ static void virtscsi_handle_transport_reset(struct =
+virtio_scsi *vscsi,
+>>=20
+>> 	switch (virtio32_to_cpu(vscsi->vdev, event->reason)) {
+>> 	case VIRTIO_SCSI_EVT_RESET_RESCAN:
+>> -		scsi_add_device(shost, 0, target, lun);
+>> +		if (lun =3D=3D 0) {
+>> +			scsi_scan_target(&shost->shost_gendev, 0, target,
+>> +					 SCAN_WILD_CARD, SCSI_SCAN_INITIAL);
+>> +		} else {
+>> +			scsi_add_device(shost, 0, target, lun);
+>> +		}
+>> 		break;
+>> 	case VIRTIO_SCSI_EVT_RESET_REMOVED:
+>> 		sdev =3D scsi_device_lookup(shost, 0, target, lun);
+>>=20
+>=20
+>=20
+> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925 Not tainted
-  ------------------------------------------------------
-  btrfs-uuid/7955 is trying to acquire lock:
-  ffff88bfbafec0f8 (btrfs-root-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+Cc: stable@vger.kernel.org
 
-  but task is already holding lock:
-  ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+Thanks, Paolo.
 
-  which lock already depends on the new lock.
+I'm Cc'ing stable as I believe this fixes a driver bug where it
+doesn't follow the spec. Per commit message, today devices are
+required to issue RESCAN events for each LUN behind a target when
+hotplugging, or risking the driver not seeing the new LUNs.
 
-  the existing dependency chain (in reverse order) is:
+Is this enough? Or should we resend after merge per below?
+https://www.kernel.org/doc/Documentation/process/stable-kernel-rules.rst
 
-  -> #1 (btrfs-uuid-00){++++}-{3:3}:
-	 down_read_nested+0x3e/0x140
-	 __btrfs_tree_read_lock+0x39/0x180
-	 __btrfs_read_lock_root_node+0x3a/0x50
-	 btrfs_search_slot+0x4bd/0x990
-	 btrfs_uuid_tree_add+0x89/0x2d0
-	 btrfs_uuid_scan_kthread+0x330/0x390
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  -> #0 (btrfs-root-00){++++}-{3:3}:
-	 __lock_acquire+0x1272/0x2310
-	 lock_acquire+0x9e/0x360
-	 down_read_nested+0x3e/0x140
-	 __btrfs_tree_read_lock+0x39/0x180
-	 __btrfs_read_lock_root_node+0x3a/0x50
-	 btrfs_search_slot+0x4bd/0x990
-	 btrfs_find_root+0x45/0x1b0
-	 btrfs_read_tree_root+0x61/0x100
-	 btrfs_get_root_ref.part.50+0x143/0x630
-	 btrfs_uuid_tree_iterate+0x207/0x314
-	 btrfs_uuid_rescan_kthread+0x12/0x50
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  other info that might help us debug this:
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(btrfs-uuid-00);
-				 lock(btrfs-root-00);
-				 lock(btrfs-uuid-00);
-    lock(btrfs-root-00);
-
-   *** DEADLOCK ***
-
-  1 lock held by btrfs-uuid/7955:
-   #0: ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  stack backtrace:
-  CPU: 73 PID: 7955 Comm: btrfs-uuid Kdump: loaded Not tainted 5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925
-  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x165/0x180
-   __lock_acquire+0x1272/0x2310
-   lock_acquire+0x9e/0x360
-   ? __btrfs_tree_read_lock+0x39/0x180
-   ? btrfs_root_node+0x1c/0x1d0
-   down_read_nested+0x3e/0x140
-   ? __btrfs_tree_read_lock+0x39/0x180
-   __btrfs_tree_read_lock+0x39/0x180
-   __btrfs_read_lock_root_node+0x3a/0x50
-   btrfs_search_slot+0x4bd/0x990
-   btrfs_find_root+0x45/0x1b0
-   btrfs_read_tree_root+0x61/0x100
-   btrfs_get_root_ref.part.50+0x143/0x630
-   btrfs_uuid_tree_iterate+0x207/0x314
-   ? btree_readpage+0x20/0x20
-   btrfs_uuid_rescan_kthread+0x12/0x50
-   kthread+0x133/0x150
-   ? kthread_create_on_node+0x60/0x60
-   ret_from_fork+0x1f/0x30
-
-This problem exists because we have two different rescan threads,
-btrfs_uuid_scan_kthread which creates the uuid tree, and
-btrfs_uuid_tree_iterate that goes through and updates or deletes any out
-of date roots.  The problem is they both do things in different order.
-btrfs_uuid_scan_kthread() reads the tree_root, and then inserts entries
-into the uuid_root.  btrfs_uuid_tree_iterate() scans the uuid_root, but
-then does a btrfs_get_fs_root() which can read from the tree_root.
-
-It's actually easy enough to not be holding the path in
-btrfs_uuid_scan_kthread() when we add a uuid entry, as we already drop
-it further down and re-start the search when we loop.  So simply move
-the path release before we add our entry to the uuid tree.
-
-This also fixes a problem where we're holding a path open after we do
-btrfs_end_transaction(), which has it's own problems.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/volumes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4174,6 +4174,7 @@ static int btrfs_uuid_scan_kthread(void
- 			goto skip;
- 		}
- update_tree:
-+		btrfs_release_path(path);
- 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
- 			ret = btrfs_uuid_tree_add(trans, fs_info,
- 						  root_item.uuid,
-@@ -4199,6 +4200,7 @@ update_tree:
- 		}
- 
- skip:
-+		btrfs_release_path(path);
- 		if (trans) {
- 			ret = btrfs_end_transaction(trans);
- 			trans = NULL;
-@@ -4206,7 +4208,6 @@ skip:
- 				break;
- 		}
- 
--		btrfs_release_path(path);
- 		if (key.offset < (u64)-1) {
- 			key.offset++;
- 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
+F.
 
 
