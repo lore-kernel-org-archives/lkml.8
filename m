@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC082C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17CEC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B904D206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6121E2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591931;
-	bh=6W5PImKoQy+Nd3zNLvrudh8+VVaCoLUFwkeOePG+JDg=;
+	s=default; t=1599591951;
+	bh=CANI4EdB3GWGdxXj0qd0YLgKhjSGCyb/d1FaCdaU570=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ok8ybWR/BC2M5u67ZjupUpq6uqJNY6/iWHY7zCaVtBRee4nH2uBZEMsZOhZOmXoqr
-	 sx53uM0ZRbCYp+5z8R6/InqIxa5PgzVCuAGYoSORl/y9ug5f6mzoGdHLeysYoC2QO9
-	 /GMddoLhbcJU7roA0x5F1e5MaWUOsRkCpoIywBBY=
+	b=MqsK9TD7OysThBxFcRRrxLv7g/JYqEHFvlRQJ1NNC+XpU0ViihxnaPP1rDUS6mO0f
+	 qlvjQnMoHEP21Xx8FUaOGGflyH1s4QHYPI18d16eLqVYnWQBlrOckFfBlH5H3JRG7D
+	 JMNaHPSyuCKRFg6jaCnGMbdcPCxaYAocfk4b2Ccs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731752AbgIHTFY (ORCPT
+        id S1731633AbgIHTFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 15:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731261AbgIHQHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730826AbgIHQHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:07:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BBE023E22;
-        Tue,  8 Sep 2020 15:46:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2348223E1F;
+        Tue,  8 Sep 2020 15:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580019;
-        bh=6W5PImKoQy+Nd3zNLvrudh8+VVaCoLUFwkeOePG+JDg=;
+        s=default; t=1599580011;
+        bh=CANI4EdB3GWGdxXj0qd0YLgKhjSGCyb/d1FaCdaU570=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhwsyZBbEtFzyajjNq8cgdX6RTNA9umV2RytS2qJLy5b8MYPNkJB0XzlZj2mVinda
-         nCVrd3SCIwcjqc85OX+HaN4+860f+Oj8U8OHp8mwqql/bV4B5vrx4JIyevf+Z2U3np
-         lUyPeswG54whwdFRtgQ4IijJbIihlh908hg50qt0=
+        b=jmAdHgut50kH1P7umx3eQbhYA6b/DA868+g1Z+MHjLrxPqr7vX5Kq+nMyKO57feGZ
+         KYZvU5ZHG9XHCT5uEtpmdAHA/hhSUGmhjmulyBMV/9ULKnkkzxtXYA5FHnabBCj5+Z
+         id8gbC8OotDnFUFmBT64VmEL1iWMk/FMvGg7LK84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        stable@vger.kernel.org, Mrinal Pandey <mrinalmni@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Yang Shi <shy828301@gmail.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Eric Biggers <ebiggers@google.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Joe Perches <joe@perches.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 127/129] mm/khugepaged.c: fix khugepageds request size in collapse_file
-Date:   Tue,  8 Sep 2020 17:26:08 +0200
-Message-Id: <20200908152236.212996375@linuxfoundation.org>
+Subject: [PATCH 5.4 125/129] checkpatch: fix the usage of capture group ( ... )
+Date:   Tue,  8 Sep 2020 17:26:06 +0200
+Message-Id: <20200908152236.103467555@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -65,42 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Mrinal Pandey <mrinalmni@gmail.com>
 
-commit e5a59d308f52bb0052af5790c22173651b187465 upstream.
+commit 13e45417cedbfc44b1926124b1846f5ee8c6ba4a upstream.
 
-collapse_file() in khugepaged passes PAGE_SIZE as the number of pages to
-be read to page_cache_sync_readahead().  The intent was probably to read
-a single page.  Fix it to use the number of pages to the end of the
-window instead.
+The usage of "capture group (...)" in the immediate condition after `&&`
+results in `$1` being uninitialized.  This issues a warning "Use of
+uninitialized value $1 in regexp compilation at ./scripts/checkpatch.pl
+line 2638".
 
-Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+I noticed this bug while running checkpatch on the set of commits from
+v5.7 to v5.8-rc1 of the kernel on the commits with a diff content in
+their commit message.
+
+This bug was introduced in the script by commit e518e9a59ec3
+("checkpatch: emit an error when there's a diff in a changelog").  It
+has been in the script since then.
+
+The author intended to store the match made by capture group in variable
+`$1`.  This should have contained the name of the file as `[\w/]+`
+matched.  However, this couldn't be accomplished due to usage of capture
+group and `$1` in the same regular expression.
+
+Fix this by placing the capture group in the condition before `&&`.
+Thus, `$1` can be initialized to the text that capture group matches
+thereby setting it to the desired and required value.
+
+Fixes: e518e9a59ec3 ("checkpatch: emit an error when there's a diff in a changelog")
+Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Yang Shi <shy828301@gmail.com>
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Eric Biggers <ebiggers@google.com>
-Link: https://lkml.kernel.org/r/20200903140844.14194-2-willy@infradead.org
+Tested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Joe Perches <joe@perches.com>
+Link: https://lkml.kernel.org/r/20200714032352.f476hanaj2dlmiot@mrinalpandey
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/khugepaged.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/checkpatch.pl |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1592,7 +1592,7 @@ static void collapse_file(struct mm_stru
- 				xas_unlock_irq(&xas);
- 				page_cache_sync_readahead(mapping, &file->f_ra,
- 							  file, index,
--							  PAGE_SIZE);
-+							  end - index);
- 				/* drain pagevecs to help isolate_lru_page() */
- 				lru_add_drain();
- 				page = find_lock_page(mapping, index);
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2576,8 +2576,8 @@ sub process {
+ 
+ # Check if the commit log has what seems like a diff which can confuse patch
+ 		if ($in_commit_log && !$commit_log_has_diff &&
+-		    (($line =~ m@^\s+diff\b.*a/[\w/]+@ &&
+-		      $line =~ m@^\s+diff\b.*a/([\w/]+)\s+b/$1\b@) ||
++		    (($line =~ m@^\s+diff\b.*a/([\w/]+)@ &&
++		      $line =~ m@^\s+diff\b.*a/[\w/]+\s+b/$1\b@) ||
+ 		     $line =~ m@^\s*(?:\-\-\-\s+a/|\+\+\+\s+b/)@ ||
+ 		     $line =~ m/^\s*\@\@ \-\d+,\d+ \+\d+,\d+ \@\@/)) {
+ 			ERROR("DIFF_IN_COMMIT_MSG",
 
 
