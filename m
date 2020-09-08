@@ -2,97 +2,127 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E047DC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08231C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA5A9206A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCB32177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgIHLgO (ORCPT
+        id S1729803AbgIHLjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:36:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54384 "EHLO mx2.suse.de"
+        Tue, 8 Sep 2020 07:39:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53366 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbgIHLbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:31:12 -0400
+        id S1729922AbgIHL1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 07:27:45 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3CD6DAB0E;
-        Tue,  8 Sep 2020 11:31:11 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id ED701AD7A;
+        Tue,  8 Sep 2020 11:27:43 +0000 (UTC)
 Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 492231E1325; Tue,  8 Sep 2020 13:31:10 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 13:31:10 +0200
+        id E8CDF1E1325; Tue,  8 Sep 2020 13:27:42 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 13:27:42 +0200
 From:   Jan Kara <jack@suse.cz>
-To:     Tobias Klauser <tklauser@distanz.ch>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] fs: adjust dirtytime_interval_handler definition to
- match prototype
-Message-ID: <20200908113110.GB2956@quack2.suse.cz>
-References: <20200907093140.13434-1-tklauser@distanz.ch>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+Message-ID: <20200908112742.GA2956@quack2.suse.cz>
+References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+ <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200907093140.13434-1-tklauser@distanz.ch>
+In-Reply-To: <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 07-09-20 11:31:40, Tobias Klauser wrote:
-> Commit 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
-> changed ctl_table.proc_handler to take a kernel pointer. Adjust the
-> definition of dirtytime_interval_handler to match its prototype in
-> linux/writeback.h which fixes the following sparse error/warning:
-> 
-> fs/fs-writeback.c:2189:50: warning: incorrect type in argument 3 (different address spaces)
-> fs/fs-writeback.c:2189:50:    expected void *
-> fs/fs-writeback.c:2189:50:    got void [noderef] __user *buffer
-> fs/fs-writeback.c:2184:5: error: symbol 'dirtytime_interval_handler' redeclared with different type (incompatible argument 3 (different address spaces)):
-> fs/fs-writeback.c:2184:5:    int extern [addressable] [signed] [toplevel] dirtytime_interval_handler( ... )
-> fs/fs-writeback.c: note: in included file:
-> ./include/linux/writeback.h:374:5: note: previously declared as:
-> ./include/linux/writeback.h:374:5:    int extern [addressable] [signed] [toplevel] dirtytime_interval_handler( ... )
-> 
-> Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+Added Jeff to CC since he has written the code...
 
-Thanks! The patch looks good to me. You can add:
+On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
+> [Widening the CC to include Andrew and linux-fsdevel@]
+> [Milan: thanks for the patch, but it's unclear to me from your commit
+> message how/if you verified the details.]
+> 
+> Andrew, maybe you (or someone else) can comment, since long ago your
+> 
+>     commit f79e2abb9bd452d97295f34376dedbec9686b986
+>     Author: Andrew Morton <akpm@osdl.org>
+>     Date:   Fri Mar 31 02:30:42 2006 -0800
+> 
+> included a comment that is referred to in  stackoverflow discussion
+> about this topic (that SO discussion is in turn referred to by
+> https://bugzilla.kernel.org/show_bug.cgi?id=194757).
+> 
+> The essence as I understand it, is this:
+> (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
+> has not been synced.
+> (2) In this case, the EIO/ENOSPC setting is cleared so that...
+> (3) A subsequent fsync() might return success, but...
+> (4) That doesn't mean that the data in (1) landed on the disk.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Correct.
+
+> The proposed manual page patch below wants to document this, but I'd
+> be happy to have an FS-knowledgeable person comment before I apply.
+
+Just a small comment below:
+
+> On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
+> >
+> > From: Milan Shah <milan.opensource@gmail.com>
+> >
+> > This Fix addresses Bug 194757.
+> > Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
+> > ---
+> >  man2/fsync.2 | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/man2/fsync.2 b/man2/fsync.2
+> > index 96401cd..f38b3e4 100644
+> > --- a/man2/fsync.2
+> > +++ b/man2/fsync.2
+> > @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
+> >  or
+> >  .BR sdparm (8)
+> >  to guarantee safe operation.
+> > +
+> > +When
+> > +.BR fsync ()
+> > +or
+> > +.BR fdatasync ()
+> > +returns
+> > +.B EIO
+> > +or
+> > +.B ENOSPC
+> > +any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
+> > +will return without error. It is
+> > +.I not
+> > +safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
+> >  .SH SEE ALSO
+> >  .BR sync (1),
+> >  .BR bdflush (2),
+
+So the error state isn't really stored "on pages in the file mapping".
+Current implementation (since 4.14) is that error state is stored in struct
+file (I think this tends to be called "file description" in manpages) and
+so EIO / ENOSPC is reported once for each file description of the file that
+was open before the error happened. Not sure if we want to be so precise in
+the manpages or if it just confuses people. Anyway your takeway that no
+error on subsequent fsync() does not mean data was written is correct.
 
 								Honza
 
-> ---
->  fs/fs-writeback.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 149227160ff0..58b27e4070a3 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -2184,7 +2184,7 @@ static int __init start_dirtytime_writeback(void)
->  __initcall(start_dirtytime_writeback);
->  
->  int dirtytime_interval_handler(struct ctl_table *table, int write,
-> -			       void __user *buffer, size_t *lenp, loff_t *ppos)
-> +			       void *buffer, size_t *lenp, loff_t *ppos)
->  {
->  	int ret;
->  
-> -- 
-> 2.27.0
-> 
 -- 
 Jan Kara <jack@suse.com>
 SUSE Labs, CR
