@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A436EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA845C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70C6E21532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9663921532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599540172;
-	bh=1VLB/RvnQha8CjbcwJCA39bUqNlzXx3CwWoF1+wVkQU=;
+	s=default; t=1599540177;
+	bh=4j7jotL5yxs4TqfltYTG1YEt+zKFkr1Q0UyMkIffXvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpfM+ajGT2LG7ny+go/PrbWg7MKU2Zeuk7MvvDmkZPUrmBxcgtiyS1BGa0I1NdERa
-	 QMZ8wHf13FORG8BeHwdD4ypQbonInEhGEIYf7hRt+rbrYPsdB2Wr8quAXvi8+yzeHe
-	 Op9IMFbYGkquAXxUZ9wWwoxbixwZToTc2pUAk1xY=
+	b=VgZLHtgAycl00OyvdzhKcPvKQhdyqYNj+UFXrUAPxSCdZ61lwIbUysztw1/AhHoxp
+	 1H6HQefP3YFywlRMpdeZJPlMp42akgmWKV+ANf/7sNYb1Y4uXH/HU2pI9ShAaO4XXL
+	 /Gnk/eJhvC0LcUqahFq3U897Mjmb5KaG0czXhJAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgIHEms (ORCPT
+        id S1728327AbgIHEmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
+        Tue, 8 Sep 2020 00:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgIHEml (ORCPT
+        with ESMTP id S1726815AbgIHEmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:42:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81006C061575
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 21:42:38 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g29so9174385pgl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 21:42:38 -0700 (PDT)
+        Tue, 8 Sep 2020 00:42:42 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A304FC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 21:42:41 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id c196so4442957pfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 21:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1X2wgdypEexLJoyJFvgbErcW6sFtqTXmvvhkdoCXtb4=;
-        b=sYbEEV3aTFimo35fJALPnPZUfN6NziOkMW9HewicxlH9EijYn5xJP0zEM+7/XXeJm2
-         ofZJKdvn4/FeZjJDBsKdA8Swqg5i95BXqRpGfAritJTcP+b1GrteWTk22dkgIG1QH9Gt
-         yL8YIMeTFuu1yjBTT0unyElYzj8PgqFj8RlCVEA4nueF5fmTv1cWoNtgyZys6HlfayP4
-         lbSv4k7TGo2DB6TAgLxj33QefPwlnBrfiObjgKMNDYdZ7R/C5apc1LoasPsRW2uVBAJx
-         bxBpgYtayADl6Uy+jUAf9WbdFyE208LSyHJix9C9dq/9ReEbnqLUtSK/M9yBydJjOfmA
-         zrgg==
+        bh=JWwRaOcpZiRwzBRh+MpTLPCX3xdF/W5yfKxu51dW7t0=;
+        b=jJCAQFf0i6/XhYQzb4Y5pyzc0bST3YZDy1pOeI7fY/rb3TvOoUWAgFzTvpsEbHIU5n
+         Nu6mzJdiRpqWdPhsfBv+nOyFv2KexJBF+1tdeIMEUiuL/aw/6sGMBBtIf6HQ2UrbeBRZ
+         XPdyFq1bP1xuEwGdaSt/YFuFk/fmbAQjtjkj+GH0sMmjMUgTiJPKcTei5ViY5ohQ9tc5
+         VmSeZG+m6h6sXqFmUklIsmBUM/ALFNTfnkkonj27HNv8iNrTcszufM9MUwBCNEvPD9e1
+         S0geZCO1bvWqaaiDwBm/uv/x9nVpqRtVCfIWwPQnUrSIll8iviCT0WlFVcRf9N0M69ZU
+         bQ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=1X2wgdypEexLJoyJFvgbErcW6sFtqTXmvvhkdoCXtb4=;
-        b=V5awRZ+MYOZ087WYzZKdTrxWq504DPih8N69XWLvjBkmN0CvNkEX0naKb8mE4JY6gQ
-         eY3/26SAs2Lp6k7DFnyGrTB3BmO0R50j+rb0dgKuT2BpEv6E1SKgSPzofil4e0jq6NiE
-         FOACLdC8mFGpT9PrX5cfRq8koksl5ci3pQBL9JTguqAgHvGK7T5OiC4gki+VYNi7sFhB
-         Sre3jOaVCP8e1F8ZHOb4bL/xjfznJPkqGmgNKImkJt7FPfmsYodZCGxQi6ICuawSgYBN
-         +Py2Fu/iYqOVLTDPTSVSWu830KbDaRIeMeO3bR2HEGmxz1J4GnTT4O15n/Kqi8Ve5iau
-         2w8A==
-X-Gm-Message-State: AOAM532DFkY/KQKCL52R6/paYbdgbalZRXdT7kVfe9TZApFlk0I+VzvD
-        J66F8Jf9XX7HDxLgquVrCyg=
-X-Google-Smtp-Source: ABdhPJyg+7zv4hQn+a1FLOaK80AMqwoFtSK0iBQIsy4P/v+w46/AUfId8KFZMSncZSXsuw6SDBed6A==
-X-Received: by 2002:a17:902:7895:b029:d0:89f4:621c with SMTP id q21-20020a1709027895b02900d089f4621cmr20971171pll.4.1599540157761;
-        Mon, 07 Sep 2020 21:42:37 -0700 (PDT)
+        bh=JWwRaOcpZiRwzBRh+MpTLPCX3xdF/W5yfKxu51dW7t0=;
+        b=ip9mFiOLaap3claG+XYH0nh72w3gVkU+deQX3arR9fIh2Yt9G2PgjCH/ERkTK8VYmS
+         keJ0tdlz7upjweXd+/vdpGxqO2hKS1VbbqKmyErR7XLInFwOA1kHBWMPFMUMIQS7DzqL
+         L+y/M9JmhEfbbGol3L+nbbl2q2n1PGV180dtW/bHZfi+nYsVXqRUFIANuntaIiszzWWc
+         nEjWo8f/2AkZkbYMPsVEfQXLMF9E+lWju18yflXzTAp3Irft4aKZCFprdq6HkWiCZf7t
+         g4Lz0LaEPIkDVZgtjsnTP4ZjPapdJL3ihSqB617d32k7Tknq6GwkVkA42AQDkgHAR0RF
+         7gBw==
+X-Gm-Message-State: AOAM532m2i4RzEOjerfB7boXNUSAHDDbyBsxnFkLdXUKgjiHxpHH/EiS
+        L2SFI1X3YZtPDL6HUicrZSU=
+X-Google-Smtp-Source: ABdhPJwIHTZ5NloFDuQnPDMFVzqUxVWssA9lm8UK4cYHFsteOJMNCHOWfP9kLPpjKc+XA8jsDDBYnA==
+X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr21964814plo.193.1599540161201;
+        Mon, 07 Sep 2020 21:42:41 -0700 (PDT)
 Received: from balhae.roam.corp.google.com ([101.235.31.111])
-        by smtp.gmail.com with ESMTPSA id q5sm16777625pfn.109.2020.09.07.21.42.34
+        by smtp.gmail.com with ESMTPSA id q5sm16777625pfn.109.2020.09.07.21.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 21:42:37 -0700 (PDT)
+        Mon, 07 Sep 2020 21:42:40 -0700 (PDT)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>
@@ -75,9 +75,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Andi Kleen <andi@firstfloor.org>,
         Ian Rogers <irogers@google.com>
-Subject: [PATCH 1/4] perf evsel: Add evsel__clone() function
-Date:   Tue,  8 Sep 2020 13:42:25 +0900
-Message-Id: <20200908044228.61197-2-namhyung@kernel.org>
+Subject: [PATCH 2/4] perf stat: Add --multiply-cgroup option
+Date:   Tue,  8 Sep 2020 13:42:26 +0900
+Message-Id: <20200908044228.61197-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200908044228.61197-1-namhyung@kernel.org>
 References: <20200908044228.61197-1-namhyung@kernel.org>
@@ -88,98 +88,229 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The evsel__clone() is to create an exactly same evsel from same
-attributes.  Note that metric events will be handled by later patch.
+The --multiply-cgroup option is a syntax sugar to monitor large number
+of cgroups easily.  Current command line requires to list all the
+events and cgroups even if users want to monitor same events for each
+cgroup.  This patch addresses that usage by copying given events for
+each cgroup on user's behalf.
 
-It will be used by perf stat to generate separate events for each
-cgroup.
+For instance, if they want to monitor 6 events for 200 cgroups each
+they should write 1200 event names (with -e) AND 1200 cgroup names
+(with -G) on the command line.  But with this change, they can just
+specify 6 events and 200 cgroups plus one more option.
+
+A simpler example below: It wants to measure 3 events for 2 cgroups
+('a' and 'b').  The result is that total 6 events are counted like
+below.
+
+  $ ./perf stat -a -e cpu-clock,cycles,instructions --multiply-cgroup -G a,b sleep 1
+
+   Performance counter stats for 'system wide':
+
+              988.18 msec cpu-clock                 a #    0.987 CPUs utilized
+       3,153,761,702      cycles                    a #    3.200 GHz                      (100.00%)
+       8,067,769,847      instructions              a #    2.57  insn per cycle           (100.00%)
+              982.71 msec cpu-clock                 b #    0.982 CPUs utilized
+       3,136,093,298      cycles                    b #    3.182 GHz                      (99.99%)
+       8,109,619,327      instructions              b #    2.58  insn per cycle           (99.99%)
+
+         1.001228054 seconds time elapsed
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/evsel.c | 57 +++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evsel.h |  1 +
- 2 files changed, 58 insertions(+)
+ tools/perf/builtin-stat.c | 20 +++++++++-
+ tools/perf/util/cgroup.c  | 78 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/cgroup.h  |  2 +
+ tools/perf/util/stat.h    |  1 +
+ 4 files changed, 100 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index fd865002cbbd..4f50f9499973 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -331,6 +331,63 @@ struct evsel *evsel__new_cycles(bool precise)
- 	goto out;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 483a28ef4ec4..6724d23ce2e7 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1068,6 +1068,16 @@ static int parse_control_option(const struct option *opt,
+ 	return 0;
  }
  
-+/**
-+ * evsel__clone - create a new evsel copied from @orig
-+ * @orig: original evsel
-+ *
-+ * The assumption is that @orig is not configured nor opened yet.
-+ * So we only care about the attributes that can be set while it's parsed.
-+ */
-+struct evsel *evsel__clone(struct evsel *orig)
++static int parse_stat_cgroups(const struct option *opt,
++			      const char *str, int unset)
 +{
-+	struct evsel *evsel;
-+	struct evsel_config_term *pos, *tmp;
++	stat_config.cgroups = strdup(str);
++	if (!stat_config.cgroups)
++		return -1;
 +
-+	BUG_ON(orig->core.fd);
-+
-+	evsel = evsel__new(&orig->core.attr);
-+	if (evsel == NULL)
-+		return NULL;
-+
-+	*evsel = *orig;
-+	evsel->evlist = NULL;
-+	INIT_LIST_HEAD(&evsel->core.node);
-+
-+	evsel->core.cpus = perf_cpu_map__get(orig->core.cpus);
-+	evsel->core.own_cpus = perf_cpu_map__get(orig->core.own_cpus);
-+	evsel->core.threads = perf_thread_map__get(orig->core.threads);
-+	if (orig->name)
-+		evsel->name = strdup(orig->name);
-+	if (orig->group_name)
-+		evsel->group_name = strdup(orig->group_name);
-+	if (orig->pmu_name)
-+		evsel->pmu_name = strdup(orig->pmu_name);
-+
-+	INIT_LIST_HEAD(&evsel->config_terms);
-+	list_for_each_entry(pos, &orig->config_terms, list) {
-+		tmp = malloc(sizeof(*tmp));
-+		if (tmp == NULL) {
-+			evsel__delete(evsel);
-+			evsel = NULL;
-+			break;
-+		}
-+
-+		*tmp = *pos;
-+		if (tmp->free_str) {
-+			tmp->val.str = strdup(pos->val.str);
-+			if (tmp->val.str == NULL) {
-+				evsel__delete(evsel);
-+				evsel = NULL;
-+				free(tmp);
-+				break;
-+			}
-+		}
-+		list_add_tail(&tmp->list, &evsel->config_terms);
-+	}
-+
-+	return evsel;
++	return parse_cgroups(opt, str, unset);
 +}
 +
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 35e3f6d66085..507c31d6a389 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -169,6 +169,7 @@ static inline struct evsel *evsel__new(struct perf_event_attr *attr)
- 	return evsel__new_idx(attr, 0);
+ static struct option stat_options[] = {
+ 	OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 		    "hardware transaction statistics"),
+@@ -1111,7 +1121,9 @@ static struct option stat_options[] = {
+ 	OPT_STRING('x', "field-separator", &stat_config.csv_sep, "separator",
+ 		   "print counts with custom separator"),
+ 	OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
+-		     "monitor event in cgroup name only", parse_cgroups),
++		     "monitor event in cgroup name only", parse_stat_cgroups),
++	OPT_BOOLEAN(0, "multiply-cgroup", &multiply_cgroup,
++		    "multiply the event list by cgroups"),
+ 	OPT_STRING('o', "output", &output_name, "file", "output file name"),
+ 	OPT_BOOLEAN(0, "append", &append_file, "append to the output file"),
+ 	OPT_INTEGER(0, "log-fd", &output_fd,
+@@ -2248,6 +2260,11 @@ int cmd_stat(int argc, const char **argv)
+ 	if (add_default_attributes())
+ 		goto out;
+ 
++	if (multiply_cgroup && stat_config.cgroups) {
++		if (evlist__multiply_cgroup(evsel_list, stat_config.cgroups) < 0)
++			goto out;
++	}
++
+ 	target__validate(&target);
+ 
+ 	if ((stat_config.aggr_mode == AGGR_THREAD) && (target.system_wide))
+@@ -2412,6 +2429,7 @@ int cmd_stat(int argc, const char **argv)
+ 
+ 	evlist__delete(evsel_list);
+ 
++	free(stat_config.cgroups);
+ 	metricgroup__rblist_exit(&stat_config.metric_events);
+ 	runtime_stat_delete(&stat_config);
+ 
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 050dea9f1e88..4892f9496bc2 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -12,6 +12,7 @@
+ #include <api/fs/fs.h>
+ 
+ int nr_cgroups;
++bool multiply_cgroup;
+ 
+ static int open_cgroup(const char *name)
+ {
+@@ -156,6 +157,10 @@ int parse_cgroups(const struct option *opt, const char *str,
+ 		return -1;
+ 	}
+ 
++	/* delay processing cgroups after it sees all events */
++	if (multiply_cgroup)
++		return 0;
++
+ 	for (;;) {
+ 		p = strchr(str, ',');
+ 		e = p ? p : eos;
+@@ -193,6 +198,79 @@ int parse_cgroups(const struct option *opt, const char *str,
+ 	return 0;
  }
  
-+struct evsel *evsel__clone(struct evsel *orig);
- struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
++int evlist__multiply_cgroup(struct evlist *evlist, const char *str)
++{
++	struct evlist *orig_list, *tmp_list;
++	struct evsel *pos, *evsel, *leader;
++	struct cgroup *cgrp = NULL;
++	const char *p, *e, *eos = str + strlen(str);
++	int ret = -1;
++
++	if (evlist->core.nr_entries == 0) {
++		fprintf(stderr, "must define events before cgroups\n");
++		return -EINVAL;
++	}
++
++	orig_list = evlist__new();
++	tmp_list = evlist__new();
++	if (orig_list == NULL || tmp_list == NULL) {
++		fprintf(stderr, "memory allocation failed\n");
++		return -ENOMEM;
++	}
++
++	/* save original events and init evlist */
++	perf_evlist__splice_list_tail(orig_list, &evlist->core.entries);
++	evlist->core.nr_entries = 0;
++
++	for (;;) {
++		p = strchr(str, ',');
++		e = p ? p : eos;
++
++		/* allow empty cgroups, i.e., skip */
++		if (e - str) {
++			/* termination added */
++			char *name = strndup(str, e - str);
++			if (!name)
++				break;
++
++			cgrp = cgroup__new(name);
++			free(name);
++			if (cgrp == NULL)
++				break;
++		} else {
++			cgrp = NULL;
++		}
++
++		leader = NULL;
++		evlist__for_each_entry(orig_list, pos) {
++			evsel = evsel__clone(pos);
++			evsel->cgrp = cgroup__get(cgrp);
++
++			if (evsel__is_group_leader(pos))
++				leader = evsel;
++			evsel->leader = leader;
++
++			evlist__add(tmp_list, evsel);
++		}
++		/* cgroup__new() has a refcount, release it here */
++		cgroup__put(cgrp);
++		nr_cgroups++;
++
++		perf_evlist__splice_list_tail(evlist, &tmp_list->core.entries);
++		tmp_list->core.nr_entries = 0;
++
++		if (!p) {
++			ret = 0;
++			break;
++		}
++		str = p+1;
++	}
++	evlist__delete(orig_list);
++	evlist__delete(tmp_list);
++
++	return ret;
++}
++
+ static struct cgroup *__cgroup__findnew(struct rb_root *root, uint64_t id,
+ 					bool create, const char *path)
+ {
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index e98d5975fe55..9a842f243dfb 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -17,6 +17,7 @@ struct cgroup {
+ };
  
- /*
+ extern int nr_cgroups; /* number of explicit cgroups defined */
++extern bool multiply_cgroup;  /* create events for each cgroup */
+ 
+ struct cgroup *cgroup__get(struct cgroup *cgroup);
+ void cgroup__put(struct cgroup *cgroup);
+@@ -24,6 +25,7 @@ void cgroup__put(struct cgroup *cgroup);
+ struct evlist;
+ 
+ struct cgroup *evlist__findnew_cgroup(struct evlist *evlist, const char *name);
++int evlist__multiply_cgroup(struct evlist *evlist, const char *cgroups);
+ 
+ void evlist__set_default_cgroup(struct evlist *evlist, struct cgroup *cgroup);
+ 
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index f8778cffd941..22f381fe93de 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -135,6 +135,7 @@ struct perf_stat_config {
+ 	struct rblist		 metric_events;
+ 	int			 ctl_fd;
+ 	int			 ctl_fd_ack;
++	char			*cgroups;
+ };
+ 
+ void perf_stat__set_big_num(int set);
 -- 
 2.28.0.526.ge36021eeef-goog
 
