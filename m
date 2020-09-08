@@ -2,137 +2,221 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63172C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1027C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14FC02074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588110;
-	bh=OYOtgndWecoxZwngBj2b+iEf7X5sIueE3Anj06XmutE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xcr/WLVe8OeoTLwKOP772LxSgqb9tBtB3oy9s55jo5EWBfboFdJozgqwCtG8Iv5e4
-	 wzSnIDklFDhiWiqrjHWaBCPJfhO8E9iYRGBpH7l5VaWGJOi0ef+R6yE4krrxPtKGwr
-	 kQs1QpuEsZhlIHlj1+AfvvHIy8LuQbEFDW7l0DSE=
+	by mail.kernel.org (Postfix) with ESMTP id 9B72F2074D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgIHSBr (ORCPT
+        id S1731955AbgIHSB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:01:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17156 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:12:10 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855C024786;
-        Tue,  8 Sep 2020 15:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580270;
-        bh=OYOtgndWecoxZwngBj2b+iEf7X5sIueE3Anj06XmutE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMfLFyUcNw5Zt0lhkDT6yBD0xi/ewm+LlpHUU3oGe3fThvHmqLXkZamd3oPkNbYFZ
-         +CQJ2Bd2K4HxpZpsRsg9XdCg+4/CjZjm3E646z8QlyHvk3/w458NqR5eHmt0Kszj1i
-         RKhQSLHT86o3DAjcs7at2lhxdgXcpYaMBptMtEk8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Karthik Shivaram <karthikgs@fb.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 75/88] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-Date:   Tue,  8 Sep 2020 17:26:16 +0200
-Message-Id: <20200908152224.923995652@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731606AbgIHR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:59:28 -0400
+IronPort-SDR: dxWIhuJ9uEGq59T5BmAc1ktPKug225/8S+3XFDwiK6p0jd/CvhXieFMVJ5RG7GlNxq1pSaICh3
+ 5DnZKZSxkF8Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="243012923"
+X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
+   d="scan'208";a="243012923"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:59:21 -0700
+IronPort-SDR: WARO9DJMBbdZU31c3kTwLwETLAhMPcS0hnrIUw7KAImr2M0Q6PsVL7nJiRlxDio9c6MmQ0fotY
+ hqlbo+byZkkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
+   d="scan'208";a="304175944"
+Received: from lkp-server01.sh.intel.com (HELO fc0154cbc871) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 08 Sep 2020 10:59:20 -0700
+Received: from kbuild by fc0154cbc871 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kFhtn-0000Ce-Cv; Tue, 08 Sep 2020 17:59:19 +0000
+Date:   Wed, 09 Sep 2020 01:58:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.09.04b] BUILD SUCCESS
+ e6195051140a6189b588b79e208e380dd8504a13
+Message-ID: <5f57c661.egqPb8FPh/s3aoyZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.09.04b
+branch HEAD: e6195051140a6189b588b79e208e380dd8504a13  squash! scftorture: Add an alternative IPI vector
 
-commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
+elapsed time: 720m
 
-All three generations of Sandisk SSDs lock up hard intermittently.
-Experiments showed that disabling NCQ lowered the failure rate significantly
-and the kernel has been disabling NCQ for some models of SD7's and 8's,
-which is obviously undesirable.
+configs tested: 147
+configs skipped: 10
 
-Karthik worked with Sandisk to root cause the hard lockups to trim commands
-larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
-limits max trim size to 128M and applies it to all three generations of
-Sandisk SSDs.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Karthik Shivaram <karthikgs@fb.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                          pxa3xx_defconfig
+x86_64                           allyesconfig
+m68k                          amiga_defconfig
+xtensa                              defconfig
+sh                        edosk7705_defconfig
+arm                         nhk8815_defconfig
+mips                           ip27_defconfig
+arm                   milbeaut_m10v_defconfig
+arc                              alldefconfig
+m68k                        m5272c3_defconfig
+mips                 decstation_r4k_defconfig
+alpha                               defconfig
+mips                malta_qemu_32r6_defconfig
+powerpc                     ep8248e_defconfig
+arm                          pxa910_defconfig
+arm                        spear3xx_defconfig
+arm                         lpc18xx_defconfig
+m68k                       m5208evb_defconfig
+mips                        bcm47xx_defconfig
+powerpc                      tqm8xx_defconfig
+mips                           rs90_defconfig
+xtensa                       common_defconfig
+arm                            u300_defconfig
+c6x                        evmc6457_defconfig
+sh                   sh7724_generic_defconfig
+mips                          ath79_defconfig
+openrisc                    or1ksim_defconfig
+sh                          lboxre2_defconfig
+powerpc                     mpc5200_defconfig
+h8300                     edosk2674_defconfig
+sh                          urquell_defconfig
+sh                        apsh4ad0a_defconfig
+c6x                        evmc6472_defconfig
+xtensa                           alldefconfig
+powerpc                      ppc64e_defconfig
+mips                       capcella_defconfig
+arm                         assabet_defconfig
+riscv                          rv32_defconfig
+m68k                       m5275evb_defconfig
+arm                            hisi_defconfig
+arm                       spear13xx_defconfig
+arm                          pxa168_defconfig
+arm                      pxa255-idp_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                     powernv_defconfig
+arm                            lart_defconfig
+csky                             alldefconfig
+arm                         lubbock_defconfig
+arm                          badge4_defconfig
+xtensa                           allyesconfig
+mips                malta_kvm_guest_defconfig
+s390                          debug_defconfig
+c6x                        evmc6678_defconfig
+arc                              allyesconfig
+arm                        spear6xx_defconfig
+powerpc                      ppc6xx_defconfig
+powerpc                    gamecube_defconfig
+s390                       zfcpdump_defconfig
+arm                       mainstone_defconfig
+sh                            shmin_defconfig
+mips                           ci20_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+x86_64               randconfig-a006-20200907
+x86_64               randconfig-a004-20200907
+x86_64               randconfig-a003-20200907
+x86_64               randconfig-a005-20200907
+x86_64               randconfig-a001-20200907
+x86_64               randconfig-a002-20200907
+i386                 randconfig-a004-20200908
+i386                 randconfig-a005-20200908
+i386                 randconfig-a006-20200908
+i386                 randconfig-a002-20200908
+i386                 randconfig-a001-20200908
+i386                 randconfig-a003-20200908
+i386                 randconfig-a004-20200907
+i386                 randconfig-a005-20200907
+i386                 randconfig-a006-20200907
+i386                 randconfig-a002-20200907
+i386                 randconfig-a003-20200907
+i386                 randconfig-a001-20200907
+x86_64               randconfig-a013-20200908
+x86_64               randconfig-a016-20200908
+x86_64               randconfig-a011-20200908
+x86_64               randconfig-a012-20200908
+x86_64               randconfig-a015-20200908
+x86_64               randconfig-a014-20200908
+i386                 randconfig-a016-20200907
+i386                 randconfig-a015-20200907
+i386                 randconfig-a011-20200907
+i386                 randconfig-a013-20200907
+i386                 randconfig-a014-20200907
+i386                 randconfig-a012-20200907
+i386                 randconfig-a016-20200908
+i386                 randconfig-a015-20200908
+i386                 randconfig-a011-20200908
+i386                 randconfig-a013-20200908
+i386                 randconfig-a014-20200908
+i386                 randconfig-a012-20200908
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a013-20200907
+x86_64               randconfig-a011-20200907
+x86_64               randconfig-a016-20200907
+x86_64               randconfig-a012-20200907
+x86_64               randconfig-a015-20200907
+x86_64               randconfig-a014-20200907
 
 ---
- drivers/ata/libata-core.c |    5 ++---
- drivers/ata/libata-scsi.c |    8 +++++++-
- include/linux/libata.h    |    1 +
- 3 files changed, 10 insertions(+), 4 deletions(-)
-
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4492,9 +4492,8 @@ static const struct ata_blacklist_entry
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
- 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
- 
--	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
--	   SD7SN6S256G and SD8SN8U256G */
--	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
-+	/* Sandisk SD7/8/9s lock up hard on large trims */
-+	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
- 
- 	/* devices which puke on READ_NATIVE_MAX */
- 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -2391,6 +2391,7 @@ static unsigned int ata_scsiop_inq_89(st
- 
- static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
- {
-+	struct ata_device *dev = args->dev;
- 	u16 min_io_sectors;
- 
- 	rbuf[1] = 0xb0;
-@@ -2416,7 +2417,12 @@ static unsigned int ata_scsiop_inq_b0(st
- 	 * with the unmap bit set.
- 	 */
- 	if (ata_id_has_trim(args->id)) {
--		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
-+		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
-+
-+		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
-+			max_blocks = 128 << (20 - SECTOR_SHIFT);
-+
-+		put_unaligned_be64(max_blocks, &rbuf[36]);
- 		put_unaligned_be32(1, &rbuf[28]);
- 	}
- 
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -439,6 +439,7 @@ enum {
- 	ATA_HORKAGE_NO_DMA_LOG	= (1 << 23),	/* don't use DMA for log read */
- 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
- 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
-+	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
- 
- 	 /* DMA mask for user DMA control: User visible values; DO NOT
- 	    renumber */
-
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
