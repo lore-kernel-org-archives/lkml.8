@@ -2,145 +2,98 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587E3C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3185BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194072098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE29206B5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUXYT5RH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cD4P+Wct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgIHLk7 (ORCPT
+        id S1729813AbgIHLqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
+        Tue, 8 Sep 2020 07:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729726AbgIHL1Y (ORCPT
+        with ESMTP id S1729741AbgIHLiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:27:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E88BC061573;
-        Tue,  8 Sep 2020 04:27:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w186so9817453pgb.8;
-        Tue, 08 Sep 2020 04:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cNJiQKqHXl3ggB9gGPvJiEIlNs0EsVy+KN+3KvCkwEU=;
-        b=BUXYT5RHI+HUP8HnCHtAN6P1ciD15/HRohJqCiUqRSdYTr0DygENXAcOXXNpeEAojD
-         qlxYEdApMKcWYf2tKEnIFrjpqUIFTJQTAep6mNJFid2UZHLNDRFBboUt55zwL26Y3JQB
-         HRt17SPwFnvP6w22HD0+E11txvpDngX4Pxdk3izcZrzZ3qrH06tjVbNayKIwVZkQmEGC
-         E05HffwerN44agqMkRtUBYtDADLHBQJiReLYOWAamztj/PFBmSYHfRceB7iR7wRqzn2W
-         6zTW2H2n8t/aAL/uJ4pygNySoJW8xFn1FYkJqRx3vrFLiLl5dZcNLGsJTyy71TEoZBoR
-         xBig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cNJiQKqHXl3ggB9gGPvJiEIlNs0EsVy+KN+3KvCkwEU=;
-        b=EdbjEtmWlg2RIt8j5gckemDJ4cVnkuN4KkQ+QdUwXTQVsfybooQgvBj6JGnsRuXUv2
-         0Y9ydnTE5uNPExKR88zmY3YePwVmZYQgrIjO2+IWcVKaDVRu8JJIvhix6WsjUY04po92
-         QU34fj/ROyfySbYMYxjQADqpu6nnw+5MY2qh28EydukVPPuoDexj2C0Rh8wPvqlr9zOt
-         lEp+ZZ/TUJaRigkOPMhvF078bunYYKqr5/xw0xzGYKlB7kajMQVpJOSGtXLzscLzuyR8
-         AgAjdBEj6X44T3aYiT91iz4PaWPbYAAnJTguy752eZ6qwQ2IRX7Zg4GFZU6TQxJOKAE/
-         2nHA==
-X-Gm-Message-State: AOAM530NcuiXGO5HUk1tOdLpZd5B1gKiLikRhh4gS0gbi4mu2/Opqf3r
-        RZMjVEwuVtzokAGi/IVHginJNetHj8Pj0lrKqRw=
-X-Google-Smtp-Source: ABdhPJzzc1klIcCXlVU0nr/4aY+iDqUFyN7Lkl/liw19bGK80Iep5eMlAXkUmFpxvJvldQTQkpu9g/NssTR+16PUCMw=
-X-Received: by 2002:a62:cfc5:0:b029:13e:d13d:a083 with SMTP id
- b188-20020a62cfc50000b029013ed13da083mr695254pfg.26.1599564443620; Tue, 08
- Sep 2020 04:27:23 -0700 (PDT)
+        Tue, 8 Sep 2020 07:38:23 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79DEC061573;
+        Tue,  8 Sep 2020 04:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3PuhP9uGjIipfkXqBzok/ejHi8BsHitcvoa7xFcrBwE=; b=cD4P+Wct6AGR6kYI5B+8HimOQk
+        HV95HuTMSTEL65KIotpV+hS46xqlFMrGV3guc5saUbuFu3HLVU5O0p9xFIWo+tSDfsMOR311qWrkf
+        Cf8IZoz7DZhSEkGLjNJacAyu/0yUt3keRVTYh6dUG6hLHL6nerlv/Omv9ZkY7HBkyYrM3yhl3LPsI
+        RGzbskPglasw1fVUx+hRejR7E2DfI7Q9DAwFX+xniqcJoviyajNk02GRLqtyuCFayy6gmfJl0yWEQ
+        jwQ7AoblGyki+qSw/Oxg7Bi+6UktcvDRYN9iWDJ9kXl6zLRcQ1KfGBMglDBVn27MVV46KfyUUQrad
+        2pOsKkrg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFbsb-0004Ni-Ui; Tue, 08 Sep 2020 11:33:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 092EA300130;
+        Tue,  8 Sep 2020 13:33:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B422923649288; Tue,  8 Sep 2020 13:33:39 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 13:33:39 +0200
+From:   peterz@infradead.org
+To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "cameron@moodycamel.com" <cameron@moodycamel.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "paulmck@kernel.org" <paulmck@kernel.org>,
+        "systemtap@sourceware.org" <systemtap@sourceware.org>
+Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
+ and make kretprobe lockless
+Message-ID: <20200908113339.GQ1362448@hirez.programming.kicks-ass.net>
+References: <20200901190808.GK29142@worktop.programming.kicks-ass.net>
+ <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
+ <20200902070226.GG2674@hirez.programming.kicks-ass.net>
+ <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
+ <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
+ <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
+ <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
+ <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
+ <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
+ <dd1b7b1fdbd84d20ad06abf0c06b4747@trendmicro.com>
 MIME-Version: 1.0
-References: <20200906031827.16819-1-xie.he.0141@gmail.com> <CA+FuTSfOeMB7Wv1t12VCTOqPYcTLq2WKdG4AJUO=gxotVRZiQw@mail.gmail.com>
- <CAJht_EO13aYPXBV7sEgOTuUhuHFTFFfdg7NBN2cEKAo6LK0DMQ@mail.gmail.com> <CA+FuTSdK6qgKwgie5Bqof8V5FR__dx-HgHUcDS5sgTQmH9B9uQ@mail.gmail.com>
-In-Reply-To: <CA+FuTSdK6qgKwgie5Bqof8V5FR__dx-HgHUcDS5sgTQmH9B9uQ@mail.gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Tue, 8 Sep 2020 04:27:12 -0700
-Message-ID: <CAJht_ENHmL322bS4BnarXLW+GjOC4ioQ8MMtnsqwOhF_gee5Yw@mail.gmail.com>
-Subject: Re: [PATCH net] net/packet: Fix a comment about hard_header_len and
- headroom allocation
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Or Cohen <orcohen@paloaltonetworks.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd1b7b1fdbd84d20ad06abf0c06b4747@trendmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 1:56 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> > > >  /*
-> > > >     Assumptions:
-> > > > -   - if device has no dev->hard_header routine, it adds and removes ll header
-> > > > -     inside itself. In this case ll header is invisible outside of device,
-> > > > -     but higher levels still should reserve dev->hard_header_len.
-> > > > -     Some devices are enough clever to reallocate skb, when header
-> > > > -     will not fit to reserved space (tunnel), another ones are silly
-> > > > -     (PPP).
-> > > > +   - If the device has no dev->header_ops, there is no LL header visible
-> > > > +     outside of the device. In this case, its hard_header_len should be 0.
-> > >
-> > > Such a constraint is more robustly captured with a compile time
-> > > BUILD_BUG_ON check. Please do add a comment that summarizes why the
-> > > invariant holds.
+On Tue, Sep 08, 2020 at 11:15:14AM +0000, Eddy_Wu@trendmicro.com wrote:
+> > From: peterz@infradead.org <peterz@infradead.org>
 > >
-> > I'm not sure how to do this. I guess both header_ops and
-> > hard_header_len are assigned at runtime. (Right?) I guess we are not
-> > able to check this at compile-time.
->
-> header_ops should be compile constant, and most devices use
-> struct initializers for hard_header_len, but of course you're right.
->
-> Perhaps a WARN_ON_ONCE, then.
-
-OK. Thank you for your suggestion! Actually I was not aware of these
-macros. So thank you for introducing them to me! I'll surely add this
-warning.
-
-> > > More about the older comment, but if reusing: it's not entirely clear
-> > > to me what "outside of the device" means. The upper layers that
-> > > receive data from the device and send data to it, including
-> > > packet_snd, I suppose? Not the lower layers, clearly. Maybe that can
-> > > be more specific.
+> > I'm now trying and failing to reproduce.... I can't seem to make it use
+> > int3 today. It seems to want to use ftrace or refuses everything. I'm
+> > probably doing it wrong.
 > >
-> > Yes, right. If a header is visible "outside of the device", it means
-> > the header is exposed to upper layers via "header_ops". If a header is
-> > not visible "outside of the device" and is only used "internally", it
-> > means the header is not exposed to upper layers via "header_ops".
-> > Maybe we can change it to "outside of the device driver"? We can
-> > borrow the idea of encapsulation in object-oriented programming - some
-> > things that happen inside a software component should not be visible
-> > outside of that software component.
->
-> How about "above"? If sketched as a network stack diagram, the code
-> paths and devices below the (possibly tunnel) device do see packets
-> with link layer header.
+> 
+> You can turn off CONFIG_KPROBES_ON_FTRACE (and also sysctl
+> debug.kprobes-optimization) to make it use int3 handler
 
-OK. I understand what you mean now. We need to make it clear that the
-header is only invisible to upper layers but not to "lower layers"
-that the device may rely on.
+I'm fairly sure I used the sysctl like in your original reproducer.
 
-I'm thinking about a way to clearly phrase this. "Above the device"
-might be confusing to people. Do you think this is good: "invisible to
-upper-layer code including the code in af_packet.c"? Or simply
-"invisible to upper-layer code"? Or just "invisible to upper layers"?
-(I don't like the last one because I feel according to the network
-stack diagram "upper layers" should already and always not care about
-the LL header.)
+I'll try again later.
