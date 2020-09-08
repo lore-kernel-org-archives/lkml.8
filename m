@@ -2,53 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C27C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A54C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D78C2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0E82080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589938;
-	bh=5yFNzowCWuQIL+Asx2yoUg6NJufu3MJx56DjDF2g47I=;
+	s=default; t=1599589997;
+	bh=ClG/J2D28CSekcsEzvDrVhqfY9dWzpT8JjtNaDePcb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJJvacquc1XONHYYPnvMpLbJcoRuz9Jw/el8rf8kHmoMbgRsNVAGX2+AXg/Naoqk9
-	 lEug+HZeaXxnWZhhPfjdBi8J6h3J8VEj8VVuI73DVOPhZA0EcUZBR/ZKWlc/uUoknO
-	 rTkYtpLh9eZiuF4l93JPGvrxbu0MX2uyzi9oARCA=
+	b=mQq3piQ7IAhhiuLilOc+BRbJsmi4GHaCKVgTMcy+0VfJIUK1dye7sJ1S9guMZRFxj
+	 DVBHQhQPOkEnrAhDHuwHz/T4F1T4jLGQTmV5NOiLiccDjk5W92KjkK3j8fDw4SGhX3
+	 zRrjPTPHndOAI9Ohad3jGrv4YQaAWlheAAsWYNKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbgIHScN (ORCPT
+        id S1731676AbgIHScu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:32:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731255AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731376AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:35 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5DBB24180;
-        Tue,  8 Sep 2020 15:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBE602463C;
+        Tue,  8 Sep 2020 15:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580174;
-        bh=5yFNzowCWuQIL+Asx2yoUg6NJufu3MJx56DjDF2g47I=;
+        s=default; t=1599580194;
+        bh=ClG/J2D28CSekcsEzvDrVhqfY9dWzpT8JjtNaDePcb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWsg5tb5g3cl/uwcJlbvf04pHYk3w8TWnnE2cyKSKfB3Zcxv1U6W24D1+BeARs2uJ
-         R9L/P3VVEF34MZh1MQHvr5mjZIBV9qKI+DmeFOZoVvXyiR6SB+QxXpECg2gAaSkyeM
-         ygrFA6hO5BNLbYwYtYjYO1AEdK6BtkSWOOeHsOKI=
+        b=JZhnRetBX7O+lQRdOxYYKWUoCrqsDMv8zn0Orp4R7SjIykNaRhleYQDK0I+PKBy1v
+         YYTjXZWBAC3tJsAXApUYcw24+76C8PegvhUBxPXJ/z1AYmoW+V232/9ciL+FQezQPI
+         yfetfik8z+HsvC5GeLTMWe2t/hPwVokfKnFqMrfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/88] btrfs: set the lockdep class for log tree extent buffers
-Date:   Tue,  8 Sep 2020 17:26:01 +0200
-Message-Id: <20200908152224.128966631@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+23b22dc2e0b81cbfcc95@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 67/88] ALSA: pcm: oss: Remove superfluous WARN_ON() for mulaw sanity check
+Date:   Tue,  8 Sep 2020 17:26:08 +0200
+Message-Id: <20200908152224.511519032@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -61,59 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit d3beaa253fd6fa40b8b18a216398e6e5376a9d21 ]
+commit 949a1ebe8cea7b342085cb6a4946b498306b9493 upstream.
 
-These are special extent buffers that get rewound in order to lookup
-the state of the tree at a specific point in time.  As such they do not
-go through the normal initialization paths that set their lockdep class,
-so handle them appropriately when they are created and before they are
-locked.
+The PCM OSS mulaw plugin has a check of the format of the counter part
+whether it's a linear format.  The check is with snd_BUG_ON() that
+emits WARN_ON() when the debug config is set, and it confuses
+syzkaller as if it were a serious issue.  Let's drop snd_BUG_ON() for
+avoiding that.
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+While we're at it, correct the error code to a more suitable, EINVAL.
+
+Reported-by: syzbot+23b22dc2e0b81cbfcc95@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200901131802.18157-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/ctree.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/core/oss/mulaw.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
-index 12b1a1c80c1b3..8007b6aacec60 100644
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -1347,6 +1347,8 @@ tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct btrfs_path *path,
- 	btrfs_tree_read_unlock_blocking(eb);
- 	free_extent_buffer(eb);
- 
-+	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb_rewin),
-+				       eb_rewin, btrfs_header_level(eb_rewin));
- 	btrfs_tree_read_lock(eb_rewin);
- 	__tree_mod_log_rewind(fs_info, eb_rewin, time_seq, tm);
- 	WARN_ON(btrfs_header_nritems(eb_rewin) >
-@@ -1420,7 +1422,6 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
- 
- 	if (!eb)
- 		return NULL;
--	btrfs_tree_read_lock(eb);
- 	if (old_root) {
- 		btrfs_set_header_bytenr(eb, eb->start);
- 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
-@@ -1428,6 +1429,9 @@ get_old_root(struct btrfs_root *root, u64 time_seq)
- 		btrfs_set_header_level(eb, old_root->level);
- 		btrfs_set_header_generation(eb, old_generation);
+--- a/sound/core/oss/mulaw.c
++++ b/sound/core/oss/mulaw.c
+@@ -329,8 +329,8 @@ int snd_pcm_plugin_build_mulaw(struct sn
+ 		snd_BUG();
+ 		return -EINVAL;
  	}
-+	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb), eb,
-+				       btrfs_header_level(eb));
-+	btrfs_tree_read_lock(eb);
- 	if (tm)
- 		__tree_mod_log_rewind(fs_info, eb, time_seq, tm);
- 	else
--- 
-2.25.1
-
+-	if (snd_BUG_ON(!snd_pcm_format_linear(format->format)))
+-		return -ENXIO;
++	if (!snd_pcm_format_linear(format->format))
++		return -EINVAL;
+ 
+ 	err = snd_pcm_plugin_build(plug, "Mu-Law<->linear conversion",
+ 				   src_format, dst_format,
 
 
