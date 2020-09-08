@@ -2,107 +2,199 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB12C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35865C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDF32068D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="KnYh3lHP"
+	by mail.kernel.org (Postfix) with ESMTP id F049D2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbgIHS7B (ORCPT
+        id S1731403AbgIHS66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:59:01 -0400
-Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:22168 "EHLO
-        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730572AbgIHS6w (ORCPT
+        Tue, 8 Sep 2020 14:58:58 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:51734 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726229AbgIHS6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:58:52 -0400
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 14:58:51 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1391; q=dns/txt; s=iport;
-  t=1599591531; x=1600801131;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=m2WVpZpXrtQFXh3Ql4JrliPwX+fM66/2SHqLhNxgwkY=;
-  b=KnYh3lHP4/Pu4OSlhFDHLVbfoxOVsRcMaYRNRv459un7R/dOKJu/TVfZ
-   knVJe3j1CGYS+0nTi6yI2AAbBjKCaDRKp537mXeHkDVYbh9mHX4Esi4E0
-   spzQSsk0yz4pU8CBK7o05+KtEyqKAqKdiHtDVeOhk+uBaODMXfKpMSj26
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.76,406,1592870400"; 
-   d="scan'208";a="732158731"
-Received: from rcdn-core-1.cisco.com ([173.37.93.152])
-  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 08 Sep 2020 18:51:43 +0000
-Received: from sjc-ads-9087.cisco.com (sjc-ads-9087.cisco.com [10.30.208.97])
-        by rcdn-core-1.cisco.com (8.15.2/8.15.2) with ESMTP id 088IphYE005304;
-        Tue, 8 Sep 2020 18:51:43 GMT
-Received: by sjc-ads-9087.cisco.com (Postfix, from userid 396877)
-        id D89BFBFD; Tue,  8 Sep 2020 11:51:42 -0700 (PDT)
-From:   Julius Hemanth Pitti <jpitti@cisco.com>
-To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
-        Julius Hemanth Pitti <jpitti@cisco.com>
-Subject: [PATCH] mm: memcg: yield cpu when we fail to charge pages
-Date:   Tue,  8 Sep 2020 11:50:51 -0700
-Message-Id: <20200908185051.62420-1-jpitti@cisco.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 8 Sep 2020 14:58:32 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Tue, 8 Sep 2020 11:58:30 -0700
+Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 9D69740B4E;
+        Tue,  8 Sep 2020 11:58:31 -0700 (PDT)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
+CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
+        <peterx@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
+        <vsirnapalli@vmware.com>, <akaher@vmware.com>
+Subject: [PATCH v2 v4.14.y 2/3] vfio-pci: Fault mmaps to enable vma tracking
+Date:   Wed, 9 Sep 2020 00:24:21 +0530
+Message-ID: <1599591263-46520-2-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599591263-46520-1-git-send-email-akaher@vmware.com>
+References: <1599591263-46520-1-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.30.208.97, sjc-ads-9087.cisco.com
-X-Outbound-Node: rcdn-core-1.cisco.com
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For non root CG, in try_charge(), we keep trying
-to charge until we succeed. On non-preemptive
-kernel, when we are OOM, this results in holding
-CPU forever.
+From: Alex Williamson <alex.williamson@redhat.com>
 
-On SMP systems, this doesn't create a big problem
-because oom_reaper get a change to kill victim
-and make some free pages. However on a single-core
-CPU (or cases where oom_reaper pinned to same CPU
-where try_charge is executing), oom_reaper shall
-never get scheduled and we stay in try_charge forever.
+commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
 
-Steps to repo this on non-smp:
-1. mount -t tmpfs none /sys/fs/cgroup
-2. mkdir /sys/fs/cgroup/memory
-3. mount -t cgroup none /sys/fs/cgroup/memory -o memory
-4. mkdir /sys/fs/cgroup/memory/0
-5. echo 40M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
-6. echo $$ > /sys/fs/cgroup/memory/0/tasks
-7. stress -m 5 --vm-bytes 10M --vm-hang 0
+Rather than calling remap_pfn_range() when a region is mmap'd, setup
+a vm_ops handler to support dynamic faulting of the range on access.
+This allows us to manage a list of vmas actively mapping the area that
+we can later use to invalidate those mappings.  The open callback
+invalidates the vma range so that all tracking is inserted in the
+fault handler and removed in the close handler.
 
-Signed-off-by: Julius Hemanth Pitti <jpitti@cisco.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.14]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 ---
- mm/memcontrol.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/vfio/pci/vfio_pci.c         | 76 ++++++++++++++++++++++++++++++++++++-
+ drivers/vfio/pci/vfio_pci_private.h |  7 ++++
+ 2 files changed, 81 insertions(+), 2 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 0d6f3ea86738..4620d70267cb 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2652,6 +2652,8 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	if (fatal_signal_pending(current))
- 		goto force;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 550ab77..c20c5ed 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -1120,6 +1120,70 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
+ 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
+ }
  
-+	cond_resched();
++static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
++			    struct vm_area_struct *vma)
++{
++	struct vfio_pci_mmap_vma *mmap_vma;
 +
- 	/*
- 	 * keep retrying as long as the memcg oom killer is able to make
- 	 * a forward progress or bypass the charge if the oom killer
++	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
++	if (!mmap_vma)
++		return -ENOMEM;
++
++	mmap_vma->vma = vma;
++
++	mutex_lock(&vdev->vma_lock);
++	list_add(&mmap_vma->vma_next, &vdev->vma_list);
++	mutex_unlock(&vdev->vma_lock);
++
++	return 0;
++}
++
++/*
++ * Zap mmaps on open so that we can fault them in on access and therefore
++ * our vma_list only tracks mappings accessed since last zap.
++ */
++static void vfio_pci_mmap_open(struct vm_area_struct *vma)
++{
++	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
++}
++
++static void vfio_pci_mmap_close(struct vm_area_struct *vma)
++{
++	struct vfio_pci_device *vdev = vma->vm_private_data;
++	struct vfio_pci_mmap_vma *mmap_vma;
++
++	mutex_lock(&vdev->vma_lock);
++	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
++		if (mmap_vma->vma == vma) {
++			list_del(&mmap_vma->vma_next);
++			kfree(mmap_vma);
++			break;
++		}
++	}
++	mutex_unlock(&vdev->vma_lock);
++}
++
++static int vfio_pci_mmap_fault(struct vm_fault *vmf)
++{
++	struct vm_area_struct *vma = vmf->vma;
++	struct vfio_pci_device *vdev = vma->vm_private_data;
++
++	if (vfio_pci_add_vma(vdev, vma))
++		return VM_FAULT_OOM;
++
++	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
++			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
++		return VM_FAULT_SIGBUS;
++
++	return VM_FAULT_NOPAGE;
++}
++
++static const struct vm_operations_struct vfio_pci_mmap_ops = {
++	.open = vfio_pci_mmap_open,
++	.close = vfio_pci_mmap_close,
++	.fault = vfio_pci_mmap_fault,
++};
++
+ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+ {
+ 	struct vfio_pci_device *vdev = device_data;
+@@ -1185,8 +1249,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+ 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+ 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
+ 
+-	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+-			       req_len, vma->vm_page_prot);
++	/*
++	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
++	 * change vm_flags within the fault handler.  Set them now.
++	 */
++	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
++	vma->vm_ops = &vfio_pci_mmap_ops;
++
++	return 0;
+ }
+ 
+ static void vfio_pci_request(void *device_data, unsigned int count)
+@@ -1243,6 +1313,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	vdev->irq_type = VFIO_PCI_NUM_IRQS;
+ 	mutex_init(&vdev->igate);
+ 	spin_lock_init(&vdev->irqlock);
++	mutex_init(&vdev->vma_lock);
++	INIT_LIST_HEAD(&vdev->vma_list);
+ 
+ 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
+ 	if (ret) {
+diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+index f561ac1..4b78f12 100644
+--- a/drivers/vfio/pci/vfio_pci_private.h
++++ b/drivers/vfio/pci/vfio_pci_private.h
+@@ -63,6 +63,11 @@ struct vfio_pci_dummy_resource {
+ 	struct list_head	res_next;
+ };
+ 
++struct vfio_pci_mmap_vma {
++	struct vm_area_struct	*vma;
++	struct list_head	vma_next;
++};
++
+ struct vfio_pci_device {
+ 	struct pci_dev		*pdev;
+ 	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
+@@ -95,6 +100,8 @@ struct vfio_pci_device {
+ 	struct eventfd_ctx	*err_trigger;
+ 	struct eventfd_ctx	*req_trigger;
+ 	struct list_head	dummy_resources_list;
++	struct mutex		vma_lock;
++	struct list_head	vma_list;
+ };
+ 
+ #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
 -- 
-2.17.1
+2.7.4
 
