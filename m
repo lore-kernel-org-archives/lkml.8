@@ -2,122 +2,167 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD0C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB63C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3E9E20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A8/Cm5SA"
+	by mail.kernel.org (Postfix) with ESMTP id 57FC020768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599590156;
+	bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Bm7TqrpBERYQ8O/veHTefK7FV/y0vfyWH7YU5fJe8hVmbrFwlICVxbO9EVUkj/QD+
+	 rivfbjjWUwYullGJqcSxu/eKpLWsWJMqG3RdzqloDEB41oOB/Ohh1MKUmRgUq6f1Y+
+	 Ckurf5BAlU1R2fvJwSQhlpdzBxEKbRPwzkIQr050=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbgIHSfi (ORCPT
+        id S1731723AbgIHScJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731504AbgIHSfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:35:11 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF06C061757
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:35:11 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o20so11680660pfp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=E2vQ4j8MCVU3HUG4FesnKAfpUPuoFei5xwviweF/Jkc=;
-        b=A8/Cm5SAiCk+X9euHqXmlnVbhDyvM43YhtgFOH45nnhE128vdpoyhX6fLIWQjxkPPj
-         Ghj5bkGAU3n0c8di9QFlbAuhND9e3zEA8qPROVlslGptxicwtozSNWntZKBoLt9UkxUS
-         6xtyTmw6h1dzYydv9Z1EGSrwJR8kE5ekSrki0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=E2vQ4j8MCVU3HUG4FesnKAfpUPuoFei5xwviweF/Jkc=;
-        b=FqxX3eQdC327AQkoix6UZS1mHiQf5uAURGyXuwDPN8DNzc1idpfTlt7jJobyNrOaoB
-         Csq2CwimJi2VOAJrl2YJMu6db2UyH87prFATl8hlpul/NE1p52EWRo0uLONv6U7/iC5z
-         AGPwRnHo624ncUaFqC3CRDcPq5gLdSmt/3/7ASQSvUZKbbvb5Z7L82IzjZ6LvABiVRsQ
-         5pxalUe07PpP8H3aRKcYfNEysvyIspf+7+uTCiknSj07+3RVmM0CfbtaKgTbaTa7TYe0
-         aLwx1uDfDP18yjDWXokE5Yirj2JpNhE1djH62BKv7pN8cEH036FWuSclzcFQvLCyO1v9
-         dS/g==
-X-Gm-Message-State: AOAM532+IQ7mIcbfybE/YxoYL4INEgw9ehivUgAbTum9yqJ5M3naadqj
-        +ES4Q4XbR83bmC7lZM8034S/zbc1sB0ccA==
-X-Google-Smtp-Source: ABdhPJxagMwsWahh7Pg0UcI3i2Yd33Y3kBmfW2ArSA5YslR0vvVLJV0PZRIvG78rkdJDqbMA1gF6cA==
-X-Received: by 2002:a17:902:6902:b029:d0:cb2d:f26d with SMTP id j2-20020a1709026902b02900d0cb2df26dmr447444plk.6.1599590110647;
-        Tue, 08 Sep 2020 11:35:10 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id q4sm122755pfs.193.2020.09.08.11.35.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 11:35:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 8 Sep 2020 14:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731379AbgIHQJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:35 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3B002417F;
+        Tue,  8 Sep 2020 15:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580199;
+        bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cfe2M1xjPKfRY9UPwb2ELVn+dJnDTbD81a67MASP7pZsCK9C1dcIXYoijkMzA8jP9
+         dpi8cmyvC1inB8vFPhPSd6TSyK9HX46lT75HjjmiuuQwxPS00QqHodDEQu2+Xob8FY
+         CoPW0kvrLsZ1L6uyqeNe62m7QEKHBKIINW8LEgqY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 69/88] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
+Date:   Tue,  8 Sep 2020 17:26:10 +0200
+Message-Id: <20200908152224.621006485@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1599536645-4593-1-git-send-email-mansur@codeaurora.org>
-References: <1599536645-4593-1-git-send-email-mansur@codeaurora.org>
-Subject: Re: [PATCH 1/2] venus: core: change clk enable and disable order in resume and suspend
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org,
-        Mansur Alisha Shaik <mansur@codeaurora.org>
-To:     Mansur Alisha Shaik <mansur@codeaurora.org>,
-        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Date:   Tue, 08 Sep 2020 11:35:08 -0700
-Message-ID: <159959010893.454335.18221321331314189759@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Mansur Alisha Shaik (2020-09-07 20:44:05)
-> Currently video driver is voting after clk enable and un voting
-> before clk disable. Basically we should vote before clk enable
-> and un vote after clk disable.
->=20
-> Corrected this by changing the order of clk enable and clk disable.
->=20
-> Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
-> ---
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-Any Fixes: tag?
+commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
 
->  drivers/media/platform/qcom/venus/core.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/pla=
-tform/qcom/venus/core.c
-> index c5af428..4857bbd 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -363,13 +363,16 @@ static __maybe_unused int venus_runtime_suspend(str=
-uct device *dev)
->         if (ret)
->                 return ret;
-> =20
-> +       if (pm_ops->core_power) {
-> +               ret =3D pm_ops->core_power(dev, POWER_OFF);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
->         ret =3D icc_set_bw(core->cpucfg_path, 0, 0);
->         if (ret)
->                 return ret;
+Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
+However, as long as he investigated, the design of this model is hardly
+similar to the one of Digi 00x family. It's better to exclude the model
+from modalias of ALSA firewire-digi00x driver.
 
-Shouldn't we power it back up if this fails during suspend?
+This commit changes device entries so that the model is excluded.
 
-> =20
-> -       if (pm_ops->core_power)
-> -               ret =3D pm_ops->core_power(dev, POWER_OFF);
-> -
->         return ret;
->  }
->
+$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
+404  31333934  bus_name "1394"
+408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
+40c  00a07e01  company_id 00a07e     |
+410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+
+               root directory
+               -----------------------------------------------------------------
+414  0005d08c  directory_length 5, crc 53388
+418  0300a07e  vendor
+41c  8100000c  --> descriptor leaf at 44c
+420  0c008380  node capabilities
+424  8d000002  --> eui-64 leaf at 42c
+428  d1000004  --> unit directory at 438
+
+               eui-64 leaf at 42c
+               -----------------------------------------------------------------
+42c  0002410f  leaf_length 2, crc 16655
+430  00a07e01  company_id 00a07e     |
+434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+
+               unit directory at 438
+               -----------------------------------------------------------------
+438  0004d6c9  directory_length 4, crc 54985
+43c  1200a02d  specifier id: 1394 TA
+440  13014001  version: Vender Unique and AV/C
+444  17000001  model
+448  81000009  --> descriptor leaf at 46c
+
+               descriptor leaf at 44c
+               -----------------------------------------------------------------
+44c  00077205  leaf_length 7, crc 29189
+450  00000000  textual descriptor
+454  00000000  minimal ASCII
+458  41766964  "Avid"
+45c  20546563  " Tec"
+460  686e6f6c  "hnol"
+464  6f677900  "ogy"
+468  00000000
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  000599a5  leaf_length 5, crc 39333
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  41647265  "Adre"
+47c  6e616c69  "nali"
+480  6e650000  "ne"
+
+Reported-by: Simon Wood <simon@mungewell.org>
+Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/firewire/digi00x/digi00x.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/sound/firewire/digi00x/digi00x.c
++++ b/sound/firewire/digi00x/digi00x.c
+@@ -15,6 +15,7 @@ MODULE_LICENSE("GPL v2");
+ #define VENDOR_DIGIDESIGN	0x00a07e
+ #define MODEL_CONSOLE		0x000001
+ #define MODEL_RACK		0x000002
++#define SPEC_VERSION		0x000001
+ 
+ static int name_card(struct snd_dg00x *dg00x)
+ {
+@@ -185,14 +186,18 @@ static const struct ieee1394_device_id s
+ 	/* Both of 002/003 use the same ID. */
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_CONSOLE,
+ 	},
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_RACK,
+ 	},
+ 	{}
+
+
