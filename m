@@ -2,95 +2,93 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41533C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070BE218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIt2V0AI"
+	by mail.kernel.org (Postfix) with ESMTP id 8CC1A21D43
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599549668;
+	bh=xVxVAtIHJcO6KUDLBsqaTImTwuMgwUwnIEbsGDNDDvI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0r+2VztUuJ9ouWEsQwTxgjRvH+nxHGA4kVDtup4PT+U0HD04RNngRgpyqr47FJ764
+	 3EkGevyE9elkSpzivEPHVH0XLulmVy618PM5merWMOWMUmFO5pSWfVwX4mGhW7sNLl
+	 NEMezEf6pD+2uox7A9etcJ6MZJhWaZxMYtPZ6Ptg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgIHHUF (ORCPT
+        id S1729492AbgIHHVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:20:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48047 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729143AbgIHHT5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:19:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599549596;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oAK5y1+Xvz1lIhReUB6ZQQkskl47YwSrG+rKXr4g4Tc=;
-        b=dIt2V0AIblRJN4ROVR+EZdl0PTyOaEhNgDtI1/LVIHw6XwBo+UtMKoO+XKZbYvdObp5oK8
-        UAFMNMnsVHDE4h20v2q9Z+zyxWEnRsUBEpGkEgannPujlk08vRetIYzXAfdTO+rt/MzXGv
-        iVdgpktkWtXzNBl26H1VaMzb7gCBG8Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-zYRkH69sOAatOO8XY33R9w-1; Tue, 08 Sep 2020 03:19:54 -0400
-X-MC-Unique: zYRkH69sOAatOO8XY33R9w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 8 Sep 2020 03:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729080AbgIHHVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:21:04 -0400
+Received: from mail.kernel.org (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C17B2FD04;
-        Tue,  8 Sep 2020 07:19:53 +0000 (UTC)
-Received: from gshan.redhat.com (vpn2-54-90.bne.redhat.com [10.64.54.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C38A1972A;
-        Tue,  8 Sep 2020 07:19:51 +0000 (UTC)
-From:   Gavin Shan <gshan@redhat.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, anshuman.khandual@arm.com, shan.gavin@gmail.com
-Subject: [PATCH 2/2] arm64/mm: Use CONT_SHIFT to define CONT_PTE_SHIFT
-Date:   Tue,  8 Sep 2020 17:19:31 +1000
-Message-Id: <20200908071931.47767-2-gshan@redhat.com>
-In-Reply-To: <20200908071931.47767-1-gshan@redhat.com>
-References: <20200908071931.47767-1-gshan@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6900521D42;
+        Tue,  8 Sep 2020 07:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599549664;
+        bh=xVxVAtIHJcO6KUDLBsqaTImTwuMgwUwnIEbsGDNDDvI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gDattiwIJ9kvnvaLvHyrlCjlIfTNE+KPZ4aOsRzrTCFUNLAQPPy8TNnVyaOZesMwU
+         2LLhi/WXS/z3H2/+9KwI3tXFP53gpc4/bEAIX3V1awgpGiIcQJA0hFyXulDNWcRq6a
+         HXkY9rjBpYYfFuGtKXD8g0i3XqL7Q0HunpYj/H2E=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kFXw5-00Axvl-3g; Tue, 08 Sep 2020 09:21:01 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Subject: [PATCH 0/2] Add a quirk for dwc3 driver, requred for Hikey 970 USB to work
+Date:   Tue,  8 Sep 2020 09:20:55 +0200
+Message-Id: <cover.1599549364.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The macro CONT_PTE_SHIFT actually depends on CONT_SHIFT, which has
-been defined in page-def.h, based on CONFIG_ARM64_CONT_SHIFT. Lets
-reflect the dependency.
+This small patch series add a new quirk for the dwc3 driver. The first patch
+was submitted previously to the USB mailing list:
 
-Signed-off-by: Gavin Shan <gshan@redhat.com>
----
- arch/arm64/include/asm/pgtable-hwdef.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+	https://patchwork.kernel.org/patch/10909965/
 
-diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-index 8a399e666837..0bd9469f4323 100644
---- a/arch/arm64/include/asm/pgtable-hwdef.h
-+++ b/arch/arm64/include/asm/pgtable-hwdef.h
-@@ -81,14 +81,12 @@
- /*
-  * Contiguous page definitions.
-  */
-+#define CONT_PTE_SHIFT		(CONT_SHIFT + PAGE_SHIFT)
- #ifdef CONFIG_ARM64_64K_PAGES
--#define CONT_PTE_SHIFT		(5 + PAGE_SHIFT)
- #define CONT_PMD_SHIFT		(5 + PMD_SHIFT)
- #elif defined(CONFIG_ARM64_16K_PAGES)
--#define CONT_PTE_SHIFT		(7 + PAGE_SHIFT)
- #define CONT_PMD_SHIFT		(5 + PMD_SHIFT)
- #else
--#define CONT_PTE_SHIFT		(4 + PAGE_SHIFT)
- #define CONT_PMD_SHIFT		(4 + PMD_SHIFT)
- #endif
- 
+This quirk is also present at the official Linaro's tree for Hikey 970.
+
+Without that, the URBs produced by the USB HID driver returns -EPROTO
+errors, causing an endless reset loop, on every 0.5 seconds.
+
+Please notice that I don't have any documentation about Synopsys
+dwc3 driver. So, I tried my best to document this quirk at patch 2,
+but I can't add anything more specifics, as I don't have any datasheets
+from such IP.
+
+Mauro Carvalho Chehab (1):
+  dt-bindings: document a new quirk for dwc3
+
+Yu Chen (1):
+  usb: dwc3: Add splitdisable quirk for Hisilicon Kirin Soc
+
+ .../devicetree/bindings/usb/dwc3.txt          |  3 +++
+ drivers/usb/dwc3/core.c                       | 25 +++++++++++++++++++
+ drivers/usb/dwc3/core.h                       |  7 ++++++
+ 3 files changed, 35 insertions(+)
+
 -- 
-2.23.0
+2.26.2
+
 
