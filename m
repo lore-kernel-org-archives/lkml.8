@@ -2,104 +2,116 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D10C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF6BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1BE208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F303207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599584317;
-	bh=1oFmjQlUgTa71eRFaKWUQb7zp5miWus6zoZgGzOe5WY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nd63Sr1LAfmnjS1VL7gkvjnmTrVhz4ytfoqcxMxGis3sb8pPcw14/BtrT+swrDSsv
-	 kyziLP5F9sSJq22ZMk2PNz0L1s89CCQbxI0VVe5ZSI/33wKrp4vICevhlEJ/WBEM0G
-	 BHR9q+uTnGxZ1B28WX8doOLBuB5R9vyz9gpQeIMM=
+	s=default; t=1599584342;
+	bh=ltST+N2nkPHvcvm7JM5iKGeE+dIaJdibruzqpP8T40g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LNya+jLbbDzjmBFmHhBug+kGX40Iax1+BgM9K8yoZd86MYi+rJG/TCrGxKVBQN2+b
+	 /pYu3quiHgPKNBTIrYZsbhUwKi6JEgXJONJUencIJGbHtUP3lMVY5WFJWmi3ot4iZH
+	 tWKEEEnNNAAN9UJpWgEciXcKKu8mbwcxdSqL+lCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbgIHQ6a (ORCPT
+        id S1731844AbgIHQ67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731864AbgIHQUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:20:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731849AbgIHQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:20:07 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC429206B8;
-        Tue,  8 Sep 2020 12:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D28C1221E3
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599567137;
-        bh=1oFmjQlUgTa71eRFaKWUQb7zp5miWus6zoZgGzOe5WY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SsM3uXHS3WpdsVZYPEApclhAwZMRIwwg/+fC6ZWLMZ34+WlbTavcoPCfeKBpDrq0P
-         t/NZ9W7hdsJALfCsGcktqFz0jiBd8FBhTqmVmyEsMWZOzwMo9cZ8/DONK+XaQtT8QP
-         Hn/eWkEW6gDH3zz/TEaICOdklnUmvTDAnZZxSrV0=
-Date:   Tue, 8 Sep 2020 13:11:33 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        tiwai@suse.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 1/7] soundwire: bus: use property to set interrupt masks
-Message-ID: <20200908121133.GA5551@sirena.org.uk>
-References: <20200818140656.29014-1-yung-chuan.liao@linux.intel.com>
- <20200818140656.29014-2-yung-chuan.liao@linux.intel.com>
- <20200828065125.GI2639@vkoul-mobl>
- <ec5fe867-f2e4-4278-0376-e54bcdd7f94d@perex.cz>
+        s=default; t=1599566928;
+        bh=ltST+N2nkPHvcvm7JM5iKGeE+dIaJdibruzqpP8T40g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lvMYbcf2Ibl+iac3x1pKdiMwh0OR3WjP+192kCA8xya69fNPOeYR1yJxOTXQ+J+yc
+         ZxrTgF6czpTYAvCpXMIK7Lhl5AUBjmQvtpIQybs1OJUTe6q6j+e7omdFgoLTJi55jY
+         OuPkkXlHjmePtJck1Z9u25ED4sQIPfZQn/Xt3mH0=
+Received: by mail-ua1-f42.google.com with SMTP id e41so4959387uad.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:08:47 -0700 (PDT)
+X-Gm-Message-State: AOAM533jzKYqGRL0FlFILyg8y0KEgdTHHO+ncE4xfrji7FT8b03bgpvg
+        INjn+rZHcIs8gP+cS+YwMvHO1hL0H4QTWPYYkXNumg==
+X-Google-Smtp-Source: ABdhPJzn5o5SdhSG4SNzohoTwQqYAZp7JwVtypVBguxbjsJFGyTmhXrdBWjuiaFKPmjaiikdExbd/KIqXlbl31C3Bcg=
+X-Received: by 2002:ab0:136f:: with SMTP id h44mr12688533uae.60.1599566926910;
+ Tue, 08 Sep 2020 05:08:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
-In-Reply-To: <ec5fe867-f2e4-4278-0376-e54bcdd7f94d@perex.cz>
-X-Cookie: Vini, vidi, Linux!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-6-manivannan.sadhasivam@linaro.org> <20200908103444.5e526uawa45om6lt@vireshk-i7>
+ <20200908111141.GB23095@mani> <20200908111813.bbgfxo5v7qt6ujpc@vireshk-i7> <CAHLCerMndYeEBOxtj8mV7OdOP9pufx+C7n1F9m+CFAneuh8DnA@mail.gmail.com>
+In-Reply-To: <CAHLCerMndYeEBOxtj8mV7OdOP9pufx+C7n1F9m+CFAneuh8DnA@mail.gmail.com>
+From:   Amit Kucheria <amitk@kernel.org>
+Date:   Tue, 8 Sep 2020 17:38:36 +0530
+X-Gmail-Original-Message-ID: <CAHLCerPm6MXr662CaA3zZm4fQ3dJ_StJt3Ehutc3xnc0L9wj3Q@mail.gmail.com>
+Message-ID: <CAHLCerPm6MXr662CaA3zZm4fQ3dJ_StJt3Ehutc3xnc0L9wj3Q@mail.gmail.com>
+Subject: Re: [PATCH 5/7] cpufreq: qcom-hw: Use regmap for accessing hardware registers
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Taniya Das <tdas@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 8, 2020 at 5:18 PM Amit Kucheria <amitk@kernel.org> wrote:
+>
+> On Tue, Sep 8, 2020 at 4:48 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 08-09-20, 16:41, Manivannan Sadhasivam wrote:
+> > > On 0908, Viresh Kumar wrote:
+> > > > On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
+> > > > > Use regmap for accessing cpufreq registers in hardware.
+> > > >
+> > > > Why ? Please mention why a change is required in the log.
+> > > >
+> > >
+> > > Only because it is recommended to use regmap for abstracting the hw access.
+> >
+> > Yes it can be very useful in abstracting the hw access in case of
+> > busses like SPI/I2C, others, but in this case there is only one way of
+> > doing it with the exact same registers. I am not sure it is worth it
+> > here. FWIW, I have never played with regmaps personally, and so every
+> > chance I can be wrong here.
+>
+> One could handle the reg offsets through a struct initialisation, but
+> then you end up with lots of #defines for bitmasks and bits for each
+> version of the IP. And the core code becomes a bit convoluted IMO,
+> trying to handle the differences.
+>
+> regmap hides the differences of the bit positions and register offsets
+> between several IP versions.
+>
+> > > Moreover it handles the proper locking for us in the core (spinlock vs mutex).
+> >
+> > What locking do you need here ?
+>
+> Right, locking isn't the main reason here.
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Having said this, perhaps this patch can be held back for now, since
+we're not yet using some of the features of regmap to abstract away
+bit fields and such.
 
-On Tue, Sep 08, 2020 at 02:05:11PM +0200, Jaroslav Kysela wrote:
-> Dne 28. 08. 20 v 8:51 Vinod Koul napsal(a):
+We don't strictly need it for just different register offsets.
 
-> >>  sound/soc/codecs/rt700-sdw.c    |  4 ++++
-> >>  sound/soc/codecs/rt711-sdw.c    |  4 ++++
-> >>  sound/soc/codecs/rt715-sdw.c    |  4 ++++
-> >>  sound/soc/codecs/wsa881x.c      |  1 +
-
-> > This touches codecs, can you Ack it please
-
-> Mark, could you ack the ASoC change to accept this patch via the soundwire repo?
-
-I don't have this patch and since I seem to get copied on quite a lot of
-soundwire only serieses I just delete them unread mostly.
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9XdPQACgkQJNaLcl1U
-h9A5ngf+OrSLYDYVzhuanGeitM41iGcNjpTuhcMxyOTDKbQbseAq9/Ho+tDeS7by
-cIPCEOX9UaRBBlqeursubOr0+EXPmtZGo5t3NqZ6MfOtpZlpcwMq4taAAokRSZBw
-E6uNY6NDb2qP3RoTJ1UIR5qbz80uBgVtIRH58O4LQ3qrk1lJ3qbbi4lZCt1kwZ0p
-D2au1Cuu6iUw0VJ3Or+Rt82XQvE4QesxmlfYR4yCZHw5M4y7c1jFTJa1knNvBcXe
-7C5xmIG/XjqV3yzZgvyosEC1UecbE4R1ibauAx8FDPVahRRYGgeoDArzc/+64OyD
-XLbOiBKLJhbWo4M1CKMEuuVWA2FzKw==
-=UJFU
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+Regards,
+Amit
