@@ -2,99 +2,89 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F19C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A4621D41
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ERXWzrnP"
+	by mail.kernel.org (Postfix) with ESMTP id 0F8DB20C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgIHDAI (ORCPT
+        id S1728547AbgIHDCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 23:00:08 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37173 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbgIHDAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 23:00:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BlqdH1TH1z9sT6;
-        Tue,  8 Sep 2020 13:00:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599534003;
-        bh=CQHN0e/Qn6UFNS+n67zmmyp7Fusk1jwKZkCaWPvtNf8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ERXWzrnPfFSmoVIRraPjIQ/onRfVmc884U8Na7Ku1MMhzJWd/gVKA2GRSPcQ06BIa
-         4F/SHqr5XHnFn8WwRm6XxyOO4mljeQE9BTt/nudmEAEAkGRLVWPHlvlv0E2EqWXeDP
-         4LtYWHhru9MK9M1vB53TIvaVs3MOY4ayr2qTuaXMgP3E3x0Ry1YJdDB9Gq1x0FyLcX
-         if3U+lxaoJlM/CPwKPvOm8+H0fR3ogNlZHWMP9qDtKXH90PWIIKONQGQuxZzt6V3e/
-         RJUy4N5eBlwvhRitYCIvhbF3dQ0l1qaReGh2zkFHwDWPiXnsUYm5zGpaFaOKl0FWDl
-         eNOibKiTUGIJQ==
-Date:   Tue, 8 Sep 2020 13:00:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the net-next tree
-Message-ID: <20200908130000.7d33d787@canb.auug.org.au>
+        Mon, 7 Sep 2020 23:02:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11255 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728327AbgIHDCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 23:02:30 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AE48EE57535693C496F3;
+        Tue,  8 Sep 2020 11:02:27 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 8 Sep 2020 11:02:19 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 4/7] net: hns3: remove unused field 'io_base' in struct hns3_enet_ring
+Date:   Tue, 8 Sep 2020 10:59:51 +0800
+Message-ID: <1599533994-32744-5-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
+References: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0QZPUHBHJ9Zkw26n/AB6g6B";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0QZPUHBHJ9Zkw26n/AB6g6B
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+'io_base' has been defined and initialized, but never used,
+so remove it.
 
-Hi all,
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 --
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 1 -
+ 2 files changed, 3 deletions(-)
 
-After merging the net-next tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 47ab2a5..1d66f84 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -3670,12 +3670,10 @@ static void hns3_ring_get_cfg(struct hnae3_queue *q, struct hns3_nic_priv *priv,
+ 		ring = &priv->ring[q->tqp_index];
+ 		desc_num = priv->ae_handle->kinfo.num_tx_desc;
+ 		ring->queue_index = q->tqp_index;
+-		ring->io_base = (u8 __iomem *)q->io_base + HNS3_TX_REG_OFFSET;
+ 	} else {
+ 		ring = &priv->ring[q->tqp_index + queue_num];
+ 		desc_num = priv->ae_handle->kinfo.num_rx_desc;
+ 		ring->queue_index = q->tqp_index;
+-		ring->io_base = q->io_base;
+ 	}
+ 
+ 	hnae3_set_bit(ring->flag, HNAE3_RING_TYPE_B, ring_type);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+index 9922c5f..0c146e7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
+@@ -380,7 +380,6 @@ struct ring_stats {
+ };
+ 
+ struct hns3_enet_ring {
+-	u8 __iomem *io_base; /* base io address for the ring */
+ 	struct hns3_desc *desc; /* dma map address space */
+ 	struct hns3_desc_cb *desc_cb;
+ 	struct hns3_enet_ring *next;
+-- 
+2.7.4
 
-net/bridge/br_multicast.c: In function 'br_multicast_find_port':
-net/bridge/br_multicast.c:1818:21: warning: unused variable 'br' [-Wunused-=
-variable]
- 1818 |  struct net_bridge *br =3D mp->br;
-      |                     ^~
-
-Introduced by commit
-
-  0436862e417e ("net: bridge: mcast: support for IGMPv3/MLDv2 ALLOW_NEW_SOU=
-RCES report")
-
-Maybe turning mlock_dereference into a static inline function would help.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0QZPUHBHJ9Zkw26n/AB6g6B
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9W87AACgkQAVBC80lX
-0Gwztgf9Hh2jrtu1RZqYuFJwNmxvdAOWUVelOVXq0kiT/OO7wuFzMD4wNcojcwyj
-HJDJsmFHrEaLh5clmSNYFK9LE/h1pmOCQYQmhDGUjOs9CnqrvlWrpBxsz60+8EtL
-556vbIvsZRImj/43lwpKbiTevG+J/JfjYw7vlkEMIzv9bFl1SlcFgmwFyziSxSWW
-vbQ9BfdO3qNWpi5cn5UvCFqyoUzyPElQNxrP3JLIKGOt+a4oloMjMWwmIdysShcA
-CVOengcuKzNIO2eRnVjBKMCyP+N2lc6ual2yKqVSpzmEbF7pbZogu3dYYxe7clbo
-IGELVZvZHG8SbxGTCV4WnxEsIYn+IA==
-=xjf+
------END PGP SIGNATURE-----
-
---Sig_/0QZPUHBHJ9Zkw26n/AB6g6B--
