@@ -2,93 +2,82 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA4DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AE0C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC9D2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34A732087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585418;
-	bh=pktw6c1CUBLPWEzsCjqwNvU46iLYhUlQd+syHKcIKAo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRpzv3rDuaa1CSLXOi8VrpFL7wP5zLsOq+a9y6Dwz9rzoLD70//CHVx8OSyesYLL4
-	 nLWI1n9M1JgWRDGh/6mICVNpBjiUXUcalHoTPgwZbAPtaXx7EVwYXJ6zLQbqrZmeim
-	 g3a0FT1MxZlmwd7FH/f7qa641bo2LsEiOukXap+w=
+	s=default; t=1599585426;
+	bh=MLbB+MGwr/r5a0jx3JnLPatiU4On+aPxTZ/schrAPb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U0r1z8M6TPV9Tc2qDOlgOCg3XbVkRrJKjNenrrf/L3cGgs7F/gUWma2tTqStoyMjm
+	 KfpKNO2YRNaxsR9cgABlNpntXQXgdI+SbnaFh3itbE6Wb1iWv+D0F7QmxoDY2cZywW
+	 UOaKeU5EWODAlY5p9tzGmHdj0q1VNGnWY/o3Eq+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbgIHRQ4 (ORCPT
+        id S1732024AbgIHRRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:17:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731761AbgIHQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731760AbgIHQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5C4924858;
-        Tue,  8 Sep 2020 15:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A67B72067C;
+        Tue,  8 Sep 2020 11:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579915;
-        bh=pktw6c1CUBLPWEzsCjqwNvU46iLYhUlQd+syHKcIKAo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Ywn27CRiMCsSaO+im22FSJjGXz2GQOeTptJUfSuvNl4G1E3PtV6BPs3QjorjrCBj
-         Z5qnIkDOIGqNBiBwYVZHh3KwN3O9DIz0B0LLMBw9pq+MUmVXCi07sUjElFQmHK2KkT
-         nXeM+LJYR0H8eIJVuAHVb6L3c7EblI4xpsLjhyZc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Richmond <t.d.richmond@gmail.com>,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 085/129] btrfs: tree-checker: fix the error message for transid error
-Date:   Tue,  8 Sep 2020 17:25:26 +0200
-Message-Id: <20200908152233.949756641@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1599566094;
+        bh=MLbB+MGwr/r5a0jx3JnLPatiU4On+aPxTZ/schrAPb8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JAijrfA70TLd2SlHXaPJ7sJAG2b3/itt6wTJkQ9xzFwtj9xstl1hwVKhAvEnYhTXX
+         nT6c2aribxoYEyWLw2ee+agJ+24B1WaYjoa7se3qUTwLH8zr9WxA6oA8Y7Vnmd5KOH
+         IFHKJKT4NpDrV3A4iWY4YidN6r/Se+41BPyNMr84=
+Date:   Tue, 8 Sep 2020 13:55:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Huacai Chen <chenhuacai@gmail.com>, Takashi Iwai <tiwai@suse.de>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2] Revert "ALSA: hda: Add support for Loongson 7A1000
+ controller"
+Message-ID: <20200908115506.GA1624115@kroah.com>
+References: <1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn>
+ <s5hsgcb59gw.wl-tiwai@suse.de>
+ <CAAhV-H5V5adhY2OjJLxW7x3zDaHGgBxxy45hjf22+qMSEBQuww@mail.gmail.com>
+ <bf50515b-a018-a66d-188a-4901428e66a6@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf50515b-a018-a66d-188a-4901428e66a6@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+On Tue, Sep 08, 2020 at 11:09:31AM +0800, Tiezhu Yang wrote:
+> On 09/08/2020 08:37 AM, Huacai Chen wrote:
+> > Hi, all
+> > 
+> > This patch should be backported to 5.4.
+> 
+> Hi,
+> 
+> Commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
+> 7A1000 controller") has been not yet merged into 5.4, so no
+> need to backport.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/pci/hda/hda_intel.c?h=v5.4
 
-commit f96d6960abbc52e26ad124e69e6815283d3e1674 upstream.
+It showed up in 5.4.62, so yes, it does need to go there.
 
-The error message for inode transid is the same as for inode generation,
-which makes us unable to detect the real problem.
+thanks,
 
-Reported-by: Tyler Richmond <t.d.richmond@gmail.com>
-Fixes: 496245cac57e ("btrfs: tree-checker: Verify inode item")
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/tree-checker.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -772,7 +772,7 @@ static int check_inode_item(struct exten
- 	/* Here we use super block generation + 1 to handle log tree */
- 	if (btrfs_inode_generation(leaf, iitem) > super_gen + 1) {
- 		inode_item_err(fs_info, leaf, slot,
--			"invalid inode generation: has %llu expect (0, %llu]",
-+			"invalid inode transid: has %llu expect [0, %llu]",
- 			       btrfs_inode_generation(leaf, iitem),
- 			       super_gen + 1);
- 		return -EUCLEAN;
-
-
+greg k-h
