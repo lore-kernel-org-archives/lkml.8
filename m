@@ -2,79 +2,142 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434BB2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8832166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:54:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TR3ZoyMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgIHIwc (ORCPT
+        id S1729457AbgIHIyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:52:32 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54814 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729831AbgIHIwZ (ORCPT
+        Tue, 8 Sep 2020 04:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729378AbgIHIyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:52:25 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F0CA21C0B7F; Tue,  8 Sep 2020 10:52:20 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 10:52:20 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Sebastian Reichel <sre@kernel.org>, ruleh <ruleh@gmx.de>
-Subject: Re: [PATCHv3 0/3] Lost key-up interrupt handling for omap4-keypad
-Message-ID: <20200908085220.GA31790@duo.ucw.cz>
-References: <20200318225727.29327-1-tony@atomide.com>
+        Tue, 8 Sep 2020 04:54:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E655C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:54:46 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u13so9594307pgh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=ex1fX1NtuHc8hEhYz2q3N1DA37jYJdBynWyV2dLsWOI=;
+        b=TR3ZoyMeHl9eHSOWfOD8I4Sf7s2fOzVi6PM7Yj8wNN7KwJODMIpaSsYC6Pyn5tDQcH
+         q4XnNo9u+LMStIowLNCwRZyQaJi3U7SeEfF5cJmL60TkxZLlpDqK/JQFVafZ9j2L8S0G
+         svuCnbDrGvE+QvU2ygTyTZ+PUEbUP1PLvf9T3p0SmUKNbaay9jvhcw+cnAWNaeZfqk3K
+         Sq38f2TccO+F38LQ3eQh955iFNcoJdoYHmgCEonBcsolC+jHbvoYupiSw4041bsH15PZ
+         ufEnWmrlTt6c4kYjMyC5B5ICRNZBsskzBaCetk7gG0lLKAqLiyg2xQu8SYuULfEG5ulT
+         vSaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=ex1fX1NtuHc8hEhYz2q3N1DA37jYJdBynWyV2dLsWOI=;
+        b=EToUHFrWtac9jMRkWRgJdg4MC6Xsr7kWEV4D8YRuZjCRBnjFhIBAeCUGWALcSgtdMC
+         BgLFwFiXGPasx378+AJ6pa4erw+H93tZ9/jUyqjJZ28DLKt5fGrecdHED2Wa150KW+sb
+         sHTp4LALnsUV3cUpoBFp+fcN20agb7w9zsQ4DG0s8msn4t7EHeA9an/6MkcM0mjkBmhO
+         XiJpo+yngm4LfJ3AdAj9zqnk2ob9a7qlxmJVZ5aCxfIBIDK0Fdl6cd2KI63+3s38u3vL
+         703AgJXLZnpgS4CnWpOvlUFpg0I1Xkf29YF40pQbui8QFs+WOr0m46RRjuNhpu3/BLuO
+         gs8w==
+X-Gm-Message-State: AOAM5324e89trXId7iY5b3S7YDhiYOg+lEMbPAp7Mg31ZrdIep012vDo
+        niWlQuXIV6c+3pVHmPu+Xq8=
+X-Google-Smtp-Source: ABdhPJzaH4LSCk2cy2RdfTrz3Men6W3SL6+DCGxwzimSryedVSk8dG5ZkJVIuXI0DvpBEpBnkIFDkQ==
+X-Received: by 2002:a63:490f:: with SMTP id w15mr19473095pga.323.1599555285912;
+        Tue, 08 Sep 2020 01:54:45 -0700 (PDT)
+Received: from localhost ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id p68sm17798313pfb.40.2020.09.08.01.54.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 01:54:45 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 18:54:40 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v1 4/5] powerpc/fault: Avoid heavy
+ search_exception_tables() verification
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
+        <b07bac7a882c69deb9e6c8f234a68b3022f29072.1596734105.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <b07bac7a882c69deb9e6c8f234a68b3022f29072.1596734105.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
-In-Reply-To: <20200318225727.29327-1-tony@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-Id: <1599554783.p12klynd6d.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
+> search_exception_tables() is an heavy operation, we have to avoid it.
+> When KUAP is selected, we'll know the fault has been blocked by KUAP.
+> Otherwise, it behaves just as if the address was already in the TLBs
+> and no fault was generated.
+>=20
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry I missed reviewing this. Yes, we discussed this and decided
+that it's not effective I think (and KUAP solves it properly).
 
-Hi!
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
 
-> This series updates omap4-keypad to disable unused long interrupts, and
-> implements the missing parts for the lost key-up interrupt quirk as
-> described in the silicon errata pdf.
-
-I do not see this in 5.9-rc4; problem is real, could we get this
-merged?
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1dGRAAKCRAw5/Bqldv6
-8mhuAJ0bd0adr/q5qzqRpWKN76Rv7KHL3QCgv6h/HnTSYDg2UPC1NWKtXP8ISAs=
-=4jTF
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
+> ---
+>  arch/powerpc/mm/fault.c | 20 +++++---------------
+>  1 file changed, 5 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+> index 525e0c2b5406..edde169ba3a6 100644
+> --- a/arch/powerpc/mm/fault.c
+> +++ b/arch/powerpc/mm/fault.c
+> @@ -214,24 +214,14 @@ static bool bad_kernel_fault(struct pt_regs *regs, =
+unsigned long error_code,
+>  	if (address >=3D TASK_SIZE)
+>  		return true;
+> =20
+> -	if (!is_exec && (error_code & DSISR_PROTFAULT) &&
+> -	    !search_exception_tables(regs->nip)) {
+> +	// Read/write fault blocked by KUAP is bad, it can never succeed.
+> +	if (bad_kuap_fault(regs, address, is_write)) {
+>  		pr_crit_ratelimited("Kernel attempted to access user page (%lx) - expl=
+oit attempt? (uid: %d)\n",
+> -				    address,
+> -				    from_kuid(&init_user_ns, current_uid()));
+> -	}
+> -
+> -	// Fault on user outside of certain regions (eg. copy_tofrom_user()) is=
+ bad
+> -	if (!search_exception_tables(regs->nip))
+> -		return true;
+> -
+> -	// Read/write fault in a valid region (the exception table search passe=
+d
+> -	// above), but blocked by KUAP is bad, it can never succeed.
+> -	if (bad_kuap_fault(regs, address, is_write))
+> +				    address, from_kuid(&init_user_ns, current_uid()));
+>  		return true;
+> +	}
+> =20
+> -	// What's left? Kernel fault on user in well defined regions (extable
+> -	// matched), and allowed by KUAP in the faulting context.
+> +	// What's left? Kernel fault on user and allowed by KUAP in the faultin=
+g context.
+>  	return false;
+>  }
+> =20
+> --=20
+> 2.25.0
+>=20
+>=20
