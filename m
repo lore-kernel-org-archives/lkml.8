@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4A2C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397F120768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF49320768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585587;
-	bh=5cTymgNOd6yMe07rM04lmyuuYPSuueVZ4FEQI/Htjg8=;
+	s=default; t=1599585605;
+	bh=JDYV8v1+7ZrAM/vICWsPnHxOJgCjCaTnOlIEWADJcJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGT2ZIfliJngd0ge9UmeUxWx3u+vTDpMzW4dERUVy3JGlD8QbfD9QqS3LBjvS8aC1
-	 /nxIZwA6jTCBg513hSjnJKU5zN7zlQ+w5VDnRq4YeBufVSi7vxqDhYt/YVza0OyeRx
-	 xcYEiv379vSDwRNnecEL6tx8ZS8OETEaC3EpyFhA=
+	b=eSFsHZHB/3c0wSYMTRIB1dzqzvHV8QOERyNggp9MJv2StQWNdAAEoWZqERfplXNv5
+	 aCgWKGxAQsdoVo7PVPhrTcSzKVm7J67cJidhb/UHYgZh4dqsdyjnn4bMga4Xh3PQZj
+	 ejB8aDaOKrH7SOVFxEM+D8Qj8DKPczYL+RFR35EQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgIHRTm (ORCPT
+        id S1726715AbgIHRT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731744AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731682AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:03 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 812AE24814;
-        Tue,  8 Sep 2020 15:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5C224810;
+        Tue,  8 Sep 2020 15:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579817;
-        bh=5cTymgNOd6yMe07rM04lmyuuYPSuueVZ4FEQI/Htjg8=;
+        s=default; t=1599579806;
+        bh=JDYV8v1+7ZrAM/vICWsPnHxOJgCjCaTnOlIEWADJcJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8knyMCJq7FdjCBsQ39TvJguCYn5MkZvnLrqOBqWZRAadZKSYCU8LkyeRWesWexzg
-         hulOIHpx5zc+sGxHbO1DfMY3yWQIQNPeSKUvc4gZvcF0mB21eo4lGVAx7bkHXMxwMa
-         TBZiNGP8YgLejN+5GQJHrnjgZh1irRA0FhY1u24k=
+        b=Y+A9hhpcjEqGnv08i/kzhsDPIjoRh14dduETUTrmaaL9Rl5HjDAKsGfzSW0dj3/He
+         MqUUDeIwYZgDxafV9BBk0vMjq27j+MEHkx0XbbCNHoW257jZ7mP9pEExSiXwzTFrxI
+         FFdxZ5oWRlGUI2hBtYrjENgq51xumjcxZA2QKyBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Gabriel Ganne <gabriel.ganne@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/129] drm/amd/display: Reject overlay plane configurations in multi-display scenarios
-Date:   Tue,  8 Sep 2020 17:24:17 +0200
-Message-Id: <20200908152230.517905225@linuxfoundation.org>
+Subject: [PATCH 5.4 040/129] gtp: add GTPA_LINK info to msg sent to userspace
+Date:   Tue,  8 Sep 2020 17:24:41 +0200
+Message-Id: <20200908152231.681088972@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -62,71 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit 168f09cdadbd547c2b202246ef9a8183da725f13 ]
+[ Upstream commit b274e47d9e3f4dcd4ad4028a316ec22dc4533ac7 ]
 
-[Why]
-These aren't stable on some platform configurations when driving
-multiple displays, especially on higher resolution.
+During a dump, this attribute is essential, it enables the userspace to
+know on which interface the context is linked to.
 
-In particular the delay in asserting p-state and validating from
-x86 outweights any power or performance benefit from the hardware
-composition.
-
-Under some configurations this will manifest itself as extreme stutter
-or unresponsiveness especially when combined with cursor movement.
-
-[How]
-Disable these for now. Exposing overlays to userspace doesn't guarantee
-that they'll be able to use them in any and all configurations and it's
-part of the DRM contract to have userspace gracefully handle validation
-failures when they occur.
-
-Valdiation occurs as part of DC and this in particular affects RV, so
-disable this in dcn10_global_validation.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Tested-by: Gabriel Ganne <gabriel.ganne@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/gtp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-index 1599bb9711111..e860ae05feda1 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-@@ -1151,6 +1151,7 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
- 	bool video_large = false;
- 	bool desktop_large = false;
- 	bool dcc_disabled = false;
-+	bool mpo_enabled = false;
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index d89ec99abcd63..634bdea38ecb3 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1182,6 +1182,7 @@ static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
+ 		goto nlmsg_failure;
  
- 	for (i = 0; i < context->stream_count; i++) {
- 		if (context->stream_status[i].plane_count == 0)
-@@ -1159,6 +1160,9 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
- 		if (context->stream_status[i].plane_count > 2)
- 			return DC_FAIL_UNSUPPORTED_1;
- 
-+		if (context->stream_status[i].plane_count > 1)
-+			mpo_enabled = true;
-+
- 		for (j = 0; j < context->stream_status[i].plane_count; j++) {
- 			struct dc_plane_state *plane =
- 				context->stream_status[i].plane_states[j];
-@@ -1182,6 +1186,10 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
- 		}
- 	}
- 
-+	/* Disable MPO in multi-display configurations. */
-+	if (context->stream_count > 1 && mpo_enabled)
-+		return DC_FAIL_UNSUPPORTED_1;
-+
- 	/*
- 	 * Workaround: On DCN10 there is UMC issue that causes underflow when
- 	 * playing 4k video on 4k desktop with video downscaled and single channel
+ 	if (nla_put_u32(skb, GTPA_VERSION, pctx->gtp_version) ||
++	    nla_put_u32(skb, GTPA_LINK, pctx->dev->ifindex) ||
+ 	    nla_put_be32(skb, GTPA_PEER_ADDRESS, pctx->peer_addr_ip4.s_addr) ||
+ 	    nla_put_be32(skb, GTPA_MS_ADDRESS, pctx->ms_addr_ip4.s_addr))
+ 		goto nla_put_failure;
 -- 
 2.25.1
 
