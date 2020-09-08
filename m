@@ -2,171 +2,124 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674F1C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32D8321D43
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09AE921D43
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MKLCvQoo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dzitBvmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgIHITE (ORCPT
+        id S1729896AbgIHIT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:19:04 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49162 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729554AbgIHITC (ORCPT
+        Tue, 8 Sep 2020 04:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729627AbgIHITz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:19:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0888ITMI075895;
-        Tue, 8 Sep 2020 03:18:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599553109;
-        bh=4eo8hs8HzetIEb9ibaaRaZuLk1d4NQhqq0X0s00zao4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MKLCvQooUkJ1q9w460K7G/4x+lYIEwCtwqnkxihR5/16AjtXRZkcUYAduUV/FBbsU
-         2eMDFi3HgH0Dt2wMUQccqQSW7nqAarGYzYRo3KKDRc9aLyoL19zruegCnpm7jsR+/g
-         HCmFxnHuuEyM7H5I42Ah/XZkvJgVOycZyE9/qESE=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0888ITxQ048580
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Sep 2020 03:18:29 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
- 2020 03:18:29 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Sep 2020 03:18:29 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0888IPRk107862;
-        Tue, 8 Sep 2020 03:18:26 -0500
-Subject: Re: [PATCH] drm: mxsfb: check framebuffer pitch
-To:     Stefan Agner <stefan@agner.ch>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        <jsarha@ti.com>
-CC:     <marex@denx.de>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200907160343.124405-1-stefan@agner.ch>
- <20200907161712.GF6047@pendragon.ideasonboard.com>
- <20200907181855.GE2352366@phenom.ffwll.local>
- <86615b4b1551d4a6f1cfcc13b38e616c@agner.ch>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <dc5a16d0-4d2a-366a-7716-29dd8db1a12a@ti.com>
-Date:   Tue, 8 Sep 2020 11:18:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 04:19:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5AFAC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:19:54 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c18so18078904wrm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=onJm5JoeC8wX6+ligEVQFIaG2k7uPzPHxbYAuHbpW6s=;
+        b=dzitBvmxxPd0DOKY9vCthE+mkoJQdvLGSUrs45nVY4M2qJIhMIdhBpg+WPNIEgAjwp
+         5UWlLrxf7Ppw74nA3bkqczIe988DdwWh1PM+3HL101h8pJB9EtURdgqnb7ni48A4zE5T
+         UUxGfMrgNOVAtzRNhGwxcue4hF8QcriQCL26kKOANnOTW21JuHdjbn9Q4IQlGBMMu5TY
+         jJkmwnqSskLaP3dH4lSMdhEetwX5bQVtQlMHWU0KFDaax4lvrE4F0OdR1Ofj3KgmC3BN
+         7GHontSjT9d2tK8/GyDr5/MIWOQvrYqBJb2IrFXXIZ+b0P2zbDeYwDIIQcmP7CRAQkh4
+         HCwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=onJm5JoeC8wX6+ligEVQFIaG2k7uPzPHxbYAuHbpW6s=;
+        b=ffhmY6kXsjK4MPI3MdWHcGpWplzrkILns3e57giQuHX//rSkGJBaJofM3qxiY2///6
+         gCelL9RG4Nqihq/ZLHS5Nq9fQn7oAANZlnLsd8CuTYhBGNaPRywBxKtpqSuds4h8Atlx
+         cJi7Td6LSsP8Ro7iwUNpvn9Gh/1iu2dYVpcETIyAQxYgwIpVvt1SVMNHqsc0iyo1j8uh
+         WKNJdPKNmgh8qozZD8aZD5FoUlOH7g4u+QLPXBmYVOaqcWuOWuS839g5v8OJKitUaWoO
+         SkMAVEIg1nCKdLxF0OkAeLAVF+L6dV0Gj2RmwCOHMNfAmaQMw4MfL4mzRPX4rQEleeit
+         NgAA==
+X-Gm-Message-State: AOAM531Tnev4NuC1PdoBc6ebgUSJU8wLZIEk4xi0CuBoKXF8DZbeiSl4
+        t+Zm+9BRIxEAjQ6B0BsOIc1p13M2d+79WQ==
+X-Google-Smtp-Source: ABdhPJxj2bfSNW8Ovib+gu1LoHpS3QT4XJEReAaEIVQ3y4/K/GkrM+u+4MSvbj4y4JreCiUH4teq/Q==
+X-Received: by 2002:adf:ab5a:: with SMTP id r26mr24977054wrc.194.1599553192356;
+        Tue, 08 Sep 2020 01:19:52 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id c205sm31146488wmd.33.2020.09.08.01.19.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 01:19:51 -0700 (PDT)
+Subject: Re: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
+To:     Jonathan Marek <jonathan@marek.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200901003300.11985-1-jonathan@marek.ca>
+ <20200907123344.GA2371705@kroah.com>
+ <a9d142c9-8a61-ee59-d849-393af1b3eaec@marek.ca>
+ <e0db9beb-bbd2-8f20-d7f4-675b62acf782@linaro.org>
+ <4b617c4c-f0f8-3d6b-c726-9dd4bf705fbc@marek.ca>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <ba161732-038e-de38-e357-a36494ad92ab@linaro.org>
+Date:   Tue, 8 Sep 2020 09:19:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <86615b4b1551d4a6f1cfcc13b38e616c@agner.ch>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <4b617c4c-f0f8-3d6b-c726-9dd4bf705fbc@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 08/09/2020 10:55, Stefan Agner wrote:
-> On 2020-09-07 20:18, Daniel Vetter wrote:
->> On Mon, Sep 07, 2020 at 07:17:12PM +0300, Laurent Pinchart wrote:
->>> Hi Stefan,
+
+On 07/09/2020 15:02, Jonathan Marek wrote:
 >>>
->>> Thank you for the patch.
->>>
->>> On Mon, Sep 07, 2020 at 06:03:43PM +0200, Stefan Agner wrote:
->>>> The lcdif IP does not support a framebuffer pitch (stride) other than
->>>> the CRTC width. Check for equality and reject the state otherwise.
->>>>
->>>> This prevents a distorted picture when using 640x800 and running the
->>>> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
->>>
->>> s/tires/tries/
->>>
->>>> leads at that particular resolution to width != stride. Currently
->>>> Mesa has no fallback behavior, but rejecting this configuration allows
->>>> userspace to handle the issue correctly.
->>>
->>> I'm increasingly impressed by how featureful this IP core is :-)
->>>
->>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>>> ---
->>>>  drivers/gpu/drm/mxsfb/mxsfb_kms.c | 22 ++++++++++++++++++----
->>>>  1 file changed, 18 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_kms.c b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
->>>> index b721b8b262ce..79aa14027f91 100644
->>>> --- a/drivers/gpu/drm/mxsfb/mxsfb_kms.c
->>>> +++ b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
->>>> @@ -403,14 +403,28 @@ static int mxsfb_plane_atomic_check(struct drm_plane *plane,
->>>>  {
->>>>  	struct mxsfb_drm_private *mxsfb = to_mxsfb_drm_private(plane->dev);
->>>>  	struct drm_crtc_state *crtc_state;
->>>> +	unsigned int pitch;
->>>> +	int ret;
->>>>
->>>>  	crtc_state = drm_atomic_get_new_crtc_state(plane_state->state,
->>>>  						   &mxsfb->crtc);
->>>>
->>>> -	return drm_atomic_helper_check_plane_state(plane_state, crtc_state,
->>>> -						   DRM_PLANE_HELPER_NO_SCALING,
->>>> -						   DRM_PLANE_HELPER_NO_SCALING,
->>>> -						   false, true);
->>>> +	ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
->>>> +						  DRM_PLANE_HELPER_NO_SCALING,
->>>> +						  DRM_PLANE_HELPER_NO_SCALING,
->>>> +						  false, true);
->>>> +	if (ret || !plane_state->visible)
->>>
->>> Would it be more explict to check for !plane_state->fb ? Otherwise I'll
->>> have to verify that !fb always implies !visible :-)
->>>
->>>> +		return ret;
->>>> +
->>>> +	pitch = crtc_state->mode.hdisplay *
->>>> +		plane_state->fb->format->cpp[0];
->>>
->>> This holds on a single line.
->>>
->>>> +	if (plane_state->fb->pitches[0] != pitch) {
->>>> +		dev_err(plane->dev->dev,
->>>> +			"Invalid pitch: fb and crtc widths must be the same");
->>>
->>> I'd turn this into a dev_dbg(), printing error messages to the kernel
->>> log in response to user-triggered conditions is a bit too verbose and
->>> could flood the log.
->>>
->>> Wouldn't it be best to catch this issue when creating the framebuffer ?
+>>> Srini do you have any suggestions for how to name these values?
 >>
->> Yeah this should be verified at addfb time. We try to validate as early as
->> possible.
->> -Daniel
+>> These are domain id corresponding to each core.
+>> you can use SDSP_DOMAIN_ID in here!
+>> these are already defined in the file as:
+>>
+>> #define ADSP_DOMAIN_ID (0)
+>> #define MDSP_DOMAIN_ID (1)
+>> #define SDSP_DOMAIN_ID (2)
+>> #define CDSP_DOMAIN_ID (3)
 >>
 > 
-> Sounds sensible. From what I can tell fb_create is the proper callback
-> to implement this at addfb time. Will give this a try.
+> I don't think this is right:
 > 
-> FWIW, I got the idea from drivers/gpu/drm/tilcdc/tilcdc_plane.c. Maybe
-> should be moved to addfb there too?
+> FASTRPC_IOCTL_INIT_ATTACH uses pd = 0
+> FASTRPC_IOCTL_INIT_CREATE uses pd = 1
+> 
+> And these two ioctl are used with all DSP cores. So it wouldn't make 
+> sense for the pd value to correspond to the domain id.
+> 
+You are right, values are pretty much similar to domain ids but not 
+exactly the same as Protection Domain(PD) ids.
 
-But you don't know the crtc width when creating the framebuffer.
+I spoke to qcom guys about this, and this is what I have.
 
- Tomi
+0 is Audio Process PD
+1 is Dynamic User PD, cases like SNPE or CV
+2 is Sensor Process PD.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+Hope this helps!
+
+--srini
