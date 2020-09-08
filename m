@@ -2,127 +2,149 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E074C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99016C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D12E521D1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F6B21D1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599550424;
+	bh=PVSSlZ7Uaf8BkjWldKCFBALWWbApIq8zDDF8hQ5P0tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gKpFY7ijhWU0rYedHG+Bg/GtTEoxzJhc/qjmq1qeB/QPLduV5knWJMMnLlaofWNs8
+	 tF8UUExMOlzH+unT3QLdoA8WsLtdl76FXdDQdsStIDz8RPmuhIewJL43AYj8fpxAAk
+	 4GJKYBq4+4PhB+CeCaIjhPLLFtRaSIb4io+kwkBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbgIHHdc (ORCPT
+        id S1728137AbgIHHdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:33:32 -0400
-Received: from mail-il1-f207.google.com ([209.85.166.207]:36483 "EHLO
-        mail-il1-f207.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbgIHHdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:33:21 -0400
-Received: by mail-il1-f207.google.com with SMTP id f20so11443698ilg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:33:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=BOREg4ynb+fPnN3e6LDGE1Wyh7kbbVZvm+CMgLSzhTY=;
-        b=TRwjzgDDpIdYc/4SRc4q3CJFwTJX7o6wHdK11sfyiFudmorTm61n4aZZgdxwhVpRj6
-         LUOIE1TXoOGz5Fcck8+A39Z4pJKsyIhgZS7HHXhMUt4VvX1dtjjGlMxIkOK8YwUtmzTA
-         Jg/tdDmPdAuNRHiuyHV10yAiQhBLhbLwaMpZ5w3HFcacyFMApz2XdcZvMZnhyUgrKaEe
-         uq3ehN2PUq8807tg6MB3RSKH1JzYA7OgtE/rN4LzAy1dC3bK/qojPcH9GdynyRtwRFSe
-         +0MRAhSe71nSDK/jlGyZi2PHJy762G/GVkIeCE0Y/E8pvMOGL8YvbFH5vQshrtg+Rw/T
-         aygA==
-X-Gm-Message-State: AOAM531AgJAt/HiT06CHThbzV8VMg6k9SC/kZa1eK9af7Cx6Kw11t/bB
-        QbCsySdseeq7xfcXJtnEHKc4MQznR0D3TWWrY7JuUYp2Uv/4
-X-Google-Smtp-Source: ABdhPJwaTImHa51NL/wpTIwANersbSYjuM915z1X5HNmgz9VWgEKlDBrYRSzvTFLD0PjXXNrskhwTGUMvkvCt9jKLsX2U7M894mG
+        Tue, 8 Sep 2020 03:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729229AbgIHHdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:33:36 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8F1E218AC;
+        Tue,  8 Sep 2020 07:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599550416;
+        bh=PVSSlZ7Uaf8BkjWldKCFBALWWbApIq8zDDF8hQ5P0tk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VaselhRfYKFR7jx3vh6moUnhaMD7gSgAEyQEgiqk7aW9rmkZ4yYb+4kGU4tjPfnXI
+         syIkg3Ahe1Zb/Phl3r5TwMHTlr1hcVt0HlevnPJiI0aj+zpIGgtoWgo0L3+fNL9V4u
+         i7SZDaKVgrGxQ/L/D+LcAwozWhhlTTsxt5LQ/SMA=
+Received: by pali.im (Postfix)
+        id 9D231617; Tue,  8 Sep 2020 09:33:33 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 09:33:33 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andre Heider <a.heider@gmail.com>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: marvell: espressobin: Simplify v7 ethernet
+ port labeling
+Message-ID: <20200908073333.i4mpjfcay42kkhq5@pali>
+References: <20200908073050.535919-1-a.heider@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1381:: with SMTP id w1mr1167608jad.34.1599550399784;
- Tue, 08 Sep 2020 00:33:19 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 00:33:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000061311205aec85935@google.com>
-Subject: WARNING: refcount bug in smc_release (3)
-From:   syzbot <syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        ubraun@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200908073050.535919-1-a.heider@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tuesday 08 September 2020 09:30:50 Andre Heider wrote:
+> Now that the switch ports have a label in the .dtsi, simplify the whole
+> "switch0" block for the v7 dts files.
+> 
+> Signed-off-by: Andre Heider <a.heider@gmail.com>
 
-syzbot found the following issue on:
+Thank you, looks good!
 
-HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=114602f2900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=8b963fe6ec74e5dac8d7
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Reviewed-by: Pali Rohár <pali@kernel.org>
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 1 PID: 28422 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 28422 Comm: syz-executor.3 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x4a kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
-Code: 07 31 ff 89 de e8 97 d2 d8 fd 84 db 0f 85 36 ff ff ff e8 4a d6 d8 fd 48 c7 c7 a0 da 93 88 c6 05 43 e5 11 07 01 e8 39 e7 a9 fd <0f> 0b e9 17 ff ff ff e8 2b d6 d8 fd 0f b6 1d 28 e5 11 07 31 ff 89
-RSP: 0018:ffffc90017fafdd8 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: ffff8880477d43c0 RSI: ffffffff815dafc7 RDI: fffff52002ff5fad
-RBP: 0000000000000002 R08: 0000000000000001 R09: ffff8880ae720f8b
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888084ef0540
-R13: ffff88800011aa80 R14: ffff888084ef0558 R15: 0000000000000000
- refcount_add include/linux/refcount.h:204 [inline]
- refcount_inc include/linux/refcount.h:241 [inline]
- sock_hold include/net/sock.h:692 [inline]
- smc_release+0x41d/0x490 net/smc/af_smc.c:180
- __sock_release+0xcd/0x280 net/socket.c:596
- sock_close+0x18/0x20 net/socket.c:1277
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416f01
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:000000000169fbe0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000416f01
-RDX: 0000000000000000 RSI: 000000000000097b RDI: 0000000000000004
-RBP: 0000000000000001 R08: 0000000000d9297a R09: 0000000000d9297e
-R10: 000000000169fcd0 R11: 0000000000000293 R12: 000000000118d940
-R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118cfec
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> ---
+> 
+> This goes on top of Pali's patch:
+> "arm64: dts: marvell: espressobin: Add ethernet switch aliases"
+> 
+> The resulting .dtb files are the same.
+> 
+>  .../armada-3720-espressobin-v7-emmc.dts        | 18 +++++-------------
+>  .../dts/marvell/armada-3720-espressobin-v7.dts | 18 +++++-------------
+>  2 files changed, 10 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+> index 215d2f702623..61d49d6a2a2a 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
+> @@ -28,20 +28,12 @@ aliases {
+>  	};
+>  };
+>  
+> -&switch0 {
+> -	ports {
+> -		switch0port1: port@1 {
+> -			reg = <1>;
+> -			label = "lan1";
+> -			phy-handle = <&switch0phy0>;
+> -		};
+> +&switch0port1 {
+> +	label = "lan1";
+> +};
+>  
+> -		switch0port3: port@3 {
+> -			reg = <3>;
+> -			label = "wan";
+> -			phy-handle = <&switch0phy2>;
+> -		};
+> -	};
+> +&switch0port3 {
+> +	label = "wan";
+>  };
+>  
+>  /* U11 */
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+> index b6f4af8ebafb..44dbe9a21cc7 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
+> @@ -27,18 +27,10 @@ aliases {
+>  	};
+>  };
+>  
+> -&switch0 {
+> -	ports {
+> -		switch0port1: port@1 {
+> -			reg = <1>;
+> -			label = "lan1";
+> -			phy-handle = <&switch0phy0>;
+> -		};
+> +&switch0port1 {
+> +	label = "lan1";
+> +};
+>  
+> -		switch0port3: port@3 {
+> -			reg = <3>;
+> -			label = "wan";
+> -			phy-handle = <&switch0phy2>;
+> -		};
+> -	};
+> +&switch0port3 {
+> +	label = "wan";
+>  };
+> -- 
+> 2.28.0
+> 
