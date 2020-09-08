@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694D7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23391C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0457E20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E81206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599581573;
-	bh=ClG/J2D28CSekcsEzvDrVhqfY9dWzpT8JjtNaDePcb8=;
+	s=default; t=1599581679;
+	bh=zuZmKb8WP9O1Bn85UWwWrQPriHdYTxy/O7xpjBrkROo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vOfWPj6jS56MDew9In/Rr1+foTvHDlRy/gr/GNeyVzqE9zOMepgPEHFNAZu+S0VRf
-	 pEhAzohQwqD6mjdhswOmRwFJSmLlu0xNiulLi70CjiSTJNaLCton3yUhPaJ+YvpoJA
-	 lUFLdv2M1VnBv1vSpYUW+Um4ebtSfNTF8/FENOxY=
+	b=F4WS2VOO5jgpByjr+UiZFstLMkAt150Ig1nHB0Qm0ulDw2183meO0l9rQZdZZ/Ugr
+	 IKJ3VIlOItJqaaQhF4Bjc3CwZr97Rf1RosEXLW4DeguhKq0pJ24xfiDrPdPuBVT/Ty
+	 Egk3tCpwQb7MI0aCGdKgGEd5vCIlAzbs5jwx3g4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbgIHQMs (ORCPT
+        id S1731424AbgIHQNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731214AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:05:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F512087C;
-        Tue,  8 Sep 2020 15:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61C2A21D80;
+        Tue,  8 Sep 2020 15:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579931;
-        bh=ClG/J2D28CSekcsEzvDrVhqfY9dWzpT8JjtNaDePcb8=;
+        s=default; t=1599579937;
+        bh=zuZmKb8WP9O1Bn85UWwWrQPriHdYTxy/O7xpjBrkROo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7kQtJgbUuETHOOgeEMykOeCMPbzqZGm+B9ShsuoaeFh5kw9HThkSJzQzjTiuHygG
-         L+aZhtUQVqvZLGKL+nmSlXZs/dltvQC/HxGJIUOulzslXBR1LfSZ0JgoePThzu/CfB
-         OI9SFR0k8x8H4ld7BDjgX3EC4JHPrN5uyF2HU1E8=
+        b=f9vd4PXsN4Sk+GRABeqtBOr1ySY3ikD02LNMrTLQ0sYfOmUO48arVZWjHxI4pF89X
+         AMXrejJoXNPpJXxlK9Uv0FUNEnR0q0hTmN3CO/rVQjwRb0zBTkjJn8xeitm4c8M4gt
+         krw9qyNTAuT2a7AStfYTRwzeR2Wd3t1j4XVTUvDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+23b22dc2e0b81cbfcc95@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 092/129] ALSA: pcm: oss: Remove superfluous WARN_ON() for mulaw sanity check
-Date:   Tue,  8 Sep 2020 17:25:33 +0200
-Message-Id: <20200908152234.337391780@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        James Sewart <jamessewart@arista.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 076/129] iommu/vt-d: Handle 36bit addressing for x86-32
+Date:   Tue,  8 Sep 2020 17:25:17 +0200
+Message-Id: <20200908152233.495213316@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,40 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 949a1ebe8cea7b342085cb6a4946b498306b9493 upstream.
+commit 29aaebbca4abc4cceb38738483051abefafb6950 upstream.
 
-The PCM OSS mulaw plugin has a check of the format of the counter part
-whether it's a linear format.  The check is with snd_BUG_ON() that
-emits WARN_ON() when the debug config is set, and it confuses
-syzkaller as if it were a serious issue.  Let's drop snd_BUG_ON() for
-avoiding that.
+Beware that the address size for x86-32 may exceed unsigned long.
 
-While we're at it, correct the error code to a more suitable, EINVAL.
+[    0.368971] UBSAN: shift-out-of-bounds in drivers/iommu/intel/iommu.c:128:14
+[    0.369055] shift exponent 36 is too large for 32-bit type 'long unsigned int'
 
-Reported-by: syzbot+23b22dc2e0b81cbfcc95@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200901131802.18157-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+If we don't handle the wide addresses, the pages are mismapped and the
+device read/writes go astray, detected as DMAR faults and leading to
+device failure. The behaviour changed (from working to broken) in commit
+fa954e683178 ("iommu/vt-d: Delegate the dma domain to upper layer"), but
+the error looks older.
+
+Fixes: fa954e683178 ("iommu/vt-d: Delegate the dma domain to upper layer")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: James Sewart <jamessewart@arista.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: <stable@vger.kernel.org> # v5.3+
+Link: https://lore.kernel.org/r/20200822160209.28512-1-chris@chris-wilson.co.uk
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/mulaw.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/sound/core/oss/mulaw.c
-+++ b/sound/core/oss/mulaw.c
-@@ -329,8 +329,8 @@ int snd_pcm_plugin_build_mulaw(struct sn
- 		snd_BUG();
- 		return -EINVAL;
- 	}
--	if (snd_BUG_ON(!snd_pcm_format_linear(format->format)))
--		return -ENXIO;
-+	if (!snd_pcm_format_linear(format->format))
-+		return -EINVAL;
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -123,29 +123,29 @@ static inline unsigned int level_to_offs
+ 	return (level - 1) * LEVEL_STRIDE;
+ }
  
- 	err = snd_pcm_plugin_build(plug, "Mu-Law<->linear conversion",
- 				   src_format, dst_format,
+-static inline int pfn_level_offset(unsigned long pfn, int level)
++static inline int pfn_level_offset(u64 pfn, int level)
+ {
+ 	return (pfn >> level_to_offset_bits(level)) & LEVEL_MASK;
+ }
+ 
+-static inline unsigned long level_mask(int level)
++static inline u64 level_mask(int level)
+ {
+-	return -1UL << level_to_offset_bits(level);
++	return -1ULL << level_to_offset_bits(level);
+ }
+ 
+-static inline unsigned long level_size(int level)
++static inline u64 level_size(int level)
+ {
+-	return 1UL << level_to_offset_bits(level);
++	return 1ULL << level_to_offset_bits(level);
+ }
+ 
+-static inline unsigned long align_to_level(unsigned long pfn, int level)
++static inline u64 align_to_level(u64 pfn, int level)
+ {
+ 	return (pfn + level_size(level) - 1) & level_mask(level);
+ }
+ 
+ static inline unsigned long lvl_to_nr_pages(unsigned int lvl)
+ {
+-	return  1 << min_t(int, (lvl - 1) * LEVEL_STRIDE, MAX_AGAW_PFN_WIDTH);
++	return 1UL << min_t(int, (lvl - 1) * LEVEL_STRIDE, MAX_AGAW_PFN_WIDTH);
+ }
+ 
+ /* VT-d pages must always be _smaller_ than MM pages. Otherwise things
 
 
