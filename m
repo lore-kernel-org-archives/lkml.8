@@ -2,113 +2,117 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FDDC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B7AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C5F2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592525;
-	bh=742W3CbqKDvwbrn1NvU05FnnBNu/FeZctm0eV7DtrN4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iNd++0sTRpXM9t/6itbHCPxdHGtBET4/1cFUbr1KmC7hSqlESElXtGxwEl0/QWkLg
-	 /FrMLQODSEBUBP+hFdfBiNAwVH46mhn5EUh62Jx5O0C1IIkQ3K6+mfy0MmnoOu7G4C
-	 N1qf8mfpAAy2GXwJABpSvNFQf2PTQ6rYHxfvt8wA=
+	by mail.kernel.org (Postfix) with ESMTP id 282082076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mungewell.org header.i=@mungewell.org header.b="jcfqXA0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbgIHTPX (ORCPT
+        id S1731928AbgIHTPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731200AbgIHQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:04:50 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A02C724670;
-        Tue,  8 Sep 2020 15:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579563;
-        bh=742W3CbqKDvwbrn1NvU05FnnBNu/FeZctm0eV7DtrN4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klyblTRCLx0jyepyLpcGpAw9a2yohPlCk/wONGo9iGn6OJUBNQeJrp1p3u4Jj/nRT
-         9VKVvyfd/p8WTNFGaiPDt88Ai28ZNpbMj5xnmE9FTGZT25y2i+Q74PNMXskTxwBSUf
-         TlhHBlkwsCgKm4Dsix8H4Mhs3L5nuZ5tBgI81aY4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 129/186] btrfs: set the lockdep class for log tree extent buffers
-Date:   Tue,  8 Sep 2020 17:24:31 +0200
-Message-Id: <20200908152247.892001151@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 15:15:31 -0400
+Received: from host18.canaca.com ([66.49.204.205]:47170 "EHLO
+        host18.canaca.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731770AbgIHTPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:15:12 -0400
+X-Greylist: delayed 1798 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 15:15:11 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=mungewell.org; s=default; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0NuhWQcldBTxDdRHEdA5HQdXlMGQ0kB4cg2kzRhE4nU=; b=jcfqXA0g4BE3azXvQ6oOuI1222
+        MKa3Cexlprcf4yPE18W4BWQ0/DM5kytYj2gcp1NAW2c7KVyQZHd1s8YwT/QvoZFV2AWiRLHgteUz0
+        n9M6JxR5SelYuThhbU8G3H54pK9SdogEWfYxdNrWOJotqHpwcu//xjAjMx0LUYy6sIX8tOKlXiZZ1
+        GoZgq59T4eOo5GxSn5ab2xf56vGIlvdIr3EssbIwp7XOOdiwKkw9p2WEdMliUs9wsdae0BrvkkPma
+        qxRWpeGcYTvle+8Io5zd3NGGD2Z/arf+OchTKZeGg7RqUZM2avubca1m1SdGXL2InMctzgvDLTKO+
+        Fw1SStfA==;
+Received: from [::1] (port=54410 helo=host18.canaca.com)
+        by host18.canaca.com with esmtpa (Exim 4.93)
+        (envelope-from <simon@mungewell.org>)
+        id 1kFicC-0005pR-QJ; Tue, 08 Sep 2020 14:45:13 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date:   Tue, 08 Sep 2020 12:45:10 -0600
+From:   simon@mungewell.org
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 4.19 69/88] ALSA: firewire-digi00x: exclude Avid
+ Adrenaline from detection
+In-Reply-To: <20200908152224.621006485@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+ <20200908152224.621006485@linuxfoundation.org>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <e214540d9645c4e285ee7f6475476973@mungewell.org>
+X-Sender: simon@mungewell.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-OutGoing-Spam-Status: No, score=-1.0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - host18.canaca.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - mungewell.org
+X-Get-Message-Sender-Via: host18.canaca.com: authenticated_id: simon@mungewell.org
+X-Authenticated-Sender: host18.canaca.com: simon@mungewell.org
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-From-Rewrite: unmodified, already matched
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+On 2020-09-08 09:26, Greg Kroah-Hartman wrote:
+> From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> 
+> commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
+> 
+> Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound 
+> to.
+> However, as long as he investigated, the design of this model is hardly
+> similar to the one of Digi 00x family. It's better to exclude the model
+> from modalias of ALSA firewire-digi00x driver.
+> 
+> This commit changes device entries so that the model is excluded.
+> 
 
-commit d3beaa253fd6fa40b8b18a216398e6e5376a9d21 upstream.
+Just to add my 'ACK-BY'. Yes, the Avid Adrenaline seems to be based 
+around a totally different method of control and will likely need a 
+separate driver.
 
-These are special extent buffers that get rewound in order to lookup
-the state of the tree at a specific point in time.  As such they do not
-go through the normal initialization paths that set their lockdep class,
-so handle them appropriately when they are created and before they are
-locked.
+I believe that this includes the following devices: AVID Adrenaline, 
+AVID Mojo, AVID Mojo SDI, AVID AV Option and others... from Windows 
+driver 'FlameThrower' inf.
+--
+[AvidHardware.NTx86]
+%Avid_Gryphon%		= Flamethrower, 1394\Avid_Technology&Gryphon
+%Avid_Raven%		= Flamethrower, 1394\Avid_Technology&Raven
+%Avid_Adrenaline%	= Flamethrower, 1394\Avid_Technology&Adrenaline
+%Avid_FireBobPro%	= Flamethrower, 1394\Avid_Technology&FireBobPro
+%Avid_Mojo%		= Flamethrower, 1394\Avid_Technology&Mojo
+%Avid_FireBoB%		= Flamethrower, 1394\Avid_Technology&FireBoB
+%Avid_FireBoBV2%	= Flamethrower, 1394\Avid_Technology&FireBoBV2
+%Avid_DigiBoB%		= Flamethrower, 1394\Avid_Technology&DigiBoB
+%Avid_AVoptionV10%	= Flamethrower, 1394\Avid_Technology&AVoptionV10
+--
 
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There are some details in this thread, for anyone interested in 
+following up.
+https://sourceforge.net/p/ffado/mailman/message/37078754/
 
----
- fs/btrfs/ctree.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Cheers,
+Simon.
 
---- a/fs/btrfs/ctree.c
-+++ b/fs/btrfs/ctree.c
-@@ -1297,6 +1297,8 @@ tree_mod_log_rewind(struct btrfs_fs_info
- 	btrfs_tree_read_unlock_blocking(eb);
- 	free_extent_buffer(eb);
- 
-+	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb_rewin),
-+				       eb_rewin, btrfs_header_level(eb_rewin));
- 	btrfs_tree_read_lock(eb_rewin);
- 	__tree_mod_log_rewind(fs_info, eb_rewin, time_seq, tm);
- 	WARN_ON(btrfs_header_nritems(eb_rewin) >
-@@ -1370,7 +1372,6 @@ get_old_root(struct btrfs_root *root, u6
- 
- 	if (!eb)
- 		return NULL;
--	btrfs_tree_read_lock(eb);
- 	if (old_root) {
- 		btrfs_set_header_bytenr(eb, eb->start);
- 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
-@@ -1378,6 +1379,9 @@ get_old_root(struct btrfs_root *root, u6
- 		btrfs_set_header_level(eb, old_root->level);
- 		btrfs_set_header_generation(eb, old_generation);
- 	}
-+	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb), eb,
-+				       btrfs_header_level(eb));
-+	btrfs_tree_read_lock(eb);
- 	if (tm)
- 		__tree_mod_log_rewind(fs_info, eb, time_seq, tm);
- 	else
-
-
+PS. Have a Mojo SDI inbound, will confirm when it arrives.
