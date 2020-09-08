@@ -2,284 +2,224 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B24C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E85C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B345E21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE3D21D7A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:57:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zz9Xr5hi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LojVD+pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgIHJ5S (ORCPT
+        id S1729027AbgIHJ5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 05:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728873AbgIHJ5N (ORCPT
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35834 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728804AbgIHJ5L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:57:13 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 178FEC061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 02:57:13 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t13so14770219ile.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 02:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gAXgXLHr4sZUGmR5wWRvQIZcW8h+Tv26UAX12qfpm58=;
-        b=Zz9Xr5hidITx4JOxvC6dEk1TLY5MJQa1WczmuIckQJWDwNyn9CCC5UcO34yEAC2CMZ
-         CsROkGHodev4SuThtZ4ypLG/0HCKWWCPgpRiWkTTCORBmyh5C7LtbeBOVt+Bns+rjt0R
-         Hgbd1S9JxaIw67qRt0A7Q5rIqtgR0RyNI6Zdo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gAXgXLHr4sZUGmR5wWRvQIZcW8h+Tv26UAX12qfpm58=;
-        b=r8+5b3KZqIpymtZDq1bBJs+sUYKfsdFOxj0TRecehC+wcJSKudPJMzcm0u5HaWI9ZF
-         c0zCSy4Eochg7Ut4j50WtaPNPtJ9HVmwLJqyaL0l501/M+yP6Q810T97AIe3kLV1+5Cx
-         stizdEvQqUrg8afSztgy+JNGKP5rOzNvGotLniyoB2OwX8wr1W+6tRlf7YtBtfuaQFnK
-         w4lN44SEEKRW+Hd7WWJfG41lZ+dYyZwiDvbqI2H6Sk3Mgx8oB5Ef2ADoblIbgRUVAx6G
-         /o+NmCjMDYUM+9htOHvErHa4vJRTMW5+DqHwvsCe67Ne1K2OQ62viJNBf8yz5V44W4tW
-         /KAw==
-X-Gm-Message-State: AOAM532PGMj/rTwNL8ZIJpJa5mV1M2TSzN3s1/4tjIf7K+NC99bGorJw
-        zWLle16VZRKVnvyNevhbztOYrblzKUK+3w==
-X-Google-Smtp-Source: ABdhPJygSkYQ6agheAfBg3y+iOTrclI+jBwqKFRIOzYHWof1sKh7/uJZ5rLvzCyF2zb3AeeJHazd6A==
-X-Received: by 2002:a92:15c5:: with SMTP id 66mr22365638ilv.44.1599559032011;
-        Tue, 08 Sep 2020 02:57:12 -0700 (PDT)
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com. [209.85.166.51])
-        by smtp.gmail.com with ESMTPSA id k14sm8370049ioa.7.2020.09.08.02.57.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 02:57:11 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id r25so5439560ioj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 02:57:11 -0700 (PDT)
-X-Received: by 2002:a92:6f0a:: with SMTP id k10mr20571863ilc.5.1599558565722;
- Tue, 08 Sep 2020 02:49:25 -0700 (PDT)
+        Tue, 8 Sep 2020 05:57:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599559029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=57pp/e9LHugR1a1fI9yzmG09N+ZeqaTEuLiJTJ+kcbw=;
+        b=LojVD+pmIDE9POFcCuiyyku9ISUE5U1cnkS0um4CfsF14QN/LzJxNbaTfZn9fNOP9PPXHB
+        ZAuMJtUfKS2rnB4W9LMTHzIQ0JsCMtkX6/lTONRKAvBibYSBpxQ6STxrD+1lZaD3gbARwU
+        /e7CJFXFfyjR93z5rZU+mHadEOYXATY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-vGuvaRPqPOit19k4eRk7-g-1; Tue, 08 Sep 2020 05:57:05 -0400
+X-MC-Unique: vGuvaRPqPOit19k4eRk7-g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B28F51005E7B;
+        Tue,  8 Sep 2020 09:57:03 +0000 (UTC)
+Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62E3B60C15;
+        Tue,  8 Sep 2020 09:57:01 +0000 (UTC)
+Subject: Re: [PATCH v3 1/2] mm/memory_hotplug: drain per-cpu pages again
+ during memory offline
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, linux-mm@kvack.org, osalvador@suse.de,
+        richard.weiyang@gmail.com, vbabka@suse.cz, rientjes@google.com
+References: <20200904151448.100489-1-pasha.tatashin@soleen.com>
+ <20200904151448.100489-2-pasha.tatashin@soleen.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <c67aa414-15cf-2cef-e38b-a028e310d500@redhat.com>
+Date:   Tue, 8 Sep 2020 11:57:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200728050140.996974-1-tientzu@chromium.org> <20200728050140.996974-5-tientzu@chromium.org>
- <20200731205804.GB756942@bogus> <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
- <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
- <CAAFQd5AfbN0V3sGCs8vhmeD-MNn3bTvfWBCaT-OY3hgjBUs-LQ@mail.gmail.com> <CAAFQd5B_LAb0uU3J9umGWBhaVSKT3N9SynnvTxw_PVEwHu4Cww@mail.gmail.com>
-In-Reply-To: <CAAFQd5B_LAb0uU3J9umGWBhaVSKT3N9SynnvTxw_PVEwHu4Cww@mail.gmail.com>
-From:   Claire Chang <tientzu@chromium.org>
-Date:   Tue, 8 Sep 2020 17:49:14 +0800
-X-Gmail-Original-Message-ID: <CALiNf28w-NZhkeAEeUGJEbzsGzQKeA=O3FR3nG+SEk+CiDhzKg@mail.gmail.com>
-Message-ID: <CALiNf28w-NZhkeAEeUGJEbzsGzQKeA=O3FR3nG+SEk+CiDhzKg@mail.gmail.com>
-Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200904151448.100489-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 1:30 AM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> On Tue, Aug 11, 2020 at 11:15 AM Tomasz Figa <tfiga@chromium.org> wrote:
-> >
-> > On Mon, Aug 3, 2020 at 5:15 PM Tomasz Figa <tfiga@chromium.org> wrote:
-> > >
-> > > Hi Claire and Rob,
-> > >
-> > > On Mon, Aug 3, 2020 at 4:26 PM Claire Chang <tientzu@chromium.org> wrote:
-> > > >
-> > > > On Sat, Aug 1, 2020 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
-> > > > > > Introduce the new compatible string, device-swiotlb-pool, for restricted
-> > > > > > DMA. One can specify the address and length of the device swiotlb memory
-> > > > > > region by device-swiotlb-pool in the device tree.
-> > > > > >
-> > > > > > Signed-off-by: Claire Chang <tientzu@chromium.org>
-> > > > > > ---
-> > > > > >  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
-> > > > > >  1 file changed, 35 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > > > > index 4dd20de6977f..78850896e1d0 100644
-> > > > > > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > > > > @@ -51,6 +51,24 @@ compatible (optional) - standard definition
-> > > > > >            used as a shared pool of DMA buffers for a set of devices. It can
-> > > > > >            be used by an operating system to instantiate the necessary pool
-> > > > > >            management subsystem if necessary.
-> > > > > > +        - device-swiotlb-pool: This indicates a region of memory meant to be
-> > > > >
-> > > > > swiotlb is a Linux thing. The binding should be independent.
-> > > > Got it. Thanks for pointing this out.
-> > > >
-> > > > >
-> > > > > > +          used as a pool of device swiotlb buffers for a given device. When
-> > > > > > +          using this, the no-map and reusable properties must not be set, so the
-> > > > > > +          operating system can create a virtual mapping that will be used for
-> > > > > > +          synchronization. Also, there must be a restricted-dma property in the
-> > > > > > +          device node to specify the indexes of reserved-memory nodes. One can
-> > > > > > +          specify two reserved-memory nodes in the device tree. One with
-> > > > > > +          shared-dma-pool to handle the coherent DMA buffer allocation, and
-> > > > > > +          another one with device-swiotlb-pool for regular DMA to/from system
-> > > > > > +          memory, which would be subject to bouncing. The main purpose for
-> > > > > > +          restricted DMA is to mitigate the lack of DMA access control on
-> > > > > > +          systems without an IOMMU, which could result in the DMA accessing the
-> > > > > > +          system memory at unexpected times and/or unexpected addresses,
-> > > > > > +          possibly leading to data leakage or corruption. The feature on its own
-> > > > > > +          provides a basic level of protection against the DMA overwriting buffer
-> > > > > > +          contents at unexpected times. However, to protect against general data
-> > > > > > +          leakage and system memory corruption, the system needs to provide a
-> > > > > > +          way to restrict the DMA to a predefined memory region.
-> > > > >
-> > > > > I'm pretty sure we already support per device carveouts and I don't
-> > > > > understand how this is different.
-> > > > We use this to bounce streaming DMA in and out of a specially allocated region.
-> > > > I'll try to merge this with the existing one (i.e., shared-dma-pool)
-> > > > to see if that
-> > > > makes things clearer.
-> > > >
-> > >
-> > > Indeed, from the firmware point of view, this is just a carveout, for
-> > > which we have the "shared-dma-pool" compatible string defined already.
-> > >
-> > > However, depending on the device and firmware setup, the way the
-> > > carevout is used may change. I can see the following scenarios:
-> > >
-> > > 1) coherent DMA (dma_alloc_*) within a reserved pool and no
-> > > non-coherent DMA (dma_map_*).
-> > >
-> > > This is how the "memory-region" property is handled today in Linux for
-> > > devices which can only DMA from/to the given memory region. However,
-> > > I'm not sure if no non-coherent DMA is actually enforced in any way by
-> > > the DMA subsystem.
-> > >
-> > > 2) coherent DMA from a reserved pool and non-coherent DMA from system memory
-> > >
-> > > This is the case for the systems which have some dedicated part of
-> > > memory which is guaranteed to be coherent with the DMA, but still can
-> > > do non-coherent DMA to any part of the system memory. Linux handles it
-> > > the same way as 1), which is what made me believe that 1) might not
-> > > actually be handled correctly.
-> > >
-> > > 3) coherent DMA and bounced non-coherent DMA within a reserved pool
-> > > 4) coherent DMA within one pool and bounced non-coherent within another pool
-> > >
-> > > These are the two cases we're interested in. Basically they make it
-> > > possible for non-coherent DMA from arbitrary system memory to be
-> > > bounced through a reserved pool, which the device has access to. The
-> > > current series implements 4), but I'd argue that it:
-> > >
-> > > - is problematic from the firmware point of view, because on most of
-> > > the systems, both pools would be just some carveouts and the fact that
-> > > Linux would use one for coherent and the other for non-coherent DMA
-> > > would be an OS implementation detail,
-> > > - suffers from the static memory split between coherent and
-> > > non-coherent DMA, which could either result in some wasted memory or
-> > > the DMA stopped working after a kernel update if the driver changes
-> > > its allocation pattern,
-> > >
-> > > and so we should rather go with 3).
-> > >
-> > > Now, from the firmware point of view, it doesn't matter how the OS
-> > > uses the carveout, but I think it's still necessary to tell the OS
-> > > about the device DMA capability. Right now we use "memory-region" for
-> > > any kind of reserved memory, but looking at the above scenarios, there
-> > > are 2 cases:
-> > >
-> > > a) the memory region is preferred for the device, e.g. it enables
-> > > coherency, but the device can still DMA across the rest of the system
-> > > memory. This is the case in scenario 2) and is kind of assumed in the
-> > > Linux DMA subsystem, although it's certainly not the case for a lot of
-> > > hardware, even if they use the "memory-region" binding.
-> > >
-> > > b) the memory region is the only region that the device can access.
-> > > This is the case in scenarios 1), 3) and 4).
-> > >
-> > > For this, I'd like to propose a "restricted-dma-region" (feel free to
-> > > suggest a better name) binding, which is explicitly specified to be
-> > > the only DMA-able memory for this device and make Linux use the given
-> > > pool for coherent DMA allocations and bouncing non-coherent DMA.
-> > >
-> > > What do you think?
-> >
-> > Rob, Robin, we'd appreciate your feedback on this when you have a
-> > chance to take a look again. Thanks!
->
-> Gentle ping.
+On 04.09.20 17:14, Pavel Tatashin wrote:
+> There is a race during page offline that can lead to infinite loop:
+> a page never ends up on a buddy list and __offline_pages() keeps
+> retrying infinitely or until a termination signal is received.
+> 
+> Thread#1 - a new process:
+> 
+> load_elf_binary
+>  begin_new_exec
+>   exec_mmap
+>    mmput
+>     exit_mmap
+>      tlb_finish_mmu
+>       tlb_flush_mmu
+>        release_pages
+>         free_unref_page_list
+>          free_unref_page_prepare
+>           set_pcppage_migratetype(page, migratetype);
+>              // Set page->index migration type below  MIGRATE_PCPTYPES
+> 
+> Thread#2 - hot-removes memory
+> __offline_pages
+>   start_isolate_page_range
+>     set_migratetype_isolate
+>       set_pageblock_migratetype(page, MIGRATE_ISOLATE);
+>         Set migration type to MIGRATE_ISOLATE-> set
+>         drain_all_pages(zone);
+>              // drain per-cpu page lists to buddy allocator.
+> 
+> Thread#1 - continue
+>          free_unref_page_commit
+>            migratetype = get_pcppage_migratetype(page);
+>               // get old migration type
+>            list_add(&page->lru, &pcp->lists[migratetype]);
+>               // add new page to already drained pcp list
+> 
+> Thread#2
+> Never drains pcp again, and therefore gets stuck in the loop.
+> 
+> The fix is to try to drain per-cpu lists again after
+> check_pages_isolated_cb() fails.
+> 
+> Fixes: c52e75935f8d ("mm: remove extra drain pages on pcp list")
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: stable@vger.kernel.org
+> Acked-by: David Rientjes <rientjes@google.com>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/memory_hotplug.c | 14 ++++++++++++++
+>  mm/page_isolation.c |  8 ++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e9d5ab5d3ca0..b11a269e2356 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1575,6 +1575,20 @@ static int __ref __offline_pages(unsigned long start_pfn,
+>  		/* check again */
+>  		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+>  					    NULL, check_pages_isolated_cb);
+> +		/*
+> +		 * per-cpu pages are drained in start_isolate_page_range, but if
+> +		 * there are still pages that are not free, make sure that we
+> +		 * drain again, because when we isolated range we might
+> +		 * have raced with another thread that was adding pages to pcp
+> +		 * list.
+> +		 *
+> +		 * Forward progress should be still guaranteed because
+> +		 * pages on the pcp list can only belong to MOVABLE_ZONE
+> +		 * because has_unmovable_pages explicitly checks for
+> +		 * PageBuddy on freed pages on other zones.
+> +		 */
+> +		if (ret)
+> +			drain_all_pages(zone);
+>  	} while (ret);
+>  
+>  	/* Ok, all of our target is isolated.
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index 242c03121d73..63a3db10a8c0 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -170,6 +170,14 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+>   * pageblocks we may have modified and return -EBUSY to caller. This
+>   * prevents two threads from simultaneously working on overlapping ranges.
+>   *
+> + * Please note that there is no strong synchronization with the page allocator
+> + * either. Pages might be freed while their page blocks are marked ISOLATED.
+> + * In some cases pages might still end up on pcp lists and that would allow
+> + * for their allocation even when they are in fact isolated already. Depending
+> + * on how strong of a guarantee the caller needs drain_all_pages might be needed
+> + * (e.g. __offline_pages will need to call it after check for isolated range for
+> + * a next retry).
+> + *
+>   * Return: the number of isolated pageblocks on success and -EBUSY if any part
+>   * of range cannot be isolated.
+>   */
+> 
 
-The "restricted-dma-region" idea sounds good to me and I'm happy to
-submit a new version implementing it.
-Rob, Robin, please kindly let us know if you have any concerns about
-it. Thanks!
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Best regards,
-Claire
+As an easy stable fix to be improved in the near future.
 
->
-> >
-> > Best regards,
-> > Tomasz
-> >
-> > >
-> > > Best regards,
-> > > Tomasz
-> > >
-> > > > >
-> > > > > What is the last sentence supposed to imply? You need an IOMMU?
-> > > > The main purpose is to mitigate the lack of DMA access control on
-> > > > systems without an IOMMU.
-> > > > For example, we plan to use this plus a MPU for our PCIe WiFi which is
-> > > > not behind an IOMMU.
-> > > >
-> > > > >
-> > > > > >          - vendor specific string in the form <vendor>,[<device>-]<usage>
-> > > > > >  no-map (optional) - empty property
-> > > > > >      - Indicates the operating system must not create a virtual mapping
-> > > > > > @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> > > > > >                       compatible = "acme,multimedia-memory";
-> > > > > >                       reg = <0x77000000 0x4000000>;
-> > > > > >               };
-> > > > > > +
-> > > > > > +             wifi_coherent_mem_region: wifi_coherent_mem_region {
-> > > > > > +                     compatible = "shared-dma-pool";
-> > > > > > +                     reg = <0x50000000 0x400000>;
-> > > > > > +             };
-> > > > > > +
-> > > > > > +             wifi_device_swiotlb_region: wifi_device_swiotlb_region {
-> > > > > > +                     compatible = "device-swiotlb-pool";
-> > > > > > +                     reg = <0x50400000 0x4000000>;
-> > > > > > +             };
-> > > > > >       };
-> > > > > >
-> > > > > >       /* ... */
-> > > > > > @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> > > > > >               memory-region = <&multimedia_reserved>;
-> > > > > >               /* ... */
-> > > > > >       };
-> > > > > > +
-> > > > > > +     pcie_wifi: pcie_wifi@0,0 {
-> > > > > > +             memory-region = <&wifi_coherent_mem_region>,
-> > > > > > +                      <&wifi_device_swiotlb_region>;
-> > > > > > +             restricted-dma = <0>, <1>;
-> > > > > > +             /* ... */
-> > > > > > +     };
-> > > > > >  };
-> > > > > > --
-> > > > > > 2.28.0.rc0.142.g3c755180ce-goog
-> > > > > >
+-- 
+Thanks,
+
+David / dhildenb
+
