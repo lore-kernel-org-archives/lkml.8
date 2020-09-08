@@ -2,254 +2,343 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F02C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09882C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D49CF2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B68672080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="debXvkyu";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="jMIU9+tz"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="FiXvdqBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgIHVmF (ORCPT
+        id S1729779AbgIHVnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:42:05 -0400
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:39660
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726002AbgIHVmE (ORCPT
+        Tue, 8 Sep 2020 17:43:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbgIHVnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:42:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599601323;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=MMxFcLq/Tfxamt12qfIPmZT++zwC8dnUjdn0xGbLW3U=;
-        b=debXvkyu72EYya7PdbCNUmN+h16i/lPTyspR6KFF6m/LAyr+SXMJExOpukZZZeHi
-        wgUuveROl9ULUoLEw2iGuFa9v2KHoidav3C70A31UH3iwsH9Lc6J5Z5Emhyr6+xp4Zc
-        SpA0rhwAlKIUREL4ynVVMhrGxzcRRRQhHs6r+fK4=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599601323;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=MMxFcLq/Tfxamt12qfIPmZT++zwC8dnUjdn0xGbLW3U=;
-        b=jMIU9+tzOHKa1p8iYqB3w5iZc839HZk4rCz3mLXmG7n5XEgBLWoJr4RHRyZRhTry
-        dgzBa5oXNf7CcmUiuzASeRg/9hBqGvz4ejV8CRGNhwmhKkJSwHQw0AvIaInpJpISY38
-        qgISSPDUNGQZS2ls7KCcs97tMiU6Ts+ioBOTt+VE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 037CAC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v3] usb: dwc3: Stop active transfers before halting the
- controller
-To:     Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org,
-        Thinh.Nguyen@synopsys.com
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-References: <20200903210954.24504-1-wcheng@codeaurora.org>
- <87o8mi151l.fsf@kernel.org>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <010101746fab2ee1-91b46c27-fef0-4266-94cb-14dea5ca350e-000000@us-west-2.amazonses.com>
-Date:   Tue, 8 Sep 2020 21:42:03 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 8 Sep 2020 17:43:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54ECC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:43:00 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x14so693477wrl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UBpu6f7JPWu7mFzpAb9CHAPz8zD95yvmmkzOzZp98jA=;
+        b=FiXvdqBYzB+4D+HFadNqvHjUIqtaDh3f2Zq+38whUPL7LfcZA+qPe7pg37t0bPGcGj
+         MV0m3Y6Fl2Fz0e4ZAqscol/7beZvSbiPywL9sHln/qmD5r3TRd380bxbhtmggoYcEs3c
+         Nl42XbqJz+2HXKNGiJinUGPoJhPpPu1DCDFOXHM85K0q3btaVu92h9eEvUfpiQi9MTsw
+         M69T71KJob6PTJ4jdpc23yRkPJja6MKzmuMFcvOrpeh0GvKP69HfQ9iRd0TGJGOfB4Lx
+         mvAhDWGapi0Tl5TBybAtDk+twjTe2OyagTFJBdH+7mb0IR5zlBHstWuneb5YuRhRwgyC
+         iNGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UBpu6f7JPWu7mFzpAb9CHAPz8zD95yvmmkzOzZp98jA=;
+        b=bUtAJIVD3beatx1ipH4+wdh3jh6VQB7dERiC01aLzbI3MBypJ/zp3GRTo+ljbcu/Zb
+         lsCmhry8iMpCHSdNIG2DRgPhIcFQXcPPralg0aWv0qIXDouC3+z5uyGTrzx+b4iRpoXz
+         WNqyASMjbxoLSatewsZjXGmvdzgBXcGDek/Oc2woxPuu41L9+4LgMNnMBWbMFhHtxM/C
+         1kioKGUSb+JQzqQZ8QsKqhyG665UzMvCEYgRfBEZYB1LQ66ggl9l9nAJ+UAWZhmirAgq
+         MobgZsJXGte4BB9Is1DbuI69Kp64E9EREs56UgAsO6F/4lTgSm1OWr+R3KCwLexSKyPr
+         OwCQ==
+X-Gm-Message-State: AOAM532FdMJXXCTqGDZmdppmuBziYOHYVBjYfJmFMutj9w++Ury38P7F
+        CPxaUw1Io4pSLtBYTf1Jq4PnVg==
+X-Google-Smtp-Source: ABdhPJzC+mwvHjlxnJTdhYmXaFWp9vE0XGelWzsCK42UAx9hLwFL8JST+xTcpLXYmpO0SapmIwqUxg==
+X-Received: by 2002:adf:8481:: with SMTP id 1mr447092wrg.231.1599601378751;
+        Tue, 08 Sep 2020 14:42:58 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:7220:84ff:fe09:7d5c])
+        by smtp.gmail.com with ESMTPSA id l8sm1090380wrx.22.2020.09.08.14.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 14:42:58 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 22:42:56 +0100
+From:   Alessio Balsini <balsini@android.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Alessio Balsini <balsini@android.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Nikhilesh Reddy <reddyn@codeaurora.org>,
+        Akilesh Kailash <akailash@google.com>,
+        David Anderson <dvander@google.com>,
+        Eric Yan <eric.yan@oneplus.com>,
+        Martijn Coenen <maco@android.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Lawrence <paullawrence@google.com>,
+        Stefano Duo <stefanoduo@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>,
+        kernel-team <kernel-team@android.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6] fuse: Add support for passthrough read/write
+Message-ID: <20200908214256.GA2526301@google.com>
+References: <20200812161452.3086303-1-balsini@android.com>
+ <CAG48ez17uXtjCTa7xpa=JWz3iBbNDQTKO2hvn6PAZtfW3kXgcA@mail.gmail.com>
+ <20200813132809.GA3414542@google.com>
+ <CAG48ez0jkU7iwdLYPA0=4PdH0SL8wpEPrYvpSztKG3JEhkeHag@mail.gmail.com>
+ <20200818135313.GA3074431@google.com>
+ <CAG48ez3ZX8R9kRAQhung2_e3wjowu5cPh7WL3U866mkga-kftQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87o8mi151l.fsf@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2020.09.08-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez3ZX8R9kRAQhung2_e3wjowu5cPh7WL3U866mkga-kftQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Jann,
 
+Sorry for the late reply, I wanted to better understand the problems you
+mentioned and explore the ioctl solution before coming back to discussion.
+I have a new patch ready which addresses the feedbacks received, and that
+has been converted to using a new ioctl. And I have to say I'm happy with
+this ioctl-based solution. :)
+I'll finish replying to the different branches of this thread and post the
+patch as soon as I'm done with testing, hopefully by tomorrow EOD.
 
-On 9/6/2020 11:20 PM, Felipe Balbi wrote:
+Inline replies below.
+
+On Wed, Aug 19, 2020 at 12:04:03PM +0200, Jann Horn wrote:
+> [...]
+> FYI, rw_verify_area() annoyingly calls security_file_permission(),
+> which is hooked by some stuff like SELinux. This doesn't really fit
+> well into the normal Linux security model, and it means that when a
+> userspace process tries to read from a FUSE file with passthrough
+> enabled, SELinux will actually perform access checks against *both*
+> the FUSE file itself and the backing file. That's kinda stupid, but
+> SELinux does it. If this ends up being a problem, switching
+> credentials would help. (Changing rw_verify_area() to not call
+> security_file_permission() would also help, but some of the LSM folks
+> might disagree with my opinion that that check is silly and should be
+> removed.)
 > 
-> Hi,
-> 
-> Wesley Cheng <wcheng@codeaurora.org> writes:
->> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
->> index 59f2e8c31bd1..456aa87e8778 100644
->> --- a/drivers/usb/dwc3/ep0.c
->> +++ b/drivers/usb/dwc3/ep0.c
->> @@ -197,7 +197,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
->>  	int				ret;
->>  
->>  	spin_lock_irqsave(&dwc->lock, flags);
->> -	if (!dep->endpoint.desc) {
->> +	if (!dep->endpoint.desc || !dwc->pullups_connected) {
-> 
-> this looks odd. If we don't have pullups connected, we shouldn't have a
-> descriptor, likewise if we don't have a a description, we haven't been
-> enumerated, therefore we shouldn't have pullups connected.
-> 
-> What am I missing here?
-> 
+> But for now, I guess it might be fine to leave things as-is and not do
+> the extra credential switching.
 
-Hi Felipe,
+I would be happy to leave this simplified access as-is too, or in the case
+something bad comes out, to implement the credential switching solution.
+Let's see if also Miklos or Jens have an opinion on this.
 
-When we
-echo "" > /sys/kernel/config/usb_gadget/g1/UDC
+> 
+> > On Thu, Aug 13, 2020 at 08:30:21PM +0200, 'Jann Horn' via kernel-team wrote:
+> [...]
+> There are setuid root binaries that will print attacker-controlled
+> data to stdout, or stuff like that. An attacker could set up a normal
+> FUSE filesystem, read an OPEN request from the /dev/fuse file
+> descriptor, construct a reply that would install a passthrough fd (but
+> NOT actually send it), and then invoke a setuid root binary with the
+> /dev/fuse fd as stderr and with some arguments that trick it into
+> writing the attacker-constructed reply to stderr. For example, you can
+> make "su" write a string starting with attacker-controlled data like
+> this:
+> 
+> $ cat blah.c
+> #include <unistd.h>
+> #include <err.h>
+> int main(void) {
+>   execlp("su", "ATTACKER-CONTROLLED STRING", "-BLAH", NULL);
+>   err(1, "execlp");
+> }
+> $ gcc -o blah blah.c
+> $ ./blah
+> ATTACKER-CONTROLLED STRING: invalid option -- 'B'
+> Try 'ATTACKER-CONTROLLED STRING --help' for more information.
+> $
+> 
+> And yes, sure, I know, you can't write nullbytes with this specific
+> example; but in principle, you have to assume that a privileged victim
+> process might be writing arbitrary attacker-controlled data to
+> attacker-supplied file descriptors.
 
-This triggers the usb_gadget_disconnect() routine to execute.
+Now I see your point! The ioctl-based solution is on the way.
 
-int usb_gadget_disconnect(struct usb_gadget *gadget)
+> [...]
+> > +ssize_t fuse_passthrough_read_iter(struct kiocb *iocb_fuse,
+> > +                                  struct iov_iter *iter)
+> > +{
+> > +       struct file *fuse_filp = iocb_fuse->ki_filp;
+> > +       struct fuse_file *ff = fuse_filp->private_data;
+> > +       struct file *passthrough_filp = ff->passthrough_filp;
+> > +       ssize_t ret;
+> > +
+> > +       if (!iov_iter_count(iter))
+> > +               return 0;
+> > +
+> > +       if (is_sync_kiocb(iocb_fuse)) {
+> > +               struct kiocb iocb;
+> > +
+> > +               kiocb_clone(&iocb, iocb_fuse, passthrough_filp);
+> > +               ret = call_read_iter(passthrough_filp, &iocb, iter);
+> > +               iocb_fuse->ki_pos = iocb.ki_pos;
+> > +       } else {
+> > +               struct fuse_aio_req *aio_req;
+> > +
+> > +               aio_req =
+> > +                       kmem_cache_zalloc(fuse_aio_request_cachep, GFP_KERNEL);
+> > +               if (!aio_req)
+> > +                       return -ENOMEM;
+> > +
+> > +               aio_req->iocb_fuse = iocb_fuse;
+> > +               kiocb_clone(&aio_req->iocb, iocb_fuse, passthrough_filp);
+> > +               aio_req->iocb.ki_complete = fuse_aio_rw_complete;
+> > +               ret = vfs_iocb_iter_read(passthrough_filp, &aio_req->iocb,
+> > +                                        iter);
+> > +               if (ret != -EIOCBQUEUED)
+> > +                       fuse_aio_cleanup_handler(aio_req);
+> > +       }
+> > +
+> > +       fuse_copyattr(fuse_filp, passthrough_filp, false);
+> 
+> This copies timestamps from the passthrough_filp to the fuse_filp
+> without any locking I can see - which means that depending on the
+> architecture and the compiler's decisions, the copied timestamps can
+> end up getting corrupted to some degree. On 64-bit platforms, in
+> practice, you might e.g. end up with a timestamp where the tv_nsec
+> part is from an older timestamp while tv_sec is from a newer one,
+> yielding an overall timestamp that might e.g. be almost a second in
+> the future; and on 32-bit platforms, the results could even be much
+> worse. In theory, this is a data race, which should generally be
+> avoided.
+> 
+> The same thing applies to some of the other places where
+> fuse_copyattr() is used.
+
+I'm not too confident in this RCU domain, so what do you think about
+changing the fuse_copyattr() code into:
+
+static void fuse_copyattr(struct file *dst_file, struct file *src_file,
+                          bool write)
 {
-...
-	ret = gadget->ops->pullup(gadget, 0);
-	if (!ret) {
-		gadget->connected = 0;
-		gadget->udc->driver->disconnect(gadget);
-	}
+        struct inode *dst = file_inode(dst_file);
+        struct inode *src = file_inode(src_file);
+        struct timespec64 i_atime, i_mtime, i_ctime;
 
-So it is possible that we've already disabled the pullup before running
-the disable() callbacks in the function drivers.  The disable()
-callbacks usually are the ones responsible for calling usb_ep_disable(),
-where we clear the desc field.  This means there is a brief period where
-the pullups_connected = 0, but we still have valid ep desc, as it has
-not been disabled yet.
+        spin_lock(&src->i_lock);
+        i_atime = src->i_atime;
+        i_mtime = src->i_mtime;
+        i_ctime = src->i_ctime;
+        spin_unlock(&src->i_lock);
+        spin_lock(&dst->i_lock);
+        dst->i_atime = i_atime;
+        dst->i_mtime = i_mtime;
+        dst->i_ctime = i_ctime;
+        spin_unlock(&dst->i_lock);
 
-Also, for function drivers like mass storage, the fsg_disable() routine
-defers the actual usb_ep_disable() call to the fsg_thread, so its not
-always ensured that the disconnect() execution would result in the
-usb_ep_disable() to occur synchronously.
+        if (write)
+                fsstack_copy_inode_size(dst, src);
+}
 
->> @@ -1926,6 +1926,21 @@ static int dwc3_gadget_set_selfpowered(struct usb_gadget *g,
->>  	return 0;
->>  }
->>  
->> +static void dwc3_stop_active_transfers(struct dwc3 *dwc)
->> +{
->> +	u32 epnum;
->> +
->> +	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
+The i_*time copy behavior is similar to fsstack_copy_inode_size().
+IIRC I didn't add any locking because a comment at the top of fs_stack.h
+mentions that the functions declared there do not require i_mutex to be
+held, and since fsstack_copy_inode_size() has its own lockings, I probably
+assumed that i_*time were special. But actually, not requiring i_mutex
+doesn't mean not requiring any locking. Oops! :P
+
 > 
-> dwc3 knows the number of endpoints available in the HW. Use dwc->num_eps
-> instead.
-> 
+> From a higher-level perspective, are you sure that you even want to do
+> this timestamp-copying at all, given that the userspace fuse daemon
+> will also be supplying its own timestamps? Especially considering that
+> the timestamps are at the inode level while the passthrough logic is
+> at the file level, that seems pretty wonky.
 
-Sure, will do.
+Yeah, that looks wonky... :)
+But while testing I noticed that the system was misbehaving when the FUSE
+stats were not manually updated with the lower filesystem.
+My understanding is that being the FUSE passthrough read/write operations
+transparent to the FUSE daemon, if stats caching is enabled the kernel
+would return the cached stats without forwarding the request to the FUSE
+daemon, and this may produce inconsistencies with the lower filesystem.
+This copying solution prevents forcing the daemon to disable stats caching.
 
->> @@ -1971,6 +1986,8 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
->>  	return 0;
->>  }
->>  
->> +static void __dwc3_gadget_stop(struct dwc3 *dwc);
->> +
->>  static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
->>  {
->>  	struct dwc3		*dwc = gadget_to_dwc(g);
->> @@ -1994,9 +2011,37 @@ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
->>  		}
->>  	}
->>  
->> +	/*
->> +	 * Synchronize and disable any further event handling while controller
->> +	 * is being enabled/disabled.
->> +	 */
->> +	disable_irq(dwc->irq_gadget);
-> 
-> why isn't dwc3_gadget_disable_irq() enough?
-> 
->>  	spin_lock_irqsave(&dwc->lock, flags);
-> 
-> spin_lock_irqsave() will disable interrupts, why disable_irq() above?
-> 
+This reminds me that I should update the commit message mentioning the
+reasoning behind these stats updates.
 
-In the discussion I had with Thinh, the concern was that with the newly
-added code to override the lpos here, if the interrupt routine
-(dwc3_check_event_buf()) runs, then it will reference the lpos for
-copying the event buffer contents to the event cache, and potentially
-process events.  There is no locking in place, so it could be possible
-to have both run in parallel.
-
-Hence, the reason if there was already a pending IRQ triggered, the
-dwc3_gadget_disable_irq() won't ensure the IRQ is handled.  We can do
-something like:
-if (!is_on)
-	dwc3_gadget_disable_irq()
-synchronize_irq()
-spin_lock_irqsave()
-if(!is_on) {
-...
-
-But the logic to only apply this on the pullup removal case is a little
-messy.  Also, from my understanding, the spin_lock_irqsave() will only
-disable the local CPU IRQs, but not the interrupt line on the GIC, which
-means other CPUs can handle it, unless we explicitly set the IRQ
-affinity to CPUX.
-
->> +	/* Controller is not halted until pending events are acknowledged */
->> +	if (!is_on) {
->> +		u32 count;
->> +
->> +		/*
->> +		 * The databook explicitly mentions for a device-initiated
->> +		 * disconnect sequence, the SW needs to ensure that it ends any
->> +		 * active transfers.
->> +		 */
+> [...]
+> > +       if (!(req->in.h.opcode == FUSE_OPEN && req->args->out_numargs == 1) &&
+> > +           !(req->in.h.opcode == FUSE_CREATE && req->args->out_numargs == 2))
+> > +               return 0;
+> > +
+> > +       open_out_index = req->args->out_numargs - 1;
+> > +
+> > +       if (req->args->out_args[open_out_index].size != sizeof(*open_out))
+> > +               return 0;
 > 
-> make this a little better by mentioning the version and section of the
-> databook you're reading. That makes it easier for future
-> reference. Also, use an actual quote from the databook, along the lines
-> of:
+> Can this ever legitimately happen, or would that indicate a kernel
+> bug? If it indicates a kernel bug, please write WARN_ON() around the
+> condition, like this: "if
+> (WARN_ON(req->args->out_args[open_out_index].size !=
+> sizeof(*open_out)))".
+
+Will be chopped in the next patch with ioctl().
+
+> > +       if (!passthrough_filp->f_op->read_iter ||
+> > +           !passthrough_filp->f_op->write_iter) {
+> > +               pr_err("FUSE: passthrough file misses file operations.\n");
+> > +               fput(passthrough_filp);
+> > +               return -1;
+> > +       }
 > 
-> 		/*
->                  * Synopsys DesignWare Cores USB3 Databook Revision
->                  * X.YYa states in section W.Z that "device-initiated
->                  * disconnect ...."
->                  */
+> (Just as a non-actionable comment: This means that passthrough files
+> won't work with files that use ->read and ->write handlers instead of
+> ->read_iter and ->write_iter. But that's probably actually a good
+> thing - ->read and ->write are mostly used by weird pseudo-files, and
+> I don't see any legitimate reason why anyone would want to use those
+> things with FUSE passthrough.)
 > 
 
-Got it.
+I like this checking because if on the one hand, as you mentioned, this
+represents a restriction for those pseud-files not implementing
+{read,write}_iter operations, on the other hand vfs automatically falls back to
+the {read,write}_iter counterpart if a filesystem doesn't implement the
+original read/write. So, why not?
 
->> +		dwc3_stop_active_transfers(dwc);
->> +		__dwc3_gadget_stop(dwc);
->> +
->> +		count = dwc3_readl(dwc->regs, DWC3_GEVNTCOUNT(0));
->> +		count &= DWC3_GEVNTCOUNT_MASK;
->> +		if (count > 0) {
->> +			dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), count);
->> +			dwc->ev_buf->lpos = (dwc->ev_buf->lpos + count) %
->> +						dwc->ev_buf->length;
->> +		}
+> > +       passthrough_inode = file_inode(passthrough_filp);
+> > +       passthrough_sb = passthrough_inode->i_sb;
+> > +       fs_stack_depth = passthrough_sb->s_stack_depth + 1;
+> > +       if (fs_stack_depth > FILESYSTEM_MAX_STACK_DEPTH) {
+> > +               pr_err("FUSE: maximum fs stacking depth exceeded for passthrough\n");
+> > +               fput(passthrough_filp);
+> > +               return -1;
+> > +       }
+> > +
+> > +       req->passthrough_filp = passthrough_filp;
+> > +       return 0;
+> > +}
+> [...]
+> > +int __init fuse_passthrough_aio_request_cache_init(void)
+> > +{
+> > +       fuse_aio_request_cachep =
+> > +               kmem_cache_create("fuse_aio_req", sizeof(struct fuse_aio_req),
+> > +                                 0, SLAB_HWCACHE_ALIGN, NULL);
+> > +       if (!fuse_aio_request_cachep)
+> > +               return -ENOMEM;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +void fuse_passthrough_aio_request_cache_destroy(void)
+> > +{
+> > +       kmem_cache_destroy(fuse_aio_request_cachep);
+> > +}
 > 
-> don't duplicate code. Add a patch before this extracting this into
-> helper and use it for both irq handler and gadget pullup.
-> 
+> I think you don't have to make your own slab cache for this; it should
+> be fine to just use kmalloc() instead. Using a dedicated cache will be
+> more space-efficient if you have tons of allocations, but you won't
+> have a huge number of these allocations existing simultaneously, so
+> that shouldn't matter much. And if you only have a very small number
+> of allocations, you'll probably actually end up using more memory.
 
-We actually removed this call in the IRQ handler, as if we ensure that
-the IRQ routine has fully complete and won't trigger anymore, then this
-sequence will handle clearing of the event count.
+I fell into an overkill trying to do the right thing.
+Jumping back to kmalloc/kfree.
 
->> +	}
->> +
->>  	ret = dwc3_gadget_run_stop(dwc, is_on, false);
->>  	spin_unlock_irqrestore(&dwc->lock, flags);
->> +	enable_irq(dwc->irq_gadget);
->>  
->>  	return ret;
->>  }
->> @@ -3100,6 +3145,8 @@ static void dwc3_gadget_reset_interrupt(struct dwc3 *dwc)
->>  	}
->>  
->>  	dwc3_reset_gadget(dwc);
->> +	/* Stop any active/pending transfers when receiving bus reset */
-> 
-> unnecessary comment. We're calling a function named "stop active
-> transfers" from within the "bus reset handler".
-> 
-
-I can remove this.
-
-Thanks
-Wesley
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks again,
+Alessio
