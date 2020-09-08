@@ -2,159 +2,85 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2804C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A7EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723A6215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6504D2177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oQsLgdni"
+	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="kMpihx1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgIHIev (ORCPT
+        id S1730068AbgIHIfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729629AbgIHIer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:34:47 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36E1AC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:34:44 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id a17so18132900wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=CW7SWlQziB+XLEfwDIarCUWn2egUFfp8nzobe9Kqg9c=;
-        b=oQsLgdniIzJlP1V7VOZOZZwmmHc8QXyz1sX64QYO80LQrCxwzh22dSDrIe4RIMbDb5
-         XwuYiesWLUOPUg/MDzU2WD4ef2pe93qwmqHBChFQh8NsHDRfhzNfSz54GKs/uz+TVuJo
-         3AgRf5yeK4/WLMWkT7UhON/1u7Ztp1NvMPAtyyjyuDFISbiqgWrA8u0MoH4AD155T+Q0
-         oHpo5ilILtn+2t+Nw44k5UW13tmZ1WCX5MV9nkjvBE6uCE0yMJH543vdHxaPQceAhrBn
-         rEHe0NRpXugJAwHttO0JyJ0eRxpmpyDxT8U4aY2J69RnCohHzzz7RkbiVC2Dv8FAKT1M
-         8+Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CW7SWlQziB+XLEfwDIarCUWn2egUFfp8nzobe9Kqg9c=;
-        b=WGkcxao/1Gq1qpPbZC0np/Uj3dcmQpCfbxP2HEd3usvzItscqM+yROc1rrEAgmfhUu
-         iHAVVnWOPuMVkuBD1BGyl4xSeKvh7J7+Z/wclyKbpOgC0xcfde0JbJ6Xfq5DUd8zYZkF
-         AE4JicOa6RWNu10u7BqMugR1Zr3/BEddb9uKXvaFD2Mbt2wdz7ZySn0NRiNyTDw2thI5
-         KzMBBpWeX+dBcQcBYAsC4CPLq69PVWUsJOS6XTUYM0/t+nQ5WpvS6gWdUqoEalkqrGxg
-         geDgc15d6ZNrClu9Gw++8L02WhGE6rDkUxVFxUgLj+hjDoFtD+/PGW0py5QhRmJXLNoV
-         BoEQ==
-X-Gm-Message-State: AOAM532aLdcPdm01QidrMK16WUFfcbSjDcDz+KmZgPGqncCi8hueaqpH
-        NCyHYfEO7f8QvxFcMUQVd2+RJIQYHB0rmQ==
-X-Google-Smtp-Source: ABdhPJzXOYfeEE1jBZn1K2gwr7k//NMMDGlmorqjNcf0DmIixHtICN0767+4NHgOHegYHiL6t9fAEw==
-X-Received: by 2002:a5d:4c90:: with SMTP id z16mr27189113wrs.170.1599554083077;
-        Tue, 08 Sep 2020 01:34:43 -0700 (PDT)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id n4sm32853292wrp.61.2020.09.08.01.34.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 01:34:42 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 09:34:39 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Subject: Re: [24/30] mwifiex: wmm: Mark 'mwifiex_1d_to_wmm_queue' as
- __maybe_unused
-Message-ID: <20200908083439.GG4400@dell>
-References: <20200826093401.1458456-25-lee.jones@linaro.org>
- <20200901131601.C3840C433C6@smtp.codeaurora.org>
+        Tue, 8 Sep 2020 04:35:20 -0400
+Received: from mail.alarsen.net ([144.76.18.233]:57426 "EHLO mail.alarsen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729629AbgIHIfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 04:35:19 -0400
+X-Greylist: delayed 386 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 04:35:18 EDT
+Received: from oscar.alarsen.net (unknown [IPv6:2001:470:1f0b:246:b440:f8d3:1c0c:d20c])
+        by joe.alarsen.net (Postfix) with ESMTPS id C72DC2B80B87;
+        Tue,  8 Sep 2020 10:28:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
+        t=1599553730; bh=vAMC3BpR+mvYVqZXlzgmRJWrQUKXzqY7hp9gqzLPC+M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kMpihx1Mn0lZF+E26HcrGXm3wEl1wM3kQy9vMh0OgkdaWmym0/RAttcriMqnUNx+Q
+         onTCxRAk4kQFdU4k5nSd+5wUEG3XWrGMOplq2HqO9QooG+jtDochhQkAddnZU6i3BM
+         A7l1QtSqSgTV0VKpPpD0wi38Cf+6S8QGZy0DmSts=
+Received: from oscar.localnet (localhost [IPv6:::1])
+        by oscar.alarsen.net (Postfix) with ESMTP id 98F8327C02A7;
+        Tue,  8 Sep 2020 10:28:50 +0200 (CEST)
+From:   Anders Larsen <al@alarsen.net>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     thierry.reding@gmail.com, sam@ravnborg.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: vendor-prefixes: Add Shanghai Top Display Optolelectronics vendor prefix
+Date:   Tue, 08 Sep 2020 10:28:50 +0200
+Message-ID: <14178277.p4ol7qMFiq@alarsen.net>
+In-Reply-To: <20200908075421.17344-2-narmstrong@baylibre.com>
+References: <20200908075421.17344-1-narmstrong@baylibre.com> <20200908075421.17344-2-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200901131601.C3840C433C6@smtp.codeaurora.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 01 Sep 2020, Kalle Valo wrote:
-
-> Lee Jones <lee.jones@linaro.org> wrote:
+On Tuesday, 2020-09-08 09:54 Neil Armstrong wrote:
+> Shanghai Top Display Optolelectronics Co., Ltd  is a display manufacturer
+> from Shanghai.
+> Web site of the company: http://www.shtdo.com/
 > 
-> > 'mwifiex_1d_to_wmm_queue' is used in'; main.c, txrx.c and uap_txrx.c
-> > 
-> > ... but not used in 14 other source files which include 'wmm.h'.
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  In file included from drivers/net/wireless/marvell/mwifiex/init.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/cmdevt.c:26:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/util.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/wmm.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/11n.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/11n_aggr.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> >  In file included from drivers/net/wireless/marvell/mwifiex/11n.h:25,
-> >  from drivers/net/wireless/marvell/mwifiex/scan.c:25:
-> >  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
-> >  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
-> >  | ^~~~~~~~~~~~~~~~~~~~~~~
-> > 
-> >  NB: Many entries - snipped for brevity.
-> > 
-> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> > Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> > Cc: Xinming Hu <huxinming820@gmail.com>
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Failed to apply:
-> 
-> fatal: sha1 information is lacking or useless (drivers/net/wireless/marvell/mwifiex/wmm.h).
-> error: could not build fake ancestor
-> Applying: mwifiex: wmm: Mark 'mwifiex_1d_to_wmm_queue' as __maybe_unused
-> Patch failed at 0001 mwifiex: wmm: Mark 'mwifiex_1d_to_wmm_queue' as __maybe_unused
-> The copy of the patch that failed is found in: .git/rebase-apply/patch
-> 
-> Patch set to Changes Requested.
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index a1e4356cf522..4e9dfb352c68 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -1078,6 +1078,8 @@ patternProperties:
+>      description: TPK U.S.A. LLC
+>    "^tplink,.*":
+>      description: TP-LINK Technologies Co., Ltd.
+> +  "^tdo,.*":
+> +    description: Shangai Top Display Optoelectronics Co., Ltd
 
-I'll rebase everything I have onto -next and see about re-submitting.
+Please keep the list sorted alphabetically as requested in line 25 of the file.
 
-Thanks.
+>    "^tpo,.*":
+>      description: TPO
+>    "^tq,.*":
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Cheers
+Anders
+
+
