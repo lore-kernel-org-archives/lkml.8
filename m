@@ -2,117 +2,137 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B95C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F82C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF0272078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588708;
-	bh=bLHFQoqjMw1LqzuW5lIQUHGrICvm3uFWuzg3G89iCmY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7bQO5tJqBicQcleN30Mcd6BjoroRN6SC/5YpGCfrAn7lKvbNdhffyFkaK27EAEfy
-	 pT9m4rti9DahuNeQh/2IkaMBLZ1k8SCqF5bgrNf+6bYk0RPjDTTz0f3nYIL38SlpGP
-	 8lCJ6c/sq3nLeAM42hb9S/MIMtEDumLagZUiE5XI=
+	by mail.kernel.org (Postfix) with ESMTP id B871420759
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sior-be.20150623.gappssmtp.com header.i=@sior-be.20150623.gappssmtp.com header.b="GRWuV3D+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgIHSJt (ORCPT
+        id S1731524AbgIHSL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731316AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:49 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE7D24768;
-        Tue,  8 Sep 2020 15:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579710;
-        bh=bLHFQoqjMw1LqzuW5lIQUHGrICvm3uFWuzg3G89iCmY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cD+vvQSpDpTcYlPHceoRNtsOfu7TKk/mH8wTZ4Kc70yne4dQjvAUQTeF0TjrxoPo3
-         PQxGI4/KZ6qzIoDKk2qIQdUHzo2nDRegWgD5YWTs1vZxGS7zRS/PdKAhvf64uuTuP9
-         l2nBPth6PYr5wz3wmfI8C2LOo88A1rAzGTabtiuk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Norman Maurer <norman.maurer@googlemail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 176/186] io_uring: no read/write-retry on -EAGAIN error and O_NONBLOCK marked file
-Date:   Tue,  8 Sep 2020 17:25:18 +0200
-Message-Id: <20200908152250.202142288@linuxfoundation.org>
+        Tue, 8 Sep 2020 14:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgIHSLj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:11:39 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9A5C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:11:38 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id j11so23982593ejk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sior-be.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2jeAKbPcMYL3zKYHWUAD80qBl6LQnPeUqzL2ybjhdJg=;
+        b=GRWuV3D+NPs+O8PhfljngvbH+/zdl1IG8s+i5wlKJNll0vYKQc3oEZmRBq2GPksBfB
+         KZqDXGLyapYUntSwXu7zK1WBhKrrjsmYheZ21l9UPvc2kysM5F4IbTnkh/il6rSNqwoL
+         EdCab1UyiUXvyGG2hYYrI867vxh2q3cIXvimK6XSZJgxiaFUvNOV4Mln6uGZ2yinOj01
+         OpRJg968cPDL9fxOL2uFJCforjAmLjmTrsy4/frYWGR4IaBF8bCZ7fGBT6ABNkJ4qWa/
+         8rXZp3U0TvvLv7/t94dXEBoHvAfxre9JV3R14nppWYwCg8WRqahVi/+t1FDgtIafF0Al
+         PATg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2jeAKbPcMYL3zKYHWUAD80qBl6LQnPeUqzL2ybjhdJg=;
+        b=gCoFK2IkkpV/JReSOulyxJFre0xRSleCvZmyI0tMvPba7vy2x4GnSS4S8NZRswlAbi
+         TOLSdrKlHZ3VeJdkPSqKI5nZFMq4E7K5KFuEvx1Cign3BwZeKdNbiBG50T9MRHz5xbdT
+         0XyxXjK03v3hZHtmbf7WABECzzLcDI2xRRNg0Ol94o/TJqvb17BdMhXMcesxX1j2l8fy
+         dDEK3FbtO8/h+Ws0SRtcIBq3gwkM9Yl52al674bKr5WZmX1oCqKy7ZLK26DAc3NgMlfB
+         Wjo4bRciPN6JyYfgUMgflPeFwwfNs9VJq9eccr0j0gnZwk7ORk+VDsKJ3xtVgwuBA/3J
+         joGQ==
+X-Gm-Message-State: AOAM531sF5OQwJKgmXKLcGUVk4yFkfjwx4YfBQ8OSDv5062VO0d6X+W7
+        wy+1O4lEjAiSBzKWP4xgUljC3g==
+X-Google-Smtp-Source: ABdhPJzXcxEi0aj0yBJLuuB4LmRVp2OUfbxb1m0J1V/0WroShEQJp8UGXqXJyJVSx6nGyPsh9AglWA==
+X-Received: by 2002:a17:906:3552:: with SMTP id s18mr26864500eja.23.1599588697308;
+        Tue, 08 Sep 2020 11:11:37 -0700 (PDT)
+Received: from aws.localdomain ([94.107.139.190])
+        by smtp.gmail.com with ESMTPSA id g20sm16127ejx.12.2020.09.08.11.11.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 11:11:36 -0700 (PDT)
+From:   Alejandro Sior <aho@sior.be>
+Cc:     Alejandro Sior <aho@sior.be>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [Intel-gfx][PATCH v2] drm/i915/gvt: Prevent NULL pointer dereference in intel_vgpu_reg_rw_edid()
+Date:   Tue,  8 Sep 2020 20:11:21 +0200
+Message-Id: <20200908181122.9100-1-aho@sior.be>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <743818af-fa38-e31a-1780-84a6a7e72e25@web.de>
+References: <743818af-fa38-e31a-1780-84a6a7e72e25@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+In the function intel_vgpu_reg_rw_edid of kvmgt.c, pos can be equal
+to NULL for GPUs that do not properly support EDID. In those cases, when
+pos gets passed to the handle_edid functions, it gets added a short offset
+then it's dereferenced in memcpy's, leading to NULL pointer
+dereference kernel oops.
 
-commit 355afaeb578abac907217c256a844cfafb0337b2 upstream.
+More concretely, that kernel oops renders some Broadwell GPUs users
+unable to set up virtual machines with virtual GPU passthrough (virtual
+machines hang indefinitely when trying to make use of the virtual GPU),
+and make them unable to remove the virtual GPUs once the kernel oops has
+happened (it hangs indefinitely, and notably too when the kernel tries to
+shutdown). The issues that this causes and steps to reproduce are
+discussed in more details in this github issue post:
+https://github.com/intel/gvt-linux/issues/170#issuecomment-685806160
 
-Actually two things that need fixing up here:
+Check if pos is equal to NULL, and if it is, set ret to a negative
+value, making the module simply indicate that the access to EDID region
+has failed, without any fatal repercussion.
 
-- The io_rw_reissue() -EAGAIN retry is explicit to block devices and
-  regular files, so don't ever attempt to do that on other types of
-  files.
-
-- If we hit -EAGAIN on a nonblock marked file, don't arm poll handler for
-  it. It should just complete with -EAGAIN.
-
-Cc: stable@vger.kernel.org
-Reported-by: Norman Maurer <norman.maurer@googlemail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alejandro Sior <aho@sior.be>
 
 ---
- fs/io_uring.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes in v2:
+- removed middle name of author to comply with git name
+- rephrased the patch description with imperative phrasing
+- removed useless paragraph
+- made a paragraph more concise
+- fixed typos
+- made individual lines shorter than 75 chars
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2697,8 +2697,15 @@ static int io_read(struct io_kiocb *req,
- 		else
- 			ret2 = -EINVAL;
+ drivers/gpu/drm/i915/gvt/kvmgt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+index ad8a9df49f29..49163363ba4a 100644
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -557,7 +557,9 @@ static size_t intel_vgpu_reg_rw_edid(struct intel_vgpu *vgpu, char *buf,
+ 		(struct vfio_edid_region *)kvmgt_vdev(vgpu)->region[i].data;
+ 	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
  
-+		/* no retry on NONBLOCK marked file */
-+		if (ret2 == -EAGAIN && (req->file->f_flags & O_NONBLOCK)) {
-+			ret = 0;
-+			goto done;
-+		}
-+
- 		/* Catch -EAGAIN return for forced non-blocking submission */
- 		if (!force_nonblock || ret2 != -EAGAIN) {
-+	done:
- 			kiocb_done(kiocb, ret2);
- 		} else {
- copy_iov:
-@@ -2823,7 +2830,13 @@ static int io_write(struct io_kiocb *req
- 		 */
- 		if (ret2 == -EOPNOTSUPP && (kiocb->ki_flags & IOCB_NOWAIT))
- 			ret2 = -EAGAIN;
-+		/* no retry on NONBLOCK marked file */
-+		if (ret2 == -EAGAIN && (req->file->f_flags & O_NONBLOCK)) {
-+			ret = 0;
-+			goto done;
-+		}
- 		if (!force_nonblock || ret2 != -EAGAIN) {
-+done:
- 			kiocb_done(kiocb, ret2);
- 		} else {
- copy_iov:
-
+-	if (pos < region->vfio_edid_regs.edid_offset) {
++	if (pos == NULL) {
++		ret = -EINVAL;
++	} else if (pos < region->vfio_edid_regs.edid_offset) {
+ 		ret = handle_edid_regs(vgpu, region, buf, count, pos, iswrite);
+ 	} else {
+ 		pos -= EDID_BLOB_OFFSET;
+-- 
+2.28.0
 
