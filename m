@@ -2,51 +2,50 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833D1C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AA9C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F06920658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6C520768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594695;
-	bh=+bIpSi/c6GEhT293GlRTXrXmug0KpOewySLts4rLX6c=;
+	s=default; t=1599594697;
+	bh=Q0s+No+VwSBihjIHi1xxZfkgr3aWqm7PPMb0lJeQw4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yjo8ghtZD4eGTE9HBGthlC8QzfkH82xOuyCne2n4BJTmqdRyE+JS9qVXkkNAnaOYU
-	 mMREaFOv6qVeunyeQ9FAUp+5MsyWL4kqnhGtqcy3dke6RLzbWiCfvhZjjZzt8Ds+mO
-	 fML/WM01j8SStTRjtpi/yKZk3q0kd0KUxcYiteVs=
+	b=2Ap8uF3PtG0+ZP+uOTSwOXhcEobvJaKPtc3ZZGUozLDCHzayVmyJmev6WmOKWT4v1
+	 9B5GafSrXPwC6lzN3CNXeTUZGs9us1JChFyBKzN1S2iakK/sns7k7ZrFXKahday7jE
+	 2Z3GYfJHYVQrZ4EG1Co30wwyyk9PPzGlyE8hb3f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgIHTvd (ORCPT
+        id S1731777AbgIHTvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39054 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730549AbgIHPt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730304AbgIHPt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:49:57 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A15B62485E;
-        Tue,  8 Sep 2020 15:45:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACE7B2485D;
+        Tue,  8 Sep 2020 15:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579927;
-        bh=+bIpSi/c6GEhT293GlRTXrXmug0KpOewySLts4rLX6c=;
+        s=default; t=1599579922;
+        bh=Q0s+No+VwSBihjIHi1xxZfkgr3aWqm7PPMb0lJeQw4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlNl1Ed1vZRIs4PpFFXMlgXZYq2oFcZZJ/sl9CbacAxhp0ZptaeO1ayAzKXSDu8j7
-         I4lObF0bnm5KZb5u6lO2xVOsQ/3euAEL+7DXFeSoxlkbkdBekUgM5stX/ZJlS90Pai
-         0yG7mwMlsUvvwXstKfSnDLGt/YTuEjWmfobMA5Gs=
+        b=rzKiQ7792d/hIt6YLu5j5PDIAUfhGYHYOliWXFlEiDEFbWV2c3742XUtasR5gDzMp
+         YYxj9qITEVHBNH4uhxwT7EIg3t5PYq1zzG/X/eRRZ8JvakUOgXHIq96MVVXKveeJFp
+         Z8pso5kZBaX7FYFPa+8WTlCEG5ZEVhJWonqzvBKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tong Zhang <ztong0001@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 090/129] ALSA: ca0106: fix error code handling
-Date:   Tue,  8 Sep 2020 17:25:31 +0200
-Message-Id: <20200908152234.229551369@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 088/129] Revert "net: dsa: microchip: set the correct number of ports"
+Date:   Tue,  8 Sep 2020 17:25:29 +0200
+Message-Id: <20200908152234.112893103@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -59,35 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tong Zhang <ztong0001@gmail.com>
+This reverts commit d55dad8b1d893fae0c4e778abf2ace048bcbad86.
 
-commit ee0761d1d8222bcc5c86bf10849dc86cf008557c upstream.
+Upstream commit af199a1a9cb0 ("net: dsa: microchip: set the correct
+number of ports") seems to have been applied twice on top of the 5.4
+branch. This revert the second instance of said commit.
 
-snd_ca0106_spi_write() returns 1 on error, snd_ca0106_pcm_power_dac()
-is returning the error code directly, and the caller is expecting an
-negative error code
-
-Signed-off-by: Tong Zhang <ztong0001@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200824224541.1260307-1-ztong0001@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/ca0106/ca0106_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/dsa/microchip/ksz8795.c | 3 ---
+ drivers/net/dsa/microchip/ksz9477.c | 3 ---
+ 2 files changed, 6 deletions(-)
 
---- a/sound/pci/ca0106/ca0106_main.c
-+++ b/sound/pci/ca0106/ca0106_main.c
-@@ -537,7 +537,8 @@ static int snd_ca0106_pcm_power_dac(stru
- 		else
- 			/* Power down */
- 			chip->spi_dac_reg[reg] |= bit;
--		return snd_ca0106_spi_write(chip, chip->spi_dac_reg[reg]);
-+		if (snd_ca0106_spi_write(chip, chip->spi_dac_reg[reg]) != 0)
-+			return -ENXIO;
- 	}
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index 8d50aacd19e51..84c4319e3b31f 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -1270,9 +1270,6 @@ static int ksz8795_switch_init(struct ksz_device *dev)
+ 	/* set the real number of ports */
+ 	dev->ds->num_ports = dev->port_cnt;
+ 
+-	/* set the real number of ports */
+-	dev->ds->num_ports = dev->port_cnt;
+-
  	return 0;
  }
+ 
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index b15da9a8e3bb9..49ab1346dc3f7 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -515,9 +515,6 @@ static int ksz9477_port_vlan_filtering(struct dsa_switch *ds, int port,
+ 			     PORT_VLAN_LOOKUP_VID_0, false);
+ 	}
+ 
+-	/* set the real number of ports */
+-	dev->ds->num_ports = dev->port_cnt;
+-
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
+
 
 
