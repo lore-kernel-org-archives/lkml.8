@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67740C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239DBC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC36215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E735421973
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q7LQSWJo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXIC3Q8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgIHCOt (ORCPT
+        id S1728982AbgIHCOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40050 "EHLO
+        Mon, 7 Sep 2020 22:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbgIHCMD (ORCPT
+        with ESMTP id S1728328AbgIHCMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 22:12:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EFCC061757;
-        Mon,  7 Sep 2020 19:11:59 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so18046322ljc.3;
-        Mon, 07 Sep 2020 19:11:59 -0700 (PDT)
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AE9C0617A1;
+        Mon,  7 Sep 2020 19:11:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n25so7106387ljj.4;
+        Mon, 07 Sep 2020 19:11:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CH+tGayY3Xii8pDTmAx+Z65LYWNubZeJ2KNGkfprF0o=;
-        b=q7LQSWJoPH17LhpG8Ij5kxBGv1GINCpyByNSRJS2267Vv99bG1eccilS5yxAAPHk1P
-         cEVIarB3wZhH42itbXveTltNS7UF8EXujaixR5BA0pYUYBhseh1usZyXmwLGmUQHcA2g
-         sfBdZ8EbTMrlZJp1MGAh2yAbDmLFap08lqpjRVJVtO82Cb5xtCF5lAjlbAPNi6rTNOGd
-         9M2d+kMMkAhunnDvTK0uyHaVVHh7kkcyzW8XSU//7zNcqN+VR48sB7GcApeFFdPlvOH2
-         3cfOoiXepbhpvOXCB8OybV3ewZzytQS0NtXXisT5bux/9PumSQXDLxXOHpySFjOwM8wZ
-         T7ug==
+        bh=Lxvjtf4dYiAKvgZL7eYwyWdc5H5QauMaAbRRwLy755M=;
+        b=SXIC3Q8SrWUGUeRnAFdu5qYHteMzhNsaoneeeTW6BzfdTaLgKwfRYFtd54IFuDdeki
+         hsgRr4CiEgPwBTb7V1DQgH4etiA2repiRFPY5kz9yH8PSdeFpDzqguwBF3Dr0KS67vKo
+         RbM3Pb4/WUGRCf9cmSqJjnSPpFBu/MV90h3US9j+yX8ZtTdy9TI7VSGFLSE/XvgLIGdA
+         h78sO84zdAJX36lUyA72g31DiMEx/J4KZ8lUM9mWXQWYAX0O1fpWNmRfnzmA7IjW5XQf
+         hkZz7ITkURMfbTdXG5sn7YtsEc6aCf2a/YFzs0/rs/C9hSDkfAAVOCjD4OK8FI7V3foM
+         YpcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CH+tGayY3Xii8pDTmAx+Z65LYWNubZeJ2KNGkfprF0o=;
-        b=OZNLEV53488aZ4tMtRK1lQVdwJpXF3KnS41V22GnJZT9S0rM1LGLMkmo5c+KKEOJEd
-         T61wD0nsRNZ8YAN92BEDfO3O2pzjNdWH7GWs9BRtAXMvAHb7M3yl9Ztk3B4mDoQJsTeF
-         BJZOfAR0nHrPqwpQq4XPD+yqpnRDDM+4TkDI/MUk+IcM04g7KHiwj9jTt9dk2uFo/lhU
-         yavMa1FRevNZ8l+biIglUF1+jKSnmk7EnEXvpwRtmNhjZhsdrAZJXeLhKs0pS1+W+RTJ
-         v2mZm9rRLtSGF1GeTYF5zEZDOZ4NGZh+RNrx0AgnDk9N8WtVKVZyS+8a0CqQBEpuf6RZ
-         G6og==
-X-Gm-Message-State: AOAM530Iuie91Exl1KkI3aQagQAfDzioWurPlRMnWkbK0buIRsipYIES
-        QFAsitVaHrQY/YMhiZcbbqs=
-X-Google-Smtp-Source: ABdhPJwKeE4jgVr/H5XobpJ54PIi3/2IyL+WLcE37TDByo0BizuVIollVgNmlCMYEYeVUKZcfCpMlQ==
-X-Received: by 2002:a2e:808a:: with SMTP id i10mr12109982ljg.313.1599531116440;
-        Mon, 07 Sep 2020 19:11:56 -0700 (PDT)
+        bh=Lxvjtf4dYiAKvgZL7eYwyWdc5H5QauMaAbRRwLy755M=;
+        b=I54f5dhRg5ESHWm8Av65sxe9TGX99Pasc6ia8aYcEAjDXF+LH5m3nRJ/ay82GG2xSh
+         Lg53kZP7btSrxVXCrlQ017tSAVd5OWwjNAdnspgBX9Wz8duqwdvDtOe2720knTFzASf5
+         kov53p83XPcGgCJ0x8ujJL88wbNnPmTIqTEpnS4CP1ORQc6hzEUxMkHUPBl6Vn5Sq0JE
+         Ncb4YZ8MuMLQ57gYnsj8skWioZp+ruKnrSgkccRU0ePl0TuFXN4BQBRfvrquvolaaFaI
+         35xVtly+moSCYc5XPMEJSTMNze0bn8WuXUoX7xDQsKreEIca2gHKGS5hUgNMt1J4K2SR
+         CBmA==
+X-Gm-Message-State: AOAM531EwLyIBv+2PgV3MRVDxRZaWtLniXtCi9LmjDbJXrjw0IbS2GEu
+        e8wpafRchPSKnBuDy7yjXPk=
+X-Google-Smtp-Source: ABdhPJysiWP28b7t6ydytix6g/oK2T8yL2PpXxcryP+HVlaolLiMbkUYyCwNZykLDQZqU8E1ZOBtIQ==
+X-Received: by 2002:a2e:a304:: with SMTP id l4mr11810448lje.35.1599531114697;
+        Mon, 07 Sep 2020 19:11:54 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.55
+        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 19:11:55 -0700 (PDT)
+        Mon, 07 Sep 2020 19:11:54 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,76 +69,81 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 23/35] i2c: tegra: Improve coding style of tegra_i2c_wait_for_config_load()
-Date:   Tue,  8 Sep 2020 05:10:09 +0300
-Message-Id: <20200908021021.9123-24-digetx@gmail.com>
+Subject: [PATCH v6 21/35] i2c: tegra: Don't fall back to PIO mode if DMA configuration fails
+Date:   Tue,  8 Sep 2020 05:10:07 +0300
+Message-Id: <20200908021021.9123-22-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200908021021.9123-1-digetx@gmail.com>
 References: <20200908021021.9123-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improve coding style of the tegra_i2c_wait_for_config_load() function by
-removing need to wrap code in order make it more readable and to adhere to
-the common kernel coding style.
+The DMA code path has been tested well enough and the DMA configuration
+performed by tegra_i2c_config_fifo_trig() shouldn't ever fail in practice.
+Hence let's remove the obscure transfer-mode switching in order to have a
+cleaner and simpler code. Now I2C transfer will be failed if DMA
+configuration fails.
 
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 34 ++++++++++++++++------------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index be7a09041871..c16273c13291 100644
+index e94da14d36e2..ba71b64e5e64 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -562,25 +562,23 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
- 	u32 val;
- 	int err;
+@@ -940,8 +940,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
  
--	if (i2c_dev->hw->has_config_load_reg) {
--		reg_offset = tegra_i2c_reg_addr(i2c_dev, I2C_CONFIG_LOAD);
--		addr = i2c_dev->base + reg_offset;
--		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
--
--		if (i2c_dev->is_curr_atomic_xfer)
--			err = readl_relaxed_poll_timeout_atomic(
--						addr, val, val == 0, 1000,
--						I2C_CONFIG_LOAD_TIMEOUT);
--		else
--			err = readl_relaxed_poll_timeout(
--						addr, val, val == 0, 1000,
--						I2C_CONFIG_LOAD_TIMEOUT);
-+	if (!i2c_dev->hw->has_config_load_reg)
-+		return 0;
- 
--		if (err) {
--			dev_warn(i2c_dev->dev,
--				 "timeout waiting for config load\n");
--			return err;
--		}
-+	reg_offset = tegra_i2c_reg_addr(i2c_dev, I2C_CONFIG_LOAD);
-+	addr = i2c_dev->base + reg_offset;
-+	i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
+-static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
+-				       size_t len)
++static int tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev, size_t len)
+ {
+ 	u32 val, reg;
+ 	u8 dma_burst;
+@@ -992,12 +991,10 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
+ 		if (ret < 0) {
+ 			dev_err(i2c_dev->dev, "DMA slave config failed: %d\n",
+ 				ret);
+-			dev_err(i2c_dev->dev, "falling back to PIO\n");
+-			tegra_i2c_release_dma(i2c_dev);
+-			i2c_dev->is_curr_dma_xfer = false;
+-		} else {
+-			goto out;
++			return ret;
+ 		}
 +
-+	if (i2c_dev->is_curr_atomic_xfer)
-+		err = readl_relaxed_poll_timeout_atomic(addr, val, val == 0, 1000,
-+							I2C_CONFIG_LOAD_TIMEOUT);
-+	else
-+		err = readl_relaxed_poll_timeout(addr, val, val == 0, 1000,
-+						 I2C_CONFIG_LOAD_TIMEOUT);
-+
-+	if (err) {
-+		dev_warn(i2c_dev->dev, "timeout waiting for config load\n");
-+		return err;
++		goto out;
  	}
  
- 	return 0;
+ 	if (i2c_dev->hw->has_mst_fifo)
+@@ -1008,6 +1005,8 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
+ 		      I2C_FIFO_CONTROL_RX_TRIG(1);
+ out:
+ 	i2c_writel(i2c_dev, val, reg);
++
++	return 0;
+ }
+ 
+ static unsigned long
+@@ -1141,7 +1140,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 	i2c_dev->is_curr_dma_xfer = (xfer_size > I2C_PIO_MODE_PREFERRED_LEN) &&
+ 				    i2c_dev->dma_buf &&
+ 				    !i2c_dev->is_curr_atomic_xfer;
+-	tegra_i2c_config_fifo_trig(i2c_dev, xfer_size);
++
++	err = tegra_i2c_config_fifo_trig(i2c_dev, xfer_size);
++	if (err)
++		return err;
+ 
+ 	/*
+ 	 * Transfer time in mSec = Total bits / transfer rate
 -- 
 2.27.0
 
