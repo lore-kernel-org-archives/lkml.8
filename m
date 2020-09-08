@@ -2,128 +2,126 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BB0C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26E022076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="1tRNglgM"
+	by mail.kernel.org (Postfix) with ESMTP id 6D78F2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599597456;
+	bh=WmZ3NUqA1CqZSvwgkSBZ2eiXK13583VBsx+Kfp4Qe5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gbiQRuP5rGjOHlEuFgT/IKK9C9t3j7+NcRyHXjFfeH2WIiiyIK88HUeNKlh7cgdwi
+	 NC7JGr/LC2C3k51T7A/HHrKZ/MY3VVFMkRAGBXEgnfEKi5WcLApeAtGgutwZQv+OCp
+	 tOYIk4CPBUH2RRvRvEVyjuNSM0oLuG+xlqNVXmo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgIHUfa (ORCPT
+        id S1729851AbgIHUhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgIHUf3 (ORCPT
+        Tue, 8 Sep 2020 16:37:35 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36995 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbgIHUhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:35:29 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19063C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 13:35:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o68so263219pfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 13:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Pi5Ot7NAsKXZl3XWiN+smNBToz4aQuIesxq10kCmT3k=;
-        b=1tRNglgMOS8BOH6OLOjRYKqh9Ki7qg9E4DucR8BCg3UxGQL3Wkem6udt1zLg6sW2Df
-         BFEIxxwePeJpCIuz28a2ntxIXPKUJX/uGyvV0WaNTlloglSqk4ogkDIh9Dxt1Nr4pqdD
-         ke6AhF5cb159RvaRumAByzVy8+3XeeXo7we4fxo5H0n9r0a5mviTorEHZrZrnC96qJNF
-         uswciVaihsCTKh1+FKIETBYYm+zTA81f7uOqvPsOGmTaNdcA8Uu54kKh2vOhJapBff5Q
-         qnaoxBZAl0TmcZEmpy9vLEcMVH/oVXs2U1hcwPZ1qk5o3OafkkbYXBUIn5UOrxYJlN5Q
-         0a+A==
+        Tue, 8 Sep 2020 16:37:32 -0400
+Received: by mail-il1-f195.google.com with SMTP id b17so224638ilh.4;
+        Tue, 08 Sep 2020 13:37:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Pi5Ot7NAsKXZl3XWiN+smNBToz4aQuIesxq10kCmT3k=;
-        b=Vi+EnbwuxC4feG6eYuFKn2nh4t/mHT/TXa3XEhA9le5rtDsjr9/KnAfgJMr69lGvBH
-         e2478MIvuMYTRdAhAlSVzoDh0u+Uc7t0ZryXM0ILp/566TwERzk53tu8+ebI9dLgW0CT
-         OQ93c/Gsru9K8ixpMoQv6SZGIOQeotIYiGUFRmgn7Wi1cHRvwontb88OcT5+im8IDRMr
-         r29YqqNGHJ/2eO85kycN8irDT9xUVqIdnHxrkH8bsSngxcSFuZXQxFiZ0dgoRr+YwfwV
-         CRjnoUktwAAPScMddRHDvojIjAldLZFTDti7nBpg/enMDQPNNQNEPqbgPeosLHp+js4c
-         KGVg==
-X-Gm-Message-State: AOAM532isnvnfLOPE8s/0pkEyXgrgSro7UEnSOIelozDlnsWuJu8bUw6
-        T0DzObiK3NfD8tDT0exvTf3ZKA==
-X-Google-Smtp-Source: ABdhPJwQYEmlnAs64gFZWFpozPfFNewZV6zhYPRoKczIf3aI18vRfj3X8a34Tv4SX20Zycek2N7cTg==
-X-Received: by 2002:a17:902:be0b:: with SMTP id r11mr427647pls.84.1599597321777;
-        Tue, 08 Sep 2020 13:35:21 -0700 (PDT)
-Received: from [100.97.122.108] (3.sub-174-194-201.myvzw.com. [174.194.201.3])
-        by smtp.gmail.com with ESMTPSA id h15sm116176pjf.54.2020.09.08.13.35.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 13:35:20 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-Date:   Tue, 8 Sep 2020 13:35:18 -0700
-Message-Id: <025308CD-6E1A-41E1-8B3D-E9842CE00794@amacapital.net>
-References: <20200908193029.GM25236@zn.tnic>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        kitsunyan <kitsunyan@airmail.cc>,
-        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-In-Reply-To: <20200908193029.GM25236@zn.tnic>
-To:     Borislav Petkov <bp@alien8.de>, Matthew Garrett <mjg59@google.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>
-X-Mailer: iPhone Mail (17H35)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GEO2mEwTa2BqylVAGWSbETeCOTUBRxw5/MLADpDOoGg=;
+        b=fPm4ADyolRFARewi3hqmvtt2NE7KXNuc95uiM/7KKA9D1TsuhD8CszmeepA1hbMe1h
+         tSYj4KAOBTUMCv3OiBnLBRul3HxsihiYNGkk09GTqV8ygtpmKaqyGVyKarY/5p8p0fzL
+         GjkJuDOO3/vg4S4o+524UvZ46bsUvld26EVTG8LLaHkGoZ0NC/FsmyjIUMOBo8IJR295
+         D1oydl04LZixSIcfuvzPBYrtsRRQGVCfIbQHew9G2uAY1Qu3yh/OtEq2uPTQDkm0ZDPJ
+         nIttxjrJv6XhPtYTyUKDqt98EZcRkC44nld3jVMlgbcQ/W57Thpb93MAmjf1m0dyXtXi
+         29YQ==
+X-Gm-Message-State: AOAM532usdfH3H2E70YQHwU5/HkN6rPdum0Wt0Gz9KQIZPi9y7oX0hhB
+        +W6I8IIQkFpBQZB11FdCJ4/zbxBUECDu
+X-Google-Smtp-Source: ABdhPJw+t2qU979+AdZ8QjmxDAMMoLlZmNZjcpVp7EYdD0LSdmcKy9B0J62qeIINYSFwU668Ssd4nw==
+X-Received: by 2002:a92:6a0c:: with SMTP id f12mr501711ilc.213.1599597451673;
+        Tue, 08 Sep 2020 13:37:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id m15sm215036iow.9.2020.09.08.13.37.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:37:31 -0700 (PDT)
+Received: (nullmailer pid 875163 invoked by uid 1000);
+        Tue, 08 Sep 2020 20:37:29 -0000
+Date:   Tue, 8 Sep 2020 14:37:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        benh@kernel.crashing.org, brendanhiggins@google.com,
+        dmitry.torokhov@gmail.com
+Subject: Re: [PATCH 1/5] dt-bindings: input: Add documentation for IBM
+ Operation Panel
+Message-ID: <20200908203729.GA872283@bogus>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
+ <20200820161152.22751-2-eajames@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820161152.22751-2-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 20, 2020 at 11:11:48AM -0500, Eddie James wrote:
+> Document the bindings for the IBM Operation Panel, which provides
+> a simple interface to control a server. It has a display and three
+> buttons.
+> Also update MAINTAINERS for the new file.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  .../bindings/input/ibm,op-panel.yaml          | 38 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/ibm,op-panel.yaml b/Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+> new file mode 100644
+> index 000000000000..86a32e8f3ef0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/ibm,op-panel.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: IBM Operation Panel
+> +
+> +maintainers:
+> +  - Eddie James <eajames@linux.ibm.com>
+> +
+> +description: |
+> +  The IBM Operation Panel provides a simple interface to control the connected
+> +  server. It has a display and three buttons: two directional arrows and one
+> +  'Enter' button.
+> +
+> +properties:
+> +  compatible:
+> +    const: ibm,op-panel
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
 
+additionalProperties: false
 
-> On Sep 8, 2020, at 12:30 PM, Borislav Petkov <bp@alien8.de> wrote:
->=20
-> =EF=BB=BFOn Tue, Sep 08, 2020 at 12:18:38PM -0700, Sultan Alsawaf wrote:
->> I'd like to point out that on Intel's recent 14nm parts, undervolting
->> is not so much for squeezing every last drop of performance out of the
->> SoC as it is for necessity.
->=20
-> <snip interesting examples>
->=20
-> Sounds to me that this undervolting functionality should be part of
-> the kernel and happen automatically. I have no clue, though, whether
-> people who do it, just get lucky and undervolting doesn't cause any
-> other hardware issues, or there's a real reason for this power madness
-> and if not done, power-related failures happen only on some boxes so
-> they decided to do them on all.
->=20
-> Or maybe BIOS is nuts, which is not a stretch.
->=20
-> Srinivas, what's the story here?
->=20
+With that added,
 
-I have seriously mixed opinions about this.
-
-First, there are really two separate issues here. One is undervolting these p=
-arts, and one is the MSR interface.
-
-In my mind, the MSR part is an easy call. Userspace has no more business pok=
-ing some undocumented mailbox MSR than it does poking any other MSR. We shou=
-ld not give special dispensation here. It should be allowed if the MSR restr=
-ictions are off, and otherwise we should warn or forbid it.
-
-Undervolting is a bit different. It=E2=80=99s a genuinely useful configurati=
-on that can affect system stability.  In general, I think it should be allow=
-ed, and it should have a real driver in tree.
-
-But this has a tricky interaction with lockdown.  An interface that allows r=
-oot to destabilize a system may well allow root to escalate privileges.  But=
- I think that making lockdown=3Dintegrity prevent tuning voltages and such w=
-ould be quite obnoxious.
-
-Should there perhaps be a separate lockdown bit for stability?
-
-I assume that Intel XTU and such work on Secure-Booted Windows.=
+Reviewed-by: Rob Herring <robh@kernel.org>
