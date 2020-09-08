@@ -2,55 +2,56 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 059822078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10142078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588747;
-	bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
+	s=default; t=1599588753;
+	bh=lxDzIitpb41yMY8+7x8hKawBxt6RAsDDtJ7qIbeuxaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yom0d8yHGOtNPNQcK/bJ0i/U/2Y2rhwWSr/nAFeVggNoKOK5aFdqRzfhZJO6tF56K
-	 hGE9OUU9XX31lSYmunnKLA4o7efeZsi3cQUMN4FxZql3R2K60yitO9OIPP3VVOya7M
-	 nTnesAQjIAQavsNttEse74u8BhOAhwEyncqgSVAA=
+	b=q39ayErmdegBHZWIqA2V5N0XA6HvUQjTvJpy9pkmVLxdmd2Cyprun2HoxHtKGQaex
+	 f4UQKKf172sSu/pghbgnUFAQ3M84ATZh/y+d1wqC4YuOsy2D7ZJkY6bhnpFBKwxD8q
+	 gT5bx3t9cLvlCapfgY7w/YsrOOeyjVE5+u63TUw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbgIHSMW (ORCPT
+        id S1732013AbgIHSMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731483AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731488AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841C0247E0;
-        Tue,  8 Sep 2020 15:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2AD224772;
+        Tue,  8 Sep 2020 15:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579754;
-        bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
+        s=default; t=1599579717;
+        bh=lxDzIitpb41yMY8+7x8hKawBxt6RAsDDtJ7qIbeuxaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J6CPdF6kq+7rFU7V5uOY2gb2duxAlWZQe7LzRMO/ih213GlxSm5h7Tr2U0Ki1QCUK
-         S4OYH0u/A619lTEUj7sYUD/O4ZBYfOQGrMkVu8tbFXq3wDIAamLq/8u4KcwbGLwSI7
-         oJDmtOEF5YmlIn8PrnZs0+B9UhMA+rsCPH8iZljY=
+        b=1sFjPW3kflneJYVmKGU/Pumv6J9Mu2PLbYOhumz3KBrJijMyvG+1t+a6uD3yG8v52
+         KAv32pswI15KxcV79UE1vwgZT9OmAwnnN2l/7k0PACm55wV8Z5yWWZf9PR2TuNvm0L
+         /qJoG+Do+Gi968e1ct/+I4VpM2Z0DAtdg/Zavspk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 021/129] fsldma: fix very broken 32-bit ppc ioread64 functionality
-Date:   Tue,  8 Sep 2020 17:24:22 +0200
-Message-Id: <20200908152230.761315744@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.8 179/186] sdhci: tegra: Add missing TMCLK for data timeout
+Date:   Tue,  8 Sep 2020 17:25:21 +0200
+Message-Id: <20200908152250.345605044@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,81 +61,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 0a4c56c80f90797e9b9f8426c6aae4c0cf1c9785 ]
+commit 8048822bac01936fda2c7b924a52131da81e6198 upstream.
 
-Commit ef91bb196b0d ("kernel.h: Silence sparse warning in
-lower_32_bits") caused new warnings to show in the fsldma driver, but
-that commit was not to blame: it only exposed some very incorrect code
-that tried to take the low 32 bits of an address.
+commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
 
-That made no sense for multiple reasons, the most notable one being that
-that code was intentionally limited to only 32-bit ppc builds, so "only
-low 32 bits of an address" was completely nonsensical.  There were no
-high bits to mask off to begin with.
+Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
+SDMMC hawdware for data timeout to achive better timeout than using
+SDCLK and using TMCLK is recommended.
 
-But even more importantly fropm a correctness standpoint, turning the
-address into an integer then caused the subsequent address arithmetic to
-be completely wrong too, and the "+1" actually incremented the address
-by one, rather than by four.
+USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
+SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
+SDCLK for data timeout.
 
-Which again was incorrect, since the code was reading two 32-bit values
-and trying to make a 64-bit end result of it all.  Surprisingly, the
-iowrite64() did not suffer from the same odd and incorrect model.
+Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
+for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
+is not recommended.
 
-This code has never worked, but it's questionable whether anybody cared:
-of the two users that actually read the 64-bit value (by way of some C
-preprocessor hackery and eventually the 'get_cdar()' inline function),
-one of them explicitly ignored the value, and the other one might just
-happen to work despite the incorrect value being read.
+So, this patch adds quirk NVQUIRK_HAS_TMCLK for SoC having separate
+timeout clock and keeps TMCLK enabled all the time.
 
-This patch at least makes it not fail the build any more, and makes the
-logic superficially sane.  Whether it makes any difference to the code
-_working_ or not shall remain a mystery.
+Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1598548861-32373-8-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Compile-tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/fsldma.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c |   53 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 56f18ae992332..308bed0a560ac 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -205,10 +205,10 @@ struct fsldma_chan {
- #else
- static u64 fsl_ioread64(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
--	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
-+	u32 val_lo = in_le32((u32 __iomem *)addr);
-+	u32 val_hi = in_le32((u32 __iomem *)addr + 1);
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -101,6 +101,12 @@
+ #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
+ #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
  
--	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
-+	return ((u64)val_hi << 32) + val_lo;
- }
++/*
++ * NVQUIRK_HAS_TMCLK is for SoC's having separate timeout clock for Tegra
++ * SDMMC hardware data timeout.
++ */
++#define NVQUIRK_HAS_TMCLK				BIT(10)
++
+ /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
+ #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
  
- static void fsl_iowrite64(u64 val, u64 __iomem *addr)
-@@ -219,10 +219,10 @@ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+@@ -131,6 +137,7 @@ struct sdhci_tegra_autocal_offsets {
+ struct sdhci_tegra {
+ 	const struct sdhci_tegra_soc_data *soc_data;
+ 	struct gpio_desc *power_gpio;
++	struct clk *tmclk;
+ 	bool ddr_signaling;
+ 	bool pad_calib_required;
+ 	bool pad_control_available;
+@@ -1424,7 +1431,8 @@ static const struct sdhci_tegra_soc_data
+ 		    NVQUIRK_HAS_PADCALIB |
+ 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+ 		    NVQUIRK_ENABLE_SDR50 |
+-		    NVQUIRK_ENABLE_SDR104,
++		    NVQUIRK_ENABLE_SDR104 |
++		    NVQUIRK_HAS_TMCLK,
+ 	.min_tap_delay = 106,
+ 	.max_tap_delay = 185,
+ };
+@@ -1462,6 +1470,7 @@ static const struct sdhci_tegra_soc_data
+ 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+ 		    NVQUIRK_ENABLE_SDR50 |
+ 		    NVQUIRK_ENABLE_SDR104 |
++		    NVQUIRK_HAS_TMCLK |
+ 		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
+ 	.min_tap_delay = 84,
+ 	.max_tap_delay = 136,
+@@ -1474,7 +1483,8 @@ static const struct sdhci_tegra_soc_data
+ 		    NVQUIRK_HAS_PADCALIB |
+ 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+ 		    NVQUIRK_ENABLE_SDR50 |
+-		    NVQUIRK_ENABLE_SDR104,
++		    NVQUIRK_ENABLE_SDR104 |
++		    NVQUIRK_HAS_TMCLK,
+ 	.min_tap_delay = 96,
+ 	.max_tap_delay = 139,
+ };
+@@ -1602,6 +1612,43 @@ static int sdhci_tegra_probe(struct plat
+ 		goto err_power_req;
+ 	}
  
- static u64 fsl_ioread64be(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
--	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
-+	u32 val_hi = in_be32((u32 __iomem *)addr);
-+	u32 val_lo = in_be32((u32 __iomem *)addr + 1);
++	/*
++	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
++	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
++	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
++	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
++	 *
++	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
++	 * 12Mhz TMCLK which is advertised in host capability register.
++	 * With TMCLK of 12Mhz provides maximum data timeout period that can
++	 * be achieved is 11s better than using SDCLK for data timeout.
++	 *
++	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
++	 * supporting separate TMCLK.
++	 */
++
++	if (soc_data->nvquirks & NVQUIRK_HAS_TMCLK) {
++		clk = devm_clk_get(&pdev->dev, "tmclk");
++		if (IS_ERR(clk)) {
++			rc = PTR_ERR(clk);
++			if (rc == -EPROBE_DEFER)
++				goto err_power_req;
++
++			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
++			clk = NULL;
++		}
++
++		clk_set_rate(clk, 12000000);
++		rc = clk_prepare_enable(clk);
++		if (rc) {
++			dev_err(&pdev->dev,
++				"failed to enable tmclk: %d\n", rc);
++			goto err_power_req;
++		}
++
++		tegra_host->tmclk = clk;
++	}
++
+ 	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+ 	if (IS_ERR(clk)) {
+ 		rc = PTR_ERR(clk);
+@@ -1645,6 +1692,7 @@ err_add_host:
+ err_rst_get:
+ 	clk_disable_unprepare(pltfm_host->clk);
+ err_clk_get:
++	clk_disable_unprepare(tegra_host->tmclk);
+ err_power_req:
+ err_parse_dt:
+ 	sdhci_pltfm_free(pdev);
+@@ -1662,6 +1710,7 @@ static int sdhci_tegra_remove(struct pla
+ 	reset_control_assert(tegra_host->rst);
+ 	usleep_range(2000, 4000);
+ 	clk_disable_unprepare(pltfm_host->clk);
++	clk_disable_unprepare(tegra_host->tmclk);
  
--	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
-+	return ((u64)val_hi << 32) + val_lo;
- }
+ 	sdhci_pltfm_free(pdev);
  
- static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
--- 
-2.25.1
-
 
 
