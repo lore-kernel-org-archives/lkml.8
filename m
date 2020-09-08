@@ -2,55 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAECC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28D562078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8134D2078E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588880;
-	bh=wsxTGtB20xdsXfzfz5WUQgQxXBVoS2VI8LTkh0qe+kk=;
+	s=default; t=1599588885;
+	bh=qp8RZsd2aYv6FgQdLh75U8iYJJYma6uoW2beJd6jk+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLP1BNNspECq3V5NBE7L7zJsC74308xjbqD74fatuiOuAWM6qIesD6KlSLqai9Hw+
-	 81sthAkkK3MK47BxaSfo5k9w/syxk/RDakRoH/jyR4GaUb5EljklJz7wx9si4W4wCf
-	 3M20VYNt54jublOMMsX+43GD5b8W0obFnK9i7Ss4=
+	b=hxY0he8YuWpUuWKBEFlUIkBnX0plkyzcNLHU2CLdvrsR3m62XQk5Z2YZhuLnbzIHK
+	 8yUG0yuA8fgu/ud40AiCreWvaM3+iS2cSCdXchztCkUYFRrh5azIrccmVKINurd8xR
+	 e42qOAIbOCCo2IJRX46tYX7VUO/5GWgb8GRNdc/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbgIHSOg (ORCPT
+        id S1731666AbgIHSOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:14:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731481AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731490AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE74E2474E;
-        Tue,  8 Sep 2020 15:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A55CB24801;
+        Tue,  8 Sep 2020 15:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579678;
-        bh=wsxTGtB20xdsXfzfz5WUQgQxXBVoS2VI8LTkh0qe+kk=;
+        s=default; t=1599579787;
+        bh=qp8RZsd2aYv6FgQdLh75U8iYJJYma6uoW2beJd6jk+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y1hXGrA45pwtn3DW/aTJ2t6345a0IzFZnMLG9UmWtl/dgO42ECB3QTiI8sLA4mHpo
-         UtNeoWT6L/l+Pv9SjhQin4k6iLzJdRkikYgC9GfMq74gZ7W8/iQZTOIMHADAF2riVC
-         GSRUhMbAC+vMTC5R/VvxvSz7rbIvGzOke0E29fUI=
+        b=JFZ0CHEmQHfmjgR9RFfN8GLTh217W6yWDD/9WX3G1lCOb7ATrV5+N8jJNo8jn5NuP
+         t3/pdFLTkZA+Sqydh7Eu74LieZ6jvaig7bAwfZ9CCGHqy5rinBK0xGak2WV49CjGV0
+         QNFodGfnHo16GD3PkQ474qQMnDcFBD62ohrNqH+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 147/186] mmc: dt-bindings: Add resets/reset-names for Mediatek MMC bindings
-Date:   Tue,  8 Sep 2020 17:24:49 +0200
-Message-Id: <20200908152248.788645527@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 033/129] netfilter: nf_tables: incorrect enum nft_list_attributes definition
+Date:   Tue,  8 Sep 2020 17:24:34 +0200
+Message-Id: <20200908152231.344748837@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenbin Mei <wenbin.mei@mediatek.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 65557383191de46611dd3d6b639cbcfbade43c4a upstream.
+[ Upstream commit da9125df854ea48a6240c66e8a67be06e2c12c03 ]
 
-Add description for resets/reset-names.
+This should be NFTA_LIST_UNSPEC instead of NFTA_LIST_UNPEC, all other
+similar attribute definitions are postfixed with _UNSPEC.
 
-Cc: <stable@vger.kernel.org> # v5.4+
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
-Link: https://lore.kernel.org/r/20200814014346.6496-2-wenbin.mei@mediatek.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/mmc/mtk-sd.txt |    2 ++
- 1 file changed, 2 insertions(+)
+ include/uapi/linux/netfilter/nf_tables.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-+++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-@@ -49,6 +49,8 @@ Optional properties:
- 		     error caused by stop clock(fifo full)
- 		     Valid range = [0:0x7]. if not present, default value is 0.
- 		     applied to compatible "mediatek,mt2701-mmc".
-+- resets: Phandle and reset specifier pair to softreset line of MSDC IP.
-+- reset-names: Should be "hrst".
- 
- Examples:
- mmc0: mmc@11230000 {
+diff --git a/include/uapi/linux/netfilter/nf_tables.h b/include/uapi/linux/netfilter/nf_tables.h
+index ed8881ad18edd..0a995403172cc 100644
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -132,7 +132,7 @@ enum nf_tables_msg_types {
+  * @NFTA_LIST_ELEM: list element (NLA_NESTED)
+  */
+ enum nft_list_attributes {
+-	NFTA_LIST_UNPEC,
++	NFTA_LIST_UNSPEC,
+ 	NFTA_LIST_ELEM,
+ 	__NFTA_LIST_MAX
+ };
+-- 
+2.25.1
+
 
 
