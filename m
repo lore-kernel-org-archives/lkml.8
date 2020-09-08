@@ -2,108 +2,134 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E131C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3F8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D2F207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZYveQDH6"
+	by mail.kernel.org (Postfix) with ESMTP id 0878521532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgIHGbn (ORCPT
+        id S1728886AbgIHGfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:31:43 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53472 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728501AbgIHGbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:31:42 -0400
-X-UUID: 0261aafbd25f48abb6b2b3ea0e3e5a84-20200908
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=UZzo7qmXCyALSuToyb3vvmrBpWA69LVmzt4LRB/qeiQ=;
-        b=ZYveQDH6XVVIMBwYuEOqnQrp53Y5yIcV6hrCQ5hnjYZ3leSxv8vATtmGBNcWoGEufJsIAhdJHSqVwKD9xT6uCyZvCjc3XLAVwqLwnUPcCTZ1sFWIkbDKcbZ8E2fLAYfucpcT78EJC0PB9pjMT3QR/hX8bV62YQJ3Axb9v/ECets=;
-X-UUID: 0261aafbd25f48abb6b2b3ea0e3e5a84-20200908
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1594504922; Tue, 08 Sep 2020 14:31:38 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 8 Sep 2020 14:31:35 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 8 Sep 2020 14:31:36 +0800
-Message-ID: <1599546695.24690.5.camel@mtkswgap22>
-Subject: Re: Re: [PATCH v2 0/2] Remove MT6779 UART3 clock support
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-CC:     CC Hwang <cc.hwang@mediatek.com>, <wsd_upstream@mediatek.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 8 Sep 2020 14:31:35 +0800
-In-Reply-To: <1596114272.18804.1.camel@mtkswgap22>
-References: <1595387397-13110-1-git-send-email-hanks.chen@mediatek.com>
-         <54e4d0b9-e62c-a3cb-7f74-af2891664cf1@gmail.com>
-         <1595416581.5511.6.camel@mtkswgap22>
-         <252ba954-ae8f-18a3-55a3-9dd844a4d5b6@gmail.com>
-         <1596114272.18804.1.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 8 Sep 2020 02:35:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17470 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728501AbgIHGff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:35:35 -0400
+IronPort-SDR: f2pUWdu8IlQQNG4E833Qzfi5KlPYf+c72EtfaQxYIt3m6Ic76xr/IyWeekRFyA++sn4a0VYqTY
+ 7gEQ/NlhH1ag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="242896564"
+X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
+   d="scan'208";a="242896564"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 23:35:35 -0700
+IronPort-SDR: 2tklKCq80yWYYcZRQVGfrPHW3ZIYTzXBpEWakjj88WThKyQckhPXbkSJVRJh9vrhxpzJWWLGvK
+ jrKRu/xsKSHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
+   d="scan'208";a="333369975"
+Received: from yhuang-mobile.sh.intel.com ([10.238.4.22])
+  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 23:35:31 -0700
+From:   Huang Ying <ying.huang@intel.com>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH] x86, fakenuma: Avoid too large emulated node
+Date:   Tue,  8 Sep 2020 14:09:12 +0800
+Message-Id: <20200908060912.12200-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 76787EE110FFF9F4F0880A7419F16CD0727562E97C40491A1E90F6A9E641C2B82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgYWxsLA0KDQpHZW50bGUgcGluZyBvbiB0aGlzIHBhdGNoIHNldC4NCg0KVGhhbmtzIQ0KDQoN
-CkhhbmtzIENoZW4NCg0KDQpPbiBUaHUsIDIwMjAtMDctMzAgYXQgMjE6MDQgKzA4MDAsIEhhbmtz
-IENoZW4gd3JvdGU6DQo+IEhpIGFsbCwNCj4gDQo+IEdlbnRsZSBwaW5nIG9uIHRoaXMgcGF0Y2gu
-DQo+IA0KPiBUaGFua3MhDQo+IA0KPiBIYW5rcyBDaGVuDQo+IA0KPiANCj4gT24gV2VkLCAyMDIw
-LTA3LTIyIGF0IDE3OjIxICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOg0KPiA+IA0KPiA+
-IE9uIDIyLzA3LzIwMjAgMTM6MTYsIEhhbmtzIENoZW4gd3JvdGU6DQo+ID4gPiBPbiBXZWQsIDIw
-MjAtMDctMjIgYXQgMTA6NDMgKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6DQo+ID4gPj4N
-Cj4gPiA+PiBPbiAyMi8wNy8yMDIwIDA1OjA5LCBIYW5rcyBDaGVuIHdyb3RlOg0KPiA+ID4+PiBy
-ZW1vdmUgdGhlIHJlZHVuZGFudCBjbGsgaW50ZXJmYWNlIG9mIHVhcnQuDQo+ID4gPj4+IENMS19J
-TkZSQV9VQVJUMyBpcyBhIGR1bW15IGNsayBpbnRlcmZhY2UsDQo+ID4gPj4+IGl0IGhhcyBubyBl
-ZmZlY3Qgb24gdGhlIG9wZXJhdGlvbiBvZiB0aGUgcmVhZC93cml0ZSBpbnN0cnVjdGlvbi4NCj4g
-PiA+Pj4NCj4gPiA+Pj4gQ2hhbmdlIHNpbmNlIHYyOg0KPiA+ID4+PiBDb21taXQgImR0LWJpbmRp
-bmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQiDQo+ID4gPj4NCj4gPiA+PiBT
-b3JyeSBqdXN0IGFub3RoZXIgY29tbWVudC4gSSB0aGluayB3ZSBjYW4gbWFrZSB0aGlzIG9uZSBw
-YXRjaCBkZWxldGluZyBldmVyeXRoaW5nLg0KPiA+ID4+DQo+ID4gPiBTb3JyeSwgSSBkb24ndCB1
-bmRlcnN0YW5kIHRoZSBjb21tZW50LiBEbyBJIG5lZWQgdG8gbWVyZ2UgdGhlbSBpbnRvIG9uZQ0K
-PiA+ID4gYmlnIHBhdGNoPw0KPiA+ID4gQnR3LCBpZiBJIHVzZSBvbmUgcGF0Y2gsIEkgd291bGQg
-Z2V0IGNoZWNrIHBhdGNoIGZhaWwuDQo+ID4gPiAtLS0NCj4gPiA+IFsyMDIwLTA3LTIyIDE5OjEy
-OjQ5LDA0NiBFUlJPUl0gUnVuIGNoZWNrIHBhdGNoIHJlc3VsdHM6DQo+ID4gPiBXQVJOSU5HOkRU
-X1NQTElUX0JJTkRJTkdfUEFUQ0g6IERUIGJpbmRpbmcgZG9jcyBhbmQgaW5jbHVkZXMgc2hvdWxk
-IGJlIGENCj4gPiA+IHNlcGFyYXRlIHBhdGNoLiBTZWU6DQo+ID4gPiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdA0KPiA+ID4gLS0tDQo+ID4g
-DQo+ID4gSG0sIEkgdGhpbmsgdGhhdCdzIGEgZGViYXRhYmxlIGVycm9yIG1lc3NhZ2UgZnJvbSBj
-aGVja3BhdGNoLCBidXQgbGV0J3MgbGVhdmUgaXQgDQo+ID4gYXMgaXQgaXMuDQo+ID4gDQo+ID4g
-UmVnYXJkcywNCj4gPiBNYXR0aGlhcw0KPiA+IA0KPiA+IA0KPiA+ID4gDQo+ID4gPiBIYW5rcw0K
-PiA+ID4gDQo+ID4gPj4+IC0tIHJlbW92ZSBGaXhlcyB0YWcNCj4gPiA+Pj4gQ29tbWl0ICJjbGs6
-IG1lZGlhdGVrOiByZW1vdmUgVUFSVDMgY2xvY2sgc3VwcG9ydCINCj4gPiA+Pj4gLS0gcmVtb3Zl
-IEZpeGVzIHRhZw0KPiA+ID4+Pg0KPiA+ID4+PiBIYW5rcyBDaGVuICgyKToNCj4gPiA+Pj4gICAg
-IGR0LWJpbmRpbmdzOiBjbG9jazogcmVtb3ZlIFVBUlQzIGNsb2NrIHN1cHBvcnQNCj4gPiA+Pj4g
-ICAgIGNsazogbWVkaWF0ZWs6IHJlbW92ZSBVQVJUMyBjbG9jayBzdXBwb3J0DQo+ID4gPj4+DQo+
-ID4gPj4+ICAgIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3NzkuYyAgICAgIHwgMiAtLQ0K
-PiA+ID4+PiAgICBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaCB8IDEgLQ0K
-PiA+ID4+PiAgICAyIGZpbGVzIGNoYW5nZWQsIDMgZGVsZXRpb25zKC0pDQo+ID4gPj4+DQo+ID4g
-PiANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-DQo+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5p
-bmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtbWVkaWF0ZWsNCg0K
+On a testing system with 2 physical NUMA node, 8GB memory, a small
+memory hole from 640KB to 1MB, and a large memory hole from 3GB to
+4GB.  If "numa=fake=1G" is used in kernel command line, the resulting
+fake NUMA nodes are as follows,
+
+    NUMA: Node 0 [mem 0x00000000-0x0009ffff] + [mem 0x00100000-0xbfffffff] -> [mem 0x00000000-0xbfffffff]
+    NUMA: Node 0 [mem 0x00000000-0xbfffffff] + [mem 0x100000000-0x13fffffff] -> [mem 0x00000000-0x13fffffff]
+    Faking node 0 at [mem 0x0000000000000000-0x0000000041ffffff] (1056MB)
+    Faking node 1 at [mem 0x0000000140000000-0x000000017fffffff] (1024MB)
+    Faking node 2 at [mem 0x0000000042000000-0x0000000081ffffff] (1024MB)
+    Faking node 3 at [mem 0x0000000180000000-0x00000001bfffffff] (1024MB)
+    Faking node 4 at [mem 0x0000000082000000-0x000000013fffffff] (3040MB)
+    Faking node 5 at [mem 0x00000001c0000000-0x00000001ffffffff] (1024MB)
+    Faking node 6 at [mem 0x0000000200000000-0x000000023fffffff] (1024MB)
+
+Where, 7 fake NUMA nodes are emulated, the size of fake node 4 is 3040
+- 1024 = 2016MB.  This is nearly 2 times of the size of the other fake
+nodes (about 1024MB).  This isn't a reasonable splitting.  The better
+way is to make the fake node size not too large or small.  So in this
+patch, the splitting algorithm is changed to make the fake node size
+between 1/2 to 3/2 of the specified node size.  After applying this
+patch, the resulting fake NUMA nodes become,
+
+    Faking node 0 at [mem 0x0000000000000000-0x0000000041ffffff] (1056MB)
+    Faking node 1 at [mem 0x0000000140000000-0x000000017fffffff] (1024MB)
+    Faking node 2 at [mem 0x0000000042000000-0x0000000081ffffff] (1024MB)
+    Faking node 3 at [mem 0x0000000180000000-0x00000001bfffffff] (1024MB)
+    Faking node 4 at [mem 0x0000000082000000-0x0000000103ffffff] (2080MB)
+    Faking node 5 at [mem 0x00000001c0000000-0x00000001ffffffff] (1024MB)
+    Faking node 6 at [mem 0x0000000104000000-0x000000013fffffff] (960MB)
+    Faking node 7 at [mem 0x0000000200000000-0x000000023fffffff] (1024MB)
+
+The newly added node 6 is a little smaller than the specified node
+size (960MB vs. 1024MB).  But the overall results look more
+reasonable.
+
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+---
+ arch/x86/mm/numa_emulation.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
+index 683cd12f4793..231469e1de6a 100644
+--- a/arch/x86/mm/numa_emulation.c
++++ b/arch/x86/mm/numa_emulation.c
+@@ -300,9 +300,10 @@ static int __init split_nodes_size_interleave_uniform(struct numa_meminfo *ei,
+ 			/*
+ 			 * If there won't be enough non-reserved memory for the
+ 			 * next node, this one must extend to the end of the
+-			 * physical node.
++			 * physical node.  The size of the emulated node should
++			 * be between size/2 and size*3/2.
+ 			 */
+-			if ((limit - end - mem_hole_size(end, limit) < size)
++			if ((limit - end - mem_hole_size(end, limit) < size / 2)
+ 					&& !uniform)
+ 				end = limit;
+ 
+-- 
+2.28.0
 
