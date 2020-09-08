@@ -2,52 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448ADC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555C4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FADA207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1554F20936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599584843;
-	bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
+	s=default; t=1599584847;
+	bh=1GQgNymHoeCIHfdcap9t87zvzoo+WAD3uNYBjZOBY9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZgUiJUsvB2o0Zv9IpfSNpmaaZH4RZXfZVDXDodZVm2ApmxZdNpS2noW1M1URrr0r
-	 RXP/MVD4Jqe/0j7oFXx9+462aEJGn7DwewwPNhpeYGZtzwBYkMH8ewIRqQEZAmTSeT
-	 3ji/EtssDKi0e2aern/Iu0Gl2I24OStbBTIRl3rM=
+	b=g4sHapnaPgoy39a+NcR1iGhukUD8pbjvQprokIIOjHOQMEVmlMnfqni59yInK7pZC
+	 kY9vtYiUKMplQ8Aba0zymiNaSgnKyu5vvexjsWYA7pdjaREkXu/qWqewK8oz4dcLyx
+	 8VQF/ljWoi07YhpHCJNpP0xVmOnLU86oSIr8scpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbgIHRHU (ORCPT
+        id S1732083AbgIHRHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:07:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731808AbgIHQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731809AbgIHQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:19:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931C32245F;
-        Tue,  8 Sep 2020 15:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C9B32462D;
+        Tue,  8 Sep 2020 15:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579370;
-        bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
+        s=default; t=1599579551;
+        bh=1GQgNymHoeCIHfdcap9t87zvzoo+WAD3uNYBjZOBY9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsb2Cdm5DaGdBQqqEApuMAvQfHQdgc0+OG5XJDw3dlUu+BZTD4HQ9dLqwyGCaR6Ry
-         YcPcm+6iM7T4YUWSxoBdxDL4JNKHh2+nG6k23x7ma+5PkfsWJJHsijz0g7I0Dqex/L
-         rhwu9qevz0A6Chy2P6TLHwtAaDke6SbSnRy+aeRM=
+        b=RwvrgncBIhdsq9yNc56/2HEcCUAejJ5raoZKXXLORyfzExSVa7/97vmEf+PU0ed/j
+         GEg14DZBM7U3as6t/1L7Hj8iPUegmwTmUxt+zxRcFVhkSuEBHENEDBWSsRx5wtpWKS
+         rHj7DxpWSXvPBbwAgAVIEuw06wFSlhXjWp15icqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 010/186] drm/msm: enable vblank during atomic commits
-Date:   Tue,  8 Sep 2020 17:22:32 +0200
-Message-Id: <20200908152242.151110870@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 125/186] btrfs: drop path before adding new uuid tree entry
+Date:   Tue,  8 Sep 2020 17:24:27 +0200
+Message-Id: <20200908152247.694471710@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,99 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 43906812eaab06423f56af5cca9a9fcdbb4ac454 ]
+commit 9771a5cf937129307d9f58922d60484d58ababe7 upstream.
 
-This has roughly the same effect as drm_atomic_helper_wait_for_vblanks(),
-basically just ensuring that vblank accounting is enabled so that we get
-valid timestamp/seqn on pageflip events.
+With the conversion of the tree locks to rwsem I got the following
+lockdep splat:
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925 Not tainted
+  ------------------------------------------------------
+  btrfs-uuid/7955 is trying to acquire lock:
+  ffff88bfbafec0f8 (btrfs-root-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  but task is already holding lock:
+  ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #1 (btrfs-uuid-00){++++}-{3:3}:
+	 down_read_nested+0x3e/0x140
+	 __btrfs_tree_read_lock+0x39/0x180
+	 __btrfs_read_lock_root_node+0x3a/0x50
+	 btrfs_search_slot+0x4bd/0x990
+	 btrfs_uuid_tree_add+0x89/0x2d0
+	 btrfs_uuid_scan_kthread+0x330/0x390
+	 kthread+0x133/0x150
+	 ret_from_fork+0x1f/0x30
+
+  -> #0 (btrfs-root-00){++++}-{3:3}:
+	 __lock_acquire+0x1272/0x2310
+	 lock_acquire+0x9e/0x360
+	 down_read_nested+0x3e/0x140
+	 __btrfs_tree_read_lock+0x39/0x180
+	 __btrfs_read_lock_root_node+0x3a/0x50
+	 btrfs_search_slot+0x4bd/0x990
+	 btrfs_find_root+0x45/0x1b0
+	 btrfs_read_tree_root+0x61/0x100
+	 btrfs_get_root_ref.part.50+0x143/0x630
+	 btrfs_uuid_tree_iterate+0x207/0x314
+	 btrfs_uuid_rescan_kthread+0x12/0x50
+	 kthread+0x133/0x150
+	 ret_from_fork+0x1f/0x30
+
+  other info that might help us debug this:
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(btrfs-uuid-00);
+				 lock(btrfs-root-00);
+				 lock(btrfs-uuid-00);
+    lock(btrfs-root-00);
+
+   *** DEADLOCK ***
+
+  1 lock held by btrfs-uuid/7955:
+   #0: ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  stack backtrace:
+  CPU: 73 PID: 7955 Comm: btrfs-uuid Kdump: loaded Not tainted 5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925
+  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
+  Call Trace:
+   dump_stack+0x78/0xa0
+   check_noncircular+0x165/0x180
+   __lock_acquire+0x1272/0x2310
+   lock_acquire+0x9e/0x360
+   ? __btrfs_tree_read_lock+0x39/0x180
+   ? btrfs_root_node+0x1c/0x1d0
+   down_read_nested+0x3e/0x140
+   ? __btrfs_tree_read_lock+0x39/0x180
+   __btrfs_tree_read_lock+0x39/0x180
+   __btrfs_read_lock_root_node+0x3a/0x50
+   btrfs_search_slot+0x4bd/0x990
+   btrfs_find_root+0x45/0x1b0
+   btrfs_read_tree_root+0x61/0x100
+   btrfs_get_root_ref.part.50+0x143/0x630
+   btrfs_uuid_tree_iterate+0x207/0x314
+   ? btree_readpage+0x20/0x20
+   btrfs_uuid_rescan_kthread+0x12/0x50
+   kthread+0x133/0x150
+   ? kthread_create_on_node+0x60/0x60
+   ret_from_fork+0x1f/0x30
+
+This problem exists because we have two different rescan threads,
+btrfs_uuid_scan_kthread which creates the uuid tree, and
+btrfs_uuid_tree_iterate that goes through and updates or deletes any out
+of date roots.  The problem is they both do things in different order.
+btrfs_uuid_scan_kthread() reads the tree_root, and then inserts entries
+into the uuid_root.  btrfs_uuid_tree_iterate() scans the uuid_root, but
+then does a btrfs_get_fs_root() which can read from the tree_root.
+
+It's actually easy enough to not be holding the path in
+btrfs_uuid_scan_kthread() when we add a uuid entry, as we already drop
+it further down and re-start the search when we loop.  So simply move
+the path release before we add our entry to the uuid tree.
+
+This also fixes a problem where we're holding a path open after we do
+btrfs_end_transaction(), which has it's own problems.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/msm/msm_atomic.c | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ fs/btrfs/volumes.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
-index 5ccfad794c6a5..561bfa48841c3 100644
---- a/drivers/gpu/drm/msm/msm_atomic.c
-+++ b/drivers/gpu/drm/msm/msm_atomic.c
-@@ -27,6 +27,34 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
- 	return msm_framebuffer_prepare(new_state->fb, kms->aspace);
- }
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4462,6 +4462,7 @@ int btrfs_uuid_scan_kthread(void *data)
+ 			goto skip;
+ 		}
+ update_tree:
++		btrfs_release_path(path);
+ 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
+ 			ret = btrfs_uuid_tree_add(trans, root_item.uuid,
+ 						  BTRFS_UUID_KEY_SUBVOL,
+@@ -4486,6 +4487,7 @@ update_tree:
+ 		}
  
-+/*
-+ * Helpers to control vblanks while we flush.. basically just to ensure
-+ * that vblank accounting is switched on, so we get valid seqn/timestamp
-+ * on pageflip events (if requested)
-+ */
-+
-+static void vblank_get(struct msm_kms *kms, unsigned crtc_mask)
-+{
-+	struct drm_crtc *crtc;
-+
-+	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
-+		if (!crtc->state->active)
-+			continue;
-+		drm_crtc_vblank_get(crtc);
-+	}
-+}
-+
-+static void vblank_put(struct msm_kms *kms, unsigned crtc_mask)
-+{
-+	struct drm_crtc *crtc;
-+
-+	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
-+		if (!crtc->state->active)
-+			continue;
-+		drm_crtc_vblank_put(crtc);
-+	}
-+}
-+
- static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- {
- 	unsigned crtc_mask = BIT(crtc_idx);
-@@ -44,6 +72,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
+ skip:
++		btrfs_release_path(path);
+ 		if (trans) {
+ 			ret = btrfs_end_transaction(trans);
+ 			trans = NULL;
+@@ -4493,7 +4495,6 @@ skip:
+ 				break;
+ 		}
  
- 	kms->funcs->enable_commit(kms);
- 
-+	vblank_get(kms, crtc_mask);
-+
- 	/*
- 	 * Flush hardware updates:
- 	 */
-@@ -58,6 +88,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- 	kms->funcs->wait_flush(kms, crtc_mask);
- 	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
-+	vblank_put(kms, crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
-@@ -221,6 +253,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	 */
- 	kms->pending_crtc_mask &= ~crtc_mask;
- 
-+	vblank_get(kms, crtc_mask);
-+
- 	/*
- 	 * Flush hardware updates:
- 	 */
-@@ -235,6 +269,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	kms->funcs->wait_flush(kms, crtc_mask);
- 	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
-+	vblank_put(kms, crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
--- 
-2.25.1
-
+-		btrfs_release_path(path);
+ 		if (key.offset < (u64)-1) {
+ 			key.offset++;
+ 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
 
 
