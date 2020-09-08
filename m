@@ -2,213 +2,120 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE4BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49ABC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D86A32080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590175;
-	bh=sgebLogZ6YMo2agxjm5idtNjYZ+IkVAyw/Tr5CG68xE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgQA33EXqu5gMYmCh0xPyktEPQMaI3zJzef0rpA3CqD2cAui81CYTfvltdrqFPvEI
-	 tBPChSeC0wm65ECrOMtssl7UH8QPlv2nlVwBwt/+dftqZKeJh8ox0CKiWj1SeRhUcN
-	 MUOn0wNLOoPqS3rywAP5qudfFM0dLR9HRUQWip6c=
+	by mail.kernel.org (Postfix) with ESMTP id A63692080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HLH41+Tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731555AbgIHSgO (ORCPT
+        id S1731757AbgIHSgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:36:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:36:19 -0400
+Received: from mout.gmx.net ([212.227.15.18]:57571 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731359AbgIHQJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:21 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F1A24179;
-        Tue,  8 Sep 2020 15:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580164;
-        bh=sgebLogZ6YMo2agxjm5idtNjYZ+IkVAyw/Tr5CG68xE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D04sRxddQet5o62az0/1+66FW4NuXH6PMgTro5go+x7FPNZ6P7D+AEbAufaaUHEzI
-         PS2V6DVa7Og1f7e3yOtzOpIWLP4mTD0P4zNHzSP4KY3coV9lW/szpT3vo1JJtzk2t/
-         PfLBvYo9l16+ldOoTHWVyLo7g82eKDxB/twCK/DE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/88] vfio-pci: Fault mmaps to enable vma tracking
-Date:   Tue,  8 Sep 2020 17:25:57 +0200
-Message-Id: <20200908152223.933542744@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731043AbgIHQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599581361;
+        bh=7BNPl463okJLMgp5n/LV2nUSf308S0c4MPGl3nc4znE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=HLH41+Tp2P3WoBA61SfRYfHNNqgXNa5kEM2q3LeieG/ywrHgzKsUffZaxqYE3AjKu
+         qcaufv2cDt9sNesldK3YEp232Os2b/K/ln+VtMastWLHUYE8VbZraaOoj7nGuHBD/d
+         qMSA3HbW0MKKeijd4AE7+rpg54z0OtiWp4ALtgfc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ts7.local ([84.179.245.142]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmUHj-1kxRXf1UTh-00iUIx; Tue, 08
+ Sep 2020 14:02:34 +0200
+From:   Thomas Schmitt <scdbackup@gmx.net>
+To:     linux-scsi@vger.kernel.org
+Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, Thomas Schmitt <scdbackup@gmx.net>
+Subject: [PATCH 2/2] sr: fix automatic tray loading for data reading
+Date:   Tue,  8 Sep 2020 14:02:07 +0200
+Message-Id: <20200908120207.5014-3-scdbackup@gmx.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200908120207.5014-1-scdbackup@gmx.net>
+References: <20200908120207.5014-1-scdbackup@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DUrGlOOQJ0WDkC+hhzia2noiehs81VZ2RLQwIvPHP1p7zeqXJEO
+ J84Z6cr1Ws8rInk2wb7ZVtCmnuF8dtBCCXI2TNFxo2TzFdjM04fuMKEkUV3e004E+u808if
+ DkkTnD3CTzLNkpY8yk1IdVQuIvfM7RmW7GWTN4/c+PNlWgPpHncf9xkzn3bHRFOcqPHYjlK
+ 3upcnhRJSGat6b0bOQtgw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2N7cV38ZpDg=:J2wTam/oBpAuELyooOZhTD
+ 7uLsnckfkXfOHPovPcTU4VmX7OXatMAP2hRKVOfumkkQ1pm5e7yGo+tOewHfTmCTs2q1smlzs
+ JIJNmV4Bwr/rSVipfafZwvLYW546FVUBOiPz8z8y1TeMaLOxpcV+EPYA2vTgYl/TJrfJ5qfPa
+ ORoS4MxkNvur6qYtaUr6fTztN8DEtO6c0ORnU/qKZ2NIQgDn4djwV2z+9LzsOOxedpd3FcIgL
+ GjulE3n9o5QrxAWNSSlRHjmLFlGocfaN6k9KUfxinIcl846Kq8o6CT2nJTJKL66LJ1csHOr/o
+ h00DoZGC0IcjIi65n46IVupfFS++HJWw2weI4gShJ9pvk5JWEeE0Bf2ofK0iuAiwSOqCZtacM
+ 2RwThTMV/c2NZasafe+tIsrMCQXGjoCGXkjsn9+i+2PhGAx9Fsmm3awcs9/fp6FB0hU5YaNo9
+ ssyzb6b5Kk4Scm9IK6UA3BFb9+FgLU07R/j174NLF9SzEv06dIfnTGKo8TLw20w22laXHmsYg
+ v2j9+zOPSxdHRnWMjFsN8NW3gPpBScC6LGHlDEmO25RVFpUyOYYIYF6IlqLGT6OmNlUvgg4cG
+ hG0kKSy+6A0IYnOakQS8EBiTQs1KG945kkXUNpNAUNGwFnD0k1+nDnKG2ZU7YMaOgIvIViphD
+ 0b1HLkZ7ArYeYKdp2YoIF01yIrbLyEUQxYZeHQli88wKCu3kKllw7CYXFJ7FdYYqpZifJPlaY
+ 0+YCDhAakxPGeueyN6R4KGxCiMV5KPgGygXN7VVvFa4Wghq8oZCEwaM3r5FQ3hWaEWpuMsdKu
+ ne9Q0V++M64fCL52YCIbLBE1Jder4fx+wKP1He6gtDXDHg8c5LgB55WYe7Etq4Y7A2BVsXXDR
+ jgap1q41hrfbzMHGsKHw62S25KSJBAdeo8gcKnP0c4wjzcmc9TYBqEf9SeSJRsW60BaXBkpc7
+ TrvwAuGpxbse5+QbO61kbC0GwYmDqaulORL28zqWANOS4eG2br4iOQHSiAnrMWr/Z7SSz8rfe
+ xsnvPBmhD4nkfA/j+SD5CAPdpSL0xrMBwD/MG3/wEdyofBZDmCoC8TUmvEJRfGQ8kf/8Xdhgd
+ SC7qG9xbjoWAgAgmkSexhi4fKxfltwcaud4WvLZyqZA84ruC+mRpFy/VJcc5XMR/a2iqu8WdY
+ S1+bD8x/gdnWbKj/783hlJLrc8qiiQnU51+qg9wDaQlyW8FF8nSxwZr37LmgQmKVxy/SOiitm
+ X9OBdfZQ/yKBxfPoKx6VTN3Cp4iStdFQwjcOOTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+If
+  open("/dev/sr0", O_RDONLY);
+pulls in the tray of an optical drive, it immediately returns -1 with
+errno ENOMEDIUM or the first read(2) fails with EIO. Later, when the drive
+has stopped blinking, another open() yields success and read() works.
+This affects not only userland reading of the device file but also
+mounting the device.
+The reason is that medium assessment happens before automatic tray
+loading.
 
-commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
+Use the new function cdrom_handle_open_tray() for deciding and performing
+tray loading before doing medium assessment.
 
-Rather than calling remap_pfn_range() when a region is mmap'd, setup
-a vm_ops handler to support dynamic faulting of the range on access.
-This allows us to manage a list of vmas actively mapping the area that
-we can later use to invalidate those mappings.  The open callback
-invalidates the vma range so that all tracking is inserted in the
-fault handler and removed in the close handler.
+Signed-off-by: Thomas Schmitt <scdbackup@gmx.net>
+=2D--
+ drivers/scsi/sr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[Ajay: Regenerated the patch for v4.19]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/vfio/pci/vfio_pci.c         | 76 ++++++++++++++++++++++++++++-
- drivers/vfio/pci/vfio_pci_private.h |  7 +++
- 2 files changed, 81 insertions(+), 2 deletions(-)
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 3b3a53c6a0de..cf06afffcb56 100644
+=2D-- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -529,11 +529,16 @@ static int sr_block_open(struct block_device *bdev, =
+fmode_t mode)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 66783a37f450c..3cd596023c2bb 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1121,6 +1121,70 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
- 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
- }
- 
-+static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
-+			    struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
-+	if (!mmap_vma)
-+		return -ENOMEM;
-+
-+	mmap_vma->vma = vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_add(&mmap_vma->vma_next, &vdev->vma_list);
-+	mutex_unlock(&vdev->vma_lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Zap mmaps on open so that we can fault them in on access and therefore
-+ * our vma_list only tracks mappings accessed since last zap.
-+ */
-+static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-+{
-+	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
-+}
-+
-+static void vfio_pci_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
-+		if (mmap_vma->vma == vma) {
-+			list_del(&mmap_vma->vma_next);
-+			kfree(mmap_vma);
-+			break;
-+		}
+ 	sdev =3D cd->device;
+ 	scsi_autopm_get_device(sdev);
+-	check_disk_change(bdev);
+
+ 	mutex_lock(&cd->lock);
+-	ret =3D cdrom_open(&cd->cdi, bdev, mode);
++	ret =3D cdrom_handle_open_tray(&cd->cdi, mode, 0);
+ 	mutex_unlock(&cd->lock);
++	if (!ret) {
++		check_disk_change(bdev);
++		mutex_lock(&cd->lock);
++		ret =3D cdrom_open(&cd->cdi, bdev, mode);
++		mutex_unlock(&cd->lock);
 +	}
-+	mutex_unlock(&vdev->vma_lock);
-+}
-+
-+static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+
-+	if (vfio_pci_add_vma(vdev, vma))
-+		return VM_FAULT_OOM;
-+
-+	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-+			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
-+		return VM_FAULT_SIGBUS;
-+
-+	return VM_FAULT_NOPAGE;
-+}
-+
-+static const struct vm_operations_struct vfio_pci_mmap_ops = {
-+	.open = vfio_pci_mmap_open,
-+	.close = vfio_pci_mmap_close,
-+	.fault = vfio_pci_mmap_fault,
-+};
-+
- static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- {
- 	struct vfio_pci_device *vdev = device_data;
-@@ -1170,8 +1234,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
- 
--	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
--			       req_len, vma->vm_page_prot);
-+	/*
-+	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
-+	 * change vm_flags within the fault handler.  Set them now.
-+	 */
-+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-+	vma->vm_ops = &vfio_pci_mmap_ops;
-+
-+	return 0;
- }
- 
- static void vfio_pci_request(void *device_data, unsigned int count)
-@@ -1243,6 +1313,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	spin_lock_init(&vdev->irqlock);
- 	mutex_init(&vdev->ioeventfds_lock);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
-+	mutex_init(&vdev->vma_lock);
-+	INIT_LIST_HEAD(&vdev->vma_list);
- 
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
- 	if (ret) {
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index cde3b5d3441ad..9743c934199d6 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -76,6 +76,11 @@ struct vfio_pci_dummy_resource {
- 	struct list_head	res_next;
- };
- 
-+struct vfio_pci_mmap_vma {
-+	struct vm_area_struct	*vma;
-+	struct list_head	vma_next;
-+};
-+
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
- 	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
-@@ -111,6 +116,8 @@ struct vfio_pci_device {
- 	struct list_head	dummy_resources_list;
- 	struct mutex		ioeventfds_lock;
- 	struct list_head	ioeventfds_list;
-+	struct mutex		vma_lock;
-+	struct list_head	vma_list;
- };
- 
- #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
--- 
-2.25.1
 
-
+ 	scsi_autopm_put_device(sdev);
+ 	if (ret)
+=2D-
+2.20.1
 
