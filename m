@@ -2,54 +2,53 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7016BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35794C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1032137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18862098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593787;
-	bh=220EG2GBP1bUQc8uNOiUXKf11bJ0C9M7hXG6lwXOrfg=;
+	s=default; t=1599593807;
+	bh=g3vQ2oDJKgDlhB3cbf7hrGx14UNunJnM8n2Tk8ZCffc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z8/aZQlfO+f57zKmJna4UyHSgzfBvjiAwpjaFX1re81umMm+gtegrqM48urzpM/D0
-	 S3gbWpS7lvl3ylK4VBhWtQmrPWvY773RMKj57ND8xapfPyE65rWVQBsZ9Ojl3U8qCL
-	 5atV8RqN51BbKPHt6eaUGPdkDouCpJRSuwLs/MPs=
+	b=vw5YONeNDIqjbleuJPTb474jDwtHAq3K2RjQpPFdsJiq/LKiYfi1U8ri1BRcE8QM5
+	 ZeYBWCKTL0ztq63DKA1RwtwD4EyDrbPyJHZ4ZrEut0G5rzuK2IkaqQs4WJMqXRB04Y
+	 77NFqStxyotU47CTfXbKQodNXo3eHJl0RsOmOAYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbgIHTgY (ORCPT
+        id S1731929AbgIHTgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbgIHP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730909AbgIHP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:57:16 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBB0F2417C;
-        Tue,  8 Sep 2020 15:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61EA92419A;
+        Tue,  8 Sep 2020 15:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579527;
-        bh=220EG2GBP1bUQc8uNOiUXKf11bJ0C9M7hXG6lwXOrfg=;
+        s=default; t=1599579531;
+        bh=g3vQ2oDJKgDlhB3cbf7hrGx14UNunJnM8n2Tk8ZCffc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwW1H6iCWBHvWMuNQecNFUe9nHf8z6Ubg2d72WbuwrRekEPCrmPwB1I4tR4CvuVtA
-         MpOnjtLVkiOCKHtCNCXX35Tu+ZvHHNWfjf/yaHyYfqJrDLSwkJwl3Ggwh5f6+na7O8
-         qZeduTl8MPW4znbPGHp8JhySsrm/EWKiV8elaZcA=
+        b=zLofb3tJ/lKUId033ZNptgACsJzsixybS1Ye8Zi2pflOw/cuZ+chjWAMt6diKctMg
+         PGlP3c/TTe8IggKuBwqH89y507VLqsmFW+fdMS1ef0NWl4o8b42pc7jRCD7WEL6qvZ
+         wBfnCr6j810+6YcYEIXosWRt8kArZ3blrBfyq8AU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Sherwood <rsher@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 075/186] bnxt: dont enable NAPI until rings are ready
-Date:   Tue,  8 Sep 2020 17:23:37 +0200
-Message-Id: <20200908152245.284859074@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        James Sewart <jamessewart@arista.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.8 117/186] iommu/vt-d: Handle 36bit addressing for x86-32
+Date:   Tue,  8 Sep 2020 17:24:19 +0200
+Message-Id: <20200908152247.308207572@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,86 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 96ecdcc992eb7f468b2cf829b0f5408a1fad4668 ]
+commit 29aaebbca4abc4cceb38738483051abefafb6950 upstream.
 
-Netpoll can try to poll napi as soon as napi_enable() is called.
-It crashes trying to access a doorbell which is still NULL:
+Beware that the address size for x86-32 may exceed unsigned long.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000000
- CPU: 59 PID: 6039 Comm: ethtool Kdump: loaded Tainted: G S                5.9.0-rc1-00469-g5fd99b5d9950-dirty #26
- RIP: 0010:bnxt_poll+0x121/0x1c0
- Code: c4 20 44 89 e0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 41 8b 86 a0 01 00 00 41 23 85 18 01 00 00 49 8b 96 a8 01 00 00 0d 00 00 00 24 <89> 02
-41 f6 45 77 02 74 cb 49 8b ae d8 01 00 00 31 c0 c7 44 24 1a
-  netpoll_poll_dev+0xbd/0x1a0
-  __netpoll_send_skb+0x1b2/0x210
-  netpoll_send_udp+0x2c9/0x406
-  write_ext_msg+0x1d7/0x1f0
-  console_unlock+0x23c/0x520
-  vprintk_emit+0xe0/0x1d0
-  printk+0x58/0x6f
-  x86_vector_activate.cold+0xf/0x46
-  __irq_domain_activate_irq+0x50/0x80
-  __irq_domain_activate_irq+0x32/0x80
-  __irq_domain_activate_irq+0x32/0x80
-  irq_domain_activate_irq+0x25/0x40
-  __setup_irq+0x2d2/0x700
-  request_threaded_irq+0xfb/0x160
-  __bnxt_open_nic+0x3b1/0x750
-  bnxt_open_nic+0x19/0x30
-  ethtool_set_channels+0x1ac/0x220
-  dev_ethtool+0x11ba/0x2240
-  dev_ioctl+0x1cf/0x390
-  sock_do_ioctl+0x95/0x130
+[    0.368971] UBSAN: shift-out-of-bounds in drivers/iommu/intel/iommu.c:128:14
+[    0.369055] shift exponent 36 is too large for 32-bit type 'long unsigned int'
 
-Reported-by: Rob Sherwood <rsher@fb.com>
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If we don't handle the wide addresses, the pages are mismapped and the
+device read/writes go astray, detected as DMAR faults and leading to
+device failure. The behaviour changed (from working to broken) in commit
+fa954e683178 ("iommu/vt-d: Delegate the dma domain to upper layer"), but
+the error looks older.
+
+Fixes: fa954e683178 ("iommu/vt-d: Delegate the dma domain to upper layer")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: James Sewart <jamessewart@arista.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: <stable@vger.kernel.org> # v5.3+
+Link: https://lore.kernel.org/r/20200822160209.28512-1-chris@chris-wilson.co.uk
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/iommu/intel/iommu.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 93a1f36cdb5cf..cd5c7a1412c6d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -9186,15 +9186,15 @@ static int __bnxt_open_nic(struct bnxt *bp, bool irq_re_init, bool link_re_init)
- 		}
- 	}
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -123,29 +123,29 @@ static inline unsigned int level_to_offs
+ 	return (level - 1) * LEVEL_STRIDE;
+ }
  
--	bnxt_enable_napi(bp);
--	bnxt_debug_dev_init(bp);
--
- 	rc = bnxt_init_nic(bp, irq_re_init);
- 	if (rc) {
- 		netdev_err(bp->dev, "bnxt_init_nic err: %x\n", rc);
--		goto open_err;
-+		goto open_err_irq;
- 	}
+-static inline int pfn_level_offset(unsigned long pfn, int level)
++static inline int pfn_level_offset(u64 pfn, int level)
+ {
+ 	return (pfn >> level_to_offset_bits(level)) & LEVEL_MASK;
+ }
  
-+	bnxt_enable_napi(bp);
-+	bnxt_debug_dev_init(bp);
-+
- 	if (link_re_init) {
- 		mutex_lock(&bp->link_lock);
- 		rc = bnxt_update_phy_setting(bp);
-@@ -9225,10 +9225,6 @@ static int __bnxt_open_nic(struct bnxt *bp, bool irq_re_init, bool link_re_init)
- 		bnxt_vf_reps_open(bp);
- 	return 0;
+-static inline unsigned long level_mask(int level)
++static inline u64 level_mask(int level)
+ {
+-	return -1UL << level_to_offset_bits(level);
++	return -1ULL << level_to_offset_bits(level);
+ }
  
--open_err:
--	bnxt_debug_dev_exit(bp);
--	bnxt_disable_napi(bp);
--
- open_err_irq:
- 	bnxt_del_napi(bp);
+-static inline unsigned long level_size(int level)
++static inline u64 level_size(int level)
+ {
+-	return 1UL << level_to_offset_bits(level);
++	return 1ULL << level_to_offset_bits(level);
+ }
  
--- 
-2.25.1
-
+-static inline unsigned long align_to_level(unsigned long pfn, int level)
++static inline u64 align_to_level(u64 pfn, int level)
+ {
+ 	return (pfn + level_size(level) - 1) & level_mask(level);
+ }
+ 
+ static inline unsigned long lvl_to_nr_pages(unsigned int lvl)
+ {
+-	return  1 << min_t(int, (lvl - 1) * LEVEL_STRIDE, MAX_AGAW_PFN_WIDTH);
++	return 1UL << min_t(int, (lvl - 1) * LEVEL_STRIDE, MAX_AGAW_PFN_WIDTH);
+ }
+ 
+ /* VT-d pages must always be _smaller_ than MM pages. Otherwise things
 
 
