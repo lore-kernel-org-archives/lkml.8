@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839B4C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60C1D218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577F921D20
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgIHH5C (ORCPT
+        id S1729899AbgIHH5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:57:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53204 "EHLO mx2.suse.de"
+        Tue, 8 Sep 2020 03:57:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53180 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbgIHH4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:56:38 -0400
+        id S1729629AbgIHH4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:56:37 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 27D88B72F;
-        Tue,  8 Sep 2020 07:56:38 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 8166FB6D7;
+        Tue,  8 Sep 2020 07:56:37 +0000 (UTC)
 From:   Oscar Salvador <osalvador@suse.de>
 To:     akpm@linux-foundation.org
 Cc:     naoya.horiguchi@nec.com, mhocko@kernel.org, tony.luck@intel.com,
         cai@lca.pw, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v2 5/5] mm,hwpoison: Remove stale code
-Date:   Tue,  8 Sep 2020 09:56:26 +0200
-Message-Id: <20200908075626.11976-6-osalvador@suse.de>
+Subject: [PATCH v2 4/5] mm,hwpoison: Drop unneeded pcplist draining
+Date:   Tue,  8 Sep 2020 09:56:25 +0200
+Message-Id: <20200908075626.11976-5-osalvador@suse.de>
 X-Mailer: git-send-email 2.13.7
 In-Reply-To: <20200908075626.11976-1-osalvador@suse.de>
 References: <20200908075626.11976-1-osalvador@suse.de>
@@ -40,43 +40,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we call shake_page and then check whether the page is
-Buddy because shake_page calls drain_all_pages, which sends pcp-pages
-back to the buddy freelists, so we could have a chance to handle
-free pages.
+memory_failure and soft_offline_path paths now drain pcplists by calling
+get_hwpoison_page.
+memory_failure flags the page as HWPoison before, so that page cannot longer
+go into a pcplist, and soft_offline_page only flags a page as HWPoison
+if 1) we took the page off a buddy freelist 2) the page was in-use
+and we migrated it 3) was a clean pagecache.
 
-get_hwpoison_page already calls drain_all_pages, and we do call
-get_hwpoison_page right before coming here, so we should be on
-the safe side.
+Because of that, a page cannot longer be poisoned and be in a pcplist.
 
 Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- mm/memory-failure.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ mm/madvise.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index e57fc5c5117a..eb72360bd78b 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1423,18 +1423,6 @@ int memory_failure(unsigned long pfn, int flags)
- 	 * walked by the page reclaim code, however that's not a big loss.
- 	 */
- 	shake_page(p, 0);
--	/* shake_page could have turned it free. */
--	if (!PageLRU(p) && is_free_buddy_page(p)) {
--		if (!take_page_off_buddy(p))
--			res = -EBUSY;
--
--		if (flags & MF_COUNT_INCREASED)
--			action_result(pfn, MF_MSG_BUDDY, res ? MF_IGNORED : MF_RECOVERED);
--		else
--			action_result(pfn, MF_MSG_BUDDY_2ND, res ? MF_IGNORED : MF_RECOVERED);
--
--		return res;
--	}
+diff --git a/mm/madvise.c b/mm/madvise.c
+index e92e06890b08..e7cdfabd8aca 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -930,10 +930,6 @@ static int madvise_inject_error(int behavior,
+ 			return ret;
+ 	}
  
- 	lock_page(p);
- 
+-	/* Ensure that all poisoned pages are removed from per-cpu lists */
+-	for_each_populated_zone(zone)
+-		drain_all_pages(zone);
+-
+ 	return 0;
+ }
+ #endif
 -- 
 2.26.2
 
