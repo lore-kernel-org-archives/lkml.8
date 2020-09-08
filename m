@@ -2,101 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C006C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3224BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 479072075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52D92075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QOaAUIFr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QFniC5E5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732089AbgIHQx0 (ORCPT
+        id S1731843AbgIHQxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732028AbgIHQsj (ORCPT
+        Tue, 8 Sep 2020 12:53:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50086 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732103AbgIHQwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:48:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 321FAC061797;
-        Tue,  8 Sep 2020 09:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=qqLaTPZucw5oDcARbFfOdxVBbFJKkf1DfCLZzjkn6K0=; b=QOaAUIFrVFFBjMiPtBwShGGSii
-        AfLQaagJtB8aVjJw7OhF/Ht9ngdo/gAEWUZUrTiEDBn5xZqgk3w8MSBaImeDG9le0FkFftx+M/b88
-        qssTqDexo3PO80Q3S7qztIKVdBmgkb/baXG9Av7oUJf/02ZCS2Lvw+L7VqIqAALTlNALU4Pfft2Ve
-        RFt4zfGcQp9UNTeuOAC0r9EQciwD+CL2DHdEZsveYr5VD9UoSn+f2I21TZ19GLqfRy8JQCans4QVs
-        v2wwDl1U6SNwJDAsoMj1LV5zwhr6oyQSFPXRATwoHHL5F0x1X/BjmCvsw2pOhy/FthSuwoOzN6uO9
-        wc+KTwuA==;
-Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFgmq-0001Ry-1W; Tue, 08 Sep 2020 16:48:04 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 04/12] dma-mapping: fix DMA_OPS dependencies
-Date:   Tue,  8 Sep 2020 18:47:50 +0200
-Message-Id: <20200908164758.3177341-5-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908164758.3177341-1-hch@lst.de>
-References: <20200908164758.3177341-1-hch@lst.de>
+        Tue, 8 Sep 2020 12:52:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599583969;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=x9IxqrF0vyUOtjvBry7cfcM/diY+UKBt1XA6JqwfYSo=;
+        b=QFniC5E5mJEAJPULqEfmSh2CTyjfTdMP3rLoFG+qswrohq79XA60HpXYYwKVB+6VaEetCw
+        ZlB2XBpImhAEQegzLm+Pv719KD5gP9ZND2i8LB0KgC6Ko7EV4Gtyw6K2M5xEMWgkqPenV+
+        iDgkicFGxXxJcnjdt5NEt0T7IZPycWY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-YZ65STXjPaa0J3He7po5SQ-1; Tue, 08 Sep 2020 12:52:46 -0400
+X-MC-Unique: YZ65STXjPaa0J3He7po5SQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C565618BE163;
+        Tue,  8 Sep 2020 16:52:44 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-112-55.ams2.redhat.com [10.36.112.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8568761176;
+        Tue,  8 Sep 2020 16:52:43 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH for-next] io_uring: return EBADFD when ring isn't in the right state
+Date:   Tue,  8 Sep 2020 18:52:42 +0200
+Message-Id: <20200908165242.124957-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver that select DMA_OPS need to depend on HAS_DMA support to
-work.  The vop driver was missing that dependency, so add it, and also
-add a nother depends in DMA_OPS itself.  That won't fix the issue due
-to how the Kconfig dependencies work, but at least produce a warning
-about unmet dependencies.
+This patch uniforms the returned error (EBADFD) when the ring state
+(enabled/disabled) is not the expected one.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The changes affect io_uring_enter() and io_uring_register() syscalls.
+
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- drivers/misc/mic/Kconfig | 1 +
- kernel/dma/Kconfig       | 1 +
- 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
-index b9bb086785db48..8a7c2c5711d5f4 100644
---- a/drivers/misc/mic/Kconfig
-+++ b/drivers/misc/mic/Kconfig
-@@ -35,6 +35,7 @@ config SCIF_BUS
+Hi Jens,
+I also updated the test/register-restrictions in liburing here:
+
+https://github.com/stefano-garzarella/liburing (branch: fix-disabled-ring-error)
+
+Thanks,
+Stefano
+---
+ fs/io_uring.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 0490edfcdd88..cf5992e79d88 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -8642,6 +8642,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 	if (!percpu_ref_tryget(&ctx->refs))
+ 		goto out_fput;
  
- config VOP_BUS
- 	tristate "VOP Bus Driver"
-+	depends on HAS_DMA
- 	select DMA_OPS
- 	help
- 	  This option is selected by any driver which registers a
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index 0ddfb5510fe45f..e7b801649f6574 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -9,6 +9,7 @@ config HAS_DMA
- 	default y
++	ret = -EBADFD;
+ 	if (ctx->flags & IORING_SETUP_R_DISABLED)
+ 		goto out_fput;
  
- config DMA_OPS
-+	depends on HAS_DMA
- 	bool
+@@ -9137,7 +9138,7 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
  
- #
+ 	/* Restrictions allowed only if rings started disabled */
+ 	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
+-		return -EINVAL;
++		return -EBADFD;
+ 
+ 	/* We allow only a single restrictions registration */
+ 	if (ctx->restrictions.registered)
+@@ -9201,7 +9202,7 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
+ static int io_register_enable_rings(struct io_ring_ctx *ctx)
+ {
+ 	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
+-		return -EINVAL;
++		return -EBADFD;
+ 
+ 	if (ctx->restrictions.registered)
+ 		ctx->restricted = 1;
 -- 
-2.28.0
+2.26.2
 
