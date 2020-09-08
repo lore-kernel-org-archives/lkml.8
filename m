@@ -2,125 +2,113 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7998AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81953C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FE7229CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5F022A84
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599575061;
+	bh=lq9eTjrWEGZEa2yiJKmSBpUchaqnuHBGfVpng6L9Aqc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=U618GEKoqeRSmZ4QwpgNyWsf4aX2lti0isG5Rv9iXTVWmzwa7m8+vt2FidtLwttpL
+	 7PMjF6aKSYNLlvrWFqjSgd7FbXb++0pJMz8oC8QcxsghbOqPW0hdeW7hNDM7g9hSFp
+	 mZ3Ehh1TwNl+6atdOzUGPWAP0BI6mpPCLNHbZkEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgIHOSg (ORCPT
+        id S1729026AbgIHOYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 10:18:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:52435 "EHLO mga03.intel.com"
+        Tue, 8 Sep 2020 10:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbgIHOQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 10:16:23 -0400
-IronPort-SDR: 4m6ZvNCocenMRoQp8WfOK+J3M4llfpkdJcHUXw+YUzwdQasusrZ2QhaaXCXYNVhbPTyphi1E5p
- 8cq5DADRY8XQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="158154397"
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="158154397"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:49:22 -0700
-IronPort-SDR: UVk6x/m63mBVyH71vbfcR5hvGtRm5fgnJc1bMd5sc6UCHlpDtyq2FjtjkWzPPhIvrQE0/YKY7m
- RrfJ1UHBvFgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="333478612"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2020 06:49:20 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFdxi-00FDZG-RE; Tue, 08 Sep 2020 16:47:06 +0300
-Date:   Tue, 8 Sep 2020 16:47:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 1/3] device: property: add helpers to count items in
- string arrays
-Message-ID: <20200908134706.GZ1891694@smile.fi.intel.com>
-References: <20200908125813.8809-1-brgl@bgdev.pl>
- <20200908125813.8809-2-brgl@bgdev.pl>
+        id S1729719AbgIHOPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 10:15:50 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A2A721D94
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599567012;
+        bh=lq9eTjrWEGZEa2yiJKmSBpUchaqnuHBGfVpng6L9Aqc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2JBREKU6JRgGxsJ1r8Ce2Iju6vIu8ns/qPUApwNkh+GlxhyVWmZki8K1pkhPaBIMI
+         oIjpxoan1Owvg0lws/TNOUleSTdKu7+AxYmUfIWC1QVQyHVnrSntCmcm31oOP9BeIn
+         XhujwMCmWKaMS2a2Z8abpw9lH+pT866FkY6uho3Y=
+Received: by mail-ua1-f42.google.com with SMTP id z12so4963351uam.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:10:12 -0700 (PDT)
+X-Gm-Message-State: AOAM532CwOh3a4SHaXB03We7EThoQCrUFIk4pjrUMW+t2UZ/Hd5Q+mnH
+        9MZmPpO5YiLp/AE7SMZGDg9hjeUIFw31aLhM4fgW8g==
+X-Google-Smtp-Source: ABdhPJzVyQm6/6q5OjrV7nqU3MI7oMJGT7K1lFXypEJBdr8i/tOI9S8ZGFWCl5CSa7p27tf/aSMle29PYGnK5195eZQ=
+X-Received: by 2002:ab0:384a:: with SMTP id h10mr5065875uaw.77.1599567011727;
+ Tue, 08 Sep 2020 05:10:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908125813.8809-2-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org> <20200908075716.30357-7-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20200908075716.30357-7-manivannan.sadhasivam@linaro.org>
+From:   Amit Kucheria <amitk@kernel.org>
+Date:   Tue, 8 Sep 2020 17:40:00 +0530
+X-Gmail-Original-Message-ID: <CAHLCerNaf6hdC5etZoiq2pvvRt85CpD0yEW5_pcfpQKDjHk5Fw@mail.gmail.com>
+Message-ID: <CAHLCerNaf6hdC5etZoiq2pvvRt85CpD0yEW5_pcfpQKDjHk5Fw@mail.gmail.com>
+Subject: Re: [PATCH 6/7] cpufreq: qcom-hw: Add cpufreq support for SM8250 SoC
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Taniya Das <tdas@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:58:11PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Instead of doing the following:
-> 
->     count = device_property_read_string_array(dev, propname, NULL, 0);
-> 
-> Let's provide inline helpers with hardcoded arguments for counting
-> strings in property arrays.
+On Tue, Sep 8, 2020 at 1:27 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> SM8250 SoC uses EPSS block for carrying out the cpufreq duties. Hence, add
+> support for it in the driver with relevant of_match data.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Amit Kucheria <amitk@kernel.org>
 
-Thanks!
 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  include/linux/property.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 9f805c442819..1fa5e250a8ea 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -170,6 +170,12 @@ static inline int device_property_count_u64(struct device *dev, const char *prop
->  	return device_property_read_u64_array(dev, propname, NULL, 0);
->  }
->  
-> +static inline int device_property_count_strings(struct device *dev,
-> +						const char *propname)
-> +{
-> +	return device_property_read_string_array(dev, propname, NULL, 0);
-> +}
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index de816bcafd33..c3c397cc3dc6 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -285,8 +285,17 @@ static const struct qcom_cpufreq_soc_data qcom_soc_data = {
+>         .lut_row_size = 32,
+>  };
+>
+> +static const struct qcom_cpufreq_soc_data sm8250_soc_data = {
+> +       .reg_enable = 0x0,
+> +       .reg_freq_lut = 0x100,
+> +       .reg_volt_lut = 0x200,
+> +       .reg_perf_state = 0x320,
+> +       .lut_row_size = 4,
+> +};
 > +
->  static inline bool fwnode_property_read_bool(const struct fwnode_handle *fwnode,
->  					     const char *propname)
->  {
-> @@ -224,6 +230,13 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
->  	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
->  }
->  
-> +static inline int
-> +fwnode_property_count_strings(const struct fwnode_handle *fwnode,
-> +			      const char *propname)
-> +{
-> +	return fwnode_property_read_string_array(fwnode, propname, NULL, 0);
-> +}
-> +
->  struct software_node;
->  
->  /**
-> -- 
-> 2.26.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  static const struct of_device_id qcom_cpufreq_hw_match[] = {
+>         { .compatible = "qcom,cpufreq-hw", .data = &qcom_soc_data },
+> +       { .compatible = "qcom,sm8250-epss", .data = &sm8250_soc_data },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
+> --
+> 2.17.1
+>
