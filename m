@@ -2,100 +2,95 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992B7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63B5C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640E22087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3322087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592434;
+	bh=TubsAvOUvnEc0JU5BVBrYgM4NGT00W78RmnPF6rvkRc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RI67rYChv4YLu8D7arpOp76hES+6l39M0Xuycg5EKk5W1GoG5gigPpf+k403QjgLz
+	 lj5TO0YCqJHOCrev53I5XIFVPE0jA4Mpo/7s49l15smwsZtMwoNNqxiM8Ze1vjaz4t
+	 s0QAeYbHGpTwAr1LfmFLAIwCrgNhX6sGeAirYc9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbgIHTNk (ORCPT
+        id S1731808AbgIHTNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:13:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:56774 "EHLO foss.arm.com"
+        Tue, 8 Sep 2020 15:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbgIHQFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CA921682;
-        Tue,  8 Sep 2020 07:09:03 -0700 (PDT)
-Received: from bogus (unknown [10.57.10.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4059F3F73C;
-        Tue,  8 Sep 2020 07:09:01 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 15:08:51 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Amit Kucheria <amitk@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 5/7] cpufreq: qcom-hw: Use regmap for accessing hardware
- registers
-Message-ID: <20200908140842.GA17621@bogus>
-References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
- <20200908075716.30357-6-manivannan.sadhasivam@linaro.org>
- <20200908103444.5e526uawa45om6lt@vireshk-i7>
- <20200908111141.GB23095@mani>
- <20200908111813.bbgfxo5v7qt6ujpc@vireshk-i7>
- <CAHLCerMndYeEBOxtj8mV7OdOP9pufx+C7n1F9m+CFAneuh8DnA@mail.gmail.com>
+        id S1731203AbgIHQFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:02 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AAF623D3A;
+        Tue,  8 Sep 2020 15:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579444;
+        bh=TubsAvOUvnEc0JU5BVBrYgM4NGT00W78RmnPF6rvkRc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gUCNE8Clw/Q0IwoHsCcpr+L+i4kwBJ0yrVWOC7gZ7iLEvNR1nMGDg3bv1cy3XgREu
+         a4cT2LXjq26GWWUVoMl5BCZmI5Yg2YG7nQ0HFnc3CemH8ngwODzwl/KMv1wq8uXYg8
+         qNYIYLh53ss1lRgthXSPGNhKqUUb5AJIqGYSOP0A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 050/186] MIPS: BMIPS: Also call bmips_cpu_setup() for secondary cores
+Date:   Tue,  8 Sep 2020 17:23:12 +0200
+Message-Id: <20200908152244.092627326@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerMndYeEBOxtj8mV7OdOP9pufx+C7n1F9m+CFAneuh8DnA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 05:18:35PM +0530, Amit Kucheria wrote:
-> On Tue, Sep 8, 2020 at 4:48 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 08-09-20, 16:41, Manivannan Sadhasivam wrote:
-> > > On 0908, Viresh Kumar wrote:
-> > > > On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
-> > > > > Use regmap for accessing cpufreq registers in hardware.
-> > > >
-> > > > Why ? Please mention why a change is required in the log.
-> > > >
-> > >
-> > > Only because it is recommended to use regmap for abstracting the hw access.
-> >
-> > Yes it can be very useful in abstracting the hw access in case of
-> > busses like SPI/I2C, others, but in this case there is only one way of
-> > doing it with the exact same registers. I am not sure it is worth it
-> > here. FWIW, I have never played with regmaps personally, and so every
-> > chance I can be wrong here.
-> 
-> One could handle the reg offsets through a struct initialisation, but
-> then you end up with lots of #defines for bitmasks and bits for each
-> version of the IP. And the core code becomes a bit convoluted IMO,
-> trying to handle the differences.
-> 
-> regmap hides the differences of the bit positions and register offsets
-> between several IP versions.
-> 
-> > > Moreover it handles the proper locking for us in the core (spinlock vs mutex).
-> >
-> > What locking do you need here ?
-> 
-> Right, locking isn't the main reason here.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-If that is the case, IMO it is better to set disable_lock or something
-in config especially as this regmap_write is used in qcom_cpufreq_hw_fast_switch
+[ Upstream commit e14f633b66902615cf7faa5d032b45ab8b6fb158 ]
 
+The initialization done by bmips_cpu_setup() typically affects both
+threads of a given core, on 7435 which supports 2 cores and 2 threads,
+logical CPU number 2 and 3 would not run this initialization.
+
+Fixes: 738a3f79027b ("MIPS: BMIPS: Add early CPU initialization code")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/kernel/smp-bmips.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+index 2f513506a3d52..1dbfb5aadffd6 100644
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -239,6 +239,8 @@ static int bmips_boot_secondary(int cpu, struct task_struct *idle)
+  */
+ static void bmips_init_secondary(void)
+ {
++	bmips_cpu_setup();
++
+ 	switch (current_cpu_type()) {
+ 	case CPU_BMIPS4350:
+ 	case CPU_BMIPS4380:
 -- 
-Regards,
-Sudeep
+2.25.1
+
+
+
