@@ -2,119 +2,131 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF23C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CC2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADBB520658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjtH2eoL"
+	by mail.kernel.org (Postfix) with ESMTP id 5A26B2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732395AbgIHTwC (ORCPT
+        id S1732409AbgIHTwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730727AbgIHPtj (ORCPT
+        Tue, 8 Sep 2020 15:52:05 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:8215 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730736AbgIHPth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:49:39 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055DEC061347
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:33:30 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id y1so2737977ejq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=U/ytzC+Xy3Xxbn3dWyObssuKdvhh3djXX6G5KrguHpw=;
-        b=MjtH2eoLRl2Yx7RGtVGNBFgZha7XbJDmTzJ4JjTcvphGudl1klnSeOMryTbu+Ily37
-         14AklWjovAy63brJ/GgEQIDkKrs/31qaZdDaaUTOc7blnCecsjH9LGMxMWo25+EQ/mJB
-         MXuU3RBSzuDcC/KTnmqaYkvIrQLkgDbd4vdBW+3YRA+66uX2cNSZNvUWsqWytxCyZRUc
-         XAK49sYqHBftaE3lz8/C8T5JtXldioVXGC78H2KCRFYlExr6qU/Co8K8+6dYMX3uXG8E
-         mbfvO6nTM6/YTMqq2Oyl5p2FVdLxtGH8nsY2MUNe1JuQxigIbKnx5yUlCMnhSVOp0PKr
-         yBTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=U/ytzC+Xy3Xxbn3dWyObssuKdvhh3djXX6G5KrguHpw=;
-        b=bbAD/Z3OaRl1zUikk2b4+So6Pc/ySjrjXksUwx5YYt77C6LKJsOymfuaPJXWMR8UYp
-         QYfzaulaP5uQ2WQY8qNDX7PmOdvDZQxNNADluFruRdaRQuroNWYyKwlMRxwJU4iwG3RV
-         FAmpon6xrrvQn77dSD6/K+81Uco7euIfyaNwv2xLll2gKmIsTe8BvSRQe2PIzkxEpe0o
-         GF+Qrk3dpKJzGVdhrC5Hs+LFhIIo2omaZlFNd2LQUezLeDhBWYO2kT4iNwVkpRLZGj6x
-         Hf8Taw3pOKFUoopUchiT3c0cdgqad1ciOdQCy3e5w9O0Qr7pAa1ZZrCZbbKi1YOc/SZE
-         /4gg==
-X-Gm-Message-State: AOAM5309WKMRjCLapelZRehciZA7uu6RueQpXzzU3ONo/q9CGjXQip5T
-        txtzdGoeRmKErTcEFWzIO6jT4CCpvKSlBki4
-X-Google-Smtp-Source: ABdhPJwP5Dtyk6XvdHyWoAeIATGo0/jTovJF2dUFA4ZnMyr0o1/OZvHbiVUU4RhBjHgXEBsTQ81vLg==
-X-Received: by 2002:a17:907:37b:: with SMTP id rs27mr27158410ejb.0.1599568408830;
-        Tue, 08 Sep 2020 05:33:28 -0700 (PDT)
-Received: from localhost.localdomain ([195.24.90.54])
-        by smtp.gmail.com with ESMTPSA id y9sm17499744edo.37.2020.09.08.05.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 05:33:28 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        nicolas.dufresne@collabora.com,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v3 2/6] venus: hfi_helper: Add VP9 profile and levels
-Date:   Tue,  8 Sep 2020 15:32:17 +0300
-Message-Id: <20200908123221.2793-3-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200908123221.2793-1-stanimir.varbanov@linaro.org>
-References: <20200908123221.2793-1-stanimir.varbanov@linaro.org>
+        Tue, 8 Sep 2020 11:49:37 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="466596022"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 14:08:43 +0200
+Date:   Tue, 8 Sep 2020 14:08:43 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+cc:     kernel test robot <lkp@intel.com>,
+        Denis Efremov <efremov@linux.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Qiujun Huang <hqjagain@gmail.com>,
+        Peter Rosin <peda@axentia.se>, dri-devel@lists.freedesktop.org
+Subject: Re: [kbuild-all] Re: [PATCH] coccinelle: api: fix device_attr_show.cocci
+ warnings
+In-Reply-To: <3c266a0e-a2b9-ffde-0768-3b4fa89b0bfe@samsung.com>
+Message-ID: <alpine.DEB.2.22.394.2009081408160.2478@hadrien>
+References: <202008101736.EtK0s7BQ%lkp@intel.com> <CGME20200810092148eucas1p117cc6af85f23fb6e457fddb913d2b41a@eucas1p1.samsung.com> <20200810092100.GA42813@2f5448a72a42> <3c266a0e-a2b9-ffde-0768-3b4fa89b0bfe@samsung.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HFI defines for VP9 codec profile and levels.
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/hfi_helper.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index 758c70ac26fd..60ee2479f7a6 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -364,6 +364,24 @@
- #define HFI_HEVC_TIER_MAIN			0x1
- #define HFI_HEVC_TIER_HIGH0			0x2
- 
-+/* VP9 Profile 0, 8-bit */
-+#define HFI_VP9_PROFILE_P0			0x00000001
-+/* VP9 Profile 2, 10-bit */
-+#define HFI_VP9_PROFILE_P2_10B			0x00000004
-+
-+#define HFI_VP9_LEVEL_1				0x00000001
-+#define HFI_VP9_LEVEL_11			0x00000002
-+#define HFI_VP9_LEVEL_2				0x00000004
-+#define HFI_VP9_LEVEL_21			0x00000008
-+#define HFI_VP9_LEVEL_3				0x00000010
-+#define HFI_VP9_LEVEL_31			0x00000020
-+#define HFI_VP9_LEVEL_4				0x00000040
-+#define HFI_VP9_LEVEL_41			0x00000080
-+#define HFI_VP9_LEVEL_5				0x00000100
-+#define HFI_VP9_LEVEL_51			0x00000200
-+#define HFI_VP9_LEVEL_6				0x00000400
-+#define HFI_VP9_LEVEL_61			0x00000800
-+
- #define HFI_BUFFER_INPUT			0x1
- #define HFI_BUFFER_OUTPUT			0x2
- #define HFI_BUFFER_OUTPUT2			0x3
--- 
-2.17.1
+On Tue, 8 Sep 2020, Bartlomiej Zolnierkiewicz wrote:
 
+>
+> Hi,
+>
+> On 8/10/20 11:21 AM, kernel test robot wrote:
+> > From: kernel test robot <lkp@intel.com>
+> >
+> > drivers/video/fbdev/core/fbcon.c:3509:8-16: WARNING: use scnprintf or sprintf
+> > drivers/video/fbdev/core/fbcon.c:3484:8-16: WARNING: use scnprintf or sprintf
+> >
+> >
+> >  From Documentation/filesystems/sysfs.txt:
+> >   show() must not use snprintf() when formatting the value to be
+> >   returned to user space. If you can guarantee that an overflow
+> >   will never happen you can use sprintf() otherwise you must use
+> >   scnprintf().
+> >
+> > Generated by: scripts/coccinelle/api/device_attr_show.cocci
+> >
+> > Fixes: abfc19ff202d ("coccinelle: api: add device_attr_show script")
+> > CC: Denis Efremov <efremov@linux.com>
+> > Signed-off-by: kernel test robot <lkp@intel.com>
+> > ---
+> >
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > head:   fc80c51fd4b23ec007e88d4c688f2cac1b8648e7
+> > commit: abfc19ff202d287742483e15fd478ddd6ada2187 coccinelle: api: add device_attr_show script
+> >
+> > Please take the patch only if it's a positive warning. Thanks!
+> >
+> >  fbcon.c |    4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > --- a/drivers/video/fbdev/core/fbcon.c
+> > +++ b/drivers/video/fbdev/core/fbcon.c
+> > @@ -3481,7 +3481,7 @@ static ssize_t show_rotate(struct device
+> >  	rotate = fbcon_get_rotate(info);
+> >  err:
+> >  	console_unlock();
+> > -	return snprintf(buf, PAGE_SIZE, "%d\n", rotate);
+> > +	return scnprintf(buf, PAGE_SIZE, "%d\n", rotate);
+>
+> buf length is at least PAGE_SIZE and rotate val is an int so
+> shouldn't this be converted to use sprintf() instead?
+
+The rule is evolving in this direction.  Thanks for the feedback.
+
+julia
+
+>
+> >  }
+> >
+> >  static ssize_t show_cursor_blink(struct device *device,
+> > @@ -3506,7 +3506,7 @@ static ssize_t show_cursor_blink(struct
+> >  	blink = (ops->flags & FBCON_FLAGS_CURSOR_TIMER) ? 1 : 0;
+> >  err:
+> >  	console_unlock();
+> > -	return snprintf(buf, PAGE_SIZE, "%d\n", blink);
+> > +	return scnprintf(buf, PAGE_SIZE, "%d\n", blink);
+>
+> ditto for blink val
+>
+> >  }
+> >
+> >  static ssize_t store_cursor_blink(struct device *device,
+> >
+>
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
+>
