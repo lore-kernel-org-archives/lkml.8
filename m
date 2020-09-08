@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E49C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B1620738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB662087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586035;
-	bh=QDY3/kFueJcsMt1b0ZKfYh3Q1QDZa4GUx5uBD6WnL40=;
+	s=default; t=1599586046;
+	bh=KhYHDduWNqQVTvu8t56Et4wFTJ1ywb1c++SzlqFbrco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4y75vERlMwEy8P2EgkltMw30Q9dnGmOdJomkh8B06ZcK1efoHhgz0S0l9qxHTEdM
-	 z9KGdkXlzD3pwmgsuu7wqXd5e8D8U/YRpiMBRzFqG2Mcp4VTfmSXvbxsU12zBCp/L3
-	 GVqffniujqn23kVpCfQbbCWbhFyhefJjkCFD5Xz8=
+	b=sQOeTKuC5ahqtqiXiVckx1ZcpqIG4UqyVEQVF0tj0NyU8LgVYJUODIZY3/VmZbKG5
+	 vU1qSbdprb+AYweIX7LT7Ri0YhZ4noQmlaVMv0nL06DYevGGrXmGKHEfcDx8vl/C5A
+	 EyqkBX5NbMT2uz+RXlKsRnJAsFlp8zTbCneK2hPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731783AbgIHR1J (ORCPT
+        id S1731849AbgIHR1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731729AbgIHQQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:16:59 -0400
+        id S1731734AbgIHQQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:16:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 633AF2481F;
-        Tue,  8 Sep 2020 15:44:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F69F24838;
+        Tue,  8 Sep 2020 15:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579847;
-        bh=QDY3/kFueJcsMt1b0ZKfYh3Q1QDZa4GUx5uBD6WnL40=;
+        s=default; t=1599579890;
+        bh=KhYHDduWNqQVTvu8t56Et4wFTJ1ywb1c++SzlqFbrco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RD8dD9snnEXzNDK5We271at/qU8KzRLjt9txNXmfsbfk0yDh6rrOjNDz+omBL9igU
-         vF206S2UtGwljybmkrjf1vbdu7QsOuYH9b+G0zodxUlFVWr/vTO8Uo4Tt2zgL+u3T4
-         On/b81Jk2Fw0CLnVxJzK5eIvuWNum97NXkCBijMc=
+        b=ptS7ImWmNrnxvuljdUwLUSTFh8wY3PbGBqRJeU/K8OtzOzu0T6cMACGUPEWgN62er
+         AfF7wxlJCBmKUPAjim7mBgiB9Faf3s9QPJV3rkNmz1R6S2bt15QGBC2FhGcfrMcCEE
+         x1b3rAXdzp4bqVWn41TeOdkI4ucJM9TK8C2T0IEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/129] net: ethernet: mlx4: Fix memory allocation in mlx4_buddy_init()
-Date:   Tue,  8 Sep 2020 17:24:59 +0200
-Message-Id: <20200908152232.601961480@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 073/129] vfio/type1: Support faulting PFNMAP vmas
+Date:   Tue,  8 Sep 2020 17:25:14 +0200
+Message-Id: <20200908152233.352379067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,42 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+From: Ajay Kaher <akaher@vmware.com>
 
-[ Upstream commit cbedcb044e9cc4e14bbe6658111224bb923094f4 ]
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
 
-On machines with much memory (> 2 TByte) and log_mtts_per_seg == 0, a
-max_order of 31 will be passed to mlx_buddy_init(), which results in
-s = BITS_TO_LONGS(1 << 31) becoming a negative value, leading to
-kvmalloc_array() failure when it is converted to size_t.
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
 
-  mlx4_core 0000:b1:00.0: Failed to initialize memory region table, aborting
-  mlx4_core: probe of 0000:b1:00.0 failed with error -12
-
-Fix this issue by changing the left shifting operand from a signed literal to
-an unsigned one.
-
-Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
-Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/mr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_type1.c | 36 ++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/mr.c b/drivers/net/ethernet/mellanox/mlx4/mr.c
-index 1a11bc0e16123..cfa0bba3940fb 100644
---- a/drivers/net/ethernet/mellanox/mlx4/mr.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/mr.c
-@@ -114,7 +114,7 @@ static int mlx4_buddy_init(struct mlx4_buddy *buddy, int max_order)
- 		goto err_out;
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index ca8c10aa4a4bc..c6220f57fdf3e 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -335,6 +335,32 @@ static int put_pfn(unsigned long pfn, int prot)
+ 	return 0;
+ }
  
- 	for (i = 0; i <= buddy->max_order; ++i) {
--		s = BITS_TO_LONGS(1 << (buddy->max_order - i));
-+		s = BITS_TO_LONGS(1UL << (buddy->max_order - i));
- 		buddy->bits[i] = kvmalloc_array(s, sizeof(long), GFP_KERNEL | __GFP_ZERO);
- 		if (!buddy->bits[i])
- 			goto err_out_free;
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 			 int prot, unsigned long *pfn)
+ {
+@@ -377,12 +403,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 
+ 	vaddr = untagged_addr(vaddr);
+ 
++retry:
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
+ 	}
+ 
+ 	up_read(&mm->mmap_sem);
 -- 
 2.25.1
 
