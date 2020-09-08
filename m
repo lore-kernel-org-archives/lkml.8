@@ -2,75 +2,123 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE39C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3174BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D621120768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ppTDKN5C"
+	by mail.kernel.org (Postfix) with ESMTP id EE3132087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599585578;
+	bh=J9FPxSeDJRQW9rI2ktIJjNLgiwVam06bvp+vY+xw60U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HJ0z8JyGWzntM4DbSrcfsFo3gr3uO+3VEJ7MN7UHS8Z/7da9p/bTqX9t52hkCr4kh
+	 bnB2pbP6T2Dg7ziWZmhCjJAP7D85IWcuB6rAstYGJsG3ewkZgMOlnn+afGfcjohQDa
+	 UDu3YnRwExUDoifQSIuXtUudfW89VD4bo1XWUiMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731746AbgIHRT1 (ORCPT
+        id S1728572AbgIHRTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728633AbgIHRTH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:19:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93FDC061573;
-        Tue,  8 Sep 2020 10:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9uZRgbe3Vq6CrxDMqukXR6cWakSDCk1Eri1y4t7+iO0=; b=ppTDKN5CEfSyw823xZjmFI5UQX
-        nWXWzwpGCDWl3B/cfD++bEP3jz1dG1nLramw5tLcjCQU7sIMtkeZbxZsKt4bJLbmR/Bn1qNVtlgNj
-        rmHH6pwtx5WZZGeHtO3V/jQb50SYxi7sLmsHCt8IjNs8I+cDVwIhu8mFtLIG3tVZ11V36IonUCzRr
-        6Ils39+kFrlA7otfC8Vo10jvlh6GBsSSyQx9c2WVvk3LTBXE9eW7ONYoE4HK5m7yXuEaeXNse1vqN
-        XQWE/vzKSjDCWOKn2/v4c4yz71InEnFQx3lhRXp3c+Z3Edd/c22MYsIPwtT9jmLVlhNp/kN9jpgcr
-        9STHyhGQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFhGl-0003jr-Kn; Tue, 08 Sep 2020 17:18:59 +0000
-Date:   Tue, 8 Sep 2020 18:18:59 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Xiaoming Ni <nixiaoming@huawei.com>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wangle6@huawei.com
-Subject: Re: Question: Why is there no notification when a file is opened
- using filp_open()?
-Message-ID: <20200908171859.GA29953@casper.infradead.org>
-References: <25817189-49a7-c64f-26ee-78d4a27496b6@huawei.com>
- <CAOQ4uxhejJzjKLZCt=b87KAX0sC3RAZ2FHEZbu4188Ar-bkmOg@mail.gmail.com>
- <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com>
- <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
+        Tue, 8 Sep 2020 13:19:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731690AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:18:03 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC5624834;
+        Tue,  8 Sep 2020 15:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579872;
+        bh=J9FPxSeDJRQW9rI2ktIJjNLgiwVam06bvp+vY+xw60U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lWoL67bnSa818wm0PfMDEsGNqi3fSZc8Bh9xb0iSocv+ClVX9p04QctMG3igncAwx
+         1AYbVn38ZLgzXpeUxdwn5Jlx/HlJgsFM1I+AkqB8Gox5FRl7cOXNc+mD568jy5hqju
+         fzIHFcwh2K+9a05scU6+LyL9ig2YPGHbPMT1CZL4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 067/129] iommu/vt-d: Serialize IOMMU GCMD register modifications
+Date:   Tue,  8 Sep 2020 17:25:08 +0200
+Message-Id: <20200908152233.045852216@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 04:18:29PM +0300, Amir Goldstein wrote:
-> On Tue, Sep 8, 2020 at 3:53 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
-> > For example, in fs/coredump.c, do_coredump() calls filp_open() to
-> > generate core files.
-> > In this scenario, the fsnotify_open() notification is missing.
-> 
-> I am not convinced that we should generate an event.
-> You will have to explain in what is the real world use case that requires this
-> event to be generated.
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-Take the typical usage for fsnotify of a graphical file manager.
-It would be nice if the file manager showed a corefile as soon as it
-appeared in a directory rather than waiting until some other operation
-in that directory caused those directory contents to be refreshed.
+[ Upstream commit 6e4e9ec65078093165463c13d4eb92b3e8d7b2e8 ]
+
+The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
+Description) that:
+
+If multiple control fields in this register need to be modified, software
+must serialize the modifications through multiple writes to this register.
+
+However, in irq_remapping.c, modifications of IRE and CFI are done in one
+write. We need to do two separate writes with STS checking after each. It
+also checks the status register before writing command register to avoid
+unnecessary register write.
+
+Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Link: https://lore.kernel.org/r/20200828000615.8281-1-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/intel_irq_remapping.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
+index 6bfb283e6f287..f697f3a1d46bc 100644
+--- a/drivers/iommu/intel_irq_remapping.c
++++ b/drivers/iommu/intel_irq_remapping.c
+@@ -507,12 +507,18 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
+ 
+ 	/* Enable interrupt-remapping */
+ 	iommu->gcmd |= DMA_GCMD_IRE;
+-	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
+ 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
+-
+ 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
+ 		      readl, (sts & DMA_GSTS_IRES), sts);
+ 
++	/* Block compatibility-format MSIs */
++	if (sts & DMA_GSTS_CFIS) {
++		iommu->gcmd &= ~DMA_GCMD_CFI;
++		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
++		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
++			      readl, !(sts & DMA_GSTS_CFIS), sts);
++	}
++
+ 	/*
+ 	 * With CFI clear in the Global Command register, we should be
+ 	 * protected from dangerous (i.e. compatibility) interrupts
+-- 
+2.25.1
+
+
+
