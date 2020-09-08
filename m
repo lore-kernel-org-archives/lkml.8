@@ -2,499 +2,190 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785B5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C204FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D42A218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBD821D1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O0Fz0vqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbgIHHSY (ORCPT
+        id S1729478AbgIHHTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:18:24 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30573 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbgIHHSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:18:10 -0400
-IronPort-SDR: 7s9ALvXixq2J3i33Jd1hKZHmU66gfdgvDtiWlXjpGhQNoFbvsrUd73C9hAIqOoOFtEnPI6Mdub
- yflSmVWD0kgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="159058773"
-X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
-   d="scan'208";a="159058773"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 00:18:06 -0700
-IronPort-SDR: ZndmxuCdVVQ2yvIAJKZS5QIjK5fY1BBWim7eczhXA6Mtpcen8h/fWe8Z1NlX+SECXzONNhH+sq
- tQuiMdlfrr8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
-   d="scan'208";a="448677740"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 08 Sep 2020 00:18:03 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, alex.williamson@redhat.com, kwankhede@nvidia.com,
-        linux-fpga@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com
-Subject: [PATCH 2/3] fpga: dfl: VFIO mdev support for DFL devices
-Date:   Tue,  8 Sep 2020 15:13:31 +0800
-Message-Id: <1599549212-24253-3-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599549212-24253-1-git-send-email-yilun.xu@intel.com>
-References: <1599549212-24253-1-git-send-email-yilun.xu@intel.com>
+        Tue, 8 Sep 2020 03:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729330AbgIHHST (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:18:19 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABA9C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 00:18:17 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id q9so16213144wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:18:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BnZLlR/MqannyWzL/NE/WCFqx90iIATvWssNkndAyuw=;
+        b=O0Fz0vqVen5yD+ixiiv6Iil1A9arYyZHXu45/ldMkIihqHbX6OTNifTm1rtv3DDvOW
+         WyAFYIb5x77WHNfLxod0m48U/xo74yrRuiwojICLINLDChoNBl0jPeScM/mx4yEFUTrU
+         bg/veOxJBJKVRO/i15Ev9WzsjplgPRjNY7yMQxJJT/gufQ5WKbo7qdYGwc8dtIme62VQ
+         3pPQDEtexpP1n1MZXPOQgBFDjTkxlPHHwpbhpAokREfd8TqVd2tpY+HkQPxD4Kn58KW2
+         TEhIWKbyAiUmfpbCT+kaCuunbLRett5rXNZ19Sk1dyaJCHwQInhoRQiXsFu2zNATHtDR
+         Y8PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BnZLlR/MqannyWzL/NE/WCFqx90iIATvWssNkndAyuw=;
+        b=umJ4GKYeJTDkzpzAW3nN9HXMl+rFccX+wGcfHO8EoWPAGOLroqdpk6tXWopdNjwSOE
+         vaM4Qyh5UkGplYecNOr0jIyIuwnwZGfW05pcXPvthhdPScaEDQOHc8GI3yXA7VodJp7f
+         uyxYYidPYCsSjwJdWQ6XIyuk9VtAZkWihJAgwd4WPCivnzNGlgOlDNG8oqstIT4ee9QN
+         U8IJhvLN9POar+OpQ1Rsnmlhhm3QPF7mYEKXKCwzrYCAVtSQ3sM2YWM6ePeQWRJEbEXY
+         83f1+9DrwseqJLj5ycI3oKC3JsWPO8MBSjcdHRsaDotzqn8Ks7ASU8HRCzS+0I+rF4AH
+         IZsA==
+X-Gm-Message-State: AOAM532JYYMxPzjk6nmO+cPDh9kWZKucXm4mWkMvqFoP/iBpKJfEiz5y
+        k8+f4i7pndkWCo9Lzmc5O6ulTQ==
+X-Google-Smtp-Source: ABdhPJzj1ecX+gU9LYQBG52HZN4YgLlObJ5QS6k25m00eZqK7euxQxVeZuSFQQDbipQ15acvDmqz+A==
+X-Received: by 2002:a1c:1fcc:: with SMTP id f195mr2744223wmf.127.1599549492849;
+        Tue, 08 Sep 2020 00:18:12 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac? ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id k8sm32317392wma.16.2020.09.08.00.18.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 00:18:12 -0700 (PDT)
+Subject: =?UTF-8?B?UmU6IOetlOWkjTogW1BBVENIIHYyIDYvNl0gZHJtL3BhbmVsOiBBZGQg?=
+ =?UTF-8?Q?Ilitek_ILI9341_DBI_panel_driver?=
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        =?UTF-8?B?5L2V5bCP6b6Z?= <Leon.He@unisoc.com>, od@zcrc.me,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200822163250.63664-1-paul@crapouillou.net>
+ <20200822163250.63664-7-paul@crapouillou.net>
+ <edf38d68214247f486db3cc1f81ec404@shmbx04.spreadtrum.com>
+ <COYVFQ.2IA7KFB6BF4C3@crapouillou.net>
+ <20200830191133.GB6043@pendragon.ideasonboard.com>
+ <20200830202822.GA950472@ravnborg.org> <5BHAGQ.KGFJ0K3OLEAO3@crapouillou.net>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <cf46c61b-1517-3009-cb92-a86e970dccc0@baylibre.com>
+Date:   Tue, 8 Sep 2020 09:18:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <5BHAGQ.KGFJ0K3OLEAO3@crapouillou.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is to provide VFIO support to DFL devices. When bound this
-driver to a dfl device, it registers a set of callbacks to the mediated
-device framework to enable mediated device creation. When a mediated
-device is created by user via mdev interfaces, it will be exposed to
-user as a VFIO platform device.
+On 07/09/2020 14:57, Paul Cercueil wrote:
+> 
+> 
+> Le dim. 30 août 2020 à 22:28, Sam Ravnborg <sam@ravnborg.org> a écrit :
+>> Hi Laurent.
+>>
+>>>  >
+>>>  > Please read the cover letter, it explains why it's done this way. The
+>>>  > whole point of this patchset is to merge DSI and DBI frameworks in a
+>>>  > way that can be maintained.
+>>>
+>>>  I think this proves the point that the proposed naming is confusing. At
+>>>  least a rename would be required.
+>>
+>> Do you have any inputs on the amount of rename we are looking into.
+>> Is this a simple s/struct mipi_dsi_device/struct mipi_dxi_device/
+>> or something more?
+>>
+>> We should script the rename as it will tocuh a lot of files,
+>> and without a script we would chase this. But once it is scripted
+>> it would be trivial to perform.
+>>
+>> I did not look at this enough, but I had an idea that we
+>> would have do to a s/dsi/dxi/ in a lot of places.
+>>
+>> (dxi is my best proposal at the moment for something covering both dsi
+>> and dbi).
+> 
+> dcs?
+> 
+> Since DBI and DSI panels generally all use DCS commands.
 
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
----
- drivers/fpga/Kconfig         |   9 +
- drivers/fpga/Makefile        |   1 +
- drivers/fpga/vfio-mdev-dfl.c | 391 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 401 insertions(+)
- create mode 100644 drivers/fpga/vfio-mdev-dfl.c
+mipi_disp / mipi_display ? since it's all about mipi display interfaces
+with different transport protocols.
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 38c7130..88f64fb 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -202,6 +202,15 @@ config FPGA_DFL_NIOS_INTEL_PAC_N3000
- 	  the card. It also instantiates the SPI master (spi-altera) for
- 	  the card's BMC (Board Management Controller) control.
- 
-+config FPGA_VFIO_MDEV_DFL
-+        tristate "VFIO Mdev support for DFL devices"
-+        depends on FPGA_DFL && VFIO_MDEV
-+        help
-+	  Support for DFL devices with VFIO Mdev. This is required to make use
-+	  of DFL devices present on the system using the VFIO Mdev framework.
-+
-+	  If you don't know what to do here, say N.
-+
- config FPGA_DFL_PCI
- 	tristate "FPGA DFL PCIe Device Driver"
- 	depends on PCI && FPGA_DFL
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 18dc9885..c69bfc9 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -45,6 +45,7 @@ dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
- dfl-afu-objs += dfl-afu-error.o
- 
- obj-$(CONFIG_FPGA_DFL_NIOS_INTEL_PAC_N3000)	+= dfl-n3000-nios.o
-+obj-$(CONFIG_FPGA_VFIO_MDEV_DFL)	+= vfio-mdev-dfl.o
- 
- # Drivers for FPGAs which implement DFL
- obj-$(CONFIG_FPGA_DFL_PCI)		+= dfl-pci.o
-diff --git a/drivers/fpga/vfio-mdev-dfl.c b/drivers/fpga/vfio-mdev-dfl.c
-new file mode 100644
-index 0000000..34fb19f
---- /dev/null
-+++ b/drivers/fpga/vfio-mdev-dfl.c
-@@ -0,0 +1,391 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * VFIO Mediated device driver for DFL devices
-+ *
-+ * Copyright (C) 2019-2020 Intel Corporation, Inc.
-+ */
-+#include <linux/device.h>
-+#include <linux/fpga/dfl-bus.h>
-+#include <linux/init.h>
-+#include <linux/iommu.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/kernel.h>
-+#include <linux/mdev.h>
-+#include <linux/module.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+#include <linux/vfio.h>
-+
-+struct vfio_mdev_dfl_dev {
-+	struct device *dev;
-+	void __iomem *ioaddr;
-+	resource_size_t phys;
-+	resource_size_t memsize;
-+	int num_irqs;
-+	u32 region_flags;
-+	atomic_t avail;
-+};
-+
-+static ssize_t
-+name_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	return sprintf(buf, "%s-type1\n", dev_name(dev));
-+}
-+static MDEV_TYPE_ATTR_RO(name);
-+
-+static ssize_t
-+available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%d\n", atomic_read(&vmdd->avail));
-+}
-+static MDEV_TYPE_ATTR_RO(available_instances);
-+
-+static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%s\n", VFIO_DEVICE_API_PLATFORM_STRING);
-+}
-+static MDEV_TYPE_ATTR_RO(device_api);
-+
-+static struct attribute *mdev_types_attrs[] = {
-+	&mdev_type_attr_name.attr,
-+	&mdev_type_attr_device_api.attr,
-+	&mdev_type_attr_available_instances.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group dfl_mdev_type_group1 = {
-+	.name  = "1",
-+	.attrs = mdev_types_attrs,
-+};
-+
-+static struct attribute_group *dfl_mdev_type_groups[] = {
-+	&dfl_mdev_type_group1,
-+	NULL,
-+};
-+
-+static int dfl_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd =
-+		dev_get_drvdata(mdev_parent_dev(mdev));
-+
-+	if (atomic_dec_if_positive(&vmdd->avail) < 0)
-+		return -EPERM;
-+
-+	return 0;
-+}
-+
-+static int dfl_mdev_remove(struct mdev_device *mdev)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd =
-+		dev_get_drvdata(mdev_parent_dev(mdev));
-+
-+	atomic_inc(&vmdd->avail);
-+
-+	return 0;
-+}
-+
-+static ssize_t dfl_mdev_read(struct mdev_device *mdev, char __user *buf,
-+			     size_t count, loff_t *ppos)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd =
-+		dev_get_drvdata(mdev_parent_dev(mdev));
-+	unsigned int done = 0;
-+	loff_t off = *ppos;
-+
-+	if (off + count > vmdd->memsize)
-+		return -EFAULT;
-+
-+	while (count) {
-+		size_t filled;
-+
-+		if (count >= 8 && !(off % 8)) {
-+			u64 val;
-+
-+			val = ioread64(vmdd->ioaddr + off);
-+			if (copy_to_user(buf, &val, 8))
-+				goto err;
-+
-+			filled = 8;
-+		} else if (count >= 4 && !(off % 4)) {
-+			u32 val;
-+
-+			val = ioread32(vmdd->ioaddr + off);
-+			if (copy_to_user(buf, &val, 4))
-+				goto err;
-+
-+			filled = 4;
-+		} else if (count >= 2 && !(off % 2)) {
-+			u16 val;
-+
-+			val = ioread16(vmdd->ioaddr + off);
-+			if (copy_to_user(buf, &val, 2))
-+				goto err;
-+
-+			filled = 2;
-+		} else {
-+			u8 val;
-+
-+			val = ioread8(vmdd->ioaddr + off);
-+			if (copy_to_user(buf, &val, 1))
-+				goto err;
-+
-+			filled = 1;
-+		}
-+
-+		count -= filled;
-+		done += filled;
-+		off += filled;
-+		buf += filled;
-+	}
-+
-+	return done;
-+err:
-+	return -EFAULT;
-+}
-+
-+static ssize_t dfl_mdev_write(struct mdev_device *mdev, const char __user *buf,
-+			      size_t count, loff_t *ppos)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd =
-+		dev_get_drvdata(mdev_parent_dev(mdev));
-+	unsigned int done = 0;
-+	loff_t off = *ppos;
-+
-+	if (off + count > vmdd->memsize)
-+		return -EFAULT;
-+
-+	while (count) {
-+		size_t filled;
-+
-+		if (count >= 8 && !(off % 8)) {
-+			u64 val;
-+
-+			if (copy_from_user(&val, buf, 8))
-+				goto err;
-+			iowrite64(val, vmdd->ioaddr + off);
-+
-+			filled = 8;
-+		} else if (count >= 4 && !(off % 4)) {
-+			u32 val;
-+
-+			if (copy_from_user(&val, buf, 4))
-+				goto err;
-+			iowrite32(val, vmdd->ioaddr + off);
-+
-+			filled = 4;
-+		} else if (count >= 2 && !(off % 2)) {
-+			u16 val;
-+
-+			if (copy_from_user(&val, buf, 2))
-+				goto err;
-+			iowrite16(val, vmdd->ioaddr + off);
-+
-+			filled = 2;
-+		} else {
-+			u8 val;
-+
-+			if (copy_from_user(&val, buf, 1))
-+				goto err;
-+			iowrite8(val, vmdd->ioaddr + off);
-+
-+			filled = 1;
-+		}
-+
-+		count -= filled;
-+		done += filled;
-+		off += filled;
-+		buf += filled;
-+	}
-+
-+	return done;
-+err:
-+	return -EFAULT;
-+}
-+
-+static long dfl_mdev_ioctl(struct mdev_device *mdev, unsigned int cmd,
-+			   unsigned long arg)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd =
-+		dev_get_drvdata(mdev_parent_dev(mdev));
-+	unsigned long minsz;
-+
-+	switch (cmd) {
-+	case VFIO_DEVICE_GET_INFO:
-+	{
-+		struct vfio_device_info info;
-+
-+		minsz = offsetofend(struct vfio_device_info, num_irqs);
-+
-+		if (copy_from_user(&info, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (info.argsz < minsz)
-+			return -EINVAL;
-+
-+		info.flags = VFIO_DEVICE_FLAGS_PLATFORM;
-+		info.num_regions = 1;
-+		info.num_irqs = vmdd->num_irqs;
-+
-+		return copy_to_user((void __user *)arg, &info, minsz) ?
-+			-EFAULT : 0;
-+	}
-+	case VFIO_DEVICE_GET_REGION_INFO:
-+	{
-+		struct vfio_region_info info;
-+
-+		minsz = offsetofend(struct vfio_region_info, offset);
-+
-+		if (copy_from_user(&info, (void __user *)arg, minsz))
-+			return -EFAULT;
-+
-+		if (info.argsz < minsz)
-+			return -EINVAL;
-+
-+		if (info.index >= 1)
-+			return -EINVAL;
-+
-+		info.offset = 0;
-+		info.size = vmdd->memsize;
-+		info.flags = vmdd->region_flags;
-+
-+		return copy_to_user((void __user *)arg, &info, minsz) ?
-+			-EFAULT : 0;
-+	}
-+	}
-+
-+	return -ENOTTY;
-+}
-+
-+static int dfl_mdev_mmap_mmio(struct vfio_mdev_dfl_dev *vmdd,
-+			      struct vm_area_struct *vma)
-+{
-+	u64 req_len, req_start;
-+
-+	req_len = vma->vm_end - vma->vm_start;
-+	req_start = vma->vm_pgoff << PAGE_SHIFT;
-+
-+	if (vmdd->memsize < PAGE_SIZE || req_start + req_len > vmdd->memsize)
-+		return -EINVAL;
-+
-+	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+
-+	return remap_pfn_range(vma, vma->vm_start,
-+			       (vmdd->phys + req_start) >> PAGE_SHIFT,
-+			       req_len, vma->vm_page_prot);
-+}
-+
-+static int dfl_mdev_mmap(struct mdev_device *mdev, struct vm_area_struct *vma)
-+{
-+	struct vfio_mdev_dfl_dev *vmdd =
-+		dev_get_drvdata(mdev_parent_dev(mdev));
-+
-+	if (vma->vm_end < vma->vm_start)
-+		return -EINVAL;
-+	if (!(vma->vm_flags & VM_SHARED))
-+		return -EINVAL;
-+	if (vma->vm_start & ~PAGE_MASK)
-+		return -EINVAL;
-+	if (vma->vm_end & ~PAGE_MASK)
-+		return -EINVAL;
-+
-+	if (!(vmdd->region_flags & VFIO_REGION_INFO_FLAG_MMAP))
-+		return -EINVAL;
-+
-+	if (!(vmdd->region_flags & VFIO_REGION_INFO_FLAG_READ) &&
-+	    (vma->vm_flags & VM_READ))
-+		return -EINVAL;
-+
-+	if (!(vmdd->region_flags & VFIO_REGION_INFO_FLAG_WRITE) &&
-+	    (vma->vm_flags & VM_WRITE))
-+		return -EINVAL;
-+
-+	vma->vm_private_data = vmdd;
-+
-+	return dfl_mdev_mmap_mmio(vmdd, vma);
-+}
-+
-+static int dfl_mdev_open(struct mdev_device *mdev)
-+{
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static void dfl_mdev_close(struct mdev_device *mdev)
-+{
-+	module_put(THIS_MODULE);
-+}
-+
-+static const struct mdev_parent_ops dfl_mdev_ops = {
-+	.owner                  = THIS_MODULE,
-+	.supported_type_groups  = dfl_mdev_type_groups,
-+	.create                 = dfl_mdev_create,
-+	.remove			= dfl_mdev_remove,
-+	.open                   = dfl_mdev_open,
-+	.release                = dfl_mdev_close,
-+	.read                   = dfl_mdev_read,
-+	.write                  = dfl_mdev_write,
-+	.ioctl		        = dfl_mdev_ioctl,
-+	.mmap			= dfl_mdev_mmap,
-+};
-+
-+static int vfio_mdev_dfl_probe(struct dfl_device *dfl_dev)
-+{
-+	struct device *dev = &dfl_dev->dev;
-+	struct vfio_mdev_dfl_dev *vmdd;
-+
-+	vmdd = devm_kzalloc(dev, sizeof(*vmdd), GFP_KERNEL);
-+	if (!vmdd)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&dfl_dev->dev, vmdd);
-+
-+	atomic_set(&vmdd->avail, 1);
-+	vmdd->dev = &dfl_dev->dev;
-+	vmdd->phys = dfl_dev->mmio_res.start;
-+	vmdd->memsize = resource_size(&dfl_dev->mmio_res);
-+	vmdd->region_flags = VFIO_REGION_INFO_FLAG_READ |
-+			    VFIO_REGION_INFO_FLAG_WRITE;
-+	/*
-+	 * Only regions addressed with PAGE granularity may be MMAPed
-+	 * securely.
-+	 */
-+	if (!(vmdd->phys & ~PAGE_MASK) && !(vmdd->memsize & ~PAGE_MASK))
-+		vmdd->region_flags |= VFIO_REGION_INFO_FLAG_MMAP;
-+
-+	vmdd->ioaddr = devm_ioremap_resource(&dfl_dev->dev, &dfl_dev->mmio_res);
-+	if (IS_ERR(vmdd->ioaddr)) {
-+		dev_err(dev, "get mem resource fail!\n");
-+		return PTR_ERR(vmdd->ioaddr);
-+	}
-+
-+	/* irq not supported yet */
-+	vmdd->num_irqs = 0;
-+
-+	return mdev_register_device(&dfl_dev->dev, &dfl_mdev_ops);
-+}
-+
-+static void vfio_mdev_dfl_remove(struct dfl_device *dfl_dev)
-+{
-+	mdev_unregister_device(&dfl_dev->dev);
-+}
-+
-+static struct dfl_driver vfio_mdev_dfl_driver = {
-+	.drv	= {
-+		.name       = "vfio-mdev-dfl",
-+	},
-+	.probe   = vfio_mdev_dfl_probe,
-+	.remove  = vfio_mdev_dfl_remove,
-+};
-+
-+module_dfl_driver(vfio_mdev_dfl_driver);
-+
-+MODULE_DESCRIPTION("VFIO MDEV DFL driver");
-+MODULE_AUTHOR("Intel Corporation");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+Neil
+
+> 
+> -Paul
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
