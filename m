@@ -2,98 +2,170 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BE5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2BAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4772067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193DF2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599604125;
+	bh=OWTZzwKbuN+Q8smRxJY5Lw0FfgwqauJp+tl8QCciMlA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=QHC3sJj+y6Ae+uJ7XaW4/x4RTr/cLfMqQS4VeEqdookSDB4r4QfqlwwLg0IgjHN+H
+	 EGJ2OGYfqgCNJPALlFojs/SiTpcFEuUKaTB5DYc8qu6I55SvlJfPo5VptswDojw+G5
+	 0OHzTifjnp9F6/fOdEU7X0L7KylG9Z8kG9G51Yn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgIHWZw convert rfc822-to-8bit (ORCPT
+        id S1729992AbgIHW2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:25:52 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59638 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729622AbgIHWZs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:25:48 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CEECC1C0B87; Wed,  9 Sep 2020 00:25:45 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 00:25:44 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     jacek.anaszewski@gmail.com, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, dmurphy@ti.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
-Message-ID: <20200908222544.GF1005@bug>
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
- <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
+        Tue, 8 Sep 2020 18:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726660AbgIHW2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 18:28:36 -0400
+Received: from localhost (35.sub-72-107-115.myvzw.com [72.107.115.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 667282067C;
+        Tue,  8 Sep 2020 22:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599604115;
+        bh=OWTZzwKbuN+Q8smRxJY5Lw0FfgwqauJp+tl8QCciMlA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IXf8Pa749+DmukeWbknmY9tb9FX6uOS6PK8b6H1MTdVaYUIOA3l6NcgbtvxG0/pA6
+         HyxX5TOiH0zmAMbC72Y7H9KwEe77Agiwd6mTbLne0o7z8oPqatUX1eKjVxdBy9gHaY
+         R1F/lOlq0s1a90+A/XirnHM9rFEDprftdwnS2M1s=
+Date:   Tue, 8 Sep 2020 17:28:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ricky_wu@realtek.com
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, bhelgaas@google.com,
+        ulf.hansson@linaro.org, rui_feng@realsil.com.cn,
+        linux-kernel@vger.kernel.org, puranjay12@gmail.com,
+        linux-pci@vger.kernel.org, vailbhavgupta40@gamail.com
+Subject: Re: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
+ driving parameter
+Message-ID: <20200908222834.GA646416@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200907100731.7722-1-ricky_wu@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Mon, Sep 07, 2020 at 06:07:31PM +0800, ricky_wu@realtek.com wrote:
+> From: Ricky Wu <ricky_wu@realtek.com>
+> 
+> v4:
+> split power down flow and power saving function to two patch
+> 
+> v5:
+> fix up modified change under the --- line
 
-> From: Gene Chen <gene_chen@richtek.com>
+Hehe, this came out *above* the "---" line :)
+
+> Add rts522a L1 sub-state support
+> Save more power on rts5227 rts5249 rts525a rts5260
+> Fix rts5260 driving parameter
 > 
-> Add MT6360 LED driver include 2-channel Flash LED with torch/strobe mode,
-> and 4-channel RGB LED support Register/Flash/Breath Mode
-> 
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
 > ---
->  drivers/leds/Kconfig       |  11 +
->  drivers/leds/Makefile      |   1 +
->  drivers/leds/leds-mt6360.c | 681 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 693 insertions(+)
->  create mode 100644 drivers/leds/leds-mt6360.c
+>  drivers/misc/cardreader/rts5227.c  | 112 +++++++++++++++++++++-
+>  drivers/misc/cardreader/rts5249.c  | 145 ++++++++++++++++++++++++++++-
+>  drivers/misc/cardreader/rts5260.c  |  28 +++---
+>  drivers/misc/cardreader/rtsx_pcr.h |  17 ++++
+>  4 files changed, 283 insertions(+), 19 deletions(-)
 > 
-> +	help
-> +	  This option enables support for dual Flash LED drivers found on
-> +	  Mediatek MT6360 PMIC.
-> +	  Independent current sources supply for each flash LED support torch and strobe mode.
-> +	  Includes Low-VF and short protection.
-> +
-
-80 columns. And perhaps user does not need to know about protections... and actually
-about independend sources, either.
-
-"Enable this for RGB LED and flash LED support on..."?
-
-> +static int mt6360_torch_brightness_set(struct led_classdev *lcdev, enum led_brightness level)
+> diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+> index 747391e3fb5d..8859011672cb 100644
+> --- a/drivers/misc/cardreader/rts5227.c
+> +++ b/drivers/misc/cardreader/rts5227.c
+> @@ -72,15 +72,80 @@ static void rts5227_fetch_vendor_settings(struct rtsx_pcr *pcr)
+>  
+>  	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
+>  	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
+> +	if (rtsx_check_mmc_support(reg))
+> +		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
+>  	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
+>  	if (rtsx_reg_check_reverse_socket(reg))
+>  		pcr->flags |= PCR_REVERSE_SOCKET;
+>  }
+>  
+> +static void rts5227_init_from_cfg(struct rtsx_pcr *pcr)
 > +{
-> +	struct mt6360_led *led = container_of(lcdev, struct mt6360_led, flash.led_cdev);
-> +	struct mt6360_priv *priv = led->priv;
-> +	u32 enable_mask = MT6360_TORCHEN_MASK | MT6360_FLCSEN_MASK(led->led_no);
-> +	u32 val = (level) ? MT6360_FLCSEN_MASK(led->led_no) : 0;
-> +	u32 prev = priv->fled_torch_used, curr;
-> +	int ret;
+> +	struct pci_dev *pdev = pcr->pci;
+> +	int l1ss;
+> +	u32 lval;
+> +	struct rtsx_cr_option *option = &pcr->option;
 > +
-> +	dev_dbg(lcdev->dev, "[%d] brightness %d\n", led->led_no, level);
-> +	if (priv->fled_strobe_used) {
-> +		dev_warn(lcdev->dev, "Please disable strobe first [%d]\n", priv->fled_strobe_used);
-> +		return -EINVAL;
+> +	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
+> +	if (!l1ss)
+> +		return;
+> +
+> +	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
+
+This looks a little problematic.  PCI_L1SS_CTL1 is an architected
+register in the ASPM L1 PM Substates capability, and its value may
+change at runtime because drivers/pci/pcie/aspm.c manages it.
+
+It looks like the code below does device-specific configuration based
+on the current PCI_L1SS_CTL1 value.  But what happens if aspm.c
+changes PCI_L1SS_CTL1 later?
+
+> +	if (CHK_PCI_PID(pcr, 0x522A)) {
+> +		if (0 == (lval & 0x0F))
+> +			rtsx_pci_enable_oobs_polling(pcr);
+> +		else
+> +			rtsx_pci_disable_oobs_polling(pcr);
 > +	}
+> +
+> +	if (lval & PCI_L1SS_CTL1_ASPM_L1_1)
+> +		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, ASPM_L1_1_EN);
+> +
+> +	if (lval & PCI_L1SS_CTL1_ASPM_L1_2)
+> +		rtsx_set_dev_flag(pcr, ASPM_L1_2_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, ASPM_L1_2_EN);
+> +
+> +	if (lval & PCI_L1SS_CTL1_PCIPM_L1_1)
+> +		rtsx_set_dev_flag(pcr, PM_L1_1_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, PM_L1_1_EN);
+> +
+> +	if (lval & PCI_L1SS_CTL1_PCIPM_L1_2)
+> +		rtsx_set_dev_flag(pcr, PM_L1_2_EN);
+> +	else
+> +		rtsx_clear_dev_flag(pcr, PM_L1_2_EN);
+> +
+> +	if (option->ltr_en) {
+> +		u16 val;
+> +
+> +		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
 
-So... how does its userland interface look like?
+Same thing here.  I don't think the PCI core currently changes
+PCI_EXP_DEVCTL2 after boot, but it's not a good idea to assume it's
+going to be constant.
 
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> +		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
+> +			option->ltr_enabled = true;
+> +			option->ltr_active = true;
+> +			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
+> +		} else {
+> +			option->ltr_enabled = false;
+> +		}
+> +	}
+> +
+> +	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
+> +				| PM_L1_1_EN | PM_L1_2_EN))
+> +		option->force_clkreq_0 = false;
+> +	else
+> +		option->force_clkreq_0 = true;
+> +
+> +}
