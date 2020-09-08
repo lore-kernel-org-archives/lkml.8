@@ -2,157 +2,349 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B2BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E370C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC9021741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B307C21D42
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pS7PQnmx"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="U0Zl7yza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgIHJYO (ORCPT
+        id S1728981AbgIHJZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:24:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:32889 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728632AbgIHJYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:24:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bm08W0YTPz9sSJ;
-        Tue,  8 Sep 2020 19:24:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599557051;
-        bh=R0OYKkOy/iCGsKRLvkfsNG7vlF5NkmSqZDFWBzeg5Z4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pS7PQnmxcHqgNKq1hQbK3RkqCm50Ki1px8JNSu4XMFD1CLLdzz2vKpbFA2eAxuwfD
-         W3wBjQ5Y0ndaYcwYGnMFdqWfGOts5QJG5GnZKGkSmTOSB/bani4oRnxbWoz06d9EiR
-         oPBUw2k7bHw+RjFANDwiBXq2BQNobZs67t1PLM5Uytt1uPFVazTlGoUCnGOtR5iB+g
-         kpMVqeRE+0dFwJYB4J5rmKCchB5Zq+OVaxAQKhHsV7Av/qL+6QAKmaCc5mvQfCLKr9
-         jja2bIMGHRwt55dt2aLLtwOCjPuYM/jc87OpjkDb86adnLDqU9VVPmNfm0bfkdoQjv
-         DVa4o1nz27JAA==
-Date:   Tue, 8 Sep 2020 19:24:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Juergen Gross <jgross@suse.com>,
-        Roger Pau Monne <roger.pau@citrix.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the akpm-current tree with Linus' tree
-Message-ID: <20200908192410.0ffe8c33@canb.auug.org.au>
+        Tue, 8 Sep 2020 05:25:06 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:58983 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728137AbgIHJZD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 05:25:03 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id FZs3kWcwSMeQuFZs4kfOHr; Tue, 08 Sep 2020 11:25:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599557100; bh=8COC+nn7sKl2+uger3PAu7UoZsqRrBMqLhCGUSfsIKw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=U0Zl7yzasoD8bybPlR2QYTuaHZzevNmYnOuLdRHTxlXWnv8x8Tnk/6wRIiS1MWzDh
+         fyl/s/s4IXZqgpcYmOkglttnqXpmQSwZGqDczR+cvMNe+UQ0lDx7k9G15AnNNRh2pQ
+         I6EC5v8OwfJzFSM+gKPBd8yeZJtAUQuqM6T5oEtF0rWQdv17aQRrp/IqBchDeN/xAw
+         i+zrNH/TynKRApPxlB/7Svu3OiCY/7kcuKBZAJxBIvXO4qzo29onPr472ai4YGdkQa
+         KAGDyPJrdtiSjlyPJ8OFS+zlszaYpspsPqHT0ZkxQ850Sb+3OmnYTGTSEczMZhI+Lo
+         6+A4homyqACdQ==
+Subject: Re: [PATCH 5/5] drm_dp_cec: add the implementation of MST support
+To:     Sam McNally <sammc@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        dri-devel@lists.freedesktop.org
+References: <20200901162133.1.I8693156f555875e5c8342e86ab37ce968dfdd277@changeid>
+ <20200901162133.5.I900b1b80709b7632a47d0ddb4cd375b4a3616c9e@changeid>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c9ec5c76-8c51-9ad6-0169-c615ae9d8f7f@xs4all.nl>
+Date:   Tue, 8 Sep 2020 11:24:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GI3t10h4Bjs/Gsj=kU5YHr1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200901162133.5.I900b1b80709b7632a47d0ddb4cd375b4a3616c9e@changeid>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCGjVpMVreZvkEhOu4e81X3UmbwXymCIUeJLHmAiZHdOE461vi3w3MB8bB/SYKWBKfn0s13vaQ1q3l2MBlv7mlDJT03ERSRYYbzv8iLBZTWlSsXJCxpc
+ wl95K8tudG5HUaYnSbE32ELhlhAJCQ0VwCubQZo8jDvWtOe+UQKnBPSfSfI4jODLEB6xFFywEss+U0+qUE8npAdY/SNwBMPdK2JvIbVq8LLI6x2ie0ERcTtF
+ s2gIOqwpdEX0nOCMmMEm9zItZHRDwtWm0tUnRUy1P4jx31BjkW/YN1Z8MmJzmtU8XUYDg76AZJiFJR0/Tya21RmyjLm7soVuRfUYRQoV53GmexWFkP4vMVl7
+ A3Bcxt4XtWv1PSvONzNp3jp4m1n5qDAfsrz9+ovBjGUTm1nobCeMLVGoDUCEydJ+8AQjA33Txm8I8jrv6wr3C0sGFKKXcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GI3t10h4Bjs/Gsj=kU5YHr1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 01/09/2020 08:22, Sam McNally wrote:
+> With DP v2.0 errata E5, CEC tunneling can be supported through an MST
+> topology.
+> 
+> There are some minor differences for CEC tunneling through an MST
+> topology compared to CEC tunneling to an SST port:
+> - CEC IRQs are delivered via a sink event notify message
+> - CEC-related DPCD registers are accessed via remote DPCD reads and
+>   writes.
+> 
+> This results in the MST implementation diverging from the existing SST
+> implementation:
+> - sink event notify messages with CEC_IRQ ID set indicate CEC IRQ rather
+>   than ESI1
+> - setting edid and handling CEC IRQs, which can be triggered from
+>   contexts where locks held preclude HPD handling, are deferred to avoid
+>   remote DPCD access which would block until HPD handling is performed
+>   or a timeout
+> 
+> Register and unregister for all MST connectors, ensuring their
+> drm_dp_aux_cec struct won't be accessed uninitialized.
+> 
+> Signed-off-by: Sam McNally <sammc@chromium.org>
+> ---
+> 
+>  drivers/gpu/drm/drm_dp_cec.c          | 67 +++++++++++++++++++++++++--
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 24 ++++++++++
+>  include/drm/drm_dp_helper.h           |  4 ++
+>  3 files changed, 90 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_cec.c b/drivers/gpu/drm/drm_dp_cec.c
+> index 04ab7b88055c..9f6aeaa27f00 100644
+> --- a/drivers/gpu/drm/drm_dp_cec.c
+> +++ b/drivers/gpu/drm/drm_dp_cec.c
+> @@ -249,6 +249,10 @@ void drm_dp_cec_irq(struct drm_dp_aux *aux)
+>  	if (!aux->transfer)
+>  		return;
+>  
+> +	if (aux->cec.is_mst) {
+> +		schedule_work(&aux->cec.mst_irq_work);
+> +		return;
+> +	}
+>  	mutex_lock(&aux->cec.lock);
+>  	if (!aux->cec.adap)
+>  		goto unlock;
+> @@ -277,6 +281,24 @@ static bool drm_dp_cec_cap(struct drm_dp_aux *aux, u8 *cec_cap)
+>  	return true;
+>  }
+>  
+> +static void drm_dp_cec_mst_irq_work(struct work_struct *work)
+> +{
+> +	struct drm_dp_aux *aux = container_of(work, struct drm_dp_aux,
+> +					      cec.mst_irq_work);
+> +	struct drm_dp_mst_port *port =
+> +		container_of(aux, struct drm_dp_mst_port, aux);
+> +
+> +	port = drm_dp_mst_topology_get_port_validated(port->mgr, port);
+> +	if (!port)
+> +		return;
+> +	mutex_lock(&aux->cec.lock);
+> +	if (aux->cec.adap)
+> +		drm_dp_cec_handle_irq(aux);
+> +
 
-Hi all,
+Nitpick: this empty line feels unbalanced. It makes more sense to add
+an empty line just before the mutex_lock() and remove this one.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+> +	mutex_unlock(&aux->cec.lock);
+> +	drm_dp_mst_topology_put_port(port);
+> +}
+> +
+>  /*
+>   * Called if the HPD was low for more than drm_dp_cec_unregister_delay
+>   * seconds. This unregisters the CEC adapter.
+> @@ -298,7 +320,8 @@ static void drm_dp_cec_unregister_work(struct work_struct *work)
+>   * were unchanged and just update the CEC physical address. Otherwise
+>   * unregister the old CEC adapter and create a new one.
+>   */
+> -void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
+> +static void drm_dp_cec_handle_set_edid(struct drm_dp_aux *aux,
+> +				       const struct edid *edid)
+>  {
+>  	struct drm_connector *connector = aux->cec.connector;
+>  	u32 cec_caps = CEC_CAP_DEFAULTS | CEC_CAP_NEEDS_HPD |
+> @@ -307,10 +330,6 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
+>  	unsigned int num_las = 1;
+>  	u8 cap;
+>  
+> -	/* No transfer function was set, so not a DP connector */
+> -	if (!aux->transfer)
+> -		return;
+> -
+>  #ifndef CONFIG_MEDIA_CEC_RC
+>  	/*
+>  	 * CEC_CAP_RC is part of CEC_CAP_DEFAULTS, but it is stripped by
+> @@ -321,6 +340,7 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
+>  	 */
+>  	cec_caps &= ~CEC_CAP_RC;
+>  #endif
+> +	cancel_work_sync(&aux->cec.mst_irq_work);
+>  	cancel_delayed_work_sync(&aux->cec.unregister_work);
+>  
+>  	mutex_lock(&aux->cec.lock);
+> @@ -375,6 +395,18 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
+>  	}
+>  	mutex_unlock(&aux->cec.lock);
+>  }
+> +
+> +void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
+> +{
+> +	/* No transfer function was set, so not a DP connector */
+> +	if (!aux->transfer)
+> +		return;
+> +
+> +	if (aux->cec.is_mst)
+> +		schedule_work(&aux->cec.mst_set_edid_work);
+> +	else
+> +		drm_dp_cec_handle_set_edid(aux, edid);
+> +}
+>  EXPORT_SYMBOL(drm_dp_cec_set_edid);
+>  
+>  /*
+> @@ -393,6 +425,8 @@ void drm_dp_cec_unset_edid(struct drm_dp_aux *aux)
+>  		goto unlock;
+>  
+>  	cec_phys_addr_invalidate(aux->cec.adap);
+> +	cancel_work_sync(&aux->cec.mst_irq_work);
 
-  drivers/dax/device.c
+I'd swap these two lines. It's a bit more robust.
 
-between commit:
+Shouldn't this also cancel cec.mst_set_edid_work?
 
-  4533d3aed857 ("memremap: rename MEMORY_DEVICE_DEVDAX to MEMORY_DEVICE_GEN=
-ERIC")
+> +
+>  	/*
+>  	 * We're done if we want to keep the CEC device
+>  	 * (drm_dp_cec_unregister_delay is >= NEVER_UNREG_DELAY) or if the
+> @@ -414,6 +448,25 @@ void drm_dp_cec_unset_edid(struct drm_dp_aux *aux)
+>  }
+>  EXPORT_SYMBOL(drm_dp_cec_unset_edid);
+>  
+> +static void drm_dp_cec_mst_set_edid_work(struct work_struct *work)
 
-from Linus' tree and commit:
+It's a bit weird to have this function appear after the drm_dp_cec_unset_edid()
+function. Wouldn't it be better to move it to just before drm_dp_cec_set_edid()?
+That way all the 'set_edid()' functions are grouped together.
 
-  ceb1b473719c ("device-dax: make pgmap optional for instance creation")
+Regards,
 
-from the akpm-current tree.
+	Hans
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+> +{
+> +	struct drm_dp_aux *aux =
+> +		container_of(work, struct drm_dp_aux, cec.mst_set_edid_work);
+> +	struct drm_dp_mst_port *port =
+> +		container_of(aux, struct drm_dp_mst_port, aux);
+> +	struct edid *edid = NULL;
+> +
+> +	port = drm_dp_mst_topology_get_port_validated(port->mgr, port);
+> +	if (!port)
+> +		return;
+> +
+> +	edid = drm_get_edid(port->connector, &port->aux.ddc);
+> +
+> +	drm_dp_cec_handle_set_edid(aux, edid);
+> +
+> +	drm_dp_mst_topology_put_port(port);
+> +}
+> +
+>  /**
+>   * drm_dp_cec_register_connector() - register a new connector
+>   * @aux: DisplayPort AUX channel
+> @@ -435,6 +488,8 @@ void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
+>  	aux->cec.is_mst = is_mst;
+>  	INIT_DELAYED_WORK(&aux->cec.unregister_work,
+>  			  drm_dp_cec_unregister_work);
+> +	INIT_WORK(&aux->cec.mst_irq_work, drm_dp_cec_mst_irq_work);
+> +	INIT_WORK(&aux->cec.mst_set_edid_work, drm_dp_cec_mst_set_edid_work);
+>  }
+>  EXPORT_SYMBOL(drm_dp_cec_register_connector);
+>  
+> @@ -444,6 +499,8 @@ EXPORT_SYMBOL(drm_dp_cec_register_connector);
+>   */
+>  void drm_dp_cec_unregister_connector(struct drm_dp_aux *aux)
+>  {
+> +	cancel_work_sync(&aux->cec.mst_irq_work);
+> +	cancel_work_sync(&aux->cec.mst_set_edid_work);
+>  	if (!aux->cec.adap)
+>  		return;
+>  	cancel_delayed_work_sync(&aux->cec.unregister_work);
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index c783a2a1c114..fd9430d88fd6 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -2183,6 +2183,8 @@ static void build_mst_prop_path(const struct drm_dp_mst_branch *mstb,
+>  int drm_dp_mst_connector_late_register(struct drm_connector *connector,
+>  				       struct drm_dp_mst_port *port)
+>  {
+> +	drm_dp_cec_register_connector(&port->aux, connector, true);
+> +
+>  	DRM_DEBUG_KMS("registering %s remote bus for %s\n",
+>  		      port->aux.name, connector->kdev->kobj.name);
+>  
+> @@ -2206,6 +2208,8 @@ void drm_dp_mst_connector_early_unregister(struct drm_connector *connector,
+>  	DRM_DEBUG_KMS("unregistering %s remote bus for %s\n",
+>  		      port->aux.name, connector->kdev->kobj.name);
+>  	drm_dp_aux_unregister_devnode(&port->aux);
+> +
+> +	drm_dp_cec_unregister_connector(&port->aux);
+>  }
+>  EXPORT_SYMBOL(drm_dp_mst_connector_early_unregister);
+>  
+> @@ -2515,6 +2519,21 @@ drm_dp_mst_handle_conn_stat(struct drm_dp_mst_branch *mstb,
+>  		queue_work(system_long_wq, &mstb->mgr->work);
+>  }
+>  
+> +static void
+> +drm_dp_mst_handle_sink_event(struct drm_dp_mst_branch *mstb,
+> +			    struct drm_dp_sink_event_notify *sink_event)
+> +{
+> +	struct drm_dp_mst_port *port;
+> +
+> +	if (sink_event->event_id & DP_SINK_EVENT_CEC_IRQ_EVENT) {
+> +		port = drm_dp_get_port(mstb, sink_event->port_number);
+> +		if (port) {
+> +			drm_dp_cec_irq(&port->aux);
+> +			drm_dp_mst_topology_put_port(port);
+> +		}
+> +	}
+> +}
+> +
+>  static struct drm_dp_mst_branch *drm_dp_get_mst_branch_device(struct drm_dp_mst_topology_mgr *mgr,
+>  							       u8 lct, u8 *rad)
+>  {
+> @@ -3954,6 +3973,8 @@ drm_dp_mst_process_up_req(struct drm_dp_mst_topology_mgr *mgr,
+>  	if (msg->req_type == DP_CONNECTION_STATUS_NOTIFY) {
+>  		drm_dp_mst_handle_conn_stat(mstb, &msg->u.conn_stat);
+>  		hotplug = true;
+> +	} else if (msg->req_type == DP_SINK_EVENT_NOTIFY) {
+> +		drm_dp_mst_handle_sink_event(mstb, &msg->u.sink_event);
+>  	}
+>  
+>  	drm_dp_mst_topology_put_mstb(mstb);
+> @@ -4147,6 +4168,8 @@ drm_dp_mst_detect_port(struct drm_connector *connector,
+>  		break;
+>  	}
+>  out:
+> +	if (ret != connector_status_connected)
+> +		drm_dp_cec_unset_edid(&port->aux);
+>  	drm_dp_mst_topology_put_port(port);
+>  	return ret;
+>  }
+> @@ -4177,6 +4200,7 @@ struct edid *drm_dp_mst_get_edid(struct drm_connector *connector, struct drm_dp_
+>  		edid = drm_get_edid(connector, &port->aux.ddc);
+>  	}
+>  	port->has_audio = drm_detect_monitor_audio(edid);
+> +	drm_dp_cec_set_edid(&port->aux, edid);
+>  	drm_dp_mst_topology_put_port(port);
+>  	return edid;
+>  }
+> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> index 12bca1b9512b..e973eba06875 100644
+> --- a/include/drm/drm_dp_helper.h
+> +++ b/include/drm/drm_dp_helper.h
+> @@ -1497,6 +1497,8 @@ struct drm_connector;
+>   * @connector: the connector this CEC adapter is associated with
+>   * @is_mst: this is an MST branch
+>   * @unregister_work: unregister the CEC adapter
+> + * @mst_irq_work: IRQ for CEC events on an MST branch
+> + * @mst_set_edid_work: set the EDID for an MST branch
+>   */
+>  struct drm_dp_aux_cec {
+>  	struct mutex lock;
+> @@ -1504,6 +1506,8 @@ struct drm_dp_aux_cec {
+>  	struct drm_connector *connector;
+>  	bool is_mst;
+>  	struct delayed_work unregister_work;
+> +	struct work_struct mst_irq_work;
+> +	struct work_struct mst_set_edid_work;
+>  };
+>  
+>  /**
+> 
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/dax/device.c
-index 1e89513f3c59,cc1f4ce185bf..000000000000
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@@ -420,17 -396,37 +396,37 @@@ int dev_dax_probe(struct dev_dax *dev_d
-  	struct inode *inode;
-  	struct cdev *cdev;
-  	void *addr;
-- 	int rc;
-+ 	int rc, i;
- =20
-- 	/* 1:1 map region resource range to device-dax instance range */
-- 	if (!devm_request_mem_region(dev, res->start, resource_size(res),
-- 				dev_name(dev))) {
-- 		dev_warn(dev, "could not reserve region %pR\n", res);
-- 		return -EBUSY;
-+ 	pgmap =3D dev_dax->pgmap;
-+ 	if (dev_WARN_ONCE(dev, pgmap && dev_dax->nr_range > 1,
-+ 			"static pgmap / multi-range device conflict\n"))
-+ 		return -EINVAL;
-+=20
-+ 	if (!pgmap) {
-+ 		pgmap =3D devm_kzalloc(dev, sizeof(*pgmap) + sizeof(struct range)
-+ 				* (dev_dax->nr_range - 1), GFP_KERNEL);
-+ 		if (!pgmap)
-+ 			return -ENOMEM;
-+ 		pgmap->nr_range =3D dev_dax->nr_range;
-+ 	}
-+=20
-+ 	for (i =3D 0; i < dev_dax->nr_range; i++) {
-+ 		struct range *range =3D &dev_dax->ranges[i].range;
-+=20
-+ 		if (!devm_request_mem_region(dev, range->start,
-+ 					range_len(range), dev_name(dev))) {
-+ 			dev_warn(dev, "mapping%d: %#llx-%#llx could not reserve range\n",
-+ 					i, range->start, range->end);
-+ 			return -EBUSY;
-+ 		}
-+ 		/* don't update the range for static pgmap */
-+ 		if (!dev_dax->pgmap)
-+ 			pgmap->ranges[i] =3D *range;
-  	}
- =20
-- 	dev_dax->pgmap.type =3D MEMORY_DEVICE_GENERIC;
-- 	addr =3D devm_memremap_pages(dev, &dev_dax->pgmap);
- -	pgmap->type =3D MEMORY_DEVICE_DEVDAX;
-++	pgmap->type =3D MEMORY_DEVICE_GENERIC;
-+ 	addr =3D devm_memremap_pages(dev, pgmap);
-  	if (IS_ERR(addr))
-  		return PTR_ERR(addr);
- =20
-
---Sig_/GI3t10h4Bjs/Gsj=kU5YHr1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XTboACgkQAVBC80lX
-0GyFCAf9FFrnvr/UxrRQ2HBwGRuvytzOZqOtVP/lRQ06aKH7wRoW94rnvmVaDs4M
-cdlS/55qJUy+PuynNSjrntT9r8dLqnvYHz5whh+WebS+tWFGS6+5OVDSmjzdVfvE
-bXrQ3Lh//x9ktn80jisVwEX93NfLKaIM2VxEv1DeHGW136OUe9MhI1jAivwDBz3D
-E01a0ToXpo06XNcWp7KoDFOuKlfOhgFC5GuWAd7NaDFbjnDdvbqoZLeXYd4K1PGA
-nsesvkosiOsUw4yXb3tN/O5FhMBrgIbN7BR1j1/JU9xlbSoC4pPZc36HEZ/zFVT+
-hYED52fXva77/vtmwj3Fxe+WEHJ7PQ==
-=iEvi
------END PGP SIGNATURE-----
-
---Sig_/GI3t10h4Bjs/Gsj=kU5YHr1--
