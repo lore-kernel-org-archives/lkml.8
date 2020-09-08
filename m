@@ -2,244 +2,169 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B67C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701C8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC7620738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFJ5yExL"
+	by mail.kernel.org (Postfix) with ESMTP id 3C6A52078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599586678;
+	bh=ll9lBgH6i+mGd8nKNN1KIhl0Mfw1fYx2x8JO9azJV3M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nGEHFKManSDUs+XWz5HhvTefoJpPig00AihL3C1uk0FyCcBrzAiYm3yTzdmP3RRr8
+	 Jo+6kfBe6jk2gXXOA3UnyZ5usi6ySYgizugpx1+A1DU62KGR04A5JLRrEYkyY0xWvR
+	 +Z3wgwPeeFBCnfptWZlQBvBBKc7+9Jcuz8coF9fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgIHRhj (ORCPT
+        id S1731816AbgIHRhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731436AbgIHRfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:35:38 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC13FC061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:35:37 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id a16so9426814vsp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jGxIFib/r1AIVUzF+ck89MPfdIoxyJ1DlRxuo3IZNeQ=;
-        b=NFJ5yExL7/3iQk83uUdYEh0bCvRb1MSngEDrzPI56Q9R9TU5wB44JoXh0X93C/OBPF
-         +G6RTxSI6s4NdshRb0TQfbOnAMNtqbyhgCkNMtPY81TUvxP380mkbh7S3EcM44rzP+LC
-         Oli4l27QuVi0RBnEg5H9F1NXjfK4SlQvmPzLKbYHwbnnHsaTl96d4q+7rg1HT2jLpKgL
-         ZVeNNk5uron6dcUdmrg5YPJxIiuZz/6yba0xlDbdEJMlJJjonQsvlvkgUOoKAfajpOHU
-         HMiH/IgF1BUM0h9bVsnKOdhtA5DiA+ivfpABT6AnhNgD8E9qEs+Iu4Mx0cIUDpEq6gT2
-         cmug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jGxIFib/r1AIVUzF+ck89MPfdIoxyJ1DlRxuo3IZNeQ=;
-        b=a5a7ODvoSK2EBRKWsAxybIhiULlQKBTU9aCMqeywbnVgXju4k9BJ2QvRayT3g7Atsx
-         lJcENmh78nUwVUKkpcGatmZ4rFnWbC/M2SkMNcjFy01O84oUl31LQXM+rsspCw8OmYHO
-         VwDGbE+pMdEWtcii/a4NQkTaHgNYylk0JioMf/vSg3+TYwQgrGlg+0N1fhUJqHAyfCHG
-         ELqA8q9wFEuj8OIMsxzEt3BSHp1uqzSZ9ZOIUhR+WtAA1xJZLeaz/CS846xLHh8NLWSX
-         rYjjtvEySaSwsfnf9IqRtRDWoVcjfHOVWS4eEuBBgR/qdjuAn0SZgifOqG6+KQskn97s
-         PlJA==
-X-Gm-Message-State: AOAM531I3cxMXO5rEGgaXUno+216IKMua/EILO/4PC2MJAcWAgbny5Lw
-        3XIU838OQci2V2Gh2mwbIpCHo0P4wnR8Tw==
-X-Google-Smtp-Source: ABdhPJyuIUl0/SPxVjgT+DGKmQonld71g0/PJibRYYf4mmHP6ackrP4d770L8tO9a30IA3OMHGjlCw==
-X-Received: by 2002:a67:ef52:: with SMTP id k18mr151169vsr.25.1599586536398;
-        Tue, 08 Sep 2020 10:35:36 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id s3sm1190001vkd.49.2020.09.08.10.35.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 10:35:35 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id q67so9478703vsd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:35:35 -0700 (PDT)
-X-Received: by 2002:a67:f5d4:: with SMTP id t20mr176891vso.1.1599586534810;
- Tue, 08 Sep 2020 10:35:34 -0700 (PDT)
+        Tue, 8 Sep 2020 13:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731704AbgIHQOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:14:39 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 998122481D;
+        Tue,  8 Sep 2020 15:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579843;
+        bh=ll9lBgH6i+mGd8nKNN1KIhl0Mfw1fYx2x8JO9azJV3M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a4jKh66d6wA0heRG38tfX5z+fduXtBjNr6KyMArFcJp+GFJZx98banm5+nuDTD32U
+         vciZ4hgr1vQsK+Pw/JYcYp9pW/oUPpMn/wYS+2uKLkw0dIk1oKTnEBWewscei8w4/B
+         u6J8uJ1+DDgMRHJ690Z5D8UNDfuZ6HCHl+ajW2T4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Potnuri Bharat Teja <bharat@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 056/129] cxgb4: fix thermal zone device registration
+Date:   Tue,  8 Sep 2020 17:24:57 +0200
+Message-Id: <20200908152232.505272370@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200901195415.4840-1-m-karicheri2@ti.com> <20200901195415.4840-2-m-karicheri2@ti.com>
- <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com> <581a90d0-243e-f62e-1c2e-a9683807805c@ti.com>
-In-Reply-To: <581a90d0-243e-f62e-1c2e-a9683807805c@ti.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 8 Sep 2020 19:34:56 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSdDqx8ZwmvLceygpxTDC9=S8=jqFRCTWFoW-6YwihXTUQ@mail.gmail.com>
-Message-ID: <CA+FuTSdDqx8ZwmvLceygpxTDC9=S8=jqFRCTWFoW-6YwihXTUQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/1] net: hsr/prp: add vlan support
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, nsekhar@ti.com,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 6:39 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
->
-> Hi Willem,
->
-> Thanks for the response!
-> On 9/4/20 11:45 AM, Willem de Bruijn wrote:
-> > On Tue, Sep 1, 2020 at 9:54 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
-> >>
-> >> This patch add support for creating vlan interfaces
-> >> over hsr/prp interface.
-> >>
-> >> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> >> ---
-> >>   net/hsr/hsr_device.c  |  4 ----
-> >>   net/hsr/hsr_forward.c | 16 +++++++++++++---
-> >>   2 files changed, 13 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-> >> index ab953a1a0d6c..e1951579a3ad 100644
-> >> --- a/net/hsr/hsr_device.c
-> >> +++ b/net/hsr/hsr_device.c
-> >> @@ -477,10 +477,6 @@ void hsr_dev_setup(struct net_device *dev)
-> >>
-> >>          /* Prevent recursive tx locking */
-> >>          dev->features |= NETIF_F_LLTX;
-> >> -       /* VLAN on top of HSR needs testing and probably some work on
-> >> -        * hsr_header_create() etc.
-> >> -        */
-> >> -       dev->features |= NETIF_F_VLAN_CHALLENGED;
-> >>          /* Not sure about this. Taken from bridge code. netdev_features.h says
-> >>           * it means "Does not change network namespaces".
-> >>           */
-> >> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-> >> index cadfccd7876e..de21df30b0d9 100644
-> >> --- a/net/hsr/hsr_forward.c
-> >> +++ b/net/hsr/hsr_forward.c
-> >> @@ -208,6 +208,7 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
-> >>                                      struct hsr_port *port, u8 proto_version)
-> >>   {
-> >>          struct hsr_ethhdr *hsr_ethhdr;
-> >> +       unsigned char *pc;
-> >>          int lsdu_size;
-> >>
-> >>          /* pad to minimum packet size which is 60 + 6 (HSR tag) */
-> >> @@ -218,7 +219,18 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
-> >>          if (frame->is_vlan)
-> >>                  lsdu_size -= 4;
-> >>
-> >> -       hsr_ethhdr = (struct hsr_ethhdr *)skb_mac_header(skb);
-> >> +       pc = skb_mac_header(skb);
-> >> +       if (frame->is_vlan)
-> >> +               /* This 4-byte shift (size of a vlan tag) does not
-> >> +                * mean that the ethhdr starts there. But rather it
-> >> +                * provides the proper environment for accessing
-> >> +                * the fields, such as hsr_tag etc., just like
-> >> +                * when the vlan tag is not there. This is because
-> >> +                * the hsr tag is after the vlan tag.
-> >> +                */
-> >> +               hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
-> >> +       else
-> >> +               hsr_ethhdr = (struct hsr_ethhdr *)pc;
-> >
-> > Instead, I would pass the header from the caller, which knows the
-> > offset because it moves the previous headers to make space.
-> >
-> So if I understood you correctly a diff for the above would like this
-> where pass dst + movelen as  struct hsr_ethhdr *hsr_ethhdr
-> pointer to hsr_fill_tag(), right?
->
-> a0868495local@uda0868495:~/Projects/upstream-kernel$ git diff
-> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-> index de21df30b0d9..4d9192c8bcf8 100644
-> --- a/net/hsr/hsr_forward.c
-> +++ b/net/hsr/hsr_forward.c
-> @@ -204,11 +204,10 @@ static void hsr_set_path_id(struct hsr_ethhdr
-> *hsr_ethhdr,
->   }
->
->   static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
-> +                                   struct hsr_ethhdr *hsr_ethhdr,
->                                      struct hsr_frame_info *frame,
->                                      struct hsr_port *port, u8
-> proto_version)
->   {
-> -       struct hsr_ethhdr *hsr_ethhdr;
-> -       unsigned char *pc;
->          int lsdu_size;
->
->          /* pad to minimum packet size which is 60 + 6 (HSR tag) */
-> @@ -219,19 +218,6 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff
-> *skb,
->          if (frame->is_vlan)
->                  lsdu_size -= 4;
->
-> -       pc = skb_mac_header(skb);
-> -       if (frame->is_vlan)
-> -               /* This 4-byte shift (size of a vlan tag) does not
-> -                * mean that the ethhdr starts there. But rather it
-> -                * provides the proper environment for accessing
-> -                * the fields, such as hsr_tag etc., just like
-> -                * when the vlan tag is not there. This is because
-> -                * the hsr tag is after the vlan tag.
-> -                */
-> -               hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
-> -       else
-> -               hsr_ethhdr = (struct hsr_ethhdr *)pc;
-> -
->          hsr_set_path_id(hsr_ethhdr, port);
->          set_hsr_tag_LSDU_size(&hsr_ethhdr->hsr_tag, lsdu_size);
->          hsr_ethhdr->hsr_tag.sequence_nr = htons(frame->sequence_nr);
-> @@ -280,10 +266,12 @@ struct sk_buff *hsr_create_tagged_frame(struct
-> hsr_frame_info *frame,
->          memmove(dst, src, movelen);
->          skb_reset_mac_header(skb);
->
-> -       /* skb_put_padto free skb on error and hsr_fill_tag returns NULL in
-> -        * that case
-> +       /* dst point to the start of hsr tag. So pass it to fill the
-> +        * hsr info. Also skb_put_padto free skb on error and hsr_fill_tag
-> +        * returns NULL in that case.
->           */
-> -       return hsr_fill_tag(skb, frame, port, port->hsr->prot_version);
-> +       return hsr_fill_tag(skb, (struct hsr_ethhdr *)(dst + movelen),
-> +                           frame, port, port->hsr->prot_version);
+From: Potnuri Bharat Teja <bharat@chelsio.com>
 
-It's a bit hard to see, since this is a draft patch on top of the
-existing patch. But I think so.
+[ Upstream commit 6b6382a857d824c0866056d5736bbcb597a922ed ]
 
-Only, instead of dst + movelen, you can use src.
+When multiple adapters are present in the system, pci hot-removing second
+adapter leads to the following warning as both the adapters registered
+thermal zone device with same thermal zone name/type.
+Therefore, use unique thermal zone name during thermal zone device
+initialization. Also mark thermal zone dev NULL once unregistered.
 
->   }
->
->
-> > Also, supporting VLAN probably also requires supporting 802.1ad QinQ,
-> > which means code should parse the headers instead of hardcoding
-> > VLAN_HLEN.
-> >
->
-> iec-62439-3 standard only talks about VLAN (TPID 0x8100), not about
-> QinQ. So what I could do is to check and bail out if 802.1ad frame is
-> received at the interface from upper layer. Something like below and
-> frame will get dropped.
->
-> @@ -519,6 +507,8 @@ static int fill_frame_info(struct hsr_frame_info *frame,
->
->          if (proto == htons(ETH_P_8021Q))
->                  frame->is_vlan = true;
-> +       else if (proto == htons(ETH_P_8021AD))
-> +               return -1; /* Don't support 802.1ad */
->
->          if (frame->is_vlan) {
->                  vlan_hdr = (struct hsr_vlan_ethhdr *)ethhdr;
->
-> What do you think?
+[  414.370143] ------------[ cut here ]------------
+[  414.370944] sysfs group 'power' not found for kobject 'hwmon0'
+[  414.371747] WARNING: CPU: 9 PID: 2661 at fs/sysfs/group.c:281
+ sysfs_remove_group+0x76/0x80
+[  414.382550] CPU: 9 PID: 2661 Comm: bash Not tainted 5.8.0-rc6+ #33
+[  414.383593] Hardware name: Supermicro X10SRA-F/X10SRA-F, BIOS 2.0a 06/23/2016
+[  414.384669] RIP: 0010:sysfs_remove_group+0x76/0x80
+[  414.385738] Code: 48 89 df 5b 5d 41 5c e9 d8 b5 ff ff 48 89 df e8 60 b0 ff ff
+ eb cb 49 8b 14 24 48 8b 75 00 48 c7 c7 90 ae 13 bb e8 6a 27 d0 ff <0f> 0b 5b 5d
+ 41 5c c3 0f 1f 00 0f 1f 44 00 00 48 85 f6 74 31 41 54
+[  414.388404] RSP: 0018:ffffa22bc080fcb0 EFLAGS: 00010286
+[  414.389638] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[  414.390829] RDX: 0000000000000001 RSI: ffff8ee2de3e9510 RDI: ffff8ee2de3e9510
+[  414.392064] RBP: ffffffffbaef2ee0 R08: 0000000000000000 R09: 0000000000000000
+[  414.393224] R10: 0000000000000000 R11: 000000002b30006c R12: ffff8ee260720008
+[  414.394388] R13: ffff8ee25e0a40e8 R14: ffffa22bc080ff08 R15: ffff8ee2c3be5020
+[  414.395661] FS:  00007fd2a7171740(0000) GS:ffff8ee2de200000(0000)
+ knlGS:0000000000000000
+[  414.396825] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  414.398011] CR2: 00007f178ffe5020 CR3: 000000084c5cc003 CR4: 00000000003606e0
+[  414.399172] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  414.400352] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  414.401473] Call Trace:
+[  414.402685]  device_del+0x89/0x400
+[  414.403819]  device_unregister+0x16/0x60
+[  414.405024]  hwmon_device_unregister+0x44/0xa0
+[  414.406112]  thermal_remove_hwmon_sysfs+0x196/0x200
+[  414.407256]  thermal_zone_device_unregister+0x1b5/0x1f0
+[  414.408415]  cxgb4_thermal_remove+0x3c/0x4f [cxgb4]
+[  414.409668]  remove_one+0x212/0x290 [cxgb4]
+[  414.410875]  pci_device_remove+0x36/0xb0
+[  414.412004]  device_release_driver_internal+0xe2/0x1c0
+[  414.413276]  pci_stop_bus_device+0x64/0x90
+[  414.414433]  pci_stop_and_remove_bus_device_locked+0x16/0x30
+[  414.415609]  remove_store+0x75/0x90
+[  414.416790]  kernfs_fop_write+0x114/0x1b0
+[  414.417930]  vfs_write+0xcf/0x210
+[  414.419059]  ksys_write+0xa7/0xe0
+[  414.420120]  do_syscall_64+0x4c/0xa0
+[  414.421278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  414.422335] RIP: 0033:0x7fd2a686afd0
+[  414.423396] Code: Bad RIP value.
+[  414.424549] RSP: 002b:00007fffc1446148 EFLAGS: 00000246 ORIG_RAX:
+ 0000000000000001
+[  414.425638] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fd2a686afd0
+[  414.426830] RDX: 0000000000000002 RSI: 00007fd2a7196000 RDI: 0000000000000001
+[  414.427927] RBP: 00007fd2a7196000 R08: 000000000000000a R09: 00007fd2a7171740
+[  414.428923] R10: 00007fd2a7171740 R11: 0000000000000246 R12: 00007fd2a6b43400
+[  414.430082] R13: 0000000000000002 R14: 0000000000000001 R15: 0000000000000000
+[  414.431027] irq event stamp: 76300
+[  414.435678] ---[ end trace 13865acb4d5ab00f ]---
 
-It's good to err on the safe side. That should probably be a separate patch.
+Fixes: b18719157762 ("cxgb4: Add thermal zone support")
+Signed-off-by: Potnuri Bharat Teja <bharat@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c
+index 3de8a5e83b6c7..d7fefdbf3e575 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c
+@@ -62,6 +62,7 @@ static struct thermal_zone_device_ops cxgb4_thermal_ops = {
+ int cxgb4_thermal_init(struct adapter *adap)
+ {
+ 	struct ch_thermal *ch_thermal = &adap->ch_thermal;
++	char ch_tz_name[THERMAL_NAME_LENGTH];
+ 	int num_trip = CXGB4_NUM_TRIPS;
+ 	u32 param, val;
+ 	int ret;
+@@ -82,7 +83,8 @@ int cxgb4_thermal_init(struct adapter *adap)
+ 		ch_thermal->trip_type = THERMAL_TRIP_CRITICAL;
+ 	}
+ 
+-	ch_thermal->tzdev = thermal_zone_device_register("cxgb4", num_trip,
++	snprintf(ch_tz_name, sizeof(ch_tz_name), "cxgb4_%s", adap->name);
++	ch_thermal->tzdev = thermal_zone_device_register(ch_tz_name, num_trip,
+ 							 0, adap,
+ 							 &cxgb4_thermal_ops,
+ 							 NULL, 0, 0);
+@@ -97,7 +99,9 @@ int cxgb4_thermal_init(struct adapter *adap)
+ 
+ int cxgb4_thermal_remove(struct adapter *adap)
+ {
+-	if (adap->ch_thermal.tzdev)
++	if (adap->ch_thermal.tzdev) {
+ 		thermal_zone_device_unregister(adap->ch_thermal.tzdev);
++		adap->ch_thermal.tzdev = NULL;
++	}
+ 	return 0;
+ }
+-- 
+2.25.1
+
+
+
