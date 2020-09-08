@@ -2,228 +2,87 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0963C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0E4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75AE2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1609221D20
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585739;
-	bh=qJw7qTW8sm4UzUgyNcs+J5DGwug32eonDnzevDjI8II=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y9WHAYVpO5rPzel/sPy9TkRLQubVhVwSuabvkCn7dCj9RLLhNK0S/HBLXSr0LAvlq
-	 2mgvrIu0g7pLQazePkMyIXbWo49tOzZ+f/SKlRDlYe38clyJh+33YtqEuq9qYHcAh7
-	 LUmr4A3SySg5T/KmCFVVjhf/wY942DzFQv5j+MyM=
+	s=default; t=1599585772;
+	bh=luI7DSIeuNgw2n7bHdR4GLN46L7NHNK8S2snlSCQbck=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=Tn3yqbX06O4q3M3CYKraKLrtTK6XettDpYm33MiNBcydZFrezd1zfSC5R+Wu/DIg0
+	 AGNiGv+oBSidO3ERwlKXdGXx8PySBKfqIwGew4DVYPeiUwZeY7la1Zt0WGJ9v6eP/R
+	 CF1s0ZZ3+B+TqFDiaWjIYn2EUJtWB0JsNaxFxUJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731816AbgIHRV6 (ORCPT
+        id S1726353AbgIHRWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:21:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56412 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:22:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728643AbgIHRUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:20:52 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731777AbgIHRVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:21:52 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C697221924;
-        Tue,  8 Sep 2020 17:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB622087D;
+        Tue,  8 Sep 2020 17:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599585651;
-        bh=qJw7qTW8sm4UzUgyNcs+J5DGwug32eonDnzevDjI8II=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PO5JNwXw5QbIuu/2RcDr0bbx7ZRzu2Y5qqEYxKk+cMJTbCZWGXrXryK1XiV7DO/h2
-         yEMYiTExVead0rncQ7oGzITXa9RgcVq1Z0JbOVxzCJnJ3swB/L3W0vpZTp8TzB9RxE
-         mLxcAmKAl3SfFk1rGVjQzGNsblf9wGM/uW0mjJv4=
-Received: by mail-ot1-f45.google.com with SMTP id c10so15495951otm.13;
-        Tue, 08 Sep 2020 10:20:51 -0700 (PDT)
-X-Gm-Message-State: AOAM532/4o/0A5g0Z73XgdibTZm+WXuKTX2jtGL/CYvgJAJrkQwA8hlH
-        uwVs8vYhkXso+sTbl/4c1367IVb3ugnvyqKKUA==
-X-Google-Smtp-Source: ABdhPJyvfyNrPjsoWHvCG23p12ZjQDxYACacWE/DdrBGJM1e/5IFpmq/yWxgunlZEazC1D1a52yjOXSbSDklAC/HUH0=
-X-Received: by 2002:a9d:411:: with SMTP id 17mr84031otc.192.1599585651032;
- Tue, 08 Sep 2020 10:20:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200828130602.42203-1-andre.przywara@arm.com> <20200828130602.42203-2-andre.przywara@arm.com>
-In-Reply-To: <20200828130602.42203-2-andre.przywara@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Sep 2020 11:20:39 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+jjzFR0ZdFO5dEp2w2D2uzSAB9tdih9tnuN987LABbiA@mail.gmail.com>
-Message-ID: <CAL_Jsq+jjzFR0ZdFO5dEp2w2D2uzSAB9tdih9tnuN987LABbiA@mail.gmail.com>
-Subject: Re: [PATCH 01/10] dt-bindings: watchdog: sp-805: Convert to Json-schema
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1599585712;
+        bh=luI7DSIeuNgw2n7bHdR4GLN46L7NHNK8S2snlSCQbck=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=dFlnBsh7xLTYLjXPmcTtF99utgCGYMRv8WlLIvMvkiLdI/wr5bH2/bE+bHAjpmBxr
+         +4jrbwjwD6njveoL9Vb4CJANBgwqdQMcxn6oyhC+Z4+7goB4r8UcUT9aoXjAImUEvN
+         CPIieMIpKZQy3aF+488qeOCkXgX50/wQwUyo5vnA=
+Date:   Tue, 08 Sep 2020 18:21:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ikjoon Jang <ikjn@chromium.org>, linux-spi@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Chuanhong Guo <gch981213@gmail.com>,
+        Bayi Cheng <bayi.cheng@mediatek.com>
+In-Reply-To: <20200826091852.519138-1-ikjn@chromium.org>
+References: <20200826091852.519138-1-ikjn@chromium.org>
+Subject: Re: [PATCH] spi: spi-mtk-nor: support standard spi properties
+Message-Id: <159958565716.16771.18117309566354827719.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 7:06 AM Andre Przywara <andre.przywara@arm.com> wrote:
->
-> Convert the ARM SP-805 watchdog IP DT binding over to Json-schema.
->
-> A straight-forward conversion, but the requirement for providing two
-> clocks got strengthened from "should" to "must".
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  .../bindings/watchdog/arm,sp805.txt           | 32 --------
->  .../bindings/watchdog/arm,sp805.yaml          | 75 +++++++++++++++++++
->  2 files changed, 75 insertions(+), 32 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
->  create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> deleted file mode 100644
-> index bee6f1f0e41b..000000000000
-> --- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-> +++ /dev/null
-> @@ -1,32 +0,0 @@
-> -ARM AMBA Primecell SP805 Watchdog
-> -
-> -SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
-> -can be used to identify the peripheral type, vendor, and revision.
-> -This value can be used for driver matching.
-> -
-> -As SP805 WDT is a primecell IP, it follows the base bindings specified in
-> -'arm/primecell.txt'
-> -
-> -Required properties:
-> -- compatible:  Should be "arm,sp805" & "arm,primecell"
-> -- reg:         Should contain location and length for watchdog timer register
-> -- clocks:      Clocks driving the watchdog timer hardware. This list should be
-> -               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
-> -               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
-> -               frequency
-> -- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
-> -               second one
-> -
-> -Optional properties:
-> -- interrupts:  Should specify WDT interrupt number
-> -- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
-> -               default timeout is determined by the driver
-> -
-> -Example:
-> -       watchdog@66090000 {
-> -               compatible = "arm,sp805", "arm,primecell";
-> -               reg = <0x66090000 0x1000>;
-> -               interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
-> -               clocks = <&wdt_clk>, <&apb_pclk>;
-> -               clock-names = "wdog_clk", "apb_pclk";
-> -       };
-> diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-> new file mode 100644
-> index 000000000000..980e155d3387
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/arm,sp805.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM AMBA Primecell SP805 Watchdog
-> +
-> +maintainers:
-> +  - Viresh Kumar <vireshk@kernel.org>
-> +
-> +description: |+
-> +  The Arm SP805 IP implements a watchdog device, which triggers an interrupt
-> +  after a configurable time period. If that interrupt has not been serviced
-> +  when the next interrupt would be triggered, the reset signal is asserted.
-> +
-> +allOf:
-> +  - $ref: /schemas/arm/primecell.yaml#
+On Wed, 26 Aug 2020 17:18:52 +0800, Ikjoon Jang wrote:
+> Use default supports_op() to support spi-[rt]x-bus-width properties.
+> And check dummy op's byte length instead of its bus width for output.
 
-Should also ref watchdog.yaml here.
+Applied to
 
-> +
-> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: arm,sp805
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: arm,sp805
-> +      - const: arm,primecell
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: |
-> +      Clocks driving the watchdog timer hardware. The first clock is used
-> +      for the actual watchdog counter. The second clock drives the register
-> +      interface.
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: wdog_clk
-> +      - const: apb_pclk
-> +
-> +  timeout-sec:
-> +    description: |
-> +      Should specify default WDT timeout in seconds. If unset, the default
-> +      timeout is determined by the driver.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-You can drop this as it is part of watchdog.yaml.
+Thanks!
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
+[1/1] spi: spi-mtk-nor: support standard spi properties
+      commit: a59b2c7c56bf795cc13139d2634e86a3da7a0314
 
-Add:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-unevaluatedProperties: false
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    watchdog@66090000 {
-> +        compatible = "arm,sp805", "arm,primecell";
-> +        reg = <0x66090000 0x1000>;
-> +        interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&wdt_clk>, <&apb_pclk>;
-> +        clock-names = "wdog_clk", "apb_pclk";
-> +    };
-> --
-> 2.17.1
->
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
