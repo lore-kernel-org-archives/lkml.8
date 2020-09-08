@@ -2,145 +2,171 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFA6C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFF8C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5294920C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5739B2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:22:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgIHKTR (ORCPT
+        id S1729252AbgIHKWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:19:17 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47652 "EHLO inva021.nxp.com"
+        Tue, 8 Sep 2020 06:22:44 -0400
+Received: from 8bytes.org ([81.169.241.247]:43782 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729285AbgIHKTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:19:01 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8C889201599;
-        Tue,  8 Sep 2020 12:18:59 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 41D7620158D;
-        Tue,  8 Sep 2020 12:18:59 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 78C302036D;
-        Tue,  8 Sep 2020 12:18:58 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 13:18:58 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     peng.fan@nxp.com
-Cc:     sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        aisheng.dong@nxp.com
-Subject: Re: [PATCH] clk: imx: lpcg-scu: SW workaround for errata (e10858)
-Message-ID: <20200908101858.kiuzcnc6rolbbyma@fsr-ub1664-175>
-References: <1599556487-31364-1-git-send-email-peng.fan@nxp.com>
+        id S1726801AbgIHKWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:22:41 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A2E93344; Tue,  8 Sep 2020 12:22:39 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 12:22:37 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v7.1 39/72] x86/sev-es: Setup early #VC handler
+Message-ID: <20200908102237.GA12638@8bytes.org>
+References: <20200907131613.12703-1-joro@8bytes.org>
+ <20200907131613.12703-40-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599556487-31364-1-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20200907131613.12703-40-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-09-08 17:14:47, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Back-to-back LPCG writes can be ignored by the LPCG register due to
-> a HW bug. The writes need to be separated by at least 4 cycles of
-> the gated clock.
-> 
-> The workaround is implemented as follows:
-> 1. For clocks running greater than or equal to 24MHz, a read
-> followed by the write will provide sufficient delay.
-> 2. For clocks running below 24MHz, add a delay of 4 clock cylces
-> after the write to the LPCG register.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/clk/imx/clk-lpcg-scu.c | 31 +++++++++++++++++++++++++++++--
->  1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-lpcg-scu.c b/drivers/clk/imx/clk-lpcg-scu.c
-> index 1f0e44f921ae..6ee9d2caedf2 100644
-> --- a/drivers/clk/imx/clk-lpcg-scu.c
-> +++ b/drivers/clk/imx/clk-lpcg-scu.c
-> @@ -6,6 +6,7 @@
->  
->  #include <linux/bits.h>
->  #include <linux/clk-provider.h>
-> +#include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
->  #include <linux/slab.h>
-> @@ -38,6 +39,31 @@ struct clk_lpcg_scu {
->  
->  #define to_clk_lpcg_scu(_hw) container_of(_hw, struct clk_lpcg_scu, hw)
->  
-> +/* e10858 -LPCG clock gating register synchronization errata */
-> +static void do_lpcg_workaround(u32 rate, void __iomem *reg, u32 val)
-> +{
-> +	writel(val, reg);
-> +
-> +	if (rate >= 24000000 || rate == 0) {
-> +		u32 reg1;
-> +
-> +		/*
-> +		 * The time taken to access the LPCG registers from the AP core
-> +		 * through the interconnect is longer than the minimum delay
-> +		 * of 4 clock cycles required by the errata.
-> +		 * Adding a readl will provide sufficient delay to prevent
-> +		 * back-to-back writes.
-> +		 */
-> +		reg1 = readl(reg);
-> +	} else {
-> +		/*
-> +		 * For clocks running below 24MHz, wait a minimum of
-> +		 * 4 clock cycles.
-> +		 */
-> +		ndelay(4 * (DIV_ROUND_UP(1000000000, rate)));
-> +	}
+From: Joerg Roedel <jroedel@suse.de>
 
-Just to make sure this is totally understood, if the lpcg consumer
-needs to two enables/disables in less than 4 multiplied by the clock
-period, the second enable/disable will be delayed.
+Setup an early handler for #VC exceptions. There is no GHCB mapped
+yet, so just re-use the vc_no_ghcb_handler. It can only handle CPUID
+exit-codes, but that should be enough to get the kernel through
+verify_cpu() and __startup_64() until it runs on virtual addresses.
 
-If we're fine with this, then here is my R-b.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/sev-es.h |  3 +++
+ arch/x86/kernel/head64.c      | 21 +++++++++++++++++++++
+ arch/x86/kernel/head_64.S     | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 54 insertions(+)
 
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 6dc52440c4b4..7175d432ebfe 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -73,4 +73,7 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+ 	return (val & mask);
+ }
+ 
++/* Early IDT entry points for #VC handler */
++extern void vc_no_ghcb(void);
++
+ #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 4282dac694c3..5683bbb555ef 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -40,6 +40,7 @@
+ #include <asm/desc.h>
+ #include <asm/extable.h>
+ #include <asm/trapnr.h>
++#include <asm/sev-es.h>
+ 
+ /*
+  * Manage page tables very early on.
+@@ -540,11 +541,31 @@ static struct desc_ptr bringup_idt_descr = {
+ 	.address	= 0, /* Set at runtime */
+ };
+ 
++static void set_bringup_idt_handler(int n, void *handler)
++{
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	struct idt_data data;
++	gate_desc desc;
++
++	init_idt_data(&data, n, handler);
++	idt_init_desc(&desc, &data);
++	native_write_idt_entry(bringup_idt_table, n, &desc);
++#endif
++}
++
+ /* This runs while still in the direct mapping */
+ static void startup_64_load_idt(unsigned long physbase)
+ {
+ 	struct desc_ptr *desc = fixup_pointer(&bringup_idt_descr, physbase);
+ 
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
++		void *handler;
++
++		/* VMM Communication Exception */
++		handler = fixup_pointer(vc_no_ghcb, physbase);
++		set_bringup_idt_handler(X86_TRAP_VC, handler);
++	}
++
+ 	desc->address = (unsigned long)fixup_pointer(bringup_idt_table, physbase);
+ 	native_load_idt(desc);
+ }
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 3b40ec44a67d..6e68bca64ae4 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -348,6 +348,36 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/*
++ * VC Exception handler used during very early boot. The
++ * early_idt_handler_array can't be used because it returns via the
++ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
++ *
++ * This handler will end up in the .init.text section and not be
++ * available to boot secondary CPUs.
++ */
++SYM_CODE_START_NOALIGN(vc_no_ghcb)
++	UNWIND_HINT_IRET_REGS offset=8
++
++	/* Build pt_regs */
++	PUSH_AND_CLEAR_REGS
++
++	/* Call C handler */
++	movq    %rsp, %rdi
++	movq	ORIG_RAX(%rsp), %rsi
++	call    do_vc_no_ghcb
++
++	/* Unwind pt_regs */
++	POP_REGS
++
++	/* Remove Error Code */
++	addq    $8, %rsp
++
++	/* Pure iret required here - don't use INTERRUPT_RETURN */
++	iretq
++SYM_CODE_END(vc_no_ghcb)
++#endif
+ 
+ #define SYM_DATA_START_PAGE_ALIGNED(name)			\
+ 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
+-- 
+2.28.0
 
-> +}
-> +
->  static int clk_lpcg_scu_enable(struct clk_hw *hw)
->  {
->  	struct clk_lpcg_scu *clk = to_clk_lpcg_scu(hw);
-> @@ -54,7 +80,8 @@ static int clk_lpcg_scu_enable(struct clk_hw *hw)
->  		val |= CLK_GATE_SCU_LPCG_HW_SEL;
->  
->  	reg |= val << clk->bit_idx;
-> -	writel(reg, clk->reg);
-> +
-> +	do_lpcg_workaround(clk_hw_get_rate(hw), clk->reg, reg);
->  
->  	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
->  
-> @@ -71,7 +98,7 @@ static void clk_lpcg_scu_disable(struct clk_hw *hw)
->  
->  	reg = readl_relaxed(clk->reg);
->  	reg &= ~(CLK_GATE_SCU_LPCG_MASK << clk->bit_idx);
-> -	writel(reg, clk->reg);
-> +	do_lpcg_workaround(clk_hw_get_rate(hw), clk->reg, reg);
->  
->  	spin_unlock_irqrestore(&imx_lpcg_scu_lock, flags);
->  }
-> -- 
-> 2.28.0
-> 
