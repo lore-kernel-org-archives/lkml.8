@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD824C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6561EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A37752080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2487F2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590311;
-	bh=l5pXDIH58BbziP64ptPqTw2F3wmrA802mD+6ENN3vkg=;
+	s=default; t=1599590319;
+	bh=BAqN8JJndhY6Fdr1OaQLHcokT17ApQzyCPPyy0UCFjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FyF7/SoiJjGiCCwDiuxV7MRdnA+zQcj3aaYQMGK2fPl0CQuZbpfEZzn81sHnR0x6C
-	 ordtvYfHU6yaJCFIilqijE/IoGzsodhIV8vCiFDv+PaGgadhB5QdbbxUO9joqkueMt
-	 EjsInRDdGKy3rvGuPokhZbAYghdJmOVY1eV0TF08=
+	b=sM5LRkHOGzynzsOtnImn0Ef7L5aycJo7jGhIwLE1Jcl0e2Y2YxKX/itt4kN2p8RAJ
+	 A/Jn/vWRMEBPXgMHHxC4IGYBtxS7jHESAkUM+KVq7MqCYL1t84z6XNkuFZ93Scc7nm
+	 gtvOvctV+ijs8KSfCHHS4jigay+lDbSGSnd/MBeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbgIHSia (ORCPT
+        id S1731910AbgIHSih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731341AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731329AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE2CC2413B;
-        Tue,  8 Sep 2020 15:49:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C3962405D;
+        Tue,  8 Sep 2020 15:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580141;
-        bh=l5pXDIH58BbziP64ptPqTw2F3wmrA802mD+6ENN3vkg=;
+        s=default; t=1599580127;
+        bh=BAqN8JJndhY6Fdr1OaQLHcokT17ApQzyCPPyy0UCFjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EShjXUOLvLyrI6jqW2CEL+Pi+hh1+5MTPK7EZVYP9Dj2xNA30NtwTQvdMxJDZzZ/n
-         8K549Cv3kbxpBwQdcR88cS8QEzdTfZtdSwfg5Avy6pRe96PW6T6tOA9tblDQolp6bD
-         sq++b+o3ssRuBQeaa/yuo2fs/MR/dH/k6xGfymZ4=
+        b=oS8qM3cwoW8ha+xaHgqZH6K7PGcidSiOtnX3maGVXHffLmwtFICB9dGuimv3TYCwb
+         D2KxDw48X+Cve/9Vgr6j0NUxwfy3CsYgVio0nHGfxou0xCPMSsX/T/NEG6MOWwDNCG
+         9LhcgFjOJ3kH0E41ld8OAEmNdc4qG+65I+fQNKgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+ab16e463b903f5a37036@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/88] batman-adv: Avoid uninitialized chaddr when handling DHCP
-Date:   Tue,  8 Sep 2020 17:25:17 +0200
-Message-Id: <20200908152221.888974886@linuxfoundation.org>
+Subject: [PATCH 4.19 39/88] nvmet-fc: Fix a missed _irqsave version of spin_lock in nvmet_fc_fod_op_done()
+Date:   Tue,  8 Sep 2020 17:25:40 +0200
+Message-Id: <20200908152223.077799986@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -63,50 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 303216e76dcab6049c9d42390b1032f0649a8206 ]
+[ Upstream commit 70e37988db94aba607d5491a94f80ba08e399b6b ]
 
-The gateway client code can try to optimize the delivery of DHCP packets to
-avoid broadcasting them through the whole mesh. But also transmissions to
-the client can be optimized by looking up the destination via the chaddr of
-the DHCP packet.
+The way 'spin_lock()' and 'spin_lock_irqsave()' are used is not consistent
+in this function.
 
-But the chaddr is currently only done when chaddr is fully inside the
-non-paged area of the skbuff. Otherwise it will not be initialized and the
-unoptimized path should have been taken.
+Use 'spin_lock_irqsave()' also here, as there is no guarantee that
+interruptions are disabled at that point, according to surrounding code.
 
-But the implementation didn't handle this correctly. It didn't retrieve the
-correct chaddr but still tried to perform the TT lookup with this
-uninitialized memory.
-
-Reported-by: syzbot+ab16e463b903f5a37036@syzkaller.appspotmail.com
-Fixes: 6c413b1c22a2 ("batman-adv: send every DHCP packet as bat-unicast")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: a97ec51b37ef ("nvmet_fc: Rework target side abort handling")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/gateway_client.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/nvme/target/fc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/gateway_client.c b/net/batman-adv/gateway_client.c
-index 140c61a3f1ecf..0c59fefc13719 100644
---- a/net/batman-adv/gateway_client.c
-+++ b/net/batman-adv/gateway_client.c
-@@ -714,8 +714,10 @@ batadv_gw_dhcp_recipient_get(struct sk_buff *skb, unsigned int *header_len,
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index 29b4b236afd85..77e4d184bc995 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -1986,9 +1986,9 @@ nvmet_fc_fod_op_done(struct nvmet_fc_fcp_iod *fod)
+ 			return;
+ 		if (fcpreq->fcp_error ||
+ 		    fcpreq->transferred_length != fcpreq->transfer_length) {
+-			spin_lock(&fod->flock);
++			spin_lock_irqsave(&fod->flock, flags);
+ 			fod->abort = true;
+-			spin_unlock(&fod->flock);
++			spin_unlock_irqrestore(&fod->flock, flags);
  
- 	chaddr_offset = *header_len + BATADV_DHCP_CHADDR_OFFSET;
- 	/* store the client address if the message is going to a client */
--	if (ret == BATADV_DHCP_TO_CLIENT &&
--	    pskb_may_pull(skb, chaddr_offset + ETH_ALEN)) {
-+	if (ret == BATADV_DHCP_TO_CLIENT) {
-+		if (!pskb_may_pull(skb, chaddr_offset + ETH_ALEN))
-+			return BATADV_DHCP_NO;
-+
- 		/* check if the DHCP packet carries an Ethernet DHCP */
- 		p = skb->data + *header_len + BATADV_DHCP_HTYPE_OFFSET;
- 		if (*p != BATADV_DHCP_HTYPE_ETHERNET)
+ 			nvmet_req_complete(&fod->req, NVME_SC_INTERNAL);
+ 			return;
 -- 
 2.25.1
 
