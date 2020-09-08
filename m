@@ -2,91 +2,126 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4162C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C63BC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99FC02087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BAC2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yeGdGILu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7LSSF/P8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zG3DKyL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731455AbgIHTUD (ORCPT
+        id S1731964AbgIHTU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54220 "EHLO
+        Tue, 8 Sep 2020 15:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730668AbgIHQCS (ORCPT
+        with ESMTP id S1731128AbgIHQCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:02:18 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74D3C061786;
-        Tue,  8 Sep 2020 09:02:17 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 18:02:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599580936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=97oj1pCtLhc8GEIScXkD+7t3oCOzOaAxQFhhixXPXYs=;
-        b=yeGdGILuNPEXB5/p4qF0cmCVDKze7lv3D+hxUC2BiCT6JPgkPmoSlYin1TMQFR9vUUkQKv
-        4KXemeCiJSkkgTxR6LuobNDDMQdl9bA/Lwn5y5Rb8pwvOTjcXRkbnsbSrQKfGz6Dbvrrdr
-        Ru2alBZYhCt3Q7wNBuMNAICWmDZibBJLKAQw+IqAzVBgFirtAIS3ehO0garsyfPHiX/uzY
-        FN5q68u0L89RM60+CEv2reYlTUHdNept+AebIBJI+1lFRqVWoAXLcaMRCMnYIInZAO4Wrm
-        REhfWQY+Q+jdUnrE9bAVrnGJIz09QDkrJxnN0+DuLTZQ0A175sbazDu/5WoWtw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599580936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=97oj1pCtLhc8GEIScXkD+7t3oCOzOaAxQFhhixXPXYs=;
-        b=7LSSF/P8VGb8OFyKhLSf/g7sECVsh9xM22Xon8GdgRlb6KSYTPdHfwFEvQME5g9X3nVfqn
-        qBoLR76pYz7bo9CA==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Mike Galbraith <efault@gmx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: v5.9-rc3-rt3 boot time networking lockdep splat
-Message-ID: <20200908160214.p3av2uxt7jjj6rx2@linutronix.de>
-References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
- <46a2b89ec8d953a4be18c7389c7d8c66310a7ff0.camel@gmx.de>
- <b989e196a8b9cceda35152de9202d7a67ca32196.camel@gmx.de>
- <20200908151229.g24j4n4fderlm2pe@linutronix.de>
- <a79815352e2f238b7f108e6e7202f6655f26159d.camel@gmx.de>
+        Tue, 8 Sep 2020 12:02:17 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B22EC08C5E7
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:22:22 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id r4so4018197ooq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CprrL+/LROkbBW4cTs+E5TrRYY4E3igZX9G7gYG5Gl4=;
+        b=zG3DKyL6RXgfAjjpoboTVkZIXN5Fo0jl+wEIvuIS6f/wQa5E3MEqXwU0MPBfQTwmpX
+         PIWYFq2rOApmDnAx7ALcajzqFYix5izxCkh8ENVonvfOuRMqvTVgYGwjh6JekmGGsQjQ
+         U+RELVmxHHC2EzfoQsmzEL2LaEKM7MCrPQ/+dk6E8ejBrEwQgvjXUlBHwL1EF2LfkqXo
+         wbycaP/xkSOASRzjaIreLTblzn9I/uCE2UJUBwkhF2y8xwVjv5HBNA+Llcn7Xgbfb7kp
+         tBvpg2fSSsQ7wW0wpsAl6m1n+IkwH8Nvc8158uZrH8SvwjAh9v2CZKAym4Sru/Qx6/X3
+         MpoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CprrL+/LROkbBW4cTs+E5TrRYY4E3igZX9G7gYG5Gl4=;
+        b=Lilh4m5apoTxrKmZsIb8owqwdp9oA4ugC9+q9hvifzwc9pyOBp6XKFSzmIRgf25gAo
+         3rcnukFNNNSVtdyMTADBfi0C6oeAv4vZZdEVBqF6ynCZRSD0Vjq9LKKilOvuAok3ukYW
+         vEyQC1npD1GFqDtMM7ETJ46XA5wIgMFwCL8V/xdvcP265ZQlaaa4ntxHRBUOn5g1dEDH
+         QrD+lYzkfycRxeY3dmwTdXKHZzoGZvsKKbaq0LWmNiJ13XYbnXgw/VzFEUYCe+nBqzie
+         1xzALnTkpjiGdWNx3yHIUYxMXLOonLUjI2GAeP+2R51Y1QNIbw+sPLEw6tzU6li15VOM
+         kKbw==
+X-Gm-Message-State: AOAM530cOGc3eiYpbmSU1B9uFUvPu/u0RXeYG52VoWCejQZAMM8TMUg8
+        j6V7bJU/dnrqGu9eyBFg8C0GEw==
+X-Google-Smtp-Source: ABdhPJyRSWbxWbxc+Nc6O5jfLmJ6bOFuPEVvNRYkmmnnGx3lYrXWkZ5m8xRlhIrwn5wJXri3MKUwzA==
+X-Received: by 2002:a4a:a385:: with SMTP id s5mr18994033ool.8.1599578540364;
+        Tue, 08 Sep 2020 08:22:20 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id y23sm3477818ooj.34.2020.09.08.08.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 08:22:19 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 10:22:17 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, amitk@kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org,
+        tdas@codeaurora.org
+Subject: Re: [PATCH 6/7] cpufreq: qcom-hw: Add cpufreq support for SM8250 SoC
+Message-ID: <20200908152217.GO3715@yoga>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-7-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a79815352e2f238b7f108e6e7202f6655f26159d.camel@gmx.de>
+In-Reply-To: <20200908075716.30357-7-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 17:59:31 [+0200], Mike Galbraith wrote:
-> > I have no idea how to debug this based on this report. Can you narrow
-> > it down to something?
+On Tue 08 Sep 02:57 CDT 2020, Manivannan Sadhasivam wrote:
+
+> SM8250 SoC uses EPSS block for carrying out the cpufreq duties. Hence, add
+> support for it in the driver with relevant of_match data.
 > 
-> I instrumented what I presume is still this problem once upon a time,
-> structures containing locks are allocated/initialized/freed again and
-> again with no cleanup until we increment into the wall.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Any idea what it is?
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> > Is Lappy new, got a new something or has a new config switch? I'm just
-> > curious if this something or something that was always there but
-> > remained undetected.
+> ---
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Nah, this is nothing new.  Turn lockdep on in RT, it's just a matter of
-> time before it turns itself off.  It's usually just not _that_ quick.
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index de816bcafd33..c3c397cc3dc6 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -285,8 +285,17 @@ static const struct qcom_cpufreq_soc_data qcom_soc_data = {
+>  	.lut_row_size = 32,
+>  };
+>  
+> +static const struct qcom_cpufreq_soc_data sm8250_soc_data = {
 
-Okay. So I have few boxes which run over the weekend without this splat.
+Could it be that this is the "epss_soc_data" (i.e. not sm8250 specific)?
+(We should still use/include the platform specific compatible though).
 
-> 	-Mike
+Regards,
+Bjorn
 
-Sebastian
+> +	.reg_enable = 0x0,
+> +	.reg_freq_lut = 0x100,
+> +	.reg_volt_lut = 0x200,
+> +	.reg_perf_state = 0x320,
+> +	.lut_row_size = 4,
+> +};
+> +
+>  static const struct of_device_id qcom_cpufreq_hw_match[] = {
+>  	{ .compatible = "qcom,cpufreq-hw", .data = &qcom_soc_data },
+> +	{ .compatible = "qcom,sm8250-epss", .data = &sm8250_soc_data },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
+> -- 
+> 2.17.1
+> 
