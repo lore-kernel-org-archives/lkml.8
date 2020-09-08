@@ -2,317 +2,125 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09466C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C240C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9437206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26799206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599582800;
-	bh=+hCEqp9kr0I/IZQxU1k6k2Nxj2Df6X7EXeIMiyfxXkE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S8/YpWGta4alI8EDG9W7izs54SAoQgDGLzE/xM2iuKDu7UrlFgo1sB2DxYBYALaBY
-	 cz3kFD1NkGPEmPmDxPuJjD9a0kK72DN4YPET8lr3R2X+UumoQORdDY5NSC02wqJuPO
-	 XxmhdiUcbPU911cZcxbQpuqcqVBtctkkjtMZc5Rs=
+	s=default; t=1599582839;
+	bh=Kpj2oGs3oTNKIeLuZX3DLWaFOXvp+PS3iXMHVDL5oCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z54KtmrP2EFbugBc3d2zKA0vdJNpEMiWSQ495yrc5qJ4jt0SmJWMg1c/iCOosv+WJ
+	 udZbLdymqSshsPAWbsSrOIEbjIh5fBOOMHmSjgWUkgT6sbRlPMjjgOEV+O4D9zRGst
+	 iN6a7Ba3kO4D5zCPs38LBDmVNS9DN/UVpHiI2XHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbgIHQcy (ORCPT
+        id S1732051AbgIHQdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33622 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731984AbgIHQa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:30:28 -0400
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732031AbgIHQcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:32:16 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3274622208
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA597206DB;
+        Tue,  8 Sep 2020 16:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599567492;
-        bh=+hCEqp9kr0I/IZQxU1k6k2Nxj2Df6X7EXeIMiyfxXkE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DE98r7VEFLbBopa/iAhBw1DtwDUIPo2WcUgWeRl8uXddPxlGWeRwPkp1/Ykll9y7H
-         tzzIxC0V9G864m+8crP3hzEhgXr6ddSbH8CNmw1bkHlDvcSH/Uw7KsrW7d6XafBNDt
-         Rits7oTQIjhxYw4lWZ93TAipLfgi7tOKgAmFgYRU=
-Received: by mail-vk1-f175.google.com with SMTP id x142so4016523vke.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:18:12 -0700 (PDT)
-X-Gm-Message-State: AOAM531YtrWUYHVCcXKSPFfE1e7Zwh9kCAt6iN2DZChSys0BDqVUohvs
-        mPYjkD3Bm4rKbol2KkU2qanoYLyUMf+EffNAYJ4Qyw==
-X-Google-Smtp-Source: ABdhPJyHjNHL1jcG4OUH6BSG5pJ8F28FOehOY+K1h0NnLxGWXGnT1i5gQfct+3m6/6iPvvaJb/1m1WK3KpKAxQAEzB0=
-X-Received: by 2002:a1f:26cd:: with SMTP id m196mr500479vkm.7.1599567491201;
- Tue, 08 Sep 2020 05:18:11 -0700 (PDT)
+        s=default; t=1599582733;
+        bh=Kpj2oGs3oTNKIeLuZX3DLWaFOXvp+PS3iXMHVDL5oCI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fhqz/EASt4/Hy/v6q6/hMpIECz0p9PaKHTrr/60CIbY9ruzS7EnRx/epzmpzJIP63
+         CSu8n/bGCI1sECr4fTbibUE+U3OW8bbFqztVeSgTpBc66xoxhofDU2u77oW7SSkBuz
+         iYWc1bh1nE044je8e10+i+ucnQiHnoCyaUaLMy4E=
+Date:   Tue, 8 Sep 2020 18:32:25 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 04/12] x86/platform/uv: Update UV MMRs for UV5
+Message-ID: <20200908163225.GD10640@kroah.com>
+References: <20200907185430.363197758@hpe.com>
+ <20200907185430.782245884@hpe.com>
+ <20200908152314.GD4114051@kroah.com>
+ <3e93b858-f74d-8e93-e444-fd85fc5856e4@hpe.com>
+ <20200908154430.GA4171853@kroah.com>
+ <35d4ce27-7a93-c3d5-3c0d-99fff06229c2@hpe.com>
 MIME-Version: 1.0
-References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org> <20200908075716.30357-5-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20200908075716.30357-5-manivannan.sadhasivam@linaro.org>
-From:   Amit Kucheria <amitk@kernel.org>
-Date:   Tue, 8 Sep 2020 17:48:00 +0530
-X-Gmail-Original-Message-ID: <CAHLCerP7frrGyUBKbcurKhpkuGtJZjB+D82smnJ5U5CeL2bQgA@mail.gmail.com>
-Message-ID: <CAHLCerP7frrGyUBKbcurKhpkuGtJZjB+D82smnJ5U5CeL2bQgA@mail.gmail.com>
-Subject: Re: [PATCH 4/7] cpufreq: qcom-hw: Make use of of_match data for
- offsets and row size
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Taniya Das <tdas@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35d4ce27-7a93-c3d5-3c0d-99fff06229c2@hpe.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 1:27 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> For preparing the driver to handle further SoC revisions, let's use the
-> of_match data for getting the device specific offsets and row size instead
-> of defining them globally.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Tue, Sep 08, 2020 at 09:20:14AM -0700, Mike Travis wrote:
+> 
+> 
+> On 9/8/2020 8:44 AM, Greg KH wrote:
+> > On Tue, Sep 08, 2020 at 08:35:37AM -0700, Mike Travis wrote:
+> > > 
+> > > 
+> > > On 9/8/2020 8:23 AM, Greg KH wrote:
+> > > > On Mon, Sep 07, 2020 at 01:54:34PM -0500, Mike Travis wrote:
+> > > > > --- linux.orig/drivers/misc/sgi-gru/grufile.c
+> > > > > +++ linux/drivers/misc/sgi-gru/grufile.c
+> > > > > @@ -7,7 +7,8 @@
+> > > > >     * This file supports the user system call for file open, close, mmap, etc.
+> > > > >     * This also incudes the driver initialization code.
+> > > > >     *
+> > > > > - *  Copyright (c) 2008-2014 Silicon Graphics, Inc.  All Rights Reserved.
+> > > > > + * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
+> > > > > + * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+> > > > 
+> > > > Please drop all copyright changes from this series, as these do not look
+> > > > correct at all, sorry.
+> > > > 
+> > > > You can send an add-on patch for all of that if it's really necessary,
+> > > > and you get legal approval for it :)
+> > > 
+> > > I can move them all to a single patch.  The HPE one is straight from their
+> > > guidance on Copyrights.  The older SGI one is also from SGI's guidance
+> > > though I'm not sure if I can find it anymore.  I also wasn't sure if it
+> > > should be retained since the HPE one didn't take effect until SGI was
+> > > legally part of HPE (circa 2018).  2017/18 was also the last time we did
+> > > this big a change (for the UV4A).
+> > 
+> > If you haven't touched a file in a year, you don't get to claim
+> > copyright on that year.  If you wish to disagree on this, great, I'll
+> > gladly take a patch that modifies the lines that has a signed-off-by
+> > from one of your lawyers for it :)
+> 
+> I skipped over that part.  But I'm moving all changes to a single patch and
+> I will look more closely at HPE's documents.  Heaven knows they have plenty
+> of lawyers, so many it's hard to ask a simple question... like when does a
+> copyright take effect.  When you change it internally, or when it gets
+> published?  Sounds like you lean towards the second?
 
+There are established rules for this type of thing, I'm not going to
+tell you what HP's rules are, but this patch really looks wrong from
+what I understand about what the rules are...
 
+thanks,
 
-> ---
->  drivers/cpufreq/qcom-cpufreq-hw.c | 96 +++++++++++++++++++++----------
->  1 file changed, 66 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index ccea34f61152..41853db7c9b8 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -19,15 +19,21 @@
->  #define LUT_L_VAL                      GENMASK(7, 0)
->  #define LUT_CORE_COUNT                 GENMASK(18, 16)
->  #define LUT_VOLT                       GENMASK(11, 0)
-> -#define LUT_ROW_SIZE                   32
->  #define CLK_HW_DIV                     2
->  #define LUT_TURBO_IND                  1
->
-> -/* Register offsets */
-> -#define REG_ENABLE                     0x0
-> -#define REG_FREQ_LUT                   0x110
-> -#define REG_VOLT_LUT                   0x114
-> -#define REG_PERF_STATE                 0x920
-> +struct qcom_cpufreq_soc_data {
-> +       u32 reg_enable;
-> +       u32 reg_freq_lut;
-> +       u32 reg_volt_lut;
-> +       u32 reg_perf_state;
-> +       u8 lut_row_size;
-> +};
-> +
-> +struct qcom_cpufreq_data {
-> +       void __iomem *base;
-> +       const struct qcom_cpufreq_soc_data *soc_data;
-> +};
->
->  static unsigned long cpu_hw_rate, xo_rate;
->  static bool icc_scaling_enabled;
-> @@ -76,10 +82,11 @@ static int qcom_cpufreq_update_opp(struct device *cpu_dev,
->  static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->                                         unsigned int index)
->  {
-> -       void __iomem *perf_state_reg = policy->driver_data;
-> +       struct qcom_cpufreq_data *data = policy->driver_data;
-> +       const struct qcom_cpufreq_soc_data *soc_data = data->soc_data;
->         unsigned long freq = policy->freq_table[index].frequency;
->
-> -       writel_relaxed(index, perf_state_reg);
-> +       writel_relaxed(index, data->base + soc_data->reg_perf_state);
->
->         if (icc_scaling_enabled)
->                 qcom_cpufreq_set_bw(policy, freq);
-> @@ -91,7 +98,8 @@ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->
->  static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
->  {
-> -       void __iomem *perf_state_reg;
-> +       struct qcom_cpufreq_data *data;
-> +       const struct qcom_cpufreq_soc_data *soc_data;
->         struct cpufreq_policy *policy;
->         unsigned int index;
->
-> @@ -99,9 +107,10 @@ static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
->         if (!policy)
->                 return 0;
->
-> -       perf_state_reg = policy->driver_data;
-> +       data = policy->driver_data;
-> +       soc_data = data->soc_data;
->
-> -       index = readl_relaxed(perf_state_reg);
-> +       index = readl_relaxed(data->base + soc_data->reg_perf_state);
->         index = min(index, LUT_MAX_ENTRIES - 1);
->
->         return policy->freq_table[index].frequency;
-> @@ -110,12 +119,13 @@ static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
->  static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
->                                                 unsigned int target_freq)
->  {
-> -       void __iomem *perf_state_reg = policy->driver_data;
-> +       struct qcom_cpufreq_data *data = policy->driver_data;
-> +       const struct qcom_cpufreq_soc_data *soc_data = data->soc_data;
->         unsigned int index;
->         unsigned long freq;
->
->         index = policy->cached_resolved_idx;
-> -       writel_relaxed(index, perf_state_reg);
-> +       writel_relaxed(index, data->base + soc_data->reg_perf_state);
->
->         freq = policy->freq_table[index].frequency;
->         arch_set_freq_scale(policy->related_cpus, freq,
-> @@ -125,8 +135,7 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
->  }
->
->  static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
-> -                                   struct cpufreq_policy *policy,
-> -                                   void __iomem *base)
-> +                                   struct cpufreq_policy *policy)
->  {
->         u32 data, src, lval, i, core_count, prev_freq = 0, freq;
->         u32 volt;
-> @@ -134,6 +143,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->         struct dev_pm_opp *opp;
->         unsigned long rate;
->         int ret;
-> +       struct qcom_cpufreq_data *drv_data = policy->driver_data;
-> +       const struct qcom_cpufreq_soc_data *soc_data = drv_data->soc_data;
->
->         table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
->         if (!table)
-> @@ -160,14 +171,14 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->         }
->
->         for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> -               data = readl_relaxed(base + REG_FREQ_LUT +
-> -                                     i * LUT_ROW_SIZE);
-> +               data = readl_relaxed(drv_data->base + soc_data->reg_freq_lut +
-> +                                     i * soc_data->lut_row_size);
->                 src = FIELD_GET(LUT_SRC, data);
->                 lval = FIELD_GET(LUT_L_VAL, data);
->                 core_count = FIELD_GET(LUT_CORE_COUNT, data);
->
-> -               data = readl_relaxed(base + REG_VOLT_LUT +
-> -                                     i * LUT_ROW_SIZE);
-> +               data = readl_relaxed(drv_data->base + soc_data->reg_volt_lut +
-> +                                     i * soc_data->lut_row_size);
->                 volt = FIELD_GET(LUT_VOLT, data) * 1000;
->
->                 if (src)
-> @@ -237,6 +248,20 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
->         }
->  }
->
-> +static const struct qcom_cpufreq_soc_data qcom_soc_data = {
-
-rename this to sdm845_soc_data?
-
-Or even better, maybe just use the IP version number for this IP block
-so that all SoCs using that IP version can use this struct?
-
-> +       .reg_enable = 0x0,
-> +       .reg_freq_lut = 0x110,
-> +       .reg_volt_lut = 0x114,
-> +       .reg_perf_state = 0x920,
-> +       .lut_row_size = 32,
-> +};
-> +
-> +static const struct of_device_id qcom_cpufreq_hw_match[] = {
-> +       { .compatible = "qcom,cpufreq-hw", .data = &qcom_soc_data },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
-> +
->  static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  {
->         struct platform_device *pdev = cpufreq_get_driver_data();
-> @@ -246,6 +271,8 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->         struct device *cpu_dev;
->         struct resource *res;
->         void __iomem *base;
-> +       struct qcom_cpufreq_data *data;
-> +       const struct of_device_id *match;
->         int ret, index;
->
->         cpu_dev = get_cpu_device(policy->cpu);
-> @@ -275,8 +302,23 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->         if (!base)
->                 return -ENOMEM;
->
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data) {
-> +               ret = -ENOMEM;
-> +               goto error;
-> +       }
-> +
-> +       match = of_match_device(qcom_cpufreq_hw_match, &pdev->dev);
-> +       if (!match) {
-> +               ret = -ENODEV;
-> +               goto error;
-> +       }
-> +
-> +       data->soc_data = match->data;
-> +       data->base = base;
-> +
->         /* HW should be in enabled state to proceed */
-> -       if (!(readl_relaxed(base + REG_ENABLE) & 0x1)) {
-> +       if (!(readl_relaxed(base + data->soc_data->reg_enable) & 0x1)) {
->                 dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
->                 ret = -ENODEV;
->                 goto error;
-> @@ -289,9 +331,9 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->                 goto error;
->         }
->
-> -       policy->driver_data = base + REG_PERF_STATE;
-> +       policy->driver_data = data;
->
-> -       ret = qcom_cpufreq_hw_read_lut(cpu_dev, policy, base);
-> +       ret = qcom_cpufreq_hw_read_lut(cpu_dev, policy);
->         if (ret) {
->                 dev_err(dev, "Domain-%d failed to read LUT\n", index);
->                 goto error;
-> @@ -315,13 +357,13 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  static int qcom_cpufreq_hw_cpu_exit(struct cpufreq_policy *policy)
->  {
->         struct device *cpu_dev = get_cpu_device(policy->cpu);
-> -       void __iomem *base = policy->driver_data - REG_PERF_STATE;
-> +       struct qcom_cpufreq_data *data = policy->driver_data;
->         struct platform_device *pdev = cpufreq_get_driver_data();
->
->         dev_pm_opp_remove_all_dynamic(cpu_dev);
->         dev_pm_opp_of_cpumask_remove_table(policy->related_cpus);
->         kfree(policy->freq_table);
-> -       devm_iounmap(&pdev->dev, base);
-> +       devm_iounmap(&pdev->dev, data->base);
->
->         return 0;
->  }
-> @@ -391,12 +433,6 @@ static int qcom_cpufreq_hw_driver_remove(struct platform_device *pdev)
->         return cpufreq_unregister_driver(&cpufreq_qcom_hw_driver);
->  }
->
-> -static const struct of_device_id qcom_cpufreq_hw_match[] = {
-> -       { .compatible = "qcom,cpufreq-hw" },
-> -       {}
-> -};
-> -MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
-> -
->  static struct platform_driver qcom_cpufreq_hw_driver = {
->         .probe = qcom_cpufreq_hw_driver_probe,
->         .remove = qcom_cpufreq_hw_driver_remove,
-> --
-> 2.17.1
->
+greg k-h
