@@ -2,159 +2,84 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6780C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F79C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C712087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759932087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgIHLY0 (ORCPT
+        id S1729189AbgIHLZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:24:26 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:57358 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729851AbgIHLRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:17:19 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx+MQQaFdfRkgTAA--.2597S2;
-        Tue, 08 Sep 2020 19:16:33 +0800 (CST)
-From:   Zejiang Tang <tangzejiang@loongson.cn>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Zejiang Tang <tangzejiang@loongson.cn>
-Subject: [PATCH v2] Improve perf option help information in perf.txt
-Date:   Tue,  8 Sep 2020 19:16:32 +0800
-Message-Id: <1599563792-20711-1-git-send-email-tangzejiang@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx+MQQaFdfRkgTAA--.2597S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF4xAw17Kr1UGryfWF47twb_yoW5Jw43pa
-        9xCry3tr1DJ343Awn5J3WIvFy3XrZ3ua1fG34Skr48Xr1DCrsFgryYkFyFqFy7Wry8AayU
-        Kr42qFy5Grs2yw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-        n2kIc2xKxwCY02Avz4vE14v_Gw4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73UjIFyTuYvjfUn1v3UUUUU
-X-CM-SenderInfo: pwdqw6phmlt03j6o00pqjv00gofq/
+        Tue, 8 Sep 2020 07:25:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:52246 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729351AbgIHLRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 07:17:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9F3031B;
+        Tue,  8 Sep 2020 04:17:24 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFC033F66E;
+        Tue,  8 Sep 2020 04:17:23 -0700 (PDT)
+Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
+To:     Qais Yousef <qais.yousef@arm.com>, peterz@infradead.org
+Cc:     vincent.donnefort@arm.com, mingo@redhat.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
+        valentin.schneider@arm.com, Phil Auld <pauld@redhat.com>
+References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
+ <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
+ <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
+ <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
+ <58f5d2e8-493b-7ce1-6abd-57705e5ab437@arm.com>
+ <20200907104845.6rust2lf2o3d5gmq@e107158-lin.cambridge.arm.com>
+ <20200907111320.GP2674@hirez.programming.kicks-ass.net>
+ <20200907145155.fsmeygi4fiypikzk@e107158-lin.cambridge.arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <cbad58a5-758b-ded9-ed41-1be74e8663a6@arm.com>
+Date:   Tue, 8 Sep 2020 13:17:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200907145155.fsmeygi4fiypikzk@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Perf could use many options, such as:-vv, --exec-path,
---html-path, -p, --paginate,--no-pager, --debugfs-dir,
---buildid-dir, --list-cmds, --list-opts. Add these options
-in perf.txt.
+On 07/09/2020 16:51, Qais Yousef wrote:
+> On 09/07/20 13:13, peterz@infradead.org wrote:
+>> On Mon, Sep 07, 2020 at 11:48:45AM +0100, Qais Yousef wrote:
+>>> IMHO the above is a hack. Out-of-tree modules should rely on public headers and
+>>> exported functions only. What you propose means that people who want to use
+>>> these tracepoints in meaningful way must have a prebuilt kernel handy. Which is
+>>> maybe true for us who work in the embedded world. But users who run normal
+>>> distro kernels (desktop/servers) will fail to build against
+>>
+>> But this isn't really aimed at regular users. We're aiming this at
+>> developers (IIUC) so I dont really see this as a problem.
 
-Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
----
- tools/perf/Documentation/perf.txt | 69 ++++++++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 22 deletions(-)
+This is what I thought as well. All these helpers can be coded directly
+in these tracepoint-2-traceevent (tp-2-te) converters. As long as they
+are build from within kernel/sched/ there is no issue with the export
+via kernel/sched/sched.h. Otherwise this little trick would be necessary.
+But since it is a tool for developers I guess we can assume that they
+can build it from within kernel/sched/.
 
-diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-index 3f37ded..5edb854 100644
---- a/tools/perf/Documentation/perf.txt
-+++ b/tools/perf/Documentation/perf.txt
-@@ -12,32 +12,57 @@ SYNOPSIS
- 
- OPTIONS
- -------
----debug::
--	Setup debug variable (see list below) in value
--	range (0, 10). Use like:
--	  --debug verbose   # sets verbose = 1
--	  --debug verbose=2 # sets verbose = 2
--
--	List of debug variables allowed to set:
--	  verbose          - general debug messages
--	  ordered-events   - ordered events object debug messages
--	  data-convert     - data convert command debug messages
--	  stderr           - write debug output (option -v) to stderr
--	                     in browser mode
--	  perf-event-open  - Print perf_event_open() arguments and
--			     return value
--
----buildid-dir::
--	Setup buildid cache directory. It has higher priority than
--	buildid.dir config file option.
-+-h::
-+--help::
-+        Run perf help command.
- 
- -v::
- --version::
--  Display perf version.
-+        Display perf version.
- 
---h::
----help::
--  Run perf help command.
-+-vv::
-+        Print the compiled-in status of libraries.
-+
-+--exec-path::
-+        Display or set exec path.
-+
-+--html-path::
-+        Display absolute html path.
-+
-+-p::
-+--paginate::
-+        Set up pager.
-+
-+--no-pager::
-+        Add or change the content of environment variables.
-+
-+--buildid-dir::
-+        Setup buildid cache directory. It has higher priority
-+        than buildid.dir config file option.
-+
-+--list-cmds::
-+        List the most commonly used perf commands.
-+
-+--list-opts::
-+        List available perf options.
-+
-+--debugfs-dir::
-+        Set debugfs directory or set environment variable PERF_DEBUGFS_DIR.
-+
-+--debug::
-+        Setup debug variable (see list below) in value
-+        range (0, 10). Use like:
-+          --debug verbose   # sets verbose = 1
-+          --debug verbose=2 # sets verbose = 2
-+
-+        List of debug variables allowed to set:
-+          verbose          - general debug messages
-+          ordered-events   - ordered events object debug messages
-+          data-convert     - data convert command debug messages
-+          stderr           - write debug output (option -v) to stderr
-+                             in browser mode
-+          perf-event-open  - Print perf_event_open() arguments and
-+                             return value
- 
- DESCRIPTION
- -----------
--- 
-2.1.0
+I tested:
 
+https://lkml.kernel.org/r/20200907091717.26116-1-dietmar.eggemann@arm.com
+
+with our EAS integration which provides one of these tp-2-t2 converter
+(sched_tp.c).
+
+http://linux-arm.org/git?p=linux-power.git;a=shortlog;h=refs/heads/topic/tracepoints
+
+[...]
