@@ -2,130 +2,81 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BFFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A427BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7306208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNM4TtzK"
+	by mail.kernel.org (Postfix) with ESMTP id 71674208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731345AbgIHUQJ (ORCPT
+        id S1731221AbgIHUQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:16:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60803 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730067AbgIHPKC (ORCPT
+        Tue, 8 Sep 2020 16:16:28 -0400
+Received: from mail-il1-f207.google.com ([209.85.166.207]:39850 "EHLO
+        mail-il1-f207.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729457AbgIHUQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:10:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599577783;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FZa+iT6uJluJlrs0f7SlUYi8Jd20qJSgs2ucWw1RdNE=;
-        b=KNM4TtzKm2ZvhqJZIscJeevndAlkwg7sKMf73shwY4ZYBnGHV9iphOgR+SObdC6fmkfwpW
-        5BUI7H1aC/8cfqXtl73fr0FLSJYwFny4FLL4M/iYHtKv2dUGyEfeOLF0lDBy9xdy5FRLAx
-        b9iU4nbF8NQWtaZJl/iSclGvAVVSEIE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-565-COb6RyaJPwm5J6x8ijO5ng-1; Tue, 08 Sep 2020 10:29:17 -0400
-X-MC-Unique: COb6RyaJPwm5J6x8ijO5ng-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D9021005E5C;
-        Tue,  8 Sep 2020 14:29:15 +0000 (UTC)
-Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3928560C84;
-        Tue,  8 Sep 2020 14:29:05 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 08:29:04 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>,
-        <cohuck@redhat.com>, <peterx@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <vsirnapalli@vmware.com>
-Subject: Re: [PATCH v4.14.y 0/3] vfio: Fix for CVE-2020-12888
-Message-ID: <20200908082904.045ff744@w520.home>
-In-Reply-To: <1599509828-23596-4-git-send-email-akaher@vmware.com>
-References: <1599509828-23596-1-git-send-email-akaher@vmware.com>
-        <1599509828-23596-4-git-send-email-akaher@vmware.com>
+        Tue, 8 Sep 2020 16:16:21 -0400
+Received: by mail-il1-f207.google.com with SMTP id v17so223363ilg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 13:16:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=s/bYKv6LX1PcO06y6Bm21nR/bMn54CugKCYgQJuiP/s=;
+        b=WQnuty4thzY5GAnZXegJyLVKdmEtRMzojg9/sMb8xLizeOkGEfLvIjhKX795atn6kK
+         715lY8HaXbhn05EY+hW/O9eBkq86gvIAW5H9eulH6xNizDeHzykg5C6/MOoO+uqmwQJy
+         eiqU0daHLxl2zDB/Esb9bbMBtdrrq5Zsx+VctplwwWwuX8WTIwQTAhfEIReYR+7gkqAL
+         zQgLtTXeKcsChz96yuKLdE7UHgtAPFOjAWofmuG1ezpQwKqRmqXMz0JDX3L1Wq8Rud1j
+         mpM2B89dJN3X96U1ThTFnGOqfYy0GsXABA9rvXno5nz8y+RMSDY2zRDVl/z1CPObyg7b
+         34CA==
+X-Gm-Message-State: AOAM5332VXnSGfM6/jMiMSzm+U4IP0BglQz4zo+SSzf5pIPVpGB3v3i9
+        +3IGb0Jq9Log6CRfhes4InNuWHult4FEZBrSxdu/mlBzhtnu
+X-Google-Smtp-Source: ABdhPJymQNFXVDQXU5MMAZ2HQLXS0S2RD9e+55WIo8flYkvmlkfHdxfYJ6z0Uozh6UVmQj5xp//ka1jwQrZK4fhYLaXIrZILdJ5I
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Received: by 2002:a02:240d:: with SMTP id f13mr669276jaa.33.1599596181256;
+ Tue, 08 Sep 2020 13:16:21 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 13:16:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002b02cf05aed302f3@google.com>
+Subject: WARNING: can't access registers at asm_sysvec_call_function_single
+From:   syzbot <syzbot+bc9dbf05dcc151e9b972@syzkaller.appspotmail.com>
+To:     alexandre.chartre@oracle.com, bp@alien8.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 01:47:08 +0530
-Ajay Kaher <akaher@vmware.com> wrote:
+Hello,
 
-> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
-> devices may lead to DoS scenario
->     
-> The VFIO modules allow users (guest VMs) to enable or disable access to the
-> devices' MMIO memory address spaces. If a user attempts to access (read/write)
-> the devices' MMIO address space when it is disabled, some h/w devices issue an
-> interrupt to the CPU to indicate a fatal error condition, crashing the system.
-> This flaw allows a guest user or process to crash the host system resulting in
-> a denial of service.
->     
-> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
-> before user access.
->     
-> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
-> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
-> can later use to invalidate those mappings.
->     
-> Patch 3/ block the user from accessing memory spaces which is disabled by using
-> new vma list support to zap, or invalidate, those memory mappings in order to
-> force them to be faulted back in on access.
->     
-> Upstreamed patches link:
-> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
->         
-> [PATCH v4.14.y 1/3]:
-> Backporting of upsream commit 41311242221e:
-> vfio/type1: Support faulting PFNMAP vmas
->         
-> [PATCH v4.14.y 2/3]:
-> Backporting of upsream commit 11c4cd07ba11:
-> vfio-pci: Fault mmaps to enable vma tracking
->         
-> [PATCH v4.14.y 3/3]:
-> Backporting of upsream commit abafbc551fdd:
-> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
-> 
+syzbot found the following issue on:
 
-I'd recommend also including the following or else SR-IOV VFs will be
-broken for DPDK:
+HEAD commit:    f4d51dff Linux 5.9-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1455d4f9900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a9075b36a6ae26c9
+dashboard link: https://syzkaller.appspot.com/bug?extid=bc9dbf05dcc151e9b972
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21
-Author: Alex Williamson <alex.williamson@redhat.com>
-Date:   Thu Jun 25 11:04:23 2020 -0600
+Unfortunately, I don't have any reproducer for this issue yet.
 
-    vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-    
-    SR-IOV VFs do not implement the memory enable bit of the command
-    register, therefore this bit is not set in config space after
-    pci_enable_device().  This leads to an unintended difference
-    between PF and VF in hand-off state to the user.  We can correct
-    this by setting the initial value of the memory enable bit in our
-    virtualized config space.  There's really no need however to
-    ever fault a user on a VF though as this would only indicate an
-    error in the user's management of the enable bit, versus a PF
-    where the same access could trigger hardware faults.
-    
-    Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-    Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bc9dbf05dcc151e9b972@syzkaller.appspotmail.com
 
+WARNING: can't access registers at asm_sysvec_call_function_single+0x12/0x20 arch/x86/include/asm/idtentry.h:589
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
