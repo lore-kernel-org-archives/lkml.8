@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B49C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2BF62087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E56C2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592872;
-	bh=5HQkN1u01BKijaPr9cSXsQZwFQFxObonHNW4mRoT2+w=;
+	s=default; t=1599592881;
+	bh=JIERlWPZq59t8PAI+bTxWU/oU1gNX/FDw8yrp5HCbYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJxov/E8mowMz8iDufENHz4AGT+k9o2aiKYLZZeLx5J+vPrQKJU38oois89oawgRP
-	 +AENLLmEFYbAlYPfIObYtnJCvn6qgVyjDee8qGbv2NOyEsbgt3qqc3/NOP/g96YnGi
-	 G2rotrUH/SjxGT00HFnbQH7kMtEmr6ArEq/foC6Q=
+	b=be6FaKCbECPX2z3XeXAt4dgduXCZNdOzAV7DwB36AjZOwNmfTiNIR67f2M1I5i3TU
+	 0m2kmdwJfMUthJ2nJQYD//nciZ/5RhPaDdPMhhN5RMv6skNYSLYf2CjbPGcQY6PQ0e
+	 IRHo20enJEGrwnKj7ecyhFlUFaYuza/z8tQG9gmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbgIHTVI (ORCPT
+        id S1731348AbgIHTVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51454 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731110AbgIHQBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:01:43 -0400
+        id S1731109AbgIHQBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 392BF23D68;
-        Tue,  8 Sep 2020 15:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B2592469E;
+        Tue,  8 Sep 2020 15:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579454;
-        bh=5HQkN1u01BKijaPr9cSXsQZwFQFxObonHNW4mRoT2+w=;
+        s=default; t=1599579591;
+        bh=JIERlWPZq59t8PAI+bTxWU/oU1gNX/FDw8yrp5HCbYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFwqxS3NXc87KqU6uSTUysl6JnV8fGsMfueDLJjncPHmgkZiQ0D1Mr5eoR4z0h9bS
-         Xocyxjbtost69ZTfm2DGk1YNhPQDJ7hfS65k78gV8YcfPFAHmdLZyhJvuIINAfr7l+
-         FuXKqu+FbxtsRBXVT6b8MetYLets+WJoHji+2TiI=
+        b=H7DZ/V1A0qVdskQc0GxmEKPfJifxcJny5npLkzN4e0AnMNhdu+FMgWzAS5opnOqjL
+         0Ksm0td2jZr/q6UW+JPtr9KbosWjOMatPSEqUPqalcmGIzB0RbqfIaMufRlP6ljRR+
+         KaG8t1yUoY7RhjaQ3++8lhkrQfspbxF3/e2xsrX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Veera Vegivada <vvegivad@codeaurora.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 085/186] netfilter: conntrack: do not auto-delete clash entries on reply
-Date:   Tue,  8 Sep 2020 17:23:47 +0200
-Message-Id: <20200908152245.763167029@linuxfoundation.org>
+Subject: [PATCH 5.8 112/186] thermal: qcom-spmi-temp-alarm: Dont suppress negative temp
+Date:   Tue,  8 Sep 2020 17:24:14 +0200
+Message-Id: <20200908152247.062102379@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,115 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Veera Vegivada <vvegivad@codeaurora.org>
 
-[ Upstream commit c46172147ebbeb70094db48d76ab7945d96c638b ]
+[ Upstream commit 0ffdab6f2dea9e23ec33230de24e492ff0b186d9 ]
 
-Its possible that we have more than one packet with the same ct tuple
-simultaneously, e.g. when an application emits n packets on same UDP
-socket from multiple threads.
+Currently driver is suppressing the negative temperature
+readings from the vadc. Consumers of the thermal zones need
+to read the negative temperature too. Don't suppress the
+readings.
 
-NAT rules might be applied to those packets. With the right set of rules,
-n packets will be mapped to m destinations, where at least two packets end
-up with the same destination.
-
-When this happens, the existing clash resolution may merge the skb that
-is processed after the first has been received with the identical tuple
-already in hash table.
-
-However, its possible that this identical tuple is a NAT_CLASH tuple.
-In that case the second skb will be sent, but no reply can be received
-since the reply that is processed first removes the NAT_CLASH tuple.
-
-Do not auto-delete, this gives a 1 second window for replies to be passed
-back to originator.
-
-Packets that are coming later (udp stream case) will not be affected:
-they match the original ct entry, not a NAT_CLASH one.
-
-Also prevent NAT_CLASH entries from getting offloaded.
-
-Fixes: 6a757c07e51f ("netfilter: conntrack: allow insertion of clashing entries")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: c610afaa21d3c6e ("thermal: Add QPNP PMIC temperature alarm driver")
+Signed-off-by: Veera Vegivada <vvegivad@codeaurora.org>
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/944856eb819081268fab783236a916257de120e4.1596040416.git.gurus@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto_udp.c | 26 ++++++++++----------------
- net/netfilter/nft_flow_offload.c       |  2 +-
- 2 files changed, 11 insertions(+), 17 deletions(-)
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_proto_udp.c b/net/netfilter/nf_conntrack_proto_udp.c
-index 760ca24228165..af402f458ee02 100644
---- a/net/netfilter/nf_conntrack_proto_udp.c
-+++ b/net/netfilter/nf_conntrack_proto_udp.c
-@@ -81,18 +81,6 @@ static bool udp_error(struct sk_buff *skb,
- 	return false;
- }
+diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+index bf7bae42c141c..6dc879fea9c8a 100644
+--- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
++++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2011-2015, 2017, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+  */
  
--static void nf_conntrack_udp_refresh_unreplied(struct nf_conn *ct,
--					       struct sk_buff *skb,
--					       enum ip_conntrack_info ctinfo,
--					       u32 extra_jiffies)
--{
--	if (unlikely(ctinfo == IP_CT_ESTABLISHED_REPLY &&
--		     ct->status & IPS_NAT_CLASH))
--		nf_ct_kill(ct);
--	else
--		nf_ct_refresh_acct(ct, ctinfo, skb, extra_jiffies);
--}
--
- /* Returns verdict for packet, and may modify conntracktype */
- int nf_conntrack_udp_packet(struct nf_conn *ct,
- 			    struct sk_buff *skb,
-@@ -124,12 +112,15 @@ int nf_conntrack_udp_packet(struct nf_conn *ct,
- 
- 		nf_ct_refresh_acct(ct, ctinfo, skb, extra);
- 
-+		/* never set ASSURED for IPS_NAT_CLASH, they time out soon */
-+		if (unlikely((ct->status & IPS_NAT_CLASH)))
-+			return NF_ACCEPT;
-+
- 		/* Also, more likely to be important, and not a probe */
- 		if (!test_and_set_bit(IPS_ASSURED_BIT, &ct->status))
- 			nf_conntrack_event_cache(IPCT_ASSURED, ct);
- 	} else {
--		nf_conntrack_udp_refresh_unreplied(ct, skb, ctinfo,
--						   timeouts[UDP_CT_UNREPLIED]);
-+		nf_ct_refresh_acct(ct, ctinfo, skb, timeouts[UDP_CT_UNREPLIED]);
- 	}
- 	return NF_ACCEPT;
- }
-@@ -206,12 +197,15 @@ int nf_conntrack_udplite_packet(struct nf_conn *ct,
- 	if (test_bit(IPS_SEEN_REPLY_BIT, &ct->status)) {
- 		nf_ct_refresh_acct(ct, ctinfo, skb,
- 				   timeouts[UDP_CT_REPLIED]);
-+
-+		if (unlikely((ct->status & IPS_NAT_CLASH)))
-+			return NF_ACCEPT;
-+
- 		/* Also, more likely to be important, and not a probe */
- 		if (!test_and_set_bit(IPS_ASSURED_BIT, &ct->status))
- 			nf_conntrack_event_cache(IPCT_ASSURED, ct);
- 	} else {
--		nf_conntrack_udp_refresh_unreplied(ct, skb, ctinfo,
--						   timeouts[UDP_CT_UNREPLIED]);
-+		nf_ct_refresh_acct(ct, ctinfo, skb, timeouts[UDP_CT_UNREPLIED]);
- 	}
- 	return NF_ACCEPT;
- }
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index 3b9b97aa4b32e..3a6c84fb2c90d 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -102,7 +102,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ #include <linux/bitops.h>
+@@ -191,7 +191,7 @@ static int qpnp_tm_get_temp(void *data, int *temp)
+ 		chip->temp = mili_celsius;
  	}
  
- 	if (nf_ct_ext_exist(ct, NF_CT_EXT_HELPER) ||
--	    ct->status & IPS_SEQ_ADJUST)
-+	    ct->status & (IPS_SEQ_ADJUST | IPS_NAT_CLASH))
- 		goto out;
+-	*temp = chip->temp < 0 ? 0 : chip->temp;
++	*temp = chip->temp;
  
- 	if (!nf_ct_is_confirmed(ct))
+ 	return 0;
+ }
 -- 
 2.25.1
 
