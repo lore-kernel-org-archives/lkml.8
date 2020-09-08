@@ -2,148 +2,99 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6543C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65456C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 680C42076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="szkwM5rw"
+	by mail.kernel.org (Postfix) with ESMTP id 1201E2137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592688;
+	bh=TvJ69wG3VXuC5EM2oQcpZMYtkRi/Ez1en9ZuywHkQt8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IrEvM4QT50pISFgVMXd4pKQlnTP5q/r9N9sx1PmeTR8BRmTu8575mUCllEistxVIi
+	 VqKu8EIKEqRiXJiZW5ghevEc5AJa+NlaERbQhbB/BeysvYclCiJSFWcLkWeb5Vn/Va
+	 A/NA4bozw696axYKURwhT6+476dLceZVbx1ogl0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbgIHTR6 (ORCPT
+        id S1731757AbgIHTSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:17:58 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59656 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731148AbgIHQDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:03:12 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200908113655euoutp0238ddbd9c5b17a2e943dda3bff90b8380~yy_gjZfhd3236032360euoutp02z
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:36:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200908113655euoutp0238ddbd9c5b17a2e943dda3bff90b8380~yy_gjZfhd3236032360euoutp02z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599565015;
-        bh=xBskEF8d1EaE+h1II+yeE2r2YHnzRhz5IYvNlirWK/U=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=szkwM5rwjV8Az6BO4K0lGFrRTFrg4iERQPhY1puk8WsG8VI0BVx7fAxmAAkvs6qD6
-         pkSMuoyiWjww4HY2/lOz3khPUaS6F7dYZuwHkRinddEkLh4rB1ShdBbLhQOZ2g3Sco
-         QR9wZzGgJmS/+jbdxWWtj4iJSPpK88GzFtnHx6XA=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200908113655eucas1p1750d3149c36df0fe07f7e36a321306bc~yy_gF2e020115401154eucas1p1E;
-        Tue,  8 Sep 2020 11:36:55 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 00.45.05997.7DC675F5; Tue,  8
-        Sep 2020 12:36:55 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200908113654eucas1p1540e6015986866bc75c7f51ea4815490~yy_f13_Yx2000020000eucas1p1F;
-        Tue,  8 Sep 2020 11:36:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200908113654eusmtrp18a1cf0970b5a56dbd144ab60be8a1ee9~yy_f1QlUZ2002820028eusmtrp1v;
-        Tue,  8 Sep 2020 11:36:54 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-6a-5f576cd7a1f9
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 11.C1.06314.6DC675F5; Tue,  8
-        Sep 2020 12:36:54 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200908113654eusmtip21b1d13c6e0d4bbbfbc9e05aa7cee36d4~yy_ffppHa1101211012eusmtip2x;
-        Tue,  8 Sep 2020 11:36:54 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] omapfb: fix spelling mistake "propert" -> "property"
-To:     Colin King <colin.king@canonical.com>
-Cc:     linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <ce1d7ff3-fd1e-e6d8-706b-665db8411675@samsung.com>
-Date:   Tue, 8 Sep 2020 13:36:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 8 Sep 2020 15:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731145AbgIHQCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:02:53 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 800AE23F36;
+        Tue,  8 Sep 2020 15:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579485;
+        bh=TvJ69wG3VXuC5EM2oQcpZMYtkRi/Ez1en9ZuywHkQt8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R/7XYO8MEZu5Ps3DUYC+hq1dEmuI0DTgPEM2LxmSOMKlPRlO8/iZkXsgLOy+cUt/p
+         d5MBZbZvBWFYlXI6lYZtHeEoRfBZIomdn2QAyhknGBfV2e+wBEeoydaB0lpTi5cWrg
+         dr8VZpQFBDFRaeayajhRZ0V+U/VNy+3Qa1LH2aSU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 097/186] net: bcmgenet: fix mask check in bcmgenet_validate_flow()
+Date:   Tue,  8 Sep 2020 17:23:59 +0200
+Message-Id: <20200908152246.334553792@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200805102805.15353-1-colin.king@canonical.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsWy7djP87rXc8LjDSbdYbL4vbqXzeLK1/ds
-        FltvSVuc6PvAanF51xw2i9lL+lkc2DxmNfSyedzvPs7k8XmTXABzFJdNSmpOZllqkb5dAlfG
-        3zNP2QqWc1TMOLievYHxPVsXIyeHhICJxNTZi1i6GLk4hARWMEq8Wf6JEcL5wijROOkHM4Tz
-        mVFi/pVtTDAtq/58YoVILGeUWHCnB6rlLaPEnNmfWUGq2ASsJCa2r2IEsYUFPCW6/l0EWsjB
-        ISKgKXH+XBFIPbPAfEaJPZsXgh3CK2An8WL6fjCbRUBF4vTzmcwgtqhAhMSnB4dZIWoEJU7O
-        fMICYnMC1U9p3AB2EbOAuMStJ/OhbHmJ7W/nMENcuohdYt9LqKtdJF4uWQ71tLDEq+Nb2CFs
-        GYnTk3vAASAhsI5R4m/HC2YIZzujxPLJ/6A6rCXunPsF9gEz0Afrd+lDhB0l7pxYzgISlhDg
-        k7jxVhDiBj6JSdumM0OEeSU62oQgqtUkNizbwAaztmvnSuYJjEqzkHw2C8k3s5B8Mwth7wJG
-        llWM4qmlxbnpqcVGeanlesWJucWleel6yfm5mxiBSeb0v+NfdjDu+pN0iFGAg1GJh/eDV1i8
-        EGtiWXFl7iFGCQ5mJRFep7On44R4UxIrq1KL8uOLSnNSiw8xSnOwKInzGi96GSskkJ5Ykpqd
-        mlqQWgSTZeLglGpg1Jh2/pvfnhzJ2eV90tqCX0KjOmM/RQYvEPMofNT9avlKfp6SyIT94hUd
-        GS+OW0y+zq1ybymPyKuY/+u0WP/7ms1YZ7QoYDGbQL+M+EfuyihTQ9vnpto2d25pr908rWW3
-        R7r7EbXiqytV7G6lSh1KKkifWGy19P+G+LY4xamin7njddqPrm5XYinOSDTUYi4qTgQAUOjl
-        XS4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsVy+t/xe7rXcsLjDa7v1rH4vbqXzeLK1/ds
-        FltvSVuc6PvAanF51xw2i9lL+lkc2DxmNfSyedzvPs7k8XmTXABzlJ5NUX5pSapCRn5xia1S
-        tKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G3zNP2QqWc1TMOLievYHxPVsX
-        IyeHhICJxKo/n1i7GLk4hASWMkq0dm5n6mLkAErISBxfXwZRIyzx51oXWL2QwGtGib2TmEFs
-        NgEriYntqxhBbGEBT4mufxfZQFpFBDQlzp8rAhnJLDCfUeLNy7VMEPMnMkrs/HkUrJlXwE7i
-        xfT9YENZBFQkTj+fCRYXFYiQOLxjFiNEjaDEyZlPWEBsTqD6KY0bmEBsZgF1iT/zLjFD2OIS
-        t57Mh4rLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5
-        mxiBMbXt2M/NOxgvbQw+xCjAwajEw/vBKyxeiDWxrLgy9xCjBAezkgiv09nTcUK8KYmVValF
-        +fFFpTmpxYcYTYGem8gsJZqcD4z3vJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakF
-        qUUwfUwcnFINjKoPE49cmSLze4Kv0rmHq0Inz5pZJlgfyVGsrSWYkJA78a341sMmjHtdQ3ax
-        yKdMytnF0BW9ey7T2msJ96UrH/7ddVqgY9WqzLz2i59UX2o7hq+sbcyb+Ld4b4zRioKTAdH5
-        /2ZnTjlcuvDw3Potb75v5He/vM4z4HNhZcK7CKv0Od8vSykoRyqxFGckGmoxFxUnAgCrzWhr
-        vwIAAA==
-X-CMS-MailID: 20200908113654eucas1p1540e6015986866bc75c7f51ea4815490
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200805102810eucas1p27af2db275089d0e815f59da56cf204a6
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200805102810eucas1p27af2db275089d0e815f59da56cf204a6
-References: <CGME20200805102810eucas1p27af2db275089d0e815f59da56cf204a6@eucas1p2.samsung.com>
-        <20200805102805.15353-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Denis Efremov <efremov@linux.com>
 
-On 8/5/20 12:28 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a pr_err message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+[ Upstream commit 1996cf46e4673a25ef2478eb266714f409a98221 ]
 
-Applied to drm-misc-next tree, thanks.
+VALIDATE_MASK(eth_mask->h_source) is checked twice in a row in
+bcmgenet_validate_flow(). Add VALIDATE_MASK(eth_mask->h_dest)
+instead.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Fixes: 3e370952287c ("net: bcmgenet: add support for ethtool rxnfc flows")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Acked-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/video/fbdev/omap2/omapfb/dss/venc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-> index 0b0ad20afd63..f560fa4d7786 100644
-> --- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-> +++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-> @@ -787,7 +787,7 @@ static int venc_probe_of(struct platform_device *pdev)
->  		venc.type = OMAP_DSS_VENC_TYPE_SVIDEO;
->  		break;
->  	default:
-> -		dev_err(&pdev->dev, "bad channel propert '%d'\n", channels);
-> +		dev_err(&pdev->dev, "bad channel property '%d'\n", channels);
->  		r = -EINVAL;
->  		goto err;
->  	}
-> 
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index e471b14fc6e98..f0074c873da3b 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1364,7 +1364,7 @@ static int bcmgenet_validate_flow(struct net_device *dev,
+ 	case ETHER_FLOW:
+ 		eth_mask = &cmd->fs.m_u.ether_spec;
+ 		/* don't allow mask which isn't valid */
+-		if (VALIDATE_MASK(eth_mask->h_source) ||
++		if (VALIDATE_MASK(eth_mask->h_dest) ||
+ 		    VALIDATE_MASK(eth_mask->h_source) ||
+ 		    VALIDATE_MASK(eth_mask->h_proto)) {
+ 			netdev_err(dev, "rxnfc: Unsupported mask\n");
+-- 
+2.25.1
+
+
+
