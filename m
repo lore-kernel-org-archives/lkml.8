@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3A3C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC4E2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585332078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593242;
-	bh=nqdOK5tmPXopAoNXH3rhjLp87objfUIf7GMKu45EsoE=;
+	s=default; t=1599593270;
+	bh=2S3ivuzEZGfnY77yUs2AAU8aYTRtxOGZowmybDPmTt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XkVL2EDSmFEm7IRB0pDkZfuFcm0JTzdoBkWwQffPhrPDLCL/3lNNDoNTKW4lXjoLk
-	 sCGonvhM4nz1y2hNolFD9x/AA/5SAhJU1Q0hMyvjplwxQJKVx724gXswgT6IPmUeSr
-	 f2+y1mX9b+qviN3S9dcMB9GuZjKNIk3qFVm++vX0=
+	b=TGaTHbCkvLXRJfXpkGRnCtRXtXikGmfXv1in8X6d3pwGwm7ueWy6bfPgHtZA6DWDW
+	 Ul15BcL4J7S4vXQkbJKt8gOf1aqvHdyQBmEMJDaa8YRrb3+2B/OdkFsKTDvOHANfJh
+	 FoUzmn7PldlmgwKZkDMCnKyFbZHDBcWPf1J1/NY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732029AbgIHT1S (ORCPT
+        id S1732195AbgIHT1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731053AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731064AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC3E2246B;
-        Tue,  8 Sep 2020 15:36:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F5E22B2A;
+        Tue,  8 Sep 2020 15:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579374;
-        bh=nqdOK5tmPXopAoNXH3rhjLp87objfUIf7GMKu45EsoE=;
+        s=default; t=1599579348;
+        bh=2S3ivuzEZGfnY77yUs2AAU8aYTRtxOGZowmybDPmTt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AulzTUZHe3FigxWkVmsq7E/t+8VeFyg4Zsc1t8Uzsqlr808YwpqVFszRpHIf16Eyt
-         iBqqmwNg/XQH79oc6Xo+2NYJsMCISaV0GZh1UROd43+ZSgFNWprcbQ+LDZh8Yegrp8
-         /+YyflYRmQggpUPDYJP0cz6zglkI+bSO0yeTzVhE=
+        b=Om2Tj7dATFSAPmiEOtz4FCN6rH38bRSo2ueD9vlGsWt04xtr7vxWgHT0O79g17Q6c
+         R3Uq/v7PTgpusdPMWvaVa7xF8exTr/j7z3haXa5JGwV3dR643hkdYIY63Wv6PIsB71
+         inR0//sZmTJxgQepUy5SdwJxmPYyXDKXjsVm1/Xw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Ofir Bitton <obitton@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 052/186] perf sched timehist: Fix use of CPU list with summary option
-Date:   Tue,  8 Sep 2020 17:23:14 +0200
-Message-Id: <20200908152244.195188556@linuxfoundation.org>
+Subject: [PATCH 5.8 013/186] habanalabs: set clock gating according to mask
+Date:   Tue,  8 Sep 2020 17:22:35 +0200
+Message-Id: <20200908152242.296583945@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,48 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Ofir Bitton <obitton@habana.ai>
 
-[ Upstream commit a74eaf1605d42391c2357a70e94e5a2c7780fea9 ]
+[ Upstream commit f44d23b9095abd91dad9f5f3add2a3149833ec83 ]
 
-Do not update thread stats or show idle summary unless CPU is in the
-list of interest.
+Once clock gating is set we enable clock gating according to mask,
+we should also disable clock gating according to relevant bits.
 
-Fixes: c30d630d1bcfad8d ("perf sched timehist: Add support for filtering on CPU")
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20200817170943.1486-1-dsahern@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-sched.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/gaudi/gaudi.c | 44 +++++++++++++--------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 459e4229945e4..7b9511e59b434 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2575,7 +2575,8 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 0261f60df5633..8b6cf722ddf8e 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -2564,6 +2564,7 @@ static void gaudi_set_clock_gating(struct hl_device *hdev)
+ {
+ 	struct gaudi_device *gaudi = hdev->asic_specific;
+ 	u32 qman_offset;
++	bool enable;
+ 	int i;
+ 
+ 	/* In case we are during debug session, don't enable the clock gate
+@@ -2573,46 +2574,43 @@ static void gaudi_set_clock_gating(struct hl_device *hdev)
+ 		return;
+ 
+ 	for (i = GAUDI_PCI_DMA_1, qman_offset = 0 ; i < GAUDI_HBM_DMA_1 ; i++) {
+-		if (!(hdev->clock_gating_mask &
+-					(BIT_ULL(gaudi_dma_assignment[i]))))
+-			continue;
++		enable = !!(hdev->clock_gating_mask &
++				(BIT_ULL(gaudi_dma_assignment[i])));
+ 
+ 		qman_offset = gaudi_dma_assignment[i] * DMA_QMAN_OFFSET;
+-		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset, QMAN_CGM1_PWR_GATE_EN);
++		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset,
++				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
+ 		WREG32(mmDMA0_QM_CGM_CFG + qman_offset,
+-				QMAN_UPPER_CP_CGM_PWR_GATE_EN);
++				enable ? QMAN_UPPER_CP_CGM_PWR_GATE_EN : 0);
  	}
  
- 	if (!sched->idle_hist || thread->tid == 0) {
--		timehist_update_runtime_stats(tr, t, tprev);
-+		if (!cpu_list || test_bit(sample->cpu, cpu_bitmap))
-+			timehist_update_runtime_stats(tr, t, tprev);
+ 	for (i = GAUDI_HBM_DMA_1 ; i < GAUDI_DMA_MAX ; i++) {
+-		if (!(hdev->clock_gating_mask &
+-					(BIT_ULL(gaudi_dma_assignment[i]))))
+-			continue;
++		enable = !!(hdev->clock_gating_mask &
++				(BIT_ULL(gaudi_dma_assignment[i])));
  
- 		if (sched->idle_hist) {
- 			struct idle_thread_runtime *itr = (void *)tr;
-@@ -2848,6 +2849,9 @@ static void timehist_print_summary(struct perf_sched *sched,
+ 		qman_offset = gaudi_dma_assignment[i] * DMA_QMAN_OFFSET;
+-		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset, QMAN_CGM1_PWR_GATE_EN);
++		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset,
++				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
+ 		WREG32(mmDMA0_QM_CGM_CFG + qman_offset,
+-				QMAN_COMMON_CP_CGM_PWR_GATE_EN);
++				enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 	}
  
- 	printf("\nIdle stats:\n");
- 	for (i = 0; i < idle_max_cpu; ++i) {
-+		if (cpu_list && !test_bit(i, cpu_bitmap))
-+			continue;
-+
- 		t = idle_threads[i];
- 		if (!t)
- 			continue;
+-	if (hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_0))) {
+-		WREG32(mmMME0_QM_CGM_CFG1, QMAN_CGM1_PWR_GATE_EN);
+-		WREG32(mmMME0_QM_CGM_CFG, QMAN_COMMON_CP_CGM_PWR_GATE_EN);
+-	}
++	enable = !!(hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_0)));
++	WREG32(mmMME0_QM_CGM_CFG1, enable ? QMAN_CGM1_PWR_GATE_EN : 0);
++	WREG32(mmMME0_QM_CGM_CFG, enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 
+-	if (hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_2))) {
+-		WREG32(mmMME2_QM_CGM_CFG1, QMAN_CGM1_PWR_GATE_EN);
+-		WREG32(mmMME2_QM_CGM_CFG, QMAN_COMMON_CP_CGM_PWR_GATE_EN);
+-	}
++	enable = !!(hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_2)));
++	WREG32(mmMME2_QM_CGM_CFG1, enable ? QMAN_CGM1_PWR_GATE_EN : 0);
++	WREG32(mmMME2_QM_CGM_CFG, enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 
+ 	for (i = 0, qman_offset = 0 ; i < TPC_NUMBER_OF_ENGINES ; i++) {
+-		if (!(hdev->clock_gating_mask &
+-					(BIT_ULL(GAUDI_ENGINE_ID_TPC_0 + i))))
+-			continue;
++		enable = !!(hdev->clock_gating_mask &
++				(BIT_ULL(GAUDI_ENGINE_ID_TPC_0 + i)));
+ 
+ 		WREG32(mmTPC0_QM_CGM_CFG1 + qman_offset,
+-				QMAN_CGM1_PWR_GATE_EN);
++				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
+ 		WREG32(mmTPC0_QM_CGM_CFG + qman_offset,
+-				QMAN_COMMON_CP_CGM_PWR_GATE_EN);
++				enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 
+ 		qman_offset += TPC_QMAN_OFFSET;
+ 	}
 -- 
 2.25.1
 
