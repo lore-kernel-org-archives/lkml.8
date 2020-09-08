@@ -2,111 +2,116 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE94C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956A2218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:59:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SRN3KVOm"
+	by mail.kernel.org (Postfix) with ESMTP id A74F12192A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgIHG67 (ORCPT
+        id S1728501AbgIHHAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:58:59 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:44084 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728922AbgIHG6u (ORCPT
+        Tue, 8 Sep 2020 03:00:53 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38496 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728995AbgIHHAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:58:50 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886t7rI030774;
-        Mon, 7 Sep 2020 23:58:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=pfpt0220; bh=R1oTpZmA2x3Yv8mOLp6sTtbJd7UKNZAzMbXgw9yuxdM=;
- b=SRN3KVOmoi9x0Za0/okEf6n1iuJ5VqqDsQfffgOKQxh8k+U7pfh7yhldMGE3o7oanGea
- PKUqwlg6MaEyuZuuB3yAGDTPzIgESSsJe2LvDjKySmseolNC62sMj7/Zen61hoiz96EJ
- OoiUBYtQiJcuIyok2Q5xa6DmE3/o6hfVulEsgaUFj7W3M2WJ6Lf+rrDCxDJeUsiypU0N
- n8ANx7UsQ2h+4CCnWLu1uE2sl3v8JR33v+9ape2uNnEv9ULvmVs0upgHtxlJXai5YTe7
- pmdMUjtljCmAS0UGBce4IprbvPhIHbsDbPRjr8Zwnyd7nr3VrmFH+IfbPia7bScFR0Oo lQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 33c81pth25-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 23:58:46 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
- 2020 23:58:46 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
- 2020 23:58:45 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 7 Sep 2020 23:58:45 -0700
-Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
-        by maili.marvell.com (Postfix) with ESMTP id CF1BA3F7043;
-        Mon,  7 Sep 2020 23:58:44 -0700 (PDT)
-Received: from localhost (aeasi@localhost)
-        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0886whxf004299;
-        Mon, 7 Sep 2020 23:58:43 -0700
-X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
-Date:   Mon, 7 Sep 2020 23:58:43 -0700
-From:   Arun Easi <aeasi@marvell.com>
-X-X-Sender: aeasi@irv1user01.caveonetworks.com
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        <linux-scsi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        <linux-spdx@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <GR-QLogic-Storage-Upstream@marvell.com>
-Subject: Re: [EXT] Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com
- group alias
-In-Reply-To: <yq1h7smkcqc.fsf@ca-mkp.ca.oracle.com>
-Message-ID: <alpine.LRH.2.21.9999.2009072352300.28578@irv1user01.caveonetworks.com>
-References: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
- <20200828091758.GF54274@SPB-NB-133.local>
- <alpine.DEB.2.21.2008281524360.11562@felia>
- <yq1h7smkcqc.fsf@ca-mkp.ca.oracle.com>
-User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
+        Tue, 8 Sep 2020 03:00:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y6so15523657oie.5;
+        Mon, 07 Sep 2020 23:59:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=80BY8rNg7RfD6oxznXYOKPcFZuo8wajfOpZ0OBeC/wY=;
+        b=RqGXWXZ9/kAxQAFSyuC5kqinD3ki4bRUdQCvuUBMdUD+NSJ4wf//toLW3N6/2xpWSI
+         4xYPmSVXo1d4QZZk7IbFC372rxSH8PBVawRiRmYmwmipDSgE19hyBXsbXcUclHUI7zhl
+         baOaiGDUTAQSKJepnGQgdAa71SHWFs5ktn6Owkl/dVgnAwDE0Yz16m3t3Otw8iiLvA7r
+         CxoqGaf4XmBlVdiZIWvC/J3/bykpfrW+9BIwzaOWT9jAjEWmqwcneAleIhN/4ca92NUu
+         mF/SikMkKKHBiGthrYmeN29uidszA6oEUywvueO8kr6U+rF9Nfnl7SC9t9AToy4lr9RO
+         qjcw==
+X-Gm-Message-State: AOAM531m5uxK5E5rDhrG78duUtGRrc4iSEER4Gv4Q5UXuKJPX0Br0eRo
+        eu2XDYFr4nVHkqJ/t1i+cPoDfVotTwO2ijrL7sI=
+X-Google-Smtp-Source: ABdhPJw+Sdn/Kf/NbESMrEGT3ykKzS7L5e1uWHMt5PE98XyXUrM0snkLRMMoZ/Q/NW5lb7vt9j4vz11Ltnr3Qr8PC/E=
+X-Received: by 2002:aca:b742:: with SMTP id h63mr1711017oif.148.1599548399253;
+ Mon, 07 Sep 2020 23:59:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_02:2020-09-08,2020-09-08 signatures=0
+References: <20200908042708.2511528-1-masahiroy@kernel.org>
+In-Reply-To: <20200908042708.2511528-1-masahiroy@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 8 Sep 2020 08:59:48 +0200
+Message-ID: <CAMuHMdVobzKWKnN0ScqSY+Jv3N1ri8=mWEd-SZfH5+je+CVVcQ@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: preprocess module linker script
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020, 8:39am, Martin K. Petersen wrote:
+On Tue, Sep 8, 2020 at 6:29 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> There was a request to preprocess the module linker script like we
+> do for the vmlinux one. (https://lkml.org/lkml/2020/8/21/512)
+>
+> The difference between vmlinux.lds and module.lds is that the latter
+> is needed for external module builds, thus must be cleaned up by
+> 'make mrproper' instead of 'make clean'. Also, it must be created
+> by 'make modules_prepare'.
+>
+> You cannot put it in arch/$(SRCARCH)/kernel/, which is cleaned up by
+> 'make clean'. I moved arch/$(SRCARCH)/kernel/module.lds to
+> arch/$(SRCARCH)/include/asm/module.lds.h, which is included from
+> scripts/module.lds.S.
+>
+> scripts/module.lds is fine because 'make clean' keeps all the
+> build artifacts under scripts/.
+>
+> You can add arch-specific sections in <asm/module.lds.h>.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Tested-by: Jessica Yu <jeyu@kernel.org>
+> Acked-by: Will Deacon <will@kernel.org>
 
-> 
-> Lukas,
-> 
-> > So, if these drivers are not orphans, you can answer Thomas Gleixner's
-> > original email from 2019. If you can quickly ack that patch set, I am
-> > happy to do the donkey work to get this apply nicely on the current
-> > master (please CC me on that response).
-> 
-> This is the first I hear of this since the patches weren't CC:ed to
-> linux-scsi. And not all of these changes pertain to storage drivers but
-> to networking so I am also not sure that mails sent to the above Storage
-> alias would have ended up in the right place.
-> 
-> But we'll get this fixed up. Reaching out to our contacts at Marvell.
-> 
+>  arch/m68k/Makefile                                     |  1 -
+>  .../{kernel/module.lds => include/asm/module.lds.h}    |  0
 
-Just to keep this thread updated, we are checking with the legal before 
-ack-ing the change on spdx. Nilesh has already updated Thomas G. about 
-this on the orignal spdx thread.
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Regards,
--Arun
-PS: Thanks Roman for the CC. These days our spam filters are a little
-    unfriendly towards the linux-* e-mails.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
