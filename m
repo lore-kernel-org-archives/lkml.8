@@ -2,205 +2,470 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F2BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BD2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7292B21481
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="byDU+17H"
+	by mail.kernel.org (Postfix) with ESMTP id AE25B21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgIHCT1 (ORCPT
+        id S1728444AbgIHCTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:19:27 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9674 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbgIHCTZ (ORCPT
+        Mon, 7 Sep 2020 22:19:38 -0400
+Received: from lucky1.263xmail.com ([211.157.147.132]:59356 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728158AbgIHCTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 22:19:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f56e9a60000>; Mon, 07 Sep 2020 19:17:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 07 Sep 2020 19:19:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 07 Sep 2020 19:19:24 -0700
-Received: from [10.19.100.126] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
- 2020 02:19:17 +0000
-Subject: Re: [PATCH v2 11/12] usb: host: xhci-tegra: unlink power domain
- devices
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <gregkh@linuxfoundation.org>, <robh@kernel.org>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <nkristam@nvidia.com>
-References: <20200831044043.1561074-1-jckuo@nvidia.com>
- <20200831044043.1561074-12-jckuo@nvidia.com> <20200831124214.GG1689119@ulmo>
-X-Nvconfidentiality: public
-From:   JC Kuo <jckuo@nvidia.com>
-Message-ID: <a05503a2-f904-d3ca-fb79-31e97f8e6630@nvidia.com>
-Date:   Tue, 8 Sep 2020 10:19:16 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200831124214.GG1689119@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599531431; bh=u8KgNCAXAoUbdHuK5OzrRoXywcCujwYAMhAAkLqoZ6I=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=byDU+17H2hl6TC36CMM5n987u45GdJqX+rM27XA5pgzVxZP4tm1lgBXhNCtdE0Ax/
-         TNDB6X/TlAI27sS64i6R1P6e/awMZKvYf/9KkswbJt1MQUugOJeeNhT3Z98pnFHSnA
-         PFmCtk0ZMVd+ewPIUq2JhQvvDVFdrS9xdMR9lLXnrqeC3lX0KoIZkvYpXnV3vfdou1
-         Vjvtmy5F78oWHv57pE++EWeo8h5F31zIiPpOyaH0paT/4xmdGcHku/DxV14379ulGC
-         onDC0d7jeJU1ogL0LzvhWok9pmEcx17mtEXrNGyyxoq8R5fDkE+VnHbbVrHkR7e6Oq
-         Gj4H09dSe6ziA==
+        Mon, 7 Sep 2020 22:19:37 -0400
+Received: from localhost (unknown [192.168.167.223])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 40586EF2E7;
+        Tue,  8 Sep 2020 10:19:27 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P15471T140655955252992S1599531565014377_;
+        Tue, 08 Sep 2020 10:19:26 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <3cd5f7e96d627ee7b6aeb9cba0db83cc>
+X-RL-SENDER: jay.xu@rock-chips.com
+X-SENDER: xjq@rock-chips.com
+X-LOGIN-NAME: jay.xu@rock-chips.com
+X-FST-TO: linus.walleij@linaro.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     linus.walleij@linaro.org, heiko@sntech.de
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH] pinctrl: rockchip: populate platform device for rockchip gpio
+Date:   Tue,  8 Sep 2020 10:19:13 +0800
+Message-Id: <20200908021913.21556-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907033808.10211-1-jay.xu@rock-chips.com>
+References: <20200907033808.10211-1-jay.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/20 8:42 PM, Thierry Reding wrote:
-> On Mon, Aug 31, 2020 at 12:40:42PM +0800, JC Kuo wrote:
->> This commit unlinks xhci-tegra platform device with ss/host power
->> domain devices. Reasons for this change is - at elpg entry, phy
->> sleepwalk and wake configuration need to be done before powering
->> down ss/host partitions, and phy need be powered off after powering
->> down ss/host partitions. Sequence looks like roughly below:
->>
->>   tegra_xusb_enter_elpg() -> xhci_suspend()
->>                           -> enable phy sleepwalk and wake if needed
->>                           -> power down ss/host partitions
->>                           -> power down phy
->>
->> If ss/host power domains are linked to xhci-tegra platform device, we
->> are not able to perform the sequence like above.
->>
->> This commit introduces:
->>   1. tegra_xusb_unpowergate_partitions() to power up ss and host
->>      partitions together. If ss/host power domain devices are
->>      available, it invokes pm_runtime_get_sync() to request power
->>      driver to power up partitions; If power domain devices are not
->>      available, tegra_powergate_sequence_power_up() will be used to
->>      power up partitions.
->>
->>   2. tegra_xusb_powergate_partitions() to power down ss and host
->>      partitions together. If ss/host power domain devices are
->>      available, it invokes pm_runtime_put_sync() to request power
->>      driver to power down partitions; If power domain devices are not
->>      available, tegra_powergate_power_off() will be used to power down
->>      partitions.
->>
->> Signed-off-by: JC Kuo <jckuo@nvidia.com>
->> ---
->>  drivers/usb/host/xhci-tegra.c | 202 +++++++++++++++++++---------------
->>  1 file changed, 111 insertions(+), 91 deletions(-)
->>
->> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
->> index 934be1686352..ce6526c2caf6 100644
->> --- a/drivers/usb/host/xhci-tegra.c
->> +++ b/drivers/usb/host/xhci-tegra.c
->> @@ -249,8 +249,6 @@ struct tegra_xusb {
->>  
->>  	struct device *genpd_dev_host;
->>  	struct device *genpd_dev_ss;
->> -	struct device_link *genpd_dl_host;
->> -	struct device_link *genpd_dl_ss;
->>  
->>  	struct phy **phys;
->>  	unsigned int num_phys;
->> @@ -814,36 +812,12 @@ static void tegra_xusb_phy_disable(struct tegra_xusb *tegra)
->>  
->>  static int tegra_xusb_runtime_suspend(struct device *dev)
->>  {
->> -	struct tegra_xusb *tegra = dev_get_drvdata(dev);
->> -
->> -	regulator_bulk_disable(tegra->soc->num_supplies, tegra->supplies);
->> -	tegra_xusb_clk_disable(tegra);
->> -
->>  	return 0;
->>  }
->>  
->>  static int tegra_xusb_runtime_resume(struct device *dev)
->>  {
->> -	struct tegra_xusb *tegra = dev_get_drvdata(dev);
->> -	int err;
->> -
->> -	err = tegra_xusb_clk_enable(tegra);
->> -	if (err) {
->> -		dev_err(dev, "failed to enable clocks: %d\n", err);
->> -		return err;
->> -	}
->> -
->> -	err = regulator_bulk_enable(tegra->soc->num_supplies, tegra->supplies);
->> -	if (err) {
->> -		dev_err(dev, "failed to enable regulators: %d\n", err);
->> -		goto disable_clk;
->> -	}
->> -
->>  	return 0;
->> -
->> -disable_clk:
->> -	tegra_xusb_clk_disable(tegra);
->> -	return err;
->>  }
->>  
->>  #ifdef CONFIG_PM_SLEEP
->> @@ -1019,10 +993,6 @@ static int tegra_xusb_load_firmware(struct tegra_xusb *tegra)
->>  static void tegra_xusb_powerdomain_remove(struct device *dev,
->>  					  struct tegra_xusb *tegra)
->>  {
->> -	if (tegra->genpd_dl_ss)
->> -		device_link_del(tegra->genpd_dl_ss);
->> -	if (tegra->genpd_dl_host)
->> -		device_link_del(tegra->genpd_dl_host);
->>  	if (!IS_ERR_OR_NULL(tegra->genpd_dev_ss))
->>  		dev_pm_domain_detach(tegra->genpd_dev_ss, true);
->>  	if (!IS_ERR_OR_NULL(tegra->genpd_dev_host))
->> @@ -1048,20 +1018,88 @@ static int tegra_xusb_powerdomain_init(struct device *dev,
->>  		return err;
->>  	}
->>  
->> -	tegra->genpd_dl_host = device_link_add(dev, tegra->genpd_dev_host,
->> -					       DL_FLAG_PM_RUNTIME |
->> -					       DL_FLAG_STATELESS);
->> -	if (!tegra->genpd_dl_host) {
->> -		dev_err(dev, "adding host device link failed!\n");
->> -		return -ENODEV;
->> +	return 0;
->> +}
->> +
->> +static int tegra_xusb_unpowergate_partitions(struct tegra_xusb *tegra)
->> +{
->> +	struct device *dev = tegra->dev;
->> +	bool use_genpd;
->> +	int rc;
->> +
->> +	use_genpd = of_property_read_bool(dev->of_node, "power-domains");
-> 
-> I don't think that's technically correct. Just because a "power-domains"
-> property exists in DT doesn't mean any power domains are necessarily
-> attached to the device. I think you'll need to check for something like
-> 
-> 	if (dev->pm_domain)
-> 
-> here.
-> 
-Thanks Thierry. I will do so in the next revision.
-> Thierry
-> 
+Register both gpio driver and device as part of driver model, so that
+the '-gpio'/'-gpios' dependency in dts can be correctly handled by
+of_devlink/of_fwlink.
+
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+ drivers/pinctrl/pinctrl-rockchip.c | 305 +++++++++++++++++------------
+ 1 file changed, 175 insertions(+), 130 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index c98bd352f831..2e4fc711d0d1 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -3370,139 +3370,121 @@ static void rockchip_irq_disable(struct irq_data *d)
+ }
+ 
+ static int rockchip_interrupts_register(struct platform_device *pdev,
+-						struct rockchip_pinctrl *info)
++						struct rockchip_pin_bank *bank)
+ {
+-	struct rockchip_pin_ctrl *ctrl = info->ctrl;
+-	struct rockchip_pin_bank *bank = ctrl->pin_banks;
+ 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+ 	struct irq_chip_generic *gc;
+ 	int ret;
+-	int i;
+ 
+-	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+-		if (!bank->valid) {
+-			dev_warn(&pdev->dev, "bank %s is not valid\n",
+-				 bank->name);
+-			continue;
+-		}
++	if (!bank->valid) {
++		dev_warn(&pdev->dev, "bank %s is not valid\n",
++			 bank->name);
++		return -EINVAL;
++	}
+ 
+-		ret = clk_enable(bank->clk);
+-		if (ret) {
+-			dev_err(&pdev->dev, "failed to enable clock for bank %s\n",
+-				bank->name);
+-			continue;
+-		}
++	ret = clk_enable(bank->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to enable clock for bank %s\n",
++			bank->name);
++		return ret;
++	}
+ 
+-		bank->domain = irq_domain_add_linear(bank->of_node, 32,
+-						&irq_generic_chip_ops, NULL);
+-		if (!bank->domain) {
+-			dev_warn(&pdev->dev, "could not initialize irq domain for bank %s\n",
+-				 bank->name);
+-			clk_disable(bank->clk);
+-			continue;
+-		}
++	bank->domain = irq_domain_add_linear(bank->of_node, 32,
++					&irq_generic_chip_ops, NULL);
++	if (!bank->domain) {
++		dev_warn(&pdev->dev, "could not initialize irq domain for bank %s\n",
++			 bank->name);
++		clk_disable(bank->clk);
++		return -EINVAL;
++	}
+ 
+-		ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
+-					 "rockchip_gpio_irq", handle_level_irq,
+-					 clr, 0, 0);
+-		if (ret) {
+-			dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
+-				bank->name);
+-			irq_domain_remove(bank->domain);
+-			clk_disable(bank->clk);
+-			continue;
+-		}
++	ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
++				 "rockchip_gpio_irq", handle_level_irq,
++				 clr, 0, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
++			bank->name);
++		irq_domain_remove(bank->domain);
++		clk_disable(bank->clk);
++		return ret;
++	}
+ 
+-		gc = irq_get_domain_generic_chip(bank->domain, 0);
+-		gc->reg_base = bank->reg_base;
+-		gc->private = bank;
+-		gc->chip_types[0].regs.mask = GPIO_INTMASK;
+-		gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
+-		gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
+-		gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
+-		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
+-		gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
+-		gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
+-		gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
+-		gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
+-		gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
+-		gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
+-		gc->wake_enabled = IRQ_MSK(bank->nr_pins);
++	gc = irq_get_domain_generic_chip(bank->domain, 0);
++	gc->reg_base = bank->reg_base;
++	gc->private = bank;
++	gc->chip_types[0].regs.mask = GPIO_INTMASK;
++	gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
++	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
++	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
++	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
++	gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
++	gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
++	gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
++	gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
++	gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
++	gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
++	gc->wake_enabled = IRQ_MSK(bank->nr_pins);
+ 
+-		/*
+-		 * Linux assumes that all interrupts start out disabled/masked.
+-		 * Our driver only uses the concept of masked and always keeps
+-		 * things enabled, so for us that's all masked and all enabled.
+-		 */
+-		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
+-		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
+-		gc->mask_cache = 0xffffffff;
++	/*
++	 * Linux assumes that all interrupts start out disabled/masked.
++	 * Our driver only uses the concept of masked and always keeps
++	 * things enabled, so for us that's all masked and all enabled.
++	 */
++	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
++	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
++	gc->mask_cache = 0xffffffff;
+ 
+-		irq_set_chained_handler_and_data(bank->irq,
+-						 rockchip_irq_demux, bank);
+-		clk_disable(bank->clk);
+-	}
++	irq_set_chained_handler_and_data(bank->irq,
++					 rockchip_irq_demux, bank);
++	clk_disable(bank->clk);
+ 
+ 	return 0;
+ }
+ 
+ static int rockchip_gpiolib_register(struct platform_device *pdev,
+-						struct rockchip_pinctrl *info)
++						struct rockchip_pin_bank *bank)
+ {
+-	struct rockchip_pin_ctrl *ctrl = info->ctrl;
+-	struct rockchip_pin_bank *bank = ctrl->pin_banks;
+ 	struct gpio_chip *gc;
+ 	int ret;
+-	int i;
+ 
+-	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+-		if (!bank->valid) {
+-			dev_warn(&pdev->dev, "bank %s is not valid\n",
+-				 bank->name);
+-			continue;
+-		}
++	if (!bank->valid) {
++		dev_err(&pdev->dev, "bank %s is not valid\n", bank->name);
++		return -EINVAL;
++	}
+ 
+-		bank->gpio_chip = rockchip_gpiolib_chip;
++	bank->gpio_chip = rockchip_gpiolib_chip;
+ 
+-		gc = &bank->gpio_chip;
+-		gc->base = bank->pin_base;
+-		gc->ngpio = bank->nr_pins;
+-		gc->parent = &pdev->dev;
+-		gc->of_node = bank->of_node;
+-		gc->label = bank->name;
++	gc = &bank->gpio_chip;
++	gc->base = bank->pin_base;
++	gc->ngpio = bank->nr_pins;
++	gc->parent = &pdev->dev;
++	gc->of_node = bank->of_node;
++	gc->label = bank->name;
+ 
+-		ret = gpiochip_add_data(gc, bank);
+-		if (ret) {
+-			dev_err(&pdev->dev, "failed to register gpio_chip %s, error code: %d\n",
+-							gc->label, ret);
+-			goto fail;
+-		}
++	ret = gpiochip_add_data(gc, bank);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register %s (%d)\n", gc->label, ret);
++		return ret;
+ 	}
+ 
+-	rockchip_interrupts_register(pdev, info);
++	if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
++		struct device *parent = pdev->dev.parent;
++		struct rockchip_pinctrl *info = dev_get_drvdata(parent);
++		struct pinctrl_dev *pctldev;
+ 
+-	return 0;
++		if (!info)
++			return -ENODATA;
+ 
+-fail:
+-	for (--i, --bank; i >= 0; --i, --bank) {
+-		if (!bank->valid)
+-			continue;
+-		gpiochip_remove(&bank->gpio_chip);
+-	}
+-	return ret;
+-}
+-
+-static int rockchip_gpiolib_unregister(struct platform_device *pdev,
+-						struct rockchip_pinctrl *info)
+-{
+-	struct rockchip_pin_ctrl *ctrl = info->ctrl;
+-	struct rockchip_pin_bank *bank = ctrl->pin_banks;
+-	int i;
++		pctldev = info->pctl_dev;
++		if (!pctldev)
++			return -ENODEV;
+ 
+-	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+-		if (!bank->valid)
+-			continue;
+-		gpiochip_remove(&bank->gpio_chip);
++		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0, gc->base, gc->ngpio);
++		if (ret) {
++			dev_err(&pdev->dev, "Failed to add pin range\n");
++			gpiochip_remove(&bank->gpio_chip);
++			return ret;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -3571,7 +3553,6 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
+ {
+ 	const struct of_device_id *match;
+ 	struct device_node *node = pdev->dev.of_node;
+-	struct device_node *np;
+ 	struct rockchip_pin_ctrl *ctrl;
+ 	struct rockchip_pin_bank *bank;
+ 	int grf_offs, pmu_offs, drv_grf_offs, drv_pmu_offs, i, j;
+@@ -3579,23 +3560,6 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
+ 	match = of_match_node(rockchip_pinctrl_dt_match, node);
+ 	ctrl = (struct rockchip_pin_ctrl *)match->data;
+ 
+-	for_each_child_of_node(node, np) {
+-		if (!of_find_property(np, "gpio-controller", NULL))
+-			continue;
+-
+-		bank = ctrl->pin_banks;
+-		for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+-			if (!strcmp(bank->name, np->name)) {
+-				bank->of_node = np;
+-
+-				if (!rockchip_get_bank_data(bank, d))
+-					bank->valid = true;
+-
+-				break;
+-			}
+-		}
+-	}
+-
+ 	grf_offs = ctrl->grf_mux_offset;
+ 	pmu_offs = ctrl->pmu_mux_offset;
+ 	drv_pmu_offs = ctrl->pmu_drv_offset;
+@@ -3742,6 +3706,68 @@ static int __maybe_unused rockchip_pinctrl_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
+ 			 rockchip_pinctrl_resume);
+ 
++static int rockchip_gpio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device *parent = pdev->dev.parent;
++	struct rockchip_pinctrl *info = dev_get_drvdata(parent);
++	struct rockchip_pin_ctrl *ctrl = info ? (info->ctrl) : NULL;
++	struct rockchip_pin_bank *bank;
++	int ret, i;
++
++	if (!info || !ctrl)
++		return -EINVAL;
++
++	if (!of_find_property(np, "gpio-controller", NULL))
++		return -ENODEV;
++
++	bank = ctrl->pin_banks;
++	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
++		if (!strcmp(bank->name, np->name)) {
++			bank->of_node = np;
++
++			if (!rockchip_get_bank_data(bank, info))
++				bank->valid = true;
++
++			break;
++		}
++	}
++
++	if (!bank->valid) {
++		dev_info(parent, "gpio%d probed\n", bank->bank_num);
++		return -EINVAL;
++	}
++
++	bank->of_node = pdev->dev.of_node;
++
++	ret = rockchip_gpiolib_register(pdev, bank);
++	if (ret)
++		return ret;
++
++	ret = rockchip_interrupts_register(pdev, bank);
++	if (ret) {
++		gpiochip_remove(&bank->gpio_chip);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, bank);
++	dev_info(parent, "gpio%d probed\n", bank->bank_num);
++
++	return 0;
++}
++
++static int rockchip_gpio_remove(struct platform_device *pdev)
++{
++	struct rockchip_pin_bank *bank = platform_get_drvdata(pdev);
++
++	if (!bank)
++		return -EINVAL;
++
++	gpiochip_remove(&bank->gpio_chip);
++
++	return 0;
++}
++
+ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct rockchip_pinctrl *info;
+@@ -3813,17 +3839,20 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+ 			return PTR_ERR(info->regmap_pmu);
+ 	}
+ 
+-	ret = rockchip_gpiolib_register(pdev, info);
+-	if (ret)
+-		return ret;
+-
+ 	ret = rockchip_pinctrl_register(pdev, info);
+ 	if (ret) {
+-		rockchip_gpiolib_unregister(pdev, info);
++		dev_err(&pdev->dev, "failed to register pinctrl device\n");
+ 		return ret;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, info);
++	dev_info(&pdev->dev, "pinctrl probed\n");
++
++	ret = of_platform_populate(np, rockchip_bank_match, NULL, dev);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register gpio device\n");
++		return ret;
++	}
+ 
+ 	return 0;
+ }
+@@ -4244,8 +4273,17 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+ 	{},
+ };
+ 
++static struct platform_driver rockchip_gpio_driver = {
++	.probe	= rockchip_gpio_probe,
++	.remove = rockchip_gpio_remove,
++	.driver = {
++		.name	= "rockchip-gpio",
++		.of_match_table = rockchip_bank_match,
++	},
++};
++
+ static struct platform_driver rockchip_pinctrl_driver = {
+-	.probe		= rockchip_pinctrl_probe,
++	.probe	= rockchip_pinctrl_probe,
+ 	.driver = {
+ 		.name	= "rockchip-pinctrl",
+ 		.pm = &rockchip_pinctrl_dev_pm_ops,
+@@ -4255,11 +4293,18 @@ static struct platform_driver rockchip_pinctrl_driver = {
+ 
+ static int __init rockchip_pinctrl_drv_register(void)
+ {
+-	return platform_driver_register(&rockchip_pinctrl_driver);
++	int ret;
++
++	ret = platform_driver_register(&rockchip_pinctrl_driver);
++	if (ret)
++		return ret;
++
++	return platform_driver_register(&rockchip_gpio_driver);
+ }
+ 
+ static void __exit rockchip_pinctrl_drv_unregister(void)
+ {
++	platform_driver_unregister(&rockchip_gpio_driver);
+ 	platform_driver_unregister(&rockchip_pinctrl_driver);
+ }
+ 
+-- 
+2.17.1
+
+
+
