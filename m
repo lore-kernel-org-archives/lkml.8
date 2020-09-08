@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7E4C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3798C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC192074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09B4206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587883;
-	bh=sWJaq8QYvsce1oJxSLE8SvodMP0gjPjJJzb5HPrDNxE=;
+	s=default; t=1599587891;
+	bh=XHlAjR9qSwET0U1pVWZAfuClY0y2XU1KBVQksFFB5TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsvv9VJj/hpGDmsN04Xo4Xro9rLlSH+l1WsNNArfHjFvknr/Q0pdwF/zTre60Uh8D
-	 fxR/eI3tQ8WF2DlBKAcFc1iIX8epCpfVIknKELuMSCIQwnDNeVGRCEyeKS+wFaKu5w
-	 bnkxLdkgzOQHJlQ3UhCraZjfgNSyiOva/jJMmgc4=
+	b=Lt6NA6IUtKqYnjjMj1wSDWoG5vThfR+t69rO8uL831+CZ0MoPZXl6RadpUFBp428p
+	 14/BMc4kHWG31tMDc+6iKw2v3SauIUVmvFnMZgZJZ2jL0YcLB8T0vt2gAs5DJPY8MF
+	 b0wgev1i2dRba4Xv9dDUnHkFpJ0jh3EZ4A7LGXlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732189AbgIHR6C (ORCPT
+        id S1732210AbgIHR6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731566AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731564AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:47 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4ED24870;
-        Tue,  8 Sep 2020 15:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE09B24882;
+        Tue,  8 Sep 2020 15:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580321;
-        bh=sWJaq8QYvsce1oJxSLE8SvodMP0gjPjJJzb5HPrDNxE=;
+        s=default; t=1599580333;
+        bh=XHlAjR9qSwET0U1pVWZAfuClY0y2XU1KBVQksFFB5TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wAn2EDB3jWGueXSU5dNYIxv/7COG9ceZy6hGbmaK3MHwsWK4qVDkTKmwPnEL6bVka
-         fRVqAhKrWt5qDvF9pH108Ot0sb7ERhz6W0EWgm4m3ufvsRtcGtZszVKIwwWLJinXoe
-         MwZ2+Nr0oKk+qeTMeSCaOAgyZo39BGB/Pas6r8zc=
+        b=DEdh4DKnAV2zHUucryy6Ya2YYEM5FGa1OeNu0VUo1YMXgQUjjbhRX938JNavT5cs9
+         LPXeCmikTd/RrXPCBoRUKxH8o1nMtqjmDMlHBIKryKcde5GBuzzJeeNey9d/lpUhbM
+         Q6ITD1e6zw6lBK3acc5IGzhT+QLPZ4NmAb1apGWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Grant <al.grant@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/65] perf tools: Correct SNOOPX field offset
-Date:   Tue,  8 Sep 2020 17:26:15 +0200
-Message-Id: <20200908152218.580691687@linuxfoundation.org>
+Subject: [PATCH 4.14 33/65] drm/radeon: Prefer lower feedback dividers
+Date:   Tue,  8 Sep 2020 17:26:18 +0200
+Message-Id: <20200908152218.744293413@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -65,49 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Grant <al.grant@foss.arm.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 39c0a53b114d0317e5c4e76b631f41d133af5cb0 ]
+[ Upstream commit fc8c70526bd30733ea8667adb8b8ffebea30a8ed ]
 
-perf_event.h has macros that define the field offsets in the data_src
-bitmask in perf records. The SNOOPX and REMOTE offsets were both 37.
+Commit 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
+fixed screen flicker for HP Compaq nx9420 but breaks other laptops like
+Asus X50SL.
 
-These are distinct fields, and the bitfield layout in perf_mem_data_src
-confirms that SNOOPX should be at offset 38.
+Turns out we also need to favor lower feedback dividers.
 
-Committer notes:
+Users confirmed this change fixes the regression and doesn't regress the
+original fix.
 
-This was extracted from a larger patch that also contained kernel
-changes.
-
-Fixes: 52839e653b5629bd ("perf tools: Add support for printing new mem_info encodings")
-Signed-off-by: Al Grant <al.grant@arm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
+BugLink: https://bugs.launchpad.net/bugs/1791312
+BugLink: https://bugs.launchpad.net/bugs/1861554
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/uapi/linux/perf_event.h | 2 +-
+ drivers/gpu/drm/radeon/radeon_display.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 362493a2f950b..3b733511bb2b3 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1033,7 +1033,7 @@ union perf_mem_data_src {
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index b2334349799d1..f1de68340944b 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -928,7 +928,7 @@ static void avivo_get_fb_ref_div(unsigned nom, unsigned den, unsigned post_div,
  
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
- /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT	37
-+#define PERF_MEM_SNOOPX_SHIFT	38
+ 	/* get matching reference and feedback divider */
+ 	*ref_div = min(max(den/post_div, 1u), ref_div_max);
+-	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
++	*fb_div = max(nom * *ref_div * post_div / den, 1u);
  
- /* locked instruction */
- #define PERF_MEM_LOCK_NA	0x01 /* not available */
+ 	/* limit fb divider to its maximum */
+ 	if (*fb_div > fb_div_max) {
 -- 
 2.25.1
 
