@@ -2,189 +2,181 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA87C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B0CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3140D22597
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28ACB22CB1
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="O3jj8gi/"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TRI4o8zL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgIHNCe (ORCPT
+        id S1730185AbgIHNDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 09:02:34 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:43107 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729898AbgIHLiY (ORCPT
+        Tue, 8 Sep 2020 09:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729915AbgIHLiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:38:24 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200908113703euoutp02915f77cc91eb2aa2a1305db113c59364~yy_nqmjoF3237932379euoutp023
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:37:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200908113703euoutp02915f77cc91eb2aa2a1305db113c59364~yy_nqmjoF3237932379euoutp023
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599565023;
-        bh=SPHqHJ2dbxrJnDJeFzqnDBnwxgoXZzlXQRb9kXnJBa8=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=O3jj8gi/AO0E1B52SNjw5FN7MdGcw7UGSmhmNqsbyjBW2wRdStKiOjhA7FGnmQUiI
-         HpF2t+YY1W7gYT2QpEbyvYZYhVPkJi8euOhfQfeOpXtHW9GgFvju4W+QQUb2jYgp/d
-         LraEQuAFfyV1rjHvgyHFOVGWzMkRzYnu/8u0vg0M=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200908113702eucas1p1f007d60b8cfda0d86caed3f07dfa439c~yy_ncn2pU0115401154eucas1p1O;
-        Tue,  8 Sep 2020 11:37:02 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 10.A5.06318.EDC675F5; Tue,  8
-        Sep 2020 12:37:02 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200908113702eucas1p2856ca25619baab242eb6ad71dbcedea8~yy_nES1Yn2030620306eucas1p28;
-        Tue,  8 Sep 2020 11:37:02 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200908113702eusmtrp1910d455ddaa3238b7aa9509289874b75~yy_nDj7lP2002320023eusmtrp1K;
-        Tue,  8 Sep 2020 11:37:02 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-3a-5f576cdebe39
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 06.A4.06017.EDC675F5; Tue,  8
-        Sep 2020 12:37:02 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200908113702eusmtip2105dcc4b97067a1556ced319d65629b5~yy_mxOdWG1663016630eusmtip2I;
-        Tue,  8 Sep 2020 11:37:02 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: fbdev: sis: fix null ptr dereference
-To:     trix@redhat.com
-Cc:     thomas@winischhofer.net, akpm@osdl.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <2b8139d8-12c9-3685-9160-fc92ae08aac0@samsung.com>
-Date:   Tue, 8 Sep 2020 13:37:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 8 Sep 2020 07:38:23 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0969C061786
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 04:37:16 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id s12so352935wrw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 04:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I/sh0hf7RWpKTkHRG2sXo6X29i3mK1fyatkLVFjwPyY=;
+        b=TRI4o8zL814YHGA/D/zYMJIAaCIYqFZ0mIpUDMLZUZN87cVGkWukeoAQibFqRSdTi0
+         6pbezBxBfFFSAjRUKWB8QJP5CHgs93NHYtFiS1nIDp648nb0kIv2ZVQ/RTs1fTwlNaec
+         GPg0wCc5jkN3j+ma2gtmxo4nY/EYhDvIrUWKQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=I/sh0hf7RWpKTkHRG2sXo6X29i3mK1fyatkLVFjwPyY=;
+        b=GqfhIy6Yhap01j3+iS/mOr5rA/NZfIJOZwoHfj9potjNZhp++Iek3ebj3STEJtUypG
+         yaabGMtjXxoStpo9dRpa0tkVsYfwhgQFHc/rdmT/jRGLCMiBOapL6b8Y5vd7yPqrO52r
+         6Exj2R2BA9R+JXuetMHSeyM/oV7JwNgulmnbNGiJX+R0F3mDQBNaJN7qTj5GBXY79uMb
+         uT7LJMnV1Y5QXjz8nmJlS2uhPP71wcD0t+EuK9M7TnjNAnm6Dj1Bu84klyNzazN3nLH9
+         DnqVnTRKvN1L6bf3dGnShpDrnHgAeqa/ddusoLzr0eN8B+wd+QxlvhSOXOndJDbJnn+v
+         gADg==
+X-Gm-Message-State: AOAM532n92RKGVdyrEel/G2hmramIH9ofgg81vWbFY5IkKG0elSBHpEp
+        NXejMJtYgvI5uKS904tQvyQTcg==
+X-Google-Smtp-Source: ABdhPJyF2qwliIvI/LNW3ilYwO975TKwRXyUs29RK60LvcJNYZwaiKnp5x/7ZaLEGFTKwLjPhYZ/og==
+X-Received: by 2002:adf:fd01:: with SMTP id e1mr24749831wrr.44.1599565035147;
+        Tue, 08 Sep 2020 04:37:15 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id e18sm39103291wra.36.2020.09.08.04.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 04:37:14 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:37:12 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
+        <etnaviv@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        "moderated list:ARM/Rockchip SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
+        <linux-tegra@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH v4 1/1] drm: allow limiting the scatter list size.
+Message-ID: <20200908113712.GL2352366@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Ben Skeggs <bskeggs@redhat.com>, Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" <etnaviv@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" <nouveau@lists.freedesktop.org>,
+        "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" <linux-rockchip@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" <linux-tegra@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
+References: <20200907112425.15610-1-kraxel@redhat.com>
+ <20200907112425.15610-2-kraxel@redhat.com>
+ <CAKMK7uGjT73rh=9iuCKAXvC_CaOuygm8PgOQgofkTgH7wRysFw@mail.gmail.com>
+ <20200908054858.um34wojjv6uhi7d3@sirius.home.kraxel.org>
+ <20200908085544.GI2352366@phenom.ffwll.local>
+ <20200908100253.b22sff23737l77bo@sirius.home.kraxel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200805145208.17727-1-trix@redhat.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djP87r3csLjDS6/MLfYuaKH3eLK1/ds
-        Fif6PrBaXN41h81i9crH7BbXvpxmcWDzuN99nMnj2vmvjB7v911l8/i8Sc5jwYz/LAGsUVw2
-        Kak5mWWpRfp2CVwZf658ZivoE6i4tvgjawPjNJ4uRk4OCQETiVOXFrJ0MXJxCAmsYJRYeP8s
-        I0hCSOALo8SxqSEQic+MEsdXdjJ3MXKAdfSczYOIL2eUmHBwDiuE85ZR4teEw6wg3WwCVhIT
-        21eBTRIWcJDY0b+PDcQWERCW+PP5LxNIA7NAB6PExubf7CAJXgE7idV7voE1swioSEzatpsF
-        xBYViJD49ABiKK+AoMTJmU/A4pwCphLbvtxjBrGZBcQlbj2ZzwRhy0tsfzuHGWSBhMAqdoln
-        j36xQTzqIjG54S4ThC0s8er4FnYIW0bi9OQeFoiGdYwSfzteQHVvZ5RYPvkfVLe1xJ1zIJM4
-        gFZoSqzfpQ8RdpSYs3MKCyRc+CRuvBWEOIIP6IHp0ODilehoE4KoVpPYsGwDG8zarp0rmScw
-        Ks1C8tosJO/MQvLOLIS9CxhZVjGKp5YW56anFhvnpZbrFSfmFpfmpesl5+duYgSmntP/jn/d
-        wbjvT9IhRgEORiUeXg/fsHgh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2KU
-        5mBREuc1XvQyVkggPbEkNTs1tSC1CCbLxMEp1cBoX/l9oVHq3kcSz1ydLdev9G2t2Jq5tv+i
-        7e7t8bMedmY/4L4svc9+rZJJq+r9NxM5Li0pi8j6OuHy0j7BORadbGe2s3yavX9zs2C2iW/H
-        Sr3yX78SM36rndWvFQ7x0H9gWGzvfuzJlvZG0xU1JqcWelyz7WHgvbHkbNXWBVw5xfbTHb76
-        sZgosRRnJBpqMRcVJwIASmRhZzkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBIsWRmVeSWpSXmKPExsVy+t/xe7r3csLjDaZ3K1jsXNHDbnHl63s2
-        ixN9H1gtLu+aw2axeuVjdotrX06zOLB53O8+zuRx7fxXRo/3+66yeXzeJOexYMZ/lgDWKD2b
-        ovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2MP1c+sxX0
-        CVRcW/yRtYFxGk8XIweHhICJRM/ZvC5GLg4hgaWMEs+PH2KCiMtIHF9f1sXICWQKS/y51sUG
-        UfOaUWL542fMIAk2ASuJie2rGEFsYQEHiR39+9hAbBGQhs9/mUAamAU6GCXa5y9ihugGcg72
-        bQDr4BWwk1i95xsriM0ioCIxadtuFhBbVCBC4vCOWVA1ghInZz4Bi3MKmEps+3IPbDOzgLrE
-        n3mXoGxxiVtP5jNB2PIS29/OYZ7AKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusZFecWJu
-        cWleul5yfu4mRmCsbTv2c8sOxq53wYcYBTgYlXh4P3iFxQuxJpYVV+YeYpTgYFYS4XU6ezpO
-        iDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OBaSCvJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBA
-        emJJanZqakFqEUwfEwenVAPjpcw6u5tr/mzdsjFt/+0tSZtUpmdxagV05L+PNHXQvKn0+V+o
-        m+8ik5sNK6w23ngUwGjiUJRn2Lo4btHJE4fy04pvZzL/eb1b7cYL3+ufHVUmW8Y2+losWt/k
-        ZvZk01Xu9GMHslL4kw8sONrK8a5JOZV9m+PyO7e25xkYTQg8Mr1WYLmo0MxaJZbijERDLeai
-        4kQAOcTOCcsCAAA=
-X-CMS-MailID: 20200908113702eucas1p2856ca25619baab242eb6ad71dbcedea8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200805145226eucas1p1e0e6d9fa3c05f7e247365f0db17cbe38
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200805145226eucas1p1e0e6d9fa3c05f7e247365f0db17cbe38
-References: <CGME20200805145226eucas1p1e0e6d9fa3c05f7e247365f0db17cbe38@eucas1p1.samsung.com>
-        <20200805145208.17727-1-trix@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908100253.b22sff23737l77bo@sirius.home.kraxel.org>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 08, 2020 at 12:02:53PM +0200, Gerd Hoffmann wrote:
+> > > > The comments I've found suggest very much not ... Or is that all very
+> > > > old stuff only that no one cares about anymore?
+> > > 
+> > > I think these days it is possible to override dma_ops per device, which
+> > > in turn allows virtio to deal with the quirks without the rest of the
+> > > kernel knowing about these details.
+> > > 
+> > > I also think virtio-gpu can drop the virtio_has_dma_quirk() checks, just
+> > > use the dma api path unconditionally and depend on virtio core having
+> > > setup dma_ops in a way that it JustWorks[tm].  I'll look into that next.
+> > 
+> > The comment above vring_use_dma_api() suggests that this has not yet
+> > happened, that's why I'm asking.
+> 
+> Hmm, wading through the code, seems it indeed happen yet, even though my
+> testing didn't show any issues.  Probably pure luck because devices and
+> cpus have the same memory view on x86.  Guess I need to try this on
+> ppc64 to see it actually failing ...
+> 
+> So dropping the virtio_has_dma_quirk() checks isn't going to fly.
+> 
+> Using dma_max_mapping_size() should be fine though.  It might use a
+> lower limit than needed for virtio, but it should not break things.
 
-On 8/5/20 4:52 PM, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> Clang static analysis reports this representative error
-> 
-> init.c:2501:18: warning: Array access (from variable 'queuedata') results
->   in a null pointer dereference
->       templ |= ((queuedata[i] & 0xc0) << 3);
-> 
-> This is the problem block of code
-> 
->    if(ModeNo > 0x13) {
->       ...
->       if(SiS_Pr->ChipType == SIS_730) {
-> 	 queuedata = &FQBQData730[0];
->       } else {
-> 	 queuedata = &FQBQData[0];
->       }
->    } else {
-> 
->    }
-> 
-> queuedata is not set in the else block
-> 
-> Reviewing the old code, the arrays FQBQData730 and FQBQData were
-> used directly.
-> 
-> So hoist the setting of queuedata out of the if-else block.
-> 
-> Fixes: 544393fe584d ("[PATCH] sisfb update")
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+Makes sense. On this patch here:
 
-Applied to drm-misc-next tree, thanks.
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+And I guess would be good if virtio pushes a bit more towards using the
+dma api abstraction fully so we can get rid of these hacks. Virtio feels
+like a driver that really should be using dma-api and not dig around
+behind it because "it' makes stuff 0.5% faster" or so, since being
+virtualized it's already not the king of speed anyway :-)
 
-> ---
->  drivers/video/fbdev/sis/init.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/sis/init.c b/drivers/video/fbdev/sis/init.c
-> index dfe3eb769638..fde27feae5d0 100644
-> --- a/drivers/video/fbdev/sis/init.c
-> +++ b/drivers/video/fbdev/sis/init.c
-> @@ -2428,6 +2428,11 @@ SiS_SetCRT1FIFO_630(struct SiS_Private *SiS_Pr, unsigned short ModeNo,
->  
->     i = 0;
->  
-> +	if (SiS_Pr->ChipType == SIS_730)
-> +		queuedata = &FQBQData730[0];
-> +	else
-> +		queuedata = &FQBQData[0];
-> +
->     if(ModeNo > 0x13) {
->  
->        /* Get VCLK  */
-> @@ -2445,12 +2450,6 @@ SiS_SetCRT1FIFO_630(struct SiS_Private *SiS_Pr, unsigned short ModeNo,
->        /* Get half colordepth */
->        colorth = colortharray[(SiS_Pr->SiS_ModeType - ModeEGA)];
->  
-> -      if(SiS_Pr->ChipType == SIS_730) {
-> -	 queuedata = &FQBQData730[0];
-> -      } else {
-> -	 queuedata = &FQBQData[0];
-> -      }
-> -
->        do {
->  	 templ = SiS_CalcDelay2(SiS_Pr, queuedata[i]) * VCLK * colorth;
->  
-> 
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
