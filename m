@@ -2,276 +2,130 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DD0C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD69C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 846B6208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599596117;
-	bh=HIQuytNpS2u2tupsYQd9yv/nlYoWgcoAF+EPFLxakTA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fyoOR27fYyeN2CfiZ3JYvY3bLrAj3FSTaujqar6F+7qDftVitsGwDo5NtiDs23oA5
-	 YOCzcXGgyE03TqCnD5E+pYP978jXjp9AxJrF6XO2R18F6jM4Kg924i8ssvfvJI7D7v
-	 fjKK7Hg6Z2aFh8w3Vg1vNB5TjmSpE7QCuobKRz70=
+	by mail.kernel.org (Postfix) with ESMTP id 34CE1208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731756AbgIHUPO (ORCPT
+        id S1731922AbgIHUPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:15:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51412 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 16:15:16 -0400
+Received: from mx2.cyber.ee ([193.40.6.72]:36344 "EHLO mx2.cyber.ee"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729865AbgIHPKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729741AbgIHPKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:10:42 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C2012405E;
-        Tue,  8 Sep 2020 15:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599577769;
-        bh=HIQuytNpS2u2tupsYQd9yv/nlYoWgcoAF+EPFLxakTA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RPawD2jkjqHZg8PD9kGJ5KCY7wKzZES9LcBzVvatZnsS6VWwYeIkhkNIADHvzM8KF
-         xuGweNH3fY2dJfi+Zgw8OXkSbkMwVmHH8iaGQIGkqEyXSi7nNcDzMMZOQ4GfWA2qZx
-         DzUKyzGPZCRwzOQL1ECxVLWaTMZ4RIWQTqtTSU3U=
-Date:   Wed, 9 Sep 2020 00:09:23 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     peterz@infradead.org
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org, systemtap@sourceware.org
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-Id: <20200909000923.54cca4fb530904c57e8ff529@kernel.org>
-In-Reply-To: <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
-        <20200901190808.GK29142@worktop.programming.kicks-ass.net>
-        <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
-        <20200902070226.GG2674@hirez.programming.kicks-ass.net>
-        <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
-        <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
-        <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
-        <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
-        <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
-        <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: gcc crashes with general protection faults in
+ 5.9.0-rc3-00091-ge28f0104343d
+From:   Meelis Roos <mroos@linux.ee>
+To:     LKML <linux-kernel@vger.kernel.org>
+References: <9883f24e-7ea4-ffe1-e284-8583a3407c94@linux.ee>
+Message-ID: <70778c21-8039-5011-e885-221c2cb06220@linux.ee>
+Date:   Tue, 8 Sep 2020 15:25:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <9883f24e-7ea4-ffe1-e284-8583a3407c94@linux.ee>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 12:37:36 +0200
-peterz@infradead.org wrote:
+Replying to myself:
+> This is 5.9.0-rc3-00091-ge28f0104343d on Lenovo t460s that has ran fine up to 5.8.0.
 
-> On Thu, Sep 03, 2020 at 10:39:54AM +0900, Masami Hiramatsu wrote:
+Now I reproduced the same problem with 5.9.0-rc3 on a HP desktop with Core2Quad CPU. The call trace is very similar and it's crashing gcc again while compiling 5.9-rc4.
+
+But it seems 5.9-rc4 cures it here as well - whatever the reason might have been.
+
+[  814.959665] general protection fault, probably for non-canonical address 0xdead000000000400: 0000 [#1] SMP PTI
+[  814.959671] CPU: 2 PID: 14496 Comm: cc1 Not tainted 5.9.0-rc3 #51
+[  814.959672] Hardware name: Hewlett-Packard HP Compaq 6000 Pro MT PC/3048h, BIOS 786G2 v02.03 10/19/2015
+[  814.959678] RIP: 0010:ext4_readpage+0xa/0x50
+[  814.959680] Code: 60 01 fb 44 89 ca 4c 89 c6 e8 32 50 03 00 85 c0 79 ea 0f 0b c3 66 66 2e 0f 1f 84 00 00 00 00 00 41 54 49 89 f4 55 48 8b 46 18 <48> 8b 28 48 8b 85 68 ff ff ff a9 00 00 00 10 74 1b 66 83 bd d2 02
+[  814.959681] RSP: 0000:ffffbcd4cb73fd68 EFLAGS: 00010286
+[  814.959683] RAX: dead000000000400 RBX: ffffbcd4cb73fe40 RCX: 0000000000000000
+[  814.959685] RDX: 0000000000000001 RSI: ffffe51507178c40 RDI: ffff9ff63f9e8e00
+[  814.959686] RBP: ffffe51507178c40 R08: 0000000000000002 R09: ffff9ff653d21d90
+[  814.959687] R10: ffff9ff64fee2c00 R11: ffff9ff63f9e8e00 R12: ffffe51507178c40
+[  814.959688] R13: 0000000000000a31 R14: ffff9ff640b8ee98 R15: ffff9ff640b8f008
+[  814.959690] FS:  00007f9ac1c64f00(0000) GS:ffff9ff653d00000(0000) knlGS:0000000000000000
+[  814.959692] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  814.959693] CR2: 0000000000e31ff0 CR3: 00000001d99de000 CR4: 00000000000406e0
+[  814.959694] Call Trace:
+[  814.959700]  filemap_fault+0x193/0x7c0
+[  814.959703]  ext4_filemap_fault+0x28/0x3a
+[  814.959706]  __do_fault+0x31/0xf0
+[  814.959708]  handle_mm_fault+0xf0e/0x14c0
+[  814.959712]  do_user_addr_fault+0x18c/0x380
+[  814.959715]  exc_page_fault+0x5b/0x80
+[  814.959718]  ? asm_exc_page_fault+0x8/0x30
+[  814.959720]  asm_exc_page_fault+0x1e/0x30
+[  814.959722] RIP: 0033:0xe31ff0
+[  814.959725] Code: Bad RIP value.
+[  814.959727] RSP: 002b:00007ffc2515f458 EFLAGS: 00010246
+[  814.959728] RAX: 0000000000000000 RBX: 00007f9ac0118798 RCX: 0000000000000070
+[  814.959730] RDX: 00007ffc2515f4a0 RSI: 00007f9ac1500b28 RDI: 00007ffc2515f510
+[  814.959731] RBP: 00007f9ac00d4ea0 R08: 0000000000000000 R09: 0000000000000008
+[  814.959732] R10: 0000000000000000 R11: 0000000002807fe0 R12: 0000000000861300
+[  814.959733] R13: 00007f9ac1500b28 R14: 00007f9ac0118798 R15: 00007ffc2515f4a0
+[  814.959735] Modules linked in: 8021q garp stp mrp llc iptable_nat nf_nat nf_conntrack bluetooth libaes nf_defrag_ipv6 jitterentropy_rng nf_defrag_ipv4 libcrc32c iptable_mangle bpfilter drbg iptable_filter ecdh_generic ecc snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio iTCO_wdt mei_wdt iTCO_vendor_support wmi_bmof kvm_intel snd_hda_intel snd_intel_dspcfg snd_hda_codec pcspkr kvm snd_hwdep snd_hda_core irqbypass snd_pcm mei_me snd_timer snd lpc_ich mfd_core mei soundcore 8250_pci tpm_infineon tpm_tis tpm_tis_core tpm rng_core wmi coretemp hwmon ip_tables x_tables autofs4
+[  814.959762] ---[ end trace 9b16ba743f2d455c ]---
+[  814.959764] RIP: 0010:ext4_readpage+0xa/0x50
+[  814.959766] Code: 60 01 fb 44 89 ca 4c 89 c6 e8 32 50 03 00 85 c0 79 ea 0f 0b c3 66 66 2e 0f 1f 84 00 00 00 00 00 41 54 49 89 f4 55 48 8b 46 18 <48> 8b 28 48 8b 85 68 ff ff ff a9 00 00 00 10 74 1b 66 83 bd d2 02
+[  814.959769] RSP: 0000:ffffbcd4cb73fd68 EFLAGS: 00010286
+[  814.959771] RAX: dead000000000400 RBX: ffffbcd4cb73fe40 RCX: 0000000000000000
+[  814.959772] RDX: 0000000000000001 RSI: ffffe51507178c40 RDI: ffff9ff63f9e8e00
+[  814.959774] RBP: ffffe51507178c40 R08: 0000000000000002 R09: ffff9ff653d21d90
+[  814.959776] R10: ffff9ff64fee2c00 R11: ffff9ff63f9e8e00 R12: ffffe51507178c40
+[  814.959778] R13: 0000000000000a31 R14: ffff9ff640b8ee98 R15: ffff9ff640b8f008
+[  814.959780] FS:  00007f9ac1c64f00(0000) GS:ffff9ff653d00000(0000) knlGS:0000000000000000
+[  814.959782] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  814.959784] CR2: 0000000000e31fc6 CR3: 00000001d99de000 CR4: 00000000000406e0
+
+
+
+> Today I tried reproducing my linking problem with git kernel on my laptop and got segmentation faults in gcc. This is probably the corresponding dmesg part:
 > 
-> > > There's a bug, that might make it miss it. I have a patch. I'll send it
-> > > shortly.
-> > 
-> > OK, I've confirmed that the lockdep warns on kretprobe from INT3
-> > with your fix.
+> 0xdead000000000400 loks like some kind of poisoning.
 > 
-> I'm now trying and failing to reproduce.... I can't seem to make it use
-> int3 today. It seems to want to use ftrace or refuses everything. I'm
-> probably doing it wrong.
-
-Ah, yes. For using the INT3, we need to disable CONFIG_FUNCTION_TRACER,
-or enable CONFIG_KPROBE_EVENTS_ON_NOTRACE and put a kretprobe on a notrace
-function :)
-
-> 
-> Could you verify the below actually works? It's on top of the first 16
-> patches.
-
-Sure. (BTW, you mean the first 15 patches, since kretprobe_hash_lock()
-becomes static by 16th patch ?)
-
-Here is the result. I got same warning with or without your patch.
-I have built the kernel with CONFIG_FUNCTION_TRACER=n and CONFIG_KPROBES_SANITY_TEST=y. 
-
-[    0.269235] PCI: Using configuration type 1 for base access
-[    0.272171] Kprobe smoke test: started
-[    0.281125] 
-[    0.281126] ================================
-[    0.281126] WARNING: inconsistent lock state
-[    0.281126] 5.9.0-rc2+ #101 Not tainted
-[    0.281126] --------------------------------
-[    0.281127] inconsistent {INITIAL USE} -> {IN-NMI} usage.
-[    0.281127] swapper/0/1 [HC1[1]:SC0[0]:HE0:SE1] takes:
-[    0.281127] ffffffff8228c778 (&rp->lock){....}-{2:2}, at: pre_handler_kretprobe+0x2b/0x1b0
-[    0.281128] {INITIAL USE} state was registered at:
-[    0.281129]   lock_acquire+0x9e/0x3c0
-[    0.281129]   _raw_spin_lock+0x2f/0x40
-[    0.281129]   recycle_rp_inst+0x48/0x90
-[    0.281129]   __kretprobe_trampoline_handler+0x15d/0x1e0
-[    0.281130]   trampoline_handler+0x43/0x60
-[    0.281130]   kretprobe_trampoline+0x2a/0x50
-[    0.281130]   kretprobe_trampoline+0x0/0x50
-[    0.281130]   init_kprobes+0x1b6/0x1d5
-[    0.281130]   do_one_initcall+0x5c/0x315
-[    0.281131]   kernel_init_freeable+0x21a/0x25f
-[    0.281131]   kernel_init+0x9/0x104
-[    0.281131]   ret_from_fork+0x22/0x30
-[    0.281131] irq event stamp: 25978
-[    0.281132] hardirqs last  enabled at (25977): [<ffffffff8108a0f7>] queue_delayed_work_on+0x57/0x90
-[    0.281132] hardirqs last disabled at (25978): [<ffffffff818df778>] exc_int3+0x48/0x140
-[    0.281132] softirqs last  enabled at (25964): [<ffffffff81c00389>] __do_softirq+0x389/0x48b
-[    0.281133] softirqs last disabled at (25957): [<ffffffff81a00f42>] asm_call_on_stack+0x12/0x20
-[    0.281133] 
-[    0.281133] other info that might help us debug this:
-[    0.281133]  Possible unsafe locking scenario:
-[    0.281134] 
-[    0.281134]        CPU0
-[    0.281134]        ----
-[    0.281134]   lock(&rp->lock);
-[    0.281135]   <Interrupt>
-[    0.281135]     lock(&rp->lock);
-[    0.281136] 
-[    0.281136]  *** DEADLOCK ***
-[    0.281136] 
-[    0.281136] no locks held by swapper/0/1.
-[    0.281136] 
-[    0.281137] stack backtrace:
-[    0.281137] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc2+ #101
-[    0.281137] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
-[    0.281137] Call Trace:
-[    0.281138]  dump_stack+0x81/0xba
-[    0.281138]  print_usage_bug.cold+0x195/0x19e
-[    0.281138]  lock_acquire+0x314/0x3c0
-[    0.281138]  ? __text_poke+0x2db/0x400
-[    0.281139]  ? pre_handler_kretprobe+0x2b/0x1b0
-[    0.281139]  _raw_spin_lock_irqsave+0x3a/0x50
-[    0.281139]  ? pre_handler_kretprobe+0x2b/0x1b0
-[    0.281139]  pre_handler_kretprobe+0x2b/0x1b0
-[    0.281139]  ? stop_machine_from_inactive_cpu+0x120/0x120
-[    0.281140]  aggr_pre_handler+0x5f/0xd0
-[    0.281140]  kprobe_int3_handler+0x10f/0x160
-[    0.281140]  exc_int3+0x52/0x140
-[    0.281140]  asm_exc_int3+0x31/0x40
-[    0.281141] RIP: 0010:kprobe_target+0x1/0x10
-[    0.281141] Code: 65 48 33 04 25 28 00 00 00 75 10 48 81 c4 90 00 00 00 44 89 e0 41 5c 5d c3 0f 0b e8 a
-[    0.281141] RSP: 0000:ffffc90000013e48 EFLAGS: 00000246
-[    0.281142] RAX: ffffffff81142130 RBX: 0000000000000001 RCX: ffffc90000013cec
-[    0.281142] RDX: 0000000000000002 RSI: 0000000000000000 RDI: 00000000f3eb0b20
-[    0.281142] RBP: ffffc90000013e68 R08: 0000000000000000 R09: 0000000000000001
-[    0.281143] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-[    0.281143] R13: ffffffff8224c2b0 R14: ffffffff8255cf60 R15: 0000000000000000
-[    0.281143]  ? stop_machine_from_inactive_cpu+0x120/0x120
-[    0.281143]  ? kprobe_target+0x1/0x10
-[    0.281144]  ? stop_machine_from_inactive_cpu+0x120/0x120
-[    0.281144]  ? init_test_probes.cold+0x2e3/0x391
-[    0.281144]  init_kprobes+0x1b6/0x1d5
-[    0.281144]  ? debugfs_kprobe_init+0xa9/0xa9
-[    0.281145]  do_one_initcall+0x5c/0x315
-[    0.281145]  ? rcu_read_lock_sched_held+0x4a/0x80
-[    0.281145]  kernel_init_freeable+0x21a/0x25f
-[    0.281145]  ? rest_init+0x23c/0x23c
-[    0.281145]  kernel_init+0x9/0x104
-[    0.281146]  ret_from_fork+0x22/0x30
-[    0.281282] Kprobe smoke test: passed successfully
-
-
-> 
-> > Of course make it lockless then warning is gone.
-> > But even without the lockless patch, this warning can be false-positive
-> > because we prohibit nested kprobe call, right?
-> 
-> Yes, because the actual nesting is avoided by kprobe_busy, but lockdep
-> can't tell. Lockdep sees a regular lock user and an in-nmi lock user and
-> figures that's a bad combination.
-
-Thanks for confirmation!
-
-> 
-> 
-> ---
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1241,48 +1241,47 @@ void recycle_rp_inst(struct kretprobe_in
->  }
->  NOKPROBE_SYMBOL(recycle_rp_inst);
->  
-> -void kretprobe_hash_lock(struct task_struct *tsk,
-> -			 struct hlist_head **head, unsigned long *flags)
-> -__acquires(hlist_lock)
-> -{
-> -	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
-> -	raw_spinlock_t *hlist_lock;
-> -
-> -	*head = &kretprobe_inst_table[hash];
-> -	hlist_lock = kretprobe_table_lock_ptr(hash);
-> -	raw_spin_lock_irqsave(hlist_lock, *flags);
-> -}
-> -NOKPROBE_SYMBOL(kretprobe_hash_lock);
-> -
->  static void kretprobe_table_lock(unsigned long hash,
->  				 unsigned long *flags)
->  __acquires(hlist_lock)
->  {
->  	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
-> -	raw_spin_lock_irqsave(hlist_lock, *flags);
-> +	/*
-> +	 * HACK, due to kprobe_busy we'll never actually recurse, make NMI
-> +	 * context use a different lock class to avoid it reporting.
-> +	 */
-> +	raw_spin_lock_irqsave_nested(hlist_lock, *flags, !!in_nmi());
->  }
->  NOKPROBE_SYMBOL(kretprobe_table_lock);
->  
-> -void kretprobe_hash_unlock(struct task_struct *tsk,
-> -			   unsigned long *flags)
-> +static void kretprobe_table_unlock(unsigned long hash,
-> +				   unsigned long *flags)
->  __releases(hlist_lock)
->  {
-> +	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
-> +	raw_spin_unlock_irqrestore(hlist_lock, *flags);
-> +}
-> +NOKPROBE_SYMBOL(kretprobe_table_unlock);
-> +
-> +void kretprobe_hash_lock(struct task_struct *tsk,
-> +			 struct hlist_head **head, unsigned long *flags)
-> +__acquires(hlist_lock)
-> +{
->  	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
-> -	raw_spinlock_t *hlist_lock;
->  
-> -	hlist_lock = kretprobe_table_lock_ptr(hash);
-> -	raw_spin_unlock_irqrestore(hlist_lock, *flags);
-> +	*head = &kretprobe_inst_table[hash];
-> +	kretprobe_table_lock(hash, flags);
->  }
-> -NOKPROBE_SYMBOL(kretprobe_hash_unlock);
-> +NOKPROBE_SYMBOL(kretprobe_hash_lock);
->  
-> -static void kretprobe_table_unlock(unsigned long hash,
-> -				   unsigned long *flags)
-> +void kretprobe_hash_unlock(struct task_struct *tsk,
-> +			   unsigned long *flags)
->  __releases(hlist_lock)
->  {
-> -	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
-> -	raw_spin_unlock_irqrestore(hlist_lock, *flags);
-> +	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
-> +	kretprobe_table_unlock(hash, flags);
->  }
-> -NOKPROBE_SYMBOL(kretprobe_table_unlock);
-> +NOKPROBE_SYMBOL(kretprobe_hash_unlock);
->  
->  struct kprobe kprobe_busy = {
->  	.addr = (void *) get_kprobe,
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> [307299.392045] general protection fault, probably for non-canonical address 0xdead000000000400: 0000 [#1] SMP PTI
+> [307299.392050] CPU: 1 PID: 165374 Comm: cc1 Not tainted 5.9.0-rc3-00091-ge28f0104343d #207
+> [307299.392051] Hardware name: LENOVO 20F9003SMS/20F9003SMS, BIOS N1CET71W (1.39 ) 09/04/2018
+> [307299.392055] RIP: 0010:ext4_readpage+0xb/0x90
+> [307299.392057] Code: 9b a3 a6 e8 57 82 fe ff f0 80 63 01 df f0 80 63 01 bf 5b c3 c3 f0 80 0e 01 eb d7 0f 1f 40 00 41 54 49 89 f4 55 53 48 8b 46 18 <48> 8b 28 0f 1f 44 00 00 48 8b 85 68 ff ff ff a9 00 00 00 10 74 1f
+> [307299.392058] RSP: 0018:ffffa08308d03d58 EFLAGS: 00010286
+> [307299.392060] RAX: dead000000000400 RBX: ffffa08308d03e38 RCX: 0000000000000000
+> [307299.392061] RDX: 0000000000000001 RSI: ffffde94c0d00ec0 RDI: ffff9661c786ca00
+> [307299.392062] RBP: ffffde94c0d00ec0 R08: 0000000000000001 R09: 0000000000000000
+> [307299.392063] R10: 0000000000000071 R11: ffff9661c786ca00 R12: ffffde94c0d00ec0
+> [307299.392064] R13: 000000000000063b R14: ffff96636d3aaea0 R15: ffff96636d3ab018
+> [307299.392065] FS:  00007f7871446f00(0000) GS:ffff966396c80000(0000) knlGS:0000000000000000
+> [307299.392067] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [307299.392068] CR2: 0000000000a3b1f0 CR3: 000000006c3e2003 CR4: 00000000003706e0
+> [307299.392069] Call Trace:
+> [307299.392073]  filemap_fault+0x193/0x7c0
+> [307299.392075]  ext4_filemap_fault+0x28/0x3a
+> [307299.392078]  __do_fault+0x31/0xf0
+> [307299.392080]  handle_mm_fault+0xf1a/0x14c0
+> [307299.392084]  do_user_addr_fault+0x1b3/0x3e0
+> [307299.392087]  exc_page_fault+0x61/0x130
+> [307299.392089]  ? asm_exc_page_fault+0x8/0x30
+> [307299.392091]  asm_exc_page_fault+0x1e/0x30
+> [307299.392093] RIP: 0033:0xa3b620
+> [307299.392096] Code: Bad RIP value.
+> [307299.392097] RSP: 002b:00007ffe4b382018 EFLAGS: 00010202
+> [307299.392099] RAX: 00007f786fd32980 RBX: 00007f786fd32a18 RCX: 0000000000000000
+> [307299.392100] RDX: 0000000000000002 RSI: 0000000000000001 RDI: 00007f786fd4ee70
+> [307299.392101] RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000000000c0
+> [307299.392102] R10: 0000000000000140 R11: 000000000000002f R12: 0000000000000001
+> [307299.392103] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000-- 
+Meelis Roos <mroos@linux.ee>
