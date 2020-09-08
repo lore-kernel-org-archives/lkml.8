@@ -2,126 +2,134 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4983BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96CEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B3F2193E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:09:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgcbDcv5"
+	by mail.kernel.org (Postfix) with ESMTP id 7D81720C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgIHDJO (ORCPT
+        id S1728564AbgIHDJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 23:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbgIHDJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 23:09:10 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D116BC061573;
-        Mon,  7 Sep 2020 20:09:09 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id h4so15585669ioe.5;
-        Mon, 07 Sep 2020 20:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rBq6L8j6VXoV9kBXKeeyWs5lIar9dvrGK6LriY/bemU=;
-        b=dgcbDcv5+Wc8PKQMo1siPE6CbXStP0BwfrR3dBoESevR1ySVkrfGJvRsAK6WxudbMs
-         tJrDc9XJUj+U2fFKE0uveTXwu9LvvdlYUTY9g3WDwcwxrEnRCthG2lDvCJ+gEs1fVrfi
-         zaFY0JUHbduPQ42Yo01YyL0Na6laN6swR3y+O/lsZBuuTfdMXD+78rZFEtBLWx1bgqF5
-         zPwhQH1DIT/mv1vKN/2o/h2U5QSDUzEEjI6kgMkzvDqsxtzNB3p9Xkk+36/Kt4D8wvxa
-         qSyD34CaT04MW9CjnwvqqZl1iBPmV6s+dEI8kr4KF5roOQu4Wf0Koe718rpIYHPlq0Hd
-         EAnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rBq6L8j6VXoV9kBXKeeyWs5lIar9dvrGK6LriY/bemU=;
-        b=ciZPIFOPqn0NYL8TawDRVUcjs+YiIywm+20IpBOfQkgI4q+BhO99Sl6hBqq/yu+9IC
-         tumlE7sYxhkER8gHjVizrW2s4No0A3Zq+4gO7q4vq0ctfRX6tHNwC77JSUKj6liqYda0
-         ZNZ7N1o997xPZtpv+4+ha2Y/eXT0hqzqmwyrDBxdZzuoIT9wQAiOoUQ6IQNi66JIlVia
-         ReIJPw1EnZ8Q1CgMgphnipTu69uK5b5CLHcLF30kKqI+zT1+ZB1twUmxn0BZIpPdOcdT
-         gQej0HfZcW/is/xT8OBQjZh2sZ+OkAXmrAAdl39/xuZQUPW1aorRj1jnFXkC0hG3dCsG
-         60iQ==
-X-Gm-Message-State: AOAM533IdES/rnM0Bpbu/xvqxUf0KeMszI/5nMRuZjoU6MuNQwqajOBw
-        e+YQUwAmyuHL0sOZ+SaOOoeUgCV1TS8=
-X-Google-Smtp-Source: ABdhPJzCd21arCbtl6Ci687epIwl9O9Ql/OkCtD7cuxgSfMkxemjdGkFrNnMRt7Oito4GFPrl3DorQ==
-X-Received: by 2002:a02:8791:: with SMTP id t17mr21129203jai.89.1599534549063;
-        Mon, 07 Sep 2020 20:09:09 -0700 (PDT)
-Received: from localhost.localdomain (c-73-242-81-227.hsd1.mn.comcast.net. [73.242.81.227])
-        by smtp.gmail.com with ESMTPSA id b8sm7923367ioa.33.2020.09.07.20.09.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 20:09:08 -0700 (PDT)
-From:   Ross Schmidt <ross.schm.dev@gmail.com>
-To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
-        gregkh@linuxfoundation.org
-Cc:     netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Ross Schmidt <ross.schm.dev@gmail.com>
-Subject: [PATCH] staging: qlge: fix quoted string split across lines
-Date:   Mon,  7 Sep 2020 22:07:57 -0500
-Message-Id: <20200908030757.101278-1-ross.schm.dev@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 7 Sep 2020 23:09:42 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49276 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728241AbgIHDJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 23:09:41 -0400
+Received: from [10.130.0.80] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx+MXr9VZf2fcSAA--.2842S3;
+        Tue, 08 Sep 2020 11:09:31 +0800 (CST)
+Subject: Re: [PATCH v2] Revert "ALSA: hda: Add support for Loongson 7A1000
+ controller"
+To:     Huacai Chen <chenhuacai@gmail.com>, Takashi Iwai <tiwai@suse.de>
+References: <1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn>
+ <s5hsgcb59gw.wl-tiwai@suse.de>
+ <CAAhV-H5V5adhY2OjJLxW7x3zDaHGgBxxy45hjf22+qMSEBQuww@mail.gmail.com>
+Cc:     alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <bf50515b-a018-a66d-188a-4901428e66a6@loongson.cn>
+Date:   Tue, 8 Sep 2020 11:09:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H5V5adhY2OjJLxW7x3zDaHGgBxxy45hjf22+qMSEBQuww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dx+MXr9VZf2fcSAA--.2842S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZw1rAw1DZryfuF4xJF1DKFg_yoW5GF4kpw
+        1FyF4avr4Dtr4UJa1qvr909r18tw45AasrX3s7Jr1jvF12gr1kJryxJF4SgFs8Gry5ZFW7
+        t398twsrWFyDG37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
+        4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
+        67vIY487MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
+        73UjIFyTuYvjfUn2-eDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a coding style issue by merging split quoted strings in qlge_main.c
-to fix checkpatch warnings.
+On 09/08/2020 08:37 AM, Huacai Chen wrote:
+> Hi, all
+>
+> This patch should be backported to 5.4.
 
-Signed-off-by: Ross Schmidt <ross.schm.dev@gmail.com>
----
- drivers/staging/qlge/qlge_main.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 2028458bea6f..e4c9f5d3bfdd 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -2079,9 +2079,9 @@ static void ql_process_chip_ae_intr(struct ql_adapter *qdev,
- 		break;
- 
- 	case PCI_ERR_ANON_BUF_RD:
--		netdev_err(qdev->ndev, "PCI error occurred when reading "
--					"anonymous buffers from rx_ring %d.\n",
--					ib_ae_rsp->q_id);
-+		netdev_err(qdev->ndev,
-+			   "PCI error occurred when reading anonymous buffers from rx_ring %d.\n",
-+			   ib_ae_rsp->q_id);
- 		ql_queue_asic_error(qdev);
- 		break;
- 
-@@ -2415,8 +2415,7 @@ static irqreturn_t qlge_isr(int irq, void *dev_id)
- 		ql_queue_asic_error(qdev);
- 		netdev_err(qdev->ndev, "Got fatal error, STS = %x.\n", var);
- 		var = ql_read32(qdev, ERR_STS);
--		netdev_err(qdev->ndev, "Resetting chip. "
--					"Error Status Register = 0x%x\n", var);
-+		netdev_err(qdev->ndev, "Resetting chip. Error Status Register = 0x%x\n", var);
- 		return IRQ_HANDLED;
- 	}
- 
-@@ -3739,8 +3738,7 @@ static void ql_display_dev_info(struct net_device *ndev)
- 	struct ql_adapter *qdev = netdev_priv(ndev);
- 
- 	netif_info(qdev, probe, qdev->ndev,
--		   "Function #%d, Port %d, NIC Roll %d, NIC Rev = %d, "
--		   "XG Roll = %d, XG Rev = %d.\n",
-+		   "Function #%d, Port %d, NIC Roll %d, NIC Rev = %d, XG Roll = %d, XG Rev = %d.\n",
- 		   qdev->func,
- 		   qdev->port,
- 		   qdev->chip_rev_id & 0x0000000f,
--- 
-2.26.2
+Commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
+7A1000 controller") has been not yet merged into 5.4, so no
+need to backport.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sound/pci/hda/hda_intel.c?h=v5.4
+
+Thanks,
+Tiezhu
+
+>
+> Huacai
+>
+> On Tue, Aug 25, 2020 at 6:03 PM Takashi Iwai <tiwai@suse.de> wrote:
+>> On Tue, 25 Aug 2020 11:39:48 +0200,
+>> Tiezhu Yang wrote:
+>>> This reverts commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
+>>> 7A1000 controller") to fix the following error on the Loongson LS7A
+>>> platform:
+>>>
+>>> rcu: INFO: rcu_preempt self-detected stall on CPU
+>>> <SNIP>
+>>> NMI backtrace for cpu 0
+>>> CPU: 0 PID: 68 Comm: kworker/0:2 Not tainted 5.8.0+ #3
+>>> Hardware name:  , BIOS
+>>> Workqueue: events azx_probe_work [snd_hda_intel]
+>>> <SNIP>
+>>> Call Trace:
+>>> [<ffffffff80211a64>] show_stack+0x9c/0x130
+>>> [<ffffffff8065a740>] dump_stack+0xb0/0xf0
+>>> [<ffffffff80665774>] nmi_cpu_backtrace+0x134/0x140
+>>> [<ffffffff80665910>] nmi_trigger_cpumask_backtrace+0x190/0x200
+>>> [<ffffffff802b1abc>] rcu_dump_cpu_stacks+0x12c/0x190
+>>> [<ffffffff802b08cc>] rcu_sched_clock_irq+0xa2c/0xfc8
+>>> [<ffffffff802b91d4>] update_process_times+0x2c/0xb8
+>>> [<ffffffff802cad80>] tick_sched_timer+0x40/0xb8
+>>> [<ffffffff802ba5f0>] __hrtimer_run_queues+0x118/0x1d0
+>>> [<ffffffff802bab74>] hrtimer_interrupt+0x12c/0x2d8
+>>> [<ffffffff8021547c>] c0_compare_interrupt+0x74/0xa0
+>>> [<ffffffff80296bd0>] __handle_irq_event_percpu+0xa8/0x198
+>>> [<ffffffff80296cf0>] handle_irq_event_percpu+0x30/0x90
+>>> [<ffffffff8029d958>] handle_percpu_irq+0x88/0xb8
+>>> [<ffffffff80296124>] generic_handle_irq+0x44/0x60
+>>> [<ffffffff80b3cfd0>] do_IRQ+0x18/0x28
+>>> [<ffffffff8067ace4>] plat_irq_dispatch+0x64/0x100
+>>> [<ffffffff80209a20>] handle_int+0x140/0x14c
+>>> [<ffffffff802402e8>] irq_exit+0xf8/0x100
+>>>
+>>> Because AZX_DRIVER_GENERIC can not work well for Loongson LS7A HDA
+>>> controller, it needs some workarounds which are not merged into the
+>>> upstream kernel at this time, so it should revert this patch now.
+>>>
+>>> Fixes: 61eee4a7fc40 ("ALSA: hda: Add support for Loongson 7A1000 controller")
+>>> Cc: <stable@vger.kernel.org> # 5.9-rc1+
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>
+>>> v2: update commit message
+>> Applied now.  Thanks.
+>>
+>>
+>> Takashi
 
