@@ -2,54 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E714C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AB2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2B02080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF822080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589310;
-	bh=lixp8BxmKE9x3A7XjRdy/g2rDI2HUaEJA24QkMcIIMs=;
+	s=default; t=1599589312;
+	bh=2zNZNlshENQ4BdNhq0uNZVcTwMOZmuMEilTYlq1Botk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBiJ5rlNiGGK8aolZzpJsuMJg/skUPQyRdhhtwb9xgF2AyrHbo9Rg9Kk4KIWShvPY
-	 5vTLmjH+BSpQkBZzQOr/o/DxPs8QkPTUgPXOEL8ApS7J/gDU5gYWmCMl9xFZKrNpe1
-	 8NVZkhYitosNvKt0SqkDmRkapZDnN+npZTdAoK/U=
+	b=I2sKCC+Bdw74xsaVRnLuDqVm+n2nmSahH2SWVOotU0TTFMHj3zqUCRxCjr25sFEjS
+	 ew2426GvXia+xqXVuS/bCCY9P8VX7MPFwBv+Skeko0vgh6PdcS9Cr3F8SW89LLEtBh
+	 wGX2qzSnBRmcrTyv1KvDtt0siQJ3oioxG1MVVVX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbgIHSVq (ORCPT
+        id S1732217AbgIHSVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731462AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731460AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0486C247F5;
-        Tue,  8 Sep 2020 15:42:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADAB24728;
+        Tue,  8 Sep 2020 15:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579769;
-        bh=lixp8BxmKE9x3A7XjRdy/g2rDI2HUaEJA24QkMcIIMs=;
+        s=default; t=1599579641;
+        bh=2zNZNlshENQ4BdNhq0uNZVcTwMOZmuMEilTYlq1Botk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cII4VTeUvmHJJtdgVZplTdV/nwOY9rwMb+xIdpE7iiubTxBze4sPpnceJNVt820dE
-         z0pJjCbNPKrNeLz9RBZvdzVqo8GcywLNeTKdVdGSFGP8KyUbWXGSXHHYtzTZsjN2Aj
-         mXm1sZ91eTzhksvfUgH+uQL1RcyxiGZWHzSGsSqs=
+        b=DngTeLivGK3ScPZqQ6m5BQRSPPsoa+qD9TirRfhRweQbcWkyMucoSOzmkzt0CpFh1
+         zRKDikFL8kvgeQAKnzU4SCsBobGPXhvmp0lc2D6VpIKLGJ9M4npJPNKB/W2oHkl6T0
+         KQiZdMB4hWF/6l4CHPOKeg9GdOs+bc1NKmkgOrg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/129] rxrpc: Keep the ACK serial in a var in rxrpc_input_ack()
-Date:   Tue,  8 Sep 2020 17:24:28 +0200
-Message-Id: <20200908152231.046700012@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.8 161/186] dmaengine: dw-edma: Fix scatter-gather address calculation
+Date:   Tue,  8 Sep 2020 17:25:03 +0200
+Message-Id: <20200908152249.469134687@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,99 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 
-[ Upstream commit 68528d937dcd675e79973061c1a314db598162d1 ]
+commit 05655541c9503bfd01af4e6cbd7f5a29ac748e6c upstream.
 
-Keep the ACK serial number in a variable in rxrpc_input_ack() as it's used
-frequently.
+Fix the source and destination physical address calculation of a
+peripheral device on scatter-gather implementation.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This issue manifested during tests using a 64 bits architecture system.
+The abnormal behavior wasn't visible before due to all previous tests
+were done using 32 bits architecture system, that masked his effect.
+
+Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Link: https://lore.kernel.org/r/8d3ab7e2ba96563fe3495b32f60077fffb85307d.1597327623.git.gustavo.pimentel@synopsys.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/rxrpc/input.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/dma/dw-edma/dw-edma-core.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 22dec6049e1bb..6cace43b217ee 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -844,7 +844,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 		struct rxrpc_ackinfo info;
- 		u8 acks[RXRPC_MAXACKS];
- 	} buf;
--	rxrpc_serial_t acked_serial;
-+	rxrpc_serial_t ack_serial, acked_serial;
- 	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
- 	int nr_acks, offset, ioffset;
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -405,7 +405,7 @@ dw_edma_device_transfer(struct dw_edma_t
+ 			if (xfer->cyclic) {
+ 				burst->dar = xfer->xfer.cyclic.paddr;
+ 			} else {
+-				burst->dar = sg_dma_address(sg);
++				burst->dar = dst_addr;
+ 				/* Unlike the typical assumption by other
+ 				 * drivers/IPs the peripheral memory isn't
+ 				 * a FIFO memory, in this case, it's a
+@@ -413,14 +413,13 @@ dw_edma_device_transfer(struct dw_edma_t
+ 				 * and destination addresses are increased
+ 				 * by the same portion (data length)
+ 				 */
+-				src_addr += sg_dma_len(sg);
+ 			}
+ 		} else {
+ 			burst->dar = dst_addr;
+ 			if (xfer->cyclic) {
+ 				burst->sar = xfer->xfer.cyclic.paddr;
+ 			} else {
+-				burst->sar = sg_dma_address(sg);
++				burst->sar = src_addr;
+ 				/* Unlike the typical assumption by other
+ 				 * drivers/IPs the peripheral memory isn't
+ 				 * a FIFO memory, in this case, it's a
+@@ -428,12 +427,14 @@ dw_edma_device_transfer(struct dw_edma_t
+ 				 * and destination addresses are increased
+ 				 * by the same portion (data length)
+ 				 */
+-				dst_addr += sg_dma_len(sg);
+ 			}
+ 		}
  
-@@ -857,6 +857,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	}
- 	offset += sizeof(buf.ack);
- 
-+	ack_serial = sp->hdr.serial;
- 	acked_serial = ntohl(buf.ack.serial);
- 	first_soft_ack = ntohl(buf.ack.firstPacket);
- 	prev_pkt = ntohl(buf.ack.previousPacket);
-@@ -865,31 +866,31 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
- 			      buf.ack.reason : RXRPC_ACK__INVALID);
- 
--	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
-+	trace_rxrpc_rx_ack(call, ack_serial, acked_serial,
- 			   first_soft_ack, prev_pkt,
- 			   summary.ack_reason, nr_acks);
- 
- 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
- 		rxrpc_input_ping_response(call, skb->tstamp, acked_serial,
--					  sp->hdr.serial);
-+					  ack_serial);
- 	if (buf.ack.reason == RXRPC_ACK_REQUESTED)
- 		rxrpc_input_requested_ack(call, skb->tstamp, acked_serial,
--					  sp->hdr.serial);
-+					  ack_serial);
- 
- 	if (buf.ack.reason == RXRPC_ACK_PING) {
--		_proto("Rx ACK %%%u PING Request", sp->hdr.serial);
-+		_proto("Rx ACK %%%u PING Request", ack_serial);
- 		rxrpc_propose_ACK(call, RXRPC_ACK_PING_RESPONSE,
--				  sp->hdr.serial, true, true,
-+				  ack_serial, true, true,
- 				  rxrpc_propose_ack_respond_to_ping);
- 	} else if (sp->hdr.flags & RXRPC_REQUEST_ACK) {
- 		rxrpc_propose_ACK(call, RXRPC_ACK_REQUESTED,
--				  sp->hdr.serial, true, true,
-+				  ack_serial, true, true,
- 				  rxrpc_propose_ack_respond_to_ack);
+-		if (!xfer->cyclic)
++		if (!xfer->cyclic) {
++			src_addr += sg_dma_len(sg);
++			dst_addr += sg_dma_len(sg);
+ 			sg = sg_next(sg);
++		}
  	}
  
- 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
- 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
--		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
- 					   first_soft_ack, call->ackr_first_seq,
- 					   prev_pkt, call->ackr_prev_seq);
- 		return;
-@@ -905,7 +906,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 
- 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
- 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
--		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
- 					   first_soft_ack, call->ackr_first_seq,
- 					   prev_pkt, call->ackr_prev_seq);
- 		goto out;
-@@ -965,7 +966,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	    RXRPC_TX_ANNO_LAST &&
- 	    summary.nr_acks == call->tx_top - hard_ack &&
- 	    rxrpc_is_client_call(call))
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, ack_serial,
- 				  false, true,
- 				  rxrpc_propose_ack_ping_for_lost_reply);
- 
--- 
-2.25.1
-
+ 	return vchan_tx_prep(&chan->vc, &desc->vd, xfer->flags);
 
 
