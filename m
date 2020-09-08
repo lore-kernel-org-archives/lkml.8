@@ -2,98 +2,249 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E8EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847FDC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 033C42087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593101;
-	bh=JKzs0guyM9YvZO6uqN0KbuEC1FWIlpV2kgvpKhYr0cU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TXGbpJs9Zw2/tD8SANquqq62QLJW6ZVe/y4Rb1t2KTIlJ7CrHZUnLFEparYg9Hw/W
-	 v6KTfvcwKRr3v6lKDMw1v9W4hgMprnDRnDgoPhpOfjV9AEfJ36B9wdduihhvCDHdjo
-	 soYKTS6r9drf20ttfJrbBpA0Ib2SWOpFIcc/Q+Rg=
+	by mail.kernel.org (Postfix) with ESMTP id 46D8B2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="DHiHSRmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgIHTYs (ORCPT
+        id S1732054AbgIHTZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731080AbgIHQBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:01:23 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011C823D22;
-        Tue,  8 Sep 2020 15:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579408;
-        bh=JKzs0guyM9YvZO6uqN0KbuEC1FWIlpV2kgvpKhYr0cU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hYSUCF5joQWwZlF3EXGmm1DFPVqynCdCwQ08y2weKhv0eQgmSnJU2AVAJDbTeq6dV
-         6BWAgzBmjM0ykDZSpUaon9Pntgrp5yXRaIhnxE9fUfU/tAIxNFafUz3g2katJbQE6U
-         xJnykG+IcQKV/ufQrLI9G3RJpaSDyLF5Kl9ROA2k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 065/186] net: ethernet: ti: cpsw: fix clean up of vlan mc entries for host port
-Date:   Tue,  8 Sep 2020 17:23:27 +0200
-Message-Id: <20200908152244.808958254@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 8 Sep 2020 15:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730606AbgIHQBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:19 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B650FC06138D
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 09:00:19 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v196so11330465pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sslab.ics.keio.ac.jp; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=vpAOYUtfsOyAnKG5VAGbK9i/Ip7+aawrrhrrv5e7Aow=;
+        b=DHiHSRmdwnpe9Sg4vtxogrU6LNpUMPIbwowsPQSZ4Qn+mF18yhnFU8kO2aEIWCVtIM
+         hnhRKBaS0yLhCwwQ4e0GAkXR2N66ArjCg7+buhT4CQh2X58AbHazwqLau+sjnm7Aw2eT
+         cW7BbZ4Qspb8yoskJd9qETBbFq63naV1F8qyw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=vpAOYUtfsOyAnKG5VAGbK9i/Ip7+aawrrhrrv5e7Aow=;
+        b=aTtO5KfegzR1fjO0G6OH5JAUh7ZA6AWZKdBgze4P8IqEhkLKAaZSs0UGzLTxpR1RXa
+         eUfsLz80FT/56qz8uVUIGfwIaPrIbfYTDzSZegv0IDub8+bro8ZCIZ3J4YcZB4U4OYlM
+         CzYZnsde6oPL0WzYBmO7k2yBBsatITI4CV97maHdCGnNwfGFNX8dHLuc6g1CDuzRH8eR
+         Rj2BZkqWdCdO9RQQcdsJIAcgyG1BVyLj/l2SMhBh7aqaustbrvFxCFnJsHitz1IPS6GJ
+         pVL9LPqbfb6kO2exSsNW9PzmbTW6XAqPKJKkDAUOd2GlCW7FfHBbEvG4+xDt/gh2PCJK
+         SkNw==
+X-Gm-Message-State: AOAM532M+VJ9gYHwam5pK2J++Eaf/eTXYv1io80zHttkWFi6pK/BNAYO
+        bzjRI79PNs9p93MnUYPnODUnEA==
+X-Google-Smtp-Source: ABdhPJxWIMWaWhzEvTVzBuaT+oyuChEp91L5TLAPvVk6VB4cN5C6rNjeqsZ4mBDuySD1iXChOWA8hQ==
+X-Received: by 2002:a17:902:ff12:: with SMTP id f18mr24272185plj.118.1599580819032;
+        Tue, 08 Sep 2020 09:00:19 -0700 (PDT)
+Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
+        by smtp.googlemail.com with ESMTPSA id z4sm3657280pfr.197.2020.09.08.09.00.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 09:00:18 -0700 (PDT)
+From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
+        takafumi@sslab.ics.keio.ac.jp, Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Scott Teel <scott.teel@microsemi.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scsi: hpsa: fix memory leak in hpsa_init_one
+Date:   Tue,  8 Sep 2020 15:59:56 +0000
+Message-Id: <20200908155957.18921-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <9f7795b2-42c6-426f-12b6-9dfbd4fdb3a9@web.de>
+References: <9f7795b2-42c6-426f-12b6-9dfbd4fdb3a9@web.de>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
+When hpsa_scsi_add_host fails, h->lastlogicals is leaked since it lacks
+free in the error handler.
 
-[ Upstream commit 99d469fc64d06f0c81c0fe2a1c01645a67e0cbf0 ]
+Fix this by adding free when hpsa_scsi_add_host fails.
 
-To flush the vid + mc entries from ALE, which is required when a VLAN
-interface is removed, driver needs to call cpsw_ale_flush_multicast()
-with ALE_PORT_HOST for port mask as these entries are added only for
-host port. Without this, these entries remain in the ALE table even
-after removing the VLAN interface. cpsw_ale_flush_multicast() calls
-cpsw_ale_flush_mcast which expects a port mask to do the job.
+This patch also renames the numbered labels to detailed names.
 
-Fixes: 15180eca569b ("net: ethernet: ti: cpsw: fix vlan mcast")
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: cf47723763a7 ("hpsa: correct initialization order issue")
+Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
 ---
- drivers/net/ethernet/ti/cpsw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/hpsa.c | 52 +++++++++++++++++++++++----------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 9b17bbbe102fe..4a65edc5a3759 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1116,7 +1116,7 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
- 				  HOST_PORT_NUM, ALE_VLAN, vid);
- 	ret |= cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
- 				  0, ALE_VLAN, vid);
--	ret |= cpsw_ale_flush_multicast(cpsw->ale, 0, vid);
-+	ret |= cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
- err:
- 	pm_runtime_put(cpsw->dev);
- 	return ret;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 48d5da59262b..4911ca22efe4 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -8691,19 +8691,19 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (!h->lockup_detected) {
+ 		dev_err(&h->pdev->dev, "Failed to allocate lockup detector\n");
+ 		rc = -ENOMEM;
+-		goto clean1;	/* aer/h */
++		goto out_destroy_workqueue;	/* aer/h */
+ 	}
+ 	set_lockup_detected_for_all_cpus(h, 0);
+ 
+ 	rc = hpsa_pci_init(h);
+ 	if (rc)
+-		goto clean2;	/* lu, aer/h */
++		goto out_free_lockup_detected;	/* lu, aer/h */
+ 
+ 	/* relies on h-> settings made by hpsa_pci_init, including
+ 	 * interrupt_mode h->intr */
+ 	rc = hpsa_scsi_host_alloc(h);
+ 	if (rc)
+-		goto clean2_5;	/* pci, lu, aer/h */
++		goto out_free_pci_init;	/* pci, lu, aer/h */
+ 
+ 	sprintf(h->devname, HPSA "%d", h->scsi_host->host_no);
+ 	h->ctlr = number_of_controllers;
+@@ -8719,7 +8719,7 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			dac = 0;
+ 		} else {
+ 			dev_err(&pdev->dev, "no suitable DMA available\n");
+-			goto clean3;	/* shost, pci, lu, aer/h */
++			goto out_scsi_host_put;	/* shost, pci, lu, aer/h */
+ 		}
+ 	}
+ 
+@@ -8728,13 +8728,13 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	rc = hpsa_request_irqs(h, do_hpsa_intr_msi, do_hpsa_intr_intx);
+ 	if (rc)
+-		goto clean3;	/* shost, pci, lu, aer/h */
++		goto out_scsi_host_put;	/* shost, pci, lu, aer/h */
+ 	rc = hpsa_alloc_cmd_pool(h);
+ 	if (rc)
+-		goto clean4;	/* irq, shost, pci, lu, aer/h */
++		goto out_free_irqs;	/* irq, shost, pci, lu, aer/h */
+ 	rc = hpsa_alloc_sg_chain_blocks(h);
+ 	if (rc)
+-		goto clean5;	/* cmd, irq, shost, pci, lu, aer/h */
++		goto out_free_cmd_pool;	/* cmd, irq, shost, pci, lu, aer/h */
+ 	init_waitqueue_head(&h->scan_wait_queue);
+ 	init_waitqueue_head(&h->event_sync_wait_queue);
+ 	mutex_init(&h->reset_mutex);
+@@ -8747,25 +8747,25 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	spin_lock_init(&h->devlock);
+ 	rc = hpsa_put_ctlr_into_performant_mode(h);
+ 	if (rc)
+-		goto clean6; /* sg, cmd, irq, shost, pci, lu, aer/h */
++		goto out_free_sg_chain_blocks; /* sg, cmd, irq, shost, pci, lu, aer/h */
+ 
+ 	/* create the resubmit workqueue */
+ 	h->rescan_ctlr_wq = hpsa_create_controller_wq(h, "rescan");
+ 	if (!h->rescan_ctlr_wq) {
+ 		rc = -ENOMEM;
+-		goto clean7;
++		goto out_free_performant_mode;
+ 	}
+ 
+ 	h->resubmit_wq = hpsa_create_controller_wq(h, "resubmit");
+ 	if (!h->resubmit_wq) {
+ 		rc = -ENOMEM;
+-		goto clean7;	/* aer/h */
++		goto out_free_performant_mode;	/* aer/h */
+ 	}
+ 
+ 	h->monitor_ctlr_wq = hpsa_create_controller_wq(h, "monitor");
+ 	if (!h->monitor_ctlr_wq) {
+ 		rc = -ENOMEM;
+-		goto clean7;
++		goto out_free_performant_mode;
+ 	}
+ 
+ 	/*
+@@ -8795,20 +8795,20 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 			 * cannot goto clean7 or free_irqs will be called
+ 			 * again. Instead, do its work
+ 			 */
+-			hpsa_free_performant_mode(h);	/* clean7 */
+-			hpsa_free_sg_chain_blocks(h);	/* clean6 */
+-			hpsa_free_cmd_pool(h);		/* clean5 */
++			hpsa_free_performant_mode(h);	/* out_free_performant_mode */
++			hpsa_free_sg_chain_blocks(h);	/* out_free_sg_chain_blocks */
++			hpsa_free_cmd_pool(h);		/* out_free_cmd_pool */
+ 			/*
+ 			 * skip hpsa_free_irqs(h) clean4 since that
+ 			 * was just called before request_irqs failed
+ 			 */
+-			goto clean3;
++			goto out_scsi_host_put;
+ 		}
+ 
+ 		rc = hpsa_kdump_soft_reset(h);
+ 		if (rc)
+ 			/* Neither hard nor soft reset worked, we're hosed. */
+-			goto clean7;
++			goto out_free_performant_mode;
+ 
+ 		dev_info(&h->pdev->dev, "Board READY.\n");
+ 		dev_info(&h->pdev->dev,
+@@ -8854,7 +8854,7 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* hook into SCSI subsystem */
+ 	rc = hpsa_scsi_add_host(h);
+ 	if (rc)
+-		goto clean7; /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
++		goto out_free_lastlogicals; /* ll, perf, sg, cmd, irq, shost, pci, lu, aer/h */
+ 
+ 	/* Monitor the controller for firmware lockups */
+ 	h->heartbeat_sample_interval = HEARTBEAT_SAMPLE_INTERVAL;
+@@ -8869,26 +8869,28 @@ static int hpsa_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 				HPSA_EVENT_MONITOR_INTERVAL);
+ 	return 0;
+ 
+-clean7: /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
++out_free_lastlogicals: /* ll, perf, sg, cmd, irq, shost, pci, lu, aer/h */
++	kfree(h->lastlogicals);
++out_free_performant_mode: /* perf, sg, cmd, irq, shost, pci, lu, aer/h */
+ 	hpsa_free_performant_mode(h);
+ 	h->access.set_intr_mask(h, HPSA_INTR_OFF);
+-clean6: /* sg, cmd, irq, pci, lockup, wq/aer/h */
++out_free_sg_chain_blocks: /* sg, cmd, irq, pci, lockup, wq/aer/h */
+ 	hpsa_free_sg_chain_blocks(h);
+-clean5: /* cmd, irq, shost, pci, lu, aer/h */
++out_free_cmd_pool: /* cmd, irq, shost, pci, lu, aer/h */
+ 	hpsa_free_cmd_pool(h);
+-clean4: /* irq, shost, pci, lu, aer/h */
++out_free_irqs: /* irq, shost, pci, lu, aer/h */
+ 	hpsa_free_irqs(h);
+-clean3: /* shost, pci, lu, aer/h */
++out_scsi_host_put: /* shost, pci, lu, aer/h */
+ 	scsi_host_put(h->scsi_host);
+ 	h->scsi_host = NULL;
+-clean2_5: /* pci, lu, aer/h */
++out_free_pci_init: /* pci, lu, aer/h */
+ 	hpsa_free_pci_init(h);
+-clean2: /* lu, aer/h */
++out_free_lockup_detected: /* lu, aer/h */
+ 	if (h->lockup_detected) {
+ 		free_percpu(h->lockup_detected);
+ 		h->lockup_detected = NULL;
+ 	}
+-clean1:	/* wq/aer/h */
++out_destroy_workqueue:	/* wq/aer/h */
+ 	if (h->resubmit_wq) {
+ 		destroy_workqueue(h->resubmit_wq);
+ 		h->resubmit_wq = NULL;
 -- 
-2.25.1
-
-
+2.17.1
 
