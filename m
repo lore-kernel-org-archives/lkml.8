@@ -2,164 +2,471 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F803C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875C8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28062206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438D3206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AqWZAUGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732172AbgIHR5i (ORCPT
+        id S1732179AbgIHR5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:57:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:33391 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730976AbgIHR52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:57:28 -0400
-IronPort-SDR: NqSJHVu83LQE+T6zTFxqI8GuV34h0G9MCI8JRncqNoW8xrCmI02zuDtC80X8BudlZY7KUVvES1
- JKj3f1FXPqWA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="222401214"
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="222401214"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:57:27 -0700
-IronPort-SDR: tOHi4J+hjFrNkhEIVJnDkLLMxxMt0Wpt0qHFy2CDsEZ8TwXJjtzId5lA48vCSkQuVc9luw9G4Y
- fwV/wTSdhiXw==
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="299877510"
-Received: from sparasa-mobl1.amr.corp.intel.com (HELO [10.251.10.231]) ([10.251.10.231])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 10:57:26 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
- <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
- <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
- <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
- <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
-Date:   Tue, 8 Sep 2020 10:57:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 13:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732161AbgIHR5f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:57:35 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1806DC061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:57:34 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 72A353B;
+        Tue,  8 Sep 2020 19:57:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599587852;
+        bh=cfvUdMZzACQX1NDPlS0gX0nzqztCbxhhaXeXA296Og0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AqWZAUGoa9Ox7oNIugTwGvgTy2YIJ8LPn5rpTdlnZOOZtlA/GgoxIxZoXiCzehQuH
+         vPYz8wwjIy94vO9q3IoMcskDIoru60Hza9EMiwfnoR2VqSTC/QfRZtEoZGKye09dVw
+         +cOZqgltQI9i5IrRoonrkuVS2EsCLv84lgNpI+jg=
+Date:   Tue, 8 Sep 2020 20:57:07 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinay Simha B N <simhavcs@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge/tc358775: Fixes bus formats read
+Message-ID: <20200908175707.GH11405@pendragon.ideasonboard.com>
+References: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
+ <20200812095418.GG6057@pendragon.ideasonboard.com>
+ <CAGWqDJ4i=t4Noi7wjGDDhUYkB_uuQ6A-WiMrh1ErKRi2HU9t9w@mail.gmail.com>
+ <20200812131818.GI6057@pendragon.ideasonboard.com>
+ <CAGWqDJ6eHCNXb5dMCUJ785iUp7gjdCk0bB=GuZesVesaVACucQ@mail.gmail.com>
+ <CAGWqDJ5QWyvgJWyink1eH2fHhFWEKSei7XPCdtCRaM1BqRs-Tw@mail.gmail.com>
+ <CAGWqDJ7DQbnxBmL9xt3cJoXkcm4aU1Msf-MiJOi12hd61GbJpg@mail.gmail.com>
+ <CAGWqDJ4eqDNZFz+F2ybaCzuZ=bvr_4hFq=GGMmPCK0zY1KcyPw@mail.gmail.com>
+ <CAGWqDJ4zHO4sjXOkG=iSeBhJn4J9+ccr6CKOKcAEBxU31b4VGw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <CAGWqDJ4zHO4sjXOkG=iSeBhJn4J9+ccr6CKOKcAEBxU31b4VGw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 10:50 AM, Yu, Yu-cheng wrote:
-> What about this:
+Hi Vinay,
+
+On Tue, Sep 08, 2020 at 11:22:48PM +0530, Vinay Simha B N wrote:
+> laurent,
 > 
-> - Do not add any new syscall or arch_prctl for creating a new shadow stack.
+> Please review or give some feedback.
+
+I'm sorry, I have very little time these days :-( Maybe Neil can provide
+feedback ?
+
+> On Tue, Aug 25, 2020 at 7:57 PM Vinay Simha B N <simhavcs@gmail.com> wrote:
 > 
-> - Add a new arch_prctl that can turn an anonymous mapping to a shadow
-> stack mapping.
-> 
-> This allows the application to do whatever is necessary.  It can even
-> allow GDB or JIT code to create or fix a call stack.
+> > laurent,
+> >
+> > Please review or give some feedback.
+> >
+> > On Thu, Aug 13, 2020 at 9:09 PM Vinay Simha B N <simhavcs@gmail.com>
+> > wrote:
+> > >
+> > > laurent,
+> > >
+> > > The code sequence was a problem. *num_inputs_fmts =
+> > > ARRAY_SIZE(tc_lvds_in_bus_fmts); should come first and then allocate
+> > > the kcalloc.
+> > >
+> > > input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
+> > >                              GFP_KERNEL);
+> > > ..
+> > >         for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> > >
+> > >         *num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+> > >
+> > > So, internally in the drm pipeline get set the input format based on
+> > > the output formats?
+> > >
+> > > On Wed, Aug 12, 2020 at 10:45 PM Vinay Simha B N <simhavcs@gmail.com>
+> > wrote:
+> > > >
+> > > > laurent,
+> > > >
+> > > > if i add the .atomic_get_input_bus_fmts =
+> > > > tc_bridge_get_input_bus_fmts, with the implementation suggested,
+> > > > system does not boot fully, the reason is, we capture all the
+> > > > supported input formats, but not sure where to set the final input
+> > > > format. Please suggest.
+> > > >
+> > > > for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> > > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> > > >
+> > > >         *num_input_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+> > > >
+> > > > On Wed, Aug 12, 2020 at 8:25 PM Vinay Simha B N <simhavcs@gmail.com>
+> > wrote:
+> > > > >
+> > > > > laurent,
+> > > > >
+> > > > > Video data input format :  RGB666 loosely packed 24 bits per pixel
+> > > > > Can we use MEDIA_BUS_FMT_RGB666_1X24_CPADHI? There was no information
+> > > > > wrt CPADHI or for loosely packed
+> > > > >
+> > > > > static const u32 tc_lvds_in_bus_fmts[] = {
+> > > > >         MEDIA_BUS_FMT_RGB565_1X16,
+> > > > >         MEDIA_BUS_FMT_RGB666_1X18,
+> > > > >         MEDIA_BUS_FMT_RGB666_1X24_CPADHI,
+> > > > >         MEDIA_BUS_FMT_RBG888_1X24,
+> > > > > };
+> > > > >
+> > > > > for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> > > > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> > > > > >> This will have all the available input formats, but finally which
+> > video data input format chosen?
+> > > > > Since dsi->format = MIPI_DSI_FMT_RGB888 is used does it chooses
+> > > > > MEDIA_BUS_FMT_RBG888_1X24 by the drm pipeline
+> > > > >
+> > > > > On Wed, Aug 12, 2020 at 6:48 PM Laurent Pinchart
+> > > > > <laurent.pinchart@ideasonboard.com> wrote:
+> > > > > >
+> > > > > > Hi Vinay,
+> > > > > >
+> > > > > > On Wed, Aug 12, 2020 at 06:07:52PM +0530, Vinay Simha B N wrote:
+> > > > > > > On Wed, Aug 12, 2020 at 3:24 PM Laurent Pinchart wrote:
+> > > > > > > > On Wed, Aug 12, 2020 at 12:55:50PM +0530, Vinay Simha BN wrote:
+> > > > > > > > > - bus formats read from
+> > drm_bridge_state.output_bus_cfg.format
+> > > > > > > > >   and .atomic_get_input_bus_fmts() instead of connector
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> > > > > > > > >
+> > > > > > > > > ---
+> > > > > > > > >  v1:
+> > > > > > > > >  * Laurent Pinchart review comments incorporated
+> > > > > > > > >    drm_bridge_state.output_bus_cfg.format
+> > > > > > > > >    instead of connector
+> > > > > > > > > ---
+> > > > > > > > >  drivers/gpu/drm/bridge/tc358775.c | 76
+> > ++++++++++++++++++++++++++++++---------
+> > > > > > > > >  1 file changed, 59 insertions(+), 17 deletions(-)
+> > > > > > > > >
+> > > > > > > > > diff --git a/drivers/gpu/drm/bridge/tc358775.c
+> > b/drivers/gpu/drm/bridge/tc358775.c
+> > > > > > > > > index 7da15cd..5d8714a 100644
+> > > > > > > > > --- a/drivers/gpu/drm/bridge/tc358775.c
+> > > > > > > > > +++ b/drivers/gpu/drm/bridge/tc358775.c
+> > > > > > > > > @@ -271,6 +271,13 @@ struct tc_data {
+> > > > > > > > >       struct gpio_desc        *stby_gpio;
+> > > > > > > > >       u8                      lvds_link; /* single-link or
+> > dual-link */
+> > > > > > > > >       u8                      bpc;
+> > > > > > > > > +     u32                     output_bus_fmt;
+> > > > > > > > > +};
+> > > > > > > > > +
+> > > > > > > > > +static const u32 tc_lvds_out_bus_fmts[] = {
+> > > > > > > > > +     MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> > > > > > > > > +     MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> > > > > > > > > +     MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> > > > > > > > >  };
+> > > > > > > > >
+> > > > > > > > >  static inline struct tc_data *bridge_to_tc(struct
+> > drm_bridge *b)
+> > > > > > > > > @@ -359,19 +366,6 @@ static void d2l_write(struct i2c_client
+> > *i2c, u16 addr, u32 val)
+> > > > > > > > >                       ret, addr);
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > -/* helper function to access bus_formats */
+> > > > > > > > > -static struct drm_connector *get_connector(struct
+> > drm_encoder *encoder)
+> > > > > > > > > -{
+> > > > > > > > > -     struct drm_device *dev = encoder->dev;
+> > > > > > > > > -     struct drm_connector *connector;
+> > > > > > > > > -
+> > > > > > > > > -     list_for_each_entry(connector,
+> > &dev->mode_config.connector_list, head)
+> > > > > > > > > -             if (connector->encoder == encoder)
+> > > > > > > > > -                     return connector;
+> > > > > > > > > -
+> > > > > > > > > -     return NULL;
+> > > > > > > > > -}
+> > > > > > > > > -
+> > > > > > > > >  static void tc_bridge_enable(struct drm_bridge *bridge)
+> > > > > > > > >  {
+> > > > > > > > >       struct tc_data *tc = bridge_to_tc(bridge);
+> > > > > > > > > @@ -380,7 +374,6 @@ static void tc_bridge_enable(struct
+> > drm_bridge *bridge)
+> > > > > > > > >       u32 val = 0;
+> > > > > > > > >       u16 dsiclk, clkdiv, byteclk, t1, t2, t3, vsdelay;
+> > > > > > > > >       struct drm_display_mode *mode;
+> > > > > > > > > -     struct drm_connector *connector =
+> > get_connector(bridge->encoder);
+> > > > > > > > >
+> > > > > > > > >       mode = &bridge->encoder->crtc->state->adjusted_mode;
+> > > > > > > > >
+> > > > > > > > > @@ -451,14 +444,13 @@ static void tc_bridge_enable(struct
+> > drm_bridge *bridge)
+> > > > > > > > >       d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) |
+> > LV_PHY0_ND(6));
+> > > > > > > > >
+> > > > > > > > >       dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
+> > > > > > > > > -             connector->display_info.bus_formats[0],
+> > > > > > > > > +             tc->output_bus_fmt,
+> > > > > > > > >               tc->bpc);
+> > > > > > > > >       /*
+> > > > > > > > >        * Default hardware register settings of tc358775
+> > configured
+> > > > > > > > >        * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24
+> > format
+> > > > > > > > >        */
+> > > > > > > > > -     if (connector->display_info.bus_formats[0] ==
+> > > > > > > > > -             MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+> > > > > > > > > +     if (tc->output_bus_fmt ==
+> > MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+> > > > > > > > >               /* VESA-24 */
+> > > > > > > > >               d2l_write(tc->i2c, LV_MX0003, LV_MX(LVI_R0,
+> > LVI_R1, LVI_R2, LVI_R3));
+> > > > > > > > >               d2l_write(tc->i2c, LV_MX0407, LV_MX(LVI_R4,
+> > LVI_R7, LVI_R5, LVI_G0));
+> > > > > > > > > @@ -590,6 +582,51 @@ static int tc358775_parse_dt(struct
+> > device_node *np, struct tc_data *tc)
+> > > > > > > > >       return 0;
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > > +static int tc_bridge_atomic_check(struct drm_bridge *bridge,
+> > > > > > > > > +                               struct drm_bridge_state
+> > *bridge_state,
+> > > > > > > > > +                               struct drm_crtc_state
+> > *crtc_state,
+> > > > > > > > > +                               struct drm_connector_state
+> > *conn_state)
+> > > > > > > > > +{
+> > > > > > > > > +     struct tc_data *tc = bridge_to_tc(bridge);
+> > > > > > > > > +
+> > > > > > > > > +     tc->output_bus_fmt =
+> > bridge_state->output_bus_cfg.format;
+> > > > > > > >
+> > > > > > > > .atomic_check() isn't allowed to modify the device state,
+> > neither the
+> > > > > > > > hardware state nor the software state in drm_bridge or
+> > tc_data. You can
+> > > > > > > > instead access the bridge state directly in
+> > tc_bridge_enable(), with
+> > > > > > > >
+> > > > > > > >         struct drm_bridge_state *state =
+> > > > > > > >                 drm_priv_to_bridge_state(bridge->base.state);
+> > > > > > >
+> > > > > > > Currently the driver is picking up from the dts panel
+> > > > > > > (data-mapping = "vesa-24";) or jeida-24 or jeida-18.
+> > > > > > >
+> > > > > > > Does state->output_bus_cfg.format  get set from the data-mapping?
+> > > > > >
+> > > > > > It should. The drm_panel should take care of that. In
+> > > > > > panel_simple_get_non_edid_modes(), it calls
+> > > > > >
+> > > > > >         if (panel->desc->bus_format)
+> > > > > >
+> >  drm_display_info_set_bus_formats(&connector->display_info,
+> > > > > >
+> > &panel->desc->bus_format, 1);
+> > > > > >
+> > > > > > to initialize the bus format in display_info. Then, the DRM bridge
+> > > > > > helper drm_atomic_bridge_chain_select_bus_fmts() retrieves the
+> > output
+> > > > > > format by calling .atomic_get_output_bus_fmts() if implemented by
+> > the
+> > > > > > last bridge in the chain, or directly from the connector
+> > display_info.
+> > > > > > The last bridge in the chain is a DRM panel bridge, and doesn't
+> > > > > > implement .atomic_get_output_bus_fmts(), so the format from
+> > display_info
+> > > > > > is used, and is stored in the output_bus_cfg.format field of this
+> > bridge
+> > > > > > in select_bus_fmt_recursive().
+> > > > > >
+> > > > > > If something doesn't work according to the plan, I can help you
+> > > > > > debugging.
+> > > > > >
+> > > > > > > > > +
+> > > > > > > > > +     dev_dbg(tc->dev, "output_bus_fmt %04x\n",
+> > tc->output_bus_fmt);
+> > > > > > > > > +
+> > > > > > > > > +     return 0;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > > +static u32 *
+> > > > > > > > > +tc_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+> > > > > > > > > +                          struct drm_bridge_state
+> > *bridge_state,
+> > > > > > > > > +                          struct drm_crtc_state *crtc_state,
+> > > > > > > > > +                          struct drm_connector_state
+> > *conn_state,
+> > > > > > > > > +                          u32 output_fmt,
+> > > > > > > > > +                          unsigned int *num_input_fmts)
+> > > > > > > > > +{
+> > > > > > > > > +     u32 *input_fmts = NULL;
+> > > > > > > > > +     int i;
+> > > > > > > >
+> > > > > > > > i only takes positive values, so it can be an unsigned int.
+> > > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +     *num_input_fmts = 0;
+> > > > > > > > > +
+> > > > > > > > > +     for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ;
+> > ++i) {
+> > > > > > > > > +             if (output_fmt == tc_lvds_out_bus_fmts[i]) {
+> > > > > > > > > +                     *num_input_fmts = 1;
+> > > > > > > > > +                     input_fmts = kcalloc(*num_input_fmts,
+> > > > > > > > > +
+> > sizeof(*input_fmts),
+> > > > > > > > > +                                          GFP_KERNEL);
+> > > > > > > > > +                     if (!input_fmts)
+> > > > > > > > > +                             return NULL;
+> > > > > > > > > +
+> > > > > > > > > +                     input_fmts[0] = output_fmt;
+> > > > > > > >
+> > > > > > > > I don't think this is right, the input of the bridge isn't
+> > LVDS, is it ?
+> > > > > > >
+> > > > > > > Input to the bridge is DSI, format is already set
+> > > > > > >
+> > > > > > > dsi->format = MIPI_DSI_FMT_RGB888;
+> > > > > > >
+> > > > > > > enum mipi_dsi_pixel_format {
+> > > > > > >         MIPI_DSI_FMT_RGB888,
+> > > > > > >         MIPI_DSI_FMT_RGB666,
+> > > > > > >         MIPI_DSI_FMT_RGB666_PACKED,
+> > > > > > >         MIPI_DSI_FMT_RGB565,
+> > > > > > > };
+> > > > > > > include/drm/drm_mipi_dsi.h
+> > > > > > >
+> > > > > > > Why do we require this atomic_get_input_bus_fmts?
+> > > > > > >
+> > > > > > > Do i need to implement both atomic_get_input_bus_fmts and
+> > > > > > > atomic_get_output_bus_fmts?
+> > > > > >
+> > > > > > .atomic_get_output_bus_fmts() is only need for the last bridge in
+> > the
+> > > > > > chain, and is not mandatory when that bridge supports a single
+> > format.
+> > > > > > As this bridge can't be last (if the output is connect to a panel,
+> > there
+> > > > > > will be a drm_bridge wrapping the drm_panel), you don't have to
+> > > > > > implement that operation.
+> > > > > >
+> > > > > > .atomic_get_input_bus_fmts() is used to negotiate formats along the
+> > > > > > pipeline. The helps the DRM bridge helpers figure out what formats
+> > are
+> > > > > > possible, with the help of bridges that must report what input
+> > formats
+> > > > > > are compatible with a given output format. The DRM bridge helpers
+> > will
+> > > > > > take care of the rest.
+> > > > > >
+> > > > > > So, for this bridge, the input and output formats are decoupled.
+> > The
+> > > > > > bridge can output any of the three supported LVDS formats,
+> > regardless of
+> > > > > > what format it gets at its input. You should thus verify that the
+> > output
+> > > > > > format you receive in this function is supported (and return NULL
+> > if it
+> > > > > > isn't), and then return the list of supported input formats. If you
+> > > > > > don't implement .atomic_get_input_bus_fmts(), then the DRM bridge
+> > > > > > helpers will consider that the input and output formats are the
+> > same,
+> > > > > > and will set the output format of the previous bridge to, for
+> > example,
+> > > > > > MEDIA_BUS_FMT_RGB666_1X7X3_SPWG. It may work if the previous bridge
+> > > > > > doesn't care about its output format, but if it does, then it will
+> > be
+> > > > > > puzzled, as the previous bridge outputs DSI, not LVDS.
+> > > > > >
+> > > > > > > > As far as I can tell, the hardware support transcoding any of
+> > the
+> > > > > > > > supported input formats (RGB565, RGB666 or RGB888) to any of
+> > the
+> > > > > > > > supported output formats. How about the following ?
+> > > > > > > >
+> > > > > > > > static const u32 tc_lvds_in_bus_fmts[] = {
+> > > > > > > >         MEDIA_BUS_FMT_RGB565_1X16,
+> > > > > > > >         MEDIA_BUS_FMT_RGB666_1X18,
+> > > > > > > >         MEDIA_BUS_FMT_RBG888_1X24,
+> > > > > > > > };
+> > > > > > > >
+> > > > > > > > ...
+> > > > > > > >
+> > > > > > > >         u32 *input_fmts;
+> > > > > > > >         unsigned int i;
+> > > > > > > >
+> > > > > > > >         *num_input_fmts = 0;
+> > > > > > > >
+> > > > > > > >         for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ;
+> > ++i) {
+> > > > > > > >                 if (output_fmt == tc_lvds_out_bus_fmts[i])
+> > > > > > > >                         break;
+> > > > > > > >         }
+> > > > > > > >
+> > > > > > > >         if (i == ARRAY_SIZE(tc_lvds_out_bus_fmts))
+> > > > > > > >                 return NULL;
+> > > > > > > >
+> > > > > > > >         input_fmts = kcalloc(*num_input_fmts,
+> > ARRAY_SIZE(tc_lvds_in_bus_fmts),
+> > > > > > > >                              GFP_KERNEL);
+> > > > > > > >         if (!input_fmts)
+> > > > > > > >                 return NULL;
+> > > > > > > >
+> > > > > > > >         for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> > > > > > > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> > > > > > > >
+> > > > > > > >         *num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+> > > > > > > >         return input_fmts;
+> > > > > > > >
+> > > > > > > > > +
+> > > > > > > > > +                     break;
+> > > > > > > > > +             }
+> > > > > > > > > +     }
+> > > > > > > > > +
+> > > > > > > > > +     return input_fmts;
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > >  static int tc_bridge_attach(struct drm_bridge *bridge,
+> > > > > > > > >                           enum drm_bridge_attach_flags flags)
+> > > > > > > > >  {
+> > > > > > > > > @@ -639,6 +676,11 @@ static int tc_bridge_attach(struct
+> > drm_bridge *bridge,
+> > > > > > > > >  }
+> > > > > > > > >
+> > > > > > > > >  static const struct drm_bridge_funcs tc_bridge_funcs = {
+> > > > > > > > > +     .atomic_duplicate_state =
+> > drm_atomic_helper_bridge_duplicate_state,
+> > > > > > > > > +     .atomic_destroy_state =
+> > drm_atomic_helper_bridge_destroy_state,
+> > > > > > > > > +     .atomic_reset = drm_atomic_helper_bridge_reset,
+> > > > > > > > > +     .atomic_get_input_bus_fmts =
+> > tc_bridge_get_input_bus_fmts,
+> > > > > > > > > +     .atomic_check = tc_bridge_atomic_check,
+> > > > > > > > >       .attach = tc_bridge_attach,
+> > > > > > > > >       .pre_enable = tc_bridge_pre_enable,
+> > > > > > > > >       .enable = tc_bridge_enable,
 
-Fine with me.  But, it's going to effectively be
+-- 
+Regards,
 
-	arch_prctl(PR_CONVERT_TO_SHS..., addr, len);
-
-when it could just as easily be:
-
-	madvise(addr, len, MADV_SHSTK...);
-
-Or a new syscall.  The only question in my mind is whether we want to do
-something generic that we can use for other similar things in the
-future, like:
-
-	madvise2(addr, len, flags, MADV2_SHSTK...);
-
-I don't really feel strongly about it, though.  Could you please share
-your logic on why you want a prctl() as opposed to a whole new syscall?
+Laurent Pinchart
