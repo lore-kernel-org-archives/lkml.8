@@ -2,77 +2,197 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE09FC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A969C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809902137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD712137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:36:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A7cOmnVX"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H0qo4CTA";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="F/OdUYS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgIHFg3 (ORCPT
+        id S1728709AbgIHFgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 01:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgIHFg2 (ORCPT
+        Tue, 8 Sep 2020 01:36:55 -0400
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:51030
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbgIHFgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 01:36:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBC5C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 22:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tnIhBm/D9q30OCjl0Uvk6IczrpKqywtr99E3Z7cDOcY=; b=A7cOmnVXCZtWAnsWTe66XL2mO2
-        EfgFVttWjeSLSSOW7M36RucpwOpruW5Go8mkpQ5cD7T0J+07ypNo8hiB1Xuxa62/LM3ciqjLddxHv
-        xRrWNTfI9+FCCIHBqmRat5fAniV5XoT3gd4rkXV0XBIex7sniDbxfzTpR9WqhPmTk0d8tJXk7y1oZ
-        jwShC3NettOOKABfpiYOFXx730naA1c5vdvjOVfcLXmzLB70bqh/LkhPpc6V6jKL77EIL+9N/T6Fi
-        lxgKjyEDm7kq9V2R/eQojzNIjMHQCRKlWOLKzMxzwKo6SZzs1YMFkDgc6hzdfs7ZnDpdIS3qBRgdJ
-        WWIrZI2g==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFWIl-00044r-4s; Tue, 08 Sep 2020 05:36:19 +0000
-Date:   Tue, 8 Sep 2020 06:36:19 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
- dma-iommu
-Message-ID: <20200908053619.GA15418@infradead.org>
-References: <20200903201839.7327-1-murphyt7@tcd.ie>
- <20200903201839.7327-6-murphyt7@tcd.ie>
- <20200907070035.GA25114@infradead.org>
- <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
+        Tue, 8 Sep 2020 01:36:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599543408;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
+        bh=A6Xgkj5tRedzTXTr+PtsbaW7vc2IQ8D/TM5K5CiUam8=;
+        b=H0qo4CTAFkMqIGb9LTC/pCsSRulBD+w2P7tWhj7CIZNcbgyUPHZfEZLEzXUfHE0n
+        eC2R9vVBjkPvqU02uzUS9yo7Z19dmRDYPEtp2/bKRSBPR5AqVGGHH5UAtPovGlLygyV
+        t1OGnGOnlXFoPuB/qU8VDSlLkagUrr03939U6/Nc=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599543408;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=A6Xgkj5tRedzTXTr+PtsbaW7vc2IQ8D/TM5K5CiUam8=;
+        b=F/OdUYS3Ud0fdErUdlPHkGDonjS7xnP2clsvhX2Bapr3gzRLywehebszY4GScDCn
+        NdtP6bdyHHsQCmJ9kSWKaFIlr5yFcPa1eqNfbEgY6SL/uyIv8uSY6nzY2LHHcPNHtah
+        Tjg7mniT2VVq87mNEuUS2jPW6s6OHaWRNxb6DbIE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 44C81C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to llcc registers
+Date:   Tue, 8 Sep 2020 05:36:48 +0000
+Message-ID: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2020.09.08-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 09:18:50PM +0100, Tom Murphy wrote:
-> Yeah we talked about passing an attr to map_sg to disable merging at
-> the following microconfernce:
-> https://linuxplumbersconf.org/event/7/contributions/846/
-> As far as I can remember everyone seemed happy with that solution. I
-> won't be working on this though as I don't have any more time to
-> dedicate to this. It seems Lu Baolu will take over this.
+From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
 
-I'm absolutely again passing a flag.  Tha just invites further
-abuse.  We need a PCI ID based quirk or something else that can't
-be as easily abused.
+Older chipsets may not be allowed to configure certain LLCC registers
+as that is handled by the secure side software. However, this is not
+the case for newer chipsets and they must configure these registers
+according to the contents of the SCT table, while keeping in mind that
+older targets may not have these capabilities. So add support to allow
+such configuration of registers to enable capacity based allocation
+and power collapse retention for capable chipsets.
+
+Reason for choosing capacity based allocation rather than the default
+way based allocation is because capacity based allocation allows more
+finer grain partition and provides more flexibility in configuration.
+As for the retention through power collapse, it has an advantage where
+the cache hits are more when we wake up from power collapse although
+it does burn more power but the exact power numbers are not known at
+the moment.
+
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+(sai: use existing config instead of dt property and commit msg change)
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+
+Changes in v3:
+ * Drop separate table and use existing qcom_llcc_config (Doug)
+ * More descriptive commit msg (Doug)
+ * Directly set the config instead of '|=' (Doug)
+
+Changes in v2:
+ * Fix build errors reported by kernel test robot.
+
+---
+ drivers/soc/qcom/llcc-qcom.c       | 23 +++++++++++++++++++++++
+ include/linux/soc/qcom/llcc-qcom.h |  2 ++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
+index 429b5a60a1ba..b908656ce519 100644
+--- a/drivers/soc/qcom/llcc-qcom.c
++++ b/drivers/soc/qcom/llcc-qcom.c
+@@ -45,6 +45,9 @@
+ #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
+ #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
+ 
++#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
++#define LLCC_TRP_PCB_ACT              0x21F04
++
+ #define BANK_OFFSET_STRIDE	      0x80000
+ 
+ /**
+@@ -89,6 +92,7 @@ struct llcc_slice_config {
+ struct qcom_llcc_config {
+ 	const struct llcc_slice_config *sct_data;
+ 	int size;
++	bool need_llcc_cfg;
+ };
+ 
+ static const struct llcc_slice_config sc7180_data[] =  {
+@@ -122,11 +126,13 @@ static const struct llcc_slice_config sdm845_data[] =  {
+ static const struct qcom_llcc_config sc7180_cfg = {
+ 	.sct_data	= sc7180_data,
+ 	.size		= ARRAY_SIZE(sc7180_data),
++	.need_llcc_cfg	= true,
+ };
+ 
+ static const struct qcom_llcc_config sdm845_cfg = {
+ 	.sct_data	= sdm845_data,
+ 	.size		= ARRAY_SIZE(sdm845_data),
++	.need_llcc_cfg	= false,
+ };
+ 
+ static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
+@@ -327,6 +333,7 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
+ 	u32 attr0_val;
+ 	u32 max_cap_cacheline;
+ 	u32 sz;
++	u32 disable_cap_alloc, retain_pc;
+ 	int ret = 0;
+ 	const struct llcc_slice_config *llcc_table;
+ 	struct llcc_slice_desc desc;
+@@ -369,6 +376,21 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
+ 					attr0_val);
+ 		if (ret)
+ 			return ret;
++
++		if (drv_data->need_llcc_config) {
++			disable_cap_alloc = llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
++			ret = regmap_write(drv_data->bcast_regmap,
++						LLCC_TRP_SCID_DIS_CAP_ALLOC, disable_cap_alloc);
++			if (ret)
++				return ret;
++
++			retain_pc = llcc_table[i].retain_on_pc << llcc_table[i].slice_id;
++			ret = regmap_write(drv_data->bcast_regmap,
++						LLCC_TRP_PCB_ACT, retain_pc);
++			if (ret)
++				return ret;
++		}
++
+ 		if (llcc_table[i].activate_on_init) {
+ 			desc.slice_id = llcc_table[i].slice_id;
+ 			ret = llcc_slice_activate(&desc);
+@@ -474,6 +496,7 @@ static int qcom_llcc_probe(struct platform_device *pdev)
+ 
+ 	drv_data->cfg = llcc_cfg;
+ 	drv_data->cfg_size = sz;
++	drv_data->need_llcc_config = cfg->need_llcc_cfg;
+ 	mutex_init(&drv_data->lock);
+ 	platform_set_drvdata(pdev, drv_data);
+ 
+diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
+index 90b864655822..52c780085f61 100644
+--- a/include/linux/soc/qcom/llcc-qcom.h
++++ b/include/linux/soc/qcom/llcc-qcom.h
+@@ -73,6 +73,7 @@ struct llcc_edac_reg_data {
+  * @bitmap: Bit map to track the active slice ids
+  * @offsets: Pointer to the bank offsets array
+  * @ecc_irq: interrupt for llcc cache error detection and reporting
++ * @need_llcc_config: check if llcc configuration is required
+  */
+ struct llcc_drv_data {
+ 	struct regmap *regmap;
+@@ -85,6 +86,7 @@ struct llcc_drv_data {
+ 	unsigned long *bitmap;
+ 	u32 *offsets;
+ 	int ecc_irq;
++	bool need_llcc_config;
+ };
+ 
+ #if IS_ENABLED(CONFIG_QCOM_LLCC)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
