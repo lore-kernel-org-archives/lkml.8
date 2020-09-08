@@ -2,123 +2,175 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C29FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C27C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC50207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB0D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HnwOR0/h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ele0Rrax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732121AbgIHQ44 (ORCPT
+        id S1731640AbgIHQ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58192 "EHLO
+        Tue, 8 Sep 2020 12:57:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731817AbgIHQWM (ORCPT
+        with ESMTP id S1731432AbgIHQ5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:22:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2113AC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 04:56:29 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c18so18768039wrm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 04:56:29 -0700 (PDT)
+        Tue, 8 Sep 2020 12:57:01 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0501C061573;
+        Tue,  8 Sep 2020 09:57:01 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w7so11464622pfi.4;
+        Tue, 08 Sep 2020 09:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Tp70PkVNXkSrNE2j0x4hwAD20KzB67jv0ioCblAxIfE=;
-        b=HnwOR0/hgZ+Lk2Ef1r50CTfWhlvEWHToNkXE65iDT3clvw0a8Go+T4AbKoW15rXUbi
-         gGkTvB1bmDZN8E7oHAlh9ewgXEXVU2K3uXg3/eDktJTlRUbEjEAXBn9jPvqHeFs5zAeK
-         HnkZeFBMdbHwJJhN1a9nM8+3t4We1WH2Yei8R3/+MN94v4dk/n2RUIyzRV+fCobrtr/h
-         9zGhfhYUUrGdNgxHEqUWkpmrpUPZZbPvdx1IGz40eCoZFv10ogBtjvTdCI4XkawmDiE8
-         6iTKPLI/MFrnaBiFNX3Aao2tL7p7Rp1/0joq3/AXU01u6NB6THr6IkTvYA54sC9faqds
-         pnZA==
+         :content-disposition:in-reply-to;
+        bh=kBD1EJXPjVAPBpvdc8wf1ILIVz5P8vX0mxtXEPwALzw=;
+        b=Ele0Rrax+SxCArR7vCT+Ep4XzRpupXA++JWD3kHsYCsN5NDhZAVsIEGGQQ88ehNC5R
+         46X0/j2chtpx+hmu9XItNJmS3if7iMfnXSYDV1uEJMrQHQDW22kF9ka/I3di4/dJSFYF
+         4mtMnPvRlqjWvbhmtg21sQpyMB8u4w4i21teNB+X3EFAJhMHaLCu5aKE2z+IrKZzcuRB
+         8LmD1TVvq7PW+2h4Y8+DchxExEX+odbLBhJV+TqhWyBPLlyj/IFZkOOwXg5f6T1hM9cn
+         I1yEt6NQJu3QdvQoIL6YzFaipMpF4S26ypm5drRygYvWFfuiOGAdfr8wrkQXzy2hLNNH
+         xKCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Tp70PkVNXkSrNE2j0x4hwAD20KzB67jv0ioCblAxIfE=;
-        b=TV+PcQ1gCeMzXvWyINuLufNwEZOhBQXPmRTzstjK4Ja1C7JLjGN1HCFVoSdJ7ppIFs
-         QGlixIzUMV+/mxJ4GGGas2B/S/CCZvKxq6jR6bQ1gwAwHVX0Us2/R8X67YVLsc3Ttp86
-         7PQJ81nObGIF12sUVPkqM8IEKbcJDdduusEE8vC1AhA53d9+qjE1Z4mEpZ1kXzJiGe1e
-         okfyftm+JYYjFyCQXUQm6ZH+RBDFdDdCuvlnYUK6LjQsGUOOgNWfx+JQZWjiKEQYkJ07
-         Z2bvFbKw8CsIkS64AgnawkyPgwp3sd6zaQsl2RyPNnDbf46Yx0w2G31aqVquAHWHvLhZ
-         Y4Ug==
-X-Gm-Message-State: AOAM5307dtmXHhIc2VmU3bCY8JMSVpFQ/efeJ7PjdKzc6wGSvhHzu+gC
-        vbcvLH7d+xpRHTjrec8XAxzW2g==
-X-Google-Smtp-Source: ABdhPJzaY79n3svROxhhavD7molBVjp0Fw3QrK2h3PmIxnn1uL3sT3TfTjMuqb3dOVp64JTckRQigQ==
-X-Received: by 2002:adf:9d44:: with SMTP id o4mr26752210wre.361.1599566187763;
-        Tue, 08 Sep 2020 04:56:27 -0700 (PDT)
-Received: from dell ([91.110.221.179])
-        by smtp.gmail.com with ESMTPSA id 71sm34589177wrm.23.2020.09.08.04.56.26
+         :mime-version:content-disposition:in-reply-to;
+        bh=kBD1EJXPjVAPBpvdc8wf1ILIVz5P8vX0mxtXEPwALzw=;
+        b=ixkI/jGdZJVTUcZNk2LluRjrMzZAUr8tN10xq39LAgE2+PMkJBWfYgTUYSDHf4x5M7
+         qfJv8mz5yVUeLJgxRnAdYy2Rg5dHyOA6NIiiKxVOS0zP1/hpUPTgBDJokrQMU+yIM/J0
+         8TKnxXMRpuirmFfytgFIn/kn5pghLEr3LAxmM28QTG7ZwhhRc41sL1df8b/ydAvZzPpZ
+         pEKE42QFA3McF7EjW1vTOMFc0QGOJqsf4dFUTH1JHo7FRbsLj7Aqw/B17vDtauae895c
+         n4Ja4C8FCnWvgY5d4zI8bW7HBVR1XnZJZbC1SU8fVdZLjcGcrCqeX07gXU0tiFmMmc7H
+         EL7g==
+X-Gm-Message-State: AOAM532m5CC7SJB4bfTPY0ocr/WWt6HyYdUv/P9JRusBiWdw5Pxo/sFT
+        +2VdxOsiBWDvBCJs/y7X5z4=
+X-Google-Smtp-Source: ABdhPJwZxemNY6Dve6ZxiSwz4vCGjA5iIlNIPUHL3l9AnM4JkFzTMbYq7IAQKVpAR9CjNuYYwMBgSQ==
+X-Received: by 2002:a05:6a00:8c5:b029:13e:ce2c:88bd with SMTP id s5-20020a056a0008c5b029013ece2c88bdmr96593pfu.0.1599584221085;
+        Tue, 08 Sep 2020 09:57:01 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id h15sm4467pfo.23.2020.09.08.09.56.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 04:56:27 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 12:56:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tom Rix <trix@redhat.com>
-Cc:     Xu Yilun <yilun.xu@intel.com>, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, matthew.gerlach@linux.intel.com,
-        russell.h.weight@intel.com, lgoncalv@redhat.com, hao.wu@intel.com
-Subject: Re: [PATCH v4 2/2] mfd: intel-m10-bmc: add Max10 BMC chip support
- for Intel FPGA PAC
-Message-ID: <20200908115625.GP4400@dell>
-References: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
- <1597822497-25107-3-git-send-email-yilun.xu@intel.com>
- <20200828100236.GF1826686@dell>
- <de14ce03-2d42-74d1-3801-2dd2b09a448e@redhat.com>
+        Tue, 08 Sep 2020 09:57:00 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 22:24:58 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        John Garry <john.garry@huawei.com>,
+        Don Brace <don.brace@microsemi.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
+Subject: Re: [PATCH v2 00/15] scsi: use generic power management
+Message-ID: <20200908165458.GA9948@gmail.com>
+References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <de14ce03-2d42-74d1-3801-2dd2b09a448e@redhat.com>
+In-Reply-To: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020, Tom Rix wrote:
-
+On Mon, Jul 20, 2020 at 07:04:13PM +0530, Vaibhav Gupta wrote:
+> Linux Kernel Mentee: Remove Legacy Power Management.
 > 
-> >> +
-> >> +static int check_m10bmc_version(struct intel_m10bmc *m10bmc)
-> >> +{
-> >> +	unsigned int v;
-> >> +
-> >> +	if (m10bmc_raw_read(m10bmc, M10BMC_LEGACY_SYS_BASE + M10BMC_BUILD_VER,
-> >> +			    &v))
-> >> +		return -ENODEV;
-> > Please break functions out of if statements.
-> >
-> > Does m10bmc_raw_read() return 0 on success?
-> >
-> > Seems odd for a read function.
-> >
-> >> +	if (v != 0xffffffff) {
-> >> +		dev_err(m10bmc->dev, "bad version M10BMC detected\n");
-> >> +		return -ENODEV;
-> >> +	}
-> > The only acceptable version is -1?
+> The purpose of this patch series is to upgrade power management in scsi
+> drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 > 
-> I ran into this in testing.  This is a check if the board is using a
-> very old legacy bmc version. The M10BMC_LEGACY_SYS_BASE is the
-> offset to this old block of mmio regs.  On the old boards, v would
-> have not been f's, on the current boards it is f's. The check is
-> necessary because future calls use the M10BMC_SYS_BASE offset which
-> was not valid on the old boards.
+> The upgrade makes sure that the involvement of PCI Core does not change the
+> order of operations executed in a driver. Thus, does not change its behavior.
+> 
+> In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+> helper functions like pci_request/release_regions(), pci_set_power_state(),
+> pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+> their job.
+> 
+> The conversion requires the removal of those function calls, change the
+> callbacks' definition accordingly and make use of dev_pm_ops structure.
+> 
+> v2: kbuild error in v1.
+> 
+> All patches are compile-tested only.
+> 
+> Test tools:
+>     - Compiler: gcc (GCC) 10.1.0
+>     - allmodconfig build: make -j$(nproc) W=1 all
+> 
+> Vaibhav Gupta (15):
+>   scsi: megaraid_sas: use generic power management
+>   scsi: aacraid: use generic power management
+>   scsi: aic7xxx: use generic power management
+>   scsi: aic79xx: use generic power management
+>   scsi: arcmsr: use generic power management
+>   scsi: esas2r: use generic power management
+>   scsi: hisi_sas_v3_hw: use generic power management
+>   scsi: mpt3sas_scsih: use generic power management
+>   scsi: lpfc: use generic power management
+>   scsi: pm_8001: use generic power management
+>   scsi: hpsa: use generic power management
+>   scsi: 3w-9xxx: use generic power management
+>   scsi: 3w-sas: use generic power management
+>   scsi: mvumi: use generic power management
+>   scsi: pmcraid: use generic power management
+> 
+>  drivers/scsi/3w-9xxx.c                    |  30 ++-----
+>  drivers/scsi/3w-sas.c                     |  31 ++-----
+>  drivers/scsi/aacraid/linit.c              |  34 ++------
+>  drivers/scsi/aic7xxx/aic79xx.h            |  12 +--
+>  drivers/scsi/aic7xxx/aic79xx_core.c       |   8 +-
+>  drivers/scsi/aic7xxx/aic79xx_osm_pci.c    |  43 +++-------
+>  drivers/scsi/aic7xxx/aic79xx_pci.c        |   6 +-
+>  drivers/scsi/aic7xxx/aic7xxx.h            |  10 +--
+>  drivers/scsi/aic7xxx/aic7xxx_core.c       |   6 +-
+>  drivers/scsi/aic7xxx/aic7xxx_osm_pci.c    |  46 +++-------
+>  drivers/scsi/aic7xxx/aic7xxx_pci.c        |   4 +-
+>  drivers/scsi/arcmsr/arcmsr_hba.c          |  35 +++-----
+>  drivers/scsi/esas2r/esas2r.h              |   5 +-
+>  drivers/scsi/esas2r/esas2r_init.c         |  48 +++--------
+>  drivers/scsi/esas2r/esas2r_main.c         |   3 +-
+>  drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  32 +++----
+>  drivers/scsi/hpsa.c                       |  12 +--
+>  drivers/scsi/lpfc/lpfc_init.c             | 100 +++++++---------------
+>  drivers/scsi/megaraid/megaraid_sas_base.c |  61 ++++---------
+>  drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  36 +++-----
+>  drivers/scsi/mvumi.c                      |  49 +++--------
+>  drivers/scsi/pm8001/pm8001_init.c         |  46 ++++------
+>  drivers/scsi/pmcraid.c                    |  44 +++-------
+>  23 files changed, 212 insertions(+), 489 deletions(-)
+> 
+> -- 
+> 2.27.0
+> 
+Please review the patch-series.
 
-This should be made more clear.  Either as a comment or as a define.
-
-Preferably both!
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks
+Vaibhav Gupta
