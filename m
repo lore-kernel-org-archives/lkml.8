@@ -2,158 +2,130 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0273CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A8C206B5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C371D2177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pxxpHzQ8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Uu8U1vN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgIHLsZ (ORCPT
+        id S1729741AbgIHLta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:48:25 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:45320 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730145AbgIHLkQ (ORCPT
+        Tue, 8 Sep 2020 07:49:30 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:46899 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730128AbgIHLju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:40:16 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200908113738euoutp016166ea840e3370571ae89bd83ef83483~yy-IQYn0k0798807988euoutp01U
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:37:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200908113738euoutp016166ea840e3370571ae89bd83ef83483~yy-IQYn0k0798807988euoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599565058;
-        bh=u9UQaTNidvGz8xQGItwzPmBXxLlY6mtig4v20LZiBcA=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=pxxpHzQ8C0Np3EljBRn599F6UekUpq0odohU1EiiF9oWYqJh2F+n8nBF/vnm14LbQ
-         hUZuZYzVI6/0xrfrDxViE0Wfki+2e/+4/hgmcdroM+kp+fz7BBOijWrEXbPuHIdmbc
-         DxLkzhc48rmVpYYkuR2tRn9RELla9rQM+q2Yf39I=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200908113737eucas1p13c031767f380c909bd65a2d5f8fc5365~yy-IB21KJ0523205232eucas1p12;
-        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1B.5E.06456.10D675F5; Tue,  8
-        Sep 2020 12:37:37 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200908113737eucas1p191e5a7978d1850ad527b5a2cc4a13e2d~yy-Hk8FjS1315613156eucas1p1E;
-        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200908113737eusmtrp2994e6741e398941d03b4ae8a58ba6c95~yy-HkX-tO3046530465eusmtrp2l;
-        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-0a-5f576d01e018
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id B1.C4.06017.10D675F5; Tue,  8
-        Sep 2020 12:37:37 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200908113737eusmtip1ea17ac50b289d3922cdc34eb5e8e3509~yy-HOYl930442004420eusmtip1X;
-        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: fbdev: radeon: Fix memleak in
- radeonfb_pci_register
-To:     Mathieu Malaterre <malat@debian.org>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Message-ID: <c2434d86-64c9-2870-f8cc-df604adb17ef@samsung.com>
-Date:   Tue, 8 Sep 2020 13:37:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 8 Sep 2020 07:39:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599565189; x=1631101189;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=F+j0JCQ1GOVdffMe15XLwWeslfZg0hQxxi1+nRfhBWA=;
+  b=Uu8U1vN2aiZ9U6xUDsslhIanSUG2YoGzxD1V36m6HqK5UatUCVs42V/K
+   iT5dJ/OxM67dceCsGUngssNgeygGopbssKHzVws6W4oMaIWwn3VG2MJx6
+   3pY9gRnQGguCPNGX2RrJnjbq126x2GOYDF0Jiv2og86nxRRN39tPwpoB1
+   spxBQok4vFWlCJ1wjfi8D4DkcqHJAuQX+j/VERg4ErXDND9IxFaN8mGfB
+   fIIWM7ZdWwt5ZrHL+1pzfKfopKCy1rye+kjJM47TxvFEJ1i334FHv2NHV
+   qM4GaWqtWIWEBod5vDvxSoWyhswuQNqcT1nuMs9/ZHJXQgXU8cZAZzbFT
+   A==;
+IronPort-SDR: UJwLxQvuqzI6LGuw+ZcNKEC8YY1cbiWNN1jw9hkfPBc15ECt57fXIKNF87X+91CTWoeakQp5Y/
+ RkBY/39EGW9iU/VBjbvfE17VrReQ7tgOjNnmC41ElliW39jSfmKdW/eLhaBwhK6idhdfOTizZb
+ txxCGTlnKakYI5A9+OXP+TrSrj3PtV6QmP8kjBnY5GhbDIm4uAli/m+WH/hvEfV4Dzf00Ip7vW
+ QfKKx+xwVTvS2Fa2cnoLaAvS8UeGmGvAjcIcs7Ly8VkSRz9c7FEb+k/A5PDTZ32TvR7T2j/Fl5
+ xMI=
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="94807242"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Sep 2020 04:35:10 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 8 Sep 2020 04:34:51 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 8 Sep 2020 04:34:37 -0700
+Date:   Tue, 8 Sep 2020 13:35:09 +0200
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Henrik Bjoernlund - M31679 <Henrik.Bjoernlund@microchip.com>
+CC:     Nikolay Aleksandrov <nikolay@nvidia.com>,
+        "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        Horatiu Vultur - M31836 <Horatiu.Vultur@microchip.com>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        UNGLinuxDriver <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH RFC 0/7] net: bridge: cfm: Add support for Connectivity
+ Fault Management(CFM)
+Message-ID: <20200908113509.hvuknvmr54no2cy4@lx-anielsen.microsemi.net>
+References: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
+ <20200904154406.4fe55b9d@hermes.lan>
+ <20200906182129.274fimjyo7l52puj@soft-dev3.localdomain>
+ <b36a32dbf3b4b315fc4cbfdf06084b75a7c58729.camel@nvidia.com>
+ <BY5PR11MB3928DF9AC75B8AEC2FBD2256ED290@BY5PR11MB3928.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+7wUswtuOPqQ131F5LdH=7dH+sWZc+jmMHXpaYmTDUehvx5eQ@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djP87qMueHxBm37zSw+NLUyW2z/3shi
-        ceXrezaLE/POsluc6PvAanF51xw2i7Ob3rI4sHv8apvL7NHzpoXV4373cSaPqwub2D0+b5Lz
-        6Nz1li2ALYrLJiU1J7MstUjfLoEro7//OXPBYq6KT1e+szYwzuXoYuTkkBAwkfgz8ydLFyMX
-        h5DACkaJ87dXsEM4Xxglbj/7ywjhfGaUuD71ADtMy/OdU6BaljNKfNv9iQ0kISTwllGiZycr
-        iM0mYCUxsX0VI4gtLBAocX7abSYQW0QgQGLL95tgK5gFrjJK/F38nRkkwStgJ3F08yEwm0VA
-        ReLF/s9g20QFIiQ+PTjMClEjKHFy5hMWEJsTaOiK96/AapgFxCVuPZnPBGHLS2x/O4cZZIGE
-        wD52iV29vUANHECOi8SmRbUQHwhLvDq+BeobGYn/O0F6QerXAR3U8QKqeTujxPLJ/9ggqqwl
-        7pz7xQYyiFlAU2L9Ln2IsKPE37fdUPP5JG68FYS4gU9i0rbpzBBhXomONiGIajWJDcs2sMGs
-        7dq5knkCo9IsJJ/NQvLNLCTfzELYu4CRZRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZg
-        Ojr97/inHYxfLyUdYhTgYFTi4f3gFRYvxJpYVlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii
-        0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4pRoYN3Q+kFm2Y7fxfYUGm86gAKX4
-        qe7Lf5oe2rTzzbM7VtXPWtfI5b+4/ry2J9C1YFGx150W74Kz/49Gn6tqffaFu9xPmnuWaPAq
-        hln67iHCj3PeX9gdzlP3fgW/6bINR2+d19kZNy/P3Pj/n3ltT1sq2+u15935W3tkKcODh/Xa
-        cx65R5dMXaH4UomlOCPRUIu5qDgRAKTW7QZDAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xu7qMueHxBp87JCw+NLUyW2z/3shi
-        ceXrezaLE/POsluc6PvAanF51xw2i7Ob3rI4sHv8apvL7NHzpoXV4373cSaPqwub2D0+b5Lz
-        6Nz1li2ALUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjf
-        LkEvo7//OXPBYq6KT1e+szYwzuXoYuTkkBAwkXi+cwpLFyMXh5DAUkaJWa0fGLsYOYASMhLH
-        15dB1AhL/LnWxQZR85pRYs/xxWwgCTYBK4mJ7asYQWxhgUCJ89NuM4HYIgJ+EqcvfmcCaWAW
-        uM4oMXHfXmaI7muMEk+WPgSr4hWwkzi6+RAziM0ioCLxYv9ndhBbVCBC4vCOWYwQNYISJ2c+
-        YQGxOYE2rHj/CqyGWUBd4s+8S8wQtrjErSfzmSBseYntb+cwT2AUmoWkfRaSlllIWmYhaVnA
-        yLKKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMAK3Hfu5ZQdj17vgQ4wCHIxKPLwfvMLihVgT
-        y4orcw8xSnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cDkkFcSb2hqaG5h
-        aWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgdGm29G0dq3cOpHwL9HrVs504S2p
-        n/KorTRZ/tOyHF7hHXVLz2rtvp5jLW12K0/kktKp80lnGVbMONRuL3s3ah/PwxeHrqQ63k4R
-        nMaS2WA2U0QlzfhmCMd7UW+rxW8fljXW8rTZ88Zr+0seY3jIV9rWGGBbX3T4gnNA8RQjiWMC
-        6xTrLptGKLEUZyQaajEXFScCAHezqRfWAgAA
-X-CMS-MailID: 20200908113737eucas1p191e5a7978d1850ad527b5a2cc4a13e2d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200825074817eucas1p29ac412697c8579d3f66c46d9e356b4e0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200825074817eucas1p29ac412697c8579d3f66c46d9e356b4e0
-References: <20200825062900.11210-1-dinghao.liu@zju.edu.cn>
-        <CGME20200825074817eucas1p29ac412697c8579d3f66c46d9e356b4e0@eucas1p2.samsung.com>
-        <CA+7wUswtuOPqQ131F5LdH=7dH+sWZc+jmMHXpaYmTDUehvx5eQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <BY5PR11MB3928DF9AC75B8AEC2FBD2256ED290@BY5PR11MB3928.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 8/25/20 9:47 AM, Mathieu Malaterre wrote:
-> On Tue, Aug 25, 2020 at 9:27 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->>
->> When radeon_kick_out_firmware_fb() fails, info should be
->> freed just like the subsequent error paths.
->>
->> Fixes: 069ee21a82344 ("fbdev: Fix loading of module radeonfb on PowerMac")
->> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
->> ---
->>  drivers/video/fbdev/aty/radeon_base.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
->> index 3fe509cb9b87..13bd2bd5c043 100644
->> --- a/drivers/video/fbdev/aty/radeon_base.c
->> +++ b/drivers/video/fbdev/aty/radeon_base.c
->> @@ -2307,7 +2307,7 @@ static int radeonfb_pci_register(struct pci_dev *pdev,
->>
->>         ret = radeon_kick_out_firmware_fb(pdev);
->>         if (ret)
->> -               return ret;
->> +               goto err_release_fb;
-> 
-> Good catch ! Thanks
-> 
-> Reviewed-by: Mathieu Malaterre <malat@debian.org>
+On 08.09.2020 11:04, Henrik Bjoernlund - M31679 wrote:
+>>On Sun, 2020-09-06 at 20:21 +0200, Horatiu Vultur wrote:
+>>> The 09/04/2020 15:44, Stephen Hemminger wrote:
+>>> > On Fri, 4 Sep 2020 09:15:20 +0000 Henrik Bjoernlund
+>>> > <henrik.bjoernlund@microchip.com> wrote:
+>>Hi, I also had the same initial thought - this really doesn't seem to
+>>affect the bridge in any way, it's only collecting and transmitting
+>>information. I get that you'd like to use the bridge as a passthrough
+>>device to switchdev to program your hw, could you share what would be
+>>offloaded more specifically ?
+>Yes.
+>
+>The HW will offload the periodic sending of CCM frames, and the
+>reception.
+>
+>If CCM frames are not received as expected, it will raise an interrupt.
+>
+>This means that all the functionality provided in this series will be
+>offloaded to HW.
+>
+>The offloading is very important on our HW where we have a small CPU,
+>serving many ports, with a high frequency of CFM frames.
+>
+>The HW also support Link-Trace and Loop-back, which we may come back to
+>later.
+>
+>>All you do - snooping and blocking these packets can easily be done
+>>from user- space with the help of ebtables, but since we need to have
+>>a software implementation/fallback of anything being offloaded via
+>>switchdev we might need this after all, I'd just prefer to push as
+>>much as possible to user-space.
+In addition to Henriks comment, it is worth mentioning that we are
+trying to push as much of the functionallity to user-space (learnings
+from the MRP discussions).
 
-Applied to drm-misc-next tree, thanks.
+This is why there are currently no in-kernel users of the CCM-lose
+singnal. When a CCM-defect is happening the network typically needs to
+be re-configured. This we are trying to keep in user-space.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+>>I plan to review the individual patches tomorrow.
+Thanks.
 
->>         /* request the mem regions */
->>         ret = pci_request_region(pdev, 0, "radeonfb framebuffer");
->> --
->> 2.17.1
+/Allan
