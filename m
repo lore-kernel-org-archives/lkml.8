@@ -2,149 +2,393 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3634AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD4DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AFA20936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BD820672
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCKvxLSP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TmLNm/v8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgIHXkO (ORCPT
+        id S1729455AbgIHXlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
+        Tue, 8 Sep 2020 19:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgIHXkN (ORCPT
+        with ESMTP id S1726340AbgIHXlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:40:13 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E75EAC061573;
-        Tue,  8 Sep 2020 16:40:12 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gf14so388558pjb.5;
-        Tue, 08 Sep 2020 16:40:12 -0700 (PDT)
+        Tue, 8 Sep 2020 19:41:19 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0279FC061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:41:19 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id q10so662245qvs.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:41:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=hlDVAxiOXkRKboZyuXLRZYuEvx2EuGrMs+4z282NJ3Y=;
-        b=QCKvxLSP+l1V9OAeyZI/eFqDi+o8xjfqGqlnLNw2npgUS4C+jvj4OFa8mylIOnw3Ya
-         6XQ4b+YzF5X9xeqEUid7qQRjOB9Dem84hWXdxpsGL8sjROMTUh3iAWiNrNF9M3+rWL7n
-         n9sok6QaHG4mV+vLLGOTzpaidSM9QmP8YgreeIXtxitNsKvIN0/6QDYW8gmYt1rVuZIk
-         WvUvncHViZB02CafjeKUSYsZvHB0/zVBwTC8G0NsLQOQ9JjvpVBi/P7vIRRDy2di+afK
-         mnWtbJTUj/fdx2pcCy+yHdsQp4kGxuuMSzg54VuGNCehCOYmakULd1OvB5Hkwwss6Liw
-         Za5g==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=FLxQcYOmmQ/om8yPj2ZCKy+MJUV/1pyM6Q37d/W6oak=;
+        b=TmLNm/v8XMti/TbQEEkj869X50hSBBqkS7L1MFFCNfRkjcrY8sbTTzFfcZtzrmnlAN
+         y+jqoPomwMGl0jiqqJh6xgY8UGNq2Xkxl35IsfEx0dkFshiIIjCbEc/XKUkwAnYXjHmV
+         KpsWCyNR/+emtzsDfJveAGgEDENmHGJ48a4XPRzvK4dDHvtsGXmplrRD5D1JloWnABUr
+         IWIOv9W/FTseBBhEVFcDU5pC2eI6vd0MZobExuTWNpbFIqzDhbiPpxbJRTWl0CEXAxHE
+         RvzMOiE/0J2poOqT8+uOcGohJm5YSUWxqf4k7or35uqnkhp6YFMHKIU5iAnxncx0SjrI
+         WGvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=hlDVAxiOXkRKboZyuXLRZYuEvx2EuGrMs+4z282NJ3Y=;
-        b=pyXsQ7zneQFFktdLUplpSJsluXHGNejYsTI58rdJmhi6vyK9XsHtICP4mNMtf2ggIH
-         I+0o8K/d0mQczrzKAU2V8kNYkyPvLV78OPewoUtzCFkDCVWt6QZiJC9DGreCYxgNIre+
-         YnLCN6Ryrb9Pl1uNMjIzPwKiNODXsq3ak1EkTYpGRxoUYPwcUFCOLu2bwe6hU4VR8Df6
-         0p+QOSwZBtNrFrP/cjPHkpfWvHwbmrPOI/U0kuHTmFF/Aanl3r6/7jYMeZrq/Z5ylUzl
-         PNJMoMEZ/P60e8XM1a7kGkemNjl398eHBxxGjhztbCo5LXHJoqZBAhHO2BaIedG1jDPt
-         s2Tg==
-X-Gm-Message-State: AOAM530bvBgQ6wRqY0OTjwxeQNIdIuzOkWVlDf3GarBsK2RTCanq13O1
-        nbmcxg0XWnbFVy/AY2jc9dDovlSScLvWn7zJlpM=
-X-Google-Smtp-Source: ABdhPJy8Y2WGjmhgmk0S8gNJ7jMT9iROaroU3DMIfr/Z94bKZkvSEbg5xsHM6Wzs15kPEkaLO+/14w==
-X-Received: by 2002:a17:902:bb84:: with SMTP id m4mr1003130pls.90.1599608411843;
-        Tue, 08 Sep 2020 16:40:11 -0700 (PDT)
-Received: from [192.168.0.104] ([49.207.193.206])
-        by smtp.gmail.com with ESMTPSA id 31sm310969pgs.59.2020.09.08.16.40.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 16:40:11 -0700 (PDT)
-Subject: Re: [PATCH] net: qrtr: Reintroduce ARCH_QCOM as a dependency for QRTR
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com,
-        syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com,
-        syzbot+3025b9294f8cb0ede850@syzkaller.appspotmail.com,
-        syzbot+0f84f6eed90503da72fc@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200908233329.200473-1-anant.thazhemadam@gmail.com>
-From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Message-ID: <03d5b23d-b81a-f9b2-c42d-90b3a8e021f2@gmail.com>
-Date:   Wed, 9 Sep 2020 05:10:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=FLxQcYOmmQ/om8yPj2ZCKy+MJUV/1pyM6Q37d/W6oak=;
+        b=rdFyne3WYGUnhfxLQzGJszjV80zPXdHKcsZiAFdbgaAYycuvFKsuNoA/rrJ1lJ8oUW
+         B+DWuutTAqTaYNcA+86yf3XXDgOXOu20UfvqpD+4ppH9J4qYat2P4R9crWn4W2FaBtj/
+         www4dvBx2IM+rKMq4P3C6aHkQF2xf+pdoZuMXE8l1mzfnqFs8ByeUUj+npZbmjrWGNyS
+         ETTYKfL52OD+nFZ+v9dFXHiV/ngbFCUYVPbsexHh0S3VHpImR6t1ztNtkUeC0wkwkkdW
+         Xvb/uwIYlH/W8sR6NL4G65LJiqmmlsTTBCa3fPyDzH7JJAntjzJn0FktqEoJIilzCGK5
+         qfEw==
+X-Gm-Message-State: AOAM530OS/5tXuYVyCLNSfhlYbvAJ9ScKPUy9GRqSG6vg6Tj/rQCv2F3
+        lwBo2p77Ky/7q5nv6ll6yN4Ojw==
+X-Google-Smtp-Source: ABdhPJyVxqz0c6xqy+iDSHfgRWvt+kr4hrMbFz06OmE11elFyu4tedyylztCIZ15WXyUNdLdGYxhWQ==
+X-Received: by 2002:ad4:45c4:: with SMTP id v4mr1602165qvt.98.1599608477569;
+        Tue, 08 Sep 2020 16:41:17 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id j11sm708352qko.111.2020.09.08.16.41.13
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Tue, 08 Sep 2020 16:41:16 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 16:41:00 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com, vbabka@suse.cz, minchan@kernel.org,
+        cai@lca.pw, hughd@google.com
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock: reviews
+In-Reply-To: <alpine.LSU.2.11.2008262301240.4405@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.2009081640070.7256@eggly.anvils>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com> <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org> <alpine.LSU.2.11.2008241231460.1065@eggly.anvils> <alpine.LSU.2.11.2008262301240.4405@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <20200908233329.200473-1-anant.thazhemadam@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Miscellaneous Acks and NAKs and other comments on the beginning and
+the end of the series, but not much yet on the all-important middle.
+I'm hoping to be spared sending ~20 email replies to ~20 patches.
 
-On 09/09/20 5:03 am, Anant Thazhemadam wrote:
-> Removing ARCH_QCOM, as a dependency for QRTR begins to give rise to
-> issues with respect to maintaining reference count integrity and
-> suspicious rcu usage.
->
-> The bugs resolved by making QRTR dependent on ARCH_QCOM include:
->
-> * WARNING: refcount bug in qrtr_node_lookup
-> Reported-by: syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com
-> * WARNING: refcount bug in qrtr_recvmsg
-> Reported-by: syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com
-> * WARNING: suspicious RCU usage in ctrl_cmd_new_lookup
-> Reported-by: syzbot+3025b9294f8cb0ede850@syzkaller.appspotmail.com
-> * WARNING: suspicious RCU usage in qrtr_ns_worker
-> Reported-by: syzbot+0f84f6eed90503da72fc@syzkaller.appspotmail.com
->
-> Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
-> ---
-> As I understand it, QRTR was initially dependent upon ARCH_QCOM, but was 
-> removed since not all modems using IPC Router protocol required the 
-> support provided for Qualcomm platforms. 
-> However, wouldn't ARCH_QCOM be required by the modems that require the 
-> support provided for Qualcomm platforms?
-> The configuration ARCH_QCOM isn't exactly the easiest to find, especially, 
-> for those who don't know what they're looking for (syzbot included, I 
-> guess).
-> I don't feel like the tradeoff of not depending on ARCH_QCOM over giving 
-> rise to potential bugs is worth it. 
-> Is NOT having QRTR depend on ARCH_QCOM so critical that it supersedes the 
-> priority of not giving rise to potential bugs?
->
->  net/qrtr/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
-> index b4020b84760f..8156d0f3656b 100644
-> --- a/net/qrtr/Kconfig
-> +++ b/net/qrtr/Kconfig
-> @@ -4,6 +4,7 @@
->  
->  config QRTR
->  	tristate "Qualcomm IPC Router support"
-> +	depends on ARCH_QCOM
->  	help
->  	  Say Y if you intend to use Qualcomm IPC router protocol.  The
->  	  protocol is used to communicate with services provided by other
-I believe I've been mistaken. I realize, requiring ARCH_QCOM wouldn't
-extend functionality, but would limit it to ONLY Qualcomm platforms.
-That makes sense, and would also explain the false positive results
-obtained when tried to test with syzbot, since syzbot wouldn't be
-able to build in the first place.
+[PATCH v18 01/32] mm/memcg: warning on !memcg after readahead page charged
+Acked-by: Hugh Dickins <hughd@google.com>
+if you make these changes:
 
-Sorry for the trouble, you may ignore this patch.
+Please add "Add VM_WARN_ON_ONCE_PAGE() macro." or something like that to
+the commit message: that's a good addition that we shall find useful in
+other places, so please advertise it.
 
-thanks,
-Anant
+Delete the four comment lines
+/* Readahead page is charged too, to see if other page uncharged */
+which make no sense on their own.
 
+[PATCH v18 02/32] mm/memcg: bail out early from swap accounting when memcg is disabled
+Acked-by: Hugh Dickins <hughd@google.com>
+
+[PATCH v18 03/32] mm/thp: move lru_add_page_tail func to huge_memory.c
+Acked-by: Hugh Dickins <hughd@google.com>
+
+[PATCH v18 04/32] mm/thp: clean up lru_add_page_tail
+Acked-by: Hugh Dickins <hughd@google.com>
+
+Though I'd prefer "mm/thp: use head for head page in lru_add_page_tail"
+to the unnecessarily vague "clean up".  But you're right to keep this
+renaming separate from the code movement in the previous commit, and
+perhaps right to keep it from the more interesting cleanup next.
+
+[PATCH v18 05/32] mm/thp: remove code path which never got into
+This is a good simplification, but I see no sign that you understand
+why it's valid: it relies on lru_add_page_tail() being called while
+head refcount is frozen to 0: we would not get this far if someone
+else holds a reference to the THP - which they must hold if they have
+isolated the page from its lru (and that's true before or after your
+per-memcg changes - but even truer after those changes, since PageLRU
+can then be flipped without lru_lock at any instant): please explain
+something of this in the commit message.
+
+You revisit this same code in 18/32, and I much prefer the way it looks
+after that (if (list) {} else {}) - this 05/32 is a bit weird, it would
+be easier to understand if it just did VM_WARN_ON(1).  Please pull the
+18/32 mods back into this one, maybe adding a VM_WARN_ON(PageLRU) into
+the "if (list)" block too.
+
+[PATCH v18 18/32] mm/thp: add tail pages into lru anyway in split_huge_page()
+Please merge into 05/32. But what do "Split_huge_page() must start with
+PageLRU(head)" and "Split start from PageLRU(head)" mean? Perhaps you mean
+that if list is NULL, then if the head was not on the LRU, then it cannot
+have got through page_ref_freeze(), because isolator would hold page ref?
+That is subtle, and deserves mention in the commit comment, but is not
+what you have said at all.  s/unexpected/unexpectedly/.
+
+[PATCH v18 06/32] mm/thp: narrow lru locking
+Why? What part does this play in the series? "narrow lru locking" can
+also be described as "widen page cache locking": you are changing the
+lock ordering, and not giving any reason to do so. This may be an
+excellent change, or it may be a terrible change: I find that usually
+lock ordering is forced upon us, and it's rare to meet an instance like
+this that could go either way, and I don't know myself how to judge it.
+
+I do want this commit to go in, partly because it has been present in
+all the testing we have done, and partly because I *can at last* see a
+logical advantage to it - it also nests lru_lock inside memcg->move_lock,
+allowing lock_page_memcg() to be used to stabilize page->mem_cgroup when
+getting per-memcg lru_lock - though only in one place, starting in v17,
+do you actually use that (and, warning: it's not used correctly there).
+
+I'm not very bothered by how the local_irq_disable() looks to RT: THP
+seems a very bad idea in an RT kernel.  Earlier I asked you to run this
+past Kirill and Matthew and Johannes: you did so, thank you, and Kirill
+has blessed it, and no one has nacked it, and I have not noticed any
+disadvantage from this change in lock ordering (documented in 23/32),
+so I'm now going to say
+
+Acked-by: Hugh Dickins <hughd@google.com>
+
+But I wish you could give some reason for it in the commit message!
+
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Is that correct? Or Wei Yang suggested some part of it perhaps?
+
+[PATCH v18 07/32] mm/swap.c: stop deactivate_file_page if page not on lru
+Perhaps; or perhaps by the time the pagevec is full, the page has been
+drained to the lru, and it should be deactivated? I'm indifferent.
+Is this important for per-memcg lru_lock?
+
+[PATCH v18 08/32] mm/vmscan: remove unnecessary lruvec adding
+You are optimizing for a case which you then mark unlikely(), and I
+don't agree that it makes the flow clearer; but you've added a useful
+comment on the race there, so please s/intergrity/integrity/ in commit
+message and in code comment, then
+Acked-by: Hugh Dickins <hughd@google.com>
+
+[PATCH v18 09/32] mm/page_idle: no unlikely double check for idle page counting
+I strongly approve of removing the abuse of lru_lock here, but the
+patch is wrong: you are mistaken in thinking the PageLRU check after
+get_page_unless_zero() is an unnecessary duplicaton of the one before.
+No, the one before is an optimization, and the one after is essential,
+for telling whether this page (arrived at via pfn, like in compaction)
+is the kind of page we understand (address_space or anon_vma or KSM
+stable_node pointer in page->mapping), so can use rmap_walk() on.
+
+Please replace this patch by mine from the tarball I posted a year ago,
+which keeps both checks, and justifies it against why the lru_lock was
+put there in the first place - thanks to Vladimir for pointing me to
+that mail thread when I tried to submit this patch a few years ago.
+Appended at the end of this mail.
+       
+[PATCH v18 10/32] mm/compaction: rename compact_deferred as compact_should_defer
+I'm indifferent: I see your point about the name, but it hasn't caused
+confusion in ten years, whereas changing name and tracepoint might cause
+confusion.  And how does changing the name help per-memcg lru_lock?  It
+just seems to be a random patch from your private tree.  If it's Acked
+by Mel who coined the name, or someone who has done a lot of work there
+(Vlastimil? Joonsoo?), fine, I have no problem with it; but I don't
+see what it's doing in this series - better left out.
+
+[PATCH v18 11/32] mm/memcg: add debug checking in lock_page_memcg
+This is a very useful change for helping lockdep:
+Acked-by: Hugh Dickins <hughd@google.com>
+
+[PATCH v18 12/32] mm/memcg: optimize mem_cgroup_page_lruvec
+Hah, I see this is in my name.  Well, I did once suggest folding this
+into one of your patches, but it's not an optimization, and that was
+before you added VM_WARN_ON_ONCE_PAGE() here.  It looks strange now,
+a VM_BUG_ON_PAGE() next to a VM_WARN_ON_ONCE_PAGE(); and the latter
+will catch that PageTail case anyway (once).  And although I feel
+slightly safer with READ_ONCE(page->mem_cgroup), I'm finding it hard
+to justify, doing so here but not in other places: particularly since
+just above it says "This function relies on page->mem_cgroup being
+stable".  Let's just drop this patch.
+
+[PATCH v18 13/32] mm/swap.c: fold vm event PGROTATED into pagevec_move_tail_fn
+Yes, nice cleanup, I don't see why it should be different and force an
+unused arg on the others.  But I have one reservation: you added comment
++ *
++ * pagevec_move_tail_fn() must be called with IRQ disabled.
++ * Otherwise this may cause nasty races.
+above rotate_reclaimable_page(), having deleted pagevec_move_tail() which
+had such a comment. It doesn't make sense, because pagevec_move_tail_fn()
+is called with IRQ disabled anyway. That comment had better say
++ *
++ * rotate_reclaimable_page() must disable IRQs, to prevent nasty races.
+I dimly remember hitting those nasty races many years ago, but forget
+the details. Oh, one other thing, you like to use "func" as abbreviation
+for "function", okay: but then at the end of the commit message you say
+"no func change" - please change that to "No functional change".
+Acked-by: Hugh Dickins <hughd@google.com>
+
+[PATCH v18 14/32] mm/lru: move lru_lock holding in func lru_note_cost_page
+"w/o functional changes" instead of "w/o function changes".  But please
+just merge this into the next, 15/32: there is no point in separating them.
+
+[PATCH v18 15/32] mm/lru: move lock into lru_note_cost
+[PATCH v18 16/32] mm/lru: introduce TestClearPageLRU
+[PATCH v18 17/32] mm/compaction: do page isolation first in compaction
+[PATCH v18 19/32] mm/swap.c: serialize memcg changes in pagevec_lru_move_fn
+[PATCH v18 20/32] mm/lru: replace pgdat lru_lock with lruvec lock
+[PATCH v18 21/32] mm/lru: introduce the relock_page_lruvec function
+[PATCH v18 22/32] mm/vmscan: use relock for move_pages_to_lru
+[PATCH v18 23/32] mm/lru: revise the comments of lru_lock
+[PATCH v18 24/32] mm/pgdat: remove pgdat lru_lock
+[PATCH v18 25/32] mm/mlock: remove lru_lock on TestClearPageMlocked in munlock_vma_page
+[PATCH v18 26/32] mm/mlock: remove __munlock_isolate_lru_page
+
+I have tested, but not yet studied these, and it's a good point to break
+off and send my comments so far, because 15/32 is where the cleanups end
+and per-memcg lru_lock kind-of begins - lru_note_cost() being potentially
+more costly, because it needs to use a different lock at each level.
+(When I tried rebasing my own series a couple of months ago, I stopped
+here at lru_note_cost() too, wondering if there was a better way.)
+
+Two things I do know about from testing, that need to be corrected:
+
+check_move_unevictable_pages() needs protection from page->memcg
+being changed while doing the relock_page_lruvec_irq(): could use
+TestClearPageLRU there (!PageLRU pages are safely skipped), but
+that doubles the number of atomic ops involved. I intended to use
+lock_page_memcg() instead, but that's harder than you'd expect: so
+probably TestClearPageLRU will be the best to use there for now.
+
+The use of lock_page_memcg() in __munlock_pagevec() in 20/32,
+introduced in patchset v17, looks good but it isn't: I was lucky that
+systemd at reboot did some munlocking that exposed the problem to lockdep.
+The first time into the loop, lock_page_memcg() is done before lru_lock
+(as 06/32 has allowed); but the second time around the loop, it is done
+while still holding lru_lock.
+
+lock_page_memcg() really needs to be absorbed into (a variant of)
+relock_page_lruvec(), and I do have that (it's awkward because of
+the different ways in which the IRQ flags are handled).  And out of
+curiosity, I've also tried using that in mm/swap.c too, instead of the
+TestClearPageLRU technique: lockdep is happy, but an update_lru_size()
+warning showed that it cannot safely be mixed with the TestClearPageLRU
+technique (that I'd left in isolate_lru_page()).  So I'll stash away
+that relock_page_lruvec(), and consider what's best for mm/mlock.c:
+now that I've posted these comments so far, that's my priority, then
+to get the result under testing again, before resuming these comments.
+
+Jumping over 15-26, and resuming comments on recent additions:
+
+[PATCH v18 27/32] mm/swap.c: optimizing __pagevec_lru_add lru_lock
+Could we please drop this one for the moment? And come back to it later
+when the basic series is safely in.  It's a good idea to try sorting
+together those pages which come under the same lock (though my guess is
+that they naturally gather themselves together quite well already); but
+I'm not happy adding 360 bytes to the kernel stack here (and that in
+addition to 192 bytes of horrid pseudo-vma in the shmem swapin case),
+though that could be avoided by making it per-cpu. But I hope there's
+a simpler way of doing it, as efficient, but also useful for the other
+pagevec operations here: perhaps scanning the pagevec for same page->
+mem_cgroup (and flags node bits), NULLing entries as they are done.
+Another, easily fixed, minor defect in this patch: if I'm reading it
+right, it reverses the order in which the pages are put on the lru?
+
+[PATCH v18 28/32] mm/compaction: Drop locked from isolate_migratepages_block
+Most of this consists of replacing "locked" by "lruvec", which is good:
+but please fold those changes back into 20/32 (or would it be 17/32?
+I've not yet looked into the relationship between those two), so we
+can then see more clearly what change this 28/32 (will need renaming!)
+actually makes, to use lruvec_holds_page_lru_lock(). That may be a
+good change, but it's mixed up with the "locked"->"lruvec" at present,
+and I think you could have just used lruvec for locked all along
+(but of course there's a place where you'll need new_lruvec too).
+
+[PATCH v18 29/32] mm: Identify compound pages sooner in isolate_migratepages_block
+NAK. I agree that isolate_migratepages_block() looks nicer this way, but
+take a look at prep_new_page() in mm/page_alloc.c: post_alloc_hook() is
+where set_page_refcounted() changes page->_refcount from 0 to 1, allowing
+a racing get_page_unless_zero() to succeed; then later prep_compound_page()
+is where PageHead and PageTails get set. So there's a small race window in
+which this patch could deliver a compound page when it should not.
+
+[PATCH v18 30/32] mm: Drop use of test_and_set_skip in favor of just setting skip
+I haven't looked at this yet (but recall that per-memcg lru_lock can
+change the point at which compaction should skip a contended lock: IIRC
+the current kernel needs nothing extra, whereas some earlier kernels did
+need extra; but when I look at 30/32, may find these remarks irrelevant).
+
+[PATCH v18 31/32] mm: Add explicit page decrement in exception path for isolate_lru_pages
+The title of this patch is definitely wrong: there was an explicit page
+decrement there before (put_page), now it's wrapping it up inside a
+WARN_ON().  We usually prefer to avoid doing functional operations
+inside WARN/BUGs, but I think I'll overlook that - anyone else worried?
+The comment is certainly better than what was there before: yes, this
+warning reflects the difficulty we have in thinking about the
+TestClearPageLRU protocol: which I'm still not sold on, but
+agree we should proceed with.  With a change in title, perhaps
+"mm: add warning where TestClearPageLRU failed on freeable page"?
+Acked-by: Hugh Dickins <hughd@google.com>
+
+[PATCH v18 32/32] mm: Split release_pages work into 3 passes
+I haven't looked at this yet (but seen no problem with it in testing).
+
+And finally, here's my replacement (rediffed against 5.9-rc) for 
+[PATCH v18 09/32] mm/page_idle: no unlikely double check for idle page counting
+
+From: Hugh Dickins <hughd@google.com>
+Date: Mon, 13 Jun 2016 19:43:34 -0700
+Subject: [PATCH] mm: page_idle_get_page() does not need lru_lock
+
+It is necessary for page_idle_get_page() to recheck PageLRU() after
+get_page_unless_zero(), but holding lru_lock around that serves no
+useful purpose, and adds to lru_lock contention: delete it.
+
+See https://lore.kernel.org/lkml/20150504031722.GA2768@blaptop for the
+discussion that led to lru_lock there; but __page_set_anon_rmap() now uses
+WRITE_ONCE(), and I see no other risk in page_idle_clear_pte_refs() using
+rmap_walk() (beyond the risk of racing PageAnon->PageKsm, mostly but not
+entirely prevented by page_count() check in ksm.c's write_protect_page():
+that risk being shared with page_referenced() and not helped by lru_lock).
+
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Alex Shi <alex.shi@linux.alibaba.com>
+---
+ mm/page_idle.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+--- a/mm/page_idle.c
++++ b/mm/page_idle.c
+@@ -32,19 +32,15 @@
+ static struct page *page_idle_get_page(unsigned long pfn)
+ {
+ 	struct page *page = pfn_to_online_page(pfn);
+-	pg_data_t *pgdat;
+ 
+ 	if (!page || !PageLRU(page) ||
+ 	    !get_page_unless_zero(page))
+ 		return NULL;
+ 
+-	pgdat = page_pgdat(page);
+-	spin_lock_irq(&pgdat->lru_lock);
+ 	if (unlikely(!PageLRU(page))) {
+ 		put_page(page);
+ 		page = NULL;
+ 	}
+-	spin_unlock_irq(&pgdat->lru_lock);
+ 	return page;
+ }
+ 
