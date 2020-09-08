@@ -2,133 +2,104 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02443C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A68BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D592080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54442087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599589548;
+	bh=u/PWZb7114iK1yOzgf7Cmth9CCerX2WYzrhq1M1BPqk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VibQDdxAEu93SfYpSm7Hpg2BruiwOrO+aH7NuGLjwflADfzyNLXhwIdVRUtelwwgn
+	 hFVC2V1UDdzmXEYTy+o3dAtWrcNm8NL7/aUHoDsRJYeW9yCK4fB5gVIuZFlkf2gXAi
+	 3LQ3CfYYfPKmghGJBVLSHzf0wDTyYbn2Hbhau+Ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgIHSZm (ORCPT
+        id S1732237AbgIHSV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:25:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51499 "EHLO mga04.intel.com"
+        Tue, 8 Sep 2020 14:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgIHSZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:25:25 -0400
-IronPort-SDR: dG5By9HBXXJoXUGErJ6k/+2MyMDAkdGFigq6MHw5IC1d4AaGwY/WhuE+YiEFL0JTzYmNp+z0O0
- rSqFh8q/Su1g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155602347"
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="155602347"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 11:25:23 -0700
-IronPort-SDR: bTS1USQJwqhUAqTZ1mXCWmgKPD1f8ak2tiuGhfZUz3y/kZrFWzwSTM0whGUwwHvZRrXPondA26
- 9gLrCKJRf3PA==
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="448891489"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.209.111.239]) ([10.209.111.239])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 11:25:21 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
- <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
- <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
- <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
- <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
- <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
-Date:   Tue, 8 Sep 2020 11:25:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1731466AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:11 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59251247E6;
+        Tue,  8 Sep 2020 15:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579756;
+        bh=u/PWZb7114iK1yOzgf7Cmth9CCerX2WYzrhq1M1BPqk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ywErtKghSksULK11KWhR5ggbjJ8m/a8fvCyDfd54rG4ty2WOO7FngXE1Ki1uFss/y
+         5dXwV8QEn/HqvrRlfjL6mRATJ1I8hGEjxwxihpuaqd7/hcsQLcPibB/j2dpUiRP5EN
+         llEjcfHG5j8TaU2c5OtejDPu1gWtu/FBY3BEzE+8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 022/129] dmaengine: of-dma: Fix of_dma_router_xlates of_dma_xlate handling
+Date:   Tue,  8 Sep 2020 17:24:23 +0200
+Message-Id: <20200908152230.812631778@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/2020 10:57 AM, Dave Hansen wrote:
-> On 9/8/20 10:50 AM, Yu, Yu-cheng wrote:
->> What about this:
->>
->> - Do not add any new syscall or arch_prctl for creating a new shadow stack.
->>
->> - Add a new arch_prctl that can turn an anonymous mapping to a shadow
->> stack mapping.
->>
->> This allows the application to do whatever is necessary.  It can even
->> allow GDB or JIT code to create or fix a call stack.
-> 
-> Fine with me.  But, it's going to effectively be
-> 
-> 	arch_prctl(PR_CONVERT_TO_SHS..., addr, len);
-> 
-> when it could just as easily be:
-> 
-> 	madvise(addr, len, MADV_SHSTK...);
-> 
-> Or a new syscall.  The only question in my mind is whether we want to do
-> something generic that we can use for other similar things in the
-> future, like:
-> 
-> 	madvise2(addr, len, flags, MADV2_SHSTK...);
-> 
-> I don't really feel strongly about it, though.  Could you please share
-> your logic on why you want a prctl() as opposed to a whole new syscall?
-> 
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-A new syscall is more intrusive, I think.  When creating a new shadow 
-stack, the kernel also installs a restore token on the top of the new 
-shadow stack, and it is somewhat x86-specific.  So far no other arch's 
-need this.
+[ Upstream commit 5b2aa9f918f6837ae943557f8cec02c34fcf80e7 ]
 
-Yes, madvise is better if the kernel only needs to change the mapping. 
-The application itself can create the restore token before calling 
-madvise().
+of_dma_xlate callback can return ERR_PTR as well NULL in case of failure.
+
+If error code is returned (not NULL) then the route should be released and
+the router should not be registered for the channel.
+
+Fixes: 56f13c0d9524c ("dmaengine: of_dma: Support for DMA routers")
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20200806104928.25975-1-peter.ujfalusi@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/of-dma.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index c2d779daa4b51..4bbf4172b9bf9 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -69,12 +69,12 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
+ 		return NULL;
+ 
+ 	chan = ofdma_target->of_dma_xlate(&dma_spec_target, ofdma_target);
+-	if (chan) {
+-		chan->router = ofdma->dma_router;
+-		chan->route_data = route_data;
+-	} else {
++	if (IS_ERR_OR_NULL(chan)) {
+ 		ofdma->dma_router->route_free(ofdma->dma_router->dev,
+ 					      route_data);
++	} else {
++		chan->router = ofdma->dma_router;
++		chan->route_data = route_data;
+ 	}
+ 
+ 	/*
+-- 
+2.25.1
+
+
+
