@@ -2,108 +2,171 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC027C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421A6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7010221D46
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599551258;
-	bh=mEjPx2kedNNVqke8gtYjeHgXCKotuHFDn/V8y6HlZ4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AmGf0fMv3tFhT4GmGsq3N2RcNu1Q7oF5wT5wfdeSDtcU0/+stOZ3AUnLoPq8lHifM
-	 HDzAgA9bbojTlQpAMc7PQjSSl7/A7ryltTGnRhIdM51i6fKf2HGmxnJPObGSCDfflw
-	 VbEHK/mIVSO7aHLzknoyBAv7NICkNrPjZcrHgiso=
+	by mail.kernel.org (Postfix) with ESMTP id ECCC921D46
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Js9F8PhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgIHHrh (ORCPT
+        id S1729548AbgIHHr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbgIHHrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:47:36 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B33A121D43;
-        Tue,  8 Sep 2020 07:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599551255;
-        bh=mEjPx2kedNNVqke8gtYjeHgXCKotuHFDn/V8y6HlZ4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f05USdwn0f1N/tYFfRQflIZ44UF4bl++1ybwuP/jMBwPoZ4JO27SKYcqk2fhGKEZV
-         Sj9FpRwd1T/Cgv00szHFLQ1eE8VOMwcdEK0CcBY5oIAX5IHoV7xtHeCyciJ/GACYl5
-         uev7/0I+rwa5h2HsYRv7DJUr863O2i1t+SOWIwao=
-Received: by pali.im (Postfix)
-        id 4FA59617; Tue,  8 Sep 2020 09:47:33 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 09:47:33 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Andre Heider <a.heider@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: marvell: espressobin: Add ethernet switch
- aliases
-Message-ID: <20200908074733.f33pwtreojzobivq@pali>
-References: <20200907112718.5994-1-pali@kernel.org>
- <20200907144228.GV3112546@lunn.ch>
- <20200907145213.fwlyz4k6scible7x@pali>
- <20200907154353.GW3112546@lunn.ch>
- <20200907161316.xd5svvahi5xusdlw@pali>
- <20200907172345.GB3254313@lunn.ch>
+        Tue, 8 Sep 2020 03:47:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7650 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728786AbgIHHr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:47:57 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0887WvWo103539;
+        Tue, 8 Sep 2020 03:46:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=7Wyqh7MeIDjAi+eJ5NjBqYqiJMPciT86nd2J6e9RnVc=;
+ b=Js9F8PhV3ve4wSZgPSOWcU4+eeye6MkHg/szXsay/J6iuPgAhdofffSX07lx5D0GB0MR
+ aF3AWsVsPiNuALSZ2Ww/0ODHXvdsSuWL2ppLGknUwxHOojMVlJKQWQ34+3Z4zGHemuf/
+ CG+DBQmn90MfyDRP9EFKac+an9e+LBFMUCrkGiSHfzLuAdo5+lU362NCriWYQIykpxcL
+ nTkdHznuDua9GcQmyPXh+3kC0kqSDkEpsTsJH/nm3C7tr5g+T4aKtUwaNYqIXkBH3INy
+ MxdZyJfAA/AsR3Auowrl4nya8/gDktt2AioTDodBt0qKN6TD7l4QjnGSkQ6rUS8oadYV QQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33e4x71s09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 03:46:46 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0887Xmoc107206;
+        Tue, 8 Sep 2020 03:46:46 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33e4x71rye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 03:46:46 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0887g14q000548;
+        Tue, 8 Sep 2020 07:46:44 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 33cm5hhgv4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 07:46:44 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0887kfuH31916436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 07:46:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F7D15204E;
+        Tue,  8 Sep 2020 07:46:41 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.35.55])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E6CF352050;
+        Tue,  8 Sep 2020 07:46:39 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 09:46:38 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC PATCH v2 2/3] mm: make pXd_addr_end() functions page-table
+ entry aware
+Message-ID: <20200908074638.GA19099@oc3871087118.ibm.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
+ <31dfb3ed-a0cc-3024-d389-ab9bd19e881f@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200907172345.GB3254313@lunn.ch>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <31dfb3ed-a0cc-3024-d389-ab9bd19e881f@csgroup.eu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_03:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ priorityscore=1501 suspectscore=0 bulkscore=0 lowpriorityscore=0
+ clxscore=1011 malwarescore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 07 September 2020 19:23:45 Andrew Lunn wrote:
-> On Mon, Sep 07, 2020 at 06:13:16PM +0200, Pali Rohár wrote:
-> > On Monday 07 September 2020 17:43:53 Andrew Lunn wrote:
-> > > > I would not say it is a "new feature". But rather that patch in this
-> > > > email fixes issue that Linux kernel did not set correct MAC address for
-> > > > DSA slave ports. I think it is something which could be backported also
-> > > > to stable releases as "ignoring" vendor/factory MAC address is not
-> > > > correct behavior.
-> > > 
-> > > Hi Pali
-> > > 
-> > > The rules for stable are here:
-> > > 
-> > > https://www.kernel.org/doc/html/v5.8/process/stable-kernel-rules.html
-> > > 
-> > > Do you think it fits?
-> > > 
-> > >    Andrew
-> > 
-> > Hello Andrew! I think it fits into those rules. As I wrote it fixes real
-> > bug that Linux kernel does not use correct MAC address for particular
-> > DSA slaves / ethernet ports.
-> 
-> O.K, then:
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> 
->     Andrew
+On Tue, Sep 08, 2020 at 07:14:38AM +0200, Christophe Leroy wrote:
+> You forgot arch/powerpc/mm/book3s64/subpage_prot.c it seems.
 
-Ok! Andrew, I would like to ask another question, how to correctly
-define that this patch depends on a2c7023f7075c? I specified it in
-human-readable part of commit description, but for backporting it would
-also need some machine-readable format. So patch would not be
-occasionally backported to older/stable kernel where a2c7023f7075c is
-not available.
+Yes, and also two more sources :/
+	arch/powerpc/mm/kasan/8xx.c
+	arch/powerpc/mm/kasan/kasan_init_32.c
+
+But these two are not quite obvious wrt pgd_addr_end() used
+while traversing pmds. Could you please clarify a bit?
+
+
+diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
+index 2784224..89c5053 100644
+--- a/arch/powerpc/mm/kasan/8xx.c
++++ b/arch/powerpc/mm/kasan/8xx.c
+@@ -15,8 +15,8 @@
+ 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd += 2, block += SZ_8M) {
+ 		pte_basic_t *new;
+ 
+-		k_next = pgd_addr_end(k_cur, k_end);
+-		k_next = pgd_addr_end(k_next, k_end);
++		k_next = pmd_addr_end(k_cur, k_end);
++		k_next = pmd_addr_end(k_next, k_end);
+ 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
+ 			continue;
+ 
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index fb29404..3f7d6dc6 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -38,7 +38,7 @@ int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_
+ 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
+ 		pte_t *new;
+ 
+-		k_next = pgd_addr_end(k_cur, k_end);
++		k_next = pmd_addr_end(k_cur, k_end);
+ 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
+ 			continue;
+ 
+@@ -196,7 +196,7 @@ void __init kasan_early_init(void)
+ 	kasan_populate_pte(kasan_early_shadow_pte, PAGE_KERNEL);
+ 
+ 	do {
+-		next = pgd_addr_end(addr, end);
++		next = pmd_addr_end(addr, end);
+ 		pmd_populate_kernel(&init_mm, pmd, kasan_early_shadow_pte);
+ 	} while (pmd++, addr = next, addr != end);
+ 
+
+> Christophe
