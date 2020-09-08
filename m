@@ -2,137 +2,133 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF2DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03CAA21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599547374;
-	bh=96sp3WmwyYCFUlY6cW+eRDxY6WE1Mn3q/76AW2FR2FA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qhOXOk2aFUPUB26TgQZ5AVGRbNBvCjhBzjjwO69/OmzGmReSyi+jQ3vrxHDN+6PK3
-	 7Efwx+IeI1RSgoz0fxStZw/s8DVC3T0MZe3om/UxP33AC8U0mlOjtbh6+FAiKNkHzq
-	 vhHTiTyHJi6fTp4rnjZjRqekH/PS8DMFGfR9Z2Dg=
+	by mail.kernel.org (Postfix) with ESMTP id AC478218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="UzBVkh4t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgIHGmw (ORCPT
+        id S1729150AbgIHGnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:42:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbgIHGmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:42:52 -0400
-Received: from kernel.org (unknown [87.71.73.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2975621532;
-        Tue,  8 Sep 2020 06:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599547371;
-        bh=96sp3WmwyYCFUlY6cW+eRDxY6WE1Mn3q/76AW2FR2FA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X2eCgyA8r7jPkplTBABQK5Y00jq1fwvxQ4LayCz94jKomHbK5in0FChsHs77eB1r0
-         PhkB+tctp/lSR71to+m4BxSNKDIoEs8F3LKkU6R5GGeq5d7HMYEu08VJsvKvMMoZWb
-         AyRX5nS6Sh+797ZUBTjsdcF8pxTeQc0JFItOBWLc=
-Date:   Tue, 8 Sep 2020 09:42:45 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Mateusz Nosek <mateusznosek0@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/mmu_notifier.c: micro-optimization substitute kzalloc
- with kmalloc
-Message-ID: <20200908064245.GE1976319@kernel.org>
-References: <20200906114321.16493-1-mateusznosek0@gmail.com>
- <20200906142645.GA1976319@kernel.org>
- <39c79454-9a97-2c06-3186-939c1f3a2b27@gmail.com>
+        Tue, 8 Sep 2020 02:43:18 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:11968 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728115AbgIHGnR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:43:17 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886esdQ001979;
+        Mon, 7 Sep 2020 23:43:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=xs56d2C/NYDIV25+23YdcJiJQUhJ3VMb5DccgFWDyug=;
+ b=UzBVkh4tWB2VBqA2ak5HvG82DxSj+1H3hVSDEiFMUZyUfwNYk4VtMgVdfjqUbT6FE3H8
+ uFUkzdZl4xOfjwvG+pTVmW11Ksp21gqtyo3nur8P3+0QrpXTwQ61/Z0yi8AtwrWYl1DL
+ qAVlXK1BfG9i5J86DHRsVXDxWnd1ryOQfivC0W7os5aYojQzn5RH4u1yl6m7lYuUOM33
+ lltRRu3aRPyS7Y8DduPMEXsOa7Q+2x2+EAVVCDkbXPk7Gn4WLa8PTF2j3n2X+xQ78ya7
+ sQ9QFf7I4NaPS14osR2nzQrnBQyJrWzpGTZmGc/iEq2H616sOx3i21lBZMSzohXKa0m0 nw== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 33ccvr1980-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 23:43:11 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:43:10 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:43:09 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 7 Sep 2020 23:43:09 -0700
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id D95773F703F;
+        Mon,  7 Sep 2020 23:43:08 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0886h8Wb020003;
+        Mon, 7 Sep 2020 23:43:08 -0700
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Mon, 7 Sep 2020 23:43:08 -0700
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     Daniel Wagner <dwagner@suse.de>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Nilesh Javali" <njavali@marvell.com>,
+        Martin Wilck <mwilck@suse.com>
+Subject: Re: [PATCH v2 2/4] qla2xxx: Simplify return value logic in
+ qla2x00_get_sp_from_handle()
+In-Reply-To: <20200831161854.70879-3-dwagner@suse.de>
+Message-ID: <alpine.LRH.2.21.9999.2009072342380.28578@irv1user01.caveonetworks.com>
+References: <20200831161854.70879-1-dwagner@suse.de>
+ <20200831161854.70879-3-dwagner@suse.de>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39c79454-9a97-2c06-3186-939c1f3a2b27@gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_02:2020-09-08,2020-09-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 06:06:39PM +0200, Mateusz Nosek wrote:
-> Hi,
-> 
-> I performed simple benchmarks using custom kernel module with the code
-> fragment in question 'copy-pasted' in there in both versions. In case of 1k,
-> 10k and 100k iterations the average time for kzalloc version was 5.1 and for
-> kmalloc 3.9, for each iterations number.
-> The time was measured using 'ktime_get(void)' function and the results given
-> here are in ktime_t units.
-> The machine I use has 4 core Intel(R) Core(TM) i5-3470 CPU @ 3.20GHz CPU.
-> 
-> The performance increase happens, but as you wrote it is probably not really
-> noticeable.
+On Mon, 31 Aug 2020, 9:18am, Daniel Wagner wrote:
 
-I don't think that saving a few cylces of memset() in a function that
-called only on the initialization path in very particular cases is worth
-risking uninitialized variables when somebody will add a new field to
-the 'struct mmu_notifier_subscriptions' and will forget to explicitly
-set it.
-
-> I have found 3 other places in kernel code with similar kzalloc related
-> issues, none of which seems to be 'hot' code.
-> I leave the decision if this patch and potential others I would send
-> regarding this issue, are worth applying to the community and maintainers.
 > 
-> Best regards,
-> Mateusz Nosek
+> Refactor qla2x00_get_sp_from_handle() to avoid the unecessary
+> goto if early returns are used. With this we can also avoid
+> preinitilzing the sp pointer.
 > 
-> On 9/6/2020 4:26 PM, Mike Rapoport wrote:
-> > Hi,
-> > 
-> > On Sun, Sep 06, 2020 at 01:43:21PM +0200, mateusznosek0@gmail.com wrote:
-> > > From: Mateusz Nosek <mateusznosek0@gmail.com>
-> > > 
-> > > Most fields in struct pointed by 'subscriptions' are initialized explicitly
-> > > after the allocation. By changing kzalloc to kmalloc the call to memset
-> > > is avoided. As the only new code consists of 2 simple memory accesses,
-> > > the performance is increased.
-> > 
-> > Is there a measurable performance increase?
-> > 
-> > The __mmu_notifier_register() is not used that frequently to trade off
-> > robustness of kzalloc() for slight (if visible at all) performance gain.
-> > 
-> > > Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
-> > > ---
-> > >   mm/mmu_notifier.c | 4 +++-
-> > >   1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> > > index 4fc918163dd3..190e198dc5be 100644
-> > > --- a/mm/mmu_notifier.c +++ b/mm/mmu_notifier.c @@ -625,7 +625,7
-> > > @@ int __mmu_notifier_register(struct mmu_notifier *subscription,
-> > > * know that mm->notifier_subscriptions can't change while we *
-> > > hold the write side of the mmap_lock.  */
-> > > -		subscriptions = kzalloc(
-> > > +		subscriptions = kmalloc(
-> > >   			sizeof(struct mmu_notifier_subscriptions), GFP_KERNEL);
-> > >   		if (!subscriptions)
-> > >   			return -ENOMEM;
-> > > @@ -636,6 +636,8 @@ int __mmu_notifier_register(struct mmu_notifier *subscription,
-> > >   		subscriptions->itree = RB_ROOT_CACHED;
-> > >   		init_waitqueue_head(&subscriptions->wq);
-> > >   		INIT_HLIST_HEAD(&subscriptions->deferred_list);
-> > > +		subscriptions->active_invalidate_ranges = 0;
-> > > +		subscriptions->has_itree = false;
-> > >   	}
-> > >   	ret = mm_take_all_locks(mm);
-> > > -- 
-> > > 2.20.1
-> > > 
-> > > 
-> > 
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>  drivers/scsi/qla2xxx/qla_isr.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+> index 27bcd346af7c..5d278155e4e7 100644
+> --- a/drivers/scsi/qla2xxx/qla_isr.c
+> +++ b/drivers/scsi/qla2xxx/qla_isr.c
+> @@ -1716,7 +1716,7 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+>  {
+>  	struct qla_hw_data *ha = vha->hw;
+>  	sts_entry_t *pkt = iocb;
+> -	srb_t *sp = NULL;
+> +	srb_t *sp;
+>  	uint16_t index;
+>  
+>  	index = LSW(pkt->handle);
+> @@ -1728,13 +1728,13 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+>  			set_bit(FCOE_CTX_RESET_NEEDED, &vha->dpc_flags);
+>  		else
+>  			set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+> -		goto done;
+> +		return NULL;
+>  	}
+>  	sp = req->outstanding_cmds[index];
+>  	if (!sp) {
+>  		ql_log(ql_log_warn, vha, 0x5032,
+>  		    "Invalid completion handle (%x) -- timed-out.\n", index);
+> -		return sp;
+> +		return NULL;
+>  	}
+>  	if (sp->handle != index) {
+>  		ql_log(ql_log_warn, vha, 0x5033,
+> @@ -1743,8 +1743,6 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+>  	}
+>  
+>  	req->outstanding_cmds[index] = NULL;
+> -
+> -done:
+>  	return sp;
+>  }
+>  
 
--- 
-Sincerely yours,
-Mike.
+Looks good.
+
+Regards,
+-Arun
