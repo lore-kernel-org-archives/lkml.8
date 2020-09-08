@@ -2,100 +2,140 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4003DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E745C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12E7C21D46
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4C12087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592730;
+	bh=Wb3AnQ9pG/xstfYsiyL5oDmyvAT5F572N3TLlAoyC78=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JKkpyCwrCc1QZf3tzAcqqjltzoCiCFTEZxnAfoau1JgegDKrnq5gAmgkdt0TwKte+
+	 TVyTpx99uOrnsIVtBNF1fAu86UUFTxhtjTW7dASrLU6ZttYIU2yuy4EuJ7VzudTiUY
+	 Qr1uBzvr8+XN10u99y813GpKE6n3tT7/tEFsqdzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732009AbgIHTS3 (ORCPT
+        id S1732024AbgIHTSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:18:29 -0400
-Received: from mga02.intel.com ([134.134.136.20]:59407 "EHLO mga02.intel.com"
+        Tue, 8 Sep 2020 15:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbgIHQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731135AbgIHQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:02:52 -0400
-IronPort-SDR: po/k/mVz/rKQaNpunDFGyqwHb7oftmN3x2KIS4nbF4kaHt0gr1UPXQFvpe6SXoijBbRbG+rTUl
- bDB2wMf4hAtQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="145860470"
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="145860470"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 07:41:11 -0700
-IronPort-SDR: GwGJVhQl5LsZCtYfS7A9iPjpGOoLjIqPKg8jU0lNh+QzaUUg/j/tOkU/84RoXAzvNqvUBXGq2n
- hbejdvwrRCjQ==
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="480050658"
-Received: from dpdesmon-mobl1.amr.corp.intel.com (HELO [10.212.58.192]) ([10.212.58.192])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 07:41:03 -0700
-Subject: Re: [PATCH] tracing: fix double free
-To:     trix@redhat.com, rostedt@goodmis.org, mingo@redhat.com,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        baohong.liu@intel.com
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200907135845.15804-1-trix@redhat.com>
-From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Message-ID: <84df7ef3-0a36-0929-3fa9-74ab773ca12e@linux.intel.com>
-Date:   Tue, 8 Sep 2020 09:41:01 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B317D23C82;
+        Tue,  8 Sep 2020 15:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579384;
+        bh=Wb3AnQ9pG/xstfYsiyL5oDmyvAT5F572N3TLlAoyC78=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CIXEDxxvO+GtAvqo4J1yjP7izlydAAUZ9v0cPqeIcZ1pm+IqL8p3X/4sQl57d+RCy
+         Yv6wun2mVRS3xx2QIMglJbd5UBubawH1d2QDfdTrwVDazQWuS5wakJIpu8uAmK6yhp
+         sJio01hi4ifQZoF3dwLR8t3DugXhXb+YnsOeCqL4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 056/186] netfilter: nf_tables: fix destination register zeroing
+Date:   Tue,  8 Sep 2020 17:23:18 +0200
+Message-Id: <20200908152244.385822435@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200907135845.15804-1-trix@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+From: Florian Westphal <fw@strlen.de>
 
-On 9/7/2020 8:58 AM, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analyzer reports this problem
-> 
-> trace_events_hist.c:3824:3: warning: Attempt to free
->    released memory
->      kfree(hist_data->attrs->var_defs.name[i]);
-> 
-> In parse_var_defs() if there is a problem allocating
-> var_defs.expr, the earlier var_defs.name is freed.
-> This free is duplicated by free_var_defs() which frees
-> the rest of the list.
-> 
-> Because free_var_defs() has to run anyway, remove the
-> second free fom parse_var_defs().
-> 
-> Fixes: 30350d65ac56 ("tracing: Add variable support to hist triggers")
-> Signed-off-by: Tom Rix <trix@redhat.com>
+[ Upstream commit 1e105e6afa6c3d32bfb52c00ffa393894a525c27 ]
 
-Good catch, thanks for fixing this!
+Following bug was reported via irc:
+nft list ruleset
+   set knock_candidates_ipv4 {
+      type ipv4_addr . inet_service
+      size 65535
+      elements = { 127.0.0.1 . 123,
+                   127.0.0.1 . 123 }
+      }
+ ..
+   udp dport 123 add @knock_candidates_ipv4 { ip saddr . 123 }
+   udp dport 123 add @knock_candidates_ipv4 { ip saddr . udp dport }
 
-Reviewed-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+It should not have been possible to add a duplicate set entry.
 
-> ---
->   kernel/trace/trace_events_hist.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 0b933546142e..1b2ef6490229 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -3865,7 +3865,6 @@ static int parse_var_defs(struct hist_trigger_data *hist_data)
->   
->   			s = kstrdup(field_str, GFP_KERNEL);
->   			if (!s) {
-> -				kfree(hist_data->attrs->var_defs.name[n_vars]);
->   				ret = -ENOMEM;
->   				goto free;
->   			}
-> 
+After some debugging it turned out that the problem is the immediate
+value (123) in the second-to-last rule.
+
+Concatenations use 32bit registers, i.e. the elements are 8 bytes each,
+not 6 and it turns out the kernel inserted
+
+inet firewall @knock_candidates_ipv4
+        element 0100007f ffff7b00  : 0 [end]
+        element 0100007f 00007b00  : 0 [end]
+
+Note the non-zero upper bits of the first element.  It turns out that
+nft_immediate doesn't zero the destination register, but this is needed
+when the length isn't a multiple of 4.
+
+Furthermore, the zeroing in nft_payload is broken.  We can't use
+[len / 4] = 0 -- if len is a multiple of 4, index is off by one.
+
+Skip zeroing in this case and use a conditional instead of (len -1) / 4.
+
+Fixes: 49499c3e6e18 ("netfilter: nf_tables: switch registers to 32 bit addressing")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/net/netfilter/nf_tables.h | 2 ++
+ net/netfilter/nft_payload.c       | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
+index 6f0f6fca9ac3e..ec2cbfab71f35 100644
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -143,6 +143,8 @@ static inline u64 nft_reg_load64(const u32 *sreg)
+ static inline void nft_data_copy(u32 *dst, const struct nft_data *src,
+ 				 unsigned int len)
+ {
++	if (len % NFT_REG32_SIZE)
++		dst[len / NFT_REG32_SIZE] = 0;
+ 	memcpy(dst, src, len);
+ }
+ 
+diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
+index a7de3a58f553d..67ce866a446d9 100644
+--- a/net/netfilter/nft_payload.c
++++ b/net/netfilter/nft_payload.c
+@@ -87,7 +87,9 @@ void nft_payload_eval(const struct nft_expr *expr,
+ 	u32 *dest = &regs->data[priv->dreg];
+ 	int offset;
+ 
+-	dest[priv->len / NFT_REG32_SIZE] = 0;
++	if (priv->len % NFT_REG32_SIZE)
++		dest[priv->len / NFT_REG32_SIZE] = 0;
++
+ 	switch (priv->base) {
+ 	case NFT_PAYLOAD_LL_HEADER:
+ 		if (!skb_mac_header_was_set(skb))
+-- 
+2.25.1
+
+
+
