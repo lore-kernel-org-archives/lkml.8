@@ -2,154 +2,136 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFDDC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EA0C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF6D208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7AA20936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:08:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CaXld08Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgIHLHF (ORCPT
+        id S1729843AbgIHLGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:07:05 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51376 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729372AbgIHLGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:06:23 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8649E9B29CFE06F35EC3;
-        Tue,  8 Sep 2020 19:06:12 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 8 Sep 2020 19:06:06 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <jhs@mojatatu.com>, <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>,
-        <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <john.fastabend@gmail.com>,
-        <eric.dumazet@gmail.com>
-Subject: [PATCH v2 net] net: sch_generic: aviod concurrent reset and enqueue op for lockless qdisc
-Date:   Tue, 8 Sep 2020 19:02:34 +0800
-Message-ID: <1599562954-87257-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Tue, 8 Sep 2020 07:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729197AbgIHLGW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 07:06:22 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D93C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 04:06:17 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bm2Nf16mGz9sPB;
+        Tue,  8 Sep 2020 21:04:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599563092;
+        bh=6U+pqYLfxynVW7ZBWg5ewtSebrhAHs8Jw/8Fsgfyq0Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CaXld08YvgRf7d39KaKgHP619xkysrKAzZdRY2sqZ0tQerwYvkE0GwKePLTW5SxDf
+         1eg/R3asmvc6sRCDO3kb0sV3KSBu/hdBD8ksAueQANLDhT8xJweSXTrA9jRt634/di
+         ewHOLutGWOkiqBAm5qpo+ic/M++ML7+vRoTYkR3YLNuxVcx/6vQ7CGqMvXKZ/z3dkp
+         tACT/u4z05iYE8zAbUz6F24BvjZs0OQhnYwMC7IFqxuNpdXuTH3rFKm/ZDVbizm742
+         Fij/LE8BI+XdhzcQcAIW+B2rlx3pTEgMWn4PBedj97223donzxhO6brrtrW7iWy4sY
+         kI2KSOrUK6Flw==
+Date:   Tue, 8 Sep 2020 21:04:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the drm-intel tree with Linus' tree
+Message-ID: <20200908210449.1a4f8e52@canb.auug.org.au>
+In-Reply-To: <db369f50-a3a0-2504-0628-ce5e6780d31b@redhat.com>
+References: <20200908140022.67dd3801@canb.auug.org.au>
+        <db369f50-a3a0-2504-0628-ce5e6780d31b@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/dGXS.TNI7czMZikC=h9RWLW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is concurrent reset and enqueue operation for the
-same lockless qdisc when there is no lock to synchronize the
-q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
-qdisc_deactivate() called by dev_deactivate_queue(), which may cause
-out-of-bounds access for priv->ring[] in hns3 driver if user has
-requested a smaller queue num when __dev_xmit_skb() still enqueue a
-skb with a larger queue_mapping after the corresponding qdisc is
-reset, and call hns3_nic_net_xmit() with that skb later.
+--Sig_/dGXS.TNI7czMZikC=h9RWLW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reused the existing synchronize_net() in dev_deactivate_many() to
-make sure skb with larger queue_mapping enqueued to old qdisc(which
-is saved in dev_queue->qdisc_sleeping) will always be reset when
-dev_reset_queue() is called.
+Hi Hans,
 
-Fixes: 6b3ba9146fe6 ("net: sched: allow qdiscs to handle locking")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
----
-ChangeLog V2:
-	Reuse existing synchronize_net().
----
- net/sched/sch_generic.c | 48 +++++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 15 deletions(-)
+On Tue, 8 Sep 2020 10:22:06 +0200 Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> On 9/8/20 6:00 AM, Stephen Rothwell wrote:
+> >=20
+> > Today's linux-next merge of the drm-intel tree got a conflict in:
+> >=20
+> >    drivers/gpu/drm/i915/display/intel_panel.c
+> >=20
+> > between commit:
+> >=20
+> >    f8bd54d21904 ("drm/i915: panel: Use atomic PWM API for devs with an =
+external PWM controller")
 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 265a61d..54c4172 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -1131,24 +1131,10 @@ EXPORT_SYMBOL(dev_activate);
- 
- static void qdisc_deactivate(struct Qdisc *qdisc)
- {
--	bool nolock = qdisc->flags & TCQ_F_NOLOCK;
--
- 	if (qdisc->flags & TCQ_F_BUILTIN)
- 		return;
--	if (test_bit(__QDISC_STATE_DEACTIVATED, &qdisc->state))
--		return;
--
--	if (nolock)
--		spin_lock_bh(&qdisc->seqlock);
--	spin_lock_bh(qdisc_lock(qdisc));
- 
- 	set_bit(__QDISC_STATE_DEACTIVATED, &qdisc->state);
--
--	qdisc_reset(qdisc);
--
--	spin_unlock_bh(qdisc_lock(qdisc));
--	if (nolock)
--		spin_unlock_bh(&qdisc->seqlock);
- }
- 
- static void dev_deactivate_queue(struct net_device *dev,
-@@ -1165,6 +1151,30 @@ static void dev_deactivate_queue(struct net_device *dev,
- 	}
- }
- 
-+static void dev_reset_queue(struct net_device *dev,
-+			    struct netdev_queue *dev_queue,
-+			    void *_unused)
-+{
-+	struct Qdisc *qdisc;
-+	bool nolock;
-+
-+	qdisc = dev_queue->qdisc_sleeping;
-+	if (!qdisc)
-+		return;
-+
-+	nolock = qdisc->flags & TCQ_F_NOLOCK;
-+
-+	if (nolock)
-+		spin_lock_bh(&qdisc->seqlock);
-+	spin_lock_bh(qdisc_lock(qdisc));
-+
-+	qdisc_reset(qdisc);
-+
-+	spin_unlock_bh(qdisc_lock(qdisc));
-+	if (nolock)
-+		spin_unlock_bh(&qdisc->seqlock);
-+}
-+
- static bool some_qdisc_is_busy(struct net_device *dev)
- {
- 	unsigned int i;
-@@ -1213,12 +1223,20 @@ void dev_deactivate_many(struct list_head *head)
- 		dev_watchdog_down(dev);
- 	}
- 
--	/* Wait for outstanding qdisc-less dev_queue_xmit calls.
-+	/* Wait for outstanding qdisc-less dev_queue_xmit calls or
-+	 * outstanding qdisc enqueuing calls.
- 	 * This is avoided if all devices are in dismantle phase :
- 	 * Caller will call synchronize_net() for us
- 	 */
- 	synchronize_net();
- 
-+	list_for_each_entry(dev, head, close_list) {
-+		netdev_for_each_tx_queue(dev, dev_reset_queue, NULL);
-+
-+		if (dev_ingress_queue(dev))
-+			dev_reset_queue(dev, dev_ingress_queue(dev), NULL);
-+	}
-+
- 	/* Wait for outstanding qdisc_run calls. */
- 	list_for_each_entry(dev, head, close_list) {
- 		while (some_qdisc_is_busy(dev)) {
--- 
-2.8.1
+This should have been
 
+  899c537c25f9 ("drm/i915: Use 64-bit division macro")
+
+> >=20
+> > from Linus' tree and commit:
+> >=20
+> >    6b51e7d23aa8 ("drm/i915: panel: Honor the VBT PWM frequency for devs=
+ with an external PWM controller") =20
+>=20
+> That doesn't sound correct, those are both commits from the drm-intel tre=
+e.
+>=20
+> > from the drm-intel tree.
+> >=20
+> > I fixed it up (I just used the latter) =20
+>=20
+> Just taking the drivers/gpu/drm/i915/display/intel_panel.c contents of:
+>=20
+> f8bd54d21904 ("drm/i915: panel: Use atomic PWM API for devs with an exter=
+nal PWM controller")
+>=20
+> Is the right thing to do, the problem is a difference in a line which gets
+> removed in that commit.
+
+Which is what I actually did, I guess :-)
+
+Sorry about that.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dGXS.TNI7czMZikC=h9RWLW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XZVEACgkQAVBC80lX
+0Gzlbwf+PPJxV9Q4ttdCmWNOyTMQU/r6ZMUpOfodqyfxbkboiTWSI6NyJshSUujB
+46CgTj20eGsf1wxDpfceCBW10RiLoxvTv9RRCn0FKFJ4knjlUmLgd5H/q3nyw7KY
+I9mymEV1qQR5Bt3qxz1kFzYDyaZVG6QHBSOAwVMkP+WPT9hAFPcJtVg4rqGsW9DS
+xPBjTxacTcrBVq1hG+L+Uc5Urr4zxyGKibMeSd1YikukIuRquftUqjBpjINUBGvU
+6DkZ2Hg5JFvNqbV1BiA9wxOFOUUCJz524+efusX9Fh5dL4YVCV6ex9SJhXboFLMP
+KAlVyNGP4K23MYWFl+nKhqsvhxrf7Q==
+=1Pjd
+-----END PGP SIGNATURE-----
+
+--Sig_/dGXS.TNI7czMZikC=h9RWLW--
