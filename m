@@ -7,107 +7,114 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60357C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 003F620759
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A71220708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUJqw5Q5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Umg5s4XG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732046AbgIHQlE (ORCPT
+        id S1732106AbgIHQl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
+        Tue, 8 Sep 2020 12:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732052AbgIHQhR (ORCPT
+        with ESMTP id S1732041AbgIHQhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5406C061A12
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:04:19 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s12so867986wrw.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:04:19 -0700 (PDT)
+        Tue, 8 Sep 2020 12:37:15 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B8EC061A14
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:05:13 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id q200so4075446vke.6
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:05:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8M8FQZb2HgpFZLZz+2kHkv7PQ6hJJGgLuAcXeYJHXoc=;
-        b=AUJqw5Q5yIKjjHv+TlphEapfGqGOE84LTkY2zdyRmrMCZc4UN5YC2gkzDw8k0vGBgc
-         Cs7Qk83LMgV1TESF82VJ5kAJMn0dMUMkUDY+W7j02XikANSGY+Q5vMIg1bXFdpVU702p
-         JpMtWNealLQk01KqN+ZWJF9EN7XmeVpCS4XuBlniZDTYtXI3FFvIfpE7OunsxJOYAvkj
-         OKfewt829N5WohHh7McC0bRqVQDay13XKTzmxsGafZIAawYUqLmaZ0ivQKWBlUoAMXEo
-         4D0NcBfydlPrudfK8LsP0K4eh5sKjdtBeSEV/jsf0BCwLordxeK93nP6TJ6FV7R5+i8w
-         tvVA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2HixXsh/i4wRCywM25LOVRxdnOWqFN3Kihr7kBnUMtY=;
+        b=Umg5s4XGDLznycAi8eh3KtIX3m/oKtp6PBGSTVFjm7nPG0PzyocKEQjfQbViNtgt6I
+         QxIgERNOf1BRZ8Pzy7dKqTR1mxD0PRsaQDxt/Lskbs2XBnMH6CrW44ckTiUeQ8ahPWp5
+         usSKEXBHPMB6fQqY2bE8e846MfWT9ORMjPy1y9xwzPLOmUNEPTxH00oHYyN8o3ErzJ7J
+         xfXs3/5LsOsSwHOprzXBbuQvP8wVowP4r6Rrh+qyH7YYWGHpJieJ6HcTHC0PN0tbUfmp
+         qNxRnDpqEytvs0irOFVodOaDL1davKeln4mFmPEnK3FGsbdyi6Bu8FURjTOf6iBSePHJ
+         /h/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8M8FQZb2HgpFZLZz+2kHkv7PQ6hJJGgLuAcXeYJHXoc=;
-        b=ssYlj6hz13l6HtrgdAL3IkaWPIGcpM+KGnJb474hxuUgVYf7+U9sVFIKb1FbdV00QR
-         BUPkazMT3pEd7JWW+kypO0lSqNOZg9uJnf4Pw4iMwoo1o9C+aOeZ4n3W9QdsAuqPrU9z
-         WTo4trlERz9TBQcWo3Fp5XuVOZKmMs1M7ZIPV8cLf37v3i8d894SzKbXC8kowjksG5q2
-         5c090IRUi8XFq8DMpaZ2w/ajfXGkpxxRsRNomNwM2MFEvQhHhhBYT3Kf0yUhbmcpj7QB
-         3qhmzF21Mbn+T78Q10ghMiH+WHOQoIbcu6ejtMMDoFlN/0cpBCQqTCGuHnAwYPocNpfv
-         3Pcg==
-X-Gm-Message-State: AOAM5326chP3HDfw9HC0EeL3blj/zdVyPZoMBF9LLJ5x3k+8r5h4OG4B
-        HoISqOLCJ62bUHUOxK0VgPKCTw==
-X-Google-Smtp-Source: ABdhPJzm2yDttST5j8TaF3B2Cm917dhqrg3b0B96Ye1IYiXRwc7ozDdXKCLbFqn5vdgCfieZFk4ipw==
-X-Received: by 2002:adf:e8ce:: with SMTP id k14mr28758614wrn.394.1599573858090;
-        Tue, 08 Sep 2020 07:04:18 -0700 (PDT)
-Received: from dell ([91.110.221.179])
-        by smtp.gmail.com with ESMTPSA id i11sm11288646wre.32.2020.09.08.07.04.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 07:04:17 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 15:04:15 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     dillon.minfei@gmail.com
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH: V2  2/2] gpio: tc35894: Disable Direct KBD interrupts to
- enable gpio irq
-Message-ID: <20200908140415.GW4400@dell>
-References: <1599118222-18990-1-git-send-email-dillon.minfei@gmail.com>
- <1599118222-18990-3-git-send-email-dillon.minfei@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2HixXsh/i4wRCywM25LOVRxdnOWqFN3Kihr7kBnUMtY=;
+        b=MYKkARWhfodFcO3j/+wt4nZl0vir6SOGHLuFpDlSfvjc2IIgR2GmzzVb93EMa4fWBR
+         55CwGu3lFW7vBhF0Ac7q0kULU39j/XFvRZQyNYdKWItKP7kpmHoLkYmYgKGVQ4lujAtK
+         Bejtn61SiL0NuMjj7TYrTVd26gJtziqtPU1Nf8xJyGy4h2Jm1cC5Ukr3kYxh4Smj4RXd
+         m9MezbRDqZYhM8x9dEC2Zqy9tkTcYQVFDL/QZ69K0CRZoaAMN39zBWjkQN8YuhAsBmwP
+         2wdOKpv+sVdTqJv92p0zD3LhL/nyN6VUycIxUuzKd7TXijor+OCQFyBXqmixLrJmIOYz
+         v05A==
+X-Gm-Message-State: AOAM532RNvVv5yzJDzmyv3kKxf4XUuauf7/oKBP+qSnoBy9KNJ/lg/g/
+        N7373BEhF5sygHl9+TTDXe/7cW5HStm954E0m8hC4g==
+X-Google-Smtp-Source: ABdhPJzHAWTtWKl8RajuaXPJ34COnitX9tlxj7uZpYUFpoCPWWh1/3+3qdqIQRa4D9eojHDxNa4cEAC0yvvWGVjYPS8=
+X-Received: by 2002:a1f:a596:: with SMTP id o144mr15011532vke.39.1599573911839;
+ Tue, 08 Sep 2020 07:05:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1599118222-18990-3-git-send-email-dillon.minfei@gmail.com>
+References: <20200907105254.31097-1-krzk@kernel.org> <CAPDyKFowS-psoJqVUChU35Xp92nrvH5r5eY=_8bMKU0SVBxLcw@mail.gmail.com>
+ <CAJKOXPdX7UOkTNMVS_uLi7sG_h0bHCs_b6R0uL2B241y_+niqg@mail.gmail.com>
+In-Reply-To: <CAJKOXPdX7UOkTNMVS_uLi7sG_h0bHCs_b6R0uL2B241y_+niqg@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 8 Sep 2020 16:04:35 +0200
+Message-ID: <CAPDyKFoytD2mgQD3qPeDL2zRuOPMrS9TaGGu8R=j+z=zcYKNnw@mail.gmail.com>
+Subject: Re: [PATCH v3] mmc: host: Enable compile testing of multiple drivers
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 03 Sep 2020, dillon.minfei@gmail.com wrote:
+On Tue, 8 Sep 2020 at 15:57, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Tue, 8 Sep 2020 at 15:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > + Arnd
+> >
+> > On Mon, 7 Sep 2020 at 12:53, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Multiple MMC host controller driver can be compile tested as they do not
+> > > depend on architecture specific headers.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > It seems like this is causing build errors for my next branch when
+> > running allmod config [1].
+> >
+> > [...]
+> >
+> > >
+> > >  config MMC_S3C
+> > >         tristate "Samsung S3C SD/MMC Card Interface support"
+> > > -       depends on ARCH_S3C24XX
+> > > +       depends on ARCH_S3C24XX || COMPILE_TEST
+> > >         depends on S3C24XX_DMAC
+> > >         help
+> > >           This selects a driver for the MCI interface found in
+> >
+> > [...]
+> >
+> > The problem doesn't exist in linux-next, since it has the
+> > corresponding cleanup/rework patches for MMC_S3C from Arnd.
+> >
+> > To fix the problem, we should probably remove COMPILE_TEST for
+> > MMC_S3C, for now. Then we can add it again and send it as a fix for
+> > v5.10-rc1.
+> >
+> > What do you think?
+>
+> Yes, better to remove it otherwise it will pop up when Linus merges
+> your tree. Do you want a patch for this or you fix it up by yourself?
 
-> From: dillon min <dillon.minfei@gmail.com>
-> 
-> On tc35894, have to disable direct keypad interrupts to make
-> it as general purpose interrupts functionality work.
-> if not, after chip reset, IRQST(0x91) will always 0x20,
-> IRQN always low level, can't be clear.
-> 
-> Configure DIRECTx to enable general purpose gpio mode,
-> else read GPIOMISx register always zero in irq routine.
-> 
-> verified on tc35894, need more test on other tc3589x.
-> 
-> Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> ---
->  
-> V1 -> V2:
-> Add DIRECTx register configuration to active general purpose gpio mode.
-> 
->  drivers/gpio/gpio-tc3589x.c | 18 ++++++++++++++++--
+I posted a patch, applying it on top. No worries.
 
->  include/linux/mfd/tc3589x.h |  6 ++++++
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Kind regards
+Uffe
