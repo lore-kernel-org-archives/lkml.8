@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F312C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAE2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B0F208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6950208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599581932;
-	bh=Jhn6tsgXt3uDCSv/y/lcHKqsyitqFv95Y1a/+DZ85ME=;
+	s=default; t=1599581947;
+	bh=EK4BNfvLsd6NDp5ykhNLmf1WHx/dXs6qTV0ErGvv3X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U72RddScr3pzXU5InsgWHw0eGd1EB32bHJYTDYjpGzNZ8y8No9Q8adsMw/qIyyPWv
-	 JnVC9kCLnmB+Qk2djdHG0IzNTfi4H9AIZyUuTiuKvN0Fz0Ta+bUJ5uZvM3BYxagtH5
-	 jm0CML/I+/CquyQeh38rtN/cB7/7Q4NvsrX/11jk=
+	b=njTVgjNKuPZd1nppRQ3M+x/GitRrK6eirohsuLHmOCirBwWdvJFBTzg8w3j5Ibh4j
+	 NKjwEfncFdRjo4ryXLFguKSnNVeDX5GVvvDwBWre8aisgpaIBDLg76wMhSdF2esR85
+	 zZzpuy+56kkG9LbhytZxX3uzEMieBicyKv4f2VCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbgIHQSq (ORCPT
+        id S1731773AbgIHQTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:19:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731328AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F292404C;
-        Tue,  8 Sep 2020 15:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EF7024051;
+        Tue,  8 Sep 2020 15:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580093;
-        bh=Jhn6tsgXt3uDCSv/y/lcHKqsyitqFv95Y1a/+DZ85ME=;
+        s=default; t=1599580103;
+        bh=EK4BNfvLsd6NDp5ykhNLmf1WHx/dXs6qTV0ErGvv3X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kw2PDSM9M/kqd+ev3nAUMO6/FcOOgvF7+/ubHVtlbOKNNmddekUUHoOJvhu7MYc+r
-         AGNAd7DiNOavGxBdv+rTFWYWwXPA0r9QgDlIkvHySwzvy31WF0rKbF6SJB/0Q1D3BA
-         Yy1WUxQK+maqHfAYNBG7UgbwOb9XfDlZPQo2XnAY=
+        b=w6NcRFoVI6n+eQryQRGqcmDZrCq/ngnBYAv/X2okfltBaEKCkoRzMOfUxB6pekxkE
+         2O1iR1oUIXdKJAfrCnHdVZRWOnysiNtyYAyAAnrWtvAfBXDlRa4h16+But1U40l40F
+         /HlFPaRWdl/pRhYD6nOlB9YwKwdcsJBYN2gwM9mI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/88] dmaengine: pl330: Fix burst length if burst size is smaller than bus width
-Date:   Tue,  8 Sep 2020 17:25:30 +0200
-Message-Id: <20200908152222.532997810@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 32/88] bnxt_en: Check for zero dir entries in NVRAM.
+Date:   Tue,  8 Sep 2020 17:25:33 +0200
+Message-Id: <20200908152222.680885139@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -60,45 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 0661cef675d37e2c4b66a996389ebeae8568e49e ]
+[ Upstream commit dbbfa96ad920c50d58bcaefa57f5f33ceef9d00e ]
 
-Move the burst len fixup after setting the generic value for it. This
-finally enables the fixup introduced by commit 137bd11090d8 ("dmaengine:
-pl330: Align DMA memcpy operations to MFIFO width"), which otherwise was
-overwritten by the generic value.
+If firmware goes into unstable state, HWRM_NVM_GET_DIR_INFO firmware
+command may return zero dir entries. Return error in such case to
+avoid zero length dma buffer request.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 137bd11090d8 ("dmaengine: pl330: Align DMA memcpy operations to MFIFO width")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lore.kernel.org/r/20200825064617.16193-1-m.szyprowski@samsung.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index bc8050c025b7b..c564df713efc3 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2769,6 +2769,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	while (burst != (1 << desc->rqcfg.brst_size))
- 		desc->rqcfg.brst_size++;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 14fe4f9f24b88..a1cb99110092d 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1877,6 +1877,9 @@ static int bnxt_get_nvram_directory(struct net_device *dev, u32 len, u8 *data)
+ 	if (rc != 0)
+ 		return rc;
  
-+	desc->rqcfg.brst_len = get_burst_len(desc, len);
- 	/*
- 	 * If burst size is smaller than bus width then make sure we only
- 	 * transfer one at a time to avoid a burst stradling an MFIFO entry.
-@@ -2776,7 +2777,6 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	if (desc->rqcfg.brst_size * 8 < pl330->pcfg.data_bus_width)
- 		desc->rqcfg.brst_len = 1;
- 
--	desc->rqcfg.brst_len = get_burst_len(desc, len);
- 	desc->bytes_requested = len;
- 
- 	desc->txd.flags = flags;
++	if (!dir_entries || !entry_length)
++		return -EIO;
++
+ 	/* Insert 2 bytes of directory info (count and size of entries) */
+ 	if (len < 2)
+ 		return -EINVAL;
 -- 
 2.25.1
 
