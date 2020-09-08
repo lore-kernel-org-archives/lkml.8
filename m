@@ -2,144 +2,93 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE3EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A0BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF400215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBD02166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVzWZ0PL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+0aFjCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgIHIn5 (ORCPT
+        id S1730055AbgIHIoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43482 "EHLO
+        Tue, 8 Sep 2020 04:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729390AbgIHInz (ORCPT
+        with ESMTP id S1729390AbgIHIoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:43:55 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFA9C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:43:55 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id jw11so1772761pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:43:55 -0700 (PDT)
+        Tue, 8 Sep 2020 04:44:13 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08FAC061573;
+        Tue,  8 Sep 2020 01:44:11 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d6so3332497pfn.9;
+        Tue, 08 Sep 2020 01:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=OXlcroGke2HNevojS8gO7AGdbKr5HayaXxgh0v0a9Rw=;
-        b=VVzWZ0PLhoBOyRnLqIhBP8KlfFI1wesE/ceDJIN6T0dgy7xPyIv2MSxmQkM/5WqrTI
-         CFU0k8luUZ6jx5bUjXraLG3G3v1aUp5DWnYzAckklhZatgNFvBRMP8G1bzLRwmUMQ/M0
-         PYyMPqh2IN0GJ0D6oJTzBd42wd9VCjv+SxeubQlPrU8G6nL2DQlHoxGas0g2MmPNJuYf
-         jNUkMDi95Xfdu5HXwvf/SFKXlsv4hdCtz4HZ8itfx96TewzGNl5b32ilpqFKNr97eC44
-         EWfDRmXwk+OGeJhaEDqBuHIlDO4cI5awDYMI2K0bmd5V6Oned79/6dnQ+TEbTTg+rtwM
-         +wQA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XuTzQQBdP+WWoANigEsq6MwgFpHmqQvWwyaZXCBXPHE=;
+        b=l+0aFjCmt8YftXSxAK+F1TTeN+lfDarbyMXferg638jFZw7DqYI6bYPXtgYmM7SrBh
+         qvXzVK+gLgQR2/0OgA2EgQNcQkcpEqzEBH/iKMJaZzz6DrqTfC9iy8E7CQPM3d83mX1U
+         vuiqC2a1PQVjnY8wzAqjeV19MjUMGC1TTS1yt7aZuEsq3iatIcWNjwmt4UGg6tLILvKZ
+         epiRbtZQdkSrIAJyW8n3bjz7034moF8o0g3ElZr+hTVd/42rLS21QtC3888C3wT0Cs2s
+         77ma0dnaK7JlyRVbSEyL7MjAD0vWSoMReCQq5WX9RsMBSd8CXV6EtmRnFT/dQsyvxskY
+         snMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=OXlcroGke2HNevojS8gO7AGdbKr5HayaXxgh0v0a9Rw=;
-        b=gnyw7Tz1a9Ozl7aympS95cv1UpSK2ZBTVaK+mnokKhmZuHZGFECuYE3ZhBRbb9onv1
-         DPLcu//+dJ5DGRN/v9iKZUSufQegEcJR1RIzQhwtbuU+2aBBGuqvea6x+bXGKm9QQzLq
-         4hTRGI8gZsck5LTZY+GcBRjDsL5/2eK/q8crFV1KSca4y2LKtEZrBl43krsWMjtnMfMd
-         yE/90XzqEALxhUAHjic/hIig7p9VHyTG++k0i8Qynl585Rkd5ebvCuyr0RKq31811hm+
-         U3DWxwaQ7Yeuy3cZgUTQC8QpvXP42BszaHfjcVjNrOp+mbVY+6qWPiBa+iLOq0RAeHcy
-         MB9Q==
-X-Gm-Message-State: AOAM5333lNpLIlsrwfTm8sgrQqlktpUqJqdsIn5hx/sy9qd+3MoqQxB+
-        sG4g8KITiTvNevJ7eSTxvghWtolZzrc=
-X-Google-Smtp-Source: ABdhPJxzyS9TfAzWvwCFoho2mIVMNDIB0pBbFX9ag1Dk5md5II1gAiOC+3ef0morgOeUwDCSINndIw==
-X-Received: by 2002:a17:90a:e795:: with SMTP id iz21mr2979053pjb.8.1599554634620;
-        Tue, 08 Sep 2020 01:43:54 -0700 (PDT)
-Received: from localhost ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id b10sm16891473pff.85.2020.09.08.01.43.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 01:43:54 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 18:43:48 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v1 1/5] powerpc/mm: sanity_check_fault() should work for
- all, not only BOOK3S
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XuTzQQBdP+WWoANigEsq6MwgFpHmqQvWwyaZXCBXPHE=;
+        b=W5uMLu+odPRU1GmrTEX4AHJXyZ8cLn0KgBd+Eyt16Yn899zkslvyw/wqm8SeskGrjQ
+         7bn5UxeTWPzAWVITQiY+wGxbd80ixGGFYUqsi1uL1Va9enCJKAYBuS+oVuOO95BEjLyB
+         ekFKr2DQXwz2FjgHpafvLKwt29xOV0W1Qhx9sk6SZn7hX7mf9tEXc9aRpXRm3A2zk5Qp
+         UjJmnfyUTxRKqgqmrPrKh61mAhd+O0Uuy8CvYaLya7ppz8AcxfzXazbW6xvv3ve+xgNE
+         3sZzCp2E2LHBB5zuomvY/+8a/uH6PsIRKE33WSLBa94fP/A7vmkiXop26/tfIcGCu00u
+         ziyg==
+X-Gm-Message-State: AOAM532K/JM0XJf1ZHyDtyorXIJHLUC/L89/9mXJkQAYc0yxeyS0ysiE
+        NkpjvAbVVsJPmbdBBaHpHDSTvIAWzWNus4AAgck=
+X-Google-Smtp-Source: ABdhPJxte4NMjBFH89t5XT3Rh0sUdCmWtYid4nnWQLKkT5VZ1TD2vb0mIcEp7C1RwxbePlBPfkkntHqqX4r+/xbAxlw=
+X-Received: by 2002:a17:902:28:: with SMTP id 37mr23483544pla.107.1599554651533;
+ Tue, 08 Sep 2020 01:44:11 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1599554359.m174sr2fhg.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200908021021.9123-1-digetx@gmail.com> <20200908021021.9123-17-digetx@gmail.com>
+In-Reply-To: <20200908021021.9123-17-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 8 Sep 2020 11:43:54 +0300
+Message-ID: <CAHp75VefU+iXpngPnzQRBfrg3OgLUBqhOCJpPo8natfCBr6Q5w@mail.gmail.com>
+Subject: Re: [PATCH v6 16/35] i2c: tegra: Reorder location of functions in the code
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
-> The verification and message introduced by commit 374f3f5979f9
-> ("powerpc/mm/hash: Handle user access of kernel address gracefully")
-> applies to all platforms, it should not be limited to BOOK3S.
->=20
-> Make the BOOK3S version of sanity_check_fault() the one for all,
-> and bail out earlier if not BOOK3S.
->=20
-> Fixes: 374f3f5979f9 ("powerpc/mm/hash: Handle user access of kernel addre=
-ss gracefully")
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/powerpc/mm/fault.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
->=20
-> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> index 925a7231abb3..2efa34d7e644 100644
-> --- a/arch/powerpc/mm/fault.c
-> +++ b/arch/powerpc/mm/fault.c
-> @@ -303,7 +303,6 @@ static inline void cmo_account_page_fault(void)
->  static inline void cmo_account_page_fault(void) { }
->  #endif /* CONFIG_PPC_SMLPAR */
-> =20
-> -#ifdef CONFIG_PPC_BOOK3S
->  static void sanity_check_fault(bool is_write, bool is_user,
->  			       unsigned long error_code, unsigned long address)
->  {
-> @@ -320,6 +319,9 @@ static void sanity_check_fault(bool is_write, bool is=
-_user,
->  		return;
->  	}
-> =20
-> +	if (!IS_ENABLED(CONFIG_PPC_BOOK3S))
-> +		return;
+On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Reorder location of functions in the code in order to have definition
+> of functions closer to the place of the invocation. This change makes
+> easier to navigate around the code and removes the need to have a
+> prototype for tegra_i2c_init().
 
-Seems okay. Why is address =3D=3D -1 special though? I guess it's because=20
-it may not be an exploit kernel reference but a buggy pointer underflow?=20
-In that case -1 doesn't seem like it would catch very much. Would it be=20
-better to test for high bit set for example ((long)address < 0) ?
+Still seems to have ordering issues (it moves pieces you actually
+change in the next patches).
+Have you considered which one looks neat this variant or if you move
+it closer to the end of the series?
 
-Anyway for your patch
-
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-
-> +
->  	/*
->  	 * For hash translation mode, we should never get a
->  	 * PROTFAULT. Any update to pte to reduce access will result in us
-> @@ -354,10 +356,6 @@ static void sanity_check_fault(bool is_write, bool i=
-s_user,
-> =20
->  	WARN_ON_ONCE(error_code & DSISR_PROTFAULT);
->  }
-> -#else
-> -static void sanity_check_fault(bool is_write, bool is_user,
-> -			       unsigned long error_code, unsigned long address) { }
-> -#endif /* CONFIG_PPC_BOOK3S */
-> =20
->  /*
->   * Define the correct "is_write" bit in error_code based
-> --=20
-> 2.25.0
->=20
->=20
+-- 
+With Best Regards,
+Andy Shevchenko
