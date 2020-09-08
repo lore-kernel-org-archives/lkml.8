@@ -2,82 +2,91 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B44C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7B6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA2921D1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4B3218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgIHHbZ (ORCPT
+        id S1729345AbgIHHbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:31:25 -0400
-Received: from mail-io1-f79.google.com ([209.85.166.79]:39119 "EHLO
-        mail-io1-f79.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbgIHHbW (ORCPT
+        Tue, 8 Sep 2020 03:31:37 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:60583 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729252AbgIHHbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:31:22 -0400
-Received: by mail-io1-f79.google.com with SMTP id y16so2924754ioy.6
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:31:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rmPvU3f+yZL7MTO2dIAyk2B7m78qJlVaW2bVimI04Ps=;
-        b=nz4OCx+ypkltPS4xwX/NyjnrG0cRsU7f3UstlDYC9/ym4/OsliyUxEcO61DNQrOEYv
-         gnLB3+Z14umHRl8wZU/U+p+D0Fvp1yM4BkLnD2lBxBzslGXdJtJlHS37kw6xwYxUhCY3
-         kMWCERXOI8qOWI0LCkBe6zhKe1A7JyeHec7bSB0kLnv0cjd8L2xnt565gwRkH5Ak55eq
-         n6+yIOCNTtWa4Ev3lFaI2qnmx+NZVX9mSbWTwh1bc6XHZxhyxOwPRM46T4UQ+SjG6H3E
-         787da84zrQVQPlS1m0YPOv9FKA/gpOGVKLNJ79mmaf9DUO5spmwCWHSM+XBE3hgs2SLc
-         bTbA==
-X-Gm-Message-State: AOAM532GKBTbAxhZzznK9oJLrvh8rfl0ucPKxOYVhYTMCsyYUyyIucV5
-        x0hHJ66so4QxzKJP8/99zS7M/MX/fH/t6W+0LTD9OWMad4/N
-X-Google-Smtp-Source: ABdhPJwPXRQ1b/beV5kAPxRtJWCT5e7/zur2D6+Jwk9T9hxKd8EMf7AOq5nyI/63FcztcUHumZUpeQdIFW2DSfuvMuW0JZHWg7fZ
+        Tue, 8 Sep 2020 03:31:31 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MzQc2-1kSwBj0wrI-00vMjO; Tue, 08 Sep 2020 09:31:27 +0200
+Received: by mail-qk1-f174.google.com with SMTP id w186so14486210qkd.1;
+        Tue, 08 Sep 2020 00:31:26 -0700 (PDT)
+X-Gm-Message-State: AOAM532Z5f4RIG6NU9P+NnAg45A83raBHCQbHgpr0CHzR+FwcD8MDj2i
+        4di64qU1BHSKMOE6cEAg8f6ssmG6AhdPXiuoxhA=
+X-Google-Smtp-Source: ABdhPJzVrV5pr+fBm34K9U0IIQyH+DEtl58pzPVS1R/9WsIYAhtAAKh5aJh9FxNNMGbiGLMExWvt7mx3apT5LWd53WI=
+X-Received: by 2002:a37:a04b:: with SMTP id j72mr23336718qke.352.1599550285996;
+ Tue, 08 Sep 2020 00:31:25 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:9a15:: with SMTP id t21mr23074428ili.289.1599550281494;
- Tue, 08 Sep 2020 00:31:21 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 00:31:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005435f305aec852b7@google.com>
-Subject: WARNING: can't access registers at asm_exc_general_protection
-From:   syzbot <syzbot+037ca50874f4d39f375d@syzkaller.appspotmail.com>
-To:     alexandre.chartre@oracle.com, bp@alien8.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
+References: <1599549126-17413-1-git-send-email-Anson.Huang@nxp.com> <1599549126-17413-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1599549126-17413-3-git-send-email-Anson.Huang@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 8 Sep 2020 09:31:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
+Message-ID: <CAK8P3a1NY07QmD+vzD3+5DsY69XYcwEz3vuwXUcsVG6jxwtTow@mail.gmail.com>
+Subject: Re: [PATCH V3 3/3] pinctrl: imx: Support building i.MX pinctrl core
+ driver as module
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2zyq8Wycbwc5PM/Vv2JQw0fwxXHDr4zKCsBQfvtI4tXJlbs5S80
+ o0oCVtjvo9rq8cGtf6gquwAmJyFt12rQ/PEfJZpWd0W911SBD1IgsP3k8YeMw6X1g5DWVD3
+ K292KoBniWq/4R0TahbJI8k2EgFImfG8mbCqYc6b1vGWdqkO3lXbBk8kiUQRFlzQf1no77l
+ kMjnPhi8rD7tKGgxtVV8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xCCp4AjAeKc=:H31grS9MPIv9d8KrhyNWmI
+ HeFqqDb0m3Zedew3I1nyrBFK+dPjyEltIvcTtQBc2AcR9fegsngXMCvXioFYxB1XHejyxCWWc
+ BJg3rN7soBLpPAbcCOk833AiyFIp1lG8k9ig6UUD5WxR9diiCV/P9HWWEuQmL2D+u/yI9x5ZG
+ 7GfA6F73Sa1uoz23rf5iu6XYdVh2F82jynmg9zNe2ypLNvYr3QiEOI+TbDA1qDMTJVmcP9cGu
+ Ob/ocSIo9ULr3yaxR9OyXxz3tn5EOfeAcIAPE1iJ8KVlW0LEO+8MKwsBmdyUIVukDJoK9v9g+
+ fxqhrVq0d5o58G3RbuxTchzwJD+nNMa2GUyY/QPV+hEDzyl4mtGgManCdiiR5cn3mzXEg9x2r
+ b628x1rkdCKzx45xokJjgY2lQng0YTuX7s3WAyH9MfQC+E8qmRCOEZDeCE0c4AjZbgkP7P/9v
+ O4cKelcG4OIc04IvmJt0dIQMpYedSvwdy2NEnkxJiQjbiJx1v3P9hRzHL/8E8sCtYfTtUymPl
+ aL2ShPDU0D2pDLJ9YeIxbDJQ0Icui+tCdwoUbbNXEVfFZboqFjrHpUaCgMR5YO+e6MFEXtkyJ
+ siEMnAGDA8Mm+kl5X87wu29fVv3vVWVbenSiq3qpeipeQqrUma4xkPq35LnMe8tIK9Iaae+s4
+ OliFsCYFExdAFGWqoINk1E2dD52o+xlj7U+4ur371gM/W0EAVqhE6jZ3xlCeMyfaCe54vZyYe
+ 6sFoGw6mm5EaVGA1lpSNs9+pWV1HRXoCRvRGOA9EtegFb2QNWYisShbD7L4qtQ9nEWGFY/SvV
+ OHK8Q2Lfm1r3LCqMPPTvZ72c3hxU4zwALIH7h/FerxbHg5nHB03vBxBvBApBBab5kr2QNse
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Sep 8, 2020 at 9:20 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-syzbot found the following issue on:
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config PINCTRL_IMX
+> -       bool
+> +       tristate "IMX pinctrl core driver"
+> +       depends on OF
+>         select GENERIC_PINCTRL_GROUPS
+>         select GENERIC_PINMUX_FUNCTIONS
+>         select GENERIC_PINCONF
 
-HEAD commit:    f4d51dff Linux 5.9-rc4
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=135135cd900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9075b36a6ae26c9
-dashboard link: https://syzkaller.appspot.com/bug?extid=037ca50874f4d39f375d
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-userspace arch: i386
+I don't see why you need to make this option user-visible when it is already
+selected by the drivers that need it. Wouldn't it be enough to change
+the 'bool' to 'tristate' without adding a prompt?
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+037ca50874f4d39f375d@syzkaller.appspotmail.com
-
-WARNING: can't access registers at asm_exc_general_protection+0x1e/0x30 arch/x86/include/asm/idtentry.h:532
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+       Arnd
