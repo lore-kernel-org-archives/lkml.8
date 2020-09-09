@@ -2,210 +2,298 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E48C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 316CB215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A5D207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="azMdh4tc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qLwFL2JC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgIIQLN (ORCPT
+        id S1730516AbgIIQLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730261AbgIIQHz (ORCPT
+        Wed, 9 Sep 2020 12:11:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48146 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730777AbgIIQIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:07:55 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC96C061367
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:10:00 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id s12so3104808wrw.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:10:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AqdCvXthY64M0/BgH+IgO4cFQky1yop2f9gBjmeTzIo=;
-        b=azMdh4tcatk3h2bNwuMv8KW2hiBxo01r6sZN+Y96c4MLNjFQfR0t+Wl3xOHJVaYwnp
-         fG7zz7yRlCMKv+SvjUWBHEoiP99bK5xI2/ACJzcsue6LVeXzuHXzZ9yVWh8JIGS+L70Q
-         dpBwgWa3h9E27uF5zzzhK9uo9F59usK2vq3oLEWU3TAHeu0c8nYQHXHFE1AhirII4j72
-         J1VaGxv5vKWkZTKzRFNAS0NcaisGUEno0XdInD1Ed3FBJ37KG/JaCxS9RkU+mbBV14iu
-         hLPId/z8KKiZAqmhZ2U+g91+oS/W9WD5kL+aXMG1NqcB6aNSYGEWO6isiK9LPkvM+SqS
-         ZUBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AqdCvXthY64M0/BgH+IgO4cFQky1yop2f9gBjmeTzIo=;
-        b=WdGVQQeCup1tDjTPiDo6VdG32KKI1Hm7fN7Jwa4JScnUrZhV7zLRUGQEZjSXjhI/xw
-         15BHirpk1SwiYaPWyFfVI+XaHBk1N8SobwdJUWVUouoPb8EbL/N6uClvaaGCwmhbOBRW
-         hwvEs5M0l9NLPg1suR9kyZsmd5xbsLqFFwYF8jmQ59NSz0UOOsL9WA3U2vpdJ2tELx5b
-         iPXZUOVt3k2woSO0LbtqnCCxhQQFiKfQxqDnFYgPnvZSydNnBudOaZs0ubYWoPLC2EHr
-         4hmyOMMNxSnYeuFEHHhFfmK83WlnUfNBlFHj/kI0R/7ZELbak1golX4fxXXxRWimoj0n
-         Qh7A==
-X-Gm-Message-State: AOAM5305445Tc4RbDvVv6q7v7Z4OZcvoHkyh/hHxFgUw3bFTeEebzjv5
-        t3Yau0mEuXEHF2WlRkulJ3r++yrRnMVGew==
-X-Google-Smtp-Source: ABdhPJxJQB3ifjMaYxPOuJSRUQxdrttYTOXb6TsYOI5JQTv4Nv/vhFgnCG76XhgUp0LkxT1Hn+WFNw==
-X-Received: by 2002:adf:e7ce:: with SMTP id e14mr3965390wrn.43.1599660598943;
-        Wed, 09 Sep 2020 07:09:58 -0700 (PDT)
-Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.googlemail.com with ESMTPSA id n14sm2894195wmi.33.2020.09.09.07.09.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 07:09:58 -0700 (PDT)
-Subject: Re: [PATCH] soundwire: bus: add enumerated slave to device list
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        vkoul@kernel.org, yung-chuan.liao@linux.intel.com
-Cc:     sanyog.r.kale@intel.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20200909082711.11670-1-srinivas.kandagatla@linaro.org>
- <80081c70-9137-c9f0-9813-8166275ef7af@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <ab107351-dbde-7f6d-c588-11572aed5d2d@linaro.org>
-Date:   Wed, 9 Sep 2020 15:09:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 9 Sep 2020 12:08:40 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 089G8Y5R094144;
+        Wed, 9 Sep 2020 11:08:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599667714;
+        bh=Oh/qY4BatZ4K2GK5HL1C9iBef+ECXb4Lrh5utolQhFw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qLwFL2JCG7TeBANL0tfjU5iGLUzUlpDaGanb+aUFg434HwxiKL2FhIgMP8T1WVF8k
+         T6WQX7XCh5RL9hivlRWfM1Qwuy1yqroSFSVHFPKcvRVxApVj/vNNe8PIhUaRf6RmNi
+         shWshJOt0Y6g/HW7/21Qt92ajgmbGppKR2uL+IqQ=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089G8YID047218;
+        Wed, 9 Sep 2020 11:08:34 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 9 Sep
+ 2020 11:08:34 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 9 Sep 2020 11:08:34 -0500
+Received: from [10.250.73.77] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089G8WjD010664;
+        Wed, 9 Sep 2020 11:08:33 -0500
+Subject: Re: [PATCH net-next 0/1] Support for VLAN interface over HSR/PRP
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20200901195415.4840-1-m-karicheri2@ti.com>
+ <d93fbc54-1721-ebec-39ca-dc8b45e6e534@ti.com>
+ <15bbf7d2-627b-1d52-f130-5bae7b7889de@ti.com>
+ <CA+FuTSeri93irC9eaQqrFrY2++d0zJ4-F0YAfCXfX6XVVqU6Pw@mail.gmail.com>
+ <bf8a22c2-0ebe-7a52-2e79-7dde72d444ba@ti.com>
+ <CA+FuTSeE_O_XozfnzDED_S4of-NwtRCN+oWr=O3JPpByfCz3Vg@mail.gmail.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <e125917f-45fb-380b-61b1-ab7395a703a4@ti.com>
+Date:   Wed, 9 Sep 2020 12:08:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <80081c70-9137-c9f0-9813-8166275ef7af@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CA+FuTSeE_O_XozfnzDED_S4of-NwtRCN+oWr=O3JPpByfCz3Vg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Willem,
 
-
-On 09/09/2020 14:37, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 9/9/20 3:27 AM, Srinivas Kandagatla wrote:
->> Currently slave devices are only added either from device tree or acpi
->> entries. However lets say, there is wrong or no entry of a slave device
->> in DT that is enumerated, then there is no way for user to know all
->> the enumerated devices on the bus.
-> 
-> Sorry Srinivas, I don't understand your point.
-> 
-> The sysfs entries will include all devices that are described in 
-> platform firmware (be it DT or ACPI).
-
-yes that is true, but it will not include all the enumerated devices on 
-the bus!
-
-In my case on a new board I was trying to figure out what devices are on 
-the bus even before even adding any device tree entries!
-
-In second case I had a typo in the device tree entry and sysfs displayed 
-devices with that typo rather than actual enumerated device id.
-
-> 
-> If you add to sysfs entries unknown devices which happen to be present 
-> on the bus, then what? How would you identify them from the devices that 
-> are described in firmware?
-
-Both of them should be displayed in sysfs, core should be able to 
-differentiate this based on the presence of fw_node or of_node and not bind!
-
-> 
-> Also the sysfs entries describe properties, but if you haven't bound a 
-> driver then how would this work?
-
-This is would be informative, atleast in cases like me!
-
-All I want to know is the list of enumerated devices on the bus, If 
-doing this way is not the right thing, then am happy to try any suggestion!
-
-For now I have managed to figure out enumerated device ids on the bus 
-with this patch, I was hoping that other people would also hit such 
-issue, so I sent this patch!
-
-
-thanks,
-srini
-> 
-> I really feel this deserves more explanations on the problem statement 
-> and what you are hoping to achieve in this case.
-> 
-> Thanks!
-> 
+On 9/8/20 1:51 PM, Willem de Bruijn wrote:
+> On Tue, Sep 8, 2020 at 6:55 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
 >>
->> To fix this add slave device by default if there is no matching dt or
->> acpi entry, so that we can see this in sysfs entry.
+>> Hi Willem,
 >>
->> In my case I had a wrong address entry in DT, However I had no way to
->> know what devices are actually enumerated on the bus!
+>> On 9/4/20 11:52 AM, Willem de Bruijn wrote:
+>>> On Thu, Sep 3, 2020 at 12:30 AM Murali Karicheri <m-karicheri2@ti.com> wrote:
+>>>>
+>>>> All,
+>>>>
+>>>> On 9/2/20 12:14 PM, Murali Karicheri wrote:
+>>>>> All,
+>>>>>
+>>>>> On 9/1/20 3:54 PM, Murali Karicheri wrote:
+>>>>>> This series add support for creating VLAN interface over HSR or
+>>>>>> PRP interface. Typically industrial networks uses VLAN in
+>>>>>> deployment and this capability is needed to support these
+>>>>>> networks.
+>>>>>>
+>>>>>> This is tested using two TI AM572x IDK boards connected back
+>>>>>> to back over CPSW  ports (eth0 and eth1).
+>>>>>>
+>>>>>> Following is the setup
+>>>>>>
+>>>>>>                    Physical Setup
+>>>>>>                    ++++++++++++++
+>>>>>>     _______________    (CPSW)     _______________
+>>>>>>     |              |----eth0-----|               |
+>>>>>>     |TI AM572x IDK1|             | TI AM572x IDK2|
+>>>>>>     |______________|----eth1-----|_______________|
+>>>>>>
+>>>>>>
+>>>>>>                    Network Topolgy
+>>>>>>                    +++++++++++++++
+>>>>>>
+>>>>>>                           TI AM571x IDK  TI AM572x IDK
+>>>>>>
+>>>>>> 192.168.100.10                 CPSW ports                 192.168.100.20
+>>>>>>                 IDK-1                                        IDK-2
+>>>>>> hsr0/prp0.100--| 192.168.2.10  |--eth0--| 192.168.2.20 |--hsr0/prp0.100
+>>>>>>                   |----hsr0/prp0--|        |---hsr0/prp0--|
+>>>>>> hsr0/prp0.101--|               |--eth1--|              |--hsr0/prp0/101
+>>>>>>
+>>>>>> 192.168.101.10                                            192.168.101.20
+>>>>>>
+>>>>>> Following tests:-
+>>>>>>     - create hsr or prp interface and ping the interface IP address
+>>>>>>       and verify ping is successful.
+>>>>>>     - Create 2 VLANs over hsr or prp interface on both IDKs (VID 100 and
+>>>>>>       101). Ping between the IP address of the VLAN interfaces
+>>>>>>     - Do iperf UDP traffic test with server on one IDK and client on the
+>>>>>>       other. Do this using 100 and 101 subnet IP addresses
+>>>>>>     - Dump /proc/net/vlan/{hsr|prp}0.100 and verify frames are transmitted
+>>>>>>       and received at these interfaces.
+>>>>>>     - Delete the vlan and hsr/prp interface and verify interfaces are
+>>>>>>       removed cleanly.
+>>>>>>
+>>>>>> Logs for IDK-1 at https://pastebin.ubuntu.com/p/NxF83yZFDX/
+>>>>>> Logs for IDK-2 at https://pastebin.ubuntu.com/p/YBXBcsPgVK/
+>>>>>>
+>>>>>> Murali Karicheri (1):
+>>>>>>      net: hsr/prp: add vlan support
+>>>>>>
+>>>>>>     net/hsr/hsr_device.c  |  4 ----
+>>>>>>     net/hsr/hsr_forward.c | 16 +++++++++++++---
+>>>>>>     2 files changed, 13 insertions(+), 7 deletions(-)
+>>>>>>
+>>>>> I am not sure if the packet flow is right for this?
+>>>>>
+>>>>> VLAN over HSR frame format is like this.
+>>>>>
+>>>>> <Start of Frame><VLAN tag><HSR Tag><IP><CRC>
+>>>>>
+>>>>> My ifconfig stats shows both hsr and hsr0.100 interfaces receiving
+>>>>> frames.
+>>>>>
+>>>>> So I did a WARN_ON() in HSR driver before frame is forwarded to upper
+>>>>> layer.
+>>>>>
+>>>>> a0868495local@uda0868495:~/Projects/upstream-kernel$ git diff
+>>>>> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+>>>>> index de21df30b0d9..545a3cd8c71b 100644
+>>>>> --- a/net/hsr/hsr_forward.c
+>>>>> +++ b/net/hsr/hsr_forward.c
+>>>>> @@ -415,9 +415,11 @@ static void hsr_forward_do(struct hsr_frame_info
+>>>>> *frame)
+>>>>>                    }
+>>>>>
+>>>>>                    skb->dev = port->dev;
+>>>>> -               if (port->type == HSR_PT_MASTER)
+>>>>> +               if (port->type == HSR_PT_MASTER) {
+>>>>> +                       if (skb_vlan_tag_present(skb))
+>>>>> +                               WARN_ON(1);
+>>>>>                            hsr_deliver_master(skb, port->dev,
+>>>>> frame->node_src);
+>>>>> -               else
+>>>>> +               } else
+>>>>>                            hsr_xmit(skb, port, frame);
+>>>>>            }
+>>>>>     }
+>>>>>
+>>>>> And I get the trace shown below.
+>>>>>
+>>>>> [  275.125431] WARNING: CPU: 0 PID: 0 at net/hsr/hsr_forward.c:420
+>>>>> hsr_forward_skb+0x460/0x564
+>>>>> [  275.133822] Modules linked in: snd_soc_omap_hdmi snd_soc_ti_sdma
+>>>>> snd_soc_core snd_pcm_dmaengine snd_pcm snd_time4
+>>>>> [  275.199705] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+>>>>> 5.9.0-rc1-00658-g473e463812c2-dirty #8
+>>>>> [  275.209573] Hardware name: Generic DRA74X (Flattened Device Tree)
+>>>>> [  275.215703] [<c011177c>] (unwind_backtrace) from [<c010b6f0>]
+>>>>> (show_stack+0x10/0x14)
+>>>>> [  275.223487] [<c010b6f0>] (show_stack) from [<c055690c>]
+>>>>> (dump_stack+0xc4/0xe4)
+>>>>> [  275.230747] [<c055690c>] (dump_stack) from [<c01386ac>]
+>>>>> (__warn+0xc0/0xf4)
+>>>>> [  275.237656] [<c01386ac>] (__warn) from [<c0138a3c>]
+>>>>> (warn_slowpath_fmt+0x58/0xb8)
+>>>>> [  275.245177] [<c0138a3c>] (warn_slowpath_fmt) from [<c09564bc>]
+>>>>> (hsr_forward_skb+0x460/0x564)
+>>>>> [  275.253657] [<c09564bc>] (hsr_forward_skb) from [<c0955534>]
+>>>>> (hsr_handle_frame+0x15c/0x190)
+>>>>> [  275.262047] [<c0955534>] (hsr_handle_frame) from [<c07c6704>]
+>>>>> (__netif_receive_skb_core+0x23c/0xc88)
+>>>>> [  275.271223] [<c07c6704>] (__netif_receive_skb_core) from [<c07c7180>]
+>>>>> (__netif_receive_skb_one_core+0x30/0x74)
+>>>>> [  275.281266] [<c07c7180>] (__netif_receive_skb_one_core) from
+>>>>> [<c07c72a4>] (netif_receive_skb+0x50/0x1c4)
+>>>>> [  275.290793] [<c07c72a4>] (netif_receive_skb) from [<c071a55c>]
+>>>>> (cpsw_rx_handler+0x230/0x308)
+>>>>> [  275.299272] [<c071a55c>] (cpsw_rx_handler) from [<c0715ee8>]
+>>>>> (__cpdma_chan_process+0xf4/0x188)
+>>>>> [  275.307925] [<c0715ee8>] (__cpdma_chan_process) from [<c0717294>]
+>>>>> (cpdma_chan_process+0x3c/0x5c)
+>>>>> [  275.316754] [<c0717294>] (cpdma_chan_process) from [<c071dd14>]
+>>>>> (cpsw_rx_mq_poll+0x44/0x98)
+>>>>> [  275.325145] [<c071dd14>] (cpsw_rx_mq_poll) from [<c07c8ae0>]
+>>>>> (net_rx_action+0xf0/0x400)
+>>>>> [  275.333185] [<c07c8ae0>] (net_rx_action) from [<c0101370>]
+>>>>> (__do_softirq+0xf0/0x3ac)
+>>>>> [  275.340965] [<c0101370>] (__do_softirq) from [<c013f5ec>]
+>>>>> (irq_exit+0xa8/0xe4)
+>>>>> [  275.348224] [<c013f5ec>] (irq_exit) from [<c0199344>]
+>>>>> (__handle_domain_irq+0x6c/0xe0)
+>>>>> [  275.356093] [<c0199344>] (__handle_domain_irq) from [<c056f8fc>]
+>>>>> (gic_handle_irq+0x4c/0xa8)
+>>>>> [  275.364481] [<c056f8fc>] (gic_handle_irq) from [<c0100b6c>]
+>>>>> (__irq_svc+0x6c/0x90)
+>>>>> [  275.371996] Exception stack(0xc0e01f18 to 0xc0e01f60)
+>>>>>
+>>>>> Shouldn't it show vlan_do_receive() ?
+>>>>>
+>>>>>        if (skb_vlan_tag_present(skb)) {
+>>>>>            if (pt_prev) {
+>>>>>                ret = deliver_skb(skb, pt_prev, orig_dev);
+>>>>>                pt_prev = NULL;
+>>>>>            }
+>>>>>            if (vlan_do_receive(&skb))
+>>>>>                goto another_round;
+>>>>>            else if (unlikely(!skb))
+>>>>>                goto out;
+>>>>>        }
+>>>>>
+>>>>> Thanks
+>>>>>
+>>>>
+>>>> I did an ftrace today and I find vlan_do_receive() is called for the
+>>>> incoming frames before passing SKB to hsr_handle_frame(). If someone
+>>>> can review this, it will help. Thanks.
+>>>>
+>>>> https://pastebin.ubuntu.com/p/CbRzXjwjR5/
+>>>
+>>> hsr_handle_frame is an rx_handler called after
+>>> __netif_receive_skb_core called vlan_do_receive and jumped back to
+>>> another_round.
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/soundwire/bus.c      | 1 +
->>   drivers/soundwire/bus.h      | 2 ++
->>   drivers/soundwire/bus_type.c | 6 ++++++
->>   drivers/soundwire/slave.c    | 4 ++--
->>   4 files changed, 11 insertions(+), 2 deletions(-)
+>> Yes. hsr_handle_frame() is a rx_handler() after the above code that
+>> does vlan_do_receive(). The ftrace shows vlan_do_receive() is called
+>> followed by call to hsr_handle_frame(). From ifconfig I can see both
+>> hsr and vlan interface stats increments by same count. So I assume,
+>> vlan_do_receive() is called initially and it removes the tag, update
+>> stats and then return true and go for another round. Do you think that
+>> is the case?
+> 
+> That was my understanding.
+> 
+>> vlan_do_receive() calls vlan_find_dev(skb->dev, vlan_proto, vlan_id)
+>> to retrieve the real netdevice (real device). However VLAN device is
+>> attached to hsr device (real device), but SKB will have HSR slave
+>> Ethernet netdevice (in our case it is cpsw device) and vlan_find_dev()
+>> would have failed since there is no vlan_info in cpsw netdev struct. So
+>> below code  in vlan_do_receive() should have failed and return false.
 >>
->> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
->> index e6e0fb9a81b4..55d9c22c4ec5 100644
->> --- a/drivers/soundwire/bus.c
->> +++ b/drivers/soundwire/bus.c
->> @@ -699,6 +699,7 @@ static int sdw_program_device_num(struct sdw_bus 
->> *bus)
->>           if (!found) {
->>               /* TODO: Park this device in Group 13 */
->> +            sdw_slave_add(bus, &id, NULL);
->>               dev_err(bus->dev, "Slave Entry not found\n");
->>           }
->> diff --git a/drivers/soundwire/bus.h b/drivers/soundwire/bus.h
->> index 82484f741168..1517d6789dff 100644
->> --- a/drivers/soundwire/bus.h
->> +++ b/drivers/soundwire/bus.h
->> @@ -19,6 +19,8 @@ static inline int sdw_acpi_find_slaves(struct 
->> sdw_bus *bus)
->>   int sdw_of_find_slaves(struct sdw_bus *bus);
->>   void sdw_extract_slave_id(struct sdw_bus *bus,
->>                 u64 addr, struct sdw_slave_id *id);
->> +int sdw_slave_add(struct sdw_bus *bus, struct sdw_slave_id *id,
->> +          struct fwnode_handle *fwnode);
->>   int sdw_master_device_add(struct sdw_bus *bus, struct device *parent,
->>                 struct fwnode_handle *fwnode);
->>   int sdw_master_device_del(struct sdw_bus *bus);
->> diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
->> index 6fba55898cf0..ac036223046f 100644
->> --- a/drivers/soundwire/bus_type.c
->> +++ b/drivers/soundwire/bus_type.c
->> @@ -84,6 +84,12 @@ static int sdw_drv_probe(struct device *dev)
->>       const struct sdw_device_id *id;
->>       int ret;
->> +    /*
->> +     * fw description is mandatory to bind
->> +     */
->> +    if (!dev->fwnode || !dev->of_node)
->> +        return -ENODEV;
->> +
->>       id = sdw_get_device_id(slave, drv);
->>       if (!id)
->>           return -ENODEV;
->> diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
->> index 0839445ee07b..24a16ebf9ae2 100644
->> --- a/drivers/soundwire/slave.c
->> +++ b/drivers/soundwire/slave.c
->> @@ -20,8 +20,8 @@ struct device_type sdw_slave_type = {
->>       .uevent =    sdw_slave_uevent,
->>   };
->> -static int sdw_slave_add(struct sdw_bus *bus,
->> -             struct sdw_slave_id *id, struct fwnode_handle *fwnode)
->> +int sdw_slave_add(struct sdw_bus *bus,
->> +          struct sdw_slave_id *id, struct fwnode_handle *fwnode)
->>   {
->>       struct sdw_slave *slave;
->>       int ret;
+>>          vlan_dev = vlan_find_dev(skb->dev, vlan_proto, vlan_id);
+>>          if (!vlan_dev)
+>>                  return false;
 >>
+>> So how does it goes for another_round ? May be vlan_find_dev is
+>> finding the hsr netdevice?
+> 
+> It's good to answer this through code inspection and/or
+> instrumentation. I do not have the answer immediately either.
+> 
+> There certainly is prior art in having vlan with an rx_handler,
+> judging from the netif_is_macvlan_port(vlan_dev) and
+> netif_is_bridge_port(vlan_dev) helpers in vlan_do_receive.
+>> I am not an expert and so the question. Probably I can put a
+>> traceprintk() to confirm this, but if someone can clarify this
+>> it will be great. But for that, I will spin v2 with the above comments
+>> addressed as in my reply and post.
+> 
+> Please don't send a patch before we understand this part.
+> 
+Sure! That is on my TODO. Will confirm this before sending next
+revision of the patch.
+-- 
+Murali Karicheri
+Texas Instruments
