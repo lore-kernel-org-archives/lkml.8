@@ -2,213 +2,193 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5413C2D0E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4855C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB7B2074B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c2tPwYEY"
+	by mail.kernel.org (Postfix) with ESMTP id 882BD2074B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgIIJH5 (ORCPT
+        id S1728350AbgIIJI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbgIIJHu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:07:50 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAC2C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:07:49 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id m6so2112913wrn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/jpvCnRB/HY9hnqXXH+ktB0xBbVQklIkg8Ire344+nU=;
-        b=c2tPwYEYDjUGLEkoxbELD4SOFyNJ1uMDf3DaMpmr5L23YBmeDVB1C5npwyTPw1WK06
-         K1d4QKR4qlTQliBvduKLq2Da7+mSkgWOgS4PyzzE8aiJU+xsaU+eiqtgoaR6avtzKoRD
-         LiNJsbWUf9QqrxJn508NGBUukWU9ClLaHdVgooXs7kVn2unNnN49foc5nZ8fr2Ismgdg
-         SlJerKYGYASYXzTNWxpZ3vT7CvRVs78SuZu7bwcQNWpA1PbEYpkgUUi/5ybXsnsRVkrh
-         fZGE/PXHTi5frPG3Fy5g/ACszH2OmOmCKMNKwxhh4cPjColZrnT2aZwXvzMn1qEkeV29
-         HDIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/jpvCnRB/HY9hnqXXH+ktB0xBbVQklIkg8Ire344+nU=;
-        b=h8IM9+optbB+Wa2y8dFcXRtusGs1X6mEtC5OVo3qSLIZyKYMBlr39Q06zg9mqtOzwN
-         xdYSYU7iZqqVy4NCSGb53h2FfGiYgWyb/AEHzjCQZo5nXT/Pq4OOXArNDYW6m8xbYhjl
-         9rlJ4LRhQybShjxg22+khRy35eRHcrxrZWkoGDfD/PRLAoB0LncUE1b8DKf42hTYmgPb
-         XKLrnt/sFUnsjjhrXNANYYsB47tDD0tGw08IITP7YH/e4caECrrY2Nzh0cvCfHWBqI7d
-         CpqnRFbA3iLS2xrrY5rSg/W41/0+KRl2dyH6Ke2Lo09DKo1N5iDm+u54qXo78XU4LnEz
-         1l7g==
-X-Gm-Message-State: AOAM532saPWE6Junk1B8VnMKvaHVmf3NfNHnbw8/RA8sBbHwe6TSIzjN
-        d5+6WmzhQmKMAylKLkQeohUvAQ==
-X-Google-Smtp-Source: ABdhPJwdL1SulUvOGytNTBBIIfnQR9CTiQxJ7ytzerFaEVPi8TWrlKtJMKE9CkIsFMUJ4V/0NIyKaQ==
-X-Received: by 2002:adf:f24d:: with SMTP id b13mr2750980wrp.316.1599642468243;
-        Wed, 09 Sep 2020 02:07:48 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id b11sm3196985wrt.38.2020.09.09.02.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:07:47 -0700 (PDT)
-Subject: Re: [PATCH RFC v6 1/6] dt-bindings: exynos-bus: Add documentation for
- interconnect properties
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     cw00.choi@samsung.com, krzk@kernel.org, devicetree@vger.kernel.org,
-        a.swigon@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200702163724.2218-1-s.nawrocki@samsung.com>
- <CGME20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3@eucas1p2.samsung.com>
- <20200702163724.2218-2-s.nawrocki@samsung.com>
- <20200709210448.GA876103@bogus>
- <65af1a5c-8f8a-ef65-07f8-e0b3d04c336c@samsung.com>
- <35d9d396-b553-a815-1f3b-1af4dc37a2ca@samsung.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <b711257d-c34b-b609-3ada-312871967b98@linaro.org>
-Date:   Wed, 9 Sep 2020 12:07:46 +0300
+        Wed, 9 Sep 2020 05:08:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25035 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbgIIJIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:08:55 -0400
+IronPort-SDR: AMjOEa3FAZ2PopmKlp4wXc+D5CWsOMRaApS+z7wsXb9UlOw39I0WakheT72NX43Zr0WWbDTNRF
+ ckL8hrE3Y0kA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="158328825"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="158328825"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:08:54 -0700
+IronPort-SDR: ichc7mAA1q/Yyvtdvhl4GK6a8S89Q/zF68grT9GpDlokRAyP9DmsqIFXVXcxHLuyiW54BR6/H3
+ 5Ic9W9d4d1Rw==
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="480388963"
+Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:08:51 -0700
+From:   shuo.a.liu@intel.com
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Shuo Liu <shuo.a.liu@intel.com>
+Subject: [PATCH v3 00/17] HSM driver for ACRN hypervisor
+Date:   Wed,  9 Sep 2020 17:08:19 +0800
+Message-Id: <20200909090836.46762-1-shuo.a.liu@intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <35d9d396-b553-a815-1f3b-1af4dc37a2ca@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
+From: Shuo Liu <shuo.a.liu@intel.com>
 
-On 8/28/20 17:49, Sylwester Nawrocki wrote:
-> On 30.07.2020 14:28, Sylwester Nawrocki wrote:
->> On 09.07.2020 23:04, Rob Herring wrote:
->>> On Thu, Jul 02, 2020 at 06:37:19PM +0200, Sylwester Nawrocki wrote:
->>>> Add documentation for new optional properties in the exynos bus nodes:
->>>> samsung,interconnect-parent, #interconnect-cells, bus-width.
->>>> These properties allow to specify the SoC interconnect structure which
->>>> then allows the interconnect consumer devices to request specific
->>>> bandwidth requirements.
->>>>
->>>> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
->>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> 
->>>> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>>> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>>> @@ -51,6 +51,13 @@ Optional properties only for parent bus device:
->>>>  - exynos,saturation-ratio: the percentage value which is used to calibrate
->>>>  			the performance count against total cycle count.
->>>>  
->>>> +Optional properties for interconnect functionality (QoS frequency constraints):
->>>> +- samsung,interconnect-parent: phandle to the parent interconnect node; for
->>>> +  passive devices should point to same node as the exynos,parent-bus property.
-> 
->>> Adding vendor specific properties for a common binding defeats the 
->>> point.
-> 
-> Actually we could do without any new property if we used existing interconnect
-> consumers binding to specify linking between the provider nodes. I think those
-> exynos-bus nodes could well be considered both the interconnect providers 
-> and consumers. The example would then be something along the lines 
-> (yes, I know the bus node naming needs to be fixed):
-> 
-> 	soc {
-> 		bus_dmc: bus_dmc {
-> 			compatible = "samsung,exynos-bus";
-> 			/* ... */
-> 			samsung,data-clock-ratio = <4>;
-> 			#interconnect-cells = <0>;
-> 		};
-> 
-> 		bus_leftbus: bus_leftbus {
-> 			compatible = "samsung,exynos-bus";
-> 			/* ... */
-> 			interconnects = <&bus_leftbus &bus_dmc>;
-> 			#interconnect-cells = <0>;
-> 		};
-> 
-> 		bus_display: bus_display {
-> 			compatible = "samsung,exynos-bus";
-> 			/* ... */
-> 			interconnects = <&bus_display &bus_leftbus>;
+ACRN is a Type 1 reference hypervisor stack, running directly on the bare-metal
+hardware, and is suitable for a variety of IoT and embedded device solutions.
 
-Hmm, bus_display being a consumer of itself is a bit odd? Did you mean:
- 			interconnects = <&bus_dmc &bus_leftbus>;
+ACRN implements a hybrid VMM architecture, using a privileged Service VM. The
+Service VM manages the system resources (CPU, memory, etc.) and I/O devices of
+User VMs. Multiple User VMs are supported, with each of them running Linux,
+Android OS or Windows. Both Service VM and User VMs are guest VM.
 
-> 			#interconnect-cells = <0>;
-> 		};
-> 
-> 
-> 		&mixer {
-> 			compatible = "samsung,exynos4212-mixer";
-> 			interconnects = <&bus_display &bus_dmc>;
-> 			/* ... */
-> 		};
-> 	};
-> 
-> What do you think, Georgi, Rob?
+Below figure shows the architecture.
 
-I can't understand the above example with bus_display being it's own consumer.
-This seems strange to me. Could you please clarify it?
+                Service VM                    User VM
+      +----------------------------+  |  +------------------+
+      |        +--------------+    |  |  |                  |
+      |        |ACRN userspace|    |  |  |                  |
+      |        +--------------+    |  |  |                  |
+      |-----------------ioctl------|  |  |                  |   ...
+      |kernel space   +----------+ |  |  |                  |
+      |               |   HSM    | |  |  | Drivers          |
+      |               +----------+ |  |  |                  |
+      +--------------------|-------+  |  +------------------+
+  +---------------------hypercall----------------------------------------+
+  |                       ACRN Hypervisor                                |
+  +----------------------------------------------------------------------+
+  |                          Hardware                                    |
+  +----------------------------------------------------------------------+
 
-Otherwise the interconnect consumer DT bindings are already well established
-and i don't see anything preventing a node to be both consumer and provider.
-So this should be okay in general.
+There is only one Service VM which could run Linux as OS.
 
-Thanks,
-Georgi
+In a typical case, the Service VM will be auto started when ACRN Hypervisor is
+booted. Then the ACRN userspace (an application running in Service VM) could be
+used to start/stop User VMs by communicating with ACRN Hypervisor Service
+Module (HSM).
+
+ACRN Hypervisor Service Module (HSM) is a middle layer that allows the ACRN
+userspace and Service VM OS kernel to communicate with ACRN Hypervisor
+and manage different User VMs. This middle layer provides the following
+functionalities,
+  - Issues hypercalls to the hypervisor to manage User VMs:
+      * VM/vCPU management
+      * Memory management
+      * Device passthrough
+      * Interrupts injection
+  - I/O requests handling from User VMs.
+  - Exports ioctl through HSM char device.
+  - Exports function calls for other kernel modules
+
+ACRN is focused on embedded system. So it doesn't support some features.
+E.g.,
+  - ACRN doesn't support VM migration.
+  - ACRN doesn't support vCPU migration.
+
+This patch set adds the HSM to the Linux kernel.
+
+The basic ARCN support was merged to upstream already.
+https://lore.kernel.org/lkml/1559108037-18813-3-git-send-email-yakui.zhao@intel.com/
+
+ChangeLog:
+v3:
+  - Used {get|put}_device() helpers on &acrn_dev->this_device
+  - Moved unused code from front patches to later ones.
+  - Removed self-defined pr_fmt() and dev_fmt()
+  - Provided comments for acrn_vm_list_lock.
+
+v2:
+  - Removed API version related code. (Dave)
+  - Replaced pr_*() by dev_*(). (Greg)
+  - Used -ENOTTY as the error code of unsupported ioctl. (Greg)
+
+
+Shuo Liu (16):
+  docs: acrn: Introduce ACRN
+  x86/acrn: Introduce acrn_{setup, remove}_intr_handler()
+  x86/acrn: Introduce hypercall interfaces
+  virt: acrn: Introduce ACRN HSM basic driver
+  virt: acrn: Introduce VM management interfaces
+  virt: acrn: Introduce an ioctl to set vCPU registers state
+  virt: acrn: Introduce EPT mapping management
+  virt: acrn: Introduce I/O request management
+  virt: acrn: Introduce PCI configuration space PIO accesses combiner
+  virt: acrn: Introduce interfaces for PCI device passthrough
+  virt: acrn: Introduce interrupt injection interfaces
+  virt: acrn: Introduce interfaces to query C-states and P-states
+    allowed by hypervisor
+  virt: acrn: Introduce I/O ranges operation interfaces
+  virt: acrn: Introduce ioeventfd
+  virt: acrn: Introduce irqfd
+  virt: acrn: Introduce an interface for Service VM to control vCPU
+
+
+Yin Fengwei (1):
+  x86/acrn: Introduce an API to check if a VM is privileged
+
+ .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+ Documentation/virt/acrn/index.rst             |  11 +
+ Documentation/virt/acrn/introduction.rst      |  40 ++
+ Documentation/virt/acrn/io-request.rst        |  97 +++
+ Documentation/virt/index.rst                  |   1 +
+ MAINTAINERS                                   |   9 +
+ arch/x86/include/asm/acrn.h                   |  74 ++
+ arch/x86/kernel/cpu/acrn.c                    |  38 +-
+ drivers/virt/Kconfig                          |   2 +
+ drivers/virt/Makefile                         |   1 +
+ drivers/virt/acrn/Kconfig                     |  15 +
+ drivers/virt/acrn/Makefile                    |   3 +
+ drivers/virt/acrn/acrn_drv.h                  | 228 +++++++
+ drivers/virt/acrn/hsm.c                       | 425 ++++++++++++
+ drivers/virt/acrn/hypercall.h                 | 254 +++++++
+ drivers/virt/acrn/ioeventfd.c                 | 273 ++++++++
+ drivers/virt/acrn/ioreq.c                     | 642 ++++++++++++++++++
+ drivers/virt/acrn/irqfd.c                     | 235 +++++++
+ drivers/virt/acrn/mm.c                        | 300 ++++++++
+ drivers/virt/acrn/vm.c                        | 123 ++++
+ include/uapi/linux/acrn.h                     | 486 +++++++++++++
+ 21 files changed, 3257 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/virt/acrn/index.rst
+ create mode 100644 Documentation/virt/acrn/introduction.rst
+ create mode 100644 Documentation/virt/acrn/io-request.rst
+ create mode 100644 arch/x86/include/asm/acrn.h
+ create mode 100644 drivers/virt/acrn/Kconfig
+ create mode 100644 drivers/virt/acrn/Makefile
+ create mode 100644 drivers/virt/acrn/acrn_drv.h
+ create mode 100644 drivers/virt/acrn/hsm.c
+ create mode 100644 drivers/virt/acrn/hypercall.h
+ create mode 100644 drivers/virt/acrn/ioeventfd.c
+ create mode 100644 drivers/virt/acrn/ioreq.c
+ create mode 100644 drivers/virt/acrn/irqfd.c
+ create mode 100644 drivers/virt/acrn/mm.c
+ create mode 100644 drivers/virt/acrn/vm.c
+ create mode 100644 include/uapi/linux/acrn.h
+
+
+base-commit: 18445bf405cb331117bc98427b1ba6f12418ad17
+-- 
+2.28.0
+
