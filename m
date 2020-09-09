@@ -2,166 +2,208 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05D9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D10CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE9E21D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:26:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D9521D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgIJC0J (ORCPT
+        id S1730531AbgIJC1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:26:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:52209 "EHLO mga03.intel.com"
+        Wed, 9 Sep 2020 22:27:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57626 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbgIJCUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:20:46 -0400
-IronPort-SDR: 5ySx/9LPGsQnDq6vHQUrurDcs9Pn1Rx7Gd/1aAPqMmrtjpupV661NFjNbGdOylWReiSzcFc+rE
- cYOG5Bza+v8A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="158471144"
-X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="158471144"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:29:55 -0700
-IronPort-SDR: URKeYjk5zRXN3NFuf/Gc1p/WC5orb20QqlfmbScaNhnDqy51Q2xqBwTflishSOOI+CExQ9WZs5
- BsF9iCFhwL9A==
-X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="304677213"
-Received: from pbhangod-mobl.amr.corp.intel.com (HELO [10.213.170.146]) ([10.213.170.146])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:29:53 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
- <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
- <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
- <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
- <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
- <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
- <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
- <5979c58d-a6e3-d14d-df92-72cdeb97298d@intel.com>
- <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
- <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
- <a881837d-c844-30e8-a614-8b92be814ef6@intel.com>
- <cbec8861-8722-ec31-2c02-1cfed20255eb@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <b3379d26-d8a7-deb7-59f1-c994bb297dcb@intel.com>
-Date:   Wed, 9 Sep 2020 16:29:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730846AbgIJCXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:23:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 773F4AB3E;
+        Wed,  9 Sep 2020 23:04:31 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Thu, 10 Sep 2020 09:04:08 +1000
+Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+In-Reply-To: <e4f5ccb298170357ba16ae2870fde6a90ca2aa81.camel@kernel.org>
+References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+ <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
+ <20200908112742.GA2956@quack2.suse.cz>
+ <e4f5ccb298170357ba16ae2870fde6a90ca2aa81.camel@kernel.org>
+Message-ID: <87k0x2k0wn.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-In-Reply-To: <cbec8861-8722-ec31-2c02-1cfed20255eb@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 4:25 PM, Yu, Yu-cheng wrote:
-> On 9/9/2020 4:11 PM, Dave Hansen wrote:
->> On 9/9/20 4:07 PM, Yu, Yu-cheng wrote:
->>> What if a writable mapping is passed to madvise(MADV_SHSTK)?  Should
->>> that be rejected?
->>
->> It doesn't matter to me.  Even if it's readable, it _stops_ being even
->> directly readable after it's a shadow stack, right?  I don't think
->> writes are special in any way.  If anything, we *want* it to be writable
->> because that indicates that it can be written to, and we will want to
->> write to it soon.
->>
-> But in a PROT_WRITE mapping, all the pte's have _PAGE_BIT_RW set.  To
-> change them to shadow stack, we need to clear that bit from the pte's.
-> That will be like mprotect_fixup()/change_protection_range().
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The page table hardware bits don't matter.  The user-visible protection
-effects matter.
+On Tue, Sep 08 2020, Jeff Layton wrote:
 
-For instance, we have PROT_EXEC, which *CLEARS* a hardware NX PTE bit.
-The PROT_ permissions are independent of the hardware.
+> On Tue, 2020-09-08 at 13:27 +0200, Jan Kara wrote:
+>> Added Jeff to CC since he has written the code...
+>>=20
+>> On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
+>> > [Widening the CC to include Andrew and linux-fsdevel@]
+>> > [Milan: thanks for the patch, but it's unclear to me from your commit
+>> > message how/if you verified the details.]
+>> >=20
+>> > Andrew, maybe you (or someone else) can comment, since long ago your
+>> >=20
+>> >     commit f79e2abb9bd452d97295f34376dedbec9686b986
+>> >     Author: Andrew Morton <akpm@osdl.org>
+>> >     Date:   Fri Mar 31 02:30:42 2006 -0800
+>> >=20
+>> > included a comment that is referred to in  stackoverflow discussion
+>> > about this topic (that SO discussion is in turn referred to by
+>> > https://bugzilla.kernel.org/show_bug.cgi?id=3D194757).
+>> >=20
+>> > The essence as I understand it, is this:
+>> > (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
+>> > has not been synced.
+>> > (2) In this case, the EIO/ENOSPC setting is cleared so that...
+>> > (3) A subsequent fsync() might return success, but...
+>> > (4) That doesn't mean that the data in (1) landed on the disk.
+>>=20
+>> Correct.
+>>=20
+>> > The proposed manual page patch below wants to document this, but I'd
+>> > be happy to have an FS-knowledgeable person comment before I apply.
+>>=20
+>> Just a small comment below:
+>>=20
+>> > On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
+>> > > From: Milan Shah <milan.opensource@gmail.com>
+>> > >=20
+>> > > This Fix addresses Bug 194757.
+>> > > Ref: https://bugzilla.kernel.org/show_bug.cgi?id=3D194757
+>> > > ---
+>> > >  man2/fsync.2 | 13 +++++++++++++
+>> > >  1 file changed, 13 insertions(+)
+>> > >=20
+>> > > diff --git a/man2/fsync.2 b/man2/fsync.2
+>> > > index 96401cd..f38b3e4 100644
+>> > > --- a/man2/fsync.2
+>> > > +++ b/man2/fsync.2
+>> > > @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled =
+using
+>> > >  or
+>> > >  .BR sdparm (8)
+>> > >  to guarantee safe operation.
+>> > > +
+>> > > +When
+>> > > +.BR fsync ()
+>> > > +or
+>> > > +.BR fdatasync ()
+>> > > +returns
+>> > > +.B EIO
+>> > > +or
+>> > > +.B ENOSPC
+>> > > +any error flags on pages in the file mapping are cleared, so subseq=
+uent synchronisation attempts
+>> > > +will return without error. It is
+>> > > +.I not
+>> > > +safe to retry synchronisation and assume that a non-error return me=
+ans prior writes are now on disk.
+>> > >  .SH SEE ALSO
+>> > >  .BR sync (1),
+>> > >  .BR bdflush (2),
+>>=20
+>> So the error state isn't really stored "on pages in the file mapping".
+>> Current implementation (since 4.14) is that error state is stored in str=
+uct
+>> file (I think this tends to be called "file description" in manpages) and
+>> so EIO / ENOSPC is reported once for each file description of the file t=
+hat
+>> was open before the error happened. Not sure if we want to be so precise=
+ in
+>> the manpages or if it just confuses people. Anyway your takeway that no
+>> error on subsequent fsync() does not mean data was written is correct.
+>>=20
+>>=20
+>
+> Thinking about it more, I think we ought to spell this out explicitly as
+> we can in the manpage. This is a point of confusion for a lot of people
+> and not understanding this can lead to data integrity bugs. Maybe
+> something like this in the NOTES section?
+>
+> '''
+> When fsync returns an error, the file is considered to be "clean". A
+> subsequent call to fsync will not result in a reattempt to write out the
+> data, unless that data has been rewritten. Applications that want to
+> reattempt writing to the file after a transient error must re-write
+> their data.
+> '''
+>
+> To be clear:
+>
+> In practice, you'd only have to write enough to redirty each page in
+> most cases.
 
-I don't think the interface should be influenced at *all* by what whacko
-PTE bit combinations we have to set to get the behavior.
+Nonononono.  In practice you have to repeat the entire write because you
+cannot know if the cached page is from before the write failure, or has
+since been flushed and reloaded.
+
+>
+> Also, it is hard to claim that the above behavior is universally true. A
+> filesystem could opt to keep the pages dirty for some errors, but the
+> vast majority just toss out the data whenever there is a writeback
+> problem.
+
+...and any filesystem that doesn't behave that way is wasting effort,
+because nothing else can be assumed.
+
+Regarding your "NOTES" addition, I don't feel comfortable with the
+"clean" language.  I would prefer something like:
+
+ When fsync() reports a failure (EIO, ENOSPC, EDQUOT) it must be assumed
+ that any write requests initiated since the previous successful fsync
+ was initiated may have failed, and that any cached data may have been
+ lost.  A future fsync() will not attempt to write out the same data
+ again.  If recovery is possible and desired, the application must
+ repeat all the writes that may have failed.
+
+ If the regions of a file that were written to prior to a failed fsync()
+ are read, the content reported may not reflect the stored content, and
+ subsequent reads may revert to the stored content at any time.
+
+NeilBrown
+
+
+>
+>
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl9ZX2gOHG5laWxiQHN1
+c2UuZGUACgkQOeye3VZigbnQFg/+NMG3ScAwc+hbCuVVL4d2NQjGVXnnsCsVANqF
+dJqVC2sFozvpRKZSqz+U6MLyCcJjG7DLqb5AtzMVQsaXjyvoZvqqgRbEm0SV8dYK
+NUsHdkK+NQwvpxSQraM+Kgw2j5XhodHios34GycGhR/XVur06cG5rjwxfW5LjsRp
+EBc631dUIfc5UylXGrZGSZIGCASPmSATD/mHKyfv7ns0f4f9enxn0s6Ntv7rjeoS
+aB9MRoRGJMFx18egQ46lCxt0z45IXnPuLtLzY83pFJc5IEhbpRgU1nVVeyYuVZU7
+tY+A91vP0Gn58nkel/Fd8Co465cYp6a+t374hFYZdjR+612X4Illu2lCHqYgWYV2
+vUTVntiwPqy9PjbO1s7SErQsDlC7DG1xAZnqydOGsx90sAP+XcHVnKpd3L078BfP
+EJ09prgTsKvI79ZS7i9sXfEW+v0jnCFcyIFQh8zj6OJOD1SjZMJNFFzoclAhWyf9
+eKzQDMfJpHemLWWcaukyr2u3QYoHxDWLcTc/iajtH+hEb/mKWKISuVRLahUuwgyp
+te6CMzDQm/3xhCuKfDeIBdnqB/wva0R7K3G91RCmPFxVBw6ZIyjBqs5QnFu/uxj1
+blMOHr/5anM3ob0ScJxxurcmvjtQUmyGJpbgcBNgCN4DWCnr88BPH++1grC0JZ1m
+qjKUlMA=
+=J3Zn
+-----END PGP SIGNATURE-----
+--=-=-=--
