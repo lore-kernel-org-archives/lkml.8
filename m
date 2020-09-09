@@ -2,92 +2,129 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6000BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C53C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A14B2145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC651208CA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599682772;
-	bh=YS6g0jqlA3WWVPE3D2uTiDJDgW4ePdJlE7UPIrkbZSA=;
+	s=default; t=1599682985;
+	bh=jc3VPvB5TZlT+YYtZQzuhsZgdoL1rboz7nYCcLOvpPI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zrBljjsVJtzebr+7RrmV6xe5P22r3rkuHFAtRtuRY7fA1CIbs2LLKWxWt45u8PiOK
-	 zDr57N6v5IVOqNqRtOwNQP/1TnQzLsVAnyyPuga3Cv72G4lu7ghiTqdtpWye2gpVoY
-	 qIkxpvCeDCWry+KF4a9YkDHkkfvj9ZwPWqPow2J8=
+	b=dCW77ho6Gc5eKmXG3KAfmf/aB2ICL8t8QgaUm1w3WeLfPMuPr02fKAUFYUFEYpV4A
+	 K0vX06U4ujobvnuC8LIjxi3qGG6ZC2n80C++jUtymLIrLlYlO2Ubka7odE6oPjj3uQ
+	 kBSSMmFT86zCXulIH53jnSpw6XDrROGoyWfl9WV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgIIUTb (ORCPT
+        id S1727870AbgIIUXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:19:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42941 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgIIUT3 (ORCPT
+        Wed, 9 Sep 2020 16:23:03 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42951 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIIUXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:19:29 -0400
-Received: by mail-io1-f67.google.com with SMTP id u6so4595334iow.9;
-        Wed, 09 Sep 2020 13:19:29 -0700 (PDT)
+        Wed, 9 Sep 2020 16:23:02 -0400
+Received: by mail-il1-f195.google.com with SMTP id t13so3578823ile.9;
+        Wed, 09 Sep 2020 13:23:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RSxhAGvdVfCVr2cHc0lTJnW3lYIHBFlEXCul1r62/7Y=;
-        b=ATB16xGzDrbixiGqqK/4XYtJEDyZN+q1tBiVf0ZF+60wEwO0vHXPCpZqQF4/+54pML
-         o/a3s5nPkdkc0cNNxl3BF8q8rWcIxyemCn9w5D9UkMOrkfVaGcGKVM6XnGUkzkLMbGxC
-         7LrG1LK9SfFey2ZLIdq8WzbPjByVTBHChUfGbuXKywPHsG/7n1k7Pj2BghOOuQ2BosQm
-         e0TUic2N77/Be6z24D8mpPYJ28zYyLCPZd0+iUHGEJHOgI3iYItl2LGIN9wkRYVVhYm2
-         qMvTpkTkcWNt08hK9h1rTC1CVGHpAunH4cXe1UbIITW2gyH9F/YbkqHpD/NRS3GIioaj
-         7/VQ==
-X-Gm-Message-State: AOAM532Uw58e16Cyq9uczvv5djZLTfP2RN1oUUnzzZOZ/5XXgWIXo74s
-        Ns0L6j1qyqrQoTdrSsCAAQ==
-X-Google-Smtp-Source: ABdhPJwBKiVRr3c97gG/LCzkZs5UuOnxWgLTDtzzXrRD6aV8r7ZtsBq+rZPDQ3q6pulT0cX9C8fw0Q==
-X-Received: by 2002:a6b:9309:: with SMTP id v9mr5087885iod.15.1599682768674;
-        Wed, 09 Sep 2020 13:19:28 -0700 (PDT)
+        bh=p/XHmGhJiyARP/AywHLjGyFW+zNdKo78DZXJUs497vk=;
+        b=ZX+TvnhYF3bNbwGePW0r5LI+JdBTEnlcxKNGBykNK9hxONtbx0c+X2nOOT8cX5x1Y7
+         jJyB5zLK6s3n8TrKsQVpd1rDRIVzbn1f6jUMyyML9eXqVs2ew1wrh5AkEFYVM5QxKHJ9
+         9kvphNpHIR+TNHHpEtkkwFVarc7/915djha9xBduhEer9IwtA7afT/+sA0K9tyL9oXK2
+         NQPx6lOnCKb3DDOdJYGofFlKKUWjCNxHe5gfwyzmeaNAq9B4a6dt2EsXiLVgXIRY/bgt
+         OCH+/D9BEAjMt5aY26mPAkVmkyKPzCP5xLLn4/8Ctd5fSBCi9cq2ZB0mrRJ6DYwFohfr
+         g0Zg==
+X-Gm-Message-State: AOAM5333xli8KNdRUTufXlAxqXZDQXwPz0YQVjPu+AHjokAQYfe72AdK
+        DDVc5jaX/4//O4jdpYrMmg==
+X-Google-Smtp-Source: ABdhPJwGgJMfrg41VCSlFUyxeF4VEeQtHEzW/mNeG0zBjw9Qla8f2sLKD3BFKup9Yno/CdJR1OlO5Q==
+X-Received: by 2002:a92:bad9:: with SMTP id t86mr4991746ill.308.1599682981597;
+        Wed, 09 Sep 2020 13:23:01 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id u89sm2049917ili.63.2020.09.09.13.19.23
+        by smtp.gmail.com with ESMTPSA id f83sm2024294ilg.9.2020.09.09.13.22.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 13:19:27 -0700 (PDT)
-Received: (nullmailer pid 2974124 invoked by uid 1000);
-        Wed, 09 Sep 2020 20:19:20 -0000
-Date:   Wed, 9 Sep 2020 14:19:20 -0600
+        Wed, 09 Sep 2020 13:23:00 -0700 (PDT)
+Received: (nullmailer pid 3008103 invoked by uid 1000);
+        Wed, 09 Sep 2020 20:22:51 -0000
+Date:   Wed, 9 Sep 2020 14:22:51 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Fabien Dessenne <fabien.dessenne@st.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: stm32: Add compatible for syscon
- tamp node
-Message-ID: <20200909201920.GA2973966@bogus>
+        linux-arm-kernel@lists.infradead.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/3] dt-bindings: remoteproc: stm32_rproc: update for
+ firmware synchronization
+Message-ID: <20200909202251.GA2975092@bogus>
 References: <20200827072101.26588-1-arnaud.pouliquen@st.com>
- <20200827072101.26588-2-arnaud.pouliquen@st.com>
+ <20200827072101.26588-3-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200827072101.26588-2-arnaud.pouliquen@st.com>
+In-Reply-To: <20200827072101.26588-3-arnaud.pouliquen@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 09:20:59 +0200, Arnaud Pouliquen wrote:
-> Since commit ad440432d1f9 ("dt-bindings: mfd: Ensure 'syscon' has a
-> more specific compatible")
-> It is required to provide at least 2 compatibles string for syscon node.
-> This patch documents the new compatible for stm32 SoC to support
-> TAMP registers access.
+On Thu, Aug 27, 2020 at 09:21:00AM +0200, Arnaud Pouliquen wrote:
+> Add new properties description used to attach to a pre-loaded
+> firmware according to the commit 9276536f455b3
+> ("remoteproc: stm32: Parse syscon that will manage M4 synchronisation")
+> which updates the driver part.
 > 
 > Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 > ---
->  Documentation/devicetree/bindings/arm/stm32/st,stm32-syscon.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/remoteproc/st,stm32-rproc.yaml   | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+> index 4ffa25268fcc..e50957d86b1c 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+> @@ -96,6 +96,25 @@ properties:
+>          3rd cell: register bitmask for the deep sleep bit
+>      maxItems: 1
+>  
+> +  st,syscfg-m4-state:
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    description: |
+> +      Reference to the tamp register which exposes the Cortex-M4 state.
+> +        1st cell: phandle to syscon block
+> +        2nd cell: register offset containing the Cortex-M4 state
+> +        3rd cell: register bitmask for the Cortex-M4 state
+> +    maxItems: 1
+> +
+> +  st,syscfg-rsc-tbl:
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    description: |
+> +      Reference to the tamp register which references the Cortex-M4
+> +      resource table address.
+> +        1st cell: phandle to syscon block
+> +        2nd cell: register offset containing the resource table address
+> +        3rd cell: register bitmask for the resource table address
+> +    maxItems: 1
 
-Acked-by: Rob Herring <robh@kernel.org>
+Why can't these be implied? You can lookup the tamp syscon by 
+compatible.
+
+Please add these to the example.
+
+> +
+>    st,auto-boot:
+>      $ref: /schemas/types.yaml#/definitions/flag
+>      description:
+> -- 
+> 2.17.1
+> 
