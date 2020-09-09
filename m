@@ -2,137 +2,141 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A25C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2349C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC344216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VIQZJDjm"
+	by mail.kernel.org (Postfix) with ESMTP id 705A621556
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgIIAP0 (ORCPT
+        id S1728970AbgIIATU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 20:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgIIAP0 (ORCPT
+        Tue, 8 Sep 2020 20:19:20 -0400
+Received: from mail-il1-f205.google.com ([209.85.166.205]:40054 "EHLO
+        mail-il1-f205.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgIIATS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 20:15:26 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98514C061573;
-        Tue,  8 Sep 2020 17:15:25 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmMwf3hRVz9sTN;
-        Wed,  9 Sep 2020 10:15:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599610516;
-        bh=G+c9Aw/7aQyit4FCnnuNFGGwhaFlmH6imUDb7V5FlrU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VIQZJDjmN5ooJV1EOuT0seYLgl1asNZyHGb7Fj5/eeMCHyxXzKrA///xqvuL54OUz
-         Pu+at0VpSAL34i/pYp+firANdwvhFBKDa+OLUkGe79DoBGFAdik6LlnmzVhErSqCQz
-         TnB52AOKYpAF8FQBlzA2z4JCgPxg6e9qtsH7m98zOuAqVZTOuSLGxdQHWKQKeHPnod
-         TZTcp3hHrs5gpOyd/MIKU6cTriX09PU94nP5XTKRYlFcSbvia3vv0RH5h7K0siWJJq
-         H6m4RSVNzuwAqZeZKAw85BCq5bnJqZHaGiJMqIChtB0glD1mNO+V9h/V44E/5dDsSy
-         Ye8PE6pTT8xgA==
-Date:   Wed, 9 Sep 2020 10:15:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: build warnings in Linus' tree
-Message-ID: <20200909101508.2dcbfdc6@canb.auug.org.au>
-In-Reply-To: <20200908131439.xj6nzi6nny3u5icb@treble>
-References: <20200908091102.4c2d7b37@canb.auug.org.au>
-        <20200908131439.xj6nzi6nny3u5icb@treble>
+        Tue, 8 Sep 2020 20:19:18 -0400
+Received: by mail-il1-f205.google.com with SMTP id g188so767396ilh.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 17:19:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=3hFNhuwHSPIPBIOlcnTYPFJp9i+qgW8XJEWKfOsjOz4=;
+        b=EiwMjwSz1g9DLfv3gNATO6bY9YFggMXGAxiR1IOdEdhstAg9Rku2gyzKOVzr+aD5yp
+         +zNjPWGNhWyWdw9y3+zG/jlf0VNzGZGUbqUncQoJSRSOxatNHdET8ZaiGP7eTY9Db3is
+         Y/Tu3I0pA5CdhcbYJaoMhPR4TYh/tJtP6CkUtn7wfCtp4Np0qL37fViilet/1esdGdMS
+         feUTqpdlfRyboT6+xCEavZ8pipqIOOHAzHYQ7G8Z+y+BNBj5BC0Oe8WXRedO+D2dPpeQ
+         mjqox12TQJDSNByz6yOSp1JRtanVpMa+ePIEbOYJOpx1lvc6hImuHXoWgh4CZsZWI+qh
+         zV7A==
+X-Gm-Message-State: AOAM532p6+nmCpEBafxs5F0i7NfSyLzliu60LPt6ImykmBopNRmRHm4G
+        AzPPmIHu4f/fV+pfBQWnqTL1BOBM4vRIJhiNnWvg7uxXPDHv
+X-Google-Smtp-Source: ABdhPJxXX65q1CaKSofPWywleeOKt1VSBDbfouD7Lzok6jAVFzEklQ1/DOIQS8Ditfql8KFQA7dFTaIjT+90+gazisgiaqLPe+tw
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/v0fIXRqK3vdwoSVeNUT=q5P";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a92:5bda:: with SMTP id c87mr1359737ilg.202.1599610757280;
+ Tue, 08 Sep 2020 17:19:17 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 17:19:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f7793505aed666dc@google.com>
+Subject: general protection fault in unlink_file_vma
+From:   syzbot <syzbot+c5d5a51dcbb558ca0cb5@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/v0fIXRqK3vdwoSVeNUT=q5P
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi Josh,
+syzbot found the following issue on:
 
-On Tue, 8 Sep 2020 08:14:39 -0500 Josh Poimboeuf <jpoimboe@redhat.com> wrot=
-e:
->
-> On Tue, Sep 08, 2020 at 09:11:02AM +1000, Stephen Rothwell wrote:
-> >=20
-> > Building Linus' tree, today's linux-next build (x86_64 allmodconfig)
-> > produced these warnings:
-> >=20
-> > arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x2a3: un=
-reachable instruction
-> > net/core/skbuff.o: warning: objtool: skb_push.cold()+0x1b: unreachable =
-instruction
-> > arch/x86/mm/mmio-mod.o: warning: objtool: pre()+0x21a: unreachable inst=
-ruction
-> > arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x14=
-2: unreachable instruction
-> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x26: unreachab=
-le instruction
-> > kernel/cred.o: warning: objtool: get_task_cred.cold()+0x19: unreachable=
- instruction
-> > drivers/misc/sgi-gru/grukservices.o: warning: objtool: gru_wait_abort_p=
-roc()+0x97: unreachable instruction
-> > drivers/scsi/pcmcia/aha152x_core.o: warning: objtool: is_complete()+0x6=
-c6: unreachable instruction
-> > drivers/message/fusion/mptbase.o: warning: objtool: mpt_SoftResetHandle=
-r()+0x4a5: unreachable instruction
-> > drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool: ahd_intr()+0x2a9=
-: unreachable instruction
-> > drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.o: warning: objtoo=
-l: otx2_sq_append_tso()+0xab6: unreachable instruction
-> > fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit.cold()+0x12: u=
-nreachable instruction
-> > fs/btrfs/backref.o: warning: objtool: btrfs_backref_finish_upper_links(=
-)+0x818: unreachable instruction
-> > fs/btrfs/relocation.o: warning: objtool: update_backref_cache.isra.0()+=
-0x3bf: unreachable instruction
-> > drivers/atm/horizon.o: warning: objtool: rx_data_av_handler()+0x452: un=
-reachable instruction =20
->=20
-> I suspect these will all be fixed by this livepatching pull request:
->=20
->   https://lkml.kernel.org/r/20200907082036.GC8084@alley
+HEAD commit:    59126901 Merge tag 'perf-tools-fixes-for-v5.9-2020-09-03' ..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1166cb5d900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
+dashboard link: https://syzkaller.appspot.com/bug?extid=c5d5a51dcbb558ca0cb5
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11901e95900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f56195900000
 
-Yep, all but the vmx_handle_exit_irqoff() one as Linus noted.
+Bisection is inconclusive: the issue happens on the oldest tested release.
 
-Thanks.
---=20
-Cheers,
-Stephen Rothwell
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1205faed900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1105faed900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1605faed900000
 
---Sig_/v0fIXRqK3vdwoSVeNUT=q5P
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c5d5a51dcbb558ca0cb5@syzkaller.appspotmail.com
 
------BEGIN PGP SIGNATURE-----
+general protection fault, probably for non-canonical address 0xe00eeaee0000003b: 0000 [#1] PREEMPT SMP KASAN
+KASAN: maybe wild-memory-access in range [0x00777770000001d8-0x00777770000001df]
+CPU: 1 PID: 10488 Comm: syz-executor721 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:unlink_file_vma+0x57/0xb0 mm/mmap.c:164
+Code: 4c 8b a5 a0 00 00 00 4d 85 e4 74 4e e8 92 d7 cd ff 49 8d bc 24 d8 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 3d 4d 8b b4 24 d8 01 00 00 4d 8d 6e 78 4c 89 ef e8
+RSP: 0018:ffffc9000ac0f9b0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff88800010ceb0 RCX: ffffffff81592421
+RDX: 000eeeee0000003b RSI: ffffffff81a6736e RDI: 00777770000001d8
+RBP: ffff88800010ceb0 R08: 0000000000000001 R09: ffff88801291a50f
+R10: ffffed10025234a1 R11: 0000000000000001 R12: 0077777000000000
+R13: 00007f1eea0da000 R14: 00007f1eea0d9000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1eea11a9d0 CR3: 000000000007e000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ free_pgtables+0x1b3/0x2f0 mm/memory.c:415
+ exit_mmap+0x2c0/0x530 mm/mmap.c:3184
+ __mmput+0x122/0x470 kernel/fork.c:1076
+ mmput+0x53/0x60 kernel/fork.c:1097
+ exit_mm kernel/exit.c:483 [inline]
+ do_exit+0xa8b/0x29f0 kernel/exit.c:793
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x428/0x1f00 kernel/signal.c:2757
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:136 [inline]
+ exit_to_user_mode_prepare+0x1ae/0x200 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446ad9
+Code: Bad RIP value.
+RSP: 002b:00007f1eea0f8d18 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00000000006dbc58 RCX: 0000000000446ad9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dbc58
+RBP: 00000000006dbc50 R08: 65732f636f72702f R09: 65732f636f72702f
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc5c
+R13: 00007f1eea0f8d20 R14: 00007f1eea0f8d20 R15: 20c49ba5e353f7cf
+Modules linked in:
+---[ end trace 22e4d2773b69c9b0 ]---
+RIP: 0010:unlink_file_vma+0x57/0xb0 mm/mmap.c:164
+Code: 4c 8b a5 a0 00 00 00 4d 85 e4 74 4e e8 92 d7 cd ff 49 8d bc 24 d8 01 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 75 3d 4d 8b b4 24 d8 01 00 00 4d 8d 6e 78 4c 89 ef e8
+RSP: 0018:ffffc9000ac0f9b0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff88800010ceb0 RCX: ffffffff81592421
+RDX: 000eeeee0000003b RSI: ffffffff81a6736e RDI: 00777770000001d8
+RBP: ffff88800010ceb0 R08: 0000000000000001 R09: ffff88801291a50f
+R10: ffffed10025234a1 R11: 0000000000000001 R12: 0077777000000000
+R13: 00007f1eea0da000 R14: 00007f1eea0d9000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1eea11a9d0 CR3: 000000000007e000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YHowACgkQAVBC80lX
-0Gz7XggAmPLYEKpqSvIpVbgZnlEiqEIRbPTUL4Btb5ymsq481Tt8kD++wlcGBUHE
-YqkCKNGyYInbDn85LAlNlx3WD1LY7Q2k0zq6xJkwZXXrxh1xiqcL+B28YCYHE+lR
-Qokw4jDtm+ARf1o7lhdAoW0dQMy6Jda6wRXNCOxwUsnSLPeXLN0tDqliT0HzIiOs
-lLC9T/4cikd++MGqCQFu/ARBPtAtmJ/KfZhpz7hWNPyvRfm+x8Nq4kYUgrwW7o7K
-Fvzn1hRPCtrCc5z0dD1yDfCu8DnpfOUPy6W/fKg1zBio9esn65vDkt4V4no7cO25
-YCUWV9uRzNMrifwUnR0dwmBL2Ew1AQ==
-=ColM
------END PGP SIGNATURE-----
 
---Sig_/v0fIXRqK3vdwoSVeNUT=q5P--
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
