@@ -2,142 +2,142 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84D1C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DBDC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E22215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFFF21973
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="EDRi3iFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgIIKIM (ORCPT
+        id S1728360AbgIIKIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:08:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:41216 "EHLO foss.arm.com"
+        Wed, 9 Sep 2020 06:08:30 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:3172 "EHLO smtp1.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgIIKIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:08:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D917331B;
-        Wed,  9 Sep 2020 03:08:10 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCECF3F66E;
-        Wed,  9 Sep 2020 03:08:08 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] dt-bindings: timers: sp-804: Convert to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Liviu Dudau <liviu.dudau@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Wei Xu <xuwei5@hisilicon.com>, Ray Jui <rjui@broadcom.com>,
-        devicetree@vger.kernel.org,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <20200828142018.43298-1-andre.przywara@arm.com>
- <20200828142018.43298-2-andre.przywara@arm.com>
- <20200908172839.GA575693@bogus>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- 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
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <5357abcd-483d-efa7-964e-5aeb4211ddac@arm.com>
-Date:   Wed, 9 Sep 2020 11:07:45 +0100
+        id S1726293AbgIIKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:08:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=2483; q=dns/txt; s=axis-central1;
+  t=1599646106; x=1631182106;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=g2QYr+BMBmVaXPE2srsqIOZIyAARlYjQfVHq31MwHR4=;
+  b=EDRi3iFh0OZA8beq6rz8fEis7gb2Aa7o3cW+NfCSFpyF4P8CGVaKNCI4
+   R/jo6gKeQ9oyPxw7TkbKVzeD5AJxXdsXrYVy+zsiVF5SMOE5zqUrIVYsL
+   O6BbVm/+z+M2TqoQkeC31oyM1IKnt2IWaYLzwaxWjmOQw1yyAhbgelHdw
+   TTb7ET5xFniZSF8Lm6odVx5nNsqilhaBem5qItSXnuSXxisU7w1o28TE8
+   6zR40DbMUNiJXfY+U2paeVSGHCq/IUV87sQCyjoB9baHOyx55cJ1I7Aa5
+   TM/8JqgDC0kPF/5dLngQbcn12IK5JAb1TJVhFAuceI7snZyfRruPIXr7b
+   A==;
+IronPort-SDR: 475Vczdz9GQmpwzIY5NB8KFVohnG7JSYz5NeXuueYvQpeaA5tEuv7l74yZU7TvrRrmBIlVXs0I
+ RtQ0hp3nlQkN8GwtYYOTQLMhO6gEtS61VtE4luhg/rkkemwmXRRPJZ5jirazutySmf7hLoIVF0
+ rdqvjCyd+0vTL1hz7U8uuAT4Q3kRIbV5KnvFzPR0vEwqQ2Hs0pwrWfrnm3PfJ6HCOU/Riy+1ds
+ uLl5HI2gh+lklLyShvInYA2IojYQW4LVFhNQizLywQBcuakh7tX2Yc7bpfGm5I5fomx5fhCFL/
+ NII=
+X-IronPort-AV: E=Sophos;i="5.76,409,1592863200"; 
+   d="scan'208";a="12709850"
+Subject: Re: [PATCH 1/2] ASoC: tlv320adcx140: Avoid accessing invalid
+ gpio_reset
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Camel Guo <Camel.Guo@axis.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        kernel <kernel@axis.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200908083521.14105-1-camel.guo@axis.com>
+ <7bb93489-dbd5-d1a5-5df6-e62470bd2252@ti.com>
+ <e791162b-1292-e1c4-3fca-b8936beeeb45@ti.com>
+From:   Camel Guo <camelg@axis.com>
+Message-ID: <629c8afb-3feb-54c6-162e-4addb3c85908@axis.com>
+Date:   Wed, 9 Sep 2020 12:08:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200908172839.GA575693@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <e791162b-1292-e1c4-3fca-b8936beeeb45@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX04.axis.com (10.0.5.18) To xbox06.axis.com
+ (10.0.15.176)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/09/2020 18:28, Rob Herring wrote:
-> On Fri, 28 Aug 2020 15:20:13 +0100, Andre Przywara wrote:
->> This converts the DT binding documentation for the ARM SP-804 timer IP
->> over to json-schema.
->> Most properties are just carried over, the clocks property requirement
->> (either one or three clocks) is now formalised and enforced.
->> As the former binding didn't specify clock-names, and there is no
->> common name used by the existing DTs, I refrained from adding them in
->> detail (just allowing the property).
->> The requirement for the APB clock is enforced by the primecell binding
->> already.
->>
->> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->> ---
->>  .../devicetree/bindings/timer/arm,sp804.txt   | 29 ------
->>  .../devicetree/bindings/timer/arm,sp804.yaml  | 93 +++++++++++++++++++
->>  2 files changed, 93 insertions(+), 29 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.txt
->>  create mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.yaml
->>
+Hi Peter,
+
+Thanks for your comment. I will make a new one like what you said.
+
+On 9/8/20 2:03 PM, Peter Ujfalusi wrote:
+> Hi,
 > 
-> Applied, thanks!
+> On 08/09/2020 14.59, Peter Ujfalusi wrote:
+>> 
+>> 
+>> On 08/09/2020 11.35, Camel Guo wrote:
+>>> From: Camel Guo <camelg@axis.com>
+>>>
+>>> When gpio_reset is not well defined in devicetree, the
+>>> adcx140->gpio_reset is an error code instead of NULL. In this case,
+>>> adcx140->gpio_reset should not be used by adcx140_reset. This commit
+>>> sets it NULL to avoid accessing an invalid variable.
+>>>
+>>> Signed-off-by: Camel Guo <camelg@axis.com>
+>>> ---
+>>>  sound/soc/codecs/tlv320adcx140.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+>>> index 7ae6ec374be3..597dd1062943 100644
+>>> --- a/sound/soc/codecs/tlv320adcx140.c
+>>> +++ b/sound/soc/codecs/tlv320adcx140.c
+>>> @@ -984,8 +984,10 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
+>>>  
+>>>       adcx140->gpio_reset = devm_gpiod_get_optional(adcx140->dev,
+>>>                                                     "reset", GPIOD_OUT_LOW);
+>>> -    if (IS_ERR(adcx140->gpio_reset))
+>>> +    if (IS_ERR(adcx140->gpio_reset) || adcx140->gpio_reset == NULL) {
+>>>               dev_info(&i2c->dev, "Reset GPIO not defined\n");
+>>> +            adcx140->gpio_reset = NULL;
+>> 
+>> the correct fix is to:
+>>        dev_err(&i2c->dev, "Reset GPIO not defined\n");
 > 
-> I dropped the primecell.yaml ref as it is redundant.
+> no need to print, I think gpio core will do that.
+> 
+>>        return PTR_ERR(adcx140->gpio_reset);
+>> 
+>> If the reset GPIO is specified and you get error when requesting it as
+>> optional, there is a reason for that.
+>> For example deferred probing.
 
-Interesting, because I explicitly added it to cover one property that
-was only described in primecell.yaml. But I think this one node was
-originally missing the actual primecell compatible string.
+I agree! Please ignore this patch and I will make a new one like this.
 
-So I tested it now again and don't see any issues without the explicit
-primecell.yaml reference anymore.
-
-Thanks for taking it!
-
-Cheers,
-Andre.
+>> 
+>>> +    }
+>>>  
+>>>       adcx140->supply_areg = devm_regulator_get_optional(adcx140->dev,
+>>>                                                          "areg");
+>>>
+>> 
+>> - Péter
+>> 
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>> 
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
