@@ -2,142 +2,150 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4227C2D0E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF89C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44F721532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A230C21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VGLUq9nd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF9+qSlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgIIIc0 (ORCPT
+        id S1728214AbgIIIcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39028 "EHLO
+        Wed, 9 Sep 2020 04:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgIIIcJ (ORCPT
+        with ESMTP id S1727920AbgIIIcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:32:09 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31316C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:32:08 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t10so1989563wrv.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:32:08 -0700 (PDT)
+        Wed, 9 Sep 2020 04:32:24 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3352BC061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:32:23 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id e23so1603206otk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U8AMXqG5zAHaXdikAoNoWpDEHgynd16DZ3dfucAxOiY=;
-        b=VGLUq9ndE7uuaBORiFcPHnd5vhovkRbty0XDj7Brco0i7kzaDZttYgC+Qp9zBE3tfS
-         IIikpqp0XlHd9u71w7YLT57BpKkBTz8pDxuVe94wvLsUo/8b1Szxm4T8d4DqlUqaSgNR
-         cerbiXsnecywdnTJZnuOtwBLiZDI2wUZA4U457F3Xn5AhpX7fIeNMjH0mQ6J8LEr61Or
-         xn9ELLCYnRv2S9wAQvLGiBPHBTsP8PM+zsOWy/rxUbSgHUjX1z6zmRejkc+25u4D+yQt
-         NZh4bOusjVbpHBPxIiRakWORWF1yC2tAPu9o5PN9JvNj4USnd1cuEFXxbS3uG+kIOiic
-         6C6w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MsQRJbIjqWwVO8tBA19OtnBJtI7NFv3wFSz6AT6T1T4=;
+        b=ZF9+qSlWcgqllAmZUgXL8tWH5tzsfyFvou4SpISOE/bzcWPT05V0wXRXKy1G/OdjzY
+         iq4d0VBF4apqKbTYByp6JxlmawORc85JWt5rNTP4Fm70fxCx65UG4HDcDwLn0uPv1edy
+         dmoJgsGCbsw5A2vJbhtOfd+mM7lXmjiyoi+krIql/mlmIRyCYVVcMJOJrSf+kertfZTe
+         OkwHXywqCUygRocCLPVukFqRxg39iTclFTSoxyjEYvf0oJW0uPCK31uk6NP453nBlbIX
+         hlEQT4UhLkZW2+SrV38ttTyoYfBDUTye+nSoEp8Sl4Zz5zdfLnwdaCpr7bpPCQ/WAmNO
+         617Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=U8AMXqG5zAHaXdikAoNoWpDEHgynd16DZ3dfucAxOiY=;
-        b=J4anOeZN/0gSygpLAa7JQrFBj+8gO8J0E/bn8o1slc26LqXdlrj0kTrpqGmN9wCCFE
-         3ArEn66op4R1e8wVpq1sWCwOL8sMD4ycuZ4SEgExNGCLrgd0J3UUxk6K5d8nsbHlO0AL
-         u8NrdCXE8lpID4O7/RWqLFusEmPIsbp4QA8yXW1EgVNJYG3/FAXh5pjYXG6JoGgMaDHa
-         jP0/hztlyd3w3lL1lg4snz3JOaDqrTy+82iRXs8oanXPtF5jxpD4uBHbbg6qMCWITn65
-         gt9zklaGTh14mK71xdgEcW9rLnTqL/jzSbL0AOAFJSrxvIH4kA/JxTnQjS+73/e5+Ie8
-         7McQ==
-X-Gm-Message-State: AOAM532IxTPLj4Pi2Nh1byZqg7TfciFVdD61ibmMNV5PlFT3LvTbvqvB
-        jHbPyWO2CdKmvOMjyTPS5HDNpA==
-X-Google-Smtp-Source: ABdhPJyYWpfKckcqkSDupRC7mtTr58cvL3RkhMr74MJs8/Rw/jFJ+pzf/kZM0m4mlAvlUxV3NOJMog==
-X-Received: by 2002:a05:6000:1c8:: with SMTP id t8mr2618180wrx.3.1599640326860;
-        Wed, 09 Sep 2020 01:32:06 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id b76sm2848976wme.45.2020.09.09.01.32.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 01:32:06 -0700 (PDT)
-Subject: Re: [PATCH v5 30/36] memory: tegra20-emc: Register as interconnect
- provider
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200814000621.8415-1-digetx@gmail.com>
- <20200814000621.8415-31-digetx@gmail.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <0fe69608-8fb9-9346-1c71-f37cc6f4193b@linaro.org>
-Date:   Wed, 9 Sep 2020 11:32:03 +0300
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MsQRJbIjqWwVO8tBA19OtnBJtI7NFv3wFSz6AT6T1T4=;
+        b=DhVBgvJU7xXVVR+KR38H0tc2pcDV721Lz1ZIgJB77XKcuPBfYwJQuZe/Rq9Q7bqrO2
+         xcxR3srdDOjgUJGtuOPmLSlkmbrxzNm317MU3cfzGLTDWDhf/kA0ODDeYeBCcfBC+IE/
+         98x+wX6a057+WSTq0uTm89hMH4qkMvPM83OuO7W1jbmJx0Seq76bQXZGhaWo3GZPTYF6
+         RpUc/LRdXa7CgLQhUoYupv5jkN0UGO6eSgfnBRtfCd+Mo5+Bh04Hx7mhYtMCmlBNRHIt
+         WlRnygoL2EpwraxuyqTrelZsotvSfAzFRn+efcRRQFCtOI6ONlEcMgOn51GeSa2NDK0D
+         HR+w==
+X-Gm-Message-State: AOAM531dFSDH2hp1aJFBe1seNHOhr1WDK9obvl2vIez94+vUtGkn11kN
+        KDBgZpUpd8uQ16pW7YRV51vBjJP3DtR/Mf28+X6Xt/pQYXs=
+X-Google-Smtp-Source: ABdhPJy2hWR2wiLXYvL1x4Ny57QcTFLih5nQS6dtXwHqOOx7DOAT7kayhPBk250D+xHPnIVtJ88ggQ2fJzQuewlHvT8=
+X-Received: by 2002:a05:6830:1f4f:: with SMTP id u15mr2080838oth.215.1599640341507;
+ Wed, 09 Sep 2020 01:32:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200814000621.8415-31-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com>
+ <87sgddaru7.fsf@nanos.tec.linutronix.de> <CAKc596+vF4eYa4h55P2cssQbRKqBV_-9c_v35SXVMdonP3HBHA@mail.gmail.com>
+ <87v9i6a53n.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87v9i6a53n.fsf@nanos.tec.linutronix.de>
+From:   jun qian <qianjun.kernel@gmail.com>
+Date:   Wed, 9 Sep 2020 16:32:10 +0800
+Message-ID: <CAKc596+=k1kBffQfd=tPJGTtG_NinwSyqOXpCaPr1m8Xy3CG1g@mail.gmail.com>
+Subject: Re: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     peterz@infradead.org, will@kernel.org, luto@kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Uladzislau Rezki <urezki@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/20 03:06, Dmitry Osipenko wrote:
-> Now memory controller is a memory interconnection provider. This allows us
-> to use interconnect API in order to change memory configuration.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Thomas Gleixner <tglx@linutronix.de> =E4=BA=8E2020=E5=B9=B47=E6=9C=8829=E6=
+=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=888:16=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Qian,
+>
+> jun qian <qianjun.kernel@gmail.com> writes:
+> > On Mon, Jul 27, 2020 at 11:41 PM Thomas Gleixner <tglx@linutronix.de> w=
+rote:
+> >> > +                     or_softirq_pending(pending << (vec_nr + 1));
+> >>
+> >> To or the value interrupts need to be disabled because otherwise you c=
+an
+> >> lose a bit when an interrupt happens in the middle of the RMW operatio=
+n
+> >> and raises a softirq which is not in @pending and not in the per CPU
+> >> local softirq pending storage.
+> >>
+> > I can't understand the problem described above, could you explain in
+> > detail.
+>
+> Oring a value to a memory location is a Read Modify Write (RMW)
+> operation.
+>
+>         x |=3D a;
+>
+> translates to pseudo code:
+>
+>         R1 =3D  x      // Load content of memory location x into register=
+ R1
+>         R1 |=3D a      // Or value a on R1
+>         x =3D R1       // Write back result
+>
+> So assume:
+>
+>    x =3D 0
+>    a =3D 1
+>
+>    R1 =3D x  --> R1 =3D=3D 0
+>    R1 |=3D a --> R1 =3D=3D 1
+>
+> interrupt sets bit 1 in x       --> x =3D=3D 0x02
+>
+>    x =3D R1  --> x =3D=3D 1
+>
+> So you lost the set bit 1, right? Not really what you want.
+>
+> >> There is another problem. Assume bit 0 and 1 are pending when the
+> >> processing starts. Now it breaks out after bit 0 has been handled and
+> >> stores back bit 1 as pending. Before ksoftirqd runs bit 0 gets raised
+> >> again. ksoftirqd runs and handles bit 0, which takes more than the
+> >> timeout. As a result the bit 0 processing can starve all other softirq=
+s.
+> >>
+> > May I use a percpu val to record the order of processing softirq, by th=
+e order
+> > val, when it is in ksoftirqd we can process the pending softirq in orde=
+r. In the
+> > scenario you described above, before ksoftirqd runs, bit 0 gets raised =
+again,
+> > ksoftirqd runs and handles bit 1 by the percpu val. just like a ring.
+>
+> Yes, you need something to save information about the not-processed
+> bits. Keeping track of which bit to process next works, but whether
+> that's going to result in efficient and simple code is a different
+> question.
+>
+> Thanks,
+>
+>         tglx
+>
 
-Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+Hi  Thomas, I am so sorry,   For personal reasons, the modification of
+this patch was delayed, I will submit the next modified version in
+these two days, sorry again
