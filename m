@@ -2,88 +2,67 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AD4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D49C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC685206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF77205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="VdNLtAuk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="es56dcOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIIVrb (ORCPT
+        id S1727870AbgIIVtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49508 "EHLO
+        Wed, 9 Sep 2020 17:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbgIIVr2 (ORCPT
+        with ESMTP id S1726440AbgIIVtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:47:28 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DFDC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:47:27 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id h1so2356950qvo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:47:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xtYCmEQsba5nU7Adim+7cup2FZgfTbjzNecUaihW994=;
-        b=VdNLtAuk7HKQaA7HqX+LUbtgZnSfFuvpQaCBggc+pT4+BxuJlTRwuqxoMZzquD8MVy
-         HB71euqA+l8n4Lx83SIe9PIEDFBXbJGXaIOeuuLOK03olUSLOHq9L1U77qwTFu0QQL91
-         zGlWwjfLThu0RMYywzur71reHHWY0v7N/vG+k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xtYCmEQsba5nU7Adim+7cup2FZgfTbjzNecUaihW994=;
-        b=cHHHTk5sqJkZI8iYPq58mNnvz3iXK1HsXpnNOtIOLnW7lh3OokUxsHd6AukZ2Qxo7Q
-         Bw/+zBIfufcZ65070AxAPB7uzN4OFo22CI04biahcFfKp3Gwat3/zvKrCw8crtfAAjt3
-         y4Pllk236RSDQRWxfMi4Bf4IHNHGjlcTCACvNqvfcfbW1RGk6MLxEkLt3bKGyDY0RTsr
-         vWLSvWj9mYi2BHwR0tYacb8xIVAo4JIB5TbYLOcwkbMOFtJwiEpD+/sBdUoWo4OXo4S2
-         SQV/RoJDuL5XQfnOFtBb85SjGZ5MjdbSZzt2M9mv09wABqa8+n7K47WIcKke+n9g6NQr
-         Fh1Q==
-X-Gm-Message-State: AOAM533hnaQpkZAxGrQ79YFffxn4gtiXIJTi9ncwsQQ0YGUzamOpKUQv
-        oVpKpHYGmrEUpWhJ2UJrjwu/Wg==
-X-Google-Smtp-Source: ABdhPJwqCV2yXcXhKFR1TB9YyHsR+Lsm8QbQvzSAdlll2vj33PUfAr9wPVAOCsB1mMqleS0agNrCtA==
-X-Received: by 2002:ad4:5745:: with SMTP id q5mr6043849qvx.29.1599688046933;
-        Wed, 09 Sep 2020 14:47:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:16fd])
-        by smtp.gmail.com with ESMTPSA id 7sm4059450qkh.60.2020.09.09.14.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 14:47:26 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 22:47:24 +0100
-From:   Chris Down <chris@chrisdown.name>
+        Wed, 9 Sep 2020 17:49:17 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31808C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HXIdUpByyG4qzsIKApPAxHn9z/7NYiDmd4oaoQuNQ6Y=; b=es56dcOcXXKCGaOzeKAMOjtmhq
+        4MSph/lwjOSVoCSqbDhjIiJEd1XMYkQ6YO45X5TPqeUn9aG95K3tvmqYBSQqLKUVEnFz1ls1Mt3QB
+        KelVEdkr+tfQYlV8hTpKkHUHtd0HblJA8Bsw9z+kxOEQMIGM0TBzJjUcBYjIneI6e2dgMzbr0n+sR
+        lzLFsds9XKOpd2goZR2GyXkC22vSP/Eh1NUZJcyTIpJtpSlcvhYt+q2GbxZqbRw16oME9h4XW9oLC
+        s+pmmZiS9XkaipAeWgIXGRMuCiIri0xU1d4mRWdp5HWxnZ3H6cg1Dh4RFiqL5/f5+FVMpVLAOApc5
+        zQTsAfZQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kG7xo-0000N8-S5; Wed, 09 Sep 2020 21:49:12 +0000
+Date:   Wed, 9 Sep 2020 22:49:12 +0100
+From:   Matthew Wilcox <willy@infradead.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     zangchunxin@bytedance.com, akpm@linux-foundation.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Muchun Song <songmuchun@bytedance.com>
 Subject: Re: [PATCH v2] mm/vmscan: fix infinite loop in drop_slab_node
-Message-ID: <20200909214724.GA1577471@chrisdown.name>
+Message-ID: <20200909214912.GO6583@casper.infradead.org>
 References: <20200909152047.27905-1-zangchunxin@bytedance.com>
  <16906d44-9e3c-76a1-f1a9-ced61e865467@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <16906d44-9e3c-76a1-f1a9-ced61e865467@suse.cz>
-User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vlastimil Babka writes:
->- Exit also on other signals such as SIGABRT, SIGTERM? If I write to drop_caches
->and think it's too long, I would prefer to kill it by ctrl-c and not just kill
+On Wed, Sep 09, 2020 at 07:59:44PM +0200, Vlastimil Babka wrote:
+> - Exit also on other signals such as SIGABRT, SIGTERM? If I write to drop_caches
+> and think it's too long, I would prefer to kill it by ctrl-c and not just kill
+> -9. Dunno if the canonical way of testing for this is if
+> (signal_pending(current)) or differently.
 
-Oh dear, fatal_signal_pending() doesn't consider cases with no more userspace 
-instructions due to SIG_DFL on TERM/INT etc, that seems misleading :-( I had 
-(naively) believed it internally checks the same set as TASK_KILLABLE.
-
-Chuxin, Muchun, can you please make it work using TASK_KILLABLE in a similar 
-way to how schedule_timeout_killable and friends do it instead, so that other 
-signals will be caught?
+fatal_signal_pending() is the canonical way to do it.  If your task has
+installed a signal handler for ABRT or TERM, that's its prerogative,
+but it's chosen not to get killed, and it's not allowed to see short
+reads/writes, so we can't break out early.
