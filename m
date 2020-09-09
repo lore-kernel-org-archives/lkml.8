@@ -2,109 +2,97 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57928C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB38AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 156DC2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA8621D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iFdh41Z5"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tABLfScP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgIIHPy (ORCPT
+        id S1726970AbgIIHQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:15:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgIIHPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:15:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D06C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:15:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x23so1212113wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/JsVsp8FI1KMy1pkXT80pqpRR7DYsy44AH3/acP066U=;
-        b=iFdh41Z5zYmKwG/W+rCcHcrRIP8Q3EONyrh6Wceurjj6y5s6aH6xcX/VYEv367+MRt
-         m+OFy6jVhz2Y64Da0GYm1+CInnjVrdwdz3MHrS29V0u2hbQ0QzsoxfPPUQ+1jCqkW/rr
-         je1GxlCIu4+34pFeirh3P9d3SQbO22e8vWAbMDAA8ZkT9M+UmKqFljAaOpSrTcFkS0TV
-         MeBYCCn8ZAtSFTMlGIBDpvIHiKxmSAsoB/GJSkUEedGHdL5ZbQrKbJqhBQ0rqrhs3DeL
-         QKxLelQIbPIQR8/aLBqcadR7iwxVVXEwI+KPqN4Cc+ITiI7ToN40UgTOuqj7pVVFJ3+/
-         PidQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/JsVsp8FI1KMy1pkXT80pqpRR7DYsy44AH3/acP066U=;
-        b=KblVhop5nAR6cKirJEooeVuy2OXJ95z4Imk6yvgUiFotsg8GoTRcOu2vhpZpA8vTvI
-         3LFB1l7anoaf1uZU5MAv3PI/DEI0QDPGmh/ZV1TKoDX8xpznFdwXHrjuTm3mbFyKI0Kq
-         g+U3GYbA394qaWyYkSHKkXoSQZP6TfRq3ZKMLWa16fj3amRm9KkQhWHQJoshG1CKtXyw
-         dupICxJOebge35SpJOkWflWqR1mWJUX//+hW0Ijvdp6VCw/VqD7+/nZ9zCbgf/m1je2O
-         6uNaAQ0jP8myIDj0oY00ttBvNIT0+ZQiKynuHoHyrikxtaiF0NWOBTA5LjuhEG16xR6o
-         S7dQ==
-X-Gm-Message-State: AOAM532W/t3VRfVDkZg9urPJ2nG2JeSWH2RrjwzFp/x66Hj9iLQfZaC0
-        P51E/WUqRxeodLCSTpKWLb9s9Q==
-X-Google-Smtp-Source: ABdhPJzFLKxycZi88TEpQo2dW2etwws5zrUtqeqmAWdb8R54+nsGrez/u+3tm/K2T6aQNSlzN72ZWw==
-X-Received: by 2002:a7b:cbd4:: with SMTP id n20mr2217549wmi.105.1599635749811;
-        Wed, 09 Sep 2020 00:15:49 -0700 (PDT)
-Received: from dell ([91.110.221.179])
-        by smtp.gmail.com with ESMTPSA id x2sm1933582wrl.13.2020.09.09.00.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 00:15:49 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 08:15:47 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: syscon: Merge Samsung Exynos
- Sysreg bindings
-Message-ID: <20200909071547.GZ4400@dell>
-References: <20200902161452.28832-1-krzk@kernel.org>
+        Wed, 9 Sep 2020 03:16:28 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:32819 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbgIIHQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:16:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmYGb3PBQz9sSJ;
+        Wed,  9 Sep 2020 17:16:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599635783;
+        bh=kvb1VwlSZi2WG9vR7HApuQMTp0EBaflFlCw8hgJNa60=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tABLfScPEkdDVjydaDLDmRghQIjeYuCJDoMvHOeT6YzXYUOgQJOMYq/xUlF5Rcobl
+         wuG5JHI9ScRq6mEt7/k3Hsv6BzbyCDkRcPlGY/hUgARE0wTDwDe63GA2ieB5LV5Jn+
+         Ac42i5Hi7CGcLoBbinaUm69DzG+YJbkyFb5V9TNtaWe0xImOO6RjAIkAFzIJyKptdz
+         dbkM8BqIUHpC8iVz8kr1eK4/rxWt/ybnJduvW80SH70o7ialzLHOIu8sgnceK9CE4t
+         TfUBDvrboxS7ULrmRHY9GIkkIfHocgwQ+pDVxpDPD8Wkyx21zr4EKmdJGq/IFqLdok
+         LT95OY6fTbOVA==
+Date:   Wed, 9 Sep 2020 17:16:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the staging tree
+Message-ID: <20200909171621.28de7d12@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200902161452.28832-1-krzk@kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/k9zhaNKq+cE6XAvPO=FmWMo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 02 Sep 2020, Krzysztof Kozlowski wrote:
+--Sig_/k9zhaNKq+cE6XAvPO=FmWMo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> The Samsung Exynos System Registers (Sysreg) bindings are quite simple -
-> just additional compatible to the syscon.  They do not have any value so
-> merge them into generic MFD syscon bindings.
-> 
-> Suggested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. New patch
-> ---
->  .../bindings/arm/samsung/sysreg.yaml          | 45 -------------------
->  .../devicetree/bindings/mfd/syscon.yaml       |  2 +
->  2 files changed, 2 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
+Hi all,
 
-Applied, thanks.
+After merging the staging tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+drivers/iio/adc/stm32-adc-core.c: In function 'stm32_adc_core_switches_prob=
+e':
+drivers/iio/adc/stm32-adc-core.c:598:5: warning: ignoring return value of '=
+dev_err_probe' declared with attribute 'warn_unused_result' [-Wunused-resul=
+t]
+  598 |     dev_err_probe(dev, ret, "can't get booster\n");
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Introduced by commit
+
+  ce30eeb613cb ("iio: adc: stm32: Simplify with dev_err_probe()")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/k9zhaNKq+cE6XAvPO=FmWMo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YgUUACgkQAVBC80lX
+0GzFGgf+Psuy9dmjbKNHIBx/hekS5Azod8U6SF9tWRHrTZiZa2pVYsFJYyDDN8cc
+AqhOyGMHu9kkAnWd6aVxlZfUsneL6TuBvU88HDh51Oo4Z4JrV4jurz9HPLOiAkoy
+KXCn9yrAz2MtBm/EZP5Tk09oOA1ESv2vgAQ8yvYALSBabGzuTEJDzVZYRIWf1XCI
+CQHVHbzhCNj1cCGzk5JzPaf1XIibeiDGKQgoLyqNMCXmx06tftYVW/oQkjFo3XWl
+T+cdtY5laCs/2zJ6MWONdctSX0jlJQgR6qsSxJLSJkea2QeTt4kBL3y+geSRielV
+Ejy3l3q0/ZPPhuOjKZ9eDA2wiUzTCQ==
+=xrwh
+-----END PGP SIGNATURE-----
+
+--Sig_/k9zhaNKq+cE6XAvPO=FmWMo--
