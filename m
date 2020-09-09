@@ -2,136 +2,98 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FC7C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BA9C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216A9208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E22A20936
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Va+sTT+W"
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="FFf6yfDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725917AbgIIGY2 (ORCPT
+        id S1726738AbgIIG0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 02:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgIIGY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 02:24:27 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E64C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 23:24:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l9so1119471wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 23:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QwOgiz0la2lW+MPNuLPbMDFXBufd/C6oqQTrDXatv7U=;
-        b=Va+sTT+WzIFWRx/K5Lj5vHbarDK1lmhCqQ1T6l/xcmeehc80itY01O2+3myDiFjgGy
-         XinVZn7Cwck54Ns+eMvRgdfuUmE5huycCuonomHBMqwR4bDKgwzl71Lc+76HDhrc7g7E
-         JLd1wIYLFo9pt5yf0QyCc+07vS3Q642anLDuBb4kFvyCv5MNwAVgKSU2l/KPuzUO1fsR
-         bO4COfZNyLeqqpOap7Mu5GFGQDEiheHrESVGoAx+b8URmY0if5r2yqsUf7aLUVMzX1Cd
-         xzhJUVzdf8q7gkp9FDRKaJBBkuFoxvAy952eyphcriaudfkwPMp2kb56NIRYHxxKC7xZ
-         CRWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QwOgiz0la2lW+MPNuLPbMDFXBufd/C6oqQTrDXatv7U=;
-        b=TjAnwVyHhh6nfVd8Ewa1VDlzljvt64sL51t8MB6yCxP8nTOuHrhDP0ocNajmgCitZJ
-         H6KFAKjCjT10xwbgA9UGiiZ1NxLqfAuEvsB9IXeO6GdeBP6N4bREGAK4Q5BtIuxM1w5T
-         6SDIfrNUaYeLxb7/RZdcEp3ZEQGylTt+a9MbnxkEWQoYE4XKtLm+MQw6QA1He7j5btT0
-         kG0W1RAGCZZP//BSsy2SgG9U8OoXDzNPG9RB9sjXLIiCKjTUGl68TlIWMK99/FTigZRE
-         lLE9bFQbP552ojA8hjAMZA2OiJ945n2AHcc5m4qtOgcH0e3ZopAdt2sIvLN9nkdkREdQ
-         2WmQ==
-X-Gm-Message-State: AOAM532kpZyu79uaVv4+1zgFPum7JcAZQIhgRZtcyXvHtgF2PtOsxwkC
-        nG+pi4BWCMMocFM9/LSs3OgUIw==
-X-Google-Smtp-Source: ABdhPJxQ/e6wXVD4JfcDlhllnc42oPWziLCTzGOT5XcSIPehHnpUeCw3YOjcVnxlpKlXB+PBXplP9g==
-X-Received: by 2002:a1c:f018:: with SMTP id a24mr1817860wmb.7.1599632665279;
-        Tue, 08 Sep 2020 23:24:25 -0700 (PDT)
-Received: from dell ([91.110.221.179])
-        by smtp.gmail.com with ESMTPSA id k24sm2323434wmj.19.2020.09.08.23.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 23:24:24 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 07:24:23 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Alain Volmat <avolmat@me.com>
-Cc:     Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [PATCH v2] mailbox: sti: fix struct description warnings
-Message-ID: <20200909062423.GX4400@dell>
-References: <20200909051219.4531-1-avolmat@me.com>
+        Wed, 9 Sep 2020 02:26:33 -0400
+Received: from mail1.perex.cz ([77.48.224.245]:43806 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbgIIG0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 02:26:30 -0400
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 411ECA003F;
+        Wed,  9 Sep 2020 08:26:28 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 411ECA003F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1599632788; bh=6TM8UZlhBVv9GZrB00/bGCYuJ/Qyusmp7Cmt1ltZKcU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FFf6yfDs3hx+hvXuYuWrkEfLUTOhqOAtk4wkhSPmdAVgR+55abBg9kGOR/HUGfNJJ
+         Z5S2vP0gJXEQG/RBsVWsmRabvxqKUGHStNN06cMAPG+G1A3UBMmR0DJRiPUnfV3L7W
+         I/6xuxSFxXgi5ZdnRcLvIMBY8M+Bs6Bt3Gc4IPzU=
+Received: from p1gen2.perex-int.cz (unknown [192.168.100.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Wed,  9 Sep 2020 08:26:13 +0200 (CEST)
+Subject: Re: [PATCH] soundwire: Add generic bandwidth allocation algorithm
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     pierre-louis.bossart@linux.intel.com, vinod.koul@linaro.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200908131520.5712-1-yung-chuan.liao@linux.intel.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <fdf22a3c-457f-09ef-8dc5-c0f3871cf2ce@perex.cz>
+Date:   Wed, 9 Sep 2020 08:26:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200908131520.5712-1-yung-chuan.liao@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200909051219.4531-1-avolmat@me.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 09 Sep 2020, Alain Volmat wrote:
-
-> Fix formating of struct description to avoid warning highlighted
-> by W=1 compilation.
-
-Apologies for not mentioning this before, but it would be nice to have
-the warning quoted in the commit message.
-
-> Signed-off-by: Alain Volmat <avolmat@me.com>
-> ---
-> v2: fixes tag removed
+Dne 08. 09. 20 v 15:15 Bard Liao napsal(a):
+> This algorithm computes bus parameters like clock frequency, frame
+> shape and port transport parameters based on active stream(s) running
+> on the bus.
 > 
->  drivers/mailbox/mailbox-sti.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Developers can also implement their own .compute_params() callback for
+> specific resource management algorithm, and set if before calling
+> sdw_add_bus_master()
+> 
+> Credits: this patch is based on an earlier internal contribution by
+> Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah. All hard-coded
+> values were removed from the initial contribution to use BIOS
+> information instead.
+> 
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> ---
+>  drivers/soundwire/Kconfig                     |   5 +
+>  drivers/soundwire/Makefile                    |   3 +
+>  drivers/soundwire/bus.c                       |   6 +
+>  drivers/soundwire/bus.h                       |  46 +-
+>  .../soundwire/generic_bandwidth_allocation.c  | 427 ++++++++++++++++++
+>  drivers/soundwire/intel.c                     |   3 +
+>  drivers/soundwire/stream.c                    |  12 +
+>  include/linux/soundwire/sdw.h                 |   3 +
+>  8 files changed, 503 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/soundwire/generic_bandwidth_allocation.c
 
-The patch itself looks fine however:
+I did testing and I've not found any issues. The abstraction looks good.
 
-Reviewed-by: Lee Jones <lee.jones@linaro.org>
-
-> diff --git a/drivers/mailbox/mailbox-sti.c b/drivers/mailbox/mailbox-sti.c
-> index 2baf69a0b81c..0f2bc09c364d 100644
-> --- a/drivers/mailbox/mailbox-sti.c
-> +++ b/drivers/mailbox/mailbox-sti.c
-> @@ -36,7 +36,7 @@
->  #define MBOX_BASE(mdev, inst)   ((mdev)->base + ((inst) * 4))
->  
->  /**
-> - * STi Mailbox device data
-> + * struct sti_mbox_device - STi Mailbox device data
->   *
->   * An IP Mailbox is currently composed of 4 instances
->   * Each instance is currently composed of 32 channels
-> @@ -60,7 +60,7 @@ struct sti_mbox_device {
->  };
->  
->  /**
-> - * STi Mailbox platform specific configuration
-> + * struct sti_mbox_pdata - STi Mailbox platform specific configuration
->   *
->   * @num_inst:	Maximum number of instances in one HW Mailbox
->   * @num_chan:	Maximum number of channel per instance
-> @@ -71,7 +71,7 @@ struct sti_mbox_pdata {
->  };
->  
->  /**
-> - * STi Mailbox allocated channel information
-> + * struct sti_channel - STi Mailbox allocated channel information
->   *
->   * @mdev:	Pointer to parent Mailbox device
->   * @instance:	Instance number channel resides in
+Acked-by: Jaroslav Kysela <perex@perex.cz>
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
