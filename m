@@ -2,187 +2,158 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C16C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601FCC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 131F620768
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7BC20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKt8/cIS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lUM96aD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730380AbgIJCGa (ORCPT
+        id S1730578AbgIJCGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50986 "EHLO
+        Wed, 9 Sep 2020 22:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730108AbgIJBwa (ORCPT
+        with ESMTP id S1730145AbgIJByT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:52:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0729C0617BB;
-        Wed,  9 Sep 2020 16:37:21 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q4so2091932pjh.5;
-        Wed, 09 Sep 2020 16:37:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wy3pvFIOU9AYRFOAORk2oZwAI6ceicLhp4MvjKovBaM=;
-        b=EKt8/cIS7m5Yk5BJIDHf7lewFwarx+7K29iGHkunzvAlV2DA7iPhuATSBxKMrbYG2j
-         ifP/s6huRhzKNuzP1rRLUNTgszkZhVDowO6PgjWmV+2TXU2+fTAMHr/HMbyIuupX0AQY
-         gRIAuIgqkzzR0SOqyI0P0PCWOvtPvczVI6HrpqXtPygh6V/gMzkSl2LftY5S4BDbMCAh
-         LjtUDdc5QCOE+3ZAwKkKSOIafOOA3r6LgP2GSFKqDHkKLFtNxl3N0meI+k/fprpdlXRY
-         rnX/MTJtzLz2YrvSRqvjkKXf/2h4gv2amVaOLkLMpuhHBiiI8vN2/CkH+/MSUrHum4Go
-         FIfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wy3pvFIOU9AYRFOAORk2oZwAI6ceicLhp4MvjKovBaM=;
-        b=cygzhSklN9eQHND4MRaxJ5B+0MKjIwkQ8BDvpDfD97WP1cnZ4R8OqE6QMqTQQmUAoU
-         80ADu1FcsIfLQfUpQBSqqdsxIksiEg/m4sElaL1GbvGsEjzdkniCpBISaD0bzlP6yCbR
-         BZPtlAs4UPFVxYMe/y7unc9J4FV2bJKYRFzAjsSzj8xUZ32W2wYpMD61FJnc+v0bmA7W
-         UARWyhu3NzjVGQgKXMJJKAYlNVnDFttEtxz7TZtBwL/uDRlx0ojE7EVFBBEwL86iaFhQ
-         FNGFi4YqrkvTcJtb4hJDS27kylcNnJBBjcMh1MSOQzhCndX8SyWcC1fHxK9hnZT/Wf6B
-         Uvgg==
-X-Gm-Message-State: AOAM531FBajkh+N7tOqkf2F5SExnrF27FwlqnkPbrjtnDEZ030EPxGdR
-        Btk4bQESU2KEHXuttH3g01XicjOmPs8=
-X-Google-Smtp-Source: ABdhPJwxXqC1C4u6pEI1JyGeQvQiOf9hrSJ7lYII5Q7df8ofr6Mfjd5ELzMFhzAnPOz5DbMa4QwoPw==
-X-Received: by 2002:a17:90a:de17:: with SMTP id m23mr2846141pjv.51.1599694641402;
-        Wed, 09 Sep 2020 16:37:21 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8800:1c00:6c81:1272:e4d7:3185])
-        by smtp.gmail.com with ESMTPSA id e14sm3192638pgu.47.2020.09.09.16.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 16:37:20 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [PATCH net] net: Clarify the difference between hard_header_len and needed_headroom
-Date:   Wed,  9 Sep 2020 16:37:15 -0700
-Message-Id: <20200909233715.425941-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 9 Sep 2020 21:54:19 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27CE5C0617B9;
+        Wed,  9 Sep 2020 16:34:46 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmyzL0s2vz9sTW;
+        Thu, 10 Sep 2020 09:34:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599694478;
+        bh=/iimjDFu3pasKYMJQEQ/kTu+FsUVpzwxhLgrWCaorIo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lUM96aD3mSfmgJ1r0i3Jb33pimBT2LGB28cKZ+jKojcm66LDK3VwpIBbV5zPDwkeX
+         bFEpjJFiQUy44dJC9AGTT7ovCCy9LomHf/hQ+MaJTsOzy79MuMB/h2keGLvFRa34P8
+         1eujQ42LCu5aYSEOJul4ylM7Jyz9y1bnfplUAynD2WQSbvmGx2UUM1QTOFMlJhFjgq
+         Vs58Zp+HBpIcwpMkIYCXVQvSARBBW62lL+Z2XFxwCFpdu/lMkcsDLvAr4CjIHH/qlP
+         cmzrpqjSvdJhgxWYBexRRYtIQDIGekGh5NdvNZ1qzD+b5d6XvmPmauJEgYHau6pc7o
+         EzFsO9ls7WREw==
+Date:   Thu, 10 Sep 2020 09:34:37 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg Ungerer <gerg@snapgear.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the m68knommu tree with the m68k tree
+Message-ID: <20200910093437.4098988b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/5OzjCGux=otNrvMezQoDw/3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The difference between hard_header_len and needed_headroom has long been
-confusing to driver developers. Let's clarify it.
+--Sig_/5OzjCGux=otNrvMezQoDw/3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The understanding of the difference in this patch is based on the
-following reasons:
+Hi all,
 
-1.
+Today's linux-next merge of the m68knommu tree got a conflict in:
 
-In this file, the function packet_snd first reserves a headroom of
-length (dev->hard_header_len + dev->needed_headroom).
-Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-which calls dev->header_ops->create, to create the link layer header.
-If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-length (dev->hard_header_len), and checks if the user has provided a
-header of length (dev->hard_header_len) (in dev_validate_header).
-This shows the developers of af_packet.c expect hard_header_len to
-be consistent with header_ops.
+  arch/m68k/Kconfig
 
-2.
+between commit:
 
-In this file, the function packet_sendmsg_spkt has a FIXME comment.
-That comment states that prepending an LL header internally in a driver
-is considered a bug. I believe this bug can be fixed by setting
-hard_header_len to 0, making the internal header completely invisible
-to af_packet.c (and requesting the headroom in needed_headroom instead).
+  dc072012bc94 ("m68k: Sort selects in main Kconfig")
 
-3.
+from the m68k tree and commit:
 
-There is a commit for a WiFi driver:
-commit 9454f7a895b8 ("mwifiex: set needed_headroom, not hard_header_len")
-According to the discussion about it at:
-  https://patchwork.kernel.org/patch/11407493/
-The author tried to set the WiFi driver's hard_header_len to the Ethernet
-header length, and request additional header space internally needed by
-setting needed_headroom. This means this usage is already adopted by
-driver developers.
+  ef03e4545eac ("m68knommu: switch to using asm-generic/uaccess.h")
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
----
- include/linux/netdevice.h |  4 ++--
- net/packet/af_packet.c    | 19 +++++++++++++------
- 2 files changed, 15 insertions(+), 8 deletions(-)
+from the m68knommu tree.
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 7bd4fcdd0738..3999b04e435d 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -1691,8 +1691,8 @@ enum netdev_priv_flags {
-  *	@min_mtu:	Interface Minimum MTU value
-  *	@max_mtu:	Interface Maximum MTU value
-  *	@type:		Interface hardware type
-- *	@hard_header_len: Maximum hardware header length.
-- *	@min_header_len:  Minimum hardware header length
-+ *	@hard_header_len: Maximum length of the headers created by header_ops
-+ *	@min_header_len:  Minimum length of the headers created by header_ops
-  *
-  *	@needed_headroom: Extra headroom the hardware may need, but not in all
-  *			  cases can this be guaranteed
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 2b33e977a905..0e324b08cb2e 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -93,12 +93,15 @@
- 
- /*
-    Assumptions:
--   - if device has no dev->hard_header routine, it adds and removes ll header
--     inside itself. In this case ll header is invisible outside of device,
--     but higher levels still should reserve dev->hard_header_len.
--     Some devices are enough clever to reallocate skb, when header
--     will not fit to reserved space (tunnel), another ones are silly
--     (PPP).
-+   - If the device has no dev->header_ops, there is no LL header visible
-+     above the device. In this case, its hard_header_len should be 0.
-+     The device may prepend its own header internally. In this case, its
-+     needed_headroom should be set to the space needed for it to add its
-+     internal header.
-+     For example, a WiFi driver pretending to be an Ethernet driver should
-+     set its hard_header_len to be the Ethernet header length, and set its
-+     needed_headroom to be (the real WiFi header length - the fake Ethernet
-+     header length).
-    - packet socket receives packets with pulled ll header,
-      so that SOCK_RAW should push it back.
- 
-@@ -2937,10 +2940,14 @@ static int packet_snd(struct socket *sock, struct msghdr *msg, size_t len)
- 	skb_reset_network_header(skb);
- 
- 	err = -EINVAL;
-+	if (!dev->header_ops)
-+		WARN_ON_ONCE(dev->hard_header_len != 0);
- 	if (sock->type == SOCK_DGRAM) {
- 		offset = dev_hard_header(skb, dev, ntohs(proto), addr, NULL, len);
- 		if (unlikely(offset < 0))
- 			goto out_free;
-+		WARN_ON_ONCE(offset > dev->hard_header_len);
-+		WARN_ON_ONCE(offset < dev->min_header_len);
- 	} else if (reserve) {
- 		skb_reserve(skb, -reserve);
- 		if (len < reserve + sizeof(struct ipv6hdr) &&
--- 
-2.25.1
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/m68k/Kconfig
+index 93bbb74ea876,aefffebc0afa..000000000000
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@@ -6,32 -6,33 +6,33 @@@ config M68
+  	select ARCH_HAS_BINFMT_FLAT
+  	select ARCH_HAS_DMA_PREP_COHERENT if HAS_DMA && MMU && !COLDFIRE
+  	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
+ +	select ARCH_HAVE_NMI_SAFE_CMPXCHG if RMW_INSNS
+  	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
+  	select ARCH_NO_PREEMPT if !COLDFIRE
+ +	select ARCH_WANT_IPC_PARSE_VERSION
+  	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
+  	select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+ -	select HAVE_IDE
+ -	select HAVE_AOUT if MMU
+ -	select HAVE_ASM_MODVERSIONS
+ -	select HAVE_DEBUG_BUGVERBOSE
+ -	select GENERIC_IRQ_SHOW
+  	select GENERIC_ATOMIC64
+ -	select NO_DMA if !MMU && !COLDFIRE
+ -	select HAVE_UID16
+ -	select VIRT_TO_BUS
+ -	select ARCH_HAVE_NMI_SAFE_CMPXCHG if RMW_INSNS
+  	select GENERIC_CPU_DEVICES
+  	select GENERIC_IOMAP
+ +	select GENERIC_IRQ_SHOW
+  	select GENERIC_STRNCPY_FROM_USER if MMU
+  	select GENERIC_STRNLEN_USER if MMU
+ -	select UACCESS_MEMCPY if !MMU
+ -	select ARCH_WANT_IPC_PARSE_VERSION
+ +	select HAVE_AOUT if MMU
+ +	select HAVE_ASM_MODVERSIONS
+ +	select HAVE_DEBUG_BUGVERBOSE
+  	select HAVE_FUTEX_CMPXCHG if MMU && FUTEX
+ +	select HAVE_IDE
+  	select HAVE_MOD_ARCH_SPECIFIC
+ +	select HAVE_UID16
+ +	select MMU_GATHER_NO_RANGE if MMU
+  	select MODULES_USE_ELF_REL
+  	select MODULES_USE_ELF_RELA
+ -	select OLD_SIGSUSPEND3
+ +	select NO_DMA if !MMU && !COLDFIRE
+  	select OLD_SIGACTION
+ -	select MMU_GATHER_NO_RANGE if MMU
+ +	select OLD_SIGSUSPEND3
+++	select UACCESS_MEMCPY if !MMU
+ +	select VIRT_TO_BUS
+ =20
+  config CPU_BIG_ENDIAN
+  	def_bool y
+
+--Sig_/5OzjCGux=otNrvMezQoDw/3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ZZo0ACgkQAVBC80lX
+0GxVyAgAojk8j6SRwOfQxFRWRIC/Yz6kMt1UMnLqldmKcqs4i/b9bKC7/Zw73Ekw
+tMfj4aoZ4UKrij2DZGkD3kwgyT0AI30zCy74D0+TZEdB2tkpG5Gvgf3HHH/Sh/xn
+sjZsUa9ivUix6WAgAnduI6iI8hykgZL5ujsrJFzcXGohWS/ZJonBw4RYjA71nJOE
+cW73kP4rXEYkeLeglHgooMk0bh8tJL/meoHsZsYD7Q83jC7KdxE8ROsO4cbxbsbw
+0v/QzUNEu+nSdqV7LKdButXhw98GphjkcplFoC3HoODTG/uZ9ECpIhoHv/P2sYvV
+67GKuIE+T7vhbFq/ozXLckBqYYeRtw==
+=bvx9
+-----END PGP SIGNATURE-----
+
+--Sig_/5OzjCGux=otNrvMezQoDw/3--
