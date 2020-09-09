@@ -2,134 +2,76 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4011DC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62386C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000D7206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B79206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgIIP5K (ORCPT
+        id S1730497AbgIIP6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:57:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58714 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbgIIPxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:53:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 71E76B291;
-        Wed,  9 Sep 2020 14:15:09 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 530AC1E12E5; Wed,  9 Sep 2020 16:14:53 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 16:14:53 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, milan.opensource@gmail.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.com>
-Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-Message-ID: <20200909141453.GC29150@quack2.suse.cz>
-References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
- <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
- <20200908112742.GA2956@quack2.suse.cz>
- <7be61144-0e77-3c31-d720-f2cbe56bc81e@gmail.com>
- <20200909112110.GA29150@quack2.suse.cz>
- <0f473a75-fd5a-82f7-1d0e-e9c168414498@gmail.com>
+        Wed, 9 Sep 2020 11:58:19 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11326 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730581AbgIIPyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:54:10 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 31D906DFC959D022662F;
+        Wed,  9 Sep 2020 21:51:15 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
+ 21:51:06 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
+        <u74147@gmail.com>, <je.yen.tam@ni.com>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] serial: 8250_pci: Remove unused function get_pci_irq()
+Date:   Wed, 9 Sep 2020 21:51:03 +0800
+Message-ID: <20200909135103.17768-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f473a75-fd5a-82f7-1d0e-e9c168414498@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-09-20 13:58:50, Michael Kerrisk (man-pages) wrote:
-> [CC += Neil, since he wrote the text we're talking about]
-> 
-> Hello Jan,
-> 
-> On 9/9/20 1:21 PM, Jan Kara wrote:
-> > On Wed 09-09-20 12:52:48, Michael Kerrisk (man-pages) wrote:
-> >>> So the error state isn't really stored "on pages in the file mapping".
-> >>> Current implementation (since 4.14) is that error state is stored in struct
-> >>> file (I think this tends to be called "file description" in manpages) and
-> >>
-> >> (Yes, "open file description" is the POSIX terminology for the thing that
-> >> sits between the FD and the inode--struct file in kernel parlance--and I
-> >> try to follow POSIX terminology in the manual pages where possible.
-> >>
-> >>> so EIO / ENOSPC is reported once for each file description of the file that
-> >>> was open before the error happened. Not sure if we want to be so precise in
-> >>> the manpages or if it just confuses people. 
-> >>
-> >> Well, people are confused now, so I think more detail would be good.
-> >>
-> >>> Anyway your takeway that no
-> >>> error on subsequent fsync() does not mean data was written is correct.
-> >>
-> >> Thanks. (See also my rply to Jeff.)
-> >>
-> >> By the way, a question related to your comments above. In the 
-> >> errors section, there is this:
-> >>
-> >>        EIO    An  error  occurred during synchronization.  This error may
-> >>               relate to data written to some other file descriptor on the
-> >> *             same  file.   Since Linux 4.13, errors from write-back will
-> >>               be reported to all file descriptors that might have written
-> >>               the  data  which  triggered  the  error.   Some filesystems
-> >>               (e.g., NFS) keep close track of  which  data  came  through
-> >>               which  file  descriptor,  and  give more precise reporting.
-> >>               Other  filesystems  (e.g.,  most  local  filesystems)  will
-> >>               report errors to all file descriptors that were open on the
-> >> *             file when the error was recorded.
-> >>
-> >> In the marked (*) lines, we have the word "file". Is this accurate? I mean, I
-> >> would normally take "file" in this context to mean the inode ('struct inode').
-> >> But I wonder if really what is meant here is "open file description"
-> >> ('struct file'). In other words, is the EIO being generated for all FDs 
-> >> connected to the same open file description, or for all FDs for all of the
-> >> open file descriptions connected to the inode? Your thoughts?
-> > 
-> > The error gets reported once for each "open file description" of the file
-> > (inode) where the error happened. If there are multiple file descriptors
-> > pointing to the same open file description, then only one of those file
-> > descriptors will see the error. This is inevitable consequence of kernel
-> > storing the error state in struct file and clearing it once it is
-> > reported...
-> 
-> So, the text in wrong two respects, I believe:
-> 
-> * It should be phrased in terms of "open file description", not "file",
-> in the lines that I marked.
+It is not used since commit 8428413b1d14 ("serial: 8250_pci: Implement MSI(-X) support")
 
-No, I believe 'file' is correct on these two lines. I guess I wasn't
-precise enough in my explanation of the mechanism :) We actually have two
-places where we store error state. There's "error counter" in the inode and
-then "last seen error" counter in struct file. Whenever "last seen error"
-is less than "inode error counter" we report error from the syscall and set
-"last seen error" in the used struct file to the current "inode error
-counter". So whenever writeback error happens for the inode, all 'struct
-file's will end up reporting the error exactly once.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/tty/serial/8250/8250_pci.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-> * Where it says "to all file descriptors" (twice), it should rather say
-> "to any of the file descriptors [that refer to the open file description]"
-
-This is correct but I'm not sure it captures well the fact that each open
-file description is guaranteed to get a notification. So maybe I'd rephrase
-it like "reported to all file descriptors" -> "reported to all open file
-descriptions (if there are multiple file descriptors pointing to the same
-open file description, the error is reported only to the first call
-regardless of which of the descriptors it uses)"
-
-								Honza
+diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+index 85810b8b9d20..824c44ec25a8 100644
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -2795,15 +2795,6 @@ static struct pci_serial_quirk *find_quirk(struct pci_dev *dev)
+ 	return quirk;
+ }
+ 
+-static inline int get_pci_irq(struct pci_dev *dev,
+-				const struct pciserial_board *board)
+-{
+-	if (board->flags & FL_NOIRQ)
+-		return 0;
+-	else
+-		return dev->irq;
+-}
+-
+ /*
+  * This is the configuration table for all of the PCI serial boards
+  * which we support.  It is directly indexed by the pci_board_num_t enum
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.17.1
+
+
