@@ -2,167 +2,131 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B63C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF5702087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D04821919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="cdevoIjG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISIjZ5JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730856AbgIIQ4b (ORCPT
+        id S1730924AbgIIQ4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:56:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
+        Wed, 9 Sep 2020 12:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730913AbgIIQ4Q (ORCPT
+        with ESMTP id S1730508AbgIIPw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:56:16 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53AD4C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:56:16 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id n14so2683295pff.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:56:16 -0700 (PDT)
+        Wed, 9 Sep 2020 11:52:28 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EE0C061372
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:17:23 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x14so3117989wrl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=gl5YvAOZp93b/wM56Dis2Ef5sMZofdOKMbfKboGp6yo=;
-        b=cdevoIjGxGVYu95IODtQea1YyoLcyw6sCCXKlJU2yUgo03CQRdkf6cy+flAIUtqrdu
-         oHoIpUwX9jWbMr2IZRh9TNuMUILi8CzSIPwkJstfmd598FkInQIjDRX0zuSX8v9XSxX0
-         ojBsLhQVlcN8Ks5A97aN6vLJ7ahpAMsBuBNMo=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YTINV8fXf0M3n9PBAJO84TZ3ZWqVa/k8IvPy7N9wgi4=;
+        b=ISIjZ5JQj4TVnnSGapFb7wbJQYYctJNyBV/BPiddD36GRemkQ2jjGJozi7ZZ/kNFgX
+         L+a9BRRcxvMgswArV5WD4NYsCit9c2oH3aiX4oPX4bd3Jz2GsnLqByOiF29v5yx3b5iD
+         uDbebTiq0Z5y1HyVnJZ+YOiaS2S0q+WjKtZ6Tef9eHw7YRu85EZSVkNInnykwrXTIC+n
+         P5rhgZr4VBrBEVyX5ti/2W5iurPZAztgCxVQu0luBxCahAI/N4dSAyW9VNbxVRuO4gwp
+         I7Snb8LSDhaMGjreOX/81es+gdR7Eb9OtmYjiXDDWcimTmOxMQjfw/bK/6V7yYEScTk0
+         wy+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gl5YvAOZp93b/wM56Dis2Ef5sMZofdOKMbfKboGp6yo=;
-        b=inzgtOJ/bttnzjFcri0m2P3K3Zkp/Hzw6dY5GIr5hIT7n2A8EFlnKLlfWi8ZzH+d4n
-         4S6uparB0YA39Fx54AfiKSYQRBf7o/b7ZvNX8HTL8STq3dl+NyJ/dWxKjGo5JZdqOf32
-         wjLlqjs8LVq9JMXyGoR45/jQ/0hg1D5H/GI+awShR8252hd3GMB/4+R9tfpQsQBIQtOb
-         p+luASzzsPP3tyfYA/nqoARoKknvUZdvoo2GH+NYW9Kqe/EaS08i4Tt0uANCiCi6bq5z
-         2j7HQtzG1Y3LMRkmxX/+PtvzCL0TWFV99jiIlJKnWTtiQdF2uUkihNKOqQzRU6CxedGw
-         Pfsg==
-X-Gm-Message-State: AOAM533Lz9dgmzsfVFRlzWoeKqwZ+Rcvbjo9DW3tDPDkdh8GAu6HRTI3
-        vuAx8M/+bMaj8JkJPi/GQ/3gFg==
-X-Google-Smtp-Source: ABdhPJxETamqFi5zkOw06l3Tp+NSNEkaTDzqtNwNnisPrhkZdLtx8XcQgkZ5FkusZb9DveNbwGLgdw==
-X-Received: by 2002:a17:902:b088:: with SMTP id p8mr1638177plr.86.1599670575585;
-        Wed, 09 Sep 2020 09:56:15 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id il14sm2370370pjb.54.2020.09.09.09.56.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YTINV8fXf0M3n9PBAJO84TZ3ZWqVa/k8IvPy7N9wgi4=;
+        b=PWFDkiv85K1UX/tznXp8gE69wD+s914QnexKMrhdQ73X+HuRxkAd8oYXTABSKDisTc
+         WSgWBloBfHbbABbRm/qqSEawJzgXLefyXRipEY5Kfsw0NiNxePyC+WdtU8jF00EDLcsT
+         ykdzy45OiOApjZ4iiWq6TrnOLGPij6pLh4minJDa3osPVxY9fqaxuZhOzRMQlFqwuvd+
+         mRK7UgbouDtmq6rOPth6tl+gIL8s1aiDiDjmiOsfnN51VX2DmaZ3ItWk1NHvsYuBSCZk
+         uHwK/BEXthavHsIQ9Kg5CJlEYS65skGwG4TqyfxMP19NllUa45hJcj7Sk0rdSFD1F+V0
+         /AUA==
+X-Gm-Message-State: AOAM531Fh+moLse1U2pM4fSIPyzlek+nh7tb/Q37/dnl57zT/8/FKI/P
+        73M2O0YYDyIC5ajTLAmuAtGcwQ==
+X-Google-Smtp-Source: ABdhPJyylZV7lGE0N2Ov626dsFCzQyMBnovybUKfA++XerEYgGcuyp66iCHpW/4W3EGC5UFcCO7ASQ==
+X-Received: by 2002:adf:82d5:: with SMTP id 79mr4682690wrc.60.1599661042100;
+        Wed, 09 Sep 2020 07:17:22 -0700 (PDT)
+Received: from dell ([91.110.221.208])
+        by smtp.gmail.com with ESMTPSA id m3sm2774942wrs.83.2020.09.09.07.17.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 09:56:14 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi@sslab.ics.keio.ac.jp,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Yuval Bason <yuval.bason@cavium.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] qedr: fix resource leak in qedr_create_qp
-Date:   Wed,  9 Sep 2020 16:55:59 +0000
-Message-Id: <20200909165600.20556-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 09 Sep 2020 07:17:21 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 15:17:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Subject: Re: [PATCH 01/32] wireless: marvell: mwifiex: sdio: Move 'static
+ const struct's into their own header file
+Message-ID: <20200909141719.GD218742@dell>
+References: <20200821071644.109970-2-lee.jones@linaro.org>
+ <20200901091541.3974FC433C6@smtp.codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200901091541.3974FC433C6@smtp.codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When xa_insert() fails, the acquired resource in qedr_create_qp should
-also be freed. However, current implementation does not handle the
-error.
+On Tue, 01 Sep 2020, Kalle Valo wrote:
 
-Fix this by adding a new goto label that calls qedr_free_qp_resources.
+> Lee Jones <lee.jones@linaro.org> wrote:
+> 
+> > Only include these tables in the 1 source file they are used.
+> > 
+> > Fixes hundreds of W=1 warnings!
+> > 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  In file included from drivers/net/wireless/marvell/mwifiex/main.h:59,
+> >  from drivers/net/wireless/marvell/mwifiex/main.c:22:
+> >  drivers/net/wireless/marvell/mwifiex/sdio.h:705:41: warning: ‘mwifiex_sdio_sd8801’ defined but not used [-Wunused-const-variable=]
+> >  705 | static const struct mwifiex_sdio_device mwifiex_sdio_sd8801 = {
+> >  | ^~~~~~~~~~~~~~~~~~~
+> > 
+> >  NB: There were 100's of these - snipped for brevity.
+> > 
+> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> > Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> > Cc: Xinming Hu <huxinming820@gmail.com>
+> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> 
+> I don't think static const variables should be in a .h file. Wouldn't
+> sdio.c be the right place for these? At least from a quick look I got
+> that impression.
 
-Fixes: 1212767e23bb ("qedr: Add wrapping generic structure for qpidr and
-adjust idr routines.")
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
----
- drivers/infiniband/hw/qedr/verbs.c | 48 ++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 23 deletions(-)
+That's a bone of contention.  I personally do not like to see C-files
+overwhelmed by a sea of structs/tables and tend to ferry them off into
+*-tables.h header files instead.
 
-diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
-index b49bef94637e..19688773c58b 100644
---- a/drivers/infiniband/hw/qedr/verbs.c
-+++ b/drivers/infiniband/hw/qedr/verbs.c
-@@ -2112,6 +2112,28 @@ static int qedr_create_kernel_qp(struct qedr_dev *dev,
- 	return rc;
- }
- 
-+static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
-+				  struct ib_udata *udata)
-+{
-+	struct qedr_ucontext *ctx =
-+		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
-+					  ibucontext);
-+	int rc;
-+
-+	if (qp->qp_type != IB_QPT_GSI) {
-+		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	if (qp->create_type == QEDR_QP_CREATE_USER)
-+		qedr_cleanup_user(dev, ctx, qp);
-+	else
-+		qedr_cleanup_kernel(dev, qp);
-+
-+	return 0;
-+}
-+
- struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
- 			     struct ib_qp_init_attr *attrs,
- 			     struct ib_udata *udata)
-@@ -2165,11 +2187,13 @@ struct ib_qp *qedr_create_qp(struct ib_pd *ibpd,
- 	if (rdma_protocol_iwarp(&dev->ibdev, 1)) {
- 		rc = xa_insert(&dev->qps, qp->qp_id, qp, GFP_KERNEL);
- 		if (rc)
--			goto err;
-+			goto err2;
- 	}
- 
- 	return &qp->ibqp;
- 
-+err2:
-+	qedr_free_qp_resources(dev, qp, udata);
- err:
- 	kfree(qp);
- 
-@@ -2671,28 +2695,6 @@ int qedr_query_qp(struct ib_qp *ibqp,
- 	return rc;
- }
- 
--static int qedr_free_qp_resources(struct qedr_dev *dev, struct qedr_qp *qp,
--				  struct ib_udata *udata)
--{
--	struct qedr_ucontext *ctx =
--		rdma_udata_to_drv_context(udata, struct qedr_ucontext,
--					  ibucontext);
--	int rc;
--
--	if (qp->qp_type != IB_QPT_GSI) {
--		rc = dev->ops->rdma_destroy_qp(dev->rdma_ctx, qp->qed_qp);
--		if (rc)
--			return rc;
--	}
--
--	if (qp->create_type == QEDR_QP_CREATE_USER)
--		qedr_cleanup_user(dev, ctx, qp);
--	else
--		qedr_cleanup_kernel(dev, qp);
--
--	return 0;
--}
--
- int qedr_destroy_qp(struct ib_qp *ibqp, struct ib_udata *udata)
- {
- 	struct qedr_qp *qp = get_qedr_qp(ibqp);
+As the gate-keeper, what you say goes.  So if you insist we move these
+450 lines of tables into the source file which references them, I will
+of course do as you ask.
+
+> Patch set to Changes Requested.
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
