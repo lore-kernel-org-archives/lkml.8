@@ -2,251 +2,127 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8700C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06C7220757
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FEC20757
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TaXjjqDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cK1sw1kY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIIJW6 (ORCPT
+        id S1728197AbgIIJYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:22:58 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:49497 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726489AbgIIJWy (ORCPT
+        Wed, 9 Sep 2020 05:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgIIJYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:22:54 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0899ClWB011931;
-        Wed, 9 Sep 2020 11:22:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=V1r1AsvoqFnYpUi6U5FqhZPOSlPWGhlFRoqwysYBwuw=;
- b=TaXjjqDVW2vaGF93Xptjv/lntL+nKiQR83szeP7C0jwwTGPQaxyhnY4pWW8TyPxwjXzO
- 3R3hpEaed0gRqbajp21/a+BfICU+1AfE9+R0zC9+QIto/Bjr5BfkF03UzH3a4KNcMZIN
- hhtQ3RT7Kx1PFy8sDQHHnEfdY88i4KQaRrswiAA1puDNG8mkKA3ubRw+Gn654I59NKbN
- xsBeBl4hsDjhjKnDNcYHJQaOMYWwV+zualNub/OlJPcFOKBo+SwiIy5KvASLjVbsHVQA
- m09nZ3ibjKdga/kmqKzNbj7TdR8ksozG7RVCiPYFSahVhiLtNqNasreHOtkp5NLCnDVp cw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 33c051c47a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 11:22:40 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E767C10002A;
-        Wed,  9 Sep 2020 11:22:39 +0200 (CEST)
-Received: from Webmail-eu.st.com (gpxdag5node5.st.com [10.75.127.78])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D697521F670;
-        Wed,  9 Sep 2020 11:22:39 +0200 (CEST)
-Received: from lmecxl1060.lme.st.com (10.75.127.49) by GPXDAG5NODE5.st.com
- (10.75.127.78) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
- 2020 11:22:39 +0200
-Subject: Re: [PATCH] i2c: stm32f7: add SMBus-Alert support
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@kernel.org>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1596432416-24636-1-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <c0a65e7a-2cc2-337e-6ee7-66e78475d0b4@st.com>
-Date:   Wed, 9 Sep 2020 11:22:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 9 Sep 2020 05:24:09 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986C3C061573;
+        Wed,  9 Sep 2020 02:24:09 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b124so1602672pfg.13;
+        Wed, 09 Sep 2020 02:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=s7fosms2xCPd69twYs+ZS2L97rb2qJfbB0MnEWzeVVk=;
+        b=cK1sw1kYcFj7HKWLh3isxH8RjB43lvVQovhxFJDMvwazwe/0VFbXl/+XFXHQh6I0UL
+         uj4+LJSMip7qxMm/JdrG3FD/pxEPBM/NJXv878BgV5ppxZ6l6DJrbcjq+RI4jlg0fUAa
+         ngtv7p9akXVqsfsJlaUBgpDLf8hZPZDEHP63lqDPvO4eIOf8qKGdh2HRJx41N6fmASN6
+         6OBddsqBh3fAhkZgalH2V80sWcdex8xmHmHOFhzqtp9N8KC4kf+v2wrZnexKZ4UB9wVw
+         COsteR/ryi9C7L4Kze3GZNWN9EUX72KfyUyPsdhA4SQYUeLBgLOeQjhKRedWQHbhmrq9
+         hQ9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s7fosms2xCPd69twYs+ZS2L97rb2qJfbB0MnEWzeVVk=;
+        b=fYYf937zv1ytlFLZBcYXf2nXlz9nF0aVk5AGv35a76BB2+qdyz5Of8VTWSvp1cOFby
+         7c4uUzTLrnIjDPtP4QurvmLfP1HIcQJoGf7D7LAdJewCxUZ22iBTvXqjHkNqvu8P6U6A
+         SE7+apMa/Llj5zC1QbriRUlSq//bY1LNxdQKprM3O0SvX6L/zF8H5tDgJP4nojXVYD5i
+         IBk2rmazbjhSlr5wubsGH73UIkRA9gpoQREC0gelpM/kswLPSabk2i14zk1mfwSK1Ahc
+         CUCmZlbb2y1Qx+RSbBRR9xBouk8r4GF7CA3hHA93QChjHqOm+5J5A10vDoK7gSn09MdJ
+         C2Cw==
+X-Gm-Message-State: AOAM533Y7ACAPOU8fa929rgQZP5RL9o7mZvGXyWvhAbiEPKsBbCVRQ+R
+        m9tWBcbAsC5up/KLxsgfuS5E6k3Yluo=
+X-Google-Smtp-Source: ABdhPJyLlBbGS0whYC2Dvu2l61YEBTRdaPWj+I4NOehqCjoCrKvCR32/yTHxG1Jc1mUXeRSkkKx7gA==
+X-Received: by 2002:a62:52c8:0:b029:13e:d13d:a10b with SMTP id g191-20020a6252c80000b029013ed13da10bmr66172pfb.39.1599643446940;
+        Wed, 09 Sep 2020 02:24:06 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id c7sm2102471pfj.100.2020.09.09.02.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 02:24:06 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 17:24:01 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+Message-ID: <20200909092401.GA1431678@sol>
+References: <20200905133549.24606-1-warthog618@gmail.com>
+ <20200905133549.24606-8-warthog618@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1596432416-24636-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To GPXDAG5NODE5.st.com
- (10.75.127.78)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200905133549.24606-8-warthog618@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alain
-
-Sounds good
-
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Best Regards
-
-
-On 8/3/20 7:26 AM, Alain Volmat wrote:
-> Add support for the SMBus-Alert protocol.
+On Sat, Sep 05, 2020 at 09:35:36PM +0800, Kent Gibson wrote:
+> Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
 > 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> The struct linereq implementation is based on the v1 struct linehandle
+> implementation.
+> 
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  This patch has to be integrated on top of the patch
->  'i2c: stm32f7: Add SMBus Host-Notify protocol support' since SMBus Alert is
->  enabled by the DT binding 'smbus' introduced in that patch.
 > 
->  drivers/i2c/busses/i2c-stm32f7.c | 71 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 223c238c3c09..fe7641da54ef 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -51,6 +51,7 @@
->  
->  /* STM32F7 I2C control 1 */
->  #define STM32F7_I2C_CR1_PECEN			BIT(23)
-> +#define STM32F7_I2C_CR1_ALERTEN			BIT(22)
->  #define STM32F7_I2C_CR1_SMBHEN			BIT(20)
->  #define STM32F7_I2C_CR1_WUPEN			BIT(18)
->  #define STM32F7_I2C_CR1_SBC			BIT(16)
-> @@ -123,6 +124,7 @@
->  				(((n) & STM32F7_I2C_ISR_ADDCODE_MASK) >> 17)
->  #define STM32F7_I2C_ISR_DIR			BIT(16)
->  #define STM32F7_I2C_ISR_BUSY			BIT(15)
-> +#define STM32F7_I2C_ISR_ALERT			BIT(13)
->  #define STM32F7_I2C_ISR_PECERR			BIT(11)
->  #define STM32F7_I2C_ISR_ARLO			BIT(9)
->  #define STM32F7_I2C_ISR_BERR			BIT(8)
-> @@ -136,6 +138,7 @@
->  #define STM32F7_I2C_ISR_TXE			BIT(0)
->  
->  /* STM32F7 I2C Interrupt Clear */
-> +#define STM32F7_I2C_ICR_ALERTCF			BIT(13)
->  #define STM32F7_I2C_ICR_PECCF			BIT(11)
->  #define STM32F7_I2C_ICR_ARLOCF			BIT(9)
->  #define STM32F7_I2C_ICR_BERRCF			BIT(8)
-> @@ -277,6 +280,17 @@ struct stm32f7_i2c_msg {
->  };
->  
->  /**
-> + * struct stm32f7_i2c_alert - SMBus alert specific data
-> + * @setup: platform data for the smbus_alert i2c client
-> + * @ara: I2C slave device used to respond to the SMBus Alert with Alert
-> + * Response Address
-> + */
-> +struct stm32f7_i2c_alert {
-> +	struct i2c_smbus_alert_setup setup;
-> +	struct i2c_client *ara;
-> +};
-> +
-> +/**
->   * struct stm32f7_i2c_dev - private data of the controller
->   * @adap: I2C adapter for this controller
->   * @dev: device for this controller
-> @@ -305,6 +319,7 @@ struct stm32f7_i2c_msg {
->   * @wakeup_src: boolean to know if the device is a wakeup source
->   * @smbus_mode: states that the controller is configured in SMBus mode
->   * @host_notify_client: SMBus host-notify client
-> + * @alert: SMBus alert specific data
->   */
->  struct stm32f7_i2c_dev {
->  	struct i2c_adapter adap;
-> @@ -333,6 +348,7 @@ struct stm32f7_i2c_dev {
->  	bool wakeup_src;
->  	bool smbus_mode;
->  	struct i2c_client *host_notify_client;
-> +	struct stm32f7_i2c_alert *alert;
->  };
->  
->  /*
-> @@ -1601,6 +1617,13 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
->  		f7_msg->result = -EINVAL;
->  	}
->  
-> +	if (status & STM32F7_I2C_ISR_ALERT) {
-> +		dev_dbg(dev, "<%s>: SMBus alert received\n", __func__);
-> +		writel_relaxed(STM32F7_I2C_ICR_ALERTCF, base + STM32F7_I2C_ICR);
-> +		i2c_handle_smbus_alert(i2c_dev->alert->ara);
-> +		return IRQ_HANDLED;
-> +	}
-> +
->  	if (!i2c_dev->slave_running) {
->  		u32 mask;
->  		/* Disable interrupts */
-> @@ -1967,6 +1990,42 @@ static void stm32f7_i2c_disable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
->  	}
->  }
->  
-> +static int stm32f7_i2c_enable_smbus_alert(struct stm32f7_i2c_dev *i2c_dev)
-> +{
-> +	struct stm32f7_i2c_alert *alert;
-> +	struct i2c_adapter *adap = &i2c_dev->adap;
-> +	struct device *dev = i2c_dev->dev;
-> +	void __iomem *base = i2c_dev->base;
-> +
-> +	alert = devm_kzalloc(dev, sizeof(*alert), GFP_KERNEL);
-> +	if (!alert)
-> +		return -ENOMEM;
-> +
-> +	alert->ara = i2c_new_smbus_alert_device(adap, &alert->setup);
-> +	if (IS_ERR(alert->ara))
-> +		return PTR_ERR(alert->ara);
-> +
-> +	i2c_dev->alert = alert;
-> +
-> +	/* Enable SMBus Alert */
-> +	stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, STM32F7_I2C_CR1_ALERTEN);
-> +
-> +	return 0;
-> +}
-> +
-> +static void stm32f7_i2c_disable_smbus_alert(struct stm32f7_i2c_dev *i2c_dev)
-> +{
-> +	struct stm32f7_i2c_alert *alert = i2c_dev->alert;
-> +	void __iomem *base = i2c_dev->base;
-> +
-> +	if (alert) {
-> +		/* Disable SMBus Alert */
-> +		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1,
-> +				     STM32F7_I2C_CR1_ALERTEN);
-> +		i2c_unregister_device(alert->ara);
-> +	}
-> +}
-> +
->  static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
-> @@ -2161,6 +2220,14 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  				ret);
->  			goto i2c_adapter_remove;
->  		}
-> +
-> +		ret = stm32f7_i2c_enable_smbus_alert(i2c_dev);
-> +		if (ret) {
-> +			dev_err(i2c_dev->dev,
-> +				"failed to enable SMBus alert protocol (%d)\n",
-> +				ret);
-> +			goto i2c_disable_smbus_host;
-> +		}
->  	}
->  
->  	dev_info(i2c_dev->dev, "STM32F7 I2C-%d bus adapter\n", adap->nr);
-> @@ -2170,6 +2237,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+
+[snip]
+
+>  		if (copy_from_user(&offset, ip, sizeof(offset)))
+>  			return -EFAULT;
+> @@ -1104,6 +1505,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+>  		 MAJOR(devt), gdev->id);
 >  
 >  	return 0;
->  
-> +i2c_disable_smbus_host:
-> +	stm32f7_i2c_disable_smbus_host(i2c_dev);
+> +	/*
+> +	 * array sizes must ensure 64-bit alignment and not create holes in
+> +	 * the struct packing.
+> +	 */
+> +	BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
+> +	BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
 > +
->  i2c_adapter_remove:
->  	i2c_del_adapter(adap);
+> +	/*
+> +	 * check that uAPI structs are 64-bit aligned for 32/64-bit
+> +	 * compatibility
+> +	 */
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
+> +	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
+>  }
 >  
-> @@ -2204,6 +2274,7 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
->  {
->  	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
->  
-> +	stm32f7_i2c_disable_smbus_alert(i2c_dev);
->  	stm32f7_i2c_disable_smbus_host(i2c_dev);
->  
->  	i2c_del_adapter(&i2c_dev->adap);
-> 
+
+A couple of things here - these should all be !IS_ALIGNED.
+And the BUILD_BUG_ON gets compiled out, and so doesn't fail, if they are
+after the return.
+
+How would you like that fixed - v8 or a patch once v7 is in?
+
+Cheers,
+Kent.
