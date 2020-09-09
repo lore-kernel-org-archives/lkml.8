@@ -2,132 +2,85 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E7DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9076C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2B1B208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qENp4mbY"
+	by mail.kernel.org (Postfix) with ESMTP id A38DB20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgIIVFk (ORCPT
+        id S1729960AbgIIVHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
+        Wed, 9 Sep 2020 17:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgIIVFj (ORCPT
+        with ESMTP id S1725975AbgIIVHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:05:39 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0DBC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:05:38 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 16so3910034qkf.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=jknzGmoqJw1EY5KNXFDJSNgXqjt2RuOtc/p1w7k0/AY=;
-        b=qENp4mbYweCT8tAiqEN3O3TLh+thuG3dwWPJLgqJgRNAryhOqmBvIevkwDDtq/X+Cq
-         IU2OoPp9i+zLhxB0W9Fliq1WToqWvbjwKfMcK+QyHwjV9Mj2DAFUOA/yqwhW7ZOJtXu/
-         RwzgtlZTJIrzbFikLUMtDM+lR30uPVWwKKjYziRPi2gbMVfyaOvlu8i4qiJ92OCBrMvv
-         4SOEUcUjqDmB42cQ3lWF+lINiNnPIcnQiNmmFVanyRhkZryZdbB3DQhd7yF9sCvlu1rZ
-         vEhRhA1II2U3kVSRo3OH275fqPurXhxu3LWIjtb/aqeqWFFVpXs/RN9z9ZoE/mCEu44a
-         s4XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=jknzGmoqJw1EY5KNXFDJSNgXqjt2RuOtc/p1w7k0/AY=;
-        b=Hv3vcVpbqIJp+/YjegzM5La2GMOKVhNHJTumDiDZ+wKSEEjf90hT5mN2BWKhCYVoG5
-         xEMvDSXyr5TDc+OVbgA1JYSCcIfzTX+sALHkEyxerrZJWCzbsrXA1Gb8RKIZLUHQuipF
-         Be+2VIXJK/2yqWN8RCWjGiDFTcyD6nl4L6fTYuASPHAKkGR/zkoTogB5Squ12PEruZ1R
-         5Vi/29QLxo65nRoyxMoK+A4Ea4FkcaqcunpTOr7PvE2UgEOT7w4ea2V+37tCbGFSNm6b
-         SHiHhFGQbML5p4uzuoINQofQOQkagSIF9j9cj5LhmuWXe0DOQyFQhVNGE+IZoAhTtzmj
-         zgWQ==
-X-Gm-Message-State: AOAM531U9ObNoOh7e8LfBVVBOQygXcZRr3SqkH9su4/3+dGfyRtSVINu
-        u1xSCM6BZKOzJFlkikNBOQGH8w==
-X-Google-Smtp-Source: ABdhPJzIHnUITkjhNzx36HupQ/sfRxXSwKpb2OivAv6/ZFVFzgHkZlZvShHJwwTX+di1qejHJNVayg==
-X-Received: by 2002:a37:e401:: with SMTP id y1mr4090429qkf.150.1599685537274;
-        Wed, 09 Sep 2020 14:05:37 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id e9sm4063695qkb.8.2020.09.09.14.05.34
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 09 Sep 2020 14:05:36 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 14:05:20 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Matthew Wilcox <willy@infradead.org>
-cc:     Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>, shy828301@gmail.com,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [PATCH v18 31/32] mm: Add explicit page decrement in exception
- path for isolate_lru_pages
-In-Reply-To: <20200909201530.GM6583@casper.infradead.org>
-Message-ID: <alpine.LSU.2.11.2009091349100.9747@eggly.anvils>
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com> <1598273705-69124-32-git-send-email-alex.shi@linux.alibaba.com> <20200909010118.GB6583@casper.infradead.org> <CAKgT0UcjNx=00OgAQNWezc7UjLmF2NcDH0p7kzZ5D23PaFrFXA@mail.gmail.com>
- <alpine.LSU.2.11.2009091100280.9020@eggly.anvils> <20200909201530.GM6583@casper.infradead.org>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Wed, 9 Sep 2020 17:07:36 -0400
+Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04345C061573;
+        Wed,  9 Sep 2020 14:07:34 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
+        by mail.nic.cz (Postfix) with ESMTPSA id 4BAF1140A64;
+        Wed,  9 Sep 2020 23:07:27 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 23:07:26 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next + leds v2 1/7] dt-bindings: leds: document
+ binding for HW controlled LEDs
+Message-ID: <20200909230726.233b4081@nic.cz>
+In-Reply-To: <20200909205923.GB3056507@bogus>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+        <20200909162552.11032-2-marek.behun@nic.cz>
+        <20200909182730.GK3290129@lunn.ch>
+        <20200909203310.15ca4e42@dellmb.labs.office.nic.cz>
+        <20200909205923.GB3056507@bogus>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020, Matthew Wilcox wrote:
-> On Wed, Sep 09, 2020 at 11:24:14AM -0700, Hugh Dickins wrote:
-> > After overnight reflection, my own preference would be simply to
-> > drop this patch.  I think we are making altogether too much of a
-> > fuss here over what was simply correct as plain put_page()
-> > (and further from correct if we change it to leak the page in an
-> > unforeseen circumstance).
+On Wed, 9 Sep 2020 14:59:23 -0600
+Rob Herring <robh@kernel.org> wrote:
+
 > > 
-> > And if Alex's comment was not quite grammatically correct, never mind,
-> > it said as much as was worth saying.  I got more worried by his
-> > placement of the "busy:" label, but that does appear to work correctly.
-> > 
-> > There's probably a thousand places where put_page() is used, where
-> > it would be troublesome if it were the final put_page(): this one
-> > bothered you because you'd been looking at isolate_migratepages_block(),
-> > and its necessary avoidance of lru_lock recursion on put_page();
-> > but let's just just leave this put_page() as is.
+> > I don't know :) I copied this from other drivers, I once tried setting
+> > up environment for doing checking of device trees with YAML schemas,
+> > and it was a little painful :)  
 > 
-> My problem with put_page() is that it's no longer the simple
-> decrement-and-branch-to-slow-path-if-zero that it used to be.  It has the
-> awful devmap excrement in it so it really expands into a lot of code.
-> I really wish that "feature" could be backed out again.  It clearly
-> wasn't ready for merge.
+> pip3 install dtschema ?
+> 
+> Can you elaborate on the issue.
+> 
+> Rob
+> 
 
-And I suppose I should thank you for opening my eyes to that.
-I knew there was "dev" stuff inside __put_page(), but didn't
-realize that the inline put_page() has now been defiled.
-Yes, I agree, that is horrid and begs to be undone.
+I am using Gentoo and didn't want to bloat system with non-portage
+packages, nor try to start a virtual environment. In the end I did it
+in a chroot Ubuntu :)
 
-But this is not the mail thread for discussing that, and we should
-not use strange alternatives to put_page(), here or elsewhere,
-just to avoid that (surely? hopefully?) temporary excrescence.
+The other thing is that the make dt_binding_check executed for
+quite a long time, and I didn't find a way to just do the binding check
+some of the schemas.
 
-Hugh
+But I am not criticizing anything, I think that it is a good thing to
+have this system.
+
+Marek
