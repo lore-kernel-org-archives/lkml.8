@@ -2,119 +2,195 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC43C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832C6C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B871120639
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3335E2067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="rK7l2L6B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qx/KDtIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbgIIQCx (ORCPT
+        id S1730824AbgIIQDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51528 "EHLO
+        Wed, 9 Sep 2020 12:03:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730567AbgIIP5U (ORCPT
+        with ESMTP id S1730569AbgIIP5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 11:57:20 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6DEC061239
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:56:57 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id di5so1619129qvb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:56:57 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 510F9C0617B9
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 06:37:56 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so3020750wrm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 06:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=bAr5DveSt2j6c3Ji2Xpkc3bdZPC9ueaRBHJ+E2ddcbI=;
-        b=rK7l2L6Ba2JCzvKHKa2SJN5u2fNNGcz+xX5FS2fVzlzE39G8QwlSi/S9fdbWoWAxte
-         lRCguLhNf5RYuc9lo5f3oE4Vg8A5hPxuxXsJdR2PC1c2dJzcKAd1xdT+aiqPbVFA2G+c
-         NeXiQNVqrVoihFGdA17ilFkkFzBmfhBUldl7oOfmkoDbT8QG9KI/IuOhFH2SWcD6oNS/
-         2g3NyQLRJuVPWj6iFMdDrGMoGxZFkRrepBFTsyENh17ExzZib5VUsUcKLuD/b/oTNTfu
-         Da44+gz/P7k+oDOGzPrpBwvn8NpegUiR/09kLs5DB137Mbv5KbiO+WssE1W8pTn4BGwN
-         DAbg==
+        bh=05cqLnvwurAG2nT9cn66pd3c6M1ZLUU9TcHpBge76Y0=;
+        b=qx/KDtIxcASxVw6BmBwCFkswRfMEmntnHNylhIbTKyXIxmiihdUuq/sjUxVBYLQKWE
+         tclmv23Xg6FYqvItYPbv/ZXJ8RHbNh6VssaL0zFUVFiDjHQZlOQ6qI9Qjn6LK/zpx652
+         HeDWQzfyNDFxUAVNirHx0uFEGMyxl4O+X6OWeDmD2UJbEhvkbFq0AZzaR7sy0nWhHnp5
+         kCbHrjXfVGMw85pls6rTNhXvbwD+XNZCKrV4UFC8+4FAjwBi1aWTn9NDYTZJ11elKI68
+         0cnSIioQGtivTzQl3Nv63qH2DGjW5y4gkBmElrTr1aQ2KIiDWmhmMpzg81dLkuPv5DYK
+         nGDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=bAr5DveSt2j6c3Ji2Xpkc3bdZPC9ueaRBHJ+E2ddcbI=;
-        b=GNMPzBfplch9D7F7lmyC9kXw6b9uvYCftS4qriiNViVEp1wfngZq6OEHjplHXrg2Vz
-         4N5r5WuVw6we8QLuNLsVuhVeMwaIVLKOELlFa7uSz8Vh5ClYH83rwlvbCcq6I1gV2QtL
-         bLFq5WFvc7PiqH1W3nTVXP+bO4LNUZMJRqdVAKIvDluTQeILaxJWJsFsw7WL4Ws/SPF3
-         DLCLUhFPTlKzTJ8zbU6uG1FNkACAPE1JXB0XMdefyWyyUQy5QeUFdp7oVqhykGZ3bUSD
-         quphhpHcOvzWsh3S8uIi9Ouhi6kR+/8gJQVX2/xygYoO375vIHKmKK1F2t3Zpav3poxY
-         dCDw==
-X-Gm-Message-State: AOAM530/2JRY2EOfCT6JTmQm1ksDRix/kKVEKQVIhTPPurXR55gZ2Vdg
-        gkpyvqn0T+uJOuNNss5Ywr6VCg==
-X-Google-Smtp-Source: ABdhPJyHGx6zvZoCwcK+52bMv7ajUNNqnFSrgAK1OIrd54oREZtOqFV8s0blObcX2qXQxFQT0Cl0Ew==
-X-Received: by 2002:a05:6214:bce:: with SMTP id ff14mr4374172qvb.32.1599663416747;
-        Wed, 09 Sep 2020 07:56:56 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:755a])
-        by smtp.gmail.com with ESMTPSA id q35sm3172982qtd.75.2020.09.09.07.56.55
+        bh=05cqLnvwurAG2nT9cn66pd3c6M1ZLUU9TcHpBge76Y0=;
+        b=pmrW8hPKneljTKbKU/nj3Yuh67zZMI5wfbN33jUKkKRBZ+wAnBh0jojOgs0PxJDOn2
+         V6914blw+5wWPbbV3eBl3BF3e3AXrDmM1m+4q7ptO3jmlI8MVMPRM5T2eyFh4fBh8/tu
+         DEaao3NvYShVnBiYk+RDPc/sPKMXUMiMyeJUAVCHefnCLumMWs+u9OCGhyMtmg/0D4Ng
+         uDG7bapiRPh0OIcFMR+Yfo/evRjW6q0exgtq2cGiyl/I5oPFA6+h3IuwHHGpENWxS4VM
+         cSPdDMgfIL4aJLN8VlcjO8fcnAHGiM9YVpIObh5bNKbsmRLqPum9GoAl4Gie1bGcyy4m
+         IbVQ==
+X-Gm-Message-State: AOAM531iYlQdk6dM863mfvjlixArHu8126tXeQYbsEqCA12YCij8k7dR
+        26CS5QtiGjU5Tj9s1Zr0xROYRg==
+X-Google-Smtp-Source: ABdhPJwR4yz+lrnFsWPaPfQx5cX9uEgPeV4TBu13brw8jj4FHCrPrszb3SZCmmL/t67uLrzIDirWbw==
+X-Received: by 2002:adf:e4c9:: with SMTP id v9mr3809264wrm.375.1599658674956;
+        Wed, 09 Sep 2020 06:37:54 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id w7sm4302641wrm.92.2020.09.09.06.37.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 07:56:55 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 10:55:34 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        =Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@kernel.org>, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH] mm: workingset: ignore slab memory size when calculating
- shadows pressure
-Message-ID: <20200909145534.GA100698@cmpxchg.org>
-References: <20200903230055.1245058-1-guro@fb.com>
+        Wed, 09 Sep 2020 06:37:54 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 14:37:52 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     dianders@chromium.org, jason.wessel@windriver.com, oleg@redhat.com,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH v2] kdb: Use newer api for tasklist scanning
+Message-ID: <20200909133752.t7zbnaupd3y22bzd@holly.lan>
+References: <20200907134614.guc4tzj3knnihbe4@holly.lan>
+ <20200907203206.21293-1-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903230055.1245058-1-guro@fb.com>
+In-Reply-To: <20200907203206.21293-1-dave@stgolabs.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 04:00:55PM -0700, Roman Gushchin wrote:
-> In the memcg case count_shadow_nodes() sums the number of pages in lru
-> lists and the amount of slab memory (reclaimable and non-reclaimable)
-> as a baseline for the allowed number of shadow entries.
+On Mon, Sep 07, 2020 at 01:32:06PM -0700, Davidlohr Bueso wrote:
+> This kills using the do_each_thread/while_each_thread combo to
+> iterate all threads and uses for_each_process_thread() instead,
+> maintaining semantics. while_each_thread() is ultimately racy
+> and deprecated;  although in this particular case there is no
+> concurrency so it doesn't matter. Still lets trivially get rid
+> of two more users.
 > 
-> It seems to be a good analogy for the !memcg case, where
-> node_present_pages() is used. However, it's not quite true, as there
-> two problems:
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+
+Applied. Thanks!
+
+
+Daniel.
+
+
+> ---
+>  kernel/debug/gdbstub.c         | 4 ++--
+>  kernel/debug/kdb/kdb_bt.c      | 4 ++--
+>  kernel/debug/kdb/kdb_main.c    | 8 ++++----
+>  kernel/debug/kdb/kdb_private.h | 4 ----
+>  4 files changed, 8 insertions(+), 12 deletions(-)
 > 
-> 1) Due to slab reparenting introduced by commit fb2f2b0adb98 ("mm:
-> memcg/slab: reparent memcg kmem_caches on cgroup removal") local
-> per-lruvec slab counters might be inaccurate on non-leaf levels.
-> It's the only place where local slab counters are used.
-
-Hm, that sounds like a bug tbh. We're reparenting the kmem caches and
-the individual objects on the list_lru when a cgroup is removed -
-shouldn't we also reparent the corresponding memory counters?
-
-> 2) Shadow nodes by themselves are backed by slabs. So there is a loop
-> dependency: the more shadow entries are there, the less pressure the
-> kernel applies to reclaim them.
-
-This effect is negligible in practice.
-
-The permitted shadow nodes are a tiny percentage of memory consumed by
-the cgroup. If shadow nodes make up a significant part of the cgroup's
-footprint, or are the only thing left, they will be pushed out fast.
-
-The formula is max_nodes = total_pages >> 3, and one page can hold 28
-nodes. So if the cgroup holds nothing but 262,144 pages (1G) of shadow
-nodes, the shrinker target is 32,768 nodes, which is 32,768 pages
-(128M) in the worst packing case and 1,170 pages (4M) at best.
-
-However, if you don't take slab into account here, it can evict shadow
-entries with undue aggression when they are needed the most. If, say,
-the inode or dentry cache explode temporarily and displace the page
-cache, it would be a big problem to drop the cache's non-resident info
-at the same time! This is when it's at its most important.
-
-Let's drop this patch, please.
+> diff --git a/kernel/debug/gdbstub.c b/kernel/debug/gdbstub.c
+> index cc3c43dfec44..b52ebff09ac8 100644
+> --- a/kernel/debug/gdbstub.c
+> +++ b/kernel/debug/gdbstub.c
+> @@ -725,7 +725,7 @@ static void gdb_cmd_query(struct kgdb_state *ks)
+>  			}
+>  		}
+>  
+> -		do_each_thread(g, p) {
+> +		for_each_process_thread(g, p) {
+>  			if (i >= ks->thr_query && !finished) {
+>  				int_to_threadref(thref, p->pid);
+>  				ptr = pack_threadid(ptr, thref);
+> @@ -735,7 +735,7 @@ static void gdb_cmd_query(struct kgdb_state *ks)
+>  					finished = 1;
+>  			}
+>  			i++;
+> -		} while_each_thread(g, p);
+> +		}
+>  
+>  		*(--ptr) = '\0';
+>  		break;
+> diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
+> index 18e03aba2cfc..1f9f0e47aeda 100644
+> --- a/kernel/debug/kdb/kdb_bt.c
+> +++ b/kernel/debug/kdb/kdb_bt.c
+> @@ -149,14 +149,14 @@ kdb_bt(int argc, const char **argv)
+>  				return 0;
+>  		}
+>  		/* Now the inactive tasks */
+> -		kdb_do_each_thread(g, p) {
+> +		for_each_process_thread(g, p) {
+>  			if (KDB_FLAG(CMD_INTERRUPT))
+>  				return 0;
+>  			if (task_curr(p))
+>  				continue;
+>  			if (kdb_bt1(p, mask, btaprompt))
+>  				return 0;
+> -		} kdb_while_each_thread(g, p);
+> +		}
+>  	} else if (strcmp(argv[0], "btp") == 0) {
+>  		struct task_struct *p;
+>  		unsigned long pid;
+> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+> index 5c7949061671..930ac1b25ec7 100644
+> --- a/kernel/debug/kdb/kdb_main.c
+> +++ b/kernel/debug/kdb/kdb_main.c
+> @@ -2299,10 +2299,10 @@ void kdb_ps_suppressed(void)
+>  		if (kdb_task_state(p, mask_I))
+>  			++idle;
+>  	}
+> -	kdb_do_each_thread(g, p) {
+> +	for_each_process_thread(g, p) {
+>  		if (kdb_task_state(p, mask_M))
+>  			++daemon;
+> -	} kdb_while_each_thread(g, p);
+> +	}
+>  	if (idle || daemon) {
+>  		if (idle)
+>  			kdb_printf("%d idle process%s (state I)%s\n",
+> @@ -2370,12 +2370,12 @@ static int kdb_ps(int argc, const char **argv)
+>  	}
+>  	kdb_printf("\n");
+>  	/* Now the real tasks */
+> -	kdb_do_each_thread(g, p) {
+> +	for_each_process_thread(g, p) {
+>  		if (KDB_FLAG(CMD_INTERRUPT))
+>  			return 0;
+>  		if (kdb_task_state(p, mask))
+>  			kdb_ps1(p);
+> -	} kdb_while_each_thread(g, p);
+> +	}
+>  
+>  	return 0;
+>  }
+> diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
+> index 2e296e4a234c..a4281fb99299 100644
+> --- a/kernel/debug/kdb/kdb_private.h
+> +++ b/kernel/debug/kdb/kdb_private.h
+> @@ -230,10 +230,6 @@ extern struct task_struct *kdb_curr_task(int);
+>  
+>  #define kdb_task_has_cpu(p) (task_curr(p))
+>  
+> -/* Simplify coexistence with NPTL */
+> -#define	kdb_do_each_thread(g, p) do_each_thread(g, p)
+> -#define	kdb_while_each_thread(g, p) while_each_thread(g, p)
+> -
+>  #define GFP_KDB (in_interrupt() ? GFP_ATOMIC : GFP_KERNEL)
+>  
+>  extern void *debug_kmalloc(size_t size, gfp_t flags);
+> -- 
+> 2.26.2
