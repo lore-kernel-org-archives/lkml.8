@@ -2,116 +2,57 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F026C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8512CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F133C20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="XooBhKOo"
+	by mail.kernel.org (Postfix) with ESMTP id 47FE72087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgIIQed (ORCPT
+        id S1731168AbgIIQeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:34:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57514 "EHLO
+        Wed, 9 Sep 2020 12:34:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731168AbgIIQeM (ORCPT
+        with ESMTP id S1731115AbgIIQ12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:34:12 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D916C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:34:11 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k18so3014938wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mss8MK33fopB1tzfoyvJfAwWlaNQqq3EvgTqO4IgP3c=;
-        b=XooBhKOoh8n9QdPT8Yk+8tiE6N5X+M+lKJEO62wQZtgFyLv8LkrEmNfwnd/uFBoMLI
-         jb3zFSKZtS+DRVIEqfQb8i9XsPCKyKX1O1Skxa3VNTewkAEBMROnu5ePF5qckcJIaSm1
-         0uk2MhQRoS5FED/0/N/FWfo5EOhFfZhciwwbT0xeOVZBDTowd1cObrW9yD60KIQUFEDY
-         sKdQr5kIjcsbTkFtki4veVj9KQNjVSdiMx3BX0C3bnWraTDXaJdMNHQidyYDWZTqhpRC
-         n0h6hAiCieP+LFXsl8BhGwPEjZ2MH37QVf3q+1xNfSN9TUhbCg0V+six6iIbAGvXMrel
-         Lpvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mss8MK33fopB1tzfoyvJfAwWlaNQqq3EvgTqO4IgP3c=;
-        b=ZRAOPxFk8OyI0Kwguid16ZgTS27zmW+M0DVWFgycHscr5ftsqG5DjxmHM6eLlZvV9V
-         358AY/Z0hhykBD0SDozAcdtEX1wyr3qIkr9Wvw+knyFXsmzSfDmq3NuB13QifNIR0Alr
-         ExW0z8sLHEGS0JPzMCf3t0h/Zhh+xN1OsGp6L7w4zFKoKmexMBZpaPGUfKGtXLzChT5/
-         yLTM4ReNKMbybywRKvrSfP9ySCYqPN752PbxtPyUigQfupw1w0SbpRj4/kyUGwcEdLga
-         e2fuhpFs8MtSOX1lyjL8ySz7+Xkl2LY81v4a/GWtXgTW7KiY4QhW4z1QuGH2LL+Kkdze
-         HWHg==
-X-Gm-Message-State: AOAM532afmTsbN48JpbLx4kbz1cUK/gh2JX6xsJKio2Nc4SemezkGnk8
-        UOHq5QntlFvrQPeImvv94ke/8Q==
-X-Google-Smtp-Source: ABdhPJy936mVi8yqv0y8gzDPgayRCZbOz8Jseznw5XOFbh036kBtUjZVLc1WXoRryvgzUTHHNIQ7ew==
-X-Received: by 2002:a1c:9d4b:: with SMTP id g72mr4454776wme.68.1599669250162;
-        Wed, 09 Sep 2020 09:34:10 -0700 (PDT)
-Received: from netronome.com ([2001:982:7ed1:403:9eeb:e8ff:fe0d:5b6a])
-        by smtp.gmail.com with ESMTPSA id j14sm4855630wrr.66.2020.09.09.09.34.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 09:34:09 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 18:34:08 +0200
-From:   Simon Horman <simon.horman@netronome.com>
-To:     Wang Qing <wangqing@vivo.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/netfilter: fix a typo for nf_conntrack_proto_dccp.c
-Message-ID: <20200909163407.GB28336@netronome.com>
-References: <1599653567-27147-1-git-send-email-wangqing@vivo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599653567-27147-1-git-send-email-wangqing@vivo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 9 Sep 2020 12:27:28 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2A3C06179E
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 06:27:48 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 4BmjVw3Dyxz9sTS; Wed,  9 Sep 2020 23:27:36 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <c2d2b8dfb8dd677026b26dffc8d31070c38a6b89.1597388079.git.christophe.leroy@csgroup.eu>
+References: <c2d2b8dfb8dd677026b26dffc8d31070c38a6b89.1597388079.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH v2] powerpc: Drop _nmask_and_or_msr()
+Message-Id: <159965716741.808686.7320618342225439057.b4-ty@ellerman.id.au>
+Date:   Wed,  9 Sep 2020 23:27:36 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wang,
-
-On Wed, Sep 09, 2020 at 08:12:44PM +0800, Wang Qing wrote:
-> Change the comment typo: "direcly" -> "directly".
+On Fri, 14 Aug 2020 06:54:49 +0000 (UTC), Christophe Leroy wrote:
+> _nmask_and_or_msr() is only used at two places to set MSR_IP.
 > 
-> Signed-off-by: Wang Qing <wangqing@vivo.com>
-
-git log  tells me that the correct prefix for this patch
-is "netfilter: conntrack:"  rather than "net/netfilter:"
-
-Probably this patch is targeted at nf-next and should include nf-next
-in the subject like this: [PATCH nf-next] ...
-
-> ---
->  net/netfilter/nf_conntrack_proto_dccp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The SYNC is unnecessary as the users are not PowerPC 601.
 > 
-> diff --git a/net/netfilter/nf_conntrack_proto_dccp.c b/net/netfilter/nf_conntrack_proto_dccp.c
-> index b3f4a33..d9bb0ce
-> --- a/net/netfilter/nf_conntrack_proto_dccp.c
-> +++ b/net/netfilter/nf_conntrack_proto_dccp.c
-> @@ -340,7 +340,7 @@ dccp_state_table[CT_DCCP_ROLE_MAX + 1][DCCP_PKT_SYNCACK + 1][CT_DCCP_MAX + 1] =
->  		 * sNO -> sIV		No connection
->  		 * sRQ -> sIV		No connection
->  		 * sRS -> sIV		No connection
-> -		 * sPO -> sOP -> sCG	Move direcly to CLOSING
-> +		 * sPO -> sOP -> sCG	Move directly to CLOSING
->  		 * sOP -> sCG		Move to CLOSING
->  		 * sCR -> sIV		Close after CloseReq is invalid
->  		 * sCG -> sCG		Retransmit
-> -- 
-> 2.7.4
+> Can be easily writen in C.
 > 
+> Do it, and drop _nmask_and_or_msr()
+
+Applied to powerpc/next.
+
+[1/1] powerpc: Drop _nmask_and_or_msr()
+      https://git.kernel.org/powerpc/c/e53281bc21f061f96c9004f534bc3e807d70cb73
+
+cheers
