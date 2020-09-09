@@ -7,31 +7,32 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12972C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0EDC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB06720639
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4CD20639
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgIIQBe (ORCPT
+        id S1730769AbgIIQBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:01:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11327 "EHLO huawei.com"
+        Wed, 9 Sep 2020 12:01:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11761 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730315AbgIIP7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:59:07 -0400
+        id S1730723AbgIIQBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:01:16 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 94AA83FBFB2294DE67E2;
-        Wed,  9 Sep 2020 21:58:05 +0800 (CST)
+        by Forcepoint Email with ESMTP id 9899E644A066854496B7;
+        Wed,  9 Sep 2020 21:59:16 +0800 (CST)
 Received: from localhost (10.174.179.108) by DGGEMS405-HUB.china.huawei.com
  (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:57:58 +0800
+ 21:59:08 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <perex@perex.cz>, <tiwai@suse.com>, <yuehaibing@huawei.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 04/19] ALSA: pcm: Remove unused inline function snd_mask_sizeof
-Date:   Wed, 9 Sep 2020 21:57:44 +0800
-Message-ID: <20200909135744.33464-1-yuehaibing@huawei.com>
+To:     <kvalo@codeaurora.org>, <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] wlcore: Remove unused macro WL1271_SUSPEND_SLEEP
+Date:   Wed, 9 Sep 2020 21:59:05 +0800
+Message-ID: <20200909135905.35728-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -42,29 +43,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no caller in tree, so can remove it.
+commit 45aa7f071b06 ("wlcore: Use generic runtime pm calls for wowlan elp configuration")
+left behind this, remove it.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- include/sound/pcm_params.h | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/net/wireless/ti/wlcore/main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/sound/pcm_params.h b/include/sound/pcm_params.h
-index 36f94735d23d..ba184f49f7e1 100644
---- a/include/sound/pcm_params.h
-+++ b/include/sound/pcm_params.h
-@@ -23,11 +23,6 @@ int snd_pcm_hw_param_value(const struct snd_pcm_hw_params *params,
- #define MASK_OFS(i)	((i) >> 5)
- #define MASK_BIT(i)	(1U << ((i) & 31))
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index d2bbd5108f7e..6863fd552d5e 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -30,7 +30,6 @@
+ #include "sysfs.h"
  
--static inline size_t snd_mask_sizeof(void)
--{
--	return sizeof(struct snd_mask);
--}
--
- static inline void snd_mask_none(struct snd_mask *mask)
- {
- 	memset(mask, 0, sizeof(*mask));
+ #define WL1271_BOOT_RETRIES 3
+-#define WL1271_SUSPEND_SLEEP 100
+ #define WL1271_WAKEUP_TIMEOUT 500
+ 
+ static char *fwlog_param;
 -- 
 2.17.1
 
