@@ -2,148 +2,108 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7DCC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ABCC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03AAA2076C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D2C2087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ag+PT8uk"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gbeq6VPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgIIJfe (ORCPT
+        id S1730111AbgIIJfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgIIJfa (ORCPT
+        Wed, 9 Sep 2020 05:35:54 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:58782 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729913AbgIIJfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:35:30 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7252BC061573;
-        Wed,  9 Sep 2020 02:35:29 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id u13so1679434pgh.1;
-        Wed, 09 Sep 2020 02:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rUMM26Eh1qMtncc4/WqzQ8pK0qp9gOhr6F1dkKvdtyY=;
-        b=ag+PT8ukrimDRfbfIhHjpeu42vFjqkYUuIKYM+2NOhMWllqqIG+lrGAPR+eWR3ukbb
-         wMjuYhiFTZwm+76ARlzbDxPsf0WDHllktjaOVyBOlACtSw2ufmT/blFrMMuXcxK+QTBt
-         RnPLTFrgVdZVj4qN+gDive0hoVNgC29g/TthTgiJ+Cf0vuQgOImfS4bY2gXwqF6zyHjF
-         DPMrj7qSJQTeU0JzsINVCHJ9HnC/uYN/nKJYF85qLEAafvJU/FWfYt5ybiXsVqHdqcCo
-         tfjrg78U6InYv+ChZ3R3jObFqcEVnse7cvRDksgP7Pk6894y9zXHTv0obs1cajgkZ1D9
-         Uwjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rUMM26Eh1qMtncc4/WqzQ8pK0qp9gOhr6F1dkKvdtyY=;
-        b=YhBKGge6CRyeXUv7OqqPYFcTdq/IgF6xJN/4mEsWVZEd/zLKLNMd9E1TFmL3ogOGH+
-         nK1LBwqB+0lC2OJFbv8JcJlXIR4I+FiTVymrsVRkTIvlqIARilboGp5UWV3q6GR02NMz
-         dgOUMt/VU5UK464+Pggbt/IakwsFel5M8SRF9TgY9ASlE6bcr3nQzLEq7CCLBti4vah5
-         bN6zzkLg9L7N8id/F+Cm0i/Tyv+IIIeizT9vHtdh3XhGHfWY/hMSK7L8UsYP/4OImsuC
-         QvMG8854Ow1KQD1M2gRQwKFp79mj2bhHWc5PGAp1bggT5WX7JXBG60DSEDZzlv9rbZdF
-         aKbg==
-X-Gm-Message-State: AOAM532eMYqXlP1SMauZlfECGJWaqJmY1vo9Q8nPZgdzP/Gh+pgOiwbO
-        ysy38vII5k0eSYzpiuFwhdKJ+6h76W8=
-X-Google-Smtp-Source: ABdhPJyA6svORv5Yq4fMn/Aic/zR8YgAw5Q11Q3iouElifaENfaUmF+/ReJF8TNcqiZnpRVySxKtsw==
-X-Received: by 2002:a17:902:ac8b:b029:d0:89f4:6220 with SMTP id h11-20020a170902ac8bb02900d089f46220mr89212plr.8.1599644128952;
-        Wed, 09 Sep 2020 02:35:28 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id r6sm2165019pfq.11.2020.09.09.02.35.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 02:35:28 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 17:35:23 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
- and GPIO_V2_LINE_GET_VALUES_IOCTL
-Message-ID: <20200909093523.GA1506132@sol>
-References: <20200905133549.24606-1-warthog618@gmail.com>
- <20200905133549.24606-8-warthog618@gmail.com>
- <20200909092401.GA1431678@sol>
- <CAMpxmJXh9pKMAXgPWSCPXeyjP0CSo=A5SgLPrL2eRxX-LAyKag@mail.gmail.com>
+        Wed, 9 Sep 2020 05:35:38 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0899WbNI011181;
+        Wed, 9 Sep 2020 11:35:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=8Z39wgCMgSV09FjTrcLGWnULrXx4mkaAHwq5zt5eW6M=;
+ b=gbeq6VPctr7PRcnvzs/xjGO9bZYbn/zlGkYwIRNkbjYBUVjcBjytvYI3OpXvZO0+Bye8
+ REpm800IET4D4wrDNTipL3QQxKX1G6Ph8kbYruuRrqZ1XVbsNbEm64vU9Cx9nnwLybmb
+ xEgRTQ/kN/nmeKaUlrQiw8lS4+hxWPzT4FFBxjWhESGfHG/jpsra/p7Tqfwx3q8y7+MP
+ Ec/omYK+jm5X+eEM5VPsIhweMGrK2vLA+VibrGa57UnXF2bbs/CYqXBnH2Pb5v2BuYSt
+ nVspCq5G3HFXMQcS46QGgGvV5F1Rm9UvfF76RXJ8sjk6ceCTfj09x61Yy6G5atOF3QhC TA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 33c0euv55c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 11:35:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E653A100034;
+        Wed,  9 Sep 2020 11:35:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D4CBD220AE9;
+        Wed,  9 Sep 2020 11:35:21 +0200 (CEST)
+Received: from localhost (10.75.127.46) by GPXDAG3NODE5.st.com (10.75.127.72)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep 2020 11:35:21
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v6 3/3] usb: dwc2: don't use ID/Vbus detection if usb-role-switch on STM32MP15 SoCs
+Date:   Wed, 9 Sep 2020 11:35:11 +0200
+Message-ID: <20200909093511.4728-4-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200909093511.4728-1-amelie.delaunay@st.com>
+References: <20200909093511.4728-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJXh9pKMAXgPWSCPXeyjP0CSo=A5SgLPrL2eRxX-LAyKag@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To GPXDAG3NODE5.st.com
+ (10.75.127.72)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 11:26:00AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Sep 9, 2020 at 11:24 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Sat, Sep 05, 2020 at 09:35:36PM +0800, Kent Gibson wrote:
-> > > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
-> > > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
-> > >
-> > > The struct linereq implementation is based on the v1 struct linehandle
-> > > implementation.
-> > >
-> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > ---
-> > >
-> >
-> > [snip]
-> >
-> > >               if (copy_from_user(&offset, ip, sizeof(offset)))
-> > >                       return -EFAULT;
-> > > @@ -1104,6 +1505,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
-> > >                MAJOR(devt), gdev->id);
-> > >
-> > >       return 0;
-> > > +     /*
-> > > +      * array sizes must ensure 64-bit alignment and not create holes in
-> > > +      * the struct packing.
-> > > +      */
-> > > +     BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
-> > > +
-> > > +     /*
-> > > +      * check that uAPI structs are 64-bit aligned for 32/64-bit
-> > > +      * compatibility
-> > > +      */
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
-> > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
-> > >  }
-> > >
-> >
-> > A couple of things here - these should all be !IS_ALIGNED.
-> > And the BUILD_BUG_ON gets compiled out, and so doesn't fail, if they are
-> > after the return.
-> >
-> > How would you like that fixed - v8 or a patch once v7 is in?
-> >
-> > Cheers,
-> > Kent.
-> 
-> v8 please. Why is it compiled out though? Does it need some config option?
-> 
+If usb-role-switch is present in the device tree, it means that ID and Vbus
+signals are not connected to the OTG controller but to an external
+component (GPIOs, Type-C controller). In this configuration, usb role
+switch is used to force valid sessions on STM32MP15 SoCs.
 
-Not sure - haven't looked into it.  I only noticed the condition was
-inverted in passing, and when I flipped it it still compiled.
-Moving the return to the end of the function made them all fail,
-as they should if IS_ALIGNED is true.
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/usb/dwc2/params.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Having BUILD_BUG_ON being able to compile out quietly is a problem in
-itself.  Nothing special in my setup that I am aware of.
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index a3611cdd1dea..50df72f32b4c 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -185,7 +185,7 @@ static void dwc2_set_stm32mp15_hsotg_params(struct dwc2_hsotg *hsotg)
+ 	struct dwc2_core_params *p = &hsotg->params;
+ 
+ 	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
+-	p->activate_stm_id_vb_detection = true;
++	p->activate_stm_id_vb_detection = !device_property_read_bool(hsotg->dev, "usb-role-switch");
+ 	p->host_rx_fifo_size = 440;
+ 	p->host_nperio_tx_fifo_size = 256;
+ 	p->host_perio_tx_fifo_size = 256;
+-- 
+2.17.1
 
-Cheers,
-Kent.
