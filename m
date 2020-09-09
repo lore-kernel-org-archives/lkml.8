@@ -2,147 +2,116 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F2FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57503C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1011E21D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138F621D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kevpgpBe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lRr0iV7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgIIJmy (ORCPT
+        id S1730205AbgIIJnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50038 "EHLO
+        Wed, 9 Sep 2020 05:43:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730085AbgIIJmq (ORCPT
+        with ESMTP id S1725826AbgIIJml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:42:46 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB49C061573;
-        Wed,  9 Sep 2020 02:42:46 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id m6so2229941wrn.0;
-        Wed, 09 Sep 2020 02:42:46 -0700 (PDT)
+        Wed, 9 Sep 2020 05:42:41 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3065C0613ED
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:42:39 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v196so1802536pfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z8RXnpnyBMjt2Rl+qFLfs99Rgx6FHbwDsstUMymIPBQ=;
-        b=kevpgpBezl8qGbV7RG2kxXNWEHlnYbeaRmCOmICumPajZr750haas/HIHumLtfoXR7
-         5LMTicH6uqLvsYFaD+KcKHT1vcw1oblYbClP7dRMaZHUQ2bSWj+8v3uy4TtjfyichXOD
-         utx2VaZh6zLD6xYSXMhvcBl4ufAFx/i1sehZpNvq1sFN87WKO+HRtMe5qbH6vlCCQCVN
-         FOfUeUPiuwpuRDFLs9fg71niN3SYxz6dPtHwUn0PM/1pA+x1Q8PgbACwbo2ViPSul9ho
-         NYXW6JjPvcnTqJfQrr0CSR8wbilkQCwYwJaARAQ8PN31FkK0fBz/2r3/yP92ShtMeyJV
-         nk6g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cJ2b5yC6U6sZBSPpf2NMndA3c8MuYwyg/EbWONDGDEQ=;
+        b=lRr0iV7jW0zq00Y+PI9+C7cOPYDyM1oIQtYgXGw2Jok5nCprEdhOZiwh5Vp+h7I5bK
+         sDVm/tVXX/1Feq/Yn7thUALZCMh8wcsS13njzNpVOyy+NKgPOQxkgpwOHjheAOj5H8PN
+         jPS12IkBQ5rM8aOk+DU5/JDyzG2RLZTleokG0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z8RXnpnyBMjt2Rl+qFLfs99Rgx6FHbwDsstUMymIPBQ=;
-        b=qIpBylnfRSlfCgc2lP1V1o3yKMd8yUuKymd45MRIRdLH5FrA7GkVZ9p/LK+v/MoHGa
-         TA5ocPu8XS4xEqNkcA75x7Q7fwRnvWmsANeqebZyWlBmnk9qEfRad/5N4RZb7jwj/Mm2
-         5807qpVr2hk3ZhEQmOE4zc606iQ2SSgWzKm0sqibNMdvhJbs1ACgHE2JOJqDlRREKFKd
-         m/IXmHRnqwmelETJgszwR2Xiw2fRN+CXR3W+0zVYN6I1lE15MzaQNX6FwLvXoOiE4L7G
-         oFNJA/C1neu57UNfk7u4ooCC3MX7KZU0Szj/H1ElCqACkNXoLg0X7gTVyCo4NRN8sQex
-         HxeA==
-X-Gm-Message-State: AOAM531wPoBM/LdKqgFvVH4LUV7tOew99zZ6/2zehJSe0WjYOoL1AXGp
-        +UUkZ2CdUVNNQk4MnOMswa0=
-X-Google-Smtp-Source: ABdhPJyxx21J8UyPGAPaHM/8Ki6ecXPVaEM7uV8gatmLfxzs69Jo48V5cXIPhGqgMe+/DzTyxE7C+w==
-X-Received: by 2002:adf:ba83:: with SMTP id p3mr3217999wrg.246.1599644565115;
-        Wed, 09 Sep 2020 02:42:45 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.201])
-        by smtp.gmail.com with ESMTPSA id m185sm3201670wmf.5.2020.09.09.02.42.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:42:44 -0700 (PDT)
-Subject: Re: [PATCH v6 4/4] arm: dts: mt7623: add lima related regulator
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alex Ryabchenko <d3adme4t@gmail.com>
-References: <20200904110002.88966-1-linux@fw-web.de>
- <20200904110002.88966-5-linux@fw-web.de>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <b893cbdb-2011-88a4-dd57-3ea82cde08d8@gmail.com>
-Date:   Wed, 9 Sep 2020 11:42:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cJ2b5yC6U6sZBSPpf2NMndA3c8MuYwyg/EbWONDGDEQ=;
+        b=jrcf+ZPoTU3IHq+SrjJo8Vb0CdDl5g+zHl4gCJ6QiE2SllcuKj0y1twY8rrhbYyX2X
+         vOLPEbSrTZZpRLnciEcZ60YtBrtzWyVWBwuRKdRUkyxhhS0U7WNfGTVcYzRzWQ1359ER
+         iXzmYdzBDSMAb+apauXmRTOikp/4KsLMMFG1XopDvFG+xrw6UZmrIVowYrvZwHPkoHTn
+         JjVIXpI3TtOIt/G7mKjyNBGZc1/S3cA+JWA4QYRv4+PXNKX7Vjsr0hKymPYOVVAd1Mw5
+         Ov4r6+tJrflmkfLEGSEni+/PgzUlMUf8Z0ASgzVj9/UO//b7s9tAXEGIgP5Ax9Y0nLfU
+         4+cw==
+X-Gm-Message-State: AOAM530zgiSm63eK0qq4zh7VCTJaxp3RyMLt0Gnjs3EVTolVslAQtrpX
+        MHXffqECmvFz0k2P44Hf3pKkZg==
+X-Google-Smtp-Source: ABdhPJy0kQhiImzPyvMTXIoe3S5XBcVzI1ubsHTbbUHt8tNPKWinvH0asFzNdG96HgDS858kUtEN9w==
+X-Received: by 2002:a17:902:9349:b029:d0:cb2d:f26c with SMTP id g9-20020a1709029349b02900d0cb2df26cmr156960plp.5.1599644559530;
+        Wed, 09 Sep 2020 02:42:39 -0700 (PDT)
+Received: from josephsih-z840.tpe.corp.google.com ([2401:fa00:1:10:de4a:3eff:fe7d:ff5f])
+        by smtp.gmail.com with ESMTPSA id a23sm1692275pgv.86.2020.09.09.02.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 02:42:39 -0700 (PDT)
+From:   Joseph Hwang <josephsih@chromium.org>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        luiz.dentz@gmail.com
+Cc:     chromeos-bluetooth-upstreaming@chromium.org, josephsih@google.com,
+        Joseph Hwang <josephsih@chromium.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2 2/2] Bluetooth: sco: expose WBS packet length in socket option
+Date:   Wed,  9 Sep 2020 17:42:02 +0800
+Message-Id: <20200909174129.v2.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+In-Reply-To: <20200909094202.3863687-1-josephsih@chromium.org>
+References: <20200909094202.3863687-1-josephsih@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200904110002.88966-5-linux@fw-web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It is desirable to expose the wideband speech packet length via
+a socket option to the user space so that the user space can set
+the value correctly in configuring the sco connection.
 
+Reviewed-by: Alain Michaud <alainm@chromium.org>
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+---
 
-On 04/09/2020 13:00, Frank Wunderlich wrote:
-> From: Alex Ryabchenko <d3adme4t@gmail.com>
-> 
-> GPU needs additional regulator, add it to devicetree of bpi-r2
-> 
-> Signed-off-by: Alex Ryabchenko <d3adme4t@gmail.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+(no changes since v1)
 
-Applied to v5.9-next/dts32
+ net/bluetooth/sco.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks!
+diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
+index dcf7f96ff417e6..79ffcdef0b7ad5 100644
+--- a/net/bluetooth/sco.c
++++ b/net/bluetooth/sco.c
+@@ -1001,6 +1001,12 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
+ 			err = -EFAULT;
+ 		break;
+ 
++	case BT_SNDMTU:
++	case BT_RCVMTU:
++		if (put_user(sco_pi(sk)->conn->mtu, (u32 __user *)optval))
++			err = -EFAULT;
++		break;
++
+ 	default:
+ 		err = -ENOPROTOOPT;
+ 		break;
+-- 
+2.28.0.526.ge36021eeef-goog
 
-> ---
->   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index f41f221e56ca..826912545ef1 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -79,6 +79,13 @@ reg_5v: regulator-5v {
->   		regulator-always-on;
->   	};
->   
-> +	reg_vgpu: fixedregulator@0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd_fixed_vgpu";
-> +		regulator-min-microvolt = <1150000>;
-> +		regulator-max-microvolt = <1150000>;
-> +	};
-> +
->   	gpio-keys {
->   		compatible = "gpio-keys";
->   		pinctrl-names = "default";
-> @@ -283,6 +290,11 @@ &i2c1 {
->   	status = "okay";
->   };
->   
-> +&mali {
-> +	mali-supply = <&reg_vgpu>;
-> +	status = "okay";
-> +};
-> +
->   &mmc0 {
->   	pinctrl-names = "default", "state_uhs";
->   	pinctrl-0 = <&mmc0_pins_default>;
-> @@ -402,4 +414,3 @@ &u3phy1 {
->   &u3phy2 {
->   	status = "okay";
->   };
-> -
-> 
