@@ -2,90 +2,98 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CE7C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B9CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 586D72166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001952166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="S4SA8z+z"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aZOUYOke";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QCoHORN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIIRIc (ORCPT
+        id S1730807AbgIIRIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:08:32 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:51891 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730394AbgIIPhD (ORCPT
+        Wed, 9 Sep 2020 13:08:42 -0400
+Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:45228
+        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730379AbgIIPgt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:37:03 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id G0kJkjPcoXgwIG0kKkZggK; Wed, 09 Sep 2020 16:06:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1599660408; bh=oPrFl/TwIvpVNpQ11j9+60pYM+n2ln10KTC8JKR4WbA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=S4SA8z+znzkwPxIJSUD15tOO5/tLQ6uyZyT8lVxO4TwZ+NwZxqYV5R0Q4lBJg2YXX
-         4HAhlrwqHrWeMbwd5HyxPYkXg0CqeBGQdnrmtdH5vxGSxQnKhLYMGEZ5CFkVeYlpZe
-         aWcLQoXVXFA/ySFah+HyFZaP9cc2ACsJiDtsX+5q8v4QawL3ljYNk+RO7Q6KiXVGrd
-         Ghcy3euewZlfVUsnno9rFvjzu2ze4ysAsBCUZmCZwIwPQSXeur5zrQlGRqmNm6et4d
-         t15Jw5Q20+7UDi2FMOq/47qoakUi73aWwGllyQSDek0xuwsanhvhdHiEkPs8mpynLX
-         cfrWoDc8TI5Xw==
-Subject: Re: [PATCH 2/3] media: Add support for the AM/FM radio chip KT0913
- from KT Micro.
-To:     Santiago Hormazabal <santiagohssl@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200831220601.20794-1-santiagohssl@gmail.com>
- <20200831220601.20794-3-santiagohssl@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <60e1d448-2c79-2642-7fb6-82aceacdb75f@xs4all.nl>
-Date:   Wed, 9 Sep 2020 16:06:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 9 Sep 2020 11:36:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599661222;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=S/7AGadvVgxsZIouyH+XWr5+pvCP3bzpW2mtxfDx8qk=;
+        b=aZOUYOkeZpw+9JYvdA+FjaxuyIwgeP8O0cKnAnraHnSPTWZfVSJCPUyHp3CYJP6j
+        EcEQKvoENMcpJWXOc8fyLeqGrCNljRwRVHI859qzARJbpLi0m5+O/gKYQkvS1m34luj
+        iWtYtrrt0nbjJb0AAElCcjijZz9sKlkRzpG921m0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599661222;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=S/7AGadvVgxsZIouyH+XWr5+pvCP3bzpW2mtxfDx8qk=;
+        b=QCoHORN2R0ql7fZ0513y1nm0Tv+1Ib0mlYHXU2r0E3jJ6BIABXYeMXtYz2A0Yb5W
+        NSOUbR/5ZtLRALaXWMjXhti/7TqzVbjmCfDl1MhILtSJqe5quT/bRrCviX3RJFsbw4o
+        wH7G+lD4dTVTP2thPgv+bGN8hcJlBF2Mp6zUZdSE=
 MIME-Version: 1.0
-In-Reply-To: <20200831220601.20794-3-santiagohssl@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBGtO1zVijWQzDMb2IpWJbNPvzETDnfTgb43UKoKnwaY0otSN+Sz/6bzbgwUBZNdeghs/Bedcx8wmruysTJ5Tftxj4trdcE3jKaLLjCFuKE0EizMQQu2
- b4AcZHRP1AT9oEzCmI9EE2qYbDRzETU0dF9wiDtpskjRw+lh5eQIfJPX8cbMCkPzphOtzvCp7yQax+P0Q2vfVDqo5PUhysE3fl9Mgh6eLMRS2NUmhefy21kl
- DfgUS3/9OjdmmugYGZYKwLuTgvj2nLsYV2q8jnfOdICXQgvn1JVv2BwSKG/Lt9/HCa2n5/riOiKo/5j4sG+/NULvzKBVGQwmWxQ8iGBPuMnvbPYiWNGWQrk8
- HCISZQGegKeFGT8gc4AF+jxqHhjKyXv1umRD3GgBYLRtSUSG7Dg+Iua796Rrq+qnqtWaVYw2s8OD9IaHKXLjTQL63o/KYi2JzT68jAKQlmtfZiAzm7e9106u
- vCx3GiLfuPbW+S3B
+Date:   Wed, 9 Sep 2020 14:20:22 +0000
+From:   skakit@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V4 1/4] arm64: dts: sc7180: Add wakeup support over UART
+ RX
+In-Reply-To: <20200903171711.GL3419728@google.com>
+References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
+ <1599145498-20707-2-git-send-email-skakit@codeaurora.org>
+ <20200903171711.GL3419728@google.com>
+Message-ID: <01010174733d2ad7-69390477-c9ca-4d17-a1c6-9754cc3cfd3a-000000@us-west-2.amazonses.com>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.09-54.240.27.56
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Santiago,
-
-On 01/09/2020 00:06, Santiago Hormazabal wrote:
-> This chip requires almost no support components and can used over I2C.
-> The driver uses the I2C bus and exposes the controls as a V4L2 radio.
-> Tested with a module that contains this chip (from SZZSJDZ.com,
-> part number ZJ-801B, even tho the company seems defunct now), and an H2+
-> AllWinner SoC running a kernel built off 07d999f of the media_tree.
+On 2020-09-03 22:47, Matthias Kaehlcke wrote:
+> On Thu, Sep 03, 2020 at 08:34:55PM +0530, satya priya wrote:
+>> Add the necessary pinctrl and interrupts to make UART wakeup capable.
+>> 
+>> If QUP function is selected in sleep state, UART RTS/RFR is pulled 
+>> high
+>> during suspend and BT SoC not able to send wakeup bytes. So, configure
+>> GPIO mode in sleep state to keep it low during suspend.
+>> 
+>> Signed-off-by: satya priya <skakit@codeaurora.org>
+>> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
 > 
-> Signed-off-by: Santiago Hormazabal <santiagohssl@gmail.com>
-> ---
->  drivers/media/radio/Kconfig        |   10 +
->  drivers/media/radio/Makefile       |    1 +
->  drivers/media/radio/radio-kt0913.c | 1196 ++++++++++++++++++++++++++++
->  3 files changed, 1207 insertions(+)
->  create mode 100644 drivers/media/radio/radio-kt0913.c
+> One more doubt: does it actually make sense/is it safe to add the
+> sleep config for all UARTs in the SoC file?
 
-One more thing: you need to add an entry to the MAINTAINERS file for this
-driver. It can either be part of this patch, or added in a separate patch.
+yes, it is not good to have it this way. We are going to remove all this 
+and add sleep config for only uart3 (BT uart) in board specific file.
 
-Regards,
+> I wonder if there could
+> be undesired behavior (like noise on TX or RTS looking active to the
+> other side) without the corresponding pinconf in the board file. If
+> the pinconf is needed to avoid unexpected behavior then it is better
+> to change the muxing in the board file to have a sane default
+> configuration in the SoC .dtsi.
+> 
 
-	Hans
+ok, will add pinmux for uart3 sleep state in board file.
+
+> From a quick grep it seems that most SoCs don't specify a sleep config
+> for their UART pins and some boards add it in their DT.
