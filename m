@@ -2,100 +2,123 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1ACC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2E0C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 057FA208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6D82076C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:21:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eFvFqDhe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Jk2tuLO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgIIIUP (ORCPT
+        id S1729305AbgIIIVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:20:15 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:27351 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726111AbgIIIUO (ORCPT
+        Wed, 9 Sep 2020 04:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbgIIIVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:20:14 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-161-BdXcDBudNH26BNJoUCbwvw-1; Wed, 09 Sep 2020 09:20:08 +0100
-X-MC-Unique: BdXcDBudNH26BNJoUCbwvw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 9 Sep 2020 09:20:07 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 9 Sep 2020 09:20:07 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [PATCH v2] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Thread-Topic: [PATCH v2] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Thread-Index: AQHWhgeZBzEzlDBqrkarsC8PutwJjalf9DHA
-Date:   Wed, 9 Sep 2020 08:20:07 +0000
-Message-ID: <01b027d0d46d4572b3b16e2b49f0f2b3@AcuMS.aculab.com>
-References: <bef9e78f9486d2a06c3e026d401511ffa117b0da.1598973982.git.jpoimboe@redhat.com>
- <20200908174329.ryfprry62e4tuodw@treble>
-In-Reply-To: <20200908174329.ryfprry62e4tuodw@treble>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 9 Sep 2020 04:21:01 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26805C061573;
+        Wed,  9 Sep 2020 01:20:59 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 10:20:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599639657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/9WooS1I0dnfrXuVay1z186vvTyZRgrndE5v3trpEa8=;
+        b=eFvFqDhevzwjoJOjn5ZNBf/l8r+rF8zHjTDajogzaqK7kToqpwNwnzagHxU0GaKh06GZFk
+        uLd7GcpW7TsCwz9H9gs3IRzVaKdFFwv3B/Nz4lxBepHwWWectCqPbG7+Ey8DvUpoHa03x3
+        DCiBm1Q904p/mYNDjNzcI5+NkJfYnE775O+6H5j8NW5fgvn0xXWUOpuhXyNiiBaxCHAJY8
+        OHO1dhO3rAJTBi8f4miqVIpBme906H4E8w3bSf2BEQw5osMw9FSL/X8/P/OLxnUUYLjlxP
+        G4egfuPiLuiRXDeD3iwBnmIeg8wgDDKWl0r0VbKb4xOBAaHXjIZhFklLgxDxCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599639657;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/9WooS1I0dnfrXuVay1z186vvTyZRgrndE5v3trpEa8=;
+        b=1Jk2tuLO3hb6D0dUElyulHKw7C5f5+ZzjpiO7q2s4l/3l7KPleygxgwDZlCd8URiw+M6f4
+        ZnHqcIRHeSIjfYCQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Mike Galbraith <efault@gmx.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [ANNOUNCE] v5.9-rc3-rt3
+Message-ID: <20200909082056.sw32jevyhdm4mzcm@linutronix.de>
+References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+ <6ed14b9743f5ce400137a4ae5561604575e72b13.camel@gmx.de>
+ <91828ea63ecd61d40bba0358e1c0efbe62976ba6.camel@gmx.de>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <91828ea63ecd61d40bba0358e1c0efbe62976ba6.camel@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zaCBQb2ltYm9ldWYgPGpwb2ltYm9lQHJlZGhhdC5jb20+DQo+IFNlbnQ6IDA4IFNl
-cHRlbWJlciAyMDIwIDE4OjQzDQo+IEhpIHg4NiBtYWludGFpbmVycywNCi4uLg0KPiA+IC0tLSBh
-L2FyY2gveDg2L2xpYi9wdXR1c2VyLlMNCj4gPiArKysgYi9hcmNoL3g4Ni9saWIvcHV0dXNlci5T
-DQo+ID4gQEAgLTM4LDYgKzM4LDggQEAgU1lNX0ZVTkNfU1RBUlQoX19wdXRfdXNlcl8xKQ0KPiA+
-ICAJRU5URVINCj4gPiAgCWNtcCBUQVNLX2FkZHJfbGltaXQoJV9BU01fQlgpLCVfQVNNX0NYDQo+
-ID4gIAlqYWUgLkxiYWRfcHV0X3VzZXINCj4gPiArCXNiYiAlX0FTTV9CWCwgJV9BU01fQlgJCS8q
-IHVhY2Nlc3NfbWFza19wdHIoKSAqLw0KPiA+ICsJYW5kICVfQVNNX0JYLCAlX0FTTV9DWA0KPiA+
-ICAJQVNNX1NUQUMNCj4gPiAgMToJbW92YiAlYWwsKCVfQVNNX0NYKQ0KPiA+ICAJeG9yICVlYXgs
-JWVheA0KDQpGb3IgNjRiaXQgdGhlIHNiYithbmQgcGF0dGVybiBjYW4gYmUgcmVwbGFjZWQgYnkg
-YW4gaW5zdHJ1Y3Rpb24NCnRoYXQgY2xlYXJzIHRoZSBoaWdoIGJpdCAoZWcgYnRyICQ2MywgJXJj
-eCkuDQpUaGlzIGlzbid0IGRlcGVuZGFudCBvbiB0aGUgZWFybGllciBpbnN0cnVjdGlvbnMgc28g
-Y2FuIGV4ZWN1dGUNCmluIHBhcmFsbGVsIHdpdGggdGhlbS4NCg0KSSBzdGlsbCB0aGluayB0aGF0
-IGRvaW5nIHRoZSBzYW1lIGNvbXBhcmlzb25zIGluIGFjY2Vzc19vaygpDQphbmQgZm9yIHRoZSBw
-b2ludGVyIG1hc2tpbmcgaXMgc2lsbHkgLSBhbmQgdGhleSBzaG91bGQgZ2V0IG1lcmdlZC4NCg0K
-V2hpbGUgaXQgbWF5IGJlIHBvc3NpYmxlIHRvIGZha2UgJ2FzbSB2b2xhdGlsZSBnb3RvIHdpdGgg
-b3V0cHV0cycNCmJ5IHVzaW5nIGEgbG9jYWwgYXNtIHJlZ2lzdGVyIHZhcmlhYmxlIGFuZCBhbHRl
-cm5hdGl2ZSBwYXR0ZXJuDQptaWdodCBiZSB0byBoYXZlIGFjY2Vzc19vaygpIHJldHVybiAwIChm
-YWlsKSBvciB+MCAob2spLg0KVGhlbiB0aGUgdXNhZ2UgY2FuIGJlICh3aXRoIGEgbG9hZCBvZiBj
-YXN0cyk6DQoJcDEgPSBwICYgYWNjZXNzX29rKHApOw0KCWlmICghcDEgJiYgcCkNCgkJcmV0dXJu
-IC1FRkFVTFQ7DQoJZm9vKCpwMSk7DQpXaXRoIGFueSBsdWNrIHRoZSBjb21waWxlciB3aWxsIHVz
-ZSB0aGUgcmVzdWx0IG9mIHRoZSAmIGZvciB0aGUNCiFwMSB0ZXN0Lg0KDQoJRGF2aWQNCg0KCQ0K
-DQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFy
-bSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAo
-V2FsZXMpDQo=
+On 2020-09-09 07:45:22 [+0200], Mike Galbraith wrote:
+> On Wed, 2020-09-09 at 05:12 +0200, Mike Galbraith wrote:
+> > On Wed, 2020-09-02 at 17:55 +0200, Sebastian Andrzej Siewior wrote:
+> > >
+> > > Known issues
+> > >      - It has been pointed out that due to changes to the printk code=
+ the
+> > >        internal buffer representation changed. This is only an issue =
+if tools
+> > >        like `crash' are used to extract the printk buffer from a kern=
+el memory
+> > >        image.
+> >
+> > Ouch.  While installing -rt5 on lappy via nfs, -rt5 server box exploded
+> > leaving nada in logs.  I have a nifty crash dump of the event, but...
+>=20
+> After convincing crash (with club) that it didn't _really_ need a
+> log_buf, nfs had nothing to do with the crash, it was nouveau.
 
+okay. Line 280 is hard to understand. My guess is that we got a pointer
+and then the boom occurred but I can't tell why/how. A few lines later
+there is args->x =3D y=E2=80=A6
+Do you see the lockdep splat without nouveau?
+
+> crash> bt -l
+> PID: 2146   TASK: ffff994c7fad0000  CPU: 0   COMMAND: "X"
+>  #0 [ffffbfffc11a76c8] machine_kexec at ffffffffb7064879
+>     /backup/usr/local/src/kernel/linux-master-rt/./include/linux/ftrace.h=
+: 792
+>  #1 [ffffbfffc11a7710] __crash_kexec at ffffffffb7173622
+>     /backup/usr/local/src/kernel/linux-master-rt/kernel/kexec_core.c: 963
+>  #2 [ffffbfffc11a77d0] crash_kexec at ffffffffb7174920
+>     /backup/usr/local/src/kernel/linux-master-rt/./arch/x86/include/asm/a=
+tomic.h: 41
+>  #3 [ffffbfffc11a77e0] oops_end at ffffffffb702716f
+>     /backup/usr/local/src/kernel/linux-master-rt/arch/x86/kernel/dumpstac=
+k.c: 342
+>  #4 [ffffbfffc11a7800] exc_general_protection at ffffffffb79a2fc6
+>     /backup/usr/local/src/kernel/linux-master-rt/arch/x86/kernel/traps.c:=
+ 82
+>  #5 [ffffbfffc11a7890] asm_exc_general_protection at ffffffffb7a00a1e
+>     /backup/usr/local/src/kernel/linux-master-rt/./arch/x86/include/asm/i=
+dtentry.h: 532
+>  #6 [ffffbfffc11a78a0] nvif_object_ctor at ffffffffc07ee6a7 [nouveau]
+>     /backup/usr/local/src/kernel/linux-master-rt/drivers/gpu/drm/nouveau/=
+nvif/object.c: 280
+>  #7 [ffffbfffc11a7918] __kmalloc at ffffffffb72eea12
+>     /backup/usr/local/src/kernel/linux-master-rt/mm/slub.c: 261
+>  #8 [ffffbfffc11a7980] nvif_object_ctor at ffffffffc07ee6a7 [nouveau]
+>     /backup/usr/local/src/kernel/linux-master-rt/drivers/gpu/drm/nouveau/=
+nvif/object.c: 280
+
+Sebastian
