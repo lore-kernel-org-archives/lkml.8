@@ -2,229 +2,125 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E282C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16557C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B220C20770
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA79121D43
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BXDUwAzw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TY6WrvPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIIS6Y (ORCPT
+        id S1727900AbgIIS7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:58:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46777 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbgIIS6W (ORCPT
+        Wed, 9 Sep 2020 14:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgIIS7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:58:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599677900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CazTvBrlRJQ8zfa4RcIvyWhiLyNZLfwdpoVOC/dALOc=;
-        b=BXDUwAzwXy0baErvElGTmC6nDm/Si+l/ur+a9cRDT9UyLrSNp93nW/kxQroDw/NPgAvmqu
-        avtK70/wHwui1X+zdqCtNseaAZhco3w0WNHkSAn8Dxc6qeB13LgPBk7/JNldh1/1C2sBdi
-        8r9xI+XsxkaADQcKyCibMHEsjWUOHXI=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-361-URkbCeOCMXuPp6LYu0Dp1Q-1; Wed, 09 Sep 2020 14:58:15 -0400
-X-MC-Unique: URkbCeOCMXuPp6LYu0Dp1Q-1
-Received: by mail-qk1-f197.google.com with SMTP id v16so1937828qka.18
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 11:58:15 -0700 (PDT)
+        Wed, 9 Sep 2020 14:59:05 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8601C061573;
+        Wed,  9 Sep 2020 11:59:04 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id s13so3321959wmh.4;
+        Wed, 09 Sep 2020 11:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uXnjw/VPfhPNUnKOZ9x/3YdxbiHHO2depn2TRUMyriM=;
+        b=TY6WrvPqQej5Qj53qINdsFDPIya8YtQdBfgYxZLIGMmAZsCV0LErKw8IEvAfAQgL2u
+         XnZWLOfWp/5eXDPebRMSz5JYqi0faEf2xaFq4PxpvpQc4H++KNNRgxVHtF6GvRNEZuYw
+         4c8D4VloFNUyQ/kkeNyiB7NqjkNm2CBY6ZqrtYb1oc/JPL6fObquZ68czZ++pO/vMB8F
+         9A8V76itAmfXV/G5N8ZYIp6jF7/1NK5u1W+DpFCkLI9V9F+ylmA+jij7NyRC9PmrKgDh
+         5pJCDZiIJ4rgth7oakgD/2A3SUoZdbJ7+54mb2+bOOLQ3QRB1ZxuJF5LSyscJ89nRZ+z
+         tVMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=CazTvBrlRJQ8zfa4RcIvyWhiLyNZLfwdpoVOC/dALOc=;
-        b=oU+lsP7Ev6q7zaiEt6xPsXqI+2YdI4Bx9NOj3d1oDSTb54b6fkLp2ZGAyW00Tm7CT+
-         ILKw+ZcWCIrmb+1PJ9DstSqMu7381id+UGj6f63U73tPXG4VV9DfAEMgyp8Vpe1Xq1Qr
-         m8GqaL92kiC+Ya2zftxGo1HANwo6ft0sCBem8FFx9L45NRpj8WnGebE62D+QNIjuqMf9
-         e3i/DDxhhaf+a9bpYlxfHAKafoSGL0+cDa0C2+ftgpYFAiJ0lhmttQg8nLP5fMhA69hz
-         LmgOVM6sNorDOWL3IqqNG8nZYPCQg0hySnxInkp8JBkTp9oUH/rYQL0HEPAOEyT6yjQs
-         4nTQ==
-X-Gm-Message-State: AOAM531THJsCyR6lmpQfKmhqSDaFo8M1pIRRMn9TUQVedn40Czi5Q5Gf
-        nXNjl2IpVotcyterlOt3/+skV7hllaO9qiZTHpRiYM9Z39zrClBi6N15ivQ7OLQKQ/e7S63jT67
-        phRbrH5/LgWRgTdF2A8unzvUn
-X-Received: by 2002:ac8:12c1:: with SMTP id b1mr4825624qtj.148.1599677894678;
-        Wed, 09 Sep 2020 11:58:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwMrfJHUr1BuZ8QHwSbIINRJrStEdMAiEEDw4kOnseUMVwZfUyFpay3iO3YT70h465ee+wZ7w==
-X-Received: by 2002:ac8:12c1:: with SMTP id b1mr4825605qtj.148.1599677894379;
-        Wed, 09 Sep 2020 11:58:14 -0700 (PDT)
-Received: from Ruby.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id i62sm3470781qkf.36.2020.09.09.11.58.13
+        bh=uXnjw/VPfhPNUnKOZ9x/3YdxbiHHO2depn2TRUMyriM=;
+        b=jewWnlBQXmG68rAzXDKt4b7V96MSaAf1zjz6G5gymKKUc7uXDjg21jT/CTW5a/aNWs
+         4EA92aHdIpCzAUzHCffqYrS+LN04/v86olmFnUzzUbB/Egg/HjDfw00q3MU8cfelNpLV
+         b/MLygUoqXBBzNaGGueBJHSa0vx8orWbiM2QySO11vz47zEqLBPfQ/vVoYSghu6fu2BR
+         yAQSi70GY/UWCO/J5u2JViNIaOlWOLarvVmgM3Zkp7KulpE/fog6fhPcInFjsNCy+qGg
+         nJwipqPgX4OIxu7NOFz687XdMRfJQbU49YLMtAYU+s2XELsLVGlPNIwfKTNnTf19J2Ea
+         SCgg==
+X-Gm-Message-State: AOAM533Nr2vZV7IGkj8W2gnHAFaMxXUcPdlt40WfOcsLxiKK5wI6tJG4
+        cPGNs5TpRqUX8dbau11gNKs=
+X-Google-Smtp-Source: ABdhPJzpUpzvO3ELbOUmyO9iu8+McZLz9g/0Xcglf5404MzZZKU07CevL6J1ZnBe9J5zNKU0Y1HEZw==
+X-Received: by 2002:a1c:1fcc:: with SMTP id f195mr4663261wmf.127.1599677940990;
+        Wed, 09 Sep 2020 11:59:00 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id j7sm5270080wrs.11.2020.09.09.11.58.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 11:58:13 -0700 (PDT)
-Message-ID: <a2aa760dd795d8798efc5f07d80cec8dd3147dcc.camel@redhat.com>
-Subject: Re: [PATCH] drm/dp: For MST hub, Get max_link_rate&max_lane from
- extended rx capability field if EXTENDED_RECEIVER_CAPABILITY_FILED_PRESENT
- is set.
-From:   Lyude Paul <lyude@redhat.com>
-To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     Koba Ko <koba.ko@canonical.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>
-Date:   Wed, 09 Sep 2020 14:58:12 -0400
-In-Reply-To: <20200909183627.GP6112@intel.com>
-References: <20200827053053.11271-1-koba.ko@canonical.com>
-         <CAJB-X+WPiUR8N5sLMS2UC-rPHj=TGJy2ezeBPjjeUXzbN5bfcg@mail.gmail.com>
-         <b1dcaf433b7ebe2d0284693724f0e7d8a7fa4825.camel@redhat.com>
-         <20200909182010.GO6112@intel.com>
-         <aaf36e7a1be596f831ca2665375632aae9c8e350.camel@redhat.com>
-         <20200909183627.GP6112@intel.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Wed, 09 Sep 2020 11:59:00 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: aic7xxx: Use kmemdup in two places
+Date:   Wed,  9 Sep 2020 19:58:55 +0100
+Message-Id: <20200909185855.151964-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-09-09 at 21:36 +0300, Ville Syrjälä wrote:
-> On Wed, Sep 09, 2020 at 02:26:11PM -0400, Lyude Paul wrote:
-> > On Wed, 2020-09-09 at 21:20 +0300, Ville SyrjÃƒÂ¤lÃƒÂ¤ wrote:
-> > > On Wed, Sep 09, 2020 at 12:33:09PM -0400, Lyude Paul wrote:
-> > > > We just added a new helper for DPCD retrieval to drm_dp_helper.c
-> > > > (which
-> > > > also
-> > > > handles grabbing the extended receiver caps), we should probably make
-> > > > use
-> > > > of
-> > > > it here 
-> > > 
-> > > Someone should really rework this whole thing so that the driver can
-> > > pass in the link rate+lane count when setting up the link. There's no
-> > > reason to assume that the source device capabilities match or exceed
-> > > the MST device caps. It would also allow the driver the dynamically
-> > > adjust these in response to link failures.
-> > 
-> > I'm a bit confused, I also think we should pass the link rate+lane count
-> > in
-> > (especially since it'll be very helpful for when we start optimizing PBN
-> > handling in regards to bw constraints), but I'm not sure what you mean by
-> > "There's no reason to assume that the source device capabilities match or
-> > exceed the MST device caps", aren't we doing the opposite here by checking
-> > the
-> > MST device caps?
-> 
-> We assume only the MST device caps matter. Which is fine if the source
-> device caps are equal or higher. But if the source device isn't as
-> capable then we're going to calculate the MST things based on link bw
-> we can not actually achieve. End result is that we potentially try to
-> push too much data over the link.
-> 
-> I'm not really sure what actually happens if we just miscompute these
-> things but don't actually oversubscribe the link. Maybe the remote
-> end gets confused when we tell it some bogus VC parameters? Maybe it
-> doesn't care? Dunno.
+kmemdup can be used instead of kmalloc+memcpy. Replace two occurrences
+of this pattern.
 
-Ah-I understand what you mean. From my understanding I think MST devices parse
-some of the bandwidth information (since a lot of hubs seem to have a
-different full_pbn based on the source caps from what I've seen). But yes-we
-probably should also start processing all of the relevant DPCD caps on the
-source device's side instead of just trusting MST. I'll add this to my todo
-list
+Issue identified with Coccinelle.
 
-> 
-> > > > On Wed, 2020-09-09 at 14:31 +0800, Koba Ko wrote:
-> > > > > On Thu, Aug 27, 2020 at 1:30 PM Koba Ko <koba.ko@canonical.com>
-> > > > > wrote:
-> > > > > > Currently, DRM get the capability of the mst hub only from
-> > > > > > DP_DPCD_REV
-> > > > > > and
-> > > > > > get the slower speed even the mst hub can run in the faster speed.
-> > > > > > 
-> > > > > > As per DP-1.3, First check DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT.
-> > > > > > If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 1, read the
-> > > > > > DP_DP13_DPCD_REV
-> > > > > > to
-> > > > > > get the faster capability.
-> > > > > > If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 0, read DP_DPCD_REV.
-> > > > > > 
-> > > > > > Signed-off-by: Koba Ko <koba.ko@canonical.com>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/drm_dp_mst_topology.c | 10 +++++++++-
-> > > > > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > > > index 67dd72ea200e..3b84c6801281 100644
-> > > > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > > > > @@ -3497,6 +3497,8 @@ static int drm_dp_get_vc_payload_bw(u8
-> > > > > > dp_link_bw,
-> > > > > > u8  dp_link_count)
-> > > > > >  int drm_dp_mst_topology_mgr_set_mst(struct
-> > > > > > drm_dp_mst_topology_mgr
-> > > > > > *mgr,
-> > > > > > bool mst_state)
-> > > > > >  {
-> > > > > >         int ret = 0;
-> > > > > > +       u8 dpcd_ext = 0;
-> > > > > > +       unsigned int dpcd_offset = 0;
-> > > > > >         struct drm_dp_mst_branch *mstb = NULL;
-> > > > > > 
-> > > > > >         mutex_lock(&mgr->payload_lock);
-> > > > > > @@ -3510,9 +3512,15 @@ int drm_dp_mst_topology_mgr_set_mst(struct
-> > > > > > drm_dp_mst_topology_mgr *mgr, bool ms
-> > > > > >                 struct drm_dp_payload reset_pay;
-> > > > > > 
-> > > > > >                 WARN_ON(mgr->mst_primary);
-> > > > > > +               drm_dp_dpcd_read(mgr->aux,
-> > > > > > +                                DP_TRAINING_AUX_RD_INTERVAL,
-> > > > > > +                                &dpcd_ext, sizeof(dpcd_ext));
-> > > > > > +
-> > > > > > +               dpcd_offset =
-> > > > > > +                       ((dpcd_ext &
-> > > > > > DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT) ?  DP_DP13_DPCD_REV :
-> > > > > > DP_DPCD_REV);
-> > > > > > 
-> > > > > >                 /* get dpcd info */
-> > > > > > -               ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr-
-> > > > > > > dpcd,
-> > > > > > DP_RECEIVER_CAP_SIZE);
-> > > > > > +               ret = drm_dp_dpcd_read(mgr->aux, dpcd_offset, mgr-
-> > > > > > > dpcd,
-> > > > > > DP_RECEIVER_CAP_SIZE);
-> > > > > >                 if (ret != DP_RECEIVER_CAP_SIZE) {
-> > > > > >                         DRM_DEBUG_KMS("failed to read DPCD\n");
-> > > > > >                         goto out_unlock;
-> > > > > > --
-> > > > > > 2.25.1
-> > > > > > 
-> > > > > Add Lyude Paul
-> > > > > 
-> > > > -- 
-> > > > Cheers,
-> > > > 	Lyude Paul (she/her)
-> > > > 	Software Engineer at Red Hat
-> > > > 
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > -- 
-> > Cheers,
-> > 	Lyude Paul (she/her)
-> > 	Software Engineer at Red Hat
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/scsi/aic7xxx/aic79xx_core.c | 3 +--
+ drivers/scsi/aic7xxx/aic7xxx_core.c | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/aic7xxx/aic79xx_core.c b/drivers/scsi/aic7xxx/aic79xx_core.c
+index 1c617c0d5899..98b02e7d38bb 100644
+--- a/drivers/scsi/aic7xxx/aic79xx_core.c
++++ b/drivers/scsi/aic7xxx/aic79xx_core.c
+@@ -9402,10 +9402,9 @@ ahd_loadseq(struct ahd_softc *ahd)
+ 	if (cs_count != 0) {
+ 
+ 		cs_count *= sizeof(struct cs);
+-		ahd->critical_sections = kmalloc(cs_count, GFP_ATOMIC);
++		ahd->critical_sections = kmemdup(cs_table, cs_count, GFP_ATOMIC);
+ 		if (ahd->critical_sections == NULL)
+ 			panic("ahd_loadseq: Could not malloc");
+-		memcpy(ahd->critical_sections, cs_table, cs_count);
+ 	}
+ 	ahd_outb(ahd, SEQCTL0, PERRORDIS|FAILDIS|FASTMODE);
+ 
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
+index 2231c4afa531..725bb7f58054 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_core.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
+@@ -6879,10 +6879,9 @@ ahc_loadseq(struct ahc_softc *ahc)
+ 	if (cs_count != 0) {
+ 
+ 		cs_count *= sizeof(struct cs);
+-		ahc->critical_sections = kmalloc(cs_count, GFP_ATOMIC);
++		ahc->critical_sections = kmemdup(cs_table, cs_count, GFP_ATOMIC);
+ 		if (ahc->critical_sections == NULL)
+ 			panic("ahc_loadseq: Could not malloc");
+-		memcpy(ahc->critical_sections, cs_table, cs_count);
+ 	}
+ 	ahc_outb(ahc, SEQCTL, PERRORDIS|FAILDIS|FASTMODE);
+ 
 -- 
-Cheers,
-	Lyude Paul (she/her)
-	Software Engineer at Red Hat
+2.28.0
 
