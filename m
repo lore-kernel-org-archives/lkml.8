@@ -2,98 +2,117 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7D8C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0475BC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8C62064B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D2A2064B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599684084;
-	bh=E1HG2GaaF2UENub3jm8SIdUJcfFRBKpcG+gmekmgqLE=;
+	s=default; t=1599684225;
+	bh=aJvLvYf+8zience5q/fyn/Ofjda77RZfMxiEFHwfPEE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=beIi/PHoWhoHIDJpZZiDgWTo35aX/rLEyM9HnthbUCwMTrPkBYjOZAym4BhII+7io
-	 Ubxfs/A8b6Sd8jq8NB77He1FvAccVJhY22/Sr58LDzD8bGBVhcoLbQ4wJ7mqQUO/28
-	 n9ElIj02RxwqVtgSwxJvVw+8TkbkZR094N8Dj+4E=
+	b=FJuYLekwW1kLAATkv8CXSYXX4eL+P+miykr/JKHcFKTE9N9fpiGiWmL3Jl8ku7fmv
+	 ECNzyx1VAwy3UH7j6HD5Nr4Vj6KKmxnXQdT4/9hvKSLL8qxxI6uOF+kuOEcayH8/bB
+	 JWNTyGg6B18i3oyVpgRfcDEgrYqs9b+oxgPi7Iy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgIIUlX (ORCPT
+        id S1728971AbgIIUno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:41:23 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35828 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgIIUlV (ORCPT
+        Wed, 9 Sep 2020 16:43:44 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43918 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgIIUnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:41:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id r9so4704328ioa.2;
-        Wed, 09 Sep 2020 13:41:20 -0700 (PDT)
+        Wed, 9 Sep 2020 16:43:43 -0400
+Received: by mail-il1-f195.google.com with SMTP id m1so3628290ilj.10;
+        Wed, 09 Sep 2020 13:43:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TqGCn7DWU7EUWxs9MN7C6bAa7Y406Cxeb7CwfmoBTx8=;
-        b=TI0NHSIHMJFHExyeU451DF8wQ1+UR9ud9jGgn0FymFFL6uMxEM7X6VXeOzyBVTuZ3O
-         K/lwbit8kSbys2UaZnRgSzKgjydeYTGbkPFa3nT4WGbfy9HBroDJeZ+8iU/TgRwOowGl
-         bTk8baED1z/T+CSc5g+1oQJO19foZRpzhYAU/xmORrFJd5tg2lc4MaZ5nhy96S+cgqHc
-         Hntk7LuvNfO7STL3Cnc9gmmHzVjUwo9TOuGjlueviEVzW+PA1NYfZ0u11506/ixeE/9J
-         KTGaVw9uY/Kgg9lpzmC+4svbXbpLJuPJ382wZCrX7449tA7yeW3gbkTlsARMsnvM7LPZ
-         nWpw==
-X-Gm-Message-State: AOAM5332dblCNZHaXrdeixktH1wMzuhYut5KTrd/2hEMPRi5hHIDgeyN
-        nrLwCOsZ+3oX9AwpdKF9Zw==
-X-Google-Smtp-Source: ABdhPJwLwHtwzJ4ltje++kfY0TsTVaRVw7sQGbyuMO1IGirxuMWUNGgGKRpRaaeQayPrx++zVhyynQ==
-X-Received: by 2002:a6b:6a01:: with SMTP id x1mr4975232iog.1.1599684080072;
-        Wed, 09 Sep 2020 13:41:20 -0700 (PDT)
+        bh=BvEuTgm2IZoHBm+jPm4TdnWSuIpSZHMUsLkTxZ2He2I=;
+        b=p6in/OdRq2CW+XnLtNM9L/rEUzizgQIjYzMeqWAXiyhMiC3VyOUbMA8ZBqamSGkC5S
+         pxsAqxZg7ORAPOnfVU/A+Wp/FCx5sHP10UzMl/8sk9oudHQE0NLVGoclq1WF7EZF9NZg
+         yylHqumeVUtQ/fuGL02fc+7xmcEZMR0eVZpWxF1xKpeqmEmx2NzTvsJ31F339ydvM+1Y
+         QWk/avNtWkh2RXknHfxWzrxgWHYkin/t5K8PgK7UAU3wi5SVZe9nVSQZ0joBwbW0FD6c
+         DpsGt0TEbC/xUQTkF7Yp/a8g3oBAesfqoY5JGksiq8IigrP6iOlxb6AsSal8Xx4OacuF
+         7Ylw==
+X-Gm-Message-State: AOAM532iUPGSQiLY26DEekDZM7D9ttIVQltFgimU7iJz5LtuKKPUujl3
+        3Fe9AnjlOl9WTtVG68wwOQ==
+X-Google-Smtp-Source: ABdhPJy4rTKJaPZ/jWpOVJ4cgZzmcFL0VsJJo+wB8OY1va7sQv3j1LxWb/8BcCQh8lOkrHj8o37atg==
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr5246688ils.72.1599684221973;
+        Wed, 09 Sep 2020 13:43:41 -0700 (PDT)
 Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id 64sm2085891ilv.0.2020.09.09.13.41.14
+        by smtp.gmail.com with ESMTPSA id a21sm1677462ioh.12.2020.09.09.13.43.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 13:41:19 -0700 (PDT)
-Received: (nullmailer pid 3041579 invoked by uid 1000);
-        Wed, 09 Sep 2020 20:41:11 -0000
-Date:   Wed, 9 Sep 2020 14:41:11 -0600
+        Wed, 09 Sep 2020 13:43:41 -0700 (PDT)
+Received: (nullmailer pid 3044856 invoked by uid 1000);
+        Wed, 09 Sep 2020 20:43:31 -0000
+Date:   Wed, 9 Sep 2020 14:43:31 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "maintainer:BROADCOM SPI DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 1/5] dt-bindings: spi: Fix spi-bcm-qspi compatible
- ordering
-Message-ID: <20200909204111.GA3041530@bogus>
-References: <20200827181842.1000451-1-f.fainelli@gmail.com>
- <20200827181842.1000451-2-f.fainelli@gmail.com>
+To:     "Robert Chiras (OSS)" <robert.chiras@oss.nxp.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ondrej Jirman <megous@megous.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH 4/5] dt-bindings: display/bridge: nwl-dsi: Document
+ fsl,clock-drop-level property
+Message-ID: <20200909204331.GA3043802@bogus>
+References: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
+ <1598613212-1113-5-git-send-email-robert.chiras@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200827181842.1000451-2-f.fainelli@gmail.com>
+In-Reply-To: <1598613212-1113-5-git-send-email-robert.chiras@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 11:18:38 -0700, Florian Fainelli wrote:
-> The binding is currently incorrectly defining the compatible strings
-> from least specific to most specific instead of the converse. Re-order
-> them from most specific (left) to least specific (right) and fix the
-> examples as well.
+On Fri, Aug 28, 2020 at 02:13:31PM +0300, Robert Chiras (OSS) wrote:
+> From: Robert Chiras <robert.chiras@nxp.com>
 > 
-> Fixes: 5fc78f4c842a ("spi: Broadcom BRCMSTB, NSP, NS2 SoC bindings")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Add documentation for a new property: 'fsl,clock-drop-level'.
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 > ---
->  .../bindings/spi/brcm,spi-bcm-qspi.txt           | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> index 8b5741b..b415f4e 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> @@ -143,6 +143,10 @@ properties:
+>  
+>      additionalProperties: false
+>  
+> +  clock-drop-level:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+fsl, ?
+
+> +    description:
+> +      Specifies the level at wich the crtc_clock should be dropped
+
+Needs a type $ref.
+
+> +
+>  patternProperties:
+>    "^panel@[0-9]+$":
+>      type: object
+> -- 
+> 2.7.4
+> 
