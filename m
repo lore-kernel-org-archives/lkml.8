@@ -2,100 +2,129 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC86CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40945C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7973D20757
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F0C2145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:26:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MLtuElp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbgIIJZj (ORCPT
+        id S1729851AbgIIJ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:25:39 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54228 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgIIJZe (ORCPT
+        Wed, 9 Sep 2020 05:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgIIJ0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:25:34 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 359D81C0B8A; Wed,  9 Sep 2020 11:25:31 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 11:25:30 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v9 11/13] arm64: dts: freescale: sl28: enable LED support
-Message-ID: <20200909092530.GC14289@amd>
-References: <20200907213802.26745-1-michael@walle.cc>
- <20200907213802.26745-12-michael@walle.cc>
+        Wed, 9 Sep 2020 05:26:13 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BE9C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:26:12 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id gr14so2569742ejb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r6DZDXW2YGItYWu3dtFgHpQyQnbLb2FyzRV1Tm+8JvY=;
+        b=MLtuElp1YLqmIO7OwQ6l20NeACyG2PIdqREORO+akPvUrIJCNfv+jHg31uTBSo7tvY
+         CWEcZxrZOG/vFPhcUp88soN0nhZBwCZS/ZxqylYK2NDagz4mQaUufqceBiMtj5lUOCYC
+         hJBvGSk25zG56nS6GkLDsmc/oLxglNmKYqU29+p9CcUCnB/CunbqRkprARZw+gg/67zV
+         CAiaQ3H/+18KUUyU5U5TSqVDidt4eCNkNnnDRe4WPtvtlQFi0i/XED+LXl3xyO4HW7Vf
+         jp7VUZSBHJvvk0b7RYSAEd99Pq8U03/mtiK3fVP1LH4DnerRYFX89OZBSf+VE2dNMbde
+         o27g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r6DZDXW2YGItYWu3dtFgHpQyQnbLb2FyzRV1Tm+8JvY=;
+        b=kl1fV6vhaBMTVh/aGrO2qqk9j3REtaUMhYQxZmXu6Rmy4/vL5NNFPXK8VBj+1jLi3T
+         b70aEjPndXzeuoghIyn8nyjKWEiUQ3NRfh7DzfjpPgLKBabx57iIqh5SVnp8iVxuCOf9
+         WzC1Lb6oRmIRw8K4OHnU1wQMAKhENtOe9sG6m01jPYStQE3+hm/31DprrbJysYcyw6DT
+         Ag0jeM5b3rX4C3aBD2jJK6ZeYElni7hFpFvIvh7GnPRvPbOsTqtcr93fBB6M1NwuEuW5
+         VQvjr9Izb8sNCq1QdFk4mtiAN03lUVMrz6n3WSRYziIuFpFz7yE5O+vEgamAWD76FbXe
+         +/LQ==
+X-Gm-Message-State: AOAM533UhikZqlZYdUmE2B3LzwM5o18xxrf+dswy58TaLSd2gkdRVajz
+        w07nXsYOn9E/PSep3vuX3VjuQk4N+Gms8F4CBH/I9A==
+X-Google-Smtp-Source: ABdhPJwnH/OaaOXRFuOx08+jmJH/w+WnKzlsJruGsmUcYnh6fd9B+IgiKxG2Pi4LXbnAZHCO/70tnv307RgxU8Bvfw0=
+X-Received: by 2002:a17:906:c1c3:: with SMTP id bw3mr2653214ejb.516.1599643571188;
+ Wed, 09 Sep 2020 02:26:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vOmOzSkFvhd7u8Ms"
-Content-Disposition: inline
-In-Reply-To: <20200907213802.26745-12-michael@walle.cc>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200905133549.24606-1-warthog618@gmail.com> <20200905133549.24606-8-warthog618@gmail.com>
+ <20200909092401.GA1431678@sol>
+In-Reply-To: <20200909092401.GA1431678@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 9 Sep 2020 11:26:00 +0200
+Message-ID: <CAMpxmJXh9pKMAXgPWSCPXeyjP0CSo=A5SgLPrL2eRxX-LAyKag@mail.gmail.com>
+Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 9, 2020 at 11:24 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Sat, Sep 05, 2020 at 09:35:36PM +0800, Kent Gibson wrote:
+> > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> >
+> > The struct linereq implementation is based on the v1 struct linehandle
+> > implementation.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> >
+>
+> [snip]
+>
+> >               if (copy_from_user(&offset, ip, sizeof(offset)))
+> >                       return -EFAULT;
+> > @@ -1104,6 +1505,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+> >                MAJOR(devt), gdev->id);
+> >
+> >       return 0;
+> > +     /*
+> > +      * array sizes must ensure 64-bit alignment and not create holes in
+> > +      * the struct packing.
+> > +      */
+> > +     BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
+> > +     BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
+> > +
+> > +     /*
+> > +      * check that uAPI structs are 64-bit aligned for 32/64-bit
+> > +      * compatibility
+> > +      */
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
+> > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
+> >  }
+> >
+>
+> A couple of things here - these should all be !IS_ALIGNED.
+> And the BUILD_BUG_ON gets compiled out, and so doesn't fail, if they are
+> after the return.
+>
+> How would you like that fixed - v8 or a patch once v7 is in?
+>
+> Cheers,
+> Kent.
 
---vOmOzSkFvhd7u8Ms
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v8 please. Why is it compiled out though? Does it need some config option?
 
-On Mon 2020-09-07 23:38:00, Michael Walle wrote:
-> Now that we have support for GPIO lines of the SMARC connector, enable
-> LED support on the KBox A-230-LS. There are two LEDs without fixed
-> functions, one is yellow and one is green. Unfortunately, it is just one
-> multi-color LED, thus while it is possible to enable both at the same
-> time it is hard to tell the difference between "yellow only" and "yellow
-> and green".
->=20
-> Signed-off-by: Michael Walle <michael@walle.cc>
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---vOmOzSkFvhd7u8Ms
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9Yn4oACgkQMOfwapXb+vKlEwCffsn/eLFslqgKQ+Rq7ewumG4T
-awAAn0ncLmIiVkw2e88vrBqQ9XWGm+jv
-=cwpv
------END PGP SIGNATURE-----
-
---vOmOzSkFvhd7u8Ms--
+Bart
