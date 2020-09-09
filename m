@@ -2,93 +2,93 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80876C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A94C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 445F62166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599670971;
-	bh=07BCrfn/8+g2jlnsAG6x4JhTKTBQxFKnS9xT7bMNxg8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Gyo0hRsKXx44D0i1IAnE8EcHimXqsguHKJiuEvf+0mVXhIZDp4PILPaq1Yy9jpIYi
-	 yvPKA1lg0yCqmqkLKG8oRTvs7orUIWyBhLa5iMUBlhRpfmp0cpWLUKDjHq6w/lop85
-	 wg7vPkaKWo1/IGC4IxGSp+HA8L61hLPYCo9+X7Eo=
+	by mail.kernel.org (Postfix) with ESMTP id 202FA2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dgIxAhSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731284AbgIIRCs (ORCPT
+        id S1730640AbgIIRCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:02:48 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:37493 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbgIIPrR (ORCPT
+        Wed, 9 Sep 2020 13:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730520AbgIIPrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:47:17 -0400
-Received: by mail-ej1-f67.google.com with SMTP id nw23so4265840ejb.4;
-        Wed, 09 Sep 2020 08:47:16 -0700 (PDT)
+        Wed, 9 Sep 2020 11:47:16 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E60EEC061373
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:17:57 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y4so3750606ljk.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RI+bxv5VZflN6t2kKylQhV08+/GCPgbygshc8DXvDRw=;
+        b=dgIxAhSw/d+KeaJLhyjaMwi9TdxfkI7HLOKZDlzi73AQBXjyD3sj4Ezv0ST0qI3kVj
+         dVrcM35E5fBcLfotWOkVSbzco3ejp6fTIF13sGxcqMhkH1jrZ7F6kGnBFqLswBbEA4wQ
+         Lu6wa3K4F92LZMwycMHAtIuPK400uLTm7CEiXYsC1akHJ2ZooKeUaWeAIALiLCz5e5Bs
+         l+GTFj9e+iVlFJWrJTptnBNeOCtB6bMwPwVzLeH+VHsvFWL8IFeyb3jNKp9XETcZtP25
+         Bin9CViLVt1+GnUjkBunWFxgnClU2IhijD+5lyK/uCwcf9MBU+7AOgKcTg5aT9xD0XBu
+         5LjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4p1CDFl+PUlfhhnDniW1eQduDkR/YtBDlZGh6mzJu5M=;
-        b=PelLgJ+C9E9GxzT/H6XzcZovYk8DTceQGlvSLRujUr490z07Tc2Cip83asU/CW4EGL
-         +KCYiqEnmpeihpDXj8W6OYruJ4HxZRkv1bNczGUnmaCxrYKsQtmbQjSXhP5u50KenHjN
-         SVuOylbpiw+G+WVHyWm173MQ+Oq6RCP2zByVE+cnxF7ESIS0HLt90t/HoLi77wlBZ+LT
-         1iV/t8FMd9dvF6jdrJktRAqfWlQWkUs24BluGn+5S+03n2cIDJjv81zQHDp4nyqmeslv
-         kNwX45PRiL9NiBeRiXwNEpV4MK1qNq5EhyCHNp7CSB8Omjl8IvodTY/qm08RnhyRrQuR
-         3jIQ==
-X-Gm-Message-State: AOAM5317vNKQeo2qjEH+qF6V4Aws23xHSEZ7e9csunevCqxyOPq91pHB
-        jYrq48aXTpkeqhCh8woD4vlRgP4jpJg=
-X-Google-Smtp-Source: ABdhPJzi/hYyGq1JVy+Kg6/YyIph1e7w9rOfhptzmNpInhxHnS6FKRNKDBWHCfA1x1z2+q3bOKx8iA==
-X-Received: by 2002:ac2:5298:: with SMTP id q24mr1992050lfm.164.1599661891028;
-        Wed, 09 Sep 2020 07:31:31 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id h20sm789811ljg.51.2020.09.09.07.31.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RI+bxv5VZflN6t2kKylQhV08+/GCPgbygshc8DXvDRw=;
+        b=DQQmAde1yzM52GIQFTL6ErrM1GnN9LRG1GVT6ZS+qi62UQyqy4JHiPPH+hJa4SV9N+
+         8l+3poTz2YUnlM5xrRZWLhEjyFr9bLUBnsxV0XvKFQ45BMzq7xdMOtie3OACKZmwf6UW
+         AwtTVmrplVX7UUE/gjdVDH3zQP+umaZ3ZfOIeJgwqb3hXNGg/r45iFw2UXtNl9nUkAzc
+         tdO83qUxEVJTGSiZCCXeya5T9Z8nzdM/IEAp+qAIHwb+cEDBS4MSze3RIigDDtSF8tvR
+         mPZSE9+Pz1g6SOu+vU/KKtuYlEtgdE2pUQRU6NNJ5VcV1q8sa3Hq++ib0jX2hIc31sKI
+         IcNA==
+X-Gm-Message-State: AOAM532kfAArB2V9z9nNucGWZQeYKsduYWQ4G6XzSlwz0EjwJwuBPKHO
+        BDtw15EbqP+NGgUIB2CfC32sLQ==
+X-Google-Smtp-Source: ABdhPJxJ1cka0/yw3k+K2Latb67SojZMHiT6GzCn48C/9jxpCdPi3NJrrI9YQkpJNaCI30I7JUmjfg==
+X-Received: by 2002:a05:651c:1253:: with SMTP id h19mr1906184ljh.55.1599661076370;
+        Wed, 09 Sep 2020 07:17:56 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id l15sm785890lje.16.2020.09.09.07.17.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 07:31:29 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@xi.terra>)
-        id 1kG18A-000414-4b; Wed, 09 Sep 2020 16:31:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 0/2] serial: core: fix console port-lock regression
-Date:   Wed,  9 Sep 2020 16:30:59 +0200
-Message-Id: <20200909143101.15389-1-johan@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 09 Sep 2020 07:17:55 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id A10F71036AE; Wed,  9 Sep 2020 17:18:00 +0300 (+03)
+Date:   Wed, 9 Sep 2020 17:18:00 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 06/16] mm: thp: add 1GB THP split_huge_pud_page()
+ function.
+Message-ID: <20200909141800.4ueixh2gw5lv4deh@box>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200902180628.4052244-7-zi.yan@sent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902180628.4052244-7-zi.yan@sent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches fix up the regressions introduced by the console-detach
-changes after which the port lock was no longer initialised for not-yet
-registered consoles during port registration or during early console
-setup.
+On Wed, Sep 02, 2020 at 02:06:18PM -0400, Zi Yan wrote:
+>  25 files changed, 852 insertions(+), 98 deletions(-)
 
-Some of the reported driver regressions have been addressed by patching
-individual drivers and later by a work-around for the first issue in
-core but the early setup issue remained.
-
-Johan
-
-
-Johan Hovold (2):
-  serial: core: fix port-lock initialisation
-  serial: core: fix console port-lock regression
-
- drivers/tty/serial/serial_core.c | 44 +++++++++++++++-----------------
- include/linux/serial_core.h      |  1 +
- 2 files changed, 21 insertions(+), 24 deletions(-)
+It's way too big to have meaningful review.
 
 -- 
-2.26.2
-
+ Kirill A. Shutemov
