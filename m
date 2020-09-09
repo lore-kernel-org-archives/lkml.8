@@ -2,96 +2,101 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3922FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F93EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E154221D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599680374;
-	bh=qcSve+DZvxzBllRviVSYyWseMpVxqE+QpXt5urpH4U8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nUJkLlq7GNO3/Kpdf5/DKntJFs+2z/dXs9Ky0NG8InMaduHy6AqsMo3E01WGubPQz
-	 Jyemygdq9XMSFrXJ+N1AvlbGiMmW3SgrSC4GGCViks7oNz8DhT5tKKWpbqDV0Q2Wx5
-	 NDtIC73XCP0LNmWVlb0iqyA/M1E21MNmiPAMAigE=
+	by mail.kernel.org (Postfix) with ESMTP id 0947D21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:41:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQApDRLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgIITja (ORCPT
+        id S1726714AbgIITla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:39:30 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:45309 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgIITj3 (ORCPT
+        Wed, 9 Sep 2020 15:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIITl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:39:29 -0400
-Received: by mail-ej1-f66.google.com with SMTP id i26so5219340ejb.12;
-        Wed, 09 Sep 2020 12:39:25 -0700 (PDT)
+        Wed, 9 Sep 2020 15:41:28 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DCFC061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:41:27 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so3410481wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=krsC5TlDTzFA7N4jXvevywXfD40E1ld+Bd6bF1uKPo0=;
+        b=jQApDRLWrd0HRK0Vx11RKynsnzL2LCzupHBZ2iu7Sr/BrT11O0VQG0DVMS23c/deNS
+         SC33nesbW4f1JNxaKn/txaZlt7+sZDvy5c1jPtXR3GuwLl62XVBaAp8JIJ7IvWwHGcJV
+         BouAmtu3kK+n8e+lbRp0Be3BIhWYk21qJlKEVPGtjmtg9XutvYprq67RzvKIgtps0WJi
+         CiSjV++ZUc4xOZh6gFp5NMerA0RD0iNSTlHKnqYbfdX0lFcXPw2Z6S2tlD2q8TUfca97
+         9tKrlCH2FY8kEKw8uZcOmT9ovcZznME5NvT1eGyg294sJtMQDS2XyWkeldcWpZG7jGqo
+         R+wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e4W6DmWRzbF1Vd8vLdjGFrgnjV3JprnSzUpFxxJ4Qz8=;
-        b=hca7fnTr6A05P37+hRLn4FLgbfNpOEH9SVeTAO3JBXFK87iaO5cZ7eSPjivGaGPp8B
-         vYrL0Ae82SvoU/sPlLD0kKcfp9N/XLiKntpz3uFGawyLvWDDy79pkx+i51ywg28bj5mf
-         WkO3qsa7ii8hnP5tg2R9aFk7KnzM4t1ZvpsLHsX7WDybNqP1ndzsJtvtoWgUaNJ43c0s
-         QtYrTEb4mJynaROnfw8y9jYZ15iC8SXgOU1fin2FniLyT2FmmwvS5jvNVGEHk5052Ovl
-         nlGqcrysAeZb1hzJhYs416XVYDbQ+70TD/YvN/BUUfS00O+5Y3aZeYnmjThA7vXLN60I
-         pEDA==
-X-Gm-Message-State: AOAM533rAifCKkXacL3SDF+w6KVAZG961xe4uDqbLNcIjJNApHrvKykq
-        oG0tr8XiqQyprxw5TEUHM+E=
-X-Google-Smtp-Source: ABdhPJxixDeCW1Z3OsaBG7M1oqZj7nTiVh0oOIPSFhZbxejJRsXvA2jBaOVpm1yhSXmYr62rBGpPAQ==
-X-Received: by 2002:a17:906:69d5:: with SMTP id g21mr4991420ejs.461.1599680364795;
-        Wed, 09 Sep 2020 12:39:24 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id rn4sm3605279ejb.43.2020.09.09.12.39.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Sep 2020 12:39:24 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 21:39:21 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 04/25] ARM: dts: s5pv210: fix pinctrl property of
- "vibrator-en" regulator in Aries
-Message-ID: <20200909193921.GB21431@kozik-lap>
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-5-krzk@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=krsC5TlDTzFA7N4jXvevywXfD40E1ld+Bd6bF1uKPo0=;
+        b=g6ao/hJ7R/bSJT9gtXH9gWszXZ5fo3CaBce4fxpHjWc7Fx8720SQs6JIwHtPZrOTZ7
+         EjDtHTBtFaeQi7xVjCB+MaaF8dUhTkMn4Koh5W7UZQHATvaAS73lxPdNDV7b87Fi6ZRg
+         hutvu0DL/3umTZbkfUCV2WeXLQDfaDnh8JTDd9QhMwlePDbaMccLB7RQsr5giMkkJ7Ht
+         QJUBhdGVuoAgiZeYHkz73XVCFG+1x4rjtGFRYccY5hjGZuo7fkHVXk+iyB9Ja52jOa4e
+         gcm+vxRZNHmq9sV7ZE7vPCRvYGoAHaykbqByHMHKO6CG76sLsoE/fdSd8V2BHIeyCK9q
+         hg8A==
+X-Gm-Message-State: AOAM531zukD8NQ8naG1lGlBCUia3HRJGb/K6fNECdcrUPGgJT3E9tQM8
+        YeS/f0onqrngOgcD8AG143U=
+X-Google-Smtp-Source: ABdhPJx4SJ5ySAYxLXHiT1bLYcJi4lRCVVLiy5Md3vYJ6vTjQ5z1ij+xpGy6S+uEKcOFRtYiST6JBA==
+X-Received: by 2002:a1c:800f:: with SMTP id b15mr4806472wmd.114.1599680486179;
+        Wed, 09 Sep 2020 12:41:26 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id j7sm5402892wrs.11.2020.09.09.12.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 12:41:25 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] w1: Use kfree_sensitive instead of memset+kfree
+Date:   Wed,  9 Sep 2020 20:41:21 +0100
+Message-Id: <20200909194122.212486-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200907161141.31034-5-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 06:11:20PM +0200, Krzysztof Kozlowski wrote:
-> Fix typo in pinctrl property of "vibrator-en" fixed regulator in Aries
-> family of boards.  The error caused lack of pin configuration for the
-> GPIO used in vibrator.
-> 
-> Fixes: 04568cb58a43 ("ARM: dts: s5pv210: Disable pull for vibrator enable GPIO on Aries boards")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/s5pv210-aries.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Issue identified with Coccinelle.
 
-Applied 4-8.
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/w1/w1.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks Jonathan for testing.
+diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
+index e58c7592008d..4f597b0fd1da 100644
+--- a/drivers/w1/w1.c
++++ b/drivers/w1/w1.c
+@@ -71,8 +71,7 @@ static void w1_master_release(struct device *dev)
+ 	struct w1_master *md = dev_to_w1_master(dev);
+ 
+ 	dev_dbg(dev, "%s: Releasing %s.\n", __func__, md->name);
+-	memset(md, 0, sizeof(struct w1_master) + sizeof(struct w1_bus_master));
+-	kfree(md);
++	kfree_sensitive(md);
+ }
+ 
+ static void w1_slave_release(struct device *dev)
+-- 
+2.28.0
 
-Best regards,
-Krzysztof
