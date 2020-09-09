@@ -2,198 +2,149 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B9BC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293A2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4735521941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599669721;
-	bh=Os+2kdLhlGFHuAXnIKwsp2QyzksMHbIGTch+A2L27SM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Q4ahW8rI+P4Q/yu4fP3Q1F2t5eFMxynqAo941+ajKLoJcWsNiSlFeiS/IjsSqLUGe
-	 rodCbAlNWCksitn/s3HA60g8oxhDP7Jzfc1WCoqn/ja7JiCqcIO8aVDWBdvBp9I0PK
-	 pwOGD4zrCuuoGoQnplIoPTZMGMnUl96nM+7RD1BI=
+	by mail.kernel.org (Postfix) with ESMTP id B46502166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:42:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QYiLxdPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgIIQl7 (ORCPT
+        id S1731073AbgIIQmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbgIIQVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:21:23 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22D772080A;
-        Wed,  9 Sep 2020 16:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599668462;
-        bh=Os+2kdLhlGFHuAXnIKwsp2QyzksMHbIGTch+A2L27SM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mEkygTjNd7rBZIkApJjkQzebC0q4p7/j8XjD7Oz/8yphQWjfrYdcPildXlFdwuqd4
-         oL0KUjTWyAQQJ82PUruCAV5s7rPcqIHxsIiTXhQVQDaIuklN13ZF9eSNYQeIARjBQm
-         MXjs4Dxd07f/OOU2Vuu6Ofkc03QrZZN9Xzp7RyCQ=
-Date:   Wed, 9 Sep 2020 11:21:00 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        John Garry <john.garry@huawei.com>,
-        Don Brace <don.brace@microsemi.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
-Subject: Re: [PATCH v2 01/15] scsi: megaraid_sas: use generic power management
-Message-ID: <20200909162100.GA710627@bjorn-Precision-5520>
+        Wed, 9 Sep 2020 12:42:32 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:30590 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730807AbgIIQQ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:16:58 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089GEmH0019711;
+        Wed, 9 Sep 2020 18:16:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=pX2B7fReKwvkHQysboPcLDLrH1m3FCE4w8zrrewK33E=;
+ b=QYiLxdPjc5qlg86Hyi/HVbm9yiRi38vLWdASByT+wFeaEkRY6ZDSaskLeEP2/61pvKmN
+ zrdJ10wLVeMug/QMxvTy/tcJ/9YAwXBa6UXax8zPrFwGWm//nD+0ioTBr1kGNJJfVSbP
+ aLUYDFtkV3KqTB9mYVX9JQSohNW+NWkWMIfBOPDJg1i5+T3jmEIbb/51LxY8Q7P+qAVS
+ NE7wLfvyYsuMc/cJeb1XlTlzbHK1AEuyjiDAhrprSAMA9CIGAvShzLI7m7ZbnQTHiOV+
+ Nl2d+8m7ZSX+YoKvDegOeUMuPUYNEonduG50ud2nyEKMeD7Ylungq/fyDa1fuyp8iQlU UQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 33c0eux4ny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 18:16:03 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E01310002A;
+        Wed,  9 Sep 2020 18:16:02 +0200 (CEST)
+Received: from Webmail-eu.st.com (gpxdag5node6.st.com [10.75.127.79])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 067C12BF9D0;
+        Wed,  9 Sep 2020 18:16:02 +0200 (CEST)
+Received: from GPXDAG5NODE4.st.com (10.75.127.77) by GPXDAG5NODE6.st.com
+ (10.75.127.79) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
+ 2020 18:16:01 +0200
+Received: from GPXDAG5NODE4.st.com ([fe80::f1ac:b650:75f9:818a]) by
+ GPXDAG5NODE4.st.com ([fe80::f1ac:b650:75f9:818a%19]) with mapi id
+ 15.00.1473.003; Wed, 9 Sep 2020 18:16:01 +0200
+From:   Hugues FRUCHET <hugues.fruchet@st.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Paul <paul.kocialkowski@bootlin.com>
+CC:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "Biju Das" <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v4 1/6] media: i2c: ov5640: Remain in power down for DVP
+ mode unless streaming
+Thread-Topic: [PATCH v4 1/6] media: i2c: ov5640: Remain in power down for DVP
+ mode unless streaming
+Thread-Index: AQHWhPjOKshFnubx50WwoCdor2jh8KlgXYuA
+Date:   Wed, 9 Sep 2020 16:16:01 +0000
+Message-ID: <8b5d4928-2921-b876-7d1e-04bb42eff4fa@st.com>
+References: <20200904201835.5958-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200904201835.5958-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200904201835.5958-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1C1BB566B1FBDB46B15502D69C582AA4@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909152058.GA14223@gmail.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_09:2020-09-09,2020-09-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 08:50:58PM +0530, Vaibhav Gupta wrote:
-> On Wed, Sep 09, 2020 at 08:23:32AM -0500, Bjorn Helgaas wrote:
-> > On Wed, Sep 09, 2020 at 03:33:15PM +0530, Vaibhav Gupta wrote:
-> > > On Tue, Sep 08, 2020 at 12:32:09PM -0500, Bjorn Helgaas wrote:
-> > > > On Mon, Jul 20, 2020 at 07:04:14PM +0530, Vaibhav Gupta wrote:
-> > > > > With legacy PM hooks, it was the responsibility of a driver to manage PCI
-> > > > > states and also the device's power state. The generic approach is to let
-> > > > > the PCI core handle the work.
-> > > > > 
-> > > > > PCI core passes "struct device*" as an argument to the .suspend() and
-> > > > > .resume() callbacks. As the .suspend() work with "struct instance*",
-> > > > > extract it from "struct device*" using dev_get_drv_data().
-> > > > > 
-> > > > > Driver was also using PCI helper functions like pci_save/restore_state(),
-> > > > > pci_disable/enable_device(), pci_set_power_state() and pci_enable_wake().
-> > > > > They should not be invoked by the driver.
-> > > > > 
-> > > > > Compile-tested only.
-> > > > > 
-> > > > > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> > > > > ---
-> > > > >  drivers/scsi/megaraid/megaraid_sas_base.c | 61 ++++++-----------------
-> > > > >  1 file changed, 16 insertions(+), 45 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-> > > > > index 00668335c2af..4a6ee7778977 100644
-> > > > > --- a/drivers/scsi/megaraid/megaraid_sas_base.c
-> > > > > +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-> > > > > @@ -7539,25 +7539,21 @@ static void megasas_shutdown_controller(struct megasas_instance *instance,
-> > > > >  	megasas_return_cmd(instance, cmd);
-> > > > >  }
-> > > > >  
-> > > > > -#ifdef CONFIG_PM
-> > > > >  /**
-> > > > >   * megasas_suspend -	driver suspend entry point
-> > > > > - * @pdev:		PCI device structure
-> > > > > - * @state:		PCI power state to suspend routine
-> > > > > + * @dev:		Device structure
-> > > > >   */
-> > > > > -static int
-> > > > > -megasas_suspend(struct pci_dev *pdev, pm_message_t state)
-> > > > > +static int __maybe_unused
-> > > > > +megasas_suspend(struct device *dev)
-> > > > >  {
-> > > > > -	struct megasas_instance *instance;
-> > > > > -
-> > > > > -	instance = pci_get_drvdata(pdev);
-> > > > > +	struct megasas_instance *instance = dev_get_drvdata(dev);
-> > > > >  
-> > > > >  	if (!instance)
-> > > > >  		return 0;
-> > > > >  
-> > > > >  	instance->unload = 1;
-> > > > >  
-> > > > > -	dev_info(&pdev->dev, "%s is called\n", __func__);
-> > > > > +	dev_info(dev, "%s is called\n", __func__);
-> > > > >  
-> > > > >  	/* Shutdown SR-IOV heartbeat timer */
-> > > > >  	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
-> > > > > @@ -7579,7 +7575,7 @@ megasas_suspend(struct pci_dev *pdev, pm_message_t state)
-> > > > >  
-> > > > >  	tasklet_kill(&instance->isr_tasklet);
-> > > > >  
-> > > > > -	pci_set_drvdata(instance->pdev, instance);
-> > > > > +	dev_set_drvdata(dev, instance);
-> > > > 
-> > > > It *might* be correct to replace "instance->pdev" with "dev", but it's
-> > > > not obvious and deserves some explanation.  It's true that you can
-> > > > replace &pdev->dev with dev, but I don't know anything about
-> > > > instance->dev.
-> > 
-> > Sorry, I meant "instance->pdev" here.
-> > 
-> > > > I don't think this change is actually necessary, is it?
-> > > > "instance->pdev" is still a pci_dev pointer, so pci_set_drvdata()
-> > > > should work fine. ...
-> > > > 
-> > > There is no instance->dev . The 'dev' passed dev_set_drvdata() is
-> > > same &pdev->dev. 
-> > 
-> > Yes, it's true that "dev" here is the same as the "&pdev->dev" we had
-> > previously.  But we passed "instance->pdev" (not "pdev") to
-> > pci_set_drvdata().  So the question is whether instance->pdev->dev ==
-> > dev.
-> > 
-> > They *might* be the same, but I don't think it's obvious.
-> > 
-> Yes, they are same.
-> driver/pci/pci-driver.c :
-> 'dev' is passed as parameter to both pci_device_probe() and pci_pm_suspend()
-> From 'dev', pci_device_probe() extracts "struct pci_dev*" and passes it to the
-> probe callback of this driver.
-> 
-> In the proble function - megasas_probe_one()
-> :7347	instance->pdev = pdev;
-> :7386	pci_set_drvdata(pdev, instance);
-> 
-> The proble function is using "struct pci_dev*" variable "pdev" provided by core
-> and same we replaced &pdev->dev with "struct device *dev".
-> 
-> So the instance->pdev->dev and 'dev' can only differ if 'dev' passed to
-> pci_device_probe() and pci_pm_suspend() are different.
-
-OK.  I think this requires too much analysis for this particular
-patch, which is really about deprecating pci_driver.suspend and
-.resume.  We want patches to be easily verifiable with a minimum of
-extra research.
-
-I would completely support a separate patch to clean this up, though.
-The *ideal* thing would be to get rid of the set_drvdata() completely
-from the suspend routine.  Doing it in the probe routine should be
-enough.
-
-> > > The dev pointer used here, points to same value.
-> > > 
-> > > pci_get_drvdata() and pci_set_drvdata() invoke dev_get_drvdata() and
-> > > dev_set_drvdata() respectively. And they do nothing else. Seems like
-> > > additional unnecessary function calls and operations.
+SGkgUHJhYmhha2FyLA0KDQpBcyBkaXNjdXNzZWQgc2VwYXJhdGVseSBJIHdvdWxkIHByZWZlciB0
+byBiZXR0ZXIgdW5kZXJzdGFuZCBpc3N1ZSBiZWZvcmUgDQpnb2luZyB0byB0aGlzIHBhdGNoLg0K
+TmV2ZXJ0aGVsZXNzIEkgaGF2ZSBzb21lIHJlbWFya3MgaW4gY29kZSBpbiBjYXNlIHdlJ2xsIG5l
+ZWQgaXQgYXQgdGhlIGVuZC4NCg0KT24gOS80LzIwIDEwOjE4IFBNLCBMYWQgUHJhYmhha2FyIHdy
+b3RlOg0KPiBLZWVwIHRoZSBzZW5zb3IgaW4gc29mdHdhcmUgcG93ZXIgZG93biBtb2RlIGFuZCB3
+YWtlIHVwIG9ubHkgaW4NCj4gb3Y1NjQwX3NldF9zdHJlYW1fZHZwKCkgY2FsbGJhY2suDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBMYWQgUHJhYmhha2FyIDxwcmFiaGFrYXIubWFoYWRldi1sYWQucmpA
+YnAucmVuZXNhcy5jb20+DQo+IFJldmlld2VkLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMuanpAYnAu
+cmVuZXNhcy5jb20+DQo+IFRlc3RlZC1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG9Aam1vbmRpLm9y
+Zz4NCj4gLS0tDQo+ICAgZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMgfCAxOSArKysrKysrKysr
+KysrKysrLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDMgZGVsZXRp
+b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMgYi9k
+cml2ZXJzL21lZGlhL2kyYy9vdjU2NDAuYw0KPiBpbmRleCAyZmU0YTdhYzA1OTIuLjg4MGZkZTcz
+YTAzMCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMNCj4gKysrIGIv
+ZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMNCj4gQEAgLTM0LDYgKzM0LDggQEANCj4gICAjZGVm
+aW5lIE9WNTY0MF9SRUdfU1lTX1JFU0VUMDIJCTB4MzAwMg0KPiAgICNkZWZpbmUgT1Y1NjQwX1JF
+R19TWVNfQ0xPQ0tfRU5BQkxFMDIJMHgzMDA2DQo+ICAgI2RlZmluZSBPVjU2NDBfUkVHX1NZU19D
+VFJMMAkJMHgzMDA4DQo+ICsjZGVmaW5lIE9WNTY0MF9SRUdfU1lTX0NUUkwwX1NXX1BXRE4JMHg0
+Mg0KPiArI2RlZmluZSBPVjU2NDBfUkVHX1NZU19DVFJMMF9TV19QV1VQCTB4MDINCg0KRm9yIHRo
+ZSB0aW1lIGJlaW5nIHRoaXMgc2VjdGlvbiB3YXMgb25seSByZWZlcnJpbmcgdG8gcmVnaXN0ZXJz
+IA0KYWRkcmVzc2VzIGFuZCBiaXQgZGV0YWlscyB3YXMgZXhwbGFpbmVkIGludG8gYSBjb21tZW50
+IHJpZ2h0IGJlZm9yZSANCmFmZmVjdGF0aW9uLCBzZWUgT1Y1NjQwX1JFR19JT19NSVBJX0NUUkww
+MCBmb3IgZXhhbXBsZS4NCg0KPiAgICNkZWZpbmUgT1Y1NjQwX1JFR19DSElQX0lECQkweDMwMGEN
+Cj4gICAjZGVmaW5lIE9WNTY0MF9SRUdfSU9fTUlQSV9DVFJMMDAJMHgzMDBlDQo+ICAgI2RlZmlu
+ZSBPVjU2NDBfUkVHX1BBRF9PVVRQVVRfRU5BQkxFMDEJMHgzMDE3DQo+IEBAIC0xMTIwLDYgKzEx
+MjIsMTIgQEAgc3RhdGljIGludCBvdjU2NDBfbG9hZF9yZWdzKHN0cnVjdCBvdjU2NDBfZGV2ICpz
+ZW5zb3IsDQo+ICAgCQl2YWwgPSByZWdzLT52YWw7DQo+ICAgCQltYXNrID0gcmVncy0+bWFzazsN
+Cj4gICANCj4gKwkJLyogcmVtYWluIGluIHBvd2VyIGRvd24gbW9kZSBmb3IgRFZQICovDQo+ICsJ
+CWlmIChyZWdzLT5yZWdfYWRkciA9PSBPVjU2NDBfUkVHX1NZU19DVFJMMCAmJg0KPiArCQkgICAg
+dmFsID09IE9WNTY0MF9SRUdfU1lTX0NUUkwwX1NXX1BXVVAgJiYNCj4gKwkJICAgIHNlbnNvci0+
+ZXAuYnVzX3R5cGUgIT0gVjRMMl9NQlVTX0NTSTJfRFBIWSkNCj4gKwkJCWNvbnRpbnVlOw0KPiAr
+DQoNCkkgdW5kZXJzdGFuZCB0aGF0IG1vcmUgb3IgbGVzcyByZWdpc3RlciBPVjU2NDBfUkVHX1NZ
+U19DVFJMMCAoMHgzMDA4KSANCmhhcyBiZWVuIHBhcnRpYWxseSByZW1vdmVkIGZyb20gYmlnIGlu
+aXQgc2VxdWVuY2U6IGZvciBwb3dlci11cCBwYXJ0LCANCmJ1dCBwb3dlci1kd24gcmVtYWlucyBh
+dCB2ZXJ5IGJlZ2lubmluZyBvZiBzZXF1ZW5jZS4NCldlIHNob3VsZCBjb21wbGV0ZWx5IHJlbW92
+ZSAweDMwMDggZnJvbSBpbml0IHNlcXVlbmNlLCBpbmNsdWRpbmcgDQpwb3dlci1kd24sIGFuZCBp
+bnRyb2R1Y2UgYSBuZXcgZnVuY3Rpb24gb3Y1NjQwX3N3X3Bvd2VyZG93bihvbi9vZmYpIHRoYXQg
+DQpzaG91bGQgYmUgY2FsbGVkIGF0IHRoZSByaWdodCBwbGFjZSBpbnN0ZWFkLg0KDQoNCj4gICAJ
+CWlmIChtYXNrKQ0KPiAgIAkJCXJldCA9IG92NTY0MF9tb2RfcmVnKHNlbnNvciwgcmVnX2FkZHIs
+IG1hc2ssIHZhbCk7DQo+ICAgCQllbHNlDQo+IEBAIC0xMjk3LDkgKzEzMDUsMTQgQEAgc3RhdGlj
+IGludCBvdjU2NDBfc2V0X3N0cmVhbV9kdnAoc3RydWN0IG92NTY0MF9kZXYgKnNlbnNvciwgYm9v
+bCBvbikNCj4gICAJICogUEFEIE9VVFBVVCBFTkFCTEUgMDINCj4gICAJICogLSBbNzoyXToJRFs1
+OjBdIG91dHB1dCBlbmFibGUNCj4gICAJICovDQo+IC0JcmV0dXJuIG92NTY0MF93cml0ZV9yZWco
+c2Vuc29yLA0KPiAtCQkJCU9WNTY0MF9SRUdfUEFEX09VVFBVVF9FTkFCTEUwMiwNCj4gLQkJCQlv
+biA/IDB4ZmMgOiAwKTsNCj4gKwlyZXQgPSBvdjU2NDBfd3JpdGVfcmVnKHNlbnNvciwgT1Y1NjQw
+X1JFR19QQURfT1VUUFVUX0VOQUJMRTAyLA0KPiArCQkJICAgICAgIG9uID8gMHhmYyA6IDApOw0K
+PiArCWlmIChyZXQpDQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gKwlyZXR1cm4gb3Y1NjQwX3dy
+aXRlX3JlZyhzZW5zb3IsIE9WNTY0MF9SRUdfU1lTX0NUUkwwLCBvbiA/DQo+ICsJCQkJT1Y1NjQw
+X1JFR19TWVNfQ1RSTDBfU1dfUFdVUCA6DQo+ICsJCQkJT1Y1NjQwX1JFR19TWVNfQ1RSTDBfU1df
+UFdETik7DQo+ICAgfQ0KPiAgIA0KPiAgIHN0YXRpYyBpbnQgb3Y1NjQwX3NldF9zdHJlYW1fbWlw
+aShzdHJ1Y3Qgb3Y1NjQwX2RldiAqc2Vuc29yLCBib29sIG9uKQ0KPiANCg0KDQpCUiwNCkh1Z3Vl
+cy4=
