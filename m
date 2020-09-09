@@ -2,94 +2,80 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7293AC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7241FC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322FE20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C6521532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599633317;
-	bh=Jmx/gfAeiOp0+n83Y104nKTHVJsUUirr9Zyouh3z9SU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oQOUET6abwIZ4iiAVS7cF9lVaXTA6FyWT5tsUlySRk5YGJqufb0u3KY6Wk5f7htDZ
-	 IgserQw1YBHpYP+WmppMgHAdr+iR84sgXreeEm0CPOIeLpG5I5uAGE1+RPYuWxBWoZ
-	 uS5LFYX38uMCSvVzoGkAPmpS+7ojeOo+Z+3W/0W4=
+	s=default; t=1599633358;
+	bh=FTAgov64ac04dst3A94wgkLpWgOSry5DPtPvBH46Xo8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hv2E/MAy20BVuqYXQlhvnqo70o8Xxu3vhUkszvbzLeRk1kiZbSCCQrmAo99GUHMfV
+	 pgp7mZe8SxkU2c31CfwjqUSUf+5cqIRVUfV7GC3mHG2z+J7KuduMXwNxkPQXbLHYn9
+	 QRwjVREWThNiATyfmps22pGjwXRM1tgIkzH9dABg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgIIGfQ (ORCPT
+        id S1728325AbgIIGf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 02:35:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43118 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 02:35:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIIGfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 02:35:15 -0400
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725772AbgIIGf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 02:35:56 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFB721532;
-        Wed,  9 Sep 2020 06:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DC9C21741;
+        Wed,  9 Sep 2020 06:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599633314;
-        bh=Jmx/gfAeiOp0+n83Y104nKTHVJsUUirr9Zyouh3z9SU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VlIdGeGSfpCGWydEZHncvsgvg1D5Z8pouy4+Dqm+6/KZiUq7yX1jvu+MzDXNEW7Dl
-         rYgZusNXR/xgUbzojzQ+RpAXx/Wk2eiWFvgcaqXeddT8QBOtJO0M0m6oG2rnQKQdJi
-         wEv+AxBeAzv7md3R4YVg0pa/sioRq59uT0eOPHYc=
-Received: by mail-ed1-f53.google.com with SMTP id g4so1491440edk.0;
-        Tue, 08 Sep 2020 23:35:14 -0700 (PDT)
-X-Gm-Message-State: AOAM531AiNdrbl+vC3jLk+C3OR97TZ8LVlU5umRPvj318zfKXy61XARg
-        nCBlNVMi3naFIqFteuxLwxrMdhnhQIC4Ro1mU20=
-X-Google-Smtp-Source: ABdhPJyCJq3WS5QRVis8ksBg0a87Uu5M+O+XbjQlSrq+pcwAoif/S8fpOajpxZgwaqRsy01DOOInpTGlPkijuzyYbNE=
-X-Received: by 2002:aa7:da16:: with SMTP id r22mr2682276eds.132.1599633312940;
- Tue, 08 Sep 2020 23:35:12 -0700 (PDT)
+        s=default; t=1599633355;
+        bh=FTAgov64ac04dst3A94wgkLpWgOSry5DPtPvBH46Xo8=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=Lez1JDQ6EymzGW68pPp9Bu7sdiO3BRpN5RYaj6dzlZIAQ3bbe7PxSpCYfo/FRRbO+
+         bxIF9LtU45tZb/7TLf1LBWrYaumwtCfqvaRf1qr4U9ZQWr6w8R3pIe2Uh+F4NP3CxA
+         KuEf/orKS0DQBZp5GxqGW0Uz7FyC5G/tBCMD3Ezs=
+Date:   Wed, 9 Sep 2020 08:35:52 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+cc:     Stefan Achatz <erazor_de@users.sourceforge.net>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2] HID: roccat: add bounds checking in
+ kone_sysfs_write_settings()
+In-Reply-To: <20200824085735.GA208317@mwanda>
+Message-ID: <nycvar.YFH.7.76.2009090835410.4671@cbobk.fhfr.pm>
+References: <20200824085735.GA208317@mwanda>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200908201319.3567-1-krzk@kernel.org> <20200908201319.3567-2-krzk@kernel.org>
- <33361ba9-51df-3b09-6744-9806cdf166db@ti.com>
-In-Reply-To: <33361ba9-51df-3b09-6744-9806cdf166db@ti.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 9 Sep 2020 08:35:01 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcfMPPK4eUWfU5ifJodt0nd-b+hxKV1AQ6oGbnXi--cdw@mail.gmail.com>
-Message-ID: <CAJKOXPcfMPPK4eUWfU5ifJodt0nd-b+hxKV1AQ6oGbnXi--cdw@mail.gmail.com>
-Subject: Re: [PATCH 2/7] power: supply: bq27xxx: report "not charging" on all types
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 at 22:54, Dan Murphy <dmurphy@ti.com> wrote:
->
-> Krzysztof
->
-> On 9/8/20 3:13 PM, Krzysztof Kozlowski wrote:
-> > Commit 6f24ff97e323 ("power: supply: bq27xxx_battery: Add the
-> > BQ27Z561 Battery monitor") and commit d74534c27775 ("power:
-> > bq27xxx_battery: Add support for additional bq27xxx family devices")
-> > added support for new device types by copying most of the code and
-> > adding necessary quirks.
-> >
-> > However they did not copy the code in bq27xxx_battery_status()
-> > responsible for returning POWER_SUPPLY_STATUS_NOT_CHARGING.
-> >
-> > Unify the bq27xxx_battery_status() so for all types when charger is
-> > supplied, it will return "not charging" status.
->
-> If this is a fix then please populate the Fixes tag.
->
-> But not sure how both commits are tied here
+On Mon, 24 Aug 2020, Dan Carpenter wrote:
 
-I am not convinced that it is a fix. It's rather missing functionality
-on these new devices. The commits did not break anything. They just
-did not implement "not charging" for new types.
+> This code doesn't check if "settings->startup_profile" is within bounds
+> and that could result in an out of bounds array access.  What the code
+> does do is it checks if the settings can be written to the firmware, so
+> it's possible that the firmware has a bounds check?  It's safer and
+> easier to verify when the bounds checking is done in the kernel.
+> 
+> Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> v2:  In the v1 patch I added a check against settings->size but that's
+> potentially too strict so it was removed.
 
-Best Regards,
-Krzysztof
+Applied, thanks Dan.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
