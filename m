@@ -7,33 +7,32 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A397206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE840206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgIIPxx (ORCPT
+        id S1730624AbgIIPyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:53:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41702 "EHLO huawei.com"
+        Wed, 9 Sep 2020 11:54:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42788 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730581AbgIIPtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:49:45 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 354901E989B60028A84F;
-        Wed,  9 Sep 2020 21:52:51 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:52:41 +0800
+        id S1730627AbgIIPut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:50:49 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1F16DD5670B8A6110164;
+        Wed,  9 Sep 2020 21:49:36 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
+ 21:49:29 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
-        <nborisov@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+To:     <perex@perex.cz>, <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] btrfs: Remove unused function calc_global_rsv_need_space()
-Date:   Wed, 9 Sep 2020 21:51:42 +0800
-Message-ID: <20200909135142.27352-1-yuehaibing@huawei.com>
+Subject: [PATCH 09/19] ALSA: pci/asihpi: Remove unused function hpi_stream_group_get_map()
+Date:   Wed, 9 Sep 2020 21:49:27 +0800
+Message-ID: <20200909134927.33964-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -44,30 +43,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not used since commit 0096420adb03 ("btrfs: do not
-account global reserve in can_overcommit")
+There is no caller in tree, so can remove it.
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- fs/btrfs/space-info.c | 5 -----
- 1 file changed, 5 deletions(-)
+ sound/pci/asihpi/asihpi.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/fs/btrfs/space-info.c b/fs/btrfs/space-info.c
-index b733718f45d3..0f16a2ce5401 100644
---- a/fs/btrfs/space-info.c
-+++ b/fs/btrfs/space-info.c
-@@ -301,11 +301,6 @@ struct btrfs_space_info *btrfs_find_space_info(struct btrfs_fs_info *info,
- 	return NULL;
+diff --git a/sound/pci/asihpi/asihpi.c b/sound/pci/asihpi/asihpi.c
+index 35e76480306e..8bacd4f47540 100644
+--- a/sound/pci/asihpi/asihpi.c
++++ b/sound/pci/asihpi/asihpi.c
+@@ -258,15 +258,6 @@ static inline u16 hpi_stream_group_reset(u32 h_stream)
+ 		return hpi_instream_group_reset(h_stream);
  }
  
--static inline u64 calc_global_rsv_need_space(struct btrfs_block_rsv *global)
+-static inline u16 hpi_stream_group_get_map(
+-				u32 h_stream, u32 *mo, u32 *mi)
 -{
--	return (global->size << 1);
+-	if (hpi_handle_object(h_stream) ==  HPI_OBJ_OSTREAM)
+-		return hpi_outstream_group_get_map(h_stream, mo, mi);
+-	else
+-		return hpi_instream_group_get_map(h_stream, mo, mi);
 -}
 -
- static u64 calc_available_free_space(struct btrfs_fs_info *fs_info,
- 			  struct btrfs_space_info *space_info,
- 			  enum btrfs_reserve_flush_enum flush)
+ static u16 handle_error(u16 err, int line, char *filename)
+ {
+ 	if (err)
 -- 
 2.17.1
 
