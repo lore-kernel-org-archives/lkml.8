@@ -2,106 +2,156 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFDFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9BE21919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:13:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pjWnANMo";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SRdJuAV/"
+	by mail.kernel.org (Postfix) with ESMTP id 8DA0C21919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgIIL57 (ORCPT
+        id S1727856AbgIIPOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:57:59 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:51983 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729941AbgIILns (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:43:48 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 915B7B12;
-        Wed,  9 Sep 2020 07:43:25 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 09 Sep 2020 07:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=IeoBvfYVc4Im06yQD+pxOyrxlm
-        Y/+Hex5uW2NfYlC4o=; b=pjWnANMor34uCQOJohh/rld/EEFZc0UosIinK3d9QS
-        XayGD5TLHvZHMGEgVCf44OvYZC0TMSyya/vL5dXrFv1Nyst1KSNCu4Qu0ea9wbvd
-        rG6wHz+nqWfOpeyxggBUWJT/CAcOpZ213uUIOOCpRtfct47VGvhs1AY2Z8eXUL3J
-        r5Lx1o/1fN+ls+0sTZRXiFWmEwVQedIN3+y7KFV++Z//WRmZZSei3fwxVO8dAQNR
-        cmYi7DTrCRGuno162UDtbtDOj1CU3L/CveGrvNg3+THNeur7HLTFntmJyfL0ULxR
-        XBN8+V97LOiaI12YBzRQn56Ke0I41EueLcmWLZWI4R6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=IeoBvfYVc4Im06yQD
-        +pxOyrxlmY/+Hex5uW2NfYlC4o=; b=SRdJuAV/upsVfD3GHCrgmudbEhZYcNChF
-        CcktFNPbjmmcfjWvkLAeXBQVrVoOz0REyitsgovvhE+larHzYMCV0OAYZCMViYx8
-        JQ4LLQhu+Y41B3GbLfxTp/xdiBbCp+gFtZBdHqmDjXD7XR0DmneNCnvk6NRMmQru
-        +YyE+QE8Jwlq3Z2zX1GpZWcFkiaOSDzoCV94LYNluDEMgIm/5EjgxZaqCef3hDSD
-        InWFWA1rexsiz6eVnRudeJRNorV/KwV2vlI34006FjsqoFU/6SCw/OPCw3Pw+8BH
-        IUJfL6qMAgVUAlNZ1Lv6bo1YH1hNx9fNYT9+wi5r1T1rhM1iNsB4A==
-X-ME-Sender: <xms:2r9YX41CXZFARNB0cvRrJvpRQsP9ME2Kaw5DRo3l1BGDXkZD0GH3CQ>
-    <xme:2r9YXzEgcpaFxrOkgie1iUuNF7Jqe_73bxz4Du9F9_1_wTm2-cUj-tAtjXptpjExc
-    5SVJn4k23xdxlP71g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehhedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
-    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
-    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
-    dvvddthefftedujeethfeuueelfedtnecukfhppedugedrvddruddtledrkeehnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifse
-    grjhdrihgurdgruh
-X-ME-Proxy: <xmx:2r9YXw4TELryIczh5Xaagxs2FH5ivCya275pTlsOHFPLyU4xuk3d3g>
-    <xmx:2r9YXx0dwqN1ZJL3SX5_RyKVPEqIuP8-n0Gi2O7Wi0Ko0dOsRKqc6Q>
-    <xmx:2r9YX7E3zlgNLcuiH9r57icHisrn_g-HNRhsGk822r-GYIboRsHf-g>
-    <xmx:3b9YX8OTvr-a032_Sld4L8_3bSqS6lNQ36xRnW0r2LdBP7Jz435Otg>
-Received: from localhost.localdomain (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1C3C63065B97;
-        Wed,  9 Sep 2020 07:43:19 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, joel@jms.id.au,
-        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] pinctrl: aspeed: AST2600 pinconf fixes
-Date:   Wed,  9 Sep 2020 21:13:09 +0930
-Message-Id: <20200909114312.2863675-1-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
+        Wed, 9 Sep 2020 11:14:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53988 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729971AbgIIL5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:57:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7A5B9AD1E;
+        Wed,  9 Sep 2020 11:53:59 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 13:53:57 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
+ control
+Message-ID: <20200909115357.GI7348@dhcp22.suse.cz>
+References: <20200817140831.30260-1-longman@redhat.com>
+ <20200818091453.GL2674@hirez.programming.kicks-ass.net>
+ <20200818092617.GN28270@dhcp22.suse.cz>
+ <20200818095910.GM2674@hirez.programming.kicks-ass.net>
+ <20200818100516.GO28270@dhcp22.suse.cz>
+ <20200818101844.GO2674@hirez.programming.kicks-ass.net>
+ <20200818134900.GA829964@cmpxchg.org>
+ <20200821193716.GU3982@worktop.programming.kicks-ass.net>
+ <20200824165850.GA932571@cmpxchg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824165850.GA932571@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+[Sorry, this slipped through cracks]
 
-The AST2600 pinctrl driver was missing support for bias control on the 1.8V
-GPIO pins, and in the process of resolving that I discovered a couple of other
-bugs that are fixed in the first two patches of the series.
+On Mon 24-08-20 12:58:50, Johannes Weiner wrote:
+> On Fri, Aug 21, 2020 at 09:37:16PM +0200, Peter Zijlstra wrote:
+[...]
+> > Arguably seeing the rate drop to near 0 is a very good point to consider
+> > running cgroup-OOM.
+> 
+> Agreed. In the past, that's actually what we did: In cgroup1, you
+> could disable the kernel OOM killer, and when reclaim failed at the
+> limit, the allocating task would be put on a waitqueue until woken up
+> by a freeing event. Conceptually this is clean & straight-forward.
+> 
+> However,
+> 
+> 1. Putting allocation contexts with unknown locks to indefinite sleep
+>    caused deadlocks, for obvious reasons. Userspace OOM killing tends
+>    to take a lot of task-specific locks when scanning through /proc
+>    files for kill candidates, and can easily get stuck.
+> 
+>    Using bounded over indefinite waits is simply acknowledging that
+>    the deadlock potential when connecting arbitrary task stacks in the
+>    system through free->alloc ordering is equally difficult to plan
+>    out as alloc->free ordering.
+> 
+>    The non-cgroup OOM killer actually has the same deadlock potential,
+>    where the allocating/killing task can hold resources that the OOM
+>    victim requires to exit. The OOM reaper hides it, the static
+>    emergency reserves hide it - but to truly solve this problem, you
+>    would have to have full knowledge of memory & lock ordering
+>    dependencies of those tasks. And then can still end up with
+>    scenarios where the only answer is panic().
 
-Please review!
+Yes. Even killing all eligible tasks is not guaranteed to help the
+situation because a) resources might be not bound to a process life time
+(e.g. tmpfs) or ineligible task might be holding resources that block
+others to do the proper cleanup. OOM reaper is here to make sure we
+reclaim some of the address space of the victim and we go over all
+eligible tasks rather than getting stuck at the first victim for ever.
+ 
+> 2. I don't recall ever seeing situations in cgroup1 where the precise
+>    matching of allocation rate to freeing rate has allowed cgroups to
+>    run sustainably after reclaim has failed. The practical benefit of
+>    a complicated feedback loop over something crude & robust once
+>    we're in an OOM situation is not apparent to me.
 
-Andrew
+Yes, this is usually go OOM and kill something. Running on a very edge
+of the (memcg) oom doesn't tend to be sustainable and I am not sure it
+makes sense to optimize for.
 
-Andrew Jeffery (3):
-  pinctrl: aspeed: Format pinconf debug consistent with pinmux
-  pinctrl: aspeed: Use the right pinconf mask
-  pinctrl: aspeed-g6: Add bias controls for 1.8V GPIO banks
+>    [ That's different from the IO-throttling *while still doing
+>      reclaim* that Dave brought up. *That* justifies the same effort
+>      we put into dirty throttling. I'm only talking about the
+>      situation where reclaim has already failed and we need to
+>      facilitate userspace OOM handling. ]
+> 
+> So that was the motivation for the bounded sleeps. They do not
+> guarantee containment, but they provide a reasonable amount of time
+> for the userspace OOM handler to intervene, without deadlocking.
 
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 17 +++++++++++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed.c    |  8 ++++----
- 2 files changed, 21 insertions(+), 4 deletions(-)
+Yes, memory.high is mostly a best effort containment. We do have the
+hard limit to put a stop on runaways or if you are watching for PSI then
+the high limit throttling would give you enough idea to take an action
+from the userspace.
+
+> That all being said, the semantics of the new 'high' limit in cgroup2
+> have allowed us to move reclaim/limit enforcement out of the
+> allocation context and into the userspace return path.
+> 
+> See the call to mem_cgroup_handle_over_high() from
+> tracehook_notify_resume(), and the comments in try_charge() around
+> set_notify_resume().
+> 
+> This already solves the free->alloc ordering problem by allowing the
+> allocation to exceed the limit temporarily until at least all locks
+> are dropped, we know we can sleep etc., before performing enforcement.
+> 
+> That means we may not need the timed sleeps anymore for that purpose,
+> and could bring back directed waits for freeing-events again.
+> 
+> What do you think? Any hazards around indefinite sleeps in that resume
+> path? It's called before __rseq_handle_notify_resume and the
+> arch-specific resume callback (which appears to be a no-op currently).
+> 
+> Chris, Michal, what are your thoughts? It would certainly be simpler
+> conceptually on the memcg side.
+
+I would need a more specific description. But as I've already said. It
+doesn't seem that we are in a need to fix any practical problem here.
+High limit implementation has changed quite a lot recently. I would
+rather see it settled for a while and see how it behaves in wider
+variety of workloads before changing the implementation again.
 
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
