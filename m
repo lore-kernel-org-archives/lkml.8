@@ -2,248 +2,173 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8ACC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84120C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7087721D40
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460AB2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YZG+Xk2c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlRa/+Nv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgIIQqk (ORCPT
+        id S1731147AbgIIQqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:46:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38008 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730625AbgIIQHk (ORCPT
+        Wed, 9 Sep 2020 12:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730939AbgIIQHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 12:07:40 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089G3U2S087988;
-        Wed, 9 Sep 2020 12:07:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=GOBHIxB9XcDj6VPq8bqibnaOg00HGwD0dSp/bZD1+iU=;
- b=YZG+Xk2caimXf8cWdV2JhkNnv1OIcGS9Ri+wVnq/kjIIBDbH7LqPQ4C5lllQojgIVgpI
- m8N07A1liTnByUtpB24HrydeQzQ8TtHZ8lZwf7QdyC0RiU/nyOi4ckFNYUJP4Smy/GHB
- amuIkV+UXRX0bLx6p6tCTuoMVAGMpeOozwc+7wA1gWR54nPuuJrNqR2P8IAtebZ+gsDW
- Bwtw5Zvxn0841fTJW3V2lgF6awOvv0I3DlTRiX76Z/q6Oy7pKWYf2w+jsaoDQtEChWHz
- Bi3RCreNNDjBI4H29kMnMmwq6y25NUg66s92Lmfvd8/Fg8zP821xsJB4QYQyl2aod17B 9Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33f1pgsbjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 12:07:22 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089G3xFI089982;
-        Wed, 9 Sep 2020 12:07:21 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33f1pgsbgc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 12:07:21 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089G264Y015712;
-        Wed, 9 Sep 2020 16:07:19 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 33c2a84t13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 16:07:18 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089G7Gor25559480
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 16:07:16 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1574B4C040;
-        Wed,  9 Sep 2020 16:07:16 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 608AB4C04A;
-        Wed,  9 Sep 2020 16:07:15 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.19.60])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Sep 2020 16:07:15 +0000 (GMT)
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
- <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <20200909105914.GF7348@dhcp22.suse.cz>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
-Date:   Wed, 9 Sep 2020 18:07:15 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63F6C061366;
+        Wed,  9 Sep 2020 07:09:20 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a9so1399018pjg.1;
+        Wed, 09 Sep 2020 07:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TJE+289hTtvntUk1HLKGYW6MtyXveHeXW/D3sjIxKq4=;
+        b=MlRa/+NvY7M7jOTHavH3Q9lFy080yJFraBQL31+lHwWOT6k0/OBgero6SovD+zMNz9
+         cT6t9IIh1i5RiFnrl61GU20SItXDEcQGpdekXUSQvQTr5mQe9LFrCV2XNmn1TEWk1sm+
+         VOZi3Yd+iiwz1yZiPP0glVniCzUS9JbrmfLiz9qGXbCrKLouBM3VqofQxer4SWMNbzKL
+         AscCw5p2Wc9xNMnoeLJ3AjBgI8wOvGDJS7OYmpZ/vg2EUYB0GXPcDJ37BwidJTm2fqH8
+         4UM44a4Jjw6LUwRFUj+D7MPQ7FIVhQT+uCjCdWGeyabOGLF1SGBD8kyvB40x2/hL2vx0
+         F1Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TJE+289hTtvntUk1HLKGYW6MtyXveHeXW/D3sjIxKq4=;
+        b=tNXvd1jIvxoBtV2dxAxfyP/gRIoCUbyqjec9TP80hmetvdRiihfOtgU79+HQSVrxRg
+         36GaTqTUyAgZ2uZLLvYwaEStUjUEro1DUd9WbpUGtyfTYS3+/Ylf6/8e8DZ2grLRKaaU
+         n5i7/ghXV0qs3GwwjNjV8v7UX1h2qX8Pk5vG+zvzqFQOFKUEj9gs6qYFqmiGr0y4XeYw
+         Z6HBZBgchz97LRPXvfDsmGO5h0/u304Z2ovskhMKOO3TuNPxAzcXB4v07dQjJv2/SADh
+         lG42cYtfHtsPOSvVpzjL38nqtjZdX+ovba6znkEnS2HJBeeheBMag4cVtOEViL8KhJxm
+         p5BA==
+X-Gm-Message-State: AOAM530RRqW2eRovor1iHL57fQFNeeyGKHEqLrY5IwWClDUnlmVf0cvO
+        GdB/GEpiNWGxMDDTYd+OLy3UGZM71N4Ff4RFHdQ=
+X-Google-Smtp-Source: ABdhPJwiYdvRQa2vATilMGyvAGfRasPZniD+zOzkWLhLPHuVpgDISM2BAExE/4PtItREzaOstqA46Wd999dfE0PiR5U=
+X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr1018362pjr.228.1599660560292;
+ Wed, 09 Sep 2020 07:09:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200909105914.GF7348@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_09:2020-09-09,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 mlxscore=0 spamscore=0
- adultscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090144
+References: <20200904165222.18444-1-vadym.kochan@plvision.eu>
+ <20200904165222.18444-2-vadym.kochan@plvision.eu> <CAHp75Vc_MN-tD+iQNbUcB6fbYizyfKJSJnm1W7uXCT6JAvPauA@mail.gmail.com>
+ <20200908083514.GB3562@plvision.eu> <CAHp75VdyahsNyOK9_7mFGHFg_O47jVQWro-mhU0n=1K17Eeg8Q@mail.gmail.com>
+ <20200909140043.GB20411@plvision.eu>
+In-Reply-To: <20200909140043.GB20411@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 9 Sep 2020 17:09:02 +0300
+Message-ID: <CAHp75Ve+JOaN=_B+a_oUF+iMT=VMw2wMrqCS5r-EbACwEmWKfw@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 09/09/2020 à 12:59, Michal Hocko a écrit :
-> On Wed 09-09-20 11:21:58, Laurent Dufour wrote:
->> Le 09/09/2020 à 11:09, Michal Hocko a écrit :
->>> On Wed 09-09-20 09:48:59, Laurent Dufour wrote:
->>>> Le 09/09/2020 à 09:40, Michal Hocko a écrit :
-> [...]
->>>>>> In
->>>>>> that case, the system is able to boot but later hot-plug operation may lead
->>>>>> to this panic because the node's links are correctly broken:
->>>>>
->>>>> Correctly broken? Could you provide more details on the inconsistency
->>>>> please?
->>>>
->>>> laurent@ltczep3-lp4:~$ ls -l /sys/devices/system/memory/memory21
->>>> total 0
->>>> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node1 -> ../../node/node1
->>>> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node2 -> ../../node/node2
->>>> -rw-r--r-- 1 root root 65536 Aug 24 05:27 online
->>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_device
->>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_index
->>>> drwxr-xr-x 2 root root     0 Aug 24 05:27 power
->>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 removable
->>>> -rw-r--r-- 1 root root 65536 Aug 24 05:27 state
->>>> lrwxrwxrwx 1 root root     0 Aug 24 05:25 subsystem -> ../../../../bus/memory
->>>> -rw-r--r-- 1 root root 65536 Aug 24 05:25 uevent
->>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 valid_zones
->>>
->>> OK, so there are two nodes referenced here. Not terrible from the user
->>> point of view. Such a memory block will refuse to offline or online
->>> IIRC.
->>
->> No the memory block is still owned by one node, only the sysfs
->> representation is wrong. So the memory block can be hot unplugged, but only
->> one node's link will be cleaned, and a '/syss/devices/system/node#/memory21'
->> link will remain and that will be detected later when that memory block is
->> hot plugged again.
-> 
-> OK, so you need to hotremove first and hotadd again to trigger the
-> problem. It is not like you would be a hot adding something new. This is
-> a useful information to have in the changelog.
-> 
->>>>> Which physical memory range you are trying to add here and what is the
->>>>> node affinity?
->>>>
->>>> None is added, the root cause of the issue is happening at boot time.
->>>
->>> Let me clarify my question. The crash has clearly happened during the
->>> hotplug add_memory_resource - which is clearly not a boot time path.
->>> I was askin for more information about why this has failed. It is quite
->>> clear that sysfs machinery has failed and that led to BUG_ON but we are
->>> mising an information on why. What was the physical memory range to be
->>> added and why sysfs failed?
->>
->> The BUG_ON is detecting a bad state generated earlier, at boot time because
->> register_mem_sect_under_node() didn't check for the block's node id.
->>
->>>>>> ------------[ cut here ]------------
->>>>>> kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
->>>>>> Oops: Exception in kernel mode, sig: 5 [#1]
->>>>>> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
->>>>>> Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
->>>>>> CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
->>>>>> NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
->>>>>> REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
->>>>>> MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
->>>>>> CFAR: c000000000846d20 IRQMASK: 0
->>>>>> GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
->>>>>> GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
->>>>>> GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
->>>>>> GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
->>>>>> GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
->>>>>> GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
->>>>>> GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
->>>>>> GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
->>>>>> NIP [c000000000403f34] add_memory_resource+0x244/0x340
->>>>>> LR [c000000000403f2c] add_memory_resource+0x23c/0x340
->>>>>> Call Trace:
->>>>>> [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
->>>>>> [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
->>>>>> [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
->>>>>> [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
->>>>>> [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
->>>>>> [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
->>>>>> [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
->>>>>> [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
->>>>>> [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
->>>>>> [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
->>>>>> [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
->>>>>> [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
->>>>>> [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
->>>>>> Instruction dump:
->>>>>> 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
->>>>>> 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
->>>>>> ---[ end trace 562fd6c109cd0fb2 ]---
->>>>>
->>>>> The BUG_ON on failure is absolutely horrendous. There must be a better
->>>>> way to handle a failure like that. The failure means that
->>>>> sysfs_create_link_nowarn has failed. Please describe why that is the
->>>>> case.
->>>>>
->>>>>> This patch addresses the root cause by not relying on the system_state
->>>>>> value to detect whether the call is due to a hot-plug operation or not. An
->>>>>> additional parameter is added to link_mem_sections() to tell the context of
->>>>>> the call and this parameter is propagated to register_mem_sect_under_node()
->>>>>> throuugh the walk_memory_blocks()'s call.
->>>>>
->>>>> This looks like a hack to me and it deserves a better explanation. The
->>>>> existing code is a hack on its own and it is inconsistent with other
->>>>> boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
->>>>> places IIRC. Would it help to use the same here as well? Maybe we want to
->>>>> wrap that inside a helper (early_memory_init()) and use it at all
->>>>> places.
->>>>
->>>> I agree, this looks like a hack to check for the system_state value.
->>>> I'll follow the David's proposal and introduce an enum detailing when the
->>>> node id check has to be done or not.
->>>
->>> I am not sure an enum is going to make the existing situation less
->>> messy. Sure we somehow have to distinguish boot init and runtime hotplug
->>> because they have different constrains. I am arguing that a) we should
->>> have a consistent way to check for those and b) we shouldn't blow up
->>> easily just because sysfs infrastructure has failed to initialize.
->>
->> For the point a, using the enum allows to know in
->> register_mem_sect_under_node() if the link operation is due to a hotplug
->> operation or done at boot time.
-> 
-> Yes, but let me repeat. We have a mess here and different paths check
-> for the very same condition by different ways. We need to unify those.
+On Wed, Sep 9, 2020 at 5:00 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> On Tue, Sep 08, 2020 at 12:38:04PM +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 8, 2020 at 11:35 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> > > On Fri, Sep 04, 2020 at 10:12:07PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
-What are you suggesting to unify these checks (using a MP_* enum as suggested by 
-David, something else)?
+...
 
-> 
->> For the point b, one option would be ignore the link error in the case the
->> link is already existing, but that BUG_ON() had the benefit to highlight the
->> root issue.
-> 
-> Yes BUG_ON is obviously an over-reaction. The system is not in a state
-> to die anytime soon.
-> 
+> > > > > +                       if (b == 0)
+> > > > > +                               continue;
+> > > > > +
+> > > > > +                       prestera_sdma_rx_desc_set_next(sdma,
+> > > > > +                                                      ring->bufs[b - 1].desc,
+> > > > > +                                                      buf->desc_dma);
+> > > > > +
+> > > > > +                       if (b == PRESTERA_SDMA_RX_DESC_PER_Q - 1)
+> > > > > +                               prestera_sdma_rx_desc_set_next(sdma, buf->desc,
+> > > > > +                                                              head->desc_dma);
+> > > >
+> > > > I guess knowing what the allowed range of bnum the above can be optimized.
+> > > >
+> > > You mean to replace PRESTERA_SDMA_RX_DESC_PER_Q by bnum ?
+> >
+> > I don't know what you meant in above. It might be a bug, it might be
+> > that bnum is redundant and this definition may be used everywhere...
+> > But I believe there is room for improvement when I see pattern like
+> >
+> >   for (i < X) {
+> >     ...
+> >     if (i == 0) {
+> >       ...
+> >     } else if (i == X - 1) {
+> >       ...
+> >     }
+> >   }
+> >
+> > Either it can be while-loop (or do-while) with better semantics for
+> > the first and last item to handle or something else.
+> > Example from another review [1] in case you wonder how changes can be
+> > made. Just think about it.
+> >
+> > [1]: https://www.spinics.net/lists/linux-pci/msg60826.html (before)
+> > https://www.spinics.net/lists/linux-pci/msg62043.html (after)
+> >
+>
+> I came up with the following approach which works:
+>
+> -------------->8------------------------------------------------
+> tail = &ring->bufs[bnum - 1];
+> head = &ring->bufs[0];
+> next = head;
+> prev = next;
+> ring->next_rx = 0;
+>
+> do {
+>         err = prestera_sdma_buf_init(sdma, next);
+>         if (err)
+>                 return err;
+>
+>         err = prestera_sdma_rx_skb_alloc(sdma, next);
+>         if (err)
+>                 return err;
+>
+>         prestera_sdma_rx_desc_init(sdma, next->desc, next->buf_dma);
+>
+>         prestera_sdma_rx_desc_set_next(sdma, prev->desc, next->desc_dma);
+>
+>         prev = next;
+>         next++;
+> } while (prev != tail);
+>
+> /* make a circular list */
+> prestera_sdma_rx_desc_set_next(sdma, tail->desc, head->desc_dma);
+> --------------8<------------------------------------------------
+>
+> Now it looks more list-oriented cyclic logic.
 
+And much better, thanks!
+
+Note, you have two places in the code with something similar (I mean
+loop handling), perhaps you may improve both.
+
+-- 
+With Best Regards,
+Andy Shevchenko
