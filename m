@@ -2,127 +2,99 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335E8C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36A9C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E78F421D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697412145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DASL1Xan"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iG6nBaZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgIIUHc (ORCPT
+        id S1727782AbgIIUQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:07:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36982 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbgIIUHH (ORCPT
+        Wed, 9 Sep 2020 16:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIIUQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:07:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089K0VEN064584;
-        Wed, 9 Sep 2020 20:07:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=4fIHZo7kla+jpKFYIjRot223Usuv7Tlceok1GZMsMRM=;
- b=DASL1Xano1yoVJYBqgYgfKew8/2gtYS4ofAqK7VLC22+DPsbGqtlR8bLHRfKjr1HGHeC
- EsqXwSPED9kvu1OfMoKj/DaC+jjirfG0Iwl2dGnzyj7aEoWEWZULmJxWfEfOYqzyPfI6
- diURE//T8aDgLBxQjGA8T0kGz6ctVbLxFYNFvLUoxyWgOeh8kfswHsarlVltnBsvSLxB
- jjWyxONEdyMUDJNq18Zm9FnPO6o5sSvrW8j+1jcvpe+3/Ep74HzQjXfjaS7qwK9NGlRd
- I9EjUbucs4Bkwf5Tu0wf3aSwwHP3H2L4kjnsOZqZcvYLsR+U3t7igPgQm5+I9CZ49NqA +A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33c2mm41yb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 20:07:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089K6PS2151930;
-        Wed, 9 Sep 2020 20:07:00 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 33cmkyfh1e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Sep 2020 20:07:00 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 089K6wEd004866;
-        Wed, 9 Sep 2020 20:06:58 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Sep 2020 13:06:58 -0700
-Date:   Wed, 9 Sep 2020 23:06:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media: atomisp: Use kvfree_sensitive in a few
- places
-Message-ID: <20200909200651.GB12635@kadam>
-References: <20200909195403.225084-1-alex.dewar90@gmail.com>
+        Wed, 9 Sep 2020 16:16:00 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E24C061573;
+        Wed,  9 Sep 2020 13:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Bw4rIJZLeK5WfU3TO9eMUF05YqQkLW/1cl+vzePNNf8=; b=iG6nBaZ2r0xjMc/5udrwMFgvVe
+        zUDTE0FRIJKDA3f55Mj+WKsuMCkMrHGPVAgxs+CjEBF9K8DMTByr2eV/wyFcPvmVaNAeY9xTIqlOZ
+        EH3nLSyN/oT93H3UyjXf1yValOLopcbpn3LFJsMi9LuSJgOzAT2F6nzyrkEgzOtPM85Kl/yajl+JY
+        TL5tEsH6XBNI8KDUZBqbcFBznLuljUyY+vW9YlFRSz3iHlAQQ4a5F2JcCPtjiX1A+qizt0Ml+g35b
+        CTKkt5fMZoPqXZNp7Sd7GqfcOLTiF/ol3aMbBxVvzoWXh/c3yqIjpa+1S7EGo6JxiWVpbEkf/03wb
+        ciR5lr9g==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kG6V8-0002Y4-CZ; Wed, 09 Sep 2020 20:15:30 +0000
+Date:   Wed, 9 Sep 2020 21:15:30 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, shy828301@gmail.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v18 31/32] mm: Add explicit page decrement in exception
+ path for isolate_lru_pages
+Message-ID: <20200909201530.GM6583@casper.infradead.org>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1598273705-69124-32-git-send-email-alex.shi@linux.alibaba.com>
+ <20200909010118.GB6583@casper.infradead.org>
+ <CAKgT0UcjNx=00OgAQNWezc7UjLmF2NcDH0p7kzZ5D23PaFrFXA@mail.gmail.com>
+ <alpine.LSU.2.11.2009091100280.9020@eggly.anvils>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909195403.225084-1-alex.dewar90@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=2
- spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009090179
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 suspectscore=2 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090178
+In-Reply-To: <alpine.LSU.2.11.2009091100280.9020@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 08:53:50PM +0100, Alex Dewar wrote:
-> In the file pci/sh_css_params.c, there are a number of places where
-> memset+kvfree is used, where kvfree_sensitive could be used instead. Fix
-> these occurrences.
-
-This doesn't say *why* the commit is doing it.  There are two reasons:
-The worry with these is that the compiler could optimize away the memset
-because it sees the kfree().  Second using kvfree_sensitive() is more
-clear and readable.
-
+On Wed, Sep 09, 2020 at 11:24:14AM -0700, Hugh Dickins wrote:
+> After overnight reflection, my own preference would be simply to
+> drop this patch.  I think we are making altogether too much of a
+> fuss here over what was simply correct as plain put_page()
+> (and further from correct if we change it to leak the page in an
+> unforeseen circumstance).
 > 
-> Issue identified with Coccinelle.
+> And if Alex's comment was not quite grammatically correct, never mind,
+> it said as much as was worth saying.  I got more worried by his
+> placement of the "busy:" label, but that does appear to work correctly.
 > 
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> ---
->  .../staging/media/atomisp/pci/sh_css_params.c | 19 +++++++------------
->  1 file changed, 7 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/sh_css_params.c b/drivers/staging/media/atomisp/pci/sh_css_params.c
-> index 2c67c23b3700..d1b5d6608d52 100644
-> --- a/drivers/staging/media/atomisp/pci/sh_css_params.c
-> +++ b/drivers/staging/media/atomisp/pci/sh_css_params.c
-> @@ -4378,8 +4378,7 @@ ia_css_3a_statistics_free(struct ia_css_3a_statistics *me)
->  	if (me) {
->  		kvfree(me->rgby_data);
->  		kvfree(me->data);
-> -		memset(me, 0, sizeof(struct ia_css_3a_statistics));
-> -		kvfree(me);
-> +		kvfree_sensitive(me, sizeof(struct ia_css_3a_statistics));
+> There's probably a thousand places where put_page() is used, where
+> it would be troublesome if it were the final put_page(): this one
+> bothered you because you'd been looking at isolate_migratepages_block(),
+> and its necessary avoidance of lru_lock recursion on put_page();
+> but let's just just leave this put_page() as is.
 
-I don't think ia_css_3a_statistics are sensitive at all.  What we're
-trying to protect are things like passwords.  Just delete the memset.
-
-Looking below, I don't think any of these are sensitive so just delete
-all the memsets.
-
-regards,
-dan carpenter
-
+My problem with put_page() is that it's no longer the simple
+decrement-and-branch-to-slow-path-if-zero that it used to be.  It has the
+awful devmap excrement in it so it really expands into a lot of code.
+I really wish that "feature" could be backed out again.  It clearly
+wasn't ready for merge.
