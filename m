@@ -2,248 +2,151 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A35C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79556C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A21A20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D7521973
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKCBOrW+"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="aFCb6jKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgIIEGH (ORCPT
+        id S1726226AbgIIEIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 00:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgIIEGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 00:06:04 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C14C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 21:06:04 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id v78so894469ybv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 21:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5l1eticj7qDEdDrm+OGUOAk8jXt5YDIoOSHNMBDZgrs=;
-        b=QKCBOrW+n5uJloRSW/TtfMCk2ECMuKI0/Ix/ZlH1tx5chIYiuGO+fPBqUG39J/laqA
-         tT3nj1TNAuEingDRkUbUa8yoGpLSXKacXQFIDkr4DuKukTkqc3r1tCZ6vRrhX76HFZ8R
-         GvK4q2OapZQtyohQaPR40jrK6INB98O7Nsvp0yU/p1N7Ccjky2/e8SbNvxHuNTETNvtC
-         KvuQZb/CpjTwhdYz0fuV+qXCCX/Zbbz62G6be0r39Le319Ah8pliXMsv+QYG+3PH3zJV
-         /Q9+noQh1ZjjhzE2wg2ieli4Xuu9go5nTuYyKG9ox9LELbmLhYpHIZ6J0Y6iIpvB737Z
-         dtjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5l1eticj7qDEdDrm+OGUOAk8jXt5YDIoOSHNMBDZgrs=;
-        b=DGS3v3u3kuoLDUT+zJFomTeKowsGGp/o2Y4C5yNojV4p6Amg2i/3ucYG0FgnF82Yqq
-         G/TEa3bt2h+Qos2bDQozHaZD5CA3zO9sBJNXd04sPr3m894j+crWILmX7Tz7iwktHf5m
-         EK3Dm1V0C9bbauAVorNLzcMDs7YtWCfilRj9mtST+78yudo4qgx2dzqjV6eyNpuMMzGv
-         6W63z/Cy2yHHdyzmCR2DbxnNopxw6CQWe2ILLmVRP5P0YorJI70GRShHCv2DOytYXURj
-         JVUo++Kge0QkOFwAff/AEtsVUknvWpCNE2v1FBqD9RpW2Dyrva4azfK0FtF54cJQ8TKf
-         PLog==
-X-Gm-Message-State: AOAM530u8tgZTI9B3ktAxt/LsuV1QRU4sEY3rqsoqp76TuaGMuc3TcFj
-        hL8ptH5YV445r4o855c6p6PN6QclnVjgRyOTTZQ=
-X-Google-Smtp-Source: ABdhPJy9FO00MIL4D9dDFJBguiKSTl16emuFaEgF/hSBMy+cayLwOwEwIBBW7+th3r2A/O5CkHUDdgMCa8tuQni/HeE=
-X-Received: by 2002:a25:bc82:: with SMTP id e2mr2918057ybk.435.1599624363612;
- Tue, 08 Sep 2020 21:06:03 -0700 (PDT)
+        Wed, 9 Sep 2020 00:08:20 -0400
+Received: from mail-eopbgr750098.outbound.protection.outlook.com ([40.107.75.98]:2155
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725300AbgIIEIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 00:08:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OY4aHqteMUXh0uR4sI2nooc7r4qkLORFqsYKGjX3unZ9Fd6qtzWrBobKVbNZuZtCp7JX0VWqUSTmSHQ6fGlP/oJuk+0cIx4nHQcm6o4OnvkIsCqLT28Djhfun7s97XgIZeOSMkj0WnespoCB0i6ct8Ld/F043zxjgUqClkgzcXYJoe4NyXXV0LM30Glb7lTD+WE/uQqhZqSRoK+7ZMoVDvDGvI6a9lNDgfnoCBNgEoPyvXAITin0jWhYxtY7Zsu+S6TCz0RuiB3QqGoXJT8dgXcae2yvk61v4jaHzTwRfWfbCV04LolRb0fmYHBgfcGfM/RTTirC73ajbNRZbT/mfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pPQvYCsrO060JXZuS50ZLOidghTMJVVVrYfxEOeTuP8=;
+ b=bB8a4On30mR/CZCCQWczij5IUmChFVtatLrNhuASRkpwcXZ0DlpN+ZkrBiS6dznWHap95o1dgUpzpvtYJDMiENs5f0XYO8Die7rn3cJSinWU70WRDSITorwaOnchrkrSKGbmogzxALLMy24GqsrFgZgsYz01En5+efckHA3+8cpS+ELXtlAj2efbU87QveHg/IIocB+J0XUv0KavbDVyiNYmYSdJE2hR6ghRmIbgRe7Rgepy1eWxGzue8YOoqpVmPYtsa5ETN11J0mDR698cScay/3EV7JmfCYwe1cRFWc4TPomeP2q7+TDqLPfx+cRN9RfcLcTiMD1oL+pbcUeZTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pPQvYCsrO060JXZuS50ZLOidghTMJVVVrYfxEOeTuP8=;
+ b=aFCb6jKZFEvNt4Gbsg2PlinF0MuN4XS/zMz+S30BYiMkakWrOPHf/DhxN2kOFML22Y0gt2gX9BlCFV84apj9IxhIvtdAdcpI4RA7w8W9D3wzE05WJCS+16FpObdIx8Fn2bgM0JqV5qj/7gsO7OVCCttAI/rMt404DcV8YGbz0R8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microsoft.com;
+Received: from BN6PR21MB0162.namprd21.prod.outlook.com (10.173.200.8) by
+ BN7PR21MB1618.namprd21.prod.outlook.com (52.135.254.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3391.3; Wed, 9 Sep 2020 04:08:10 +0000
+Received: from BN6PR21MB0162.namprd21.prod.outlook.com
+ ([fe80::c189:fa0c:eb39:9b39]) by BN6PR21MB0162.namprd21.prod.outlook.com
+ ([fe80::c189:fa0c:eb39:9b39%7]) with mapi id 15.20.3391.004; Wed, 9 Sep 2020
+ 04:08:10 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kuba@kernel.org, wei.liu@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        davem@davemloft.net, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com
+Cc:     saeedm@mellanox.com, markb@mellanox.com,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH net 1/2] hv_netvsc: Switch the data path at the right time during hibernation
+Date:   Tue,  8 Sep 2020 21:07:32 -0700
+Message-Id: <20200909040732.18993-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-Originating-IP: [2001:4898:80e8:7:fe0e:50ca:c8bf:219c]
+X-ClientProxiedBy: CO2PR05CA0091.namprd05.prod.outlook.com
+ (2603:10b6:104:1::17) To BN6PR21MB0162.namprd21.prod.outlook.com
+ (2603:10b6:404:94::8)
 MIME-Version: 1.0
-References: <20200812204952.1921587-1-jcline@redhat.com>
-In-Reply-To: <20200812204952.1921587-1-jcline@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Wed, 9 Sep 2020 14:05:52 +1000
-Message-ID: <CACAvsv71oxCYB1+LCAUHD5v_NGAP-DpxPY_dPz53iw2=91KAJg@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] drm/nouveau: Add fine-grain temperature reporting
-To:     Jeremy Cline <jcline@redhat.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from decui-u1804.corp.microsoft.com (2001:4898:80e8:7:fe0e:50ca:c8bf:219c) by CO2PR05CA0091.namprd05.prod.outlook.com (2603:10b6:104:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.8 via Frontend Transport; Wed, 9 Sep 2020 04:08:08 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2db76353-7dc6-49ee-d7f3-08d85475f697
+X-MS-TrafficTypeDiagnostic: BN7PR21MB1618:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN7PR21MB1618FD22C6F26033C706E46ABF260@BN7PR21MB1618.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HE4rmVSQwcotRTV54HwBmLWO3ZrhikeR3h5xx/6R5Kn3L9tDMeCrIgty6Pht+SdCvQeGW1XH3vB9fiW0T9Q1Touwn7SJFF4CPiYs6CUjLYWtjqpPR9pigefmmKpsXzMLTA6dT9Bjdyn5eO/zYPAqOU0GW+7vHCUagGXJESFreUAo9NEea9IoZnTpb7+WwOu/kRCVsGSODEFFy0KI5ldBOd3N7LQPFi52L95ekMulh5RFWWVP/qL01JYN2GwcYO5pZEogPf/LtEJjaP1lG9COUAKsa7xwGxPNR6hc3/bg5uw3YjfpKXNcU4c9rmRIz/MCdAuBdt29uMDh5JEksK4ZhhRqvMHiYdYFGCNph480Gx1al+m14uzANblVNkv4FIKRhQADqjay6JvDDVszDD47XCsh9fzvzdJI5bs3ST3qQSo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR21MB0162.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(6666004)(2616005)(86362001)(8936002)(186003)(16526019)(83380400001)(107886003)(10290500003)(6636002)(8676002)(1076003)(316002)(478600001)(52116002)(66556008)(66476007)(66946007)(5660300002)(36756003)(4326008)(6486002)(82950400001)(82960400001)(3450700001)(7696005)(2906002)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: g8Z95UpsGYrXMLaiUbnpGKUsQM6N1XF58/nJ+T3LnrPxdTOULT4/XRzfXgVH1PGV6Mri9Z5h/Nv61KNynyG3GHq0UQ7aOS/ZqbALhCcp3OMwU4i18oPIEt4XcNSncatZRsHnQMnsCPqPKOmHzWosrZ8Sl8eO59+Afbn1OrF/+v7/pYyaEkXPu32eyCUa17kFS0U2i8CKBurY+nICC6M1KT9HjwJn7uZg9CAipIuhvu8XMfJs4dinORuC0RmJwNgiiF3AU6jkaunX7/wek9cv8/qbI3pboMyftGgIDJOyM5rzCr52fOt4cFuvesynckx9tTOS6nIdFDFEM9QQV+GG603DWvGY9Nj1Qh+zhNd590lPaLvtwyteMjrIDrXJzVvd34gVhsZNqvY88ghZBgT211zHnFygeTA1N+qqjtBwwzJoEGyYzeFcr522oSO/mVSvqFjpeluZoIN1R5eVhw/gHAoztA2xfizG5vGP7SLVFX6O72sX5iqO65BDayPjFgzWfrQpZSs4HrP6SQBnUC3ttgAwB379unXPqemuEJnWG3oePb+H7cvR+NnkJwrSxQD7Vhz3AMaHQ5xuB3OTMWt8d/eJaLkB5IS9JPBn/1w2Cnl67WYUl4Nk9uavum41ypYN7Xmoai6WZuxcpPLRfsHQ57MhVzv2AKBE8YJ4ghaXRg1cs8phrt8RuWFYpN2T0rDFzIVqtcum6QuR2DAE5Q9nDg==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2db76353-7dc6-49ee-d7f3-08d85475f697
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR21MB0162.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 04:08:10.1786
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AN50k459PyDZAGitfXR6P0ai3fE7O+tP0d6D28l3y17dsFdqI8AxyR1asye2jjzu+YtLzRjaLIZPyXN7Xlctmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR21MB1618
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 at 06:50, Jeremy Cline <jcline@redhat.com> wrote:
->
-> Commit d32656373857 ("drm/nouveau/therm/gp100: initial implementation of
-> new gp1xx temperature sensor") added support for reading finer-grain
-> temperatures, but continued to report temperatures in 1 degree Celsius
-> increments via nvkm_therm_temp_get().
->
-> Rather than altering nvkm_therm_temp_get() to report finer-grain
-> temperatures, which would be inconvenient for other users of the
-> function, a second interface has been added to line up with hwmon's
-> native unit of temperature.
-Hey Jeremy,
+When netvsc_resume() is called, the mlx5 VF NIC has not been resumed yet,
+so in the future the host might sliently fail the call netvsc_vf_changed()
+-> netvsc_switch_datapath() there, even if the call works now.
 
-Sorry this slipped past me until now.  I'm OK with adding support for
-millidegree temperature reporting, but don't think we need to keep
-both interfaces around and would rather see the existing code
-converted to return millidegrees (even on GPUs that don't support it)
-instead of degrees.
+Call netvsc_vf_changed() in the NETDEV_CHANGE event handler: at that time
+the mlx5 VF NIC has been resumed.
 
-Thanks!
-Ben.
+Fixes: 19162fd4063a ("hv_netvsc: Fix hibernation for mlx5 VF driver")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/net/hyperv/netvsc_drv.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
->
-> Signed-off-by: Jeremy Cline <jcline@redhat.com>
-> ---
->  .../drm/nouveau/include/nvkm/subdev/therm.h   | 18 +++++++++++++
->  drivers/gpu/drm/nouveau/nouveau_hwmon.c       |  4 +--
->  .../gpu/drm/nouveau/nvkm/subdev/therm/base.c  | 16 ++++++++++++
->  .../gpu/drm/nouveau/nvkm/subdev/therm/gp100.c | 25 +++++++++++++++++--
->  .../gpu/drm/nouveau/nvkm/subdev/therm/priv.h  |  1 +
->  5 files changed, 60 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h
-> index 62c34f98c930..7b9928dd001c 100644
-> --- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h
-> +++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h
-> @@ -100,6 +100,24 @@ struct nvkm_therm {
->  };
->
->  int nvkm_therm_temp_get(struct nvkm_therm *);
-> +
-> +/**
-> + * nvkm_therm_temp_millidegree_get() - get the temperature in millidegrees
-> + * @therm: The thermal device to read from.
-> + *
-> + * This interface reports temperatures in units of millidegree Celsius to
-> + * align with the hwmon API. Some cards may only be capable of reporting in
-> + * units of Celsius, and those that report finer grain temperatures may not be
-> + * capable of millidegree Celsius accuracy,
-> + *
-> + * For cases where millidegree temperature is too fine-grain, the
-> + * nvkm_therm_temp_get() interface reports temperatures in one degree Celsius
-> + * increments.
-> + *
-> + * Return: The temperature in millidegrees Celsius, or -ENODEV if temperature
-> + *         reporting is not supported.
-> + */
-> +int nvkm_therm_temp_millidegree_get(struct nvkm_therm *therm);
->  int nvkm_therm_fan_sense(struct nvkm_therm *);
->  int nvkm_therm_cstate(struct nvkm_therm *, int, int);
->  void nvkm_therm_clkgate_init(struct nvkm_therm *,
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_hwmon.c b/drivers/gpu/drm/nouveau/nouveau_hwmon.c
-> index 1c3104d20571..e96355f93ce5 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_hwmon.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_hwmon.c
-> @@ -428,8 +428,8 @@ nouveau_temp_read(struct device *dev, u32 attr, int channel, long *val)
->         case hwmon_temp_input:
->                 if (drm_dev->switch_power_state != DRM_SWITCH_POWER_ON)
->                         return -EINVAL;
-> -               ret = nvkm_therm_temp_get(therm);
-> -               *val = ret < 0 ? ret : (ret * 1000);
-> +               ret = nvkm_therm_temp_millidegree_get(therm);
-> +               *val = ret;
->                 break;
->         case hwmon_temp_max:
->                 *val = therm->attr_get(therm, NVKM_THERM_ATTR_THRS_DOWN_CLK)
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c
-> index 4a4d1e224126..e655b32c78b8 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c
-> @@ -34,6 +34,22 @@ nvkm_therm_temp_get(struct nvkm_therm *therm)
->         return -ENODEV;
->  }
->
-> +int
-> +nvkm_therm_temp_millidegree_get(struct nvkm_therm *therm)
-> +{
-> +       int ret = -ENODEV;
-> +
-> +       if (therm->func->temp_millidegree_get)
-> +               return therm->func->temp_millidegree_get(therm);
-> +
-> +       if (therm->func->temp_get) {
-> +               ret = therm->func->temp_get(therm);
-> +               if (ret > 0)
-> +                       ret *= 1000;
-> +       }
-> +       return ret;
-> +}
-> +
->  static int
->  nvkm_therm_update_trip(struct nvkm_therm *therm)
->  {
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c
-> index 9f0dea3f61dc..4c3c2895a3cb 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c
-> @@ -24,7 +24,7 @@
->  #include "priv.h"
->
->  static int
-> -gp100_temp_get(struct nvkm_therm *therm)
-> +gp100_temp_get_raw(struct nvkm_therm *therm)
->  {
->         struct nvkm_device *device = therm->subdev.device;
->         struct nvkm_subdev *subdev = &therm->subdev;
-> @@ -37,14 +37,35 @@ gp100_temp_get(struct nvkm_therm *therm)
->
->         /* device valid */
->         if (tsensor & 0x20000000)
-> -               return (inttemp >> 8);
-> +               return inttemp;
->         else
->                 return -ENODEV;
->  }
->
-> +static int
-> +gp100_temp_millidegree_get(struct nvkm_therm *therm)
-> +{
-> +       int raw_temp = gp100_temp_get_raw(therm);
-> +
-> +       if (raw_temp < 0)
-> +               return raw_temp;
-> +       return raw_temp * 1000 >> 8;
-> +}
-> +
-> +static int
-> +gp100_temp_get(struct nvkm_therm *therm)
-> +{
-> +       int raw_temp = gp100_temp_get_raw(therm);
-> +
-> +       if (raw_temp < 0)
-> +               return raw_temp;
-> +       return raw_temp >> 8;
-> +}
-> +
->  static const struct nvkm_therm_func
->  gp100_therm = {
->         .temp_get = gp100_temp_get,
-> +       .temp_millidegree_get = gp100_temp_millidegree_get,
->         .program_alarms = nvkm_therm_program_alarms_polling,
->  };
->
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h
-> index 21659daf1864..a53068b4f0b9 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h
-> @@ -92,6 +92,7 @@ struct nvkm_therm_func {
->         int (*pwm_clock)(struct nvkm_therm *, int line);
->
->         int (*temp_get)(struct nvkm_therm *);
-> +       int (*temp_millidegree_get)(struct nvkm_therm *therm);
->
->         int (*fan_sense)(struct nvkm_therm *);
->
-> --
-> 2.26.2
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 81c5c70b616a..4a25886e2346 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2619,7 +2619,6 @@ static int netvsc_resume(struct hv_device *dev)
+ 	struct net_device *net = hv_get_drvdata(dev);
+ 	struct net_device_context *net_device_ctx;
+ 	struct netvsc_device_info *device_info;
+-	struct net_device *vf_netdev;
+ 	int ret;
+ 
+ 	rtnl_lock();
+@@ -2632,15 +2631,6 @@ static int netvsc_resume(struct hv_device *dev)
+ 	netvsc_devinfo_put(device_info);
+ 	net_device_ctx->saved_netvsc_dev_info = NULL;
+ 
+-	/* A NIC driver (e.g. mlx5) may keep the VF network interface across
+-	 * hibernation, but here the data path is implicitly switched to the
+-	 * netvsc NIC since the vmbus channel is closed and re-opened, so
+-	 * netvsc_vf_changed() must be used to switch the data path to the VF.
+-	 */
+-	vf_netdev = rtnl_dereference(net_device_ctx->vf_netdev);
+-	if (vf_netdev && netvsc_vf_changed(vf_netdev) != NOTIFY_OK)
+-		ret = -EINVAL;
+-
+ 	rtnl_unlock();
+ 
+ 	return ret;
+@@ -2701,6 +2691,7 @@ static int netvsc_netdev_event(struct notifier_block *this,
+ 		return netvsc_unregister_vf(event_dev);
+ 	case NETDEV_UP:
+ 	case NETDEV_DOWN:
++	case NETDEV_CHANGE:
+ 		return netvsc_vf_changed(event_dev);
+ 	default:
+ 		return NOTIFY_DONE;
+-- 
+2.19.1
+
