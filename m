@@ -2,147 +2,121 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57034C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F32E20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jXLCBqNU"
+	by mail.kernel.org (Postfix) with ESMTP id 89B2520BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599687087;
+	bh=OKxwcLImwmsohPaFaDDJ5HrYUMI4p4WZ7Gr+SHBqPq0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DmpeVGsZIzLwPYAKcV6xWbiGUPgoVkbfAlBPPxfVxMQY8QydHH2OLiFT3wP00Oop7
+	 AfZKscQY2uBWsEaDXqQtdtot9U2ApjG/OKyZaILD8ibQbMh7oFJaGgkcCat44rJJpM
+	 A5XdIxpmTFcU29sB2LF4NnltvnY0FQdLs5D+znXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbgIIVaS (ORCPT
+        id S1730181AbgIIVb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgIIVaL (ORCPT
+        Wed, 9 Sep 2020 17:31:26 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33090 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgIIVbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:30:11 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF29C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:30:10 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id e5so1064690vkm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=47pCfHCQ+v4BbpZhrHNZ2wtMUQkpqJXTbV3lF3DkBic=;
-        b=jXLCBqNUV9jGbre90QfVGVO4THC61Ocp5+wSKhoeIGyRADR6hKTBJUMPPXtjVJtlfT
-         nxJk7eqLtaDCYR7zQTQAYQt9efFu8muNYflrHPKsG8DB37chbJKvqorUdT2Ks++80dxl
-         sT5gwqw36/ChMVpExrBrojlJx98COigtRy9a8=
+        Wed, 9 Sep 2020 17:31:25 -0400
+Received: by mail-io1-f66.google.com with SMTP id r25so4878572ioj.0;
+        Wed, 09 Sep 2020 14:31:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=47pCfHCQ+v4BbpZhrHNZ2wtMUQkpqJXTbV3lF3DkBic=;
-        b=S326JOCEy4rELKQ2ok4bTNrwyI7e/72p05wGWvIIvkGD+FS5V6M8nuL8QS1so5vm9r
-         /aOE97Ez0GXGvq9ZImF2KIYXz4dKikfRr6qSSSOBXRx7iPXzMQqRIKWbcktOIHGpg5+L
-         z7q6FB1SMtel8vio2254uA9oJqmLBd6Nx+x2OshXegQij2d8H78b5rtj3eWCfUHyevdx
-         A1DW/M4E/HKM0szgua4PI34cwieRtQ3GJ0MndVXpLAgDVQiqGkuLCux941bPK9NJn4Ok
-         Fv3Sr+MdGGulOwcwLL4wKERpfU3gh3ocX9g8OQJNyfJ0IAuyKx/XzdGcYB1pLZzEZEXi
-         60pg==
-X-Gm-Message-State: AOAM531FrbdzfgTq3gqN6BHLQXE0mAMy+dR+vDUvi/F0A3NnXLWCYKXn
-        AeORnaq7GwU3HTmKXfwRbjNLzbKbygfeYA==
-X-Google-Smtp-Source: ABdhPJxqbfEe+TATKdbG3Fxs0y3q3HBgzi+3zaL9vS1zY84JB53PxWK23+Pc8h5rMKp51CYySDMqgw==
-X-Received: by 2002:a1f:bf53:: with SMTP id p80mr2236681vkf.5.1599687009659;
-        Wed, 09 Sep 2020 14:30:09 -0700 (PDT)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id b205sm581649vkf.54.2020.09.09.14.30.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 14:30:08 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id n193so1051941vkf.12
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:30:08 -0700 (PDT)
-X-Received: by 2002:a1f:e641:: with SMTP id d62mr2162009vkh.30.1599687008270;
- Wed, 09 Sep 2020 14:30:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4LJPa6wY+bmsqueUyPNc2PybKgdIOrPEhe+awiCsZb8=;
+        b=tVlWtGorMxVbEhgGrlqRTgTSSqmAZxdodriD8XQm0QPwJn9ZX23B5gV28j3p5WFfYq
+         ZVta2bFlWQYvw6m+u+fgNdtcEdMwx244/sZxEP0q3i5pEqvzXlqJoCCKGOOIDWpxVomJ
+         5muKTPsUhBVgNSLwFq8fhtXGi3gXdOtANOIVpMEvW6xXdhrbOV3DGorLiVbslsGs+rtY
+         FPxo8OGPCfQM5Ji2V3jCKfws+tSJ0Jw25lrZHIrn/z2yPjhg4heL35jtNI0g289d9rBc
+         pmvOmMD9E6wlbZd9X9XEsffNi6awV3M2w2T0DwIMgfa1MWdyLipt0AScZB5LuGbdli7R
+         2OVw==
+X-Gm-Message-State: AOAM532rE9WzXeX+pNVU15Ddu49P4OYPUDSGtdgGuKo+8UMRDpf/E9JZ
+        z8WC6FAEoVSWmhZMIvyPhA==
+X-Google-Smtp-Source: ABdhPJx+yi3NeE5/5sKNkbuyeC6+1XRipNeRGuLJCswC6gjgCaTEgcvbt1hptOmwmXb8008oPjMkBA==
+X-Received: by 2002:a02:8805:: with SMTP id r5mr6116720jai.52.1599687084653;
+        Wed, 09 Sep 2020 14:31:24 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id u25sm1733942iot.35.2020.09.09.14.31.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 14:31:23 -0700 (PDT)
+Received: (nullmailer pid 3107682 invoked by uid 1000);
+        Wed, 09 Sep 2020 21:31:22 -0000
+Date:   Wed, 9 Sep 2020 15:31:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next + leds v2 1/7] dt-bindings: leds: document
+ binding for HW controlled LEDs
+Message-ID: <20200909213122.GA3087645@bogus>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+ <20200909162552.11032-2-marek.behun@nic.cz>
+ <20200909182730.GK3290129@lunn.ch>
+ <20200909203310.15ca4e42@dellmb.labs.office.nic.cz>
+ <20200909205923.GB3056507@bogus>
+ <20200909230726.233b4081@nic.cz>
 MIME-Version: 1.0
-References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org> <1599145498-20707-4-git-send-email-skakit@codeaurora.org>
-In-Reply-To: <1599145498-20707-4-git-send-email-skakit@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 9 Sep 2020 14:29:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VyRU3+BLx_6YPrOsaA6E05cJn_OpBR1y3Dt0LA0X5REA@mail.gmail.com>
-Message-ID: <CAD=FV=VyRU3+BLx_6YPrOsaA6E05cJn_OpBR1y3Dt0LA0X5REA@mail.gmail.com>
-Subject: Re: [PATCH V4 3/4] arm64: dts: qcom: sc7180: Add sleep state for BT UART
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        msavaliy@qti.qualcomm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909230726.233b4081@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Sep 09, 2020 at 11:07:26PM +0200, Marek Behun wrote:
+> On Wed, 9 Sep 2020 14:59:23 -0600
+> Rob Herring <robh@kernel.org> wrote:
+> 
+> > > 
+> > > I don't know :) I copied this from other drivers, I once tried setting
+> > > up environment for doing checking of device trees with YAML schemas,
+> > > and it was a little painful :)  
+> > 
+> > pip3 install dtschema ?
+> > 
+> > Can you elaborate on the issue.
+> > 
+> > Rob
+> > 
+> 
+> I am using Gentoo and didn't want to bloat system with non-portage
+> packages, nor try to start a virtual environment. In the end I did it
+> in a chroot Ubuntu :)
 
-On Thu, Sep 3, 2020 at 8:08 AM satya priya <skakit@codeaurora.org> wrote:
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index cecac3e..77e3523 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -507,6 +507,43 @@
->         };
->  };
->
-> +&qup_uart3_sleep {
-> +       pinconf-cts {
-> +               /*
-> +                * Configure no-pull on CTS. As this is driven by BT, do not
-> +                * specify any pull in order to not conflict with BT pulls.
-> +                */
-> +               pins = "gpio38";
-> +               bias-disable;
+A user install doesn't work?
 
-Same comment as in the previous patch that I'm not convinced removing
-the bias here is correct.
+I don't really care for virtual env either.
 
+> The other thing is that the make dt_binding_check executed for
+> quite a long time, and I didn't find a way to just do the binding check
+> some of the schemas.
 
-> +       };
-> +
-> +       pinconf-rts {
-> +               /*
-> +                * Configure pull-down on RTS to make sure that the BT SoC can
-> +                * wake up the system by sending wakeup bytes during suspend.
-> +                */
-> +               pins = "gpio39";
-> +               bias-pull-down;
-> +       };
-> +
-> +       pinconf-tx {
-> +               /* Configure pull-up on TX when it isn't actively driven */
-> +               pins = "gpio40";
-> +               bias-pull-up;
-> +       };
-> +
-> +       pinconf-rx {
-> +               /*
-> +                * Configure a pull-up on RX. This is needed to avoid
-> +                * garbage data when the TX pin of the Bluetooth module is
-> +                * in tri-state (module powered off or not driving the
-> +                * signal yet).
-> +                */
-> +               pins = "gpio41";
-> +               bias-pull-up;
-> +       };
-> +};
-> +
->  &qup_uart8_default {
+It's a bit faster now with what's queued for 5.10. The schema 
+validation is under 10sec now on my laptop. For the examples, any 
+new schema could apply to any example, so we have to check them all. 
+It's faster too, but still minutes to run.
 
-Slight nit that "default" starts with a "d" which sorts before "sleep"
-which starts with an "s".  Thus "qup_uart8_default" should be above
-"qup_uart3_sleep", not below.
+> But I am not criticizing anything, I think that it is a good thing to
+> have this system.
+
+Good to hear. Just want to improve any pain points if possible.
+
+Rob
+
