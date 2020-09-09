@@ -2,110 +2,90 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6070BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC2DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDAE62087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED6620C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599705158;
-	bh=GitDIBjazlg2aEqgUHmiwSZ1KvMEnONcmZnbecWQMHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lmrra/W9r+femQHr9nTxWW5XGGQzuySgCRxsIeQvcS3R/Z851lfWSBItQviaoDgeu
-	 9OP1LWEy3dOfTLdjWSFJZIpLMkJtm0+3152PpEj3k7znI3BpXE9px2kdN1JKi7O8OF
-	 osAUBwV21biy8hWxm5Y7F96ewWPCY9x2V1cxoDns=
+	s=default; t=1599705167;
+	bh=G/d7I7uYDPr+xcXLSAz55tCVxS++/YD+BwhhhZQ43rE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gokMV4/KvOXFeMd492xIR7rFlZtY/B8Wmq030wxfoiHWO09BJiNadQpxkNDaUR/lr
+	 hWGCJjKjcWC/BzSoDL/y0v8QVZxabquH8gTbYav8iW/2Ch+yTuI6Ax8XeTZa1xoLaZ
+	 iqbzm66e9bmZFyQsqrDdv4vjUK6jAKrTJJh9GBfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbgIJCc2 (ORCPT
+        id S1730401AbgIJCcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:32:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39566 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 22:32:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730920AbgIJCZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730921AbgIJCZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 22:25:30 -0400
-Received: from localhost (lfbn-ncy-1-588-162.w81-51.abo.wanadoo.fr [81.51.203.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C863520C09;
-        Wed,  9 Sep 2020 22:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BB2D208CA
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599691735;
-        bh=GitDIBjazlg2aEqgUHmiwSZ1KvMEnONcmZnbecWQMHg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qWBOrgBhJ6HySZn5zs3kJR2qeJSz9FHowfK3pRxJokck9fF7dQDomXTHwy2FSiAJl
-         r2nuh0mLY0R75xVoBe/3vRdkWNP04KJ4e8z8/pHu2SzmMgpAy+79VLmBzEK6yT5+2h
-         4KYi+gJ8FApk6hC0cW3PTD13MAv7IOogBAXJAyYM=
-Date:   Thu, 10 Sep 2020 00:48:52 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Requirements to control kernel isolation/nohz_full at runtime
-Message-ID: <20200909224852.GC20541@lenoir>
-References: <20200901104640.GA13814@lenoir>
- <20200904204740.GP29330@paulmck-ThinkPad-P72>
+        s=default; t=1599695820;
+        bh=G/d7I7uYDPr+xcXLSAz55tCVxS++/YD+BwhhhZQ43rE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qP1mLFoFElIO3POE7p4mPUAYXwmsO/XSRrk3t5/qHZWwPmEBX9oUK3Ytty/iZa4Mh
+         UxBxO0tdVkS8hnI6o3a/YfGj5gTiUN4wdk00h/C60TAK1Lr75rN+d793UgH2dGKZXE
+         87xu1sF3AVtntrGULLDYy7gBUkGv67K2IFmH9JPI=
+Received: by mail-wm1-f41.google.com with SMTP id k18so4007605wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 16:57:00 -0700 (PDT)
+X-Gm-Message-State: AOAM532+5oyO6h4DRkrmvQjuvNo4B5X1bD0ehbOaBPySh1ws2NULO8fs
+        QfZFT4EIpP3RWyFyCOo4WjtEBph2y/mnqf8kwa8IkQ==
+X-Google-Smtp-Source: ABdhPJzH/nmU4Vf4z8Anq+NWWPNlJPoNfTnH0PJIk0ApNI/X6nVQ/+QvDJXA4QaLUUOZaFv1S6ywVK6a0FKb2CQSs0Q=
+X-Received: by 2002:a05:600c:2183:: with SMTP id e3mr6114629wme.49.1599695818930;
+ Wed, 09 Sep 2020 16:56:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904204740.GP29330@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200908193029.GM25236@zn.tnic> <025308CD-6E1A-41E1-8B3D-E9842CE00794@amacapital.net>
+ <CACdnJusOJVb0xpecFgPQB4N2WhUORikv_1eXAcGfJ3xwBVTo9Q@mail.gmail.com>
+In-Reply-To: <CACdnJusOJVb0xpecFgPQB4N2WhUORikv_1eXAcGfJ3xwBVTo9Q@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 9 Sep 2020 16:56:46 -0700
+X-Gmail-Original-Message-ID: <CALCETrV+zLzKvmkJSyXVqVw6FREC__sMXrv2rygruSq3ZAwtiQ@mail.gmail.com>
+Message-ID: <CALCETrV+zLzKvmkJSyXVqVw6FREC__sMXrv2rygruSq3ZAwtiQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        kitsunyan <kitsunyan@airmail.cc>,
+        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 01:47:40PM -0700, Paul E. McKenney wrote:
-> On Tue, Sep 01, 2020 at 12:46:41PM +0200, Frederic Weisbecker wrote:
-> > Hi,
-> > 
-> > I'm currently working on making nohz_full/nohz_idle runtime toggable
-> > and some other people seem to be interested as well. So I've dumped
-> > a few thoughts about some pre-requirements to achieve that for those
-> > interested.
-> > 
-> > As you can see, there is a bit of hard work in the way. I'm iterating
-> > that in https://pad.kernel.org/p/isolation, feel free to edit:
-> > 
-> > 
-> > == RCU nocb ==
-> > 
-> > Currently controllable with "rcu_nocbs=" boot parameter and/or through nohz_full=/isolcpus=nohz
-> > We need to make it toggeable at runtime. Currently handling that:
-> > v1: https://lwn.net/Articles/820544/
-> > v2: coming soon
-> 
-> Looking forward to seeing it!
+On Tue, Sep 8, 2020 at 3:32 PM Matthew Garrett <mjg59@google.com> wrote:
+>
+> On Tue, Sep 8, 2020 at 1:35 PM Andy Lutomirski <luto@amacapital.net> wrot=
+e:
+>
+> > Undervolting is a bit different. It=E2=80=99s a genuinely useful config=
+uration that can affect system stability.  In general, I think it should be=
+ allowed, and it should have a real driver in tree.
+>
+> Agree that this should be a proper driver rather than permitting
+> arbitrary poking (especially if this isn't an architecturally defined
+> MSR - there's no guarantee that it'll have the same functionality
+> everywhere).
 
-So many ordering riddles I had to put on paper. But I'm getting close to
-something RFC-postable now.
-
-> 
-> > == TIF_NOHZ ==
-> > 
-> > Need to get rid of that in order not to trigger syscall slowpath on CPUs that don't want nohz_full.
-> > Also we don't want to iterate all threads and clear the flag when the last nohz_full CPU exits nohz_full
-> > mode. Prefer static keys to call context tracking on archs. x86 does that well.
-> 
-> Would it help if RCU was able to, on a per-CPU basis, distinguish between
-> nohz_full userspace execution on the one hand and idle-loop execution
-> on the other?  Or do you have some other trick in mind?
-
-No it's more about context tracking. Initially it used TIF_NOHZ to enter
-the syscall slow path and call to context tracking on kernel entry and exit.
-
-The problem is that it forces all CPUs, including housekeepers, to run into
-that syscall slowpath. So we rather want the context tracking call conditional
-on a per cpu basis and not on a per task basis. And static keys are good for
-that. That's what x86 does.
-
-So RCU can't help much I fear (but hey, first time I can say that! ;-)
-
-Thanks.
+After looking at the code for intel-undervolt a bit, that definitely
+needs kernel or even firmware support.  That MSR really is a mailbox.
+You write commands to it and read responses.  There's no way that user
+code can have adequate locking.
