@@ -2,312 +2,358 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A1EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A895520C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196A721D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fhPN17N7"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OSyOqXC0";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LjYv1xza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgIIWDX (ORCPT
+        id S1727055AbgIIWIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 18:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgIIWDV (ORCPT
+        Wed, 9 Sep 2020 18:08:21 -0400
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:44964
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726426AbgIIWIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 18:03:21 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDD2C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 15:03:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t14so3051364pgl.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 15:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y29oJ2wR8B7vMMWMqGAukb+m950+dbW6OxjMlymMlBc=;
-        b=fhPN17N7/qjwdvpNEW6poJXqxItTX/BcX32e5QXRppf6eTv8TDJzy4xUtkU6HmOsWY
-         VjI8t1NJzXsCZIFXeEtlBNDKB5jQvwdTxEvA7XZgRduXh/P8Pef+NRDu42A+5T2P/bYs
-         Ga0BAjAjJ65pQVyqxq60fuMrFVCGOkdUQdlGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y29oJ2wR8B7vMMWMqGAukb+m950+dbW6OxjMlymMlBc=;
-        b=rZ9be+hlZVO37ADIttKMPRbEuHniom8DtuJR1Wq7EaZdKHtxGwGW9hnDmNdh4MMXlJ
-         tpx+UWFuQLXtyfq1tQ/vLBWNqi7GixMgI6MKBQWZjhf0EKj1iA8333Haxv+rBAsYnsSY
-         qpUaKpisuGmOKlSnaH+Qyu6rEFiQZdyux4QZN0T/D7/QnYsyi3IdBwDgvvZKA7iN1Jbk
-         igp3eCwGoYXp53Rio/4M4RW56xzeF2HCkgaxthNNritxoFp0mTzNIkYfMg1e552k/sPD
-         YLPU4yPolWiI45I4F9pDYmTLLcnEFix5UKtK9thknyF2nWYXVcGZMt0V04e7/fQd98Vm
-         fBHA==
-X-Gm-Message-State: AOAM530Dva7q9x8BinixITltIYml3CA5JAQjaWOPAVJJfLJWYSPCew0D
-        Jf5/fu/gjIqB6aNSjkQfI2HThsnqHctoLw==
-X-Google-Smtp-Source: ABdhPJw/d5Tqf/rHCwWkJFbCgAyi1QvfIXvgAz1a19pSi6GJfrzgl7jFis+ln923AoXqFqkEyH0Ijg==
-X-Received: by 2002:a62:cf05:: with SMTP id b5mr2495603pfg.108.1599689000262;
-        Wed, 09 Sep 2020 15:03:20 -0700 (PDT)
-Received: from localhost ([2620:15c:202:201:9657:a5ff:feef:7b57])
-        by smtp.gmail.com with ESMTPSA id n2sm170854pja.41.2020.09.09.15.03.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 15:03:19 -0700 (PDT)
-From:   Sean O'Brien <seobrien@chromium.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>
-Cc:     linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Sean O'Brien <seobrien@chromium.org>
-Subject: [PATCH v3] HID: add vivaldi HID driver
-Date:   Wed,  9 Sep 2020 15:03:04 -0700
-Message-Id: <20200909150254.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+        Wed, 9 Sep 2020 18:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599689299;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=hzvZvx1MYCrv6d2Rm3AxGLKpuZ8qoBgm/eA9frU1bDw=;
+        b=OSyOqXC0dn7ZZmUPmP2P2PRHjapt7xL/zYO7yTtZYLhfgnWAxl9s1evcY6KMSajn
+        a0vxsvPrY2KR6iujp2c6mEcHK+6mU1vvGAXwpQEiQPdak4uQ44N5zVb7RJff8ArW+C8
+        94PURBYmG8m+8y2V1/L/kktWmrTtZlrnc/NgfWoM=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599689299;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=hzvZvx1MYCrv6d2Rm3AxGLKpuZ8qoBgm/eA9frU1bDw=;
+        b=LjYv1xzaBJrOuv228ssZwOfRYhn6yBx4C49Sru74j4yEHb3T4P4RpKjyLZLnM+LF
+        MzZpyX/M8SOBoSvuKx47pFvXMYhs60DoXmuHjStAv9qnTVSLmenb6XNQJGWWagCCB9i
+        aQrQ3OWNUJUuhXXScK1biT/3Ca+h4YTXGAiyZTPc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A493AC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=ilina@codeaurora.org
+Date:   Wed, 9 Sep 2020 22:08:18 +0000
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, linux-pm@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] PM / Domains: Add support for PM domain on/off
+ notifiers for genpd
+Message-ID: <0101017474e993a8-a6b84db3-a829-4710-b37e-77103f1af8dc-000000@us-west-2.amazonses.com>
+References: <20200819104057.318230-1-ulf.hansson@linaro.org>
+ <20200819104057.318230-4-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819104057.318230-4-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-SES-Outgoing: 2020.09.09-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add vivaldi HID driver. This driver allows us to read and report the top
-row layout of keyboards which provide a vendor-defined (Google) HID
-usage.
+-----Original Message-----
+Date: Wed, 19 Aug 2020 12:40:57 +0200
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman
+ <khilman@kernel.org>, linux-pm@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi
+ <Lorenzo.Pieralisi@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Lina Iyer <ilina@codeaurora.org>, Lukasz Luba <lukasz.luba@arm.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn
+ Andersson <bjorn.andersson@linaro.org>, Benjamin Gaignard
+ <benjamin.gaignard@st.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] PM / Domains: Add support for PM domain on/off notifiers
+ for genpd
 
-Signed-off-by: Sean O'Brien <seobrien@chromium.org>
+A device may have specific HW constraints that must be obeyed to, before
+its corresponding PM domain (genpd) can be powered off - and vice verse at
+power on. These constraints can't be managed through the regular runtime PM
+based deployment for a device, because the access pattern for it, isn't
+always request based. In other words, using the runtime PM callbacks to
+deal with the constraints doesn't work for these cases.
+
+For these reasons, let's instead add a PM domain power on/off notification
+mechanism to genpd. To add/remove a notifier for a device, the device must
+already have been attached to the genpd, which also means that it needs to
+be a part of the PM domain topology.
+
+To add/remove a notifier, let's introduce two genpd specific functions:
+ - dev_pm_genpd_add|remove_notifier()
+
+Note that, to further clarify when genpd power on/off notifiers may be
+used, one can compare with the existing CPU_CLUSTER_PM_ENTER|EXIT
+notifiers. In the long run, the genpd power on/off notifiers should be able
+to replace them, but that requires additional genpd based platform support
+for the current users.
+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
+ drivers/base/power/domain.c | 130 ++++++++++++++++++++++++++++++++++--
+ include/linux/pm_domain.h   |  15 +++++
+ 2 files changed, 141 insertions(+), 4 deletions(-)
 
- drivers/hid/Kconfig       |   9 +++
- drivers/hid/Makefile      |   1 +
- drivers/hid/hid-core.c    |   7 ++
- drivers/hid/hid-vivaldi.c | 144 ++++++++++++++++++++++++++++++++++++++
- include/linux/hid.h       |   2 +
- 5 files changed, 163 insertions(+)
- create mode 100644 drivers/hid/hid-vivaldi.c
-
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index 05315b434276..612629678c84 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -397,6 +397,15 @@ config HID_GOOGLE_HAMMER
- 	help
- 	Say Y here if you have a Google Hammer device.
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 4b787e1ff188..9cb85a5e8342 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -545,13 +545,21 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+ 	if (!genpd->gov)
+ 		genpd->state_idx = 0;
  
-+config HID_VIVALDI
-+	tristate "Vivaldi Keyboard"
-+	depends on HID
-+	help
-+	  Say Y here if you want to enable support for Vivaldi keyboards.
-+
-+	  Vivaldi keyboards use a vendor-specific (Google) HID usage to report
-+	  how the keys in the top row are physically ordered.
-+
- config HID_GT683R
- 	tristate "MSI GT68xR LED support"
- 	depends on LEDS_CLASS && USB_HID
-diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index d8ea4b8c95af..4acb583c92a6 100644
---- a/drivers/hid/Makefile
-+++ b/drivers/hid/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_HID_GEMBIRD)	+= hid-gembird.o
- obj-$(CONFIG_HID_GFRM)		+= hid-gfrm.o
- obj-$(CONFIG_HID_GLORIOUS)  += hid-glorious.o
- obj-$(CONFIG_HID_GOOGLE_HAMMER)	+= hid-google-hammer.o
-+obj-$(CONFIG_HID_VIVALDI)	+= hid-vivaldi.o
- obj-$(CONFIG_HID_GT683R)	+= hid-gt683r.o
- obj-$(CONFIG_HID_GYRATION)	+= hid-gyration.o
- obj-$(CONFIG_HID_HOLTEK)	+= hid-holtek-kbd.o
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index d2ecc9c45255..6dbd09254c44 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -814,6 +814,13 @@ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
- 
- 	if ((parser->global.usage_page << 16) >= HID_UP_MSVENDOR)
- 		parser->scan_flags |= HID_SCAN_FLAG_VENDOR_SPECIFIC;
-+
-+	if ((parser->global.usage_page << 16) == HID_UP_GOOGLEVENDOR)
-+		for (i = 0; i < parser->local.usage_index; i++)
-+			if (parser->local.usage[i] ==
-+					(HID_UP_GOOGLEVENDOR | 0x0001))
-+				parser->device->group =
-+					HID_GROUP_VIVALDI;
- }
- 
- static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
-diff --git a/drivers/hid/hid-vivaldi.c b/drivers/hid/hid-vivaldi.c
-new file mode 100644
-index 000000000000..cd7ada48b1d9
---- /dev/null
-+++ b/drivers/hid/hid-vivaldi.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HID support for Vivaldi Keyboard
-+ *
-+ * Copyright 2020 Google LLC.
-+ * Author: Sean O'Brien <seobrien@chromium.org>
-+ */
-+
-+#include <linux/hid.h>
-+#include <linux/module.h>
-+
-+#define MIN_FN_ROW_KEY	1
-+#define MAX_FN_ROW_KEY	24
-+#define HID_VD_FN_ROW_PHYSMAP 0x00000001
-+#define HID_USAGE_FN_ROW_PHYSMAP (HID_UP_GOOGLEVENDOR | HID_VD_FN_ROW_PHYSMAP)
-+
-+static struct hid_driver hid_vivaldi;
-+
-+struct vivaldi_data {
-+	u32 function_row_physmap[MAX_FN_ROW_KEY - MIN_FN_ROW_KEY + 1];
-+	int max_function_row_key;
-+};
-+
-+static ssize_t function_row_physmap_show(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	struct hid_device *hdev = to_hid_device(dev);
-+	struct vivaldi_data *drvdata = hid_get_drvdata(hdev);
-+	ssize_t size = 0;
-+	int i;
-+
-+	if (!drvdata->max_function_row_key)
-+		return 0;
-+
-+	for (i = 0; i < drvdata->max_function_row_key; i++)
-+		size += sprintf(buf + size, "%02X ",
-+				drvdata->function_row_physmap[i]);
-+	size += sprintf(buf + size, "\n");
-+	return size;
-+}
-+
-+DEVICE_ATTR_RO(function_row_physmap);
-+static struct attribute *sysfs_attrs[] = {
-+	&dev_attr_function_row_physmap.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group input_attribute_group = {
-+	.attrs = sysfs_attrs
-+};
-+
-+static int vivaldi_probe(struct hid_device *hdev,
-+			 const struct hid_device_id *id)
-+{
-+	struct vivaldi_data *drvdata;
-+	int ret;
-+
-+	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	hid_set_drvdata(hdev, drvdata);
-+
-+	ret = hid_parse(hdev);
++	/* Notify consumers that we are about to power off. */
++	ret = raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_OFF,
++				      NULL);
 +	if (ret)
 +		return ret;
 +
-+	return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
-+}
+ 	/* Don't power off, if a child domain is waiting to power on. */
+-	if (atomic_read(&genpd->sd_count) > 0)
+-		return -EBUSY;
++	if (atomic_read(&genpd->sd_count) > 0) {
++		ret = -EBUSY;
++		goto busy;
++	}
+ 
+ 	ret = _genpd_power_off(genpd, true);
+ 	if (ret)
+-		return ret;
++		goto busy;
+ 
+ 	genpd->status = GENPD_STATE_OFF;
+ 	genpd_update_accounting(genpd);
+@@ -564,6 +572,9 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+ 	}
+ 
+ 	return 0;
++busy:
++	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
++	return ret;
+ }
+ 
+ /**
+@@ -606,6 +617,9 @@ static int genpd_power_on(struct generic_pm_domain *genpd, unsigned int depth)
+ 	if (ret)
+ 		goto err;
+ 
++	/* Inform consumers that we have powered on. */
++	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
 +
-+static void vivaldi_feature_mapping(struct hid_device *hdev,
-+				    struct hid_field *field,
-+				    struct hid_usage *usage)
+ 	genpd->status = GENPD_STATE_ON;
+ 	genpd_update_accounting(genpd);
+ 
+@@ -948,9 +962,18 @@ static void genpd_sync_power_off(struct generic_pm_domain *genpd, bool use_lock,
+ 
+ 	/* Choose the deepest state when suspending */
+ 	genpd->state_idx = genpd->state_count - 1;
+-	if (_genpd_power_off(genpd, false))
++
++	/* Notify consumers that we are about to power off. */
++	if (raw_notifier_call_chain(&genpd->power_notifiers,
++				    GENPD_STATE_OFF, NULL))
+ 		return;
+If any of the notified returns an error, we probably should inform that
+the genpd failed as well. 
+
+-- Lina
+
++	if (_genpd_power_off(genpd, false)) {
++		raw_notifier_call_chain(&genpd->power_notifiers,
++					GENPD_STATE_ON, NULL);
++		return;
++	}
++
+ 	genpd->status = GENPD_STATE_OFF;
+ 
+ 	list_for_each_entry(link, &genpd->child_links, child_node) {
+@@ -998,6 +1021,9 @@ static void genpd_sync_power_on(struct generic_pm_domain *genpd, bool use_lock,
+ 
+ 	_genpd_power_on(genpd, false);
+ 
++	/* Inform consumers that we have powered on. */
++	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
++
+ 	genpd->status = GENPD_STATE_ON;
+ }
+ 
+@@ -1593,6 +1619,101 @@ int pm_genpd_remove_device(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(pm_genpd_remove_device);
+ 
++/**
++ * dev_pm_genpd_add_notifier - Add a genpd power on/off notifier for @dev
++ *
++ * @dev: Device that should be associated with the notifier
++ * @nb: The notifier block to register
++ *
++ * Users may call this function to add a genpd power on/off notifier for an
++ * attached @dev. Only one notifier per device is allowed. The notifier is
++ * sent when genpd is powering on/off the PM domain.
++ *
++ * It is assumed that the user guarantee that the genpd wouldn't be detached
++ * while this routine is getting called.
++ *
++ * Returns 0 on success and negative error values on failures.
++ */
++int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb)
 +{
-+	struct vivaldi_data *drvdata = hid_get_drvdata(hdev);
-+	int fn_key;
++	struct generic_pm_domain *genpd;
++	struct generic_pm_domain_data *gpd_data;
 +	int ret;
-+	u32 report_len;
-+	u8 *buf;
 +
-+	if (field->logical != HID_USAGE_FN_ROW_PHYSMAP ||
-+	    (usage->hid & HID_USAGE_PAGE) != HID_UP_ORDINAL)
-+		return;
++	genpd = dev_to_genpd_safe(dev);
++	if (!genpd)
++		return -ENODEV;
 +
-+	fn_key = (usage->hid & HID_USAGE);
-+	if (fn_key < MIN_FN_ROW_KEY || fn_key > MAX_FN_ROW_KEY)
-+		return;
-+	if (fn_key > drvdata->max_function_row_key)
-+		drvdata->max_function_row_key = fn_key;
++	if (WARN_ON(!dev->power.subsys_data ||
++		     !dev->power.subsys_data->domain_data))
++		return -EINVAL;
 +
-+	buf = hid_alloc_report_buf(field->report, GFP_KERNEL);
-+	if (!buf)
-+		return;
++	gpd_data = to_gpd_data(dev->power.subsys_data->domain_data);
++	if (gpd_data->power_nb)
++		return -EEXIST;
 +
-+	report_len = hid_report_len(field->report);
-+	ret = hid_hw_raw_request(hdev, field->report->id, buf,
-+				 report_len, HID_FEATURE_REPORT,
-+				 HID_REQ_GET_REPORT);
-+	if (ret < 0) {
-+		dev_warn(&hdev->dev, "failed to fetch feature %d\n",
-+			 field->report->id);
-+		goto out;
-+	}
++	genpd_lock(genpd);
++	ret = raw_notifier_chain_register(&genpd->power_notifiers, nb);
++	genpd_unlock(genpd);
 +
-+	ret = hid_report_raw_event(hdev, HID_FEATURE_REPORT, buf,
-+				   report_len, 0);
 +	if (ret) {
-+		dev_warn(&hdev->dev, "failed to report feature %d\n",
-+			 field->report->id);
-+		goto out;
++		dev_warn(dev, "failed to add notifier for PM domain %s\n",
++			 genpd->name);
++		return ret;
 +	}
 +
-+	drvdata->function_row_physmap[fn_key - MIN_FN_ROW_KEY] =
-+	    field->value[usage->usage_index];
-+
-+out:
-+	kfree(buf);
++	gpd_data->power_nb = nb;
++	return 0;
 +}
++EXPORT_SYMBOL_GPL(dev_pm_genpd_add_notifier);
 +
-+static int vivaldi_input_configured(struct hid_device *hdev,
-+				    struct hid_input *hidinput)
++/**
++ * dev_pm_genpd_remove_notifier - Remove a genpd power on/off notifier for @dev
++ *
++ * @dev: Device that is associated with the notifier
++ *
++ * Users may call this function to remove a genpd power on/off notifier for an
++ * attached @dev.
++ *
++ * It is assumed that the user guarantee that the genpd wouldn't be detached
++ * while this routine is getting called.
++ *
++ * Returns 0 on success and negative error values on failures.
++ */
++int dev_pm_genpd_remove_notifier(struct device *dev)
 +{
-+	return sysfs_create_group(&hdev->dev.kobj, &input_attribute_group);
++	struct generic_pm_domain *genpd;
++	struct generic_pm_domain_data *gpd_data;
++	int ret;
++
++	genpd = dev_to_genpd_safe(dev);
++	if (!genpd)
++		return -ENODEV;
++
++	if (WARN_ON(!dev->power.subsys_data ||
++		     !dev->power.subsys_data->domain_data))
++		return -EINVAL;
++
++	gpd_data = to_gpd_data(dev->power.subsys_data->domain_data);
++	if (!gpd_data->power_nb)
++		return -ENODEV;
++
++	genpd_lock(genpd);
++	ret = raw_notifier_chain_unregister(&genpd->power_notifiers,
++					    gpd_data->power_nb);
++	genpd_unlock(genpd);
++
++	if (ret) {
++		dev_warn(dev, "failed to remove notifier for PM domain %s\n",
++			 genpd->name);
++		return ret;
++	}
++
++	gpd_data->power_nb = NULL;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dev_pm_genpd_remove_notifier);
++
+ static int genpd_add_subdomain(struct generic_pm_domain *genpd,
+ 			       struct generic_pm_domain *subdomain)
+ {
+@@ -1763,6 +1884,7 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 	INIT_LIST_HEAD(&genpd->parent_links);
+ 	INIT_LIST_HEAD(&genpd->child_links);
+ 	INIT_LIST_HEAD(&genpd->dev_list);
++	RAW_INIT_NOTIFIER_HEAD(&genpd->power_notifiers);
+ 	genpd_lock_init(genpd);
+ 	genpd->gov = gov;
+ 	INIT_WORK(&genpd->power_off_work, genpd_power_off_work_fn);
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index 66f3c5d64d81..3b2b561ce846 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -112,6 +112,7 @@ struct generic_pm_domain {
+ 	cpumask_var_t cpus;		/* A cpumask of the attached CPUs */
+ 	int (*power_off)(struct generic_pm_domain *domain);
+ 	int (*power_on)(struct generic_pm_domain *domain);
++	struct raw_notifier_head power_notifiers; /* Power on/off notifiers */
+ 	struct opp_table *opp_table;	/* OPP table of the genpd */
+ 	unsigned int (*opp_to_performance_state)(struct generic_pm_domain *genpd,
+ 						 struct dev_pm_opp *opp);
+@@ -178,6 +179,7 @@ struct generic_pm_domain_data {
+ 	struct pm_domain_data base;
+ 	struct gpd_timing_data td;
+ 	struct notifier_block nb;
++	struct notifier_block *power_nb;
+ 	int cpu;
+ 	unsigned int performance_state;
+ 	void *data;
+@@ -204,6 +206,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		  struct dev_power_governor *gov, bool is_off);
+ int pm_genpd_remove(struct generic_pm_domain *genpd);
+ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
++int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb);
++int dev_pm_genpd_remove_notifier(struct device *dev);
+ 
+ extern struct dev_power_governor simple_qos_governor;
+ extern struct dev_power_governor pm_domain_always_on_gov;
+@@ -251,6 +255,17 @@ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int dev_pm_genpd_add_notifier(struct device *dev,
++					    struct notifier_block *nb)
++{
++	return -ENOTSUPP;
 +}
 +
-+static const struct hid_device_id vivaldi_table[] = {
-+	{ HID_DEVICE(HID_BUS_ANY, HID_GROUP_VIVALDI, HID_ANY_ID,
-+		     HID_ANY_ID) },
-+	{ }
-+};
++static inline int dev_pm_genpd_remove_notifier(struct device *dev)
++{
++	return -ENOTSUPP;
++}
 +
-+MODULE_DEVICE_TABLE(hid, vivaldi_table);
-+
-+static struct hid_driver hid_vivaldi = {
-+	.name = "hid-vivaldi",
-+	.id_table = vivaldi_table,
-+	.probe = vivaldi_probe,
-+	.feature_mapping = vivaldi_feature_mapping,
-+	.input_configured = vivaldi_input_configured,
-+};
-+
-+module_hid_driver(hid_vivaldi);
-+
-+MODULE_AUTHOR("Sean O'Brien");
-+MODULE_DESCRIPTION("HID vivaldi driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index c7044a14200e..58684657960b 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -163,6 +163,7 @@ struct hid_item {
- #define HID_UP_LNVENDOR		0xffa00000
- #define HID_UP_SENSOR		0x00200000
- #define HID_UP_ASUSVENDOR	0xff310000
-+#define HID_UP_GOOGLEVENDOR	0xffd10000
- 
- #define HID_USAGE		0x0000ffff
- 
-@@ -371,6 +372,7 @@ struct hid_item {
- #define HID_GROUP_LOGITECH_DJ_DEVICE		0x0102
- #define HID_GROUP_STEAM				0x0103
- #define HID_GROUP_LOGITECH_27MHZ_DEVICE		0x0104
-+#define HID_GROUP_VIVALDI			0x0105
- 
- /*
-  * HID protocol status
+ #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
+ #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
+ #endif
 -- 
-2.28.0.526.ge36021eeef-goog
+2.25.1
 
