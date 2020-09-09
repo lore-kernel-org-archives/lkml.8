@@ -7,34 +7,32 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF2AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F995C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00FAE207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09972207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgIIPrt (ORCPT
+        id S1730544AbgIIPsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:47:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11325 "EHLO huawei.com"
+        Wed, 9 Sep 2020 11:48:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37118 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730450AbgIIPpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:45:18 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 83E9722A8BAE0B106767;
-        Wed,  9 Sep 2020 21:42:51 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:42:44 +0800
+        id S1730446AbgIIPpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:45:15 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 43882EA083EC8B2B931C;
+        Wed,  9 Sep 2020 21:43:31 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
+ 21:43:20 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] PCI: dwc: unexport dw_pcie_link_set_max_speed
-Date:   Wed, 9 Sep 2020 21:42:34 +0800
-Message-ID: <20200909134234.31204-1-yuehaibing@huawei.com>
+To:     <stefan@agner.ch>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <vigneshr@ti.com>, <yuehaibing@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] mtd: rawnand: vf610_nfc: Remove unused function vf610_nfc_transfer_size()
+Date:   Wed, 9 Sep 2020 21:43:18 +0800
+Message-ID: <20200909134318.36340-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -45,27 +43,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function has been made static, which causes warning:
+commit ecc40b8df59a ("mtd: rawnand: vf610_nfc: remove old hooks")
+left behind this, remove it.
 
-WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT_SYMBOL_GPL
-
-Fixes: 3af45d34d30c ("PCI: dwc: Centralize link gen setting")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/mtd/nand/raw/vf610_nfc.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 4d105efb5722..3c3a4d1dbc0b 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -508,7 +508,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
- 	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
- 
+diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
+index 7248c5901183..ed8e0928c0b2 100644
+--- a/drivers/mtd/nand/raw/vf610_nfc.c
++++ b/drivers/mtd/nand/raw/vf610_nfc.c
+@@ -323,11 +323,6 @@ static inline void vf610_nfc_ecc_mode(struct vf610_nfc *nfc, int ecc_mode)
+ 			    CONFIG_ECC_MODE_SHIFT, ecc_mode);
  }
--EXPORT_SYMBOL_GPL(dw_pcie_link_set_max_speed);
  
- static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
+-static inline void vf610_nfc_transfer_size(struct vf610_nfc *nfc, int size)
+-{
+-	vf610_nfc_write(nfc, NFC_SECTOR_SIZE, size);
+-}
+-
+ static inline void vf610_nfc_run(struct vf610_nfc *nfc, u32 col, u32 row,
+ 				 u32 cmd1, u32 cmd2, u32 trfr_sz)
  {
 -- 
 2.17.1
