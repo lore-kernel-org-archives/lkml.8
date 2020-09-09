@@ -2,85 +2,113 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EA7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D855BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C7B206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A117206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599666951;
-	bh=VzOm3hbHGC38QpPnhgXXm5Exmh3fq0wV/ZdUr9+5gwk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TSbAhCN2pgz6lS4JBg+TlwFEpegmr12h6x38xxXI3VCCT35d4DcomXXQ6eOOk8PzA
-	 EfvyQV/AjB8cSNeyfQiwiDpd4HznRf4yawBgSOV1rw+FSCOADqQTxWwEPDAgN9QZ4P
-	 Dqa15/+/G4DgelbSA5gk71EoBHDwMCx0Pg/7mRlA=
+	s=default; t=1599667015;
+	bh=iY6OqVOcgu1zhpou4oMMQ2MqoLuggzVS9uTeM1VK3V8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w6J9x7TeaXMiMKhx5ZSuf4zR/jlhkrWCP2CqYJNt38xafi79KEbwCjsrpfHhPuS0U
+	 EVFTyFsQIzuHlGevAB23/WoOBV0hq+D49myCsb8XS9GaBXurq8DFukjWO/sXBGZ3PH
+	 sKbvz946QbeBCPbx3V8RsBWIZYo7vP+UcrVhIoVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbgIIPzd (ORCPT
+        id S1730456AbgIIP4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 11:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbgIIPwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:52:07 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        id S1730547AbgIIPvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:51:21 -0400
+Received: from mail.kernel.org (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4003E20639;
-        Wed,  9 Sep 2020 15:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44546221E8;
+        Wed,  9 Sep 2020 14:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599666725;
-        bh=VzOm3hbHGC38QpPnhgXXm5Exmh3fq0wV/ZdUr9+5gwk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IJNX8/5fZjHHkVRxVgRvSGV5uqM4kzI2NYrjXr8Ptyg5Z/iTi9mf/UQTcq382G1mJ
-         Tl+NCFKfrdmbL9vcvP6Y/NMwCBfgH2n8M0NqAEBKg/51xjdNOSairGIba3K8aD5aSB
-         tGVeua677ZoeNPrC/GdItDe3IsGnG1S02StSSx5E=
-Date:   Wed, 9 Sep 2020 08:52:03 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     syzbot <syzbot+8267241609ae8c23b248@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vinicius.gomes@intel.com, xiyou.wangcong@gmail.com
-Subject: Re: INFO: rcu detected stall in cleanup_net (4)
-Message-ID: <20200909085203.5e335c61@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <000000000000db78de05aedabb5a@google.com>
-References: <000000000000db78de05aedabb5a@google.com>
+        s=default; t=1599660665;
+        bh=iY6OqVOcgu1zhpou4oMMQ2MqoLuggzVS9uTeM1VK3V8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eCdjr+F3S/SUxOlc1bDPVGLdKtcVY4Cm21Hs3RkfNxm6TUWoGhAKvXl0HtKTPnuJc
+         eWiRXuu0xCS5Iy19k6LbQdtChs1cGtoRFavApk2arVzpZ0B4XOoXVokg9tFi8CZojt
+         V4tXBxnhPnoiRs8McKT3J7lXwWd9q1E1nw3icZEU=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kG0oR-00DUWr-8U; Wed, 09 Sep 2020 16:11:03 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 08/30] docs: fix location of nommu-mmap.rst file
+Date:   Wed,  9 Sep 2020 16:10:39 +0200
+Message-Id: <275a0c634408d89a3b3fb51ca93a6c0e8b4f7905.1599660067.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599660067.git.mchehab+huawei@kernel.org>
+References: <cover.1599660067.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 08 Sep 2020 22:29:21 -0700 syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    59126901 Merge tag 'perf-tools-fixes-for-v5.9-2020-09-03' ..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12edb935900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8267241609ae8c23b248
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=157c7aa5900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c92ef9900000
-> 
-> The issue was bisected to:
-> 
-> commit 5a781ccbd19e4664babcbe4b4ead7aa2b9283d22
-> Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Date:   Sat Sep 29 00:59:43 2018 +0000
-> 
->     tc: Add support for configuring the taprio scheduler
+mm/nommu-mmap.rst -> admin-guide/mm/ nommu-mmap.rst
 
+Fixes: 800c02f5d030 ("docs: move nommu-mmap.txt to admin-guide and rename to ReST")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ init/Kconfig | 2 +-
+ mm/Kconfig   | 2 +-
+ mm/nommu.c   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Vinicius, could you please take a look at all the syzbot reports which
-point to your commit? I know syzbot bisection is not super reliable,
-but at least 3 reports point to your commit now, so something's
-probably going on.
+diff --git a/init/Kconfig b/init/Kconfig
+index 91456ac0ef20..c9446911cf41 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1990,7 +1990,7 @@ config MMAP_ALLOW_UNINITIALIZED
+ 	  userspace.  Since that isn't generally a problem on no-MMU systems,
+ 	  it is normally safe to say Y here.
+ 
+-	  See Documentation/mm/nommu-mmap.rst for more information.
++	  See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
+ 
+ config SYSTEM_DATA_VERIFICATION
+ 	def_bool n
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 7d56281ff41e..c7f30f8b282b 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -383,7 +383,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
+ 	  This option specifies the initial value of this option.  The default
+ 	  of 1 says that all excess pages should be trimmed.
+ 
+-	  See Documentation/mm/nommu-mmap.rst for more information.
++	  See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
+ 
+ config TRANSPARENT_HUGEPAGE
+ 	bool "Transparent Hugepage Support"
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 75a327149af1..0df7ca321314 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -5,7 +5,7 @@
+  *  Replacement code for mm functions to support CPU's that don't
+  *  have any form of memory management unit (thus no virtual memory).
+  *
+- *  See Documentation/mm/nommu-mmap.rst
++ *  See Documentation/admin-guide/mm/nommu-mmap.rst
+  *
+  *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
+  *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
+-- 
+2.26.2
+
