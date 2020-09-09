@@ -2,134 +2,96 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4307FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CCEC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF34521D40
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599630849;
-	bh=pbyS4ZMWYMUKwmpi3BhxrHHLzLjXuJLnUN/DArAAcCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ixcQ4QzQikkLV3FKyd9USSHtZpOMIV/fV/+85FBEidWupm2HATdfxbtVQzZQShJCH
-	 r9N3/BDpNF4ArkH+Z3MTglzf8+trWd3l6t/ow8ySS+Gl1riSmtcqjJfF3uftOE1Nh7
-	 ABRs2CU90eM+5lZ7HMeNgq288NgY9S1lNHf7pquc=
+	by mail.kernel.org (Postfix) with ESMTP id B6A5F21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:56:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OGf6NrqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgIIFyH (ORCPT
+        id S1726440AbgIIF46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 01:54:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36198 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 01:56:58 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56013 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgIIFyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 01:54:07 -0400
-Received: from localhost (unknown [172.98.75.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725807AbgIIF44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 01:56:56 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC8532166E;
-        Wed,  9 Sep 2020 05:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599630846;
-        bh=pbyS4ZMWYMUKwmpi3BhxrHHLzLjXuJLnUN/DArAAcCk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Up3DXdI8JG6lYgGcC0tVjYoVSP1nLZyG6no0UVGh0mcYcuP7bLalh/ZHMcaxkd8ZT
-         4hKkD4LUFJoxQFZYfY0KmG9+m5OcFoTb6CHL9YtBOQqvWQ53gbXqE+GdKD+ZcMeAHE
-         2uF6//oVS8x+8pzmKdA8VqSS/nBIguX1Si2IuUBY=
-Date:   Wed, 9 Sep 2020 07:54:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Felipe Franciosi <felipe@nutanix.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Matej Genci <matej.genci@nutanix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH] Rescan the entire target on transport reset when LUN is 0
-Message-ID: <20200909055403.GA310264@kroah.com>
-References: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
- <200ad446-1242-9555-96b6-4fa94ee27ec7@redhat.com>
- <CCFAFEBB-8250-4627-B25D-3B9054954C45@nutanix.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmWVt5XR4z9sT6;
+        Wed,  9 Sep 2020 15:56:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599631015;
+        bh=vfVKtdmJt6Bf/TTuVd/HT4z/eb0RBFxlPgZxNj8kPrM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OGf6NrqMlD7YzsunMXjXN3sxb2/YreD1BsktGjEEYnvLLzeOgTcJjD2V1BllT5wFU
+         H7/HN5iEheIOSOBdnH++Y42oP2qu/xwC2vW2eN4IoEua2aaXBflWeP1f3Rdn8whTHY
+         ai4rLKxa2C+tie5rNn6e8Vt1niVWXjOFW4mm+WYkfGqhqsFQL3I5Q7FKcOmaV0LZRh
+         QTHOOg/qLjJdA4Fib+Lf8RTziDEU/Mdl6CTy7qrxUlt8U3LSEABy038T+OiuI5knf/
+         DgbVvUU2eTeqmtujcCIeSGHRuE+zXX2jU8fJAKDLjqjK7ATGoLs7pv7rCK+4iM+Yom
+         h9tx+KZjhWb1w==
+Date:   Wed, 9 Sep 2020 15:56:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the tty tree
+Message-ID: <20200909155654.76fe3bd6@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CCFAFEBB-8250-4627-B25D-3B9054954C45@nutanix.com>
+Content-Type: multipart/signed; boundary="Sig_/QJLYmG4sIAt=QNG2xrw8Ccl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 05:53:16PM +0000, Felipe Franciosi wrote:
-> 
-> 
-> > On Sep 8, 2020, at 3:22 PM, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > 
-> > On 28/08/20 14:21, Matej Genci wrote:
-> >> VirtIO 1.0 spec says
-> >>    The removed and rescan events ... when sent for LUN 0, they MAY
-> >>    apply to the entire target so the driver can ask the initiator
-> >>    to rescan the target to detect this.
-> >> 
-> >> This change introduces the behaviour described above by scanning the
-> >> entire scsi target when LUN is set to 0. This is both a functional and a
-> >> performance fix. It aligns the driver with the spec and allows control
-> >> planes to hotplug targets with large numbers of LUNs without having to
-> >> request a RESCAN for each one of them.
-> >> 
-> >> Signed-off-by: Matej Genci <matej@nutanix.com>
-> >> Suggested-by: Felipe Franciosi <felipe@nutanix.com>
-> >> ---
-> >> drivers/scsi/virtio_scsi.c | 7 ++++++-
-> >> 1 file changed, 6 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-> >> index bfec84aacd90..a4b9bc7b4b4a 100644
-> >> --- a/drivers/scsi/virtio_scsi.c
-> >> +++ b/drivers/scsi/virtio_scsi.c
-> >> @@ -284,7 +284,12 @@ static void virtscsi_handle_transport_reset(struct virtio_scsi *vscsi,
-> >> 
-> >> 	switch (virtio32_to_cpu(vscsi->vdev, event->reason)) {
-> >> 	case VIRTIO_SCSI_EVT_RESET_RESCAN:
-> >> -		scsi_add_device(shost, 0, target, lun);
-> >> +		if (lun == 0) {
-> >> +			scsi_scan_target(&shost->shost_gendev, 0, target,
-> >> +					 SCAN_WILD_CARD, SCSI_SCAN_INITIAL);
-> >> +		} else {
-> >> +			scsi_add_device(shost, 0, target, lun);
-> >> +		}
-> >> 		break;
-> >> 	case VIRTIO_SCSI_EVT_RESET_REMOVED:
-> >> 		sdev = scsi_device_lookup(shost, 0, target, lun);
-> >> 
-> > 
-> > 
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> 
-> Cc: stable@vger.kernel.org
-> 
-> Thanks, Paolo.
-> 
-> I'm Cc'ing stable as I believe this fixes a driver bug where it
-> doesn't follow the spec. Per commit message, today devices are
-> required to issue RESCAN events for each LUN behind a target when
-> hotplugging, or risking the driver not seeing the new LUNs.
-> 
-> Is this enough? Or should we resend after merge per below?
-> https://www.kernel.org/doc/Documentation/process/stable-kernel-rules.rst
+--Sig_/QJLYmG4sIAt=QNG2xrw8Ccl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-You need to let stable know the git commit id of the patch in Linus's
-tree if the cc: stable is not on the final commit that gets merged.
+Hi all,
 
-thanks,
+After merging the tty tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
 
-greg k-h
+drivers/tty/serial/8250/8250_bcm2835aux.c: In function 'bcm2835aux_serial_p=
+robe':
+drivers/tty/serial/8250/8250_bcm2835aux.c:154:3: warning: ignoring return v=
+alue of 'dev_err_probe' declared with attribute 'warn_unused_result' [-Wunu=
+sed-result]
+  154 |   dev_err_probe(&pdev->dev, ret, "unable to register 8250 port\n");
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Introduced by commit
+
+  ea43a60b1548 ("serial: 8250: Simplify with dev_err_probe()")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/QJLYmG4sIAt=QNG2xrw8Ccl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YbqYACgkQAVBC80lX
+0Gw0bQgAhB5SgV2H2xU273HHGxlI22OTyzpDJ04cq+3ZUKjEOzTJDOW77k+jxotp
+4mAWxasrVxzkwxvSk3wlgclJZria7Uo8uELj138IQrZipZRCBsReKszmrOOl3qgs
+thTVHoq+0zETUzz02uWrn7ZMpYIRBuxRZyjT944DtiuuLzA+5Jq0Vh1Iguprlbk6
+WDq+X8Ea05s2pUrGfQEyiAasBFKYNrQVUlVY5Opt6HsF8sV0n7/7E8/RxisbsRy9
+Wqa/OCKZcr+ZL4lH+Fn0hTLkzEX0NzTmcLLXEpI0c21zbZSD6MG4r3QLAT7tjZRR
+h8L9KFZRuZ33JBrzTIgW2llKGJfuDA==
+=Q0I9
+-----END PGP SIGNATURE-----
+
+--Sig_/QJLYmG4sIAt=QNG2xrw8Ccl--
