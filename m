@@ -2,233 +2,133 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578BCC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E395C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06D3D207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967AA21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:26:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Zn5bV2eM";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="DWhu6SEx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNAVYHr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgIIHXb (ORCPT
+        id S1727005AbgIIH0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:23:31 -0400
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:46674
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728207AbgIIHXa (ORCPT
+        Wed, 9 Sep 2020 03:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIIH0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:23:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599636209;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=tvnsCUb+u2iGWEoRFd4HuBUYVjbgtXXEPz1cXcW8tTA=;
-        b=Zn5bV2eM8CqtS3wsnfullyl7vGzxEIQvqUM3WzGoiaIdqzel/WvAnVeuEmD4kd10
-        yTq141KGCP1+biyrdTET/2gBdmN9GE7Zn2DCkqjM5Qcw2llWklz0OC0Q2178CCRARk5
-        krm7nMQLLDBnCXWqZ9FAs/YD719Pspx2wMtfsKGA=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599636209;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=tvnsCUb+u2iGWEoRFd4HuBUYVjbgtXXEPz1cXcW8tTA=;
-        b=DWhu6SEx3VwHkay8IrothhyGuqF0zhyPqousXlR6LCWGBMkVnh5ufzsoYqOMqMSl
-        jW2NRQui+KRtC9qF5A9xfAw1t/LdkWiKJiQMpt9z1OfsZrVQ750u8VHd7wxdvQTvy51
-        TthsefMoJnM3GF48ZUaY547hIFDqoEPd/SjSSswc=
+        Wed, 9 Sep 2020 03:26:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C6CC061573;
+        Wed,  9 Sep 2020 00:26:32 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d6so1371411pfn.9;
+        Wed, 09 Sep 2020 00:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NB8HBUKnl+eWfZNHIQZWAbfkL9C5IcAO+9Z1lg426u8=;
+        b=hNAVYHr5uxDesz7m8yBEg9nTrnbnzLgkuYvjloOejB/N6d8aae8dTdQu2xhhan0Vtl
+         viJO7ZNo030PGxkXyTbUWpTLuecLUIQqkBS8LH3U7RamoG+oAkaDuHOi1A+4PZjSmPqi
+         EoBVK7TpvxlDjdnHPXyH3Yt8wyrKOK8XGgzfYVPpmIKGXeE12M8psa9BW0zZQJ/aHR+4
+         KF/ZtkQjl2s+FQdRkBIGBmzK0/R0Z4NYX3mb0hIpGiLpkbIV26/G31SgEorcqReRRZiM
+         ikR/C5UVkQ4ft+STBWWOMXlnHbrPVrbPt6HloxfdmkPRVFO2/z1j6cGnR0nhUwxzeynF
+         JkHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NB8HBUKnl+eWfZNHIQZWAbfkL9C5IcAO+9Z1lg426u8=;
+        b=t12lx9coJGdoCnAhFce6SBCJ5KTJ+px911baX2lT8OOkEaJBI7YwISalcBHIRJnQPM
+         1ghh+kbzWyfS1NOsc0f8HreEG+nesx+v3DOnEkoyCR2qF/JIrT6t+ImlHlMaA2hlGyvC
+         OH4C6LOSjmFDHcnkLuiqol6/a5ue9ikaZuWj69QEOuMwshx1dwol/LhFJ8o09sD7sCA5
+         ejd9FImKnhExzDMakc9ZQb7im3W4hXMA4oiePsnf3F5oiDJkZ9pXnRk6zrGS7acRBHc6
+         TnsCsinPiS27wMv0a/UW1a/14y4RHlnv+lTef9jM0AWt5QB/JPVUPwg8alb6YrOVTTDP
+         MWhA==
+X-Gm-Message-State: AOAM533U9m8ANTHHsZQ7JFppywn+2ugCSnohk/6FKMLGGdTdZicbJnvd
+        dMjhkviDCGu5N4Vx4//0ww==
+X-Google-Smtp-Source: ABdhPJxgN58H3LqRJckQL6qJXd2ZuTLY65XPV2ud3K7OCYkyiqQA+x1vw7hC5sQIXpCuHOBgInDgkQ==
+X-Received: by 2002:a17:902:c38a:: with SMTP id g10mr2551819plg.23.1599636392271;
+        Wed, 09 Sep 2020 00:26:32 -0700 (PDT)
+Received: from localhost.localdomain (n11212042027.netvigator.com. [112.120.42.27])
+        by smtp.gmail.com with ESMTPSA id r10sm1129570pjp.49.2020.09.09.00.26.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 00:26:31 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        syzkaller-bugs@googlegroups.com
+Subject: [Linux-kernel-mentees] [PATCH v2] Bluetooth: Fix memory leak in read_adv_mon_features()
+Date:   Wed,  9 Sep 2020 03:25:51 -0400
+Message-Id: <20200909072551.1101031-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200908200635.1099360-1-yepeilin.cs@gmail.com>
+References: <20200908200635.1099360-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 9 Sep 2020 07:23:29 +0000
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Subject: Re: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to
- llcc registers
-In-Reply-To: <159963528940.454335.574793743141997933@swboyd.mtv.corp.google.com>
-References: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
- <159958993124.450588.14302117254509761157@swboyd.mtv.corp.google.com>
- <0101017471ada82d-5015eab8-69cc-4e77-b1dc-651d8bdd303b-000000@us-west-2.amazonses.com>
- <159963528940.454335.574793743141997933@swboyd.mtv.corp.google.com>
-Message-ID: <0101017471bf7e8c-19471d98-5b36-4414-89c3-8de992a36d5c-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.09-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-09 12:38, Stephen Boyd wrote:
-> Quoting Sai Prakash Ranjan (2020-09-09 00:04:00)
->> Hi,
->> 
->> On 2020-09-09 00:02, Stephen Boyd wrote:
->> > Quoting Sai Prakash Ranjan (2020-09-07 22:36:48)
->> >> From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
->> >>
->> >> Older chipsets may not be allowed to configure certain LLCC registers
->> >> as that is handled by the secure side software. However, this is not
->> >> the case for newer chipsets and they must configure these registers
->> >> according to the contents of the SCT table, while keeping in mind that
->> >> older targets may not have these capabilities. So add support to allow
->> >> such configuration of registers to enable capacity based allocation
->> >> and power collapse retention for capable chipsets.
->> >>
->> >> Reason for choosing capacity based allocation rather than the default
->> >> way based allocation is because capacity based allocation allows more
->> >> finer grain partition and provides more flexibility in configuration.
->> >> As for the retention through power collapse, it has an advantage where
->> >> the cache hits are more when we wake up from power collapse although
->> >> it does burn more power but the exact power numbers are not known at
->> >> the moment.
->> >>
->> >> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
->> >> (sai: use existing config instead of dt property and commit msg
->> >> change)
->> >
->> > Should be the following format:
->> >
->> > [saiprakash.ranjan@codeaurora.org: use existing...]
->> >
->> 
->> Hmm, is this documented somewhere because a quick grep shows
->> quite a few places where just the first name is added. Plus
->> there is already a signed-off-by line below this, so we know
->> that it is this 'sai' who made the extra changes.
-> 
-> See Documentation/process/submitting-patches.rst
-> 
+read_adv_mon_features() is leaking memory. Free `rp` before returning.
 
-Thanks, it says **prepending the description with your mail and/or 
-name**.
-So its either mail and/or name, but I didn't give my full name
-and I don't have a strong opinion, so I can change it to include
-my full mail address.
+Fixes: e5e1e7fd470c ("Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES")
+Reported-and-tested-by: syzbot+f7f6e564f4202d8601c6@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=f7f6e564f4202d8601c6
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+I forgot the "Link:" tag yesterday. Sorry about that.
 
->> 
->> >> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> >> ---
->> >> diff --git a/drivers/soc/qcom/llcc-qcom.c
->> >> b/drivers/soc/qcom/llcc-qcom.c
->> >> index 429b5a60a1ba..b908656ce519 100644
->> >> --- a/drivers/soc/qcom/llcc-qcom.c
->> >> +++ b/drivers/soc/qcom/llcc-qcom.c
->> >> @@ -45,6 +45,9 @@
->> >>  #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
->> >>  #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
->> >>
->> >> +#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
->> >> +#define LLCC_TRP_PCB_ACT              0x21F04
->> >
->> > Use lowercase hex please. LLCC_COMMON_STATUS0 is using lowercase.
->> >
->> 
->> Ok
->> 
->> >> +
->> >>  #define BANK_OFFSET_STRIDE           0x80000
->> >>
->> >>  /**
->> >> @@ -89,6 +92,7 @@ struct llcc_slice_config {
->> >>  struct qcom_llcc_config {
->> >>         const struct llcc_slice_config *sct_data;
->> >>         int size;
->> >> +       bool need_llcc_cfg;
->> >>  };
->> >>
->> >>  static const struct llcc_slice_config sc7180_data[] =  {
->> >> @@ -122,11 +126,13 @@ static const struct llcc_slice_config
->> >> sdm845_data[] =  {
->> >>  static const struct qcom_llcc_config sc7180_cfg = {
->> >>         .sct_data       = sc7180_data,
->> >>         .size           = ARRAY_SIZE(sc7180_data),
->> >> +       .need_llcc_cfg  = true,
->> >>  };
->> >>
->> >>  static const struct qcom_llcc_config sdm845_cfg = {
->> >>         .sct_data       = sdm845_data,
->> >>         .size           = ARRAY_SIZE(sdm845_data),
->> >> +       .need_llcc_cfg  = false,
->> >
->> > false is the default so just leave it out?
->> >
->> 
->> Done on purpose as I wanted to be explicit here so that
->> anyone reading it knows that it doesn't support configuring
->> in kernel. Yes the default is false but it won't hurt to be
->> explicit here to avoid confusion.
-> 
-> I fear that being explicit will mean that all SoCs will be explicit and
-> that's sort of useless. Does it need to be so explicit?
-> 
+Change in v2:
+    - add a proper "Link:" tag.
 
- From what I know, the majority of the SoCs(upcoming) will have
-it true so we don't have to fill them with false everywhere,
-just have to do it for SDM845.
+ net/bluetooth/mgmt.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
->> 
->> >>  };
->> >>
->> >>  static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
->> >> @@ -327,6 +333,7 @@ static int qcom_llcc_cfg_program(struct
->> >> platform_device *pdev)
->> >>         u32 attr0_val;
->> >>         u32 max_cap_cacheline;
->> >>         u32 sz;
->> >> +       u32 disable_cap_alloc, retain_pc;
->> >>         int ret = 0;
->> >>         const struct llcc_slice_config *llcc_table;
->> >>         struct llcc_slice_desc desc;
->> >> @@ -369,6 +376,21 @@ static int qcom_llcc_cfg_program(struct
->> >> platform_device *pdev)
->> >>                                         attr0_val);
->> >>                 if (ret)
->> >>                         return ret;
->> >> +
->> >> +               if (drv_data->need_llcc_config) {
->> >> +                       disable_cap_alloc =
->> >> llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
->> >
->> > Can we move u32 disable_cap_alloc, retain_pc here? That would keep it
->> > local to this if condition. Or make llc_table[i].slice_id into a local
->> > variable so the shift line isn't so long? Or make the body of this
->> > while
->> > loop a new function that takes an llcc_table[i] pointer so that lines
->> > are easier to read?
->> >
->> 
->> The whole function qcom_llcc_cfg_program() is just a loop so
->> adding another function moving that loop wouldn't look good.
-> 
-> Agreed it's one big loop, but having a function that deals with one
-> "thing" in the loop is easy to reason about and read. Right now I have
-> to read llc_table[i] a bunch of times. Yuck.
-> 
-
-Ok then I will move it to another function in a separate patch
-before this change.
-
->> llc_table[i].slice_id is already used elsewhere in this function
->> and changing everywhere is not related to this patch. So I will
->> go with your suggestion to move disable_cap_alloc and retain_pc
->> to if block.
->> 
-> 
-> Ok.
-
-Thanks,
-Sai
-
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 5bbe71002fb9..f96251f818fc 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -4157,7 +4157,7 @@ static int read_adv_mon_features(struct sock *sk, struct hci_dev *hdev,
+ {
+ 	struct adv_monitor *monitor = NULL;
+ 	struct mgmt_rp_read_adv_monitor_features *rp = NULL;
+-	int handle;
++	int handle, err;
+ 	size_t rp_size = 0;
+ 	__u32 supported = 0;
+ 	__u16 num_handles = 0;
+@@ -4192,9 +4192,13 @@ static int read_adv_mon_features(struct sock *sk, struct hci_dev *hdev,
+ 	if (num_handles)
+ 		memcpy(&rp->handles, &handles, (num_handles * sizeof(u16)));
+ 
+-	return mgmt_cmd_complete(sk, hdev->id,
+-				 MGMT_OP_READ_ADV_MONITOR_FEATURES,
+-				 MGMT_STATUS_SUCCESS, rp, rp_size);
++	err = mgmt_cmd_complete(sk, hdev->id,
++				MGMT_OP_READ_ADV_MONITOR_FEATURES,
++				MGMT_STATUS_SUCCESS, rp, rp_size);
++
++	kfree(rp);
++
++	return err;
+ }
+ 
+ static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
