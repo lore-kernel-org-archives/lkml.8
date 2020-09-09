@@ -2,128 +2,199 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC28C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872E4C2D0E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D2721D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="mYuIK7PT"
+	by mail.kernel.org (Postfix) with ESMTP id 50D8121741
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgIIG5M (ORCPT
+        id S1727920AbgIIG7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 02:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgIIG5L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 02:57:11 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF174C061573;
-        Tue,  8 Sep 2020 23:57:10 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id q21so1531692edv.1;
-        Tue, 08 Sep 2020 23:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aucFnAaA6n54SqN2ylDW2Uq1+nK592raJ0MmLzBKiSs=;
-        b=mYuIK7PT4ChKZXdBvVrAd7YKq7i/4lwweyhypREg+ye6C6cYuYWQo2zLiWiUGH+tWe
-         6q6Clmjyx92I7Ed1bHBx7IQzZQc90V8ILbwtoZk/4SAT8ccv3Jo/4cM6wi8z41LJ4v3l
-         DSWkf02+8QQ86flhs7lTLOQvzv0X58zrRLhLo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aucFnAaA6n54SqN2ylDW2Uq1+nK592raJ0MmLzBKiSs=;
-        b=g9mlM9R9Hx9Id5uOFiKHhS/o/RuRP/glVKQnZdUJTGP1XsdANsB3VfXP20ux3BSUdW
-         jcjHVi0qO6EcAMHAFjyZNghpGX3kQgYMtu8eTO1iRPem4cf5L3Gh84ihj3VJ01ZddNtx
-         SLnto1z+yEZthl74w+GYBbHNYb8WEl/V3izJx1LDVOVq04nokh01Dsu44hlF2/d5yphj
-         28uyM8seCa1xNgqQE08caVo/n0OPcUUCwg0s8YRN+cGMyVlB5mwh8HPuIUR3WQZNVxFG
-         r5wa6AIs4tTVyFipzBYG/pFnPPD3qzmHMJNlSWTnp4C6k5Z/7MHDkh8kx0YelWI8UuJo
-         Wwnw==
-X-Gm-Message-State: AOAM530ZRZHoN+gx1GkdbaW6FD9ZzgZ/be0nMbp6Ic6dEWS9WJDPAAi0
-        cA/G9/GZacPrhkq353h7+5cC0Hit7VwiR7pOa3g=
-X-Google-Smtp-Source: ABdhPJwPlzh1DnLGo9MSTT8J/yrnEnx7UmuC9FQVeFtz+arOOvvLH5XkI0R9H39kuPOE/iZLcwtZShJUK72WQR+TAXI=
-X-Received: by 2002:a05:6402:ca7:: with SMTP id cn7mr2599331edb.143.1599634629657;
- Tue, 08 Sep 2020 23:57:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200908200101.64974-1-eajames@linux.ibm.com> <20200908200101.64974-5-eajames@linux.ibm.com>
-In-Reply-To: <20200908200101.64974-5-eajames@linux.ibm.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 9 Sep 2020 06:56:57 +0000
-Message-ID: <CACPK8Xf0z4kz9JkTWPKveQsmEpKq0YtEQ+1Jracndu9g9UW7ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: Aspeed: Tacoma: Add IBM Operation Panel
- I2C device
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org,
+        Wed, 9 Sep 2020 02:59:24 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgIIG7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 02:59:22 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 56372782562A495340CB;
+        Wed,  9 Sep 2020 14:59:17 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.253) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 9 Sep 2020 14:59:08 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        wsa@kernel.org, Tao Ren <rentao.bupt@gmail.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Haoyu Lv <lvhaoyu@huawei.com>, Libin <huawei.libin@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH v3 2/3] irqchip: dw-apb-ictl: support hierarchy irq domain
+Date:   Wed, 9 Sep 2020 14:58:35 +0800
+Message-ID: <20200909065836.2631-3-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <20200909065836.2631-1-thunder.leizhen@huawei.com>
+References: <20200909065836.2631-1-thunder.leizhen@huawei.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 at 20:01, Eddie James <eajames@linux.ibm.com> wrote:
->
-> Set I2C bus 0 to multi-master mode and add the panel device that will
-> register as a slave.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
+Add support to use dw-apb-ictl as primary interrupt controller.
 
-I will take this and the rainier dts patch through the aspeed tree so
-we don't get conflicts.
+Suggested-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Tested-by: Haoyu Lv <lvhaoyu@huawei.com>
+---
+ drivers/irqchip/Kconfig           |  2 +-
+ drivers/irqchip/irq-dw-apb-ictl.c | 76 +++++++++++++++++++++++++++----
+ 2 files changed, 69 insertions(+), 9 deletions(-)
 
-Eddie, when you send v3, you can omit them.
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index bfc9719dbcdc..7c2d1c8fa551 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -148,7 +148,7 @@ config DAVINCI_CP_INTC
+ config DW_APB_ICTL
+ 	bool
+ 	select GENERIC_IRQ_CHIP
+-	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
+ 
+ config FARADAY_FTINTC010
+ 	bool
+diff --git a/drivers/irqchip/irq-dw-apb-ictl.c b/drivers/irqchip/irq-dw-apb-ictl.c
+index 5458004242e9..3c7bebe1b947 100644
+--- a/drivers/irqchip/irq-dw-apb-ictl.c
++++ b/drivers/irqchip/irq-dw-apb-ictl.c
+@@ -17,6 +17,7 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/interrupt.h>
+ 
+ #define APB_INT_ENABLE_L	0x00
+ #define APB_INT_ENABLE_H	0x04
+@@ -26,6 +27,27 @@
+ #define APB_INT_FINALSTATUS_H	0x34
+ #define APB_INT_BASE_OFFSET	0x04
+ 
++/* irq domain of the primary interrupt controller. */
++static struct irq_domain *dw_apb_ictl_irq_domain;
++
++static void __irq_entry dw_apb_ictl_handle_irq(struct pt_regs *regs)
++{
++	struct irq_domain *d = dw_apb_ictl_irq_domain;
++	int n;
++
++	for (n = 0; n < d->revmap_size; n += 32) {
++		struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, n);
++		u32 stat = readl_relaxed(gc->reg_base + APB_INT_FINALSTATUS_L);
++
++		while (stat) {
++			u32 hwirq = ffs(stat) - 1;
++
++			handle_domain_irq(d, hwirq, regs);
++			stat &= ~BIT(hwirq);
++		}
++	}
++}
++
+ static void dw_apb_ictl_handle_irq_cascaded(struct irq_desc *desc)
+ {
+ 	struct irq_domain *d = irq_desc_get_handler_data(desc);
+@@ -50,6 +72,30 @@ static void dw_apb_ictl_handle_irq_cascaded(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++static int dw_apb_ictl_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				unsigned int nr_irqs, void *arg)
++{
++	int i, ret;
++	irq_hw_number_t hwirq;
++	unsigned int type = IRQ_TYPE_NONE;
++	struct irq_fwspec *fwspec = arg;
++
++	ret = irq_domain_translate_onecell(domain, fwspec, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < nr_irqs; i++)
++		irq_map_generic_chip(domain, virq + i, hwirq + i);
++
++	return 0;
++}
++
++static const struct irq_domain_ops dw_apb_ictl_irq_domain_ops = {
++	.translate = irq_domain_translate_onecell,
++	.alloc = dw_apb_ictl_irq_domain_alloc,
++	.free = irq_domain_free_irqs_top,
++};
++
+ #ifdef CONFIG_PM
+ static void dw_apb_ictl_resume(struct irq_data *d)
+ {
+@@ -75,13 +121,20 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 	void __iomem *iobase;
+ 	int ret, nrirqs, parent_irq, i;
+ 	u32 reg;
+-	const struct irq_domain_ops *domain_ops = &irq_generic_chip_ops;
+-
+-	/* Map the parent interrupt for the chained handler */
+-	parent_irq = irq_of_parse_and_map(np, 0);
+-	if (parent_irq <= 0) {
+-		pr_err("%pOF: unable to parse irq\n", np);
+-		return -EINVAL;
++	const struct irq_domain_ops *domain_ops;
++
++	if (!parent || (np == parent)) {
++		/* It's used as the primary interrupt controller */
++		parent_irq = 0;
++		domain_ops = &dw_apb_ictl_irq_domain_ops;
++	} else {
++		/* Map the parent interrupt for the chained handler */
++		parent_irq = irq_of_parse_and_map(np, 0);
++		if (parent_irq <= 0) {
++			pr_err("%pOF: unable to parse irq\n", np);
++			return -EINVAL;
++		}
++		domain_ops = &irq_generic_chip_ops;
+ 	}
+ 
+ 	ret = of_address_to_resource(np, 0, &r);
+@@ -144,10 +197,17 @@ static int __init dw_apb_ictl_init(struct device_node *np,
+ 		gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
+ 		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
+ 		gc->chip_types[0].chip.irq_resume = dw_apb_ictl_resume;
++		if (!parent_irq)
++			gc->chip_types[0].chip.irq_eoi = irq_gc_noop;
+ 	}
+ 
+-	irq_set_chained_handler_and_data(parent_irq,
++	if (parent_irq) {
++		irq_set_chained_handler_and_data(parent_irq,
+ 				dw_apb_ictl_handle_irq_cascaded, domain);
++	} else {
++		dw_apb_ictl_irq_domain = domain;
++		set_handle_irq(dw_apb_ictl_handle_irq);
++	}
+ 
+ 	return 0;
+ 
+-- 
+2.26.0.106.g9fadedd
 
-Cheers,
 
-Joel
-
-> ---
->  arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-> index 5f4ee67ac787..4d070d6ba09f 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
-> @@ -4,6 +4,7 @@
->
->  #include "aspeed-g6.dtsi"
->  #include <dt-bindings/gpio/aspeed-gpio.h>
-> +#include <dt-bindings/i2c/i2c.h>
->  #include <dt-bindings/leds/leds-pca955x.h>
->
->  / {
-> @@ -438,7 +439,13 @@ aliases {
->  };
->
->  &i2c0 {
-> +       multi-master;
->         status = "okay";
-> +
-> +       ibm-panel@62 {
-> +               compatible = "ibm,op-panel";
-> +               reg = <(0x62 | I2C_OWN_SLAVE_ADDRESS)>;
-> +       };
->  };
->
->  &i2c1 {
-> --
-> 2.26.2
->
