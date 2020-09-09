@@ -2,258 +2,268 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802BFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2159BC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442BF215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AD72076C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:22:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXjtcXJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgIIIVb (ORCPT
+        id S1726920AbgIIIWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:21:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34248 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgIIIV2 (ORCPT
+        Wed, 9 Sep 2020 04:22:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52102 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbgIIIWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:21:28 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h17so1614723otr.1;
-        Wed, 09 Sep 2020 01:21:27 -0700 (PDT)
+        Wed, 9 Sep 2020 04:22:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599639750;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hDu4WTB9qWTPV0dbKk/SY2ZW1BVfToU7xoBYtd+G0E0=;
+        b=gXjtcXJ/OZZd5nhp5xN617J9bqxs2GLOVlh1Rfp5ZWq9xbm8ejvblTxzHb5oJjlqrnSSZL
+        IDqEA1b3YytNnqk3wmeH1f10RkU79BDEszYJLPKKi/tH0OeUDiN+u8MncceW7J0UrXIWQu
+        Q0SgjFQ/BK3ijz3VCjdWc/l6cIwLi1k=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-536-1Xs-rci_P6-00Jr_s5y6aA-1; Wed, 09 Sep 2020 04:22:26 -0400
+X-MC-Unique: 1Xs-rci_P6-00Jr_s5y6aA-1
+Received: by mail-qk1-f197.google.com with SMTP id 125so960603qkh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:22:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MNqX1Kt5t6A882o2HZ+jAXfNO+3aimU6By7fOQmqm98=;
-        b=f/p8QDtdCXloiyHFHH6IrAWtyomRfgy+/xB+fwvlSppu5VG0cCcH85Wf0aRgEQzz/o
-         ZWtNWHI21ZdubUN31HlqChdiXUBp/J6nwsI8DynuUB8Xd9SxlyV9A9fBwKRcWrYXOU/t
-         L0MLF3WrT9sseDRxsWyK36SBqkB/2uy9pB7XQ/HfWtw99bx5T3fM7cb2PCdJG1R7e002
-         /ljNc/XXWBds4shk6hY/qp7U/GYkLWyM86t5Hh3DL4t47WVNDQlArCDQuQQOFp6VcVXg
-         CoI2cK0UiBkRJPDZ+jlcqDUu7yJjHAJkBGTeKYx1zb93FuLovERO0mDCPPzCk9zu9xIT
-         czMg==
-X-Gm-Message-State: AOAM531/26M/bGpSxP6meJOtltBKf47eyzAfE4ttRag4FScN5hF37Cmr
-        UbHIy8RLaOIaqPvidfxhaZRJAfmcdJA4ckC0peQ=
-X-Google-Smtp-Source: ABdhPJyvd43SWzG5LyW2aRTw2GwE/DHa8tT1EXEaIPkFBhB8GNPaudlgcawhcfESMDqyZWQtLxKS41hp6S80qQ7ylfw=
-X-Received: by 2002:a9d:3b76:: with SMTP id z109mr2012536otb.250.1599639687255;
- Wed, 09 Sep 2020 01:21:27 -0700 (PDT)
+        bh=hDu4WTB9qWTPV0dbKk/SY2ZW1BVfToU7xoBYtd+G0E0=;
+        b=oNYJVY+MG8bRbJjTOMigTUJIDtIAP3Kw7eWXeUzWMrZkDs/FSKjs7shlReNzY0HQS9
+         TEfxYjPRYNXArDfQs/t4J4wfihmxfogvfeSdn0QC+mtklZJr4eaXVC++FDyt/OpbC4Rh
+         XH+p2vVSX27W8TQ7KkBiejjrTf911ArfY5JOqpz2Ow5SYhUbNTH+TMSFgNKXXSYrer1E
+         ry3QBGqSZlIxwSUFjxBdvE+jhsgDQ0YctdwzduW026eOExjHdldlvPLEksWYoDV4MGxG
+         rd4bGn37QWr0S3YfoPAA/cwm6ibBXCUmdtfxjJ2OUctTQOvpXa5SfP0ardGzU+LiofBS
+         CwVg==
+X-Gm-Message-State: AOAM533zYApBH2uSJISdPt+cUl69AEc3BGVgCpEKjtiGaLp/Pm/i4pKQ
+        4Wl/Yu52BBbjhBA7JknZ+ah6/WTQe8SZr6eLL+W92dE/eSnx9fZhlwoBy1WSVoxKorugnkyjFS1
+        lH0dNP4FuoSAj6u7h82aTd88NAKdLxNUPesED39IC
+X-Received: by 2002:a05:620a:cd7:: with SMTP id b23mr2302250qkj.192.1599639745974;
+        Wed, 09 Sep 2020 01:22:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzL9+uuU8O0pxBu3MC+S7Ux+Tw5qi1GkJwbdWT5j4dzjoEP5JLDsHQrTn6kHBzSuM1M5Ad+8Ztb7gcqD61r7r8=
+X-Received: by 2002:a05:620a:cd7:: with SMTP id b23mr2302242qkj.192.1599639745631;
+ Wed, 09 Sep 2020 01:22:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <00ee44fe6ecdce1c783c3cc3b1b9a62b498dcdb2.1597736545.git.fthain@telegraphics.com.au>
-In-Reply-To: <00ee44fe6ecdce1c783c3cc3b1b9a62b498dcdb2.1597736545.git.fthain@telegraphics.com.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Sep 2020 10:21:15 +0200
-Message-ID: <CAMuHMdWAi6+75Mq0U8x7Ut6viHvF7XEZAcYnxq=jJmtJyAX8pw@mail.gmail.com>
-Subject: Re: [PATCH] ide/macide: Convert Mac IDE driver to platform driver
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org
+References: <20200812204952.1921587-1-jcline@redhat.com> <CACAvsv71oxCYB1+LCAUHD5v_NGAP-DpxPY_dPz53iw2=91KAJg@mail.gmail.com>
+In-Reply-To: <CACAvsv71oxCYB1+LCAUHD5v_NGAP-DpxPY_dPz53iw2=91KAJg@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 9 Sep 2020 10:22:14 +0200
+Message-ID: <CACO55tvv6REmNzZZyyRSJyRT5z-xEf38+tk9cDnft63DX5JQUw@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH] drm/nouveau: Add fine-grain temperature reporting
+To:     Ben Skeggs <skeggsb@gmail.com>
+Cc:     Jeremy Cline <jcline@redhat.com>, David Airlie <airlied@linux.ie>,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
-
-On Tue, Aug 18, 2020 at 9:45 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> Add platform devices for the Mac IDE controller variants. Convert the
-> macide module into a platform driver to support two of those variants.
-> For the third, use a generic "pata_platform" driver instead.
-> This enables automatic loading of the appropriate module and begins
-> the process of replacing the driver with libata alternatives.
+On Wed, Sep 9, 2020 at 6:06 AM Ben Skeggs <skeggsb@gmail.com> wrote:
 >
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Joshua Thompson <funaho@jurai.org>
-> References: commit 5ed0794cde593 ("m68k/atari: Convert Falcon IDE drivers to platform drivers")
-> References: commit 7ad19a99ad431 ("ide: officially deprecated the legacy IDE driver")
-> Tested-by: Stan Johnson <userm57@yahoo.com>
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-
-Thanks for your patch!
-
-> --- a/arch/m68k/mac/config.c
-> +++ b/arch/m68k/mac/config.c
-
-> @@ -940,6 +941,50 @@ static const struct resource mac_scsi_ccl_rsrc[] __initconst = {
->         },
->  };
+> On Thu, 13 Aug 2020 at 06:50, Jeremy Cline <jcline@redhat.com> wrote:
+> >
+> > Commit d32656373857 ("drm/nouveau/therm/gp100: initial implementation of
+> > new gp1xx temperature sensor") added support for reading finer-grain
+> > temperatures, but continued to report temperatures in 1 degree Celsius
+> > increments via nvkm_therm_temp_get().
+> >
+> > Rather than altering nvkm_therm_temp_get() to report finer-grain
+> > temperatures, which would be inconvenient for other users of the
+> > function, a second interface has been added to line up with hwmon's
+> > native unit of temperature.
+> Hey Jeremy,
 >
-> +static const struct resource mac_ide_quadra_rsrc[] __initconst = {
-> +       {
-> +               .flags = IORESOURCE_MEM,
-> +               .start = 0x50F1A000,
-> +               .end   = 0x50F1A103,
-> +       }, {
-> +               .flags = IORESOURCE_IRQ,
-> +               .start = IRQ_NUBUS_F,
-> +               .end   = IRQ_NUBUS_F,
-> +       },
-> +};
-> +
-> +static const struct resource mac_ide_pb_rsrc[] __initconst = {
-> +       {
-> +               .flags = IORESOURCE_MEM,
-> +               .start = 0x50F1A000,
-> +               .end   = 0x50F1A103,
-> +       }, {
-> +               .flags = IORESOURCE_IRQ,
-> +               .start = IRQ_NUBUS_C,
-> +               .end   = IRQ_NUBUS_C,
-> +       },
-> +};
-
-As the above two variants are almost identical, perhaps it makes sense
-to drop one of them, drop the const, and override the irq values
-dynamically?
-
-> +
-> +static const struct resource mac_pata_baboon_rsrc[] __initconst = {
-> +       {
-> +               .flags = IORESOURCE_MEM,
-> +               .start = 0x50F1A000,
-> +               .end   = 0x50F1A037,
-> +       }, {
-> +               .flags = IORESOURCE_MEM,
-> +               .start = 0x50F1A038,
-> +               .end   = 0x50F1A03B,
-> +       }, {
-> +               .flags = IORESOURCE_IRQ | IORESOURCE_IRQ_SHAREABLE,
-> +               .start = IRQ_BABOON_1,
-> +               .end   = IRQ_BABOON_1,
-> +       },
-> +};
-> +
-> +static const struct pata_platform_info mac_pata_baboon_data __initconst = {
-> +       .ioport_shift  = 2,
-> +};
-
-Just wondering: how is this implemented in drivers/ide/macide.c, which
-doesn't use the platform info?
-
-> --- a/drivers/ide/macide.c
-> +++ b/drivers/ide/macide.c
-> @@ -18,10 +18,11 @@
->  #include <linux/delay.h>
->  #include <linux/ide.h>
->  #include <linux/module.h>
-> +#include <linux/platform_device.h>
+> Sorry this slipped past me until now.  I'm OK with adding support for
+> millidegree temperature reporting, but don't think we need to keep
+> both interfaces around and would rather see the existing code
+> converted to return millidegrees (even on GPUs that don't support it)
+> instead of degrees.
 >
->  #include <asm/macintosh.h>
-> -#include <asm/macints.h>
-> -#include <asm/mac_baboon.h>
-> +
-> +#define DRV_NAME "mac_ide"
+> Thanks!
+> Ben.
 >
->  #define IDE_BASE 0x50F1A000    /* Base address of IDE controller */
 
-Do you still need this definition?
-Yes, because it's still used to access IDE_IFR.
-Ideally, that should be converted to use the base from the resource,
-too.
+just a note as I was trying something like that in the past: we have a
+lot of code which fetches the temperature and there are a lot of
+places where we would then do a divide by 1000, so having a wrapper
+function at least makes sense. If we want to keep the func pointers?
+well.. I guess the increased CPU overhead wouldn't be as bad if all
+sub classes do this static * 1000 as well either. I just think we
+should have both interfaces in subdev/therm.h so we can just keep most
+of the current code as is.
 
+> >
+> > Signed-off-by: Jeremy Cline <jcline@redhat.com>
+> > ---
+> >  .../drm/nouveau/include/nvkm/subdev/therm.h   | 18 +++++++++++++
+> >  drivers/gpu/drm/nouveau/nouveau_hwmon.c       |  4 +--
+> >  .../gpu/drm/nouveau/nvkm/subdev/therm/base.c  | 16 ++++++++++++
+> >  .../gpu/drm/nouveau/nvkm/subdev/therm/gp100.c | 25 +++++++++++++++++--
+> >  .../gpu/drm/nouveau/nvkm/subdev/therm/priv.h  |  1 +
+> >  5 files changed, 60 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h b/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h
+> > index 62c34f98c930..7b9928dd001c 100644
+> > --- a/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h
+> > +++ b/drivers/gpu/drm/nouveau/include/nvkm/subdev/therm.h
+> > @@ -100,6 +100,24 @@ struct nvkm_therm {
+> >  };
+> >
+> >  int nvkm_therm_temp_get(struct nvkm_therm *);
+> > +
+> > +/**
+> > + * nvkm_therm_temp_millidegree_get() - get the temperature in millidegrees
+> > + * @therm: The thermal device to read from.
+> > + *
+> > + * This interface reports temperatures in units of millidegree Celsius to
+> > + * align with the hwmon API. Some cards may only be capable of reporting in
+> > + * units of Celsius, and those that report finer grain temperatures may not be
+> > + * capable of millidegree Celsius accuracy,
+> > + *
+> > + * For cases where millidegree temperature is too fine-grain, the
+> > + * nvkm_therm_temp_get() interface reports temperatures in one degree Celsius
+> > + * increments.
+> > + *
+> > + * Return: The temperature in millidegrees Celsius, or -ENODEV if temperature
+> > + *         reporting is not supported.
+> > + */
+> > +int nvkm_therm_temp_millidegree_get(struct nvkm_therm *therm);
+> >  int nvkm_therm_fan_sense(struct nvkm_therm *);
+> >  int nvkm_therm_cstate(struct nvkm_therm *, int, int);
+> >  void nvkm_therm_clkgate_init(struct nvkm_therm *,
+> > diff --git a/drivers/gpu/drm/nouveau/nouveau_hwmon.c b/drivers/gpu/drm/nouveau/nouveau_hwmon.c
+> > index 1c3104d20571..e96355f93ce5 100644
+> > --- a/drivers/gpu/drm/nouveau/nouveau_hwmon.c
+> > +++ b/drivers/gpu/drm/nouveau/nouveau_hwmon.c
+> > @@ -428,8 +428,8 @@ nouveau_temp_read(struct device *dev, u32 attr, int channel, long *val)
+> >         case hwmon_temp_input:
+> >                 if (drm_dev->switch_power_state != DRM_SWITCH_POWER_ON)
+> >                         return -EINVAL;
+> > -               ret = nvkm_therm_temp_get(therm);
+> > -               *val = ret < 0 ? ret : (ret * 1000);
+> > +               ret = nvkm_therm_temp_millidegree_get(therm);
+> > +               *val = ret;
+> >                 break;
+> >         case hwmon_temp_max:
+> >                 *val = therm->attr_get(therm, NVKM_THERM_ATTR_THRS_DOWN_CLK)
+> > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c
+> > index 4a4d1e224126..e655b32c78b8 100644
+> > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c
+> > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/base.c
+> > @@ -34,6 +34,22 @@ nvkm_therm_temp_get(struct nvkm_therm *therm)
+> >         return -ENODEV;
+> >  }
+> >
+> > +int
+> > +nvkm_therm_temp_millidegree_get(struct nvkm_therm *therm)
+> > +{
+> > +       int ret = -ENODEV;
+> > +
+> > +       if (therm->func->temp_millidegree_get)
+> > +               return therm->func->temp_millidegree_get(therm);
+> > +
+> > +       if (therm->func->temp_get) {
+> > +               ret = therm->func->temp_get(therm);
+> > +               if (ret > 0)
+> > +                       ret *= 1000;
+> > +       }
+> > +       return ret;
+> > +}
+> > +
+> >  static int
+> >  nvkm_therm_update_trip(struct nvkm_therm *therm)
+> >  {
+> > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c
+> > index 9f0dea3f61dc..4c3c2895a3cb 100644
+> > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c
+> > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/gp100.c
+> > @@ -24,7 +24,7 @@
+> >  #include "priv.h"
+> >
+> >  static int
+> > -gp100_temp_get(struct nvkm_therm *therm)
+> > +gp100_temp_get_raw(struct nvkm_therm *therm)
+> >  {
+> >         struct nvkm_device *device = therm->subdev.device;
+> >         struct nvkm_subdev *subdev = &therm->subdev;
+> > @@ -37,14 +37,35 @@ gp100_temp_get(struct nvkm_therm *therm)
+> >
+> >         /* device valid */
+> >         if (tsensor & 0x20000000)
+> > -               return (inttemp >> 8);
+> > +               return inttemp;
+> >         else
+> >                 return -ENODEV;
+> >  }
+> >
+> > +static int
+> > +gp100_temp_millidegree_get(struct nvkm_therm *therm)
+> > +{
+> > +       int raw_temp = gp100_temp_get_raw(therm);
+> > +
+> > +       if (raw_temp < 0)
+> > +               return raw_temp;
+> > +       return raw_temp * 1000 >> 8;
+> > +}
+> > +
+> > +static int
+> > +gp100_temp_get(struct nvkm_therm *therm)
+> > +{
+> > +       int raw_temp = gp100_temp_get_raw(therm);
+> > +
+> > +       if (raw_temp < 0)
+> > +               return raw_temp;
+> > +       return raw_temp >> 8;
+> > +}
+> > +
+> >  static const struct nvkm_therm_func
+> >  gp100_therm = {
+> >         .temp_get = gp100_temp_get,
+> > +       .temp_millidegree_get = gp100_temp_millidegree_get,
+> >         .program_alarms = nvkm_therm_program_alarms_polling,
+> >  };
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h
+> > index 21659daf1864..a53068b4f0b9 100644
+> > --- a/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h
+> > +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/therm/priv.h
+> > @@ -92,6 +92,7 @@ struct nvkm_therm_func {
+> >         int (*pwm_clock)(struct nvkm_therm *, int line);
+> >
+> >         int (*temp_get)(struct nvkm_therm *);
+> > +       int (*temp_millidegree_get)(struct nvkm_therm *therm);
+> >
+> >         int (*fan_sense)(struct nvkm_therm *);
+> >
+> > --
+> > 2.26.2
+> >
+> > _______________________________________________
+> > Nouveau mailing list
+> > Nouveau@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/nouveau
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
 >
-> @@ -109,42 +110,65 @@ static const char *mac_ide_name[] =
->   * Probe for a Macintosh IDE interface
->   */
->
-> -static int __init macide_init(void)
-> +static int mac_ide_probe(struct platform_device *pdev)
->  {
-> -       unsigned long base;
-> -       int irq;
-> +       struct resource *mem, *irq;
->         struct ide_hw hw, *hws[] = { &hw };
->         struct ide_port_info d = macide_port_info;
-> +       struct ide_host *host;
-> +       int rc;
->
->         if (!MACH_IS_MAC)
->                 return -ENODEV;
->
-> -       switch (macintosh_config->ide_type) {
-> -       case MAC_IDE_QUADRA:
-> -               base = IDE_BASE;
-> -               irq = IRQ_NUBUS_F;
-> -               break;
-> -       case MAC_IDE_PB:
-> -               base = IDE_BASE;
-> -               irq = IRQ_NUBUS_C;
-> -               break;
-> -       case MAC_IDE_BABOON:
-> -               base = BABOON_BASE;
-> -               d.port_ops = NULL;
 
-How does the driver know not to use the special port_ops after
-this change?
-
-> -               irq = IRQ_BABOON_1;
-> -               break;
-> -       default:
-> +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!mem)
-> +               return -ENODEV;
-> +
-> +       irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +       if (!irq)
->                 return -ENODEV;
-> +
-> +       if (!devm_request_mem_region(&pdev->dev, mem->start,
-> +                                    resource_size(mem), DRV_NAME)) {
-> +               dev_err(&pdev->dev, "resources busy\n");
-> +               return -EBUSY;
->         }
->
->         printk(KERN_INFO "ide: Macintosh %s IDE controller\n",
->                          mac_ide_name[macintosh_config->ide_type - 1]);
->
-> -       macide_setup_ports(&hw, base, irq);
-> +       macide_setup_ports(&hw, mem->start, irq->start);
-> +
-> +       rc = ide_host_add(&d, hws, 1, &host);
-> +       if (rc)
-> +               goto release_mem;
-> +
-> +       platform_set_drvdata(pdev, host);
-
-In general, it's safer to move the platform_set_drvdata() call before
-the ide_host_add() call, as the IDE core may start calling into your
-driver as soon as the host has been added.  Fortunately you're using
-dev_get_drvdata() in the .remove() callback only, and not in other parts
-of the driver.
-
-> +       return 0;
-> +
-> +release_mem:
-> +       release_mem_region(mem->start, resource_size(mem));
-
-Not needed, as you used devm_*() for allocation.
-
-> +       return rc;
-> +}
-> +
-> +static int mac_ide_remove(struct platform_device *pdev)
-> +{
-> +       struct ide_host *host = dev_get_drvdata(&pdev->dev);
->
-> -       return ide_host_add(&d, hws, 1, NULL);
-> +       ide_host_remove(host);
-> +       return 0;
->  }
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
