@@ -2,113 +2,134 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D855BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4011DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A117206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599667015;
-	bh=iY6OqVOcgu1zhpou4oMMQ2MqoLuggzVS9uTeM1VK3V8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6J9x7TeaXMiMKhx5ZSuf4zR/jlhkrWCP2CqYJNt38xafi79KEbwCjsrpfHhPuS0U
-	 EVFTyFsQIzuHlGevAB23/WoOBV0hq+D49myCsb8XS9GaBXurq8DFukjWO/sXBGZ3PH
-	 sKbvz946QbeBCPbx3V8RsBWIZYo7vP+UcrVhIoVI=
+	by mail.kernel.org (Postfix) with ESMTP id 000D7206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgIIP4V (ORCPT
+        id S1730512AbgIIP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 11:57:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58714 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730547AbgIIPvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:51:21 -0400
-Received: from mail.kernel.org (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44546221E8;
-        Wed,  9 Sep 2020 14:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599660665;
-        bh=iY6OqVOcgu1zhpou4oMMQ2MqoLuggzVS9uTeM1VK3V8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCdjr+F3S/SUxOlc1bDPVGLdKtcVY4Cm21Hs3RkfNxm6TUWoGhAKvXl0HtKTPnuJc
-         eWiRXuu0xCS5Iy19k6LbQdtChs1cGtoRFavApk2arVzpZ0B4XOoXVokg9tFi8CZojt
-         V4tXBxnhPnoiRs8McKT3J7lXwWd9q1E1nw3icZEU=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kG0oR-00DUWr-8U; Wed, 09 Sep 2020 16:11:03 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 08/30] docs: fix location of nommu-mmap.rst file
-Date:   Wed,  9 Sep 2020 16:10:39 +0200
-Message-Id: <275a0c634408d89a3b3fb51ca93a6c0e8b4f7905.1599660067.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599660067.git.mchehab+huawei@kernel.org>
-References: <cover.1599660067.git.mchehab+huawei@kernel.org>
+        id S1730588AbgIIPxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:53:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 71E76B291;
+        Wed,  9 Sep 2020 14:15:09 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 530AC1E12E5; Wed,  9 Sep 2020 16:14:53 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 16:14:53 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, milan.opensource@gmail.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.com>
+Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+Message-ID: <20200909141453.GC29150@quack2.suse.cz>
+References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+ <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
+ <20200908112742.GA2956@quack2.suse.cz>
+ <7be61144-0e77-3c31-d720-f2cbe56bc81e@gmail.com>
+ <20200909112110.GA29150@quack2.suse.cz>
+ <0f473a75-fd5a-82f7-1d0e-e9c168414498@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f473a75-fd5a-82f7-1d0e-e9c168414498@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mm/nommu-mmap.rst -> admin-guide/mm/ nommu-mmap.rst
+On Wed 09-09-20 13:58:50, Michael Kerrisk (man-pages) wrote:
+> [CC += Neil, since he wrote the text we're talking about]
+> 
+> Hello Jan,
+> 
+> On 9/9/20 1:21 PM, Jan Kara wrote:
+> > On Wed 09-09-20 12:52:48, Michael Kerrisk (man-pages) wrote:
+> >>> So the error state isn't really stored "on pages in the file mapping".
+> >>> Current implementation (since 4.14) is that error state is stored in struct
+> >>> file (I think this tends to be called "file description" in manpages) and
+> >>
+> >> (Yes, "open file description" is the POSIX terminology for the thing that
+> >> sits between the FD and the inode--struct file in kernel parlance--and I
+> >> try to follow POSIX terminology in the manual pages where possible.
+> >>
+> >>> so EIO / ENOSPC is reported once for each file description of the file that
+> >>> was open before the error happened. Not sure if we want to be so precise in
+> >>> the manpages or if it just confuses people. 
+> >>
+> >> Well, people are confused now, so I think more detail would be good.
+> >>
+> >>> Anyway your takeway that no
+> >>> error on subsequent fsync() does not mean data was written is correct.
+> >>
+> >> Thanks. (See also my rply to Jeff.)
+> >>
+> >> By the way, a question related to your comments above. In the 
+> >> errors section, there is this:
+> >>
+> >>        EIO    An  error  occurred during synchronization.  This error may
+> >>               relate to data written to some other file descriptor on the
+> >> *             same  file.   Since Linux 4.13, errors from write-back will
+> >>               be reported to all file descriptors that might have written
+> >>               the  data  which  triggered  the  error.   Some filesystems
+> >>               (e.g., NFS) keep close track of  which  data  came  through
+> >>               which  file  descriptor,  and  give more precise reporting.
+> >>               Other  filesystems  (e.g.,  most  local  filesystems)  will
+> >>               report errors to all file descriptors that were open on the
+> >> *             file when the error was recorded.
+> >>
+> >> In the marked (*) lines, we have the word "file". Is this accurate? I mean, I
+> >> would normally take "file" in this context to mean the inode ('struct inode').
+> >> But I wonder if really what is meant here is "open file description"
+> >> ('struct file'). In other words, is the EIO being generated for all FDs 
+> >> connected to the same open file description, or for all FDs for all of the
+> >> open file descriptions connected to the inode? Your thoughts?
+> > 
+> > The error gets reported once for each "open file description" of the file
+> > (inode) where the error happened. If there are multiple file descriptors
+> > pointing to the same open file description, then only one of those file
+> > descriptors will see the error. This is inevitable consequence of kernel
+> > storing the error state in struct file and clearing it once it is
+> > reported...
+> 
+> So, the text in wrong two respects, I believe:
+> 
+> * It should be phrased in terms of "open file description", not "file",
+> in the lines that I marked.
 
-Fixes: 800c02f5d030 ("docs: move nommu-mmap.txt to admin-guide and rename to ReST")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- init/Kconfig | 2 +-
- mm/Kconfig   | 2 +-
- mm/nommu.c   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+No, I believe 'file' is correct on these two lines. I guess I wasn't
+precise enough in my explanation of the mechanism :) We actually have two
+places where we store error state. There's "error counter" in the inode and
+then "last seen error" counter in struct file. Whenever "last seen error"
+is less than "inode error counter" we report error from the syscall and set
+"last seen error" in the used struct file to the current "inode error
+counter". So whenever writeback error happens for the inode, all 'struct
+file's will end up reporting the error exactly once.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 91456ac0ef20..c9446911cf41 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1990,7 +1990,7 @@ config MMAP_ALLOW_UNINITIALIZED
- 	  userspace.  Since that isn't generally a problem on no-MMU systems,
- 	  it is normally safe to say Y here.
- 
--	  See Documentation/mm/nommu-mmap.rst for more information.
-+	  See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
- 
- config SYSTEM_DATA_VERIFICATION
- 	def_bool n
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 7d56281ff41e..c7f30f8b282b 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -383,7 +383,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
- 	  This option specifies the initial value of this option.  The default
- 	  of 1 says that all excess pages should be trimmed.
- 
--	  See Documentation/mm/nommu-mmap.rst for more information.
-+	  See Documentation/admin-guide/mm/nommu-mmap.rst for more information.
- 
- config TRANSPARENT_HUGEPAGE
- 	bool "Transparent Hugepage Support"
-diff --git a/mm/nommu.c b/mm/nommu.c
-index 75a327149af1..0df7ca321314 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -5,7 +5,7 @@
-  *  Replacement code for mm functions to support CPU's that don't
-  *  have any form of memory management unit (thus no virtual memory).
-  *
-- *  See Documentation/mm/nommu-mmap.rst
-+ *  See Documentation/admin-guide/mm/nommu-mmap.rst
-  *
-  *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
-  *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
+> * Where it says "to all file descriptors" (twice), it should rather say
+> "to any of the file descriptors [that refer to the open file description]"
+
+This is correct but I'm not sure it captures well the fact that each open
+file description is guaranteed to get a notification. So maybe I'd rephrase
+it like "reported to all file descriptors" -> "reported to all open file
+descriptions (if there are multiple file descriptors pointing to the same
+open file description, the error is reported only to the first call
+regardless of which of the descriptors it uses)"
+
+								Honza
 -- 
-2.26.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
