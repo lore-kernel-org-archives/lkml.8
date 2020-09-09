@@ -2,312 +2,145 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E099C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922BEC2D0E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDFB1215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599646227;
-	bh=DrZt4e9YLfPg0Lk/whdCAuWLqMlcxgTaAhqLzgLL9gA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2F6afIdhz71EqUnLq3Jz/O2/hQ0aVExfPgKDdpJ8N76PotVXdbyfcaqgdUKOEtiIC
-	 ovfledjG5JieRg2PCm60lDaY9S1ifQcrqLM8Qkut5lv2Mz2bfgYb9EJU5GmthLUtyI
-	 DsIz49YoceRZAuen7T1qi65OIHDJ8UE2+Gso4ICo=
+	by mail.kernel.org (Postfix) with ESMTP id 61211215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgIIKKU (ORCPT
+        id S1728347AbgIIKMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 06:12:01 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:53888 "EHLO wind.enjellic.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIIKKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:10:14 -0400
-Received: from localhost.localdomain (unknown [180.164.158.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F9BD215A4;
-        Wed,  9 Sep 2020 10:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599646213;
-        bh=DrZt4e9YLfPg0Lk/whdCAuWLqMlcxgTaAhqLzgLL9gA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=18xu8txyeTplyHzoA8E7bjCrL/XIFgcWM8/UfsFtcUzPh+20nSAgcnwO7fjm6DiaS
-         dE59WYjwxMLpRN/KDhIkbU/t24z9rNzKumADv0fhM+nqQj688fulTT4In5mJ0iVC0r
-         zWoybPRI4E4TUnb2iEV5Fv3qK/gWd2T0qj7kAvX4=
-From:   Peter Chen <peter.chen@kernel.org>
-To:     myungjoo.ham@samsung.com, cw00.choi@samsung.com
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-imx@nxp.com, jun.li@nxp.com, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 1/1] extcon: release memory after both provider and user are unregistered
-Date:   Wed,  9 Sep 2020 18:09:57 +0800
-Message-Id: <20200909100957.6508-1-peter.chen@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1725917AbgIIKMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:12:00 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 089ABMRJ016828;
+        Wed, 9 Sep 2020 05:11:23 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 089ABLvd016827;
+        Wed, 9 Sep 2020 05:11:21 -0500
+Date:   Wed, 9 Sep 2020 05:11:21 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Luke Hinds <lhinds@redhat.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        krzysztof.struczynski@huawei.com, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, stefanb@linux.vnet.ibm.com,
+        sunyuqiong1988@gmail.com, mkayaalp@cs.binghamton.edu,
+        dmitry.kasatkin@gmail.com, "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>, christian@brauner.io,
+        silviu.vlasceanu@huawei.com, roberto.sassu@huawei.com,
+        ebiederm@xmission.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, luto@amacapital.net,
+        jannh@google.com, nick.dusek@gmail.com
+Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
+Message-ID: <20200909101120.GA16191@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200818152037.11869-1-krzysztof.struczynski@huawei.com> <20200818164943.va3um7toztazcfud@wittgenstein> <d77a6cd783319702fddd06783cb84fdeb86210a6.camel@linux.ibm.com> <20200906171413.GA8305@wind.enjellic.com> <CAKrSGQR3Pw=Rad2RgUuCHqr0r2Nc6x2nLoo2cVAkD+_8Vbmd7A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKrSGQR3Pw=Rad2RgUuCHqr0r2Nc6x2nLoo2cVAkD+_8Vbmd7A@mail.gmail.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Wed, 09 Sep 2020 05:11:23 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+On Mon, Sep 07, 2020 at 12:50:07PM +0100, Luke Hinds wrote:
 
-When the both extcon provider (eg, tcpci) and user (controller driver) are
-built as module, if the extcon provider is removed first, the use-after-free
-oops (see below) will be showed when removing extcon user module. The reason
-is the edev (extcon device) and supported_cable are freed by provider, the
-stale pointer will be get when calling unregister notifier.
+Good morning, I hope the week is going well for everyone.
 
-Since the edev is used by both extcon provider and user, it needs to use
-device core refcount to hold its memory until all users are unregistered.
-The edev allocation and registration to device core are at two APIs, it
-causes this memory management a little difficulties, this may could be
-improveed in future after the edev .release is used for free memory.
+> On Sun, Sep 6, 2020 at 6:15 PM Dr. Greg <greg@enjellic.com> wrote:
+> > Just to be clear, we are not campaigning or advocating what we have
+> > done but are simply providing background for discussion.  We haven't
+> > campaigned this approach given how complex the kernel development has
+> > become, particurlarly with respect to security infrastructure.
+> >
+> > Candidly, given the politics of security technology being viewed as
+> > 'constraining' user rights, I think that a lot of forthcoming security
+> > technology may end up being out of tree moving forward.
 
-oops log:
-[  127.135373] Unable to handle kernel paging request at virtual address 0073656369766564
-[  127.143400] Mem abort info:
-[  127.146203]   ESR = 0x96000004
-[  127.149378]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  127.155025]   SET = 0, FnV = 0
-[  127.158097]   EA = 0, S1PTW = 0
-[  127.161308] Data abort info:
-[  127.164220]   ISV = 0, ISS = 0x00000004
-[  127.168079]   CM = 0, WnR = 0
-[  127.171072] [0073656369766564] address between user and kernel address ranges
-[  127.178228] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[  127.183803] Modules linked in: cdns3(-) phy_mxs_usb phy_generic crct10dif_ce mxc_jpeg_encdec imx8_media_dev(C) [last unloaded: usbmisc_imx]
-[  127.196353] CPU: 1 PID: 1820 Comm: modprobe Tainted: G         C        5.4.47-00029-g054bf76ce616-dirty #4
-[  127.206093] Hardware name: Freescale i.MX8QXP MEK (DT)
+> I think it's prudent to look forward and plan diligently, but I would not
+> want perfect to be the enemy of good.
+>
+> I approach this more from a user's perspective. We are using IMA in
+> https://keylime.dev to measure a host and would like to measure
+> within a container too. It's the most common request we hear from
+> our users.
+>
+> Perhaps we all collaborate on a proposal extending Stefans work here:
+> https://kernsec.org/wiki/index.php/IMA_Namespacing_design_considerations
+>
+> I have seen around 3-4 patches now get submitted, so work has been
+> done before, and as above, users are present too. We could then have
+> some consensus on how this should look and later patches might have
+> more success at landing.
+>
+> Would anyone be interested in this and have recommendations on how
+> we could approach this?
 
-Message from syslogd@imx8qmmek at Fri Jul 10 07:34:08 2020 ...
-imx8qmmek kernel: [  127.178228] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[  127.224436] pstate: 20000005 (nzCv daif -PAN -UAO)
-[  127.229240] pc : extcon_unregister_notifier+0x48/0xb8
-[  127.234297] lr : devm_extcon_dev_notifier_unreg+0x1c/0x28
-[  127.239696] sp : ffff80001257bc80
-[  127.243004] x29: ffff80001257bc80 x28: ffff000837dc5400
-[  127.248321] x27: 0000000000000000 x26: 0000000000000000
-[  127.253638] x25: 0000000056000000 x24: ffff00083bcadc00
-[  127.258956] x23: 0000000000000016 x22: ffff80001257bd08
-[  127.264271] x21: ffff000836b95320 x20: ffff000836d20c00
-[  127.269588] x19: 0000000000000000 x18: 0000000000000000
-[  127.274905] x17: 0000000000000000 x16: 0000000000000000
-[  127.280221] x15: 0000000000000004 x14: 4d554e5145530074
-[  127.285538] x13: 0000000000000000 x12: 0000000000000001
-[  127.290855] x11: 0000000000000000 x10: 0000000000000001
-[  127.296172] x9 : ffff80001257ba50 x8 : ffff000837dc5e20
-[  127.301488] x7 : 0000000040000000 x6 : 0000000000210d00
-[  127.306805] x5 : 2f73656369766564 x4 : 0000000000000002
-[  127.312122] x3 : ffff00083cbc6698 x2 : ffff000836b95320
-[  127.317439] x1 : 0000000000000001 x0 : ffff000836d20c00
-[  127.322757] Call trace:
-[  127.325205]  extcon_unregister_notifier+0x48/0xb8
-[  127.329908]  devm_extcon_dev_notifier_unreg+0x1c/0x28
-[  127.334968]  release_nodes+0x1a8/0x220
-[  127.338716]  devres_release_all+0x34/0x58
-[  127.342723]  device_release_driver_internal+0x104/0x1c0
-[  127.347952]  driver_detach+0x4c/0xd8
-[  127.351533]  bus_remove_driver+0x54/0xa8
-[  127.355460]  driver_unregister+0x2c/0x58
-[  127.359388]  platform_driver_unregister+0x10/0x18
+Obviously everyone is interested in sharpening their own knives so the
+first challenge will be defining where this theme of measurement and
+attestation needs to go.
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/extcon/extcon.c | 60 ++++++++++++++++++++++++++++-------------
- drivers/extcon/extcon.h |  2 +-
- 2 files changed, 42 insertions(+), 20 deletions(-)
+Our focus in all of this is from a platform behavior modeling
+perspective.  Our objective is to design platforms/containers that are
+capable of self-disciplining themselves in the event that they exhibit
+behavior inconsistent with the wishes of their designer.  Container
+measurement trivially falls out of this model.
 
-diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
-index e055893fd5c3..306b80190246 100644
---- a/drivers/extcon/extcon.c
-+++ b/drivers/extcon/extcon.c
-@@ -909,6 +909,7 @@ int extcon_register_notifier(struct extcon_dev *edev, unsigned int id,
- 	if (idx < 0)
- 		return idx;
- 
-+	get_device(&edev->dev);
- 	spin_lock_irqsave(&edev->lock, flags);
- 	ret = raw_notifier_chain_register(&edev->nh[idx], nb);
- 	spin_unlock_irqrestore(&edev->lock, flags);
-@@ -941,6 +942,7 @@ int extcon_unregister_notifier(struct extcon_dev *edev, unsigned int id,
- 	spin_lock_irqsave(&edev->lock, flags);
- 	ret = raw_notifier_chain_unregister(&edev->nh[idx], nb);
- 	spin_unlock_irqrestore(&edev->lock, flags);
-+	put_device(&edev->dev);
- 
- 	return ret;
- }
-@@ -967,6 +969,7 @@ int extcon_register_notifier_all(struct extcon_dev *edev,
- 	if (!edev || !nb)
- 		return -EINVAL;
- 
-+	get_device(&edev->dev);
- 	spin_lock_irqsave(&edev->lock, flags);
- 	ret = raw_notifier_chain_register(&edev->nh_all, nb);
- 	spin_unlock_irqrestore(&edev->lock, flags);
-@@ -994,6 +997,7 @@ int extcon_unregister_notifier_all(struct extcon_dev *edev,
- 	spin_lock_irqsave(&edev->lock, flags);
- 	ret = raw_notifier_chain_unregister(&edev->nh_all, nb);
- 	spin_unlock_irqrestore(&edev->lock, flags);
-+	put_device(&edev->dev);
- 
- 	return ret;
- }
-@@ -1020,6 +1024,13 @@ static int create_extcon_class(void)
- 
- static void extcon_dev_release(struct device *dev)
- {
-+	struct extcon_dev *edev = container_of(dev, struct extcon_dev, dev);
-+
-+	dev_dbg(dev, "releasing '%s'\n", dev_name(dev));
-+
-+	kfree(edev->nh);
-+	kfree(edev->supported_cable);
-+	kfree(edev);
- }
- 
- static const char *muex_name = "mutually_exclusive";
-@@ -1041,6 +1052,7 @@ static void dummy_sysfs_dev_release(struct device *dev)
- struct extcon_dev *extcon_dev_allocate(const unsigned int *supported_cable)
- {
- 	struct extcon_dev *edev;
-+	int index = 0;
- 
- 	if (!supported_cable)
- 		return ERR_PTR(-EINVAL);
-@@ -1049,8 +1061,18 @@ struct extcon_dev *extcon_dev_allocate(const unsigned int *supported_cable)
- 	if (!edev)
- 		return ERR_PTR(-ENOMEM);
- 
--	edev->max_supported = 0;
--	edev->supported_cable = supported_cable;
-+	for (; supported_cable[index] != EXTCON_NONE; index++)
-+		;
-+
-+	edev->max_supported = index;
-+	edev->supported_cable = kmemdup(supported_cable,
-+				(index + 1) * sizeof(*supported_cable),
-+				GFP_KERNEL);
-+
-+	if (!edev->supported_cable) {
-+		kfree(edev);
-+		return ERR_PTR(-ENOMEM);
-+	}
- 
- 	return edev;
- }
-@@ -1058,10 +1080,11 @@ struct extcon_dev *extcon_dev_allocate(const unsigned int *supported_cable)
- /*
-  * extcon_dev_free() - Free the memory of extcon device.
-  * @edev:	the extcon device
-+ *
-+ * TODO: useless now, may delete later
-  */
- void extcon_dev_free(struct extcon_dev *edev)
- {
--	kfree(edev);
- }
- EXPORT_SYMBOL_GPL(extcon_dev_free);
- 
-@@ -1081,25 +1104,25 @@ EXPORT_SYMBOL_GPL(extcon_dev_free);
-  */
- int extcon_dev_register(struct extcon_dev *edev)
- {
--	int ret, index = 0;
-+	int ret, index;
- 	static atomic_t edev_no = ATOMIC_INIT(-1);
- 
- 	if (!extcon_class) {
- 		ret = create_extcon_class();
- 		if (ret < 0)
--			return ret;
-+			goto free_edev;
- 	}
- 
--	if (!edev || !edev->supported_cable)
--		return -EINVAL;
--
--	for (; edev->supported_cable[index] != EXTCON_NONE; index++);
-+	if (!edev || !edev->supported_cable) {
-+		ret = -EINVAL;
-+		goto free_edev;
-+	}
- 
--	edev->max_supported = index;
--	if (index > SUPPORTED_CABLE_MAX) {
-+	if (edev->max_supported > SUPPORTED_CABLE_MAX) {
- 		dev_err(&edev->dev,
- 			"exceed the maximum number of supported cables\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto free_edev;
- 	}
- 
- 	edev->dev.class = extcon_class;
-@@ -1109,7 +1132,8 @@ int extcon_dev_register(struct extcon_dev *edev)
- 	if (IS_ERR_OR_NULL(edev->name)) {
- 		dev_err(&edev->dev,
- 			"extcon device name is null\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto free_edev;
- 	}
- 	dev_set_name(&edev->dev, "extcon%lu",
- 			(unsigned long)atomic_inc_return(&edev_no));
-@@ -1123,7 +1147,7 @@ int extcon_dev_register(struct extcon_dev *edev)
- 				       GFP_KERNEL);
- 		if (!edev->cables) {
- 			ret = -ENOMEM;
--			goto err_sysfs_alloc;
-+			goto free_edev;
- 		}
- 		for (index = 0; index < edev->max_supported; index++) {
- 			cable = &edev->cables[index];
-@@ -1237,8 +1261,7 @@ int extcon_dev_register(struct extcon_dev *edev)
- 	}
- 
- 	spin_lock_init(&edev->lock);
--	edev->nh = devm_kcalloc(&edev->dev, edev->max_supported,
--				sizeof(*edev->nh), GFP_KERNEL);
-+	edev->nh = kcalloc(edev->max_supported, sizeof(*edev->nh), GFP_KERNEL);
- 	if (!edev->nh) {
- 		ret = -ENOMEM;
- 		goto err_dev;
-@@ -1274,7 +1297,8 @@ int extcon_dev_register(struct extcon_dev *edev)
- err_alloc_cables:
- 	if (edev->max_supported)
- 		kfree(edev->cables);
--err_sysfs_alloc:
-+free_edev:
-+	kfree(edev);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(extcon_dev_register);
-@@ -1283,8 +1307,6 @@ EXPORT_SYMBOL_GPL(extcon_dev_register);
-  * extcon_dev_unregister() - Unregister the extcon device.
-  * @edev:	the extcon device to be unregistered.
-  *
-- * Note that this does not call kfree(edev) because edev was not allocated
-- * by this class.
-  */
- void extcon_dev_unregister(struct extcon_dev *edev)
- {
-diff --git a/drivers/extcon/extcon.h b/drivers/extcon/extcon.h
-index 93b5e0306966..02b5da7f880c 100644
---- a/drivers/extcon/extcon.h
-+++ b/drivers/extcon/extcon.h
-@@ -41,7 +41,7 @@
- struct extcon_dev {
- 	/* Optional user initializing data */
- 	const char *name;
--	const unsigned int *supported_cable;
-+	unsigned int *supported_cable;
- 	const u32 *mutually_exclusive;
- 
- 	/* Internal data. Please do not set. */
--- 
-2.17.1
+With respect to measurement namespaces, the first problem to be
+addressed is what takes custody and responsibility for the measurement
+events.  In classic IMA this is, of course, a TPM.  In our model we
+use a Trusted Execution Environment (TEE) as this entity.
 
+The TEE makes a decision as to whether or not the kernel should label
+a context of execution as being a 'bad actor' if it indicates a desire
+to exhibit a behavior inconsistent with a previously defined model.
+As I noted previously we have an SGX based solution that provides this
+infrastructure but have designed and are moving to a micro-controller
+based alternative, given the fact that SGX is now moving to a 'cloud
+only' solution.
+
+One of the pain points in all of this appears to be whether or not a
+measurement stream from a container should feed into the root
+measurement of the platform or be fed into a measurement/monitoring
+domain that can be attested against the root measurement of the
+platform.  Based on our experiences the latter model is the only one
+that is feasible or makes sense from an attestation perspective.
+
+So it would seem that a generic approach to directing the target of
+the measurement events would be the first objective.  If there is
+interest we can make a copy of our patch available as it supports both
+models.
+
+> - Luke
+
+Have a good day.
+
+Dr. Greg
+
+As always,
+Dr. Greg Wettstein, Ph.D, Worker      Autonomously self-defensive
+Enjellic Systems Development, LLC     IOT platforms and edge devices.
+4206 N. 19th Ave.
+Fargo, ND  58102
+PH: 701-281-1686                      EMAIL: dg@enjellic.com
+------------------------------------------------------------------------------
+"I created a hack to make the division come out right ... I was
+ relieved because I thought I was coding wrong.
+
+ Did you?  It took a guy (Thomas Nicely) with a Ph.D. doing heavy
+ research in computational number theory to find it, yet you found it
+ while working on a game in QuickBasic?"
+                                -- Slashdot
