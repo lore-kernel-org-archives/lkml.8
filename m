@@ -2,119 +2,333 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A559C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EDAC2D0A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E922087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4912921D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gR1qzHKQ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VkNDQtyl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbgIIRLI (ORCPT
+        id S1730309AbgIIRLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:11:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:19272 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbgIIRK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:10:58 -0400
-IronPort-SDR: 4bZWr28V0muMRHpAwVI5HolmG70awak0f/3q3YhNfoSgXz6NVkQIc09KFxNKdXWWY+Uxn0iE4d
- fHV/EtUi0Ubw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155842243"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="155842243"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 10:10:56 -0700
-IronPort-SDR: 5qT68Jsn0cJQAktVnxQeDCfV8fH0mpJfxEtiS+SvivGmWwong8TxccfnMWaV91WoWzHQrBbXr3
- ET5pqWXNskJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="333886837"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga008.jf.intel.com with ESMTP; 09 Sep 2020 10:10:56 -0700
-Date:   Wed, 9 Sep 2020 10:10:56 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        eperezma@redhat.com, peterx@redhat.com, mst@redhat.com,
-        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] intel-iommu: don't disable ATS for device without page
- aligned request
-Message-ID: <20200909171056.GF104641@otc-nc-03>
-References: <20200909083432.9464-1-jasowang@redhat.com>
+        Wed, 9 Sep 2020 13:11:20 -0400
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:42810
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730307AbgIIPds (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:33:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599661184;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=WjDONsuBH7IGcBm3DuSDqu/G8Oq6gOfRjVZiH4J/Zdw=;
+        b=gR1qzHKQVGqAvDMd8Sl1M4Hf+SCteui5S9G/1NQVaUAr7GleRQnQsIs4Xt8i4j7Y
+        0Iv6Ub/sDh5ALCVnKt1KIasjozEC7yQvkdZaLA9bZi4f77wXJNNOBbK02LcULD7rL7N
+        Cz8mk8YwkhZlXWK/p5z6+m+OnPEP/JxaMcQUyldw=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599661184;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=WjDONsuBH7IGcBm3DuSDqu/G8Oq6gOfRjVZiH4J/Zdw=;
+        b=VkNDQtylz+1BehymhumYgj2veKe4Sypp/lqs5bacOb8x/ThrRB6JWjc+mY59cZGE
+        XNhVbKgv6XFiE8WhoqfcKX9TsdBBg3NyJ5Q4mecxCUwUD2XaP/pMKe70uRXFrRd9m7g
+        +exA5sSk2j5WIyLyJ0A8SBOaUkz1s9clAkjnJPMs=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909083432.9464-1-jasowang@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 9 Sep 2020 14:19:44 +0000
+From:   skakit@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V4 1/4] arm64: dts: sc7180: Add wakeup support over UART
+ RX
+In-Reply-To: <20200903160524.GH3419728@google.com>
+References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
+ <1599145498-20707-2-git-send-email-skakit@codeaurora.org>
+ <20200903160524.GH3419728@google.com>
+Message-ID: <01010174733c94d4-bf866578-b2de-4720-bc0f-bed3472a4070-000000@us-west-2.amazonses.com>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.09-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason
+Hi Matthias,
 
-On Wed, Sep 09, 2020 at 04:34:32PM +0800, Jason Wang wrote:
-> Commit 61363c1474b1 ("iommu/vt-d: Enable ATS only if the device uses
-> page aligned address.") disables ATS for device that can do unaligned
-> page request.
-
-Did you take a look at the PCI specification?
-Page Aligned Request is in the ATS capability Register.
-
-ATS Capability Register (Offset 0x04h)
-
-bit (5):
-Page Aligned Request - If Set, indicates the Untranslated address is always
-aligned to 4096 byte boundary. Setting this field is recommended. This
-field permits software to distinguish between implemntations compatible
-with this specification and those compatible with an earlier version of
-this specification in which a Requester was permitted to supply anything in
-bits [11:2].
-
+On 2020-09-03 21:35, Matthias Kaehlcke wrote:
+> On Thu, Sep 03, 2020 at 08:34:55PM +0530, satya priya wrote:
+>> Add the necessary pinctrl and interrupts to make UART wakeup capable.
+>> 
+>> If QUP function is selected in sleep state, UART RTS/RFR is pulled 
+>> high
+>> during suspend and BT SoC not able to send wakeup bytes. So, configure
+>> GPIO mode in sleep state to keep it low during suspend.
+>> 
+>> Signed-off-by: satya priya <skakit@codeaurora.org>
+>> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>  - As per Matthias's comment added wakeup support for all the UARTs
+>>    of SC7180.
+>> 
+>> Changes in V3:
+>>  - No change.
+>> 
+>> Changes in V4:
+>>  - As per Matthias's comment, added the reason for configuring GPIO
+>>    mode for sleep state in commit text.
+>> 
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 
+>> ++++++++++++++++++++++++++++++------
+>>  1 file changed, 84 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index d46b383..855b13e 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -793,9 +793,11 @@
+>>  				reg = <0 0x00880000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart0_default>;
+>> -				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart0_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 37 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
+>> SLAVE_QUP_CORE_0>,
+>> @@ -845,9 +847,11 @@
+>>  				reg = <0 0x00884000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart1_default>;
+>> -				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart1_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 3 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
+>> SLAVE_QUP_CORE_0>,
+>> @@ -931,9 +935,11 @@
+>>  				reg = <0 0x0088c000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart3_default>;
+>> -				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart3_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
+>> SLAVE_QUP_CORE_0>,
+>> @@ -1017,9 +1023,11 @@
+>>  				reg = <0 0x00894000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart5_default>;
+>> -				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart5_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 28 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
+>> SLAVE_QUP_CORE_0>,
+>> @@ -1084,9 +1092,11 @@
+>>  				reg = <0 0x00a80000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart6_default>;
+>> -				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart6_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt 
+>> SLAVE_QUP_CORE_1>,
+>> @@ -1256,9 +1266,11 @@
+>>  				reg = <0 0x00a90000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart10_default>;
+>> -				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart10_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 89 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt 
+>> SLAVE_QUP_CORE_1>,
+>> @@ -1308,9 +1320,11 @@
+>>  				reg = <0 0x00a94000 0 0x4000>;
+>>  				clock-names = "se";
+>>  				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
+>> -				pinctrl-names = "default";
+>> +				pinctrl-names = "default", "sleep";
+>>  				pinctrl-0 = <&qup_uart11_default>;
+>> -				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
+>> +				pinctrl-1 = <&qup_uart11_sleep>;
+>> +				interrupts-extended = <&intc GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
+>> +							<&tlmm 56 IRQ_TYPE_EDGE_FALLING>;
+>>  				power-domains = <&rpmhpd SC7180_CX>;
+>>  				operating-points-v2 = <&qup_opp_table>;
+>>  				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt 
+>> SLAVE_QUP_CORE_1>,
+>> @@ -1638,6 +1652,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart0_sleep: qup-uart0-sleep {
+>> +				pinmux {
+>> +					pins = "gpio34", "gpio35",
+>> +					       "gpio36", "gpio37";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			qup_uart1_default: qup-uart1-default {
+>>  				pinmux {
+>>  					pins = "gpio0", "gpio1",
+>> @@ -1646,6 +1668,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart1_sleep: qup-uart1-sleep {
+>> +				pinmux {
+>> +					pins = "gpio0", "gpio1",
+>> +					       "gpio2", "gpio3";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			qup_uart2_default: qup-uart2-default {
+>>  				pinmux {
+>>  					pins = "gpio15", "gpio16";
+>> @@ -1661,6 +1691,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart3_sleep: qup-uart3-sleep {
+>> +				pinmux {
+>> +					pins = "gpio38", "gpio39",
+>> +					       "gpio40", "gpio41";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			qup_uart4_default: qup-uart4-default {
+>>  				pinmux {
+>>  					pins = "gpio115", "gpio116";
+>> @@ -1676,6 +1714,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart5_sleep: qup-uart5-sleep {
+>> +				pinmux {
+>> +					pins = "gpio25", "gpio26",
+>> +					       "gpio27", "gpio28";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			qup_uart6_default: qup-uart6-default {
+>>  				pinmux {
+>>  					pins = "gpio59", "gpio60",
+>> @@ -1684,6 +1730,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart6_sleep: qup-uart6-sleep {
+>> +				pinmux {
+>> +					pins = "gpio59", "gpio60",
+>> +					       "gpio61", "gpio62";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			qup_uart7_default: qup-uart7-default {
+>>  				pinmux {
+>>  					pins = "gpio6", "gpio7";
+>> @@ -1713,6 +1767,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart10_sleep: qup-uart10-sleep {
+>> +				pinmux {
+>> +					pins = "gpio86", "gpio87",
+>> +					       "gpio88", "gpio89";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			qup_uart11_default: qup-uart11-default {
+>>  				pinmux {
+>>  					pins = "gpio53", "gpio54",
+>> @@ -1721,6 +1783,14 @@
+>>  				};
+>>  			};
+>> 
+>> +			qup_uart11_sleep: qup-uart11-sleep {
+>> +				pinmux {
+>> +					pins = "gpio53", "gpio54",
+>> +					       "gpio55", "gpio56";
+>> +					function = "gpio";
+>> +				};
+>> +			};
+>> +
+>>  			sdc1_on: sdc1-on {
+>>  				pinconf-clk {
+>>  					pins = "sdc1_clk";
 > 
-> This looks wrong, since the commit log said it's because the page
-> request descriptor doesn't support reporting unaligned request.
-
-I don't think you can change the definition from ATS to PRI. Both are
-orthogonal feature.
-
+> It seems only the RTS pin actually requires a pinmux change. One could
+> argue that only the muxing of this pin should be changed in sleep mode.
+> But well, changing all pins to GPIO simplifies the config, so I guess
+> it's ok as long as there are no side effects.
 > 
-> A victim is Qemu's virtio-pci which doesn't advertise the page aligned
-> address. Fixing by disable PRI instead of ATS if device doesn't have
-> page aligned request.
+> I noticed you changed only the UARTs that have RTS/CTS signals. Do the
+> others not support wakeup? I understand that the pinmux change isn't
+> needed for these UARTs, since they have no RTS signal, however I'd 
+> expect
+> them to need the 'interrupts-extended' entry if they support wakeup.
 
-This is a requirement for the Intel IOMMU's.
+We are planning to add the wakeup related changes(interrupts-extended, 
+pin ctrls) to only uart3 in board specific file. As we understand, this 
+wakeup is an optional feature and cannot be added to all the UARTs. So, 
+now all the changes will be added in board specific files including the 
+pinmux change for sleep state.
 
-You say virtio, so is it all emulated device or you talking about some
-hardware that implemented virtio-pci compliant hw? If you are sure the
-device actually does comply with the requirement, but just not enumerating
-the capability, you can maybe work a quirk to overcome that?
+Thanks,
+Satya Priya
 
-Now PRI also has an alignment requirement, and Intel IOMMU's requires that
-as well. If your device supports SRIOV as well, PASID and PRI are
-enumerated just on the PF and not the VF. You might want to pay attension
-to that. We are still working on a solution for that problem.
-
-I don't think this is the right fix for your problem. 
-
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/iommu/intel/iommu.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
