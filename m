@@ -2,224 +2,143 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61679C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8600921D40
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2581121D40
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZS5kURL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S0iEEtWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgIIEcm (ORCPT
+        id S1726408AbgIIEfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 00:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58722 "EHLO
+        Wed, 9 Sep 2020 00:35:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIEck (ORCPT
+        with ESMTP id S1725811AbgIIEfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 00:32:40 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F01C061573;
-        Tue,  8 Sep 2020 21:32:40 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s2so704955pjr.4;
-        Tue, 08 Sep 2020 21:32:40 -0700 (PDT)
+        Wed, 9 Sep 2020 00:35:19 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9115FC061757
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 21:35:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id o16so711430pjr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 21:35:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZL1/dFPSyKDLoUtfW2I3TnJOQ1LLw3ZjlfPq0EZElIo=;
-        b=vZS5kURLZDuYQhY8ACURTlu/876ye9UykjPe24ra2DbJiBluTLdsYqi/PI9bBneS2f
-         GciINZgtJMKrtW/zCbRi+iH2+Z2+UXWmsV8LGcuPDpFy5RXiMCRjoEmYzL7Uyt9L9RFN
-         CQz31RY1JXIEV3RKPCXRBfEa5q24zApCwaOpzkYsPaxaqNBt53Df7bdB2QkSiInZ8ErQ
-         GpqxVLNIT2dXV//LS/OEex/JiF6QHxurKOzhFK+cYN2AmIBY3Ar5ib7lUI42WFndgVXw
-         eB//Wvf/dckUoctehdKMCcwF9ucwhCV1XSceTCF28/X/sdD7LFFOqD4syilUrjTOdN1X
-         vjWA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=z/ZqzCBddoOe6cElQsXSPaPa9YScgcb1RA++AVKK45o=;
+        b=S0iEEtWHdVMdH4ZvaQfDsFtl52bOxgDUnqEKCqK13oLiS7xCyycKXwY2VIuvCNRPuU
+         MSMSWLy3KV532CJHWDObBmAImM+Kzyow0iB/WZ3vpgmbaMoVLL821tpO+eFo5FFbgrip
+         H7WtG7PWAs8H4fLvNoMTxm2fnGS9vJwhmTdrbe82kgfVzhvuaFov6fTPRbh0lO5ZKflO
+         Haw9eVq2OgvUPoE2rL6YdKWsv7pYA+ceRcl26RdHS9M9oNwAW+fhUhipZi0KXjCARbKD
+         MqKTbptINtOsGNz24PX9A9eWoXX/U0uIV5kr4VBcKo7COkJ+CR8pJi1GbbmuzpY6+PS2
+         PANg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZL1/dFPSyKDLoUtfW2I3TnJOQ1LLw3ZjlfPq0EZElIo=;
-        b=ZA9Ke6lh+TdibPBzfr9ezkDFj/AEsKdbHf3ynP7lTm6QcyHSRbaCjbFkewVxqLtwyJ
-         O8/S5Q999HJpYUZD40W7za50sDBeOqcGdQhzoYIezX+IoiPXcS2fWu04y/+hzI4i76g/
-         il3vPUEzIziHK2HRyaX4W+cdHkhHKDvXF8LtFtuPA9j8AK94aQPz7IL3bMFU/kP0mFX9
-         nBAUIJG320OZWbDyCmOGOhvL8tLjaWV0dOQKrtpK4oHAd2PXp8yKwQn7A9vwYZQXadGM
-         hTjEvIBpSOoGijLIBtJiOXaE7KXYCki6eHS1VXxq9h6+qhDZu1kvhFyhWWlDTeWkMajL
-         y6TQ==
-X-Gm-Message-State: AOAM531DrJpfWOhL2L43g7f6nSI7JdlNTG2pQPDdGp4Nk0M4Nf/BFte/
-        XrhgV1QlzaG1UARETwTznpGzIhi+ejA=
-X-Google-Smtp-Source: ABdhPJzclGbvNrY8NUl/8c/ky2RgtEtE9sDRgdRO08HBwjGQYV7iY+8zWagTigmChSy6VxMcoM5EwA==
-X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr1974550pjb.20.1599625957983;
-        Tue, 08 Sep 2020 21:32:37 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id ih11sm638444pjb.51.2020.09.08.21.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 21:32:37 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net: dsa: b53: Report VLAN table occupancy via devlink
-Date:   Tue,  8 Sep 2020 21:32:34 -0700
-Message-Id: <20200909043235.4080900-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=z/ZqzCBddoOe6cElQsXSPaPa9YScgcb1RA++AVKK45o=;
+        b=aUvYL7dnLyl+LoageBnOFuo5ghzfL3olyf/zgu1dANFZfGA54DRfO5jVDyRNDnhRvN
+         0FoQGbmnzz7UjNM9nF0LYph9KQ9sr0Kg74uw6hFyV3ZVY/kdcJbp6pIssUyT16HgTZOB
+         iLCwsJyY3YdTzkVGDP9LEQV8kh24h9mPoavQiDUwcswUMddm1iGtoDZyd+rPzQcVJloh
+         +BN73m8RLZsl67hd23rF5cvUVAoNuFDVkRbeM/y+FwkPmzKlZiKSwFzME0qREySpyaPl
+         Th9zo9jpIg6gdzjLJIUaGBWl9GLzD/9HmP2mNn9HpsiTksnV7wUyrGSSq8Dgrt3J+S3X
+         0kzA==
+X-Gm-Message-State: AOAM533Yebe2eO9qFGwiAaiQQCM0u5DvMW/o4B8lG60Yp8LC6f1EtsJh
+        ITESr9aMS+TkgFFEHRdUgqPmOw==
+X-Google-Smtp-Source: ABdhPJym123jrDQyOmckTomGRhHglYxlPrWudYpouUVfZSewDsr/fa/uKEO4Gqv50DZEE8lcrCB6yw==
+X-Received: by 2002:a17:90b:4a4b:: with SMTP id lb11mr1891666pjb.111.1599626117949;
+        Tue, 08 Sep 2020 21:35:17 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id z1sm355353pfz.70.2020.09.08.21.35.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 21:35:16 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 10:05:14 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amitk@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH 5/7] cpufreq: qcom-hw: Use regmap for accessing hardware
+ registers
+Message-ID: <20200909043514.kuchag27eb255lgk@vireshk-i7>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-6-manivannan.sadhasivam@linaro.org>
+ <20200908103444.5e526uawa45om6lt@vireshk-i7>
+ <20200908111141.GB23095@mani>
+ <20200908111813.bbgfxo5v7qt6ujpc@vireshk-i7>
+ <CAHLCerMndYeEBOxtj8mV7OdOP9pufx+C7n1F9m+CFAneuh8DnA@mail.gmail.com>
+ <CAHLCerPm6MXr662CaA3zZm4fQ3dJ_StJt3Ehutc3xnc0L9wj3Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerPm6MXr662CaA3zZm4fQ3dJ_StJt3Ehutc3xnc0L9wj3Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already maintain an array of VLANs used by the switch so we can
-simply iterate over it to report the occupancy via devlink.
+On 08-09-20, 17:38, Amit Kucheria wrote:
+> On Tue, Sep 8, 2020 at 5:18 PM Amit Kucheria <amitk@kernel.org> wrote:
+> >
+> > On Tue, Sep 8, 2020 at 4:48 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 08-09-20, 16:41, Manivannan Sadhasivam wrote:
+> > > > On 0908, Viresh Kumar wrote:
+> > > > > On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
+> > > > > > Use regmap for accessing cpufreq registers in hardware.
+> > > > >
+> > > > > Why ? Please mention why a change is required in the log.
+> > > > >
+> > > >
+> > > > Only because it is recommended to use regmap for abstracting the hw access.
+> > >
+> > > Yes it can be very useful in abstracting the hw access in case of
+> > > busses like SPI/I2C, others, but in this case there is only one way of
+> > > doing it with the exact same registers. I am not sure it is worth it
+> > > here. FWIW, I have never played with regmaps personally, and so every
+> > > chance I can be wrong here.
+> >
+> > One could handle the reg offsets through a struct initialisation, but
+> > then you end up with lots of #defines for bitmasks and bits for each
+> > version of the IP. And the core code becomes a bit convoluted IMO,
+> > trying to handle the differences.
+> >
+> > regmap hides the differences of the bit positions and register offsets
+> > between several IP versions.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/b53/b53_common.c | 59 ++++++++++++++++++++++++++++++--
- drivers/net/dsa/b53/b53_priv.h   |  1 +
- drivers/net/dsa/bcm_sf2.c        |  8 ++++-
- 3 files changed, 65 insertions(+), 3 deletions(-)
+Right and I agree that is another useful aspect of it which I missed
+mentioning.
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 26fcff85d881..a1527665e817 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -977,6 +977,53 @@ int b53_get_sset_count(struct dsa_switch *ds, int port, int sset)
- }
- EXPORT_SYMBOL(b53_get_sset_count);
- 
-+enum b53_devlink_resource_id {
-+	B53_DEVLINK_PARMA_ID_VLAN_TABLE,
-+};
-+
-+static u64 b53_devlink_vlan_table_get(void *priv)
-+{
-+	struct b53_device *dev = priv;
-+	unsigned int i, count = 0;
-+	struct b53_vlan *vl;
-+
-+	for (i = 0; i < dev->num_vlans; i++) {
-+		vl = &dev->vlans[i];
-+		if (vl->members)
-+			count++;
-+	}
-+
-+	return count;
-+}
-+
-+int b53_setup_devlink_resources(struct dsa_switch *ds)
-+{
-+	struct devlink_resource_size_params size_params;
-+	struct b53_device *dev = ds->priv;
-+	int err;
-+
-+	devlink_resource_size_params_init(&size_params, dev->num_vlans,
-+					  dev->num_vlans,
-+					  1, DEVLINK_RESOURCE_UNIT_ENTRY);
-+
-+	err = dsa_devlink_resource_register(ds, "VLAN", dev->num_vlans,
-+					    B53_DEVLINK_PARMA_ID_VLAN_TABLE,
-+					    DEVLINK_RESOURCE_ID_PARENT_TOP,
-+					    &size_params);
-+	if (err)
-+		goto out;
-+
-+	dsa_devlink_resource_occ_get_register(ds,
-+					      B53_DEVLINK_PARMA_ID_VLAN_TABLE,
-+					      b53_devlink_vlan_table_get, dev);
-+
-+	return 0;
-+out:
-+	dsa_devlink_resources_unregister(ds);
-+	return err;
-+}
-+EXPORT_SYMBOL(b53_setup_devlink_resources);
-+
- static int b53_setup(struct dsa_switch *ds)
- {
- 	struct b53_device *dev = ds->priv;
-@@ -992,8 +1039,10 @@ static int b53_setup(struct dsa_switch *ds)
- 	b53_reset_mib(dev);
- 
- 	ret = b53_apply_config(dev);
--	if (ret)
-+	if (ret) {
- 		dev_err(ds->dev, "failed to apply configuration\n");
-+		return ret;
-+	}
- 
- 	/* Configure IMP/CPU port, disable all other ports. Enabled
- 	 * ports will be configured with .port_enable
-@@ -1012,7 +1061,12 @@ static int b53_setup(struct dsa_switch *ds)
- 	 */
- 	ds->vlan_filtering_is_global = true;
- 
--	return ret;
-+	return b53_setup_devlink_resources(ds);
-+}
-+
-+static void b53_teardown(struct dsa_switch *ds)
-+{
-+	dsa_devlink_resources_unregister(ds);
- }
- 
- static void b53_force_link(struct b53_device *dev, int port, int link)
-@@ -2141,6 +2195,7 @@ static int b53_get_max_mtu(struct dsa_switch *ds, int port)
- static const struct dsa_switch_ops b53_switch_ops = {
- 	.get_tag_protocol	= b53_get_tag_protocol,
- 	.setup			= b53_setup,
-+	.teardown		= b53_teardown,
- 	.get_strings		= b53_get_strings,
- 	.get_ethtool_stats	= b53_get_ethtool_stats,
- 	.get_sset_count		= b53_get_sset_count,
-diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
-index e942c60e4365..c55c0a9f1b47 100644
---- a/drivers/net/dsa/b53/b53_priv.h
-+++ b/drivers/net/dsa/b53/b53_priv.h
-@@ -328,6 +328,7 @@ void b53_br_set_stp_state(struct dsa_switch *ds, int port, u8 state);
- void b53_br_fast_age(struct dsa_switch *ds, int port);
- int b53_br_egress_floods(struct dsa_switch *ds, int port,
- 			 bool unicast, bool multicast);
-+int b53_setup_devlink_resources(struct dsa_switch *ds);
- void b53_port_event(struct dsa_switch *ds, int port);
- void b53_phylink_validate(struct dsa_switch *ds, int port,
- 			  unsigned long *supported,
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 3263e8a0ae67..723820603107 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -936,7 +936,12 @@ static int bcm_sf2_sw_setup(struct dsa_switch *ds)
- 	b53_configure_vlan(ds);
- 	bcm_sf2_enable_acb(ds);
- 
--	return 0;
-+	return b53_setup_devlink_resources(ds);
-+}
-+
-+static void bcm_sf2_sw_teardown(struct dsa_switch *ds)
-+{
-+	dsa_devlink_resources_unregister(ds);
- }
- 
- /* The SWITCH_CORE register space is managed by b53 but operates on a page +
-@@ -1073,6 +1078,7 @@ static int bcm_sf2_sw_get_sset_count(struct dsa_switch *ds, int port,
- static const struct dsa_switch_ops bcm_sf2_ops = {
- 	.get_tag_protocol	= b53_get_tag_protocol,
- 	.setup			= bcm_sf2_sw_setup,
-+	.teardown		= bcm_sf2_sw_teardown,
- 	.get_strings		= bcm_sf2_sw_get_strings,
- 	.get_ethtool_stats	= bcm_sf2_sw_get_ethtool_stats,
- 	.get_sset_count		= bcm_sf2_sw_get_sset_count,
+> > > > Moreover it handles the proper locking for us in the core (spinlock vs mutex).
+> > >
+> > > What locking do you need here ?
+> >
+> > Right, locking isn't the main reason here.
+> 
+> Having said this, perhaps this patch can be held back for now, since
+> we're not yet using some of the features of regmap to abstract away
+> bit fields and such.
+> 
+> We don't strictly need it for just different register offsets.
+
+Right, I just didn't understood why it was required currently as it
+wasn't all that complex at all.
+
 -- 
-2.25.1
-
+viresh
