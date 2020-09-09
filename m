@@ -4,70 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F995C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3419FC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09972207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD7B21941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbgIIPsU (ORCPT
+        id S1730358AbgIIPsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:48:20 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37118 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730446AbgIIPpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:45:15 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 43882EA083EC8B2B931C;
-        Wed,  9 Sep 2020 21:43:31 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:43:20 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <stefan@agner.ch>, <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <vigneshr@ti.com>, <yuehaibing@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] mtd: rawnand: vf610_nfc: Remove unused function vf610_nfc_transfer_size()
-Date:   Wed, 9 Sep 2020 21:43:18 +0800
-Message-ID: <20200909134318.36340-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 9 Sep 2020 11:48:38 -0400
+Received: from mailout08.rmx.de ([94.199.90.85]:43570 "EHLO mailout08.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730460AbgIIPpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:45:36 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout08.rmx.de (Postfix) with ESMTPS id 4BmmYw5Cf1zMnC1;
+        Wed,  9 Sep 2020 17:45:24 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BmmYT72k8z2TRlN;
+        Wed,  9 Sep 2020 17:45:01 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.93) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 9 Sep
+ 2020 17:45:01 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christian Eggers <ceggers@arri.de>
+Subject: [PATCH] iio: light: as73211: Increase measurement timeout
+Date:   Wed, 9 Sep 2020 17:44:39 +0200
+Message-ID: <20200909154439.10308-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.93]
+X-RMX-ID: 20200909-174501-4BmmYT72k8z2TRlN-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit ecc40b8df59a ("mtd: rawnand: vf610_nfc: remove old hooks")
-left behind this, remove it.
+We found some sensors which are much slower (20% at room temperature)
+than nominal. According to the data sheet, up to 27% is possible. Now I
+add 33% to the nominal time out, hopefully this is enough.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Christian Eggers <ceggers@arri.de>
 ---
- drivers/mtd/nand/raw/vf610_nfc.c | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/iio/light/as73211.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
-index 7248c5901183..ed8e0928c0b2 100644
---- a/drivers/mtd/nand/raw/vf610_nfc.c
-+++ b/drivers/mtd/nand/raw/vf610_nfc.c
-@@ -323,11 +323,6 @@ static inline void vf610_nfc_ecc_mode(struct vf610_nfc *nfc, int ecc_mode)
- 			    CONFIG_ECC_MODE_SHIFT, ecc_mode);
- }
+diff --git a/drivers/iio/light/as73211.c b/drivers/iio/light/as73211.c
+index 25e5c386d678..457bf7f4b1f4 100644
+--- a/drivers/iio/light/as73211.c
++++ b/drivers/iio/light/as73211.c
+@@ -259,10 +259,9 @@ static int as73211_req_data(struct as73211_data *data)
+ 	data->osr &= ~AS73211_OSR_SS;
  
--static inline void vf610_nfc_transfer_size(struct vf610_nfc *nfc, int size)
--{
--	vf610_nfc_write(nfc, NFC_SECTOR_SIZE, size);
--}
--
- static inline void vf610_nfc_run(struct vf610_nfc *nfc, u32 col, u32 row,
- 				 u32 cmd1, u32 cmd2, u32 trfr_sz)
- {
+ 	/*
+-	 * Add some extra margin for the timeout. sensor timing is not as precise
+-	 * as our one ...
++	 * Add 33% extra margin for the timeout. fclk,min = fclk,typ - 27%.
+ 	 */
+-	time_us += time_us / 8;
++	time_us += time_us / 3;
+ 	if (data->client->irq) {
+ 		ret = wait_for_completion_timeout(&data->completion, usecs_to_jiffies(time_us));
+ 		if (!ret) {
 -- 
-2.17.1
+Christian Eggers
+Embedded software developer
 
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
