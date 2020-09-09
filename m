@@ -2,107 +2,134 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457E8C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53099C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F063821741
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599635879;
-	bh=HM+rzaB8jIQfL0goRXEpQy9E5vp1Tz0Xya2N8+sURa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L3LSgK/HwZyj4YqdE9Za52ZKZk3WC3VoPgmMT5vhXYiHU0n2VMiVXhnWOEco48GPm
-	 3fYJxAumAF3gaC309SQx3D7eyQyYcDeBNOMGfJgRanGhgUQ7CRaf99XtHRapOaWDba
-	 u1bG2HKIh2d2cfrCacyfQL6T2CPViGS1yy9NuPXk=
+	by mail.kernel.org (Postfix) with ESMTP id 0B8D121741
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOZkXJ6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgIIHR5 (ORCPT
+        id S1728626AbgIIHSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIIHRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:17:49 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9DD2078E;
-        Wed,  9 Sep 2020 07:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599635869;
-        bh=HM+rzaB8jIQfL0goRXEpQy9E5vp1Tz0Xya2N8+sURa8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AvT8dnL52SNWoRsYGkEMucCNddyCJQuXVVABi6KWtNROiarVGoZIIksdgH++GXUk/
-         mfX6EAUKLeKSOnJ2qoBI3uXM/U1aG8XaU0+hDOa7Lt1OcLDpieALm74V9UfqnUSe0L
-         mSA2BCCpW8HVUTBtZhu/0DJnEr8IcSkO0W2pwNvs=
-Date:   Wed, 9 Sep 2020 09:17:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Libor Pechacek <lpechacek@suse.cz>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 3/7] mm/memory_hotplug: prepare passing flags to
- add_memory() and friends
-Message-ID: <20200909071759.GD435421@kroah.com>
-References: <20200908201012.44168-1-david@redhat.com>
- <20200908201012.44168-4-david@redhat.com>
+        Wed, 9 Sep 2020 03:18:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIIHR7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:17:59 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF3AC061573;
+        Wed,  9 Sep 2020 00:17:58 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l191so1418823pgd.5;
+        Wed, 09 Sep 2020 00:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=64Bt6kd9gxNJLRVuqcxKj5M+pb5+qbe839Gm0r/zIvo=;
+        b=BOZkXJ6/UZfd/Smz8exM0/GCMabLwdZY0S7okls6rxu14xZzEAcX+7DHmsZISbkkg1
+         yI+W8ytZ2T8AY61EhOAtxyLw/FXWXvZ8zE3VvXxr0LX0FbUVdMosXzPdv7nuDZzbWrkz
+         Mq+leo06/a5x3b+9W+6QJAP+RWsyDJrKakDSaqjR+ch+HTVPMwA9vL25n4E5ufexmJfx
+         5RuG0VmZbBZydIVVUfcO+9WXm3igrUCRTWEIvanjZY4RmigvsMwz8KyfXu7TDXj/DuGZ
+         6uQ8GIDFcht7e76ccDGhc/3kIpHbgTIfiJpCWNpM8Bqdg88VJuTWxAKDS8rVfZYDUBLN
+         YyNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=64Bt6kd9gxNJLRVuqcxKj5M+pb5+qbe839Gm0r/zIvo=;
+        b=Y4UYQGpzbXyxbhQZ1aliF6qPEQZzplLB6I+ccPiRFr1nycbAdokz4qsPJHczBahpXA
+         xUXkHHDO1cw3CvGQl/OoHuULY0UPRCs+seMKNEY6ToEREgukGt7CoqpEQxGvGCvM9oHH
+         VmDgPQyXFEUiu9WW6UP19dWTdHYjB+/gBwIq8NcljM+nlIDi1kl+n6WyPiiDbu1Qtve0
+         rWJ54RgD4ydPjcLTGtNW0Zq96wylaDzp3794Z6kdzAya83DCyKQmzJiOG4goNNVS3Q8F
+         5cZ4Vkmv44w4oZ6i7v4PM+yHvRo8yPDXUZCqf9eP13GBAHBEh+tviJgSowQxyBJ1nse5
+         YWIQ==
+X-Gm-Message-State: AOAM530UuglL65IWHw1WU0h5LWsBEVIuGGPmzlQ+Pn/18I104/MI1wFP
+        WZTSA7Ze0ZLyjXW9Hyoo1A==
+X-Google-Smtp-Source: ABdhPJxuGhKjFWPHlV7tWVd/A6dvlcDQsvdVZO4mWSI4b/JsVgqaXXITNfUrG/50JWsRL7CjUveweg==
+X-Received: by 2002:a17:902:7203:b029:d0:cbe1:e73a with SMTP id ba3-20020a1709027203b02900d0cbe1e73amr2786781plb.21.1599635878103;
+        Wed, 09 Sep 2020 00:17:58 -0700 (PDT)
+Received: from localhost.localdomain (n11212042027.netvigator.com. [112.120.42.27])
+        by smtp.gmail.com with ESMTPSA id y3sm1699661pfb.18.2020.09.09.00.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 00:17:57 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net v2] Bluetooth: Fix slab-out-of-bounds read in hci_le_direct_adv_report_evt()
+Date:   Wed,  9 Sep 2020 03:17:00 -0400
+Message-Id: <20200909071700.1100748-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200805180902.684024-1-yepeilin.cs@gmail.com>
+References: <20200805180902.684024-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908201012.44168-4-david@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:10:08PM +0200, David Hildenbrand wrote:
-> We soon want to pass flags, e.g., to mark added System RAM resources.
-> mergeable. Prepare for that.
+`num_reports` is not being properly checked. A malformed event packet with
+a large `num_reports` number makes hci_le_direct_adv_report_evt() read out
+of bounds. Fix it.
 
-What are these random "flags", and how do we know what should be passed
-to them?
+Cc: stable@vger.kernel.org
+Fixes: 2f010b55884e ("Bluetooth: Add support for handling LE Direct Advertising Report events")
+Reported-and-tested-by: syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=24ebd650e20bd263ca01
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Change in v2:
+    - add "Cc: stable@" tag.
 
-Why not make this an enumerated type so that we know it all works
-properly, like the GPF_* flags are?  Passing around a random unsigned
-long feels very odd/broken...
+ net/bluetooth/hci_event.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-thanks,
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 4b7fc430793c..aec43ae488d1 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5863,21 +5863,19 @@ static void hci_le_direct_adv_report_evt(struct hci_dev *hdev,
+ 					 struct sk_buff *skb)
+ {
+ 	u8 num_reports = skb->data[0];
+-	void *ptr = &skb->data[1];
++	struct hci_ev_le_direct_adv_info *ev = (void *)&skb->data[1];
+ 
+-	hci_dev_lock(hdev);
++	if (!num_reports || skb->len < num_reports * sizeof(*ev) + 1)
++		return;
+ 
+-	while (num_reports--) {
+-		struct hci_ev_le_direct_adv_info *ev = ptr;
++	hci_dev_lock(hdev);
+ 
++	for (; num_reports; num_reports--, ev++)
+ 		process_adv_report(hdev, ev->evt_type, &ev->bdaddr,
+ 				   ev->bdaddr_type, &ev->direct_addr,
+ 				   ev->direct_addr_type, ev->rssi, NULL, 0,
+ 				   false);
+ 
+-		ptr += sizeof(*ev);
+-	}
+-
+ 	hci_dev_unlock(hdev);
+ }
+ 
+-- 
+2.25.1
 
-greg k-h
