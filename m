@@ -2,139 +2,79 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3261C2BC11
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8185C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93E820EDD
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D59421D20
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F8bvDBFS"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f2HMqAS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgIIDO5 (ORCPT
+        id S1728643AbgIIDQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 23:14:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33028 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726369AbgIIDO4 (ORCPT
+        Tue, 8 Sep 2020 23:16:36 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:49629 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726002AbgIIDQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 23:14:56 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08933O7V004243;
-        Tue, 8 Sep 2020 23:14:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=fPQ2hLtSSqn4qp3cZqEnFdUV2+VkBJNtU2UrwwB3KOY=;
- b=F8bvDBFSkNwtkMvAPa/Qae2yYGT4hMNgVpsgM8zb9pK6ap/XJEZH0ab9oKZ7cou2o2W2
- P2ubeX19DUoCdYwgCpfe0FihxDYIE6RBKqahVdSD6RUFjluhpMRrX08RkIdO0oS8Xka+
- qiFrnkiWMRo7icjjrOt295sVb5kaY/cyHhe3bXSwJM2b6auXFIaQbHcu+A5XeTt+qQLY
- cWmZWf7wGJJoy56weVEL0hkib15gPvO21qd90CUOdzJwd9E4NdUkHSR5yf7Y2HcrQAMD
- gmF07jIWrI4RTiU8GMjVsbidn/JxC6cXQHNEpOM3B3XVcN0+wYueo7p969fzN8O6vupm 9A== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33eph2rrse-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 23:14:48 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08939NiI019409;
-        Wed, 9 Sep 2020 03:14:46 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 33c2a80cb2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 03:14:46 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0893Ehgn32834012
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 03:14:43 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37ED4A4051;
-        Wed,  9 Sep 2020 03:14:43 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9612BA4040;
-        Wed,  9 Sep 2020 03:14:41 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.46.123])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Sep 2020 03:14:41 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     linux-block@vger.kernel.org, axboe@kernel.dk
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hch@infradead.org,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Subject: [RESEND PATCH 1/1] block: Set same_page to false in __bio_try_merge_page if ret is false
-Date:   Wed,  9 Sep 2020 08:44:25 +0530
-Message-Id: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 8 Sep 2020 23:16:35 -0400
+X-UUID: 9e7cc0b894ba4b14a27667a025a37425-20200909
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=D4akEY1UsIrLp2l32I4rH/2r4ZNkNg0urog1SmVJQy4=;
+        b=f2HMqAS5HdzGiqovALQY3IIbtKL3Vyr5hGlhiL/sOeABmvMNz2pIj3+bU7tho+cXO4lBoFbmBOtw34txCEsM8sJ8tW2XXSDq94rb477khaxWI0WbWxvCLRoWIb1t00QFAijp36TXvmdFbsrwNPHWhB2r3XOSWB79v+tKpBQQhfA=;
+X-UUID: 9e7cc0b894ba4b14a27667a025a37425-20200909
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1994703033; Wed, 09 Sep 2020 11:16:33 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n2.mediatek.inc
+ (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
+ 2020 11:16:31 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 9 Sep 2020 11:16:30 +0800
+Message-ID: <1599621279.2521.13.camel@mhfsdcap03>
+Subject: Re: [v1,1/3] dt-bindings: Add YAML schemas for Gen3 PCIe controller
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        <davem@davemloft.net>, <linux-pci@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>
+Date:   Wed, 9 Sep 2020 11:14:39 +0800
+In-Reply-To: <20200908200407.GA628520@bjorn-Precision-5520>
+References: <20200908200407.GA628520@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_02:2020-09-08,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- malwarescore=0 suspectscore=0 impostorscore=0 phishscore=0 bulkscore=0
- adultscore=0 mlxlogscore=925 spamscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090026
+X-TM-SNTS-SMTP: 0EE92390ADB39B90B8C5C83EAD1CEFB6CD9D6181AF39723CDB849AC1378F8DBA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we hit the UINT_MAX limit of bio->bi_iter.bi_size and so we are anyway
-not merging this page in this bio, then it make sense to make same_page
-also as false before returning.
-
-Without this patch, we hit below WARNING in iomap.
-This mostly happens with very large memory system and / or after tweaking
-vm dirty threshold params to delay writeback of dirty data.
-
-WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
- CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
- Call Trace:
-  __remove_mapping+0x154/0x320 (unreliable)
-  iomap_releasepage+0x80/0x180
-  try_to_release_page+0x94/0xe0
-  invalidate_inode_page+0xc8/0x110
-  invalidate_mapping_pages+0x1dc/0x540
-  generic_fadvise+0x3c8/0x450
-  xfs_file_fadvise+0x2c/0xe0 [xfs]
-  vfs_fadvise+0x3c/0x60
-  ksys_fadvise64_64+0x68/0xe0
-  sys_fadvise64+0x28/0x40
-  system_call_exception+0xf8/0x1c0
-  system_call_common+0xf0/0x278
-
-Fixes: cc90bc68422 ("block: fix "check bi_size overflow before merge"")
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
----
-RESEND: added "fixes" tag
-
- block/bio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/block/bio.c b/block/bio.c
-index a7366c02c9b5..675ecd81047b 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -877,8 +877,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
- 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
- 
- 		if (page_is_mergeable(bv, page, len, off, same_page)) {
--			if (bio->bi_iter.bi_size > UINT_MAX - len)
-+			if (bio->bi_iter.bi_size > UINT_MAX - len) {
-+				*same_page = false;
- 				return false;
-+			}
- 			bv->bv_len += len;
- 			bio->bi_iter.bi_size += len;
- 			return true;
--- 
-2.25.4
+T24gVHVlLCAyMDIwLTA5LTA4IGF0IDE1OjA0IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBNb24sIFNlcCAwNywgMjAyMCBhdCAwODowODo1MFBNICswODAwLCBKaWFuanVuIFdhbmcg
+d3JvdGU6DQo+ID4gQWRkIFlBTUwgc2NoZW1hcyBkb2N1bWVudGF0aW9uIGZvciBHZW4zIFBDSWUg
+Y29udHJvbGxlciBvbg0KPiA+IE1lZGlhVGVrIFNvQ3MuDQo+IA0KPiBQbGVhc2UgbWVudGlvbiAi
+bWVkaWF0ZWsiIGluIHRoZSBzdWJqZWN0IGxpbmUgc28gImdpdCBsb2cgLS1vbmVsaW5lIg0KPiBp
+cyBtb3JlIHVzZWZ1bC4NCj4gDQo+IFRoZSBjb252ZW50aW9uIChub3QgdW5pdmVyc2FsbHkgb2Jz
+ZXJ2ZWQpIHNlZW1zIHRvIGJlIHNvbWV0aGluZyBsaWtlOg0KPiANCj4gICBkdC1iaW5kaW5nczog
+UENJOiA8ZHJpdmVyLW5hbWU+OiBBZGQgWUFNTCBzY2hlbWENCg0KVGhhbmtzIGZvciB5b3VyIHJl
+dmlldywgSSB3aWxsIGZpeCBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQo=
 
