@@ -2,202 +2,144 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D153AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7E1C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92BC8207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07845207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OPN9vAK9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtM/b9gM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgIIIhK (ORCPT
+        id S1729614AbgIIIhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
+        Wed, 9 Sep 2020 04:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgIIIhC (ORCPT
+        with ESMTP id S1726293AbgIIIhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:37:02 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60865C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:37:01 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q9so1436723wmj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:37:01 -0700 (PDT)
+        Wed, 9 Sep 2020 04:37:18 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02BCC061573;
+        Wed,  9 Sep 2020 01:37:17 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q13so2318846ejo.9;
+        Wed, 09 Sep 2020 01:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BhyBPgB9vs4GX0WG0TB0f4M/oPN9+cSShKiQ6+MBT10=;
-        b=OPN9vAK9sNgPp5A/WCtYKZk4EXN1Xv0wFzNPosFQBrGLKCNlgDFMXSLTi1DzTXcVvQ
-         U5mDF/rrsVKk3hj4upMkQ5Xu1yelPahQ3J3SjNu7gPE6TlyM5fwq1GNOiSRLh3WT2MN9
-         uJnP16gsogLc9kRrF/MY8ctXVS/nt59oIcTjh4apsEQcJAOa7fZ2I80LdFK8s6Zip30a
-         qIaYdbcw8KjjcfPwWG7haVmyFwgYW7+J5eHtdcJEXIUqW05F7kRcUh0UyJ5mdkPcsrat
-         IniktyEOHY3TTukZNwemyKmcTbIqc+D69GiOb5YjGOwN+EEg5iFhXdswjOAI5DcweYD0
-         Ornw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Noo3UKIz6eixoV9cUm0tMx6veXOTEv85/CVG2wDCJ38=;
+        b=UtM/b9gMnxs0qhGhYvm0dCzTEBcPyD56PlS2vDQOS0By4j2Am1WDsZyWFgr4hmmz5P
+         IrowW9xsStMtxIkgiILSwEw+GNfWCaWKwL2q8Oi1C9eRYkixJEbUtgWYJjW3t5Rxa36A
+         SzTdju2Dm5LRl/ZOLJY18Hj6lGEmvA8ndDH18hsuEdmIiQCQCAmV2Gjv+2pesvP7+2Qv
+         6H3338FcjOKRXX8QTx+036jNunqFzPykurd6OsbVh3SBTmiwiN4S2Px0A/IWxPp8mXf7
+         e6efnjcqAHnxLpnEwNaFbnP4MusdpTYj1QOoG6jvtlqUl5QdDXp2DokwF/cE30RN5IIH
+         7L0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BhyBPgB9vs4GX0WG0TB0f4M/oPN9+cSShKiQ6+MBT10=;
-        b=j6yKjHEE7ViS2dpX2ReA5Ow3P2AYIMm8nXXJnYHa+mO+hrusSy/9Bvj6ivv5pUurF8
-         HD9PRkwcPCHeX6S6f0HOEyFOhKibjU0LzsnUSMv6+gEhqKmMJ6M0VPOkqb8T4YIhWwUs
-         QO5/Y/s6C2fotAdLbFyzZN47jX/2cppIaOGZliEDWM9JW2rxoyQ/MaScL6hffAvm9/ox
-         Xdqli7+53jW1hYbaeSS470/ESUNAPy8LDbTXfe+XZWzzlC/cMhT9yXJz9d88AoXRvNNy
-         xPSi11gTQsBXzK6LXmUcEjDVZnBHq78uOE0J9q+Q8ToHm6z1qKIM5rcXv2/FI241Bo9Y
-         qEpA==
-X-Gm-Message-State: AOAM5322X/xv5xd4iGha1iOLdmNyuitw28FSaVTv1JW8NDNMD+cR/ZRR
-        Asrwr1j8XUTgm9oeReBk2GPozQ==
-X-Google-Smtp-Source: ABdhPJzu82wH9CRZsiCU2R+ocLOX+gu3BxWXYAGsPmOfOmqbjHOVa4PINfNYscUgauOLun5/lvakdw==
-X-Received: by 2002:a7b:ce86:: with SMTP id q6mr2557860wmj.163.1599640619750;
-        Wed, 09 Sep 2020 01:36:59 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id a127sm2812203wmh.34.2020.09.09.01.36.58
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Noo3UKIz6eixoV9cUm0tMx6veXOTEv85/CVG2wDCJ38=;
+        b=V7+4xDIBgMQwYQcygevwGpPJrLvqTyTI/sSfV4GygpOhllaChyVAmjPOC6jExVgaR9
+         8ijT2wp/WeqjpxopMJFaelWd8U/z9qHyR6HAji7tcIY2hIyoT7RP12kwco8LcxiTw4KK
+         /rlrP2wtMYYSRssjoqNV+Ezlzg6UTlbFFEkDAOPLDMhsud51X115YeYcCKCr4PQUQh5z
+         0f0XckxvLauYPm5AqT1D8t1bmWtqTiE8s+acDJJeoHoHdK7rzYqAkl2WOZaRt5bdRza1
+         mU69SmZo2ovNWCz0aOe/9EY1Rn2uwld6Oz3UvX6enRpPkBPGCXXLSDkruHxI9RnlmwdT
+         QYcQ==
+X-Gm-Message-State: AOAM531CHt5zMi05CHU692iiOYEjsVoVCj+zgZ8TzbWjhBwIEK/DFecQ
+        1rZzmVyHe4+5+XoWj0hIsk8=
+X-Google-Smtp-Source: ABdhPJzBZz2+PKiWmK6INFr2pATT9j+pYM10EJr6sKSqPVyoiyX2wA2Goe6ItgZnnBD5ScGJJbQH2A==
+X-Received: by 2002:a17:906:4cc7:: with SMTP id q7mr2599870ejt.437.1599640636594;
+        Wed, 09 Sep 2020 01:37:16 -0700 (PDT)
+Received: from felia ([2001:16b8:2d44:6000:6108:df55:7b8e:67d4])
+        by smtp.gmail.com with ESMTPSA id g19sm1344680ejz.5.2020.09.09.01.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 01:36:58 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 10:36:53 +0200
-From:   Marco Elver <elver@google.com>
-To:     David Gow <davidgow@google.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Randy Dunlap <rd.dunlab@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>, Tim Bird <Tim.Bird@sony.com>,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: kunit: Add naming guidelines
-Message-ID: <20200909083653.GA620870@elver.google.com>
-References: <20200909051631.2960347-1-davidgow@google.com>
+        Wed, 09 Sep 2020 01:37:15 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 9 Sep 2020 10:37:14 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     John Mathew <john.mathew@unikie.com>
+cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        willy@infradead.org, valentin.schneider@arm.com
+Subject: Re: [RFC PATCH v8 0/3] Add scheduler overview documentation
+In-Reply-To: <20200902162632.10271-1-john.mathew@unikie.com>
+Message-ID: <alpine.DEB.2.21.2009090959530.5622@felia>
+References: <20200902162632.10271-1-john.mathew@unikie.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909051631.2960347-1-davidgow@google.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:16PM -0700, David Gow wrote:
-> As discussed in [1], KUnit tests have hitherto not had a particularly
-> consistent naming scheme. This adds documentation outlining how tests
-> and test suites should be named, including how those names should be
-> used in Kconfig entries and filenames.
-> 
-> [1]:
-> https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
-> 
-> Signed-off-by: David Gow <davidgow@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
-> 
-> This is v2 of the KUnit test nomenclature guidelines. The guidelines have
-> changed a bit in response to the discussion on the v1 thread which came
-> about after plumbers. The major change is that the filename suffix is
-> now "_test", with "_kunit" permitted where it conflicts. There are also
-> some other exceptions carved out around existing tests, and very
-> non-unit-like tests.
-> 
-> Changelog:
-> 
-> v2:
-> - Rewrote the filename section to use "_test" as a suffix, and focus on
->   module names, not filenames.
-> - Add a motivating introduction, which also calls out existing tests and
->   tests which cause problems when run automatically (long running,
->   flaky tests) as reasons to avoid the guidelines.
-> - Talk about including the type of test in the suite name, but only if
->   theres an actual confict. (And update the example for this).
-> 
-> v1:
-> https://lore.kernel.org/linux-kselftest/20200702071416.1780522-1-davidgow@google.com/
-> - Fixed a bit of space/tab confusion in the index (Thanks, Randy)
-> - Added some more examples (and some test case examples).
-> - Added some examples of what not to call subsystems and suites.
-> - No longer explicitly require "If unsure, put N" in Kconfig entries.
-> - Minor formatting changes
-> 
-> RFC:
-> https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
-> - Initial version
-> 
-> 
-> The result is a little bit weaker than the previous versions, but
-> hopefully will let us get the areas we agree on down.
-> 
-> -- David
-> 
-> 
->  Documentation/dev-tools/kunit/index.rst |   1 +
->  Documentation/dev-tools/kunit/style.rst | 207 ++++++++++++++++++++++++
->  2 files changed, 208 insertions(+)
->  create mode 100644 Documentation/dev-tools/kunit/style.rst
-> 
-> diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
-> index e93606ecfb01..c234a3ab3c34 100644
-> --- a/Documentation/dev-tools/kunit/index.rst
-> +++ b/Documentation/dev-tools/kunit/index.rst
-> @@ -11,6 +11,7 @@ KUnit - Unit Testing for the Linux Kernel
->  	usage
->  	kunit-tool
->  	api/index
-> +	style
->  	faq
->  
->  What is KUnit?
-> diff --git a/Documentation/dev-tools/kunit/style.rst b/Documentation/dev-tools/kunit/style.rst
-> new file mode 100644
-> index 000000000000..c001ea1cd87d
-> --- /dev/null
-> +++ b/Documentation/dev-tools/kunit/style.rst
-> @@ -0,0 +1,207 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===========================
-> +Test Style and Nomenclature
-> +===========================
-> +
-> +To make finding, writing, and using KUnit tests as simple as possible, it's
-> +strongly encouraged that they are named and written according to the guidelines
-> +below. While it's possible to write KUnit tests which do not follow these rules,
-> +they may break some tooling, may conflict with other tests, and may not be run
-> +automatically by testing systems.
-> +
-> +It's recommended that you only deviate from these guidelines when:
-> +
-> +1. Porting tests to KUnit which are already known with an existing name, or
-> +2. Writing tests which would cause serious problems if automatically run (e.g.,
-> +   nonderministically producing false positives or negatives, or taking an
 
-s/nonderministically/nondeterministically/ (or non-deterministically?)
 
-> +   extremely long time to run).
-[...]
-> +Test File and Module Names
-> +==========================
-> +
-> +KUnit tests can often be compiled as a module. These modules should be named
-> +after the test suite, followed by ``_test``. If this is likely to conflict with
-> +non-KUnit tests, the suffic ``_kunit`` can also be used.
+On Wed, 2 Sep 2020, John Mathew wrote:
 
-s/suffic/suffix/
+> This patch series updates the scheduler documentation to add more topics
+> wrt to scheduler overview. New sections are added to provide a brief
+> overview of the kernel structs used by the scheduler, scheduler invocation,
+> and context switch. Previous version of the patch was reviewed at:
+> https://lore.kernel.org/lkml/20200527084421.4673-1-John.Mathew@unikie.com/
+>
 
-> +The easiest way of achieving this is to name the file containing the test suite
-> +``<suite>_test.c`` (or, as above, ``<suite>_kunit.c``). This file should be
-> +placed next to the code under test.
-> +
-> +If the suite name contains some or all of the name of the test's parent
-> +directory, it may make sense to modify the source filename to reduce redundancy.
-> +For example, a ``foo_firmware`` suite could be in the ``foo/firmware_test.c``
-> +file.
+John, here is some first feedback to get the ball rolling:
 
-Reviewed-by: Marco Elver <elver@google.com>
+I tried to apply your patches on v5.9-rc4, and I got those warnings:
 
-Thank you!
+Applying: docs: scheduler: Restructure scheduler documentation.
+.git/rebase-apply/patch:30: new blank line at EOF.
++
+.git/rebase-apply/patch:137: new blank line at EOF.
++
+warning: 2 lines add whitespace errors.
+Applying: docs: scheduler: Add scheduler overview documentation
+.git/rebase-apply/patch:73: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
+Applying: docs: scheduler: Add introduction to scheduler context-switch
+.git/rebase-apply/patch:153: new blank line at EOF.
++
+.git/rebase-apply/patch:260: new blank line at EOF.
++
+warning: 2 lines add whitespace errors.
+
+
+You might want to look into this. I also checked that the patch also 
+applies on linux-next, i.e., next-20200908; so, it does not clash in an 
+obvious way with other changes at the moment.
+
+I did run checkpatch.pl and it warned about:
+WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+
+No action required here. 
+
+
+Documentation generation (make htmldocs) shows these two new warnings with 
+your patches applied to v5.9-rc4:
+
+  ./kernel/sched/core.c:17: WARNING: Definition list ends without a blank 
+line; unexpected unindent.
+  ./kernel/sched/core.c:21: WARNING: Unexpected indentation.
+
+
+You might want to put those minor fixes on your remaining TODO list for 
+this patchset as well.
+
+I will continue to comment with more editorial points in the next hours 
+and days, while proof-reading your additions to the documentation.
+
+
+Lukas
