@@ -2,118 +2,120 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E5EC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8206CC2BC11
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2792145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420DD20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u1A3ot8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXLzG0CC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgIIC5r (ORCPT
+        id S1729449AbgIIC7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44128 "EHLO
+        Tue, 8 Sep 2020 22:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgIIC5g (ORCPT
+        with ESMTP id S1726714AbgIIC7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:57:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099BEC061573;
-        Tue,  8 Sep 2020 19:57:34 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x123so855512pfc.7;
-        Tue, 08 Sep 2020 19:57:34 -0700 (PDT)
+        Tue, 8 Sep 2020 22:59:31 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056F3C061573;
+        Tue,  8 Sep 2020 19:59:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 5so999209pgl.4;
+        Tue, 08 Sep 2020 19:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6Ci4JG02FAd7t2hb7z9AKMELCxudpUg5ze3327gd91Y=;
-        b=u1A3ot8Ky7B2j9GgvIOk9jfuL8tdo9WyRMr8t9ugobDiQR196NOocxCyUE2qeLsy9f
-         eA85NvUbNVXPTTJlbQtJg2ytBP2SLANU7Jjm/kGwmiidjSbb2Pb/U7JMA6+963A52BwE
-         4hhEh/MevUxjxgKqTCGD2QiMvTj2cVEN6aopW84VuV3moCDJWH0C8aieeiFIc5UXx01Q
-         XcCWUrNjkeTxdIEA8/GW0Vq3bT9FF6GGBNMZI79UxT6gI6V7Dd8CNv29hR98eoWv4/Wx
-         TnzntkA6kH4v+3VW21eqo4otD7ZnuYBYYu7Gz2e+vTwxGSGYTLjlWFvCHaEgCvjGMvYS
-         jcGw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Tp4bbytIV3MCk9Tk4/Dcp87bEHrVbZ661Kr/3La1Mzw=;
+        b=BXLzG0CCg8YsEc/oa74A1IAubX08MzTTwjX3ERrPica6/CzeaP+L0rn27XGSfd/Prv
+         1tGWI90koY3PhMaZtS9WknbIdljle39k7zdDNYea+OD4aqSa9hp4qaXr3sGr4ANb5VZa
+         GyjGvBX/rEQJUmmZR6SWnldR+PD62bSLjVHX1/1IvVLWfilBnd9Cvat4V7yAWWO5PRPJ
+         27iynbyZTsjYFYWYZYLNObcfD4pr3RI7UomsdfezTOpVv+Z71MsBAMTXqXWJBDhqkbBl
+         hewfqhgHbwhf/aqfYNxgxCS4fO2yujrAs6yHtw0OdY7znKewN1CVDKqmkGFJWUOlFMhd
+         bhGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=6Ci4JG02FAd7t2hb7z9AKMELCxudpUg5ze3327gd91Y=;
-        b=L3GgezGOC3cLPBsGETRKL/RSfkSmFP7ZdvJzGcU/Rv1UiR8LCEUPatdbuuQC59XqjU
-         HoTz1GIIsBxLpeSeAb+7PklU+S2cqEt50iip3xuSv8Ip54CiV9YAMhcCQWBgUCaRewE+
-         Byluwu4N3skYWoAfV64/8/0bFAYACQnmVwq5UICZi/64oL4N+mauJ+eWiMk9E59GmEQ1
-         8DJGJTQ8uFHHNWemagEdWgnbmDGa78tT7XHp7W0Q8sXgGaEAz5jT7I/xsApOeMi1AmX4
-         JYPi0DL4rphbI2yOOVT8TRA33pkTllmIsTF2Qlnfyl1gDT6J7w3E31kpBHnNRkmzmSCt
-         WT2Q==
-X-Gm-Message-State: AOAM532Pt+gG8FmGkUgCSS48dTicbLRKUPw4P0dCy43fq8JI/VYxh2Lp
-        EccAsQC2Z23NXMBsM2fyJe6DD3cviLI=
-X-Google-Smtp-Source: ABdhPJy9r3B86GKGUKXdY2u00hxgmHa5G1Fs6cZ1Avi+W/4ehJwNJ6YKLerD4CUUGZKUidURW1i6zg==
-X-Received: by 2002:a65:6707:: with SMTP id u7mr1295575pgf.449.1599620250966;
-        Tue, 08 Sep 2020 19:57:30 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id l9sm556063pgg.29.2020.09.08.19.57.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Sep 2020 19:57:30 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Paul K ." <kronenpj@kronenpj.dyndns.org>
-Subject: [PATCH RESEND 2/3] KVM: SVM: Move svm_complete_interrupts() into svm_vcpu_run()
-Date:   Wed,  9 Sep 2020 10:57:16 +0800
-Message-Id: <1599620237-13156-2-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599620237-13156-1-git-send-email-wanpengli@tencent.com>
-References: <1599620237-13156-1-git-send-email-wanpengli@tencent.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Tp4bbytIV3MCk9Tk4/Dcp87bEHrVbZ661Kr/3La1Mzw=;
+        b=FQXZ5cr4z2G4xksXWAiVUHLHK6ZbbntGYtrYBb5IhwqrUHwase54pmhJT8lH4mx872
+         xytOOjpKePdjEqVteuJGBj7p4kqHyPX/Tf2pnlxLqkBUtr4andwdqK1OoShqXV4PcFq7
+         AgY7MFQ7YRCdJANYUDiNVGe6jn8GJRLEu3Ob1u9XrIO5gslSEo8uyRh5Hj2bzFV4h2QY
+         mKKdchR+qt9ttuWYnE2T0R6KL31VMz9pYNyw+hqYIpmwqLwXwGjZ+JhNMVyRaM5Tf3FG
+         ukt/EwHAYYZyoQY5+DChxN3KfEzDsYsxWiPqkYtZ2Oqx4Ni8iEB2+tbXcmd89Ev5Wwxi
+         zjVA==
+X-Gm-Message-State: AOAM531UuFPAgUiXl/m2/OA4enpYzzpM45A5AG+xn5SQSfdwllgQclf4
+        OT2zQiIO2GLcpKiExdqVYQwVJ0Hdi3FzHG9k
+X-Google-Smtp-Source: ABdhPJy6hCj+lJaBzifhBxZCkz9qq1bH+dxXTHRmupp1dQ+tjy7/i6gvzc5Ux5ZUvy5YbEMKVZ43Jw==
+X-Received: by 2002:a63:fe06:: with SMTP id p6mr1321871pgh.337.1599620369318;
+        Tue, 08 Sep 2020 19:59:29 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id r123sm737300pfc.187.2020.09.08.19.59.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 08 Sep 2020 19:59:28 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 19:59:22 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
+        benh@kernel.crashing.org, brendanhiggins@google.com,
+        dmitry.torokhov@gmail.com, robh+dt@kernel.org, wsa@kernel.org,
+        ryan_chen@aspeedtech.com
+Subject: Re: [PATCH v2 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+Message-ID: <20200909025921.GA3449@taoren-ubuntu-R90MNF91>
+References: <20200908200101.64974-1-eajames@linux.ibm.com>
+ <20200908200101.64974-4-eajames@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908200101.64974-4-eajames@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Tue, Sep 08, 2020 at 03:00:59PM -0500, Eddie James wrote:
+> Mask the IRQ status to only the bits that the driver checks. This
+> prevents excessive driver warnings when operating in slave mode
+> when additional bits are set that the driver doesn't handle.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Moving svm_complete_interrupts() into svm_vcpu_run() which can align VMX 
-and SVM with respect to completing interrupts.
+Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Paul K. <kronenpj@kronenpj.dyndns.org>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/svm/svm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c61bc3b..74bcf0a 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2938,8 +2938,6 @@ static int handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- 	if (npt_enabled)
- 		vcpu->arch.cr3 = svm->vmcb->save.cr3;
- 
--	svm_complete_interrupts(svm);
--
- 	if (is_guest_mode(vcpu)) {
- 		int vmexit;
- 
-@@ -3530,6 +3528,8 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 		     SVM_EXIT_EXCP_BASE + MC_VECTOR))
- 		svm_handle_mce(svm);
- 
-+	svm_complete_interrupts(svm);
-+
- 	vmcb_mark_all_clean(svm->vmcb);
- 	return exit_fastpath;
- }
--- 
-2.7.4
-
+> ---
+>  drivers/i2c/busses/i2c-aspeed.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+> index 31268074c422..2a388911038a 100644
+> --- a/drivers/i2c/busses/i2c-aspeed.c
+> +++ b/drivers/i2c/busses/i2c-aspeed.c
+> @@ -69,6 +69,7 @@
+>   * These share bit definitions, so use the same values for the enable &
+>   * status bits.
+>   */
+> +#define ASPEED_I2CD_INTR_ALL				0xf000ffff
+>  #define ASPEED_I2CD_INTR_SDA_DL_TIMEOUT			BIT(14)
+>  #define ASPEED_I2CD_INTR_BUS_RECOVER_DONE		BIT(13)
+>  #define ASPEED_I2CD_INTR_SLAVE_MATCH			BIT(7)
+> @@ -604,6 +605,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+>  	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+>  	       bus->base + ASPEED_I2C_INTR_STS_REG);
+>  	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+> +	irq_received &= ASPEED_I2CD_INTR_ALL;
+>  	irq_remaining = irq_received;
+>  
+>  #if IS_ENABLED(CONFIG_I2C_SLAVE)
+> -- 
+> 2.26.2
+> 
