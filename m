@@ -2,123 +2,451 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BD1C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3523CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54DF521919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="gxZgtexX";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="RKRwV/ks"
+	by mail.kernel.org (Postfix) with ESMTP id E59AA21D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgIII6Y (ORCPT
+        id S1730104AbgIII6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:58:24 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:45446 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728617AbgIII6N (ORCPT
+        Wed, 9 Sep 2020 04:58:35 -0400
+Received: from mail-io1-f80.google.com ([209.85.166.80]:50190 "EHLO
+        mail-io1-f80.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729622AbgIII6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:58:13 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0898tNbG025026;
-        Wed, 9 Sep 2020 01:58:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=pfpt0220; bh=oDjxk/Pwx4lnXY6bw/qX5PO3ZgTzOr8+criizktwdAU=;
- b=gxZgtexXdps+leQXaGt9roZEr+k4Kclvu0drh1i1iE4d5DjPet4FFSvCN4FoRdB1VlfC
- tiQrIecTGW/++ham3CsTbOsepXlFdU65qgETzhQ8B/f8gIfXoKy21Jb3YahuK+R+mtTP
- 8jsBo9e/wcmpz1jSYMATRoa2/08r8ZFtqEyCunp19Kafu+eEVwpieX+MgtCePusHgwV2
- l6geHHZb4rHhBV/VftENfQobzcTGUQUACkCh28YZ+ddzUn+U8ZHG2o+z6a8SXkCjyGVo
- oUDUlgpls47GvncpzyyeuMLvdDfaO+PQZYvEUqb5HF/zlh1JykBL/62NMZ16VYPvdNs1 /g== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 33c81py2n4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 01:58:08 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
- 2020 01:58:07 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.104)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 9 Sep 2020 01:58:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fJNVvqHU6gyCpgSiJZBvBMkQyl3c8hAAaxYfw1waR/bwUGSHbW96aULs96PB6ILth57Y2JrSF3whgukhKIpPKqTP8grURp7idyUNfSzKylUBvEKqHdBTjJvKKBcyOQqxiASBDgUSGAiA7tfR+g9p2x+hjPHq03coz26lOJ3EgbDbBSJgc6fvwl0Slj8xWvtJz8mS+JTGt8WmlgIG9E0Chri2T6RuQTwEA5sc0rqqpc+ZGhiOJVL9RZNQLVTi1NcWPqxiTINu5idqBuol29UQPQfodny29Vi1Jx96T6QGpG6mH+7BOnoymXYUrrAQ26K6egY89fxlhCygfsjBg81OXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oDjxk/Pwx4lnXY6bw/qX5PO3ZgTzOr8+criizktwdAU=;
- b=ijlJHiXDmj1UrHs9/peV+QlGB662Wrb7qhSruemExsYeFVPfHWP2STQlx7o3UrUwyAAUtTaZSe0pBYha4EHYt3y6qDfpIcmpzevUnLln6FvzrK/B45PJYq87HNqFQnTAKnt2obe6u1WKlmjE87Q/tGp6w5VmigegiPZ0Je9xwNgdx9XHk2i41pry1bxsKy8BN0FYhcGp5LGNKyp0uCjFi1Lo4toLAuCWVSWWvpPu5FFMtlUzCVWsJhhe1bpEJpElnrAku/jP3T+SemRNvf7J8zVEqNR5hpoJYfxxQ2G6TV14vDS04U4rO+xfPidDNh8zksZm212KSQ0MHBqrCzRCJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oDjxk/Pwx4lnXY6bw/qX5PO3ZgTzOr8+criizktwdAU=;
- b=RKRwV/ksAhlsbkXv0MxOMjq5kh3uuXBUwM/6yV9gD0c8E5yMq7u4+fkYqKiT1gXBANxt4SyFUYaC4wxXCYAYwlQ64pAeT+8KavLMSP2u38YsMyc5yyjL1iRPduiJO9rfb59E6aVmAZ1cx8R0q8lVPEmFeLzrhZCLZvUYJvaB0Kg=
-Received: from DM6PR18MB3052.namprd18.prod.outlook.com (2603:10b6:5:167::19)
- by DM5PR1801MB1867.namprd18.prod.outlook.com (2603:10b6:4:6c::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Wed, 9 Sep
- 2020 08:58:04 +0000
-Received: from DM6PR18MB3052.namprd18.prod.outlook.com
- ([fe80::905a:ebb4:369c:ae1b]) by DM6PR18MB3052.namprd18.prod.outlook.com
- ([fe80::905a:ebb4:369c:ae1b%7]) with mapi id 15.20.3348.019; Wed, 9 Sep 2020
- 08:58:04 +0000
-From:   Nilesh Javali <njavali@marvell.com>
-To:     "lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: [PATCH 1/5] scsi/qla4xxx: Convert to SPDX license identifiers
-Thread-Topic: Re: [PATCH 1/5] scsi/qla4xxx: Convert to SPDX license
- identifiers
-Thread-Index: AdaGhtFqhP3YXnOVRQez8UtuoI+8VA==
-Date:   Wed, 9 Sep 2020 08:58:04 +0000
-Message-ID: <DM6PR18MB3052C2975B3E76FA6B575CE7AF260@DM6PR18MB3052.namprd18.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=marvell.com;
-x-originating-ip: [117.220.251.152]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e27349c4-797d-46ca-f12f-08d8549e76bd
-x-ms-traffictypediagnostic: DM5PR1801MB1867:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR1801MB18673369BCADE0602DC35B11AF260@DM5PR1801MB1867.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZsBqZYSDbiLcM6GRUE1u2/ZtpC16ZCUV97Ig4k4sTungJT3FBO9a4QM4z/O6ayQSGtaFUqlZgf8F463+tVZOExYQNMEP4MKEG7E+R0tXedMRsZN9ddTxX3jb1X1dMbn6c27g4IwsqbbP9Sl6302uxUi4lF8tYttE3Bhfb2rTFJm8Ko4hzNey/ncxPZ424ZA/uQetoyMG2GA7ghU6miP7hkqvjLJjRzm3Yk9myEx1yhTjRg2PDuvqLOd/718401ysxahFFFJlMPj9FkzHqCI1zSyZhq7MF4YqaBi87u+EQ2iTWFg1RSqnAXxaaWq1ZLw8nDNMedCYqBnXWKYn991TjQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB3052.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(9686003)(33656002)(8676002)(2906002)(19618925003)(316002)(6506007)(5660300002)(6916009)(71200400001)(8936002)(4270600006)(558084003)(54906003)(26005)(55016002)(478600001)(7696005)(4326008)(66946007)(76116006)(66476007)(66446008)(52536014)(186003)(66556008)(86362001)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 5jaSmZC6u/0xiqlgkR0BFqobUP6qcvh/pP6+48nUibFSQwON/fa2j4SOPUMNVvdCtv7Tuf+A8TSCTvna66n6p9ENdmh84CDiFP8jSf5ViUR5P4VZ3mGO6wPRMTNwaFw1ubRw9oTSBGgBvM7yY1jQH8LbS3fL61CWIC8fdmcnCxWe+ePdVNf5nkn/EhBWqcjGjHPU5/q1WgOLLqGPYu8uE3mn0HJYPCa+jUtyEq9DZN7G02B4BeMDoT+VBJAwxO38cUvv5MJgIphi2+j4NEgpOgWR78yWcyuQ9SA0Pf/H7KFwbfEj887JnEvxWMrUxUiWYoh+iJfML2W3zR9dkdrG1CFk4/YRP3cSSxeWYG4cCRE3IgX0GlaoQ9ZFrf8GRtnuyHFsTV7oJ1hfmp+JEquXPynzLjoDJC03bn57edG6R6rV+7dOianxYbkcSbKg08WikzSyNMoegFOiYQjWCzNI8asykXBVadHjb2ONQPrp4Xt/0Vp4/PyzDYeG5FLfE9m3amC6WeuY/R3Iu/WFxHV6kVcxZAyuhXqJxcVtOE5cfZx8fAP155Fw0sdDBzNtCyPPA73q+wb0TIEXBG0WQuSr4lZTOrTEC7pApa4gFV3XNwXzVv5XtNS8NcXP+wLBWJYF4jB/cnLMnuaCebovwmkXpA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Sep 2020 04:58:23 -0400
+Received: by mail-io1-f80.google.com with SMTP id b16so1475821iod.17
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:58:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=a82XEKuwQtRdR0+zY4now1TJNGu7MBTSY6oVedJsmNg=;
+        b=Yiu2oALPvRo3/17Ec5apTAndehY1VPj6Qe1FdvNsIlgBt/EwR5wUI1w82250hjHsnv
+         OI0T6q5TkRxhqfc+Y8bZDglrz6MFuLyloWmx85eWdhfniWrk95bHN88/ibiESZ4MxUHi
+         GMWoaDbWRB3ZiTQTRFHp+2jaU55tQwnkRhntReIr6dL2o6/lMIM24FCEg7sqDH/175PV
+         4xIzuy3qUygs956RVaT0LH5gORzS3PeWnVNU7AbIKNctR7YGvpfhU7rPdm89diowXXgh
+         8E2/7pnJ7drBgyWU6cKzQy0ZsL64cye3L4EX3iNQbPk2bYnwpbB4aqvbAi4NP4HqI4rv
+         Tvzw==
+X-Gm-Message-State: AOAM533yt9yGw95ScdOHX0n8eIHv4d5at78hDBdsRMB0LDuFfsLIqZww
+        +ZdtaJAnNw0OAmuVmMN03tQvrqqH6/lor2UXo6fZOE4Btc49
+X-Google-Smtp-Source: ABdhPJy7nD98ztksJNjatjTdIQCiip7e6DR50zAgnagmjr8wDg6w7zGHM3qNS1kjxOLosM6V4x1eL9PVx6y4HTOj5Rt+zCO1w9gB
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR18MB3052.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e27349c4-797d-46ca-f12f-08d8549e76bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2020 08:58:04.6220
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgOY89d5JN4RJ24cX0vF0o3jrCO+8W0oJha9Ngl30qapZO6B/kqmwagkmLSyH474arxEQ0n57BvO3kcrZ4nQCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1801MB1867
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
+X-Received: by 2002:a02:11c2:: with SMTP id 185mr2973916jaf.35.1599641900890;
+ Wed, 09 Sep 2020 01:58:20 -0700 (PDT)
+Date:   Wed, 09 Sep 2020 01:58:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000045446005aedda747@google.com>
+Subject: possible deadlock in snd_ctl_notify
+From:   syzbot <syzbot+a04707b50020dd3fe3f7@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, dan.carpenter@oracle.com,
+        linux-kernel@vger.kernel.org, o-takashi@sakamocchi.jp,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Nilesh Javali <njavali@marvell.com>
+Hello,
 
+syzbot found the following issue on:
+
+HEAD commit:    dff9f829 Add linux-next specific files for 20200908
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f43229900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
+dashboard link: https://syzkaller.appspot.com/bug?extid=a04707b50020dd3fe3f7
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a04707b50020dd3fe3f7@syzkaller.appspotmail.com
+
+=====================================================
+WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
+5.9.0-rc4-next-20200908-syzkaller #0 Not tainted
+-----------------------------------------------------
+syz-executor.3/8556 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+ffff888214db8760 (&card->ctl_files_rwlock){.+.+}-{2:2}, at: snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+
+and this task is already holding:
+ffff888214dc2108 (&group->lock){..-.}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:379 [inline]
+ffff888214dc2108 (&group->lock){..-.}-{2:2}, at: snd_pcm_group_lock_irq sound/core/pcm_native.c:97 [inline]
+ffff888214dc2108 (&group->lock){..-.}-{2:2}, at: snd_pcm_stream_lock_irq+0x8e/0xb0 sound/core/pcm_native.c:136
+which would create a new lock dependency:
+ (&group->lock){..-.}-{2:2} -> (&card->ctl_files_rwlock){.+.+}-{2:2}
+
+but this new dependency connects a SOFTIRQ-irq-safe lock:
+ (&group->lock){..-.}-{2:2}
+
+... which became SOFTIRQ-irq-safe at:
+  lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x94/0xd0 kernel/locking/spinlock.c:159
+  _snd_pcm_stream_lock_irqsave+0x9f/0xd0 sound/core/pcm_native.c:170
+  snd_pcm_period_elapsed+0x24/0x250 sound/core/pcm_lib.c:1799
+  loopback_jiffies_timer_function+0x1a8/0x220 sound/drivers/aloop.c:669
+  call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
+  expire_timers kernel/time/timer.c:1458 [inline]
+  __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
+  __run_timers kernel/time/timer.c:1736 [inline]
+  run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
+  __do_softirq+0x1f7/0xa91 kernel/softirq.c:298
+  asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+  __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+  run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+  do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
+  invoke_softirq kernel/softirq.c:393 [inline]
+  __irq_exit_rcu kernel/softirq.c:423 [inline]
+  irq_exit_rcu+0x235/0x280 kernel/softirq.c:435
+  sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
+  asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
+  unwind_next_frame+0xc51/0x1f90 arch/x86/kernel/unwind_orc.c:543
+  arch_stack_walk+0x81/0xf0 arch/x86/kernel/stacktrace.c:25
+  stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
+  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+  kasan_set_track mm/kasan/common.c:56 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc+0x27c/0x480 mm/slab.c:3664
+  kmalloc include/linux/slab.h:559 [inline]
+  tomoyo_realpath_from_path+0xc3/0x620 security/tomoyo/realpath.c:254
+  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+  tomoyo_path_perm+0x212/0x3f0 security/tomoyo/file.c:822
+  security_inode_getattr+0xcf/0x140 security/security.c:1278
+  vfs_getattr fs/stat.c:121 [inline]
+  vfs_statx+0x170/0x390 fs/stat.c:206
+  vfs_lstat include/linux/fs.h:3186 [inline]
+  __do_sys_newlstat+0x91/0x110 fs/stat.c:374
+  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+to a SOFTIRQ-irq-unsafe lock:
+ (&card->ctl_files_rwlock){.+.+}-{2:2}
+
+... which became SOFTIRQ-irq-unsafe at:
+...
+  lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+  __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+  _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
+  snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+  snd_ctl_notify+0x8f/0xb0 sound/core/control.c:181
+  __snd_ctl_add_replace+0x638/0x800 sound/core/control.c:382
+  snd_ctl_add_replace+0x76/0x130 sound/core/control.c:399
+  snd_card_dummy_new_mixer sound/drivers/dummy.c:885 [inline]
+  snd_dummy_probe+0xbbf/0x1050 sound/drivers/dummy.c:1080
+  platform_drv_probe+0x87/0x140 drivers/base/platform.c:747
+  really_probe+0x282/0x9f0 drivers/base/dd.c:553
+  driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:738
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:844
+  bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+  __device_attach+0x228/0x470 drivers/base/dd.c:912
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+  device_add+0xb17/0x1c40 drivers/base/core.c:2926
+  platform_device_add+0x34f/0x6d0 drivers/base/platform.c:597
+  platform_device_register_full+0x38c/0x4e0 drivers/base/platform.c:720
+  platform_device_register_resndata include/linux/platform_device.h:131 [inline]
+  platform_device_register_simple include/linux/platform_device.h:160 [inline]
+  alsa_card_dummy_init+0x1cc/0x2e0 sound/drivers/dummy.c:1168
+  do_one_initcall+0x10a/0x7b0 init/main.c:1204
+  do_initcall_level init/main.c:1277 [inline]
+  do_initcalls init/main.c:1293 [inline]
+  do_basic_setup init/main.c:1313 [inline]
+  kernel_init_freeable+0x5e9/0x66d init/main.c:1512
+  kernel_init+0xd/0x1c0 init/main.c:1402
+  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+other info that might help us debug this:
+
+ Possible interrupt unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&card->ctl_files_rwlock);
+                               local_irq_disable();
+                               lock(&group->lock);
+                               lock(&card->ctl_files_rwlock);
+  <Interrupt>
+    lock(&group->lock);
+
+ *** DEADLOCK ***
+
+1 lock held by syz-executor.3/8556:
+ #0: ffff888214dc2108 (&group->lock){..-.}-{2:2}, at: spin_lock_irq include/linux/spinlock.h:379 [inline]
+ #0: ffff888214dc2108 (&group->lock){..-.}-{2:2}, at: snd_pcm_group_lock_irq sound/core/pcm_native.c:97 [inline]
+ #0: ffff888214dc2108 (&group->lock){..-.}-{2:2}, at: snd_pcm_stream_lock_irq+0x8e/0xb0 sound/core/pcm_native.c:136
+
+the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
+-> (&group->lock){..-.}-{2:2} {
+   IN-SOFTIRQ-W at:
+                    lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+                    __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+                    _raw_spin_lock_irqsave+0x94/0xd0 kernel/locking/spinlock.c:159
+                    _snd_pcm_stream_lock_irqsave+0x9f/0xd0 sound/core/pcm_native.c:170
+                    snd_pcm_period_elapsed+0x24/0x250 sound/core/pcm_lib.c:1799
+                    loopback_jiffies_timer_function+0x1a8/0x220 sound/drivers/aloop.c:669
+                    call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
+                    expire_timers kernel/time/timer.c:1458 [inline]
+                    __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
+                    __run_timers kernel/time/timer.c:1736 [inline]
+                    run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
+                    __do_softirq+0x1f7/0xa91 kernel/softirq.c:298
+                    asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+                    __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+                    run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+                    do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
+                    invoke_softirq kernel/softirq.c:393 [inline]
+                    __irq_exit_rcu kernel/softirq.c:423 [inline]
+                    irq_exit_rcu+0x235/0x280 kernel/softirq.c:435
+                    sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
+                    asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
+                    unwind_next_frame+0xc51/0x1f90 arch/x86/kernel/unwind_orc.c:543
+                    arch_stack_walk+0x81/0xf0 arch/x86/kernel/stacktrace.c:25
+                    stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
+                    kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+                    kasan_set_track mm/kasan/common.c:56 [inline]
+                    __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+                    __do_kmalloc mm/slab.c:3655 [inline]
+                    __kmalloc+0x27c/0x480 mm/slab.c:3664
+                    kmalloc include/linux/slab.h:559 [inline]
+                    tomoyo_realpath_from_path+0xc3/0x620 security/tomoyo/realpath.c:254
+                    tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+                    tomoyo_path_perm+0x212/0x3f0 security/tomoyo/file.c:822
+                    security_inode_getattr+0xcf/0x140 security/security.c:1278
+                    vfs_getattr fs/stat.c:121 [inline]
+                    vfs_statx+0x170/0x390 fs/stat.c:206
+                    vfs_lstat include/linux/fs.h:3186 [inline]
+                    __do_sys_newlstat+0x91/0x110 fs/stat.c:374
+                    do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+                    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+   INITIAL USE at:
+                   lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+                   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
+                   _raw_spin_lock_irq+0x94/0xd0 kernel/locking/spinlock.c:167
+                   spin_lock_irq include/linux/spinlock.h:379 [inline]
+                   snd_pcm_group_lock_irq sound/core/pcm_native.c:97 [inline]
+                   snd_pcm_stream_lock_irq sound/core/pcm_native.c:136 [inline]
+                   snd_pcm_hw_params+0x12a/0x1880 sound/core/pcm_native.c:672
+                   snd_pcm_kernel_ioctl+0xd1/0x240 sound/core/pcm_native.c:3325
+                   snd_pcm_oss_change_params_locked+0x130c/0x3430 sound/core/oss/pcm_oss.c:941
+                   snd_pcm_oss_change_params sound/core/oss/pcm_oss.c:1084 [inline]
+                   snd_pcm_oss_get_active_substream+0x164/0x1c0 sound/core/oss/pcm_oss.c:1101
+                   snd_pcm_oss_get_channels sound/core/oss/pcm_oss.c:1792 [inline]
+                   snd_pcm_oss_set_channels+0x244/0x380 sound/core/oss/pcm_oss.c:1784
+                   snd_pcm_oss_ioctl+0x17d5/0x3370 sound/core/oss/pcm_oss.c:2606
+                   vfs_ioctl fs/ioctl.c:48 [inline]
+                   __do_sys_ioctl fs/ioctl.c:753 [inline]
+                   __se_sys_ioctl fs/ioctl.c:739 [inline]
+                   __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:739
+                   do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+                   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ }
+ ... key      at: [<ffffffff8d607200>] __key.7+0x0/0x40
+ ... acquired at:
+   lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+   __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+   _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
+   snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+   snd_ctl_notify+0x8f/0xb0 sound/core/control.c:181
+   loopback_check_format sound/drivers/aloop.c:358 [inline]
+   loopback_trigger+0x10df/0x1990 sound/drivers/aloop.c:387
+   snd_pcm_do_start sound/core/pcm_native.c:1350 [inline]
+   snd_pcm_do_start+0xb1/0xf0 sound/core/pcm_native.c:1345
+   snd_pcm_action_single sound/core/pcm_native.c:1207 [inline]
+   snd_pcm_action+0xc8/0x170 sound/core/pcm_native.c:1290
+   __snd_pcm_lib_xfer+0x1202/0x1a90 sound/core/pcm_lib.c:2247
+   snd_pcm_oss_write3+0x107/0x320 sound/core/oss/pcm_oss.c:1221
+   io_playback_transfer+0x27e/0x330 sound/core/oss/io.c:47
+   snd_pcm_plug_write_transfer+0x2cd/0x3f0 sound/core/oss/pcm_plugin.c:624
+   snd_pcm_oss_write2+0x245/0x3f0 sound/core/oss/pcm_oss.c:1353
+   snd_pcm_oss_write1 sound/core/oss/pcm_oss.c:1419 [inline]
+   snd_pcm_oss_write+0x705/0x940 sound/core/oss/pcm_oss.c:2765
+   vfs_write+0x28e/0x700 fs/read_write.c:593
+   ksys_write+0x12d/0x250 fs/read_write.c:648
+   do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+
+the dependencies between the lock to be acquired
+ and SOFTIRQ-irq-unsafe lock:
+-> (&card->ctl_files_rwlock){.+.+}-{2:2} {
+   HARDIRQ-ON-R at:
+                    lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+                    __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+                    _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
+                    snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+                    snd_ctl_notify+0x8f/0xb0 sound/core/control.c:181
+                    __snd_ctl_add_replace+0x638/0x800 sound/core/control.c:382
+                    snd_ctl_add_replace+0x76/0x130 sound/core/control.c:399
+                    snd_card_dummy_new_mixer sound/drivers/dummy.c:885 [inline]
+                    snd_dummy_probe+0xbbf/0x1050 sound/drivers/dummy.c:1080
+                    platform_drv_probe+0x87/0x140 drivers/base/platform.c:747
+                    really_probe+0x282/0x9f0 drivers/base/dd.c:553
+                    driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:738
+                    __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:844
+                    bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+                    __device_attach+0x228/0x470 drivers/base/dd.c:912
+                    bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+                    device_add+0xb17/0x1c40 drivers/base/core.c:2926
+                    platform_device_add+0x34f/0x6d0 drivers/base/platform.c:597
+                    platform_device_register_full+0x38c/0x4e0 drivers/base/platform.c:720
+                    platform_device_register_resndata include/linux/platform_device.h:131 [inline]
+                    platform_device_register_simple include/linux/platform_device.h:160 [inline]
+                    alsa_card_dummy_init+0x1cc/0x2e0 sound/drivers/dummy.c:1168
+                    do_one_initcall+0x10a/0x7b0 init/main.c:1204
+                    do_initcall_level init/main.c:1277 [inline]
+                    do_initcalls init/main.c:1293 [inline]
+                    do_basic_setup init/main.c:1313 [inline]
+                    kernel_init_freeable+0x5e9/0x66d init/main.c:1512
+                    kernel_init+0xd/0x1c0 init/main.c:1402
+                    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+   SOFTIRQ-ON-R at:
+                    lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+                    __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+                    _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
+                    snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+                    snd_ctl_notify+0x8f/0xb0 sound/core/control.c:181
+                    __snd_ctl_add_replace+0x638/0x800 sound/core/control.c:382
+                    snd_ctl_add_replace+0x76/0x130 sound/core/control.c:399
+                    snd_card_dummy_new_mixer sound/drivers/dummy.c:885 [inline]
+                    snd_dummy_probe+0xbbf/0x1050 sound/drivers/dummy.c:1080
+                    platform_drv_probe+0x87/0x140 drivers/base/platform.c:747
+                    really_probe+0x282/0x9f0 drivers/base/dd.c:553
+                    driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:738
+                    __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:844
+                    bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+                    __device_attach+0x228/0x470 drivers/base/dd.c:912
+                    bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+                    device_add+0xb17/0x1c40 drivers/base/core.c:2926
+                    platform_device_add+0x34f/0x6d0 drivers/base/platform.c:597
+                    platform_device_register_full+0x38c/0x4e0 drivers/base/platform.c:720
+                    platform_device_register_resndata include/linux/platform_device.h:131 [inline]
+                    platform_device_register_simple include/linux/platform_device.h:160 [inline]
+                    alsa_card_dummy_init+0x1cc/0x2e0 sound/drivers/dummy.c:1168
+                    do_one_initcall+0x10a/0x7b0 init/main.c:1204
+                    do_initcall_level init/main.c:1277 [inline]
+                    do_initcalls init/main.c:1293 [inline]
+                    do_basic_setup init/main.c:1313 [inline]
+                    kernel_init_freeable+0x5e9/0x66d init/main.c:1512
+                    kernel_init+0xd/0x1c0 init/main.c:1402
+                    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+   INITIAL USE at:
+                   lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+                   __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+                   _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
+                   snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+                   snd_ctl_notify+0x8f/0xb0 sound/core/control.c:181
+                   __snd_ctl_add_replace+0x638/0x800 sound/core/control.c:382
+                   snd_ctl_add_replace+0x76/0x130 sound/core/control.c:399
+                   snd_card_dummy_new_mixer sound/drivers/dummy.c:885 [inline]
+                   snd_dummy_probe+0xbbf/0x1050 sound/drivers/dummy.c:1080
+                   platform_drv_probe+0x87/0x140 drivers/base/platform.c:747
+                   really_probe+0x282/0x9f0 drivers/base/dd.c:553
+                   driver_probe_device+0xfe/0x1d0 drivers/base/dd.c:738
+                   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:844
+                   bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:431
+                   __device_attach+0x228/0x470 drivers/base/dd.c:912
+                   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+                   device_add+0xb17/0x1c40 drivers/base/core.c:2926
+                   platform_device_add+0x34f/0x6d0 drivers/base/platform.c:597
+                   platform_device_register_full+0x38c/0x4e0 drivers/base/platform.c:720
+                   platform_device_register_resndata include/linux/platform_device.h:131 [inline]
+                   platform_device_register_simple include/linux/platform_device.h:160 [inline]
+                   alsa_card_dummy_init+0x1cc/0x2e0 sound/drivers/dummy.c:1168
+                   do_one_initcall+0x10a/0x7b0 init/main.c:1204
+                   do_initcall_level init/main.c:1277 [inline]
+                   do_initcalls init/main.c:1293 [inline]
+                   do_basic_setup init/main.c:1313 [inline]
+                   kernel_init_freeable+0x5e9/0x66d init/main.c:1512
+                   kernel_init+0xd/0x1c0 init/main.c:1402
+                   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+   (null) at:
+general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 0 PID: 8556 Comm: syz-executor.3 Not tainted 5.9.0-rc4-next-20200908-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:print_lock_trace kernel/locking/lockdep.c:1751 [inline]
+RIP: 0010:print_lock_class_header kernel/locking/lockdep.c:2240 [inline]
+RIP: 0010:print_shortest_lock_dependencies.cold+0x110/0x2af kernel/locking/lockdep.c:2263
+Code: 48 8b 04 24 48 c1 e8 03 42 80 3c 20 00 74 09 48 8b 3c 24 e8 dd fb de f9 48 8b 04 24 48 8b 00 48 8d 78 14 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 22 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
+RSP: 0018:ffffc900056f73a0 EFLAGS: 00010003
+RAX: 0000000000000001 RBX: ffffc900056f7558 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: ffffffff815bc817 RDI: 0000000000000015
+RBP: ffffc900056f7558 R08: 0000000000000004 R09: ffff8880ae620f8b
+R10: 0000000000000000 R11: 6c6c756e28202020 R12: dffffc0000000000
+R13: ffffffff8c6de340 R14: 0000000000000009 R15: 0000000000000000
+FS:  00007f3778278700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b33223000 CR3: 00000000a78fa000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ print_bad_irq_dependency kernel/locking/lockdep.c:2402 [inline]
+ check_irq_usage.cold+0x46b/0x5b0 kernel/locking/lockdep.c:2634
+ check_prev_add kernel/locking/lockdep.c:2823 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2944 [inline]
+ validate_chain kernel/locking/lockdep.c:3562 [inline]
+ __lock_acquire+0x2800/0x55d0 kernel/locking/lockdep.c:4796
+ lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
+ __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
+ _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
+ snd_ctl_notify.part.0+0x36/0x550 sound/core/control.c:153
+ snd_ctl_notify+0x8f/0xb0 sound/core/control.c:181
+ loopback_check_format sound/drivers/aloop.c:358 [inline]
+ loopback_trigger+0x10df/0x1990 sound/drivers/aloop.c:387
+ snd_pcm_do_start sound/core/pcm_native.c:1350 [inline]
+ snd_pcm_do_start+0xb1/0xf0 sound/core/pcm_native.c:1345
+ snd_pcm_action_single sound/core/pcm_native.c:1207 [inline]
+ snd_pcm_action+0xc8/0x170 sound/core/pcm_native.c:1290
+ __snd_pcm_lib_xfer+0x1202/0x1a90 sound/core/pcm_lib.c:2247
+ snd_pcm_oss_write3+0x107/0x320 sound/core/oss/pcm_oss.c:1221
+ io_playback_transfer+0x27e/0x330 sound/core/oss/io.c:47
+ snd_pcm_plug_write_transfer+0x2cd/0x3f0 sound/core/oss/pcm_plugin.c:624
+ snd_pcm_oss_write2+0x245/0x3f0 sound/core/oss/pcm_oss.c:1353
+ snd_pcm_oss_write1 sound/core/oss/pcm_oss.c:1419 [inline]
+ snd_pcm_oss_write+0x705/0x940 sound/core/oss/pcm_oss.c:2765
+ vfs_write+0x28e/0x700 fs/read_write.c:593
+ ksys_write+0x12d/0x250 fs/read_write.c:648
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f3778277c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000038f40 RCX: 000000000045d5b9
+RDX: 0000000000000080 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
+R13: 00007ffe90897b0f R14: 00007f37782789c0 R15: 000000000118cf4c
+Modules linked in:
+---[ end trace f8fb172cba9857a8 ]---
+RIP: 0010:print_lock_trace kernel/locking/lockdep.c:1751 [inline]
+RIP: 0010:print_lock_class_header kernel/locking/lockdep.c:2240 [inline]
+RIP: 0010:print_shortest_lock_dependencies.cold+0x110/0x2af kernel/locking/lockdep.c:2263
+Code: 48 8b 04 24 48 c1 e8 03 42 80 3c 20 00 74 09 48 8b 3c 24 e8 dd fb de f9 48 8b 04 24 48 8b 00 48 8d 78 14 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 22 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
+RSP: 0018:ffffc900056f73a0 EFLAGS: 00010003
+RAX: 0000000000000001 RBX: ffffc900056f7558 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: ffffffff815bc817 RDI: 0000000000000015
+RBP: ffffc900056f7558 R08: 0000000000000004 R09: ffff8880ae620f8b
+R10: 0000000000000000 R11: 6c6c756e28202020 R12: dffffc0000000000
+R13: ffffffff8c6de340 R14: 0000000000000009 R15: 0000000000000000
+FS:  00007f3778278700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b33223000 CR3: 00000000a78fa000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
