@@ -2,178 +2,146 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896C3C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50C5C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4928720C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XkshsgiE"
+	by mail.kernel.org (Postfix) with ESMTP id 7DCF9206F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgIILs0 (ORCPT
+        id S1728663AbgIILut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:48:26 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729986AbgIILoV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:44:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599651857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=VMMi7EKygLSRL4gNx8fYOq7nfSc3N9XfpNyRkxlAIKA=;
-        b=XkshsgiEHfxa07uCNvuqrl9xwQI48Rlz81sV6v5hwd1Gxf2C6UR0lp5h4Ymj4ouUoENOfZ
-        /Ju/t9PWR2lK/umNPkOnD7hPiSU0UI4bh+RvQlnMACahJ79C/r71jG0zr+IfnqJ6QS7uU8
-        YsNIeI6IeU4wPjSzCXSJvE1y/t45vho=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-cfL4s0SrNeqjjKE-ej8KmQ-1; Wed, 09 Sep 2020 07:44:15 -0400
-X-MC-Unique: cfL4s0SrNeqjjKE-ej8KmQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60CB080732B;
-        Wed,  9 Sep 2020 11:44:14 +0000 (UTC)
-Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B78E37E8D9;
-        Wed,  9 Sep 2020 11:44:12 +0000 (UTC)
-Subject: Re: [RFC 5/5] mm, page_alloc: disable pcplists during page isolation
-To:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <20200907163628.26495-1-vbabka@suse.cz>
- <20200907163628.26495-6-vbabka@suse.cz>
- <d5d5ef64-b239-0640-5640-75c7a3c78584@suse.cz>
- <20200909113647.GG7348@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <c417a996-67d8-8935-ce57-a5dac4408691@redhat.com>
-Date:   Wed, 9 Sep 2020 13:44:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 9 Sep 2020 07:50:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37836 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729860AbgIILnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:43:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 74FF6AE8C;
+        Wed,  9 Sep 2020 11:11:32 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 3B62E1E12E1; Wed,  9 Sep 2020 13:11:30 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 13:11:30 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wangle6@huawei.com
+Subject: Re: Question: Why is there no notification when a file is opened
+ using filp_open()?
+Message-ID: <20200909111130.GD24207@quack2.suse.cz>
+References: <25817189-49a7-c64f-26ee-78d4a27496b6@huawei.com>
+ <CAOQ4uxhejJzjKLZCt=b87KAX0sC3RAZ2FHEZbu4188Ar-bkmOg@mail.gmail.com>
+ <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com>
+ <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
+ <20200908171859.GA29953@casper.infradead.org>
+ <CAOQ4uxjX2GAJhD70=6SmwdXPH6TuOzGugtdYupDjLLywC2H5Ag@mail.gmail.com>
+ <96abf6e3-2442-8871-c9f3-be981c0a1965@huawei.com>
+ <CAOQ4uxjNcjFtQuc9AeWgEO7G3CeGm3vL_wK6UhbHkxOZuRYOeQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200909113647.GG7348@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxjNcjFtQuc9AeWgEO7G3CeGm3vL_wK6UhbHkxOZuRYOeQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.09.20 13:36, Michal Hocko wrote:
-> On Wed 09-09-20 12:48:54, Vlastimil Babka wrote:
->> Here's a version that will apply on top of next-20200908. The first 4 patches need no change.
->>
->> ----8<----
->> >From 8febc17272b8e8b378e2e5ea5e76b2616f029c5b Mon Sep 17 00:00:00 2001
->> From: Vlastimil Babka <vbabka@suse.cz>
->> Date: Mon, 7 Sep 2020 17:20:39 +0200
->> Subject: [PATCH] mm, page_alloc: disable pcplists during page isolation
->>
->> Page isolation can race with process freeing pages to pcplists in a way that
->> a page from isolated pageblock can end up on pcplist. This can be fixed by
->> repeated draining of pcplists, as done by patch "mm/memory_hotplug: drain
->> per-cpu pages again during memory offline" in [1].
->>
->> David and Michal would prefer that this race was closed in a way that callers
->> of page isolation don't need to care about drain. David suggested disabling
->> pcplists usage completely during page isolation, instead of repeatedly draining
->> them.
->>
->> To achieve this without adding special cases in alloc/free fastpath, we can use
->> the same 'trick' as boot pagesets - when pcp->high is 0, any pcplist addition
->> will be immediately flushed.
->>
->> The race can thus be closed by setting pcp->high to 0 and draining pcplists
->> once in start_isolate_page_range(). The draining will serialize after processes
->> that already disabled interrupts and read the old value of pcp->high in
->> free_unref_page_commit(), and processes that have not yet disabled interrupts,
->> will observe pcp->high == 0 when they are rescheduled, and skip pcplists.
->> This guarantees no stray pages on pcplists in zones where isolation happens.
->>
->> We can use the variable zone->nr_isolate_pageblock (protected by zone->lock)
->> to detect transitions from 0 to 1 (to change pcp->high to 0 and issue drain)
->> and from 1 to 0 (to restore original pcp->high and batch values cached in
->> struct zone). We have to avoid external updates to high and batch by taking
->> pcp_batch_high_lock. To allow multiple isolations in parallel, change this
->> lock from mutex to rwsem.
->>
->> For callers that pair start_isolate_page_range() with
->> undo_isolated_page_range() properly, this is transparent. Currently that's
->> alloc_contig_range(). __offline_pages() doesn't call undo_isolated_page_range()
->> in the succes case, so it has to be carful to handle restoring pcp->high and batch
->> and unlocking pcp_batch_high_lock.
+On Wed 09-09-20 10:36:57, Amir Goldstein wrote:
+> On Wed, Sep 9, 2020 at 10:00 AM Xiaoming Ni <nixiaoming@huawei.com> wrote:
+> >
+> > On 2020/9/9 11:44, Amir Goldstein wrote:
+> > > On Tue, Sep 8, 2020 at 8:19 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > >>
+> > >> On Tue, Sep 08, 2020 at 04:18:29PM +0300, Amir Goldstein wrote:
+> > >>> On Tue, Sep 8, 2020 at 3:53 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
+> > >>>> For example, in fs/coredump.c, do_coredump() calls filp_open() to
+> > >>>> generate core files.
+> > >>>> In this scenario, the fsnotify_open() notification is missing.
+> > >>>
+> > >>> I am not convinced that we should generate an event.
+> > >>> You will have to explain in what is the real world use case that requires this
+> > >>> event to be generated.
+> > >>
+> > >> Take the typical usage for fsnotify of a graphical file manager.
+> > >> It would be nice if the file manager showed a corefile as soon as it
+> > >> appeared in a directory rather than waiting until some other operation
+> > >> in that directory caused those directory contents to be refreshed.
+> > >
+> > > fsnotify_open() is not the correct notification for file managers IMO.
+> > > fsnotify_create() is and it will be called in this case.
+> > >
+> > > If the reason you are interested in open events is because you want
+> > > to monitor the entire filesystem then welcome to the future -
+> > > FAN_CREATE is supported since kernel v5.1.
+> > >
+> > > Is there another real life case you have in mind where you think users
+> > > should be able to get an open fd for a file that the kernel has opened?
+> > > Because that is what FAN_OPEN will do.
+> > >
+> >
+> > There are also cases where file is opened in read-only mode using
+> > filp_open().
+> >
+> > case1: nfsd4_init_recdir() call filp_open()
+> > filp_open()
+> > nfsd4_init_recdir() fs/nfsd/nfs4recover.c#L543
+> >
+> > L70: static char user_recovery_dirname[PATH_MAX] =
+> > "/var/lib/nfs/v4recovery";
+> > L543: nn->rec_file = filp_open(user_recovery_dirname, O_RDONLY |
+> > O_DIRECTORY, 0);
+> >
+> >
+> > case2: ima_read_policy()
+> > filp_open()
+> > kernel_read_file_from_path()  fs/exec.c#L1004
+> > ima_read_policy()  security/integrity/ima/ima_fs.c#L286
+> > ima_write_policy() security/integrity/ima/ima_fs.c#L335
+> > ima_measure_policy_ops   security/integrity/ima/ima_fs.c#L443
+> > sys_write()
+> >
+> > case3: use do_file_open_root() to open file
+> > do_file_open_root()
+> > file_open_root()   fs/open.c#L1159
+> > kernel_read_file_from_path_initns()  fs/exec.c#L1029
+> > fw_get_filesystem_firmware()  drivers/base/firmware_loader/main.c#L498
+> >
+> > Do we need to add fsnotify_open() in these scenarios?
 > 
-> I was hoping that it would be possible to have this completely hidden
-> inside start_isolate_page_range code path. If we need some sort of
-> disable_pcp_free/enable_pcp_free then it seems like a better fit to have
-> an explicit API for that (the naming would be obviously different
-> because we do not want to call out pcp free lists). I strongly suspect
-> that only the memory hotplug really cares for this hard guanrantee.
-> alloc_contig_range simply goes with EBUSY.
+> We do not *need* to add fsnotify_open() if there is no concrete use case
+> from real life that needs it.
+> 
+> Matthew gave an example of a real life use case and I explained why IMO
+> we don't need to add fsnotify_open() for the use case that he described.
+> 
+> If you want to add fsnotify_open() to any call site, please come up with
+> a real life use case - not a made up one, one that really exists and where
+> the open event is really needed.
+> 
+> grepping the code for callers of filp_open() is not enough.
 
-There will be different alloc_contig_range() demands in the future: try
-fast (e.g., loads of small CMA allocations) vs. try hard (e.g.,
-virtio-mem). We can add ways to specify that.
+Yeah. So in kernel, things are both ways. There are filp_open() users that
+do take care to manually generate fsnotify_open() event (most notably
+io_uring, exec, or do_handle_open) and there are others as Xiaoming found
+which just don't bother.  I'm not sure filp_open() should unconditionally
+generate fsnotify_open() event as IMO some of those notifications would be
+more confusing than useful.
 
+OTOH it is true that e.g. for core dumping we will generate other fsnotify
+events such as FSNOTIFY_CLOSE (which is generated in __fput()) so missing
+FSNOTIFY_OPEN is somewhat confusing. So having some consistency in this
+(either by generating FSNOTIFY_OPEN or by not generating FSNOTIFY_CLOSE)
+would be IMO desirable.
+
+								Honza
 -- 
-Thanks,
-
-David / dhildenb
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
