@@ -2,79 +2,70 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8185C2D0E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2B6C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D59421D20
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f2HMqAS5"
+	by mail.kernel.org (Postfix) with ESMTP id F324720EDD
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgIIDQg (ORCPT
+        id S1729296AbgIIDRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 23:16:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49629 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726002AbgIIDQf (ORCPT
+        Tue, 8 Sep 2020 23:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgIIDRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 23:16:35 -0400
-X-UUID: 9e7cc0b894ba4b14a27667a025a37425-20200909
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=D4akEY1UsIrLp2l32I4rH/2r4ZNkNg0urog1SmVJQy4=;
-        b=f2HMqAS5HdzGiqovALQY3IIbtKL3Vyr5hGlhiL/sOeABmvMNz2pIj3+bU7tho+cXO4lBoFbmBOtw34txCEsM8sJ8tW2XXSDq94rb477khaxWI0WbWxvCLRoWIb1t00QFAijp36TXvmdFbsrwNPHWhB2r3XOSWB79v+tKpBQQhfA=;
-X-UUID: 9e7cc0b894ba4b14a27667a025a37425-20200909
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1994703033; Wed, 09 Sep 2020 11:16:33 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs08n2.mediatek.inc
- (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
- 2020 11:16:31 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 9 Sep 2020 11:16:30 +0800
-Message-ID: <1599621279.2521.13.camel@mhfsdcap03>
-Subject: Re: [v1,1/3] dt-bindings: Add YAML schemas for Gen3 PCIe controller
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        <davem@davemloft.net>, <linux-pci@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>
-Date:   Wed, 9 Sep 2020 11:14:39 +0800
-In-Reply-To: <20200908200407.GA628520@bjorn-Precision-5520>
-References: <20200908200407.GA628520@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: 0EE92390ADB39B90B8C5C83EAD1CEFB6CD9D6181AF39723CDB849AC1378F8DBA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 8 Sep 2020 23:17:20 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F71C061573;
+        Tue,  8 Sep 2020 20:17:17 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3775D11E3E4C3;
+        Tue,  8 Sep 2020 20:00:30 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 20:17:16 -0700 (PDT)
+Message-Id: <20200908.201716.965139535841943259.davem@davemloft.net>
+To:     christophe.jaillet@wanadoo.fr
+Cc:     jes@trained-monkey.org, kuba@kernel.org, linux-hippi@sunsite.dk,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] hippi: switch from 'pci_' to 'dma_' API
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200908200839.323530-1-christophe.jaillet@wanadoo.fr>
+References: <20200908200839.323530-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: Mew version 6.8 on Emacs 27.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 08 Sep 2020 20:00:30 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA5LTA4IGF0IDE1OjA0IC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBNb24sIFNlcCAwNywgMjAyMCBhdCAwODowODo1MFBNICswODAwLCBKaWFuanVuIFdhbmcg
-d3JvdGU6DQo+ID4gQWRkIFlBTUwgc2NoZW1hcyBkb2N1bWVudGF0aW9uIGZvciBHZW4zIFBDSWUg
-Y29udHJvbGxlciBvbg0KPiA+IE1lZGlhVGVrIFNvQ3MuDQo+IA0KPiBQbGVhc2UgbWVudGlvbiAi
-bWVkaWF0ZWsiIGluIHRoZSBzdWJqZWN0IGxpbmUgc28gImdpdCBsb2cgLS1vbmVsaW5lIg0KPiBp
-cyBtb3JlIHVzZWZ1bC4NCj4gDQo+IFRoZSBjb252ZW50aW9uIChub3QgdW5pdmVyc2FsbHkgb2Jz
-ZXJ2ZWQpIHNlZW1zIHRvIGJlIHNvbWV0aGluZyBsaWtlOg0KPiANCj4gICBkdC1iaW5kaW5nczog
-UENJOiA8ZHJpdmVyLW5hbWU+OiBBZGQgWUFNTCBzY2hlbWENCg0KVGhhbmtzIGZvciB5b3VyIHJl
-dmlldywgSSB3aWxsIGZpeCBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQo=
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date: Tue,  8 Sep 2020 22:08:39 +0200
 
+> The wrappers in include/linux/pci-dma-compat.h should go away.
+> 
+> The patch has been generated with the coccinelle script below and has been
+> hand modified to replace GFP_ with a correct flag.
+> It has been compile tested.
+> 
+> When memory is allocated in 'rr_init_one()' GFP_KERNEL can be used because
+> it is a probe function and no spinlock is taken in the between.
+> 
+> When memory is allocated in 'rr_open()' GFP_KERNEL can be used because
+> it is a '.ndo_open' function (see struct net_device_ops) and no spinlock is
+> taken in the between.
+> '.ndo_open' functions are synchronized using the rtnl_lock() semaphore.
+ ...
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+Applied.
