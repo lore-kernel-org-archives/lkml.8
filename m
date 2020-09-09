@@ -2,104 +2,114 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A6AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3167C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B3A21532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D3D21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QWCA9gPZ"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TPNA/FdS";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="MeQLCKmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgIIHG3 (ORCPT
+        id S1726970AbgIIHHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIHG2 (ORCPT
+        Wed, 9 Sep 2020 03:07:37 -0400
+Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:47244
+        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725863AbgIIHHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:06:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE77C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=hCw8xGdlNdOCLWn3JTGudEyCmE42OPi648sQ0UReuL4=; b=QWCA9gPZCZ3wzIlKZV6poclcFq
-        LzfIY4lmnE8VjlKQlNvIxOZhHe41lSL2CEaz90i97YxxVXfVK2X9ipiCtBI5MxDA/GrklQLLksV9N
-        A+Npi3L42x5yATBqMul+YVCITK1IZThjOn0EUXnndO9qp7cPI0FFjw4jGkioLYG7yo+OIXJ90SVhh
-        p828BaX8dZFZEzYrjLX+PcMmEzTQ4QaFDIf9VTMHiOulzyKvRLp4LgQRkKE6IWheY0Qo2AZRcG4t/
-        E31RYqm6VXEyf9QSWC6uKFR7sdjlY3BZMedrpiAOMTsUbtVtomspvCxcQvlyn4mr8HghIktPWnf/d
-        Z5aMpAyA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFuBQ-0007rM-HR; Wed, 09 Sep 2020 07:06:20 +0000
-Date:   Wed, 9 Sep 2020 08:06:20 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Tom Murphy <murphyt7@tcd.ie>, intel-gfx@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
- dma-iommu
-Message-ID: <20200909070620.GB28245@infradead.org>
-References: <20200903201839.7327-1-murphyt7@tcd.ie>
- <20200903201839.7327-6-murphyt7@tcd.ie>
- <20200907070035.GA25114@infradead.org>
- <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
- <20200908053619.GA15418@infradead.org>
- <20200908055510.GA19078@infradead.org>
- <9655fdc9-6ea0-e4c1-e104-a9a8981ecb1e@linux.intel.com>
- <20200908062326.GB20774@infradead.org>
- <a10026ea-6de5-b7b1-80af-8000dfd4601b@linux.intel.com>
+        Wed, 9 Sep 2020 03:07:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599635255;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=IX0qpGF6RZPTD4fnxFnuXuw4dThJiaZOCS3toSRRGfU=;
+        b=TPNA/FdSr2vG4KNbVuQpTvGu1FRogAMbk5/k2kULKXll4KILO9mFdoMMx0/mI8Ql
+        MvJl+i2M+iOsqKVT1ZztRw04XJqu8E/s/bnwp9XRiSXyCdRg1aqegES/tEXqRakqg3m
+        HhTPyu3Z+/hMBMnSaRbV2jtuBluc7aVahYP+09Pc=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599635255;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=IX0qpGF6RZPTD4fnxFnuXuw4dThJiaZOCS3toSRRGfU=;
+        b=MeQLCKmyFc+vYpCWdcqKqQJW9hslp+y0LGqldyG0zd45UIMRP3Ai54MSOY8wdH1K
+        mOTfAHN9y9tWEqoOPBroUWIKWOQswpfq/Ma1bjBYB1/nLiv0TY2M9gF1ygszZ5UCyc5
+        XhP+hb6eP5vfQIG2NHwv3X6Xn/qZoiPbn2H4Ugbg=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a10026ea-6de5-b7b1-80af-8000dfd4601b@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 9 Sep 2020 07:07:34 +0000
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>
+Subject: Re: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to
+ llcc registers
+In-Reply-To: <CAD=FV=WsUopZPHJzHe1+pa=pzKQda0yQKUCtnPrni3Dmx7aV3g@mail.gmail.com>
+References: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
+ <CAD=FV=WsUopZPHJzHe1+pa=pzKQda0yQKUCtnPrni3Dmx7aV3g@mail.gmail.com>
+Message-ID: <0101017471b0ee7c-d406adca-451c-418d-a07e-e6edb1643177-000000@us-west-2.amazonses.com>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.09-54.240.27.11
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 09:43:09AM +0800, Lu Baolu wrote:
-> +       /*
-> +        * The Intel graphic device driver is used to assume that the
-> returned
-> +        * sg list is not combound. This blocks the efforts of converting
-> the
+Hi,
 
-This adds pointless overly long lines.
+On 2020-09-08 20:30, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Sep 7, 2020 at 10:36 PM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> --- a/include/linux/soc/qcom/llcc-qcom.h
+>> +++ b/include/linux/soc/qcom/llcc-qcom.h
+>> @@ -73,6 +73,7 @@ struct llcc_edac_reg_data {
+>>   * @bitmap: Bit map to track the active slice ids
+>>   * @offsets: Pointer to the bank offsets array
+>>   * @ecc_irq: interrupt for llcc cache error detection and reporting
+>> + * @need_llcc_config: check if llcc configuration is required
+>>   */
+>>  struct llcc_drv_data {
+>>         struct regmap *regmap;
+>> @@ -85,6 +86,7 @@ struct llcc_drv_data {
+>>         unsigned long *bitmap;
+>>         u32 *offsets;
+>>         int ecc_irq;
+>> +       bool need_llcc_config;
+> 
+> Do you really need to add this into "struct llcc_drv_data"?  You use
+> it once at probe time and you could just pass it in to
+> qcom_llcc_cfg_program(), or just pass the "struct qcom_llcc_config" to
+> qcom_llcc_cfg_program()?  It's not a huge deal, but it would make your
+> patch simpler and keep an extra element out of the include file.
+> 
 
-> +        * Intel IOMMU driver to dma-iommu api's. Add this quirk to make the
-> +        * device driver work and should be removed once it's fixed in i915
-> +        * driver.
-> +        */
-> +       if (dev_is_pci(dev) &&
-> +           to_pci_dev(dev)->vendor == PCI_VENDOR_ID_INTEL &&
-> +           (to_pci_dev(dev)->class >> 16) == PCI_BASE_CLASS_DISPLAY) {
-> +               for_each_sg(sg, s, nents, i) {
-> +                       unsigned int s_iova_off = sg_dma_address(s);
-> +                       unsigned int s_length = sg_dma_len(s);
-> +                       unsigned int s_iova_len = s->length;
-> +
-> +                       s->offset += s_iova_off;
-> +                       s->length = s_length;
-> +                       sg_dma_address(s) = dma_addr + s_iova_off;
-> +                       sg_dma_len(s) = s_length;
-> +                       dma_addr += s_iova_len;
-> +               }
-> +
-> +               return nents;
-> +       }
+I just kept it following how other properties were passed to
+qcom_llcc_cfg_program(), but yes its better to just pass
+qcom_llcc_config to qcom_llcc_cfg_program() so that any future
+additions also can use it, will change it in the next version.
 
-This wants an IS_ENABLED() check.  And probably a pr_once reminding
-of the workaround.
+> In any case:
+> 
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
