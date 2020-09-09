@@ -2,342 +2,125 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0979C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1692AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A59BD21973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C649B218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ePDBdc0t";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="hgm6HUo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgIII6p (ORCPT
+        id S1730166AbgIII70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:58:45 -0400
-Received: from mail-il1-f208.google.com ([209.85.166.208]:57099 "EHLO
-        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728617AbgIII6d (ORCPT
+        Wed, 9 Sep 2020 04:59:26 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:4050 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgIII7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:58:33 -0400
-Received: by mail-il1-f208.google.com with SMTP id w82so1473586ila.23
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:58:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Tn8IQgw/Dbm8DU2LG9nUT43aKJJbqo51ix0e4vMP6Cg=;
-        b=s2p3JRrOTaIG4jFJA3DSe4ugKwnYRuhVjragXaqq01nF3EPi5jKJsTSZ5caSuhqKxD
-         u8OSb41TRM5/qiLrkJQRaT+xTYS+c9XrVQMWfXblwMXqGBlorwhyxUxYwAD/LGjqnPB8
-         FGyPE6l9/PZ4q66rTvAG48Fnoobm//sRx/LFLaNtgZ5fQI7X4de73jFMJL56MdT971yi
-         spb3L+VXYsEkc4EuMQ7aLFsYSrMzGzst8L8nf3xz3csdb1hpz8COq62lvk+4hxuNzkrA
-         rJClvSghaW+i+xGMA742v4hVLJOljT1vlLsKUGMTB6igWTbzrEU1I6u5h7GK+nOlR8OF
-         yxUQ==
-X-Gm-Message-State: AOAM530i0GdpfklA7rIOuqkbvR7s1d2fJRqvT4hoDzP83skzXvfCAQgb
-        FrvvpujrficKyKZecvwH7NwCYGnhsQB0pFXey87jzU/q3/SM
-X-Google-Smtp-Source: ABdhPJwOmzIFyNVIvJDdw+OORA4IiOKhhwnZ+CKckHbbER5c+dreBVBFP7Oxudvo5eVMwprSOOsvoJLjP1yDz36XrARODHSoc4Un
+        Wed, 9 Sep 2020 04:59:24 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0898tdOd025151;
+        Wed, 9 Sep 2020 01:59:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=pfpt0220; bh=oDjxk/Pwx4lnXY6bw/qX5PO3ZgTzOr8+criizktwdAU=;
+ b=ePDBdc0tdbGLyfADDIkkwbiyaRY4H2c6VodBtRYN8phNDgztYtvnFCvTQv/rNVbwzJ+O
+ 9Z0jwqzQmi6NHRwE+5/07VryTO+Ven82oePoEj+stsIVn0Hw7QLH8WsUBaY4EupvXtmX
+ f2oAtfAGSjHGi8nVS8TjgX+vBp+q+M1UapBFRcy1v/ebruheBTMWJ2wk++UZiQ9RMkTT
+ URKJDEFKXEoqxe7CnHZXfAgtNzjlSDBGnd4VVf8Dt3+I1PZth/q6hoW6AG+2RdhGRZf5
+ njUvSHZGZsOQ1ozUqomWKjLCgGVLEIJQI//DxkBrt5xmk2KK3HuDSQqrQIFPbGf0xShg kA== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 33c81py2rv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 01:59:20 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
+ 2020 01:59:19 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
+ 2020 01:59:19 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.105)
+ by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 9 Sep 2020 01:59:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bs3iKW8M0bCwsP545GmbBGtxRuCgblfH9wHY4AnQaXzlb0k7CH2svCt/ch9TwlZENyczKrl47nHcC0x4wOIupnapZb+ahxDtFN3iGT+MvTueEW2Gc1iDk7J/YbobJUc2k3nMDApSduQ4Olt4sZ6qRd2Qh1lxrOOmOVqGnai1RTSf0VzUj1l2zeHweV3eacukx7HrT4vzVQ89wPFkVIupEz6hTqIFDvmQMvfbrCyBGn9MFVyECp2Vx4eJnFWB5z4K/7Og3d8bI5xoRk/bK965VMKQCWy0rMOv8Tk00qQRz3Bx2DTZ9L9PWtwbJ2i2cFMrQ8mQuOf5+yFLwDLQ/FtdBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oDjxk/Pwx4lnXY6bw/qX5PO3ZgTzOr8+criizktwdAU=;
+ b=O9wbtUzq01JhHjpPaO+9X/ZkGAyIXEFJ8peWT84bPosCq2rPvK1CzqLz8Shai86vlWGv4tIE+or9Zavi6jLNNZTiB61fekxi+7fzL7gKNIZZcNPFosGBiGZ2kNLf7GpZyq0OIy/8QvggvEcS7869V0F/yeFjepgqBdtUsScOnN3kxnVI/dNawt6mlxHZTreaVaY3ZikmgLQEN8KSEgcp7W+W8Ccc54nHWCuF9o+XevjdalRfeiK1H+BY1W9V0Mfdi3eZ1EXBPCCWCfc82ciFJ225y4TKLPsx4gTCedUB750Io8G0zVGndS5SBK3b7mPahR+qjBCLtip/xBdPTwAa1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oDjxk/Pwx4lnXY6bw/qX5PO3ZgTzOr8+criizktwdAU=;
+ b=hgm6HUo0/nOfJX0YRtr2Xc/kDoUzQabCLz9F0pqz1ALalwDrDPksC7fCmpr9kPwoQ+QLu/fP6QQEiNjukfF5FcTHScwj4IZeI54Cjo4wcQSX1PN/fHXXTqGI56U7sea2/v0p5fB38Q5TIctLz27GOGHwW4agt5Z01maKu9/safE=
+Received: from DM6PR18MB3052.namprd18.prod.outlook.com (2603:10b6:5:167::19)
+ by DM5PR1801MB1867.namprd18.prod.outlook.com (2603:10b6:4:6c::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Wed, 9 Sep
+ 2020 08:59:16 +0000
+Received: from DM6PR18MB3052.namprd18.prod.outlook.com
+ ([fe80::905a:ebb4:369c:ae1b]) by DM6PR18MB3052.namprd18.prod.outlook.com
+ ([fe80::905a:ebb4:369c:ae1b%7]) with mapi id 15.20.3348.019; Wed, 9 Sep 2020
+ 08:59:16 +0000
+From:   Nilesh Javali <njavali@marvell.com>
+To:     "lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>
+CC:     Igor Russkikh <irusskikh@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+Subject: Re: [PATCH 2/5] scsi/qla2xxx: Convert to SPDX license identifiers
+Thread-Topic: Re: [PATCH 2/5] scsi/qla2xxx: Convert to SPDX license
+ identifiers
+Thread-Index: AdaGh2WnpUkcu3KzTrqS1rJzTlIjxA==
+Date:   Wed, 9 Sep 2020 08:59:15 +0000
+Message-ID: <DM6PR18MB30522D4485EA11646B387235AF260@DM6PR18MB3052.namprd18.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=marvell.com;
+x-originating-ip: [117.220.251.152]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e2ed6b7f-33a4-401d-4dbf-08d8549ea14d
+x-ms-traffictypediagnostic: DM5PR1801MB1867:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR1801MB1867438934498E3AB20F03AFAF260@DM5PR1801MB1867.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nIeBrmaVC1I0h5LCPBekvED2eQBaUepAhs+rHanTDELGPGs8Q+uLdEc2iBG5cBBlMwAOlep7JsUwrDTON+5gSoBsu2vxD/2l7trHCi6RClNjkhd9P9vB+ttQmbXxoxj0elhA8ZO98C5iJbGq5ZBEiTPFZG3FzSeh/RKyygU+E5atRca6mk3E8dmpikbd6TLvOpB+Og3Ui9xCVpAC3MnmpAtCFYWG+Z8iXLUam4qiqaSy5lspB7BMTK3nD3NtMdFWrdq23IQtCZVPJn/wYr3Wejh9fBVZx5r0a7MxuqAAXW7uQvIPzKVfjXW4vbdds7u1RdjTCyp45zBqaC0boxC+Xg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB3052.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(9686003)(33656002)(8676002)(2906002)(19618925003)(316002)(6506007)(5660300002)(6916009)(71200400001)(8936002)(4270600006)(558084003)(54906003)(26005)(55016002)(478600001)(7696005)(4326008)(66946007)(76116006)(66476007)(66446008)(52536014)(186003)(66556008)(86362001)(64756008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 66irXwGhvr6YXY5p2cMIkiEtGDxT7cKpzVgwdeXfc3X8dvAEi5C2r5gD8qk/7K5C7o0AK3fUvhzlvYuWLjPAKvjPnF2D7pUaZVQMODQTtfMZ6Mb864P3kFJN35bV4lkYZFrbPGNUnRChwi/mdJhOqIN98poqlZRwWBGpJ3EPWPAMv1SkpJaieP6/ISJEMfbUPa3VTmxQGMOhdvzlustPskfvYJtCRuq4zi9x8Vpp4qgmB+Kz37ubFXQEEoe9vlgso3WjZNmVVp99CdOBCnIX2IIravnYVczMCUucMUQwNIqE9ljpMQJXGT7awWx7r6hazqMa+F10ISHdqD8SuocIZN2JL5E/cHL0GoTEWCMxeD+3GtRlsEj8j7tlbvJC2IBsH6dl17ScASZY9VXyzlsG+x5xZ6TP1vZmKjfbjvOmRUmGnQdRPr/ZOo9tTojHFQRpH3NLilmhWzUEeWK3sbHe9Lw/yOxEzweNiFbpcKlNXgkTxXO+r6bmnD+Uvb+mtotPxq7MIvqc227BWr8J4VZA5kslyXbBbC1VkCjFdQgMX3rcJ9vcdc/EbehRqNEEXBwszSsDmsItl7IzO6c8ytiQbN38f03c8hvoEtCb3lJ0tbeGMSGLK7uHWZe26PEMnosrwwuP5DkLDJGifXFp4hWdIw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:60c:: with SMTP id t12mr2815971ils.200.1599641910293;
- Wed, 09 Sep 2020 01:58:30 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 01:58:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d4b96a05aedda7e2@google.com>
-Subject: possible deadlock in send_sigio (2)
-From:   syzbot <syzbot+907b8537e3b0e55151fc@syzkaller.appspotmail.com>
-To:     bfields@fieldses.org, jlayton@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR18MB3052.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2ed6b7f-33a4-401d-4dbf-08d8549ea14d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2020 08:59:16.0169
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N8RpYED+/KwMRlv75/3Hegbm570/hwhxheWu7dCNTbw33kW9NbKN7qEtfU7mwL2haf1J4YYUB2AhJsAn/+sDnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1801MB1867
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    dff9f829 Add linux-next specific files for 20200908
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17521b35900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
-dashboard link: https://syzkaller.appspot.com/bug?extid=907b8537e3b0e55151fc
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+907b8537e3b0e55151fc@syzkaller.appspotmail.com
-
-=====================================================
-WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected
-5.9.0-rc4-next-20200908-syzkaller #0 Not tainted
------------------------------------------------------
-syz-executor.5/15112 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
-ffff8880a828e478 (&f->f_owner.lock){.+.?}-{2:2}, at: send_sigio+0x24/0x320 fs/fcntl.c:786
-
-and this task is already holding:
-ffff88809d98b9f0 (&new->fa_lock){....}-{2:2}, at: kill_fasync_rcu fs/fcntl.c:1002 [inline]
-ffff88809d98b9f0 (&new->fa_lock){....}-{2:2}, at: kill_fasync fs/fcntl.c:1023 [inline]
-ffff88809d98b9f0 (&new->fa_lock){....}-{2:2}, at: kill_fasync+0x14b/0x460 fs/fcntl.c:1016
-which would create a new lock dependency:
- (&new->fa_lock){....}-{2:2} -> (&f->f_owner.lock){.+.?}-{2:2}
-
-but this new dependency connects a SOFTIRQ-irq-safe lock:
- (fasync_lock){+.+.}-{2:2}
-
-... which became SOFTIRQ-irq-safe at:
-  lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:354 [inline]
-  fasync_remove_entry+0x2e/0x1f0 fs/fcntl.c:875
-  fasync_helper+0x9e/0xb0 fs/fcntl.c:983
-  __tty_fasync drivers/tty/tty_io.c:2126 [inline]
-  tty_release+0x16d/0xf60 drivers/tty/tty_io.c:1664
-  __fput+0x285/0x920 fs/file_table.c:281
-  task_work_run+0xdd/0x190 kernel/task_work.c:141
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_user_mode_loop kernel/entry/common.c:163 [inline]
-  exit_to_user_mode_prepare+0x1e2/0x1f0 kernel/entry/common.c:190
-  syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:265
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-to a SOFTIRQ-irq-unsafe lock:
- (&f->f_owner.lock){.+.?}-{2:2}
-
-... which became SOFTIRQ-irq-unsafe at:
-...
-  lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
-  __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
-  _raw_read_lock+0x36/0x70 kernel/locking/spinlock.c:223
-  send_sigurg+0x1e/0xa60 fs/fcntl.c:824
-  sk_send_sigurg+0x76/0x300 net/core/sock.c:2930
-  tcp_check_urg.isra.0+0x1f4/0x710 net/ipv4/tcp_input.c:5485
-  tcp_urg net/ipv4/tcp_input.c:5526 [inline]
-  tcp_rcv_established+0x10b9/0x1eb0 net/ipv4/tcp_input.c:5858
-  tcp_v4_do_rcv+0x5d1/0x870 net/ipv4/tcp_ipv4.c:1643
-  tcp_v4_rcv+0x2d10/0x3750 net/ipv4/tcp_ipv4.c:2025
-  ip_protocol_deliver_rcu+0x5c/0x880 net/ipv4/ip_input.c:204
-  ip_local_deliver_finish+0x20a/0x370 net/ipv4/ip_input.c:231
-  NF_HOOK include/linux/netfilter.h:301 [inline]
-  NF_HOOK include/linux/netfilter.h:295 [inline]
-  ip_local_deliver+0x1b3/0x200 net/ipv4/ip_input.c:252
-  dst_input include/net/dst.h:449 [inline]
-  ip_rcv_finish+0x1da/0x2f0 net/ipv4/ip_input.c:428
-  NF_HOOK include/linux/netfilter.h:301 [inline]
-  NF_HOOK include/linux/netfilter.h:295 [inline]
-  ip_rcv+0xaa/0xd0 net/ipv4/ip_input.c:539
-  __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5286
-  __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5400
-  process_backlog+0x2e1/0x8e0 net/core/dev.c:6242
-  napi_poll net/core/dev.c:6688 [inline]
-  net_rx_action+0x4f8/0xf90 net/core/dev.c:6758
-  __do_softirq+0x1f7/0xa91 kernel/softirq.c:298
-  run_ksoftirqd kernel/softirq.c:652 [inline]
-  run_ksoftirqd+0xcf/0x170 kernel/softirq.c:644
-  smpboot_thread_fn+0x655/0x9e0 kernel/smpboot.c:165
-  kthread+0x3af/0x4a0 kernel/kthread.c:292
-  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-other info that might help us debug this:
-
-Chain exists of:
-  fasync_lock --> &new->fa_lock --> &f->f_owner.lock
-
- Possible interrupt unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&f->f_owner.lock);
-                               local_irq_disable();
-                               lock(fasync_lock);
-                               lock(&new->fa_lock);
-  <Interrupt>
-    lock(fasync_lock);
-
- *** DEADLOCK ***
-
-8 locks held by syz-executor.5/15112:
- #0: ffff88809cee8160 (&evdev->mutex){+.+.}-{3:3}, at: evdev_write+0x1cd/0x750 drivers/input/evdev.c:513
- #1: ffff88809da12230 (&dev->event_lock){-...}-{2:2}, at: input_inject_event+0xa6/0x310 drivers/input/input.c:466
- #2: ffffffff89c68540 (rcu_read_lock){....}-{1:2}, at: is_event_supported drivers/input/input.c:53 [inline]
- #2: ffffffff89c68540 (rcu_read_lock){....}-{1:2}, at: is_event_supported drivers/input/input.c:50 [inline]
- #2: ffffffff89c68540 (rcu_read_lock){....}-{1:2}, at: input_inject_event+0x92/0x310 drivers/input/input.c:465
- #3: ffffffff89c68540 (rcu_read_lock){....}-{1:2}, at: input_pass_values.part.0+0x0/0x700 drivers/input/input.c:833
- #4: ffffffff89c68540 (rcu_read_lock){....}-{1:2}, at: evdev_events+0x55/0x330 drivers/input/evdev.c:297
- #5: ffff888097fef028 (&client->buffer_lock){....}-{2:2}, at: spin_lock include/linux/spinlock.h:354 [inline]
- #5: ffff888097fef028 (&client->buffer_lock){....}-{2:2}, at: evdev_pass_values+0x195/0xa30 drivers/input/evdev.c:262
- #6: ffffffff89c68540 (rcu_read_lock){....}-{1:2}, at: kill_fasync+0x3d/0x460 fs/fcntl.c:1021
- #7: ffff88809d98b9f0 (&new->fa_lock){....}-{2:2}, at: kill_fasync_rcu fs/fcntl.c:1002 [inline]
- #7: ffff88809d98b9f0 (&new->fa_lock){....}-{2:2}, at: kill_fasync fs/fcntl.c:1023 [inline]
- #7: ffff88809d98b9f0 (&new->fa_lock){....}-{2:2}, at: kill_fasync+0x14b/0x460 fs/fcntl.c:1016
-
-the dependencies between SOFTIRQ-irq-safe lock and the holding lock:
- -> (fasync_lock){+.+.}-{2:2} {
-    HARDIRQ-ON-W at:
-                      lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
-                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                      spin_lock include/linux/spinlock.h:354 [inline]
-                      fasync_remove_entry+0x2e/0x1f0 fs/fcntl.c:875
-                      fasync_helper+0x9e/0xb0 fs/fcntl.c:983
-                      __tty_fasync drivers/tty/tty_io.c:2126 [inline]
-                      tty_release+0x16d/0xf60 drivers/tty/tty_io.c:1664
-                      __fput+0x285/0x920 fs/file_table.c:281
-                      task_work_run+0xdd/0x190 kernel/task_work.c:141
-                      tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-                      exit_to_user_mode_loop kernel/entry/common.c:163 [inline]
-                      exit_to_user_mode_prepare+0x1e2/0x1f0 kernel/entry/common.c:190
-                      syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:265
-                      entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    SOFTIRQ-ON-W at:
-                      lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
-                      __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                      _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                      spin_lock include/linux/spinlock.h:354 [inline]
-                      fasync_remove_entry+0x2e/0x1f0 fs/fcntl.c:875
-                      fasync_helper+0x9e/0xb0 fs/fcntl.c:983
-                      __tty_fasync drivers/tty/tty_io.c:2126 [inline]
-                      tty_release+0x16d/0xf60 drivers/tty/tty_io.c:1664
-                      __fput+0x285/0x920 fs/file_table.c:281
-                      task_work_run+0xdd/0x190 kernel/task_work.c:141
-                      tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-                      exit_to_user_mode_loop kernel/entry/common.c:163 [inline]
-                      exit_to_user_mode_prepare+0x1e2/0x1f0 kernel/entry/common.c:190
-                      syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:265
-                      entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    INITIAL USE at:
-                     lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
-                     __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-                     _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
-                     spin_lock include/linux/spinlock.h:354 [inline]
-                     fasync_remove_entry+0x2e/0x1f0 fs/fcntl.c:875
-                     fasync_helper+0x9e/0xb0 fs/fcntl.c:983
-                     __tty_fasync drivers/tty/tty_io.c:2126 [inline]
-                     tty_release+0x16d/0xf60 drivers/tty/tty_io.c:1664
-                     __fput+0x285/0x920 fs/file_table.c:281
-                     task_work_run+0xdd/0x190 kernel/task_work.c:141
-                     tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-                     exit_to_user_mode_loop kernel/entry/common.c:163 [inline]
-                     exit_to_user_mode_prepare+0x1e2/0x1f0 kernel/entry/common.c:190
-                     syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:265
-                     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  }
-  ... key      at: [<ffffffff89d445f8>] fasync_lock+0x18/0x660
-  ... acquired at:
-   __raw_write_lock_irq include/linux/rwlock_api_smp.h:196 [inline]
-   _raw_write_lock_irq+0x94/0xd0 kernel/locking/spinlock.c:311
-   fasync_remove_entry+0xb6/0x1f0 fs/fcntl.c:880
-   fasync_helper+0x9e/0xb0 fs/fcntl.c:983
-   lease_modify fs/locks.c:1522 [inline]
-   lease_modify+0x28a/0x370 fs/locks.c:1509
-   locks_remove_lease fs/locks.c:2770 [inline]
-   locks_remove_file+0x2be/0x580 fs/locks.c:2795
-   __fput+0x1b8/0x920 fs/file_table.c:273
-   task_work_run+0xdd/0x190 kernel/task_work.c:141
-   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-   exit_to_user_mode_loop kernel/entry/common.c:163 [inline]
-   exit_to_user_mode_prepare+0x1e2/0x1f0 kernel/entry/common.c:190
-   syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:265
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
--> (&new->fa_lock){....}-{2:2} {
-   INITIAL USE at:
-                   lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
-                   __raw_write_lock_irq include/linux/rwlock_api_smp.h:196 [inline]
-                   _raw_write_lock_irq+0x94/0xd0 kernel/locking/spinlock.c:311
-                   fasync_remove_entry+0xb6/0x1f0 fs/fcntl.c:880
-                   fasync_helper+0x9e/0xb0 fs/fcntl.c:983
-                   lease_modify fs/locks.c:1522 [inline]
-                   lease_modify+0x28a/0x370 fs/locks.c:1509
-                   locks_remove_lease fs/locks.c:2770 [inline]
-                   locks_remove_file+0x2be/0x580 fs/locks.c:2795
-                   __fput+0x1b8/0x920 fs/file_table.c:273
-                   task_work_run+0xdd/0x190 kernel/task_work.c:141
-                   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-                   exit_to_user_mode_loop kernel/entry/common.c:163 [inline]
-                   exit_to_user_mode_prepare+0x1e2/0x1f0 kernel/entry/common.c:190
-                   syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:265
-                   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-   (null) at:
-general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 0 PID: 15112 Comm: syz-executor.5 Not tainted 5.9.0-rc4-next-20200908-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:print_lock_trace kernel/locking/lockdep.c:1751 [inline]
-RIP: 0010:print_lock_class_header kernel/locking/lockdep.c:2240 [inline]
-RIP: 0010:print_shortest_lock_dependencies.cold+0x110/0x2af kernel/locking/lockdep.c:2263
-Code: 48 8b 04 24 48 c1 e8 03 42 80 3c 20 00 74 09 48 8b 3c 24 e8 dd fb de f9 48 8b 04 24 48 8b 00 48 8d 78 14 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 22 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
-RSP: 0018:ffffc900057875c0 EFLAGS: 00010003
-RAX: 0000000000000001 RBX: ffffc90005787718 RCX: 0000000000000000
-RDX: 0000000000000002 RSI: ffffffff815bc817 RDI: 0000000000000015
-RBP: ffffc90005787718 R08: 0000000000000004 R09: ffff8880ae620f8b
-R10: 0000000000000000 R11: 6c6c756e28202020 R12: dffffc0000000000
-R13: ffffffff8c709bb8 R14: 0000000000000009 R15: 0000000000000000
-FS:  00007f7930053700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004e9cf0 CR3: 000000008f8ef000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- print_bad_irq_dependency kernel/locking/lockdep.c:2395 [inline]
- check_irq_usage.cold+0x42d/0x5b0 kernel/locking/lockdep.c:2634
- check_prev_add kernel/locking/lockdep.c:2823 [inline]
- check_prevs_add kernel/locking/lockdep.c:2944 [inline]
- validate_chain kernel/locking/lockdep.c:3562 [inline]
- __lock_acquire+0x2800/0x55d0 kernel/locking/lockdep.c:4796
- lock_acquire+0x1f3/0xaf0 kernel/locking/lockdep.c:5398
- __raw_read_lock include/linux/rwlock_api_smp.h:149 [inline]
- _raw_read_lock+0x5b/0x70 kernel/locking/spinlock.c:223
- send_sigio+0x24/0x320 fs/fcntl.c:786
- kill_fasync_rcu fs/fcntl.c:1009 [inline]
- kill_fasync fs/fcntl.c:1023 [inline]
- kill_fasync+0x205/0x460 fs/fcntl.c:1016
- __pass_event drivers/input/evdev.c:240 [inline]
- evdev_pass_values+0x715/0xa30 drivers/input/evdev.c:279
- evdev_events+0x20c/0x330 drivers/input/evdev.c:307
- input_to_handler+0x2a0/0x4c0 drivers/input/input.c:115
- input_pass_values.part.0+0x284/0x700 drivers/input/input.c:145
- input_pass_values drivers/input/input.c:134 [inline]
- input_handle_event+0x324/0x1390 drivers/input/input.c:399
- input_inject_event+0x2f5/0x310 drivers/input/input.c:471
- evdev_write+0x424/0x750 drivers/input/evdev.c:530
- vfs_write+0x28e/0x700 fs/read_write.c:593
- ksys_write+0x1ee/0x250 fs/read_write.c:648
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7930052c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000038f80 RCX: 000000000045d5b9
-RDX: 0000000000000373 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffe25f626af R14: 00007f79300539c0 R15: 000000000118cf4c
-Modules linked in:
----[ end trace 7926691370b595f2 ]---
-RIP: 0010:print_lock_trace kernel/locking/lockdep.c:1751 [inline]
-RIP: 0010:print_lock_class_header kernel/locking/lockdep.c:2240 [inline]
-RIP: 0010:print_shortest_lock_dependencies.cold+0x110/0x2af kernel/locking/lockdep.c:2263
-Code: 48 8b 04 24 48 c1 e8 03 42 80 3c 20 00 74 09 48 8b 3c 24 e8 dd fb de f9 48 8b 04 24 48 8b 00 48 8d 78 14 48 89 fa 48 c1 ea 03 <42> 0f b6 0c 22 48 89 fa 83 e2 07 83 c2 03 38 ca 7c 08 84 c9 0f 85
-RSP: 0018:ffffc900057875c0 EFLAGS: 00010003
-RAX: 0000000000000001 RBX: ffffc90005787718 RCX: 0000000000000000
-RDX: 0000000000000002 RSI: ffffffff815bc817 RDI: 0000000000000015
-RBP: ffffc90005787718 R08: 0000000000000004 R09: ffff8880ae620f8b
-R10: 0000000000000000 R11: 6c6c756e28202020 R12: dffffc0000000000
-R13: ffffffff8c709bb8 R14: 0000000000000009 R15: 0000000000000000
-FS:  00007f7930053700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004e9cf0 CR3: 000000008f8ef000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Acked-by: Nilesh Javali <njavali@marvell.com>
