@@ -2,114 +2,155 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD687C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF5520732
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED462068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:50:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9Ywp41A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CRrEiBHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgIIHuP (ORCPT
+        id S1730021AbgIIHur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729455AbgIIHuL (ORCPT
+        Wed, 9 Sep 2020 03:50:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20103 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729521AbgIIHun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:50:11 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB7AC061573;
-        Wed,  9 Sep 2020 00:50:09 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r24so2285150ljm.3;
-        Wed, 09 Sep 2020 00:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+eoBy/bwt6qKy1ZU0hQLUIIb2eFiZ29uRJfoY0zAIck=;
-        b=M9Ywp41A+KsRDVsFPG6mUL2IKvRoQoehb0HspBt50pCHhLzboHNdhVGwGVEipw9wfJ
-         7hZZSg+T3fmGnUNuwAkfEqUaTbXRuOm31dKLaSiLK026mhUTT/MrgXoeTzmOHzbYsFqm
-         +A8i4gcA/t91nbljx6J9SSGkTYI6ynwT265Z3mOGFjpWNL9gaZ4VqBN67iae0YWqY2Qp
-         uVEDfPiK0Fw4oHjuJLVVPz0sykxlu2UC+lgqHqRKtuH3CMZ8CJdzDYkUlzjTONJogZ9Q
-         IHwXpYNPCNRByf2ynwQbgD+zOradLAKQbshX5mZ6mVJ8YryvtbQKQDlilS86zU1+4NWs
-         iquQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+eoBy/bwt6qKy1ZU0hQLUIIb2eFiZ29uRJfoY0zAIck=;
-        b=QqERKsJI96CeBEoxw6Bk5ciGi6jStwSUemb4cjggUDMxM+zXfAdF51TzgIJcUgABwf
-         5nwLRT3Lm5oBQwpBKrZxpz3qpRaGNI7s+BgErUAh9T0YeSn6lVktvAnc46/MYmFdo6ia
-         feQplupQLNlO7YAfMDK5prVO8cmSmBX2/KKHg2WNMec9eBjC3Qtnqv34fwtXIXF7RjrJ
-         X4zZ/lI8hHWzOmsOQsgLpegkL4/WqMBtbEV08IxGKRGbmuLSC2YDidUyeTWDlXovdFrp
-         XvU7yj8c1noGKPVz3kW6TBTMsRKF8iwj+3iKvIkJsiRyZJPyp90ZZAJhxlAt72/Q59CT
-         XsKg==
-X-Gm-Message-State: AOAM530C5YlJZessBxek19VBWbX/xPbEg8sobBZeNMCaJtZKzCgzi4ng
-        yOFLuT+j1keFsYeKtvvIIqWjx8duhcq3pA==
-X-Google-Smtp-Source: ABdhPJwEA3XTx1gh59N0mVW4YGXuKKn+jsdBgABsdtOTBUZ1LgQuaosBlCBjZQ2p2fQTw9bkjzWHyA==
-X-Received: by 2002:a2e:3215:: with SMTP id y21mr1180072ljy.52.1599637807929;
-        Wed, 09 Sep 2020 00:50:07 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:290:64e3:f5dd:84ac:70b0:5629? ([2a00:1fa0:290:64e3:f5dd:84ac:70b0:5629])
-        by smtp.gmail.com with ESMTPSA id z24sm403079lfe.54.2020.09.09.00.50.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 00:50:07 -0700 (PDT)
-Subject: Re: [PATCH 07/19] swim3: use bdev_check_media_changed
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20200908145347.2992670-1-hch@lst.de>
- <20200908145347.2992670-8-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <81bd0c24-81ec-c43f-5771-22fbe7b3dce4@gmail.com>
-Date:   Wed, 9 Sep 2020 10:50:00 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 9 Sep 2020 03:50:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599637841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vGyOk6KkR/XxaRsF4tGcmjHK4z5GfNfxYjweN6SPha8=;
+        b=CRrEiBHtjnnBituzz/X30XKnd9dpFJsd3KnxlafCSauWP78MOph9YOwB8AzE8LCCb4YZ3W
+        L8p0BIZ7mmgeKJJEbK8SnCV5t7k4RJX+r1tfih82Iz4Uk3+iwCCmQ8RQycaYZ+UvjDkjAM
+        mnVTk9f9goWQswHY64zWHvUefBhLbLg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-279-0g7HX4qqMzmHTgYqZXGsLw-1; Wed, 09 Sep 2020 03:50:38 -0400
+X-MC-Unique: 0g7HX4qqMzmHTgYqZXGsLw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7E74800597;
+        Wed,  9 Sep 2020 07:50:36 +0000 (UTC)
+Received: from kasong-rh-laptop.redhat.com (ovpn-12-29.pek2.redhat.com [10.72.12.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 152BA100238C;
+        Wed,  9 Sep 2020 07:50:27 +0000 (UTC)
+From:   Kairui Song <kasong@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        kexec@lists.infradead.org, Kairui Song <kasong@redhat.com>
+Subject: [RFC PATCH 0/3] Add writing support to vmcore for reusing oldmem
+Date:   Wed,  9 Sep 2020 15:50:13 +0800
+Message-Id: <20200909075016.104407-1-kasong@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-8-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Currently vmcore only supports reading, this patch series is an RFC
+to add writing support to vmcore. It's x86_64 only yet, I'll add other
+architecture later if there is no problem with this idea.
 
-On 08.09.2020 17:53, Christoph Hellwig wrote:
+My purpose of adding writing support is to reuse the crashed kernel's
+old memory in kdump kernel, reduce kdump memory pressure, and
+allow kdump to run with a smaller crashkernel reservation.
 
-> Switch to use bdev_check_media_changed instead of check_disk_change and
-             ^^^
-    Using?
+This is doable because in most cases, after kernel panic, user only
+interested in the crashed kernel itself, and userspace/cache/free
+memory pages are not dumped. `makedumpfile` is widely used to skip
+these pages. Kernel pages usually only take a small part of
+the whole old memory. So there will be many reusable pages.
 
-> call floppy_revalidate manually.  Given that floppy_revalidate only
-> deals with media change events, the extra call into ->revalidate_disk
-> from bdev_disk_changed is not required either, so stop wiring up the
-> method.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-[...]
+By adding writing support, userspace then can use these pages as a fast
+and temporary storage. This helps reduce memory pressure in many ways.
 
-MBR, Sergei
+For example, I've written a POC program based on this, it will find
+the reusable pages, and creates an NBD device which maps to these pages.
+The NBD device can then be used as swap, or to hold some temp files
+which previouly live in RAM.
+
+The link of the POC tool: https://github.com/ryncsn/kdumpd
+
+I tested it on x86_64 on latest Fedora by using it as swap with
+following step in kdump kernel:
+
+  1. Install this tool in kdump initramfs
+  2. Execute following command in kdump:
+     /sbin/modprobe nbd nbds_max=1
+     /bin/kdumpd &
+     /sbin/mkswap /dev/nbd0
+     /sbin/swapon /dev/nbd0
+  3. Observe the swap is being used:
+     SwapTotal:        131068 kB
+     SwapFree:         121852 kB
+
+It helped to reduce the crashkernel from 168M to 110M for a successful
+kdump run over NFSv3. There are still many workitems that could be done
+based on this idea, eg. move the initramfs content to the old memory,
+which may help reduce another ~10-20M of memory.
+
+It's have been a long time issue that kdump suffers from OOM issue
+with limited crashkernel memory. So reusing old memory could be very
+helpful.
+
+This method have it's limitation:
+- Swap only works for userspace. But kdump userspace is a major memory
+  consumer, so in general this should be helpful enough.
+- For users who want to dump the whole memory area, this won't help as
+  there is no reusable page.
+
+I've tried other ways to improve the crashkernel value, eg.
+- Reserve some smaller memory segments in first kernel for crashkernel: It's
+  only a suppliment of the default crashkernel reservation and only make
+  crashkernel value more adjustable, still not solving the real problem.
+
+- Reuse old memory, but hotplug chunk of reusable old memory into
+  kdump kernel's memory:
+  It's hard to find large chunk of continuous memory, especially on
+  systems with heavy workload, the reusable regions could be very
+  fragmental. So it can only hotplug small fragments of memories,
+  which looks hackish, and may have a high page table overhead.
+
+- Implement the old memory based based block device as a kernel
+  module. It doesn't looks good to have a module for this sole
+  usage and it don't have much performance/implementation advantage
+  compared to this RFC.
+
+Besides, keeping all the complex logic of parsing reusing old memory
+logic in userspace seems a better idea.
+
+And as a plus, this could make it more doable and reasonable to
+have n crashkernel=auto param. If there is a swap, then userspace
+will have less memory pressure. crashkernel=auto can focus on the
+kernel usage.
+
+Kairui Song (3):
+  vmcore: simplify read_from_olemem
+  vmcore: Add interface to write to old mem
+  x86_64: implement copy_to_oldmem_page
+
+ arch/x86/kernel/crash_dump_64.c |  49 ++++++++--
+ fs/proc/vmcore.c                | 154 ++++++++++++++++++++++++++------
+ include/linux/crash_dump.h      |  18 +++-
+ 3 files changed, 180 insertions(+), 41 deletions(-)
+
+-- 
+2.26.2
+
