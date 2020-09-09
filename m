@@ -2,203 +2,496 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E51CC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3B2C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 587F02145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3899C21D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgIIJJ7 (ORCPT
+        id S1730073AbgIIJKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:09:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55136 "EHLO mx2.suse.de"
+        Wed, 9 Sep 2020 05:10:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:39827 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgIIJJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726535AbgIIJJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 05:09:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 30825B03A;
-        Wed,  9 Sep 2020 09:09:55 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 11:09:53 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200909090953.GE7348@dhcp22.suse.cz>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
- <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+IronPort-SDR: 9KIgYO1YZUL9V/3Dnw/WI/8BsEPxQQSjd0UrCmyZ1k18kYDTYyATeMiymsOX0pNX2msrwbddiv
+ 0swGftFEI7xw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155773882"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="155773882"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:09:57 -0700
+IronPort-SDR: AIKQceBR2EhJepIfUFI7LfYUW7cJuWqkQ1ds5vZz9CKkdowgX+Ztilz22ILbkPsGdPHngaJ7hs
+ OdnPSckiYPmQ==
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="505390989"
+Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:09:52 -0700
+From:   shuo.a.liu@intel.com
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Shuo Liu <shuo.a.liu@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH v3 06/17] virt: acrn: Introduce VM management interfaces
+Date:   Wed,  9 Sep 2020 17:08:25 +0800
+Message-Id: <20200909090836.46762-7-shuo.a.liu@intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200909090836.46762-1-shuo.a.liu@intel.com>
+References: <20200909090836.46762-1-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-09-20 09:48:59, Laurent Dufour wrote:
-> Le 09/09/2020 à 09:40, Michal Hocko a écrit :
-> > [reposting because the malformed cc list confused my email client]
-> > 
-> > On Tue 08-09-20 19:08:35, Laurent Dufour wrote:
-> > > In register_mem_sect_under_node() the system_state’s value is checked to
-> > > detect whether the operation the call is made during boot time or during an
-> > > hot-plug operation. Unfortunately, that check is wrong on some
-> > > architecture, and may lead to sections being registered under multiple
-> > > nodes if node's memory ranges are interleaved.
-> > 
-> > Why is this check arch specific?
-> 
-> I was wrong the check is not arch specific.
-> 
-> > > This can be seen on PowerPC LPAR after multiple memory hot-plug and
-> > > hot-unplug operations are done. At the next reboot the node's memory ranges
-> > > can be interleaved
-> > 
-> > What is the exact memory layout?
-> 
-> For instance:
-> [    0.000000] Early memory node ranges
-> [    0.000000]   node   1: [mem 0x0000000000000000-0x000000011fffffff]
-> [    0.000000]   node   2: [mem 0x0000000120000000-0x000000014fffffff]
-> [    0.000000]   node   1: [mem 0x0000000150000000-0x00000001ffffffff]
-> [    0.000000]   node   0: [mem 0x0000000200000000-0x000000048fffffff]
-> [    0.000000]   node   2: [mem 0x0000000490000000-0x00000007ffffffff]
+From: Shuo Liu <shuo.a.liu@intel.com>
 
-Include this into the changelog.
+The VM management interfaces expose several VM operations to ACRN
+userspace via ioctls. For example, creating VM, starting VM, destroying
+VM and so on.
 
-> > > and since the call to link_mem_sections() is made in
-> > > topology_init() while the system is in the SYSTEM_SCHEDULING state, the
-> > > node's id is not checked, and the sections registered multiple times.
-> > 
-> > So a single memory section/memblock belongs to two numa nodes?
-> 
-> If the node id is not checked in register_mem_sect_under_node(), yes that the case.
+The ACRN Hypervisor needs to exchange data with the ACRN userspace
+during the VM operations. HSM provides VM operation ioctls to the ACRN
+userspace and communicates with the ACRN Hypervisor for VM operations
+via hypercalls.
 
-I do not follow. register_mem_sect_under_node is about user interface.
-This is independent on the low level memory representation - aka memory
-section. I do not think we can handle a section in multiple zones/nodes.
-Memblock in multiple zones/nodes is a different story and interleaving
-physical memory layout can indeed lead to it. This is something that we
-do not allow for runtime hotplug but have to somehow live with that - at
-least not crash.
+HSM maintains a list of User VM. Each User VM will be bound to an
+existing file descriptor of /dev/acrn_hsm. The User VM will be
+destroyed when the file descriptor is closed.
+
+Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Zhi Wang <zhi.a.wang@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Cc: Yu Wang <yu1.wang@intel.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ .../userspace-api/ioctl/ioctl-number.rst      |  1 +
+ MAINTAINERS                                   |  1 +
+ drivers/virt/acrn/Makefile                    |  2 +-
+ drivers/virt/acrn/acrn_drv.h                  | 22 +++++-
+ drivers/virt/acrn/hsm.c                       | 66 ++++++++++++++++
+ drivers/virt/acrn/hypercall.h                 | 78 +++++++++++++++++++
+ drivers/virt/acrn/vm.c                        | 69 ++++++++++++++++
+ include/uapi/linux/acrn.h                     | 56 +++++++++++++
+ 8 files changed, 293 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/virt/acrn/hypercall.h
+ create mode 100644 drivers/virt/acrn/vm.c
+ create mode 100644 include/uapi/linux/acrn.h
+
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 2a198838fca9..ac60efedb104 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -319,6 +319,7 @@ Code  Seq#    Include File                                           Comments
+ 0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
+                                                                      <mailto:kenji@bitgate.com>
+ 0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
++0xA2  all    uapi/linux/acrn.h                                       ACRN hypervisor
+ 0xA3  80-8F                                                          Port ACL  in development:
+                                                                      <mailto:tlewis@mindspring.com>
+ 0xA3  90-9F  linux/dtlk.h
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3030d0e93d02..d4c1ef303c2d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -443,6 +443,7 @@ S:	Supported
+ W:	https://projectacrn.org
+ F:	Documentation/virt/acrn/
+ F:	drivers/virt/acrn/
++F:	include/uapi/linux/acrn.h
  
-> > > In
-> > > that case, the system is able to boot but later hot-plug operation may lead
-> > > to this panic because the node's links are correctly broken:
-> > 
-> > Correctly broken? Could you provide more details on the inconsistency
-> > please?
-> 
-> laurent@ltczep3-lp4:~$ ls -l /sys/devices/system/memory/memory21
-> total 0
-> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node1 -> ../../node/node1
-> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node2 -> ../../node/node2
-> -rw-r--r-- 1 root root 65536 Aug 24 05:27 online
-> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_device
-> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_index
-> drwxr-xr-x 2 root root     0 Aug 24 05:27 power
-> -r--r--r-- 1 root root 65536 Aug 24 05:27 removable
-> -rw-r--r-- 1 root root 65536 Aug 24 05:27 state
-> lrwxrwxrwx 1 root root     0 Aug 24 05:25 subsystem -> ../../../../bus/memory
-> -rw-r--r-- 1 root root 65536 Aug 24 05:25 uevent
-> -r--r--r-- 1 root root 65536 Aug 24 05:27 valid_zones
-
-OK, so there are two nodes referenced here. Not terrible from the user
-point of view. Such a memory block will refuse to offline or online
-IIRC.
+ AD1889 ALSA SOUND DRIVER
+ L:	linux-parisc@vger.kernel.org
+diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
+index 6920ed798aaf..cf8b4ed5e74e 100644
+--- a/drivers/virt/acrn/Makefile
++++ b/drivers/virt/acrn/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_ACRN_HSM)	:= acrn.o
+-acrn-y := hsm.o
++acrn-y := hsm.o vm.o
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index 29eedd696327..043ae6840995 100644
+--- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -3,16 +3,36 @@
+ #ifndef __ACRN_HSM_DRV_H
+ #define __ACRN_HSM_DRV_H
  
-> > Which physical memory range you are trying to add here and what is the
-> > node affinity?
-> 
-> None is added, the root cause of the issue is happening at boot time.
-
-Let me clarify my question. The crash has clearly happened during the
-hotplug add_memory_resource - which is clearly not a boot time path.
-I was askin for more information about why this has failed. It is quite
-clear that sysfs machinery has failed and that led to BUG_ON but we are
-mising an information on why. What was the physical memory range to be
-added and why sysfs failed?
++#include <linux/acrn.h>
++#include <linux/dev_printk.h>
+ #include <linux/types.h>
  
-> > > ------------[ cut here ]------------
-> > > kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
-> > > Oops: Exception in kernel mode, sig: 5 [#1]
-> > > LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-> > > Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
-> > > CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
-> > > NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
-> > > REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
-> > > MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
-> > > CFAR: c000000000846d20 IRQMASK: 0
-> > > GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
-> > > GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
-> > > GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
-> > > GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
-> > > GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
-> > > GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
-> > > GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
-> > > GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
-> > > NIP [c000000000403f34] add_memory_resource+0x244/0x340
-> > > LR [c000000000403f2c] add_memory_resource+0x23c/0x340
-> > > Call Trace:
-> > > [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
-> > > [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
-> > > [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
-> > > [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
-> > > [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
-> > > [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
-> > > [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
-> > > [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
-> > > [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
-> > > [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
-> > > [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
-> > > [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
-> > > [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
-> > > Instruction dump:
-> > > 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
-> > > 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
-> > > ---[ end trace 562fd6c109cd0fb2 ]---
-> > 
-> > The BUG_ON on failure is absolutely horrendous. There must be a better
-> > way to handle a failure like that. The failure means that
-> > sysfs_create_link_nowarn has failed. Please describe why that is the
-> > case.
-> > 
-> > > This patch addresses the root cause by not relying on the system_state
-> > > value to detect whether the call is due to a hot-plug operation or not. An
-> > > additional parameter is added to link_mem_sections() to tell the context of
-> > > the call and this parameter is propagated to register_mem_sect_under_node()
-> > > throuugh the walk_memory_blocks()'s call.
-> > 
-> > This looks like a hack to me and it deserves a better explanation. The
-> > existing code is a hack on its own and it is inconsistent with other
-> > boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
-> > places IIRC. Would it help to use the same here as well? Maybe we want to
-> > wrap that inside a helper (early_memory_init()) and use it at all
-> > places.
-> 
-> I agree, this looks like a hack to check for the system_state value.
-> I'll follow the David's proposal and introduce an enum detailing when the
-> node id check has to be done or not.
-
-I am not sure an enum is going to make the existing situation less
-messy. Sure we somehow have to distinguish boot init and runtime hotplug
-because they have different constrains. I am arguing that a) we should
-have a consistent way to check for those and b) we shouldn't blow up
-easily just because sysfs infrastructure has failed to initialize.
++#include "hypercall.h"
++
+ #define ACRN_INVALID_VMID (0xffffU)
+ 
++#define ACRN_VM_FLAG_DESTROYED		0U
++extern struct list_head acrn_vm_list;
++extern rwlock_t acrn_vm_list_lock;
+ /**
+  * struct acrn_vm - Properties of ACRN User VM.
++ * @dev:	The struct device this VM belongs to
++ * @list:	Entry within global list of all VMs
+  * @vmid:	User VM ID
++ * @vcpu_num:	Number of virtual CPUs in the VM
++ * @flags:	Flags (ACRN_VM_FLAG_*) of the VM. This is VM flag management
++ *		in HSM which is different from the &acrn_vm_creation.vm_flag.
+  */
+ struct acrn_vm {
+-	u16	vmid;
++	struct device		*dev;
++	struct list_head	list;
++	u16			vmid;
++	int			vcpu_num;
++	unsigned long		flags;
+ };
+ 
++struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
++			       struct acrn_vm_creation *vm_param);
++int acrn_vm_destroy(struct acrn_vm *vm);
++
+ #endif /* __ACRN_HSM_DRV_H */
+diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+index 28a3052ffa55..bc85a3c14f87 100644
+--- a/drivers/virt/acrn/hsm.c
++++ b/drivers/virt/acrn/hsm.c
+@@ -19,6 +19,8 @@
+ 
+ #include "acrn_drv.h"
+ 
++static struct miscdevice acrn_dev;
++
+ /*
+  * When /dev/acrn_hsm is opened, a 'struct acrn_vm' object is created to
+  * represent a VM instance and continues to be associated with the opened file
+@@ -34,14 +36,77 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
+ 		return -ENOMEM;
+ 
+ 	vm->vmid = ACRN_INVALID_VMID;
++	vm->dev = get_device(acrn_dev.this_device);
+ 	filp->private_data = vm;
+ 	return 0;
+ }
+ 
++static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
++			   unsigned long ioctl_param)
++{
++	struct acrn_vm *vm = filp->private_data;
++	struct acrn_vm_creation *vm_param;
++	int ret = 0;
++
++	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
++		dev_err(vm->dev, "ioctl 0x%x: Invalid VM state!\n", cmd);
++		return -EFAULT;
++	}
++
++	switch (cmd) {
++	case ACRN_IOCTL_CREATE_VM:
++		vm_param = memdup_user((void __user *)ioctl_param,
++				       sizeof(struct acrn_vm_creation));
++		if (IS_ERR(vm_param))
++			return PTR_ERR(vm_param);
++
++		vm = acrn_vm_create(vm, vm_param);
++		if (!vm) {
++			ret = -EFAULT;
++			kfree(vm_param);
++			break;
++		}
++
++		if (copy_to_user((void __user *)ioctl_param, vm_param,
++				 sizeof(struct acrn_vm_creation))) {
++			acrn_vm_destroy(vm);
++			ret = -EFAULT;
++		}
++
++		kfree(vm_param);
++		break;
++	case ACRN_IOCTL_START_VM:
++		ret = hcall_start_vm(vm->vmid);
++		if (ret < 0)
++			dev_err(vm->dev, "Failed to start VM %u!\n", vm->vmid);
++		break;
++	case ACRN_IOCTL_PAUSE_VM:
++		ret = hcall_pause_vm(vm->vmid);
++		if (ret < 0)
++			dev_err(vm->dev, "Failed to pause VM %u!\n", vm->vmid);
++		break;
++	case ACRN_IOCTL_RESET_VM:
++		ret = hcall_reset_vm(vm->vmid);
++		if (ret < 0)
++			dev_err(vm->dev, "Failed to restart VM %u!\n", vm->vmid);
++		break;
++	case ACRN_IOCTL_DESTROY_VM:
++		ret = acrn_vm_destroy(vm);
++		break;
++	default:
++		dev_warn(vm->dev, "Unknown IOCTL 0x%x!\n", cmd);
++		ret = -ENOTTY;
++	}
++
++	return ret;
++}
++
+ static int acrn_dev_release(struct inode *inode, struct file *filp)
+ {
+ 	struct acrn_vm *vm = filp->private_data;
+ 
++	acrn_vm_destroy(vm);
++	put_device(vm->dev);
+ 	kfree(vm);
+ 	return 0;
+ }
+@@ -50,6 +115,7 @@ static const struct file_operations acrn_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= acrn_dev_open,
+ 	.release	= acrn_dev_release,
++	.unlocked_ioctl = acrn_dev_ioctl,
+ };
+ 
+ static struct miscdevice acrn_dev = {
+diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
+new file mode 100644
+index 000000000000..426b66cadb1f
+--- /dev/null
++++ b/drivers/virt/acrn/hypercall.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * ACRN HSM: hypercalls of ACRN Hypervisor
++ */
++#ifndef __ACRN_HSM_HYPERCALL_H
++#define __ACRN_HSM_HYPERCALL_H
++#include <asm/acrn.h>
++
++/*
++ * Hypercall IDs of the ACRN Hypervisor
++ */
++#define _HC_ID(x, y) (((x) << 24) | (y))
++
++#define HC_ID 0x80UL
++
++#define HC_ID_VM_BASE			0x10UL
++#define HC_CREATE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x00)
++#define HC_DESTROY_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x01)
++#define HC_START_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x02)
++#define HC_PAUSE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x03)
++#define HC_RESET_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x05)
++
++/**
++ * hcall_create_vm() - Create a User VM
++ * @vminfo:	Service VM GPA of info of User VM creation
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_create_vm(u64 vminfo)
++{
++	return acrn_hypercall1(HC_CREATE_VM, vminfo);
++}
++
++/**
++ * hcall_start_vm() - Start a User VM
++ * @vmid:	User VM ID
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_start_vm(u64 vmid)
++{
++	return acrn_hypercall1(HC_START_VM, vmid);
++}
++
++/**
++ * hcall_pause_vm() - Pause a User VM
++ * @vmid:	User VM ID
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_pause_vm(u64 vmid)
++{
++	return acrn_hypercall1(HC_PAUSE_VM, vmid);
++}
++
++/**
++ * hcall_destroy_vm() - Destroy a User VM
++ * @vmid:	User VM ID
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_destroy_vm(u64 vmid)
++{
++	return acrn_hypercall1(HC_DESTROY_VM, vmid);
++}
++
++/**
++ * hcall_reset_vm() - Reset a User VM
++ * @vmid:	User VM ID
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_reset_vm(u64 vmid)
++{
++	return acrn_hypercall1(HC_RESET_VM, vmid);
++}
++
++#endif /* __ACRN_HSM_HYPERCALL_H */
+diff --git a/drivers/virt/acrn/vm.c b/drivers/virt/acrn/vm.c
+new file mode 100644
+index 000000000000..851a9481a78e
+--- /dev/null
++++ b/drivers/virt/acrn/vm.c
+@@ -0,0 +1,69 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ACRN_HSM: Virtual Machine management
++ *
++ * Copyright (C) 2020 Intel Corporation. All rights reserved.
++ *
++ * Authors:
++ *	Jason Chen CJ <jason.cj.chen@intel.com>
++ *	Yakui Zhao <yakui.zhao@intel.com>
++ */
++#include <linux/io.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++
++#include "acrn_drv.h"
++
++/* List of VMs */
++LIST_HEAD(acrn_vm_list);
++/*
++ * acrn_vm_list is read in a tasklet which dispatch I/O requests and is wrote
++ * in VM creation ioctl. Use the rwlock mechanism to protect it.
++ */
++DEFINE_RWLOCK(acrn_vm_list_lock);
++
++struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
++			       struct acrn_vm_creation *vm_param)
++{
++	int ret;
++
++	ret = hcall_create_vm(virt_to_phys(vm_param));
++	if (ret < 0 || vm_param->vmid == ACRN_INVALID_VMID) {
++		dev_err(vm->dev, "Failed to create VM! Error: %d\n", ret);
++		return NULL;
++	}
++
++	vm->vmid = vm_param->vmid;
++	vm->vcpu_num = vm_param->vcpu_num;
++
++	write_lock_bh(&acrn_vm_list_lock);
++	list_add(&vm->list, &acrn_vm_list);
++	write_unlock_bh(&acrn_vm_list_lock);
++
++	dev_dbg(vm->dev, "VM %u created.\n", vm->vmid);
++	return vm;
++}
++
++int acrn_vm_destroy(struct acrn_vm *vm)
++{
++	int ret;
++
++	if (vm->vmid == ACRN_INVALID_VMID ||
++	    test_and_set_bit(ACRN_VM_FLAG_DESTROYED, &vm->flags))
++		return 0;
++
++	/* Remove from global VM list */
++	write_lock_bh(&acrn_vm_list_lock);
++	list_del_init(&vm->list);
++	write_unlock_bh(&acrn_vm_list_lock);
++
++	ret = hcall_destroy_vm(vm->vmid);
++	if (ret < 0) {
++		dev_err(vm->dev, "Failed to destroy VM %u\n", vm->vmid);
++		clear_bit(ACRN_VM_FLAG_DESTROYED, &vm->flags);
++		return ret;
++	}
++	dev_dbg(vm->dev, "VM %u destroyed.\n", vm->vmid);
++	vm->vmid = ACRN_INVALID_VMID;
++	return 0;
++}
+diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
+new file mode 100644
+index 000000000000..364b1a783074
+--- /dev/null
++++ b/include/uapi/linux/acrn.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Userspace interface for /dev/acrn_hsm - ACRN Hypervisor Service Module
++ *
++ * This file can be used by applications that need to communicate with the HSM
++ * via the ioctl interface.
++ */
++
++#ifndef _UAPI_ACRN_H
++#define _UAPI_ACRN_H
++
++#include <linux/types.h>
++
++/**
++ * struct acrn_vm_creation - Info to create a User VM
++ * @vmid:		User VM ID returned from the hypervisor
++ * @reserved0:		Reserved
++ * @vcpu_num:		Number of vCPU in the VM. Return from hypervisor.
++ * @reserved1:		Reserved
++ * @uuid:		UUID of the VM. Pass to hypervisor directly.
++ * @vm_flag:		Flag of the VM creating. Pass to hypervisor directly.
++ * @ioreq_buf:		Service VM GPA of I/O request buffer. Pass to
++ *			hypervisor directly.
++ * @cpu_affinity:	CPU affinity of the VM. Pass to hypervisor directly.
++ * @reserved2:		Reserved
++ */
++struct acrn_vm_creation {
++	__u16	vmid;
++	__u16	reserved0;
++	__u16	vcpu_num;
++	__u16	reserved1;
++	__u8	uuid[16];
++	__u64	vm_flag;
++	__u64	ioreq_buf;
++	__u64	cpu_affinity;
++	__u8	reserved2[8];
++} __attribute__((aligned(8)));
++
++/* The ioctl type, documented in ioctl-number.rst */
++#define ACRN_IOCTL_TYPE			0xA2
++
++/*
++ * Common IOCTL IDs definition for ACRN userspace
++ */
++#define ACRN_IOCTL_CREATE_VM		\
++	_IOWR(ACRN_IOCTL_TYPE, 0x10, struct acrn_vm_creation)
++#define ACRN_IOCTL_DESTROY_VM		\
++	_IO(ACRN_IOCTL_TYPE, 0x11)
++#define ACRN_IOCTL_START_VM		\
++	_IO(ACRN_IOCTL_TYPE, 0x12)
++#define ACRN_IOCTL_PAUSE_VM		\
++	_IO(ACRN_IOCTL_TYPE, 0x13)
++#define ACRN_IOCTL_RESET_VM		\
++	_IO(ACRN_IOCTL_TYPE, 0x15)
++
++#endif /* _UAPI_ACRN_H */
 -- 
-Michal Hocko
-SUSE Labs
+2.28.0
+
