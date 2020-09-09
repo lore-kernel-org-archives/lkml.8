@@ -2,280 +2,202 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C515C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33388C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52AD222272
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:43:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Pp0VFzZg"
+	by mail.kernel.org (Postfix) with ESMTP id E885722252
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599662811;
+	bh=RC4ET4UGGwvfPfKXEGUHg+8Sd219Ylt06e+SU6Ko5hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iG07TbN6PcSje1rf8UlEFFhB0Hx9txbc4qg71Fu/Q7Aa+rnjOXzv74slEWUvpjqL1
+	 r+rs17NFbffFi2zJzPDomCqP0zNMu2hR6eIq7EkyHgXDxKqt94a7HMGQvQO+gaazsV
+	 0ERZxW5yS0G1TB7CuleE6yp9Z090AN3jNqlKV1bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbgIIOmz (ORCPT
+        id S1730206AbgIIOpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 10:42:55 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:28886 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728551AbgIIMfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 08:35:43 -0400
-X-UUID: e57122865c1e48509df9877070d50abe-20200909
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=2guDIT84rtpUaMUFhWADD5VNuK3neJxSfJO6MF34kNA=;
-        b=Pp0VFzZgWsk0719UETrMa4Cy+sMYz7h8ev2jPvl8sqXhQQzME++9itiEtZybqWZg3qviXYzJGhS1+QhjDG/Q7bCyFDdgDVTSS5OvBdhtvuHIB4T5uR4s5LNNOSmZZikfQP+5GepHCWh2k7jZLHw+4yCLijIqC+3D6M4wMJrp2Hk=;
-X-UUID: e57122865c1e48509df9877070d50abe-20200909
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1866630061; Wed, 09 Sep 2020 20:26:50 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 9 Sep 2020 20:26:34 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 9 Sep 2020 20:26:35 +0800
-Message-ID: <1599654396.2621.16.camel@mtkswgap22>
-Subject: Re: [PATCH v5 1/2] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rob Herring" <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Date:   Wed, 9 Sep 2020 20:26:36 +0800
-In-Reply-To: <20200909112955.5fm3mv2btr6wrcc7@vireshk-i7>
-References: <1599645086-10169-1-git-send-email-hector.yuan@mediatek.com>
-         <1599645086-10169-2-git-send-email-hector.yuan@mediatek.com>
-         <20200909112955.5fm3mv2btr6wrcc7@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 9 Sep 2020 10:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730189AbgIIMfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 08:35:40 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F44321D40;
+        Wed,  9 Sep 2020 12:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599654292;
+        bh=RC4ET4UGGwvfPfKXEGUHg+8Sd219Ylt06e+SU6Ko5hM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b+LfyXyZQizdA4JwxUxSlquVnPdTwlFvX+Iq3KUpeJ5+vLMP9JaTQdqULPdOLd/7P
+         MSb8LZLCWdX7xemIfNhjp1INideHCg6/7krAk9I2LvLLog/L5KPRR6YebpAmHbMXGI
+         8t9rt8nzDtt965PnucWv+/2y8otm7hvZM5cJLHko=
+Date:   Wed, 9 Sep 2020 14:25:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jim Cromie <jim.cromie@gmail.com>, Petr Mladek <pmladek@suse.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, jbaron@akamai.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, jim.cromie@gmail.com,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>
+Subject: Re: kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
+Message-ID: <20200909122502.GB668220@kroah.com>
+References: <CA+G9fYvg7voMNArr3nPpv_dRn10RwYos075NW_b5rFbBLZ=-8g@mail.gmail.com>
+ <20200909144745.504c4cbfeea9bc298e3c6b9b@kernel.org>
+ <20200909080025.GC3864@alley>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 7BFCD0EC8248CFF5F9D9B4A26A53BE89755EEA30A661FC1A257714E2446C9F3E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909080025.GC3864@alley>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA5LTA5IGF0IDE2OjU5ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+
-IE9uIDA5LTA5LTIwLCAxNzo1MSwgSGVjdG9yIFl1YW4gd3JvdGU6DQo+ID4gRnJvbTogIkhlY3Rv
-ci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IEFkZCBNVDY3Nzkg
-Y3B1ZnJlcSBIVyBzdXBwb3J0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEhlY3Rvci5ZdWFu
-IDxoZWN0b3IueXVhbkBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY3B1ZnJl
-cS9LY29uZmlnLmFybSAgICAgICAgICAgfCAgIDEyICsrDQo+ID4gIGRyaXZlcnMvY3B1ZnJlcS9N
-YWtlZmlsZSAgICAgICAgICAgICAgfCAgICAxICsNCj4gPiAgZHJpdmVycy9jcHVmcmVxL21lZGlh
-dGVrLWNwdWZyZXEtaHcuYyB8ICAyODkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-DQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMzAyIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvY3B1ZnJlcS9tZWRpYXRlay1jcHVmcmVxLWh3LmMNCj4gPiANCj4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcHVmcmVxL0tjb25maWcuYXJtIGIvZHJpdmVycy9jcHVm
-cmVxL0tjb25maWcuYXJtDQo+ID4gaW5kZXggYzZjYmZjOC4uOGU1OGMxMiAxMDA2NDQNCj4gPiAt
-LS0gYS9kcml2ZXJzL2NwdWZyZXEvS2NvbmZpZy5hcm0NCj4gPiArKysgYi9kcml2ZXJzL2NwdWZy
-ZXEvS2NvbmZpZy5hcm0NCj4gPiBAQCAtMTIxLDYgKzEyMSwxOCBAQCBjb25maWcgQVJNX01FRElB
-VEVLX0NQVUZSRVENCj4gPiAgCWhlbHANCj4gPiAgCSAgVGhpcyBhZGRzIHRoZSBDUFVGcmVxIGRy
-aXZlciBzdXBwb3J0IGZvciBNZWRpYVRlayBTb0NzLg0KPiA+ICANCj4gPiArY29uZmlnIEFSTV9N
-RURJQVRFS19DUFVGUkVRX0hXDQo+ID4gKwl0cmlzdGF0ZSAiTWVkaWFUZWsgQ1BVRnJlcSBIVyBk
-cml2ZXIiDQo+ID4gKwlkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsgfHwgQ09NUElMRV9URVNUDQo+
-ID4gKwlkZWZhdWx0IG0NCj4gPiArCWhlbHANCj4gPiArCSAgU3VwcG9ydCBmb3IgdGhlIENQVUZy
-ZXEgSFcgZHJpdmVyLg0KPiA+ICsJICBTb21lIE1lZGlhVGVrIGNoaXBzZXRzIGhhdmUgYSBIVyBl
-bmdpbmUgdG8gb2ZmbG9hZCB0aGUgc3RlcHMNCj4gPiArCSAgbmVjZXNzYXJ5IGZvciBjaGFuZ2lu
-ZyB0aGUgZnJlcXVlbmN5IG9mIHRoZSBDUFVzLiBGaXJtd2FyZSBsb2FkZWQNCj4gPiArCSAgaW4g
-dGhpcyBlbmdpbmUgZXhwb3NlcyBhIHByb2dyYW1taW5nIGludGVyZmFjZSB0byB0aGUgT1MuDQo+
-ID4gKwkgIFRoZSBkcml2ZXIgaW1wbGVtZW50cyB0aGUgY3B1ZnJlcSBpbnRlcmZhY2UgZm9yIHRo
-aXMgSFcgZW5naW5lLg0KPiA+ICsJICBTYXkgWSBpZiB5b3Ugd2FudCB0byBzdXBwb3J0IENQVUZy
-ZXEgSFcuDQo+ID4gKw0KPiA+ICBjb25maWcgQVJNX09NQVAyUExVU19DUFVGUkVRDQo+ID4gIAli
-b29sICJUSSBPTUFQMisiDQo+ID4gIAlkZXBlbmRzIG9uIEFSQ0hfT01BUDJQTFVTDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvY3B1ZnJlcS9NYWtlZmlsZSBiL2RyaXZlcnMvY3B1ZnJlcS9NYWtl
-ZmlsZQ0KPiA+IGluZGV4IGY2NjcwYzQuLmRjMWYzNzEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
-cy9jcHVmcmVxL01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy9jcHVmcmVxL01ha2VmaWxlDQo+
-ID4gQEAgLTU3LDYgKzU3LDcgQEAgb2JqLSQoQ09ORklHX0FSTV9JTVg2UV9DUFVGUkVRKQkJKz0g
-aW14NnEtY3B1ZnJlcS5vDQo+ID4gIG9iai0kKENPTkZJR19BUk1fSU1YX0NQVUZSRVFfRFQpCSs9
-IGlteC1jcHVmcmVxLWR0Lm8NCj4gPiAgb2JqLSQoQ09ORklHX0FSTV9LSVJLV09PRF9DUFVGUkVR
-KQkrPSBraXJrd29vZC1jcHVmcmVxLm8NCj4gPiAgb2JqLSQoQ09ORklHX0FSTV9NRURJQVRFS19D
-UFVGUkVRKQkrPSBtZWRpYXRlay1jcHVmcmVxLm8NCj4gPiArb2JqLSQoQ09ORklHX0FSTV9NRURJ
-QVRFS19DUFVGUkVRX0hXKQkrPSBtZWRpYXRlay1jcHVmcmVxLWh3Lm8NCj4gPiAgb2JqLSQoQ09O
-RklHX01BQ0hfTVZFQlVfVjcpCQkrPSBtdmVidS1jcHVmcmVxLm8NCj4gPiAgb2JqLSQoQ09ORklH
-X0FSTV9PTUFQMlBMVVNfQ1BVRlJFUSkJKz0gb21hcC1jcHVmcmVxLm8NCj4gPiAgb2JqLSQoQ09O
-RklHX0FSTV9QWEEyeHhfQ1BVRlJFUSkJKz0gcHhhMnh4LWNwdWZyZXEubw0KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2NwdWZyZXEvbWVkaWF0ZWstY3B1ZnJlcS1ody5jIGIvZHJpdmVycy9jcHVm
-cmVxL21lZGlhdGVrLWNwdWZyZXEtaHcuYw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4g
-aW5kZXggMDAwMDAwMC4uYWU0YjM4Yg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2
-ZXJzL2NwdWZyZXEvbWVkaWF0ZWstY3B1ZnJlcS1ody5jDQo+ID4gQEAgLTAsMCArMSwyODkgQEAN
-Cj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArLyoNCj4gPiAr
-ICogQ29weXJpZ2h0IChjKSAyMDIwIE1lZGlhVGVrIEluYy4NCj4gPiArICovDQo+ID4gKw0KPiA+
-ICsjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2NwdWZy
-ZXEuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4
-L2tlcm5lbC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gKyNpbmNsdWRl
-IDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ICsNCj4gPiArI2RlZmluZSBMVVRf
-TUFYX0VOVFJJRVMJCQkzMlUNCj4gPiArI2RlZmluZSBMVVRfRlJFUQkJCUdFTk1BU0soMTEsIDAp
-DQo+ID4gKyNkZWZpbmUgTFVUX1JPV19TSVpFCQkJMHg0DQo+ID4gKw0KPiA+ICtlbnVtIHsNCj4g
-PiArCVJFR19MVVRfVEFCTEUsDQo+ID4gKwlSRUdfRU5BQkxFLA0KPiA+ICsJUkVHX1BFUkZfU1RB
-VEUsDQo+ID4gKw0KPiA+ICsJUkVHX0FSUkFZX1NJWkUsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtz
-dHJ1Y3QgY3B1ZnJlcV9tdGsgew0KPiA+ICsJc3RydWN0IGNwdWZyZXFfZnJlcXVlbmN5X3RhYmxl
-ICp0YWJsZTsNCj4gPiArCXZvaWQgX19pb21lbSAqcmVnX2Jhc2VzW1JFR19BUlJBWV9TSVpFXTsN
-Cj4gPiArCWNwdW1hc2tfdCByZWxhdGVkX2NwdXM7DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgY29uc3QgdTE2IGNwdWZyZXFfbXRrX29mZnNldHNbUkVHX0FSUkFZX1NJWkVdID0gew0KPiA+
-ICsJW1JFR19MVVRfVEFCTEVdCQk9IDB4MCwNCj4gPiArCVtSRUdfRU5BQkxFXQkJPSAweDg0LA0K
-PiA+ICsJW1JFR19QRVJGX1NUQVRFXQk9IDB4ODgsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgc3RydWN0IGNwdWZyZXFfbXRrICptdGtfZnJlcV9kb21haW5fbWFwW05SX0NQVVNdOw0KPiA+
-ICsNCj4gPiArc3RhdGljIGludCBtdGtfY3B1ZnJlcV9od190YXJnZXRfaW5kZXgoc3RydWN0IGNw
-dWZyZXFfcG9saWN5ICpwb2xpY3ksDQo+ID4gKwkJCQkgICAgICAgdW5zaWduZWQgaW50IGluZGV4
-KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgY3B1ZnJlcV9tdGsgKmMgPSBwb2xpY3ktPmRyaXZlcl9k
-YXRhOw0KPiA+ICsNCj4gPiArCXdyaXRlbF9yZWxheGVkKGluZGV4LCBjLT5yZWdfYmFzZXNbUkVH
-X1BFUkZfU1RBVEVdKTsNCj4gPiArCWFyY2hfc2V0X2ZyZXFfc2NhbGUocG9saWN5LT5yZWxhdGVk
-X2NwdXMsDQo+ID4gKwkJCSAgICBwb2xpY3ktPmZyZXFfdGFibGVbaW5kZXhdLmZyZXF1ZW5jeSwN
-Cj4gPiArCQkJICAgIHBvbGljeS0+Y3B1aW5mby5tYXhfZnJlcSk7DQo+IA0KPiBQbGVhc2UgZHJv
-cCB0aGUgYXJjaF9zZXRfZnJlcV9zY2FsZSgpIHN0dWZmLiBUaGlzIGlzIGdldHRpbmcgbW92ZWQg
-dG8NCj4gY3B1ZnJlcSBjb3JlIGluIGFub3RoZXIgc2VyaWVzIGFuZCB3aWxsIGJlIGRvbmUgYnkg
-Y29yZSBjb2RlIGZvcg0KPiBldmVyeW9uZS4gU29ycnkgSSBmb3Jnb3QgdG8gbWVudGlvbiB0aGF0
-IGVhcmxpZXIuDQo+IA0KT0ssIHdpbGwgcmVtb3ZlIGl0LCBUaGFuayB5b3UuDQo+ID4gKw0KPiA+
-ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyB1bnNpZ25lZCBpbnQgbXRr
-X2NwdWZyZXFfaHdfZ2V0KHVuc2lnbmVkIGludCBjcHUpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBj
-cHVmcmVxX210ayAqYzsNCj4gPiArCXN0cnVjdCBjcHVmcmVxX3BvbGljeSAqcG9saWN5Ow0KPiA+
-ICsJdW5zaWduZWQgaW50IGluZGV4Ow0KPiA+ICsNCj4gPiArCXBvbGljeSA9IGNwdWZyZXFfY3B1
-X2dldF9yYXcoY3B1KTsNCj4gPiArCWlmICghcG9saWN5KQ0KPiA+ICsJCXJldHVybiAwOw0KPiA+
-ICsNCj4gPiArCWMgPSBwb2xpY3ktPmRyaXZlcl9kYXRhOw0KPiANCj4gV2hhdCBhYm91dCBkb2lu
-ZyB0aGlzIGluc3RlYWQgPw0KPiANCj4gICAgICAgICBjID0gbXRrX2ZyZXFfZG9tYWluX21hcFtj
-cHVdOw0KPiANCj4gWW91IHdvbid0IHJlcXVpcmUgdG8gZ2V0IHBvbGljeSBoZXJlLCByaWdodCA/
-DQo+IA0KWWVzLCB3aWxsIGdldCBjIGZyb20gcGxhdGZvcm0gZGF0YS4NCj4gPiArDQo+ID4gKwlp
-bmRleCA9IHJlYWRsX3JlbGF4ZWQoYy0+cmVnX2Jhc2VzW1JFR19QRVJGX1NUQVRFXSk7DQo+ID4g
-KwlpbmRleCA9IG1pbihpbmRleCwgTFVUX01BWF9FTlRSSUVTIC0gMSk7DQo+ID4gKw0KPiA+ICsJ
-cmV0dXJuIHBvbGljeS0+ZnJlcV90YWJsZVtpbmRleF0uZnJlcXVlbmN5Ow0KPiA+ICt9DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgaW50IG10a19jcHVmcmVxX2h3X2NwdV9pbml0KHN0cnVjdCBjcHVmcmVx
-X3BvbGljeSAqcG9saWN5KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgY3B1ZnJlcV9tdGsgKmM7DQo+
-ID4gKwlzdHJ1Y3QgZGV2aWNlICpjcHVfZGV2Ow0KPiA+ICsNCj4gPiArCWNwdV9kZXYgPSBnZXRf
-Y3B1X2RldmljZShwb2xpY3ktPmNwdSk7DQo+ID4gKwlpZiAoIWNwdV9kZXYpIHsNCj4gDQo+IFdo
-eSBkbyB5b3UgbmVlZCB0aGlzIGhlcmUgPyBZb3UgZG9uJ3QgdXNlIGl0Lg0KPiANCk9LLCB3aWxs
-IHJlbW92ZSBkdW1teSBjb2RlLg0KPiA+ICsJCXByX2VycigiJXM6IGZhaWxlZCB0byBnZXQgY3B1
-JWQgZGV2aWNlXG4iLCBfX2Z1bmNfXywNCj4gPiArCQkgICAgICAgcG9saWN5LT5jcHUpOw0KPiA+
-ICsJCXJldHVybiAtRU5PREVWOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWMgPSBtdGtfZnJlcV9k
-b21haW5fbWFwW3BvbGljeS0+Y3B1XTsNCj4gPiArCWlmICghYykgew0KPiA+ICsJCXByX2Vycigi
-Tm8gc2NhbGluZyBzdXBwb3J0IGZvciBDUFUlZFxuIiwgcG9saWN5LT5jcHUpOw0KPiA+ICsJCXJl
-dHVybiAtRU5PREVWOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWNwdW1hc2tfY29weShwb2xpY3kt
-PmNwdXMsICZjLT5yZWxhdGVkX2NwdXMpOw0KPiA+ICsNCj4gPiArCXBvbGljeS0+ZnJlcV90YWJs
-ZSA9IGMtPnRhYmxlOw0KPiA+ICsJcG9saWN5LT5kcml2ZXJfZGF0YSA9IGM7DQo+ID4gKw0KPiA+
-ICsJLyogSFcgc2hvdWxkIGJlIGluIGVuYWJsZWQgc3RhdGUgdG8gcHJvY2VlZCBub3cgKi8NCj4g
-PiArCXdyaXRlbF9yZWxheGVkKDB4MSwgYy0+cmVnX2Jhc2VzW1JFR19FTkFCTEVdKTsNCj4gDQo+
-IERvbid0IHlvdSBuZWVkIHRvIGRvIHRoZSBvcHBvc2l0ZSBvZiB0aGlzIGFzIHdlbGwgPw0KPiBj
-cHVmcmVxX2RyaXZlci0+ZXhpdCA/DQo+IA0KT0ssIHdpbGwgZGVmaW5lIGV4aXQgZnVuY3Rpb24u
-DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1
-Y3QgY3B1ZnJlcV9kcml2ZXIgY3B1ZnJlcV9tdGtfaHdfZHJpdmVyID0gew0KPiA+ICsJLmZsYWdz
-CQk9IENQVUZSRVFfU1RJQ0tZIHwgQ1BVRlJFUV9ORUVEX0lOSVRJQUxfRlJFUV9DSEVDSyB8DQo+
-ID4gKwkJCSAgQ1BVRlJFUV9IQVZFX0dPVkVSTk9SX1BFUl9QT0xJQ1ksDQo+ID4gKwkudmVyaWZ5
-CQk9IGNwdWZyZXFfZ2VuZXJpY19mcmVxdWVuY3lfdGFibGVfdmVyaWZ5LA0KPiA+ICsJLnRhcmdl
-dF9pbmRleAk9IG10a19jcHVmcmVxX2h3X3RhcmdldF9pbmRleCwNCj4gPiArCS5nZXQJCT0gbXRr
-X2NwdWZyZXFfaHdfZ2V0LA0KPiA+ICsJLmluaXQJCT0gbXRrX2NwdWZyZXFfaHdfY3B1X2luaXQs
-DQo+ID4gKwkubmFtZQkJPSAibXRrLWNwdWZyZXEtaHciLA0KPiA+ICsJLmF0dHIJCT0gY3B1ZnJl
-cV9nZW5lcmljX2F0dHIsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IG10a19jcHVf
-Y3JlYXRlX2ZyZXFfdGFibGUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gPiArCQkJ
-CSAgICAgc3RydWN0IGNwdWZyZXFfbXRrICpjKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZGV2aWNl
-ICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsJdm9pZCBfX2lvbWVtICpiYXNlX3RhYmxlOw0KPiA+
-ICsJdTMyIGRhdGEsIGksIGZyZXEsIHByZXZfZnJlcSA9IDA7DQo+ID4gKw0KPiA+ICsJYy0+dGFi
-bGUgPSBkZXZtX2tjYWxsb2MoZGV2LCBMVVRfTUFYX0VOVFJJRVMgKyAxLA0KPiA+ICsJCQkJc2l6
-ZW9mKCpjLT50YWJsZSksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFjLT50YWJsZSkNCj4gPiAr
-CQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKwliYXNlX3RhYmxlID0gYy0+cmVnX2Jhc2Vz
-W1JFR19MVVRfVEFCTEVdOw0KPiA+ICsNCj4gPiArCWZvciAoaSA9IDA7IGkgPCBMVVRfTUFYX0VO
-VFJJRVM7IGkrKykgew0KPiA+ICsJCWRhdGEgPSByZWFkbF9yZWxheGVkKGJhc2VfdGFibGUgKyAo
-aSAqIExVVF9ST1dfU0laRSkpOw0KPiA+ICsJCWZyZXEgPSBGSUVMRF9HRVQoTFVUX0ZSRVEsIGRh
-dGEpICogMTAwMDsNCj4gPiArDQo+ID4gKwkJaWYgKGZyZXEgPT0gcHJldl9mcmVxKQ0KPiA+ICsJ
-CQlicmVhazsNCj4gPiArDQo+ID4gKwkJYy0+dGFibGVbaV0uZnJlcXVlbmN5ID0gZnJlcTsNCj4g
-PiArDQo+ID4gKwkJZGV2X2RiZyhkZXYsICJpbmRleD0lZCBmcmVxPSVkXG4iLA0KPiA+ICsJCQlp
-LCBjLT50YWJsZVtpXS5mcmVxdWVuY3kpOw0KPiA+ICsNCj4gPiArCQlwcmV2X2ZyZXEgPSBmcmVx
-Ow0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWMtPnRhYmxlW2ldLmZyZXF1ZW5jeSA9IENQVUZSRVFf
-VEFCTEVfRU5EOw0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtz
-dGF0aWMgaW50IG10a19nZXRfcmVsYXRlZF9jcHVzKGludCBpbmRleCwgc3RydWN0IGNwdW1hc2sg
-Km0pDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqY3B1X25wOw0KPiA+ICsJc3Ry
-dWN0IG9mX3BoYW5kbGVfYXJncyBhcmdzOw0KPiA+ICsJaW50IGNwdSwgcmV0Ow0KPiA+ICsNCj4g
-PiArCWZvcl9lYWNoX3Bvc3NpYmxlX2NwdShjcHUpIHsNCj4gPiArCQljcHVfbnAgPSBvZl9jcHVf
-ZGV2aWNlX25vZGVfZ2V0KGNwdSk7DQo+ID4gKwkJaWYgKCFjcHVfbnApDQo+ID4gKwkJCWNvbnRp
-bnVlOw0KPiA+ICsNCj4gPiArCQlyZXQgPSBvZl9wYXJzZV9waGFuZGxlX3dpdGhfYXJncyhjcHVf
-bnAsICJtdGstZnJlcS1kb21haW4iLA0KPiA+ICsJCQkJCQkgIiNmcmVxLWRvbWFpbi1jZWxscyIs
-IDAsDQo+ID4gKwkJCQkJCSAmYXJncyk7DQo+ID4gKwkJb2Zfbm9kZV9wdXQoY3B1X25wKTsNCj4g
-PiArCQlpZiAocmV0IDwgMCkNCj4gPiArCQkJY29udGludWU7DQo+ID4gKw0KPiA+ICsJCWlmIChp
-bmRleCA9PSBhcmdzLmFyZ3NbMF0pDQo+ID4gKwkJCWNwdW1hc2tfc2V0X2NwdShjcHUsIG0pOw0K
-PiA+ICsJfQ0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgaW50IG10a19jcHVfcmVzb3VyY2VzX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-diwNCj4gPiArCQkJCSAgdW5zaWduZWQgaW50IGNwdSwgaW50IGluZGV4LA0KPiA+ICsJCQkJICBj
-b25zdCB1MTYgKm9mZnNldHMpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBjcHVmcmVxX210ayAqYzsN
-Cj4gPiArCXN0cnVjdCByZXNvdXJjZSAqcmVzOw0KPiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0g
-JnBkZXYtPmRldjsNCj4gPiArCWludCByZXQsIGksIGNwdV9yOw0KPiA+ICsJdm9pZCBfX2lvbWVt
-ICpiYXNlOw0KPiA+ICsNCj4gPiArCWlmIChtdGtfZnJlcV9kb21haW5fbWFwW2NwdV0pDQo+ID4g
-KwkJcmV0dXJuIDA7DQo+ID4gKw0KPiA+ICsJYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
-YyksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFjKQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0K
-PiA+ICsNCj4gPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNF
-X01FTSwgaW5kZXgpOw0KPiA+ICsJYmFzZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJl
-cyk7DQo+ID4gKwlpZiAoSVNfRVJSKGJhc2UpKQ0KPiA+ICsJCXJldHVybiBQVFJfRVJSKGJhc2Up
-Ow0KPiANCj4gQ2FuIHlvdSB1c2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkgaGVy
-ZSA/DQo+IA0KT0ssIHdpbGwgdXNlIHRoYXQuDQo+ID4gKw0KPiA+ICsJZm9yIChpID0gUkVHX0xV
-VF9UQUJMRTsgaSA8IFJFR19BUlJBWV9TSVpFOyBpKyspDQo+ID4gKwkJYy0+cmVnX2Jhc2VzW2ld
-ID0gYmFzZSArIG9mZnNldHNbaV07DQo+ID4gKw0KPiA+ICsJcmV0ID0gbXRrX2dldF9yZWxhdGVk
-X2NwdXMoaW5kZXgsICZjLT5yZWxhdGVkX2NwdXMpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJ
-CWRldl9lcnIoZGV2LCAiRG9tYWluLSVkIGZhaWxlZCB0byBnZXQgcmVsYXRlZCBDUFVzXG4iLCBp
-bmRleCk7DQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXQgPSBt
-dGtfY3B1X2NyZWF0ZV9mcmVxX3RhYmxlKHBkZXYsIGMpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+
-ICsJCWRldl9lcnIoZGV2LCAiRG9tYWluLSVkIGZhaWxlZCB0byBjcmVhdGUgT1BQXG4iLCBpbmRl
-eCk7DQo+IA0KPiBTdGlsbCB0aGUgd3JvbmcgZXJyb3IuIFlvdSBkaWRuJ3QgZmFpbCB0byBjcmVh
-dGUgT1BQIGhlcmUgOikNCj4gDQo+IEp1c3Qgc2VhcmNoIGZvciBPUFAgaW4gdGhlIGRyaXZlciBh
-bmQgc2VlIGlmIHlvdSBuZWVkIHRvIGZpeCB0aGF0Lg0KPiANCk9LLCB3aWxsIG1vZGlmeSB0aGlz
-IGVycm9yIG1lc3NhZ2UuDQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+ID4g
-Kwlmb3JfZWFjaF9jcHUoY3B1X3IsICZjLT5yZWxhdGVkX2NwdXMpDQo+ID4gKwkJbXRrX2ZyZXFf
-ZG9tYWluX21hcFtjcHVfcl0gPSBjOw0KPiANCj4gV2hhdCBhYm91dCBkb2luZyB0aGlzIGZyb20g
-bXRrX2dldF9yZWxhdGVkX2NwdXMoKSBpbnN0ZWFkPyBXZSBhbHJlYWR5DQo+IHJ1biB0aGUgbG9v
-cCB0aGVyZS4NCj4gDQpPSywgd2lsbCBtZXJnZSB0aGlzIHRvIG10a19nZXRfcmVsYXRlZF9jcHVz
-KCkuDQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBp
-bnQgbXRrX2NwdWZyZXFfaHdfZHJpdmVyX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
-ZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqY3B1X25wOw0KPiA+ICsJc3Ry
-dWN0IG9mX3BoYW5kbGVfYXJncyBhcmdzOw0KPiA+ICsJY29uc3QgdTE2ICpvZmZzZXRzOw0KPiA+
-ICsJdW5zaWduZWQgaW50IGNwdTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJb2Zmc2V0
-cyA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCj4gPiArCWlmICghb2Zm
-c2V0cykNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArDQo+ID4gKwlmb3JfZWFjaF9wb3Nz
-aWJsZV9jcHUoY3B1KSB7DQo+ID4gKwkJY3B1X25wID0gb2ZfY3B1X2RldmljZV9ub2RlX2dldChj
-cHUpOw0KPiA+ICsJCWlmICghY3B1X25wKSB7DQo+ID4gKwkJCWRldl9kYmcoJnBkZXYtPmRldiwg
-IkZhaWxlZCB0byBnZXQgY3B1ICVkIGRldmljZVxuIiwNCj4gPiArCQkJCWNwdSk7DQo+IA0KPiBU
-aGlzIGRlc2VydmVzIGRldl9lcnIgYW5kIG1heWJlIHlvdSBzaG91bGQgZXJyb3Igb3V0IGNvbXBs
-ZXRlbHkgPw0KPiBDdXJyZW50bHkgaWYgb2ZfY3B1X2RldmljZV9ub2RlX2dldCgpIGZhaWxzIGZv
-ciBhbGwgQ1BVcywgeW91IHdpbGwNCj4gc3RpbGwgdHJ5IHRvIHJlZ2lzdGVyIHRoZSBjcHVmcmVx
-IGRyaXZlci4NCj4gDQpPSywgd2lsbCB1c2UgZGV2X2VyciBhbmQgcmV0dXJuIGZhaWwuDQo+ID4g
-KwkJCWNvbnRpbnVlOw0KPiA+ICsJCX0NCj4gPiArDQo+ID4gKwkJcmV0ID0gb2ZfcGFyc2VfcGhh
-bmRsZV93aXRoX2FyZ3MoY3B1X25wLCAibXRrLWZyZXEtZG9tYWluIiwNCj4gPiArCQkJCQkJICIj
-ZnJlcS1kb21haW4tY2VsbHMiLCAwLA0KPiA+ICsJCQkJCQkgJmFyZ3MpOw0KPiA+ICsJCWlmIChy
-ZXQgPCAwKQ0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCQkvKiBHZXQgdGhlIGJh
-c2VzIG9mIGNwdWZyZXEgZm9yIGRvbWFpbnMgKi8NCj4gPiArCQlyZXQgPSBtdGtfY3B1X3Jlc291
-cmNlc19pbml0KHBkZXYsIGNwdSwgYXJncy5hcmdzWzBdLCBvZmZzZXRzKTsNCj4gPiArCQlpZiAo
-cmV0KSB7DQo+ID4gKwkJCWRldl9lcnIoJnBkZXYtPmRldiwgIkNQVUZyZXEgcmVzb3VyY2UgaW5p
-dCBmYWlsZWRcbiIpOw0KPiA+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsJCX0NCj4gPiArCX0NCj4g
-PiArDQo+ID4gKwlyZXQgPSBjcHVmcmVxX3JlZ2lzdGVyX2RyaXZlcigmY3B1ZnJlcV9tdGtfaHdf
-ZHJpdmVyKTsNCj4gPiArCWlmIChyZXQpIHsNCj4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJD
-UFVGcmVxIEhXIGRyaXZlciBmYWlsZWQgdG8gcmVnaXN0ZXJcbiIpOw0KPiA+ICsJCXJldHVybiBy
-ZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4g
-K3N0YXRpYyBpbnQgbXRrX2NwdWZyZXFfaHdfZHJpdmVyX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4gY3B1ZnJlcV91bnJlZ2lzdGVyX2Ry
-aXZlcigmY3B1ZnJlcV9tdGtfaHdfZHJpdmVyKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2NwdWZyZXFfaHdfbWF0Y2hbXSA9IHsNCj4g
-PiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssY3B1ZnJlcS1odyIsIC5kYXRhID0gJmNwdWZy
-ZXFfbXRrX29mZnNldHMgfSwNCj4gPiArCXt9DQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMg
-c3RydWN0IHBsYXRmb3JtX2RyaXZlciBtdGtfY3B1ZnJlcV9od19kcml2ZXIgPSB7DQo+ID4gKwku
-cHJvYmUgPSBtdGtfY3B1ZnJlcV9od19kcml2ZXJfcHJvYmUsDQo+ID4gKwkucmVtb3ZlID0gbXRr
-X2NwdWZyZXFfaHdfZHJpdmVyX3JlbW92ZSwNCj4gPiArCS5kcml2ZXIgPSB7DQo+ID4gKwkJLm5h
-bWUgPSAibXRrLWNwdWZyZXEtaHciLA0KPiA+ICsJCS5vZl9tYXRjaF90YWJsZSA9IG10a19jcHVm
-cmVxX2h3X21hdGNoLA0KPiA+ICsJfSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQg
-X19pbml0IG10a19jcHVmcmVxX2h3X2luaXQodm9pZCkNCj4gPiArew0KPiA+ICsJcmV0dXJuIHBs
-YXRmb3JtX2RyaXZlcl9yZWdpc3RlcigmbXRrX2NwdWZyZXFfaHdfZHJpdmVyKTsNCj4gPiArfQ0K
-PiA+ICttb2R1bGVfaW5pdChtdGtfY3B1ZnJlcV9od19pbml0KTsNCj4gPiArDQo+ID4gK3N0YXRp
-YyB2b2lkIF9fZXhpdCBtdGtfY3B1ZnJlcV9od19leGl0KHZvaWQpDQo+ID4gK3sNCj4gPiArCXBs
-YXRmb3JtX2RyaXZlcl91bnJlZ2lzdGVyKCZtdGtfY3B1ZnJlcV9od19kcml2ZXIpOw0KPiA+ICt9
-DQo+ID4gK21vZHVsZV9leGl0KG10a19jcHVmcmVxX2h3X2V4aXQpOw0KPiANCj4gWW91IGNhbiB1
-c2UgdGhpcyBpbnN0ZWFkLg0KPiANCj4gbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihtdGtfY3B1ZnJl
-cV9od19kcml2ZXIpOw0KPiANCk9LLCB3aWxsIGRvIHRoYXQuDQo+ID4gKw0KPiA+ICtNT0RVTEVf
-REVTQ1JJUFRJT04oIm10ayBDUFVGUkVRIEhXIERyaXZlciIpOw0KPiA+ICtNT0RVTEVfTElDRU5T
-RSgiR1BMIHYyIik7DQo+ID4gLS0gDQo+ID4gMS43LjkuNQ0KPiANCg0K
+On Wed, Sep 09, 2020 at 10:00:25AM +0200, Petr Mladek wrote:
+> On Wed 2020-09-09 14:47:45, Masami Hiramatsu wrote:
+> > Hi Naresh,
+> > 
+> > Thanks for reporting, it seems that you have run the kselftests/livepatch/test-livepatch.sh.
+> > Then, I think it is better to report to Livepatch maintainers too. (I Cc'd them)
+> > 
+> > Thank you,
+> > 
+> > On Wed, 9 Sep 2020 10:24:09 +0530
+> > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > 
+> > > While testing livepatch test cases on x86_64 with Linux next 20200908 tag kernel
+> > > this kernel BUG noticed several times.
+> > > 
+> > > metadata:
+> > >   git branch: master
+> > >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > >   git commit: dff9f829e5b0181d4ed9d35aa62d695292399b54
+> > >   git describe: next-20200908
+> > >     kernel-config:
+> > > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/853/config
+> > > 
+> > > kernel BUG log,
+> > > ----------------------
+> > > [  634.063970] % rmmod test_klp_livepatch
+> > > [  634.114787] test_klp_atomic_replace: this has been live patched
+> > > [  634.121953] % echo 0 > /sys/kernel/livepatch/test_klp_atomic_replace/enabled
+> > > [  634.129391] livepatch: 'test_klp_atomic_replace': starting
+> > > unpatching transition
+> > > [  634.143990] livepatch: 'test_klp_atomic_replace': unpatching complete
+> > > [  634.156223] % rmmod test_klp_atomic_replace
+> > > [  634.235451] ------------[ cut here ]------------
+> > > [  634.240314] kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
+> > > [  634.246584] invalid opcode: 0000 [#1] SMP PTI
+> > > [  634.250955] CPU: 0 PID: 12791 Comm: test-livepatch. Tainted: G
+> > >   W     K   5.9.0-rc4-next-20200908 #1
+> > > [  634.260615] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > > 2.2 05/23/2018
+> > > [  634.268007] RIP: 0010:ddebug_exec_query+0x77b/0xb90
+> > > [  634.272886] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
+> > > 00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
+> > > fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
+> > > 8b 15
+> > > [  634.291630] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
+> > > [  634.296856] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
+> > > [  634.303987] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
+> > > [  634.311111] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
+> > > [  634.318236] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
+> > > [  634.325368] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
+> > > [  634.332500] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
+> > > knlGS:0000000000000000
+> > > [  634.340578] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [  634.346315] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
+> > > [  634.353446] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > [  634.360570] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > [  634.367693] Call Trace:
+> > > [  634.370139]  ? lock_acquire+0xa6/0x390
+> > > [  634.373892]  ? __might_fault+0x34/0x80
+> > > [  634.377648]  ddebug_exec_queries+0x6e/0x140
+> > > [  634.381831]  ddebug_proc_write+0x4b/0xa0
+> > > [  634.385756]  full_proxy_write+0x5f/0x90
+> > > [  634.389595]  vfs_write+0xed/0x240
+> > > [  634.392915]  ksys_write+0xad/0xf0
+> > > [  634.396233]  ? syscall_trace_enter+0x17a/0x240
+> > > [  634.400670]  __x64_sys_write+0x1a/0x20
+> > > [  634.404416]  do_syscall_64+0x37/0x50
+> > > [  634.407993]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > [  634.413038] RIP: 0033:0x7fd371b84144
+> > > [  634.416617] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00
+> > > 00 00 00 00 66 90 48 8d 05 c1 e7 2c 00 8b 00 85 c0 75 13 b8 01 00 00
+> > > 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89
+> > > f5 53
+> > > [  634.435362] RSP: 002b:00007ffd19447658 EFLAGS: 00000246 ORIG_RAX:
+> > > 0000000000000001
+> > > [  634.442928] RAX: ffffffffffffffda RBX: 00000000000000bc RCX: 00007fd371b84144
+> > > [  634.450059] RDX: 00000000000000bc RSI: 0000000000e6cf70 RDI: 0000000000000001
+> > > [  634.457181] RBP: 0000000000e6cf70 R08: 00000000000000e9 R09: 0000000000000000
+> > > [  634.464305] R10: 00007ffd19447c48 R11: 0000000000000246 R12: 00007fd371e4e760
+> > > [  634.471429] R13: 00000000000000bc R14: 00007fd371e49760 R15: 00000000000000bc
+> > > [  634.478559] Modules linked in: trace_printk sch_fq 8021q
+> > > iptable_filter xt_mark ip_tables cls_bpf sch_ingress veth algif_hash
+> > > x86_pkg_temp_thermal fuse [last unloaded: test_klp_atomic_replace]
+> > > [  634.495695] ---[ end trace d04d7e11bd1458bf ]---
+> > > [  634.500333] RIP: 0010:ddebug_exec_query+0x77b/0xb90
+> > > [  634.505218] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
+> > > 00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
+> > > fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
+> > > 8b 15
+> > > [  634.523969] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
+> > > [  634.529197] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
+> > > [  634.536330] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
+> > > [  634.543462] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
+> > > [  634.550593] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
+> > > [  634.557727] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
+> > > [  634.564869] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
+> > > knlGS:0000000000000000
+> > > [  634.572953] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [  634.578699] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
+> > > [  634.585829] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > [  634.592964] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> It is caused by the commit 42f07816ac0cc79792811 ("dyndbg:
+> fix problem parsing format="foo bar"). It modified the condition
+> when the above BUG() gets triggered.
+> 
+> It has even been reported by the kernel test robot, see
+> https://lore.kernel.org/lkml/20200902074124.GP4299@shao2-debian/
+> 
+> 
+> It is triggered when the livepatching selftest is trying to restore the
+> original setting of dynamic debug messages in the livepatch framework.
+> 
+> It can get reliably reproduced by the following call:
+> 
+> $> echo -n 'file kernel/livepatch/transition.c line 586 =_' > \
+>    /sys/kernel/debug/dynamic_debug/control
+> 
+> 
+> Adding people from the problematic patch into CC.
+> 
+> I haven't dived into the dynamic debug code yet. The logic might
+> be wrong.
+> 
+> Anyway, the BUG_ON() should get replaced by a normal error message.
+> There is no reason to panic() when a string can't be parsed !!!
 
+The above mentioned patch was trying to fix things so that the BUG_ON()
+would not be hit, I guess that's not really happening here :(
+
+Jim, can you look into this?
+
+thanks,
+
+greg k-h
