@@ -2,93 +2,114 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A94C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9107C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202FA2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E41121919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dgIxAhSw"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Lk6/SwLG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbgIIRCw (ORCPT
+        id S1730909AbgIIRC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49926 "EHLO
+        Wed, 9 Sep 2020 13:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730520AbgIIPrQ (ORCPT
+        with ESMTP id S1730522AbgIIPrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:47:16 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E60EEC061373
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:17:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so3750606ljk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:17:57 -0700 (PDT)
+        Wed, 9 Sep 2020 11:47:15 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200B3C061376
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:19:10 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id b6so3301678iof.6
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:19:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RI+bxv5VZflN6t2kKylQhV08+/GCPgbygshc8DXvDRw=;
-        b=dgIxAhSw/d+KeaJLhyjaMwi9TdxfkI7HLOKZDlzi73AQBXjyD3sj4Ezv0ST0qI3kVj
-         dVrcM35E5fBcLfotWOkVSbzco3ejp6fTIF13sGxcqMhkH1jrZ7F6kGnBFqLswBbEA4wQ
-         Lu6wa3K4F92LZMwycMHAtIuPK400uLTm7CEiXYsC1akHJ2ZooKeUaWeAIALiLCz5e5Bs
-         l+GTFj9e+iVlFJWrJTptnBNeOCtB6bMwPwVzLeH+VHsvFWL8IFeyb3jNKp9XETcZtP25
-         Bin9CViLVt1+GnUjkBunWFxgnClU2IhijD+5lyK/uCwcf9MBU+7AOgKcTg5aT9xD0XBu
-         5LjQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CmblY2ylsYjWHFktEYRzj6RVW7MJd9inxZj+0AXmUk4=;
+        b=Lk6/SwLGNkoc/Vmb1jUQAmwDs73O+dRP/R0g5tuhROvzrh/Xnk8DRAR5mGdwWdArJz
+         vZCH3IiSyp1vbwdoaXo4+xF/vLonCfcw4VZgLReFRUaGo3f7hb0+XfH/U5M63xTrGc22
+         26LIBp/6IjlkQstor6j4UKXSkN6kKDWyMBce3lqAev9u8mrhaOpzClEhtubcQJ1N1AKL
+         Bj+8yJal2FyQTOENoLhAPKKLy+gnutm0ri7C3yCxOFxibH/o76jkYvTf7nZgV4gV/Scw
+         1qqlDnuzC9qe2G7lwQzLfbhNXl5GB2CT1bhNa3mbs9Et/qsEY41x23JZo7JgkmMdxKUJ
+         dd+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RI+bxv5VZflN6t2kKylQhV08+/GCPgbygshc8DXvDRw=;
-        b=DQQmAde1yzM52GIQFTL6ErrM1GnN9LRG1GVT6ZS+qi62UQyqy4JHiPPH+hJa4SV9N+
-         8l+3poTz2YUnlM5xrRZWLhEjyFr9bLUBnsxV0XvKFQ45BMzq7xdMOtie3OACKZmwf6UW
-         AwtTVmrplVX7UUE/gjdVDH3zQP+umaZ3ZfOIeJgwqb3hXNGg/r45iFw2UXtNl9nUkAzc
-         tdO83qUxEVJTGSiZCCXeya5T9Z8nzdM/IEAp+qAIHwb+cEDBS4MSze3RIigDDtSF8tvR
-         mPZSE9+Pz1g6SOu+vU/KKtuYlEtgdE2pUQRU6NNJ5VcV1q8sa3Hq++ib0jX2hIc31sKI
-         IcNA==
-X-Gm-Message-State: AOAM532kfAArB2V9z9nNucGWZQeYKsduYWQ4G6XzSlwz0EjwJwuBPKHO
-        BDtw15EbqP+NGgUIB2CfC32sLQ==
-X-Google-Smtp-Source: ABdhPJxJ1cka0/yw3k+K2Latb67SojZMHiT6GzCn48C/9jxpCdPi3NJrrI9YQkpJNaCI30I7JUmjfg==
-X-Received: by 2002:a05:651c:1253:: with SMTP id h19mr1906184ljh.55.1599661076370;
-        Wed, 09 Sep 2020 07:17:56 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id l15sm785890lje.16.2020.09.09.07.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 07:17:55 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A10F71036AE; Wed,  9 Sep 2020 17:18:00 +0300 (+03)
-Date:   Wed, 9 Sep 2020 17:18:00 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 06/16] mm: thp: add 1GB THP split_huge_pud_page()
- function.
-Message-ID: <20200909141800.4ueixh2gw5lv4deh@box>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200902180628.4052244-7-zi.yan@sent.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CmblY2ylsYjWHFktEYRzj6RVW7MJd9inxZj+0AXmUk4=;
+        b=kg7dtbWuCx+JQPchjkYpdfb1iJzE3BLAHKWi1jBzNrtgfrE6rYmjGGWbaQ0Bepy80o
+         8IHNDUtphDEENsCaXVsk5iwc/vlgbIhzEl3euJ6u29q/kTipjIRdlDmEbivWL+5EhBvS
+         ABwpL8Vi8dksWvLr/Z+/kjjqUgeZo/a/u6bGMLpEBxPMfXVO0IUe3Au+dqYVRV7rntJa
+         2bzObfiUddoacwc4o8quKjzIdth7ofeboSwJbQejw9AmgqKXXGj/QHn4tlj5NDF3CVgP
+         SpwSYmj4PVnzW/0diQs86v36dUEQdfMzUlrdTgPnPIWYnwmHrNMq3CHY9r5amvzvo5Al
+         gglg==
+X-Gm-Message-State: AOAM531zXZLDOq8gtjv15XqDoiZbaj8dMgAx8P2wYlJTrnSkOoCyzkJ9
+        DVpycJEaVVneXQjsnBqwOxkw1w==
+X-Google-Smtp-Source: ABdhPJz8z7+J9CHtH1Rzw4Ej3kaYLD5DXx+Zu82Roro2EA5WfFs49suUa42wQSyVizXaM4N2MkzHhw==
+X-Received: by 2002:a02:ca0e:: with SMTP id i14mr4357841jak.65.1599661149424;
+        Wed, 09 Sep 2020 07:19:09 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r8sm1200756iot.51.2020.09.09.07.19.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 07:19:08 -0700 (PDT)
+Subject: Re: [RESEND PATCH 1/1] block: Set same_page to false in
+ __bio_try_merge_page if ret is false
+To:     Ritesh Harjani <riteshh@linux.ibm.com>, linux-block@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+References: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a90e9ab8-93b5-8ea0-97fb-2d5ea90196b1@kernel.dk>
+Date:   Wed, 9 Sep 2020 08:19:07 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902180628.4052244-7-zi.yan@sent.com>
+In-Reply-To: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 02:06:18PM -0400, Zi Yan wrote:
->  25 files changed, 852 insertions(+), 98 deletions(-)
+On 9/8/20 9:14 PM, Ritesh Harjani wrote:
+> If we hit the UINT_MAX limit of bio->bi_iter.bi_size and so we are anyway
+> not merging this page in this bio, then it make sense to make same_page
+> also as false before returning.
+> 
+> Without this patch, we hit below WARNING in iomap.
+> This mostly happens with very large memory system and / or after tweaking
+> vm dirty threshold params to delay writeback of dirty data.
+> 
+> WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
+>  CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
+>  Call Trace:
+>   __remove_mapping+0x154/0x320 (unreliable)
+>   iomap_releasepage+0x80/0x180
+>   try_to_release_page+0x94/0xe0
+>   invalidate_inode_page+0xc8/0x110
+>   invalidate_mapping_pages+0x1dc/0x540
+>   generic_fadvise+0x3c8/0x450
+>   xfs_file_fadvise+0x2c/0xe0 [xfs]
+>   vfs_fadvise+0x3c/0x60
+>   ksys_fadvise64_64+0x68/0xe0
+>   sys_fadvise64+0x28/0x40
+>   system_call_exception+0xf8/0x1c0
+>   system_call_common+0xf0/0x278
 
-It's way too big to have meaningful review.
+Applied, thanks.
 
 -- 
- Kirill A. Shutemov
+Jens Axboe
+
