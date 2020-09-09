@@ -2,258 +2,124 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5909CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C5C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB7B21D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX+OlvYf"
+	by mail.kernel.org (Postfix) with ESMTP id D507D21D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgIIHKG (ORCPT
+        id S1728709AbgIIHKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgIIHJ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:09:58 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97E5C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:09:57 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t18so742859ilp.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K5nt6NW95MoUAw6MEltboJP4x+aHBBR4bvSni/nMTG8=;
-        b=HX+OlvYfFmyRY5KpnVk1/SUaMZH+K1Xnbx4XAYBPTuFmyWdcLqS50beKODjTdFXU38
-         ueuKrhflniqebAemuOkyT7bjtG/DbEI26PRkrdAVlMTxbNRBHL3FVNHv6rRbySPWYwM2
-         oinTrfj9fbCM547HrtJlFn1ROfb8IdjVvi1E17ndMY9F6Oub5qfD4i3uxav+hRjHKbmn
-         otQy3DKscJbCeBBmuAZ951ikCqkzbXQCMWcCjUNIqDQEzJuPP8axmWCPpa6CALAZPRrd
-         SncUjs/kvzfLyisAKFoz1NhI/4LYSp1QG4p7E+nthO8NTQeq73mjmjB7o8fGjOtymCxv
-         GTXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K5nt6NW95MoUAw6MEltboJP4x+aHBBR4bvSni/nMTG8=;
-        b=XkOAAgEVSiNcAagopaS2LdKjF+K7J9yMdgZD+DG+NWvP64hQGOu15jFc2c2Mu8U3kP
-         uEf8G9D++/Yo1RcdjwLDJZQGkm4i2dWSw4PzXnxegTzSpDwuozbh16R2g7DXMAslHVTN
-         EM3catmwTbU/C/iELg59+ciOBJUyVYR/uONXzDTmusPm8rabLP+nC0U2bvyNr6RiW41t
-         t3rmkUgFVRSUrIigrlbl1juR4cf4RpuxhTzWDjB/Lb0ZR7wuTSPaEja3IdV9GEEZXAbs
-         QK3qKC4d9vaNDfJnTASuNXZg4OZLh3HzHLFsVLSQbsBa3z3mfJE/cWEo6sWi8hsyDgi1
-         EITA==
-X-Gm-Message-State: AOAM5306r2jQ3N6S0RmpqH4JBOTiYVjiMm//kX/9G2muwv+ucuH+NPPN
-        q9cPFA8ougvdjZEVreCnkFfG6WzvjQvybPHZ0ns=
-X-Google-Smtp-Source: ABdhPJwIA2ommqfDJurjDZrxOv9h0V7R0Dq40OXozD6jcy0NEPGLU4HA7zRSMsxBa1m/L5xOhP6cWc1IIKoPAjG7CgQ=
-X-Received: by 2002:a92:d188:: with SMTP id z8mr2525174ilz.292.1599635395503;
- Wed, 09 Sep 2020 00:09:55 -0700 (PDT)
+        Wed, 9 Sep 2020 03:10:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32828 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbgIIHKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:10:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 28B46B61E;
+        Wed,  9 Sep 2020 07:10:03 +0000 (UTC)
+Subject: Re: [PATCH 07/19] swim3: use bdev_check_media_changed
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20200908145347.2992670-1-hch@lst.de>
+ <20200908145347.2992670-8-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <174779e9-149d-a10e-23aa-c5d280fd4feb@suse.de>
+Date:   Wed, 9 Sep 2020 09:10:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1597661277-27862-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597661277-27862-10-git-send-email-gene.chen.richtek@gmail.com>
- <20200828104053.GM1826686@dell> <CAE+NS37uFoDhWyGkw0WTu+tR+_85EwzYRqecNMG6nK6b2J=9jg@mail.gmail.com>
- <20200908114819.GO4400@dell>
-In-Reply-To: <20200908114819.GO4400@dell>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Wed, 9 Sep 2020 07:09:44 +0800
-Message-ID: <CAE+NS36MVA=9e0Ev73gpJ-gOcY+_aNveTr+DhquD6iqY-GKXCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 9/9] mfd: mt6360: Merge different sub-devices I2C read/write
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200908145347.2992670-8-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B49=E6=9C=888=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:48=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, 01 Sep 2020, Gene Chen wrote:
->
-> > Lee Jones <lee.jones@linaro.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8828=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:40=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > On Mon, 17 Aug 2020, Gene Chen wrote:
-> > >
-> > > > From: Gene Chen <gene_chen@richtek.com>
-> > > >
-> > > > Remove unuse register definition.
-> > >
-> > > This should be in a separate patch.
-> > >
-> > > > Merge different sub-devices I2C read/write functions into one Regma=
-p,
-> > > > because PMIC and LDO part need CRC bits for access protection.
-> > > >
-> > > > Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> > > > ---
-> > > >  drivers/mfd/Kconfig        |   1 +
-> > > >  drivers/mfd/mt6360-core.c  | 260 +++++++++++++++++++++++++++++++++=
-++++++------
-> > > >  include/linux/mfd/mt6360.h | 240 ---------------------------------=
---------
-> > > >  3 files changed, 226 insertions(+), 275 deletions(-)
-> > > >  delete mode 100644 include/linux/mfd/mt6360.h
-> > > >
-> > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > > index a37d7d1..0684ddc 100644
-> > > > --- a/drivers/mfd/Kconfig
-> > > > +++ b/drivers/mfd/Kconfig
-> > > > @@ -913,6 +913,7 @@ config MFD_MT6360
-> > > >       select MFD_CORE
-> > > >       select REGMAP_I2C
-> > > >       select REGMAP_IRQ
-> > > > +     select CRC8
-> > > >       depends on I2C
-> > > >       help
-> > > >         Say Y here to enable MT6360 PMU/PMIC/LDO functional support=
-.
-> > > > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-> > > > index 677c974..e995220 100644
-> > > > --- a/drivers/mfd/mt6360-core.c
-> > > > +++ b/drivers/mfd/mt6360-core.c
-> > > > @@ -14,7 +14,53 @@
-> > > >  #include <linux/regmap.h>
-> > > >  #include <linux/slab.h>
-> > > >
-> > > > -#include <linux/mfd/mt6360.h>
-> > > > +enum {
-> > > > +     MT6360_SLAVE_TCPC =3D 0,
-> > > > +     MT6360_SLAVE_PMIC,
-> > > > +     MT6360_SLAVE_LDO,
-> > > > +     MT6360_SLAVE_PMU,
-> > > > +     MT6360_SLAVE_MAX,
-> > > > +};
-> > > > +
-> > > > +struct mt6360_ddata {
-> > > > +     struct i2c_client *i2c[MT6360_SLAVE_MAX];
-> > > > +     struct device *dev;
-> > > > +     struct regmap *regmap;
-> > > > +     struct regmap_irq_chip_data *irq_data;
-> > > > +     unsigned int chip_rev;
-> > > > +     u8 crc8_tbl[CRC8_TABLE_SIZE];
-> > > > +};
-> > >
-> > > This is not a new structure, right?  Where was this before?  Surely i=
-t
-> > > should be removed from wherever it was in the same patch that places
-> > > it here?
-> > >
-> >
-> > No, it is merge from header file to source code for unuse in other sub-=
-module.
->
-> So where did it come from and why don't I see the removal in this
-> patch?
->
+On 9/8/20 4:53 PM, Christoph Hellwig wrote:
+> Switch to use bdev_check_media_changed instead of check_disk_change and
+> call floppy_revalidate manually.  Given that floppy_revalidate only
+> deals with media change events, the extra call into ->revalidate_disk
+> from bdev_disk_changed is not required either, so stop wiring up the
+> method.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> ---
+>  drivers/block/swim3.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Change is in the bottom of this patch.
-There is a little confuse part in "[PATCH v4 5/9] mfd: mt6360: Rename
-mt6360_pmu_data by mt6360_ddata"
-The "PATCH 5/9" change mt6360_pmu_data to mt6360_ddata instead of mt6360_da=
-ta.
-I will update PATCH v5 to fix it.
+Cheers,
 
-[PATCH v4 9/9]
-diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
--struct mt6360_data {
--       struct i2c_client *i2c[MT6360_SLAVE_MAX];
--       struct device *dev;
--       struct regmap *regmap;
--       struct regmap_irq_chip_data *irq_data;
--       unsigned int chip_rev;
--};
-
-[PATCH v4 5/9]
-diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
--struct mt6360_pmu_data {
-+struct mt6360_data {
-        struct i2c_client *i2c[MT6360_SLAVE_MAX];
-        struct device *dev;
-        struct regmap *regmap;
-
-
-> [...]
->
-> > > > -static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] =
-=3D {
-> > > > -     MT6360_PMU_SLAVEID,
-> > > > +static const u16 mt6360_slave_addrs[MT6360_SLAVE_MAX] =3D {
-> > >
-> > > Why are you changing the data type?
-> > >
-> >
-> > Easy to read.
-> > I think it's the same?
->
-> It's an unrelated change and should not be in this patch.
->
-> Please separate patches into functional changes.
->
-
-ACK. It's not very important change. I will revert it.
-
-> > > > +     MT6360_TCPC_SLAVEID,
-> > > >       MT6360_PMIC_SLAVEID,
-> > > >       MT6360_LDO_SLAVEID,
-> > > > -     MT6360_TCPC_SLAVEID,
-> > > > +     MT6360_PMU_SLAVEID,
-> > > > +};
->
-> [...]
->
-> > > >  static int mt6360_probe(struct i2c_client *client)
-> > > > @@ -329,9 +521,23 @@ static int mt6360_probe(struct i2c_client *cli=
-ent)
-> > > >               return -ENOMEM;
-> > > >
-> > > >       ddata->dev =3D &client->dev;
-> > > > -     i2c_set_clientdata(client, ddata);
-> > > >
-> > > > -     ddata->regmap =3D devm_regmap_init_i2c(client, &mt6360_pmu_re=
-gmap_config);
-> > > > +     for (i =3D 0; i < MT6360_SLAVE_MAX - 1; i++) {
-> > > > +             ddata->i2c[i] =3D devm_i2c_new_dummy_device(&client->=
-dev,
-> > > > +                                                       client->ada=
-pter,
-> > > > +                                                       mt6360_slav=
-e_addrs[i]);
-> > > > +             if (IS_ERR(ddata->i2c[i])) {
-> > > > +                     dev_err(&client->dev,
-> > > > +                             "Failed to get new dummy I2C device f=
-or address 0x%x",
-> > > > +                             mt6360_slave_addrs[i]);
-> > > > +                     return PTR_ERR(ddata->i2c[i]);
-> > >
-> > > Do you have to free the new devices you just allocated?
-> > >
-> >
-> > Usually no need to free devm_i2c_new_dummy_device,
-> > Should I use kfree(ddata->i2c[i]);?
->
-> You tell me.
->
-
-I survey the upstream code e.q. drivers/mfd/tps80031.c
-It' should not have to free the memory.
-
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Hannes
+-- 
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
