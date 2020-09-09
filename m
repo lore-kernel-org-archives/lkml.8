@@ -2,85 +2,84 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4103C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4252DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C47206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AB7206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599671918;
-	bh=YrPDcU8CAauI5I1aJRFu4u8EEBAbnGremxHMZQRp3ms=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=G7Y+rvncj4vrcxxhtOG2yjxlSZmkaPzsEpu+4FP17r/u75wkDVvTaZf/n7qQu8evL
-	 C4QdUOL1YHgAu6nVv1ItcvdzS0ADH7fxo7pbA0tEm+i6tbrPFBsJ7E+aJ87//l9awG
-	 OWl5AVpm7PeRHScqxslD0mkIHmOy+gSmjeC/oJso=
+	s=default; t=1599671930;
+	bh=OMihYBJ6xvOdxxMLmTKgnorsZGJ7XVEG8zFXlFqEiAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QpYVjsO06fO7cpgbUb21lyfRTlSj3LC1ho/XDJvQ8DTd3IgyWiCZjUI7f5y3t5D7R
+	 lMH/q9Pvz4ehfuIcmKDocPPWsOwoWyjDt3hviMVL2TRw/aYw361m7E12x0bzB/3nqU
+	 pT728RrSBB4x4RmUx0ke6OozGlYEJSVr2lbiOxaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbgIIRSb (ORCPT
+        id S1731128AbgIIRSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbgIIP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:27:59 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C3D22276;
-        Wed,  9 Sep 2020 15:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599664684;
-        bh=YrPDcU8CAauI5I1aJRFu4u8EEBAbnGremxHMZQRp3ms=;
-        h=From:To:Subject:Date:From;
-        b=qUpIqDTile1YKhos64e+JX+Vd1ZPbBaihbYqVqYHNa9BmqbJur/oIeojIfO+mg+S0
-         Arp8CWRYSUDB3NauXHi2VUUuD6nUXIwirUwJY3GDUPVmQ9mHI/DSkBut62rN8hvGbU
-         vudS1hkGrjbPpflVIPvAxqRVCuBBIEIuRMaXlACE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] arm64: dts: imx8mm-var-som-symphony: Remove unneeded i2c3 properties
-Date:   Wed,  9 Sep 2020 17:17:53 +0200
-Message-Id: <20200909151755.17783-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Sep 2020 13:18:48 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41314 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730168AbgIIRSo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:18:44 -0400
+Received: by mail-il1-f194.google.com with SMTP id w8so3058415ilj.8;
+        Wed, 09 Sep 2020 10:18:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1hr4fQWVMQoos6KFmQBQi97levSHBi+dO9Jnfm/kgyc=;
+        b=QgVDrQv79/bMsspyf26g4QQ7M+nDYYC/uCyuQAI6TQmqQO9jt5pBIr+Mlusq9nduAE
+         eyKUQSv+CBNtLnXmfaF4UVbv+Eh9R3p20rQfmcfxvpnJx0bheNnCp274h8xntUrA6YTL
+         pEbbgtFSY1NAQdGEfXBxhlFRZKPfY3yctAMGgEqu3fy4klGIQ3GZBMhu/ML2mfsl91O5
+         m671D9XSpw/34bNwhjwmj+4TwKoVzBKXYDXyqnV6dD5r6WbpGJzHbw5iNhCkiEtNYzVA
+         sOWvIiDr89TV/HICs1wPOonQaP+eqy4+Gi9Hn1ym5+2hPL173KUd8Kq+MG8OZQ0TJvEg
+         QZbg==
+X-Gm-Message-State: AOAM533E7xhtu7K5XJRV2KAI8tOtdLjd6y5OssahsAiIoLgHK5bQASKW
+        xYFJZcSYgX4SjyrA1Szz5pt2u8/klmWD
+X-Google-Smtp-Source: ABdhPJweONXjnuZtBkOGVqg1AFS1ASeGmxxVhyJmF8gPg8PMO09CmvmPl5R9xygei/39Fl6Prjb6gg==
+X-Received: by 2002:a92:bb94:: with SMTP id x20mr4613847ilk.86.1599671923668;
+        Wed, 09 Sep 2020 10:18:43 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id s15sm1610420ilt.62.2020.09.09.10.18.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 10:18:43 -0700 (PDT)
+Received: (nullmailer pid 2680839 invoked by uid 1000);
+        Wed, 09 Sep 2020 17:18:42 -0000
+Date:   Wed, 9 Sep 2020 11:18:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: regulator: Convert mp886x to json-schema
+Message-ID: <20200909171842.GA2680789@bogus>
+References: <20200827150640.267f6edc@xhacker.debian>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827150640.267f6edc@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c3 clock frequency and pin configuration are already set by
-imx8mm-var-som.dtsi.
+On Thu, 27 Aug 2020 15:06:40 +0800, Jisheng Zhang wrote:
+> Convert the mp886x binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  .../devicetree/bindings/regulator/mp886x.txt  | 31 ----------
+>  .../bindings/regulator/mps,mp886x.yaml        | 61 +++++++++++++++++++
+>  2 files changed, 61 insertions(+), 31 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-index fbf321cdcf16..1c427260e887 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-@@ -121,11 +121,6 @@
- };
- 
- &i2c3 {
--	clock-frequency = <400000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2c3>;
--	status = "okay";
--
- 	/* Capacitive touch controller */
- 	ft5x06_ts: touchscreen@38 {
- 		compatible = "edt,edt-ft5406";
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
