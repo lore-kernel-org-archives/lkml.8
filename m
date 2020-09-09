@@ -2,112 +2,142 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCA0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84D1C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 805F1215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="CSlLrAx2"
+	by mail.kernel.org (Postfix) with ESMTP id 81E22215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgIIKHD (ORCPT
+        id S1728015AbgIIKIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:07:03 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:3045 "EHLO smtp1.axis.com"
+        Wed, 9 Sep 2020 06:08:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:41216 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbgIIKHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:07:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1544; q=dns/txt; s=axis-central1;
-  t=1599646019; x=1631182019;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=IGajUZBa96i/VzPEy7tge28b46RvbWFmOz5Ue/tcm4k=;
-  b=CSlLrAx2FnSv1gOENiLBW+7a8+vlz+08AlkCubK+J/LfmXw4DxmO5nIe
-   ItFZGEwF5zfx3ScjvLA6MgRh8A8HEgkGJ/kGcjoYkKx1KGnQdrX3kQctv
-   CbYU5oFpdrH+VQYJB1mi5hx7/VkAyRjEOKMRsdsZGyEe4uUuuLasm4+c+
-   3IHilHuxwa97zvTuBp9wEIGwwcY7RxklPT6L1bCEoM46+w2KDV2N8uf+c
-   c+8BWz6ioACeqg176KSOGg9wKh1G5o/f2qmaQmJmS1Hu2UUdcVnkSn/TC
-   RAv5fs5zx0iqPBqgQoH+ae8jko0JdXlLtC+CEt9OfWI9hszbU8BXyZZ00
-   g==;
-IronPort-SDR: /6mEj/gzoUQOdYQvxHD9rdzrF/U/w0nRti7xCvCa1CGoHSfjobjC2E6ngngkG8YM7jSwtZrhvF
- gbkQ1bBMkkIT32d4YHABLl+N28FpDJIxOwbaVUFDV+NiAimefjat8q4xjPTBgGqhkJmrqHBP4e
- pq04iV3tqDus6jidBge+AkEfIJqB5qe4gYwmN6dJuS/rHLN9QaProaE5eUujwXdbtT/B0mMtNS
- i013/ggzub0/hLT48WByU3EBuyvfNecGRFY7aZNBaZq0wCeQC5XyOLdzzz6SgG5vS0jpD2Lrh2
- x6w=
-X-IronPort-AV: E=Sophos;i="5.76,409,1592863200"; 
-   d="scan'208";a="12709791"
-Subject: Re: [PATCH 1/2] ASoC: tlv320adcx140: Avoid accessing invalid
- gpio_reset
-To:     Mark Brown <broonie@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>, Camel Guo <Camel.Guo@axis.com>,
-        "tiwai@suse.com" <tiwai@suse.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>
-References: <20200908083521.14105-1-camel.guo@axis.com>
- <159958562064.16576.7853800514030717096.b4-ty@kernel.org>
-From:   Camel Guo <camelg@axis.com>
-Message-ID: <1e17f203-7b60-bf97-4515-937e722f5ef7@axis.com>
-Date:   Wed, 9 Sep 2020 12:06:45 +0200
+        id S1726489AbgIIKIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:08:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D917331B;
+        Wed,  9 Sep 2020 03:08:10 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCECF3F66E;
+        Wed,  9 Sep 2020 03:08:08 -0700 (PDT)
+Subject: Re: [PATCH v2 1/6] dt-bindings: timers: sp-804: Convert to
+ json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Liviu Dudau <liviu.dudau@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Ray Jui <rjui@broadcom.com>,
+        devicetree@vger.kernel.org,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+ <20200828142018.43298-2-andre.przywara@arm.com>
+ <20200908172839.GA575693@bogus>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ xsFNBFNPCKMBEAC+6GVcuP9ri8r+gg2fHZDedOmFRZPtcrMMF2Cx6KrTUT0YEISsqPoJTKld
+ tPfEG0KnRL9CWvftyHseWTnU2Gi7hKNwhRkC0oBL5Er2hhNpoi8x4VcsxQ6bHG5/dA7ctvL6
+ kYvKAZw4X2Y3GTbAZIOLf+leNPiF9175S8pvqMPi0qu67RWZD5H/uT/TfLpvmmOlRzNiXMBm
+ kGvewkBpL3R2clHquv7pB6KLoY3uvjFhZfEedqSqTwBVu/JVZZO7tvYCJPfyY5JG9+BjPmr+
+ REe2gS6w/4DJ4D8oMWKoY3r6ZpHx3YS2hWZFUYiCYovPxfj5+bOr78sg3JleEd0OB0yYtzTT
+ esiNlQpCo0oOevwHR+jUiaZevM4xCyt23L2G+euzdRsUZcK/M6qYf41Dy6Afqa+PxgMEiDto
+ ITEH3Dv+zfzwdeqCuNU0VOGrQZs/vrKOUmU/QDlYL7G8OIg5Ekheq4N+Ay+3EYCROXkstQnf
+ YYxRn5F1oeVeqoh1LgGH7YN9H9LeIajwBD8OgiZDVsmb67DdF6EQtklH0ycBcVodG1zTCfqM
+ AavYMfhldNMBg4vaLh0cJ/3ZXZNIyDlV372GmxSJJiidxDm7E1PkgdfCnHk+pD8YeITmSNyb
+ 7qeU08Hqqh4ui8SSeUp7+yie9zBhJB5vVBJoO5D0MikZAODIDwARAQABzS1BbmRyZSBQcnp5
+ d2FyYSAoQVJNKSA8YW5kcmUucHJ6eXdhcmFAYXJtLmNvbT7CwXsEEwECACUCGwMGCwkIBwMC
+ BhUIAgkKCwQWAgMBAh4BAheABQJTWSV8AhkBAAoJEAL1yD+ydue63REP/1tPqTo/f6StS00g
+ NTUpjgVqxgsPWYWwSLkgkaUZn2z9Edv86BLpqTY8OBQZ19EUwfNehcnvR+Olw+7wxNnatyxo
+ D2FG0paTia1SjxaJ8Nx3e85jy6l7N2AQrTCFCtFN9lp8Pc0LVBpSbjmP+Peh5Mi7gtCBNkpz
+ KShEaJE25a/+rnIrIXzJHrsbC2GwcssAF3bd03iU41J1gMTalB6HCtQUwgqSsbG8MsR/IwHW
+ XruOnVp0GQRJwlw07e9T3PKTLj3LWsAPe0LHm5W1Q+euoCLsZfYwr7phQ19HAxSCu8hzp43u
+ zSw0+sEQsO+9wz2nGDgQCGepCcJR1lygVn2zwRTQKbq7Hjs+IWZ0gN2nDajScuR1RsxTE4WR
+ lj0+Ne6VrAmPiW6QqRhliDO+e82riI75ywSWrJb9TQw0+UkIQ2DlNr0u0TwCUTcQNN6aKnru
+ ouVt3qoRlcD5MuRhLH+ttAcmNITMg7GQ6RQajWrSKuKFrt6iuDbjgO2cnaTrLbNBBKPTG4oF
+ D6kX8Zea0KvVBagBsaC1CDTDQQMxYBPDBSlqYCb/b2x7KHTvTAHUBSsBRL6MKz8wwruDodTM
+ 4E4ToV9URl4aE/msBZ4GLTtEmUHBh4/AYwk6ACYByYKyx5r3PDG0iHnJ8bV0OeyQ9ujfgBBP
+ B2t4oASNnIOeGEEcQ2rjzsFNBFNPCKMBEACm7Xqafb1Dp1nDl06aw/3O9ixWsGMv1Uhfd2B6
+ it6wh1HDCn9HpekgouR2HLMvdd3Y//GG89irEasjzENZPsK82PS0bvkxxIHRFm0pikF4ljIb
+ 6tca2sxFr/H7CCtWYZjZzPgnOPtnagN0qVVyEM7L5f7KjGb1/o5EDkVR2SVSSjrlmNdTL2Rd
+ zaPqrBoxuR/y/n856deWqS1ZssOpqwKhxT1IVlF6S47CjFJ3+fiHNjkljLfxzDyQXwXCNoZn
+ BKcW9PvAMf6W1DGASoXtsMg4HHzZ5fW+vnjzvWiC4pXrcP7Ivfxx5pB+nGiOfOY+/VSUlW/9
+ GdzPlOIc1bGyKc6tGREH5lErmeoJZ5k7E9cMJx+xzuDItvnZbf6RuH5fg3QsljQy8jLlr4S6
+ 8YwxlObySJ5K+suPRzZOG2+kq77RJVqAgZXp3Zdvdaov4a5J3H8pxzjj0yZ2JZlndM4X7Msr
+ P5tfxy1WvV4Km6QeFAsjcF5gM+wWl+mf2qrlp3dRwniG1vkLsnQugQ4oNUrx0ahwOSm9p6kM
+ CIiTITo+W7O9KEE9XCb4vV0ejmLlgdDV8ASVUekeTJkmRIBnz0fa4pa1vbtZoi6/LlIdAEEt
+ PY6p3hgkLLtr2GRodOW/Y3vPRd9+rJHq/tLIfwc58ZhQKmRcgrhtlnuTGTmyUqGSiMNfpwAR
+ AQABwsFfBBgBAgAJBQJTTwijAhsMAAoJEAL1yD+ydue64BgP/33QKczgAvSdj9XTC14wZCGE
+ U8ygZwkkyNf021iNMj+o0dpLU48PIhHIMTXlM2aiiZlPWgKVlDRjlYuc9EZqGgbOOuR/pNYA
+ JX9vaqszyE34JzXBL9DBKUuAui8z8GcxRcz49/xtzzP0kH3OQbBIqZWuMRxKEpRptRT0wzBL
+ O31ygf4FRxs68jvPCuZjTGKELIo656/Hmk17cmjoBAJK7JHfqdGkDXk5tneeHCkB411p9WJU
+ vMO2EqsHjobjuFm89hI0pSxlUoiTL0Nuk9Edemjw70W4anGNyaQtBq+qu1RdjUPBvoJec7y/
+ EXJtoGxq9Y+tmm22xwApSiIOyMwUi9A1iLjQLmngLeUdsHyrEWTbEYHd2sAM2sqKoZRyBDSv
+ ejRvZD6zwkY/9nRqXt02H1quVOP42xlkwOQU6gxm93o/bxd7S5tEA359Sli5gZRaucpNQkwd
+ KLQdCvFdksD270r4jU/rwR2R/Ubi+txfy0dk2wGBjl1xpSf0Lbl/KMR5TQntELfLR4etizLq
+ Xpd2byn96Ivi8C8u9zJruXTueHH8vt7gJ1oax3yKRGU5o2eipCRiKZ0s/T7fvkdq+8beg9ku
+ fDO4SAgJMIl6H5awliCY2zQvLHysS/Wb8QuB09hmhLZ4AifdHyF1J5qeePEhgTA+BaUbiUZf
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <5357abcd-483d-efa7-964e-5aeb4211ddac@arm.com>
+Date:   Wed, 9 Sep 2020 11:07:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <159958562064.16576.7853800514030717096.b4-ty@kernel.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.0.5.60]
-X-ClientProxiedBy: XBOX04.axis.com (10.0.5.18) To xbox06.axis.com
- (10.0.15.176)
+In-Reply-To: <20200908172839.GA575693@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+On 08/09/2020 18:28, Rob Herring wrote:
+> On Fri, 28 Aug 2020 15:20:13 +0100, Andre Przywara wrote:
+>> This converts the DT binding documentation for the ARM SP-804 timer IP
+>> over to json-schema.
+>> Most properties are just carried over, the clocks property requirement
+>> (either one or three clocks) is now formalised and enforced.
+>> As the former binding didn't specify clock-names, and there is no
+>> common name used by the existing DTs, I refrained from adding them in
+>> detail (just allowing the property).
+>> The requirement for the APB clock is enforced by the primecell binding
+>> already.
+>>
+>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+>> ---
+>>  .../devicetree/bindings/timer/arm,sp804.txt   | 29 ------
+>>  .../devicetree/bindings/timer/arm,sp804.yaml  | 93 +++++++++++++++++++
+>>  2 files changed, 93 insertions(+), 29 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.txt
+>>  create mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.yaml
+>>
+> 
+> Applied, thanks!
+> 
+> I dropped the primecell.yaml ref as it is redundant.
 
-On 9/8/20 7:20 PM, Mark Brown wrote:
-> On Tue, 8 Sep 2020 10:35:20 +0200, Camel Guo wrote:
->> When gpio_reset is not well defined in devicetree, the
->> adcx140->gpio_reset is an error code instead of NULL. In this case,
->> adcx140->gpio_reset should not be used by adcx140_reset. This commit
->> sets it NULL to avoid accessing an invalid variable.
-> 
-> Applied to
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Interesting, because I explicitly added it to cover one property that
+was only described in primecell.yaml. But I think this one node was
+originally missing the actual primecell compatible string.
 
-I think it is "ASoC: tlv320adcx140: Wake up codec before register 
-setting" that is applied to for next not this one.
+So I tested it now again and don't see any issues without the explicit
+primecell.yaml reference anymore.
 
-> 
-> Thanks!
-> 
-> [1/1] ASoC: tlv320adcx140: Wake up codec before accessing register
->        commit: 1a5ce48fd667128e369fdc7fb87e21539aed21b5
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-> 
-> Thanks,
-> Mark
+Thanks for taking it!
+
+Cheers,
+Andre.
