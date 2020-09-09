@@ -2,100 +2,90 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6F4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CE7C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D452166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586D72166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwGh4anN"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="S4SA8z+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgIIRIV (ORCPT
+        id S1728709AbgIIRIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730393AbgIIPgz (ORCPT
+        Wed, 9 Sep 2020 13:08:32 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:51891 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730394AbgIIPhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:36:55 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7B6C06134A;
-        Wed,  9 Sep 2020 08:36:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u4so4102092ljd.10;
-        Wed, 09 Sep 2020 08:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XU1ZtzBl+1dsx6yIj55gnRA9ur3suV6Xeost/94vjf4=;
-        b=LwGh4anNyth/MyytVIlJfhNHjNXoiiWeSRiwuxbEl22Enwzo69J1kUgmxiFRa8kuJQ
-         Od5ZbS41PBUKMr0sXT3rOrJ34xiX5lGUpiKlRZsLZvoV4lwe4Yp0oQeSeKXwOhDzXZf/
-         u/PkWxKP4/VU3bh18T70yCFyKT/pWhd9WdIAbbVsL3i+Vb83WVLYVELRBxbgNf4BPaij
-         C3KSsmX4EWkB8kv3OTmy+MwgOBpIXhYBkp09nKKXM0WMY4pBa9nVyTY+KWoLRttAPQPt
-         pkvR3HKd0TgZ37ImaTmSYnHLBa5IGaGM2bxLHvQBwsbu8c0VMWQr6mX8AtpaaQty7mvq
-         Bmng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XU1ZtzBl+1dsx6yIj55gnRA9ur3suV6Xeost/94vjf4=;
-        b=OjNFcuYNbwePWkCSqIKWGZJrJOIsRJY1DcxuLfRvccYW8Eni2phv62gugY+MFGDKPP
-         bLEkTpfj2tW/8aO+wrdYWEqTj+Xxory3SeJfyzuGv3G1BWVAyiZRlfGzshcNFeNabfQK
-         Ax7YOt1PlKY59fYGc4OxHaBQC3iWS0ZtmSBU1MzHTFb+gN8I8jACxfpDdxp9W9Ai/Pfb
-         4BxroVTQ4ZnMgggp2Ej2cwRzknt5d1vfxffNnYHA4RF2oDqKPzbJRmzHNb/9oYgsCLTs
-         nFETzThwPQoh7BI+Xc4I4I7X6XeDbwj91SVGbgpGKrGUVzlripkGBShtQKFuythL9l+/
-         1EoQ==
-X-Gm-Message-State: AOAM533UacRNqycNh0qymW+4XqwzcGVEQiaWCHD+AKDGAVGVDFGfct5n
-        wq/iKEiLk65/Ci7USNF09anfAHDYvE0=
-X-Google-Smtp-Source: ABdhPJwzVCRzTQ0E8502ffif0fVJTnPlR6Fvt/HW9AaMtT5L4hkrtvW9IZIKYK8m+eg+fhnS69mYhw==
-X-Received: by 2002:a2e:9c9:: with SMTP id 192mr2037989ljj.197.1599665813443;
-        Wed, 09 Sep 2020 08:36:53 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t82sm645752lff.43.2020.09.09.08.36.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 08:36:52 -0700 (PDT)
-Subject: Re: [PATCH v7 00/34] Improvements for Tegra I2C driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200908224006.25636-1-digetx@gmail.com>
- <CAHp75Vdh6bErqeO-ki2xsS9jEeoy4mKF1h0Jw_HM6UpukqH_BQ@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <854a0ed8-35dd-0b25-6c53-4915be0e33e9@gmail.com>
-Date:   Wed, 9 Sep 2020 18:36:50 +0300
+        Wed, 9 Sep 2020 11:37:03 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id G0kJkjPcoXgwIG0kKkZggK; Wed, 09 Sep 2020 16:06:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599660408; bh=oPrFl/TwIvpVNpQ11j9+60pYM+n2ln10KTC8JKR4WbA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=S4SA8z+znzkwPxIJSUD15tOO5/tLQ6uyZyT8lVxO4TwZ+NwZxqYV5R0Q4lBJg2YXX
+         4HAhlrwqHrWeMbwd5HyxPYkXg0CqeBGQdnrmtdH5vxGSxQnKhLYMGEZ5CFkVeYlpZe
+         aWcLQoXVXFA/ySFah+HyFZaP9cc2ACsJiDtsX+5q8v4QawL3ljYNk+RO7Q6KiXVGrd
+         Ghcy3euewZlfVUsnno9rFvjzu2ze4ysAsBCUZmCZwIwPQSXeur5zrQlGRqmNm6et4d
+         t15Jw5Q20+7UDi2FMOq/47qoakUi73aWwGllyQSDek0xuwsanhvhdHiEkPs8mpynLX
+         cfrWoDc8TI5Xw==
+Subject: Re: [PATCH 2/3] media: Add support for the AM/FM radio chip KT0913
+ from KT Micro.
+To:     Santiago Hormazabal <santiagohssl@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200831220601.20794-1-santiagohssl@gmail.com>
+ <20200831220601.20794-3-santiagohssl@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <60e1d448-2c79-2642-7fb6-82aceacdb75f@xs4all.nl>
+Date:   Wed, 9 Sep 2020 16:06:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vdh6bErqeO-ki2xsS9jEeoy4mKF1h0Jw_HM6UpukqH_BQ@mail.gmail.com>
+In-Reply-To: <20200831220601.20794-3-santiagohssl@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBGtO1zVijWQzDMb2IpWJbNPvzETDnfTgb43UKoKnwaY0otSN+Sz/6bzbgwUBZNdeghs/Bedcx8wmruysTJ5Tftxj4trdcE3jKaLLjCFuKE0EizMQQu2
+ b4AcZHRP1AT9oEzCmI9EE2qYbDRzETU0dF9wiDtpskjRw+lh5eQIfJPX8cbMCkPzphOtzvCp7yQax+P0Q2vfVDqo5PUhysE3fl9Mgh6eLMRS2NUmhefy21kl
+ DfgUS3/9OjdmmugYGZYKwLuTgvj2nLsYV2q8jnfOdICXQgvn1JVv2BwSKG/Lt9/HCa2n5/riOiKo/5j4sG+/NULvzKBVGQwmWxQ8iGBPuMnvbPYiWNGWQrk8
+ HCISZQGegKeFGT8gc4AF+jxqHhjKyXv1umRD3GgBYLRtSUSG7Dg+Iua796Rrq+qnqtWaVYw2s8OD9IaHKXLjTQL63o/KYi2JzT68jAKQlmtfZiAzm7e9106u
+ vCx3GiLfuPbW+S3B
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.09.2020 12:11, Andy Shevchenko пишет:
-> On Wed, Sep 9, 2020 at 1:40 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> Hello!
->>
->> This series performs refactoring of the Tegra I2C driver code and hardens
->> the atomic-transfer mode.
-> 
-> I think there is still room for improvement, but let not block it, FWIW,
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Hi Santiago,
 
-Thank you and Michał for helping with the review! Very appreciate this!
+On 01/09/2020 00:06, Santiago Hormazabal wrote:
+> This chip requires almost no support components and can used over I2C.
+> The driver uses the I2C bus and exposes the controls as a V4L2 radio.
+> Tested with a module that contains this chip (from SZZSJDZ.com,
+> part number ZJ-801B, even tho the company seems defunct now), and an H2+
+> AllWinner SoC running a kernel built off 07d999f of the media_tree.
+> 
+> Signed-off-by: Santiago Hormazabal <santiagohssl@gmail.com>
+> ---
+>  drivers/media/radio/Kconfig        |   10 +
+>  drivers/media/radio/Makefile       |    1 +
+>  drivers/media/radio/radio-kt0913.c | 1196 ++++++++++++++++++++++++++++
+>  3 files changed, 1207 insertions(+)
+>  create mode 100644 drivers/media/radio/radio-kt0913.c
+
+One more thing: you need to add an entry to the MAINTAINERS file for this
+driver. It can either be part of this patch, or added in a separate patch.
+
+Regards,
+
+	Hans
