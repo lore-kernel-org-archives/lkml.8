@@ -2,74 +2,74 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357B5C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E458DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD99C21D40
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A646121D40
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="dXk9To9Q"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="tpgF9Rnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIIE7i (ORCPT
+        id S1726920AbgIIE7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 00:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34634 "EHLO
+        Wed, 9 Sep 2020 00:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgIIE7a (ORCPT
+        with ESMTP id S1726111AbgIIE7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 00:59:30 -0400
+        Wed, 9 Sep 2020 00:59:31 -0400
 Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9F4C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 21:59:29 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id o20so1068197pfp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 21:59:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65D9C061757
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 21:59:30 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z19so1080603pfn.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 21:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=HusqWcfyGC+ql/Zjk8Q/vdT8PXZvHACLiqB7zBTzSvM=;
-        b=dXk9To9Q1v53+uIxoDd356SC63Me668w/PlIGfYaPZoiOq+kn5JzBDG8ISHZzGFR/k
-         w6AdfCOfQQlYd55zyhFFzYbLm1I0TPelctdgEe/K9UMvxGwjkSzTtfrc1LT1sKDfT03Z
-         dno8EwQRVyVcB8ZtO7RcNpgHhYzbLVFqj2C/j7zM9pq/KypLsbvt/Fany2AguiScA1Ey
-         EPBF/OTN5dgB6E+LZ7CfaDQjxRQHj6mr2sUqN8fvo1AoHZhdWukXGh77ZrwkYllqc5gt
-         mf+j9mk3CClJcSqPaMOz/Z/4FqfVFjDk3n4YfpUEbOWsOulYfeo/VKskrzezIDCeMubf
-         5/1A==
+        bh=aMuaqipRQnYeqRzhZrGBU6gZzBaakoxqT2EsHc4LAkw=;
+        b=tpgF9Rnjs582RVO60tHFuThNeDv8r1D7N4z/7UTKHgifa+meHjtSqF6MmXDAlaZiRY
+         nqqGXLS2Xx7cWbQmv2Tsmxav1QwUJevwRHbW/8KUyfLigIRgRiFxMOMkdVqiiwNzxsYx
+         HZv8VX4R32LJJljOL4S9tDoE7X7QugRVxE6gWmn/rNX4xGHSm34XkIKVGyFUcnqj/rVJ
+         MZCqNIjU3Xb7c67+Vd+6NMkgv0My+pdYPoAV1fN2XSlFAnJcs7acyWbru7ghUBDihK+n
+         HA3KkD9a8MMJ3mptyenmxRBX4VAJkBNGBzhWly1gBbZAze1ERi77A0PrZNZBUWYQavE1
+         4llg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=HusqWcfyGC+ql/Zjk8Q/vdT8PXZvHACLiqB7zBTzSvM=;
-        b=BqwCII4+RJmm+DzYYg2Yhqx/1hrcOIq+pKRYi25htSHm9yb+RYqoUATq/Yt5PkPBnT
-         DIG8bgYCP0HbDRJljstxp9Bp7ek3cJdWw1WuouQ/WPg61J2oZWN48rv27Lsek8tdI2gz
-         Bx/AioCCr3mqG+6CdUhVJqjCa0w/VGtgixZLJwuyuO7ZXe5/TQ5ZuK5XDU2tWK0ecSkx
-         bHvXG4gmBKik6o2m8pNfPqu0gwmHqtRSXY5R6FRTU3CwfPrgvXUPgsm8K4HGEKbSIN0/
-         ujeIrIaVk40VW9KtMdVhfXg5pHzzk9wHLO5Mw3e37jOyT9IuIVTVinkkoB/V3Zy9waoq
-         JCmw==
-X-Gm-Message-State: AOAM5330E1Mdc6rSeZ8V6Vc6FAhYuxhdyOgrPjkVk4KSbHxS3x06w/3e
-        SHmlwcJ7lK0KDbf2bAw5BArT7A==
-X-Google-Smtp-Source: ABdhPJy4MS198jyOfSH08aNpUpExBegNhbKMjNLEX4M8IafVuBqxEO3l93M82iDwSb1jkLq+09tyxg==
-X-Received: by 2002:aa7:8756:: with SMTP id g22mr2064694pfo.37.1599627569034;
-        Tue, 08 Sep 2020 21:59:29 -0700 (PDT)
+        bh=aMuaqipRQnYeqRzhZrGBU6gZzBaakoxqT2EsHc4LAkw=;
+        b=mYZU8YDrBmVgL0vCMiYLXWrQ/Iav7I6HXKkRKeBMZzBITjULPn30SEsYP4a4sJSO4/
+         6j+LNBYTfGkxtMTVET2ctwu/wFngOrxWaFwzcnIIUAZRqYGzD+/+I0f3u78rYo/X1/pc
+         L5uu45Tsf1Mbedc8qwRIJpXxZjxjMJ31n3yFMCVcpYFEEtZwtzexvOd7ojeom/kaV+6o
+         dPauWloPR7oLIMEvEG80QhpiFqtXGCp+p/FGa8AlB2/xZYgzHOIi2opiQ2pN9Aw85QJX
+         5t18W8CK+nsIP6OmG0cQaCn7NOSV3F7puyoAsk09vWDiSsvRB0T1+MwTd33jnt8KRzbR
+         R/0w==
+X-Gm-Message-State: AOAM532hHmxbMQL3Db8LdjuyGhkUnhsgoZntujVZP4HEImYckszw3NCB
+        lO0rn+RWPGFmlZznZyrOVWlynQ==
+X-Google-Smtp-Source: ABdhPJxDDE5ivT8UmvibDFe7q7gQD1F1no9tzfg8hTFhxtCkA6fy7IjVUDNFMcPuNzrxEIhllR0ZfQ==
+X-Received: by 2002:aa7:8e85:: with SMTP id a5mr1997808pfr.96.1599627570285;
+        Tue, 08 Sep 2020 21:59:30 -0700 (PDT)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id u71sm1061068pfc.43.2020.09.08.21.59.28
+        by smtp.gmail.com with ESMTPSA id e17sm1043445pff.6.2020.09.08.21.59.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 21:59:28 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 21:59:28 -0700 (PDT)
-X-Google-Original-Date: Tue, 08 Sep 2020 21:55:52 PDT (-0700)
-Subject:     Re: [PATCH 8/8] riscv: remove address space overrides using set_fs()
-In-Reply-To: <20200907055825.1917151-9-hch@lst.de>
+        Tue, 08 Sep 2020 21:59:29 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 21:59:29 -0700 (PDT)
+X-Google-Original-Date: Tue, 08 Sep 2020 21:58:57 PDT (-0700)
+Subject:     Re: remove set_fs for riscv v2
+In-Reply-To: <20200907055825.1917151-1-hch@lst.de>
 CC:     Paul Walmsley <paul.walmsley@sifive.com>,
         Arnd Bergmann <arnd@arndb.de>, viro@zeniv.linux.org.uk,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org
 From:   Palmer Dabbelt <palmer@dabbelt.com>
 To:     Christoph Hellwig <hch@lst.de>
-Message-ID: <mhng-ca158d54-5e36-4407-a4da-097c9ddc7dfc@palmerdabbelt-glaptop1>
+Message-ID: <mhng-5fa86587-c404-420e-a4c0-43d197d1cd27@palmerdabbelt-glaptop1>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -78,118 +78,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 06 Sep 2020 22:58:25 PDT (-0700), Christoph Hellwig wrote:
-> Stop providing the possibility to override the address space using
-> set_fs() now that there is no need for that any more.
+On Sun, 06 Sep 2020 22:58:17 PDT (-0700), Christoph Hellwig wrote:
+> Hi all,
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/Kconfig                   |  1 -
->  arch/riscv/include/asm/thread_info.h |  6 ------
->  arch/riscv/include/asm/uaccess.h     | 27 +--------------------------
->  arch/riscv/kernel/process.c          |  1 -
->  4 files changed, 1 insertion(+), 34 deletions(-)
+> this series converts riscv to the new set_fs less world and is on top of this
+> branch:
 >
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 460e3971a80fde..33dde87218ddab 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -86,7 +86,6 @@ config RISCV
->  	select SPARSE_IRQ
->  	select SYSCTL_EXCEPTION_TRACE
->  	select THREAD_INFO_IN_TASK
-> -	select SET_FS
->  	select UACCESS_MEMCPY if !MMU
+>     https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=base.set_fs
 >
->  config ARCH_MMAP_RND_BITS_MIN
-> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
-> index 464a2bbc97ea33..a390711129de64 100644
-> --- a/arch/riscv/include/asm/thread_info.h
-> +++ b/arch/riscv/include/asm/thread_info.h
-> @@ -24,10 +24,6 @@
->  #include <asm/processor.h>
->  #include <asm/csr.h>
->
-> -typedef struct {
-> -	unsigned long seg;
-> -} mm_segment_t;
-> -
->  /*
->   * low level task data that entry.S needs immediate access to
->   * - this struct should fit entirely inside of one cache line
-> @@ -39,7 +35,6 @@ typedef struct {
->  struct thread_info {
->  	unsigned long		flags;		/* low level flags */
->  	int                     preempt_count;  /* 0=>preemptible, <0=>BUG */
-> -	mm_segment_t		addr_limit;
->  	/*
->  	 * These stack pointers are overwritten on every system call or
->  	 * exception.  SP is also saved to the stack it can be recovered when
-> @@ -59,7 +54,6 @@ struct thread_info {
->  {						\
->  	.flags		= 0,			\
->  	.preempt_count	= INIT_PREEMPT_COUNT,	\
-> -	.addr_limit	= KERNEL_DS,		\
->  }
->
->  #endif /* !__ASSEMBLY__ */
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-> index 264e52fb62b143..c47e6b35c551f4 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -26,29 +26,6 @@
->  #define __disable_user_access()							\
->  	__asm__ __volatile__ ("csrc sstatus, %0" : : "r" (SR_SUM) : "memory")
->
-> -/*
-> - * The fs value determines whether argument validity checking should be
-> - * performed or not.  If get_fs() == USER_DS, checking is performed, with
-> - * get_fs() == KERNEL_DS, checking is bypassed.
-> - *
-> - * For historical reasons, these macros are grossly misnamed.
-> - */
-> -
-> -#define MAKE_MM_SEG(s)	((mm_segment_t) { (s) })
-> -
-> -#define KERNEL_DS	MAKE_MM_SEG(~0UL)
-> -#define USER_DS		MAKE_MM_SEG(TASK_SIZE)
-> -
-> -#define get_fs()	(current_thread_info()->addr_limit)
-> -
-> -static inline void set_fs(mm_segment_t fs)
-> -{
-> -	current_thread_info()->addr_limit = fs;
-> -}
-> -
-> -#define uaccess_kernel() (get_fs().seg == KERNEL_DS.seg)
-> -#define user_addr_max()	(get_fs().seg)
-> -
->  /**
->   * access_ok: - Checks if a user space pointer is valid
->   * @addr: User space pointer to start of block to check
-> @@ -76,9 +53,7 @@ static inline void set_fs(mm_segment_t fs)
->   */
->  static inline int __access_ok(unsigned long addr, unsigned long size)
->  {
-> -	const mm_segment_t fs = get_fs();
-> -
-> -	return size <= fs.seg && addr <= fs.seg - size;
-> +	return size <= TASK_SIZE && addr <= TASK_SIZE - size;
->  }
->
->  /*
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index 2b97c493427c9e..19225ec65db62f 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -84,7 +84,6 @@ void start_thread(struct pt_regs *regs, unsigned long pc,
->  	}
->  	regs->epc = pc;
->  	regs->sp = sp;
-> -	set_fs(USER_DS);
->  }
->
->  void flush_thread(void)
+> The first four patches are general improvements and enablement for all nommu
+> ports, and might make sense to merge through the above base branch.
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Seems like it to me.  These won't work without the SET_FS code so I'm OK if you
+guys want to keep them all together.  Otherwise I think I'd need to wait until
+the SET_FS stuff gets merged before taking any of these, which would be a bit
+of a headache.
+
+Thanks!
+
+> Changes since v1:
+>  - implement __get_user_fn and __put_user_fn for the UACCESS_MEMCPY case
+>    and remove the small constant size optimizations in raw_copy_from_user
+>    and raw_copy_to_user
+>  - reshuffle the patch order a little
+>
+> Diffstat
+>  arch/riscv/Kconfig                   |    2
+>  arch/riscv/include/asm/thread_info.h |    6 -
+>  arch/riscv/include/asm/uaccess.h     |  177 +++++++++++++++++------------------
+>  arch/riscv/kernel/process.c          |    1
+>  arch/riscv/lib/Makefile              |    2
+>  include/asm-generic/uaccess.h        |  109 +++++++++++++--------
+>  include/linux/uaccess.h              |    4
+>  7 files changed, 166 insertions(+), 135 deletions(-)
