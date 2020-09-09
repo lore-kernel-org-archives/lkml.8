@@ -2,110 +2,103 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE269C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDCEC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64FC821919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7514F207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="MskrfZnZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iF0d9TgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgIIHWg (ORCPT
+        id S1728458AbgIIHXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgIIHWd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:22:33 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766ACC061573;
-        Wed,  9 Sep 2020 00:22:32 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id lo4so2030745ejb.8;
-        Wed, 09 Sep 2020 00:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rO8zY4SOk/PyIA4prlUmHLVh2+ctXvivZUrMTHOdfHA=;
-        b=MskrfZnZsX7Iuf32LZyCZNzbIGXaeW+mK14mUDqYgOSribmqAZDvmz6KL5ttLjqipX
-         0HopvRMl/pbef4OquOPAaByTp17ipnjqwMBRTDF5vqky3Dq5MqT4nfy6qxe8qVvr8lQw
-         NkfivOti0pWe4NwtLb/25Q40m9Yhaj4s3RJIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rO8zY4SOk/PyIA4prlUmHLVh2+ctXvivZUrMTHOdfHA=;
-        b=D2Nbfm6vR2Ir+mJJqwOJLvL1aQKTl2wEL4P8bzatz3TTEOubwz7xwABpW7T467RHEQ
-         V9Z2bTj1voh0f07uQjBWe2uq0HA0Awtt1rOPMfr+GLoiL25K3fIRVdlY/H3H9LSxY3RR
-         e9y0+H1PLt8RBNq0obdvHDBCXy71+U5ob8CNUh77GddBg0gotZeMjM/v5Zkj4/p/BILQ
-         XAdJQFylFN8s6UttWcOxv5NbA115MEcZDoN/e4yc4KV95IyoTHIryG8BkwCFzVL+5q+2
-         DZW1y3K2qyestvjwyIuTEyxd+hIzjWuJpZl0roeSePgoLX5zYjrCf2JQecqYSmBEqQjP
-         TX7w==
-X-Gm-Message-State: AOAM532ZCdybSw4ccKP4NVLLlGSNZlahm2PuM0ms8a2i9j75tXaONwDY
-        vuzfIg86Tc5AQ/zpKkpofie3lWYoA29MO1Ppb0NF487K
-X-Google-Smtp-Source: ABdhPJzG8i0Ylu6Upc12ayDxcIwkT9Rb3MGN1wQb3dn2PS0s9yBulo2UK0UfKwHfUno3cr8owVw38kBJQrVRgFCbzL0=
-X-Received: by 2002:a17:906:4c58:: with SMTP id d24mr2472778ejw.108.1599636151097;
- Wed, 09 Sep 2020 00:22:31 -0700 (PDT)
+        Wed, 9 Sep 2020 03:23:30 -0400
+Received: from ozlabs.org ([203.11.71.1]:40417 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbgIIHXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:23:20 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmYQZ1tkLz9sTX;
+        Wed,  9 Sep 2020 17:23:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599636198;
+        bh=d6EUXUc9+FiqXpuacjC9aDTYw/+UMcDEJgP0/w1dNDs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iF0d9TgFexX1zsaMEN9Rf67znAEVV1L8nHn8Dlavz2Atb9fuiJJfiqZfFpGM6epys
+         VQTFOz/anr+Wx0nt9KaQF+1WGah1QUPsfyUnTNumLjw2zfmyBr+q6ymjw3kpugUCJE
+         v18LYtWu2WE0gNJktbKEkhigzMwlwGdPb7xK7jRbdND32wLLOqs87gbi7jBuTErxXj
+         rszTVSrdgQygX0Hz2P7xbBLRASKNc3qP8SeJNRS4595BvZA9FB4WXTZMC+X3S1PWfP
+         mayUWAAmtc/PhFlPSajyCtGG0CWgnxiFNsMzv6lcstdIj9Gk1s0CmKNv6mkMwNg47a
+         SCGLS38uqlUcQ==
+Date:   Wed, 9 Sep 2020 17:23:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the driver-core tree
+Message-ID: <20200909172317.170984de@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200812112400.2406734-1-joel@jms.id.au> <1e56af7945b93a22e31ba6d81da82cbdb1b237b6.camel@ozlabs.org>
-In-Reply-To: <1e56af7945b93a22e31ba6d81da82cbdb1b237b6.camel@ozlabs.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 9 Sep 2020 07:22:19 +0000
-Message-ID: <CACPK8XfZ6hLv0Ls0g=b5wdr6A3ei3nzVKDgyOt5Su_Y8g8yQ7A@mail.gmail.com>
-Subject: Re: [PATCH] ARM: aspeed: g5: Do not set sirq polarity
-To:     Jeremy Kerr <jk@ozlabs.org>
-Cc:     Oskar Senft <osk@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/18lyfPQH8SGzodw.E.jQO8Q";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 06:27, Jeremy Kerr <jk@ozlabs.org> wrote:
->
-> Hi Joel,
->
-> > A feature was added to the aspeed vuart driver to configure the vuart
-> > interrupt (sirq) polarity according to the LPC/eSPI strapping register.
-> >
-> > Systems that depend on a active low behaviour (sirq_polarity set to 0)
-> > such as OpenPower boxes also use LPC, so this relationship does not
-> > hold.
-> >
-> > The property was added for a Tyan S7106 system which is not supported
-> > in the kernel tree. Should this or other systems wish to use this
-> > feature of the driver they should add it to the machine specific device
-> > tree.
-> >
-> > Fixes: c791fc76bc72 ("arm: dts: aspeed: Add vuart aspeed,sirq-polarity-sense...")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Joel Stanley <joel@jms.id.au>
->
-> LGTM. I've tested this on the s2600st, which is strapped for eSPI. All
-> good there too, as expected.
->
-> Tested-by: Jeremy Kerr <jk@ozlabs.org>
->
-> and/or:
->
-> Reviewed-by: Jeremy Kerr <jk@ozlabs.org>
+--Sig_/18lyfPQH8SGzodw.E.jQO8Q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Jeremy. I have queued this for 5.10 and applied it to the openbmc tree.
+Hi all,
 
-We should also remove the code from the aspeed-vuart driver, as it is
-not correct. Better would be a property that is set according to the
-system's hardware design.
+After merging the driver-core tree, today's linux-next build produced
+this warning:
 
+drivers/mmc/host/davinci_mmc.c: In function 'davinci_mmcsd_probe':
+drivers/mmc/host/davinci_mmc.c:1243:4: warning: ignoring return value of 'd=
+ev_err_probe' declared with attribute 'warn_unused_result' [-Wunused-result]
+ 1243 |    dev_err_probe(&pdev->dev, ret,
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1244 |           "could not parse of data\n");
+      |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Introduced by commit
+
+  e1f82a0dcf38 ("driver core: Annotate dev_err_probe() with __must_check")
+
+interacting with commit
+
+  3a35e7e1bd50 ("mmc: davinci: Simplify with dev_err_probe()")
+
+from the mmc tree.
+
+--=20
 Cheers,
+Stephen Rothwell
 
-Joel
+--Sig_/18lyfPQH8SGzodw.E.jQO8Q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YguUACgkQAVBC80lX
+0GyMPAf/XYMWZojWSl9lqF7j+11gEeyUdYJZYtcFNdrqCr+5ZWyaKNAtpV0wb2h7
+s4JXDBE8oLKV/0cJ0P2t3NyVyer4DYSJ6AZfMLTPSetmOvcXp82wgSBLtz6yxoOx
+QEI6/R/YY0K6V8Fg+Zx1A7BECWPRXDXD7K738zRsjM+A67kHOb0/K69JElM/yOml
+hw5wTwGZ31f1M1skXDPMUZ+s+tFQE49coaSZFHyMZvzeoDxF9E1i02pZ8QDBd/x/
+bFPdv7yWht0Gv66YAvFbvzXtW8tzzm36Eu3hIaFGDWiZppQinX9n0GIuTSaoX6B8
+Al/9G5yLIOToGrnTfbchFj5lCIIo0w==
+=WNOR
+-----END PGP SIGNATURE-----
+
+--Sig_/18lyfPQH8SGzodw.E.jQO8Q--
