@@ -2,291 +2,187 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B6AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CCAC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34FCC2080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599676579;
-	bh=ia9hTJyZgEKfRDINp42R4WNkVvq9pCYrEhY2mO62t5E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ve3XN0nbKJilMyHj44acbgM5l0Uh0Wp34gHcS9H4Fm4A3eCd/HMdrE0TBg2+BgdA+
-	 gUXYvN0c3PRXeVy0UIi5GxbeplpyuDcmHESiAOgApqS+JeEqljgZ4MNJIcTNXszUnm
-	 o1cNwznquYOqdtzU72m4K5jpFXUrkwS6YSpOEDyU=
+	by mail.kernel.org (Postfix) with ESMTP id 4D87520C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgIISgR (ORCPT
+        id S1728443AbgIISgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39412 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 14:36:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:57279 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbgIISgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:36:08 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B328120C09;
-        Wed,  9 Sep 2020 18:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599676567;
-        bh=ia9hTJyZgEKfRDINp42R4WNkVvq9pCYrEhY2mO62t5E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=knGyXOGF7f7i/Ki2r7Ku7Scb0TISK5qGEPUfKpe9uiNoehhN5k559yVdz5F+H4eHA
-         8xWDS0vile5v7kmyfpeZEJb92c6JNYqo1/kMaas25tZDZym8w0B4ccwCXITaydSann
-         1bhIeZEsp06NKSEgL7v2PSAZOv+r3qOgET7c/hFk=
-Date:   Wed, 9 Sep 2020 19:36:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 08/18] iio: adc: stm32: Simplify with dev_err_probe()
-Message-ID: <20200909193600.41970d8c@archlinux>
-In-Reply-To: <20200829064726.26268-8-krzk@kernel.org>
-References: <20200829064726.26268-1-krzk@kernel.org>
-        <20200829064726.26268-8-krzk@kernel.org>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726293AbgIISgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:36:33 -0400
+IronPort-SDR: /ra28IRa319nkk/kmRZRoP15zfIGSjHPWZbaM9i1CrQxEys6NY1nlKx1wsWZJ9Zmg1Q6OfK2VO
+ 9seVg4iX+ynQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="146110869"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="146110869"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 11:36:32 -0700
+IronPort-SDR: LferYeSil/HEpv4GqJx+mklAYh2mncAbkxXr27unboEl0kX7kYbvMWJbwNpzT/RKr1ZIlSj9VH
+ nb7d5HG38/aQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="343982758"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga007.jf.intel.com with SMTP; 09 Sep 2020 11:36:27 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 09 Sep 2020 21:36:27 +0300
+Date:   Wed, 9 Sep 2020 21:36:27 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Koba Ko <koba.ko@canonical.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>
+Subject: Re: [PATCH] drm/dp: For MST hub, Get max_link_rate&max_lane from
+ extended rx capability field if EXTENDED_RECEIVER_CAPABILITY_FILED_PRESENT
+ is set.
+Message-ID: <20200909183627.GP6112@intel.com>
+References: <20200827053053.11271-1-koba.ko@canonical.com>
+ <CAJB-X+WPiUR8N5sLMS2UC-rPHj=TGJy2ezeBPjjeUXzbN5bfcg@mail.gmail.com>
+ <b1dcaf433b7ebe2d0284693724f0e7d8a7fa4825.camel@redhat.com>
+ <20200909182010.GO6112@intel.com>
+ <aaf36e7a1be596f831ca2665375632aae9c8e350.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aaf36e7a1be596f831ca2665375632aae9c8e350.camel@redhat.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Aug 2020 08:47:16 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
-
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+On Wed, Sep 09, 2020 at 02:26:11PM -0400, Lyude Paul wrote:
+> On Wed, 2020-09-09 at 21:20 +0300, Ville Syrjälä wrote:
+> > On Wed, Sep 09, 2020 at 12:33:09PM -0400, Lyude Paul wrote:
+> > > We just added a new helper for DPCD retrieval to drm_dp_helper.c (which
+> > > also
+> > > handles grabbing the extended receiver caps), we should probably make use
+> > > of
+> > > it here 
+> > 
+> > Someone should really rework this whole thing so that the driver can
+> > pass in the link rate+lane count when setting up the link. There's no
+> > reason to assume that the source device capabilities match or exceed
+> > the MST device caps. It would also allow the driver the dynamically
+> > adjust these in response to link failures.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-I don't have the thread to hand, but this tripped a warning next
-and the patch was dropped as a result. See below.
+> I'm a bit confused, I also think we should pass the link rate+lane count in
+> (especially since it'll be very helpful for when we start optimizing PBN
+> handling in regards to bw constraints), but I'm not sure what you mean by
+> "There's no reason to assume that the source device capabilities match or
+> exceed the MST device caps", aren't we doing the opposite here by checking the
+> MST device caps?
 
-Jonathan
-> ---
-> 
-> Changes since v2:
-> 1. Wrap dev_err_probe() lines at 80 character
-> 
-> Changes since v1:
-> 1. Convert to devm_clk_get_optional
-> 2. Update also stm32-dfsdm-core and stm32-dac-core.
-> 3. Wrap around 100 characters (accepted by checkpatch).
-> ---
->  drivers/iio/adc/stm32-adc-core.c   | 75 ++++++++++--------------------
->  drivers/iio/adc/stm32-adc.c        | 10 ++--
->  drivers/iio/adc/stm32-dfsdm-adc.c  | 10 ++--
->  drivers/iio/adc/stm32-dfsdm-core.c |  9 ++--
->  drivers/iio/dac/stm32-dac-core.c   |  5 +-
->  5 files changed, 35 insertions(+), 74 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-> index 0e2068ec068b..3f27b4817a42 100644
-> --- a/drivers/iio/adc/stm32-adc-core.c
-> +++ b/drivers/iio/adc/stm32-adc-core.c
-> @@ -582,11 +582,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->  	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
->  	if (IS_ERR(priv->syscfg)) {
->  		ret = PTR_ERR(priv->syscfg);
-> -		if (ret != -ENODEV) {
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(dev, "Can't probe syscfg: %d\n", ret);
-> -			return ret;
-> -		}
-> +		if (ret != -ENODEV)
-> +			return dev_err_probe(dev, ret, "Can't probe syscfg\n");
-> +
->  		priv->syscfg = NULL;
->  	}
->  
-> @@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->  		priv->booster = devm_regulator_get_optional(dev, "booster");
->  		if (IS_ERR(priv->booster)) {
->  			ret = PTR_ERR(priv->booster);
-> -			if (ret != -ENODEV) {
-> -				if (ret != -EPROBE_DEFER)
-> -					dev_err(dev, "can't get booster %d\n",
-> -						ret);
-> -				return ret;
-> -			}
-> +			if (ret != -ENODEV)
-> +				dev_err_probe(dev, ret, "can't get booster\n");
+We assume only the MST device caps matter. Which is fine if the source
+device caps are equal or higher. But if the source device isn't as
+capable then we're going to calculate the MST things based on link bw
+we can not actually achieve. End result is that we potentially try to
+push too much data over the link.
 
-This tripped a warning and got the patch dropped because we no longer
-return on error.
+I'm not really sure what actually happens if we just miscompute these
+things but don't actually oversubscribe the link. Maybe the remote
+end gets confused when we tell it some bogus VC parameters? Maybe it
+doesn't care? Dunno.
 
-> +
->  			priv->booster = NULL;
->  		}
->  	}
-> @@ -612,11 +607,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->  		priv->vdd = devm_regulator_get_optional(dev, "vdd");
->  		if (IS_ERR(priv->vdd)) {
->  			ret = PTR_ERR(priv->vdd);
-> -			if (ret != -ENODEV) {
-> -				if (ret != -EPROBE_DEFER)
-> -					dev_err(dev, "can't get vdd %d\n", ret);
-> -				return ret;
-> -			}
-> +			if (ret != -ENODEV)
-> +				return dev_err_probe(dev, ret, "can't get vdd\n");
-> +
->  			priv->vdd = NULL;
->  		}
->  	}
-> @@ -669,42 +662,24 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  	priv->common.phys_base = res->start;
->  
->  	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
-> -	if (IS_ERR(priv->vdda)) {
-> -		ret = PTR_ERR(priv->vdda);
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (IS_ERR(priv->vdda))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->vdda),
-> +				     "vdda get failed\n");
->  
->  	priv->vref = devm_regulator_get(&pdev->dev, "vref");
-> -	if (IS_ERR(priv->vref)) {
-> -		ret = PTR_ERR(priv->vref);
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "vref get failed, %d\n", ret);
-> -		return ret;
-> -	}
-> -
-> -	priv->aclk = devm_clk_get(&pdev->dev, "adc");
-> -	if (IS_ERR(priv->aclk)) {
-> -		ret = PTR_ERR(priv->aclk);
-> -		if (ret != -ENOENT) {
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(&pdev->dev, "Can't get 'adc' clock\n");
-> -			return ret;
-> -		}
-> -		priv->aclk = NULL;
-> -	}
-> -
-> -	priv->bclk = devm_clk_get(&pdev->dev, "bus");
-> -	if (IS_ERR(priv->bclk)) {
-> -		ret = PTR_ERR(priv->bclk);
-> -		if (ret != -ENOENT) {
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(&pdev->dev, "Can't get 'bus' clock\n");
-> -			return ret;
-> -		}
-> -		priv->bclk = NULL;
-> -	}
-> +	if (IS_ERR(priv->vref))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->vref),
-> +				     "vref get failed\n");
-> +
-> +	priv->aclk = devm_clk_get_optional(&pdev->dev, "adc");
-> +	if (IS_ERR(priv->aclk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->aclk),
-> +				     "Can't get 'adc' clock\n");
-> +
-> +	priv->bclk = devm_clk_get_optional(&pdev->dev, "bus");
-> +	if (IS_ERR(priv->bclk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->bclk),
-> +				     "Can't get 'bus' clock\n");
->  
->  	ret = stm32_adc_core_switches_probe(dev, priv);
->  	if (ret)
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 3eb9ebe8372f..b3f31f147347 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -1805,13 +1805,9 @@ static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
->  	adc->dma_chan = dma_request_chan(dev, "rx");
->  	if (IS_ERR(adc->dma_chan)) {
->  		ret = PTR_ERR(adc->dma_chan);
-> -		if (ret != -ENODEV) {
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(dev,
-> -					"DMA channel request failed with %d\n",
-> -					ret);
-> -			return ret;
-> -		}
-> +		if (ret != -ENODEV)
-> +			return dev_err_probe(dev, ret,
-> +					     "DMA channel request failed with\n");
->  
->  		/* DMA is optional: fall back to IRQ mode */
->  		adc->dma_chan = NULL;
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 5e10fb4f3704..c7e0109315f8 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -1473,13 +1473,9 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
->  	/* Optionally request DMA */
->  	ret = stm32_dfsdm_dma_request(dev, indio_dev);
->  	if (ret) {
-> -		if (ret != -ENODEV) {
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(dev,
-> -					"DMA channel request failed with %d\n",
-> -					ret);
-> -			return ret;
-> -		}
-> +		if (ret != -ENODEV)
-> +			return dev_err_probe(dev, ret,
-> +					     "DMA channel request failed with\n");
->  
->  		dev_dbg(dev, "No DMA support\n");
->  		return 0;
-> diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
-> index 26e2011c5868..0b8bea88b011 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-core.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-core.c
-> @@ -243,12 +243,9 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
->  	 * on use case.
->  	 */
->  	priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
-> -	if (IS_ERR(priv->clk)) {
-> -		ret = PTR_ERR(priv->clk);
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
-> -		return ret;
-> -	}
-> +	if (IS_ERR(priv->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-> +				     "Failed to get clock\n");
->  
->  	priv->aclk = devm_clk_get(&pdev->dev, "audio");
->  	if (IS_ERR(priv->aclk))
-> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
-> index 7e5809ba0dee..906436780347 100644
-> --- a/drivers/iio/dac/stm32-dac-core.c
-> +++ b/drivers/iio/dac/stm32-dac-core.c
-> @@ -150,10 +150,7 @@ static int stm32_dac_probe(struct platform_device *pdev)
->  	rst = devm_reset_control_get_optional_exclusive(dev, NULL);
->  	if (rst) {
->  		if (IS_ERR(rst)) {
-> -			ret = PTR_ERR(rst);
-> -			if (ret != -EPROBE_DEFER)
-> -				dev_err(dev, "reset get failed, %d\n", ret);
-> -
-> +			ret = dev_err_probe(dev, PTR_ERR(rst), "reset get failed\n");
->  			goto err_hw_stop;
->  		}
->  
+> > 
+> > > On Wed, 2020-09-09 at 14:31 +0800, Koba Ko wrote:
+> > > > On Thu, Aug 27, 2020 at 1:30 PM Koba Ko <koba.ko@canonical.com> wrote:
+> > > > > Currently, DRM get the capability of the mst hub only from DP_DPCD_REV
+> > > > > and
+> > > > > get the slower speed even the mst hub can run in the faster speed.
+> > > > > 
+> > > > > As per DP-1.3, First check DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT.
+> > > > > If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 1, read the
+> > > > > DP_DP13_DPCD_REV
+> > > > > to
+> > > > > get the faster capability.
+> > > > > If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 0, read DP_DPCD_REV.
+> > > > > 
+> > > > > Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/drm_dp_mst_topology.c | 10 +++++++++-
+> > > > >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > index 67dd72ea200e..3b84c6801281 100644
+> > > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > @@ -3497,6 +3497,8 @@ static int drm_dp_get_vc_payload_bw(u8
+> > > > > dp_link_bw,
+> > > > > u8  dp_link_count)
+> > > > >  int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr
+> > > > > *mgr,
+> > > > > bool mst_state)
+> > > > >  {
+> > > > >         int ret = 0;
+> > > > > +       u8 dpcd_ext = 0;
+> > > > > +       unsigned int dpcd_offset = 0;
+> > > > >         struct drm_dp_mst_branch *mstb = NULL;
+> > > > > 
+> > > > >         mutex_lock(&mgr->payload_lock);
+> > > > > @@ -3510,9 +3512,15 @@ int drm_dp_mst_topology_mgr_set_mst(struct
+> > > > > drm_dp_mst_topology_mgr *mgr, bool ms
+> > > > >                 struct drm_dp_payload reset_pay;
+> > > > > 
+> > > > >                 WARN_ON(mgr->mst_primary);
+> > > > > +               drm_dp_dpcd_read(mgr->aux,
+> > > > > +                                DP_TRAINING_AUX_RD_INTERVAL,
+> > > > > +                                &dpcd_ext, sizeof(dpcd_ext));
+> > > > > +
+> > > > > +               dpcd_offset =
+> > > > > +                       ((dpcd_ext &
+> > > > > DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT) ?  DP_DP13_DPCD_REV :
+> > > > > DP_DPCD_REV);
+> > > > > 
+> > > > >                 /* get dpcd info */
+> > > > > -               ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr-
+> > > > > >dpcd,
+> > > > > DP_RECEIVER_CAP_SIZE);
+> > > > > +               ret = drm_dp_dpcd_read(mgr->aux, dpcd_offset, mgr-
+> > > > > >dpcd,
+> > > > > DP_RECEIVER_CAP_SIZE);
+> > > > >                 if (ret != DP_RECEIVER_CAP_SIZE) {
+> > > > >                         DRM_DEBUG_KMS("failed to read DPCD\n");
+> > > > >                         goto out_unlock;
+> > > > > --
+> > > > > 2.25.1
+> > > > > 
+> > > > Add Lyude Paul
+> > > > 
+> > > -- 
+> > > Cheers,
+> > > 	Lyude Paul (she/her)
+> > > 	Software Engineer at Red Hat
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> -- 
+> Cheers,
+> 	Lyude Paul (she/her)
+> 	Software Engineer at Red Hat
 
+-- 
+Ville Syrjälä
+Intel
