@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDC0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CD2C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B79092145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A29220708
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgIIJLE (ORCPT
+        id S1730212AbgIIJLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:11:04 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62109 "EHLO mga18.intel.com"
+        Wed, 9 Sep 2020 05:11:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25201 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgIIJLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:11:03 -0400
-IronPort-SDR: 6PclQqpPJK6gLekS/axzhoC3sMjRoqEsTiHL1qn3ug2Dnh1z7YiiyGWmmr558WOH5QmUBjtots
- NhPQkqWcWmsA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="146012564"
+        id S1726440AbgIIJLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:11:09 -0400
+IronPort-SDR: N1lFwvp43Hj5BP+jV0ccc/99QRu8OOjMRMRkcSAih399v0ubSlkynaCZCVymyTt3f/qXObn6tD
+ tXU5D3uhvkng==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="158329219"
 X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="146012564"
+   d="scan'208";a="158329219"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:11:03 -0700
-IronPort-SDR: HAnWavMVnfksDQ8XZpDYx1uGBTpA+NuwwNZuvyJKfZVhQw+AucjZnCAbqh/+zqXTAJcHJqSPum
- SfZClj+cSF/g==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:11:08 -0700
+IronPort-SDR: lD1LoAuQEKx2ApgdPjS+K+iP5Y9R+DFoEZniG+gT3uwR4IofpgGB2vHNkfdL3dlqPuPax9VNex
+ RjhtnkLeR78g==
 X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="480389583"
+   d="scan'208";a="304428438"
 Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:10:59 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:11:05 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shuo Liu <shuo.a.liu@intel.com>,
         Zhi Wang <zhi.a.wang@intel.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v3 13/17] virt: acrn: Introduce interfaces to query C-states and P-states allowed by hypervisor
-Date:   Wed,  9 Sep 2020 17:08:32 +0800
-Message-Id: <20200909090836.46762-14-shuo.a.liu@intel.com>
+Subject: [PATCH v3 14/17] virt: acrn: Introduce I/O ranges operation interfaces
+Date:   Wed,  9 Sep 2020 17:08:33 +0800
+Message-Id: <20200909090836.46762-15-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200909090836.46762-1-shuo.a.liu@intel.com>
 References: <20200909090836.46762-1-shuo.a.liu@intel.com>
@@ -62,17 +62,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-The C-states and P-states data are used to support CPU power management.
-The hypervisor controls C-states and P-states for a User VM.
+An I/O request of a User VM, which is constructed by hypervisor, is
+distributed by the ACRN Hypervisor Service Module to an I/O client
+corresponding to the address range of the I/O request.
 
-ACRN userspace need to query the data from the hypervisor to build ACPI
-tables for a User VM.
-
-HSM provides ioctls for ACRN userspace to query C-states and P-states
-data obtained from the hypervisor.
+I/O client maintains a list of address ranges. Introduce
+acrn_ioreq_range_{add,del}() to manage these address ranges.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
-Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Zhi Wang <zhi.a.wang@intel.com>
 Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
@@ -80,184 +77,96 @@ Cc: Yu Wang <yu1.wang@intel.com>
 Cc: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/virt/acrn/hsm.c       | 69 +++++++++++++++++++++++++++++++++++
- drivers/virt/acrn/hypercall.h | 12 ++++++
- include/uapi/linux/acrn.h     | 35 ++++++++++++++++++
- 3 files changed, 116 insertions(+)
+ drivers/virt/acrn/acrn_drv.h |  4 +++
+ drivers/virt/acrn/ioreq.c    | 60 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
-diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-index d6e1f60126a8..7c0e410cf32d 100644
---- a/drivers/virt/acrn/hsm.c
-+++ b/drivers/virt/acrn/hsm.c
-@@ -42,6 +42,67 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
- 	return 0;
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index 84d9a8f80101..cde12eaa492e 100644
+--- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -198,6 +198,10 @@ struct acrn_ioreq_client *acrn_ioreq_client_create(struct acrn_vm *vm,
+ 						   void *data, bool is_default,
+ 						   const char *name);
+ void acrn_ioreq_client_destroy(struct acrn_ioreq_client *client);
++int acrn_ioreq_range_add(struct acrn_ioreq_client *client,
++			 u32 type, u64 start, u64 end);
++void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
++			  u32 type, u64 start, u64 end);
+ 
+ int acrn_msi_inject(struct acrn_vm *vm, u64 msi_addr, u64 msi_data);
+ 
+diff --git a/drivers/virt/acrn/ioreq.c b/drivers/virt/acrn/ioreq.c
+index a9953e4322a5..11acfa1be674 100644
+--- a/drivers/virt/acrn/ioreq.c
++++ b/drivers/virt/acrn/ioreq.c
+@@ -101,6 +101,66 @@ int acrn_ioreq_request_default_complete(struct acrn_vm *vm, u16 vcpu)
+ 	return ret;
  }
  
-+static int pmcmd_ioctl(u64 cmd, void __user *uptr)
++/**
++ * acrn_ioreq_range_add() - Add an iorange monitored by an ioreq client
++ * @client:	The ioreq client
++ * @type:	Type (ACRN_IOREQ_TYPE_MMIO or ACRN_IOREQ_TYPE_PORTIO)
++ * @start:	Start address of iorange
++ * @end:	End address of iorange
++ *
++ * Return: 0 on success, <0 on error
++ */
++int acrn_ioreq_range_add(struct acrn_ioreq_client *client,
++			 u32 type, u64 start, u64 end)
 +{
-+	struct acrn_pstate_data *px_data;
-+	struct acrn_cstate_data *cx_data;
-+	u64 *pm_info;
-+	int ret = 0;
++	struct acrn_ioreq_range *range;
 +
-+	switch (cmd & PMCMD_TYPE_MASK) {
-+	case ACRN_PMCMD_GET_PX_CNT:
-+	case ACRN_PMCMD_GET_CX_CNT:
-+		pm_info = kmalloc(sizeof(u64), GFP_KERNEL);
-+		if (!pm_info)
-+			return -ENOMEM;
-+
-+		ret = hcall_get_cpu_state(cmd, virt_to_phys(pm_info));
-+		if (ret < 0) {
-+			kfree(pm_info);
-+			break;
-+		}
-+
-+		if (copy_to_user(uptr, pm_info, sizeof(u64)))
-+			ret = -EFAULT;
-+		kfree(pm_info);
-+		break;
-+	case ACRN_PMCMD_GET_PX_DATA:
-+		px_data = kmalloc(sizeof(*px_data), GFP_KERNEL);
-+		if (!px_data)
-+			return -ENOMEM;
-+
-+		ret = hcall_get_cpu_state(cmd, virt_to_phys(px_data));
-+		if (ret < 0) {
-+			kfree(px_data);
-+			break;
-+		}
-+
-+		if (copy_to_user(uptr, px_data, sizeof(*px_data)))
-+			ret = -EFAULT;
-+		kfree(px_data);
-+		break;
-+	case ACRN_PMCMD_GET_CX_DATA:
-+		cx_data = kmalloc(sizeof(*cx_data), GFP_KERNEL);
-+		if (!cx_data)
-+			return -ENOMEM;
-+
-+		ret = hcall_get_cpu_state(cmd, virt_to_phys(cx_data));
-+		if (ret < 0) {
-+			kfree(cx_data);
-+			break;
-+		}
-+
-+		if (copy_to_user(uptr, cx_data, sizeof(*cx_data)))
-+			ret = -EFAULT;
-+		kfree(cx_data);
-+		break;
-+	default:
-+		break;
++	if (end < start) {
++		dev_err(client->vm->dev,
++			"Invalid IO range [0x%llx,0x%llx]\n", start, end);
++		return -EFAULT;
 +	}
 +
-+	return ret;
++	range = kzalloc(sizeof(*range), GFP_KERNEL);
++	if (!range)
++		return -ENOMEM;
++
++	range->type = type;
++	range->start = start;
++	range->end = end;
++
++	write_lock_bh(&client->range_lock);
++	list_add(&range->list, &client->range_list);
++	write_unlock_bh(&client->range_lock);
++
++	return 0;
 +}
 +
- static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- 			   unsigned long ioctl_param)
- {
-@@ -54,6 +115,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- 	struct acrn_msi_entry *msi;
- 	struct acrn_pcidev *pcidev;
- 	struct page *page;
-+	u64 cstate_cmd;
- 	int ret = 0;
- 
- 	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
-@@ -227,6 +289,13 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- 	case ACRN_IOCTL_CLEAR_VM_IOREQ:
- 		acrn_ioreq_request_clear(vm);
- 		break;
-+	case ACRN_IOCTL_PM_GET_CPU_STATE:
-+		if (copy_from_user(&cstate_cmd, (void *)ioctl_param,
-+				   sizeof(cstate_cmd)))
-+			return -EFAULT;
-+
-+		ret = pmcmd_ioctl(cstate_cmd, (void __user *)ioctl_param);
-+		break;
- 	default:
- 		dev_warn(vm->dev, "Unknown IOCTL 0x%x!\n", cmd);
- 		ret = -ENOTTY;
-diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
-index a8813397a3fe..e640632366f0 100644
---- a/drivers/virt/acrn/hypercall.h
-+++ b/drivers/virt/acrn/hypercall.h
-@@ -39,6 +39,9 @@
- #define HC_ASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x05)
- #define HC_DEASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x06)
- 
-+#define HC_ID_PM_BASE			0x80UL
-+#define HC_PM_GET_CPU_STATE		_HC_ID(HC_ID, HC_ID_PM_BASE + 0x00)
-+
- /**
-  * hcall_create_vm() - Create a User VM
-  * @vminfo:	Service VM GPA of info of User VM creation
-@@ -225,4 +228,13 @@ static inline long hcall_reset_ptdev_intr(u64 vmid, u64 irq)
- 	return acrn_hypercall2(HC_RESET_PTDEV_INTR, vmid, irq);
- }
- 
-+/*
-+ * hcall_get_cpu_state() - Get P-states and C-states info from the hypervisor
-+ * @state:	Service VM GPA of buffer of P-states and C-states
++/**
++ * acrn_ioreq_range_del() - Del an iorange monitored by an ioreq client
++ * @client:	The ioreq client
++ * @type:	Type (ACRN_IOREQ_TYPE_MMIO or ACRN_IOREQ_TYPE_PORTIO)
++ * @start:	Start address of iorange
++ * @end:	End address of iorange
 + */
-+static inline long hcall_get_cpu_state(u64 cmd, u64 state)
++void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
++			  u32 type, u64 start, u64 end)
 +{
-+	return acrn_hypercall2(HC_PM_GET_CPU_STATE, cmd, state);
++	struct acrn_ioreq_range *range;
++
++	write_lock_bh(&client->range_lock);
++	list_for_each_entry(range, &client->range_list, list) {
++		if (type == range->type &&
++		    start == range->start &&
++		    end == range->end) {
++			list_del(&range->list);
++			kfree(range);
++			break;
++		}
++	}
++	write_unlock_bh(&client->range_lock);
 +}
 +
- #endif /* __ACRN_HSM_HYPERCALL_H */
-diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-index 7764459e130c..9fed7209a8ef 100644
---- a/include/uapi/linux/acrn.h
-+++ b/include/uapi/linux/acrn.h
-@@ -353,6 +353,38 @@ struct acrn_msi_entry {
- 	__u64	msi_data;
- };
- 
-+struct acrn_acpi_generic_address {
-+	__u8	space_id;
-+	__u8	bit_width;
-+	__u8	bit_offset;
-+	__u8	access_size;
-+	__u64	address;
-+} __attribute__ ((__packed__));
-+
-+struct acrn_cstate_data {
-+	struct acrn_acpi_generic_address	cx_reg;
-+	__u8					type;
-+	__u32					latency;
-+	__u64					power;
-+} __attribute__((aligned(8)));
-+
-+struct acrn_pstate_data {
-+	__u64	core_frequency;
-+	__u64	power;
-+	__u64	transition_latency;
-+	__u64	bus_master_latency;
-+	__u64	control;
-+	__u64	status;
-+} __attribute__((aligned(8)));
-+
-+#define PMCMD_TYPE_MASK		0x000000ff
-+enum acrn_pm_cmd_type {
-+	ACRN_PMCMD_GET_PX_CNT,
-+	ACRN_PMCMD_GET_PX_DATA,
-+	ACRN_PMCMD_GET_CX_CNT,
-+	ACRN_PMCMD_GET_CX_DATA,
-+};
-+
- /* The ioctl type, documented in ioctl-number.rst */
- #define ACRN_IOCTL_TYPE			0xA2
- 
-@@ -404,4 +436,7 @@ struct acrn_msi_entry {
- #define ACRN_IOCTL_DEASSIGN_PCIDEV	\
- 	_IOW(ACRN_IOCTL_TYPE, 0x56, struct acrn_pcidev)
- 
-+#define ACRN_IOCTL_PM_GET_CPU_STATE	\
-+	_IOWR(ACRN_IOCTL_TYPE, 0x60, __u64)
-+
- #endif /* _UAPI_ACRN_H */
+ /*
+  * ioreq_task() is the execution entity of handler thread of an I/O client.
+  * The handler callback of the I/O client is called within the handler thread.
 -- 
 2.28.0
 
