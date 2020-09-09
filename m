@@ -2,138 +2,193 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E218C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C59CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCFA208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E64AD2087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BzvSFaQJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cOMX0UY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgIIITh (ORCPT
+        id S1729048AbgIIIT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:19:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37088 "EHLO
+        Wed, 9 Sep 2020 04:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgIIITd (ORCPT
+        with ESMTP id S1726683AbgIIITe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:19:33 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49289C061786
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:19:30 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id nw23so2282023ejb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:19:29 -0700 (PDT)
+        Wed, 9 Sep 2020 04:19:34 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EEEC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:19:32 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id e14so849834vsa.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1pXeIVny4SCjQpHOWRmhg1e5D0Af+TbFGDr+gvAazg8=;
-        b=BzvSFaQJLJILAdbXFT5uKFET8GO6bhTFU1aGXOdyFeuKWcsNprgoucxgyYron9HPfk
-         HZ97W1WAJu2i1eDwe14xs0xptM1CRb0niUmbUMgS/GaowyFio56M3+/7vkgyS/mZ9TA+
-         pkreEdffWjXtuxoj2tazieSNZxqOVRvmruuzY=
+         :cc:content-transfer-encoding;
+        bh=kxsSOAH08Cb/1H/bCrBQPy36KVRAJlGoYW7Z2pWiU/Y=;
+        b=cOMX0UY4FYViplh6wKAtEd2R02thFI01xq7M4Hwgzxr6DPjpx42kGVOuNX4FehUxDq
+         jtAGZKKTc6CogSuICHLSl5SVGpHJkzvjjT7/R78wtczR//U3KOad5nXbPLZYPd4qgbCI
+         6AxM0h99CzEZm/aoWs1a1guDPj1fzCO1LCRnLXGj3P8OFgLfJYndgpu075HF8j/XPbRD
+         URtJTARScj6SDwUPxmmK9zlDqJjEbFzV60qjEY38Wub9w2YKtT4SfavjVepnbQsjPM6k
+         83pCPUfZpfEz7OxT059ibeEv7jn1z7AZmPjRKol+duvekZVImqc5Z7Dfcc6fIHOHAYw0
+         q5Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1pXeIVny4SCjQpHOWRmhg1e5D0Af+TbFGDr+gvAazg8=;
-        b=Vkfazeky2+WwEwzf1z8s1XhTx+iSRfxyyxb1zCwME2NlkDWLgW5EsvXj6o830JIzk9
-         DcNZpL7j9xUNTcy/ELmshw1rJULiQM1KwCu0HvsrKgs6RHlSLF2rZp7jO2dHXBBKgD+U
-         SBFwj5L0TlnmEdumSDub7n3o2GJZ+JiAA0PN/0h09YWzJMURgqJ4FLT9Wa5WiafE5NCi
-         ezOnTkCPVYUe/DzBflQmXBPtcNBjl7efeDme50S3GB42+g1wGe9I9pfwAkA2BsoMmTJD
-         Aq22dcE05eqxYmaky7X+z5qiFq3lHSZlnRWDuS0renT7ppjIS0zm1edoqKMfRa2KA+Rb
-         +xvQ==
-X-Gm-Message-State: AOAM530Q/UYZHbcYY7bkiZX4mi5U7kQF4Xvr5qMaeTcHBsttz0ilbhJN
-        us8LLxBaLixbqnbShnne7bJRSiNSJQCOYtfAXKxsiA==
-X-Google-Smtp-Source: ABdhPJzvfIij7YO4hihFiSb4hxA+NHJOifz4cTebwv29YbC+ZXbvBjLWdaVioZkEamOkVZ0ebFwb4JDa7iEPkbmLQ3o=
-X-Received: by 2002:a17:906:f150:: with SMTP id gw16mr2384862ejb.528.1599639568574;
- Wed, 09 Sep 2020 01:19:28 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kxsSOAH08Cb/1H/bCrBQPy36KVRAJlGoYW7Z2pWiU/Y=;
+        b=tXwX8XvrwPsx3ac+U80ioqES4EWfARYPuvZbPDjZ6IfRkjSFmaGE7QHA9fJfbJtDhm
+         Ltz8n6Ait3jesRjaN8Cz7R0yzpUZQjH+aKNpxRTwOP2cqILNZ2G+QB60SZw1jgFE4BIV
+         7jpgT8KxAdMkpPeFz8dfpc7tYsa/KPAl/tq2/LjmBCRto/OiOpg1CkLY9rMN5Lc1PrWk
+         CehyISOCwaCL45+8roF5Ue2pzHfVFoj8uYQyIv6DAoM5u/z+CFxpYdHVUPRkxkAGv/Ag
+         dK5OmvyVVJqpsJexNKxsnP32Cp34cde1SpVQYWeL2r059hi9CPh4KbC+WOcs92KVyp8u
+         sj9A==
+X-Gm-Message-State: AOAM530E4OsyZhzFQHwjgRTV74owYWXulWI6dd+W1rRge81OodvyaCcl
+        Fa4ABIam2VQxHUPPqKz1geGFNeIrlLpLdazroOTY4g==
+X-Google-Smtp-Source: ABdhPJzGs/uInKpVTHQiAOSJVnUQ3v1i+kKqOuY/ow1h7pWk17jvJw6jTMYM/5DIOGoGbnIx822Dej3ONmk1xHi0lMk=
+X-Received: by 2002:a05:6102:204b:: with SMTP id q11mr1845302vsr.40.1599639571640;
+ Wed, 09 Sep 2020 01:19:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191112110330.179649-1-pihsun@chromium.org> <20191112110330.179649-5-pihsun@chromium.org>
- <2abf8fdd-7b7c-73b0-beea-9c9ac56869dc@gmail.com> <CA+G9fYt9AujG6gyfeV5AaAv0EgggUfGT1jow8DJjVfetVWV3EA@mail.gmail.com>
- <CAJKOXPeV9zCg4v0kBfToGdJSxswbKtT16LVYADALpYRHqWXBOg@mail.gmail.com> <ab35a9c7-1b33-dc75-8520-ee072ff1309f@nvidia.com>
-In-Reply-To: <ab35a9c7-1b33-dc75-8520-ee072ff1309f@nvidia.com>
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Date:   Wed, 9 Sep 2020 16:18:52 +0800
-Message-ID: <CANdKZ0eGTqxkcdgyAR6ay4yJNy74v5SqAOh96u+v4WzbZRf32Q@mail.gmail.com>
-Subject: Re: [PATCH v21 4/4] arm64: dts: mt8183: add scp node
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Erin Lo <erin.lo@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
+References: <20200908152217.022816723@linuxfoundation.org>
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 9 Sep 2020 13:49:20 +0530
+Message-ID: <CA+G9fYt2CNnV+-7jbvwff=0q=UvMp4baCPy61evpXtVT-f-xVw@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/65] 4.14.197-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
         lkft-triage@lists.linaro.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 3:37 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+On Tue, 8 Sep 2020 at 21:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
+> This is the start of the stable review cycle for the 4.14.197 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> On 02/09/2020 17:23, Krzysztof Kozlowski wrote:
-> > On Wed, 2 Sep 2020 at 16:45, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >>
-> >> On Thu, 27 Aug 2020 at 15:44, Matthias Brugger <matthias.bgg@gmail.com> wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 12/11/2019 12:03, Pi-Hsun Shih wrote:
-> >>>> From: Eddie Huang <eddie.huang@mediatek.com>
-> >>>>
-> >>>> Add scp node to mt8183 and mt8183-evb
-> >>>>
-> >>>> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> >>>> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> >>>> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
-> >>>
-> >>> Sorry I somehow oversaw this. Next time please don't doubt to ping me.
-> >>>
-> >>> Bjorn, do I understand correctly that you don't send emails to the list
-> >>> informing of the inclusion of a patch/series in your tree?
-> >>>
-> >>> Anyway applied now to v5.9-next/dts64 :)
-> >>
-> >> arm64 build dtbs failed on linux next 20200902.
-> >
-> > I just hit it as well... I wish the kernel was built after applying
-> > patches... it would make the next a better place.
+> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
+> Anything received after that time might be too late.
 >
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.197-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
 >
-> Any update on this? It is still broken as of next-20200908.
+> thanks,
 >
-> Jon
->
+> greg k-h
 
-I just sent https://lore.kernel.org/patchwork/patch/1303034/ which
-should fix this.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-The build failure is because another patch for the mt8183-kukui.dtsi
-(cd894e274b74 "arm64: dts: mt8183: Add krane-sku176 board") that was
-merged after this patch is submitted to list is missing the
-scp_mem_reserved field. Sorry for that.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
+Summary
+------------------------------------------------------------------------
 
-> --
-> nvpublic
+kernel: 4.14.197-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: d520aac0cd79e557dd7d2ae06370d104a9f48645
+git describe: v4.14.196-66-gd520aac0cd79
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.196-66-gd520aac0cd79
+
+No regressions (compared to build v4.14.196)
+
+No fixes (compared to build v4.14.196)
+
+Ran 33476 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-fs-tests
+* ltp-open-posix-tests
+* ltp-tracing-tests
+* igt-gpu-tools
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
