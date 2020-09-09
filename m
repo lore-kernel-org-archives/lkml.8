@@ -2,139 +2,106 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFDFC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B0E22269
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9BE21919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lq0jJ4wh"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pjWnANMo";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SRdJuAV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgIIPLJ (ORCPT
+        id S1729741AbgIIL57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730067AbgIIL6C (ORCPT
+        Wed, 9 Sep 2020 07:57:59 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:51983 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729941AbgIILns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:58:02 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528D9C0617A2
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:58:01 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id k25so3180498ljk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=veMOlwm85HGnlMSTVN952J/Jqjc/7rvdCvDfPKEre0c=;
-        b=Lq0jJ4whRo5WT/1EwrgGOl0XtPUPtvtGXLC81q5hE5FLoHPxnCgByqRckcoRWhj69y
-         8POlYqx76p1PczfUYqXfb+R7q5w0oL+bb5PyhrPpsQU6UKMKeUmSKkDaAL+s7kMke30d
-         YiGusFifL3kjDo2Y3BUUdRoscclcabbbQiDZACAMH/75Q1mpxTyMd9tTtFm3ATcURbyg
-         04CbyAHdOELljt3QOr0smY9DXjCBobqHTrbDupSNhYUX41fkK4Xwy4UFEbq3Cdo/dBpR
-         ZqwdOCqg5JfSW9dyYIRNMjwnVLuw8KhzqqZqiD74IP0vOQ4EN43WzK6XOkONzPBpOh5Y
-         r9JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=veMOlwm85HGnlMSTVN952J/Jqjc/7rvdCvDfPKEre0c=;
-        b=ByCsIqsI5CX2yvVEeg17Tz2XcGU7UOtDH4jB3aK6BD0VZ9LvHGDaOWnihs3tkyH9F7
-         z+zaCy6V38NVp5etFhBztolHuvh++kGCZ1Kpfh2tbrqowmhcGP+jlHKd4XsdVkYdq0pr
-         tGVZKQ8g/Pe2DpwsDvPFmZ4Gen1yFFiXwNxBYs8O6d5Kms5dB9m7FDjLWE8L6BrFY5NT
-         Xq6wqolVQtPYFU3qNhSBRvNxvUjf443kOdcajm+Xs041Kf23pvHovLXPCsZjPKzy1UFY
-         2dIRAWSVidkc8/+cBn1TMUsxJlJDE+YEotJH/SofzA+6LYV0eRxj4kQk4RNIP4rFU1tJ
-         AZVg==
-X-Gm-Message-State: AOAM531/QdD3HJ6EW9HXhiJHED7VY4fM5EZ6A4fw9LZGTN9hBeeJXubB
-        8tTZgBMPDHYDCjnXBd5GO3W8HmObxmRy08zZPe9Ijw==
-X-Google-Smtp-Source: ABdhPJwCf3FmxgZrTisFeaRuj2pxBcn3CZA8Jzyk/0TkRmXwR5H+xd9VJWHscFXDHtkwCveC2Trx20irnwH9IVujNcM=
-X-Received: by 2002:a2e:a177:: with SMTP id u23mr1687459ljl.104.1599652679725;
- Wed, 09 Sep 2020 04:57:59 -0700 (PDT)
+        Wed, 9 Sep 2020 07:43:48 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 915B7B12;
+        Wed,  9 Sep 2020 07:43:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 09 Sep 2020 07:43:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=IeoBvfYVc4Im06yQD+pxOyrxlm
+        Y/+Hex5uW2NfYlC4o=; b=pjWnANMor34uCQOJohh/rld/EEFZc0UosIinK3d9QS
+        XayGD5TLHvZHMGEgVCf44OvYZC0TMSyya/vL5dXrFv1Nyst1KSNCu4Qu0ea9wbvd
+        rG6wHz+nqWfOpeyxggBUWJT/CAcOpZ213uUIOOCpRtfct47VGvhs1AY2Z8eXUL3J
+        r5Lx1o/1fN+ls+0sTZRXiFWmEwVQedIN3+y7KFV++Z//WRmZZSei3fwxVO8dAQNR
+        cmYi7DTrCRGuno162UDtbtDOj1CU3L/CveGrvNg3+THNeur7HLTFntmJyfL0ULxR
+        XBN8+V97LOiaI12YBzRQn56Ke0I41EueLcmWLZWI4R6A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=IeoBvfYVc4Im06yQD
+        +pxOyrxlmY/+Hex5uW2NfYlC4o=; b=SRdJuAV/upsVfD3GHCrgmudbEhZYcNChF
+        CcktFNPbjmmcfjWvkLAeXBQVrVoOz0REyitsgovvhE+larHzYMCV0OAYZCMViYx8
+        JQ4LLQhu+Y41B3GbLfxTp/xdiBbCp+gFtZBdHqmDjXD7XR0DmneNCnvk6NRMmQru
+        +YyE+QE8Jwlq3Z2zX1GpZWcFkiaOSDzoCV94LYNluDEMgIm/5EjgxZaqCef3hDSD
+        InWFWA1rexsiz6eVnRudeJRNorV/KwV2vlI34006FjsqoFU/6SCw/OPCw3Pw+8BH
+        IUJfL6qMAgVUAlNZ1Lv6bo1YH1hNx9fNYT9+wi5r1T1rhM1iNsB4A==
+X-ME-Sender: <xms:2r9YX41CXZFARNB0cvRrJvpRQsP9ME2Kaw5DRo3l1BGDXkZD0GH3CQ>
+    <xme:2r9YXzEgcpaFxrOkgie1iUuNF7Jqe_73bxz4Du9F9_1_wTm2-cUj-tAtjXptpjExc
+    5SVJn4k23xdxlP71g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehhedggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
+    dvvddthefftedujeethfeuueelfedtnecukfhppedugedrvddruddtledrkeehnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifse
+    grjhdrihgurdgruh
+X-ME-Proxy: <xmx:2r9YXw4TELryIczh5Xaagxs2FH5ivCya275pTlsOHFPLyU4xuk3d3g>
+    <xmx:2r9YXx0dwqN1ZJL3SX5_RyKVPEqIuP8-n0Gi2O7Wi0Ko0dOsRKqc6Q>
+    <xmx:2r9YX7E3zlgNLcuiH9r57icHisrn_g-HNRhsGk822r-GYIboRsHf-g>
+    <xmx:3b9YX8OTvr-a032_Sld4L8_3bSqS6lNQ36xRnW0r2LdBP7Jz435Otg>
+Received: from localhost.localdomain (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1C3C63065B97;
+        Wed,  9 Sep 2020 07:43:19 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, joel@jms.id.au,
+        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] pinctrl: aspeed: AST2600 pinconf fixes
+Date:   Wed,  9 Sep 2020 21:13:09 +0930
+Message-Id: <20200909114312.2863675-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200822163250.63664-1-paul@crapouillou.net> <20200822163250.63664-4-paul@crapouillou.net>
-In-Reply-To: <20200822163250.63664-4-paul@crapouillou.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 9 Sep 2020 13:57:48 +0200
-Message-ID: <CACRpkdaN7S9PoYd2d-hxUNq9NXA52P0TugwRzyFuCTCc6Onp=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] drm: Add SPI DBI host driver
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf Tronnes <noralf@tronnes.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        od@zcrc.me,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hello,
 
-I looked a bit at this patch
+The AST2600 pinctrl driver was missing support for bias control on the 1.8V
+GPIO pins, and in the process of resolving that I discovered a couple of other
+bugs that are fixed in the first two patches of the series.
 
-On Sat, Aug 22, 2020 at 6:33 PM Paul Cercueil <paul@crapouillou.net> wrote:
+Please review!
 
-> +config DRM_MIPI_DBI_SPI
-> +       tristate "SPI host support for MIPI DBI"
-> +       depends on DRM && OF && SPI
+Andrew
 
-I think you want to depend on SPI_HOST actually.
+Andrew Jeffery (3):
+  pinctrl: aspeed: Format pinconf debug consistent with pinmux
+  pinctrl: aspeed: Use the right pinconf mask
+  pinctrl: aspeed-g6: Add bias controls for 1.8V GPIO banks
 
-> +       struct gpio_desc *dc;
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 17 +++++++++++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c    |  8 ++++----
+ 2 files changed, 21 insertions(+), 4 deletions(-)
 
-This dc is very much undocumented, so I can only guess what
-it is for, please add some kerneldoc explaining what it is.
-I suppose it is in the DBI spec but I don't have it.
+-- 
+2.25.1
 
-> +       gpiod_set_value_cansleep(dbi->dc, 0);
-
-Since it is optional I usually prefer to do it like this:
-
-if (dbi->dc)
-   gpiod_set_value_cansleep(dbi->dc, 0);
-
-> +  gpiod_set_value_cansleep(dbi->dc, 1);
-
-Since you drive this low when you assert it and
-high when you de-assert it, inverse this and mark the
-GPIO line as GPIO_ACTIVE_LOW in the device tree
-instead.
-
-> +       dbi->dc = devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
-> +       if (IS_ERR(dbi->dc)) {
-> +               dev_err(dev, "Failed to get gpio 'dc'\n");
-> +               return PTR_ERR(dbi->dc);
-> +       }
-
-Currently you are requesting the line asserted according to the
-above logic. Is that what you want?
-
-If you change the DT to GPIO_ACTIVE_LOW then this seems
-correct.
-
-But I am overall a bit curious about this "dc" thing. What is it
-really? It seems suspiciously similar to a SPI chip select,
-and then that is something that should be handled by the
-SPI core and set as cs-gpios in the device tree instead.
-It is certainly used exactly like a chip select as far as I can
-tell.
-
-Yours,
-Linus Walleij
