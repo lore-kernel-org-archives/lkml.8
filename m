@@ -2,364 +2,215 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7816C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DC2C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 932C821D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E899321941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="d14jEUS7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bF8Qb/gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgIJCmX (ORCPT
+        id S1730695AbgIJCmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
+        Wed, 9 Sep 2020 22:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730111AbgIJCHb (ORCPT
+        with ESMTP id S1730520AbgIJCHb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 22:07:31 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061e.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::61e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E547C06179B
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 16:18:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Um93tfzKjex0nn05zKtdMMBldQKaN/Gt4JmvLuF2/7eoeTI5ITD7rC8vaRTezstXoBtW27jFontLOapnHfIl01BQ77hopZFPUnyFZeZb+twfWEGZWa6uON9DNKofyPQKoMPVsZyXTuQ0V+h5mtbepIW5V4EA9oFipIbnAG552qmr6q2m+yc60rxap4trRkqHRFUDS7vD2pDDm8wyCuTmANsyqBPTON3AFHTgpwnffgxPnIpUMmH+08UDLCPWfUVs6wYsrTLxzDyiO3c52/5VSky18OzNMgOH4C11lz3Tg4aSzuTvSCpD/0y1l44a1GusOn7PmB3+HdAkq8J018UF3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9dODFAEWpJwE7o6RftnyaGtifeCeyXmRhnXRtvEwanU=;
- b=Ql4QSDGJvlIswgedB7fVE7fW3gGPv0oVtkUWYgPiH3L4MauMBGPKQd1NcANOYei03E5k8QAQwYEkffW0AxRgtH10/DYOlUmrzpaWp7CKZnSJLDbiJMZzkZgNFJm90SmNtHrmfirzxHwuWtxSUIMgnC9fcaZIpiD1cO3Ijr2pqeLlCoZzfAWOqdwq/dpxbFj5AZ8nnQbkfNR98zLyZcVyR3HGBohdWDdylRepm2ZkbBu07lttEV6/obwTHWmTuWAKiMKsOXtjWTKWU4vXZWJHcxrXrCPvO4Jb8+ufGgJMxaT5Fq30K5Tfr4WAtrPHQ4YOS+Mt5BeCZT/VD7HuD5fw8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8386DC061796
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 16:17:47 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id b13so2484633qvl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 16:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9dODFAEWpJwE7o6RftnyaGtifeCeyXmRhnXRtvEwanU=;
- b=d14jEUS7naU7bReArMR7Zg6W13MsTh4hfmVuqcuKtN3ujUTZjNCvdZO1e3gIvadsFnyUgyG4d0Raz/GV8GhmSQ1b/C9bwdbnG+VTgxrYIn/6etVFhMAY0kuq7bwPnFKaeSBoMDc0Jn+HgWJaCHa6KM5tLPybp7Up0XjAnfsdv6k=
-Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=none action=none
- header.from=amd.com;
-Received: from DM6PR12MB4124.namprd12.prod.outlook.com (2603:10b6:5:221::20)
- by DM6PR12MB2986.namprd12.prod.outlook.com (2603:10b6:5:39::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.18; Wed, 9 Sep
- 2020 22:54:37 +0000
-Received: from DM6PR12MB4124.namprd12.prod.outlook.com
- ([fe80::25a1:ace4:4ca8:167e]) by DM6PR12MB4124.namprd12.prod.outlook.com
- ([fe80::25a1:ace4:4ca8:167e%8]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
- 22:54:36 +0000
-From:   Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        hersenxs.wu@amd.com
-Subject: [PATCH 3/3] drm/amd/display: Add pipe_state tracepoint
-Date:   Wed,  9 Sep 2020 18:53:52 -0400
-Message-Id: <20200909225352.4072030-4-Rodrigo.Siqueira@amd.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200909225352.4072030-1-Rodrigo.Siqueira@amd.com>
-References: <20200909225352.4072030-1-Rodrigo.Siqueira@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT1PR01CA0143.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2f::22) To DM6PR12MB4124.namprd12.prod.outlook.com
- (2603:10b6:5:221::20)
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=eNbgA7wJNhgB/YQkgVZ6Sifq4zF6BFfhA4BIqD8+kaE=;
+        b=bF8Qb/grHct1/eaX/5eL6k6ObxpykJb0d4zLLV2jGb0xvjs073Ym42sOFNa63xRsKl
+         3UiR7OtWtNLBbgQqlDP/Ze+fx+8eBg1pR3fjkL3tjBrMZOrxXwY9f39eH3HocooAVVNZ
+         H7mQzRzVzUnPj5qbRNxztp/s2ul4YWIYfJklEuDJOAoCgMe/9Ml2w/ZHH0qLx6T/n04F
+         ErB/S2m3jU99ylGanWDQjBbcs8mqb3f7QhPX81WiT2tnbnH1pzdeTTh3KdYG/1FNun5B
+         3x3lbmO3Z8hOpFjJAeJMv7ygsuY6oQr+ylEA9bFQV5A9rkplXpOgTzg67S4c4qvcrl2W
+         rpzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=eNbgA7wJNhgB/YQkgVZ6Sifq4zF6BFfhA4BIqD8+kaE=;
+        b=CsW+JN5hTAs8iA9x1cp6mhxiSIs3xVT9ilC6W07OdqwQ+v9GVmC2kJn1elhhQoROWp
+         084L9o8goalTHgWCWKPSZ9sVzHt8s7Bb1+GkF7VqddIBGLW/T+0ommSyQFinRyICbSgd
+         TtdJx3ClZbV3bauC696pA0yG2pYa8BbSMLaaB4iHxflG43TYSYP8m2Ymif21Gr+IodJO
+         WuwiN1gPxNERZwSk1yGh83G9W7IwYOIJjctaqPDF/HLcXWjTwZvzU7nDsLAWeVQsvddV
+         NN8MsY9JKDsO6Co6yY2x/2LkVLnmbakAd9msmGQlZn5iAX5fgW9Crbf3QhXDS/dgRzs2
+         ntsw==
+X-Gm-Message-State: AOAM533u+N/CRlJboqNXCLQYATgGXMwkhqSDQxPUt1nmf37aC7TtkNaP
+        7JRIQTNy9CEoEkuR96kEnbl5sQ==
+X-Google-Smtp-Source: ABdhPJwudYuv1b4JcL8l9kJC2ypzAliQ961ce7PA3JlrwTvNm3U2ajUl9p33pNfTp/yGmTBaBfxXVQ==
+X-Received: by 2002:a0c:e783:: with SMTP id x3mr6293895qvn.114.1599693417492;
+        Wed, 09 Sep 2020 16:16:57 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id w44sm4934717qth.9.2020.09.09.16.16.54
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 09 Sep 2020 16:16:56 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 16:16:41 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com, vbabka@suse.cz, minchan@kernel.org, cai@lca.pw
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock: reviews
+In-Reply-To: <61a42a87-eec9-e300-f710-992756f70de6@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.2009091524260.10087@eggly.anvils>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com> <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org> <alpine.LSU.2.11.2008241231460.1065@eggly.anvils> <alpine.LSU.2.11.2008262301240.4405@eggly.anvils>
+ <alpine.LSU.2.11.2009081640070.7256@eggly.anvils> <61a42a87-eec9-e300-f710-992756f70de6@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from atma2.hitronhub.home (2607:fea8:56e0:6d60::10ec) by YT1PR01CA0143.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2f::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 22:54:36 +0000
-X-Mailer: git-send-email 2.28.0
-X-Originating-IP: [2607:fea8:56e0:6d60::10ec]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 149ec436-921e-414a-1502-08d85513538f
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2986:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB29862D555487906DC09D8D2998260@DM6PR12MB2986.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:586;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NheUKLb5WuPWuhCeBeSmhVUB3x/y1Zb90Vm8es5GGRFqBPKQg2u+10QDLY64tKSoYB/omzQiFzp1JAh9Uxao8TjsAL1eJRvyGGvVT+ADKC0NcmeuUcIl7JmFoGbzZtzwUNXhkOcijcl0Eqk69vw+5h4NikhFRYVtnYvObrIsummaUi/ttQwvDCA+Dsd0IGr3Sj1OkialNM62HUwsrVEg9qpzN/fvAYSk9otWxsetGRWVMPFrsS66c0gYFKcoTmqLgYoI2qQhR7joQ6m3nFuE4VNte8sw/Akg8a0IoL3NR8HM/OhV8VVaQ8RVMXm02aYI9pMx2pJh1q5iKRjAluMjpA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4124.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(376002)(346002)(39860400002)(2906002)(8936002)(6486002)(6512007)(5660300002)(16526019)(186003)(478600001)(83380400001)(4326008)(8676002)(52116002)(316002)(1076003)(66476007)(6506007)(6666004)(86362001)(2616005)(66556008)(54906003)(36756003)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: WZyn81Xpr9Dg4uTqmIw54IeeQJa1KoSaxifg/4sdIOiQllf69Mfv5N5qfaHYIvAq+smjwAUrTGpZsy3APPFBoyh7vcZJI8Pgwvtemugc8ne83D5WYHD1Ja4EAGL20nKiGaOIxpe55pJTm9nhLonKP2oaH41qHYsrDhtXSrS9oBnCJbkNbsxXnXfUsMBu0kfrLFpN7hKQ+4P7i0LF8ZUHPcQbyDQHlP0CLYgLwMg/DRnWyCo6NlejfUyyuXjN0hdRKRMaIaHwEC59Cck+kS1/ggs6o8CgSjrT14bF6ov3mJpSnfd0xCIIrwAD9EOJBwGFHQg7Po8ai4xAyT08qwTRfVGhjAR68raFKW348mmArWSjsHwe9Zj2ZVGVH7fAy3BvzUMI4FC2V5MGKcM1tm70oW2r0QnxpXhgI2zqRqKdEoVeoIjCjP8BRatRJrA4gf81Gx8ig1u0RBuVbycXVPHLkfhr2qBDScdSiujTy0587zomGQ6YM9HbbqEmQdD+DhQoZSIKqYlgRjoBozPHQA7CM12N12RJusJ/fovIaC8TpZ3X1vpE2p2CdZE1eam0e/uFOpkroowjOws0ot+LUHI/DmVatN9if6vDwMY0pENbQKXE5sQr01F+gKx4QjD6LJ4R1LRrLwVr2l5tl+PWTDdRxgYoIvUIlyNpE0L1A2yyvIs=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 149ec436-921e-414a-1502-08d85513538f
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4124.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 22:54:36.9243
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kSKNBQgFs3EpKdbyLtI3o9h28guAqLgnKmSKJDDF0lDFWbr6mYDqy/agyEAjMV9D7sODsCrpnhkgAzSaMABNUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2986
+Content-Type: MULTIPART/MIXED; BOUNDARY="0-945709820-1599693416=:10087"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduces a trace mechanism for struct pipe_ctx by adding a
-middle layer struct in the amdgpu_dm_trace.h for capturing the most
-important data from struct pipe_ctx and showing its data via tracepoint.
-This tracepoint was added to dc.c and dcn10_hw_sequencer, however, it
-can be added to other DCN architecture.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Co-developed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
----
- .../amd/display/amdgpu_dm/amdgpu_dm_trace.h   | 172 ++++++++++++++++++
- drivers/gpu/drm/amd/display/dc/core/dc.c      |  11 ++
- .../amd/display/dc/dcn10/dcn10_hw_sequencer.c |  17 +-
- 3 files changed, 195 insertions(+), 5 deletions(-)
+--0-945709820-1599693416=:10087
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-index 5fb4c4a5c349..53f62506e17c 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_trace.h
-@@ -376,6 +376,178 @@ TRACE_EVENT(amdgpu_dm_atomic_check_finish,
- 		      __entry->async_update, __entry->allow_modeset)
- );
- 
-+#ifndef _AMDGPU_DM_TRACE_STRUCTS_DEFINED_
-+#define _AMDGPU_DM_TRACE_STRUCTS_DEFINED_
-+
-+struct amdgpu_dm_trace_pipe_state {
-+	int pipe_idx;
-+	const void *stream;
-+	int stream_w;
-+	int stream_h;
-+	int dst_x;
-+	int dst_y;
-+	int dst_w;
-+	int dst_h;
-+	int src_x;
-+	int src_y;
-+	int src_w;
-+	int src_h;
-+	int clip_x;
-+	int clip_y;
-+	int clip_w;
-+	int clip_h;
-+	int recout_x;
-+	int recout_y;
-+	int recout_w;
-+	int recout_h;
-+	int viewport_x;
-+	int viewport_y;
-+	int viewport_w;
-+	int viewport_h;
-+	int flip_immediate;
-+	int surface_pitch;
-+	int format;
-+	int swizzle;
-+	unsigned int update_flags;
-+};
-+
-+#define fill_out_trace_pipe_state(trace_pipe_state, pipe_ctx) \
-+	do { \
-+		trace_pipe_state.pipe_idx	= (pipe_ctx)->pipe_idx; \
-+		trace_pipe_state.stream		= (pipe_ctx)->stream; \
-+		trace_pipe_state.stream_w	= (pipe_ctx)->stream->timing.h_addressable; \
-+		trace_pipe_state.stream_h	= (pipe_ctx)->stream->timing.v_addressable; \
-+		trace_pipe_state.dst_x		= (pipe_ctx)->plane_state->dst_rect.x; \
-+		trace_pipe_state.dst_y		= (pipe_ctx)->plane_state->dst_rect.y; \
-+		trace_pipe_state.dst_w		= (pipe_ctx)->plane_state->dst_rect.width; \
-+		trace_pipe_state.dst_h		= (pipe_ctx)->plane_state->dst_rect.height; \
-+		trace_pipe_state.src_x		= (pipe_ctx)->plane_state->src_rect.x; \
-+		trace_pipe_state.src_y		= (pipe_ctx)->plane_state->src_rect.y; \
-+		trace_pipe_state.src_w		= (pipe_ctx)->plane_state->src_rect.width; \
-+		trace_pipe_state.src_h		= (pipe_ctx)->plane_state->src_rect.height; \
-+		trace_pipe_state.clip_x		= (pipe_ctx)->plane_state->clip_rect.x; \
-+		trace_pipe_state.clip_y		= (pipe_ctx)->plane_state->clip_rect.y; \
-+		trace_pipe_state.clip_w		= (pipe_ctx)->plane_state->clip_rect.width; \
-+		trace_pipe_state.clip_h		= (pipe_ctx)->plane_state->clip_rect.height; \
-+		trace_pipe_state.recout_x	= (pipe_ctx)->plane_res.scl_data.recout.x; \
-+		trace_pipe_state.recout_y	= (pipe_ctx)->plane_res.scl_data.recout.y; \
-+		trace_pipe_state.recout_w	= (pipe_ctx)->plane_res.scl_data.recout.width; \
-+		trace_pipe_state.recout_h	= (pipe_ctx)->plane_res.scl_data.recout.height; \
-+		trace_pipe_state.viewport_x	= (pipe_ctx)->plane_res.scl_data.viewport.x; \
-+		trace_pipe_state.viewport_y	= (pipe_ctx)->plane_res.scl_data.viewport.y; \
-+		trace_pipe_state.viewport_w	= (pipe_ctx)->plane_res.scl_data.viewport.width; \
-+		trace_pipe_state.viewport_h	= (pipe_ctx)->plane_res.scl_data.viewport.height; \
-+		trace_pipe_state.flip_immediate = (pipe_ctx)->plane_state->flip_immediate; \
-+		trace_pipe_state.surface_pitch	= (pipe_ctx)->plane_state->plane_size.surface_pitch; \
-+		trace_pipe_state.format		= (pipe_ctx)->plane_state->format; \
-+		trace_pipe_state.swizzle	= (pipe_ctx)->plane_state->tiling_info.gfx9.swizzle; \
-+		trace_pipe_state.update_flags	= (pipe_ctx)->update_flags.raw; \
-+	} while (0)
-+
-+#endif /* _AMDGPU_DM_TRACE_STRUCTS_DEFINED_ */
-+
-+TRACE_EVENT(amdgpu_dm_dc_pipe_state,
-+	    TP_PROTO(const struct amdgpu_dm_trace_pipe_state *pipe_state),
-+	    TP_ARGS(pipe_state),
-+	    TP_STRUCT__entry(
-+			     __field(int, pipe_idx)
-+			     __field(const void *, stream)
-+			     __field(int, stream_w)
-+			     __field(int, stream_h)
-+			     __field(int, dst_x)
-+			     __field(int, dst_y)
-+			     __field(int, dst_w)
-+			     __field(int, dst_h)
-+			     __field(int, src_x)
-+			     __field(int, src_y)
-+			     __field(int, src_w)
-+			     __field(int, src_h)
-+			     __field(int, clip_x)
-+			     __field(int, clip_y)
-+			     __field(int, clip_w)
-+			     __field(int, clip_h)
-+			     __field(int, recout_x)
-+			     __field(int, recout_y)
-+			     __field(int, recout_w)
-+			     __field(int, recout_h)
-+			     __field(int, viewport_x)
-+			     __field(int, viewport_y)
-+			     __field(int, viewport_w)
-+			     __field(int, viewport_h)
-+			     __field(int, flip_immediate)
-+			     __field(int, surface_pitch)
-+			     __field(int, format)
-+			     __field(int, swizzle)
-+			     __field(unsigned int, update_flags)
-+	),
-+
-+	TP_fast_assign(
-+		       __entry->pipe_idx = pipe_state->pipe_idx;
-+		       __entry->stream = pipe_state->stream;
-+		       __entry->stream_w = pipe_state->stream_w;
-+		       __entry->stream_h = pipe_state->stream_h;
-+		       __entry->dst_x = pipe_state->dst_x;
-+		       __entry->dst_y = pipe_state->dst_y;
-+		       __entry->dst_w = pipe_state->dst_w;
-+		       __entry->dst_h = pipe_state->dst_h;
-+		       __entry->src_x = pipe_state->src_x;
-+		       __entry->src_y = pipe_state->src_y;
-+		       __entry->src_w = pipe_state->src_w;
-+		       __entry->src_h = pipe_state->src_h;
-+		       __entry->clip_x = pipe_state->clip_x;
-+		       __entry->clip_y = pipe_state->clip_y;
-+		       __entry->clip_w = pipe_state->clip_w;
-+		       __entry->clip_h = pipe_state->clip_h;
-+		       __entry->recout_x = pipe_state->recout_x;
-+		       __entry->recout_y = pipe_state->recout_y;
-+		       __entry->recout_w = pipe_state->recout_w;
-+		       __entry->recout_h = pipe_state->recout_h;
-+		       __entry->viewport_x = pipe_state->viewport_x;
-+		       __entry->viewport_y = pipe_state->viewport_y;
-+		       __entry->viewport_w = pipe_state->viewport_w;
-+		       __entry->viewport_h = pipe_state->viewport_h;
-+		       __entry->flip_immediate = pipe_state->flip_immediate;
-+		       __entry->surface_pitch = pipe_state->surface_pitch;
-+		       __entry->format = pipe_state->format;
-+		       __entry->swizzle = pipe_state->swizzle;
-+		       __entry->update_flags = pipe_state->update_flags;
-+	),
-+	TP_printk("pipe_idx=%d stream=%p rct(%d,%d) dst=(%d,%d,%d,%d) "
-+		  "src=(%d,%d,%d,%d) clip=(%d,%d,%d,%d) recout=(%d,%d,%d,%d) "
-+		  "viewport=(%d,%d,%d,%d) flip_immediate=%d pitch=%d "
-+		  "format=%d swizzle=%d update_flags=%x",
-+		  __entry->pipe_idx,
-+		  __entry->stream,
-+		  __entry->stream_w,
-+		  __entry->stream_h,
-+		  __entry->dst_x,
-+		  __entry->dst_y,
-+		  __entry->dst_w,
-+		  __entry->dst_h,
-+		  __entry->src_x,
-+		  __entry->src_y,
-+		  __entry->src_w,
-+		  __entry->src_h,
-+		  __entry->clip_x,
-+		  __entry->clip_y,
-+		  __entry->clip_w,
-+		  __entry->clip_h,
-+		  __entry->recout_x,
-+		  __entry->recout_y,
-+		  __entry->recout_w,
-+		  __entry->recout_h,
-+		  __entry->viewport_x,
-+		  __entry->viewport_y,
-+		  __entry->viewport_w,
-+		  __entry->viewport_h,
-+		  __entry->flip_immediate,
-+		  __entry->surface_pitch,
-+		  __entry->format,
-+		  __entry->swizzle,
-+		  __entry->update_flags
-+	)
-+);
-+
- #endif /* _AMDGPU_DM_TRACE_H_ */
- 
- #undef TRACE_INCLUDE_PATH
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index dc463d99ef50..0c9f177e5827 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2644,6 +2644,17 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 		}
- 	}
- 
-+	for (i = 0; i < MAX_PIPES; ++i) {
-+		struct pipe_ctx *pipe_ctx = &dc->current_state->res_ctx.pipe_ctx[i];
-+
-+		if (pipe_ctx->plane_state) {
-+			struct amdgpu_dm_trace_pipe_state pipe_state_trace;
-+
-+			fill_out_trace_pipe_state(pipe_state_trace, pipe_ctx);
-+			trace_amdgpu_dm_dc_pipe_state(&pipe_state_trace);
-+		}
-+	}
-+
- 	commit_planes_for_stream(
- 				dc,
- 				srf_updates,
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 8ca94f506195..464d0ad093b9 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -1020,15 +1020,22 @@ static bool dcn10_hw_wa_force_recovery(struct dc *dc)
- 
- }
- 
--
- void dcn10_verify_allow_pstate_change_high(struct dc *dc)
- {
--	static bool should_log_hw_state; /* prevent hw state log by default */
--
- 	if (!hubbub1_verify_allow_pstate_change_high(dc->res_pool->hubbub)) {
--		if (should_log_hw_state) {
--			dcn10_log_hw_state(dc, NULL);
-+		int i;
-+
-+		for (i = 0; i < MAX_PIPES; ++i) {
-+			struct pipe_ctx *pipe_ctx = &dc->current_state->res_ctx.pipe_ctx[i];
-+
-+			if (pipe_ctx->plane_state) {
-+				struct amdgpu_dm_trace_pipe_state pipe_state_trace;
-+
-+				fill_out_trace_pipe_state(pipe_state_trace, pipe_ctx);
-+				trace_amdgpu_dm_dc_pipe_state(&pipe_state_trace);
-+			}
- 		}
-+
- 		BREAK_TO_DEBUGGER();
- 		if (dcn10_hw_wa_force_recovery(dc)) {
- 		/*check again*/
--- 
-2.28.0
+On Wed, 9 Sep 2020, Alex Shi wrote:
+> =E5=9C=A8 2020/9/9 =E4=B8=8A=E5=8D=887:41, Hugh Dickins =E5=86=99=E9=81=
+=93:
+> >=20
+> > [PATCH v18 05/32] mm/thp: remove code path which never got into
+> > This is a good simplification, but I see no sign that you understand
+> > why it's valid: it relies on lru_add_page_tail() being called while
+> > head refcount is frozen to 0: we would not get this far if someone
+> > else holds a reference to the THP - which they must hold if they have
+> > isolated the page from its lru (and that's true before or after your
+> > per-memcg changes - but even truer after those changes, since PageLRU
+> > can then be flipped without lru_lock at any instant): please explain
+> > something of this in the commit message.
+>=20
+> Is the following commit log better?
+>=20
+>     split_huge_page() will never call on a page which isn't on lru list, =
+so
+>     this code never got a chance to run, and should not be run, to add ta=
+il
+>     pages on a lru list which head page isn't there.
+>=20
+>     Hugh Dickins' mentioned:
+>     The path should never be called since lru_add_page_tail() being calle=
+d
+>     while head refcount is frozen to 0: we would not get this far if some=
+one
+>     else holds a reference to the THP - which they must hold if they have
+>     isolated the page from its lru.
+>=20
+>     Although the bug was never triggered, it'better be removed for code
+>     correctness, and add a warn for unexpected calling.
 
+Not much better, no.  split_huge_page() can easily be called for a page
+which is not on the lru list at the time, and I don't know what was the
+bug which was never triggered.  Stick with whatever text you end up with
+for the combination of 05/32 and 18/32, and I'll rewrite it after.
+
+> > [PATCH v18 06/32] mm/thp: narrow lru locking
+> > Why? What part does this play in the series? "narrow lru locking" can
+> > also be described as "widen page cache locking":=20
+>=20
+> Uh, the page cache locking isn't widen, it's still on the old place.
+
+I'm not sure if you're joking there. Perhaps just a misunderstanding.
+
+Yes, patch 06/32 does not touch the xa_lock(&mapping->i_pages) and
+xa_lock(&swap_cache->i_pages) lines (odd how we've arrived at two of
+those, but please do not get into cleaning it up now); but it removes
+the spin_lock_irqsave(&pgdata->lru_lock, flags) which used to come
+before them, and inserts a spin_lock(&pgdat->lru_lock) after them.
+
+You call that narrowing the lru locking, okay, but I see it as also
+pushing the page cache locking outwards: before this patch, page cache
+lock was taken inside lru_lock; after this patch, page cache lock is
+taken outside lru_lock.  If you cannot see that, then I think you
+should not have touched this code at all; but it's what we have
+been testing, and I think we should go forward with it.
+
+> > But I wish you could give some reason for it in the commit message!
+>=20
+> It's a head scratch task. Would you like to tell me what's detailed info=
+=20
+> should be there? Thanks!
+
+So, you don't know why you did it either: then it will be hard to
+justify.  I guess I'll have to write something for it later.  I'm
+strongly tempted just to drop the patch, but expect it will become
+useful later, for using lock_page_memcg() before getting lru_lock.
+
+> > Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+> > Is that correct? Or Wei Yang suggested some part of it perhaps?
+>=20
+> Yes, we talked a lot to confirm the locking change is safe.
+
+Okay, but the patch was written by you, and sent by you to Andrew:
+that is not a case for "Signed-off-by: Someone Else".
+
+> > [PATCH v18 27/32] mm/swap.c: optimizing __pagevec_lru_add lru_lock
+> > Could we please drop this one for the moment? And come back to it later
+> > when the basic series is safely in.  It's a good idea to try sorting
+> > together those pages which come under the same lock (though my guess is
+> > that they naturally gather themselves together quite well already); but
+> > I'm not happy adding 360 bytes to the kernel stack here (and that in
+> > addition to 192 bytes of horrid pseudo-vma in the shmem swapin case),
+> > though that could be avoided by making it per-cpu. But I hope there's
+> > a simpler way of doing it, as efficient, but also useful for the other
+> > pagevec operations here: perhaps scanning the pagevec for same page->
+> > mem_cgroup (and flags node bits), NULLing entries as they are done.
+> > Another, easily fixed, minor defect in this patch: if I'm reading it
+> > right, it reverses the order in which the pages are put on the lru?
+>=20
+> this patch could give about 10+% performance gain on my multiple memcg
+> readtwice testing. fairness locking cost the performance much.
+
+Good to know, should have been mentioned.  s/fairness/Repeated/
+
+But what was the gain or loss on your multiple memcg readtwice
+testing without this patch, compared against node-only lru_lock?
+The 80% gain mentioned before, I presume.  So this further
+optimization can wait until the rest is solid.
+
+>=20
+> I also tried per cpu solution but that cause much trouble of per cpu func
+> things, and looks no benefit except a bit struct size of stack, so if=20
+> stack size still fine. May we could use the solution and improve it bette=
+r.
+> like, functionlize, fix the reverse issue etc.
+
+I don't know how important the stack depth consideration is nowadays:
+I still care, maybe others don't, since VMAP_STACK became an option.
+
+Yes, please fix the reversal (if I was right on that); and I expect
+you could use a singly linked list instead of the double.
+
+But I'll look for an alternative - later, once the urgent stuff
+is completed - and leave the acks on this patch to others.
+
+Hugh
+--0-945709820-1599693416=:10087--
