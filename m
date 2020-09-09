@@ -2,148 +2,161 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A12C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0CAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91B572087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A417D2087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7L8weSl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UgdqYyCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgIIRLk (ORCPT
+        id S1731079AbgIIRLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730295AbgIIPdh (ORCPT
+        Wed, 9 Sep 2020 13:11:46 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45374 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729785AbgIIPdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:33:37 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4340C061347;
-        Wed,  9 Sep 2020 08:32:45 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id s65so1265388pgb.0;
-        Wed, 09 Sep 2020 08:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=trGJ50voisTKMXdWojN1XirpnONTHR3jS4BAJJ1oVsw=;
-        b=F7L8weSlpk8/pODYA4tNGT+KwpHzJOoFw3Bod4mveWjwavNu+4EScbFqoVsDsCaTuL
-         50rr6rAhSmYZo/Ddx9al9AO6AgcF98IjzOzN72g6mISE+8TEZLFQh8MCpcLYS5VrO0ae
-         7F6aIVGhN731HWeqWq7Ua2+l9nhrpSgblpMar32OlJmqDcBOmbspJ95FcPd0rQopRE/p
-         7GsUc/rm5hOz+cqdebk6kIGvIjuoTOq7NSrGCxvkQ2tNadNQiWpZdJXePmeeZklVO6vW
-         idszhiT37mO9NSZZmwY/wCP/vewHJ+OvBlPYaSa5h3A6v9qzD8ieKx1m0zD6Ln/jSZrK
-         BwAw==
+        Wed, 9 Sep 2020 11:33:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599665564;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YDCg8To8PVZc/Jy4VpaJ8RUW2JiYebaTzDo+8HJa1Rs=;
+        b=UgdqYyCYujoMgztJHPGb/s++My6LYZpCEkL0UpFxdigr1x0qMLOFvy7PVuKrjWJFjGL7ve
+        QnoOqv5eIOkoQUanWqQsI4vMNjA+u2M3TtUMvjBJQUsKs2X3gpkOqS8t2nl2iwcyfUTDo0
+        gYJlYg43qYwTnh2oZia71kmqJg6Ql/c=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-JfeRSkT7MpensYoeBZC00Q-1; Wed, 09 Sep 2020 11:32:41 -0400
+X-MC-Unique: JfeRSkT7MpensYoeBZC00Q-1
+Received: by mail-wm1-f72.google.com with SMTP id 189so965473wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 08:32:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=trGJ50voisTKMXdWojN1XirpnONTHR3jS4BAJJ1oVsw=;
-        b=TflGpMkSz2rVOhK8Rrc/Ryv2yvskeR4qQLczSnTPc+jJd+FSDT2+3MoT3GJ/9wNZoA
-         3/gKOAbvbudJJ36rFOpCgrbpDnA7psDw3shHqrxvncMECC7rGemWC8qY/MoTgxCI994M
-         c4t0af1km+u9F4ZBUj2DYQN1nxJmbZdlrcqAHL6K8ZAjspReqD1b3hq1487Ssl5aX9be
-         EKl0o6GC/p2MWEU+9vdujCVnFzk61IomKYmX15aUMRkIzm2ozCax5obzwiVDV3fUR2zA
-         NrIASRLDYMIrfaX0WP3qTVgLhOFw0butiUEVoFkwTbb3lfgTVWScuvAEocbVvQJBLel3
-         bJxA==
-X-Gm-Message-State: AOAM5332i22ta/lcBNgETW01kig/yiVcDCdmOvAEbixYjQY4/ffUssu2
-        WnJEViwwehFn+hgiupK6SP4=
-X-Google-Smtp-Source: ABdhPJwYsuOpqojCS7ZyITqMamrO8ggPUW2+PUpO9xFfkiZyVjwWNPOrwLPiCLxyOjWzngiJ90vx9A==
-X-Received: by 2002:a63:4822:: with SMTP id v34mr1010403pga.342.1599665565409;
-        Wed, 09 Sep 2020 08:32:45 -0700 (PDT)
-Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
-        by smtp.gmail.com with ESMTPSA id i62sm3194036pfe.140.2020.09.09.08.32.44
+         :mime-version:content-disposition:in-reply-to;
+        bh=YDCg8To8PVZc/Jy4VpaJ8RUW2JiYebaTzDo+8HJa1Rs=;
+        b=AxBZabz21EHLJMAQo8LK/R8Jn6+Nf4rrtIV0yYlr55MnxYfgcHSOxze6AuaQnohYJU
+         OW71mByO5GGnwhfDkpRW9klwCprpwM+Jm5ObVBnm7hUL5QiN/lLZZbxFiLPHLLAMQMPg
+         3KkP+1otoB767rky67ozo509daUrfiG8BwIuCQ6YtDPMnYe4adPVUTV3hj4wLMJIX/3i
+         GRFQAizTcF3uVRu0IhJ+gdP67S/q4ZSyNiutWsoMyFrdEcSj0wny0SF8L2E+KRpo+FjO
+         ev0j1qoZbFIjzColVZxdfYdUIhzNRs7wWlnJ3aV2maL3NgOrC8ayObPd6vUCfLBhV+ps
+         6tQg==
+X-Gm-Message-State: AOAM530RkNnbcdIicpwfJAXaSP8zXmKYoGl/nBe8lLSCR6MzMlZRjzc7
+        dGK+8TpQe8PvtRpE0HpufKuRYLOZchLpNeQzQR0m9DXC7PB5yjgH8+CK78hJ7AOkpD0Mo8P3y/4
+        9dOn1/j/0wJZ6IlOQkLQ2+f0P
+X-Received: by 2002:a1c:c910:: with SMTP id f16mr4070521wmb.82.1599665559654;
+        Wed, 09 Sep 2020 08:32:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwrl9uLP4HdYT7AmY2PVq8Ybf24Jg2oS57iN373p/WZoSRqKSAYvg4TV3HV/QODmFgBvBaGVA==
+X-Received: by 2002:a1c:c910:: with SMTP id f16mr4070489wmb.82.1599665559309;
+        Wed, 09 Sep 2020 08:32:39 -0700 (PDT)
+Received: from steredhat (host-79-53-225-185.retail.telecomitalia.it. [79.53.225.185])
+        by smtp.gmail.com with ESMTPSA id 70sm4689288wme.15.2020.09.09.08.32.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 08:32:44 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 15:32:43 +0000
-From:   Hao Lee <haolee.swjtu@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs: Eliminate a local variable to make the code more
- clear
-Message-ID: <20200909153243.GA25215@haolee.github.io>
-References: <20200729151740.GA3430@haolee.github.io>
- <20200908130656.GC22780@haolee.github.io>
- <20200908184857.GT1236603@ZenIV.linux.org.uk>
- <20200908231156.GA23779@haolee.github.io>
- <87k0x39kkr.fsf@x220.int.ebiederm.org>
+        Wed, 09 Sep 2020 08:32:38 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 17:32:35 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+3c23789ea938faaef049@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: INFO: task hung in io_sq_thread_stop
+Message-ID: <20200909153235.joqj6hjyxug3wtwv@steredhat>
+References: <00000000000030a45905aedd879d@google.com>
+ <20200909134317.19732-1-hdanton@sina.com>
+ <4d55d988-d45e-ba36-fed7-342e0a6ab16e@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k0x39kkr.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <4d55d988-d45e-ba36-fed7-342e0a6ab16e@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 07:54:44AM -0500, Eric W. Biederman wrote:
-> Hao Lee <haolee.swjtu@gmail.com> writes:
+On Wed, Sep 09, 2020 at 08:05:33AM -0600, Jens Axboe wrote:
+> On 9/9/20 7:43 AM, Hillf Danton wrote:
+> > 
+> > On Wed, 9 Sep 2020 12:03:55 +0200 Stefano Garzarella wrote:
+> >> On Wed, Sep 09, 2020 at 01:49:22AM -0700, syzbot wrote:
+> >>> Hello,
+> >>>
+> >>> syzbot found the following issue on:
+> >>>
+> >>> HEAD commit:    dff9f829 Add linux-next specific files for 20200908
+> >>> git tree:       linux-next
+> >>> console output: https://syzkaller.appspot.com/x/log.txt?x=112f880d900000
+> >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
+> >>> dashboard link: https://syzkaller.appspot.com/bug?extid=3c23789ea938faaef049
+> >>> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> >>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c082a5900000
+> >>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1474f5f9900000
+> >>>
+> >>> Bisection is inconclusive: the first bad commit could be any of:
+> >>>
+> >>> d730b1a2 io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+> >>> 7ec3d1dd io_uring: allow disabling rings during the creation
+> >>
+> >> I'm not sure it is related, but while rebasing I forgot to update the
+> >> right label in the error path.
+> >>
+> >> Since the check of ring state is after the increase of ctx refcount, we
+> >> need to decrease it jumping to 'out' label instead of 'out_fput':
+> > 
+> > I think we need to fix 6a7bb9ff5744 ("io_uring: remove need for
+> > sqd->ctx_lock in io_sq_thread()") because the syzbot report
+> > indicates the io_sq_thread has to wake up the kworker before
+> > scheduling, and in turn the kworker has the chance to unpark it.
+> > 
+> > Below is the minimum walkaround I can have because it can't
+> > ensure the parker will be waken in every case.
+> > 
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -6834,6 +6834,10 @@ static int io_sq_thread(void *data)
+> >  			io_sq_thread_drop_mm();
+> >  		}
+> >  
+> > +		if (kthread_should_park()) {
+> > +			/* wake up parker before scheduling */
+> > +			continue;
+> > +		}
+> >  		if (ret & SQT_SPIN) {
+> >  			io_run_task_work();
+> >  			cond_resched();
+> > 
 > 
-> > On Tue, Sep 08, 2020 at 07:48:57PM +0100, Al Viro wrote:
-> >> On Tue, Sep 08, 2020 at 01:06:56PM +0000, Hao Lee wrote:
-> >> > ping
-> >> > 
-> >> > On Wed, Jul 29, 2020 at 03:21:28PM +0000, Hao Lee wrote:
-> >> > > The dentry local variable is introduced in 'commit 84d17192d2afd ("get
-> >> > > rid of full-hash scan on detaching vfsmounts")' to reduce the length of
-> >> > > some long statements for example
-> >> > > mutex_lock(&path->dentry->d_inode->i_mutex). We have already used
-> >> > > inode_lock(dentry->d_inode) to do the same thing now, and its length is
-> >> > > acceptable. Furthermore, it seems not concise that assign path->dentry
-> >> > > to local variable dentry in the statement before goto. So, this function
-> >> > > would be more clear if we eliminate the local variable dentry.
-> >> 
-> >> How does it make the function more clear?  More specifically, what
-> >> analysis of behaviour is simplified by that?
-> >
-> > When I first read this function, it takes me a few seconds to think
-> > about if the local variable dentry is always equal to path->dentry and
-> > want to know if it has special purpose. This local variable may confuse
-> > other people too, so I think it would be better to eliminate it.
+> I think this should go in the slow path:
 > 
-> I tend to have the opposite reaction.  I read your patch and wonder
-> why path->dentry needs to be reread what is changing path that I can not see.
-> my back.
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 652cc53432d4..1c4fa2a0fd82 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -6839,6 +6839,8 @@ static int io_sq_thread(void *data)
+>  		} else if (ret == SQT_IDLE) {
+>  			list_for_each_entry(ctx, &sqd->ctx_list, sqd_list)
+>  				io_ring_set_wakeup_flag(ctx);
+> +			if (kthread_should_park())
+> +				continue;
+>  			schedule();
+>  			start_jiffies = jiffies;
+>  		}
+> 
 
-If I understand correctly, accessing path->dentry->d_inode needs one
-more instruction than accessing dentry->d_inode, so the original code is
-more efficient.
+Yes, I agree since only in this case the kthread is not rescheduled.
 
-> 
-> Now for clarity it would probably help to do something like:
-> 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index bae0e95b3713..430f3b4785e3 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2206,7 +2206,7 @@ static struct mountpoint *lock_mount(struct path *path)
->                 return mp;
->         }
->         namespace_unlock();
-> -       inode_unlock(path->dentry->d_inode);
-> +       inode_unlock(dentry->d_inode);
->         path_put(path);
->         path->mnt = mnt;
->         dentry = path->dentry = dget(mnt->mnt_root);
-> 
-> 
-> So at least the inode_lock and inode_unlock are properly paired.
-> 
-> At first glance inode_unlock using path->dentry instead of dentry
-> appears to be an oversight in 84d17192d2af ("get rid of full-hash scan
-> on detaching vfsmounts").  
+Thanks both for the fix :-)
+Feel free to add my R-b:
 
-I think I have understood why we use the local variable dentry. Thanks.
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Regards,
-Hao Lee
-
-> 
-> 
-> Eric
