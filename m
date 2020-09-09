@@ -2,133 +2,103 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3514C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ED2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7ED20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DD320C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="uS92XPYq"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="PLZPiLkU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgIIUhF (ORCPT
+        id S1728442AbgIIUjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        Wed, 9 Sep 2020 16:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgIIUhE (ORCPT
+        with ESMTP id S1726414AbgIIUjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:37:04 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C7FC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 13:37:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id w2so3554578wmi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 13:37:03 -0700 (PDT)
+        Wed, 9 Sep 2020 16:39:03 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75549C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 13:39:00 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id v196so3332810pfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 13:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IxpDQzrsNIx5XK9835G9janE/xMpHUZ2uvG496EzU4c=;
-        b=uS92XPYqpRhOsmDhb/M+bZTwgExe+1thV6iqBUozWBfXEodWAvbPKaUV5OpnDhj4sV
-         d7TuGytPDfhScP3DSI91yHgQO9DxEPrMvU5abRcxLH8qsOQDmhxfL5bh+rlxACEs28g6
-         0nQhSHTHwstThwSDMpF5uqpI054HHm5VIWYpQ=
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pvTELsnuqawB+9CsCnyO4FXHa5jqvr6EqiJIinGYuyw=;
+        b=PLZPiLkU77f9XNFW8QrusL13z1a4SsShUnxQOOKJxFwPNbQngptnHWjyTnlNrh07Z1
+         SuqvnFhCNi6xZ/LkCG84M89gi4WieZbxofhpHM7yRfQII/7rVu80rUgab7G/+IlPoz0J
+         JoSyqkqgDva2xC4i2QaBP1cVEasVCAG3wQZconV7kVDWiV4jdOGAVWH9vRqle8i/wmO1
+         EYlHBTpm25ht0q8HDx8RZZYKF0kBclWfL0cElzSE4wFlHLJcqYpxXsNrhLKVIoOyDk8m
+         RlrCE4sT1WGbMYlovipYVFkhBxIAkVxwB1y5mBogm1g+gjJ1RAsV+LUr0FmpAA6OME5m
+         D+Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IxpDQzrsNIx5XK9835G9janE/xMpHUZ2uvG496EzU4c=;
-        b=Wjmse0KpRxYLrcIrin0Nb0rGa2QldIbluu/CA/7OyY+QnkZ9ogjV+8omN5XfbChucE
-         PBOERjKwLOgNgbqlJD0l0ZK//Z/Kh+JmoLySUEBtRaALcfugulzHJckXd4QlMCBnaL8O
-         COY0hgwlgOK8Egb0n6LG6jm2nuxhcvzNeR5tJbcb5d936ZJ7YQ2MIM8RRkqliHWEKs/F
-         Uz6sZJQf6b9Ho6QC2Xd+WBXYK3Feb/24bhoB1YUpHjVJGbIGqjViSh4QAsbd7Ybd+OZk
-         veXOX4ggCObDCJ4IftHMv36SqtePbilELgXKRwkqf+GA/2GF9k5fvHAxG32xDILpcxD6
-         Jd4w==
-X-Gm-Message-State: AOAM533KZapkuaGsLjrorgQvBx+3EkYHP2lBLRcd0Q8C9GXn6wXBKei5
-        oWcjPhXpfo7DBesIb7ivyxQrjesHkue8qIme3D9w
-X-Google-Smtp-Source: ABdhPJw3GyYdapemtMoD/isRBkb5ObOYz1AcU+f6/9csJEhiDM94T1DsJyix98xT46tRec5a5gXYrpNP18spkqk0yKc=
-X-Received: by 2002:a1c:c20a:: with SMTP id s10mr5235421wmf.55.1599683821370;
- Wed, 09 Sep 2020 13:37:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200904155025.55718-1-xypron.glpk@gmx.de> <CAMj1kXGYpMMrQPgL-SNde75EbDX8RZBDrboEuMcjJ7-cyEJUXg@mail.gmail.com>
-In-Reply-To: <CAMj1kXGYpMMrQPgL-SNde75EbDX8RZBDrboEuMcjJ7-cyEJUXg@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Wed, 9 Sep 2020 13:36:50 -0700
-Message-ID: <CAOnJCU+DrXt=Fvq08dMJX=Nn0bEJr_V_1nPJvh6sRA-GqgV3OQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=pvTELsnuqawB+9CsCnyO4FXHa5jqvr6EqiJIinGYuyw=;
+        b=NlYVZJSApkQls16h89hTntAWZe00TmFlg+OpBIksfaT8GXgWKiqqJpYQ3Gez0mXKxn
+         zAlhsE/JE0p4fHlm2f3ncDVWY3JGKZyjDjcqAU2D8Gcd6Uon9cBsITKWo68C+38QFShB
+         Wkdao/Ha0QiAQlnft8hE1DcoFmtcaX933nWJD1gl9hnEJ1lMoKveDlZwj0drLqhUhyzG
+         BkRiiMMBG9WlTHnn65EgQ0Lkqb9sVXDQPNi3Szsv4fgXL99EFVVP1ZPrTexVuoRg65kQ
+         p78fe8g8yBaMfh472fYCF2UaCJplJh9Th9JZBdmg8F4PhlBleQXnQQB00jkVhZGDLeTp
+         m/Hw==
+X-Gm-Message-State: AOAM531ag7RE0Z1rTd/j+nRIcZ8Ze9HFKGET0tfVq/LC6JYe2Wsolgrl
+        upQO9IC4Ur6C9DeDKVfNdC4ZwA==
+X-Google-Smtp-Source: ABdhPJzrC5l7v5FTB1r/YYtUR1nC0/3uzkDrW1qiPAnWCKJr6AMnKAG1nnvmAvNG0lAHQfGXBcYCqQ==
+X-Received: by 2002:a62:ce4b:0:b029:13e:d13d:a100 with SMTP id y72-20020a62ce4b0000b029013ed13da100mr2268407pfg.28.1599683938493;
+        Wed, 09 Sep 2020 13:38:58 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id z23sm3514558pfg.220.2020.09.09.13.38.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 13:38:57 -0700 (PDT)
+Date:   Wed, 09 Sep 2020 13:38:57 -0700 (PDT)
+X-Google-Original-Date: Wed, 09 Sep 2020 13:38:04 PDT (-0700)
+Subject:     Re: remove set_fs for riscv v2
+In-Reply-To: <20200909065515.GA9618@lst.de>
+CC:     viro@zeniv.linux.org.uk, Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Christoph Hellwig <hch@lst.de>
+Message-ID: <mhng-e33e9c39-7441-44f4-9c77-2243bb81168b@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 1:17 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+On Tue, 08 Sep 2020 23:55:15 PDT (-0700), Christoph Hellwig wrote:
+> On Tue, Sep 08, 2020 at 09:59:29PM -0700, Palmer Dabbelt wrote:
+>>>
+>>> The first four patches are general improvements and enablement for all nommu
+>>> ports, and might make sense to merge through the above base branch.
+>>
+>> Seems like it to me.  These won't work without the SET_FS code so I'm OK if you
+>> guys want to keep them all together.  Otherwise I think I'd need to wait until
+>> the SET_FS stuff gets merged before taking any of these, which would be a bit
+>> of a headache.
 >
-> (+ Atish, Palmer)
+> now that we've sorted out a remaining issue base.set_fs should not
+> be rebased any more, so you could pull it into the riscv tree or a topic
+> branch.
 >
-> On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-> >
-> > In the memory map the regions with the lowest addresses may be of type
-> > EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
-> > rest of the memory. So for calculating the maximum loading address for the
-> > device tree and the initial ramdisk image these reserved areas should not
-> > be taken into account.
-> >
-> > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> > ---
-> >  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> > index c2484bf75c5d..13058ac75765 100644
-> > --- a/drivers/firmware/efi/libstub/efi-stub.c
-> > +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> > @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
-> >         map.map_end = map.map + map_size;
-> >
-> >         for_each_efi_memory_desc_in_map(&map, md) {
-> > -               if (md->attribute & EFI_MEMORY_WB) {
-> > +               if (md->attribute & EFI_MEMORY_WB &&
-> > +                   md->type != EFI_RESERVED_TYPE) {
-> >                         if (membase > md->phys_addr)
-> >                                 membase = md->phys_addr;
-> >                 }
-> > --
-> > 2.28.0
-> >
->
-> This is not the right fix - on RPi2, for instance, which has some
-> reserved memory at the base of DRAM, this change will result in the
-> first 16 MB of memory to be wasted.
->
-> What I would prefer to do is get rid of get_dram_base() entirely -
-> arm64 does not use its return value in the first place, and for ARM,
-> the only reason we need it is so that we can place the uncompressed
-> kernel image as low in memory as possible, and there are probably
-> better ways to do that. RISC-V just started using it too, but only
-> passes it from handle_kernel_image() to efi_relocate_kernel(), and
-> afaict, passing 0x0 there instead would not cause any problems.
+> The first four patch should go into base.set_fs, though.  Arnd, can you
+> re-review the updated patches?
 
-Yes. Passing 0x0 to efi_relocate_kernel will result in a failure in
-efi_bs_call and it will fallback to
-efi_low_alloc_above which will try to assign the lowest possible
-available memory with 2MB alignment restriction.
-The only disadvantage is an extra unnecessary call to UEFI firmware
-which should be okay as it is not in the hotpath.
+OK, assuming the first four land through vfs I'll take the rest through my
+tree.  I wasn't sure it was OK to merge another subtree into my tree, as IIRC I
+got told not to do something like that before, but I'll go figure out a sane
+way to handle it.
 
--- 
-Regards,
-Atish
+Thanks!
