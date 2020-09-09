@@ -2,116 +2,98 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8608C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E19EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A08221D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xn3olNCn"
+	by mail.kernel.org (Postfix) with ESMTP id 3EF1121D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599679464;
+	bh=nlWFWCSnvtY0mLZZMeSCfQTCzDo6swiuvKmc7yHCNKo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xnln3GXWVPol/pWbAa5iFMr+BcZXx1h7t5fbDlLaqvoijV1CTblo1ILv4JdLyelmt
+	 othGyqXxUJVz7avVdsw/LQwDLPYS1XdkCwC437rQ0avnTXrOnSvWx40MvvsAcSBh0i
+	 uSJvdQk+oT2p2RM8QqW2LWng2wrA2HEXgqnntjg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgIITVY (ORCPT
+        id S1728631AbgIITYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:21:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725772AbgIITVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:21:23 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089J5enk077421;
-        Wed, 9 Sep 2020 15:20:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=wI2LxfXNbDDIWk+xzWG3L8PJPVjUR3KEWKVAUC1zG7g=;
- b=Xn3olNCnyQbPW4fO0sfB3M7imcUtD4sOJvn2ymxDutok9DNIPUHONSFCc66B6WA8kdXY
- zJ/mAokkqV08mqDeNW6p8yyWyQVInV/ESL9vIwHlKtz0EwH8kpcl7Ve8fkKjf1dkk9n7
- hPI9aJG0wX+t2TTAnhOXssLhNF7iqPQek3ldRELGWbn5EDt4EEGzRhpzl15uGdYcs5Pt
- RltwfBEsK21HHeuO/VExL/1tBXWlzh2CbNm6dVGcQen93Ud0w6tHTWEJiKLxm8FmkVHf
- X70WSYR9YRAyssOis21kz/PH6he9aAjy6jJN+OoqR51b86i/6hOP+AT0KfDk4tCpDUxD YA== 
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33f47eshya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 15:20:58 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089JBtJP026932;
-        Wed, 9 Sep 2020 19:20:57 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 33d46mw1m8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 19:20:57 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089JKuCj49873192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 19:20:56 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56765AE060;
-        Wed,  9 Sep 2020 19:20:56 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 163E2AE05F;
-        Wed,  9 Sep 2020 19:20:55 +0000 (GMT)
-Received: from oc6857751186.ibm.com (unknown [9.65.215.230])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Sep 2020 19:20:54 +0000 (GMT)
-Subject: Re: [PATCH] scsi: ibmvfc: Fix error return in ibmvfc_probe()
-To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200907083949.154251-1-jingxiangfeng@huawei.com>
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-Message-ID: <93fb2dbf-b386-4009-95e2-508c56c68607@linux.ibm.com>
-Date:   Wed, 9 Sep 2020 12:20:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 9 Sep 2020 15:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726399AbgIITYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 15:24:20 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B37921D6C;
+        Wed,  9 Sep 2020 19:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599679459;
+        bh=nlWFWCSnvtY0mLZZMeSCfQTCzDo6swiuvKmc7yHCNKo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sGernz+e3OSlmlp0EJtUXxym+NlLEqgNzI10OLNLp31q+b3OgL4LqM5V8dv4evoNc
+         FY25iTbxowqkMImgPoJoCtfKBtBRWjwf50b+NxM+QYHy3QiDfK//UdeV35yNangfrx
+         7PSTyufqVpLbiBvFYXKPTuI1VvBd6Rk9f05cy/aY=
+Date:   Wed, 9 Sep 2020 12:24:17 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Moshe Shemesh <moshe@nvidia.com>
+Cc:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
+ to devlink reload command
+Message-ID: <20200909122417.49b637eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <b0550422-83a4-4e97-46e3-cb5f431a6dd7@nvidia.com>
+References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
+        <1598801254-27764-2-git-send-email-moshe@mellanox.com>
+        <20200831121501.GD3794@nanopsycho.orion>
+        <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
+        <20200902094627.GB2568@nanopsycho>
+        <20200902083025.43407d8f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200903055729.GB2997@nanopsycho.orion>
+        <20200903124719.75325f0c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200904090450.GH2997@nanopsycho.orion>
+        <20200904125647.799e66e4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <6bd0fa45-68ce-b82d-98e6-327c6cd50e80@nvidia.com>
+        <20200907105850.34726158@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <b0550422-83a4-4e97-46e3-cb5f431a6dd7@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907083949.154251-1-jingxiangfeng@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_13:2020-09-09,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 suspectscore=2 lowpriorityscore=0 spamscore=0
- clxscore=1011 malwarescore=0 adultscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090169
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/7/20 1:39 AM, Jing Xiangfeng wrote:
-> Fix to return error code PTR_ERR() from the error handling case instead
-> of 0.
-> 
-> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+On Wed, 9 Sep 2020 16:27:19 +0300 Moshe Shemesh wrote:
+> On 9/7/2020 8:58 PM, Jakub Kicinski wrote:
+> > On Mon, 7 Sep 2020 16:46:01 +0300 Moshe Shemesh wrote: =20
+> >>> In that sense I don't like --live because it doesn't really say much.
+> >>> AFAIU it means 1) no link flap; 2) < 2 sec datapath downtime; 3) no
+> >>> configuration is lost in kernel or device (including netdev config,
+> >>> link config, flow rules, counters etc.). I was hoping at least the
+> >>> documentation in patch 14 would be more precise. =20
+> >> Actually, while writing "no-reset" or "live-patching" I meant also no
+> >> downtime at all and nothing resets (config, rules ... anything), that
+> >> fits mlx5 live-patching.
+> >>
+> >> However, to make it more generic,  I can allow few seconds downtime and
+> >> add similar constrains as you mentioned here to "no-reset". I will add
+> >> that to the documentation patch. =20
+> > Oh! If your device supports no downtime and packet loss at all that's
+> > great. You don't have to weaken the definition now, whoever needs a
+> > weaker definition can add a different constraint level later, no? =20
+>=20
+> Yes, but if we are thinking there will be more levels, maybe the flag=20
+> "--live" or "--no_reset" is less extendable, we may need new attr. I=20
+> mean should I have uAPI command line like:
+>=20
+> $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action {=20
+> driver_reinit | fw_activate } [ limit_level=C2=A0 no_reset ] ]
 
-Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-
-> ---
->  drivers/scsi/ibmvscsi/ibmvfc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-> index ea7c8930592d..70daa0605082 100644
-> --- a/drivers/scsi/ibmvscsi/ibmvfc.c
-> +++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-> @@ -4928,6 +4928,7 @@ static int ibmvfc_probe(struct vio_dev *vdev, const struct vio_device_id *id)
->  	if (IS_ERR(vhost->work_thread)) {
->  		dev_err(dev, "Couldn't create kernel thread: %ld\n",
->  			PTR_ERR(vhost->work_thread));
-> +		rc = PTR_ERR(vhost->work_thread);
->  		goto free_host_mem;
->  	}
->  
-> 
-
+That LGTM, thanks.
