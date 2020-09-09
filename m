@@ -2,197 +2,137 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082A4C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A58CE21D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W6u3PSCF"
+	by mail.kernel.org (Postfix) with ESMTP id C92202078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599675642;
+	bh=JaN9N3pcoNDn3owpWWs48WvhhA1KCzxeHdaE/iRZjgY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zRh19YpU5meVAGIewVUJvWJBMhl7DVEVXNyPZvQcg+LmRcNt9g3wK10JOF5XTYheQ
+	 DM2fTcnu0m7MXED1iYWLsLBp2+OGcK/3dkhZPwJNeC5w7TRCGxMu09tCy4a19HbpYr
+	 1nnJDBZVE3i36LjxduraUhbHrtVD2ecvQLPvu34w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgIISUZ (ORCPT
+        id S1729913AbgIISUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIISUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:20:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ADD2C061573;
-        Wed,  9 Sep 2020 11:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Gs7l2ozHR0HxDr2hbk3gqjz3Et8a8q1twWwZC7hxypY=; b=W6u3PSCFmSajTX3+XLDF/fiiG7
-        +efOlDW3xUWpArrgADLOP/BB8Pa2PP1S4JczSLNNV0hxeJIJAbwE69Ym7L+PIR2oKcYxIAuQgwo90
-        KbGrlZlKSoiy1Y+SKznpbvvw0azanhsi50kZlrC93YY4gGFMqpnP6v2QxFrdM4rfQF215wfM5iGia
-        dzCWdjQ0UEsVfhk60DUTjKsLHcEkra5RAv4usFfHjCTGTc3jvKNqljHXaBk35EpJxnQCEjK48VQr0
-        pOH0dYxvUt8tvmBC1X6diLy4uSHmwFmGBRmphI0psMq7lygxlhcd3YwJ1aXP+RkFp5PoK5jjKLJXh
-        zIipE4iw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kG4hR-0004S1-Or; Wed, 09 Sep 2020 18:20:08 +0000
-Subject: Re: [PATCH net-next + leds v2 2/7] leds: add generic API for LEDs
- that can be controlled by hardware
-To:     =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-3-marek.behun@nic.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <84bfc0ce-752d-9d1f-1043-fabe4cc25b15@infradead.org>
-Date:   Wed, 9 Sep 2020 11:20:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 9 Sep 2020 14:20:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbgIISUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:20:35 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272A721D7F;
+        Wed,  9 Sep 2020 18:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599675634;
+        bh=JaN9N3pcoNDn3owpWWs48WvhhA1KCzxeHdaE/iRZjgY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=y9d+1uXio6dNOyfxskd1CxCQ+TgygEg+TrXynmG2dimfIx0KVIbsAGTMnEIV9+RPv
+         2dv3e306tPEquqIstAJkY9BiBdbcHvYCSZZ/rZfcdUT/449LRkS5bG0K0C89CGRQjH
+         OL8p/S2idASTo/qcXlpkEsmrOwhkLb2HooWYjisA=
+Received: by mail-oo1-f42.google.com with SMTP id m25so809195oou.0;
+        Wed, 09 Sep 2020 11:20:34 -0700 (PDT)
+X-Gm-Message-State: AOAM532cDOpxBx4SSLcnmhtT1LD6iVYgYB6JTc+6Uh6rCK/z1oGlc1fW
+        BcEhcWEZQFyzZjqRUtr2pYrHty8NrB/NC7pHeA==
+X-Google-Smtp-Source: ABdhPJysndRewOcbs57i2Hp2EeNgVH4uvg8GYdBkIyjcd/OFZOjDgbOLWTn74YaaG5Aa6jTa2G8H3AZa2FPgZTOhE5M=
+X-Received: by 2002:a4a:d306:: with SMTP id g6mr1662606oos.25.1599675633402;
+ Wed, 09 Sep 2020 11:20:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200909162552.11032-3-marek.behun@nic.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-3-crystal.guo@mediatek.com> <20200825190219.GA1125997@bogus>
+ <1598440183.30048.14.camel@mhfsdcap03> <6c292056-1cb1-bc6c-0422-46e047dcf08f@ti.com>
+ <CAL_JsqKuL7XM2CL3z0OQdRua5YJO2ZRdsoE3fdAH948mKGfWnA@mail.gmail.com> <b91c4ddf-8f12-2154-0a41-bf9563b5aefd@ti.com>
+In-Reply-To: <b91c4ddf-8f12-2154-0a41-bf9563b5aefd@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 9 Sep 2020 12:20:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJq6gqoXtvG1U7UDsOQpz7oMLMunZHq2njN6nvPr8PZMA@mail.gmail.com>
+Message-ID: <CAL_JsqJq6gqoXtvG1U7UDsOQpz7oMLMunZHq2njN6nvPr8PZMA@mail.gmail.com>
+Subject: Re: [v4,2/4] dt-binding: reset-controller: ti: add
+ 'mediatek,infra-reset' to compatible
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Crystal Guo <crystal.guo@mediatek.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
+        <seiya.wang@mediatek.com>,
+        =?UTF-8?B?U3RhbmxleSBDaHUgKOacseWOn+mZnik=?= 
+        <stanley.chu@mediatek.com>,
+        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
+        <Yingjoe.Chen@mediatek.com>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?WW9uZyBMaWFuZyAo5qKB5YuHKQ==?= <Yong.Liang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Sep 9, 2020 at 9:10 AM Suman Anna <s-anna@ti.com> wrote:
+>
+> On 9/8/20 1:49 PM, Rob Herring wrote:
+> > On Wed, Sep 2, 2020 at 5:26 PM Suman Anna <s-anna@ti.com> wrote:
+> >>
+> >> Hi Rob,
+> >>
+> >> On 8/26/20 6:09 AM, Crystal Guo wrote:
+> >>> On Wed, 2020-08-26 at 03:02 +0800, Rob Herring wrote:
+> >>>> On Mon, Aug 17, 2020 at 11:03:22AM +0800, Crystal Guo wrote:
+> >>>>> The TI syscon reset controller provides a common reset management,
+> >>>>> and is suitable for MTK SoCs. Add compatible 'mediatek,infra-reset',
+> >>>>> which denotes to use ti reset-controller driver directly.
+> >>>>>
+> >>>>> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> >>>>> ---
+> >>>>>  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 1 +
+> >>>>>  1 file changed, 1 insertion(+)
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> >>>>> index ab041032339b..5a0e9365b51b 100644
+> >>>>> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> >>>>> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> >>>>> @@ -25,6 +25,7 @@ Required properties:
+> >>>>>                         "ti,k2l-pscrst"
+> >>>>>                         "ti,k2hk-pscrst"
+> >>>>>                         "ti,syscon-reset"
+> >>>>> +                       "mediatek,infra-reset", "ti,syscon-reset"
+> >>>>
+> >>>> You need your own binding doc. If you can use the same driver then fine,
+> >>>> but that's a separate issue. There's also reset-simple driver if you
+> >>>> have just array of 32-bit registers with a bit per reset.
+> >>>>
+> >>>> Don't repeat 'ti,reset-bits' either.
+> >>>
+> >>> Do you mean I should add a Mediatek reset binding doc, although Mediatek
+> >>> reuse the TI reset controller directly?
+> >>
+> >> Hmm, how do you envision not repeating the same bits in a separate binding?
+> >
+> > I mean 'ti,reset-bits' isn't really something that should have been in
+> > DT in the first place, but rather implied by the compatible string.
+>
+> Ok, should I be deprecating this and move this data to driver then?
 
-On 9/9/20 9:25 AM, Marek Behún wrote:
-> Many an ethernet PHY (and other chips) supports various HW control modes
-> for LEDs connected directly to them.
-> 
-> This patch adds a generic API for registering such LEDs when described
-> in device tree. This API also exposes generic way to select between
-> these hardware control modes.
-> 
-> This API registers a new private LED trigger called dev-hw-mode. When
-> this trigger is enabled for a LED, the various HW control modes which
-> are supported by the device for given LED can be get/set via hw_mode
-> sysfs file.
-> 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> ---
->  .../sysfs-class-led-trigger-dev-hw-mode       |   8 +
->  drivers/leds/Kconfig                          |  10 +
->  drivers/leds/Makefile                         |   1 +
->  drivers/leds/leds-hw-controlled.c             | 227 ++++++++++++++++++
->  include/linux/leds-hw-controlled.h            |  74 ++++++
->  5 files changed, 320 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-led-trigger-dev-hw-mode
->  create mode 100644 drivers/leds/leds-hw-controlled.c
->  create mode 100644 include/linux/leds-hw-controlled.h
-> 
+No, I'm just asking to not have new users.
 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 1c181df24eae4..5e47ab21aafb4 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -49,6 +49,16 @@ config LEDS_BRIGHTNESS_HW_CHANGED
->  
->  	  See Documentation/ABI/testing/sysfs-class-led for details.
->  
-> +config LEDS_HW_CONTROLLED
-> +	bool "API for LEDs that can be controlled by hardware"
-> +	depends on LEDS_CLASS
+> I am assuming that is how you are envisioning the new Mediatek binding to be
+> atleast.
 
-	depends on OF || COMPILE_TEST
-?
+Right.
 
-> +	select LEDS_TRIGGERS
-> +	help
-> +	  This option enables support for a generic API via which other drivers
-> +	  can register LEDs that can be put into hardware controlled mode, eg.
-
-	                                                                   e.g.
-
-> +	  a LED connected to an ethernet PHY can be configured to blink on
-
-	  an LED
-
-> +	  network activity.
-> +
->  comment "LED drivers"
->  
->  config LEDS_88PM860X
-
-
-> diff --git a/include/linux/leds-hw-controlled.h b/include/linux/leds-hw-controlled.h
-> new file mode 100644
-> index 0000000000000..2c9b8a06def18
-> --- /dev/null
-> +++ b/include/linux/leds-hw-controlled.h
-> @@ -0,0 +1,74 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Generic API for LEDs that can be controlled by hardware (eg. by an ethernet PHY chip)
-> + *
-> + * Copyright (C) 2020 Marek Behun <marek.behun@nic.cz>
-> + */
-> +#ifndef _LINUX_LEDS_HW_CONTROLLED_H_
-> +#define _LINUX_LEDS_HW_CONTROLLED_H_
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +
-> +struct hw_controlled_led {
-> +	struct led_classdev cdev;
-> +	const struct hw_controlled_led_ops *ops;
-> +	struct mutex lock;
-> +
-> +	/* these members are filled in by OF if OF is enabled */
-> +	int addr;
-> +	bool active_low;
-> +	bool tristate;
-> +
-> +	/* also filled in by OF, but changed by led_set_hw_mode operation */
-> +	const char *hw_mode;
-> +
-> +	void *priv;
-> +};
-> +#define led_cdev_to_hw_controlled_led(l) container_of(l, struct hw_controlled_led, cdev)
-> +
-> +/* struct hw_controlled_led_ops: Operations on LEDs that can be controlled by HW
-> + *
-> + * All the following operations must be implemented:
-> + * @led_init: Should initialize the LED from OF data (and sanity check whether they are correct).
-> + *            This should also change led->cdev.max_brightness, if the value differs from default,
-> + *            which is 1.
-> + * @led_brightness_set: Sets brightness.
-> + * @led_iter_hw_mode: Iterates available HW control mode names for this LED.
-> + * @led_set_hw_mode: Sets HW control mode to value specified by given name.
-> + * @led_get_hw_mode: Returns current HW control mode name.
-> + */
-
-Convert that struct info to kernel-doc?
-
-> +struct hw_controlled_led_ops {
-> +	int (*led_init)(struct device *dev, struct hw_controlled_led *led);
-> +	int (*led_brightness_set)(struct device *dev, struct hw_controlled_led *led,
-> +				  enum led_brightness brightness);
-> +	const char *(*led_iter_hw_mode)(struct device *dev, struct hw_controlled_led *led,
-> +					void **iter);
-> +	int (*led_set_hw_mode)(struct device *dev, struct hw_controlled_led *led,
-> +			       const char *mode);
-> +	const char *(*led_get_hw_mode)(struct device *dev, struct hw_controlled_led *led);
-> +};
-> +
-
-> +
-> +#endif /* _LINUX_LEDS_HW_CONTROLLED_H_ */
-
-thanks.
--- 
-~Randy
-
+Rob
