@@ -2,107 +2,167 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71851C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD98C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4278C21D46
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F11321D43
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 04:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K+Y9rfAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgIIExy (ORCPT
+        id S1726642AbgIIEy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 00:53:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:37788 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbgIIExx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 00:53:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F169931B;
-        Tue,  8 Sep 2020 21:53:52 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.71.250])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1ACE83F68F;
-        Tue,  8 Sep 2020 21:53:48 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
-Cc:     will@kernel.org, catalin.marinas@arm.com,
-        akpm@linux-foundation.org, rcampbell@nvidia.com, ziy@nvidia.com,
-        Jonathan.Cameron@Huawei.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/2] arm64/mm: Enable THP migration
-Date:   Wed,  9 Sep 2020 10:23:03 +0530
-Message-Id: <1599627183-14453-3-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599627183-14453-1-git-send-email-anshuman.khandual@arm.com>
-References: <1599627183-14453-1-git-send-email-anshuman.khandual@arm.com>
+        Wed, 9 Sep 2020 00:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgIIEyY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 00:54:24 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C450BC061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 21:54:23 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id y194so625441vsc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 21:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=ZsUcEp0I/7e3EEW+rD19DOIX5s79KarqD1M3OWzmN/s=;
+        b=K+Y9rfAfXd/LXotSiZ5b0cva/C74KPrr3WH6OR5vEH5SiW7aQRz69Bnp66bJYxIXcA
+         IkZJ+9wJQuJkhVm2zwDaWsioaTih/tp9ZCOzsq6uCZJLKqSG0ZqG4jeUwQCgXLi+Db2J
+         Ny3QU4dnL9dli2Dvp93xkPhnbjmGj73ZhdzfpXH92Q77ez3gkRKKFwBma0u+1qj9DRfB
+         V4BF6CPFPgvAH03zdNQRh9ncAtZauVQpZxmaZlr1dT6qWxj6u00JbJVEoPN0iv/Nqw59
+         AyuWRp4HugEb5NMjS+hXQVDOjYfBYvH3Ec7Senckv+HwVJ05GLV6f9uH1u+U9xEXFYIp
+         UuQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ZsUcEp0I/7e3EEW+rD19DOIX5s79KarqD1M3OWzmN/s=;
+        b=cTBw0H/76UrKdnLvXW5xckG4h67g3kk+afBEBB0hMFimSKl3D3uoTPCdO5yFpyOuOU
+         RyjpLACsoFYoV235F+lVXtwMJ7RZsaKzyfvAmXI0mqwAq8CT5wgpdmtmxumSzkAEHGxl
+         br9eSWzNvB+TqwgUzmMbF63jNmDtdxt+XCYjodWVLjujfpcPX9toSfRZrLLytMwW02GU
+         4je5HKV7UKHXjJgDTFrV8GSPOvurQZs/iy9kc9YJ0wmb2nT9uWK6kCugWMpI3KVdd+PK
+         PBm1sYMR66qAUPA8FCPTdf9KCekT4HfCZWTkp2066izTlFHGTMhAk/01bnb0/3vIqwtx
+         g6FQ==
+X-Gm-Message-State: AOAM532AszCb5hHc8Aa9I63dzZkFiiqhG0z+dccChqdYcohNujCrqBHX
+        GHNozksXvTTQfWUyDN0+MQ19btoFqnOAaAwf3uEaHQ==
+X-Google-Smtp-Source: ABdhPJz7p5TZsxtQu8BMPnC4vbJA9/d5+gYYlLptyNilt3dcbMwK8qKo2WIWglz+CqVfvKIlRKQ9d7WACLX6KN6Dvds=
+X-Received: by 2002:a67:7c52:: with SMTP id x79mr1306383vsc.21.1599627260715;
+ Tue, 08 Sep 2020 21:54:20 -0700 (PDT)
+MIME-Version: 1.0
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 9 Sep 2020 10:24:09 +0530
+Message-ID: <CA+G9fYvg7voMNArr3nPpv_dRn10RwYos075NW_b5rFbBLZ=-8g@mail.gmail.com>
+Subject: kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Cc:     jbaron@akamai.com, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>, jim.cromie@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In certain page migration situations, a THP page can be migrated without
-being split into it's constituent subpages. This saves time required to
-split a THP and put it back together when required. But it also saves an
-wider address range translation covered by a single TLB entry, reducing
-future page fault costs.
+While testing livepatch test cases on x86_64 with Linux next 20200908 tag kernel
+this kernel BUG noticed several times.
 
-A previous patch changed platform THP helpers per generic memory semantics,
-clearing the path for THP migration support. This adds two more THP helpers
-required to create PMD migration swap entries. Now enable THP migration via
-ARCH_ENABLE_THP_MIGRATION.
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: dff9f829e5b0181d4ed9d35aa62d695292399b54
+  git describe: next-20200908
+    kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/853/config
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Suzuki Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/Kconfig               | 4 ++++
- arch/arm64/include/asm/pgtable.h | 5 +++++
- 2 files changed, 9 insertions(+)
+kernel BUG log,
+----------------------
+[  634.063970] % rmmod test_klp_livepatch
+[  634.114787] test_klp_atomic_replace: this has been live patched
+[  634.121953] % echo 0 > /sys/kernel/livepatch/test_klp_atomic_replace/enabled
+[  634.129391] livepatch: 'test_klp_atomic_replace': starting
+unpatching transition
+[  634.143990] livepatch: 'test_klp_atomic_replace': unpatching complete
+[  634.156223] % rmmod test_klp_atomic_replace
+[  634.235451] ------------[ cut here ]------------
+[  634.240314] kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
+[  634.246584] invalid opcode: 0000 [#1] SMP PTI
+[  634.250955] CPU: 0 PID: 12791 Comm: test-livepatch. Tainted: G
+  W     K   5.9.0-rc4-next-20200908 #1
+[  634.260615] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[  634.268007] RIP: 0010:ddebug_exec_query+0x77b/0xb90
+[  634.272886] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
+00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
+fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
+8b 15
+[  634.291630] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
+[  634.296856] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
+[  634.303987] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
+[  634.311111] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
+[  634.318236] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
+[  634.325368] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
+[  634.332500] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
+knlGS:0000000000000000
+[  634.340578] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  634.346315] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
+[  634.353446] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  634.360570] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  634.367693] Call Trace:
+[  634.370139]  ? lock_acquire+0xa6/0x390
+[  634.373892]  ? __might_fault+0x34/0x80
+[  634.377648]  ddebug_exec_queries+0x6e/0x140
+[  634.381831]  ddebug_proc_write+0x4b/0xa0
+[  634.385756]  full_proxy_write+0x5f/0x90
+[  634.389595]  vfs_write+0xed/0x240
+[  634.392915]  ksys_write+0xad/0xf0
+[  634.396233]  ? syscall_trace_enter+0x17a/0x240
+[  634.400670]  __x64_sys_write+0x1a/0x20
+[  634.404416]  do_syscall_64+0x37/0x50
+[  634.407993]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  634.413038] RIP: 0033:0x7fd371b84144
+[  634.416617] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00
+00 00 00 00 66 90 48 8d 05 c1 e7 2c 00 8b 00 85 c0 75 13 b8 01 00 00
+00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89
+f5 53
+[  634.435362] RSP: 002b:00007ffd19447658 EFLAGS: 00000246 ORIG_RAX:
+0000000000000001
+[  634.442928] RAX: ffffffffffffffda RBX: 00000000000000bc RCX: 00007fd371b84144
+[  634.450059] RDX: 00000000000000bc RSI: 0000000000e6cf70 RDI: 0000000000000001
+[  634.457181] RBP: 0000000000e6cf70 R08: 00000000000000e9 R09: 0000000000000000
+[  634.464305] R10: 00007ffd19447c48 R11: 0000000000000246 R12: 00007fd371e4e760
+[  634.471429] R13: 00000000000000bc R14: 00007fd371e49760 R15: 00000000000000bc
+[  634.478559] Modules linked in: trace_printk sch_fq 8021q
+iptable_filter xt_mark ip_tables cls_bpf sch_ingress veth algif_hash
+x86_pkg_temp_thermal fuse [last unloaded: test_klp_atomic_replace]
+[  634.495695] ---[ end trace d04d7e11bd1458bf ]---
+[  634.500333] RIP: 0010:ddebug_exec_query+0x77b/0xb90
+[  634.505218] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
+00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
+fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
+8b 15
+[  634.523969] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
+[  634.529197] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
+[  634.536330] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
+[  634.543462] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
+[  634.550593] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
+[  634.557727] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
+[  634.564869] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
+knlGS:0000000000000000
+[  634.572953] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  634.578699] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
+[  634.585829] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  634.592964] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6d232837cbee..e21b94061780 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1876,6 +1876,10 @@ config ARCH_ENABLE_HUGEPAGE_MIGRATION
- 	def_bool y
- 	depends on HUGETLB_PAGE && MIGRATION
- 
-+config ARCH_ENABLE_THP_MIGRATION
-+	def_bool y
-+	depends on TRANSPARENT_HUGEPAGE
-+
- menu "Power management options"
- 
- source "kernel/power/Kconfig"
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index d8258ae8fce0..bc68da9f5706 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -875,6 +875,11 @@ static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
- #define __pte_to_swp_entry(pte)	((swp_entry_t) { pte_val(pte) })
- #define __swp_entry_to_pte(swp)	((pte_t) { (swp).val })
- 
-+#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-+#define __pmd_to_swp_entry(pmd)		((swp_entry_t) { pmd_val(pmd) })
-+#define __swp_entry_to_pmd(swp)		__pmd((swp).val)
-+#endif /* CONFIG_ARCH_ENABLE_THP_MIGRATION */
-+
- /*
-  * Ensure that there are not more swap files than can be encoded in the kernel
-  * PTEs.
+full test log,
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20200908/testrun/3171064/suite/linux-log-parser/test/check-kernel-bug-1743477/log
+
 -- 
-2.20.1
-
+Linaro LKFT
+https://lkft.linaro.org
