@@ -2,115 +2,109 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE086C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F5BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6782D2080A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599652894;
-	bh=gk5ai7/vsUBs2dl7VhzTb79HWtwuO4OdRiCJ/geHW4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vlUusqVJtSvziVT6RKOBwOTo5n31mhGV1dW4RQjGfpMm1Qo8lwceg1BJF3KkD1z6E
-	 LiL+0i0xyL47A5lksro+8zS1L8W+di7EOPEhYQEHhErqurTu+56vtkx0c+zlcPsTDV
-	 y8UJdVe3fQ+Hzmqz2AJH0DlqkINucl06pIhVR0Kc=
+	by mail.kernel.org (Postfix) with ESMTP id CDA1C21D40
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bndKyFAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgIIMA7 (ORCPT
+        id S1728015AbgIIMDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 08:00:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbgIILmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 08:03:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbgIILmN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 07:42:13 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EBA1207DE;
-        Wed,  9 Sep 2020 11:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599649899;
-        bh=gk5ai7/vsUBs2dl7VhzTb79HWtwuO4OdRiCJ/geHW4g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xt32yCIJZrUnpBjf6/MToHhOH5aK0XvmwKj0BwuSH4Fcsie9nQ0R0tHFTEEnVTFIP
-         29njlrTtNhos9A/wOErrHOF4fNWmUSFQ9GV2x/XbjDPYvt+u9vNWaHJT8TSYsNQWbr
-         xUrm/P+mViuyxOWWowDpQZ7V6BMBiafgTH9hvMDw=
-Received: by pali.im (Postfix)
-        id B61AE7A9; Wed,  9 Sep 2020 13:11:36 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 13:11:36 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Joseph Hwang <josephsih@chromium.org>
-Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
-        luiz.dentz@gmail.com, chromeos-bluetooth-upstreaming@chromium.org,
-        josephsih@google.com, Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Bluetooth: sco: expose WBS packet length in
- socket option
-Message-ID: <20200909111136.ghp5p56m4cxfjreo@pali>
-References: <20200909094202.3863687-1-josephsih@chromium.org>
- <20200909174129.v2.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A861CC061795
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:41:38 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z19so1411647lfr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9QFqZ8T4Z8Uwssi88QoBtFjRyO2k2yhi/Ck4LHpw7Qk=;
+        b=bndKyFALCwNbpGG6biL5LEJoMyzVE3/sE7fOKzM0bdlDG5LYKrVzIyaoIPdR2j3xo9
+         ++yPbukmQM8z67YpiR6rloFUdCvnbCIQIwtrfXT11Y3f8mIL6IxU4Ws1RsASWnWA1VXr
+         Jk4QHqNo+AhOG+O7PZKZxH/j0N9bJZKi7cSrxQvpusImfogn4uS06eckyz/qrYsyCO1t
+         Isn93zwFT14OXhtBmKB6DgUDDY8TndPFTtlvWtMdxc40O0hECK8K5IDySLim670nVZDx
+         QhGxOUNiRKJRcPSHjXp2Ggt2pgO9wX7XRbPen0Din2y0bZ5+oALUJdnSVu7jg6Plf+RZ
+         KGQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9QFqZ8T4Z8Uwssi88QoBtFjRyO2k2yhi/Ck4LHpw7Qk=;
+        b=nwh6SbTiXLLq76eY9c1O8bezDH2GvGD7BFEvLzwE9evCr4UNIpiJtxl/f1Cuf8E+vD
+         cm0isjMQM/hEI4dAHXcUtCQfQcflshufaG3CZNng8idLMP8soiJAVhXhk44icBH/NcU8
+         XQEiOzqNiW/CAojC88+Srhdz3a86o/2ZH49qsuuoZQMrBpZrgeeF0I3CazzXNh2kbAX6
+         k8znvWXjaSd/iM6nOtVObyg95LxYccOlA0kzjWhftTvJ/5R1/AuFYCo37vshjPtoGFfL
+         rZZSe3n1eHo5BfxTUU2ioW2JFNY/Z1ptM+db98WjIT51bKkmwa2IW+POWPLyVQU2M7mD
+         MaAA==
+X-Gm-Message-State: AOAM533uZZWF4yaRt6htQ7NgD1fG93lOv98ltzg10UoDOKf3C9h3rm9t
+        HdtWTS9dcJeKEzWKrhe97Ra1qsWTw5b6HHyhG0d5Xg==
+X-Google-Smtp-Source: ABdhPJx1689AN6ZBjH9cFKkBhgvwX3Sn72kLkZELmRxndnnmRkhFO6EY5qp4HI+dRiZKRBpPZpNKfjqIAxtiWfATgOw=
+X-Received: by 2002:ac2:5541:: with SMTP id l1mr1734063lfk.89.1599651696103;
+ Wed, 09 Sep 2020 04:41:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909174129.v2.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
-User-Agent: NeoMutt/20180716
+References: <20200822163250.63664-1-paul@crapouillou.net> <20200822163250.63664-2-paul@crapouillou.net>
+In-Reply-To: <20200822163250.63664-2-paul@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Sep 2020 13:41:24 +0200
+Message-ID: <CACRpkdZmiar+2RrMb8=2UdyH83_8KQD0VvX2oWcBezmCdVwzzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: display: Document NewVision NV3052C
+ DT node
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Noralf Tronnes <noralf@tronnes.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        od@zcrc.me,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 09 September 2020 17:42:02 Joseph Hwang wrote:
-> It is desirable to expose the wideband speech packet length via
-> a socket option to the user space so that the user space can set
-> the value correctly in configuring the sco connection.
+On Sat, Aug 22, 2020 at 6:33 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-Hello! I'm fine with change below, but I would suggest to put more
-details into commit message. This change has nothing to do with wideband
-nor with exporting socket option to userspace -- which is already done
-via SCO_OPTIONS option. Also it is relevant to SCO socket with any codec
-data, not only wideband.
+> Add documentation for the Device Tree node for LCD panels based on the
+> NewVision NV3052C controller.
+>
+> v2: - Support backlight property
+>     - Add *-supply properties for the 5 different power supplies.
+>       Either they must all be present, or 'power-supply' must be
+>       present.
+>     - Reword description to avoid confusion about 'driver'
+>     - Use 4-space indent in example
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-This commit description should rather mention that it defines new
-getsockopt options BT_SNDMTU/BT_RCVMTU for SCO socket to be compatible
-with other bluetooth sockets and that these options return same value as
-option SCO_OPTIONS which is already present on existing kernels.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> 
-> Reviewed-by: Alain Michaud <alainm@chromium.org>
-> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-> ---
-> 
-> (no changes since v1)
-> 
->  net/bluetooth/sco.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
-> index dcf7f96ff417e6..79ffcdef0b7ad5 100644
-> --- a/net/bluetooth/sco.c
-> +++ b/net/bluetooth/sco.c
-> @@ -1001,6 +1001,12 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
->  			err = -EFAULT;
->  		break;
->  
-> +	case BT_SNDMTU:
-> +	case BT_RCVMTU:
-> +		if (put_user(sco_pi(sk)->conn->mtu, (u32 __user *)optval))
-> +			err = -EFAULT;
-> +		break;
-> +
->  	default:
->  		err = -ENOPROTOOPT;
->  		break;
-> -- 
-> 2.28.0.526.ge36021eeef-goog
-> 
+> +            reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
+
+This has the right polarity but the code in patch 6
+seems to use a device tree that does not?
+
+Yours,
+Linus Walleij
