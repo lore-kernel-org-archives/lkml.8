@@ -2,279 +2,145 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07659C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C92C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8358A21973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD0C216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mb+37Pjo"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c6LQWgXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgIIAoc (ORCPT
+        id S1728643AbgIIAqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 20:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51992 "EHLO
+        Tue, 8 Sep 2020 20:46:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgIIAo3 (ORCPT
+        with ESMTP id S1726660AbgIIAqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 20:44:29 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18618C061573;
-        Tue,  8 Sep 2020 17:44:29 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 67so751060pgd.12;
-        Tue, 08 Sep 2020 17:44:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=K8QsISLidxurmPHK5+YsjnPP/PckoOJ6G9b+uwLzbMw=;
-        b=mb+37PjoeLRqv2WjK4oAy8ZM56SLsUERgXMJV+xnvceYAg8LDU9j3g+mPnNZafXStS
-         fprzt259PdmatRcwBUd80MYT4qOUqdqOx7swopNaXHu5XAIScv0v+FZRPqRh9F8Db1lC
-         JV02KtL1zQ1dv9FEOAvHVJGXwVEBvqVKeEEHNgjVfz7HiNJPag/6HC2V/e/pFbuT4n7y
-         OLTm0Ul1Hc1XRprsmrF7VxTvuXALGq0dBrhPCazKdNqOFs7RW/NG/Oe4hFhbirV+RNXb
-         1lFe5OHGFhoa1NDHw+/VoV/4/Lj96dcvhcBjlciPyPhWdP91rgeoxsmfsX0UJKno29iV
-         ZPeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K8QsISLidxurmPHK5+YsjnPP/PckoOJ6G9b+uwLzbMw=;
-        b=aN6ksq5MqTChZ3LvBxNoCCFdUaJBRMp1YEMiFophfLCbaCujqNGDUbGudFPlYs110D
-         jY9tr5BNLXOekiwuUgoTGyD08GTsp8W8pr0988KYlxCIazy0aDy5cXdCXzNzcdZ7IX5Y
-         oSr1xanvDoGDVRKWDgPIZf59yTi6ymD+5j9h/NqWmp/FTWTMlz43Eydvavlita9R3uF+
-         zJ4GYAdghtmGq9QByDjlgYZGlZcRdfjFmCEQ+nrHHh8QKAlRdCuAIJ9KKD4srFBAE+ud
-         26A38+DzIh3g2dM7mEz6iEsS7AEE/YSKT+CtAFfFFZMWaAqS5m8AfTsK1zr4VaCGsepW
-         BZ5Q==
-X-Gm-Message-State: AOAM5301PWpYJwryIKK3yo3GKDYqRdGrmkyTAM5/CPyNbWnlRFmusExE
-        lVq4SVrd5Wlq8WZO31CjFHI=
-X-Google-Smtp-Source: ABdhPJzXqypVIDq1EkovtOZSBjPHx3Aef9gcdPgJx8+NPlHLPtiYhOsFRQXaiEqyLmrxEuEuIaFmHQ==
-X-Received: by 2002:a63:ff01:: with SMTP id k1mr1045030pgi.141.1599612268290;
-        Tue, 08 Sep 2020 17:44:28 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id ga3sm342882pjb.18.2020.09.08.17.44.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 17:44:26 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 17:44:24 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adurbin@google.com
-Subject: Re: [PATCH v2] drivers: input: Use single i2c_transfer transaction
- when using RM_CMD_BANK_SWITCH
-Message-ID: <20200909004424.GD1665100@dtor-ws>
-References: <20200820224551.GX1665100@dtor-ws>
- <20200821024006.3399663-1-furquan@google.com>
+        Tue, 8 Sep 2020 20:46:23 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E18C061573;
+        Tue,  8 Sep 2020 17:46:22 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmNcX5L7zz9sTW;
+        Wed,  9 Sep 2020 10:46:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599612380;
+        bh=LcyqUDdmTFo/hpRQO2EuNKhJuisUTlJ8dkPNFe9MyJU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=c6LQWgXAjJWSgZFeuU/T5fGLN50G2Y6jvVmtiPWLTJFQMHSO8GOwRgjNiMkhyA/4i
+         qxESn7015hbbwP4x0HK09pRCY0rvEXHhgC+5ZIK1Xm80k4+HaMt7QqRaxG9LDHY28V
+         6QE07ZT3AhmGjn3M9MaCZ2uhVjzLAPAA+/oIn9WdWIFgj6nSoljzzSHbIJP142kKsP
+         xmRWPLgCatjEqayTG+p5bf6a3E9uiE5AcIqOAxskpdwLHn6AHot4mr+KCW7cO+ZOm1
+         f3h7m8By11mU6rFMG2dUAjfw7MNnWJDM6D62MN5mXoP49dIpJ+NClWVYpdVfHnZBkc
+         UFQV4tQhO7d/Q==
+Date:   Wed, 9 Sep 2020 10:46:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
+Message-ID: <20200909104619.0902238c@canb.auug.org.au>
+In-Reply-To: <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org>
+References: <20200902180950.4bc7c4de@canb.auug.org.au>
+        <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
+        <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
+        <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
+        <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821024006.3399663-1-furquan@google.com>
+Content-Type: multipart/signed; boundary="Sig_/EXWxTn/MK9ozwgFhmWyLq_J";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Furquan,
+--Sig_/EXWxTn/MK9ozwgFhmWyLq_J
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 20, 2020 at 07:40:06PM -0700, Furquan Shaikh wrote:
-> On an AMD chromebook, where the same I2C bus is shared by both Raydium
-> touchscreen and a trackpad device, it is observed that interleaving of
-> I2C messages when `raydium_i2c_read_message()` is called leads to the
-> Raydium touch IC reporting incorrect information. This is the sequence
-> that was observed to result in the above issue:
-> 
-> * I2C write to Raydium device for RM_CMD_BANK_SWITCH
-> * I2C write to trackpad device
-> * I2C read from trackpad device
-> * I2C write to Raydium device for setting address
-> * I2C read from Raydium device >>>> This provides incorrect
->   information
-> 
-> This change adds a new helper function `raydium_i2c_xfer()` that
-> performs I2C transactions to the Raydium device. It uses the register
-> address to decide if RM_CMD_BANK_SWITCH header needs to be sent to the
-> device (i.e. if register address is greater than 255, then bank switch
-> header is sent before the rest of the transaction). Additionally, it
-> ensures that all the I2C operations performed as part of
-> `raydium_i2c_xfer()` are done as a single i2c_transfer. This
-> guarantees that no other transactions are initiated to any other
-> device on the same bus in between. Additionally,
-> `raydium_i2c_{send|read}*` functions are refactored to use this new
-> helper function.
-> 
-> Verified with the patch across multiple reboots (>100) that the
-> information reported by the Raydium  touchscreen device during probe
-> is correct.
-> 
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> 
-> ---
-> v2: Added a new helper function raydium_i2c_xfer so that all read and
-> send transfers are handled using the same path. This helper function
-> uses register address > 255 to decide whether to send
-> RM_CMD_BANK_SWITCH command. Additionally, __packed keyword is moved
-> to be placed after the structure defintion.
-> 
->  drivers/input/touchscreen/raydium_i2c_ts.c | 132 +++++++++------------
->  1 file changed, 58 insertions(+), 74 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
-> index fe245439adee..261e4a290836 100644
-> --- a/drivers/input/touchscreen/raydium_i2c_ts.c
-> +++ b/drivers/input/touchscreen/raydium_i2c_ts.c
-> @@ -51,6 +51,7 @@
->  
->  /* Touch relative info */
->  #define RM_MAX_RETRIES		3
-> +#define RM_RETRY_DELAY_MS	20
->  #define RM_MAX_TOUCH_NUM	10
->  #define RM_BOOT_DELAY_MS	100
->  
-> @@ -136,114 +137,98 @@ struct raydium_data {
->  	bool wake_irq_enabled;
->  };
->  
-> -static int raydium_i2c_send(struct i2c_client *client,
-> -			    u8 addr, const void *data, size_t len)
-> +static int raydium_i2c_xfer(struct i2c_client *client, u32 addr, void *data,
-> +				size_t len, bool is_read)
->  {
-> -	u8 *buf;
-> -	int tries = 0;
-> -	int ret;
-> -
-> -	buf = kmalloc(len + 1, GFP_KERNEL);
-> -	if (!buf)
-> -		return -ENOMEM;
-> -
-> -	buf[0] = addr;
-> -	memcpy(buf + 1, data, len);
-> -
-> -	do {
-> -		ret = i2c_master_send(client, buf, len + 1);
-> -		if (likely(ret == len + 1))
-> -			break;
-> -
-> -		msleep(20);
-> -	} while (++tries < RM_MAX_RETRIES);
-> -
-> -	kfree(buf);
-> -
-> -	if (unlikely(ret != len + 1)) {
-> -		if (ret >= 0)
-> -			ret = -EIO;
-> -		dev_err(&client->dev, "%s failed: %d\n", __func__, ret);
-> -		return ret;
-> -	}
-> +	struct raydium_bank_switch_header {
-> +		u8 cmd;
-> +		__be32 be_addr;
-> +	} __packed header = {
-> +		.cmd = RM_CMD_BANK_SWITCH,
-> +		.be_addr = cpu_to_be32(addr),
-> +	};
->  
-> -	return 0;
-> -}
-> +	u8 reg_addr = addr & 0xff;
->  
-> -static int raydium_i2c_read(struct i2c_client *client,
-> -			    u8 addr, void *data, size_t len)
-> -{
->  	struct i2c_msg xfer[] = {
-> +		{
-> +			.addr = client->addr,
-> +			.len = sizeof(header),
-> +			.buf = (u8 *)&header,
-> +		},
->  		{
->  			.addr = client->addr,
->  			.len = 1,
-> -			.buf = &addr,
-> +			.buf = &reg_addr,
->  		},
->  		{
->  			.addr = client->addr,
-> -			.flags = I2C_M_RD,
->  			.len = len,
->  			.buf = data,
-> +			.flags = is_read ? I2C_M_RD : 0,
->  		}
->  	};
-> +
-> +	/*
-> +	 * If address is greater than 255, then RM_CMD_BANK_SWITCH needs to be
-> +	 * sent first. Else, skip the header i.e. xfer[0].
-> +	 */
-> +	int xfer_start_idx = (addr > 0xff) ? 0 : 1;
-> +	size_t xfer_count = ARRAY_SIZE(xfer) - xfer_start_idx;
->  	int ret;
->  
-> -	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
-> -	if (unlikely(ret != ARRAY_SIZE(xfer)))
-> -		return ret < 0 ? ret : -EIO;
-> +	ret = i2c_transfer(client->adapter, &xfer[xfer_start_idx], xfer_count);
-> +	if (likely(ret == xfer_count))
-> +		return 0;
->  
-> -	return 0;
-> +	return -EIO;
+Hi Randy,
 
-We are losing real error here, I'll change this to
+On Tue, 8 Sep 2020 07:38:31 -0700 Randy Dunlap <rdunlap@infradead.org> wrot=
+e:
+>
+> On 9/4/20 12:59 AM, Brendan Higgins wrote:
+> > On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org> wr=
+ote: =20
+> >>
+> >> On 9/2/20 8:44 AM, Randy Dunlap wrote: =20
+> >>> On 9/2/20 1:09 AM, Stephen Rothwell wrote: =20
+> >>>> Hi all,
+> >>>>
+> >>>> Changes since 20200828:
+> >>>> =20
+> >>>
+> >>>
+> >>> on i386:
+> >>>
+> >>> ../lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
+> >>> ../lib/ubsan.c:141:2: error: implicit declaration of function =E2=80=
+=98kunit_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_test=
+=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+> >>>   kunit_fail_current_test();
+> >>>
+> >>>
+> >>> Full randconfig file is attached.
+> >>> =20
+> >>
+> >> Hi Brendan,
+> >>
+> >> Do you know anything about this build error?
+> >>
+> >> I can't find kunit_fail_current_test() anywhere. =20
+> >=20
+> > Yeah, this got applied for some reason without the prerequisite
+> > patches. It is from a two patch series, the other being here:
+> >=20
+> > https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielg=
+uajardojr@gmail.com/
+> >=20
+> > which in turn depends on another patchset which didn't make it into 5.9.
+> >=20
+> > Again, I don't know why this was applied without it's prereqs. Sorry ab=
+out that.
+> >  =20
+>=20
+> Well.  Who is responsible for this small mess?
+> It is still killing linux-next builds for me (2020-0908).
 
-	return ret < 0 ? ret : -EIO;
+It came in via the kunit-next tree (Shuah cc'd).  I will revert commit
+abe83f7621ee ("kunit: ubsan integration") today.
 
->  }
->  
-> -static int raydium_i2c_read_message(struct i2c_client *client,
-> -				    u32 addr, void *data, size_t len)
-> +static int raydium_i2c_send(struct i2c_client *client, u32 addr,
-> +				const void *data, size_t len)
->  {
-> -	__be32 be_addr;
-> +	int tries = 0;
-> +	int ret;
-> +
-> +	do {
-> +		ret = raydium_i2c_xfer(client, addr, (void *)data, len, false);
-> +		if (likely(ret == 0))
-> +			return 0;
-> +
-> +		msleep(RM_RETRY_DELAY_MS);
-> +	} while (++tries < RM_MAX_RETRIES);
-> +
-> +	dev_err(&client->dev, "%s failed\n", __func__);
-> +	return -EIO;
+--=20
+Cheers,
+Stephen Rothwell
 
-Again losing real error here, I'll rename ret to error and do
+--Sig_/EXWxTn/MK9ozwgFhmWyLq_J
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-	return error;
+-----BEGIN PGP SIGNATURE-----
 
-here.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YJdsACgkQAVBC80lX
+0GyK+wgAjTHDhBW6vb4+obLH3Ebgk9/5ea0BdLvPmuHn6X2dVOldQRwLDdPEoqUg
+Xwrz+9aPXZVeSy+rcTEnQIjEB1+qXhmpbBVu9NUtp9yeowrFU0XHAcRafDamVSB4
+o4hHgb4MLvlUd3E22QvacN/Ed4yLFXR4t5x27nlXKpc8heX1h606y9NO878AKVui
+ngi4GaQXUSRlNSbwdMGb7fED9o+HiUsJ1ogxl5U6uF9s4fk5zFcLV+yR+AdiCpxJ
+89aFZtozDKsKVyu7FLLS8xn1MipzPdLdoLaNsR7LHcR8rOuaD1PAXfwj9E9iz/Y2
+XGigs29hVDUCytHm73nPDSTv367JQQ==
+=tOVS
+-----END PGP SIGNATURE-----
 
-> +}
-> +
-> +static int raydium_i2c_read(struct i2c_client *client, u32 addr, void *data,
-> +				size_t len)
-> +{
-> +	int ret;
->  	size_t xfer_len;
-> -	int error;
->  
->  	while (len) {
->  		xfer_len = min_t(size_t, len, RM_MAX_READ_SIZE);
-> +		ret = raydium_i2c_xfer(client, addr, data, len, true);
-
-I think this needs to be xfer_len, not len.
-
-I can fix it up locally if you agree.
-
-Thanks.
-
--- 
-Dmitry
+--Sig_/EXWxTn/MK9ozwgFhmWyLq_J--
