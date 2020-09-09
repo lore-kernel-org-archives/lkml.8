@@ -2,528 +2,416 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABFFC2D0E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21613C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C283821973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2D02087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJchZfpF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THQ3JIpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgIIJ3k (ORCPT
+        id S1729529AbgIIJaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47994 "EHLO
+        Wed, 9 Sep 2020 05:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgIIJ3k (ORCPT
+        with ESMTP id S1725826AbgIIJac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:29:40 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C57C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:29:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c18so2134951wrm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:29:39 -0700 (PDT)
+        Wed, 9 Sep 2020 05:30:32 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FCE5C061573;
+        Wed,  9 Sep 2020 02:30:32 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id md22so1072667pjb.0;
+        Wed, 09 Sep 2020 02:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hXqUYlv6FQXC0NWO3WzPdE9cu2eajOHbbEEHxWTWdr0=;
-        b=iJchZfpFQeGOp4xe5euU+/KAv43EtHc+f3JjQy9OjclyGT1NNZMqQtQjVt3vPOtVk9
-         CdJDf0fFRlO60XhovLO4Z9taFYuKOsN8WxBVenNMO1axiCpk1MXDiwpMJeX2Xd/Ll1/Y
-         JJCYy/vm3h5W3ILW3rLA6ugcfPrw2fC8wKWHsaPUtg+So/SpygKapcg3WSKvS2FXWzjP
-         se0WAkeCf8Hd9zwCUJ4N7H5r6KFIjtpQsFLxNreOd0Ab6vcHOvyG/eDGBe07hgDAQnl2
-         vWXqpWV231QJlfhnp9OmKElLU8+pareBW9/wn54mYdzV2jgDJeB1McLRk9qlzYomAArB
-         prhg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f2279BonLAVVWCMfCaFUngcoVi5EiMYWkHxInhXYdiw=;
+        b=THQ3JIpXmopRL+ZAgZdbsI/vfwizNSZMr0fC/PNt7eLrv1ehTAmuSsCtVZoZ5ZSBoX
+         8/IpDqrb3Zkz9y6yEvohxxpwSejaUcs7SyuwiYcyIhG5DV41B1RSdERVcrHEUOOnuD+p
+         nOSJrlLj7rG9w2i+fpgXXyCmxOpa3G/w3miH2nef9SXHPK0s6Gq1ivqYlIrIIgWBG9LV
+         Z6as46+HxaawhtRZKs4Y2yhjmXVlr6+EztfnfQmJBvCnU1CCPKlC98I1ISN6MP2i73kb
+         PsSW9MWY1AGdUnV0YnscdqNuJKJW6mXxaJO+Hn64BtpaR3iyfmmpiRUCYcEMr4VKktyS
+         fe+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hXqUYlv6FQXC0NWO3WzPdE9cu2eajOHbbEEHxWTWdr0=;
-        b=GRX7OC6EuqHwSwSVy3PyFu31PiYvgLJocIn8EDeZCwY8HkHGEAXgnImYY97Bhtc6yC
-         WeogfS7s8T/12FS5RzRKFk6gucPtWjgSa1kj/8pmwaJlM7X0gGmGMvswQtFmRhJOchcj
-         ZvORXghGhWXIltQ8ew6x96J5hBJVOPvT/xbDQ54hOY2hNUwYm1++6b62nKPkxWJvtv9w
-         mwUa9wud7t3Ons2xLwgVc0Yekay07eIgNDktzNAJJbWGFpiij1/kt9G74vAyKsBTX070
-         wnagqd9NzG71PBcaI/mQj8yQ914MucjKFAnj0QZNLa3Gs6WLmhAOl9IxghvWeudZJXlZ
-         pLZA==
-X-Gm-Message-State: AOAM531iA0XXBhdxf3XpKuV3fb/HhWMp7V05OZucEE0zpm+URrCJjoSG
-        bXoUBDXcWeXBcENngHMCaTA=
-X-Google-Smtp-Source: ABdhPJyDTwb2K2ZKpKUpD0LZXGyNPMp/PutjdsuYzbERZTuNTHiwl/D/cGiKStvqJ5MPsY8+VhGozQ==
-X-Received: by 2002:adf:b602:: with SMTP id f2mr2920298wre.186.1599643778250;
-        Wed, 09 Sep 2020 02:29:38 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.201])
-        by smtp.gmail.com with ESMTPSA id h184sm3126522wmh.41.2020.09.09.02.29.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:29:37 -0700 (PDT)
-Subject: Re: [PATCH v5 7/7] arm: dts: mt7623: add display subsystem related
- device nodes
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-References: <20200819081752.4805-1-linux@fw-web.de>
- <20200819081752.4805-8-linux@fw-web.de>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2bbeff85-d1c6-5cc1-1f23-5e77eaa364c3@gmail.com>
-Date:   Wed, 9 Sep 2020 11:29:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f2279BonLAVVWCMfCaFUngcoVi5EiMYWkHxInhXYdiw=;
+        b=uk/BI93mV9Zd89CAm3r9567+Ii400JElvAKTezxXHjwZWRsIx31IyrO5S1G92c/rIh
+         oZVabKiqtg4wFDC2/9NoQFJGQubXZVP7O9E1qQcTIXiuW75KqeXK85ELJztGkuxGMsjc
+         oEj+xF9pgELjtN5nJVUBLVQb5jrN5cbnXv5tMniJ6dh7ZcZ7zdGKdUH0eBH3f4ctG+8T
+         wx/MsOZ3L+ghl0s4Eo2ndUFk5/SnUgFF9Wt7dwGZvjNV2pRVdf+vJ7Nh3LpGLS++bzZm
+         QYwUvNIJqrV1CUOWcqLz4EQ/QVKeGgIAt3Li2bzWTQwA3RNR14iJsb+ngwpu4ChH6mlO
+         zyRQ==
+X-Gm-Message-State: AOAM531vMjVRLCN8UNXlXDPDwhBFyFGpPyZuR+FqLTzbaQjpgBU/ssW8
+        m1uAMQ3JRUfFwS3zEKZsC1SsNQ/CG+70pf0vD0s=
+X-Google-Smtp-Source: ABdhPJxj1jpsTrOrXD5rOnNbLwDExSltBdrdbj6t7zbm+kph22q6w5+iA1LOyPNkeQ54nJj0WSCgXr5ntdA+Uqs88zw=
+X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr55873pjr.228.1599643831603;
+ Wed, 09 Sep 2020 02:30:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200819081752.4805-8-linux@fw-web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200905130336.967622-1-luka.kovacic@sartura.hr> <20200905130336.967622-5-luka.kovacic@sartura.hr>
+In-Reply-To: <20200905130336.967622-5-luka.kovacic@sartura.hr>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 9 Sep 2020 12:30:14 +0300
+Message-ID: <CAHp75VfwPa9zL6HCz+qqXJ1rK2JB=ewRiK1qdrgsyxixA5R5Lg@mail.gmail.com>
+Subject: Re: [PATCH 4/7] drivers: leds: Add the iEi WT61P803 PUZZLE LED driver
+To:     Luka Kovacic <luka.kovacic@sartura.hr>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        luka.perkov@sartura.hr
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Sep 5, 2020 at 4:10 PM Luka Kovacic <luka.kovacic@sartura.hr> wrote:
+>
+> Add support for the iEi WT61P803 PUZZLE LED driver.
+> Currently only the front panel power LED is supported.
+>
+> This driver depends on the iEi WT61P803 PUZZLE MFD driver.
 
+Can we make it OF independent?
+See below how to achieve this.
 
-On 19/08/2020 10:17, Frank Wunderlich wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
-> 
-> Add display subsystem related device nodes for MT7623.
-> 
-> Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
-
-Applied to v5.9-next/dts32
-
-Thanks!
-
+> Signed-off-by: Luka Kovacic <luka.kovacic@sartura.hr>
+> Cc: Luka Perkov <luka.perkov@sartura.hr>
 > ---
-> changed
-> v4->v5:
->    add nodes to new mt7623n.dtsi to avoid conflict with mt7623a
-> v3->v4:
->    drop display_components which is duplicate of existing mmsys
-> v2->v3:
->    drop bls to dpi routing
-> ---
->   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 ++++++++
->   arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 ++++++++
->   arch/arm/boot/dts/mt7623n.dtsi                | 171 ++++++++++++++++++
->   3 files changed, 315 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 344f8c65c4aa..f41f221e56ca 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -21,6 +21,19 @@ chosen {
->   		stdout-path = "serial2:115200n8";
->   	};
->   
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +		type = "d";
-> +		ddc-i2c-bus = <&hdmiddc0>;
+>  drivers/leds/Kconfig                    |   8 ++
+>  drivers/leds/Makefile                   |   1 +
+>  drivers/leds/leds-iei-wt61p803-puzzle.c | 184 ++++++++++++++++++++++++
+>  3 files changed, 193 insertions(+)
+>  create mode 100644 drivers/leds/leds-iei-wt61p803-puzzle.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 1c181df24eae..8a25fb753dec 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -332,6 +332,14 @@ config LEDS_IPAQ_MICRO
+>           Choose this option if you want to use the notification LED on
+>           Compaq/HP iPAQ h3100 and h3600.
+>
+> +config LEDS_IEI_WT61P803_PUZZLE
+> +       tristate "LED Support for the iEi WT61P803 PUZZLE MCU"
+> +       depends on LEDS_CLASS
+> +       depends on MFD_IEI_WT61P803_PUZZLE
+> +       help
+> +         This option enables support for LEDs controlled by the iEi WT61P803
+> +         M801 MCU.
 > +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi0_out>;
-> +			};
-> +		};
-> +	};
+>  config LEDS_HP6XX
+>         tristate "LED Support for the HP Jornada 6xx"
+>         depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index c2c7d7ade0d0..cd362437fefd 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -34,6 +34,7 @@ obj-$(CONFIG_LEDS_HP6XX)              += leds-hp6xx.o
+>  obj-$(CONFIG_LEDS_INTEL_SS4200)                += leds-ss4200.o
+>  obj-$(CONFIG_LEDS_IP30)                        += leds-ip30.o
+>  obj-$(CONFIG_LEDS_IPAQ_MICRO)          += leds-ipaq-micro.o
+> +obj-$(CONFIG_LEDS_IEI_WT61P803_PUZZLE) += leds-iei-wt61p803-puzzle.o
+>  obj-$(CONFIG_LEDS_IS31FL319X)          += leds-is31fl319x.o
+>  obj-$(CONFIG_LEDS_IS31FL32XX)          += leds-is31fl32xx.o
+>  obj-$(CONFIG_LEDS_KTD2692)             += leds-ktd2692.o
+> diff --git a/drivers/leds/leds-iei-wt61p803-puzzle.c b/drivers/leds/leds-iei-wt61p803-puzzle.c
+> new file mode 100644
+> index 000000000000..50d1e4e81571
+> --- /dev/null
+> +++ b/drivers/leds/leds-iei-wt61p803-puzzle.c
+> @@ -0,0 +1,184 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +
->   	cpus {
->   		cpu@0 {
->   			proc-supply = <&mt6323_vproc_reg>;
-> @@ -114,10 +127,18 @@ memory@80000000 {
->   	};
->   };
->   
-> +&bls {
-> +	status = "okay";
+> +/* iEi WT61P803 PUZZLE MCU LED Driver
+> + *
+> + * Copyright (C) 2020 Sartura Ltd.
+> + * Author: Luka Kovacic <luka.kovacic@sartura.hr>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/mfd/iei-wt61p803-puzzle.h>
+
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+
+of*.h -> mod_devicetable.h
+
+> +#include <linux/platform_device.h>
+
++ property.h
+
+> +#include <linux/slab.h>
+> +
+> +#include <linux/leds.h>
+> +
+> +#define CMD_CHAR(x) (char)(x)
+> +
+> +/**
+> + * enum iei_wt61p803_puzzle_led_state - LED state values
+
+> + *
+
+This is not needed.
+
+> + * @IEI_LED_OFF: The LED is turned off
+> + * @IEI_LED_ON: The LED is turned on
+> + * @IEI_LED_BLINK_5HZ: The LED will blink with a freq of 5 Hz
+> + * @IEI_LED_BLINK_1HZ: The LED will blink with a freq of 1 Hz
+> + */
+> +enum iei_wt61p803_puzzle_led_state {
+> +       IEI_LED_OFF = 0x30,
+> +       IEI_LED_ON = 0x31,
+> +       IEI_LED_BLINK_5HZ = 0x32,
+> +       IEI_LED_BLINK_1HZ = 0x33
+
+Can we leave a comma here?
+
 > +};
 > +
->   &btif {
->   	status = "okay";
->   };
->   
-> +&cec {
-> +	status = "okay";
+> +/**
+> + * struct iei_wt61p803_puzzle_led - MCU LED Driver
+
+> + *
+
+This is not needed.
+
+> + * @mcu: MCU struct pointer
+> + * @lock: General mutex lock for LED operations
+> + * @led_power_state: State of the front panel power LED
+> + */
+> +struct iei_wt61p803_puzzle_led {
+> +       struct iei_wt61p803_puzzle *mcu;
+> +       struct mutex lock;
+> +
+> +       int led_power_state;
 > +};
 > +
->   &cir {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&cir_pins_a>;
-> @@ -128,6 +149,21 @@ &crypto {
->   	status = "okay";
->   };
->   
-> +&dpi0 {
-> +	status = "okay";
+> +static inline struct iei_wt61p803_puzzle_led *
+> +               cdev_to_iei_wt61p803_puzzle_led(struct led_classdev *led_cdev)
+
+It's a rather strange indentation.
+
+> +{
+> +       return dev_get_drvdata(led_cdev->dev->parent);
+> +}
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			dpi0_out: endpoint {
-> +				remote-endpoint = <&hdmi0_in>;
-> +			};
-> +		};
-> +	};
+> +static int iei_wt61p803_puzzle_led_brightness_set_blocking
+> +       (struct led_classdev *cdev, enum led_brightness brightness)
+
+Ditto.
+
+> +{
+> +       struct iei_wt61p803_puzzle_led *mcu_led =
+> +               cdev_to_iei_wt61p803_puzzle_led(cdev);
+
+> +       unsigned char led_power_cmd[5] = { '@', 'R', '1',
+> +               CMD_CHAR(IEI_LED_OFF) };
+
+Ditto.
+
+> +
+
+This is not needed.
+
+> +       int ret;
+
+> +
+
+Ditto.
+
+> +       size_t reply_size = 0;
+
+> +       unsigned char *resp_buf = kmalloc(IEI_WT61P803_PUZZLE_BUF_SIZE, GFP_KERNEL);
+
+Please move the assignment closer to its use and add an error check.
+Btw, how big is the buffer?
+
+> +       mutex_lock(&mcu_led->lock);
+> +
+> +       if (brightness == LED_OFF) {
+> +               led_power_cmd[3] = CMD_CHAR(IEI_LED_OFF);
+> +               mcu_led->led_power_state = LED_OFF;
+> +       } else {
+> +               led_power_cmd[3] = CMD_CHAR(IEI_LED_ON);
+> +               mcu_led->led_power_state = LED_ON;
+> +       }
+> +
+> +       mutex_unlock(&mcu_led->lock);
+> +
+> +       ret = iei_wt61p803_puzzle_write_command(mcu_led->mcu, led_power_cmd,
+> +                       sizeof(led_power_cmd), resp_buf, &reply_size);
+> +
+> +       kfree(resp_buf);
+> +
+> +       return ret;
+> +}
+> +
+> +static enum led_brightness
+> +iei_wt61p803_puzzle_led_brightness_get(struct led_classdev *cdev)
+> +{
+> +       struct iei_wt61p803_puzzle_led *mcu_led =
+> +               cdev_to_iei_wt61p803_puzzle_led(cdev);
+
+> +
+
+This is not needed.
+
+> +       int led_state;
+> +
+> +       mutex_lock(&mcu_led->lock);
+> +       led_state = mcu_led->led_power_state;
+> +       mutex_unlock(&mcu_led->lock);
+> +
+> +       return led_state;
+> +}
+> +
+> +static int iei_wt61p803_puzzle_led_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct iei_wt61p803_puzzle *mcu = dev_get_drvdata(dev->parent);
+
+> +       struct device_node *np = dev->of_node;
+
+Drop this.
+
+> +
+
+This is not needed.
+
+> +       struct iei_wt61p803_puzzle_led *mcu_led;
+
+> +       struct device_node *child;
+
+struct fwnode_handle *child;
+
+> +
+
+This is not needed
+
+> +       int ret;
+> +
+> +       mcu_led = devm_kzalloc(dev, sizeof(*mcu_led), GFP_KERNEL);
+> +       if (!mcu_led)
+> +               return -ENOMEM;
+> +
+> +       mcu_led->mcu = mcu;
+> +
+> +       /* The default LED power state is 1 */
+> +       mcu_led->led_power_state = 1;
+> +
+> +       /* Init the mutex lock */
+> +       mutex_init(&mcu_led->lock);
+> +
+> +       dev_set_drvdata(dev, mcu_led);
+> +
+
+> +       for_each_child_of_node(np, child) {
+
+device_for_each_child_node()
+
+> +               struct led_classdev *led;
+> +               u32 reg;
+> +
+> +               led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
+> +               if (!led)
+> +                       return -ENOMEM;
+> +
+
+> +               ret = of_property_read_u32(child, "reg", &reg);
+
+fwnode_property_read_u32()
+
+> +               if (ret || reg > 1) {
+
+> +                       dev_err(dev, "Could not register 'reg' of %s\n",
+> +                               child->name);
+
+%pfw
+
+> +                       continue;
+> +               }
+> +
+
+> +               if (of_property_read_string(child, "label", &led->name))
+
+of_ -> fwnode_
+
+> +                       led->name = child->name;
+
+devm_kasprintf()
+
+See, for example, drivers/leds/leds-max77650.c for such approach.
+
+> +
+> +               of_property_read_string(child, "linux,default-trigger",
+> +                               &led->default_trigger);
+
+of_ -> fwnode_
+
+> +
+> +               led->brightness_set_blocking =
+> +                       iei_wt61p803_puzzle_led_brightness_set_blocking;
+> +               led->brightness_get = iei_wt61p803_puzzle_led_brightness_get;
+> +
+> +               led->max_brightness = 1;
+> +
+> +               ret = devm_led_classdev_register(dev, led);
+> +               if (ret) {
+> +                       dev_err(dev, "Could not register %s\n", led->name);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+
+> +
+
+This is not needed.
+
+> +}
+> +
+> +static const struct of_device_id iei_wt61p803_puzzle_led_of_match[] = {
+> +       { .compatible = "iei,wt61p803-puzzle-leds" },
+> +       { }
 > +};
+> +MODULE_DEVICE_TABLE(of, iei_wt61p803_puzzle_led_of_match);
 > +
->   &eth {
->   	status = "okay";
->   
-> @@ -199,6 +235,42 @@ fixed-link {
->   	};
->   };
->   
-> +&hdmi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_pins_a>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			hdmi0_in: endpoint {
-> +				remote-endpoint = <&dpi0_out>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi0_out: endpoint {
-> +				remote-endpoint = <&hdmi_connector_in>;
-> +			};
-> +		};
-> +	};
+> +static struct platform_driver iei_wt61p803_puzzle_led_driver = {
+> +       .driver = {
+> +               .name = "iei-wt61p803-puzzle-led",
+> +               .of_match_table = iei_wt61p803_puzzle_led_of_match,
+> +       },
+> +       .probe = iei_wt61p803_puzzle_led_probe,
 > +};
+> +module_platform_driver(iei_wt61p803_puzzle_led_driver);
 > +
-> +&hdmiddc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_ddc_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_phy {
-> +	mediatek,ibias = <0xa>;
-> +	mediatek,ibias_up = <0x1c>;
-> +	status = "okay";
-> +};
-> +
->   &i2c0 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&i2c0_pins_a>;
-> diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> index f8efcc364bc3..1b9b9a8145a7 100644
-> --- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> +++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> @@ -24,6 +24,19 @@ chosen {
->   		stdout-path = "serial2:115200n8";
->   	};
->   
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +		type = "d";
-> +		ddc-i2c-bus = <&hdmiddc0>;
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi0_out>;
-> +			};
-> +		};
-> +	};
-> +
->   	cpus {
->   		cpu@0 {
->   			proc-supply = <&mt6323_vproc_reg>;
-> @@ -106,10 +119,18 @@ sound {
->   	};
->   };
->   
-> +&bls {
-> +	status = "okay";
-> +};
-> +
->   &btif {
->   	status = "okay";
->   };
->   
-> +&cec {
-> +	status = "okay";
-> +};
-> +
->   &cir {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&cir_pins_a>;
-> @@ -120,6 +141,21 @@ &crypto {
->   	status = "okay";
->   };
->   
-> +&dpi0 {
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			dpi0_out: endpoint {
-> +				remote-endpoint = <&hdmi0_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &eth {
->   	status = "okay";
->   
-> @@ -203,6 +239,42 @@ fixed-link {
->   	};
->   };
->   
-> +&hdmi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_pins_a>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			hdmi0_in: endpoint {
-> +				remote-endpoint = <&dpi0_out>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi0_out: endpoint {
-> +				remote-endpoint = <&hdmi_connector_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&hdmiddc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_ddc_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_phy {
-> +	mediatek,ibias = <0xa>;
-> +	mediatek,ibias_up = <0x1c>;
-> +	status = "okay";
-> +};
-> +
->   &i2c0 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&i2c0_pins_a>;
-> diff --git a/arch/arm/boot/dts/mt7623n.dtsi b/arch/arm/boot/dts/mt7623n.dtsi
-> index a47e82468895..61545fc541c4 100644
-> --- a/arch/arm/boot/dts/mt7623n.dtsi
-> +++ b/arch/arm/boot/dts/mt7623n.dtsi
-> @@ -10,6 +10,10 @@
->   #include <dt-bindings/memory/mt2701-larb-port.h>
->   
->   / {
-> +	aliases {
-> +		rdma0 = &rdma0;
-> +		rdma1 = &rdma1;
-> +	};
->   	g3dsys: syscon@13000000 {
->   		compatible = "mediatek,mt7623-g3dsys",
->   			     "mediatek,mt2701-g3dsys",
-> @@ -131,4 +135,171 @@ smi_common: smi@1000c000 {
->   		clock-names = "apb", "smi", "async";
->   		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
->   	};
-> +
-> +	ovl: ovl@14007000 {
-> +		compatible = "mediatek,mt7623-disp-ovl",
-> +			     "mediatek,mt2701-disp-ovl";
-> +		reg = <0 0x14007000 0 0x1000>;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_OVL>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	rdma0: rdma@14008000 {
-> +		compatible = "mediatek,mt7623-disp-rdma",
-> +			     "mediatek,mt2701-disp-rdma";
-> +		reg = <0 0x14008000 0 0x1000>;
-> +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_RDMA>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	wdma@14009000 {
-> +		compatible = "mediatek,mt7623-disp-wdma",
-> +			     "mediatek,mt2701-disp-wdma";
-> +		reg = <0 0x14009000 0 0x1000>;
-> +		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_WDMA>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	bls: pwm@1400a000 {
-> +		compatible = "mediatek,mt7623-disp-pwm",
-> +			     "mediatek,mt2701-disp-pwm";
-> +		reg = <0 0x1400a000 0 0x1000>;
-> +		#pwm-cells = <2>;
-> +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
-> +			 <&mmsys CLK_MM_DISP_BLS>;
-> +		clock-names = "main", "mm";
-> +		status = "disabled";
-> +	};
-> +
-> +	color: color@1400b000 {
-> +		compatible = "mediatek,mt7623-disp-color",
-> +			     "mediatek,mt2701-disp-color";
-> +		reg = <0 0x1400b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_COLOR>;
-> +	};
-> +
-> +	dsi: dsi@1400c000 {
-> +		compatible = "mediatek,mt7623-dsi",
-> +			     "mediatek,mt2701-dsi";
-> +		reg = <0 0x1400c000 0 0x1000>;
-> +		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
-> +			 <&mmsys CLK_MM_DSI_DIG>,
-> +			 <&mipi_tx0>;
-> +		clock-names = "engine", "digital", "hs";
-> +		phys = <&mipi_tx0>;
-> +		phy-names = "dphy";
-> +		status = "disabled";
-> +	};
-> +
-> +	mutex: mutex@1400e000 {
-> +		compatible = "mediatek,mt7623-disp-mutex",
-> +			     "mediatek,mt2701-disp-mutex";
-> +		reg = <0 0x1400e000 0 0x1000>;
-> +		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_MUTEX_32K>;
-> +	};
-> +
-> +	rdma1: rdma@14012000 {
-> +		compatible = "mediatek,mt7623-disp-rdma",
-> +			     "mediatek,mt2701-disp-rdma";
-> +		reg = <0 0x14012000 0 0x1000>;
-> +		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	dpi0: dpi@14014000 {
-> +		compatible = "mediatek,mt7623-dpi",
-> +			     "mediatek,mt2701-dpi";
-> +		reg = <0 0x14014000 0 0x1000>;
-> +		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
-> +			 <&mmsys CLK_MM_DPI1_ENGINE>,
-> +			 <&apmixedsys CLK_APMIXED_TVDPLL>;
-> +		clock-names = "pixel", "engine", "pll";
-> +		status = "disabled";
-> +	};
-> +
-> +	hdmi0: hdmi@14015000 {
-> +		compatible = "mediatek,mt7623-hdmi",
-> +			     "mediatek,mt8173-hdmi";
-> +		reg = <0 0x14015000 0 0x400>;
-> +		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
-> +			 <&mmsys CLK_MM_HDMI_PLL>,
-> +			 <&mmsys CLK_MM_HDMI_AUDIO>,
-> +			 <&mmsys CLK_MM_HDMI_SPDIF>;
-> +		clock-names = "pixel", "pll", "bclk", "spdif";
-> +		phys = <&hdmi_phy>;
-> +		phy-names = "hdmi";
-> +		mediatek,syscon-hdmi = <&mmsys 0x900>;
-> +		cec = <&cec>;
-> +		status = "disabled";
-> +	};
-> +
-> +	mipi_tx0: mipi-dphy@10010000 {
-> +		compatible = "mediatek,mt7623-mipi-tx",
-> +			     "mediatek,mt2701-mipi-tx";
-> +		reg = <0 0x10010000 0 0x90>;
-> +		clocks = <&clk26m>;
-> +		clock-output-names = "mipi_tx0_pll";
-> +		#clock-cells = <0>;
-> +		#phy-cells = <0>;
-> +	};
-> +
-> +	cec: cec@10012000 {
-> +		compatible = "mediatek,mt7623-cec",
-> +			     "mediatek,mt8173-cec";
-> +		reg = <0 0x10012000 0 0xbc>;
-> +		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&infracfg CLK_INFRA_CEC>;
-> +		status = "disabled";
-> +	};
-> +
-> +	hdmi_phy: phy@10209100 {
-> +		compatible = "mediatek,mt7623-hdmi-phy",
-> +			     "mediatek,mt2701-hdmi-phy";
-> +		reg = <0 0x10209100 0 0x24>;
-> +		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
-> +		clock-names = "pll_ref";
-> +		clock-output-names = "hdmitx_dig_cts";
-> +		#clock-cells = <0>;
-> +		#phy-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	hdmiddc0: i2c@11013000 {
-> +		compatible = "mediatek,mt7623-hdmi-ddc",
-> +			     "mediatek,mt8173-hdmi-ddc";
-> +		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-> +		reg = <0 0x11013000 0 0x1C>;
-> +		clocks = <&pericfg CLK_PERI_I2C3>;
-> +		clock-names = "ddc-i2c";
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> +&pio {
-> +	hdmi_pins_a: hdmi-default {
-> +		pins-hdmi {
-> +			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
-> +			input-enable;
-> +			bias-pull-down;
-> +		};
-> +	};
-> +
-> +	hdmi_ddc_pins_a: hdmi_ddc-default {
-> +		pins-hdmi-ddc {
-> +			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
-> +				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
-> +		};
-> +	};
->   };
-> 
+> +MODULE_DESCRIPTION("iEi WT61P803 PUZZLE front panel LED driver");
+> +MODULE_AUTHOR("Luka Kovacic <luka.kovacic@sartura.hr>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:leds-iei-wt61p803-puzzle");
+> --
+> 2.20.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
