@@ -2,96 +2,88 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61250C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCB72177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B6821D24
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:39:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LYytBpnc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FtBdSMBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgIICit (ORCPT
+        id S1729305AbgIICjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgIICis (ORCPT
+        Tue, 8 Sep 2020 22:39:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36421 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726002AbgIICjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:38:48 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0468C061573;
-        Tue,  8 Sep 2020 19:38:46 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 8 Sep 2020 22:39:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599619175;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+kOlksnHlL2YKiZmwkKZv4xGASnLuZsp0UtpeOcpuVA=;
+        b=FtBdSMBMM0Wb5c7GG5EOiD/CbiA33wsQQIpENrEUIdyinW3/R+P/k/1mD/bRIihZUNxC7b
+        SxW0AR2xYlYqc4rlySl6dw9Hf+tyBXhMqsvwuIeaic2HePSOS/hDmh4v8ifII6HDeC/wGg
+        aENUipG+XS5i+bSQfHM8CSJ8u9k7PaA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-wAFVfAntNYSuExNRwqOGJQ-1; Tue, 08 Sep 2020 22:39:33 -0400
+X-MC-Unique: wAFVfAntNYSuExNRwqOGJQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmR6D3gbmz9sTS;
-        Wed,  9 Sep 2020 12:38:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599619124;
-        bh=2izng1FlEMeGvkzbnaHy65co67h6yPmYVNwVRf6P3i0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LYytBpncR++dbiT4D3vcQ3D9GqsDhRottrmhn99d37hKi2lyNL+29pqivWPresaz+
-         LoFeRLErapUhbi1yessfmrRKePy+Bz0t97hTbr2jyw8505B6iV+vRae+PjehjWq3Sd
-         1YkWF4AHCSwjUhPhCOX4dSDIVCu9fSQOIB7xj/dgDyISjm2fFVqQGTI8cJMXhrMaaX
-         RxLP5DKXtXOCzlLY87yYe7Q1pEwacE4aE/uJ3HK0aGMI5uqlrBx49lyKJFI4xie+/a
-         cdMo8UH5j4s72N6h74yo8BFySLu0o9IKeUexxkbbMlWzROs/u3yyzHUrI61r8sGiYT
-         anO7orXivOI/A==
-Date:   Wed, 9 Sep 2020 12:38:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the pci tree
-Message-ID: <20200909123843.390cbf28@canb.auug.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3353E8018AB;
+        Wed,  9 Sep 2020 02:39:31 +0000 (UTC)
+Received: from T590 (ovpn-12-76.pek2.redhat.com [10.72.12.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D8D1D5D9E8;
+        Wed,  9 Sep 2020 02:39:22 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 10:39:18 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "Zhao, Haifeng" <haifeng.zhao@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "Zhang, ShanshanX" <shanshanx.zhang@intel.com>,
+        "Jia, Pei P" <pei.p.jia@intel.com>
+Subject: Re: [PATCH] Revert "block: revert back to synchronous request_queue
+ removal"
+Message-ID: <20200909023918.GA1473752@T590>
+References: <20200908075047.5140-1-haifeng.zhao@intel.com>
+ <20200908142128.GA3463@infradead.org>
+ <MWHPR11MB1696A6C649BD434390418FE797260@MWHPR11MB1696.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/AL7W2=v4vj53okQq37zom2.";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR11MB1696A6C649BD434390418FE797260@MWHPR11MB1696.namprd11.prod.outlook.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AL7W2=v4vj53okQq37zom2.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello Haifeng,
 
-Hi all,
+On Wed, Sep 09, 2020 at 02:11:20AM +0000, Zhao, Haifeng wrote:
+> Ming, Christoph,
+>     Could you point out the patch aimed to fix this issue ? I would like to try it.   This issue blocked my other PCI patch developing and verification work, 
+> I am not a BLOCK/NVMe expert, wouldn't to be trapped into other sub-system bugs, so just reported it for other expert's quick fix. 
+> 
 
-After merging the pci tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+Please try the following patch:
 
-WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT=
-_SYMBOL_GPL
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cafe01ef8fcb248583038e1be071383530fe355a
 
-Introduced by commit
+Thanks,
+Ming
 
-  3af45d34d30c ("PCI: dwc: Centralize link gen setting")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/AL7W2=v4vj53okQq37zom2.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YQDMACgkQAVBC80lX
-0GwsNQf/aTIlF/2NlwaoLrYuHIDhfEa/XkV5yluznkda/vnaS0SRQaX1QiTArH+r
-yx2RCs5R82fYRIpxk35NMJcOXTfKXHEMwQEzEfuR8NeCRF3VZGlewwRVfMELrR6P
-BnxmABIWy1PrRrHzEtqdbSsCTNSHpLvJUkRI8NmqNs0uZxEgmsgTUKhIW5vH+QcG
-9KCmwImotFp6xnTEi06Cuds3EoTTNbJXo5j9nq2fvFFfVCiOgO5ogqJ4nVb9CPiW
-y5hF2IYm+fR5Vwyra8rWlUaudE2a92HRLq2PvObEd64pTj9vq+Plo/4q6vks3ykn
-mYLXwtQGFcfD0L82CvtaRQEaTJ3FfQ==
-=tG+m
------END PGP SIGNATURE-----
-
---Sig_/AL7W2=v4vj53okQq37zom2.--
