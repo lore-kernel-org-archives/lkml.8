@@ -2,174 +2,107 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7156C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3E322286
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B44seAHY"
+	by mail.kernel.org (Postfix) with ESMTP id 81F6422286
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:19:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599664750;
+	bh=LkadiQCgclxrhojlBp3ZXM5AWwkkDe239xMCm7eedRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PjaTl0sB2OmAQrBqI38axYAgMezj2w2mUvE4STRb6Yhh+QvNV3qmI8zkmg5LC49iq
+	 hbBMV/+xIecN8w4L6WXBFPVSIiakykdR4w2FyCvUk2T/mBzoxisy81SbMfxQ5CA8ic
+	 dSmOjXexV7+cx9XV4xKJS6Mx274JIE2jtdDeXvNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgIIPSk (ORCPT
+        id S1729691AbgIIPS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729275AbgIILan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:30:43 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CE6C06179A
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:30:32 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0ae7002c1f5e624f33a6aa.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:e700:2c1f:5e62:4f33:a6aa])
+        Wed, 9 Sep 2020 11:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729161AbgIILao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:30:44 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA3541EC027B;
-        Wed,  9 Sep 2020 13:30:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599651028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=gF6Scd5cy14X4AN/Sb0Jw5aLe2Jbw6dlDTXmjAO/chs=;
-        b=B44seAHY/4PMrl8i9ZcuoUnJZeHFdAigK0HDA+DdaVbTPNxcue5uHmM2SlQKqM+t9J9G+b
-        8EmTh0tHmrb4+Xe/wetu/GOXDfOsinxsiEWEGjmpYxwRFpUKA5IDpLYRQMK1CQySP3GrKM
-        igb7amYKtNw/VwScXLlD7byipQopFmg=
-Date:   Wed, 9 Sep 2020 13:30:22 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
-Message-ID: <20200909113022.GA12237@zn.tnic>
-References: <20200906212130.GA28456@zn.tnic>
- <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
- <20200908094650.GA25236@zn.tnic>
- <20200908100837.GC25236@zn.tnic>
- <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
- <20200908152539.GE25236@zn.tnic>
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C7221582;
+        Wed,  9 Sep 2020 11:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599650582;
+        bh=LkadiQCgclxrhojlBp3ZXM5AWwkkDe239xMCm7eedRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UrrGsOcTrWGEPvnUvln7SG7bMJdZ8HTJlYOThf6sAUD4Tsyc62iZhuN4/kAh2Zodw
+         6l6UYCdDFnpiAt9e7kHXzKb1ps6JA3d4pmwjio2Yzbtz0FIfh8vjs3UJXhbNa8/cPw
+         r1AD8bDOoFfbRIIic8PEdNoQl6PYUrAmdxQPEjCE=
+Date:   Wed, 9 Sep 2020 12:22:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Camel Guo <camelg@axis.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>, Camel Guo <Camel.Guo@axis.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel <kernel@axis.com>
+Subject: Re: [PATCH 1/2] ASoC: tlv320adcx140: Avoid accessing invalid
+ gpio_reset
+Message-ID: <20200909112216.GB4926@sirena.org.uk>
+References: <20200908083521.14105-1-camel.guo@axis.com>
+ <159958562064.16576.7853800514030717096.b4-ty@kernel.org>
+ <1e17f203-7b60-bf97-4515-937e722f5ef7@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
 Content-Disposition: inline
-In-Reply-To: <20200908152539.GE25236@zn.tnic>
+In-Reply-To: <1e17f203-7b60-bf97-4515-937e722f5ef7@axis.com>
+X-Cookie: MIT:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I guess something as straightforward as this:
 
----
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 0ba24dfffdb2..9893caaf2696 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -373,10 +373,27 @@ static int msr_to_offset(u32 msr)
- 	return -1;
- }
- 
-+__visible bool ex_handler_rdmsr_fault(const struct exception_table_entry *fixup,
-+				      struct pt_regs *regs, int trapnr,
-+				      unsigned long error_code,
-+				      unsigned long fault_addr)
-+{
-+	if (pr_warn_once("MSR access error: RDMSR from 0x%x at rIP: 0x%lx (%pS)\n",
-+			 (unsigned int)regs->cx, regs->ip, (void *)regs->ip))
-+		show_stack_regs(regs);
-+
-+	panic("MCA Architectural violation!\n");
-+
-+	while (true)
-+		cpu_relax();
-+
-+	return true;
-+}
-+
- /* MSR access wrappers used for error injection */
- static u64 mce_rdmsrl(u32 msr)
- {
--	u64 v;
-+	DECLARE_ARGS(val, low, high);
- 
- 	if (__this_cpu_read(injectm.finished)) {
- 		int offset = msr_to_offset(msr);
-@@ -386,21 +403,42 @@ static u64 mce_rdmsrl(u32 msr)
- 		return *(u64 *)((char *)this_cpu_ptr(&injectm) + offset);
- 	}
- 
--	if (rdmsrl_safe(msr, &v)) {
--		WARN_ONCE(1, "mce: Unable to read MSR 0x%x!\n", msr);
--		/*
--		 * Return zero in case the access faulted. This should
--		 * not happen normally but can happen if the CPU does
--		 * something weird, or if the code is buggy.
--		 */
--		v = 0;
--	}
-+	/*
-+	 * RDMSR on MCA MSRs should not fault. If they do, this is very much an
-+	 * architectural violation and needs to be reported to hw vendor. Panic
-+	 * the box to not allow any further progress.
-+	 */
-+	asm volatile("1: rdmsr\n"
-+		     "2:\n"
-+		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_rdmsr_fault)
-+		     : EAX_EDX_RET(val, low, high) : "c" (msr));
- 
--	return v;
-+
-+	return EAX_EDX_VAL(val, low, high);
-+}
-+
-+__visible bool ex_handler_wrmsr_fault(const struct exception_table_entry *fixup,
-+				      struct pt_regs *regs, int trapnr,
-+				      unsigned long error_code,
-+				      unsigned long fault_addr)
-+{
-+	if (pr_warn_once("MSR access error: WRMSR to 0x%x (tried to write 0x%08x%08x) at rIP: 0x%lx (%pS)\n",
-+			 (unsigned int)regs->cx, (unsigned int)regs->dx, (unsigned int)regs->ax,
-+			 regs->ip, (void *)regs->ip))
-+		show_stack_regs(regs);
-+
-+	panic("MCA Architectural violation!\n");
-+
-+	while (true)
-+		cpu_relax();
-+
-+	return true;
- }
- 
- static void mce_wrmsrl(u32 msr, u64 v)
- {
-+	u32 low, high;
-+
- 	if (__this_cpu_read(injectm.finished)) {
- 		int offset = msr_to_offset(msr);
- 
-@@ -408,7 +446,15 @@ static void mce_wrmsrl(u32 msr, u64 v)
- 			*(u64 *)((char *)this_cpu_ptr(&injectm) + offset) = v;
- 		return;
- 	}
--	wrmsrl(msr, v);
-+
-+	low  = (u32)v;
-+	high = (u32)(v >> 32);
-+
-+	/* See comment in mce_rdmsrl() */
-+	asm volatile("1: wrmsr\n"
-+		     "2:\n"
-+		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_wrmsr_fault)
-+		     : : "c" (msr), "a"(low), "d" (high) : "memory");
- }
- 
- /*
+--i9LlY+UWpKt15+FH
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Regards/Gruss,
-    Boris.
+On Wed, Sep 09, 2020 at 12:06:45PM +0200, Camel Guo wrote:
+> On 9/8/20 7:20 PM, Mark Brown wrote:
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> > Applied to
+
+> > https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-n=
+ext
+
+> I think it is "ASoC: tlv320adcx140: Wake up codec before register setting"
+> that is applied to for next not this one.
+
+As the mail says:
+
+> > [1/1] ASoC: tlv320adcx140: Wake up codec before accessing register
+> >  =A0=A0=A0=A0=A0 commit: 1a5ce48fd667128e369fdc7fb87e21539aed21b5
+
+You didn't send a cover letter.
+
+--i9LlY+UWpKt15+FH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9YuugACgkQJNaLcl1U
+h9BzRAf/eej3UqPw1MAjqnCxeGC25+X4SQHNNj9q/MDJxHNi4cmZhw1xymwlhMvH
+LzzZuVLNsf+iBGnr+Pb1bFs+gbXPK4R2mes/HOAnfrBtTmQaaVdz7gI6GauLubZl
+UhK+XUiP6nLgOw/hQcF0dc9mJzZcL74wixT1Qb4nADxZMIS9NvWsNb9IX7/S4Zi6
+6u6In1DZFzMICqDVirAmTNXwDkEuoK+SuFzQqibMIQ/KOKrNuyevcuFbfEETzeNP
+lCdyuMyDzJp2oAVSRoos9OUQ9K+9szg74RzZ98yjDwBE/sX17iVPO1exFaNS1IG7
+g+jkoNwl+SVDGWK9ouoSKgmmzTUDcQ==
+=hYvu
+-----END PGP SIGNATURE-----
+
+--i9LlY+UWpKt15+FH--
