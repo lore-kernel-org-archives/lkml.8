@@ -2,160 +2,139 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D65AC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0AE22268
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B0E22269
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMZskFVQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lq0jJ4wh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgIIPIb (ORCPT
+        id S1726293AbgIIPLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
+        Wed, 9 Sep 2020 11:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730021AbgIIL7q (ORCPT
+        with ESMTP id S1730067AbgIIL6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:59:46 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A499C06179E;
-        Wed,  9 Sep 2020 04:58:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id y15so2082580wmi.0;
-        Wed, 09 Sep 2020 04:58:54 -0700 (PDT)
+        Wed, 9 Sep 2020 07:58:02 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528D9C0617A2
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:58:01 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id k25so3180498ljk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2MjbEB7ZY2uJBr8LETR57xA5qxS8KO0vG8+bEIyBh6o=;
-        b=BMZskFVQHIxW+hpXeAE3v9XPaAP/BQdHBxrGpVzKx/T1GRfhdPUGUkG7gq1uq9loJw
-         M0x/+i4ieezcA5TS8TcUUkZD59yjrNBCPkSOL4tACCrboaPOqxEkti1HELdwVGaQcPw8
-         IBEDL6Ck9u7nSBEmK47Mm6QozbJuqSgkORCCfgWaX1ZBD7Pyc8FcPH8k2Oc//N1aIxz0
-         NjjJ5Hzhp5zWxTnKnh0+wrvC0yoRSyk7OssE+U0NXzurJdNJirAH9xm529tkqEJMqmB8
-         GAjlJUztJxp1NXN6KtFYbV3Ru97oTKW3N1A60YZZLJikd3BrhHIPDUZa1ScbaawUeAT1
-         ePmg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=veMOlwm85HGnlMSTVN952J/Jqjc/7rvdCvDfPKEre0c=;
+        b=Lq0jJ4whRo5WT/1EwrgGOl0XtPUPtvtGXLC81q5hE5FLoHPxnCgByqRckcoRWhj69y
+         8POlYqx76p1PczfUYqXfb+R7q5w0oL+bb5PyhrPpsQU6UKMKeUmSKkDaAL+s7kMke30d
+         YiGusFifL3kjDo2Y3BUUdRoscclcabbbQiDZACAMH/75Q1mpxTyMd9tTtFm3ATcURbyg
+         04CbyAHdOELljt3QOr0smY9DXjCBobqHTrbDupSNhYUX41fkK4Xwy4UFEbq3Cdo/dBpR
+         ZqwdOCqg5JfSW9dyYIRNMjwnVLuw8KhzqqZqiD74IP0vOQ4EN43WzK6XOkONzPBpOh5Y
+         r9JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2MjbEB7ZY2uJBr8LETR57xA5qxS8KO0vG8+bEIyBh6o=;
-        b=WOynl3kn9+yEKjOTI1FcC2b0E9SCOGGQjmwxgf7ObJu1oKlIpB3+gd0fqJg0xUgkTq
-         xP4qXLPWhrQaGNVEAdcnKwwwkDhhMi8OIcCJYHOk47xf0/omNXZ3Xr1vC5BZN5E4nm6x
-         wuRrSlBbUJf8Y0udTXF0Zn6IlMB9arg5A3hfyDCrkiL7EpJXmO1yaZWCe/DEPlX9HoqB
-         CZTRBL6xDgxlwY5skmmtUTedelukpQtD/2DVEFMoi9Qc4I19Fv/x3hrurikSxHbkT85Y
-         44pFH8KFUhPVns/jTOoQzvWg3qLg/5Zc5Sd19RFKgOn8yaIT6Qy9TkCYlrga/9qIuSs0
-         j6wg==
-X-Gm-Message-State: AOAM5315mePOuCAlmegM56TIKUxIASjJlybT+x0F1w0wLC7N1VEO3v72
-        4P9Qm5JxGUJ+ybqCMdi03IAox5Nfoxo=
-X-Google-Smtp-Source: ABdhPJxeyMAg/oSJ1/Cuk8qhdTZYljBX/3D60/Sw0CPPcu8wFHUaahnNGrrMsadVL1xxBKXHmclzjA==
-X-Received: by 2002:a7b:c182:: with SMTP id y2mr2824557wmi.21.1599652733697;
-        Wed, 09 Sep 2020 04:58:53 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
-        by smtp.gmail.com with ESMTPSA id t188sm3750551wmf.41.2020.09.09.04.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 04:58:53 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, milan.opensource@gmail.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.com>
-Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-To:     Jan Kara <jack@suse.cz>
-References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
- <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
- <20200908112742.GA2956@quack2.suse.cz>
- <7be61144-0e77-3c31-d720-f2cbe56bc81e@gmail.com>
- <20200909112110.GA29150@quack2.suse.cz>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <0f473a75-fd5a-82f7-1d0e-e9c168414498@gmail.com>
-Date:   Wed, 9 Sep 2020 13:58:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=veMOlwm85HGnlMSTVN952J/Jqjc/7rvdCvDfPKEre0c=;
+        b=ByCsIqsI5CX2yvVEeg17Tz2XcGU7UOtDH4jB3aK6BD0VZ9LvHGDaOWnihs3tkyH9F7
+         z+zaCy6V38NVp5etFhBztolHuvh++kGCZ1Kpfh2tbrqowmhcGP+jlHKd4XsdVkYdq0pr
+         tGVZKQ8g/Pe2DpwsDvPFmZ4Gen1yFFiXwNxBYs8O6d5Kms5dB9m7FDjLWE8L6BrFY5NT
+         Xq6wqolVQtPYFU3qNhSBRvNxvUjf443kOdcajm+Xs041Kf23pvHovLXPCsZjPKzy1UFY
+         2dIRAWSVidkc8/+cBn1TMUsxJlJDE+YEotJH/SofzA+6LYV0eRxj4kQk4RNIP4rFU1tJ
+         AZVg==
+X-Gm-Message-State: AOAM531/QdD3HJ6EW9HXhiJHED7VY4fM5EZ6A4fw9LZGTN9hBeeJXubB
+        8tTZgBMPDHYDCjnXBd5GO3W8HmObxmRy08zZPe9Ijw==
+X-Google-Smtp-Source: ABdhPJwCf3FmxgZrTisFeaRuj2pxBcn3CZA8Jzyk/0TkRmXwR5H+xd9VJWHscFXDHtkwCveC2Trx20irnwH9IVujNcM=
+X-Received: by 2002:a2e:a177:: with SMTP id u23mr1687459ljl.104.1599652679725;
+ Wed, 09 Sep 2020 04:57:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200909112110.GA29150@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200822163250.63664-1-paul@crapouillou.net> <20200822163250.63664-4-paul@crapouillou.net>
+In-Reply-To: <20200822163250.63664-4-paul@crapouillou.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Sep 2020 13:57:48 +0200
+Message-ID: <CACRpkdaN7S9PoYd2d-hxUNq9NXA52P0TugwRzyFuCTCc6Onp=Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] drm: Add SPI DBI host driver
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Noralf Tronnes <noralf@tronnes.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        od@zcrc.me,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[CC += Neil, since he wrote the text we're talking about]
+Hi Paul,
 
-Hello Jan,
+I looked a bit at this patch
 
-On 9/9/20 1:21 PM, Jan Kara wrote:
-> On Wed 09-09-20 12:52:48, Michael Kerrisk (man-pages) wrote:
->>> So the error state isn't really stored "on pages in the file mapping".
->>> Current implementation (since 4.14) is that error state is stored in struct
->>> file (I think this tends to be called "file description" in manpages) and
->>
->> (Yes, "open file description" is the POSIX terminology for the thing that
->> sits between the FD and the inode--struct file in kernel parlance--and I
->> try to follow POSIX terminology in the manual pages where possible.
->>
->>> so EIO / ENOSPC is reported once for each file description of the file that
->>> was open before the error happened. Not sure if we want to be so precise in
->>> the manpages or if it just confuses people. 
->>
->> Well, people are confused now, so I think more detail would be good.
->>
->>> Anyway your takeway that no
->>> error on subsequent fsync() does not mean data was written is correct.
->>
->> Thanks. (See also my rply to Jeff.)
->>
->> By the way, a question related to your comments above. In the 
->> errors section, there is this:
->>
->>        EIO    An  error  occurred during synchronization.  This error may
->>               relate to data written to some other file descriptor on the
->> *             same  file.   Since Linux 4.13, errors from write-back will
->>               be reported to all file descriptors that might have written
->>               the  data  which  triggered  the  error.   Some filesystems
->>               (e.g., NFS) keep close track of  which  data  came  through
->>               which  file  descriptor,  and  give more precise reporting.
->>               Other  filesystems  (e.g.,  most  local  filesystems)  will
->>               report errors to all file descriptors that were open on the
->> *             file when the error was recorded.
->>
->> In the marked (*) lines, we have the word "file". Is this accurate? I mean, I
->> would normally take "file" in this context to mean the inode ('struct inode').
->> But I wonder if really what is meant here is "open file description"
->> ('struct file'). In other words, is the EIO being generated for all FDs 
->> connected to the same open file description, or for all FDs for all of the
->> open file descriptions connected to the inode? Your thoughts?
-> 
-> The error gets reported once for each "open file description" of the file
-> (inode) where the error happened. If there are multiple file descriptors
-> pointing to the same open file description, then only one of those file
-> descriptors will see the error. This is inevitable consequence of kernel
-> storing the error state in struct file and clearing it once it is
-> reported...
+On Sat, Aug 22, 2020 at 6:33 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-So, the text in wrong two respects, I believe:
+> +config DRM_MIPI_DBI_SPI
+> +       tristate "SPI host support for MIPI DBI"
+> +       depends on DRM && OF && SPI
 
-* It should be phrased in terms of "open file description", not "file",
-in the lines that I marked.
+I think you want to depend on SPI_HOST actually.
 
-* Where it says "to all file descriptors" (twice), it should rather say
-"to any of the file descriptors [that refer to the open file description]"
+> +       struct gpio_desc *dc;
 
-Do you agree?
+This dc is very much undocumented, so I can only guess what
+it is for, please add some kerneldoc explaining what it is.
+I suppose it is in the DBI spec but I don't have it.
 
-Thanks,
+> +       gpiod_set_value_cansleep(dbi->dc, 0);
 
-Michael
+Since it is optional I usually prefer to do it like this:
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+if (dbi->dc)
+   gpiod_set_value_cansleep(dbi->dc, 0);
+
+> +  gpiod_set_value_cansleep(dbi->dc, 1);
+
+Since you drive this low when you assert it and
+high when you de-assert it, inverse this and mark the
+GPIO line as GPIO_ACTIVE_LOW in the device tree
+instead.
+
+> +       dbi->dc = devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
+> +       if (IS_ERR(dbi->dc)) {
+> +               dev_err(dev, "Failed to get gpio 'dc'\n");
+> +               return PTR_ERR(dbi->dc);
+> +       }
+
+Currently you are requesting the line asserted according to the
+above logic. Is that what you want?
+
+If you change the DT to GPIO_ACTIVE_LOW then this seems
+correct.
+
+But I am overall a bit curious about this "dc" thing. What is it
+really? It seems suspiciously similar to a SPI chip select,
+and then that is something that should be handled by the
+SPI core and set as cs-gpios in the device tree instead.
+It is certainly used exactly like a chip select as far as I can
+tell.
+
+Yours,
+Linus Walleij
