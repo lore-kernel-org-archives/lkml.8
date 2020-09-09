@@ -2,155 +2,146 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B907EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3ECC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8849721D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DBF21D46
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="koV/+i57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgIIUsW (ORCPT
+        id S1730108AbgIIUsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:48:22 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39014 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730021AbgIIUsU (ORCPT
+        Wed, 9 Sep 2020 16:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgIIUsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:48:20 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3DD4C1C0B87; Wed,  9 Sep 2020 22:48:16 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 22:48:15 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 2/7] leds: add generic API for LEDs
- that can be controlled by hardware
-Message-ID: <20200909204815.GB20388@amd>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-3-marek.behun@nic.cz>
+        Wed, 9 Sep 2020 16:48:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CA63C061573;
+        Wed,  9 Sep 2020 13:48:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g4so4383702wrs.5;
+        Wed, 09 Sep 2020 13:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=msyTyBuqg+S9lSfyJBnZ2ellRZt6dmdc0yChx+UPxKo=;
+        b=koV/+i57bGxaeWzcaR3ot72iqyXmIiat5L82lel4bkbFuylPHtkYD/RyZwOy8nHAfn
+         E/ess/ZvcMgSwczW+yo3TBTUZNicVuzKtLp05CBwoHOo26gi1+SIW96AklvRX+0TeaVT
+         slR0PB8woP9gDL4LqFubK5Hl+RNqE0CWnky1JJMilUg8hkh4w6pBh2xBUycFJ0uE2cr+
+         i3W3j/fywmoareT5PKXr1dycWj7fFWqh88hXhygfiBLAhDkVxKEXSEn20+Hq+tjlM3PI
+         vH1sasf1KXgZuKIX1Vl1Cqno6BYsaEDMEwfdA2/NhswquDG0MPGmS4Jpc8y6s8JXyepn
+         6JuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=msyTyBuqg+S9lSfyJBnZ2ellRZt6dmdc0yChx+UPxKo=;
+        b=tY//74sls6ZTv55H8NcG4Uuos4wGb9v5EV/4qr4HFiRfrJUzk2fZRAFRSja1imaU/U
+         5S7IqJA0+8/+qv0b7F/pxdqh6kPxWFpR3Ny1KqJBrvnkNfpXuO7QsiRYslwrZrXik+Vq
+         qBVO9BWMMl86nXhdKnkL4szDvegkJokL1CgwQBqEr7kCVz658jaJXHFhfZJu54wCXt5F
+         BYsEAO1eouLm+XcT9HkdjAb0R/Fj9C/qEfT6eGdbfHepjXLpEAvwoQVsdA4Myh2uytP3
+         x36+4p9aFbveg1XVWAocXbuJRqCGJyhVLLc0cAg8WF+hCsSp3ooOz8ZO4gAXBFUMAOft
+         l9BA==
+X-Gm-Message-State: AOAM531wMitRCu9WGkxt/A/IneB6qaPxJjIM3JwvHkzmQB19NE1lOLK7
+        88pkvkLqOfqUIwoR4rH6DVc=
+X-Google-Smtp-Source: ABdhPJzqMJb3CpQd6FD2aRtPqLCg50OLeNOC9diM0ZequY6MDGcUMHsvN30FytEWsWjy1JFN7Lyvvg==
+X-Received: by 2002:a5d:4152:: with SMTP id c18mr5963823wrq.277.1599684520297;
+        Wed, 09 Sep 2020 13:48:40 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id 189sm427103wmb.3.2020.09.09.13.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 13:48:39 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: media: atomisp: Don't do unnecessary zeroing of memory
+Date:   Wed,  9 Sep 2020 21:48:00 +0100
+Message-Id: <20200909204807.36501-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
-Content-Disposition: inline
-In-Reply-To: <20200909162552.11032-3-marek.behun@nic.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In a few places in pci/sh_css_params.c, memset is used to zero memory
+immediately before it is freed. As none of these structs appear to
+contain sensitive information, just remove the calls to memset.
 
---ADZbWkCsHQ7r3kzd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/staging/media/atomisp/pci/sh_css_params.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Hi!
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_params.c b/drivers/staging/media/atomisp/pci/sh_css_params.c
+index 2c67c23b3700..24fc497bd491 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_params.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_params.c
+@@ -4378,7 +4378,6 @@ ia_css_3a_statistics_free(struct ia_css_3a_statistics *me)
+ 	if (me) {
+ 		kvfree(me->rgby_data);
+ 		kvfree(me->data);
+-		memset(me, 0, sizeof(struct ia_css_3a_statistics));
+ 		kvfree(me);
+ 	}
+ }
+@@ -4417,7 +4416,6 @@ ia_css_dvs_statistics_free(struct ia_css_dvs_statistics *me)
+ 	if (me) {
+ 		kvfree(me->hor_proj);
+ 		kvfree(me->ver_proj);
+-		memset(me, 0, sizeof(struct ia_css_dvs_statistics));
+ 		kvfree(me);
+ 	}
+ }
+@@ -4459,7 +4457,6 @@ ia_css_dvs_coefficients_free(struct ia_css_dvs_coefficients *me)
+ 	if (me) {
+ 		kvfree(me->hor_coefs);
+ 		kvfree(me->ver_coefs);
+-		memset(me, 0, sizeof(struct ia_css_dvs_coefficients));
+ 		kvfree(me);
+ 	}
+ }
+@@ -4551,7 +4548,6 @@ ia_css_dvs2_statistics_free(struct ia_css_dvs2_statistics *me)
+ 		kvfree(me->ver_prod.odd_imag);
+ 		kvfree(me->ver_prod.even_real);
+ 		kvfree(me->ver_prod.even_imag);
+-		memset(me, 0, sizeof(struct ia_css_dvs2_statistics));
+ 		kvfree(me);
+ 	}
+ }
+@@ -4635,7 +4631,6 @@ ia_css_dvs2_coefficients_free(struct ia_css_dvs2_coefficients *me)
+ 		kvfree(me->ver_coefs.odd_imag);
+ 		kvfree(me->ver_coefs.even_real);
+ 		kvfree(me->ver_coefs.even_imag);
+-		memset(me, 0, sizeof(struct ia_css_dvs2_coefficients));
+ 		kvfree(me);
+ 	}
+ }
+@@ -4710,7 +4705,6 @@ ia_css_dvs2_6axis_config_free(struct ia_css_dvs_6axis_config *dvs_6axis_config)
+ 		kvfree(dvs_6axis_config->ycoords_y);
+ 		kvfree(dvs_6axis_config->xcoords_uv);
+ 		kvfree(dvs_6axis_config->ycoords_uv);
+-		memset(dvs_6axis_config, 0, sizeof(struct ia_css_dvs_6axis_config));
+ 		kvfree(dvs_6axis_config);
+ 	}
+ }
+-- 
+2.28.0
 
-> Many an ethernet PHY (and other chips) supports various HW control modes
-> for LEDs connected directly to them.
-
-I guess this should be
-
-"Many ethernet PHYs (and other chips) support various HW control modes
-for LEDs connected directly to them."
-
-> This API registers a new private LED trigger called dev-hw-mode. When
-> this trigger is enabled for a LED, the various HW control modes which
-> are supported by the device for given LED can be get/set via hw_mode
-> sysfs file.
->=20
-> Signed-off-by: Marek Beh=FAn <marek.behun@nic.cz>
-> ---
->  .../sysfs-class-led-trigger-dev-hw-mode       |   8 +
->  drivers/leds/Kconfig                          |  10 +
-
-I guess this should live in drivers/leds/trigger/ledtrig-hw.c . I'd
-call the trigger just "hw"...
-
-> +Contact:	Marek Beh=FAn <marek.behun@nic.cz>
-> +		linux-leds@vger.kernel.org
-> +Description:	(W) Set the HW control mode of this LED. The various availa=
-ble HW control modes
-> +		    are specific per device to which the LED is connected to and per L=
-ED itself.
-> +		(R) Show the available HW control modes and the currently selected one.
-
-80 columns :-) (and please fix that globally, at least at places where
-it is easy, like comments).
-
-> +	return 0;
-> +err_free:
-> +	devm_kfree(dev, led);
-> +	return ret;
-> +}
-
-No need for explicit free with devm_ infrastructure?
-
-> +	cur_mode =3D led->ops->led_get_hw_mode(dev->parent, led);
-> +
-> +	for (mode =3D led->ops->led_iter_hw_mode(dev->parent, led, &iter);
-> +	     mode;
-> +	     mode =3D led->ops->led_iter_hw_mode(dev->parent, led, &iter)) {
-> +		bool sel;
-> +
-> +		sel =3D cur_mode && !strcmp(mode, cur_mode);
-> +
-> +		len +=3D scnprintf(buf + len, PAGE_SIZE - len, "%s%s%s ", sel ? "[" : =
-"", mode,
-> +				 sel ? "]" : "");
-> +	}
-> +
-> +	if (buf[len - 1] =3D=3D ' ')
-> +		buf[len - 1] =3D '\n';
-
-Can this ever be false? Are you accessing buf[-1] in such case?
-
-> +int of_register_hw_controlled_leds(struct device *dev, const char *devic=
-ename,
-> +				   const struct hw_controlled_led_ops *ops);
-> +int hw_controlled_led_brightness_set(struct led_classdev *cdev, enum led=
-_brightness brightness);
-> +
-
-Could we do something like hw_controlled_led -> hw_led to keep
-verbosity down and line lengths reasonable? Or hwc_led?
-
-> +extern struct led_hw_trigger_type hw_control_led_trig_type;
-> +extern struct led_trigger hw_control_led_trig;
-> +
-> +#else /* !IS_ENABLED(CONFIG_LEDS_HW_CONTROLLED) */
-
-CONFIG_LEDS_HWC? Or maybe CONFIG_LEDTRIG_HW?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ADZbWkCsHQ7r3kzd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9ZP48ACgkQMOfwapXb+vLwZQCfYh+LPNKqjNBysaBhnmN2tuNz
-s0kAmwRZTEfv7ZWdx/OVgOPKU2VXE4z4
-=ABk9
------END PGP SIGNATURE-----
-
---ADZbWkCsHQ7r3kzd--
