@@ -2,98 +2,107 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B9CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DEAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 001952166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aZOUYOke";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QCoHORN2"
+	by mail.kernel.org (Postfix) with ESMTP id 057072166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599671348;
+	bh=3HW7/YZpNR5PKfJypmmXKtFx2FgzoWRoaPzw05ImMYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Fx7Lxs0kEvcy+DTzk5YhipaIAZuq/3P3wRq6ft3T1Yc8+6wO6VwhrhXjV4au4bKWE
+	 dM7CHcU/MqdYugw54wAgTC0FsJVxMLul67gio3Av04LLKxiQq7iGaGeSuPdvw0COta
+	 z97IISkhD0nbcy1sX442Y+PlbqIRIPrm7kq2wv7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgIIRIm (ORCPT
+        id S1730572AbgIIRJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:08:42 -0400
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:45228
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730379AbgIIPgt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:36:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599661222;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=S/7AGadvVgxsZIouyH+XWr5+pvCP3bzpW2mtxfDx8qk=;
-        b=aZOUYOkeZpw+9JYvdA+FjaxuyIwgeP8O0cKnAnraHnSPTWZfVSJCPUyHp3CYJP6j
-        EcEQKvoENMcpJWXOc8fyLeqGrCNljRwRVHI859qzARJbpLi0m5+O/gKYQkvS1m34luj
-        iWtYtrrt0nbjJb0AAElCcjijZz9sKlkRzpG921m0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599661222;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=S/7AGadvVgxsZIouyH+XWr5+pvCP3bzpW2mtxfDx8qk=;
-        b=QCoHORN2R0ql7fZ0513y1nm0Tv+1Ib0mlYHXU2r0E3jJ6BIABXYeMXtYz2A0Yb5W
-        NSOUbR/5ZtLRALaXWMjXhti/7TqzVbjmCfDl1MhILtSJqe5quT/bRrCviX3RJFsbw4o
-        wH7G+lD4dTVTP2thPgv+bGN8hcJlBF2Mp6zUZdSE=
+        Wed, 9 Sep 2020 13:09:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730354AbgIIPgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:36:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00C142078E;
+        Wed,  9 Sep 2020 15:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599665771;
+        bh=3HW7/YZpNR5PKfJypmmXKtFx2FgzoWRoaPzw05ImMYU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wLzlH809IZZ8Q09B/sG7jf9PBljl6iCXX/4tdxMzMRKUtkG2wiGZR4Cc90e61dTy5
+         1dUPctUxZ8MElnHsnXk2AIxOxLjiSoNmcaIMcOMyywsWtCaAc//woQfJxCoEJg7YY+
+         UF4UtexqtQji6PJ8oc/lVuKjdWwKoCies9lvjLG8=
+Date:   Wed, 9 Sep 2020 16:35:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Device addition to the tlv320adcx140 and tas2562
+Message-ID: <20200909153525.GF4926@sirena.org.uk>
+References: <8c47c81f-5f83-2cf4-7bf1-62201b35bed3@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 9 Sep 2020 14:20:22 +0000
-From:   skakit@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V4 1/4] arm64: dts: sc7180: Add wakeup support over UART
- RX
-In-Reply-To: <20200903171711.GL3419728@google.com>
-References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
- <1599145498-20707-2-git-send-email-skakit@codeaurora.org>
- <20200903171711.GL3419728@google.com>
-Message-ID: <01010174733d2ad7-69390477-c9ca-4d17-a1c6-9754cc3cfd3a-000000@us-west-2.amazonses.com>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.09-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
+Content-Disposition: inline
+In-Reply-To: <8c47c81f-5f83-2cf4-7bf1-62201b35bed3@ti.com>
+X-Cookie: MIT:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-03 22:47, Matthias Kaehlcke wrote:
-> On Thu, Sep 03, 2020 at 08:34:55PM +0530, satya priya wrote:
->> Add the necessary pinctrl and interrupts to make UART wakeup capable.
->> 
->> If QUP function is selected in sleep state, UART RTS/RFR is pulled 
->> high
->> during suspend and BT SoC not able to send wakeup bytes. So, configure
->> GPIO mode in sleep state to keep it low during suspend.
->> 
->> Signed-off-by: satya priya <skakit@codeaurora.org>
->> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> 
-> One more doubt: does it actually make sense/is it safe to add the
-> sleep config for all UARTs in the SoC file?
 
-yes, it is not good to have it this way. We are going to remove all this 
-and add sleep config for only uart3 (BT uart) in board specific file.
+--sDKAb4OeUBrWWL6P
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I wonder if there could
-> be undesired behavior (like noise on TX or RTS looking active to the
-> other side) without the corresponding pinconf in the board file. If
-> the pinconf is needed to avoid unexpected behavior then it is better
-> to change the muxing in the board file to have a sane default
-> configuration in the SoC .dtsi.
-> 
+On Wed, Sep 09, 2020 at 10:01:51AM -0500, Dan Murphy wrote:
 
-ok, will add pinmux for uart3 sleep state in board file.
+> For the TLV320adcx140 driver I have another device which is register and
+> bitmap compatible but it does not support Analog microphones or Line In l=
+ike
+> the x140.
 
-> From a quick grep it seems that most SoCs don't specify a sleep config
-> for their UART pins and some boards add it in their DT.
+> Should I add a new driver specifically for this part or should I add the =
+new
+> audio maps, widgets and controls to the existing driver?=A0 This would ma=
+ke
+> this existing driver really big in terms of LoC and object size.
+
+Are they sharing anything (eg, the code is the same but the data tables
+vary) or is it just two unrelated devices?
+
+> Similar question for the TAS2562.=A0 I have a new device that is register=
+ and
+> bitmap compatible but removes the I/V sense. Adding this new device to the
+> existing driver wouldn't be as intrusive as the x140 as the audio map and
+> controls are much simpler
+
+That definitely sounds like sharing the driver makes sense.
+
+--sDKAb4OeUBrWWL6P
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9Y9jwACgkQJNaLcl1U
+h9BRGgf/a6zuU0wHCq5OOO1RymVVtslMfSmac1WHzxfuSkO69/NsPCzFN75Hf+aU
+41aKjkomQcSwL+xAhIG5dvAKqtgxWUpJ/SmMtFT3EVIv3vwerr2aMlK25j1Im444
+IJzswJ5J7U+FbLc7Ie8bs18+QX3Vnq/iRyt3tgT6sqEvlpPOQuWeS9a0WSVyYpKc
+Ay6Rju4a2WzTYF5+B3XUsNZwpmlBG2UgG+thli0zqg8z/4brKGBSiethg40D6XcV
+NeqLIj0x5pe2H/5T61++/KSibVi0HQZoKeUYnLwHM9am0fqxJtk4I2hFCC0d4wHS
+kMEY/ad8Gny5AGUphwwmp9WxtI3XdQ==
+=kQP4
+-----END PGP SIGNATURE-----
+
+--sDKAb4OeUBrWWL6P--
