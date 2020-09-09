@@ -6,48 +6,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3497DC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832E8C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED620206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE51206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbgIIQ3w (ORCPT
+        id S1730576AbgIIQaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56368 "EHLO
+        Wed, 9 Sep 2020 12:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731129AbgIIQ1k (ORCPT
+        with ESMTP id S1731126AbgIIQ1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:27:40 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A11DC061796
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 06:27:41 -0700 (PDT)
+        Wed, 9 Sep 2020 12:27:32 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF70C0617A5;
+        Wed,  9 Sep 2020 06:30:08 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BmjVt10gLz9sTN; Wed,  9 Sep 2020 23:27:33 +1000 (AEST)
+        id 4BmjWR3xYDz9sVW; Wed,  9 Sep 2020 23:28:03 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+To:     linuxppc-dev@lists.ozlabs.org, Stephen Kitt <steve@sk2.org>,
+        Scott Wood <oss@buserror.net>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <e0bcdabac45fcd26c02d7df273bd4a5827c6033d.1596716375.git.christophe.leroy@csgroup.eu>
-References: <e0bcdabac45fcd26c02d7df273bd4a5827c6033d.1596716375.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH] powerpc/irq: Drop forward declaration of struct irqaction
-Message-Id: <159965716629.808686.18358177011917781182.b4-ty@ellerman.id.au>
-Date:   Wed,  9 Sep 2020 23:27:33 +1000 (AEST)
+Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+In-Reply-To: <20200807152713.381588-1-steve@sk2.org>
+References: <20200807152713.381588-1-steve@sk2.org>
+Subject: Re: [PATCH] arch/powerpc: use simple i2c probe function
+Message-Id: <159965716684.808686.4339273777351365516.b4-ty@ellerman.id.au>
+Date:   Wed,  9 Sep 2020 23:28:03 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 12:19:46 +0000 (UTC), Christophe Leroy wrote:
-> Since the commit identified below, the forward declaration of
-> struct irqaction is useless. Drop it.
+On Fri, 7 Aug 2020 17:27:13 +0200, Stephen Kitt wrote:
+> The i2c probe functions here don't use the id information provided in
+> their second argument, so the single-parameter i2c probe function
+> ("probe_new") can be used instead.
+> 
+> This avoids scanning the identifier tables during probes.
 
 Applied to powerpc/next.
 
-[1/1] powerpc/irq: Drop forward declaration of struct irqaction
-      https://git.kernel.org/powerpc/c/b134cfc3e3276ccd5d29e39de5c848a45b08e410
+[1/1] powerpc: Use simple i2c probe function
+      https://git.kernel.org/powerpc/c/6c9100ea39d209e1625ba0fe06134192d9c4752a
 
 cheers
