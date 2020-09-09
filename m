@@ -2,187 +2,153 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D25CC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE08CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEECA21556
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a0Fn+WGs"
+	by mail.kernel.org (Postfix) with ESMTP id 74BFD21556
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbgIIR0k (ORCPT
+        id S1729935AbgIIR1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:26:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60044 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729005AbgIIR0g (ORCPT
+        Wed, 9 Sep 2020 13:27:20 -0400
+Received: from smtprelay0116.hostedemail.com ([216.40.44.116]:56254 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726883AbgIIR1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:26:36 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089HJ2gK051405;
-        Wed, 9 Sep 2020 13:25:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=cjurvjugr7NYNyJv2e5m0mRxD9kWPQ1Co8p7cVwZgRc=;
- b=a0Fn+WGsOgKb9v9OSCIZ4vTawA6Q4ZWyUk5Zt6IyTNtTXdZySGDE4pfNW4f9sOhvDRO5
- pyaNWhLyJ2qz3kHm1udz4qSWUWaxsbyYzZLNWKFPeYNcxy2qdx0OXkhkTDPLQoBCBK1t
- 7YomGSfviJhw2ax52kN9UbRlZeV16c8bRZP4tJOx9BLgNI8eZteBXenPoAxximHCBe3r
- oc3mh8uaZpxgVJjOxB3Kwhe+XjRIXqlbY7UiHRXs8QbI/LmnYJW28BEv9GJIlDCWO9Nn
- BcMJVH24ws0Fur+qARRdqFfpfnTFoGkjKZORJo+fOQcFQTXSPiLNreCZu/z5cCKZzuRh 6Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33f3b88711-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 13:25:42 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089HKUCM063750;
-        Wed, 9 Sep 2020 13:25:42 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33f3b886y8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 13:25:42 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089HLmU7024299;
-        Wed, 9 Sep 2020 17:25:39 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 33c2a84w57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 17:25:39 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089HPaUJ57147902
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 17:25:36 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A04C5AE058;
-        Wed,  9 Sep 2020 17:25:36 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75DA7AE057;
-        Wed,  9 Sep 2020 17:25:35 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.79.102])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed,  9 Sep 2020 17:25:35 +0000 (GMT)
-Date:   Wed, 9 Sep 2020 19:25:34 +0200
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200909192534.442f8984@thinkpad>
-In-Reply-To: <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
-        <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
-        <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
-        <20200909142904.00b72921@thinkpad>
-        <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 9 Sep 2020 13:27:18 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id E1042181D3039;
+        Wed,  9 Sep 2020 17:27:16 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toy26_3d1802a270df
+X-Filterd-Recvd-Size: 4200
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  9 Sep 2020 17:27:15 +0000 (UTC)
+Message-ID: <ed839e7c9f4e96ee54fc3ab958eeb2ab285f5ba8.camel@perches.com>
+Subject: Re: [PATCH] kernel: events: Use scnprintf() in show_pmu_*() instead
+ of snprintf()
+From:   Joe Perches <joe@perches.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@redhat.com, namhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 09 Sep 2020 10:27:14 -0700
+In-Reply-To: <d0c52cb6-5eb2-8ea0-a1b4-c97f447835f6@linuxfoundation.org>
+References: <20200901234930.359126-1-skhan@linuxfoundation.org>
+         <87o8mfxxc4.fsf@ashishki-desk.ger.corp.intel.com>
+         <d0c52cb6-5eb2-8ea0-a1b4-c97f447835f6@linuxfoundation.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_12:2020-09-09,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- suspectscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
- spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009090147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 09:18:46 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
-
-> On 9/9/20 5:29 AM, Gerald Schaefer wrote:
-> > This only works well as long there are real pagetable pointers involved,
-> > that can also be used for iteration. For gup_fast, or any other future
-> > pagetable walkers using the READ_ONCE logic w/o lock, that is not true.
-> > There are pointers involved to local pXd values on the stack, because of
-> > the READ_ONCE logic, and our middle-level iteration will suddenly iterate
-> > over such stack pointers instead of pagetable pointers.
+On Wed, 2020-09-09 at 10:19 -0600, Shuah Khan wrote:
+> On 9/9/20 12:45 AM, Alexander Shishkin wrote:
+> > Shuah Khan <skhan@linuxfoundation.org> writes:
+> > 
+> > > Since snprintf() returns would-be-output size instead of the actual
+> > > output size, replace it with scnprintf(), so the nr_addr_filters_show(),
+> > > type_show(), and perf_event_mux_interval_ms_show() routines return the
+> > > actual size.
+> > 
+> > Well, firstly they should just be sprintf()s, and secondly, I wouldn't
+> > worry about it, because [0].
 > 
-> By "There are pointers involved to local pXd values on the stack", did
-> you mean "locate" instead of "local"?  That sentence confused me.
+> scnprintf() or sprinf() could be used.
 > 
-> Which code is it, exactly that allocates these troublesome on-stack pXd
-> values, btw?
+> > [0] https://marc.info/?l=linux-kernel&m=159874491103969&w=2
+> 
+> Awesome. Thanks for the pointer. I wasn't aware of this work and
+> it takes care of the problem kernel wide. A better way to solve
+> the problem.
 
-It is the gup_pXd_range() call sequence in mm/gup.c. It starts in
-gup_pgd_range() with "pgdp = pgd_offset(current->mm, addr)" and then
-the "pgd_t pgd = READ_ONCE(*pgdp)" which creates the first local
-stack variable "pgd".
+There is a fairly large, though fairly trivial direct conversion
+using a cocci script for 90+% (~5000) of the existing uses of
+device and kobject show functions that use any of the sprintf
+call family.
 
-The next-level call to gup_p4d_range() gets this "pgd" value as
-input, but not the original pgdp pointer where it was read from.
-This is already the essential difference to other pagetable walkers
-like e.g. walk_pXd_range() in mm/pagewalk.c, where the original
-pointer is passed through. With READ_ONCE, that pointer must not
-be further de-referenced, so instead the value is passed over.
+https://lore.kernel.org/lkml/c22b7006813b1776467a72e716a5970e9277b4b7.camel@perches.com/
 
-In gup_p4d_range() we then have "p4dp = p4d_offset(&pgd, addr)",
-with &pgd being a pointer to the passed over pgd value, so that's
-the first pXd pointer that does not point directly to the pXd in
-the page table, but a local stack variable.
+The other < 10% though require some manual changes.
 
-With folded p4d, p4d_offset(&pgd, addr) will simply return
-the passed-in &pgd pointer, so we now also have p4dp point to that.
-That continues with "p4d_t p4d = READ_ONCE(*p4dp)", and that second
-stack variable passed to gup_huge_pud() and so on. Due to inlining,
-all those variables will not really be passed anywhere, but simply
-sit on the stack.
+There are some code blocks where it's possible for a
+PAGE_SIZE buffer overrun to occur, though perhaps it's not
+ever occurred in practice.
 
-So far, IIUC, that would also happen on x86 (or everywhere else
-actually) for folded levels, i.e. some pXd_offset() calls would
-simply return the passed in (stack) value pointer. This works
-as designed, and it will not lead to the "iteration over stack
-pointer" for anybody but s390, because the pXd_addr_end()
-boundaries usually take care that you always return to pgd
-level for iteration, and that is the only level with a real
-pagetable pointer. For s390, we stay at the first non-folded
-level and do the iteration there, which is fine for other
-pagetable walkers using the original pointers, but not for
-the READ_ONCE-style gup_fast.
+A defect I've seen when looking at the code is to always
+output to a presumed PAGE_SIZE buffer even though the
+output buffer address has been advanced.
 
-I actually had to draw myself a picture to get some hold of
-this, or rather a walk-through with a certain pud-crossing
-range in a folded 3-level scenario. Not sure if I would have
-understood my explanation above w/o that, but I hope you can
-make some sense out of it. Or draw yourself a picture :-)
+i.e.:
+
+	for (i = 0; i < count; i++)
+		buf += scnprintf(buf, PAGE_SIZE, " %u", val[i]);
+
+In actual code: (from drivers/staging/gasket/gasket_core.c)
+
+In this code buf is passed to a helper function without adding
+an offset in buf to the argument list and PAGE_SIZE is used for
+multiple calls in a for loop in the case statement.
+
+static ssize_t
+gasket_write_mappable_regions(char *buf,
+			      const struct gasket_driver_desc *driver_desc,
+			      int bar_index)
+{
+	int i;
+	ssize_t written;
+	ssize_t total_written = 0;
+	ulong min_addr, max_addr;
+	struct gasket_bar_desc bar_desc =
+		driver_desc->bar_descriptions[bar_index];
+
+	if (bar_desc.permissions == GASKET_NOMAP)
+		return 0;
+	for (i = 0;
+	     i < bar_desc.num_mappable_regions && total_written < PAGE_SIZE;
+	     i++) {
+		min_addr = bar_desc.mappable_regions[i].start -
+			   driver_desc->legacy_mmap_address_offset;
+		max_addr = bar_desc.mappable_regions[i].start -
+			   driver_desc->legacy_mmap_address_offset +
+			   bar_desc.mappable_regions[i].length_bytes;
+		written = scnprintf(buf, PAGE_SIZE - total_written,
+				    "0x%08lx-0x%08lx\n", min_addr, max_addr);
+		total_written += written;
+		buf += written;
+	}
+	return total_written;
+}
+
+...
+
+static ssize_t gasket_sysfs_data_show(struct device *device,
+				      struct device_attribute *attr, char *buf)
+{
+	...
+	switch (sysfs_type) {
+	...
+	case ATTR_USER_MEM_RANGES:
+		for (i = 0; i < PCI_STD_NUM_BARS; ++i) {
+			current_written =
+				gasket_write_mappable_regions(buf, driver_desc,
+							      i);
+			buf += current_written;
+			ret += current_written;
+		}
+		break;
+	...
+}
+
+
