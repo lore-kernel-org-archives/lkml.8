@@ -2,230 +2,118 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D617C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA026C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0489721D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:49:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="deFW1JQC"
+	by mail.kernel.org (Postfix) with ESMTP id 8CDA621D46
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599673877;
+	bh=pGHphgmWLyo/dufTuQiMNTxw/j6Mkqzz2RqYRRi2qIE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=g1TCrMrVkzClTnh4tHVeeHEJ9tTqq+9Ivu9wuPPWs9xwVBeCaFFVOAiV/kujrPGao
+	 uUSLCrvakCfKdTDSTKngZ1Nz4tf60LOrPte2SHxIcY6pkp+DfGk8bJR/TGP3+RSuAv
+	 U2zA5IF7CHA6inGFC0fsFs974oKclxRirsmJAkyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIIRt5 (ORCPT
+        id S1729296AbgIIRvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgIIRtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:49:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EB8C061757;
-        Wed,  9 Sep 2020 10:49:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m5so2595279pgj.9;
-        Wed, 09 Sep 2020 10:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vr8be9z5ve289rWYH4FMLgISuz5QCRzwF700gd1BO2s=;
-        b=deFW1JQCJtN43zETrg87xyX00GC6XmUZm6gHSR8oVtoMk0dRAZk+bp/j2/8V/mAC6P
-         JqbsxKqi7oWFaQFSiPur2nhwwhCMR9iPj5dPlk3Wo4GC04LXwE/MJMb/XZQzGwhpOhyM
-         pO3EBmlURwpsdEtbmE/cem3eycFX9pU+Zhma9JwstuSJRPdBK1uFwy3EZe70qzbKXNxa
-         OvzgBYShIB8J0FGsg0sAJvL+yizh/7K5yL6LfZqilLe8wdCle00BWtSL156cATJ15R5N
-         XCfpArynh0vhidHx1G/2BqgQ4jKB+bF+BgUB2xtTWtjyf1cEt6ENgmrE5bONWbyolSsi
-         zsww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vr8be9z5ve289rWYH4FMLgISuz5QCRzwF700gd1BO2s=;
-        b=NYa5fM/ZP1/bkcPNsY0Y0t92Qx5L80yN+GeS/2soZpsZjF25LgzE0WqNRepinEr4QL
-         JXlM3SJX2hKAW7ZgjIXnYg0INXtSqVemMZuEMR8mY4MG4YkiShJhVkUKi9AoePtddcqW
-         mvyLN91sIxWhO9TEKgm1B9PBDBpiryquGCkEMlPmE9KJorkfmbVS9q4xpfC7wX0QAW0z
-         i9Ep0Z8B6+kOE06ekvfQzlDCo9Kln7JCHCodfGo4mUxHHFcfyR+zz7aj8Ldzc3Yr340x
-         KHBOD8/pS7iWyhRY9Ma6P4NBpoG+Iv1gUVKvkrmZdZ35Sl7bInbICivFA6hRUS7nQdPU
-         hZzA==
-X-Gm-Message-State: AOAM532gc89Z9NVn4GAvP/tgnpN8s1wB+0ca5cRHSeoTwSsM0cAvcOPw
-        vhTdkqJFaX7tssD9nUnax+Lw+GtVJQo=
-X-Google-Smtp-Source: ABdhPJx1xIZJXBh/EmG2Xo+Hxj8YeCTDmSbQ9oSQrzB6M55tmeV4EqlIR/AxDv60o0Z0rV4M2BocSA==
-X-Received: by 2002:a17:902:ed13:b029:d0:89f1:9e32 with SMTP id b19-20020a170902ed13b02900d089f19e32mr2040378pld.14.1599673774771;
-        Wed, 09 Sep 2020 10:49:34 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a20sm3254825pfa.59.2020.09.09.10.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 10:49:34 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     olteanv@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v2] net: dsa: b53: Report VLAN table occupancy via devlink
-Date:   Wed,  9 Sep 2020 10:49:31 -0700
-Message-Id: <20200909174932.4138500-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 9 Sep 2020 13:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbgIIRvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:51:06 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF2B21D7F;
+        Wed,  9 Sep 2020 17:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599673865;
+        bh=pGHphgmWLyo/dufTuQiMNTxw/j6Mkqzz2RqYRRi2qIE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UifUi1aR6vTY1YCFohz0MrsKIbjiUVfmrXU2POWfD05x3TzEfeUPlesFCVlJ6ghfj
+         9vIKHIkvaeFpbqdu0l6Nr9FuDgfyQP+9Asr7rOvSE/4V1z1OUqkQV0RhMb5NGdIAUa
+         Bu91FIcOSqIl/6c1IQ0N9sRnIsOWjX/dOz2z9lqM=
+Received: by mail-ot1-f44.google.com with SMTP id e23so3041611otk.7;
+        Wed, 09 Sep 2020 10:51:05 -0700 (PDT)
+X-Gm-Message-State: AOAM5312kw1DuKn84gQM+jUMYzCOgSB91L4a38kiYeYVT4Pr16ryt3Ex
+        TW8SmtFuErQSIUdbqotW9XfRDn7rDWrTKEpN+w==
+X-Google-Smtp-Source: ABdhPJxkJmq457j4MdDwATy4hh9FtiZDSM5Hwf51HIx/0/Kwnq9MhZuGO4CNBKKY+8iKB00EhwOE4N/A7bj1yse07sE=
+X-Received: by 2002:a9d:411:: with SMTP id 17mr1478163otc.192.1599673864818;
+ Wed, 09 Sep 2020 10:51:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200907120852.12090-1-jianjun.wang@mediatek.com>
+ <20200907120852.12090-2-jianjun.wang@mediatek.com> <20200908195050.GA795070@bogus>
+ <1599620917.2521.9.camel@mhfsdcap03>
+In-Reply-To: <1599620917.2521.9.camel@mhfsdcap03>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 9 Sep 2020 11:50:53 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+NrfiJ-DAwtYG2b_chfivXi-aazHH8kiApuHS1G8JF=Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+NrfiJ-DAwtYG2b_chfivXi-aazHH8kiApuHS1G8JF=Q@mail.gmail.com>
+Subject: Re: [v1,1/3] dt-bindings: Add YAML schemas for Gen3 PCIe controller
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already maintain an array of VLANs used by the switch so we can
-simply iterate over it to report the occupancy via devlink.
+On Tue, Sep 8, 2020 at 9:10 PM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+>
+> On Tue, 2020-09-08 at 13:50 -0600, Rob Herring wrote:
+> > On Mon, 07 Sep 2020 20:08:50 +0800, Jianjun Wang wrote:
+> > > Add YAML schemas documentation for Gen3 PCIe controller on
+> > > MediaTek SoCs.
+> > >
+> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > > ---
+> > >  .../bindings/pci/mediatek-pcie-gen3.yaml      | 158 ++++++++++++++++++
+> > >  1 file changed, 158 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> > >
+> >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.example.dts:55.56-59.19: Warning (pci_device_reg): /example-0/bus/pcie@11230000/legacy-interrupt-controller: missing PCI reg property
+> >
+> >
+> > See https://patchwork.ozlabs.org/patch/1359119
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> >
+> > Please check and re-submit.
+> >
+>
+> Yes, I have already found this warning message, but I'm confused with
+> how to add this reg property, since the interrupt-controller has inherit
+> the pci device type but does not have its own registers.
+>
+> Could you please tell me how to fix this error, or which docs can I
+> refer to?
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Changes in v2:
+Actually, disregard this. We need to fix dtc for this case.
 
-- make count u64
-- correct typo: s/PARMA/PARAM/
-
- drivers/net/dsa/b53/b53_common.c | 60 ++++++++++++++++++++++++++++++--
- drivers/net/dsa/b53/b53_priv.h   |  1 +
- drivers/net/dsa/bcm_sf2.c        |  8 ++++-
- 3 files changed, 66 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 26fcff85d881..6a5796c32721 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -977,6 +977,54 @@ int b53_get_sset_count(struct dsa_switch *ds, int port, int sset)
- }
- EXPORT_SYMBOL(b53_get_sset_count);
- 
-+enum b53_devlink_resource_id {
-+	B53_DEVLINK_PARAM_ID_VLAN_TABLE,
-+};
-+
-+static u64 b53_devlink_vlan_table_get(void *priv)
-+{
-+	struct b53_device *dev = priv;
-+	struct b53_vlan *vl;
-+	unsigned int i;
-+	u64 count = 0;
-+
-+	for (i = 0; i < dev->num_vlans; i++) {
-+		vl = &dev->vlans[i];
-+		if (vl->members)
-+			count++;
-+	}
-+
-+	return count;
-+}
-+
-+int b53_setup_devlink_resources(struct dsa_switch *ds)
-+{
-+	struct devlink_resource_size_params size_params;
-+	struct b53_device *dev = ds->priv;
-+	int err;
-+
-+	devlink_resource_size_params_init(&size_params, dev->num_vlans,
-+					  dev->num_vlans,
-+					  1, DEVLINK_RESOURCE_UNIT_ENTRY);
-+
-+	err = dsa_devlink_resource_register(ds, "VLAN", dev->num_vlans,
-+					    B53_DEVLINK_PARAM_ID_VLAN_TABLE,
-+					    DEVLINK_RESOURCE_ID_PARENT_TOP,
-+					    &size_params);
-+	if (err)
-+		goto out;
-+
-+	dsa_devlink_resource_occ_get_register(ds,
-+					      B53_DEVLINK_PARAM_ID_VLAN_TABLE,
-+					      b53_devlink_vlan_table_get, dev);
-+
-+	return 0;
-+out:
-+	dsa_devlink_resources_unregister(ds);
-+	return err;
-+}
-+EXPORT_SYMBOL(b53_setup_devlink_resources);
-+
- static int b53_setup(struct dsa_switch *ds)
- {
- 	struct b53_device *dev = ds->priv;
-@@ -992,8 +1040,10 @@ static int b53_setup(struct dsa_switch *ds)
- 	b53_reset_mib(dev);
- 
- 	ret = b53_apply_config(dev);
--	if (ret)
-+	if (ret) {
- 		dev_err(ds->dev, "failed to apply configuration\n");
-+		return ret;
-+	}
- 
- 	/* Configure IMP/CPU port, disable all other ports. Enabled
- 	 * ports will be configured with .port_enable
-@@ -1012,7 +1062,12 @@ static int b53_setup(struct dsa_switch *ds)
- 	 */
- 	ds->vlan_filtering_is_global = true;
- 
--	return ret;
-+	return b53_setup_devlink_resources(ds);
-+}
-+
-+static void b53_teardown(struct dsa_switch *ds)
-+{
-+	dsa_devlink_resources_unregister(ds);
- }
- 
- static void b53_force_link(struct b53_device *dev, int port, int link)
-@@ -2141,6 +2196,7 @@ static int b53_get_max_mtu(struct dsa_switch *ds, int port)
- static const struct dsa_switch_ops b53_switch_ops = {
- 	.get_tag_protocol	= b53_get_tag_protocol,
- 	.setup			= b53_setup,
-+	.teardown		= b53_teardown,
- 	.get_strings		= b53_get_strings,
- 	.get_ethtool_stats	= b53_get_ethtool_stats,
- 	.get_sset_count		= b53_get_sset_count,
-diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
-index e942c60e4365..c55c0a9f1b47 100644
---- a/drivers/net/dsa/b53/b53_priv.h
-+++ b/drivers/net/dsa/b53/b53_priv.h
-@@ -328,6 +328,7 @@ void b53_br_set_stp_state(struct dsa_switch *ds, int port, u8 state);
- void b53_br_fast_age(struct dsa_switch *ds, int port);
- int b53_br_egress_floods(struct dsa_switch *ds, int port,
- 			 bool unicast, bool multicast);
-+int b53_setup_devlink_resources(struct dsa_switch *ds);
- void b53_port_event(struct dsa_switch *ds, int port);
- void b53_phylink_validate(struct dsa_switch *ds, int port,
- 			  unsigned long *supported,
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 3263e8a0ae67..723820603107 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -936,7 +936,12 @@ static int bcm_sf2_sw_setup(struct dsa_switch *ds)
- 	b53_configure_vlan(ds);
- 	bcm_sf2_enable_acb(ds);
- 
--	return 0;
-+	return b53_setup_devlink_resources(ds);
-+}
-+
-+static void bcm_sf2_sw_teardown(struct dsa_switch *ds)
-+{
-+	dsa_devlink_resources_unregister(ds);
- }
- 
- /* The SWITCH_CORE register space is managed by b53 but operates on a page +
-@@ -1073,6 +1078,7 @@ static int bcm_sf2_sw_get_sset_count(struct dsa_switch *ds, int port,
- static const struct dsa_switch_ops bcm_sf2_ops = {
- 	.get_tag_protocol	= b53_get_tag_protocol,
- 	.setup			= bcm_sf2_sw_setup,
-+	.teardown		= bcm_sf2_sw_teardown,
- 	.get_strings		= bcm_sf2_sw_get_strings,
- 	.get_ethtool_stats	= bcm_sf2_sw_get_ethtool_stats,
- 	.get_sset_count		= bcm_sf2_sw_get_sset_count,
--- 
-2.25.1
-
+Rob
