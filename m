@@ -2,473 +2,311 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AACC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112E0C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9448022286
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2E921941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YEr4mGSp"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iA0FGZJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgIIPTy (ORCPT
+        id S1729860AbgIIPVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728611AbgIILaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:30:01 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7802C061796
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:29:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x123so1881175pfc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Kc6Yomps2D2n8nZdrOeRPm5cJ+KzoM2wVkMkwmBNIZc=;
-        b=YEr4mGSp0d7n00uEasiyiXXQg5aJ33rd927jmHwi6ibR7bcAPfJ/9frElok0rlQczZ
-         pV/gqKpu8+8xUSf55EC3SmEIb92/EnagqOkfjfF/zGth50KNTLzIg6KEQOtOrh63pU0V
-         q/arWVkKCZuxL3yCL0OhMa+ze981HPP8Ooh7ne8lKRuNv7XpAoyK5ii6J5JNAiDRGUw6
-         gLF1EttEz5f4N3yZzWgBSkxb++cthtwxiyhbrZljaowSO0Qk6s4XMc68eWxotx7ilBYl
-         otJhYH+7P71/jqToYjAtzoT/jidvLmdhRzkOggn//MsWKywSTAXATm0CgpQaKqcu2jqB
-         5SiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kc6Yomps2D2n8nZdrOeRPm5cJ+KzoM2wVkMkwmBNIZc=;
-        b=gv4PIOSbUws6MFqQAvcKF3QckZEv57c+ueBOCcpckxrQYoyo4Nkq1ENVFVc04Ab4gf
-         a+cdtiJ0d0FDtkWTV4/OaB5kNtJTYp88b6ZfLjOJOiweHAmXKBm03K0O81UbZjCqetnb
-         GjloMjFNUEQcRgyljdx+qJpt+qeKYEdJWwvED4mDCGqcDADKa9yHMRSHUFqPP5hxWLYQ
-         BBHqnYg2jDjbOx+VqnTb1GN9UxOBgG+XvwHaHrKvLDPCLXyrqOJAPZFy0N9h9jNowEtU
-         1DHfpiIBPZc1ii3Zbh7G2AMx4zjSnoTUgPjn5fP7AJXMz29aXwimacCAw1RlF+Gv5+mf
-         zUoQ==
-X-Gm-Message-State: AOAM533L+mOCTZIPEi7OwrY5QW/bPZmzJ0tYiHadMn8hc/cohzA5N6Ey
-        yNhhYlIEurFHKbHdGv/N0y/R6g==
-X-Google-Smtp-Source: ABdhPJxCkG1isPqbkrb8m8ZW120W/qZ6CKiKqF5kfPrTwlG3sPQXzqZ4DQ4/F9ndk/QetxRooSTgeg==
-X-Received: by 2002:a05:6a00:2b1:: with SMTP id q17mr446412pfs.74.1599650999144;
-        Wed, 09 Sep 2020 04:29:59 -0700 (PDT)
-Received: from localhost ([122.181.54.133])
-        by smtp.gmail.com with ESMTPSA id 187sm2390284pfx.174.2020.09.09.04.29.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 04:29:58 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 16:59:55 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Hector Yuan <hector.yuan@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v5 1/2] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-Message-ID: <20200909112955.5fm3mv2btr6wrcc7@vireshk-i7>
-References: <1599645086-10169-1-git-send-email-hector.yuan@mediatek.com>
- <1599645086-10169-2-git-send-email-hector.yuan@mediatek.com>
+        Wed, 9 Sep 2020 11:21:37 -0400
+Received: from mail-eopbgr20050.outbound.protection.outlook.com ([40.107.2.50]:26974
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728443AbgIIL2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:28:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fvq3Ns8xHl82FULm1DPkJJm7XozbaNvcka8E1Cdt++mwkIoxfYFKkSgW6hq3we1mW/QaGnLy2j0UXCEybOjR1tBsSt+msntN4cg4EBGHYrYviq7uSV/AzC92JGcL+DwV/1cI5J/lSHSC2TAfzRAURLmEkdU9G13PJkH83I8pqxxLNwd9pn0IPVDDu7DJGpOPuRrm//UvgzBIujw1wcAt0Truxt1LSiQsDHjknQiFf+rWHI4aICGlpgYjM6tgJ28YoiEu2MZZl9WkMziuQq3Iwbecba1k/igXbJciOL1odzg46ce+RHclckk+Z/TXiB2nTcL7egr31WCI98CALhqr0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZTU+VvFxQuiEKrPS0SQ/lTLYebk3AfnfwCMBI4OUiJs=;
+ b=jM3P+LDG6yejK3TKOKwZa5Jv3145P6mQSM3IRKYXvpEqZEtqTqu1B+mZflm1HKKIZtKOkdnWDTeMPlwwBmRUgqTVATX7KWtkSOW/MIdCdUXJjM4cURyIE0ejJyD4nnvvayLtCJkrIglWaT50g2ONKS72RJHaDEFlLGGq7ZOfsmqIV5wHCyZt1xKbiCDTIXHiTUMhYHXs5fFCBOuzr00OvP3ZoTOWDt9PME2N6aR9ibRDp99f5mtrJa9XR9ossoeIM6/CDXZ/a7AZmzpDhfWlsoKypWeryCXGEudr6+NRgAw+5F+GVuKA3+cQb0hKhqJX9A8aYcy0ci55j5n8hknSUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZTU+VvFxQuiEKrPS0SQ/lTLYebk3AfnfwCMBI4OUiJs=;
+ b=iA0FGZJWhtSAFhebSscC8PAyIVedBoHtF4NrEi+oj7NJSCB0RR8xHHHMorKOeM+SAr/KQaIozxYWDa8CHYcd0RSX8VDJ1ZNh2GAq2oDXUJYVFHuQExj6QuiBtLTvmmmhbg4ZSySlk34it+C2eMm+ILBxS42ZvpE6etoi1SPZMUs=
+Received: from HE1PR04MB3196.eurprd04.prod.outlook.com (2603:10a6:7:21::31) by
+ HE1PR0402MB3561.eurprd04.prod.outlook.com (2603:10a6:7:89::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3348.15; Wed, 9 Sep 2020 11:27:18 +0000
+Received: from HE1PR04MB3196.eurprd04.prod.outlook.com
+ ([fe80::d899:49cb:a131:dd62]) by HE1PR04MB3196.eurprd04.prod.outlook.com
+ ([fe80::d899:49cb:a131:dd62%5]) with mapi id 15.20.3348.019; Wed, 9 Sep 2020
+ 11:27:18 +0000
+From:   Ashish Kumar <ashish.kumar@nxp.com>
+To:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Yogesh Gaur <yogeshgaur.83@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Varun Sethi <V.Sethi@nxp.com>, Arokia Samy <arokia.samy@nxp.com>
+Subject: RE: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
+Thread-Topic: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
+Thread-Index: AQHWhaWudJxNb8lKBUu2hXu+NXNcFKlgIu4Q
+Date:   Wed, 9 Sep 2020 11:27:17 +0000
+Message-ID: <HE1PR04MB3196017359FD8B44F44EE5EC95260@HE1PR04MB3196.eurprd04.prod.outlook.com>
+References: <20200908060227.299-1-kuldip.dwivedi@puresoftware.com>
+In-Reply-To: <20200908060227.299-1-kuldip.dwivedi@puresoftware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: puresoftware.com; dkim=none (message not signed)
+ header.d=none;puresoftware.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [182.69.247.28]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e53ca9a9-5a86-47b8-19e9-08d854b34fa8
+x-ms-traffictypediagnostic: HE1PR0402MB3561:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <HE1PR0402MB35610CBF9E83F9C293DC4B9995260@HE1PR0402MB3561.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nEqt+LXUcsPPsC63rdp6IH8k5odb6vpvlPTt3kSxDNO1U3VdrxgG2gD7OcCyF62/Pp+2XWnCXlIROIrVml8kGBBUxLr6a1tufgSTpuDzsIkpkigVMZr8dkL3HYGeXGdK0IDenwnjmbOunksl1O4XTRFV3Lt+w26f1EBfjIcyBkGhOe1aT8Ohsjak2YmuH9N991xZ/rN+bJc81FkUW8kHJfP6mrvRp4IvJv0tk+9cAPwRu/k259l4TzOY9JD6GIXMjE4oB6t7zQqTJ+Y4Gq9jVRzLMhNBgvSo+h4/FM7l8GbGIXPJoSsouMdpMiQA50inZ6uXBEhXCUDknnVOxbeLrA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR04MB3196.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(52536014)(64756008)(44832011)(66556008)(66476007)(4326008)(5660300002)(33656002)(478600001)(8936002)(9686003)(8676002)(55016002)(7696005)(86362001)(2906002)(6506007)(53546011)(26005)(71200400001)(54906003)(110136005)(66946007)(76116006)(66446008)(316002)(83380400001)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: xPAlqigj0pZDqOy8tOQw1t8btaJfwXPwId/5lBWSL7GeYxWUoxEVZz4sygH/dxPph37sLzZCGc9BOVveHIzUhzn4mEEMLxDpRwNozl4EZWS+urqh1UlHwgtBEph0cB1wNM7+SVtGiUGPE9XikAyHvaR+obRoBXS/bAhXvGhhm3Z6rNc9f6/IbHWXFy1BEI3xKrIYx1KaMuF4g8l/Dw3IkCczPiOjXcyCqRnVOoLzmqzxsyGib4bcyFkJlNItX1BIiJejHpa54NIW+U3uYIubiw5HSblJ30+PI+x7+SZlTRKb0ee9Gfs7K6RmK5ZVvm+ik9qKmUN43CTFNiY6UPFvT/NwRCol92j2I4w8tf2sBhnya83f/4sXw6vSfVbzMgahgByLEzrWremxe+XryckcU4ILL40S5RN5tFnonXB/yZDmtWvx0pQ4hFEOv9re4okLX6jCpEVhFpL4HIdrUNl5TMVuMUZ5Ks3vZSDbPyNBGrmoi05rKRafFJtVtA1TZmPf0TySAQvVb1nBJREkkErkUgB96jsRD3bPnACHLIc687GONgzPYNh61dKAzwTwjhAuK65SLrH7dQKt+0Mzb/Ss+WYJIxFaP+FR3YVXvlfiazriW3kni5Z3WfW6Q+KzXt44+qmSx1I/qPvT9EDbieZQHQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599645086-10169-2-git-send-email-hector.yuan@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR04MB3196.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e53ca9a9-5a86-47b8-19e9-08d854b34fa8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2020 11:27:17.7325
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OAT/beGZVQzsVYV6MWukpWrx+bueg5O+wpRxA1xcInkF2K7nqZR962hyiFVR0opMU8ABHvobUuS39bzgTqh0hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3561
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-09-20, 17:51, Hector Yuan wrote:
-> From: "Hector.Yuan" <hector.yuan@mediatek.com>
-> 
-> Add MT6779 cpufreq HW support.
-> 
-> Signed-off-by: Hector.Yuan <hector.yuan@mediatek.com>
+Hi Kuldeep Dwivedi,
+
+> -----Original Message-----
+> From: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+> Sent: Tuesday, September 8, 2020 11:32 AM
+> To: Ashish Kumar <ashish.kumar@nxp.com>; Yogesh Gaur
+> <yogeshgaur.83@gmail.com>; Mark Brown <broonie@kernel.org>; linux-
+> spi@vger.kernel.org; linux-kernel@vger.kernel.org
+> Cc: Varun Sethi <V.Sethi@nxp.com>; Arokia Samy <arokia.samy@nxp.com>;
+> kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+> Subject: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
+>=20
+> Caution: EXT Email
+>=20
+> Currently NXP fspi  driver has support of DT only. Adding ACPI
+> support to the driver so that it can be used by UEFI firmware
+> booting in ACPI mode. This driver will be probed if any firmware
+> will expose HID "NXP0009" in DSDT table.
+>=20
+> Signed-off-by: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
+Does these change affects non-ACPI FSPI driver in Linux? What test case wer=
+e run to verify the same?
+
 > ---
->  drivers/cpufreq/Kconfig.arm           |   12 ++
->  drivers/cpufreq/Makefile              |    1 +
->  drivers/cpufreq/mediatek-cpufreq-hw.c |  289 +++++++++++++++++++++++++++++++++
->  3 files changed, 302 insertions(+)
->  create mode 100644 drivers/cpufreq/mediatek-cpufreq-hw.c
-> 
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index c6cbfc8..8e58c12 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -121,6 +121,18 @@ config ARM_MEDIATEK_CPUFREQ
->  	help
->  	  This adds the CPUFreq driver support for MediaTek SoCs.
->  
-> +config ARM_MEDIATEK_CPUFREQ_HW
-> +	tristate "MediaTek CPUFreq HW driver"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	default m
-> +	help
-> +	  Support for the CPUFreq HW driver.
-> +	  Some MediaTek chipsets have a HW engine to offload the steps
-> +	  necessary for changing the frequency of the CPUs. Firmware loaded
-> +	  in this engine exposes a programming interface to the OS.
-> +	  The driver implements the cpufreq interface for this HW engine.
-> +	  Say Y if you want to support CPUFreq HW.
+>=20
+> Notes:
+>     1. Add ACPI match table
+>     2. Change the DT specific APIs to device property APIs
+>        so that same API can be used in DT and ACPi mode.
+>     3. Omit clock configuration part - in ACPI world, the firmware
+>        is responsible for clock maintenance.
+>     4. This patch is tested on LX2160A platform
+>=20
+>  drivers/spi/spi-nxp-fspi.c | 66 +++++++++++++++++++++++++++-----------
+>  1 file changed, 47 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+> index 1ccda82da206..acdb186ddfb2 100644
+> --- a/drivers/spi/spi-nxp-fspi.c
+> +++ b/drivers/spi/spi-nxp-fspi.c
+> @@ -3,7 +3,8 @@
+>  /*
+>   * NXP FlexSPI(FSPI) controller driver.
+>   *
+> - * Copyright 2019 NXP.
+> + * Copyright 2019-2020 NXP
+Why Update NXP copyright?
+
+> + * Copyright 2020 Puresoftware Ltd.
+>   *
+>   * FlexSPI is a flexsible SPI host controller which supports two SPI
+>   * channels and up to 4 external devices. Each channel supports
+> @@ -30,6 +31,7 @@
+>   *     Frieder Schrempf <frieder.schrempf@kontron.de>
+>   */
+>=20
+> +#include <linux/acpi.h>
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+>  #include <linux/completion.h>
+> @@ -563,6 +565,9 @@ static int nxp_fspi_clk_prep_enable(struct nxp_fspi
+> *f)
+>  {
+>         int ret;
+>=20
+> +       if (is_acpi_node(f->dev->fwnode))
+> +               return 0;
 > +
->  config ARM_OMAP2PLUS_CPUFREQ
->  	bool "TI OMAP2+"
->  	depends on ARCH_OMAP2PLUS
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index f6670c4..dc1f371 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -57,6 +57,7 @@ obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)		+= imx6q-cpufreq.o
->  obj-$(CONFIG_ARM_IMX_CPUFREQ_DT)	+= imx-cpufreq-dt.o
->  obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+= kirkwood-cpufreq.o
->  obj-$(CONFIG_ARM_MEDIATEK_CPUFREQ)	+= mediatek-cpufreq.o
-> +obj-$(CONFIG_ARM_MEDIATEK_CPUFREQ_HW)	+= mediatek-cpufreq-hw.o
->  obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
->  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
->  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
-> diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
-> new file mode 100644
-> index 0000000..ae4b38b
-> --- /dev/null
-> +++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
-> @@ -0,0 +1,289 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2020 MediaTek Inc.
-> + */
+>         ret =3D clk_prepare_enable(f->clk_en);
+>         if (ret)
+>                 return ret;
+> @@ -576,10 +581,15 @@ static int nxp_fspi_clk_prep_enable(struct
+> nxp_fspi *f)
+>         return 0;
+>  }
+>=20
+> -static void nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
+> +static int nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
+>  {
+> +       if (is_acpi_node(f->dev->fwnode))
+> +               return 0;
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/cpufreq.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/slab.h>
+>         clk_disable_unprepare(f->clk);
+>         clk_disable_unprepare(f->clk_en);
 > +
-> +#define LUT_MAX_ENTRIES			32U
-> +#define LUT_FREQ			GENMASK(11, 0)
-> +#define LUT_ROW_SIZE			0x4
+> +       return 0;
+>  }
+>=20
+>  /*
+> @@ -900,6 +910,8 @@ static int nxp_fspi_default_setup(struct nxp_fspi *f)
+>                 return ret;
+>=20
+>         /* Reset the module */
+> +       fspi_writel(f, FSPI_MCR0_SWRST, (base + FSPI_MCR0));
 > +
-> +enum {
-> +	REG_LUT_TABLE,
-> +	REG_ENABLE,
-> +	REG_PERF_STATE,
-> +
-> +	REG_ARRAY_SIZE,
+Why is this SW reset needed now? This will alter nxp_fspi_resume() function=
+ as well.=20
+
+>         /* w1c register, wait unit clear */
+>         ret =3D fspi_readl_poll_tout(f, f->iobase + FSPI_MCR0,
+>                                    FSPI_MCR0_SWRST, 0, POLL_TOUT, false);
+> @@ -1001,7 +1013,7 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>=20
+>         f =3D spi_controller_get_devdata(ctlr);
+>         f->dev =3D dev;
+> -       f->devtype_data =3D of_device_get_match_data(dev);
+> +       f->devtype_data =3D device_get_match_data(dev);
+>         if (!f->devtype_data) {
+>                 ret =3D -ENODEV;
+>                 goto err_put_ctrl;
+> @@ -1011,6 +1023,8 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>=20
+>         /* find the resources - configuration register address space */
+>         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "fspi_base");
+> +       if (!res)
+> +               res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+Why is this needed ?, _byname() will get you fspi_base value.
+
+>         f->iobase =3D devm_ioremap_resource(dev, res);
+>         if (IS_ERR(f->iobase)) {
+>                 ret =3D PTR_ERR(f->iobase);
+> @@ -1020,8 +1034,11 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>         /* find the resources - controller memory mapped space */
+>         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "fspi_mmap");
+>         if (!res) {
+> -               ret =3D -ENODEV;
+> -               goto err_put_ctrl;
+> +               res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+Why is this needed? _byname() will get you fspi_mmap.
+If fspi_mmap is not present then fetch 1st IORESOURE_MEM ?
+
+Regards
+Ashish=20
+> +               if (!res) {
+> +                       ret =3D -ENODEV;
+> +                       goto err_put_ctrl;
+> +               }
+>         }
+>=20
+>         /* assign memory mapped starting address and mapped size. */
+> @@ -1029,22 +1046,24 @@ static int nxp_fspi_probe(struct platform_device
+> *pdev)
+>         f->memmap_phy_size =3D resource_size(res);
+>=20
+>         /* find the clocks */
+> -       f->clk_en =3D devm_clk_get(dev, "fspi_en");
+> -       if (IS_ERR(f->clk_en)) {
+> -               ret =3D PTR_ERR(f->clk_en);
+> -               goto err_put_ctrl;
+> -       }
+> +       if (dev_of_node(&pdev->dev)) {
+> +               f->clk_en =3D devm_clk_get(dev, "fspi_en");
+> +               if (IS_ERR(f->clk_en)) {
+> +                       ret =3D PTR_ERR(f->clk_en);
+> +                       goto err_put_ctrl;
+> +               }
+>=20
+> -       f->clk =3D devm_clk_get(dev, "fspi");
+> -       if (IS_ERR(f->clk)) {
+> -               ret =3D PTR_ERR(f->clk);
+> -               goto err_put_ctrl;
+> -       }
+> +               f->clk =3D devm_clk_get(dev, "fspi");
+> +               if (IS_ERR(f->clk)) {
+> +                       ret =3D PTR_ERR(f->clk);
+> +                       goto err_put_ctrl;
+> +               }
+>=20
+> -       ret =3D nxp_fspi_clk_prep_enable(f);
+> -       if (ret) {
+> -               dev_err(dev, "can not enable the clock\n");
+> -               goto err_put_ctrl;
+> +               ret =3D nxp_fspi_clk_prep_enable(f);
+> +               if (ret) {
+> +                       dev_err(dev, "can not enable the clock\n");
+> +                       goto err_put_ctrl;
+> +               }
+>         }
+>=20
+>         /* find the irq */
+> @@ -1127,6 +1146,14 @@ static const struct of_device_id nxp_fspi_dt_ids[]
+> =3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
+>=20
+> +#ifdef CONFIG_ACPI
+> +static const struct acpi_device_id nxp_fspi_acpi_ids[] =3D {
+> +       { "NXP0009", .driver_data =3D (kernel_ulong_t)&lx2160a_data, },
+> +       {}
 > +};
+> +MODULE_DEVICE_TABLE(acpi, nxp_fspi_acpi_ids);
+> +#endif
 > +
-> +struct cpufreq_mtk {
-> +	struct cpufreq_frequency_table *table;
-> +	void __iomem *reg_bases[REG_ARRAY_SIZE];
-> +	cpumask_t related_cpus;
-> +};
-> +
-> +static const u16 cpufreq_mtk_offsets[REG_ARRAY_SIZE] = {
-> +	[REG_LUT_TABLE]		= 0x0,
-> +	[REG_ENABLE]		= 0x84,
-> +	[REG_PERF_STATE]	= 0x88,
-> +};
-> +
-> +static struct cpufreq_mtk *mtk_freq_domain_map[NR_CPUS];
-> +
-> +static int mtk_cpufreq_hw_target_index(struct cpufreq_policy *policy,
-> +				       unsigned int index)
-> +{
-> +	struct cpufreq_mtk *c = policy->driver_data;
-> +
-> +	writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
-> +	arch_set_freq_scale(policy->related_cpus,
-> +			    policy->freq_table[index].frequency,
-> +			    policy->cpuinfo.max_freq);
+>  static const struct dev_pm_ops nxp_fspi_pm_ops =3D {
+>         .suspend        =3D nxp_fspi_suspend,
+>         .resume         =3D nxp_fspi_resume,
+> @@ -1136,6 +1163,7 @@ static struct platform_driver nxp_fspi_driver =3D {
+>         .driver =3D {
+>                 .name   =3D "nxp-fspi",
+>                 .of_match_table =3D nxp_fspi_dt_ids,
+> +               .acpi_match_table =3D ACPI_PTR(nxp_fspi_acpi_ids),
+>                 .pm =3D   &nxp_fspi_pm_ops,
+>         },
+>         .probe          =3D nxp_fspi_probe,
+> --
+> 2.17.1
 
-Please drop the arch_set_freq_scale() stuff. This is getting moved to
-cpufreq core in another series and will be done by core code for
-everyone. Sorry I forgot to mention that earlier.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned int mtk_cpufreq_hw_get(unsigned int cpu)
-> +{
-> +	struct cpufreq_mtk *c;
-> +	struct cpufreq_policy *policy;
-> +	unsigned int index;
-> +
-> +	policy = cpufreq_cpu_get_raw(cpu);
-> +	if (!policy)
-> +		return 0;
-> +
-> +	c = policy->driver_data;
-
-What about doing this instead ?
-
-        c = mtk_freq_domain_map[cpu];
-
-You won't require to get policy here, right ?
-
-> +
-> +	index = readl_relaxed(c->reg_bases[REG_PERF_STATE]);
-> +	index = min(index, LUT_MAX_ENTRIES - 1);
-> +
-> +	return policy->freq_table[index].frequency;
-> +}
-> +
-> +static int mtk_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
-> +{
-> +	struct cpufreq_mtk *c;
-> +	struct device *cpu_dev;
-> +
-> +	cpu_dev = get_cpu_device(policy->cpu);
-> +	if (!cpu_dev) {
-
-Why do you need this here ? You don't use it.
-
-> +		pr_err("%s: failed to get cpu%d device\n", __func__,
-> +		       policy->cpu);
-> +		return -ENODEV;
-> +	}
-> +
-> +	c = mtk_freq_domain_map[policy->cpu];
-> +	if (!c) {
-> +		pr_err("No scaling support for CPU%d\n", policy->cpu);
-> +		return -ENODEV;
-> +	}
-> +
-> +	cpumask_copy(policy->cpus, &c->related_cpus);
-> +
-> +	policy->freq_table = c->table;
-> +	policy->driver_data = c;
-> +
-> +	/* HW should be in enabled state to proceed now */
-> +	writel_relaxed(0x1, c->reg_bases[REG_ENABLE]);
-
-Don't you need to do the opposite of this as well ?
-cpufreq_driver->exit ?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static struct cpufreq_driver cpufreq_mtk_hw_driver = {
-> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
-> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
-> +	.verify		= cpufreq_generic_frequency_table_verify,
-> +	.target_index	= mtk_cpufreq_hw_target_index,
-> +	.get		= mtk_cpufreq_hw_get,
-> +	.init		= mtk_cpufreq_hw_cpu_init,
-> +	.name		= "mtk-cpufreq-hw",
-> +	.attr		= cpufreq_generic_attr,
-> +};
-> +
-> +static int mtk_cpu_create_freq_table(struct platform_device *pdev,
-> +				     struct cpufreq_mtk *c)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem *base_table;
-> +	u32 data, i, freq, prev_freq = 0;
-> +
-> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
-> +				sizeof(*c->table), GFP_KERNEL);
-> +	if (!c->table)
-> +		return -ENOMEM;
-> +
-> +	base_table = c->reg_bases[REG_LUT_TABLE];
-> +
-> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> +		data = readl_relaxed(base_table + (i * LUT_ROW_SIZE));
-> +		freq = FIELD_GET(LUT_FREQ, data) * 1000;
-> +
-> +		if (freq == prev_freq)
-> +			break;
-> +
-> +		c->table[i].frequency = freq;
-> +
-> +		dev_dbg(dev, "index=%d freq=%d\n",
-> +			i, c->table[i].frequency);
-> +
-> +		prev_freq = freq;
-> +	}
-> +
-> +	c->table[i].frequency = CPUFREQ_TABLE_END;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_get_related_cpus(int index, struct cpumask *m)
-> +{
-> +	struct device_node *cpu_np;
-> +	struct of_phandle_args args;
-> +	int cpu, ret;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		cpu_np = of_cpu_device_node_get(cpu);
-> +		if (!cpu_np)
-> +			continue;
-> +
-> +		ret = of_parse_phandle_with_args(cpu_np, "mtk-freq-domain",
-> +						 "#freq-domain-cells", 0,
-> +						 &args);
-> +		of_node_put(cpu_np);
-> +		if (ret < 0)
-> +			continue;
-> +
-> +		if (index == args.args[0])
-> +			cpumask_set_cpu(cpu, m);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_cpu_resources_init(struct platform_device *pdev,
-> +				  unsigned int cpu, int index,
-> +				  const u16 *offsets)
-> +{
-> +	struct cpufreq_mtk *c;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +	int ret, i, cpu_r;
-> +	void __iomem *base;
-> +
-> +	if (mtk_freq_domain_map[cpu])
-> +		return 0;
-> +
-> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
-> +	if (!c)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-
-Can you use devm_platform_ioremap_resource() here ?
-
-> +
-> +	for (i = REG_LUT_TABLE; i < REG_ARRAY_SIZE; i++)
-> +		c->reg_bases[i] = base + offsets[i];
-> +
-> +	ret = mtk_get_related_cpus(index, &c->related_cpus);
-> +	if (ret) {
-> +		dev_err(dev, "Domain-%d failed to get related CPUs\n", index);
-> +		return ret;
-> +	}
-> +
-> +	ret = mtk_cpu_create_freq_table(pdev, c);
-> +	if (ret) {
-> +		dev_err(dev, "Domain-%d failed to create OPP\n", index);
-
-Still the wrong error. You didn't fail to create OPP here :)
-
-Just search for OPP in the driver and see if you need to fix that.
-
-> +		return ret;
-> +	}
-> +
-> +	for_each_cpu(cpu_r, &c->related_cpus)
-> +		mtk_freq_domain_map[cpu_r] = c;
-
-What about doing this from mtk_get_related_cpus() instead? We already
-run the loop there.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *cpu_np;
-> +	struct of_phandle_args args;
-> +	const u16 *offsets;
-> +	unsigned int cpu;
-> +	int ret;
-> +
-> +	offsets = of_device_get_match_data(&pdev->dev);
-> +	if (!offsets)
-> +		return -EINVAL;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		cpu_np = of_cpu_device_node_get(cpu);
-> +		if (!cpu_np) {
-> +			dev_dbg(&pdev->dev, "Failed to get cpu %d device\n",
-> +				cpu);
-
-This deserves dev_err and maybe you should error out completely ?
-Currently if of_cpu_device_node_get() fails for all CPUs, you will
-still try to register the cpufreq driver.
-
-> +			continue;
-> +		}
-> +
-> +		ret = of_parse_phandle_with_args(cpu_np, "mtk-freq-domain",
-> +						 "#freq-domain-cells", 0,
-> +						 &args);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* Get the bases of cpufreq for domains */
-> +		ret = mtk_cpu_resources_init(pdev, cpu, args.args[0], offsets);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "CPUFreq resource init failed\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = cpufreq_register_driver(&cpufreq_mtk_hw_driver);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_cpufreq_hw_driver_remove(struct platform_device *pdev)
-> +{
-> +	return cpufreq_unregister_driver(&cpufreq_mtk_hw_driver);
-> +}
-> +
-> +static const struct of_device_id mtk_cpufreq_hw_match[] = {
-> +	{ .compatible = "mediatek,cpufreq-hw", .data = &cpufreq_mtk_offsets },
-> +	{}
-> +};
-> +
-> +static struct platform_driver mtk_cpufreq_hw_driver = {
-> +	.probe = mtk_cpufreq_hw_driver_probe,
-> +	.remove = mtk_cpufreq_hw_driver_remove,
-> +	.driver = {
-> +		.name = "mtk-cpufreq-hw",
-> +		.of_match_table = mtk_cpufreq_hw_match,
-> +	},
-> +};
-> +
-> +static int __init mtk_cpufreq_hw_init(void)
-> +{
-> +	return platform_driver_register(&mtk_cpufreq_hw_driver);
-> +}
-> +module_init(mtk_cpufreq_hw_init);
-> +
-> +static void __exit mtk_cpufreq_hw_exit(void)
-> +{
-> +	platform_driver_unregister(&mtk_cpufreq_hw_driver);
-> +}
-> +module_exit(mtk_cpufreq_hw_exit);
-
-You can use this instead.
-
-module_platform_driver(mtk_cpufreq_hw_driver);
-
-> +
-> +MODULE_DESCRIPTION("mtk CPUFREQ HW Driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 1.7.9.5
-
--- 
-viresh
