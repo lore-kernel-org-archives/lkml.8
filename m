@@ -2,118 +2,165 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E6CC2D0E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C322C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF8D2145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9CD2098B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uaWxMc0O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REk0x+/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIIDAu (ORCPT
+        id S1729479AbgIIDDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 23:00:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:50703 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgIIDAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 23:00:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmRbg2x0Gz9sTX;
-        Wed,  9 Sep 2020 13:00:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599620447;
-        bh=3sMO884hg7pPLK7RKjxOZTh+vUD/yFzH8k0FjgNvOok=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uaWxMc0OMTr1wT+EG8NLJgY72MEJ32VhO4TLbXpDfqMIzmrLbH29lQ6JnUTONVx0x
-         BZlAZPt3+huulhPQhxvbnk8TkpY0LY4iqvZWxyELQKL0So61IFOeCvg+ZRMU6kTamW
-         wyU5VNazyX/xdSYYSD3mu/vviL0pqGy7w2xGTqoV3l4xSKQmJ/uwFldU7Jv4daUC8k
-         xCRer2a8AftNyH7pXTpHw2XxTXH+/puJjJr+ePzazfA58pklYRFFOYDLJKt6zPrrg8
-         yRB6X4wiKEvniWJe0GgevNTULo4Z0PkwziAnufQqwhAMez3MM24jamB8jC6FFon0g0
-         wKmyr1gXzfbuQ==
-Date:   Wed, 9 Sep 2020 13:00:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Qian Cai <cai@lca.pw>
-Cc:     skhan@linuxfoundation.org, brendanhiggins@google.com,
-        urielguajardo@google.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-next@vger.kernel.org
-Subject: Re: [PATCH 2/2] kunit: ubsan integration
-Message-ID: <20200909130046.118fe505@canb.auug.org.au>
-In-Reply-To: <20200903123824.GA4225@lca.pw>
-References: <20200806174326.3577537-1-urielguajardojr@gmail.com>
-        <20200806174326.3577537-2-urielguajardojr@gmail.com>
-        <20200902125223.GA5676@lca.pw>
-        <20200903123824.GA4225@lca.pw>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/zfuNZ91fUths2EWrVnzCG=u";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 8 Sep 2020 23:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgIIDDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 23:03:49 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8FAC061573;
+        Tue,  8 Sep 2020 20:03:49 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d6so861379pfn.9;
+        Tue, 08 Sep 2020 20:03:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=L0ztXl6pthK1M0XWUvkN5wvzKplhba5Dp+ppl19NO1s=;
+        b=REk0x+/y3ZBsJPmho9b86rt2NlB23JjPt1/nbNCkKd7app2duktWItsXUonVLccaN3
+         2+edZ5kxWqWxryh2TDtiZAB9UZqFzijT3SS7613XNDEuR6VpmCBYZR2B66olTQzDi/Hs
+         WPVYctKuvl2noG8pT83mD9XpikaVwYhqFpyd9KOjy1OGwFfRAK1ZPlVAwQ8NIQiWmRnR
+         fearLbqEQUoaF6Y/pxqJGCs58H/KESVCtrVWYjibbFT57ihT8qoDbSaRfxuc4yybLY4C
+         6SJlh9eZvNsKyKhUiQNpAEgdJ0V0mbvsPVGRezAXFk/DBzbhdbYlmDI8QITTdbjUDNxO
+         mQ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=L0ztXl6pthK1M0XWUvkN5wvzKplhba5Dp+ppl19NO1s=;
+        b=hp/+z4HT1ouiCM2Iuqnuj9p06C/K5vTN9BGfSZ8+SyDTlZl0GBKY6AypXj/dq4jODv
+         17zKBjkRl3ReAd4nepfa7g357Wn3he+iEkisXBzl+/Snn695X7Uc/1YpSganu/qv47za
+         ve8hFLi5hihcaJGeerBK1NBj3N6ElRhl/PqBZW3iC4XLNb+tqiuI6i7iBouz2DaGLPb3
+         Ufo9rZ8pg8ahYAffYAE0ckDrBlvK9f0NElgzC0tOO+1A9rX99GBrmNpVaLDQHE/ZC45F
+         t8BiVmhQk1BAEULflxubjy8SdhzbpGB9zrASxWjmUEENvqvr/8/PZI5lhqxlv1n3ToLJ
+         Uvzg==
+X-Gm-Message-State: AOAM532aJkinETqnkbBHVfKT7pdUhdnv2G7gw78HfLE4J95l/okBG1GM
+        yLt63qYim3KsOWKBbTRsqrLyRS6Xccrmkw==
+X-Google-Smtp-Source: ABdhPJzLpP3YCiQlMP+UUmh8sB9gCLNV+BZNuultJsgB46kHm/0r/T7D6gx666qO8Nyd+8WJcM61XQ==
+X-Received: by 2002:aa7:9a42:: with SMTP id x2mr1709871pfj.5.1599620628554;
+        Tue, 08 Sep 2020 20:03:48 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id i1sm768788pfk.21.2020.09.08.20.03.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 20:03:47 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [MPTCP][PATCH net] mptcp: fix kmalloc flag in mptcp_pm_nl_get_local_id
+Date:   Wed,  9 Sep 2020 11:01:24 +0800
+Message-Id: <edf5e512a6932d9169f77d9cd5c89aa198b20d31.1599620248.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/zfuNZ91fUths2EWrVnzCG=u
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+mptcp_pm_nl_get_local_id may be called in interrupt context, so we need to
+use GFP_ATOMIC flag to allocate memory to avoid sleeping in atomic context.
 
-Hi Qian,
+[  280.209809] BUG: sleeping function called from invalid context at mm/slab.h:498
+[  280.209812] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1680, name: kworker/1:3
+[  280.209814] INFO: lockdep is turned off.
+[  280.209816] CPU: 1 PID: 1680 Comm: kworker/1:3 Tainted: G        W         5.9.0-rc3-mptcp+ #146
+[  280.209818] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  280.209820] Workqueue: events mptcp_worker
+[  280.209822] Call Trace:
+[  280.209824]  <IRQ>
+[  280.209826]  dump_stack+0x77/0xa0
+[  280.209829]  ___might_sleep.cold+0xa6/0xb6
+[  280.209832]  kmem_cache_alloc_trace+0x1d1/0x290
+[  280.209835]  mptcp_pm_nl_get_local_id+0x23c/0x410
+[  280.209840]  subflow_init_req+0x1e9/0x2ea
+[  280.209843]  ? inet_reqsk_alloc+0x1c/0x120
+[  280.209845]  ? kmem_cache_alloc+0x264/0x290
+[  280.209849]  tcp_conn_request+0x303/0xae0
+[  280.209854]  ? printk+0x53/0x6a
+[  280.209857]  ? tcp_rcv_state_process+0x28f/0x1374
+[  280.209859]  tcp_rcv_state_process+0x28f/0x1374
+[  280.209864]  ? tcp_v4_do_rcv+0xb3/0x1f0
+[  280.209866]  tcp_v4_do_rcv+0xb3/0x1f0
+[  280.209869]  tcp_v4_rcv+0xed6/0xfa0
+[  280.209873]  ip_protocol_deliver_rcu+0x28/0x270
+[  280.209875]  ip_local_deliver_finish+0x89/0x120
+[  280.209877]  ip_local_deliver+0x180/0x220
+[  280.209881]  ip_rcv+0x166/0x210
+[  280.209885]  __netif_receive_skb_one_core+0x82/0x90
+[  280.209888]  process_backlog+0xd6/0x230
+[  280.209891]  net_rx_action+0x13a/0x410
+[  280.209895]  __do_softirq+0xcf/0x468
+[  280.209899]  asm_call_on_stack+0x12/0x20
+[  280.209901]  </IRQ>
+[  280.209903]  ? ip_finish_output2+0x240/0x9a0
+[  280.209906]  do_softirq_own_stack+0x4d/0x60
+[  280.209908]  do_softirq.part.0+0x2b/0x60
+[  280.209911]  __local_bh_enable_ip+0x9a/0xa0
+[  280.209913]  ip_finish_output2+0x264/0x9a0
+[  280.209916]  ? rcu_read_lock_held+0x4d/0x60
+[  280.209920]  ? ip_output+0x7a/0x250
+[  280.209922]  ip_output+0x7a/0x250
+[  280.209925]  ? __ip_finish_output+0x330/0x330
+[  280.209928]  __ip_queue_xmit+0x1dc/0x5a0
+[  280.209931]  __tcp_transmit_skb+0xa0f/0xc70
+[  280.209937]  tcp_connect+0xb03/0xff0
+[  280.209939]  ? lockdep_hardirqs_on_prepare+0xe7/0x190
+[  280.209942]  ? ktime_get_with_offset+0x125/0x150
+[  280.209944]  ? trace_hardirqs_on+0x1c/0xe0
+[  280.209948]  tcp_v4_connect+0x449/0x550
+[  280.209953]  __inet_stream_connect+0xbb/0x320
+[  280.209955]  ? mark_held_locks+0x49/0x70
+[  280.209958]  ? lockdep_hardirqs_on_prepare+0xe7/0x190
+[  280.209960]  ? __local_bh_enable_ip+0x6b/0xa0
+[  280.209963]  inet_stream_connect+0x32/0x50
+[  280.209966]  __mptcp_subflow_connect+0x1fd/0x242
+[  280.209972]  mptcp_pm_create_subflow_or_signal_addr+0x2db/0x600
+[  280.209975]  mptcp_worker+0x543/0x7a0
+[  280.209980]  process_one_work+0x26d/0x5b0
+[  280.209984]  ? process_one_work+0x5b0/0x5b0
+[  280.209987]  worker_thread+0x48/0x3d0
+[  280.209990]  ? process_one_work+0x5b0/0x5b0
+[  280.209993]  kthread+0x117/0x150
+[  280.209996]  ? kthread_park+0x80/0x80
+[  280.209998]  ret_from_fork+0x22/0x30
 
-On Thu, 3 Sep 2020 08:38:25 -0400 Qian Cai <cai@lca.pw> wrote:
->
-> On Wed, Sep 02, 2020 at 08:52:24AM -0400, Qian Cai wrote:
-> > On Thu, Aug 06, 2020 at 05:43:26PM +0000, Uriel Guajardo wrote: =20
-> > > Integrates UBSAN into the KUnit testing framework. It fails KUnit tes=
-ts
-> > > whenever it reports undefined behavior.
-> > >=20
-> > > Signed-off-by: Uriel Guajardo <urielguajardo@google.com> =20
-> >=20
-> > It looks like this patch had been merged into linux-next but the "[PATC=
-H 1/2]
-> > kunit: support failure from dynamic analysis tools" did not. Hence, it =
-caused a
-> > compiling failure.
-> >=20
-> > lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
-> > lib/ubsan.c:141:2: error: implicit declaration of function =E2=80=98kun=
-it_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_test=E2=80=
-=99? [-Werror=3Dimplicit-function-declaration]
-> >   kunit_fail_current_test();
-> >   ^~~~~~~~~~~~~~~~~~~~~~~
-> >   kunit_init_test
-> > cc1: some warnings being treated as errors =20
->=20
-> Stephen, Shuah, can you revert this commit or pick up its dependency as w=
-ell?
+Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ net/mptcp/pm_netlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry, for the slow response ... this should be gone today.
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index bd88e9c0bf71..1f6d029ccf40 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -354,7 +354,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ 		return ret;
+ 
+ 	/* address not found, add to local list */
+-	entry = kmalloc(sizeof(*entry), GFP_KERNEL);
++	entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
+ 	if (!entry)
+ 		return -ENOMEM;
+ 
+-- 
+2.17.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/zfuNZ91fUths2EWrVnzCG=u
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YRV4ACgkQAVBC80lX
-0Gw8EQf/c1VzFm3ro9TFRsYuojPzJHb6J39cJzCwYjxVJ9yH1Qcf0d1rUbpt6w1W
-8+EupMS6gQrVVzdawHGApftrxHuV8ELNRDVNsRo07V9E/cjbdHSaB7gXvnoCrjzR
-msDborabO43BmnOVFs2Ji54y7Fl1Uy6EiTl9hDYXCEC3clXZaFL2FOU4myWaFLd0
-kZJD4/pEcbe56T5Javo/fQFZCKYxC3jHGOeE1QQZ7yilSRsYFBLbvH5eTaOSDFOm
-TIeuV0erCW3wrqKvhjz6ZWJHlilxSiBCnIPWuEu8dq+rcrXzGzvFDkWJs0REJU70
-P90MDo8f4SV1Zgav4daSHApS5PnpLQ==
-=qlg+
------END PGP SIGNATURE-----
-
---Sig_/zfuNZ91fUths2EWrVnzCG=u--
