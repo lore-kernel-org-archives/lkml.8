@@ -2,121 +2,93 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAF1C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC84C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CACA920EDD
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55AB20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="TReKjmiI"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UOa7HWIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgIIDMZ (ORCPT
+        id S1729851AbgIIDMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 23:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgIIDMS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 23:12:18 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C4ACC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 20:12:17 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m5so999241pgj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 20:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=68ipujDablGcEJonPET//NBEYZiQNXSeSF+EeohflME=;
-        b=TReKjmiIL072PrYgIA4/D2VQXd+J56RQ/DSJXM7PBArTdXh4/GxSAbvdgGzsHJAyn7
-         ZzJPgLqDko2UBN0UMQ3m456optZlKtqlwx+HGq60uJYI57g0ev1xOoEGkDujuTfmrTRo
-         FiH/R/Czt0dHCsH1fPA2Uzh2Ecn3HY2ieoZ+DwzBrbfkiDk1bLTXUWeOuqtQtPb3I8Hl
-         nrCx1lN7nhoqvEuuNM+G9SPLizyqNFZ3Dls+kQWqSvFJQiPVPYXD/2VYDJ5DyPQLz03B
-         1AQRz66PFO6KIS+LKsdx//tDLK7+cJRDShEZyTFsprfBX/yQz0MF5rCeCwec0jk3i8oG
-         dXMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=68ipujDablGcEJonPET//NBEYZiQNXSeSF+EeohflME=;
-        b=J3s3NMCopfGEmVLOnrjOH08b2wPto0D+ByRuo2fVoCVyRipSHn36+g1mXDEiM76xTk
-         cvuj5sjToakMNBTrFRwl6p4/p9nhyCRYql6XbnrqYXJ81MtdzCsshUBJKzJc1lCBbTMn
-         GfXAR44uqzJJGwxDrh7woAb2t8/61K+Nwni2j3sHjGbtntur4u+MwyWBdbhYgWMvfmKe
-         NTpe4ixKkXLdlZ8JrZQCIA/jaoSaIKAd1OxlWRcuogNFs2hTJEqviXWrG40a1f2a7o6d
-         qz8rk+rYq4lvnDE7vp/zZb537AKYa4gkiqVc+s7pT6HBr2EUeoQnUajk0qni5z+27b92
-         cTRw==
-X-Gm-Message-State: AOAM5328RwXfIK218IelFdC3OkUwAvu48TvmGdNyrRT3+jylSF0MAvtC
-        yMq1Of8oh5NkQ/KPBsDV8Dbdyg==
-X-Google-Smtp-Source: ABdhPJwexB0r5HrP0KwYZnG4eojTsfNQqFJlDv8+/BCwJd3a9eEytgZ8MppW46t1gK2A2ChRvfFYPw==
-X-Received: by 2002:a63:5b64:: with SMTP id l36mr1371109pgm.413.1599621136651;
-        Tue, 08 Sep 2020 20:12:16 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id b20sm809072pfb.198.2020.09.08.20.12.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 20:12:16 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 20:12:16 -0700 (PDT)
-X-Google-Original-Date: Tue, 08 Sep 2020 20:12:09 PDT (-0700)
-Subject:     Re: [PATCH v2 2/3] soc: sifive: Add SiFive specific Cadence DDR controller driver
-In-Reply-To: <20200907061126.GA14999@infradead.org>
-CC:     yash.shah@sifive.com, robh+dt@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, bp@alien8.de,
-        mchehab@kernel.org, tony.luck@intel.com,
-        devicetree@vger.kernel.org, aou@eecs.berkeley.edu,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
-        rrichter@marvell.com, james.morse@arm.com,
-        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Christoph Hellwig <hch@infradead.org>, dkangude@cadence.com
-Message-ID: <mhng-d2a95187-c772-4c5d-b30b-b053a3195177@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 8 Sep 2020 23:12:45 -0400
+Received: from mout.gmx.net ([212.227.15.15]:46379 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbgIIDMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 23:12:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599621130;
+        bh=hGzYd8QpKUeVsLHhGXXCngHsrpy2Tys7KhO2nnK2y2k=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=UOa7HWIYogwZOYyid2Aw4O4w+K4NQYMUAs1K5njswP8cA8KNwLmHfGmNwBcMsmHry
+         TTSbtMJFT3YWiGeoR8aA4oBJkvdIeTo+bkpk2mpWI6pLMML0DZhilW3sC2ahe3MaZ5
+         xK62ojsoFJ7Ny0VyT94gErgIfe4/fCK/NEN/XD5E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.simpson.net ([185.191.217.72]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MiaY9-1kmjRV2GYh-00fmbX; Wed, 09
+ Sep 2020 05:12:10 +0200
+Message-ID: <6ed14b9743f5ce400137a4ae5561604575e72b13.camel@gmx.de>
+Subject: Re: [ANNOUNCE] v5.9-rc3-rt3
+From:   Mike Galbraith <efault@gmx.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed, 09 Sep 2020 05:12:09 +0200
+In-Reply-To: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.34.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:boqi8g3uyHFft8vQoTCT7Tae8b9yFScO9vIXQtA5vdNwUGkSkkY
+ pcfliwQ7+tQlGkSPDnzzccUdCuiPmcNGQZpPbS5hasTkORDoV7zCnUoYzIHSn9G0MFx3WNe
+ KJAFZVNqW3YnRPHc5YLOb1AJDNb4icC8TQ4siMzdlsDJMEArKYVRWRm6l7+4vDmHQUPih1j
+ UbgGK5X6fLVwNOlq5BA7w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OuPKnAqCiVM=:hZKEQaiNbCRFprLbfqHCg7
+ C1JzFw6g6o6Jck5InrRAJxMWIB+NaoFVM1yxOwWenSYlFQR85CeOvK5xzmphPHFABaL7m3OFp
+ XRHeWc3u2pOOM1Jd8LwyiE0z0piWXUSxaW7xl5P+5+OPx3LYiknryM2esEt6aWfgvcHFHOY3S
+ y0T4NcioeXxyszlY/KiWh/Ar/OzPtbxU/0rIcsdcHZsfwCS30pqL/iI8V/txaXMRWJ8UTcPhh
+ 2NlgLnL/UrfGrKDRnQ+I8UL4qckYR4iDzi+/lBSQLmCZJhIr+hyc26UIhjlZ+MNu3lw3RT03D
+ scO9UaMINM8E8dOMjEWb2fQSBD75Blf7Vg7SGJ28lE5bCFa7jvshj6ZLm7XP06OL9i5Ee/hC/
+ Oe1Q0cU6dAuD+sxji9+pxHy1ROsbyDj28ZFTRvWwCzsyI7mfPw3pFK78n0Je+O6rtwjgWdXQM
+ m2y+c6nV/cp0V2IxNmhmw+J2XToeWkf6ZpjDQb0/RqdapbFijQ39kVFgpjuqaPg2VWJiniEmw
+ SALpQrD+rFoh5zchadMpVlq4cZ2Nfaz3hZyvxBuxGO1khFpwMstlM/oM3szA2XTvaCyOSYY7N
+ ADSX0mZrkTUHZRjr4K0O/VvhRNWfsXb9cSBvlGovv5viSS9r03iCYsv9Lk+Cg07zlC8uwkU8Y
+ yivIulQLRiH7AaA5bZH6iSoO+Ki8VJ0qToQVWBP2px66s+sdX/PtdrfI7w2RiJxZ+KUwcNJun
+ h/4Z3tEOzHZb5CB8qZlbvhSpYCG/rTcMgK4vVCt+lnt3Jn9Ecn3FodgEswIwx81HlWBI1m76/
+ iOxu9dvi5w0MPxuJCVFoyIHI/bU7XF7m0ZtS3i4pEmeJE9JodLNckMIrBdHDVn+T/qbuvjLa9
+ jhbz07iCsN/Bwv2KT/a6WLRjgwg7YiCGk4irXlwjBgltFCtpRbaOGstZPjxr3aQJygm0JRqaP
+ fLhBa+voeagBhQIqdDXwBDR8x+Uy1JhTjpolzUtWN1ZgUkKjg8mWccaOaVuMXxP0/sbQlhWJ3
+ OIMjJXu27aVU1hMOgKus6thhFoaPwDzgx30AgTd3L9ZjjLLNBvsE6fL7iG2j4VY0NF9A6a4ti
+ tztd/rv6onmNmeyi0X2RSXKX4VNuZPEHftAa9YWag4QtbPOK27UjrbcL1f1ZyhGzuYLhWFnXY
+ +Lu4GtHzTFNRlD4kUkVQrOzPR05OjZc05QteBieGPAd+jbvzb+7ziPA7AsgrXhLuOWIpHCeGj
+ uSK3Qy5pHAShf001h
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 06 Sep 2020 23:11:26 PDT (-0700), Christoph Hellwig wrote:
-> On Mon, Sep 07, 2020 at 11:17:58AM +0530, Yash Shah wrote:
->> Add a driver to manage the Cadence DDR controller present on SiFive SoCs
->> At present the driver manages the EDAC feature of the DDR controller.
->> Additional features may be added to the driver in future to control
->> other aspects of the DDR controller.
+On Wed, 2020-09-02 at 17:55 +0200, Sebastian Andrzej Siewior wrote:
 >
-> So if this is a generic(ish) Cadence IP block shouldn't it be named
-> Cadence and made generic?  Or is the frontend somehow SiFive specific?
+> Known issues
+>      - It has been pointed out that due to changes to the printk code th=
+e
+>        internal buffer representation changed. This is only an issue if =
+tools
+>        like `crash' are used to extract the printk buffer from a kernel =
+memory
+>        image.
 
-For some reason I thought we had a SiFive-specific interface to this, but I may
-have gotten that confused with something else as it's been a while.  Someone
-from SiFive would probably have a better idea, but it looks like the person I'd
-ask isn't thereany more so I'm all out of options ;)
+Ouch.  While installing -rt5 on lappy via nfs, -rt5 server box exploded
+leaving nada in logs.  I have a nifty crash dump of the event, but...
 
-It looks like there was a very similar driver posted by Dhananjay Kangude from
-Cadence in April: https://lkml.org/lkml/2020/4/6/358 .  Some of the register
-definitions seem to be different, but the code I looked at is very similar so
-there's at least some bits that could be shared.  I found a v4 of that patch
-set, but that was back in May: https://lkml.org/lkml/2020/5/11/912 .  It
-alludes to a v5, but I can't find one.  I've added Dhananjay, maybe he knows
-what's up?
+	-Mike
 
-I don't know enough about the block to know if the subtle difference in
-register names/offsets means.  They look properly jumbled up (ie, not just an
-offset), so maybe there's just different versions or that's the SiFive-specific
-part I had bouncing around my head?  Either way, it seems like one driver with
-some simple configuration could handle both of these -- either sticking the
-offsets in the DT (if they're going to be different everywhere) or by coming up
-with some version sort of thing (if there's a handful of these).
-
-I'm now also a bit worried about the provenace of this code.  The two drivers
-are errily similar -- for example, the variable definitions in handle_ce()
-
-       u64 err_c_addr = 0x0;
-       u64 err_c_data = 0x0;
-       u32 err_c_synd, err_c_id;
-       u32 sig_val_l, sig_val_h;
-
-are exactly the same.
