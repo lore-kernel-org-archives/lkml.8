@@ -2,137 +2,146 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAA5C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A59FC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD6F2076C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4DB21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iQLxrgRK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PC3VAOwV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iMBqAbWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgIIIYG (ORCPT
+        id S1726489AbgIII0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:24:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59202 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgIIIYF (ORCPT
+        Wed, 9 Sep 2020 04:26:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60122 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgIII0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:24:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0898MOTp177688;
-        Wed, 9 Sep 2020 08:23:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=m0A4wE6XM5B3kJLujPtoNoYr3KFzvqcm3MjYY5mxpUE=;
- b=iQLxrgRKImQPlHn9HECcNxZboFivDFA/t9NzKI5p1uRrqNfJCRL+e16KebpPTAeflpnt
- bd+AuhueZbvp+f6toyWd9K53yZM/VP08KN2ZmQXTJCi1oddOOslkvazXDiAyAlj2iCLH
- lk9ZxMaG/3IZGMnApOdHuIIy7xnVAugZ8y85QARAfIrnjqNMA7AVK2G7E8GqzFPQ8UOW
- dCuVjB3TzPPVxz9Ca2lrVXNnwn/DaUIa2OMp2m0WF96W9b3FPlgVthID9Com79QPxRgL
- eyj7jOl27xwgE4BEUbfImiRPfC/MQpBKlUppcpg9TuxkNYeUIVhL8RG/Emt3G7K8zD/3 yQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 33c3an03rs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 08:23:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0898LRVM109843;
-        Wed, 9 Sep 2020 08:23:45 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 33cmesemjp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Sep 2020 08:23:45 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0898NhCm032064;
-        Wed, 9 Sep 2020 08:23:43 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Sep 2020 01:23:42 -0700
-Date:   Wed, 9 Sep 2020 11:23:35 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Cc:     lkp@intel.com, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Ofer Levi <oferle@nvidia.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [kbuild] Re: [PATCH] ARC: [plat-eznps]: Drop support for EZChip NPS
- platform
-Message-ID: <20200909082335.GX8321@kadam>
+        Wed, 9 Sep 2020 04:26:16 -0400
+Date:   Wed, 09 Sep 2020 08:26:12 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599639973;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QoDD1UDHTlJFMLx9+RNng8Fd9vf19kX3LXI/EPptrC0=;
+        b=PC3VAOwVybDTf8GPzx8pjT6Y/hC7lBII2+oTwXXS/3Ehgdj2VOAS203Y0qp18f+uyqD+hS
+        /thKbVSHFJ4X5OsTGTlGbZlXYJEC0jXKd+9liwaZ0AFgq+brAkGPVb9/wr1+M9jW+CcPpg
+        WXK3W+YA05iI8OoBcbHUB6Wg/e5iq2iTjOq0rJ180pN/LsMbXbAcp/Y9X0V1cKVxEdX7vk
+        +vyJIx/v9xT1n5BAbnDml4nNPhuXWaOAZIVlo1XEY7FraaBQvqxOb4NJEuxRdnGBhYzM1C
+        +SxLI0epwGnk+RBxSnnpmWcbbzMb8Zdai1x7dFUccF6czktXYZEn8p70gRmk9A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599639973;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QoDD1UDHTlJFMLx9+RNng8Fd9vf19kX3LXI/EPptrC0=;
+        b=iMBqAbWC2jRtBf0RHg2K8mr94DRlCVOcQK7RMU+RjhAzyd64Io5HaSCFxS9m0NnGCfbezI
+        uvgtqkfj/kqjeWBg==
+From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/topology: Move sd_flag_debug out of #ifdef
+ CONFIG_SYSCTL
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200908184956.23369-1-valentin.schneider@arm.com>
+References: <20200908184956.23369-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908210601.1746462-1-vgupta@synopsys.com>
-Message-ID-Hash: VB56LWJLBK4YHEIDYJ5P2Z32XKJYZVRK
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 adultscore=0
- bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009090074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090074
+Message-ID: <159963997277.20229.10716555225789484968.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vineet,
+The following commit has been merged into the sched/core branch of tip:
 
-I love your patch! Yet something to improve:
+Commit-ID:     848785df48835eefebe0c4eb5da7690690b0a8b7
+Gitweb:        https://git.kernel.org/tip/848785df48835eefebe0c4eb5da7690690b0a8b7
+Author:        Valentin Schneider <valentin.schneider@arm.com>
+AuthorDate:    Tue, 08 Sep 2020 19:49:56 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 09 Sep 2020 10:09:03 +02:00
 
+sched/topology: Move sd_flag_debug out of #ifdef CONFIG_SYSCTL
 
-url:    https://github.com/0day-ci/linux/commits/Vineet-Gupta/ARC-plat-eznps-Drop-support-for-EZChip-NPS-platform/20200909-121133 
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  34d4ddd359dbcdf6c5fb3f85a179243d7a1cb7f8
-config: arc-randconfig-r026-20200909
-compiler: arc-elf-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross  -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc  randconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc 
+The last sd_flag_debug shuffle inadvertently moved its definition within
+an #ifdef CONFIG_SYSCTL region. While CONFIG_SYSCTL is indeed required to
+produce the sched domain ctl interface (which uses sd_flag_debug to output
+flag names), it isn't required to run any assertion on the sched_domain
+hierarchy itself.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+Move the definition of sd_flag_debug to a CONFIG_SCHED_DEBUG region of
+topology.c.
 
-All errors (new ones prefixed by >>):
+Now at long last we have:
 
->> arch/arc/Kconfig:100: can't open file "arch/arc/plat-eznps/Kconfig"
-   make[2]: *** [scripts/kconfig/Makefile:71: oldconfig] Error 1
-   make[1]: *** [Makefile:606: oldconfig] Error 2
-   make: *** [Makefile:185: __sub-make] Error 2
-   make: Target 'oldconfig' not remade because of errors.
---
->> arch/arc/Kconfig:100: can't open file "arch/arc/plat-eznps/Kconfig"
-   make[2]: *** [scripts/kconfig/Makefile:71: olddefconfig] Error 1
-   make[1]: *** [Makefile:606: olddefconfig] Error 2
-   make: *** [Makefile:185: __sub-make] Error 2
-   make: Target 'olddefconfig' not remade because of errors.
+- sd_flag_debug declared in include/linux/sched/topology.h iff
+  CONFIG_SCHED_DEBUG=y
+- sd_flag_debug defined in kernel/sched/topology.c, conditioned by:
+  - CONFIG_SCHED_DEBUG, with an explicit #ifdef block
+  - CONFIG_SMP, as a requirement to compile topology.c
 
-# https://github.com/0day-ci/linux/commit/80d11f778086417bae2b58423840deaa2e527ce6 
-git remote add linux-review https://github.com/0day-ci/linux 
-git fetch --no-tags linux-review Vineet-Gupta/ARC-plat-eznps-Drop-support-for-EZChip-NPS-platform/20200909-121133
-git checkout 80d11f778086417bae2b58423840deaa2e527ce6
-vim +100 arch/arc/Kconfig
+With this change, all symbols pertaining to SD flag metadata (with the
+exception of __SD_FLAG_CNT) are now defined exclusively within topology.c
 
-cfdbc2e16e65c1e Vineet Gupta      2013-01-18   96  
-072eb693904a52d Christian Ruppert 2013-04-12   97  source "arch/arc/plat-tb10x/Kconfig"
-556cc1c5f528dcc Alexey Brodkin    2014-01-27   98  source "arch/arc/plat-axs10x/Kconfig"
-cfdbc2e16e65c1e Vineet Gupta      2013-01-18   99  #New platform adds here
-966657890e874d3 Noam Camus        2015-10-16 @100  source "arch/arc/plat-eznps/Kconfig"
-a518d63777a4e94 Alexey Brodkin    2017-08-15  101  source "arch/arc/plat-hsdk/Kconfig"
-93ad700de2abc11 Vineet Gupta      2013-01-22  102  
-
+Fixes: 8fca9494d4b4 ("sched/topology: Move sd_flag_debug out of linux/sched/topology.h")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200908184956.23369-1-valentin.schneider@arm.com
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org 
-_______________________________________________
-kbuild mailing list -- kbuild@lists.01.org
-To unsubscribe send an email to kbuild-leave@lists.01.org
+ kernel/sched/debug.c    | 6 ------
+ kernel/sched/topology.c | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 0d7896d..0655524 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -245,12 +245,6 @@ set_table_entry(struct ctl_table *entry,
+ 	entry->proc_handler = proc_handler;
+ }
+ 
+-#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
+-const struct sd_flag_debug sd_flag_debug[] = {
+-#include <linux/sched/sd_flags.h>
+-};
+-#undef SD_FLAG
+-
+ static int sd_ctl_doflags(struct ctl_table *table, int write,
+ 			  void *buffer, size_t *lenp, loff_t *ppos)
+ {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index aa1676a..249bec7 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -25,6 +25,12 @@ static inline bool sched_debug(void)
+ 	return sched_debug_enabled;
+ }
+ 
++#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
++const struct sd_flag_debug sd_flag_debug[] = {
++#include <linux/sched/sd_flags.h>
++};
++#undef SD_FLAG
++
+ static int sched_domain_debug_one(struct sched_domain *sd, int cpu, int level,
+ 				  struct cpumask *groupmask)
+ {
