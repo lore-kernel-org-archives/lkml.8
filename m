@@ -2,73 +2,66 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC055C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80876C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2CA2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w7pR2L08"
+	by mail.kernel.org (Postfix) with ESMTP id 445F62166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599670971;
+	bh=07BCrfn/8+g2jlnsAG6x4JhTKTBQxFKnS9xT7bMNxg8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Gyo0hRsKXx44D0i1IAnE8EcHimXqsguHKJiuEvf+0mVXhIZDp4PILPaq1Yy9jpIYi
+	 yvPKA1lg0yCqmqkLKG8oRTvs7orUIWyBhLa5iMUBlhRpfmp0cpWLUKDjHq6w/lop85
+	 wg7vPkaKWo1/IGC4IxGSp+HA8L61hLPYCo9+X7Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbgIIRCa (ORCPT
+        id S1731284AbgIIRCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730502AbgIIPr0 (ORCPT
+        Wed, 9 Sep 2020 13:02:48 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:37493 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730525AbgIIPrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:47:26 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAE2C061374
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:18:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id w5so3139414wrp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z9k53vYT+N1BhX48Rij3GUI6/3bZme1pQPIscVRVPBk=;
-        b=w7pR2L08zpdeRf35Al+3qzs7BazoxXi4K4IFvtwZqlJyksSS0c7H3PF2KZ2sgSSDpP
-         FujlD1ob/vsHrx5wxZLDonYVVHtcd+AXdHbZfNbNzsCZkbidsTZ+Lr4Nfn2Nd9M9vZBu
-         6WI2b+ZvoxZ3zrP6nAIC6cjUK0kdYgTnytIoeXk4TNJlyjW7FMxZBxbkvHoOBZ82Zlrd
-         kIL8pIbKnrXxflQBzM8bWpfk3tpF7rBN8mZm195zu+18tAAPCku7Da+vnsHdKAA/FT74
-         EElHBXICQCjxCOv9+mZ/k2kk1GjvOPKLrcQ7X/wJpKqivHZx1iP9jiI/2aQIvbMhY/jx
-         h32Q==
+        Wed, 9 Sep 2020 11:47:17 -0400
+Received: by mail-ej1-f67.google.com with SMTP id nw23so4265840ejb.4;
+        Wed, 09 Sep 2020 08:47:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=z9k53vYT+N1BhX48Rij3GUI6/3bZme1pQPIscVRVPBk=;
-        b=OKNq2X7Sf36qBMU9dW1WyW1WWtRkxX7FFaH08Shmsu1Ca4P/5sd6LYEZeM4bwzPeh9
-         H/Ru9KDkf3oGeFyIlZhntW5lRWiR5i71+d+yLG/KwdztD3mIbBlAWKERX626n/m7UX9+
-         7eVTAmsEzvmsd6gSqUxEU4e2TJ1vnY1LN4HzBMKvFVfrMufZgR/ezIF7vCp5eaf2e2jo
-         5NXKcEGwdiPaAKMeCoS8IEbEC3up9M5mpKXGVvAeRc9gAamJrW3e5OTThS+PpuoHQ8vi
-         BzOhQqAfnq+VNumq0zjo0CCqdm7LbGvUO8yshWE8pX50+lXTuUFSYiYguO62TkWyn5Vp
-         8toA==
-X-Gm-Message-State: AOAM533ZE8OS7pBWvqzbWV7G4XtFKCi39LHvprwzlVSPAVnOBXGLIH8m
-        DLMXgevQqe8Lq7/ZBFzhdu06ng==
-X-Google-Smtp-Source: ABdhPJzTIAjuCKugtfkjMCZdT9znBSCY0+3Irznm89yqpZg1M9XHZgxPVJURAeXo03ClvT2+A4cCiw==
-X-Received: by 2002:a5d:5042:: with SMTP id h2mr4138682wrt.409.1599661085905;
-        Wed, 09 Sep 2020 07:18:05 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id q18sm4463736wre.78.2020.09.09.07.18.04
+        bh=4p1CDFl+PUlfhhnDniW1eQduDkR/YtBDlZGh6mzJu5M=;
+        b=PelLgJ+C9E9GxzT/H6XzcZovYk8DTceQGlvSLRujUr490z07Tc2Cip83asU/CW4EGL
+         +KCYiqEnmpeihpDXj8W6OYruJ4HxZRkv1bNczGUnmaCxrYKsQtmbQjSXhP5u50KenHjN
+         SVuOylbpiw+G+WVHyWm173MQ+Oq6RCP2zByVE+cnxF7ESIS0HLt90t/HoLi77wlBZ+LT
+         1iV/t8FMd9dvF6jdrJktRAqfWlQWkUs24BluGn+5S+03n2cIDJjv81zQHDp4nyqmeslv
+         kNwX45PRiL9NiBeRiXwNEpV4MK1qNq5EhyCHNp7CSB8Omjl8IvodTY/qm08RnhyRrQuR
+         3jIQ==
+X-Gm-Message-State: AOAM5317vNKQeo2qjEH+qF6V4Aws23xHSEZ7e9csunevCqxyOPq91pHB
+        jYrq48aXTpkeqhCh8woD4vlRgP4jpJg=
+X-Google-Smtp-Source: ABdhPJzi/hYyGq1JVy+Kg6/YyIph1e7w9rOfhptzmNpInhxHnS6FKRNKDBWHCfA1x1z2+q3bOKx8iA==
+X-Received: by 2002:ac2:5298:: with SMTP id q24mr1992050lfm.164.1599661891028;
+        Wed, 09 Sep 2020 07:31:31 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id h20sm789811ljg.51.2020.09.09.07.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 07:18:05 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH] kdb: Fix pager search for multi-line strings
-Date:   Wed,  9 Sep 2020 15:17:08 +0100
-Message-Id: <20200909141708.338273-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.25.4
+        Wed, 09 Sep 2020 07:31:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1kG18A-000414-4b; Wed, 09 Sep 2020 16:31:26 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/2] serial: core: fix console port-lock regression
+Date:   Wed,  9 Sep 2020 16:30:59 +0200
+Message-Id: <20200909143101.15389-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,56 +69,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently using forward search doesn't handle multi-line strings correctly.
-The search routine replaces line breaks with \0 during the search and, for
-regular searches ("help | grep Common\n"), there is code after the line
-has been discarded or printed to replace the break character.
+These patches fix up the regressions introduced by the console-detach
+changes after which the port lock was no longer initialised for not-yet
+registered consoles during port registration or during early console
+setup.
 
-However during a pager search ("help\n" followed by "/Common\n") when the
-string is matched we will immediately return to normal output and the code
-that should restore the \n becomes unreachable. Fix this by restoring the
-replaced character when we disable the search mode and update the comment
-acordingly.
+Some of the reported driver regressions have been addressed by patching
+individual drivers and later by a work-around for the first issue in
+core but the early setup issue remained.
 
-Fixes: fb6daa7520f9d ("kdb: Provide forward search at more prompt")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
+Johan
 
-Notes:
-    In the long term the kdb pager code would probably benefit from a
-    bigger rewrite since the way it handles newlines is still quirky
-    and confusing. However this fix is easy to backport so I decided
-    not to hold it back whilst we wait for code that is not yet
-    written.
 
- kernel/debug/kdb/kdb_io.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Johan Hovold (2):
+  serial: core: fix port-lock initialisation
+  serial: core: fix console port-lock regression
 
-diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-index 9d847ab851db..e240c97086e2 100644
---- a/kernel/debug/kdb/kdb_io.c
-+++ b/kernel/debug/kdb/kdb_io.c
-@@ -706,12 +706,16 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
- 			size_avail = sizeof(kdb_buffer) - len;
- 			goto kdb_print_out;
- 		}
--		if (kdb_grepping_flag >= KDB_GREPPING_FLAG_SEARCH)
-+		if (kdb_grepping_flag >= KDB_GREPPING_FLAG_SEARCH) {
- 			/*
- 			 * This was a interactive search (using '/' at more
--			 * prompt) and it has completed. Clear the flag.
-+			 * prompt) and it has completed. Replace the \0 with
-+			 * its original value to ensure multi-line strings
-+			 * are handled properly, and return to normal mode.
- 			 */
-+			*cphold = replaced_byte;
- 			kdb_grepping_flag = 0;
-+		}
- 		/*
- 		 * at this point the string is a full line and
- 		 * should be printed, up to the null.
+ drivers/tty/serial/serial_core.c | 44 +++++++++++++++-----------------
+ include/linux/serial_core.h      |  1 +
+ 2 files changed, 21 insertions(+), 24 deletions(-)
 
-base-commit: f75aef392f869018f78cfedf3c320a6b3fcfda6b
---
-2.25.4
+-- 
+2.26.2
 
