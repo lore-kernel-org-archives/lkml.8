@@ -2,311 +2,118 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112E0C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FCFC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D2E921941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:21:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iA0FGZJW"
+	by mail.kernel.org (Postfix) with ESMTP id 634AC21941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgIIPVh (ORCPT
+        id S1729971AbgIIPVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:21:37 -0400
-Received: from mail-eopbgr20050.outbound.protection.outlook.com ([40.107.2.50]:26974
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728443AbgIIL2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:28:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fvq3Ns8xHl82FULm1DPkJJm7XozbaNvcka8E1Cdt++mwkIoxfYFKkSgW6hq3we1mW/QaGnLy2j0UXCEybOjR1tBsSt+msntN4cg4EBGHYrYviq7uSV/AzC92JGcL+DwV/1cI5J/lSHSC2TAfzRAURLmEkdU9G13PJkH83I8pqxxLNwd9pn0IPVDDu7DJGpOPuRrm//UvgzBIujw1wcAt0Truxt1LSiQsDHjknQiFf+rWHI4aICGlpgYjM6tgJ28YoiEu2MZZl9WkMziuQq3Iwbecba1k/igXbJciOL1odzg46ce+RHclckk+Z/TXiB2nTcL7egr31WCI98CALhqr0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZTU+VvFxQuiEKrPS0SQ/lTLYebk3AfnfwCMBI4OUiJs=;
- b=jM3P+LDG6yejK3TKOKwZa5Jv3145P6mQSM3IRKYXvpEqZEtqTqu1B+mZflm1HKKIZtKOkdnWDTeMPlwwBmRUgqTVATX7KWtkSOW/MIdCdUXJjM4cURyIE0ejJyD4nnvvayLtCJkrIglWaT50g2ONKS72RJHaDEFlLGGq7ZOfsmqIV5wHCyZt1xKbiCDTIXHiTUMhYHXs5fFCBOuzr00OvP3ZoTOWDt9PME2N6aR9ibRDp99f5mtrJa9XR9ossoeIM6/CDXZ/a7AZmzpDhfWlsoKypWeryCXGEudr6+NRgAw+5F+GVuKA3+cQb0hKhqJX9A8aYcy0ci55j5n8hknSUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZTU+VvFxQuiEKrPS0SQ/lTLYebk3AfnfwCMBI4OUiJs=;
- b=iA0FGZJWhtSAFhebSscC8PAyIVedBoHtF4NrEi+oj7NJSCB0RR8xHHHMorKOeM+SAr/KQaIozxYWDa8CHYcd0RSX8VDJ1ZNh2GAq2oDXUJYVFHuQExj6QuiBtLTvmmmhbg4ZSySlk34it+C2eMm+ILBxS42ZvpE6etoi1SPZMUs=
-Received: from HE1PR04MB3196.eurprd04.prod.outlook.com (2603:10a6:7:21::31) by
- HE1PR0402MB3561.eurprd04.prod.outlook.com (2603:10a6:7:89::32) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.15; Wed, 9 Sep 2020 11:27:18 +0000
-Received: from HE1PR04MB3196.eurprd04.prod.outlook.com
- ([fe80::d899:49cb:a131:dd62]) by HE1PR04MB3196.eurprd04.prod.outlook.com
- ([fe80::d899:49cb:a131:dd62%5]) with mapi id 15.20.3348.019; Wed, 9 Sep 2020
- 11:27:18 +0000
-From:   Ashish Kumar <ashish.kumar@nxp.com>
-To:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Varun Sethi <V.Sethi@nxp.com>, Arokia Samy <arokia.samy@nxp.com>
-Subject: RE: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
-Thread-Topic: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
-Thread-Index: AQHWhaWudJxNb8lKBUu2hXu+NXNcFKlgIu4Q
-Date:   Wed, 9 Sep 2020 11:27:17 +0000
-Message-ID: <HE1PR04MB3196017359FD8B44F44EE5EC95260@HE1PR04MB3196.eurprd04.prod.outlook.com>
-References: <20200908060227.299-1-kuldip.dwivedi@puresoftware.com>
-In-Reply-To: <20200908060227.299-1-kuldip.dwivedi@puresoftware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: puresoftware.com; dkim=none (message not signed)
- header.d=none;puresoftware.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [182.69.247.28]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e53ca9a9-5a86-47b8-19e9-08d854b34fa8
-x-ms-traffictypediagnostic: HE1PR0402MB3561:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR0402MB35610CBF9E83F9C293DC4B9995260@HE1PR0402MB3561.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nEqt+LXUcsPPsC63rdp6IH8k5odb6vpvlPTt3kSxDNO1U3VdrxgG2gD7OcCyF62/Pp+2XWnCXlIROIrVml8kGBBUxLr6a1tufgSTpuDzsIkpkigVMZr8dkL3HYGeXGdK0IDenwnjmbOunksl1O4XTRFV3Lt+w26f1EBfjIcyBkGhOe1aT8Ohsjak2YmuH9N991xZ/rN+bJc81FkUW8kHJfP6mrvRp4IvJv0tk+9cAPwRu/k259l4TzOY9JD6GIXMjE4oB6t7zQqTJ+Y4Gq9jVRzLMhNBgvSo+h4/FM7l8GbGIXPJoSsouMdpMiQA50inZ6uXBEhXCUDknnVOxbeLrA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR04MB3196.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(52536014)(64756008)(44832011)(66556008)(66476007)(4326008)(5660300002)(33656002)(478600001)(8936002)(9686003)(8676002)(55016002)(7696005)(86362001)(2906002)(6506007)(53546011)(26005)(71200400001)(54906003)(110136005)(66946007)(76116006)(66446008)(316002)(83380400001)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: xPAlqigj0pZDqOy8tOQw1t8btaJfwXPwId/5lBWSL7GeYxWUoxEVZz4sygH/dxPph37sLzZCGc9BOVveHIzUhzn4mEEMLxDpRwNozl4EZWS+urqh1UlHwgtBEph0cB1wNM7+SVtGiUGPE9XikAyHvaR+obRoBXS/bAhXvGhhm3Z6rNc9f6/IbHWXFy1BEI3xKrIYx1KaMuF4g8l/Dw3IkCczPiOjXcyCqRnVOoLzmqzxsyGib4bcyFkJlNItX1BIiJejHpa54NIW+U3uYIubiw5HSblJ30+PI+x7+SZlTRKb0ee9Gfs7K6RmK5ZVvm+ik9qKmUN43CTFNiY6UPFvT/NwRCol92j2I4w8tf2sBhnya83f/4sXw6vSfVbzMgahgByLEzrWremxe+XryckcU4ILL40S5RN5tFnonXB/yZDmtWvx0pQ4hFEOv9re4okLX6jCpEVhFpL4HIdrUNl5TMVuMUZ5Ks3vZSDbPyNBGrmoi05rKRafFJtVtA1TZmPf0TySAQvVb1nBJREkkErkUgB96jsRD3bPnACHLIc687GONgzPYNh61dKAzwTwjhAuK65SLrH7dQKt+0Mzb/Ss+WYJIxFaP+FR3YVXvlfiazriW3kni5Z3WfW6Q+KzXt44+qmSx1I/qPvT9EDbieZQHQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Sep 2020 11:21:52 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:35999 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728350AbgIIL2c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:28:32 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MG9Xu-1kJCr04Bbw-00GaHP; Wed, 09 Sep 2020 13:27:15 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/23] Use asm-generic for mmu_context no-op functions
+Date:   Wed,  9 Sep 2020 13:27:08 +0200
+Message-Id: <159965079776.3591084.10754647036857628984.b4-ty@arndb.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR04MB3196.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e53ca9a9-5a86-47b8-19e9-08d854b34fa8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2020 11:27:17.7325
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OAT/beGZVQzsVYV6MWukpWrx+bueg5O+wpRxA1xcInkF2K7nqZR962hyiFVR0opMU8ABHvobUuS39bzgTqh0hw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0402MB3561
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:7OMazxQ6DY8MEF6H/bZ/vvXzzHh3+g8R4o0uC3slmdaoHjeIgYq
+ yYLMHXATL1HlHzETUxMec1heCWdAqn5Xbe34Z7iqBpu9Y+QREbqvwyqSFWcQXq6+OkYWUq4
+ mlJxy2fwrK+/O2uwi47EP5zNbeaSwyCVP23+DW/IriB8kDIZHKFD40PKK96QjJV0N2KRzcV
+ XgsmqvhStI+/vCfKlCM9A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YBNooPUWFN8=:iu760Z4R7UBivMuwhQHeHx
+ YWGUNWbZBoBYfk7wdQPrvP1mVGFgET9PxQovhGbZlFI5aEYtZuOzHfM/eRykMdbMQ6ww1LpMc
+ WK7ZuviVeyXh5f8DYbWBSRFbHi7frupdJsOKbULIrnLSZpdcX/PmV9M7eC2i4AHqbGInC63cs
+ z+hNRtsNbWqEhoyXzsPm49s+EKw+XpUQZM50TYKqMcSbprL3tkjFiOxFGWpCFWmidcZ+qj/+l
+ EKg37uALHPRd2MfjLG0mKt9/hR5zuy57OeAJax1lCwlORQa5kpTvsOhUR5hxRFgN4ZXFQk9wp
+ 3ooVViweyIcusk1tEDI+U9N5c/qXBG7FnGvHREG4qGAfcBw/HTT0zvh8TPR+0HAbcA+Y29nV3
+ HIOH1B6nt0FWzIDzno0O9y/cfTwxDLtOxPqrv+oVWlCsRH8DA63nGHDSTFpE+Q9qCCHzctsVv
+ pLp4TLvZegnYRHmCF44R+K/A/H6jKrFe/snW7gywhGynxLUVNO8MThghQtVUt6m5t8YHcD1wG
+ I/nCCzrTddRlOqIWNT56HKsDJIL6wmlw0xY0V0PXxA/4Hc+4+7xVpEAMttmEa+2airyFYsLaL
+ HIgm4ihHJlHkDCu6WVpWN+D+zYIH/sVzsaQ+0+KB8BMQos8oc4NYbUSlP7RAX9wV7aP47qTMR
+ CWebRmcNhnV55e6Ni/NUvroWkjws9gk8V1vyndOZU09izuC7dDHDUgY6lVvOaN8zv0h9sox/h
+ gscn/yomTex4SVx5LjeVs4jcvyTcr5Pe3XjyR3nvBkLqTFH5dx7HqJNAyqFp5a3OGfu2Gc9Zv
+ qHxP6rHut/gY4hmgJ/SZ/5dZJlXZe+6D6/6HWtbIDvbVPTNE7E/I3CRmKD9daBAzcGBYTMu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kuldeep Dwivedi,
+On Wed, 2 Sep 2020 00:15:16 +1000, Nicholas Piggin wrote:
+> It would be nice to be able to modify mmu_context functions or add a
+> hook without updating all architectures, many of which will be no-ops.
+> 
+> The motivation for this series is a change to lazy mmu handling, but
+> this series stands on its own as a good cleanup whether or not we end
+> up making that change.
+> 
+> [...]
 
-> -----Original Message-----
-> From: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> Sent: Tuesday, September 8, 2020 11:32 AM
-> To: Ashish Kumar <ashish.kumar@nxp.com>; Yogesh Gaur
-> <yogeshgaur.83@gmail.com>; Mark Brown <broonie@kernel.org>; linux-
-> spi@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Varun Sethi <V.Sethi@nxp.com>; Arokia Samy <arokia.samy@nxp.com>;
-> kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> Subject: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
->=20
-> Caution: EXT Email
->=20
-> Currently NXP fspi  driver has support of DT only. Adding ACPI
-> support to the driver so that it can be used by UEFI firmware
-> booting in ACPI mode. This driver will be probed if any firmware
-> will expose HID "NXP0009" in DSDT table.
->=20
-> Signed-off-by: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-Does these change affects non-ACPI FSPI driver in Linux? What test case wer=
-e run to verify the same?
+Applied to asm-generic, thanks!
 
-> ---
->=20
-> Notes:
->     1. Add ACPI match table
->     2. Change the DT specific APIs to device property APIs
->        so that same API can be used in DT and ACPi mode.
->     3. Omit clock configuration part - in ACPI world, the firmware
->        is responsible for clock maintenance.
->     4. This patch is tested on LX2160A platform
->=20
->  drivers/spi/spi-nxp-fspi.c | 66 +++++++++++++++++++++++++++-----------
->  1 file changed, 47 insertions(+), 19 deletions(-)
->=20
-> diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-> index 1ccda82da206..acdb186ddfb2 100644
-> --- a/drivers/spi/spi-nxp-fspi.c
-> +++ b/drivers/spi/spi-nxp-fspi.c
-> @@ -3,7 +3,8 @@
->  /*
->   * NXP FlexSPI(FSPI) controller driver.
->   *
-> - * Copyright 2019 NXP.
-> + * Copyright 2019-2020 NXP
-Why Update NXP copyright?
+[01/23] asm-generic: add generic MMU versions of mmu context functions
+        (no commit info)
+[02/23] alpha: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[03/23] arc: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[04/23] arm: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[05/23] arm64: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[06/23] csky: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[07/23] hexagon: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[08/23] ia64: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[09/23] m68k: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[10/23] microblaze: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[11/23] mips: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[12/23] nds32: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[13/23] nios2: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[14/23] openrisc: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[15/23] parisc: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[16/23] powerpc: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[17/23] riscv: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[18/23] s390: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[19/23] sh: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[20/23] sparc: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[21/23] um: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[22/23] x86: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
+[23/23] xtensa: use asm-generic/mmu_context.h for no-op implementations
+        (no commit info)
 
-> + * Copyright 2020 Puresoftware Ltd.
->   *
->   * FlexSPI is a flexsible SPI host controller which supports two SPI
->   * channels and up to 4 external devices. Each channel supports
-> @@ -30,6 +31,7 @@
->   *     Frieder Schrempf <frieder.schrempf@kontron.de>
->   */
->=20
-> +#include <linux/acpi.h>
->  #include <linux/bitops.h>
->  #include <linux/clk.h>
->  #include <linux/completion.h>
-> @@ -563,6 +565,9 @@ static int nxp_fspi_clk_prep_enable(struct nxp_fspi
-> *f)
->  {
->         int ret;
->=20
-> +       if (is_acpi_node(f->dev->fwnode))
-> +               return 0;
-> +
->         ret =3D clk_prepare_enable(f->clk_en);
->         if (ret)
->                 return ret;
-> @@ -576,10 +581,15 @@ static int nxp_fspi_clk_prep_enable(struct
-> nxp_fspi *f)
->         return 0;
->  }
->=20
-> -static void nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
-> +static int nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
->  {
-> +       if (is_acpi_node(f->dev->fwnode))
-> +               return 0;
-> +
->         clk_disable_unprepare(f->clk);
->         clk_disable_unprepare(f->clk_en);
-> +
-> +       return 0;
->  }
->=20
->  /*
-> @@ -900,6 +910,8 @@ static int nxp_fspi_default_setup(struct nxp_fspi *f)
->                 return ret;
->=20
->         /* Reset the module */
-> +       fspi_writel(f, FSPI_MCR0_SWRST, (base + FSPI_MCR0));
-> +
-Why is this SW reset needed now? This will alter nxp_fspi_resume() function=
- as well.=20
-
->         /* w1c register, wait unit clear */
->         ret =3D fspi_readl_poll_tout(f, f->iobase + FSPI_MCR0,
->                                    FSPI_MCR0_SWRST, 0, POLL_TOUT, false);
-> @@ -1001,7 +1013,7 @@ static int nxp_fspi_probe(struct platform_device
-> *pdev)
->=20
->         f =3D spi_controller_get_devdata(ctlr);
->         f->dev =3D dev;
-> -       f->devtype_data =3D of_device_get_match_data(dev);
-> +       f->devtype_data =3D device_get_match_data(dev);
->         if (!f->devtype_data) {
->                 ret =3D -ENODEV;
->                 goto err_put_ctrl;
-> @@ -1011,6 +1023,8 @@ static int nxp_fspi_probe(struct platform_device
-> *pdev)
->=20
->         /* find the resources - configuration register address space */
->         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> "fspi_base");
-> +       if (!res)
-> +               res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-Why is this needed ?, _byname() will get you fspi_base value.
-
->         f->iobase =3D devm_ioremap_resource(dev, res);
->         if (IS_ERR(f->iobase)) {
->                 ret =3D PTR_ERR(f->iobase);
-> @@ -1020,8 +1034,11 @@ static int nxp_fspi_probe(struct platform_device
-> *pdev)
->         /* find the resources - controller memory mapped space */
->         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> "fspi_mmap");
->         if (!res) {
-> -               ret =3D -ENODEV;
-> -               goto err_put_ctrl;
-> +               res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-Why is this needed? _byname() will get you fspi_mmap.
-If fspi_mmap is not present then fetch 1st IORESOURE_MEM ?
-
-Regards
-Ashish=20
-> +               if (!res) {
-> +                       ret =3D -ENODEV;
-> +                       goto err_put_ctrl;
-> +               }
->         }
->=20
->         /* assign memory mapped starting address and mapped size. */
-> @@ -1029,22 +1046,24 @@ static int nxp_fspi_probe(struct platform_device
-> *pdev)
->         f->memmap_phy_size =3D resource_size(res);
->=20
->         /* find the clocks */
-> -       f->clk_en =3D devm_clk_get(dev, "fspi_en");
-> -       if (IS_ERR(f->clk_en)) {
-> -               ret =3D PTR_ERR(f->clk_en);
-> -               goto err_put_ctrl;
-> -       }
-> +       if (dev_of_node(&pdev->dev)) {
-> +               f->clk_en =3D devm_clk_get(dev, "fspi_en");
-> +               if (IS_ERR(f->clk_en)) {
-> +                       ret =3D PTR_ERR(f->clk_en);
-> +                       goto err_put_ctrl;
-> +               }
->=20
-> -       f->clk =3D devm_clk_get(dev, "fspi");
-> -       if (IS_ERR(f->clk)) {
-> -               ret =3D PTR_ERR(f->clk);
-> -               goto err_put_ctrl;
-> -       }
-> +               f->clk =3D devm_clk_get(dev, "fspi");
-> +               if (IS_ERR(f->clk)) {
-> +                       ret =3D PTR_ERR(f->clk);
-> +                       goto err_put_ctrl;
-> +               }
->=20
-> -       ret =3D nxp_fspi_clk_prep_enable(f);
-> -       if (ret) {
-> -               dev_err(dev, "can not enable the clock\n");
-> -               goto err_put_ctrl;
-> +               ret =3D nxp_fspi_clk_prep_enable(f);
-> +               if (ret) {
-> +                       dev_err(dev, "can not enable the clock\n");
-> +                       goto err_put_ctrl;
-> +               }
->         }
->=20
->         /* find the irq */
-> @@ -1127,6 +1146,14 @@ static const struct of_device_id nxp_fspi_dt_ids[]
-> =3D {
->  };
->  MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
->=20
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id nxp_fspi_acpi_ids[] =3D {
-> +       { "NXP0009", .driver_data =3D (kernel_ulong_t)&lx2160a_data, },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(acpi, nxp_fspi_acpi_ids);
-> +#endif
-> +
->  static const struct dev_pm_ops nxp_fspi_pm_ops =3D {
->         .suspend        =3D nxp_fspi_suspend,
->         .resume         =3D nxp_fspi_resume,
-> @@ -1136,6 +1163,7 @@ static struct platform_driver nxp_fspi_driver =3D {
->         .driver =3D {
->                 .name   =3D "nxp-fspi",
->                 .of_match_table =3D nxp_fspi_dt_ids,
-> +               .acpi_match_table =3D ACPI_PTR(nxp_fspi_acpi_ids),
->                 .pm =3D   &nxp_fspi_pm_ops,
->         },
->         .probe          =3D nxp_fspi_probe,
-> --
-> 2.17.1
-
+       Arnd
