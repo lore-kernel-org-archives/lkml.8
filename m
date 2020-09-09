@@ -2,87 +2,84 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3120FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8371C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32B421D43
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705A421D43
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgIILoe (ORCPT
+        id S1729449AbgIILpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:44:34 -0400
-Received: from sauhun.de ([88.99.104.3]:48374 "EHLO pokefinder.org"
+        Wed, 9 Sep 2020 07:45:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36500 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgIILmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726293AbgIILmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 07:42:14 -0400
-Received: from localhost (p54b33098.dip0.t-ipconnect.de [84.179.48.152])
-        by pokefinder.org (Postfix) with ESMTPSA id 1B8B82C082B;
-        Wed,  9 Sep 2020 13:11:22 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 13:11:21 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        linux-media <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v8 6/6] at24: Support probing while off
-Message-ID: <20200909111121.GJ2272@ninjato>
-References: <20200903081550.6012-1-sakari.ailus@linux.intel.com>
- <20200903081550.6012-7-sakari.ailus@linux.intel.com>
- <CAMpxmJX40=iYYxL9Uvs1Pjj9c3NvZBGJ9Mh9-87T0c==FKEXRw@mail.gmail.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0C6D4B732;
+        Wed,  9 Sep 2020 11:40:59 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 13:40:57 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, vdavydov.dev@gmail.com, shy828301@gmail.com
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+Message-ID: <20200909114057.GH7348@dhcp22.suse.cz>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+ <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
+ <20200826011946.spknwjt44d2szrdo@ca-dmjordan1.us.oracle.com>
+ <01ed6e45-3853-dcba-61cb-b429a49a7572@linux.alibaba.com>
+ <20200828014022.y5xju6weysqpzxd2@ca-dmjordan1.us.oracle.com>
+ <20200909024432.GA9736@desktop-ziqianlu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9Q2l3mYpK16UQ/iv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJX40=iYYxL9Uvs1Pjj9c3NvZBGJ9Mh9-87T0c==FKEXRw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200909024432.GA9736@desktop-ziqianlu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 09-09-20 10:44:32, Aaron Lu wrote:
+> On Thu, Aug 27, 2020 at 09:40:22PM -0400, Daniel Jordan wrote:
+> > I went back to your v1 post to see what motivated you originally, and you had
+> > some results from aim9 but nothing about where this reared its head in the
+> > first place.  How did you discover the bottleneck?  I'm just curious about how
+> > lru_lock hurts in practice.
+> 
+> I think making lru_lock per-memcg helps in colocated environment: some
+> workloads are of high priority while some workloads are of low priority.
+> 
+> For these low priority workloads, we may even want to use some swap for
+> it to save memory and this can cause frequent alloc/reclaim, depending
+> on its workingset etc. and these alloc/reclaim need to hold the global
+> lru lock and zone lock. And then when the high priority workloads do
+> page fault, their performance can be adversely affected and that is not
+> acceptible since these high priority workloads normally have strict SLA
+> requirement.
 
---9Q2l3mYpK16UQ/iv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+While this all sounds reasonably. We are lacking _any_ numbers to
+actually make that a solid argumentation rather than hand waving.
+Having something solid is absolutely necessary for a big change like
+this.
 
-
-> This currently conflicts with the fix I queued for at24 for v5.9.
-> Which tree is going to take this series?
-
-I recall we agreed on I2C.
-
-
---9Q2l3mYpK16UQ/iv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9YuFUACgkQFA3kzBSg
-KbbPiA//bLpenFByrgOHGcnTs15I5XOFV265XepqY1gAEtxBftW1cz1Z9VXYs3tR
-p9RCBb+Lf6FcNah3nA4Nwksdl8SH/zWPJhWRTAcxgMx+s5PmfY4giXQyHblTNMtv
-xYNxJFpmFN01TE/Vi0KXqelssyNBwj2cvbfoMKJiINbn9sE8V9s08AxLxBAsJmlK
-qtKkuNzctQhbewUyVW5Z+S8MLuxYRSKibfGPEXFm9h6+NKhg50TCTRrhkVYPEzLe
-kt2ZFU2TjxVnY4yxL8igM4vktC/Cgy359PlWCe2mFoY3Iz70fEDoXMrIq4V1cTeD
-EyCqvjSRWeV8YTK0lPwJRQJQUbfYXrAiA9S+41Tch/NWVOpymBaMxeML9hbb33P4
-rxTKygGQVwKZan61IKw3paOou8CA5RSiask/4okabdVz6UJ1qGDEpBiuEeRxL7u0
-shdEHZBcT84zRHRQIpFc3z/LsgeXwxi2z0kwN2EBVt6NniuHCsvAzlEx1ZYMM2nY
-ykM/uta6gLbzfbI8agotN8TDRME7Eipv/+//oDFyoRETxzAqnph1R8LpjNOhOGoS
-8T/PHM4uB30sIA3JAE79S25txIPfNHvPUJeRIzud0Ec81R/m2WyOyyFUMAu5oVuz
-2Dzx7FtHclH3HFkqz2bFTd+gw0eY1ZL1FuEPJXkfxBwe7HN/3lA=
-=rCmE
------END PGP SIGNATURE-----
-
---9Q2l3mYpK16UQ/iv--
+-- 
+Michal Hocko
+SUSE Labs
