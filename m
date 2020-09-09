@@ -2,130 +2,179 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B1DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C4AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD77208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE9020757
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yc1be8SB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="DB0AOF0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgIIIJs (ORCPT
+        id S1728954AbgIIIKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:09:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgIIIJq (ORCPT
+        Wed, 9 Sep 2020 04:10:31 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:48125 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbgIIIK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:09:46 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BB6C061573;
-        Wed,  9 Sep 2020 01:09:46 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m8so1522278pgi.3;
-        Wed, 09 Sep 2020 01:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=x1ennYUlzh5ZiE58CNNa6Rmzq+yOs03mH5GcYAaRQyI=;
-        b=Yc1be8SBjWq+KAkLjeHBXNGg8D8viucHr66IFvqr6CPDdnxzpg7V64QlqeP+DThD5B
-         91WRDzyRNWp48mkFkh/Mj+4ZC+xzdtjx4rCB6RvL8bWiZa4nmaJz1C/8T5a3mw0nEpHd
-         NuI1+sKPX3ExoP/YaVhuXeOCKSVudYL8dGLpykiiIRSaGEp1P47q5yVRtEA2R2qiOomN
-         +4E4KscqSXJibUJ8xPCbTXp8UjcEvJMDqvGh2xcaYbOjuOC3owp/S6hDg/+4/NfnuQVk
-         Rvlu9ZGgV0uNmWU0bhkYAwD9kNGkMd4LWAU6Ub1P6S8uiN4t4b1vS1CBYIvA/dPojSns
-         ofdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=x1ennYUlzh5ZiE58CNNa6Rmzq+yOs03mH5GcYAaRQyI=;
-        b=DGdZbyIxQQmeEOLmrbfWYdzvDwFhX/fZ3+l3MHfPMWqfUE58SpyQbjEBU7Yu6H4wZj
-         tWVKlsFEpcygU6XUQV8abHM3Jn4xfIbD8coakCyvT75Uc9vbfDgwaKTFbG1fVjsDDrBv
-         rRZCVMnUsemkp3cPz1ODQZ4mLeaczyUCq33h7RAKigr9va0pdOB3lxDGXQgU6HL+sxO6
-         v9wftzvv+RrvGOUwkUUf2ix5isrA55Q+HNEJQX1rucwIcHcGuKALWH780AXbv9XyZxjI
-         8/r9cztpajnixIAEZW0nexQxeZYvMe3bs32AEXfRabbHfBgCD+q4dLSYEg+SHmrKOfxF
-         Gizg==
-X-Gm-Message-State: AOAM5304J8j5nIFYU8MjvGki7gp3yHJDbnvCb5JMMhQEf3wjA04FwdkD
-        pc7+8ZrXjfmga71Lq+zsTfU=
-X-Google-Smtp-Source: ABdhPJwLmGAG2A5a2r29KKqQm2O+XLzOCLEkeRfBbqYIWr+0Gl9hJUGEkYlO4HbYh4Z8nRMVyY5bPA==
-X-Received: by 2002:a17:902:ff02:b029:d0:89f3:28d2 with SMTP id f2-20020a170902ff02b02900d089f328d2mr2840803plj.14.1599638985715;
-        Wed, 09 Sep 2020 01:09:45 -0700 (PDT)
-Received: from adolin ([49.207.200.122])
-        by smtp.gmail.com with ESMTPSA id f10sm1790655pfk.195.2020.09.09.01.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 01:09:44 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 13:39:39 +0530
-From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
-To:     cocci@systeme.lip6.fr
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Julia.Lawall@lip6.fr, Gilles.Muller@lip6.fr, masahiroy@kernel.org,
-        michal.lkml@markovi.net, nicolas.palix@imag.fr
-Subject: [PATCH V2] scripts: coccicheck: Do not use shift command when rule
- is specfified
-Message-ID: <20200909080939.bhkgluvo5zw2kder@adolin>
+        Wed, 9 Sep 2020 04:10:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1599639029;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yXL30i3WyuUF7A2QXRkz5zJReRjKthYKlquFiCBqi7E=;
+  b=DB0AOF0Y2uY+nQZjQGOKnuf1WGyy0aHUny0vvGnKStvf4nSuWfqW/sHn
+   LSsegR9H+SHa0Bn100qUpj1lwooLJ6SkjwlowGO8qBrGhTSwh2/2u7nTU
+   jX8feWhG6k2tUQXTFJ2iSwYFqddaKd8LmQVDycvbxMkL8Z7bcZ8XT98nU
+   g=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: Be6vo8VWXTZiCSjiTPzLxo6WwimGVNp2BNAvOJEjGmarx2ErHKqvjvSEtqthJVLWXte45s1pyr
+ IhQyUa10GDng2hzD97ox7GKenx0nRVAQslBDsMPhzzcLQDxqfDvCSkUcfytgTXIn1s6As7GPp5
+ 1gvHqYTrf/1kCsvxGMYVXdVCfatDwJGrRt9K8bX0dp+W3ODfFVuRxYijNLxPIScl2c39BhXs0G
+ fFcuLycfn9Oijb5fmV9R2eX4XDI/yvk3etbe/Zt5qfarkafT0eikBdGPY/cX6f8VmO/DjaErN7
+ Bgw=
+X-SBRS: 2.7
+X-MesageID: 26274962
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,409,1592884800"; 
+   d="scan'208";a="26274962"
+Date:   Wed, 9 Sep 2020 10:10:14 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Sebastien Boeuf" <sebastien.boeuf@intel.com>,
+        Liu Bo <bo.liu@linux.alibaba.com>,
+        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200909081014.GX734@Air-de-Roger>
+References: <20200908200950.1368e71b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
+In-Reply-To: <20200908200950.1368e71b@canb.auug.org.au>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ FTLPEX02CL06.citrite.net (10.13.108.179)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The command "make coccicheck C=1 CHECK=scripts/coccicheck" results in the
-error:
-	./scripts/coccicheck: line 65: -1: shift count out of range
+On Tue, Sep 08, 2020 at 08:09:50PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/xen/unpopulated-alloc.c: In function 'fill_list':
+> drivers/xen/unpopulated-alloc.c:30:9: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>    30 |  pgmap->res.name = "Xen scratch";
+>       |         ^~~
+>       |         ref
+> drivers/xen/unpopulated-alloc.c:31:9: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>    31 |  pgmap->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+>       |         ^~~
+>       |         ref
+> drivers/xen/unpopulated-alloc.c:33:51: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>    33 |  ret = allocate_resource(&iomem_resource, &pgmap->res,
+>       |                                                   ^~~
+>       |                                                   ref
+> In file included from include/asm-generic/memory_model.h:5,
+>                  from arch/x86/include/asm/page.h:76,
+>                  from arch/x86/include/asm/thread_info.h:12,
+>                  from include/linux/thread_info.h:38,
+>                  from arch/x86/include/asm/preempt.h:7,
+>                  from include/linux/preempt.h:78,
+>                  from include/linux/spinlock.h:51,
+>                  from include/linux/mmzone.h:8,
+>                  from include/linux/gfp.h:6,
+>                  from drivers/xen/unpopulated-alloc.c:3:
+> drivers/xen/unpopulated-alloc.c:53:35: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>    53 |   xen_pfn_t pfn = PFN_DOWN(pgmap->res.start);
+>       |                                   ^~~
+> include/linux/pfn.h:20:23: note: in definition of macro 'PFN_DOWN'
+>    20 | #define PFN_DOWN(x) ((x) >> PAGE_SHIFT)
+>       |                       ^
+> drivers/xen/unpopulated-alloc.c:58:30: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>    58 |     release_resource(&pgmap->res);
+>       |                              ^~~
+>       |                              ref
+> drivers/xen/unpopulated-alloc.c:69:28: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>    69 |   release_resource(&pgmap->res);
+>       |                            ^~~
+>       |                            ref
+> fs/fuse/virtio_fs.c: In function 'virtio_fs_setup_dax':
+> fs/fuse/virtio_fs.c:838:9: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
+>   838 |  pgmap->res = (struct resource){
+>       |         ^~~
+>       |         ref
+> 
+> Caused by commit
+> 
+>   b3e022c5a68c ("mm/memremap_pages: convert to 'struct range'")
+> 
+> interacting with commit
+> 
+>   9e2369c06c8a ("xen: add helpers to allocate unpopulated memory")
+> 
+> from Linus' tree (in v5.9-rc4) and commit
+> 
+>   7e833303db20 ("virtiofs: set up virtio_fs dax_device")
+> 
+> from the fuse tree.
+> 
+> I have added the following patch which may require more work but at
+> least makes it all build.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 8 Sep 2020 20:00:20 +1000
+> Subject: [PATCH] merge fix up for "mm/memremap_pages: convert to 'struct
+>  range'"
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-This happens because every time the C variable is specified,
-the shell arguments need to be "shifted" in order to take only
-the last argument, which is the C file to test. These shell arguments
-mostly comprise flags that have been set in the Makefile. However,
-when coccicheck is specified in the make command as a rule, the
-number of shell arguments is zero, thus passing the invalid value -1
-to the shift command, resulting in an error.
+Thanks, LGTM.
 
-Modify coccicheck to use the shift command only when
-number of shell arguments is not zero.
+> ---
+>  drivers/xen/unpopulated-alloc.c | 15 +++++++++------
+>  fs/fuse/virtio_fs.c             |  3 +--
+>  2 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/xen/unpopulated-alloc.c b/drivers/xen/unpopulated-alloc.c
+> index 3b98dc921426..9fa7ce330628 100644
+> --- a/drivers/xen/unpopulated-alloc.c
+> +++ b/drivers/xen/unpopulated-alloc.c
+> @@ -18,6 +18,7 @@ static unsigned int list_count;
+>  static int fill_list(unsigned int nr_pages)
+>  {
+>  	struct dev_pagemap *pgmap;
+> +	struct resource res;
+>  	void *vaddr;
+>  	unsigned int i, alloc_pages = round_up(nr_pages, PAGES_PER_SECTION);
+>  	int ret;
+> @@ -27,10 +28,10 @@ static int fill_list(unsigned int nr_pages)
+>  		return -ENOMEM;
+>  
+>  	pgmap->type = MEMORY_DEVICE_GENERIC;
+> -	pgmap->res.name = "Xen scratch";
+> -	pgmap->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> +	res.name = "Xen scratch";
+> +	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
 
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+You could init the fields at res definition time now, since it's no
+longer dynamically allocated.
 
----
-Changes in V2:
-	- Fix spelling errors as suggested by Markus Elfring
----
- scripts/coccicheck | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/scripts/coccicheck b/scripts/coccicheck
-index e04d328210ac..5c8df337e1e3 100755
---- a/scripts/coccicheck
-+++ b/scripts/coccicheck
-@@ -61,9 +61,19 @@ COCCIINCLUDE=${COCCIINCLUDE// -include/ --include}
- if [ "$C" = "1" -o "$C" = "2" ]; then
-     ONLINE=1
- 
--    # Take only the last argument, which is the C file to test
--    shift $(( $# - 1 ))
--    OPTIONS="$COCCIINCLUDE $1"
-+    # If the rule coccicheck is specified when calling make, number of
-+    # arguments is zero
-+    if [ $# -ne 0 ]; then
-+	    # Take only the last argument, which is the C file to test
-+	    shift $(( $# -1 ))
-+	    OPTIONS="$COCCIINCLUDE $1"
-+    else
-+	if [ "$KBUILD_EXTMOD" = "" ] ; then
-+		OPTIONS="--dir $srctree $COCCIINCLUDE"
-+	else
-+		OPTIONS="--dir $KBUILD_EXTMOD $COCCIINCLUDE"
-+	fi
-+    fi
- 
-     # No need to parallelize Coccinelle since this mode takes one input file.
-     NPROC=1
--- 
-2.25.1
-
+Roger.
