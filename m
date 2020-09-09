@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE67C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D74521D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB43421D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgIIVd7 (ORCPT
+        id S1729993AbgIIVeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:33:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:27957 "EHLO mga03.intel.com"
+        Wed, 9 Sep 2020 17:34:00 -0400
+Received: from mga05.intel.com ([192.55.52.43]:31493 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgIIVdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726883AbgIIVdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 17:33:54 -0400
-IronPort-SDR: L9NSu7kcG1LXU2D61mf6YeFFqGzU+5BkIhDD42Vr+nikDZLGyU4u6oa4+HEPUp7+wmEe8HVqCz
- ayveLKMI2Zhg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="158457658"
+IronPort-SDR: HAaE/lkaXUUArzlZqJHf7WozDkMncBr0eM7ZOPm8MPyPTOXuXNSZppcyvzppzV/ZECOMkZj4q2
+ MRoGn+8Tj4hA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="243236987"
 X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="158457658"
+   d="scan'208";a="243236987"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 14:33:53 -0700
-IronPort-SDR: RdHY684MHQEzDNAW4czVydLm6rRg18+Z2DMfO3ev7esR7vLJc2dDMNd/3Z9YpABoMUgPCKtbl9
- E8SKb1pbkj/g==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 14:33:54 -0700
+IronPort-SDR: VFdTHRiuWqax637N4gTccZ1DAcc/+1mqcVBU0qEEWD+P4/c7+t4JcMsO2tcFQ248Iis8tygRwu
+ f0+w1Ltwd+cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="304647811"
+   d="scan'208";a="317681462"
 Received: from lkp-server01.sh.intel.com (HELO 12ff3cf3f2e9) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 09 Sep 2020 14:33:52 -0700
+  by orsmga002.jf.intel.com with ESMTP; 09 Sep 2020 14:33:52 -0700
 Received: from kbuild by 12ff3cf3f2e9 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kG7ix-0000bV-Ul; Wed, 09 Sep 2020 21:33:51 +0000
-Date:   Thu, 10 Sep 2020 05:33:32 +0800
+        id 1kG7ix-0000bN-Sx; Wed, 09 Sep 2020 21:33:51 +0000
+Date:   Thu, 10 Sep 2020 05:33:38 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 76366050eb1b3151c4b4110c76538ff14dffb74c
-Message-ID: <5f594a2c.cUU5DZ6hCHCZkgPa%lkp@intel.com>
+Subject: [tip:master] BUILD SUCCESS
+ 6a0704dd2bd6e167d7e527e1a7fe22c31ded2dd1
+Message-ID: <5f594a32.EWky/0sFlwxYpzEJ%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,13 +55,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
-branch HEAD: 76366050eb1b3151c4b4110c76538ff14dffb74c  x86/defconfigs: Explicitly unset CONFIG_64BIT in i386_defconfig
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 6a0704dd2bd6e167d7e527e1a7fe22c31ded2dd1  Merge branch 'WIP.fixes'
 
 elapsed time: 720m
 
-configs tested: 154
-configs skipped: 77
+configs tested: 137
+configs skipped: 20
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -77,20 +77,11 @@ powerpc                     mpc5200_defconfig
 sh                   sh7724_generic_defconfig
 c6x                              allyesconfig
 arm                          simpad_defconfig
-mips                malta_kvm_guest_defconfig
-mips                         db1xxx_defconfig
-mips                          rm200_defconfig
-arm                        vexpress_defconfig
-mips                         tb0226_defconfig
-mips                      maltasmvp_defconfig
-h8300                       h8s-sim_defconfig
-mips                      fuloong2e_defconfig
-sh                         apsh4a3a_defconfig
-arm                      footbridge_defconfig
-sh                         ecovec24_defconfig
 i386                             allyesconfig
 c6x                        evmc6678_defconfig
+arm                        vexpress_defconfig
 c6x                        evmc6472_defconfig
+mips                malta_kvm_guest_defconfig
 sh                            shmin_defconfig
 powerpc                        cell_defconfig
 powerpc                     powernv_defconfig
@@ -106,50 +97,44 @@ mips                           mtx1_defconfig
 sh                          r7785rp_defconfig
 arc                           tb10x_defconfig
 arm                        spear3xx_defconfig
-arm                            zeus_defconfig
-sh                           se7705_defconfig
-riscv                    nommu_k210_defconfig
-arm                       spear13xx_defconfig
+arm                       imx_v4_v5_defconfig
+mips                       lemote2f_defconfig
 arc                              allyesconfig
 h8300                               defconfig
+mips                     cu1000-neo_defconfig
+arc                    vdk_hs38_smp_defconfig
+csky                             alldefconfig
+mips                           ci20_defconfig
+s390                                defconfig
 arm                         lpc18xx_defconfig
 mips                           jazz_defconfig
 m68k                       m5249evb_defconfig
 parisc                generic-32bit_defconfig
 arm                         assabet_defconfig
 arm                            dove_defconfig
-mips                         bigsur_defconfig
-mips                     cu1000-neo_defconfig
-arm                          pxa910_defconfig
-openrisc                         alldefconfig
-c6x                         dsk6455_defconfig
-mips                 decstation_r4k_defconfig
 mips                  maltasmvp_eva_defconfig
 sh                            titan_defconfig
+arm                          pxa910_defconfig
 mips                        vocore2_defconfig
 arm                    vt8500_v6_v7_defconfig
 arm                  colibri_pxa300_defconfig
 xtensa                generic_kc705_defconfig
 arm                         s3c2410_defconfig
 um                            kunit_defconfig
-sh                          polaris_defconfig
-m68k                        mvme16x_defconfig
-openrisc                 simple_smp_defconfig
-arm                        shmobile_defconfig
-arm64                            alldefconfig
-mips                           rs90_defconfig
-mips                          ath25_defconfig
-sh                         ap325rxa_defconfig
-arm                        mvebu_v7_defconfig
-arm                          collie_defconfig
+arc                        vdk_hs38_defconfig
+sh                               alldefconfig
+powerpc                     ep8248e_defconfig
 sh                              ul2_defconfig
 m68k                          multi_defconfig
 arm                         nhk8815_defconfig
 powerpc                  mpc885_ads_defconfig
 mips                           ip28_defconfig
+sh                         apsh4a3a_defconfig
 sh                          landisk_defconfig
 arc                     haps_hs_smp_defconfig
 arm                           tegra_defconfig
+sparc                               defconfig
+arm                         s5pv210_defconfig
 x86_64                           alldefconfig
 arc                        nsim_700_defconfig
 arm                        multi_v7_defconfig
@@ -177,9 +162,7 @@ sh                               allmodconfig
 parisc                              defconfig
 s390                             allyesconfig
 parisc                           allyesconfig
-s390                                defconfig
 sparc                            allyesconfig
-sparc                               defconfig
 i386                                defconfig
 mips                             allyesconfig
 mips                             allmodconfig
