@@ -2,130 +2,110 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D94C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDB8320EDD
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A40A216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dhE5EDFs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnELXMNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgIICng (ORCPT
+        id S1728507AbgIICoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:43:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59104 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgIICnf (ORCPT
+        Tue, 8 Sep 2020 22:44:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbgIICon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:43:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892WDpo195897;
-        Wed, 9 Sep 2020 02:42:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=eukrwp7H2koQjeyZA6wBLLVQSjtXdS08WqjhoStToms=;
- b=dhE5EDFsaaXmDeiHDJi/Zfj7NwjpIdn5QX+5RoKACONs4OU9k61rSUoDxA80UXOeNfVS
- EM8YoduhExTYX/r5wcf61KqBKP0rK6Uq5XmHl7VUqfEc3oM2AQdN1IbPzgWTHuSuwnkB
- DeMddPbQ750+uvZZUAQ0M7G5+J66QKOC8/1ZrZAz1atZOdeg4ImFSCGn25kFUQtQ7V0Q
- +fsluw2UQ6poGwhoJbO1MJtf3nnKqeBN2PNyd0FDUJHe7hTMKqJhrCnupjCuZOV/zRaV
- CH1MfUs+NIj0fksF8YLDCFqc7cnIomPVrSBrmdzNpNMILnDz+SiJ60BDtWcKC5WzzidT xw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 33c3amxw43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 02:42:55 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892VbmW148878;
-        Wed, 9 Sep 2020 02:40:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 33dacjqvg1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Sep 2020 02:40:54 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0892erJe026700;
-        Wed, 9 Sep 2020 02:40:53 GMT
-Received: from [10.74.86.35] (/10.74.86.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Sep 2020 19:40:53 -0700
-Subject: Re: [PATCH next v2 0/3] soc: ti: k3: ringacc: add am65x sr2.0 support
-To:     Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200829184139.15547-1-grygorii.strashko@ti.com>
- <b9310d10-46c5-2c63-a921-88be23363d44@oracle.com>
- <1661043e-15a3-b8de-b16c-ef6ff88f18e5@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <39eeac89-b87b-e3ef-e061-20021e9bb0b9@oracle.com>
-Date:   Tue, 8 Sep 2020 19:40:51 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Tue, 8 Sep 2020 22:44:43 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6D9C061573;
+        Tue,  8 Sep 2020 19:44:42 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m8so976523pgi.3;
+        Tue, 08 Sep 2020 19:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0ZdmUVaaik0Cd28h3Zbe2m43Ssgf1GR/sAhP0i4ZEkE=;
+        b=AnELXMNtpHPPvFIglx8F3SVHWevil/Qj/z/vpbBRAvIn5Z+8QZvRRdtDrnet3+bsLM
+         5mCLGxCFpyFhqz95Hx4U4HTvz5lQjzyhOuSdSEsfTMrNQimYLdlqYew1C5g66rd5/su2
+         CNH0k30TqQpa5zqkDQirUnbrGnTL0LJeLOdkLsfi2Z7BI4YZu/TDAbvV38KLLXcrhNH6
+         zfotW278dwua1xutDu6WQ4z4I55XsYNz9vIlb2ToKsKtYIXaTYjXBj6Dr7qzfXmWutZN
+         ZY89N3EA5hpaqooLt1MKRRrIEkQhWYLwuREAdK6vuhA2hQvMXg+kaJBSOiAgPVm5ebo/
+         hrTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0ZdmUVaaik0Cd28h3Zbe2m43Ssgf1GR/sAhP0i4ZEkE=;
+        b=lgUfN4KK0n3awGsKwwYCRGSK7EgB2/HCL5KDe0Y/VbGLHdSuNn4kwULEnHrRC05B6K
+         wK4B1vU7sDFXfKHa+yFBIbvU/qaRh7wjsUY7oQN8fB+bydxGWQcke4fBsr4YdCq4Gxgr
+         RBJr4B141tzsqzjuidOy6mw+IhJsQLzRnQs4uOEaVHfZJ1PMq/gh0xFTgLObasKBCHoA
+         sOSKsWaHwHFFo5z8CbBwqSyJe3MJOZHYKnuL5cRh8PGKl1Ql3VsaZUIrdqtjlaoyf0bR
+         QCZC3IaM6c9+EOJOkpsQwc61fP8jIREfuB7+8ZUkilE43mHQrAdc/JBsdrn9qq85DWNm
+         S1dQ==
+X-Gm-Message-State: AOAM531aZVaRWKbnCyeUXsA+neHxGluxzFHIHEguM+XNygZ0lQhXjPTu
+        Xo5Rjbv1qfQAYvm1TfujVdk=
+X-Google-Smtp-Source: ABdhPJy4R6mz9uYwCQ+w3R9a2nnsXjsgw2amLudcvUNkXcUDKVv/IUKrWuLgI1C9iMeS6XgZAub9AQ==
+X-Received: by 2002:a63:110c:: with SMTP id g12mr1261586pgl.91.1599619482359;
+        Tue, 08 Sep 2020 19:44:42 -0700 (PDT)
+Received: from desktop-ziqianlu ([47.89.83.67])
+        by smtp.gmail.com with ESMTPSA id m190sm684741pfm.184.2020.09.08.19.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 19:44:41 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 10:44:32 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+Message-ID: <20200909024432.GA9736@desktop-ziqianlu>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+ <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
+ <20200826011946.spknwjt44d2szrdo@ca-dmjordan1.us.oracle.com>
+ <01ed6e45-3853-dcba-61cb-b429a49a7572@linux.alibaba.com>
+ <20200828014022.y5xju6weysqpzxd2@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <1661043e-15a3-b8de-b16c-ef6ff88f18e5@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090022
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090022
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828014022.y5xju6weysqpzxd2@ca-dmjordan1.us.oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 27, 2020 at 09:40:22PM -0400, Daniel Jordan wrote:
+> I went back to your v1 post to see what motivated you originally, and you had
+> some results from aim9 but nothing about where this reared its head in the
+> first place.  How did you discover the bottleneck?  I'm just curious about how
+> lru_lock hurts in practice.
 
+I think making lru_lock per-memcg helps in colocated environment: some
+workloads are of high priority while some workloads are of low priority.
 
-On 9/8/20 3:09 PM, Suman Anna wrote:
-> Hi Santosh,
-> 
-> On 8/31/20 1:34 PM, santosh.shilimkar@oracle.com wrote:
->> On 8/29/20 11:41 AM, Grygorii Strashko wrote:
->>> Hi Santosh,
->>>
->>> I've rebased on top of  linux-next and identified merge conflict of patch 3
->>> with commit 6da45875fa17 ("arm64: dts: k3-am65: Update the RM resource types")
->>> in -next.
->>>
->>> ---
->>> This series adds support for the TI AM65x SR2.0 SoC Ringacc which has fixed
->>> errata i2023 "RINGACC, UDMA: RINGACC and UDMA Ring State Interoperability
->>> Issue after Channel Teardown". This errata also fixed for J271E SoC.
->>> The SOC bus chipinfo data is used to identify the SoC and configure
->>> i2023 errata W/A.
->>>
->>> This changes made "ti,dma-ring-reset-quirk" DT property obsolete, so it's
->>> removed.
->>>
->>> Changes in v2:
->>>    - no functional changes
->>>    - rebased on top of linux-next
->>>    - added ask from Rob Herring
->>>
->> Thanks. Can you please followup DT acks for PRUSS series so that I can
->> apply PRUSS + $subject series.
-> 
-> PRUSS dt binding is acked now, so can you pick up the PRUSS v2 series for 5.10
-> merge window.
-> 
-Yes, I saw ack from Rob. Will try to get to this over coming weekend.
-
-Regards,
-Santosh
+For these low priority workloads, we may even want to use some swap for
+it to save memory and this can cause frequent alloc/reclaim, depending
+on its workingset etc. and these alloc/reclaim need to hold the global
+lru lock and zone lock. And then when the high priority workloads do
+page fault, their performance can be adversely affected and that is not
+acceptible since these high priority workloads normally have strict SLA
+requirement.
