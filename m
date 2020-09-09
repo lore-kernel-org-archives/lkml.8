@@ -2,136 +2,72 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7B3C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7709E20768
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CBEtX+ee"
+	by mail.kernel.org (Postfix) with ESMTP id 1DA9F207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbgIIQG4 (ORCPT
+        id S1730624AbgIIQHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:06:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbgIIQFE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:05:04 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33452C061799
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:04:20 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a65so2803463wme.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:04:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=h1AWnbsFuPZ6MacypHQ8HsT3a6NqF6t9qfTWoa+8SvY=;
-        b=CBEtX+eetvQyYOJlhFNdL2Py9mlE1aqXsNu2yLaDW0ofpA3brnezX+6b7BJvAYKLuT
-         V68bQ27V+dOY0t21Y4cMcopxcuHJl9KObw5od6vAqTGIiccB8nljhohkaX6b988Fh2dk
-         +WW6yD629U3/2fVJqNwKLxqout6WmwgAJehP3FyS2yuM8GQiUC90ENf1p4GYBpYQ1Iie
-         Wpy0Soe3C+7W3P8HjatHnNJQkG2CkCbnx8oIy57b/J9dP5ITDpA9dh0MNYzSsk8BdLcY
-         BApABE2lixWzfO/MPhOK6ycI/B2lwLg0mofAc4MAh5J3fNsWtMENu062OPINiimT08Cd
-         6Edg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=h1AWnbsFuPZ6MacypHQ8HsT3a6NqF6t9qfTWoa+8SvY=;
-        b=pdUvpnSbxIEBukIffRDlLhodJAYcqogeGsqvqqH3pCyLcnnStsKqfEqYXsSkA8k/n/
-         fcCSppMOF3qdniXF6xofmEopFqE7gj8TRRKIGqD+5riRX39ElL8Q3YVd+aJEobq+kZSF
-         DaiLuq5go6tJs7yzyCGYpw0NLnzZL3M6pEdnYWGRBt2fkOgocjYylfu4b97hxvqMlNPt
-         VIHqVhkBjAH4MWgnq2FYvq5FDCsYVDE9smkUleotX8nJN6qI88Qg5RV5gLqk/2xdaI2G
-         R7S9NrTJ38com2CEO9eFu0W+FX3iDmcqy9FkSmCGL4ytKNgizeaTMLwo6xSVlLKtJnTA
-         n90g==
-X-Gm-Message-State: AOAM53114rXTzTc312RyUdWCREukIW1/vaup4Zi/6OFuw+wPgjBvfXzs
-        wLGAyYyeUKfohBggBwdPVL02Zg==
-X-Google-Smtp-Source: ABdhPJxj7lBo+0hk4DkP0KoDHzMJtbj02HX+VSFjyvK7FqFw6/ssYu+ZmXW2UR8kbhGhvelekB8u/w==
-X-Received: by 2002:a7b:c5d0:: with SMTP id n16mr4098812wmk.7.1599667458702;
-        Wed, 09 Sep 2020 09:04:18 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
-        by smtp.gmail.com with ESMTPSA id y6sm4850700wrn.41.2020.09.09.09.04.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 09:04:18 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, martin.blumenstingl@googlemail.com,
-        devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH 2/5] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: add the Amlogic AXG Families USB Glue Bindings
-Date:   Wed,  9 Sep 2020 18:04:06 +0200
-Message-Id: <20200909160409.8678-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200909160409.8678-1-narmstrong@baylibre.com>
-References: <20200909160409.8678-1-narmstrong@baylibre.com>
+        Wed, 9 Sep 2020 12:07:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46798 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730912AbgIIQFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:05:18 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EC685CB9941A0048A30F;
+        Wed,  9 Sep 2020 22:07:38 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Wed, 9 Sep 2020 22:07:34 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: pxa168_eth: remove redundant null check before clk_disable_unprepare()
+Date:   Wed, 9 Sep 2020 22:06:37 +0800
+Message-ID: <1599660397-25077-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic AXG is close from the GXL Glue but with a single OTG PHY.
+Because clk_prepare_enable() and clk_disable_unprepare() already checked
+NULL clock parameter, so the additional checks are unnecessary, just
+remove them.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 ---
- .../usb/amlogic,meson-g12a-usb-ctrl.yaml      | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/pxa168_eth.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-index 5b04a7dfa018..c0058332b967 100644
---- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-+++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-@@ -25,13 +25,14 @@ description: |
-   The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
-   host-only mode.
+diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
+index eb8cf60..faac94b 100644
+--- a/drivers/net/ethernet/marvell/pxa168_eth.c
++++ b/drivers/net/ethernet/marvell/pxa168_eth.c
+@@ -1541,10 +1541,8 @@ static int pxa168_eth_remove(struct platform_device *pdev)
+ 	}
+ 	if (dev->phydev)
+ 		phy_disconnect(dev->phydev);
+-	if (pep->clk) {
+-		clk_disable_unprepare(pep->clk);
+-	}
  
--  The Amlogic GXL & GXM SoCs doesn't embed an USB3 PHY.
-+  The Amlogic GXL, GXM & AXG SoCs doesn't embed an USB3 PHY.
- 
- properties:
-   compatible:
-     enum:
-       - amlogic,meson-gxl-usb-ctrl
-       - amlogic,meson-gxm-usb-ctrl
-+      - amlogic,meson-axg-usb-ctrl
-       - amlogic,meson-g12a-usb-ctrl
-       - amlogic,meson-a1-usb-ctrl
- 
-@@ -151,6 +152,25 @@ allOf:
- 
-       required:
-         - clock-names
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - amlogic,meson-axg-usb-ctrl
-+
-+    then:
-+      properties:
-+        phy-names:
-+          items:
-+            - const: usb2-phy1 # USB2 PHY1 if USBOTG_B port is used
-+        clocks:
-+          minItems: 2
-+        clock-names:
-+          items:
-+            - const: usb_ctrl
-+            - const: ddr
-+      required:
-+        - clock-names
-   - if:
-       properties:
-         compatible:
++	clk_disable_unprepare(pep->clk);
+ 	mdiobus_unregister(pep->smi_bus);
+ 	mdiobus_free(pep->smi_bus);
+ 	unregister_netdev(dev);
 -- 
-2.22.0
+2.9.5
 
