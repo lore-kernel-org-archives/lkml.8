@@ -5,256 +5,116 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C5BC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086E1C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A172145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFCB20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gXYo0Fht"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIqZrTRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgIICz7 (ORCPT
+        id S1729275AbgIIC5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:55:59 -0400
-Received: from m12-16.163.com ([220.181.12.16]:57114 "EHLO m12-16.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729691AbgIICzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:55:53 -0400
-X-Greylist: delayed 911 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 22:55:51 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=F18fFmXeWeRjmTAsVn
-        9Hw6fZGsQLMSIvu+VR4xb46lc=; b=gXYo0FhtfRYvU4N7psfjOxF6ahDA5Iq+1w
-        TJ9OvuK/XJuKwtCTKhTX2x5+MHi+uADJYJ1TpWDNeDcRKOnurEMR0iEM6LgVw0Iw
-        483xEq+TKC8QgrxniDr0f3B6Y7dBm3toQmKfmuWj4YxsggzYVpnmN/4x8MNPRNQ4
-        B805H/3FE=
-Received: from localhost.localdomain (unknown [222.211.191.110])
-        by smtp12 (Coremail) with SMTP id EMCowACXmCyVQFhfurHUUg--.29631S4;
-        Wed, 09 Sep 2020 10:40:23 +0800 (CST)
-From:   Sheng Long Wang <china_shenglong@163.com>
-To:     johan@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jan.kiszka@siemens.com,
-        Wang Sheng Long <shenglong.wang.ext@siemens.com>
-Subject: [PATCH v4] usb-serial:cp210x: add support to software flow control
-Date:   Wed,  9 Sep 2020 10:39:30 +0800
-Message-Id: <20200909023931.19530-1-china_shenglong@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: EMCowACXmCyVQFhfurHUUg--.29631S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW3JF45Jw18Jr45Gw48Jr1kXwb_yoW7KryrpF
-        48trWFyrWqva17Wa1rAF4UZwnxZan7XFyIyFW3G39ayr13Jr1fKF1Ika4Yyr1UArW8Gry5
-        Jrn0yayDuF4jqrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j6OJnUUUUU=
-X-Originating-IP: [222.211.191.110]
-X-CM-SenderInfo: xfkl0tpbvkv0xjor0wi6rwjhhfrp/xtbBdReaslaD8hrIWgAAsl
+        Tue, 8 Sep 2020 22:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgIIC53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 22:57:29 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3389C061573;
+        Tue,  8 Sep 2020 19:57:28 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o20so841936pfp.11;
+        Tue, 08 Sep 2020 19:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vXOzzvFu8SFrA4CAW0a5T7SuJva0VHxNKr87gI4K2Fc=;
+        b=DIqZrTRZTRJ1OQx/gOPEn4+bM4FE3kN3Pg7Y1cIbESXDVl3/dT6jxYK0HBucFeO7OH
+         9PSAaZa8eQSzRVcIL5+Ti9OGTR5SPfbeEbFL2y64trz9pbdzgrKLarv7T2yVUfzPIQtm
+         Oe5WA+z6Fzt/n3M3l+rqemMeFMcbeP+rpqKIsRUXxu9QZDj2UMYDWG8k4uRGEzEJU8Xv
+         YwvqLqFh/gNUVkflSITbzA2H17NXytY7SP/0IA8+G7gvpkB0eDY3bOHA+b8Dhpdfb86M
+         vH/1th6Vo61XWN543f7kXUFP0yIhCdGka9tASpxUWYyHZLEstsfkR1DhwqHGzsrlUWqn
+         3xMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vXOzzvFu8SFrA4CAW0a5T7SuJva0VHxNKr87gI4K2Fc=;
+        b=heVHNII4dqZFJ1m4XFt3iW0qK7iXw/XLmHTRoOfcPmSXQ4/+o/zt45OlPoq+tGsEnk
+         1ZZkBBwsVBayiYmyW+De3K0QfmI0Fmd8rE/21CNNcb8OZvobWshRZTzV0NOh+Qi8ZJpe
+         xwmisH3NJYpgHYxlpc2sUAOtb4vjTY7v9T24rafK2CK6cEoaUAZYNj5bpT8x1MGStOng
+         amcJamK8Qb6rDE66zVnDKsQVIkj4Oh6xPmWW7KIAu7+L2arYVvJrjdmUjKZkzaELvGCj
+         49grEGXSWEn5he/0nwlW8y6VKu6/yOhmawzJ2csgbJi1F3/97cr/Z58B8gd0+nlgOWvf
+         qcHQ==
+X-Gm-Message-State: AOAM532nzteqJryRFhiCcleu5c10/6vFI6dm3sX4taKDHa33GbS18GOo
+        IYp/81PqTGnvY/hfxMBbQ8oy/21hlsA=
+X-Google-Smtp-Source: ABdhPJzGpaGuJQnM7F8oIR4SzaXXvnjaLCqKupxziP9tdtgxwwwc5Vq+NYKCHC3fSRB3Ihot2TIN9w==
+X-Received: by 2002:a63:c64c:: with SMTP id x12mr1341486pgg.433.1599620247986;
+        Tue, 08 Sep 2020 19:57:27 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id l9sm556063pgg.29.2020.09.08.19.57.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 19:57:27 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Paul K ." <kronenpj@kronenpj.dyndns.org>,
+        "# v5 . 8-rc1+" <stable@vger.kernel.org>
+Subject: [PATCH RESEND 1/3] KVM: SVM: Get rid of handle_fastpath_set_msr_irqoff()
+Date:   Wed,  9 Sep 2020 10:57:15 +0800
+Message-Id: <1599620237-13156-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Sheng Long <shenglong.wang.ext@siemens.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-When data is transmitted between two serial ports,
-the phenomenon of data loss often occurs. The two kinds
-of flow control commonly used in serial communication
-are hardware flow control and software flow control.
+Analysis from Sean:
 
-In serial communication, If you only use RX/TX/GND Pins, you
-can't do hardware flow. So we often used software flow control
-and prevent data loss. The user sets the software flow control
-through the application program, and the application program
-sets the software flow control mode for the serial port
-chip through the driver.
-
-For the cp210 serial port chip, its driver lacks the
-software flow control setting code, so the user cannot set
-the software flow control function through the application
-program. This adds the missing software flow control.
-
-Signed-off-by: Wang Sheng Long <shenglong.wang.ext@siemens.com>
-
-Changes in v3:
-- fixed code style, It mainly adjusts the code style acccording
-  to kernel specification.
-
-Changes in v4:
-- It mainly adjusts the patch based on the last usb-next branch
-  of the usb-serial and optimized the relevant code.
----
- drivers/usb/serial/cp210x.c | 125 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 120 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-index d0c05aa8a0d6..bcbf8da99ebb 100644
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -412,6 +412,15 @@ struct cp210x_comm_status {
- 	u8       bReserved;
- } __packed;
+ | svm->next_rip is reset in svm_vcpu_run() only after calling 
+ | svm_exit_handlers_fastpath(), which will cause SVM's 
+ | skip_emulated_instruction() to write a stale RIP.
  
-+struct cp210x_special_chars {
-+	u8	bEofChar;
-+	u8	bErrorChar;
-+	u8	bBreakChar;
-+	u8	bEventChar;
-+	u8	bXonChar;
-+	u8	bXoffChar;
-+};
-+
- /*
-  * CP210X_PURGE - 16 bits passed in wValue of USB request.
-  * SiLabs app note AN571 gives a strange description of the 4 bits:
-@@ -675,6 +684,69 @@ static int cp210x_read_vendor_block(struct usb_serial *serial, u8 type, u16 val,
- 	return result;
+Let's get rid of handle_fastpath_set_msr_irqoff() in svm_exit_handlers_fastpath()
+to have a quick fix.
+
+Reported-by: Paul K. <kronenpj@kronenpj.dyndns.org>
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Paul K. <kronenpj@kronenpj.dyndns.org>
+Cc: <stable@vger.kernel.org> # v5.8-rc1+
+Fixes: 404d5d7bff0d (KVM: X86: Introduce more exit_fastpath_completion enum values)
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/svm/svm.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 19e622a..c61bc3b 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3349,11 +3349,6 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
+ 
+ static fastpath_t svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
+ {
+-	if (!is_guest_mode(vcpu) &&
+-	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
+-	    to_svm(vcpu)->vmcb->control.exit_info_1)
+-		return handle_fastpath_set_msr_irqoff(vcpu);
+-
+ 	return EXIT_FASTPATH_NONE;
  }
  
-+static int cp210x_get_chars(struct usb_serial_port *port, void *buf, int bufsize)
-+{
-+	struct usb_serial *serial = port->serial;
-+	struct cp210x_port_private *port_priv = usb_get_serial_port_data(port);
-+	void *dmabuf;
-+	int result;
-+
-+	dmabuf = kmemdup(buf, bufsize, GFP_KERNEL);
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	result = usb_control_msg(serial->dev,
-+				usb_sndctrlpipe(serial->dev, 0),
-+				CP210X_GET_CHARS, REQTYPE_DEVICE_TO_HOST, 0,
-+				port_priv->bInterfaceNumber,
-+				dmabuf, bufsize, USB_CTRL_SET_TIMEOUT);
-+
-+	if (result == bufsize) {
-+		memcpy(buf, dmabuf, bufsize);
-+		result = 0;
-+	} else {
-+		dev_err(&port->dev, "failed get req 0x%x size %d status: %d\n",
-+			CP210X_GET_CHARS, bufsize, result);
-+		if (result >= 0)
-+			result = -EIO;
-+	}
-+
-+	kfree(dmabuf);
-+
-+	return result;
-+}
-+
-+static int cp210x_set_chars(struct usb_serial_port *port, void *buf, int bufsize)
-+{
-+	struct usb_serial *serial = port->serial;
-+	struct cp210x_port_private *port_priv = usb_get_serial_port_data(port);
-+	void *dmabuf;
-+	int result;
-+
-+	dmabuf = kmemdup(buf, bufsize, GFP_KERNEL);
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	result = usb_control_msg(serial->dev,
-+				usb_sndctrlpipe(serial->dev, 0),
-+				CP210X_SET_CHARS, REQTYPE_HOST_TO_INTERFACE, 0,
-+				port_priv->bInterfaceNumber,
-+				dmabuf, bufsize, USB_CTRL_SET_TIMEOUT);
-+
-+	if (result == bufsize) {
-+		result = 0;
-+	} else {
-+		dev_err(&port->dev, "failed get req 0x%x size %d status: %d\n",
-+			CP210X_SET_CHARS, bufsize, result);
-+		if (result >= 0)
-+			result = -EIO;
-+	}
-+
-+	kfree(dmabuf);
-+
-+	return result;
-+}
-+
- /*
-  * Writes any 16-bit CP210X_ register (req) whose value is passed
-  * entirely in the wValue field of the USB request.
-@@ -1356,11 +1428,17 @@ static void cp210x_set_termios(struct tty_struct *tty,
- 		struct usb_serial_port *port, struct ktermios *old_termios)
- {
- 	struct device *dev = &port->dev;
--	unsigned int cflag, old_cflag;
-+	unsigned int cflag, old_cflag, iflag;
-+	struct cp210x_special_chars charsres;
-+	struct cp210x_flow_ctl flow_ctl;
- 	u16 bits;
-+	int result;
-+	u32 ctl_hs;
-+	u32 flow_repl;
- 
- 	cflag = tty->termios.c_cflag;
- 	old_cflag = old_termios->c_cflag;
-+	iflag = tty->termios.c_iflag;
- 
- 	if (tty->termios.c_ospeed != old_termios->c_ospeed)
- 		cp210x_change_speed(tty, port, old_termios);
-@@ -1434,10 +1512,6 @@ static void cp210x_set_termios(struct tty_struct *tty,
- 	}
- 
- 	if ((cflag & CRTSCTS) != (old_cflag & CRTSCTS)) {
--		struct cp210x_flow_ctl flow_ctl;
--		u32 ctl_hs;
--		u32 flow_repl;
--
- 		cp210x_read_reg_block(port, CP210X_GET_FLOW, &flow_ctl,
- 				sizeof(flow_ctl));
- 		ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
-@@ -1474,6 +1548,47 @@ static void cp210x_set_termios(struct tty_struct *tty,
- 				sizeof(flow_ctl));
- 	}
- 
-+	if ((iflag & IXOFF) || (iflag & IXON)) {
-+
-+		result = cp210x_get_chars(port, &charsres, sizeof(charsres));
-+		if (result < 0)
-+			dev_err(dev, "failed to get character: %d\n", result);
-+
-+		charsres.bXonChar  = START_CHAR(tty);
-+		charsres.bXoffChar = STOP_CHAR(tty);
-+
-+		result = cp210x_set_chars(port, &charsres, sizeof(charsres));
-+		if (result < 0)
-+			dev_err(dev, "failed to set character: %d\n", result);
-+
-+		result = cp210x_read_reg_block(port,
-+					CP210X_GET_FLOW,
-+					&flow_ctl,
-+					sizeof(flow_ctl));
-+		if (result)
-+			dev_err(dev, "failed to read flow_ctl reg: %d\n", result);
-+
-+		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
-+
-+		if (iflag & IXOFF)
-+			flow_repl |= CP210X_SERIAL_AUTO_RECEIVE;
-+		else
-+			flow_repl &= ~CP210X_SERIAL_AUTO_RECEIVE;
-+
-+		if (iflag & IXON)
-+			flow_repl |= CP210X_SERIAL_AUTO_TRANSMIT;
-+		else
-+			flow_repl &= ~CP210X_SERIAL_AUTO_TRANSMIT;
-+
-+		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
-+		result = cp210x_write_reg_block(port,
-+					CP210X_SET_FLOW,
-+					&flow_ctl,
-+					sizeof(flow_ctl));
-+		if (result)
-+			dev_err(dev, "failed to write flow_ctl reg: %d\n", result);
-+	}
-+
- 	/*
- 	 * Enable event-insertion mode only if input parity checking is
- 	 * enabled for now.
 -- 
-2.17.1
-
+2.7.4
 
