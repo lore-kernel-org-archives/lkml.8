@@ -2,133 +2,181 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B1FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD6CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64223206DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599638430;
-	bh=+MFU+ADujEBf7YFUpPEYBMqxfDQrcIUOTsLiP1qvsQo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LafApM2uw3Psj3FYMs1RKcQU6ldZwWdVBmSrLFMnTsGZztS6TgvguHx3z9k78H5DQ
-	 7DWxpe1L+xe9KYKrZuVdbU6fu8OTqwug8gD2VmTxEld9On3tad1lkACah03Mt1zqNw
-	 qFprZzh4JEhwWmoVNM/sqQAvTxiQh5k+7pGwbGr4=
+	by mail.kernel.org (Postfix) with ESMTP id ABE15206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgIIIA2 (ORCPT
+        id S1730190AbgIIIAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgIIIAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:00:25 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B3B1C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:00:25 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id b12so1645113edz.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wBquDOMvvGBMKlLoT0ZYSQBY2ltKHLixc0AqZwGUMEg=;
-        b=sLhlkDWQlawJYdG6m+Rc4jQKtlkc+q3fCT1+NzbHo2HA4xyy9xzq+zUpBXekTZfHGi
-         IqiS6LPRxDogwOfWRvTyrTCUsTWr/r5m20KxnDzu9p2cJM/5oZ+GhEbeMQu6CArbqsYs
-         BCBbYDWoEXvjeQbVV5nUyqP80jdT/ukV5bArjBjiCpEMCVzXVpK7TB9ZEutccviygpxV
-         VXUkbGsmn0q+UN1iB2OcB22gUDAwatS5xBeQ5O1f/9B8Ttrq2bDfqRVVjGLjYidRZ50S
-         QTDjgJGKEj8h7rRohjKpViTmqORKxi6dID+T5y9GDYKUPW9Ze0k1JSzLAjHS7RQCuQXe
-         So8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=wBquDOMvvGBMKlLoT0ZYSQBY2ltKHLixc0AqZwGUMEg=;
-        b=o39s3LxOFXxST6sv8EUZrEkpHybU1c7CZiLN/Vkzj+NmQ9o7u6Ds61IVz0qVOHnonm
-         lUzzqmdkXpymIveYQUV7LI3S4tigi35H3UiNQlDho4bqxomG4t9YgX0eT0pN+3VdvqFO
-         dLP708VNiE6oMrGdahw2fGm2poZhGmTigeAG6TkZGMLcP8DjFPSa36CPRfpp3gx957DB
-         g8GthAkCz1AnNjYGR8ZCetVMd6phlQ5zMqMXLPlU7K+LdJTL0o1nRnDTM+PzYUUJa1tf
-         SEaPU6Km1xVuq0tLuK+P0LLgVr7Q7U+H3mDTW7ZDFb4N45cTsorRbDw4GDYWf2LH3y+w
-         Sfkw==
-X-Gm-Message-State: AOAM530JpJW2Azzo+/+9lbX56iCD1kROKDTau1G2fvQ4FaQOP/0ggvir
-        WtnlOpkWMFMMAztbXS1YCU4=
-X-Google-Smtp-Source: ABdhPJyCoapXaBDbIez2oa4OKqWgA9jBW5jloaJK3uy0fraUM4W0WRa2tGJj36NAlFEE0rMEbyzeSg==
-X-Received: by 2002:a50:a693:: with SMTP id e19mr2753440edc.205.1599638423633;
-        Wed, 09 Sep 2020 01:00:23 -0700 (PDT)
-Received: from gmail.com (54007801.dsl.pool.telekom.hu. [84.0.120.1])
-        by smtp.gmail.com with ESMTPSA id bz5sm1278231ejc.83.2020.09.09.01.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 01:00:22 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 10:00:20 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arnaud Lacombe <lacombar@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v1] x86/defconfigs: Unbreak 32-bit defconfig builds
-Message-ID: <20200909080020.GA2437694@gmail.com>
-References: <20200908100018.50188-1-andriy.shevchenko@linux.intel.com>
- <20200908121354.GA3848343@gmail.com>
- <20200908134350.GX1891694@smile.fi.intel.com>
+        Wed, 9 Sep 2020 04:00:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36356 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730068AbgIIIAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:00:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7D9A2ADC1;
+        Wed,  9 Sep 2020 08:00:27 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 10:00:25 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, jbaron@akamai.com,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, jim.cromie@gmail.com,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
+Message-ID: <20200909080025.GC3864@alley>
+References: <CA+G9fYvg7voMNArr3nPpv_dRn10RwYos075NW_b5rFbBLZ=-8g@mail.gmail.com>
+ <20200909144745.504c4cbfeea9bc298e3c6b9b@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908134350.GX1891694@smile.fi.intel.com>
+In-Reply-To: <20200909144745.504c4cbfeea9bc298e3c6b9b@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Tue, Sep 08, 2020 at 02:13:54PM +0200, Ingo Molnar wrote:
-> > 
-> > * Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > 
-> > > After the commit 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
-> > > 32-bit builds using defconfig become broken because on x86_64 build host
-> > > with no ARCH provided the default behaviour is to assume 64-bit independently
-> > > on the configuration file name. The crucial part is CONFIG_64BIT option
-> > > that used to be explicit. Let restore the latter option in order to unbreak
-> > > 32-bit builds.
-> > 
-> > So exactly which build method broke due to this? The typical way to do a defconfig build is:
-> > 
-> >   make ARCH=i386 defconfig
-> > 
-> > which still works fine AFAICS.
+On Wed 2020-09-09 14:47:45, Masami Hiramatsu wrote:
+> Hi Naresh,
 > 
-> uname => x86_64
-> make i386_defconfig
+> Thanks for reporting, it seems that you have run the kselftests/livepatch/test-livepatch.sh.
+> Then, I think it is better to report to Livepatch maintainers too. (I Cc'd them)
 > 
-> It was very convenient to not supply ARCH when build on multi-arch host.
+> Thank you,
+> 
+> On Wed, 9 Sep 2020 10:24:09 +0530
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> 
+> > While testing livepatch test cases on x86_64 with Linux next 20200908 tag kernel
+> > this kernel BUG noticed several times.
+> > 
+> > metadata:
+> >   git branch: master
+> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >   git commit: dff9f829e5b0181d4ed9d35aa62d695292399b54
+> >   git describe: next-20200908
+> >     kernel-config:
+> > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/853/config
+> > 
+> > kernel BUG log,
+> > ----------------------
+> > [  634.063970] % rmmod test_klp_livepatch
+> > [  634.114787] test_klp_atomic_replace: this has been live patched
+> > [  634.121953] % echo 0 > /sys/kernel/livepatch/test_klp_atomic_replace/enabled
+> > [  634.129391] livepatch: 'test_klp_atomic_replace': starting
+> > unpatching transition
+> > [  634.143990] livepatch: 'test_klp_atomic_replace': unpatching complete
+> > [  634.156223] % rmmod test_klp_atomic_replace
+> > [  634.235451] ------------[ cut here ]------------
+> > [  634.240314] kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
+> > [  634.246584] invalid opcode: 0000 [#1] SMP PTI
+> > [  634.250955] CPU: 0 PID: 12791 Comm: test-livepatch. Tainted: G
+> >   W     K   5.9.0-rc4-next-20200908 #1
+> > [  634.260615] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> > 2.2 05/23/2018
+> > [  634.268007] RIP: 0010:ddebug_exec_query+0x77b/0xb90
+> > [  634.272886] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
+> > 00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
+> > fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
+> > 8b 15
+> > [  634.291630] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
+> > [  634.296856] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
+> > [  634.303987] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
+> > [  634.311111] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
+> > [  634.318236] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
+> > [  634.325368] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
+> > [  634.332500] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
+> > knlGS:0000000000000000
+> > [  634.340578] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  634.346315] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
+> > [  634.353446] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [  634.360570] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [  634.367693] Call Trace:
+> > [  634.370139]  ? lock_acquire+0xa6/0x390
+> > [  634.373892]  ? __might_fault+0x34/0x80
+> > [  634.377648]  ddebug_exec_queries+0x6e/0x140
+> > [  634.381831]  ddebug_proc_write+0x4b/0xa0
+> > [  634.385756]  full_proxy_write+0x5f/0x90
+> > [  634.389595]  vfs_write+0xed/0x240
+> > [  634.392915]  ksys_write+0xad/0xf0
+> > [  634.396233]  ? syscall_trace_enter+0x17a/0x240
+> > [  634.400670]  __x64_sys_write+0x1a/0x20
+> > [  634.404416]  do_syscall_64+0x37/0x50
+> > [  634.407993]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [  634.413038] RIP: 0033:0x7fd371b84144
+> > [  634.416617] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00
+> > 00 00 00 00 66 90 48 8d 05 c1 e7 2c 00 8b 00 85 c0 75 13 b8 01 00 00
+> > 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89
+> > f5 53
+> > [  634.435362] RSP: 002b:00007ffd19447658 EFLAGS: 00000246 ORIG_RAX:
+> > 0000000000000001
+> > [  634.442928] RAX: ffffffffffffffda RBX: 00000000000000bc RCX: 00007fd371b84144
+> > [  634.450059] RDX: 00000000000000bc RSI: 0000000000e6cf70 RDI: 0000000000000001
+> > [  634.457181] RBP: 0000000000e6cf70 R08: 00000000000000e9 R09: 0000000000000000
+> > [  634.464305] R10: 00007ffd19447c48 R11: 0000000000000246 R12: 00007fd371e4e760
+> > [  634.471429] R13: 00000000000000bc R14: 00007fd371e49760 R15: 00000000000000bc
+> > [  634.478559] Modules linked in: trace_printk sch_fq 8021q
+> > iptable_filter xt_mark ip_tables cls_bpf sch_ingress veth algif_hash
+> > x86_pkg_temp_thermal fuse [last unloaded: test_klp_atomic_replace]
+> > [  634.495695] ---[ end trace d04d7e11bd1458bf ]---
+> > [  634.500333] RIP: 0010:ddebug_exec_query+0x77b/0xb90
+> > [  634.505218] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
+> > 00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
+> > fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
+> > 8b 15
+> > [  634.523969] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
+> > [  634.529197] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
+> > [  634.536330] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
+> > [  634.543462] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
+> > [  634.550593] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
+> > [  634.557727] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
+> > [  634.564869] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
+> > knlGS:0000000000000000
+> > [  634.572953] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  634.578699] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
+> > [  634.585829] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [  634.592964] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Nice, TIL about the extended 'make *config' targets. :-)
+It is caused by the commit 42f07816ac0cc79792811 ("dyndbg:
+fix problem parsing format="foo bar"). It modified the condition
+when the above BUG() gets triggered.
 
-Curiously, they aren't even mentioned in the 'configuration targets' 
-section of 'make help' and are not discoverable unless you know their 
-locations.
+It has even been reported by the kernel test robot, see
+https://lore.kernel.org/lkml/20200902074124.GP4299@shao2-debian/
 
-Anyway, your fix makes sense now to me too.
 
-Do we need a similar for x86_64 defconfig, when built on 32-bit hosts? (not 
-that anyone does that in practice, but just for completeness.)
+It is triggered when the livepatching selftest is trying to restore the
+original setting of dynamic debug messages in the livepatch framework.
 
-Also, it would be nice if there was a way to annotate the defconfig for 
-'make savedefconfig' preserved these ARCH choices - it currently strips out 
-all non-enabled options that match their default configuration value.
+It can get reliably reproduced by the following call:
 
-Thanks,
+$> echo -n 'file kernel/livepatch/transition.c line 586 =_' > \
+   /sys/kernel/debug/dynamic_debug/control
 
-	Ingo
+
+Adding people from the problematic patch into CC.
+
+I haven't dived into the dynamic debug code yet. The logic might
+be wrong.
+
+Anyway, the BUG_ON() should get replaced by a normal error message.
+There is no reason to panic() when a string can't be parsed !!!
+
+Best Regards,
+Petr
