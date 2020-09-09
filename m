@@ -2,207 +2,187 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29805C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D25CC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D153E206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599672187;
-	bh=ojYXfjO2DurN2C/opB53TRYM7STqyjyLj7tArEbYnYU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TfFrr3Ai2X45aUArlSaFhjJsdi/uatYr83KDrLaRw/nWrgJYQVNepOwsRv2RyWA0T
-	 qxXKVytEjSoEVXkGk3q6f1aQP10xriBM3Acv+fbEwbw15UoycnEJgCp5OCtqD90vpd
-	 YuS/6XR8qrQVAZd+quM3YVDniSk3JRuFB7zWiKss=
+	by mail.kernel.org (Postfix) with ESMTP id EEECA21556
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a0Fn+WGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbgIIRXF (ORCPT
+        id S1729802AbgIIR0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgIIRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:23:02 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0452166E;
-        Wed,  9 Sep 2020 17:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599672181;
-        bh=ojYXfjO2DurN2C/opB53TRYM7STqyjyLj7tArEbYnYU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W40okwbvhzb3YNdQWWE61AnHf+7XtiOdb6MNYys5tClUSQqHRyUMpvh3j0fpRj3NS
-         33B56q0jVNPBQ3AsfsIRkXkarAFSMhPU2JsKSxRbZo06tvNmgrXsWwK3ewSbwGSrxC
-         B3BdieaaNhVMHkaDJiSZWYP+jSTalp6OSB3k8Ud8=
-Received: by mail-ot1-f42.google.com with SMTP id g10so2954608otq.9;
-        Wed, 09 Sep 2020 10:23:01 -0700 (PDT)
-X-Gm-Message-State: AOAM532QNqalj6R3eFLxyi/WKh/V+wpgcVI5mHOwFIhUjqcJfy/ZkstH
-        Yg8ez7sZHgduM4r4zDXprgUh9ezNBpfhIC0Ihg==
-X-Google-Smtp-Source: ABdhPJwF/BBwg1karh3OP6yS1l/x+0g03zifHTvvij6uGN/zcwIb/C59SHbjSoa84vatAmS8zyZQIW9jDnoPNpIu7AQ=
-X-Received: by 2002:a9d:411:: with SMTP id 17mr1405892otc.192.1599672180697;
- Wed, 09 Sep 2020 10:23:00 -0700 (PDT)
+        Wed, 9 Sep 2020 13:26:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60044 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729005AbgIIR0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:26:36 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089HJ2gK051405;
+        Wed, 9 Sep 2020 13:25:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=cjurvjugr7NYNyJv2e5m0mRxD9kWPQ1Co8p7cVwZgRc=;
+ b=a0Fn+WGsOgKb9v9OSCIZ4vTawA6Q4ZWyUk5Zt6IyTNtTXdZySGDE4pfNW4f9sOhvDRO5
+ pyaNWhLyJ2qz3kHm1udz4qSWUWaxsbyYzZLNWKFPeYNcxy2qdx0OXkhkTDPLQoBCBK1t
+ 7YomGSfviJhw2ax52kN9UbRlZeV16c8bRZP4tJOx9BLgNI8eZteBXenPoAxximHCBe3r
+ oc3mh8uaZpxgVJjOxB3Kwhe+XjRIXqlbY7UiHRXs8QbI/LmnYJW28BEv9GJIlDCWO9Nn
+ BcMJVH24ws0Fur+qARRdqFfpfnTFoGkjKZORJo+fOQcFQTXSPiLNreCZu/z5cCKZzuRh 6Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33f3b88711-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 13:25:42 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089HKUCM063750;
+        Wed, 9 Sep 2020 13:25:42 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33f3b886y8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 13:25:42 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089HLmU7024299;
+        Wed, 9 Sep 2020 17:25:39 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 33c2a84w57-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 17:25:39 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089HPaUJ57147902
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Sep 2020 17:25:36 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A04C5AE058;
+        Wed,  9 Sep 2020 17:25:36 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75DA7AE057;
+        Wed,  9 Sep 2020 17:25:35 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.79.102])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed,  9 Sep 2020 17:25:35 +0000 (GMT)
+Date:   Wed, 9 Sep 2020 19:25:34 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200909192534.442f8984@thinkpad>
+In-Reply-To: <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+        <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+        <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+        <20200909142904.00b72921@thinkpad>
+        <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
- <863c9c1e44cfbe6184bf0bd4893ff456af0e7bb8.1598043782.git.cristian.ciocaltea@gmail.com>
- <20200908214724.GA959481@bogus> <20200909160334.GA385382@BV030612LT>
-In-Reply-To: <20200909160334.GA385382@BV030612LT>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 9 Sep 2020 11:22:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL+21YH+_w3e6PnW0GqPyEAD6uU-hqHZercKK0xQwCOjg@mail.gmail.com>
-Message-ID: <CAL_JsqL+21YH+_w3e6PnW0GqPyEAD6uU-hqHZercKK0xQwCOjg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_12:2020-09-09,2020-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
+ spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009090147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 10:03 AM Cristian Ciocaltea
-<cristian.ciocaltea@gmail.com> wrote:
->
-> Hi Rob,
->
-> Thanks for reviewing!
->
-> On Tue, Sep 08, 2020 at 03:47:24PM -0600, Rob Herring wrote:
-> > On Sat, Aug 22, 2020 at 01:19:47AM +0300, Cristian Ciocaltea wrote:
-> > > Add devicetree binding for Actions Semi ATC260x PMICs.
-> > >
-> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > ---
-> > >  .../bindings/mfd/actions,atc260x.yaml         | 221 ++++++++++++++++++
-> > >  1 file changed, 221 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/actions,atc260x.yaml b/Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
-> > > new file mode 100644
-> > > index 000000000000..4a55bbe1306e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
-> > > @@ -0,0 +1,221 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/actions,atc260x.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Actions Semi ATC260x Power Management IC bindings
-> > > +
-> > > +maintainers:
-> > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > +
-> > > +description: |
-> > > +  ATC260x series PMICs integrates Audio Codec, Power Management, RTC, IR
-> > > +  and GPIO controller blocks. Currently only the PM related functionalities
-> > > +  (i.e. regulators and system power-off/reboot) for the ATC2603C and ATC2609A
-> > > +  chip variants are supported.
-> > > +  ATC2603C includes 3 programmable DC-DC converters and 9 LDO regulators.
-> > > +  ATC2609A includes 5 programmable DC-DC converters and 10 LDO regulators.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - actions,atc2603c
-> > > +      - actions,atc2609a
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  pwrc:
-> > > +    type: object
-> > > +    description: |
-> > > +      The power controller integrated in ATC260x provides system power-off
-> > > +      and reboot operations.
-> >
-> > No need for this node as there are no properties, just instantiate
-> > what's needed in the MFD driver.
->
-> My intention was to allow the user specify what functionality in the MFD
-> shall be enabled. For this particular case, if the 'pwrc' node is not
-> provided, the power-off/reboot functions will be disabled.
+On Wed, 9 Sep 2020 09:18:46 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-IIRC, there's a flag property for this already.
+> On 9/9/20 5:29 AM, Gerald Schaefer wrote:
+> > This only works well as long there are real pagetable pointers involved,
+> > that can also be used for iteration. For gup_fast, or any other future
+> > pagetable walkers using the READ_ONCE logic w/o lock, that is not true.
+> > There are pointers involved to local pXd values on the stack, because of
+> > the READ_ONCE logic, and our middle-level iteration will suddenly iterate
+> > over such stack pointers instead of pagetable pointers.
+> 
+> By "There are pointers involved to local pXd values on the stack", did
+> you mean "locate" instead of "local"?  That sentence confused me.
+> 
+> Which code is it, exactly that allocates these troublesome on-stack pXd
+> values, btw?
 
->
-> > > +
-> > > +    properties:
-> > > +      compatible:
-> > > +        enum:
-> > > +          - actions,atc2603c-pwrc
-> > > +          - actions,atc2609a-pwrc
-> > > +
-> > > +    required:
-> > > +      - compatible
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +  onkey:
-> > > +    type: object
-> > > +    description: |
-> > > +      Use the ONKEY built into ATC260x PMICs as an input device reporting
-> > > +      power button status. ONKEY can be used to wakeup from low power
-> > > +      modes and force a reset on long press.
-> > > +
-> > > +    properties:
-> > > +      compatible:
-> > > +        enum:
-> > > +          - actions,atc2603c-onkey
-> > > +          - actions,atc2609a-onkey
-> > > +
-> > > +      actions,reset-time-sec:
-> > > +        description: |
-> > > +          Duration in seconds which the key should be kept pressed for device
-> > > +          to reset automatically. The hardware default is 8. Use 0 to disable
-> > > +          this functionality.
-> > > +        enum: [0, 6, 8, 10, 12]
-> >
-> > We already have 'power-off-time-sec' in input.yaml. How about adding
-> > 'reset-time-sec' there.
->
-> Thanks for the suggestion, I was actually looking for this before
-> choosing the custom property and just assumed this was not added for
-> a particular reason.
+It is the gup_pXd_range() call sequence in mm/gup.c. It starts in
+gup_pgd_range() with "pgdp = pgd_offset(current->mm, addr)" and then
+the "pgd_t pgd = READ_ONCE(*pgdp)" which creates the first local
+stack variable "pgd".
 
-Probably just because the usual behavior of holding the power button
-is to power off rather than reset.
+The next-level call to gup_p4d_range() gets this "pgd" value as
+input, but not the original pgdp pointer where it was read from.
+This is already the essential difference to other pagetable walkers
+like e.g. walk_pXd_range() in mm/pagewalk.c, where the original
+pointer is passed through. With READ_ONCE, that pointer must not
+be further de-referenced, so instead the value is passed over.
 
-> So I'm going to handle it. Would you like me to send a separate patch
-> (not part of this series)?
+In gup_p4d_range() we then have "p4dp = p4d_offset(&pgd, addr)",
+with &pgd being a pointer to the passed over pgd value, so that's
+the first pXd pointer that does not point directly to the pXd in
+the page table, but a local stack variable.
 
-Separate patch yes, but it can be part of the series.
+With folded p4d, p4d_offset(&pgd, addr) will simply return
+the passed-in &pgd pointer, so we now also have p4dp point to that.
+That continues with "p4d_t p4d = READ_ONCE(*p4dp)", and that second
+stack variable passed to gup_huge_pud() and so on. Due to inlining,
+all those variables will not really be passed anywhere, but simply
+sit on the stack.
 
-> > This could really just be a property in the parent node.
->
-> This is similar with 'pwrc': if 'onkey' node is not present, the ONKEY
-> functionality will not be enabled.
+So far, IIUC, that would also happen on x86 (or everywhere else
+actually) for folded levels, i.e. some pXd_offset() calls would
+simply return the passed in (stack) value pointer. This works
+as designed, and it will not lead to the "iteration over stack
+pointer" for anybody but s390, because the pXd_addr_end()
+boundaries usually take care that you always return to pgd
+level for iteration, and that is the only level with a real
+pagetable pointer. For s390, we stay at the first non-folded
+level and do the iteration there, which is fine for other
+pagetable walkers using the original pointers, but not for
+the READ_ONCE-style gup_fast.
 
-Would you really want/need to support wakeup, but disable long press
-feature? Seems like a single property would be sufficient.
-
-> Is there a better/recommended approach to manage this MFD feature
-> selection?
-
-But we have child nodes for this in other cases, so I guess it is fine.
-
-Rob
+I actually had to draw myself a picture to get some hold of
+this, or rather a walk-through with a certain pud-crossing
+range in a folded 3-level scenario. Not sure if I would have
+understood my explanation above w/o that, but I hope you can
+make some sense out of it. Or draw yourself a picture :-)
