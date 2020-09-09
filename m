@@ -2,107 +2,93 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DE1C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4A4C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC83721D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mQJ/P6I0"
+	by mail.kernel.org (Postfix) with ESMTP id D33EA21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599680683;
+	bh=uYjxcQ9VQqhiIAlkoc+9rui041F9j02Wcz2E9sFddAw=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=b78dx32mp4pVSxhA8B8+TckSWBMsUQkamqPFodc3UxTH+BxTeq/DxDwSZVu0kgkfY
+	 6/+cQ/W4bhjoEYhWFfQf4wnQ8teI6rgIjlADWzFupG/mOVUuR9nsk4Hr2k0q18eMEU
+	 gTCJ+YmUb+MM5ehTMy7aR/v33R9hlaxMpdL2qpM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgIIToH (ORCPT
+        id S1729479AbgIITom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:44:07 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47294 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728347AbgIIToC (ORCPT
+        Wed, 9 Sep 2020 15:44:42 -0400
+Received: from mail-ej1-f46.google.com ([209.85.218.46]:43921 "EHLO
+        mail-ej1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgIIToj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:44:02 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 089Jhv8Q021391;
-        Wed, 9 Sep 2020 14:43:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599680637;
-        bh=k8H3ySxg/5Hu3LKDVffSO2sqa0Uyy5zNLnUTjK7eCzg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=mQJ/P6I02UnvprJU7jHtW8AnyCxfT0q+cwZmHuBdEHaclA4w/Oel0RD75z/6DWYVs
-         H2EzHP6Rfp8XFo81BF19ZCWRbJZ4Z512+CSyQ2GDT1oxTYG/rb3KP4pxnZVUd/qtHo
-         2HoIj7s8gMJcsyxWoobewQcT0nZk+wUsYGgl3qYw=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 089Jhvtv068869
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 9 Sep 2020 14:43:57 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 9 Sep
- 2020 14:43:57 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 9 Sep 2020 14:43:56 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089JhtA5019776;
-        Wed, 9 Sep 2020 14:43:56 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <santosh.shilimkar@oracle.com>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RESEND PATCH next v2 2/2] bindings: soc: ti: soc: ringacc: remove ti,dma-ring-reset-quirk
-Date:   Wed, 9 Sep 2020 22:43:38 +0300
-Message-ID: <20200909194338.21840-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200909194338.21840-1-grygorii.strashko@ti.com>
-References: <20200909194338.21840-1-grygorii.strashko@ti.com>
+        Wed, 9 Sep 2020 15:44:39 -0400
+Received: by mail-ej1-f46.google.com with SMTP id o8so5264568ejb.10;
+        Wed, 09 Sep 2020 12:44:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rWZU3unCj9fu1p22kF6MLzALPkoa763qB+YvDpsCgmo=;
+        b=CnjWCFYIVtuJ0YiUZfyi42HiFydXEFlyKWBDqF+Jcfq33yNY+qF6bjnaR2X8qcFjfm
+         L+F7hL6L/YiAwSwKBgu/55y92dapL9sG9OaowdNpAg+Dq6fVNLG3kMhH5BuyZesPe2jK
+         2Hvai8ZFREM+ir+eyLLRofpxCKdpiHbs/Hhv0ZyMtkN/TrDeaeMTb/llloU8w59+e7NY
+         ivvBmD3STCufrIJQkilIHh+/EWWdOcJD/q/384NRPXeTF3rCXTPmOKI3+BO59/5mqyPv
+         VqXrBogQCCrYRDjltIoZOZyUgPz1l5kJisSj8f57UFbvBkYZSuL+swvRqRnDmZW5RCyV
+         VBNQ==
+X-Gm-Message-State: AOAM5326DcfNjHMX9M0DHW2OSv09/rHCaAh2MXfWPhI9Nf4BIvihlLOE
+        3klZBEy4a+EV3tBpFpArOTY=
+X-Google-Smtp-Source: ABdhPJyoIVF6Kb8LIjY5/OZ5vuY2/SXqKdvpYPhrn2U0y2XVc9KbqJ0z8AQAQd7yR9KeYvl2A6A+NQ==
+X-Received: by 2002:a17:906:8401:: with SMTP id n1mr5107934ejx.215.1599680676715;
+        Wed, 09 Sep 2020 12:44:36 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id g20sm3460946ejx.12.2020.09.09.12.44.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Sep 2020 12:44:35 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 21:44:33 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [RFT 24/25] ARM: dts: s5pv210: align SPI GPIO node name with
+ dtschema in Aries
+Message-ID: <20200909194433.GD21431@kozik-lap>
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-25-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907161141.31034-25-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove "ti,dma-ring-reset-quirk" DT property as proper w/a handling is
-implemented now in Ringacc driver using SoC info.
+On Mon, Sep 07, 2020 at 06:11:40PM +0200, Krzysztof Kozlowski wrote:
+> The device tree schema expects SPI controller to be named "spi",
+> otherwise dtbs_check complain with a warning like:
+> 
+>   spi-gpio-0: $nodename:0: 'spi-gpio-0' does not match '^spi(@.*|-[0-9a-f])*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/s5pv210-aries.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml | 6 ------
- 1 file changed, 6 deletions(-)
+Applied.
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-index ae33fc957141..c3c595e235a8 100644
---- a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-+++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
-@@ -62,11 +62,6 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: TI-SCI device id of the ring accelerator
- 
--  ti,dma-ring-reset-quirk:
--    $ref: /schemas/types.yaml#definitions/flag
--    description: |
--      enable ringacc/udma ring state interoperability issue software w/a
--
- required:
-   - compatible
-   - reg
-@@ -94,7 +89,6 @@ examples:
-             reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
-             ti,num-rings = <818>;
-             ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
--            ti,dma-ring-reset-quirk;
-             ti,sci = <&dmsc>;
-             ti,sci-dev-id = <187>;
-             msi-parent = <&inta_main_udmass>;
--- 
-2.17.1
+Best regards,
+Krzysztof
 
