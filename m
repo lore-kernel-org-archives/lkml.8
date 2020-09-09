@@ -2,102 +2,70 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E39C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5980EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26D9121D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A04C21D43
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599651741;
+	bh=LsZZCgcD9CKkSW0yTqr5sXk2HVFb9a1pnywslo7fZww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k55SMsN3ZAue5rninqo8iBJ3T6HQZQsZUJQjTDOsZAVhcAjTosHgoe9MQ8bOgaV1o
+	 1ifoNh6ho8vmXTcfVI/r2aq/rxFp2uyuU9zNqPx8EzSogshkj5+gKgPIs9fnqViOqO
+	 8vrFGDNPth/WElZH8OULzrFNUKwBjchzQNLlhdTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgIILlS (ORCPT
+        id S1729670AbgIILmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:41:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33016 "EHLO mx2.suse.de"
+        Wed, 9 Sep 2020 07:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgIILdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:33:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B6A26AEE9;
-        Wed,  9 Sep 2020 11:21:11 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id AD94B1E12E5; Wed,  9 Sep 2020 13:21:10 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 13:21:10 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, milan.opensource@gmail.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-Message-ID: <20200909112110.GA29150@quack2.suse.cz>
-References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
- <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
- <20200908112742.GA2956@quack2.suse.cz>
- <7be61144-0e77-3c31-d720-f2cbe56bc81e@gmail.com>
+        id S1729622AbgIILfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:35:30 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4F7C21D7B;
+        Wed,  9 Sep 2020 11:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599650682;
+        bh=LsZZCgcD9CKkSW0yTqr5sXk2HVFb9a1pnywslo7fZww=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vIur60NMEckDbV+dW9IzqmRMhQRqdG47fgB2CmYQCO4frCQmILdcuxdpwkGsZk3Ut
+         MS6De6rBF8MOvEMUxl1qnrdy7RKi7swqmuyJ5RTtCLEHXtSahUJ0SgRlkwtzGg3CC3
+         aA8hRwkCVNcsZHlg/uAXJpPt5P+opjQ5xPXgy5RI=
+Date:   Wed, 9 Sep 2020 13:24:52 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.8 101/186] drm/radeon: Prefer lower feedback dividers
+Message-ID: <20200909112452.GA621541@kroah.com>
+References: <20200908152241.646390211@linuxfoundation.org>
+ <20200908152246.531365310@linuxfoundation.org>
+ <77ec0338-32a1-6379-858c-359f636a0e58@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <7be61144-0e77-3c31-d720-f2cbe56bc81e@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <77ec0338-32a1-6379-858c-359f636a0e58@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-09-20 12:52:48, Michael Kerrisk (man-pages) wrote:
-> > So the error state isn't really stored "on pages in the file mapping".
-> > Current implementation (since 4.14) is that error state is stored in struct
-> > file (I think this tends to be called "file description" in manpages) and
+On Wed, Sep 09, 2020 at 01:15:13PM +0200, Christian König wrote:
+> Hi Greg,
 > 
-> (Yes, "open file description" is the POSIX terminology for the thing that
-> sits between the FD and the inode--struct file in kernel parlance--and I
-> try to follow POSIX terminology in the manual pages where possible.
-> 
-> > so EIO / ENOSPC is reported once for each file description of the file that
-> > was open before the error happened. Not sure if we want to be so precise in
-> > the manpages or if it just confuses people. 
-> 
-> Well, people are confused now, so I think more detail would be good.
-> 
-> > Anyway your takeway that no
-> > error on subsequent fsync() does not mean data was written is correct.
-> 
-> Thanks. (See also my rply to Jeff.)
-> 
-> By the way, a question related to your comments above. In the 
-> errors section, there is this:
-> 
->        EIO    An  error  occurred during synchronization.  This error may
->               relate to data written to some other file descriptor on the
-> *             same  file.   Since Linux 4.13, errors from write-back will
->               be reported to all file descriptors that might have written
->               the  data  which  triggered  the  error.   Some filesystems
->               (e.g., NFS) keep close track of  which  data  came  through
->               which  file  descriptor,  and  give more precise reporting.
->               Other  filesystems  (e.g.,  most  local  filesystems)  will
->               report errors to all file descriptors that were open on the
-> *             file when the error was recorded.
-> 
-> In the marked (*) lines, we have the word "file". Is this accurate? I mean, I
-> would normally take "file" in this context to mean the inode ('struct inode').
-> But I wonder if really what is meant here is "open file description"
-> ('struct file'). In other words, is the EIO being generated for all FDs 
-> connected to the same open file description, or for all FDs for all of the
-> open file descriptions connected to the inode? Your thoughts?
+> please drop that patch. It turned out to break a lot of different setups and
+> we are going to revert it now.
 
-The error gets reported once for each "open file description" of the file
-(inode) where the error happened. If there are multiple file descriptors
-pointing to the same open file description, then only one of those file
-descriptors will see the error. This is inevitable consequence of kernel
-storing the error state in struct file and clearing it once it is
-reported...
+Ok, now dropped from all trees, thanks.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+greg k-h
