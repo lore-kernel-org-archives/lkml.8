@@ -2,105 +2,118 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF81AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F64C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0C120897
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47E32080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VkBFBYfq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qD/yDq3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgIIUDb (ORCPT
+        id S1727893AbgIIUEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:03:31 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45998 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIIUDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:03:30 -0400
-Received: from zn.tnic (p200300ec2f0ae700897556713e13a596.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:e700:8975:5671:3e13:a596])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DDB851EC0284;
-        Wed,  9 Sep 2020 22:03:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599681807;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=WuLhwOH4c/kFAZ1PFUixa6QF6rwcqteTpHh91pUKe9o=;
-        b=VkBFBYfqjG3gUfDd3NyabLLhRDklJ/XuxTw02b36E2Q5vhn5BRv9nhZympLqcBjDB0D38w
-        bQlPncpVer9vtiB4D8iVgfoCWjF2Stqa6DEQLiHfdERWHTqgkXKy0P5gRpbyH/CTxWuBfU
-        4zg5sZUuoG9Vzd407Er5qWZEnm2EO6U=
-Date:   Wed, 9 Sep 2020 22:03:21 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
-Message-ID: <20200909200321.GG12237@zn.tnic>
-References: <20200906212130.GA28456@zn.tnic>
- <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
- <20200908094650.GA25236@zn.tnic>
- <20200908100837.GC25236@zn.tnic>
- <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
- <20200908152539.GE25236@zn.tnic>
- <20200909113022.GA12237@zn.tnic>
- <20200909182051.GA31883@agluck-desk2.amr.corp.intel.com>
+        Wed, 9 Sep 2020 16:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIIUEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 16:04:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9903AC061573;
+        Wed,  9 Sep 2020 13:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Jvm77/90HJwYlfYPmRWddMCR1SEU0mTsLpsMQ1Ko468=; b=qD/yDq3DH2haYhqEJ+5QHtsEP9
+        ad4v7Ils7MwCrW3lZqFPjpk8dNcZWVDqGuNfwwjFzlI3aAztH+dHxVoR4WMVGVjAvKrCqKcXGyaF2
+        KalLAJbKAvE45F8oVW8szWLyVl0Hz07dsINhg7Ut4LHR2enTGbg8aszl1U8TpJdQ9OXtC8ygbB+vM
+        8rQJIZi0WLpt1q9LzfHCZSQZoUydYfN8SQQ/TCf4dDh/++G7Tp89QtTcSfCqjtpdgNrx30xw/QPT2
+        PDQD3kl+D/f2CUKABTtW/JzWgackM6lmfvKgaOnE5BFSKUqFPZxqbz5WnR6LpIwdV3G4koMFzofQx
+        ev5ED+zQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kG6KS-0001V9-Aq; Wed, 09 Sep 2020 20:04:28 +0000
+Subject: Re: linux-next: Tree for Jul 20 (scsi/ufs/exynos)
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        'Stephen Rothwell' <sfr@canb.auug.org.au>,
+        'Linux Next Mailing List' <linux-next@vger.kernel.org>
+Cc:     'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>,
+        'linux-scsi' <linux-scsi@vger.kernel.org>,
+        'Santosh Yaraganavi' <santosh.sy@samsung.com>,
+        'Vinayak Holikatti' <h.vinayak@samsung.com>,
+        'Seungwon Jeon' <essuuj@gmail.com>
+References: <20200720194225.17de9962@canb.auug.org.au>
+ <CGME20200720164116epcas5p2021c67d1778e737d7c695f6bdbc5b2d4@epcas5p2.samsung.com>
+ <e6112633-61c9-fa80-8479-fe90bb360868@infradead.org>
+ <06a601d65f86$3d8aeee0$b8a0cca0$@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f72b8022-1ebd-c5a1-2fe2-a3e93854fd0e@infradead.org>
+Date:   Wed, 9 Sep 2020 13:04:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <06a601d65f86$3d8aeee0$b8a0cca0$@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200909182051.GA31883@agluck-desk2.amr.corp.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 11:20:51AM -0700, Luck, Tony wrote:
-> Do we think there will be other places where we want this
-> MSR-or-die behaviour?
+On 7/21/20 10:41 AM, Alim Akhtar wrote:
+> Hi Randy,
+> 
+>> -----Original Message-----
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>> Sent: 20 July 2020 22:11
+>> To: Stephen Rothwell <sfr@canb.auug.org.au>; Linux Next Mailing List <linux-
+>> next@vger.kernel.org>
+>> Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; linux-scsi <linux-
+>> scsi@vger.kernel.org>; Santosh Yaraganavi <santosh.sy@samsung.com>;
+>> Vinayak Holikatti <h.vinayak@samsung.com>; Alim Akhtar
+>> <alim.akhtar@samsung.com>; Seungwon Jeon <essuuj@gmail.com>
+>> Subject: Re: linux-next: Tree for Jul 20 (scsi/ufs/exynos)
+>>
+>> On 7/20/20 2:42 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20200717:
+>>>
+>>
+>> on x86_64:
+>>
+>> WARNING: unmet direct dependencies detected for PHY_SAMSUNG_UFS
+>>   Depends on [n]: OF [=n] && (ARCH_EXYNOS || COMPILE_TEST [=y])
+>>   Selected by [y]:
+>>   - SCSI_UFS_EXYNOS [=y] && SCSI_LOWLEVEL [=y] && SCSI [=y] &&
+>> SCSI_UFSHCD_PLATFORM [=y] && (ARCH_EXYNOS || COMPILE_TEST [=y])
+>>
+> Thanks, will post a patch shortly.
 
-MSR-or-die - I like that. That belongs on a T-shirt. :-)
+Hi Alim,
+I am still seeing this in linux-next of 20200909.
+Was there a patch posted that I missed and is not applied anywhere yet?
 
-> If there are, then most of this belongs elsewhere from
-> arch/x86/kernel/cpu/mce/core.c
 
-Yeah, I can't think of any other users needing this ATM. But if they do,
-lifting those and moving them somewhere else is trivial.
+>> There are no build errors since <linux/of.h> provides stubs for functions when
+>> CONFIG_OF is not enabled.
+>>
+>> But new warnings are not OK.
+>>
+>> thanks.
+>> --
+>> ~Randy
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
 
-> The "_once" version seems a little pointless when the next statement
-> in the function is "panic()".
-
-True, removed.
-
-> "warn" seems understated for an error that is going to crash the system.
-> Just go for "pr_emerg()".
-
-Done.
-
-> There seems no consistency on using "rIP" or "RIP" ... but I think "RIP"
-> is slightly ahead.
-
-The "r" in rIP means that it can be RIP or EIP and that code builds on
-32-bit too.
-
-> nitpick: I don't thing Architectural needs to be capitalized.
-
-Done.
-
-> Ugh. Is this why you have warn_once() ... because panic might return?
-
-People tend to put all kinds of things in panic() and I want to make
-sure that even if it returns for whatever reason, at some point in
-the future, we don't make any further progress here. Think of it as a
-paranoid precation of sorts...
-
-Thx.
-
+thanks.
 -- 
-Regards/Gruss,
-    Boris.
+~Randy
 
-https://people.kernel.org/tglx/notes-about-netiquette
