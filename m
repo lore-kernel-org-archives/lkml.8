@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A12C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7594AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B533D21973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CCE207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:21:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dHllD90s"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gvxxZAB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgIIHVc (ORCPT
+        id S1729992AbgIIHVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56308 "EHLO
+        Wed, 9 Sep 2020 03:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgIIHVX (ORCPT
+        with ESMTP id S1728297AbgIIHVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:21:23 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D9BC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:21:22 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id b16so900341pjp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:21:22 -0700 (PDT)
+        Wed, 9 Sep 2020 03:21:30 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF5BC061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:21:29 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id k15so1353190pfc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:21:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bLPtTuLpMmqGcI18AHosC8t8jX+F5LJliVXfFXGdRzo=;
-        b=dHllD90sWsIvfpw8cEKg4udYXNwUKGh2aJJesDyELYXYfTm6NHaITmgFkGFmy0HCjF
-         1IhK/ljvkIzPQ0KnPfH4w/kpgG4MprLjzPzItFCHI9CiTLhFsvTLo8FJn3MNYeRaUhN/
-         7tVvgDzaoWCkVlYgeasCYE6KCO3NFOsmShzEg=
+        bh=3Cckn9EcRCOy7+IrqhRAkRB9fhj6npQVnQRV+Ywzibc=;
+        b=gvxxZAB0tPUxEA0Thi4h7/smwnXShApL7/fFLgGCHldHmOEE2BTAehvz980zF0bC5V
+         1jyjKn1EcadTXdtjYvSp6exlDKHQgRGcsYiGmfs1pvalHPOjt9P3+KqwM1/PjcdN6uw5
+         ofBzbQ6swdXhEMJZ9w0hU/qrJcw4o4uQvTUWQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bLPtTuLpMmqGcI18AHosC8t8jX+F5LJliVXfFXGdRzo=;
-        b=uSnoaDUKOY9bwWE/f+3YW19EJbj+w8bp5E84998k2xOZyb1NQw1KAHvm2X51wI1hMj
-         jWkxgWLXw5NPZFSV72IUGaujVQcb5CJirHFESUXkrLkVaEJGe9sKqB0y+PhjCS6fcHO6
-         a/GxQv2mAms2pOiJx3eT1JR13PTxEId7/PjoIAf74WG7g4c14aX5wDHpDmGB3P5+VB9d
-         nzIBCXoNigyiIE9cLIRZIM1biOTjrf15SfND9QsrnXaSqMpWLs5ikxP6hT2F8aaElpeI
-         HsXa9POC5PUroSe/A0tZe1MzC7NDs1vfFDxwsNMeuy554t39uZNShQzrJh+s9e7JD+Kt
-         716w==
-X-Gm-Message-State: AOAM532WYxjDtXmmtPKfvi1uKH0A2QUsmFvVapfmzXoGymIc62H5DISU
-        V6/0neICefpUEp8tq22ovsfWWEqQ6vUxuA==
-X-Google-Smtp-Source: ABdhPJzX1jP/qLLmt+a0xk0JgMFrrGWSt76WDoxrpIvUrtVywETiK7WFFc5/T+f1+qlCLVLotGekjA==
-X-Received: by 2002:a17:90a:104f:: with SMTP id y15mr212144pjd.45.1599636082099;
-        Wed, 09 Sep 2020 00:21:22 -0700 (PDT)
+        bh=3Cckn9EcRCOy7+IrqhRAkRB9fhj6npQVnQRV+Ywzibc=;
+        b=fl/AZWTaNuBLR+/k7voog4/XKWeyMLUF6MyAJwp+APxnzstHjnL+vajv3LQGzoE9Lt
+         1BKYl/LkWfFBxrH1bVE4PUCajHXDoN08oVTi4f4tWkosN7LAfVkzyg+p4rfTEx3x2Q+c
+         51jcpRUA1lO0y2CcoRJJJS+hjiWfqp8THBTvyiEMhPAAIXm6H7A6BplbMFq7hzarObg6
+         n0FzRjoQS+WVA2S1zhTmfL5YYJ7ppZh8NI+rL250Vb6pUxb1UJofzW1tGXl8DQuitsZx
+         gvmRJKtq7FldUoPeNpQpEhb9IsEI263ljd4QVtDgjvLuV4uSiGkdE0S1bVKcywByPks6
+         NIwA==
+X-Gm-Message-State: AOAM531Qc6tY6z8Bigp/XkmM8fo9SXZbdCmLg4fqcaG5ElimdjcQRbAY
+        5t9d2TXb7ob5uXIJK9WlXLIAJ89EGn2m8g==
+X-Google-Smtp-Source: ABdhPJyVJbjJSTx1Z989hLkxbOZzvUOJE6v28wOoJgdZ3iUdbEym7T5IeDt/Vu4kikQytkZs652qvg==
+X-Received: by 2002:a17:902:ea82:b029:d1:7ed9:5470 with SMTP id x2-20020a170902ea82b02900d17ed95470mr1734756plb.26.1599636088605;
+        Wed, 09 Sep 2020 00:21:28 -0700 (PDT)
 Received: from localhost ([2401:fa00:9:15:7220:84ff:fe09:cabc])
-        by smtp.gmail.com with ESMTPSA id q34sm1304145pgl.28.2020.09.09.00.21.18
+        by smtp.gmail.com with ESMTPSA id x9sm1240120pgi.87.2020.09.09.00.21.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 00:21:21 -0700 (PDT)
+        Wed, 09 Sep 2020 00:21:28 -0700 (PDT)
 From:   Sam McNally <sammc@chromium.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
@@ -67,9 +67,9 @@ Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 2/4] drm_dp_mst_topology: use correct AUX channel
-Date:   Wed,  9 Sep 2020 17:20:50 +1000
-Message-Id: <20200909172023.v2.2.Ided0ab0808c4908238bd2eb9ebb6ffb2c9312789@changeid>
+Subject: [PATCH v2 3/4] drm_dp_mst_topology: export two functions
+Date:   Wed,  9 Sep 2020 17:20:51 +1000
+Message-Id: <20200909172023.v2.3.I6c917ff82a1d2ae2253a3bd4d750d58879387cac@changeid>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200909172023.v2.1.I8693156f555875e5c8342e86ab37ce968dfdd277@changeid>
 References: <20200909172023.v2.1.I8693156f555875e5c8342e86ab37ce968dfdd277@changeid>
@@ -82,82 +82,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil@cisco.com>
 
-For adapters behind an MST hub use the correct AUX channel.
+These are required for the CEC MST support.
 
 Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-[sammc@chromium.org: rebased, removing redundant changes]
 Signed-off-by: Sam McNally <sammc@chromium.org>
 ---
 
 (no changes since v1)
 
- drivers/gpu/drm/drm_dp_mst_topology.c | 36 +++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 6 ++----
+ include/drm/drm_dp_mst_helper.h       | 4 ++++
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 15b6cc39a754..0d753201adbd 100644
+index 0d753201adbd..c783a2a1c114 100644
 --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2255,6 +2255,9 @@ drm_dp_mst_topology_unlink_port(struct drm_dp_mst_topology_mgr *mgr,
- 	drm_dp_mst_topology_put_port(port);
- }
+@@ -62,8 +62,6 @@ struct drm_dp_pending_up_req {
+ static bool dump_dp_payload_table(struct drm_dp_mst_topology_mgr *mgr,
+ 				  char *buf);
  
-+static ssize_t
-+drm_dp_mst_aux_transfer(struct drm_dp_aux *aux, struct drm_dp_aux_msg *msg);
-+
- static struct drm_dp_mst_port *
- drm_dp_mst_add_port(struct drm_device *dev,
- 		    struct drm_dp_mst_topology_mgr *mgr,
-@@ -2271,9 +2274,13 @@ drm_dp_mst_add_port(struct drm_device *dev,
- 	port->port_num = port_number;
- 	port->mgr = mgr;
- 	port->aux.name = "DPMST";
-+	mutex_init(&port->aux.hw_mutex);
-+	mutex_init(&port->aux.cec.lock);
- 	port->aux.dev = dev->dev;
- 	port->aux.is_remote = true;
- 
-+	port->aux.transfer = drm_dp_mst_aux_transfer;
-+
- 	/* initialize the MST downstream port's AUX crc work queue */
- 	drm_dp_remote_aux_init(&port->aux);
- 
-@@ -3503,6 +3510,35 @@ static int drm_dp_send_up_ack_reply(struct drm_dp_mst_topology_mgr *mgr,
- 	return 0;
- }
- 
-+static ssize_t
-+drm_dp_mst_aux_transfer(struct drm_dp_aux *aux, struct drm_dp_aux_msg *msg)
-+{
-+	struct drm_dp_mst_port *port =
-+		container_of(aux, struct drm_dp_mst_port, aux);
-+	int ret;
-+
-+	switch (msg->request & ~DP_AUX_I2C_MOT) {
-+	case DP_AUX_NATIVE_WRITE:
-+	case DP_AUX_I2C_WRITE:
-+	case DP_AUX_I2C_WRITE_STATUS_UPDATE:
-+		ret = drm_dp_send_dpcd_write(port->mgr, port, msg->address,
-+					     msg->size, msg->buffer);
-+		break;
-+
-+	case DP_AUX_NATIVE_READ:
-+	case DP_AUX_I2C_READ:
-+		ret = drm_dp_send_dpcd_read(port->mgr, port, msg->address,
-+					    msg->size, msg->buffer);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
- static int drm_dp_get_vc_payload_bw(u8 dp_link_bw, u8  dp_link_count)
+-static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port);
+-
+ static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
+ 				     int id,
+ 				     struct drm_dp_payload *payload);
+@@ -1864,7 +1862,7 @@ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
+  * drm_dp_mst_topology_try_get_port()
+  * drm_dp_mst_topology_get_port()
+  */
+-static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
++void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
  {
- 	if (dp_link_bw == 0 || dp_link_count == 0)
+ 	topology_ref_history_lock(port->mgr);
+ 
+@@ -1935,7 +1933,7 @@ drm_dp_mst_topology_get_port_validated_locked(struct drm_dp_mst_branch *mstb,
+ 	return NULL;
+ }
+ 
+-static struct drm_dp_mst_port *
++struct drm_dp_mst_port *
+ drm_dp_mst_topology_get_port_validated(struct drm_dp_mst_topology_mgr *mgr,
+ 				       struct drm_dp_mst_port *port)
+ {
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
+index c7c79e0ced18..d036222e0d64 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -754,6 +754,10 @@ drm_dp_mst_detect_port(struct drm_connector *connector,
+ 		       struct drm_dp_mst_topology_mgr *mgr,
+ 		       struct drm_dp_mst_port *port);
+ 
++struct drm_dp_mst_port *drm_dp_mst_topology_get_port_validated
++(struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port);
++void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port);
++
+ struct edid *drm_dp_mst_get_edid(struct drm_connector *connector, struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port);
+ 
+ 
 -- 
 2.28.0.526.ge36021eeef-goog
 
