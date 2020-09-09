@@ -2,181 +2,117 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272D1C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEA5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A912087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4591D20C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="HVAOveRk"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KKPCfQcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730977AbgIIQu1 (ORCPT
+        id S1731090AbgIIQuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:50:27 -0400
-Received: from mail-vi1eur05on2069.outbound.protection.outlook.com ([40.107.21.69]:46336
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730604AbgIIQGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:06:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ChIplXw/C1TqrlVMSQO9QmtEccvJ28PjlNCk7owYVTvj8xOQ6CwrPAMvG6gmdfkPGbhSTnXUJbEFk7IYsC22NDwUnBO5Zc2/aXncyAB6sg+5JajG+buhTA29eBb9zqhV8TMzlz+S14J0OI031hIUKNBzaDEm1K5ZcMTVUHKbTukg5C9p3yKeag6rkfrSPiN5fbEof/SuaP9x3iXU8e36BpXu1KCzxJpG/uIQeEBmlyg51uqVmwNr9XNYVDVccyA7O4EWgT/UbGWF6Xlz1Nz4SZbnay1GLx7TvLKAJOi+903uNhxZ3si5WCUduAA/DnjokFcvLS8aOCyz5p2TF7BbqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aYR5tq+lUMx60NpWI9ucLHBXRANLGNqmbZQttaWQXMI=;
- b=BUZC80MDJa+XA3TXfd5eh4VMU0MhoFXj8TIfEJFUMwUToEaAc5tYLvo7SHmeIpoCELUpXRy9kE0ZGRtKaixOHoVwIE5jlwqCA2h2q+IIiFhE7E2IGJezC6Ro+4ysjz96u+fHi/jhWb9d/JGBMgL0YzY0PyfRPtDqJ/Q1Z8/RYOSeu3paMSh0hCmc5EV62L89whR5BxqzGczvfsyAKPDB90AJm51NUPK5HT/xmUl6SAzyW/uI9nldKmlrAFYKAs9JXsvQ+H+w7x9RS8t7fH/8PE4hlvlJIOy1Eywi7sqSNNqRlkWB6Y2vT5mzmehjcHwAj318X1/kimpdsmr6lcAfpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aYR5tq+lUMx60NpWI9ucLHBXRANLGNqmbZQttaWQXMI=;
- b=HVAOveRktA+qHjlEQSok0IciXXh30gcBE/EMF/QMmQQjbZvHyYBwa45jWuJBfv3CGq/aTrR8qTrBcRIB4Fj+6b2hB+VOYxhkdvMl9bznYgLEmYV05OB/8jzt7j/ZGJjM+ydD8EHnnKqvItv6h1JTyBd1T+SACq89GAJS/7h0JHc=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13)
- by VI1PR04MB3967.eurprd04.prod.outlook.com (2603:10a6:803:4c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 9 Sep
- 2020 13:45:07 +0000
-Received: from VE1PR04MB6702.eurprd04.prod.outlook.com
- ([fe80::1dce:f6ac:a750:5ed0]) by VE1PR04MB6702.eurprd04.prod.outlook.com
- ([fe80::1dce:f6ac:a750:5ed0%6]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
- 13:45:07 +0000
-From:   Wasim Khan <wasim.khan@oss.nxp.com>
-To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, V.sethi@nxp.com
-Cc:     Wasim Khan <wasim.khan@nxp.com>
-Subject: [PATCH 4/6] arm64: dts: ls1046a: Add label to pcie nodes
-Date:   Wed,  9 Sep 2020 19:14:34 +0530
-Message-Id: <1599659076-28121-5-git-send-email-wasim.khan@oss.nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599659076-28121-1-git-send-email-wasim.khan@oss.nxp.com>
-References: <1599659076-28121-1-git-send-email-wasim.khan@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0095.apcprd02.prod.outlook.com
- (2603:1096:4:90::35) To VE1PR04MB6702.eurprd04.prod.outlook.com
- (2603:10a6:803:123::13)
+        Wed, 9 Sep 2020 12:50:54 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11389 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgIIQFV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:05:21 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f58e45b0000>; Wed, 09 Sep 2020 07:19:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 09 Sep 2020 07:19:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 09 Sep 2020 07:19:50 -0700
+Received: from [10.2.173.224] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
+ 2020 14:19:45 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <linux-mm@kvack.org>, Roman Gushchin <guro@fb.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 06/16] mm: thp: add 1GB THP split_huge_pud_page()
+ function.
+Date:   Wed, 9 Sep 2020 10:19:43 -0400
+X-Mailer: MailMate (1.13.1r5705)
+Message-ID: <AF9154F7-74D8-4639-BB53-0B6FF245F623@nvidia.com>
+In-Reply-To: <20200909141800.4ueixh2gw5lv4deh@box>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200902180628.4052244-7-zi.yan@sent.com>
+ <20200909141800.4ueixh2gw5lv4deh@box>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03032.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0095.apcprd02.prod.outlook.com (2603:1096:4:90::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 13:45:05 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 904202a4-9679-4015-3ce4-08d854c69062
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3967:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB3967425E6C05EB2B8094D075D1260@VI1PR04MB3967.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: j5dTWspZxVYilyd4qWZPTWWJ+NEoqIKTwut+LvOsn5sFGr3snffACYADfZCgvt3+QL91Y2OvOnVeyoal/Q8E3kgzOXkQjvGPHoO0Gh0TYV+dW+rAiludi4n1oQXQtDaR1JxbM3HdnI9WdWDHOQQhdEjJP9Fdaf7z7RXrmWDIiUuWo/ykAu0JlxGpDrDffWjppqR3Q80SpTXW3YpopltCiMKaetkvNDw9PN9OA8iLDyVymsJ/GwNXejyR+WYQ9LGdJIDeGyxEYMlwCqSQ/Y7SL2mJ1Cwzx66G6lIdtOJpX5FDknWsbMKD09ag/nu+/cGrjXEZGMzb4LGhW6YqHD1CS4hKE98gTnp8sTPdDhE52KuM37i/xszTgygd1HEkBbyk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6702.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(55236004)(16526019)(478600001)(186003)(26005)(6506007)(52116002)(83380400001)(6512007)(4326008)(5660300002)(2906002)(316002)(86362001)(66556008)(66946007)(6666004)(1006002)(44832011)(2616005)(956004)(66476007)(8936002)(8676002)(6486002)(110426005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: EmwADCPofb+uu1Twr3VhK1KZsIayQyHE5EU/HamV/WazgRyh/GUGQkGfnpLxAeiyot+5Omp8fpQh1q2a7mLhhp2LyEDyJLYKDEyF6xxj3L2XLx2S5k2X6mxOc9M+9FbaHCp8+NVfpstyaP+M0c2uiCtgyS8HxDJm6aHmOivTJAijcUomvF+yHj7/l0UReMn5vsDR/2tTI8RlLUUNd7/mdiXsqDVVqwbYFgdsSjSju1NRSNw2bhzpM3YeAuNgNHq2XGdcJKGBCHKvpspiUTRs6fA8SFGbTIXivcYS9n7X2cOWVlcLy5BwbCNycrnTia28k1VGTiJ81yUyofSGcH8GwMjnj9rSonc9CRds7j5GTpeniWTrwFdzizkHtY/h5Ps4tQxE/OFdCdh/1gaVA2clLXIoilF3n660JDBK8pBZE09CuU+PYkaPenN+mq6ibMvJnz/AYh04HvjZPFRYvjHdQcCvqEP+wPcQ26ftyRziaFa+q15jusDta0YWBSjh3K4LK61J0Z01j6F6UZSRKvjB56X0iVNIhjYHNM5BNWd4zKYamxlYxQL84m6FUmlLc6M5l2vQlXg7cw5gtjZygkmmXS1N1TyDdtWkk/maotfOd3ceMb91f7A3v/s/2jtqCj4S3y3ojYZVG8irkz+kv5QNSg==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 904202a4-9679-4015-3ce4-08d854c69062
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6702.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 13:45:07.7299
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SmjiNgem0WWJn0ru90cew9pErtz4sYK2v3AaKtUnWDKxhy6Qk4jBW7QwUiLE/bIWQa5cWBl/d7MRzWuiWmU/cQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3967
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_67E22BE1-702B-406F-8717-49758A0ED8D6_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599661147; bh=ouW3msjo0bxs7Ho0BhRy49F31Peg+avV+uVRSUbnD0s=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=KKPCfQccZ0mz3gX3Iz+YypGO6w/K7rBnVj0RLPJOPNVGoL3aMIpSFGM2kDV0p/O/C
+         XRpHplzO0w57y1ftBbS5AUQa1S5FtZMnfZdqU21mtstSAEm5/gqq3QNFFV8spllok2
+         0CI2bNbJXhEWVgim7Jm+zaDfYVEOv4PLYtQP2NKH9e5cMK/Clmo22yx+ADrNccssyB
+         7wuK9M7ClSh1mnbSsVve9tak0qPCnnIXFo2759Fr90hkf/sT4IfjI4sWqtxG7HJ4C2
+         DK87+yaTN9h6P2a8O+K0FvVqwcSozo3G6jku1mcFc12ykG393WIBeo9V8ZO4qBgpey
+         lV4YKVzNkP/7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wasim Khan <wasim.khan@nxp.com>
+--=_MailMate_67E22BE1-702B-406F-8717-49758A0ED8D6_=
+Content-Type: text/plain; charset="UTF-8"; markup=markdown
+Content-Transfer-Encoding: quoted-printable
 
-Add label to pcie nodes
+On 9 Sep 2020, at 10:18, Kirill A. Shutemov wrote:
 
-Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> On Wed, Sep 02, 2020 at 02:06:18PM -0400, Zi Yan wrote:
+>>  25 files changed, 852 insertions(+), 98 deletions(-)
+>
+> It's way too big to have meaningful review.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 0246d97..1fa39ba 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-- * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-+ * Device Tree Include file for NXP Layerscape-1046A family SoC.
-  *
-  * Copyright 2016 Freescale Semiconductor, Inc.
-- * Copyright 2018 NXP
-+ * Copyright 2018, 2020 NXP
-  *
-  * Mingkai Hu <mingkai.hu@nxp.com>
-  */
-@@ -718,7 +718,7 @@
- 				     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--		pcie@3400000 {
-+		pcie1: pcie@3400000 {
- 			compatible = "fsl,ls1046a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
-@@ -744,7 +744,7 @@
- 			status = "disabled";
- 		};
- 
--		pcie_ep@3400000 {
-+		pcie_ep1: pcie_ep@3400000 {
- 			compatible = "fsl,ls1046a-pcie-ep","fsl,ls-pcie-ep";
- 			reg = <0x00 0x03400000 0x0 0x00100000
- 				0x40 0x00000000 0x8 0x00000000>;
-@@ -754,7 +754,7 @@
- 			status = "disabled";
- 		};
- 
--		pcie@3500000 {
-+		pcie2: pcie@3500000 {
- 			compatible = "fsl,ls1046a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
-@@ -780,7 +780,7 @@
- 			status = "disabled";
- 		};
- 
--		pcie_ep@3500000 {
-+		pcie_ep2: pcie_ep@3500000 {
- 			compatible = "fsl,ls1046a-pcie-ep","fsl,ls-pcie-ep";
- 			reg = <0x00 0x03500000 0x0 0x00100000
- 				0x48 0x00000000 0x8 0x00000000>;
-@@ -790,7 +790,7 @@
- 			status = "disabled";
- 		};
- 
--		pcie@3600000 {
-+		pcie3: pcie@3600000 {
- 			compatible = "fsl,ls1046a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
-@@ -816,7 +816,7 @@
- 			status = "disabled";
- 		};
- 
--		pcie_ep@3600000 {
-+		pcie_ep3: pcie_ep@3600000 {
- 			compatible = "fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep";
- 			reg = <0x00 0x03600000 0x0 0x00100000
- 				0x50 0x00000000 0x8 0x00000000>;
--- 
-2.7.4
+Will split it into small patches in the next version.
 
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_67E22BE1-702B-406F-8717-49758A0ED8D6_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9Y5H8PHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqK6bgP/1zuTfokWA7v5i0dOvkMy4hhGhOvmGQ9uZzf
+IHUfm4jaIRwfQQ7U/jwZJatVi5HJTzOYxSMf9hrpv4x/0jsbsszMmvJ/SzIVa0ZD
+Q/ZZf8ItL27F0ZUtGctCqfEABtWIlG9mwik2xf8AmQM8L0I2jB2QCrYWyRMC4Fx8
+iVCnAmUDr1TOGIWwYy2OE3lLsuwRLwpcnAZtYarJsIvd+Ao+I6tdgTS3Mc7Ewn8A
+/G7k8SW8I8oAl+A2RD5c581xGKcvmkXkWkNwZ1meCa17nO4nFmnMz6QCbXYVT2Vm
+BPm8QvCvE7uQ41fqJWLjF+CKM9YHXH5qFyvw7PowRWUSOb0FKpvSRZEl7Y6glxY+
+QB8dWFT+csKEomrkU8Bb01g6oc73cF9Qiv3GTVVPgPPiwhWF4pyfyKQ0wMr3HLaZ
+rKVhl5rVN4zmibwwljaJlO4efUik1GiF16pwcbZNZY/L86XWhZLX8jb18awbEh9I
+hLvYP7MDXcePYz1/ZysTkGPW/EbV2btV2zFtqtxHGoVx5IWr3UL4DMVaXoSPyJYz
+K+K/7vBg13u/ujCh40v53vU5vBIwmQ+l2t0D4N7uqbjmdIz5x4DTB/CmIb35F3Co
+AjLBdCcCWMYngi2iiLCi9zSUJUgMzU49pa57hw5rSiWLnSX2xMCg8hlTZCBPKZpV
+TqSMdqVV
+=KXb2
+-----END PGP SIGNATURE-----
+
+--=_MailMate_67E22BE1-702B-406F-8717-49758A0ED8D6_=--
