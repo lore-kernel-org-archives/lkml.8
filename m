@@ -2,84 +2,185 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B462EC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1AEC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727782166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908CC207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:15:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="LoZsiyRN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RiDhA0at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbgIIQNA (ORCPT
+        id S1731014AbgIIQPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730821AbgIIQJZ (ORCPT
+        Wed, 9 Sep 2020 12:15:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60368 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730727AbgIIQLT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:09:25 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D900C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:09:20 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id j10so1766810qvk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:09:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XOUyPTsa2Cy1aBInD+QuWOlrkZOb1oPn3ygyN5HSAlw=;
-        b=LoZsiyRN6z3nQTE+reJEuHSLJx/sEAeC0/lg9Ji/pYlB7dC9jGShyT3icZv0Jh+YaM
-         EYDrMJiztU1bZr5xo1De0LQt8sutI/Gr9qQ7/n2Dj9y6PqFSdYF6U94Rg9WYCPglKd1d
-         0XX9IN2kGMxwHWlJICG360S5k88hyLU+4KSmI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XOUyPTsa2Cy1aBInD+QuWOlrkZOb1oPn3ygyN5HSAlw=;
-        b=idEkoV9rgv4K8y6s4oSDlTTJzxTqCO2/EVf0iq5MHeBRhyEyhU//HnWoWZLafQMmm1
-         kqjaQKsOrafFrxQ+HOSHmRxbmCXAOm6EkKX9w6rQF1gDBKWtqNA/rcl8be1L99dSOUVq
-         4qIgaRm4l51tK3Ctg8bc+6n6guIopAKRMpJS1mOyGg5EQsLvc1Yo/OiMfshWRSCG80S1
-         OqYPjs0OfmWOm1GjKbIRxCbItT6yz24gJ/b0ZfXZu2G51QuGr01N2JOCkaB+qGz/I3bw
-         t4RIOJ2WQUcUl0uHoPzbdMiXmJz3y787Mg8tRmgQ/i06nFaBvqGKbtnAJgnpAQ+OmAOP
-         5uvQ==
-X-Gm-Message-State: AOAM533/FjxBR7ALT+07S6VLxmQiCpeFOOCgSs9WJ8kasRG8CRLTI884
-        g+pq9oSv0v5noM6FCuz9aQd5hA==
-X-Google-Smtp-Source: ABdhPJyL7+T9zIVmdMwKB1/q+iv+QjLVbUi6SxoPu8hTWkv8uve1cnVGV+9GR+PjfuPGIhHSCec3Ng==
-X-Received: by 2002:a0c:b35d:: with SMTP id a29mr4590496qvf.19.1599667759190;
-        Wed, 09 Sep 2020 09:09:19 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:16fd])
-        by smtp.gmail.com with ESMTPSA id q3sm2817689qkq.132.2020.09.09.09.09.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 09:09:18 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 17:09:17 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     zangchunxin@bytedance.com
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: Re: [PATCH v2] mm/vmscan: fix infinite loop in drop_slab_node
-Message-ID: <20200909160917.GA1569471@chrisdown.name>
-References: <20200909152047.27905-1-zangchunxin@bytedance.com>
+        Wed, 9 Sep 2020 12:11:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599667876;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=37v6qxsQ8z+hF4TWCPwC2yGYQasatQmlxoZy76lvFLg=;
+        b=RiDhA0atjdHgsFJRquYSCKTmUjSudUHrzJF2PTT3FxddqsSBCcNCu+ruU4xaiSbee6rrpg
+        z+OuzBHgQZh0q4XugCS+1yoRj1YCsQD9ZT29b9whoCBA17OH2BThxy3bXsH+wYQO63i5RN
+        Tii2BZ/FBaXmPykVxDJMhmRo4X56RE8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-rtN6wnoYNtWBkcWY0CdhoA-1; Wed, 09 Sep 2020 09:44:03 -0400
+X-MC-Unique: rtN6wnoYNtWBkcWY0CdhoA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2182618B9FE4;
+        Wed,  9 Sep 2020 13:44:01 +0000 (UTC)
+Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E82575C3E0;
+        Wed,  9 Sep 2020 13:43:56 +0000 (UTC)
+Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
+To:     Rik van Riel <riel@surriel.com>, Michal Hocko <mhocko@suse.com>
+Cc:     Zi Yan <ziy@nvidia.com>, Roman Gushchin <guro@fb.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200903142300.bjq2um5y5nwocvar@box>
+ <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
+ <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
+ <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
+ <20200908143503.GE26850@dhcp22.suse.cz>
+ <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
+ <20200909070445.GA7348@dhcp22.suse.cz>
+ <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <6135d2c5-2a74-6ca8-4b3b-8ceb25c0d4b1@redhat.com>
+Date:   Wed, 9 Sep 2020 15:43:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200909152047.27905-1-zangchunxin@bytedance.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+In-Reply-To: <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks! This looks reasonable to me, and avoids hard-to-reason-about changes in 
-the existing semantics.
+On 09.09.20 15:19, Rik van Riel wrote:
+> On Wed, 2020-09-09 at 09:04 +0200, Michal Hocko wrote:
+>> On Tue 08-09-20 10:41:10, Rik van Riel wrote:
+>>> On Tue, 2020-09-08 at 16:35 +0200, Michal Hocko wrote:
+>>>
+>>>> A global knob is insufficient. 1G pages will become a very
+>>>> precious
+>>>> resource as it requires a pre-allocation (reservation). So it
+>>>> really
+>>>> has
+>>>> to be an opt-in and the question is whether there is also some
+>>>> sort
+>>>> of
+>>>> access control needed.
+>>>
+>>> The 1GB pages do not require that much in the way of
+>>> pre-allocation. The memory can be obtained through CMA,
+>>> which means it can be used for movable 4kB and 2MB
+>>> allocations when not
+>>> being used for 1GB pages.
+>>
+>> That CMA has to be pre-reserved, right? That requires a
+>> configuration.
+> 
+> To some extent, yes.
+> 
+> However, because that pool can be used for movable
+> 4kB and 2MB
+> pages as well as for 1GB pages, it would be easy to just set
+> the size of that pool to eg. 1/3 or even 1/2 of memory for every
+> system.
+> 
+> It isn't like the pool needs to be the exact right size. We
+> just need to avoid the "highmem problem" of having too little
+> memory for kernel allocations.
+> 
 
-zangchunxin@bytedance.com writes:
->Signed-off-by: Chunxin Zang <zangchunxin@bytedance.com>
->Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+I am not sure I like the trend towards CMA that we are seeing, reserving
+huge buffers for specific users (and eventually even doing it
+automatically).
 
-Acked-by: Chris Down <chris@chrisdown.name>
+What we actually want is ZONE_MOVABLE with relaxed guarantees, such that
+anybody who requires large, unmovable allocations can use it.
+
+I once played with the idea of having ZONE_PREFER_MOVABLE, which
+a) Is the primary choice for movable allocations
+b) Is allowed to contain unmovable allocations (esp., gigantic pages)
+c) Is the fallback for ZONE_NORMAL for unmovable allocations, instead of
+running out of memory
+
+If someone messes up the zone ratio, issues known from zone imbalances
+are avoided - large allocations simply become less likely to succeed. In
+contrast to ZONE_MOVABLE, memory offlining is not guaranteed to work.
+
+-- 
+Thanks,
+
+David / dhildenb
+
