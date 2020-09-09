@@ -2,80 +2,120 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2BFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EA3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C02A2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9EC21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgIINcx (ORCPT
+        id S1730319AbgIINeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 09:32:53 -0400
-Received: from mail-il1-f207.google.com ([209.85.166.207]:44686 "EHLO
-        mail-il1-f207.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730336AbgIINTH (ORCPT
+        Wed, 9 Sep 2020 09:34:01 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45342 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730355AbgIINTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 09:19:07 -0400
-Received: by mail-il1-f207.google.com with SMTP id j11so1987813ilr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 06:19:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=E3DC8oOc5Wv1kvi7EPmKvvKbe0T5xVJz7MHLJ6IZAsg=;
-        b=g4o2pkDAP/5SYWV2TVenm1sJUrEUaQs+9bnw6u6OQEqQa+NbqtVhIwnVEM6+iJ/woq
-         NiTwB689Mhj0R0MHeCBGvRr0VM1AQtiU0bydYyb9n+VQGWkOVRt2exP9mbxsk/BQx3cO
-         +/ahYLUVxnSBW8jIsY8BfypSpdc8SHrJnaE1W/QKZjmHgZA4Zsd7p8TTA+O5Jj/wPI/F
-         yjS/CXpRI274wLlY0skHlg3lRdHtxtQovzbEtOWbVSsc/85S8LGhgsikW9TUkOMhPWdx
-         WCEguDoBKANoSVr8+bV6VX8T9hUdXAlZnOLie4FAMsYsLOPUQalm3y873owAv6KGqREk
-         AV/w==
-X-Gm-Message-State: AOAM530yzeOVGxzfpAocCq1sy+6x2hEI3jlM4qwsi+fH2vM4y7lELpXE
-        Nr80+4FZYRkBcOGEYrB//Tw24XFooxsurozuPDh0WW8qStKC
-X-Google-Smtp-Source: ABdhPJxcQGxT5cF6oLXv72p5cpZNhvBHKbh1UCXK1nE51/J5GhQOYBlu+S/ZZWIBLCIbFJoMJf4qNwXxdUWZdLn5fycpFuyANkem
+        Wed, 9 Sep 2020 09:19:34 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1kG00L-0003w1-7V; Wed, 09 Sep 2020 09:19:17 -0400
+Message-ID: <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
+Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
+From:   Rik van Riel <riel@surriel.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>,
+        Roman Gushchin <guro@fb.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 09 Sep 2020 09:19:16 -0400
+In-Reply-To: <20200909070445.GA7348@dhcp22.suse.cz>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+         <20200903142300.bjq2um5y5nwocvar@box>
+         <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
+         <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
+         <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
+         <20200908143503.GE26850@dhcp22.suse.cz>
+         <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
+         <20200909070445.GA7348@dhcp22.suse.cz>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-a/joHFftty7+65yl3VYm"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-X-Received: by 2002:a92:906:: with SMTP id y6mr3753912ilg.106.1599657546811;
- Wed, 09 Sep 2020 06:19:06 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 06:19:06 -0700
-In-Reply-To: <0000000000002cdf7305aedd838d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d7136005aee14bf9@google.com>
-Subject: Re: WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected (2)
-From:   syzbot <syzbot+22e87cdf94021b984aa6@syzkaller.appspotmail.com>
-To:     bfields@fieldses.org, boqun.feng@gmail.com, jlayton@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
 
-commit f08e3888574d490b31481eef6d84c61bedba7a47
-Author: Boqun Feng <boqun.feng@gmail.com>
-Date:   Fri Aug 7 07:42:30 2020 +0000
+--=-a/joHFftty7+65yl3VYm
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-    lockdep: Fix recursive read lock related safe->unsafe detection
+On Wed, 2020-09-09 at 09:04 +0200, Michal Hocko wrote:
+> On Tue 08-09-20 10:41:10, Rik van Riel wrote:
+> > On Tue, 2020-09-08 at 16:35 +0200, Michal Hocko wrote:
+> >=20
+> > > A global knob is insufficient. 1G pages will become a very
+> > > precious
+> > > resource as it requires a pre-allocation (reservation). So it
+> > > really
+> > > has
+> > > to be an opt-in and the question is whether there is also some
+> > > sort
+> > > of
+> > > access control needed.
+> >=20
+> > The 1GB pages do not require that much in the way of
+> > pre-allocation. The memory can be obtained through CMA,
+> > which means it can be used for movable 4kB and 2MB
+> > allocations when not
+> > being used for 1GB pages.
+>=20
+> That CMA has to be pre-reserved, right? That requires a
+> configuration.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13034be1900000
-start commit:   dff9f829 Add linux-next specific files for 20200908
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=10834be1900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17034be1900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
-dashboard link: https://syzkaller.appspot.com/bug?extid=22e87cdf94021b984aa6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108b740d900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12daa9ed900000
+To some extent, yes.
 
-Reported-by: syzbot+22e87cdf94021b984aa6@syzkaller.appspotmail.com
-Fixes: f08e3888574d ("lockdep: Fix recursive read lock related safe->unsafe detection")
+However, because that pool can be used for movable
+4kB and 2MB
+pages as well as for 1GB pages, it would be easy to just set
+the size of that pool to eg. 1/3 or even 1/2 of memory for every
+system.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+It isn't like the pool needs to be the exact right size. We
+just need to avoid the "highmem problem" of having too little
+memory for kernel allocations.
+
+--=20
+All Rights Reversed.
+
+--=-a/joHFftty7+65yl3VYm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl9Y1lQACgkQznnekoTE
+3oPHVQf/bgeq438Tq37bx4goKsEOaJmg8kdwGMi1Sa0MPj0rHzIqrrcpBGN7MoTB
+cJwWBXlXktTn7r9fdv3TVFu2DwctuUu3U8XA6tKveENqUqW/rZJfkayb6mCF8qDv
+deKHkCbDyFrp4ugPQ8Ey2QX8fPcqI02kHTGmJQQxohE7Y1Gim5qiLzkn5aYQVDK1
+mC2AgQYpGISMW/hPJ8yAZl3mKaQ5MKqfrhlqRHbq8y8oibv4ttkSLTFKX5E+Xizn
+zRQ4Re4Ld/zou/xUVXYMUkA71eqoIb+qDhXFmomWrBxmdHirzgMqDpKX6L7Kxm4+
++s3riO3TZZP2YCwj5xbMWABajAf8Mw==
+=tW2I
+-----END PGP SIGNATURE-----
+
+--=-a/joHFftty7+65yl3VYm--
+
