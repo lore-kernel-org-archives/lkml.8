@@ -2,145 +2,106 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C92C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FFAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD0C216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:46:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c6LQWgXA"
+	by mail.kernel.org (Postfix) with ESMTP id AC343216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599612577;
+	bh=JuewVb3CWL2f8ApY/LeauzXHZXVBZAWlQT1A8+lK45U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gd3D/C33OJLNZU287fc4ks1cNp96OzQ9Qci4rvSzmFDR1R09zArCJOFu4Qc75MBli
+	 OmtDvd7iIof6jqfFDFITs7ZmQpE5/p1hB9nj25tYbDhqpAFUStu32B6/LwnvBkhS/b
+	 ltiD967V9ROdlffLyk7Ne2wrQ9djuuH03Ftobsg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgIIAqX (ORCPT
+        id S1729305AbgIIAtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 20:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgIIAqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 20:46:23 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E18C061573;
-        Tue,  8 Sep 2020 17:46:22 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 8 Sep 2020 20:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728458AbgIIAtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 20:49:33 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmNcX5L7zz9sTW;
-        Wed,  9 Sep 2020 10:46:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599612380;
-        bh=LcyqUDdmTFo/hpRQO2EuNKhJuisUTlJ8dkPNFe9MyJU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c6LQWgXAjJWSgZFeuU/T5fGLN50G2Y6jvVmtiPWLTJFQMHSO8GOwRgjNiMkhyA/4i
-         qxESn7015hbbwP4x0HK09pRCY0rvEXHhgC+5ZIK1Xm80k4+HaMt7QqRaxG9LDHY28V
-         6QE07ZT3AhmGjn3M9MaCZ2uhVjzLAPAA+/oIn9WdWIFgj6nSoljzzSHbIJP142kKsP
-         xmRWPLgCatjEqayTG+p5bf6a3E9uiE5AcIqOAxskpdwLHn6AHot4mr+KCW7cO+ZOm1
-         f3h7m8By11mU6rFMG2dUAjfw7MNnWJDM6D62MN5mXoP49dIpJ+NClWVYpdVfHnZBkc
-         UFQV4tQhO7d/Q==
-Date:   Wed, 9 Sep 2020 10:46:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
-Message-ID: <20200909104619.0902238c@canb.auug.org.au>
-In-Reply-To: <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org>
-References: <20200902180950.4bc7c4de@canb.auug.org.au>
-        <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
-        <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
-        <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
-        <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A23B21D20;
+        Wed,  9 Sep 2020 00:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599612572;
+        bh=JuewVb3CWL2f8ApY/LeauzXHZXVBZAWlQT1A8+lK45U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1JUR3bSxoVpeWmCcldM6kA1CJMlepqwv/tbK+zGFbP+opWOGsgXeoWnYMid8n5ifj
+         WrL4WvAdrthp1NvIkfSE+JoK+CRNnGfl6bGNTDW9Ex6Y++gXA/tEf+dmkYtmVh1Ppa
+         GOxChAvtbdSORr507DW0vLP2PQO2pIeyvgKPXyI8=
+Received: by mail-lj1-f175.google.com with SMTP id a22so1215302ljp.13;
+        Tue, 08 Sep 2020 17:49:32 -0700 (PDT)
+X-Gm-Message-State: AOAM533oSmWNK3uTUMNfaQ061lVkq13GAL/RhTPnlg+ox6QkI7p5Ia9S
+        jmhavDFYutSuA5BAgnUnegOBDqtUB5LrJsT5zBE=
+X-Google-Smtp-Source: ABdhPJwQqF8kGQl3aQIHo4jL6u7iNStiHzbekOsDMSF5xlfXaQF0zXWv8Np4ajPtvuGLncE3yLEaBvzKiELR1KuaAk4=
+X-Received: by 2002:a05:651c:104:: with SMTP id a4mr547366ljb.273.1599612570759;
+ Tue, 08 Sep 2020 17:49:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EXWxTn/MK9ozwgFhmWyLq_J";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200908145347.2992670-1-hch@lst.de> <20200908145347.2992670-16-hch@lst.de>
+In-Reply-To: <20200908145347.2992670-16-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 8 Sep 2020 17:49:19 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW548EyxEJmriyQy9VObEDUvg0H1HVcuwkadva88_e=FGw@mail.gmail.com>
+Message-ID: <CAPhsuW548EyxEJmriyQy9VObEDUvg0H1HVcuwkadva88_e=FGw@mail.gmail.com>
+Subject: Re: [PATCH 15/19] md: use bdev_check_media_change
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Denis Efremov <efremov@linux.com>,
+        Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>,
+        linux-scsi@vger.kernel.org,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EXWxTn/MK9ozwgFhmWyLq_J
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi Randy,
-
-On Tue, 8 Sep 2020 07:38:31 -0700 Randy Dunlap <rdunlap@infradead.org> wrot=
-e:
+On Tue, Sep 8, 2020 at 7:55 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On 9/4/20 12:59 AM, Brendan Higgins wrote:
-> > On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org> wr=
-ote: =20
-> >>
-> >> On 9/2/20 8:44 AM, Randy Dunlap wrote: =20
-> >>> On 9/2/20 1:09 AM, Stephen Rothwell wrote: =20
-> >>>> Hi all,
-> >>>>
-> >>>> Changes since 20200828:
-> >>>> =20
-> >>>
-> >>>
-> >>> on i386:
-> >>>
-> >>> ../lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
-> >>> ../lib/ubsan.c:141:2: error: implicit declaration of function =E2=80=
-=98kunit_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_test=
-=E2=80=99? [-Werror=3Dimplicit-function-declaration]
-> >>>   kunit_fail_current_test();
-> >>>
-> >>>
-> >>> Full randconfig file is attached.
-> >>> =20
-> >>
-> >> Hi Brendan,
-> >>
-> >> Do you know anything about this build error?
-> >>
-> >> I can't find kunit_fail_current_test() anywhere. =20
-> >=20
-> > Yeah, this got applied for some reason without the prerequisite
-> > patches. It is from a two patch series, the other being here:
-> >=20
-> > https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielg=
-uajardojr@gmail.com/
-> >=20
-> > which in turn depends on another patchset which didn't make it into 5.9.
-> >=20
-> > Again, I don't know why this was applied without it's prereqs. Sorry ab=
-out that.
-> >  =20
->=20
-> Well.  Who is responsible for this small mess?
-> It is still killing linux-next builds for me (2020-0908).
+> The md driver does not have a ->revalidate_disk method, so it can just
+> use bdev_check_media_change without any additional changes.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-It came in via the kunit-next tree (Shuah cc'd).  I will revert commit
-abe83f7621ee ("kunit: ubsan integration") today.
+Acked-by: Song Liu <song@kernel.org>
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EXWxTn/MK9ozwgFhmWyLq_J
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YJdsACgkQAVBC80lX
-0GyK+wgAjTHDhBW6vb4+obLH3Ebgk9/5ea0BdLvPmuHn6X2dVOldQRwLDdPEoqUg
-Xwrz+9aPXZVeSy+rcTEnQIjEB1+qXhmpbBVu9NUtp9yeowrFU0XHAcRafDamVSB4
-o4hHgb4MLvlUd3E22QvacN/Ed4yLFXR4t5x27nlXKpc8heX1h606y9NO878AKVui
-ngi4GaQXUSRlNSbwdMGb7fED9o+HiUsJ1ogxl5U6uF9s4fk5zFcLV+yR+AdiCpxJ
-89aFZtozDKsKVyu7FLLS8xn1MipzPdLdoLaNsR7LHcR8rOuaD1PAXfwj9E9iz/Y2
-XGigs29hVDUCytHm73nPDSTv367JQQ==
-=tOVS
------END PGP SIGNATURE-----
-
---Sig_/EXWxTn/MK9ozwgFhmWyLq_J--
+> ---
+>  drivers/md/md.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 9562ef598ae1f4..27ed61197014ef 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -7848,7 +7848,7 @@ static int md_open(struct block_device *bdev, fmode_t mode)
+>         atomic_inc(&mddev->openers);
+>         mutex_unlock(&mddev->open_mutex);
+>
+> -       check_disk_change(bdev);
+> +       bdev_check_media_change(bdev);
+>   out:
+>         if (err)
+>                 mddev_put(mddev);
+> --
+> 2.28.0
+>
