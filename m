@@ -2,141 +2,118 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8982C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0383C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC7021941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599653530;
-	bh=vsjTYNMmq1bU3l1iBwYS0EsYYEjqKIejBpLzYh0pyqo=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=D27oNA8v+WoNKdFCfrhl6W1CkTyXNNhZzfLNrPz6cnu4IcUGEKo/AZ/wjWMfMFpSi
-	 5mDZwG7jRWNkiXBYJ+JNzCIp9Xvz+LiVGSj1aGRDKHsn+hz0DgD91ykUKcLx5NgRHz
-	 jJDwm337gvit0yLvZYIJ0loNOUKEdTtgak79vqgA=
+	by mail.kernel.org (Postfix) with ESMTP id 98CE4206A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgIIMLZ (ORCPT
+        id S1727804AbgIIMNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 08:11:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729822AbgIIMAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 08:00:40 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88A3A215A4;
-        Wed,  9 Sep 2020 11:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599652210;
-        bh=vsjTYNMmq1bU3l1iBwYS0EsYYEjqKIejBpLzYh0pyqo=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=meVJ1T4+sNUN3l++6g5sFUQY9BG0qIDH6bh0Z3LmLIHJ8AyG09+hFC4DfI3u5lljP
-         ibWHVA0xChCkPtlKyhBIW/SpOiCkw1U/8Tr812P5IIs/i9SEN4Hu7WQ51AXfkPknzI
-         u11FU/2utLZ/Jqo+nNxQlALOZ6UF3TVyVGGqesGU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3748D3523091; Wed,  9 Sep 2020 04:50:10 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 04:50:10 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 9 Sep 2020 08:13:53 -0400
+Received: from smtprelay0197.hostedemail.com ([216.40.44.197]:49916 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730174AbgIIMDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 08:03:05 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id D2987100E7B43;
+        Wed,  9 Sep 2020 12:02:13 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: touch41_4202f16270dd
+X-Filterd-Recvd-Size: 3596
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  9 Sep 2020 12:02:12 +0000 (UTC)
+Message-ID: <1d6548cc89bf89a0bea9a2d84a94a01cebc4ec7b.camel@perches.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] checkpatch: GIT_COMMIT_ID:
+ handle commit messages with multiple quotes
+From:   Joe Perches <joe@perches.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>, Ayush <ayush@disroot.org>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH kernel] srcu: Fix static initialization
-Message-ID: <20200909115010.GG29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200908144306.33355-1-aik@ozlabs.ru>
- <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
+Date:   Wed, 09 Sep 2020 05:02:11 -0700
+In-Reply-To: <alpine.DEB.2.21.2009091324590.5622@felia>
+References: <alpine.DEB.2.21.2009091152530.5622@felia>
+         <beed63208cc412f122fe273602675801add08ede.camel@perches.com>
+         <20200907151417.44453-1-ayush@disroot.org>
+         <22db634e7be36f4514f0c9b3ecf0060a@disroot.org>
+         <3dea1eefdbbf97791bed3f838d4f06a7@disroot.org>
+         <alpine.DEB.2.21.2009091324590.5622@felia>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 07:24:11PM +1000, Alexey Kardashevskiy wrote:
+On Wed, 2020-09-09 at 13:32 +0200, Lukas Bulwahn wrote:
+> dropped the maintainers.
 > 
+> On Wed, 9 Sep 2020, Ayush wrote:
 > 
-> On 09/09/2020 00:43, Alexey Kardashevskiy wrote:
-> > init_srcu_struct_nodes() is called with is_static==true only internally
-> > and when this happens, the srcu->sda is not initialized in
-> > init_srcu_struct_fields() and we crash on dereferencing @sdp.
+> > Sir,
 > > 
-> > This fixes the crash by moving "if (is_static)" out of the loop which
-> > only does useful work for is_static=false case anyway.
+> > > As the mentor in the linux kernel community bridge program, I usually
+> > > inform the mentees when the review on the mentee mailing list has
+> > > successfully concluded to a first acceptable state and I think it is well
+> > > advised to reach out to the maintainers for further discussion.
+> > > 
+> > > You did not do that, but just send some patch to the maintainers.
+> > > That is fully up to you, but I will not support the patch acceptance in
+> > > any way, and it suggests that you do not see the need to be mentored.
+> > > 
+> > > If you can land patches without mentoring support successfully, that is
+> > > great, but then you do not need a mentorship.
 > > 
-> > Found by syzkaller.
-> > 
-> > Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> > ---
-> >  kernel/rcu/srcutree.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> > index c100acf332ed..49b54a50bde8 100644
-> > --- a/kernel/rcu/srcutree.c
-> > +++ b/kernel/rcu/srcutree.c
-> > @@ -135,6 +135,9 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
-> >  				   levelspread[level - 1];
-> >  	}
+> > I am extremely sorry for my mistakes. It won't happen again.
 > >  
-> > +	if (is_static)
-> > +		return;
-> 
-> Actually, this is needed here too:
-> 
->  if (!ssp->sda)
->          return;
-> 
-> as
-> ssp->sda = alloc_percpu(struct srcu_data)
-> 
-> can fail if the process is killed too soon - it is quite easy to get
-> this situation with syzkaller (syscalls fuzzer)
-> 
-> Makes sense?
-
-Just to make sure that I understand, these failures occur when the task
-running init_srcu_struct_nodes() is killed, correct?
-
-Or has someone managed to invoke (say) synchronize_srcu() on a
-dynamically allocated srcu_struct before invoking init_srcu_struct() on
-that srcu_struct?  This would be an SRCU usage bug.  If you dynamically
-allocate your srcu_struct, you are absolutely required to invoke
-init_srcu_struct() on it before doing anything else with it.
-
-Or am I missing something here?
-
-(The rcutorture test suite does test both static and dynamic allocation
-of the srcu_struct, so I am expecting something a bit subtle here.)
-
-							Thanx, Paul
-
-> > +
-> >  	/*
-> >  	 * Initialize the per-CPU srcu_data array, which feeds into the
-> >  	 * leaves of the srcu_node tree.
-> > @@ -161,8 +164,6 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
-> >  		timer_setup(&sdp->delay_work, srcu_delay_timer, 0);
-> >  		sdp->ssp = ssp;
-> >  		sdp->grpmask = 1 << (cpu - sdp->mynode->grplo);
-> > -		if (is_static)
-> > -			continue;
-> >  
-> >  		/* Dynamically allocated, better be no srcu_read_locks()! */
-> >  		for (i = 0; i < ARRAY_SIZE(sdp->srcu_lock_count); i++) {
+> > > Now, to the commit:
+> > > 
+> > > Ayush, your commit message is largely incomprehensible.
+> > > 
+> > > Your follow-up explanation that was needed should have been in the commit
+> > > message in the first place.
+> > 
+> > It was my first patch, so I had very little idea of forming commit messages. 
+> > I will discuss it with mentors next time before sending the patch next time.
 > > 
 > 
-> -- 
-> Alexey
+> Let us start with the simpler patch and then see if you can write a commit 
+> message that convinces Joe to ack your patch.
+>  
+> > > Ayush, you did not sign-off with your full legal name.
+> > 
+> > My legal name according to all official identification documents of India is Ayush. 
+> > I have no surname registered legally.
+> > So should I include "Ayush <ayush@disroot.org>"  or do I need to include my last name too (Which is Ayush only)?
+> > 
+> 
+> Okay. If you say so, I cannot judge but you should try to use a name that 
+> others can with a fair chance uniquely identify that is you.
+> 
+> The name is used in git log summaries, pull requests, etc.; so, it should 
+> be a name that with high chance to refer to one person.
+> 
+> Maybe you find a good way that works as suitable name for 
+> unique identification?
+
+I believe the Developer's Certificate of Origin (DCO) in
+Documentation/pr
+ocess/submitting-patches.rst just asks
+for a "full name".
+
+If Ayush has no surname, then I imagine that his actual
+full name Ayush should be good enough for the DCO.
+
+A line like "Signed-off-by: Ayush <ayush@disroot.org>"
+should be fine.
+
+
