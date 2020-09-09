@@ -2,222 +2,79 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B548FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E85C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2C121D7E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD851206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:15:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="etO8dCFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbgIIROo (ORCPT
+        id S1731115AbgIIRO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:14:44 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11756 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730236AbgIIP3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:29:42 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 742603448DFDBD0050E8;
-        Wed,  9 Sep 2020 21:37:34 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:37:25 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <vkoul@kernel.org>, <yung-chuan.liao@linux.intel.com>,
-        <pierre-louis.bossart@linux.intel.com>, <sanyog.r.kale@intel.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] soundwire: intel: Remove ununsed function
-Date:   Wed, 9 Sep 2020 21:15:31 +0800
-Message-ID: <20200909131531.31380-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 9 Sep 2020 13:14:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:44098 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726976AbgIIP3G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:29:06 -0400
+X-UUID: 36e0a08b229f472eadec214b44e570cc-20200909
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=6Ta4xbWlDnLHSIu1GOEg1nUgcgnCO6XZQfUX8n8EoXs=;
+        b=etO8dCFeeYOusmFed/C8TjTy0V+rB4a+b9JonCzglWU5nKCMi9tUvrRjaV0oi7wxS2/pEzfQAXFORlNNe92iT7kBezcf6+dYpOC03wtzRFBxzxa3uJQI2CVV2djaAGZZW4cPATbuVDDnSeW1qqeTRT5eTOjWPDbusdQbM8DO+5w=;
+X-UUID: 36e0a08b229f472eadec214b44e570cc-20200909
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <hector.yuan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1210527837; Wed, 09 Sep 2020 21:34:39 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 9 Sep 2020 21:34:35 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 9 Sep 2020 21:34:36 +0800
+From:   Hector Yuan <hector.yuan@mediatek.com>
+To:     <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <hector.yuan@mediatek.com>
+Subject: [PATCH v6] cpufreq: mediatek-hw: Add support for Mediatek cpufreq HW driver
+Date:   Wed, 9 Sep 2020 21:34:34 +0800
+Message-ID: <1599658476-16562-1-git-send-email-hector.yuan@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_PM is not set, build warns:
-
-drivers/soundwire/intel.c:488:12: warning: 'intel_link_power_down' defined but not used [-Wunused-function]
-
-Move this to #ifdef block.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/soundwire/intel.c | 137 +++++++++++++++++++-------------------
- 1 file changed, 68 insertions(+), 69 deletions(-)
-
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index e047910d73f5..ea53291c80dd 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -399,27 +399,6 @@ static void intel_shim_glue_to_master_ip(struct sdw_intel *sdw)
- 	/* at this point Master IP has full control of the I/Os */
- }
- 
--/* this needs to be called with shim_lock */
--static void intel_shim_master_ip_to_glue(struct sdw_intel *sdw)
--{
--	unsigned int link_id = sdw->instance;
--	void __iomem *shim = sdw->link_res->shim;
--	u16 ioctl;
--
--	/* Glue logic */
--	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
--	ioctl |= SDW_SHIM_IOCTL_BKE;
--	ioctl |= SDW_SHIM_IOCTL_COE;
--	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
--	usleep_range(10, 15);
--
--	ioctl &= ~(SDW_SHIM_IOCTL_MIF);
--	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
--	usleep_range(10, 15);
--
--	/* at this point Integration Glue has full control of the I/Os */
--}
--
- static int intel_shim_init(struct sdw_intel *sdw, bool clock_stop)
- {
- 	void __iomem *shim = sdw->link_res->shim;
-@@ -485,54 +464,6 @@ static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
- 	mutex_unlock(sdw->link_res->shim_lock);
- }
- 
--static int intel_link_power_down(struct sdw_intel *sdw)
--{
--	u32 link_control, spa_mask, cpa_mask;
--	unsigned int link_id = sdw->instance;
--	void __iomem *shim = sdw->link_res->shim;
--	u32 *shim_mask = sdw->link_res->shim_mask;
--	int ret = 0;
--
--	mutex_lock(sdw->link_res->shim_lock);
--
--	intel_shim_master_ip_to_glue(sdw);
--
--	if (!(*shim_mask & BIT(link_id)))
--		dev_err(sdw->cdns.dev,
--			"%s: Unbalanced power-up/down calls\n", __func__);
--
--	*shim_mask &= ~BIT(link_id);
--
--	if (!*shim_mask) {
--
--		dev_dbg(sdw->cdns.dev, "%s: powering down all links\n", __func__);
--
--		/* Link power down sequence */
--		link_control = intel_readl(shim, SDW_SHIM_LCTL);
--
--		/* only power-down enabled links */
--		spa_mask = FIELD_PREP(SDW_SHIM_LCTL_SPA_MASK, ~sdw->link_res->link_mask);
--		cpa_mask = FIELD_PREP(SDW_SHIM_LCTL_CPA_MASK, sdw->link_res->link_mask);
--
--		link_control &=  spa_mask;
--
--		ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
--	}
--
--	link_control = intel_readl(shim, SDW_SHIM_LCTL);
--
--	mutex_unlock(sdw->link_res->shim_lock);
--
--	if (ret < 0) {
--		dev_err(sdw->cdns.dev, "%s: could not power down link\n", __func__);
--
--		return ret;
--	}
--
--	sdw->cdns.link_up = false;
--	return 0;
--}
--
- static void intel_shim_sync_arm(struct sdw_intel *sdw)
- {
- 	void __iomem *shim = sdw->link_res->shim;
-@@ -1541,6 +1472,74 @@ int intel_master_process_wakeen_event(struct platform_device *pdev)
-  */
- 
- #ifdef CONFIG_PM
-+/* this needs to be called with shim_lock */
-+static void intel_shim_master_ip_to_glue(struct sdw_intel *sdw)
-+{
-+	unsigned int link_id = sdw->instance;
-+	void __iomem *shim = sdw->link_res->shim;
-+	u16 ioctl;
-+
-+	/* Glue logic */
-+	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
-+	ioctl |= SDW_SHIM_IOCTL_BKE;
-+	ioctl |= SDW_SHIM_IOCTL_COE;
-+	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
-+	usleep_range(10, 15);
-+
-+	ioctl &= ~(SDW_SHIM_IOCTL_MIF);
-+	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
-+	usleep_range(10, 15);
-+
-+	/* at this point Integration Glue has full control of the I/Os */
-+}
-+
-+static int intel_link_power_down(struct sdw_intel *sdw)
-+{
-+	u32 link_control, spa_mask, cpa_mask;
-+	unsigned int link_id = sdw->instance;
-+	void __iomem *shim = sdw->link_res->shim;
-+	u32 *shim_mask = sdw->link_res->shim_mask;
-+	int ret = 0;
-+
-+	mutex_lock(sdw->link_res->shim_lock);
-+
-+	intel_shim_master_ip_to_glue(sdw);
-+
-+	if (!(*shim_mask & BIT(link_id)))
-+		dev_err(sdw->cdns.dev,
-+			"%s: Unbalanced power-up/down calls\n", __func__);
-+
-+	*shim_mask &= ~BIT(link_id);
-+
-+	if (!*shim_mask) {
-+
-+		dev_dbg(sdw->cdns.dev, "%s: powering down all links\n", __func__);
-+
-+		/* Link power down sequence */
-+		link_control = intel_readl(shim, SDW_SHIM_LCTL);
-+
-+		/* only power-down enabled links */
-+		spa_mask = FIELD_PREP(SDW_SHIM_LCTL_SPA_MASK, ~sdw->link_res->link_mask);
-+		cpa_mask = FIELD_PREP(SDW_SHIM_LCTL_CPA_MASK, sdw->link_res->link_mask);
-+
-+		link_control &=  spa_mask;
-+
-+		ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
-+	}
-+
-+	link_control = intel_readl(shim, SDW_SHIM_LCTL);
-+
-+	mutex_unlock(sdw->link_res->shim_lock);
-+
-+	if (ret < 0) {
-+		dev_err(sdw->cdns.dev, "%s: could not power down link\n", __func__);
-+
-+		return ret;
-+	}
-+
-+	sdw->cdns.link_up = false;
-+	return 0;
-+}
- 
- static int __maybe_unused intel_suspend(struct device *dev)
- {
--- 
-2.17.1
-
+VGhlIENQVWZyZXEgSFcgcHJlc2VudCBpbiBzb21lIE1lZGlhdGVrIGNoaXBzZXRzIG9mZmxvYWRz
+IHRoZSBzdGVwcyBuZWNlc3NhcnkgZm9yIGNoYW5naW5nIHRoZSBmcmVxdWVuY3kgb2YgQ1BVcy4g
+DQpUaGUgZHJpdmVyIGltcGxlbWVudHMgdGhlIGNwdWZyZXEgZHJpdmVyIGludGVyZmFjZSBmb3Ig
+dGhpcyBoYXJkd2FyZSBlbmdpbmUuIA0KDQpUaGlzIHBhdGNoIGRlcGVuZHMgb24gdGhlIE1UNjc3
+OSBEVFMgcGF0Y2ggc3VibWl0dGVkIGJ5IEhhbmtzIENoZW4NCiBodHRwczovL2xrbWwub3JnL2xr
+bWwvMjAyMC84LzQvMTA5NA0KDQoNCkhlY3Rvci5ZdWFuICgyKToNCiAgY3B1ZnJlcTogbWVkaWF0
+ZWstaHc6IEFkZCBzdXBwb3J0IGZvciBNZWRpYXRlayBjcHVmcmVxIEhXIGRyaXZlcg0KICBkdC1i
+aW5kaW5nczogY3B1ZnJlcTogYWRkIGJpbmRpbmdzIGZvciBNZWRpYVRlayBjcHVmcmVxIEhXDQoN
+CiAuLi4vYmluZGluZ3MvY3B1ZnJlcS9jcHVmcmVxLW1lZGlhdGVrLWh3LnlhbWwgICAgICB8ICAx
+NDEgKysrKysrKysrKw0KIGRyaXZlcnMvY3B1ZnJlcS9LY29uZmlnLmFybSAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAxMiArDQogZHJpdmVycy9jcHVmcmVxL01ha2VmaWxlICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgICAxICsNCiBkcml2ZXJzL2NwdWZyZXEvbWVkaWF0ZWstY3B1ZnJl
+cS1ody5jICAgICAgICAgICAgICB8ICAyODMgKysrKysrKysrKysrKysrKysrKysNCiA0IGZpbGVz
+IGNoYW5nZWQsIDQzNyBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcHVmcmVxL2NwdWZyZXEtbWVkaWF0ZWstaHcueWFt
+bA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2NwdWZyZXEvbWVkaWF0ZWstY3B1ZnJlcS1o
+dy5j
 
