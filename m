@@ -2,124 +2,110 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D87C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE2AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3421121D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D90208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Giwmug0v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgIIHg1 (ORCPT
+        id S1726726AbgIIHg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:36:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52110 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730178AbgIIHgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:36:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AAB16AD32;
-        Wed,  9 Sep 2020 07:36:05 +0000 (UTC)
-Subject: Re: [PATCH 16/19] sd: use bdev_check_media_change
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20200908145347.2992670-1-hch@lst.de>
- <20200908145347.2992670-17-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <624818c7-79bf-bcc9-1df8-32e6077cb607@suse.de>
-Date:   Wed, 9 Sep 2020 09:36:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 9 Sep 2020 03:36:57 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:24334 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728936AbgIIHfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:35:24 -0400
+X-UUID: 9c0fbe76b0a1422fb99834cbf31ac34b-20200909
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=M9B+st9EHiLWNz6oa11lg4+mh5nozfsj2SPClhQffMk=;
+        b=Giwmug0vLHT5wluE9LEhZyvSw8f+KFUEvvoGtHZXTZZBFGMjYhnAbpGyhJprYnCugnAYY/fukmvcvPi/gcBAc7zLpMeX5UCr8bJkranVW3WS+rO23YTvKetdOiTLTvel3hTANVoMiKmD4jbS9F6qsJp2UewvKwmco4w+Ds0gBQY=;
+X-UUID: 9c0fbe76b0a1422fb99834cbf31ac34b-20200909
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 4604978; Wed, 09 Sep 2020 15:35:16 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 9 Sep 2020 15:35:14 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 9 Sep 2020 15:35:12 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Peter Chen <peter.chen@nxp.com>, Bin Liu <b-liu@ti.com>,
+        Sasi Kumar <sasi.kumar@broadcom.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v3 07/11] usb: gadget: bdc: avoid precedence issues
+Date:   Wed, 9 Sep 2020 15:32:58 +0800
+Message-ID: <1599636782-7654-7-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1599636782-7654-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1599636782-7654-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-17-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 9F11B893D605C1BECD111902489BE88A353AD99B2D417CA66D2A22B31B54C4322000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 4:53 PM, Christoph Hellwig wrote:
-> Switch to use bdev_check_media_change instead of check_disk_change and
-> call sd_revalidate_disk manually.  As sd also calls sd_revalidate_disk
-> manually during probe and open, , the extra call into ->revalidate_disk
-> from bdev_disk_changed is not required either, so stop wiring up the
-> method.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> ---
->  drivers/scsi/sd.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+QWRkICgpIGFyb3VuZCBtYWNybyBhcmd1bWVudCB0byBhdm9pZCBwcmVjZWRlbmNlIGlzc3Vlcw0K
+DQpDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQpTaWduZWQtb2Zm
+LWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQpBY2tlZC1ieTog
+RmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQotLS0NCnYzOiBhZGQgYWNr
+ZWQtYnkgRmxvcmlhbg0KDQp2MjogYWRkIENjIEZsb3JpYW4NCi0tLQ0KIGRyaXZlcnMvdXNiL2dh
+ZGdldC91ZGMvYmRjL2JkYy5oIHwgMTggKysrKysrKysrLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5n
+ZWQsIDkgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMv
+YmRjLmgNCmluZGV4IDY1OGFiZWYuLmY4ZDU5NTggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9n
+YWRnZXQvdWRjL2JkYy9iZGMuaA0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRj
+LmgNCkBAIC04NiwyMCArODYsMjAgQEANCiAjZGVmaW5lIEJEQ19FUFNUUzUJMHg3NA0KICNkZWZp
+bmUgQkRDX0VQU1RTNgkweDc4DQogI2RlZmluZSBCRENfRVBTVFM3CTB4N2MNCi0jZGVmaW5lIEJE
+Q19TUlJCQUwobikJKDB4MjAwICsgKG4gKiAweDEwKSkNCi0jZGVmaW5lIEJEQ19TUlJCQUgobikJ
+KDB4MjA0ICsgKG4gKiAweDEwKSkNCi0jZGVmaW5lIEJEQ19TUlJJTlQobikJKDB4MjA4ICsgKG4g
+KiAweDEwKSkNCi0jZGVmaW5lIEJEQ19JTlRDVExTKG4pCSgweDIwYyArIChuICogMHgxMCkpDQor
+I2RlZmluZSBCRENfU1JSQkFMKG4pCSgweDIwMCArICgobikgKiAweDEwKSkNCisjZGVmaW5lIEJE
+Q19TUlJCQUgobikJKDB4MjA0ICsgKChuKSAqIDB4MTApKQ0KKyNkZWZpbmUgQkRDX1NSUklOVChu
+KQkoMHgyMDggKyAoKG4pICogMHgxMCkpDQorI2RlZmluZSBCRENfSU5UQ1RMUyhuKQkoMHgyMGMg
+KyAoKG4pICogMHgxMCkpDQogDQogLyogRXh0ZW5kZWQgY2FwYWJpbGl0eSByZWdzICovDQogI2Rl
+ZmluZSBCRENfRlNDTk9DCTB4Y2Q0DQogI2RlZmluZSBCRENfRlNDTklDCTB4Y2U0DQotI2RlZmlu
+ZSBOVU1fTkNTKHApCShwID4+IDI4KQ0KKyNkZWZpbmUgTlVNX05DUyhwKQkoKHApID4+IDI4KQ0K
+IA0KIC8qIFJlZ2lzdGVyIGJpdCBmaWVsZHMgYW5kIE1hc2tzICovDQogLyogQkRDIENvbmZpZ3Vy
+YXRpb24gMCAqLw0KICNkZWZpbmUgQkRDX1BHUyhwKQkoKChwKSAmICgweDcgPDwgOCkpID4+IDgp
+DQotI2RlZmluZSBCRENfU1BCKHApCShwICYgMHg3KQ0KKyNkZWZpbmUgQkRDX1NQQihwKQkoKHAp
+ICYgMHg3KQ0KIA0KIC8qIEJEQyBDYXBhYmlsaXR5MSAqLw0KICNkZWZpbmUgQkRDX1A2NAkJKDEg
+PDwgMCkNCkBAIC0xMTMsNyArMTEzLDcgQEANCiAjZGVmaW5lIEJEQ19DTURfRFZDCTB4MQ0KICNk
+ZWZpbmUgQkRDX0NNRF9DV1MJCSgweDEgPDwgNSkNCiAjZGVmaW5lIEJEQ19DTURfQ1NUKHApCQko
+KChwKSAmICgweGYgPDwgNikpPj42KQ0KLSNkZWZpbmUgQkRDX0NNRF9FUE4ocCkJCSgocCAmIDB4
+MWYpIDw8IDEwKQ0KKyNkZWZpbmUgQkRDX0NNRF9FUE4ocCkJCSgoKHApICYgMHgxZikgPDwgMTAp
+DQogI2RlZmluZSBCRENfU1VCX0NNRF9BREQJCSgweDEgPDwgMTcpDQogI2RlZmluZSBCRENfU1VC
+X0NNRF9GV0sJCSgweDQgPDwgMTcpDQogLyogUmVzZXQgc2VxdWVuY2UgbnVtYmVyICovDQpAQCAt
+MTYzLDcgKzE2Myw3IEBADQogI2RlZmluZSBCRENfU1BFRURfSFMJMHgzDQogI2RlZmluZSBCRENf
+U1BFRURfU1MJMHg0DQogDQotI2RlZmluZSBCRENfUFNUKHApCShwICYgMHhmKQ0KKyNkZWZpbmUg
+QkRDX1BTVChwKQkoKHApICYgMHhmKQ0KICNkZWZpbmUgQkRDX1BTVF9NQVNLCTB4Zg0KIA0KIC8q
+IFVTUFBNUyAqLw0KQEAgLTIyOCw3ICsyMjgsNyBAQA0KIC8qIHN0YXR1cyByZXBvcnQgZGVmaW5l
+cyAqLw0KICNkZWZpbmUgU1JfWFNGCQkwDQogI2RlZmluZSBTUl9VU1BDCQk0DQotI2RlZmluZSBT
+Ul9CRF9MRU4ocCkgICAgKHAgJiAweGZmZmZmZikNCisjZGVmaW5lIFNSX0JEX0xFTihwKSAgICAo
+KHApICYgMHhmZmZmZmYpDQogDQogI2RlZmluZSBYU0ZfU1VDQwkweDENCiAjZGVmaW5lIFhTRl9T
+SE9SVAkweDMNCi0tIA0KMS45LjENCg==
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
