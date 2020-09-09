@@ -2,70 +2,141 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DEFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8982C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C012D21941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC7021941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599653530;
+	bh=vsjTYNMmq1bU3l1iBwYS0EsYYEjqKIejBpLzYh0pyqo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=D27oNA8v+WoNKdFCfrhl6W1CkTyXNNhZzfLNrPz6cnu4IcUGEKo/AZ/wjWMfMFpSi
+	 5mDZwG7jRWNkiXBYJ+JNzCIp9Xvz+LiVGSj1aGRDKHsn+hz0DgD91ykUKcLx5NgRHz
+	 jJDwm337gvit0yLvZYIJ0loNOUKEdTtgak79vqgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgIIMJn (ORCPT
+        id S1728954AbgIIMLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 08:09:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55368 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730140AbgIIMAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 08:00:45 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 658D98FDACFF76C07082;
-        Wed,  9 Sep 2020 20:00:43 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 20:00:37 +0800
-From:   Zheng Bin <zhengbin13@huawei.com>
-To:     <darrick.wong@oracle.com>, <linux-xfs@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: [PATCH -next] xfs: Remove unneeded semicolon
-Date:   Wed, 9 Sep 2020 20:07:32 +0800
-Message-ID: <20200909120733.115415-1-zhengbin13@huawei.com>
-X-Mailer: git-send-email 2.26.0.106.g9fadedd
+        Wed, 9 Sep 2020 08:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729822AbgIIMAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 08:00:40 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88A3A215A4;
+        Wed,  9 Sep 2020 11:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599652210;
+        bh=vsjTYNMmq1bU3l1iBwYS0EsYYEjqKIejBpLzYh0pyqo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=meVJ1T4+sNUN3l++6g5sFUQY9BG0qIDH6bh0Z3LmLIHJ8AyG09+hFC4DfI3u5lljP
+         ibWHVA0xChCkPtlKyhBIW/SpOiCkw1U/8Tr812P5IIs/i9SEN4Hu7WQ51AXfkPknzI
+         u11FU/2utLZ/Jqo+nNxQlALOZ6UF3TVyVGGqesGU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3748D3523091; Wed,  9 Sep 2020 04:50:10 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 04:50:10 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH kernel] srcu: Fix static initialization
+Message-ID: <20200909115010.GG29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200908144306.33355-1-aik@ozlabs.ru>
+ <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes coccicheck warning:
+On Wed, Sep 09, 2020 at 07:24:11PM +1000, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 09/09/2020 00:43, Alexey Kardashevskiy wrote:
+> > init_srcu_struct_nodes() is called with is_static==true only internally
+> > and when this happens, the srcu->sda is not initialized in
+> > init_srcu_struct_fields() and we crash on dereferencing @sdp.
+> > 
+> > This fixes the crash by moving "if (is_static)" out of the loop which
+> > only does useful work for is_static=false case anyway.
+> > 
+> > Found by syzkaller.
+> > 
+> > Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> > ---
+> >  kernel/rcu/srcutree.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+> > index c100acf332ed..49b54a50bde8 100644
+> > --- a/kernel/rcu/srcutree.c
+> > +++ b/kernel/rcu/srcutree.c
+> > @@ -135,6 +135,9 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
+> >  				   levelspread[level - 1];
+> >  	}
+> >  
+> > +	if (is_static)
+> > +		return;
+> 
+> Actually, this is needed here too:
+> 
+>  if (!ssp->sda)
+>          return;
+> 
+> as
+> ssp->sda = alloc_percpu(struct srcu_data)
+> 
+> can fail if the process is killed too soon - it is quite easy to get
+> this situation with syzkaller (syscalls fuzzer)
+> 
+> Makes sense?
 
-fs/xfs/xfs_icache.c:1214:2-3: Unneeded semicolon
+Just to make sure that I understand, these failures occur when the task
+running init_srcu_struct_nodes() is killed, correct?
 
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
----
- fs/xfs/xfs_icache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Or has someone managed to invoke (say) synchronize_srcu() on a
+dynamically allocated srcu_struct before invoking init_srcu_struct() on
+that srcu_struct?  This would be an SRCU usage bug.  If you dynamically
+allocate your srcu_struct, you are absolutely required to invoke
+init_srcu_struct() on it before doing anything else with it.
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 101028ebb571..5e926912e507 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1211,7 +1211,7 @@ xfs_reclaim_inodes(
- 	while (radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_RECLAIM_TAG)) {
- 		xfs_ail_push_all_sync(mp->m_ail);
- 		xfs_reclaim_inodes_ag(mp, &nr_to_scan);
--	};
-+	}
- }
+Or am I missing something here?
 
- /*
---
-2.26.0.106.g9fadedd
+(The rcutorture test suite does test both static and dynamic allocation
+of the srcu_struct, so I am expecting something a bit subtle here.)
 
+							Thanx, Paul
+
+> > +
+> >  	/*
+> >  	 * Initialize the per-CPU srcu_data array, which feeds into the
+> >  	 * leaves of the srcu_node tree.
+> > @@ -161,8 +164,6 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
+> >  		timer_setup(&sdp->delay_work, srcu_delay_timer, 0);
+> >  		sdp->ssp = ssp;
+> >  		sdp->grpmask = 1 << (cpu - sdp->mynode->grplo);
+> > -		if (is_static)
+> > -			continue;
+> >  
+> >  		/* Dynamically allocated, better be no srcu_read_locks()! */
+> >  		for (i = 0; i < ARRAY_SIZE(sdp->srcu_lock_count); i++) {
+> > 
+> 
+> -- 
+> Alexey
