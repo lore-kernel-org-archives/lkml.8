@@ -2,203 +2,147 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55321C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBEFC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE82D207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38466207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dbg05bce"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="alVzraIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbgIIQXK (ORCPT
+        id S1731045AbgIIQXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:23:10 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41519 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730997AbgIIQVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:23:24 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:3056 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730701AbgIIQVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 12:21:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599668491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=WnxLiECWEUEeO8grgNMv0XSyMN/3o5FAaKtxYxpeiyI=;
-        b=dbg05bcemZGb5F7dnUYqvHbE39CoZ6qOY/NIO1SZFkePM3wTghH2nrV7HDLFPxDgM/ZDef
-        +Dwb0E8+q9IeC0r5XcyC+F9tDeArpbnShFWqCl/y9/K6SUNfiloOC/3C2e0L0Vf75W7F3b
-        /Z8eyYcodnnRmVYzEteXJVUNLtmNapI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-D3rS0gQyP5qczVOKFWlYqQ-1; Wed, 09 Sep 2020 09:54:46 -0400
-X-MC-Unique: D3rS0gQyP5qczVOKFWlYqQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1155018BA2A9;
-        Wed,  9 Sep 2020 13:54:44 +0000 (UTC)
-Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83DED5C1C2;
-        Wed,  9 Sep 2020 13:54:41 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-To:     Rik van Riel <riel@surriel.com>, Michal Hocko <mhocko@suse.com>
-Cc:     Zi Yan <ziy@nvidia.com>, Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
- <20200908143503.GE26850@dhcp22.suse.cz>
- <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
- <20200909070445.GA7348@dhcp22.suse.cz>
- <054d02f3b34d9946905929ff268b685c91494b3e.camel@surriel.com>
- <6135d2c5-2a74-6ca8-4b3b-8ceb25c0d4b1@redhat.com>
- <4923e178c12f38148a2620ba31fcded349e555fb.camel@surriel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <5e2136d6-c0b3-12e5-2217-d37cec34a155@redhat.com>
-Date:   Wed, 9 Sep 2020 15:54:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f59010f0000>; Thu, 10 Sep 2020 00:21:35 +0800
+Received: from HKMAIL104.nvidia.com ([10.18.16.13])
+  by hkpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 09 Sep 2020 09:21:35 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate101.nvidia.com on Wed, 09 Sep 2020 09:21:35 -0700
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL104.nvidia.com
+ (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
+ 2020 16:21:30 +0000
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.58) by
+ HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 9 Sep 2020 16:21:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lu/mUR/K46DzbyE6ZpefU6yr9uD8d/9zHoErsFlOf85LfjuSyUW4vuhR7Mfj81O7NXxED4P+X1KbQqJ8Q1VeZEaJ1WqbE3UWgkSiGms+Bkl6+I739gbQCdwMSyDK7YAngvj/5ybfLXEc7bre0OkTsxOFaXraazsXt2XAu5xqgHWZ6EhqCE6P3m/B7mVXPo9qh39ETdEuRVNLBy3He9LDKgDZS0T3KsgM/6OeI6CmIuxLGACOKcWhTkvmuZHvtdNTdJQ8BRCwD6yri54aTKHb77s+9cmdEpK55uLUKRHToSYDM1kG7bqfL6rclGYu2eC2Zko+/XCMvcQegcC4tUUO+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bdxkPg4cqdDqJ8Dl3OzMSMsSkp/jiUhpJqU0D/mresE=;
+ b=hwmqcboBZFnG2WBvYou6G0OpbKqsoTbJsFj9GyLGHA99Yv3HHd5tV5xzrF1CbWaLOHrIwy3cSxl+0I0YcUuIisNidv+U+Tjo9y2mlXLCBn46OtscqxVOGmQ5wMnu7/19RKSAOfWVcjvAXBgleOITl7HzQ2QJH1GcYPoaqFjxzOAqh/mx1gzFzcoMe62wzPdy8i1NEq9t2cs63xsV/GXWqBfYH/M9RXGIh4sPDjKcQZPRoulZ4S05B/azuaucNxX8zhGqlIfeR0xVCT3H2tWwakECfMlCUuBQOmC50+YoK7jy6y5li0U1FFjWXE0Yb6cTuR+ICwMGFffzvBqod3ZvQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1754.namprd12.prod.outlook.com (2603:10b6:3:10f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 9 Sep
+ 2020 16:21:26 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
+ 16:21:26 +0000
+Date:   Wed, 9 Sep 2020 13:21:23 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     <selvin.xavier@broadcom.com>, <devesh.sharma@broadcom.com>,
+        <somnath.kotur@broadcom.com>, <sriharsha.basavapatna@broadcom.com>,
+        <nareshkumar.pbs@broadcom.com>, <dledford@redhat.com>,
+        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] RDMA/bnxt_re: Remove set but not used variable
+ 'qplib_ctx'
+Message-ID: <20200909162123.GA834958@nvidia.com>
+References: <20200905121624.32776-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200905121624.32776-1-yuehaibing@huawei.com>
+X-ClientProxiedBy: MN2PR05CA0034.namprd05.prod.outlook.com
+ (2603:10b6:208:c0::47) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <4923e178c12f38148a2620ba31fcded349e555fb.camel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR05CA0034.namprd05.prod.outlook.com (2603:10b6:208:c0::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.10 via Frontend Transport; Wed, 9 Sep 2020 16:21:25 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kG2qZ-003VDk-SR; Wed, 09 Sep 2020 13:21:23 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6a69cabc-d2eb-4a47-8ead-08d854dc65f0
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1754:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB17541F593035F1C78B7AEB56C2260@DM5PR12MB1754.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xQ2DTRuIUMxXvd6V8rTqzuIdsOXBm6Y0bCeT6KOhQMAalkSOrNPu+CxdeYYXew5y/asspEuidFvS1BBDwwhu/1k5tXstXg1l763+tUXxNMA31ksFV8yrm8+mH2chJiHv0wqP+krI7EuBQaU7LQcW4YgwBKob8ejcaqWeKpJhTqG+ZGAo4lgJ9g6NaJ6tX+LbmYpWlnGhZ+dY+14ndP0HQxveyMpGuVRf1lLpU3m1lPd2jF0YJnIyqHYpdiq9HxJTZh3q+tWyqnWXoINdYInGpukvwyCuZ0IMkJVZux/T6d76Ft+k9lsIDB6RtuOHRtpoecCf1YFickPvqkznkZMQaEZ4EoJF6KrtrfRu1ep3LDJ7AIEDzpPmerRa4bWW7b3a
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(396003)(376002)(366004)(346002)(8676002)(86362001)(1076003)(36756003)(186003)(426003)(5660300002)(83380400001)(26005)(2906002)(4744005)(9786002)(9746002)(316002)(4326008)(6916009)(66946007)(66476007)(66556008)(478600001)(33656002)(8936002)(2616005)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: zZ5DjXFpWGn83QpXK7+2bu0fbkzr66999WpZJh08poE6M1A25VnREBC9T4E2e5sxuaFuUS5675+wIBgFxD/ntyZT3v6KyA9EKdWvpE6HNN8MdaLZqNZWb03THzpYN6mpMACMldkJ8mUvZF9cRPDfhx6joJcjg1K47rbUXY7l3on7KsQ9NUBLUFRPinoAqa8Sc3oH85CkI9ZlyowyBi1+VgSINIfkcEkCQVhZ4hH9kVSWlKe/bi4Lo6QS72+aXceOumx7qx9BbgA+IovR5mKbOwN/C3x4jbgHWnVrO9+zXfDSb/d3ZvZ17YzSaJkvNyx0s1GqZfJAxlPM4BfZ/Sm669iO8+FkIA+BkawynUx1yMhaOAUXOPf1G+tn2pwyAGnerYotlOAV/ZVtb04D+ONNJfUMkNU1Z2xJd2WuyXw2M3vsjaw/hs9DnL1fByx1ozg24pisgExl1SDlTZVcmvB8xVlbZCvAORDggJMxiHyTuW259su5v68c2EwMqdZ3W7t+eS+D5S+uGCWRQZWAxxl+9NEMGVqZ+6kiZc4HvbjtiDRlRdRjuVwfH5DlMrCI1MUdlzxGNVIwPKnuIy6RzBNWs5TKJLgK0ZMAsge92HjfjRNlDqR7Jr5ZxeBUCJmA9oQeZaa/EQzo8aR9paAMRGsk+Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a69cabc-d2eb-4a47-8ead-08d854dc65f0
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 16:21:25.9623
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +Ym9onbWIeXYUMOouI1mNj/3hM0NUAKpxC2tAbuyxNmgsZVTTclURyGUwFjEFbsg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1754
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599668495; bh=JBh7Xwr9nXOir7sTeqt4nRVwF9gez2ot/pqAvBeuqgE=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         Content-Transfer-Encoding:In-Reply-To:X-ClientProxiedBy:
+         MIME-Version:X-MS-Exchange-MessageSentRepresentingType:
+         X-Originating-IP:X-MS-PublicTrafficType:
+         X-MS-Office365-Filtering-Correlation-Id:X-MS-TrafficTypeDiagnostic:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=alVzraIPWMduqvBUPQF+cv/YmP9s1amSNrV3M+k67VsbaHj34hzmCJP8NILOcx1YS
+         RRRzLk4VYOEPJoStStSTfgFXd7TPEWytq0XFyc/RRUiOEhKrheOr3otrSrX/h0imRh
+         8flrSk360AhKft+djsRGDBFly3DV/+wQiwMG96tjYT6TIatRXZAdWmnei1b2CUIi+Y
+         wBmQz+GnYlyryvA4FR+AKaO9uCvSg5U6ha6AClwb34tDH4B4XSNpx3X56Tvds6AIc9
+         eoVDp1gqh8mKxPLftI8tp2Gr85lG3u+1XN3e8tWvLCG8AUBeXFwLWeKq15DtzZIewa
+         qLp4dzULVvIbw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.09.20 15:49, Rik van Riel wrote:
-> On Wed, 2020-09-09 at 15:43 +0200, David Hildenbrand wrote:
->> On 09.09.20 15:19, Rik van Riel wrote:
->>> On Wed, 2020-09-09 at 09:04 +0200, Michal Hocko wrote:
->>>
->>>> That CMA has to be pre-reserved, right? That requires a
->>>> configuration.
->>>
->>> To some extent, yes.
->>>
->>> However, because that pool can be used for movable
->>> 4kB and 2MB
->>> pages as well as for 1GB pages, it would be easy to just set
->>> the size of that pool to eg. 1/3 or even 1/2 of memory for every
->>> system.
->>>
->>> It isn't like the pool needs to be the exact right size. We
->>> just need to avoid the "highmem problem" of having too little
->>> memory for kernel allocations.
->>>
->>
->> I am not sure I like the trend towards CMA that we are seeing,
->> reserving
->> huge buffers for specific users (and eventually even doing it
->> automatically).
->>
->> What we actually want is ZONE_MOVABLE with relaxed guarantees, such
->> that
->> anybody who requires large, unmovable allocations can use it.
->>
->> I once played with the idea of having ZONE_PREFER_MOVABLE, which
->> a) Is the primary choice for movable allocations
->> b) Is allowed to contain unmovable allocations (esp., gigantic pages)
->> c) Is the fallback for ZONE_NORMAL for unmovable allocations, instead
->> of
->> running out of memory
->>
->> If someone messes up the zone ratio, issues known from zone
->> imbalances
->> are avoided - large allocations simply become less likely to succeed.
->> In
->> contrast to ZONE_MOVABLE, memory offlining is not guaranteed to work.
-> 
-> I really like that idea. This will be easier to deal with than
-> a "just the right size" CMA area, and seems like it would be
-> pretty forgiving in both directions.
-> 
+On Sat, Sep 05, 2020 at 08:16:24PM +0800, YueHaibing wrote:
+> drivers/infiniband/hw/bnxt_re/main.c:1012:25:
+>  warning: variable =E2=80=98qplib_ctx=E2=80=99 set but not used [-Wunused=
+-but-set-variable]
+>=20
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/infiniband/hw/bnxt_re/main.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-Yes, and can be extended using memory hotplug.
+Applied to for-rc, thanks
 
-> Keeping unmovable allocations
-> contained to one part of memory
-> should also make compaction within the ZONE_PREFER_MOVABLE area
-> a lot easier than compaction for higher order allocations is
-> today.
-> 
-> I suspect your proposal solves a lot of issues at once.
-> 
-> For (c) from your proposal, we could even claim a whole
-> 2MB or even 1GB area at once for unmovable allocations,
-> keeping those contained in a limited amount of physical
-> memory again, to make life easier on compaction.
-> 
-
-Exactly, locally limiting unmovable allocations to a sane minimum.
-
-(with some smart extra work, we could even convert ZONE_PREFER_MOVABLE
-to ZONE_NORMAL, one memory section/block at a time where needed, that
-direction always works. But that's very tricky.)
-
--- 
-Thanks,
-
-David / dhildenb
-
+Jason
