@@ -2,196 +2,335 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0358C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC1BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6862166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:49:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WdrPPCWW"
+	by mail.kernel.org (Postfix) with ESMTP id EE1BC21941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgIIFtN (ORCPT
+        id S1726226AbgIIFts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 01:49:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIFtL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 01:49:11 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44BC0C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 22:49:11 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id e14so663884vsa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 22:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=P0ez4cWjUUyq1ZAM7GWoUf4wC5G9nmNzRjitsaqGkY8=;
-        b=WdrPPCWW3iGd70z716OSVZVu++nHDQLesP+JY/eZaWupfkuM7bDSvtWA9CGqplnU71
-         Cdry+dvU5xwbaDuSMr7znQU3X1BNlLfkaYjfPwcem+EAKCQfr7wMuxcfR50TC3pGsUlU
-         LNFPF3CXp9TSUlExDCEA0uBOmBjWq2YXA7kgvGcDoexo8WBeuVyBOeHvCJ/ZTZDPB73w
-         y7tbpJ0QZA3AtCDKVTjQlq1oFo84r2GmQxSWt98WFvwCjl4GL5jp6eWqWBeMyjANsUOs
-         xhF//sPpqSkkMytTLAZfirUVPdasY1bObPLtNNk80UP6Rass7GzuARnqMTmQqWmh2Jfo
-         t2sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=P0ez4cWjUUyq1ZAM7GWoUf4wC5G9nmNzRjitsaqGkY8=;
-        b=rRP4S0Ct2qGwRICmteQ/R4cT+iCQOJdR0AcVc3V9KSwvo+MBhsrv0s6AODG5wH9+76
-         jn/EPDc+7v0T1gfM9Acjk+3uh6+xIs//YVPejVq9No4Alprf479hHgHuTef6BQsg4OYh
-         W3DIYF+k+nDLmjbADzlWUQNsCm6/GMv7CL8rxnXyRrGaAwTIQbF1/l68jksh6vV8hhEd
-         mfXEVHbg77aKGHxU9CEncxZ2/tp2OiX6C5RChron9/+xHRBXX+OSzaw6BOOO0NHhrlLQ
-         p7VQMRkGZ/yfugjBjfGfnvPNSppXIpFtuBZ5K/7+kva1maepB7RJYFGcXY5a6tQ+tgwk
-         APnQ==
-X-Gm-Message-State: AOAM530/HwKFvZnRaIVqnQXOb03P9OC30T5osgi7fhNf3OUxVcNLhu4E
-        PZr+bamaskQlnI06frlGzvpAUD2Btq9iO9wV0fueSg==
-X-Google-Smtp-Source: ABdhPJwrULB2Obj/3hy7iZLzOkGI1uuLfdZrHtfOjUdl755KUzQU6wr4NrO+94eOhajtmc7n93vWeoYKd49fFvGXqRs=
-X-Received: by 2002:a05:6102:204b:: with SMTP id q11mr1639904vsr.40.1599630548956;
- Tue, 08 Sep 2020 22:49:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200908152241.646390211@linuxfoundation.org>
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 9 Sep 2020 11:18:57 +0530
-Message-ID: <CA+G9fYsUF_7qVThy7Q-HcSs19_VsGnqCJCYTcpJmwdx0oBpO0g@mail.gmail.com>
-Subject: Re: [PATCH 5.8 000/186] 5.8.8-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 9 Sep 2020 01:49:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:38074 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbgIIFto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 01:49:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 296CE31B;
+        Tue,  8 Sep 2020 22:49:43 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.71.250])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2DCA13F68F;
+        Tue,  8 Sep 2020 22:49:39 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+        will@kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V4] arm64/cpuinfo: Define HWCAP name arrays per their actual bit definitions
+Date:   Wed,  9 Sep 2020 11:18:55 +0530
+Message-Id: <1599630535-29337-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 at 21:05, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.8.8 release.
-> There are 186 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.8.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.8.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+HWCAP name arrays (hwcap_str, compat_hwcap_str, compat_hwcap2_str) that are
+scanned for /proc/cpuinfo are detached from their bit definitions making it
+vulnerable and difficult to correlate. It is also bit problematic because
+during /proc/cpuinfo dump these arrays get traversed sequentially assuming
+they reflect and match actual HWCAP bit sequence, to test various features
+for a given CPU. This redefines name arrays per their HWCAP bit definitions
+. It also warns after detecting any feature which is not expected on arm64.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This applies on 5.9-rc4
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Mark, since the patch has changed I have dropped your Acked-by: tag. Are you
+happy to give a new one ?
 
-Summary
-------------------------------------------------------------------------
+Changes in V4:
 
-kernel: 5.8.8-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.8.y
-git commit: 456fe9607f8f8a55179d2527598b8e90a2591e4d
-git describe: v5.8.7-187-g456fe9607f8f
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/bui=
-ld/v5.8.7-187-g456fe9607f8f
+- Unified all three HWCAP array traversal per Will
 
-No regressions (compared to build v5.8.7)
+Changes in V3: (https://patchwork.kernel.org/patch/11718113/)
 
+- Moved name arrays to (arch/arm64/kernel/cpuinfo.c) to prevent a build warning
+- Replaced string values with NULL for all compat features not possible on arm64
+- Changed compat_hwcap_str[] iteration on size as some NULL values are expected
+- Warn once after detecting any feature on arm64 that is not expected
 
-No fixes (compared to build v5.8.7)
+Changes in V2: (https://patchwork.kernel.org/patch/11533755/)
 
-Ran 36239 total tests in the following environments and test suites.
+- Defined COMPAT_KERNEL_HWCAP[2] and updated the name arrays per Mark
+- Updated the commit message as required
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+Changes in V1: (https://patchwork.kernel.org/patch/11532945/)
 
-Test Suites
------------
-* build
-* igt-gpu-tools
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* ltp-containers-tests
-* ltp-ipc-tests
-* ltp-tracing-tests
-* network-basic-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* ssuite
+ arch/arm64/include/asm/hwcap.h |   9 ++
+ arch/arm64/kernel/cpuinfo.c    | 176 +++++++++++++++++----------------
+ 2 files changed, 101 insertions(+), 84 deletions(-)
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
+index 22f73fe09030..6493a4c63a2f 100644
+--- a/arch/arm64/include/asm/hwcap.h
++++ b/arch/arm64/include/asm/hwcap.h
+@@ -8,18 +8,27 @@
+ #include <uapi/asm/hwcap.h>
+ #include <asm/cpufeature.h>
+ 
++#define COMPAT_HWCAP_SWP	(1 << 0)
+ #define COMPAT_HWCAP_HALF	(1 << 1)
+ #define COMPAT_HWCAP_THUMB	(1 << 2)
++#define COMPAT_HWCAP_26BIT	(1 << 3)
+ #define COMPAT_HWCAP_FAST_MULT	(1 << 4)
++#define COMPAT_HWCAP_FPA	(1 << 5)
+ #define COMPAT_HWCAP_VFP	(1 << 6)
+ #define COMPAT_HWCAP_EDSP	(1 << 7)
++#define COMPAT_HWCAP_JAVA	(1 << 8)
++#define COMPAT_HWCAP_IWMMXT	(1 << 9)
++#define COMPAT_HWCAP_CRUNCH	(1 << 10)
++#define COMPAT_HWCAP_THUMBEE	(1 << 11)
+ #define COMPAT_HWCAP_NEON	(1 << 12)
+ #define COMPAT_HWCAP_VFPv3	(1 << 13)
++#define COMPAT_HWCAP_VFPV3D16	(1 << 14)
+ #define COMPAT_HWCAP_TLS	(1 << 15)
+ #define COMPAT_HWCAP_VFPv4	(1 << 16)
+ #define COMPAT_HWCAP_IDIVA	(1 << 17)
+ #define COMPAT_HWCAP_IDIVT	(1 << 18)
+ #define COMPAT_HWCAP_IDIV	(COMPAT_HWCAP_IDIVA|COMPAT_HWCAP_IDIVT)
++#define COMPAT_HWCAP_VFPD32	(1 << 19)
+ #define COMPAT_HWCAP_LPAE	(1 << 20)
+ #define COMPAT_HWCAP_EVTSTRM	(1 << 21)
+ 
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index d0076c2159e6..04640f5f9f0f 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -43,94 +43,93 @@ static const char *icache_policy_str[] = {
+ unsigned long __icache_flags;
+ 
+ static const char *const hwcap_str[] = {
+-	"fp",
+-	"asimd",
+-	"evtstrm",
+-	"aes",
+-	"pmull",
+-	"sha1",
+-	"sha2",
+-	"crc32",
+-	"atomics",
+-	"fphp",
+-	"asimdhp",
+-	"cpuid",
+-	"asimdrdm",
+-	"jscvt",
+-	"fcma",
+-	"lrcpc",
+-	"dcpop",
+-	"sha3",
+-	"sm3",
+-	"sm4",
+-	"asimddp",
+-	"sha512",
+-	"sve",
+-	"asimdfhm",
+-	"dit",
+-	"uscat",
+-	"ilrcpc",
+-	"flagm",
+-	"ssbs",
+-	"sb",
+-	"paca",
+-	"pacg",
+-	"dcpodp",
+-	"sve2",
+-	"sveaes",
+-	"svepmull",
+-	"svebitperm",
+-	"svesha3",
+-	"svesm4",
+-	"flagm2",
+-	"frint",
+-	"svei8mm",
+-	"svef32mm",
+-	"svef64mm",
+-	"svebf16",
+-	"i8mm",
+-	"bf16",
+-	"dgh",
+-	"rng",
+-	"bti",
++	[KERNEL_HWCAP_FP]		= "fp",
++	[KERNEL_HWCAP_ASIMD]		= "asimd",
++	[KERNEL_HWCAP_EVTSTRM]		= "evtstrm",
++	[KERNEL_HWCAP_AES]		= "aes",
++	[KERNEL_HWCAP_PMULL]		= "pmull",
++	[KERNEL_HWCAP_SHA1]		= "sha1",
++	[KERNEL_HWCAP_SHA2]		= "sha2",
++	[KERNEL_HWCAP_CRC32]		= "crc32",
++	[KERNEL_HWCAP_ATOMICS]		= "atomics",
++	[KERNEL_HWCAP_FPHP]		= "fphp",
++	[KERNEL_HWCAP_ASIMDHP]		= "asimdhp",
++	[KERNEL_HWCAP_CPUID]		= "cpuid",
++	[KERNEL_HWCAP_ASIMDRDM]		= "asimdrdm",
++	[KERNEL_HWCAP_JSCVT]		= "jscvt",
++	[KERNEL_HWCAP_FCMA]		= "fcma",
++	[KERNEL_HWCAP_LRCPC]		= "lrcpc",
++	[KERNEL_HWCAP_DCPOP]		= "dcpop",
++	[KERNEL_HWCAP_SHA3]		= "sha3",
++	[KERNEL_HWCAP_SM3]		= "sm3",
++	[KERNEL_HWCAP_SM4]		= "sm4",
++	[KERNEL_HWCAP_ASIMDDP]		= "asimddp",
++	[KERNEL_HWCAP_SHA512]		= "sha512",
++	[KERNEL_HWCAP_SVE]		= "sve",
++	[KERNEL_HWCAP_ASIMDFHM]		= "asimdfhm",
++	[KERNEL_HWCAP_DIT]		= "dit",
++	[KERNEL_HWCAP_USCAT]		= "uscat",
++	[KERNEL_HWCAP_ILRCPC]		= "ilrcpc",
++	[KERNEL_HWCAP_FLAGM]		= "flagm",
++	[KERNEL_HWCAP_SSBS]		= "ssbs",
++	[KERNEL_HWCAP_SB]		= "sb",
++	[KERNEL_HWCAP_PACA]		= "paca",
++	[KERNEL_HWCAP_PACG]		= "pacg",
++	[KERNEL_HWCAP_DCPODP]		= "dcpodp",
++	[KERNEL_HWCAP_SVE2]		= "sve2",
++	[KERNEL_HWCAP_SVEAES]		= "sveaes",
++	[KERNEL_HWCAP_SVEPMULL]		= "svepmull",
++	[KERNEL_HWCAP_SVEBITPERM]	= "svebitperm",
++	[KERNEL_HWCAP_SVESHA3]		= "svesha3",
++	[KERNEL_HWCAP_SVESM4]		= "svesm4",
++	[KERNEL_HWCAP_FLAGM2]		= "flagm2",
++	[KERNEL_HWCAP_FRINT]		= "frint",
++	[KERNEL_HWCAP_SVEI8MM]		= "svei8mm",
++	[KERNEL_HWCAP_SVEF32MM]		= "svef32mm",
++	[KERNEL_HWCAP_SVEF64MM]		= "svef64mm",
++	[KERNEL_HWCAP_SVEBF16]		= "svebf16",
++	[KERNEL_HWCAP_I8MM]		= "i8mm",
++	[KERNEL_HWCAP_BF16]		= "bf16",
++	[KERNEL_HWCAP_DGH]		= "dgh",
++	[KERNEL_HWCAP_RNG]		= "rng",
++	[KERNEL_HWCAP_BTI]		= "bti",
+ 	/* reserved for "mte" */
+-	NULL
+ };
+ 
+ #ifdef CONFIG_COMPAT
++#define COMPAT_KERNEL_HWCAP(x)	const_ilog2(COMPAT_HWCAP_ ## x)
+ static const char *const compat_hwcap_str[] = {
+-	"swp",
+-	"half",
+-	"thumb",
+-	"26bit",
+-	"fastmult",
+-	"fpa",
+-	"vfp",
+-	"edsp",
+-	"java",
+-	"iwmmxt",
+-	"crunch",
+-	"thumbee",
+-	"neon",
+-	"vfpv3",
+-	"vfpv3d16",
+-	"tls",
+-	"vfpv4",
+-	"idiva",
+-	"idivt",
+-	"vfpd32",
+-	"lpae",
+-	"evtstrm",
+-	NULL
++	[COMPAT_KERNEL_HWCAP(SWP)]	= "swp",
++	[COMPAT_KERNEL_HWCAP(HALF)]	= "half",
++	[COMPAT_KERNEL_HWCAP(THUMB)]	= "thumb",
++	[COMPAT_KERNEL_HWCAP(26BIT)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(FAST_MULT)] = "fastmult",
++	[COMPAT_KERNEL_HWCAP(FPA)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(VFP)]	= "vfp",
++	[COMPAT_KERNEL_HWCAP(EDSP)]	= "edsp",
++	[COMPAT_KERNEL_HWCAP(JAVA)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(IWMMXT)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(CRUNCH)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(THUMBEE)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(NEON)]	= "neon",
++	[COMPAT_KERNEL_HWCAP(VFPv3)]	= "vfpv3",
++	[COMPAT_KERNEL_HWCAP(VFPV3D16)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(TLS)]	= "tls",
++	[COMPAT_KERNEL_HWCAP(VFPv4)]	= "vfpv4",
++	[COMPAT_KERNEL_HWCAP(IDIVA)]	= "idiva",
++	[COMPAT_KERNEL_HWCAP(IDIVT)]	= "idivt",
++	[COMPAT_KERNEL_HWCAP(VFPD32)]	= NULL,	/* Not possible on arm64 */
++	[COMPAT_KERNEL_HWCAP(LPAE)]	= "lpae",
++	[COMPAT_KERNEL_HWCAP(EVTSTRM)]	= "evtstrm",
+ };
+ 
++#define COMPAT_KERNEL_HWCAP2(x)	const_ilog2(COMPAT_HWCAP2_ ## x)
+ static const char *const compat_hwcap2_str[] = {
+-	"aes",
+-	"pmull",
+-	"sha1",
+-	"sha2",
+-	"crc32",
+-	NULL
++	[COMPAT_KERNEL_HWCAP2(AES)]	= "aes",
++	[COMPAT_KERNEL_HWCAP2(PMULL)]	= "pmull",
++	[COMPAT_KERNEL_HWCAP2(SHA1)]	= "sha1",
++	[COMPAT_KERNEL_HWCAP2(SHA2)]	= "sha2",
++	[COMPAT_KERNEL_HWCAP2(CRC32)]	= "crc32",
+ };
+ #endif /* CONFIG_COMPAT */
+ 
+@@ -166,16 +165,25 @@ static int c_show(struct seq_file *m, void *v)
+ 		seq_puts(m, "Features\t:");
+ 		if (compat) {
+ #ifdef CONFIG_COMPAT
+-			for (j = 0; compat_hwcap_str[j]; j++)
+-				if (compat_elf_hwcap & (1 << j))
++			for (j = 0; j < ARRAY_SIZE(compat_hwcap_str); j++) {
++				if (compat_elf_hwcap & (1 << j)) {
++					/*
++					 * Warn once if any feature should not
++					 * have been present on arm64 platform.
++					 */
++					if (WARN_ON_ONCE(!compat_hwcap_str[j]))
++						continue;
++
+ 					seq_printf(m, " %s", compat_hwcap_str[j]);
++				}
++			}
+ 
+-			for (j = 0; compat_hwcap2_str[j]; j++)
++			for (j = 0; j < ARRAY_SIZE(compat_hwcap2_str); j++)
+ 				if (compat_elf_hwcap2 & (1 << j))
+ 					seq_printf(m, " %s", compat_hwcap2_str[j]);
+ #endif /* CONFIG_COMPAT */
+ 		} else {
+-			for (j = 0; hwcap_str[j]; j++)
++			for (j = 0; j < ARRAY_SIZE(hwcap_str); j++)
+ 				if (cpu_have_feature(j))
+ 					seq_printf(m, " %s", hwcap_str[j]);
+ 		}
+-- 
+2.20.1
+
