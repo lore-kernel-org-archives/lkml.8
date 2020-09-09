@@ -2,149 +2,130 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB3FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3728920C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C499720C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:30:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dvx5En3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgIIU3b (ORCPT
+        id S1728347AbgIIUaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:29:31 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:56439 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgIIU3a (ORCPT
+        Wed, 9 Sep 2020 16:30:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55806 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbgIIU37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:29:30 -0400
-Received: from methusalix.internal.home.lespocky.de ([109.250.100.135]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MvsN5-1kZHze0Ukh-00syox; Wed, 09 Sep 2020 22:29:17 +0200
-Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
-        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <post@lespocky.de>)
-        id 1kG6iL-0006c9-3z; Wed, 09 Sep 2020 22:29:10 +0200
-Date:   Wed, 9 Sep 2020 22:29:07 +0200
-From:   Alexander Dahl <post@lespocky.de>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Alexander Dahl <post@lespocky.de>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, Alexander Dahl <ada@thorsis.com>
-Subject: Re: [PATCH v3 1/2] leds: pwm: Allow automatic labels for DT based
- devices
-Message-ID: <20200909202907.3z425uujvu532qxs@falbala.internal.home.lespocky.de>
-Mail-Followup-To: Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org, Alexander Dahl <ada@thorsis.com>
-References: <20200907043459.2961-1-post@lespocky.de>
- <20200907043459.2961-2-post@lespocky.de>
- <20200909090736.GE10891@amd>
+        Wed, 9 Sep 2020 16:29:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599683398;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6nexsJiCuIdw7FA1Tk1xu5+FRgBxFGsMZ4jBAZcpm8c=;
+        b=dvx5En3KPWOIeM6b26+I/P8yh+PlVGPX6mRWVIN4qCoUUnb9jropzPuxRxEeyelbjEOZUs
+        jvtk7BJu7lxIFkElKmBOUvDLeK4KDHjL7uf6MaZU7rwKDY5TiPNnNCzY6qqJr8jXgNPSXp
+        TYighXPiFByh096UMnvybEwXjuYRr/E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-J55BP5YrOMKeOlbqDeyhpg-1; Wed, 09 Sep 2020 16:29:54 -0400
+X-MC-Unique: J55BP5YrOMKeOlbqDeyhpg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 235A818BA283;
+        Wed,  9 Sep 2020 20:29:53 +0000 (UTC)
+Received: from [10.10.114.200] (ovpn-114-200.rdu2.redhat.com [10.10.114.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A3EC10013D7;
+        Wed,  9 Sep 2020 20:29:51 +0000 (UTC)
+Subject: Re: [PATCH] selftests/lkdtm: Use "comm" instead of "diff" for dmesg
+To:     Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>
+References: <202006261358.3E8AA623A9@keescook>
+ <202009091247.C10CDA60C@keescook>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <9f3e5c23-3acd-d14f-06f9-acbc84e052a5@redhat.com>
+Date:   Wed, 9 Sep 2020 16:29:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7j5jbnrxqkkhowne"
-Content-Disposition: inline
-In-Reply-To: <20200909090736.GE10891@amd>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Scan-Signature: b1198b667d2db641cccf5b3ffa27e5f4
-X-Provags-ID: V03:K1:q4ciz/d7HvNF3MJSK7E5yv7MFCQV5/j7h6HGs5KycUOVhx1SbuO
- UUn4zs0YM+nLSybDQxt4AEZTZbXN7sAQQRNP5PYjATuIM8uT53Zt8UH4R63nWzEzHZFAClQ
- 4Ah0sIr8r+XEYfVK13cxJdj8XvIz13AsMssJRvBC9hK7REOP4/K7s76ZF0KIQlT+vOz7Xwa
- B1SX13XGwZzvqDMJekFNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oTm1+CY9ogc=:Rq4LASjrd37j7HRcX8zjk0
- FWAkcTO/eLT3JO0F6+0QvJ3gViLfPGB5rejBMT47SgXNpp9691EBy4QTbMj0Up2QVkMM4F8EV
- w1yWawXYLjRUyl91iZ6eb3mjyEVKG/bJHyFsLPNXp2o+iawUo0FdgTwCZVy/souTgOt+YqgYA
- yF6eRarp1Uoh0DUSOopH3c33ltmBNJyX8qYoOwAEi5UaJUg6EUO6ZcRSOI+4Z9m6vbdwGU0SU
- ppvWbr9F3cSnVXhgV+xQWM3oq4B1/dFVk1F3JOKULGp4OkqgJp0qpz7JSJUKWIH2Tkq5pf7s+
- YhOso5jwShrjcZsko6PfNZv1ErZSseZD2eHvKQIYXyJwpiLQfvM8wD9zVuNHx1BI0naH9vf/8
- rRlFYUOnakyKV73GZYw8R4YPNpFvMdxsncOluht45AiG+GISec/qo29xUtEUfjWJGhTvmS/o/
- CSVWM/glvSHBTn/xvaFmOItmLHztfyY8TrT5ahOxxJwQUPmdNTe4hHGEVZ+LfiD9CZn0KMTRs
- q3UITI7D2UGl0HRrYWn31r9U9/aadEBIJ0+JY/n/a+z8rFRY09/0UQqdLFuv7Cjk0ZTtcV2EL
- IwkJFhr33TklJFc/LHoWa8DPE42zz6UA+fZFAsJwpN3Ekke3NAdoiPnPMwIQh2HZ4bzlIU5tc
- OSBEO6/Go48OhV5GUFXudoMmNSPBBaq1wIpkrWdiqXko2KMk6WuXgkLLEWZh1JPfifOShBtFH
- mxkeE6tjPdsJ5Pnm+EJRlEWPZjh6sfrX077P/dwf9raktZT7Q9MoYupzPOrrrfLKi2347dTvn
- Zw5o2f7eMqM8GchS+AEuj7Gn4epbtkZ1148Xjir5iHZXM9zdst9CvXRTmp29PlGsJjp6EO7
+In-Reply-To: <202009091247.C10CDA60C@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/9/20 3:49 PM, Kees Cook wrote:
+> 
+> On Fri, Jun 26, 2020 at 01:59:43PM -0700, Kees Cook wrote:
+>> Instead of full GNU diff (which smaller boot environments may not have),
+>> use "comm" which is more available.
+>>
+>> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+>> Link: https://lore.kernel.org/lkml/CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com
+>> Fixes: f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running tests")
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Shuah, this really needs to land to fix lkdtm tests on busybox. Can
+> you add this to -next? (Or is it better to direct this to Greg for the
+> lkdtm tree?)
+> 
+> Thanks!
+> 
+> -Kees
+> 
+>> ---
+>>   tools/testing/selftests/lkdtm/run.sh | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+>> index 8383eb89d88a..5fe23009ae13 100755
+>> --- a/tools/testing/selftests/lkdtm/run.sh
+>> +++ b/tools/testing/selftests/lkdtm/run.sh
+>> @@ -82,7 +82,7 @@ dmesg > "$DMESG"
+>>   ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
+>>   
+>>   # Record and dump the results
+>> -dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
+>> +dmesg | comm -13 "$DMESG" - > "$LOG" || true
+>>   
+>>   cat "$LOG"
+>>   # Check for expected output
+>> -- 
+>> 2.25.1
+>>
+>>
+>> -- 
+>> Kees Cook
+> 
 
---7j5jbnrxqkkhowne
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Kees,
 
-Hei hei,
+You may want to consider a similar follow up to the one Miroslav made to 
+the livepatching equivalent:
 
-On Wed, Sep 09, 2020 at 11:07:36AM +0200, Pavel Machek wrote:
-> Hi!
->=20
-> >  	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> > =20
-> > -	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> > +	if (fwnode) {
-> > +		init_data.fwnode =3D fwnode;
-> > +		ret =3D devm_led_classdev_register_ext(dev, &led_data->cdev,
-> > +						     &init_data);
-> > +	} else {
-> > +		ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> > +	}
->=20
-> Can you always use _ext version, even with null fwnode?=20
+https://lore.kernel.org/live-patching/nycvar.YFH.7.76.2008271528000.27422@cbobk.fhfr.pm/T/#m1c17812d2c005dd57e9a299a4a492026a156619e
 
-I did not try on real hardware, but from reading the code I would say
-the following would happen: led_classdev_register_ext() calls
-led_compose_name(parent, init_data, composed_name) which itself calls
-led_parse_fwnode_props(dev, fwnode, &props); that returns early due to
-fwnode=3D=3DNULL without changing props, thus this stays as initialized
-with {}, so led_compose_name() would return -EINVAL which would let
-led_classdev_register_ext() fail, too.
+basically 'comm' will complain if two lines from dmesg have the same 
+timestamp prefix and their text portions are not sorted.
 
-> If not, can you fix the core to accept that? Having that conditional
-> in driver is ugly.
+Regards,
 
-It is ugly, although the approach is inspired by the leds-gpio driver.
-I'll see if I can come up with a change to led-core, but I'm also open
-for suggestions. ;-)
+-- Joe
 
-fyi: Peter Ujfalusi answered and would give his Ack to the changed
-dual license for the yaml file.  You can expect that for v4.
-
-Stay tuned
-Alex
-
---=20
-/"\ ASCII RIBBON | =BBWith the first link, the chain is forged. The first
-\ / CAMPAIGN     | speech censured, the first thought forbidden, the
- X  AGAINST      | first freedom denied, chains us all irrevocably.=AB
-/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
-
---7j5jbnrxqkkhowne
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl9ZOwwACgkQNK3NAHIh
-XMZYxA/+IulUzC5gR42kuynkDbBaM43uqyoJJZiKNJJQUR3qM6Z0v/UgTOG1CcY8
-uouSnoSC5hMO9bNfxTsdyBPDueqp0yttdBRkPYJs+mIIXfgpx2fDfYpp+G7XnaA0
-/aCZ7jNscqYM7stsZXTw9pHCKB/u6uhM7dPpxf4F5GRlqOBbZvBCkoSzX1Tv/lcG
-F+P+ssx16KlQycmXmhd2d1o15VCGPljnHV+GGWLMhkOLmN8P5e0vk6fOHrD54nRn
-6XS+0rZFFJ3UtXm2z7lNydQWg3wRliQmky3LMMdxgEyGvxsahwqc49YGJtUeN0ue
-tjmmN0GSCHUAPAKbxjTnGSFiGDhjjgxqP9RbDsdhc2eCO2Ppge8zCiWMK1rzch8B
-e7We5jikLTk19FMhTY15CSmigvKg84hHSCYsUCT/EIS9knA4X6hdoWR3MPRptFQg
-ebcagIHr5Jx0cMQ/JY8sSwK6x3T6FAQWT2SQ95NnowxXF2eBOP+zISxKMY5VWZVg
-WuRrcbi6n8visLtYqaZP5Y8/5WMd/HkdYPzM8MtczQEBsYEyraIpLNxQDqW2r7OT
-qdS0cKywuIkanCybA2vMHsQ+Sd8z7eBvpmQ0bZspQQY/PKl0+vfa4jyzcTe2hcDh
-Li4UpqovWXuLyVtzKReBc2mkFoI31u2cW+5jolv+HhP8F0/3OOQ=
-=5bMy
------END PGP SIGNATURE-----
-
---7j5jbnrxqkkhowne--
