@@ -2,235 +2,90 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C57EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49ED21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85871218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="otUwM2M8"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GmIkY3te"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgIIIzY (ORCPT
+        id S1727782AbgIII5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:55:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgIIIyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:54:36 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9271C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:54:35 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id x14so1995135wrl.12
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oPMxGpr+QGmkhggb489uiTdIfshLbRulDWZhsNIiQQ0=;
-        b=otUwM2M8fg6sUNUlUOQv2teY8eBLuSSXPA1O+KLiU8GAIx0C5oyXwzkSp1hAEbXzrh
-         wR77Nc+iTZTHpu+qsEOLbTBoEctRA8jwCZa0/+PsOBgdW3urGYxTxwTDv3aFQXEHay4R
-         VG4t1r3jJYZudV92WuzFRg6I4FceUgjC31gcI8yAZoewULhbriw3gv0kpZkMo4KXdChd
-         1iitu6J8QtcsZq0qp28TDTwjWDaq6hoH0+OVOaGBqyg/b4dbD0QDavtNI5NXFFGq1E1v
-         guSMKpgxPCnGeFw3iDTZ9G36vajzgeEDz/oTfgzC+nu2gQFF1YRhyznQDS7jTCfqlaNo
-         TmJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oPMxGpr+QGmkhggb489uiTdIfshLbRulDWZhsNIiQQ0=;
-        b=AZLACESkOmoyZQbdZre1V+gu7d7k12KHvdNeNSOQUcW5o9HxX06fJSBphOGzKRW7P4
-         L7hxwjjF1FNjfygfHZzyEtHS0A1OYpkYL5TFtm3H0zHD1Twv/pmzGX6MV1NmZY46K7lk
-         KCB6RAjGpLepQkm3Pi/4U/qOq6dxOMYToqetkVBpOJoEK2UEjsbvMa9AOQlUyJS/syLv
-         Cr3yBEbWv+QbbuSVrQl/wV7zK0t/s4YEA+mMllA3RrOiRrAKKoUEGTO668j90BupFmsu
-         +8NxOAmWz8YEMIsVV3vNxN5R9mbUQhv1Gpd6ktntCOq1dgTbEd5mWy//s6X6MuwWCRCD
-         Sh+w==
-X-Gm-Message-State: AOAM532t+aHQPKuoNL2++hg+QJb3XOMaMZEcdDlv31puU6z5qP4uWw6d
-        va/UOAVAvUlTVYCAImhbs8t4Ww==
-X-Google-Smtp-Source: ABdhPJyjCMVwPB9EVQf6t5VG8C1T/fmtpLMTR9b7o4akg5vT15n4K/Us+Gh0Xbin7xbSiUnFFIYs7A==
-X-Received: by 2002:adf:8342:: with SMTP id 60mr3177139wrd.158.1599641674463;
-        Wed, 09 Sep 2020 01:54:34 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-657-1-17-60.w109-210.abo.wanadoo.fr. [109.210.64.60])
-        by smtp.gmail.com with ESMTPSA id n17sm3418812wrw.0.2020.09.09.01.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 01:54:33 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 2/3] gpiolib: generalize devprop_gpiochip_set_names() for device properties
-Date:   Wed,  9 Sep 2020 10:54:25 +0200
-Message-Id: <20200909085426.19862-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200909085426.19862-1-brgl@bgdev.pl>
-References: <20200909085426.19862-1-brgl@bgdev.pl>
+        Wed, 9 Sep 2020 04:57:14 -0400
+Received: from mout.gmx.net ([212.227.15.19]:57119 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726226AbgIII5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:57:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599641802;
+        bh=6yeIcnDlDXF/cSX3A7mQFqErPV2eGD3O9fY2RZ1wFK4=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=GmIkY3te10cRNduDS6hxKQ6NZ0UfffmI2SeR8JEux2LiQWcwrFFnZwLB78BRJCpTj
+         1UWKZxauF7JXXbprqZbmbGAJ68Zh3s3BvbCOTBaWAIZ9E4VMquj5aOUY+VggP27B0x
+         w7/ng8mWULqkIODglI3gJXLcGjSXrb+ORYmWZuUg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.simpson.net ([185.191.217.72]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MOREi-1jtQwe0KT8-00PuUJ; Wed, 09
+ Sep 2020 10:56:42 +0200
+Message-ID: <327d42059a3d31bcb3439d5fae8b3c36019d8a68.camel@gmx.de>
+Subject: Re: [ANNOUNCE] v5.9-rc3-rt3
+From:   Mike Galbraith <efault@gmx.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed, 09 Sep 2020 10:56:41 +0200
+In-Reply-To: <20200909082056.sw32jevyhdm4mzcm@linutronix.de>
+References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+         <6ed14b9743f5ce400137a4ae5561604575e72b13.camel@gmx.de>
+         <91828ea63ecd61d40bba0358e1c0efbe62976ba6.camel@gmx.de>
+         <20200909082056.sw32jevyhdm4mzcm@linutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:JU2hlvyH1gZLoT6yKMTSk4BnOfqMWqbqPq61HMG9Q7GDn8YDh/7
+ uyvXqCNvQHop2HM0mF4Lkmznsg273ZbmghMChAIvSDnf60ItvpJqlyFsttnJks4eQvhZ+6O
+ rMat6m2jhMuPrXKhHeQT8XcGT8BsM9gP2O7tP59Q5GBb4pwrwltXzEi6bNd652gNe1LqFzH
+ OYZCwTPeSC6ntOJMk2hGw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:u9OekmghEaE=:vktCdVt+n2j8cOVgp4YR/A
+ T/V885UrR+hpFffWOjIll9l7NxubdT/VIU1JQhIK1qMhz2EvHNyf0ZzBZi/pkx6i87omYC47I
+ 9evwd7yhramsIhS5JC96HJYDZ86zjUlG+9ESr1kC1wGISj9fPvg+I7HEtLqwaRY+KxMJxB/gt
+ /2EkeqwuSDpBNTPGYXcm6MZmLa74bsOnOPod5VO75G2kyC8TIPK10bW0dGGAP8eI52Zrfb5cF
+ yI+yvkaX3xN8FoGwM7s0bMP5Eb8CrAaMEqMYUo0to1gZooonsj50d1eKR7klRluxTdMZZZSGK
+ fhcKOC/zr5meOZRAxBCce7tEtRmIUQy0trL/1HB+Y/vlaRwIAsrkMRSl2T876vdzxz0XTMiAy
+ tD+FNY35VAqoJIK2wGOuobiTaWFPgkOpYdakVlrMZhBExbbSC6RnZ6aSSTyiI0LNie/ljvqVb
+ M/KNn6N+Rx0y+sVL8yphzB8M6licdKDMD4Xzj08dSaYESQt+TTKlPsObKJxeGmVrovMW8l2X4
+ vAXATWPQH5KYj0TRS72uMvobtGOB+rm00yn6rzg6Y0hy9FZCsm1UmrweUyFz6Q60YBztENUiZ
+ dA8vTII2nP1ofemCEGXatAPLWaNQ9EI+pGa6Nz1FYHqIdQJIBr1SPyTR0rLVpeorUj7Z+8Lzx
+ WP2l+GkE+tAATyL5nN9NHRXSVwzERlH5PDb0aIBUNeMfMttKxMf8+QeVeJf57DOMKuHcDcrgz
+ YmfpaeKE0DLH8Zv2hPedehdiKTdySqSPlsK3tvDNXtGRezhb3Ny3/dSWvUL1wE5v/zsBnai7t
+ Tt5rKEvAKfneJO4TdYRZRM516wSOAxt+LtcUD7Lg45motwiWI1LSWxWoiSx92x7f9cJiFzV/A
+ 9I0dD+P/SikNkg9YEi/giGmcotBObDWdn1Bl/QM/U+eiCqLkPwOAk6IBo62URb7qkP6Vgh4jX
+ z7n0355ML94ouVEoFsivv6oKlE+NcbrjYN2534A3XJPB/xWaDyE7aLGg41kSFAzyF7/pXFcC3
+ ABidcSzbTPeDpnkt6+PSI46vS+WTdKpZSYaSmbi6t4LCK5WTP3VJLUPf01/+lwYiGAGQ01WKw
+ L9HrL5rV2Ls10XjbX6k7VUnJkF+lOTT0rLGYd+gvoUjIh9UYHh33Qibn9IB6cQAQfswxHxcep
+ zMKyZxwD+J6gDsjKs9SvWjpLAn0ht4Vw6IIdZxTB8sYBN5tBdJzIXYNEFerxodISrmpE7OGg8
+ 865vRGlwq5giyLqBT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, 2020-09-09 at 10:20 +0200, Sebastian Andrzej Siewior wrote:
+>
+> Do you see the lockdep splat without nouveau?
 
-devprop_gpiochip_set_names() is overly complicated with taking the
-fwnode argument (which requires using dev_fwnode() & of_fwnode_handle()
-in ACPI and OF GPIO code respectively). Let's just switch to using the
-generic device properties.
+Yeah.  Lappy uses i915, but lockdep also shuts itself off.
 
-This allows us to pull the code setting line names directly into
-gpiochip_add_data_with_key() instead of handling it separately for
-ACPI and OF.
+BTW, methinks RT had nothing to do with the nouveau burp.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c    |  3 ---
- drivers/gpio/gpiolib-devprop.c | 20 ++++++++++----------
- drivers/gpio/gpiolib-of.c      |  5 -----
- drivers/gpio/gpiolib.c         |  8 ++++----
- include/linux/gpio/driver.h    |  3 +--
- 5 files changed, 15 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 54ca3c18b291..834a12f3219e 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1221,9 +1221,6 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
- 		return;
- 	}
- 
--	if (!chip->names)
--		devprop_gpiochip_set_names(chip, dev_fwnode(chip->parent));
--
- 	acpi_gpiochip_request_regions(acpi_gpio);
- 	acpi_gpiochip_scan_gpios(acpi_gpio);
- 	acpi_walk_dep_device_list(handle);
-diff --git a/drivers/gpio/gpiolib-devprop.c b/drivers/gpio/gpiolib-devprop.c
-index 26741032fa9e..31599d89a85d 100644
---- a/drivers/gpio/gpiolib-devprop.c
-+++ b/drivers/gpio/gpiolib-devprop.c
-@@ -17,25 +17,23 @@
- /**
-  * devprop_gpiochip_set_names - Set GPIO line names using device properties
-  * @chip: GPIO chip whose lines should be named, if possible
-- * @fwnode: Property Node containing the gpio-line-names property
-  *
-  * Looks for device property "gpio-line-names" and if it exists assigns
-  * GPIO line names for the chip. The memory allocated for the assigned
-- * names belong to the underlying firmware node and should not be released
-+ * names belong to the underlying software node and should not be released
-  * by the caller.
-  */
--void devprop_gpiochip_set_names(struct gpio_chip *chip,
--				const struct fwnode_handle *fwnode)
-+int devprop_gpiochip_set_names(struct gpio_chip *chip)
- {
- 	struct gpio_device *gdev = chip->gpiodev;
-+	struct device *dev = chip->parent;
- 	const char **names;
- 	int ret, i;
- 	int count;
- 
--	count = fwnode_property_read_string_array(fwnode, "gpio-line-names",
--						  NULL, 0);
-+	count = device_property_string_array_count(dev, "gpio-line-names");
- 	if (count < 0)
--		return;
-+		return 0;
- 
- 	if (count > gdev->ngpio) {
- 		dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
-@@ -45,19 +43,21 @@ void devprop_gpiochip_set_names(struct gpio_chip *chip,
- 
- 	names = kcalloc(count, sizeof(*names), GFP_KERNEL);
- 	if (!names)
--		return;
-+		return -ENOMEM;
- 
--	ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
-+	ret = device_property_read_string_array(dev, "gpio-line-names",
- 						names, count);
- 	if (ret < 0) {
- 		dev_warn(&gdev->dev, "failed to read GPIO line names\n");
- 		kfree(names);
--		return;
-+		return ret;
- 	}
- 
- 	for (i = 0; i < count; i++)
- 		gdev->descs[i].name = names[i];
- 
- 	kfree(names);
-+
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(devprop_gpiochip_set_names);
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index bd31dd3b6a75..2f895a2b8411 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -1026,11 +1026,6 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 	if (ret)
- 		return ret;
- 
--	/* If the chip defines names itself, these take precedence */
--	if (!chip->names)
--		devprop_gpiochip_set_names(chip,
--					   of_fwnode_handle(chip->of_node));
--
- 	of_node_get(chip->of_node);
- 
- 	ret = of_gpiochip_scan_gpios(chip);
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 80137c1b3cdc..0d390f0ec32c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -340,9 +340,6 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
- 	struct gpio_device *gdev = gc->gpiodev;
- 	int i;
- 
--	if (!gc->names)
--		return 0;
--
- 	/* First check all names if they are unique */
- 	for (i = 0; i != gc->ngpio; ++i) {
- 		struct gpio_desc *gpio;
-@@ -621,7 +618,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	INIT_LIST_HEAD(&gdev->pin_ranges);
- #endif
- 
--	ret = gpiochip_set_desc_names(gc);
-+	if (gc->names)
-+		ret = gpiochip_set_desc_names(gc);
-+	else
-+		ret = devprop_gpiochip_set_names(gc);
- 	if (ret)
- 		goto err_remove_from_list;
- 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index d1cef5c2715c..56485a040b82 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -756,8 +756,7 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 					    enum gpiod_flags dflags);
- void gpiochip_free_own_desc(struct gpio_desc *desc);
- 
--void devprop_gpiochip_set_names(struct gpio_chip *gc,
--				const struct fwnode_handle *fwnode);
-+int devprop_gpiochip_set_names(struct gpio_chip *gc);
- 
- #ifdef CONFIG_GPIOLIB
- 
--- 
-2.26.1
+	-Mike
 
