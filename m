@@ -7,76 +7,77 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C49C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834E3C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF7A221D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4716721D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599679999;
-	bh=7t3cqZGQeNybkAMxcwI6CKbOKEnjRy5rg+HDhcpVHBI=;
+	s=default; t=1599680033;
+	bh=fr85jX9907inWbLqVIkjUCpS0dYEq1C19QyNMrn0/rI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jrgAFL0MYCl64JkxgXUqkg4whfHXG4pKPpII3CHSuDvF/3rqhBHUZI0lmokfasS/d
-	 khUeF1SX4AyPNDjhDxqvy15JieEVUUtlvhw/ZdNNm0vvTmF94g/2gY91eAmrON/uqN
-	 NUEQ4dK5cMXXt5W1IG2I/5kRri16TBbZRG9ME/Lk=
+	b=BjEtxz5kDqCYMZa+WoWrW2EH/2tYvLmurqcJLXfdzSbETxh5mO4F7IYOadW7pLtpL
+	 vpLfiyDQZ7XQCuTQ/b2bjG6hBUmSMQEkBT7gCx7WXzDFP4epFhaCQEJdxI60ZCok6D
+	 ANmdDNPG+B2/RWJuQh7Kym6Muy8kPZNtWKOBKgY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIITdR (ORCPT
+        id S1727870AbgIITdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:33:17 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:37526 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIITdQ (ORCPT
+        Wed, 9 Sep 2020 15:33:52 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34274 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIITdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:33:16 -0400
-Received: by mail-ej1-f68.google.com with SMTP id nw23so5251017ejb.4;
-        Wed, 09 Sep 2020 12:33:14 -0700 (PDT)
+        Wed, 9 Sep 2020 15:33:50 -0400
+Received: by mail-ed1-f67.google.com with SMTP id q21so3896357edv.1;
+        Wed, 09 Sep 2020 12:33:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yh5U4DdKjNhyUaf2ifBbb4LF6J0UbLKo+raAvinnvCc=;
-        b=FInsvLBJOjYiufyYIA0L/TE4dnLBIwMRZMh4bjYVAkf9PCiYBe6vNfsSPNrGlqn2w3
-         T8HAwxpVDxoHrnT9VoHIPtIbSRggv9JYPpE0Qd1sj9Lq5kylbIbNehQrzFKfVPtxoWer
-         Lxaux0yo6oNMQm3VxuKg80COCgiaJHdOD7LaZedm0JrYVRzZeyXiDhIvW1CfZoWSdILS
-         leyLD6/sTAu+kavc9e8tbL5lrTKYcg0DODaWBKvYdmwo5Le8djWf82CDMmXr/YOApavF
-         PIBZLVWDmPmen3fe46t258R86pe9+H7xs5npR8ROUHcJYGCz7O4RQkW/u3z5XrHuA/tu
-         8W3w==
-X-Gm-Message-State: AOAM532OhiztGSBHlJtMuDVO3W8O54WFBtBALkpz17jhaudlbmo61Vu9
-        XxQQWSBFHBq+42KYavvEpl0=
-X-Google-Smtp-Source: ABdhPJzfLTKoQqFfsuyMyzEyLXyZr0KGpy8lDztIEh6WKkxAjXcD2vd6EVWLi/WVCEqwa5g4EAyG9w==
-X-Received: by 2002:a17:906:d97b:: with SMTP id rp27mr5520650ejb.18.1599679994274;
-        Wed, 09 Sep 2020 12:33:14 -0700 (PDT)
+        bh=Sw9jWXv7ueCKGASAg1xofj4dYvmEqJQsQ3PAFeaA6O0=;
+        b=AV5xyckKHQgGkQthB96Gvf23xoKfirCsw0Nhx5zdmzc9R0x+MzYBeOSUrmpCYszHdW
+         cX/0Fk9fTlUvxxt6mGRJPo7mjyEq7Gm/jAr3bPcWQQbOJDRmEEwZT1gGLCDB6pbrZ757
+         AjaQTGshT1fqUyEgtSoBzTX1+r1qPBatA8LDzIdtskZ5VNJ3uEw2ySI3bxTqijCbdA1H
+         ea3K4O9NbYluf90aZWDoFWNt+HLhV5LXmlBYw550gGd0zTLy8S2lonoysy7YFxB8UIwZ
+         KOdG++S0JNx3lWVqrGt6m4C4+GPjvAEPT+4oAMMbDPDdjBUhBVGDqpufByiCjw3vPALl
+         +bWA==
+X-Gm-Message-State: AOAM532wAcnM3jYWNUKYe70RxFJnv8O0grDP2EM0QWNaalEZy5SWj6Dn
+        2YzMgJvpYtLze70zdTLUWh8=
+X-Google-Smtp-Source: ABdhPJydL+n5p7BlcUySs/kCrMXSVaq5M88wRrv1kwZpvcNlByzDTl2rURnTEE6Whm6aV3V+mEf4Bw==
+X-Received: by 2002:a05:6402:1353:: with SMTP id y19mr5861188edw.71.1599680028975;
+        Wed, 09 Sep 2020 12:33:48 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id 40sm3702732edr.67.2020.09.09.12.33.12
+        by smtp.googlemail.com with ESMTPSA id f10sm3805180edk.34.2020.09.09.12.33.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Sep 2020 12:33:13 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 21:33:11 +0200
+        Wed, 09 Sep 2020 12:33:48 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 21:33:43 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Fabien Parent <fparent@baylibre.com>
 Cc:     linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, matthias.bgg@gmail.com,
         robh+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: mediatek: Add binding for MT8167 SMI
-Message-ID: <20200909193311.GA15293@kozik-lap>
+Subject: Re: [PATCH 2/2] memory: mtk-smi: add support for MT8167
+Message-ID: <20200909193343.GB15293@kozik-lap>
 References: <20200906180938.1117526-1-fparent@baylibre.com>
+ <20200906180938.1117526-2-fparent@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200906180938.1117526-1-fparent@baylibre.com>
+In-Reply-To: <20200906180938.1117526-2-fparent@baylibre.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 08:09:37PM +0200, Fabien Parent wrote:
-> Add device tree bindings documentation for MT8167 SMI.
+On Sun, Sep 06, 2020 at 08:09:38PM +0200, Fabien Parent wrote:
+> Add support for the SMI IP on MT8167
 > 
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  .../bindings/memory-controllers/mediatek,smi-common.txt        | 3 ++-
->  .../bindings/memory-controllers/mediatek,smi-larb.txt          | 3 ++-
+>  drivers/memory/mtk-smi.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 
 Thanks, applied.
 
