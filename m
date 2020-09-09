@@ -2,177 +2,146 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D330C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9DBC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE50621941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E92221941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:24:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9qAfUGL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XDE4XX5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgIISWe (ORCPT
+        id S1729738AbgIISYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46134 "EHLO
+        Wed, 9 Sep 2020 14:24:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIISWc (ORCPT
+        with ESMTP id S1728971AbgIISYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:22:32 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F822C061573;
-        Wed,  9 Sep 2020 11:22:32 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id r4so804148ooq.7;
-        Wed, 09 Sep 2020 11:22:32 -0700 (PDT)
+        Wed, 9 Sep 2020 14:24:30 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ADF0C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 11:24:30 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id cy2so2048465qvb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 11:24:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=688NLY8rgGgq1KdYbZdm4itrRDRlZvTXb/hBapp2KNw=;
-        b=M9qAfUGLNa1oHLV5/dqIQUhuPedojf5Jo0GZG0TRWralGe+845q5vHcHaI34yZe5nS
-         n5XY1Ytw6Qdkcen5I+NMP16aAa2aPYk3lIIOw4GGmRpFDeVBg+k1qOyWzz1R3DDxojY3
-         PYtOftlfx5tyknibWXEfcOmlXPbSF+/MfPrK4bxjatHHZiVGrLnKtBJ+c4A0qVRmcNPO
-         ynAg+92zoAM3NRSomQROX3XSQjxIhIbhA+H8AkzwKotc0+eAITXhUENAAsSXdy275pXI
-         CEmzk1gP98kbAf+6M6JPIce7UF6c2nqRzRfSqehzx8FrJF3XHSCmIkTUzG4XFmR7BQZm
-         8jeQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Ruhhup1GiVMzdtnhUGJBHZmdP0+i41QleFToFouJcG0=;
+        b=XDE4XX5WI/xPzfW/NMmUCQ3gVCnjbXrHt8OZ8zTa8NBevb7IHbrl/CNJzNEBbJAWSt
+         mb2pkZ6iQFCSt/q5DVeqGb+Nus0hYvK68luUixqriqlyeKJdl+oqygph3LDTrnWc6T9h
+         fWv/uvdnEzXrsILGx8SzqA65K21CKUQDVaAl0JFq2hcncH1UebzvxYpWJbFh7zVFBpBu
+         gingaYs6WXb1VQj6dXz40KyyJXkaaFLrzQ4rRC1CX61vyJvkxHuszDndK7jT5Lrbkojv
+         DJeqyHfkPPnmTJGrQIIwUhTtQ+MRbeYsaCG00Wkar1qmHCnOEQgsdMgsei9v2ccL99kT
+         XkOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=688NLY8rgGgq1KdYbZdm4itrRDRlZvTXb/hBapp2KNw=;
-        b=ZGZkE6R2wOkNgTzIo1j1UKmdE2MxPDw6eD5WE7tVsFHAH+vd34NoaJJnYKrSQ218BG
-         Ho1hqMJzS/eGreaqkJ5siiKHI4oUn7GZcnicDhiT7xTWRdz+JBwuUw8Og49rlNDGkPb5
-         Odgz5zyWbaDNZQAhnCfDcyIW3Yyv30sIFd/xzsl/VqHRgqRx0YxHiJR/ZdGgHIfHWr0V
-         jVxtiNkQl8cJDQ0qsZSO/2ldxiyLD3ftGFCj3I4oFXoqi2eL8K07UmIrBv/Kgtmygulv
-         zR4EpX5eo7os6jYvy3LAnxwKfUMGi3KkGD2xpwxPy7VEEJXmpOU0clPXoxHbuZHXmaLS
-         2CjA==
-X-Gm-Message-State: AOAM532DUZm9WCFtBG7DEvJUhVb7qVtTosrct6g7AMvfGvl7jfI1cjVy
-        HV+Oy/KaK2V/OP9ASER2qNvDwtOg3Ok=
-X-Google-Smtp-Source: ABdhPJwHuLrpoHFCxaxcZQUn7fiq5L85H/2ty4EFXZBaFDQf4nsORv8jtYiW0dXA0DnX9IQVxmHyRg==
-X-Received: by 2002:a4a:d38c:: with SMTP id i12mr1645767oos.81.1599675750912;
-        Wed, 09 Sep 2020 11:22:30 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m8sm471346otn.66.2020.09.09.11.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 11:22:30 -0700 (PDT)
-Subject: Re: [PATCH 5.8 000/186] 5.8.8-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200908152241.646390211@linuxfoundation.org>
- <20200909164705.GE1479@roeck-us.net> <20200909180121.GD1003763@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <5ea4e73b-778d-e742-7ba7-f1cbe0307a0f@roeck-us.net>
-Date:   Wed, 9 Sep 2020 11:22:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Ruhhup1GiVMzdtnhUGJBHZmdP0+i41QleFToFouJcG0=;
+        b=rHLR7p5H7UyPAzshS9whbasG2WtCR917vwY7NPsPpLw1RFBOzD+Pu8DiIn4oDJb8qr
+         2YCEW0xH+mtlnvjdqkMEBPahEt5ei8RRo5Eh3gmND5VyQWbUqPwTeW6V+/7MkT+c/TXr
+         Lud2yM+Sa9E73K4j9oCBsYHO4H0/AFPwCywr3+iXhwjixjsmHwXP5ofKPeRuE18LP6+X
+         zGQlGa50A/qHTkp5nEK3A5tRAVITFbvp1cZKp9tIjWEiwTGV3B0yWvBKj5sqIodh/teu
+         v6jWyug9zNHdG0uVr5asRBqQfc7DkWMHS8f2U39X7EZ7rVCdX0YSSoqu2T5pxuRfIV3y
+         uWWQ==
+X-Gm-Message-State: AOAM531BBrRC7LOdCFES6Q0nVZrNm2uxhDvi+DSkavxL5jmq8CMEpHbM
+        bcV0a7RrF0CSaW33arz4fuyUvA==
+X-Google-Smtp-Source: ABdhPJwLHtK06MB86ozbrs1dqxtlh9p5l/69lx5+FCQ89PVrR+dpBTlHWMb5oT5whELFYBtY0OnqTQ==
+X-Received: by 2002:a0c:ff4b:: with SMTP id y11mr5502578qvt.3.1599675869492;
+        Wed, 09 Sep 2020 11:24:29 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id c13sm3841553qtq.5.2020.09.09.11.24.26
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 09 Sep 2020 11:24:28 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 11:24:14 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+cc:     Matthew Wilcox <willy@infradead.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>, shy828301@gmail.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v18 31/32] mm: Add explicit page decrement in exception
+ path for isolate_lru_pages
+In-Reply-To: <CAKgT0UcjNx=00OgAQNWezc7UjLmF2NcDH0p7kzZ5D23PaFrFXA@mail.gmail.com>
+Message-ID: <alpine.LSU.2.11.2009091100280.9020@eggly.anvils>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com> <1598273705-69124-32-git-send-email-alex.shi@linux.alibaba.com> <20200909010118.GB6583@casper.infradead.org> <CAKgT0UcjNx=00OgAQNWezc7UjLmF2NcDH0p7kzZ5D23PaFrFXA@mail.gmail.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <20200909180121.GD1003763@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 11:01 AM, Greg Kroah-Hartman wrote:
-> On Wed, Sep 09, 2020 at 09:47:05AM -0700, Guenter Roeck wrote:
->> On Tue, Sep 08, 2020 at 05:22:22PM +0200, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 5.8.8 release.
->>> There are 186 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
->>> Anything received after that time might be too late.
->>>
->>
->> Build results:
->> 	total: 154 pass: 153 fail: 1
->> Failed builds:
->> 	powerpc:allmodconfig
->> Qemu test results:
->> 	total: 430 pass: 430 fail: 0
->>
->> The powerpc problem is the same as before:
->>
->> Inconsistent kallsyms data
->> Try make KALLSYMS_EXTRA_PASS=1 as a workaround
->>
->> KALLSYMS_EXTRA_PASS=1 doesn't help. The problem is sporadic, elusive, and all
->> but impossible to bisect. The same build passes on another system, for example,
->> with a different load pattern. It may pass with -j30 and fail with -j40.
->> The problem started at some point after v5.8, and got worse over time; by now
->> it almost always happens. I'd be happy to debug if there is a means to do it,
->> but I don't have an idea where to even start. I'd disable KALLSYMS in my
->> test configurations, but the symbol is selected from various places and thus
->> difficult to disable. So unless I stop building ppc:allmodconfig entirely
->> we'll just have to live with the failure.
+On Wed, 9 Sep 2020, Alexander Duyck wrote:
+> On Tue, Sep 8, 2020 at 6:01 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > On Mon, Aug 24, 2020 at 08:55:04PM +0800, Alex Shi wrote:
+> > > +++ b/mm/vmscan.c
+> > > @@ -1688,10 +1688,13 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+> > >
+> > >                       if (!TestClearPageLRU(page)) {
+> > >                               /*
+> > > -                              * This page may in other isolation path,
+> > > -                              * but we still hold lru_lock.
+> > > +                              * This page is being isolated in another
+> > > +                              * thread, but we still hold lru_lock. The
+> > > +                              * other thread must be holding a reference
+> > > +                              * to the page so this should never hit a
+> > > +                              * reference count of 0.
+> > >                                */
+> > > -                             put_page(page);
+> > > +                             WARN_ON(put_page_testzero(page));
+> > >                               goto busy;
+> >
+> > I read Hugh's review and that led me to take a look at this.  We don't
+> > do it like this.  Use the same pattern as elsewhere in mm:
+> >
+> >         page_ref_sub(page, nr);
+> >         VM_BUG_ON_PAGE(page_count(page) <= 0, page);
+> >
+> >
 > 
-> Ah, I was worried when I saw your dashboard orange for this kernel.
-> 
-> I guess the powerpc maintainers don't care?  Sad :(
-> 
+> Actually for this case page_ref_dec(page) would make more sense
+> wouldn't it? Otherwise I agree that would be a better change if that
+> is the way it has been handled before. I just wasn't familiar with
+> those other spots.
 
-Not sure if the powerpc architecture is to blame. Bisect attempts end up
-all over the place, and don't typically include any powerpc changes.
-I have no idea how kallsyms is created, but my suspicion is that it is
-a generic problem and that powerpc just happens to hit it right now.
-I have added KALLSYMS_EXTRA_PASS=1 to several architecture builds over
-time, when they reported similar problems. Right now I set it for
-alpha, arm, and m68k. powerpc just happens to be the first architecture
-where it doesn't help.
+After overnight reflection, my own preference would be simply to
+drop this patch.  I think we are making altogether too much of a
+fuss here over what was simply correct as plain put_page()
+(and further from correct if we change it to leak the page in an
+unforeseen circumstance).
 
-Guenter
+And if Alex's comment was not quite grammatically correct, never mind,
+it said as much as was worth saying.  I got more worried by his
+placement of the "busy:" label, but that does appear to work correctly.
+
+There's probably a thousand places where put_page() is used, where
+it would be troublesome if it were the final put_page(): this one
+bothered you because you'd been looking at isolate_migratepages_block(),
+and its necessary avoidance of lru_lock recursion on put_page();
+but let's just just leave this put_page() as is.
+
+Hugh
