@@ -2,141 +2,83 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAFAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7817D2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D946A2087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbgIIJbV (ORCPT
+        id S1726708AbgIIJd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:31:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:40556 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbgIIJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:31:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD0491FB;
-        Wed,  9 Sep 2020 02:31:15 -0700 (PDT)
-Received: from bogus (unknown [10.57.10.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D07F3F66E;
-        Wed,  9 Sep 2020 02:31:14 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 10:31:07 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] dt-bindings: mailbox: add doorbell support to ARM MHU
-Message-ID: <20200909093107.GA10762@bogus>
-References: <20200605045645.GD12397@bogus>
- <CABb+yY2YZ99NjHYNi0=KLGFDsVUeJmqiJD3E25Chwk-THJV4iw@mail.gmail.com>
- <20200605085830.GA32372@bogus>
- <CABb+yY2TR7tuMx6u8yah6mO2GwZ5SWYOO80EQRL-i=ybgn=Wog@mail.gmail.com>
- <20200610093334.yznxl2esv5ht27ns@vireshk-i7>
- <20200611100027.GB18781@bogus>
- <CABb+yY1OwVB+uk+0w+D-4Xy46iYn8tPZYBZ0qjrzQFLA6SaTvw@mail.gmail.com>
- <20200612052853.nds4iycie6ldjnnr@vireshk-i7>
- <CAK8P3a0nVOR7YYSZaKmzm3WsUZLgOqL7yZq+f0Dfnn2=16AkLA@mail.gmail.com>
- <CABb+yY3HDs219C8Wcc+CJRLukV4OvCKhqevU-9jN4bCU6SC3rQ@mail.gmail.com>
+        Wed, 9 Sep 2020 05:33:58 -0400
+Received: from smtprelay0068.hostedemail.com ([216.40.44.68]:57658 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725826AbgIIJdx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:33:53 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 7218F182CED34;
+        Wed,  9 Sep 2020 09:33:52 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: floor94_611501d270dc
+X-Filterd-Recvd-Size: 2099
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  9 Sep 2020 09:33:49 +0000 (UTC)
+Message-ID: <2530c5c8a596b7edd7e2273cffc3b76ac4b437c7.camel@perches.com>
+Subject: Re: [net-next] net: iavf: Use the ARRAY_SIZE macro for aq_to_posix
+From:   Joe Perches <joe@perches.com>
+To:     Wei Xu <xuwei5@hisilicon.com>, netdev@vger.kernel.org
+Cc:     davem@davemloft.net, linuxarm@huawei.com,
+        shameerali.kolothum.thodi@huawei.com, jonathan.cameron@huawei.com,
+        john.garry@huawei.com, salil.mehta@huawei.com,
+        shiju.jose@huawei.com, jinying@hisilicon.com,
+        zhangyi.ac@huawei.com, liguozhu@hisilicon.com,
+        tangkunshan@huawei.com, huangdaode@hisilicon.com,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Wed, 09 Sep 2020 02:33:48 -0700
+In-Reply-To: <1599641471-204919-1-git-send-email-xuwei5@hisilicon.com>
+References: <1599641471-204919-1-git-send-email-xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY3HDs219C8Wcc+CJRLukV4OvCKhqevU-9jN4bCU6SC3rQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:23:33PM -0500, Jassi Brar wrote:
-> On Tue, Sep 8, 2020 at 4:15 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > Picking up the old thread again after and getting pinged by multiple
-> > colleagues about it (thanks!) reading through the history.
-> >
-> > On Fri, Jun 12, 2020 at 7:29 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 11-06-20, 19:34, Jassi Brar wrote:
-> > > > In the first post in this thread, Viresh lamented that mailbox
-> > > > introduces "a few ms" delay in the scheduler path.
-> > > > Your own tests show that is certainly not the case -- average is the
-> > > > same as proposed virtual channels 50-100us, the best case is 3us vs
-> > > > 53us for virtual channels.
-> > >
-> > > Hmmm, I am not sure where is the confusion here Jassi. There are two
-> > > things which are very very different from each other.
-> > >
-> > > - Time taken by the mailbox framework (and remote for acknowledging
-> > >   it) for completion of a single request, this can be 3us to 100s of
-> > >   us. This is clear for everyone. THIS IS NOT THE PROBLEM.
-> > >
-> > > - Delay introduced by few of such requests on the last one, i.e. 5
-> > >   normal requests followed by an important one (like DVFS), the last
-> > >   one needs to wait for the first 5 to finish first. THIS IS THE
-> > >   PROBLEM.
-> >
-> > Earlier, Jassi also commented "Linux does not provide real-time
-> > guarantees", which to me is what actually causes the issue here:
-> >
-> > Linux having timeouts when communicating to the firmware means
-> > that it relies on the hardware and firmware having real-time behavior
-> > even when not providing real-time guarantees to its processes.
-> >
-> The timeout used in SCMI is simply based on how long the Juno (?)
-> platform takes to reply in most cases.
+On Wed, 2020-09-09 at 16:51 +0800, Wei Xu wrote:
+> Use the ARRAY_SIZE macro to calculate the size of an array.
+> This code was detected with the help of Coccinelle.
+[]
+> diff --git a/drivers/net/ethernet/intel/iavf/iavf_adminq.h b/drivers/net/ethernet/intel/iavf/iavf_adminq.h
+[]
+> @@ -120,7 +120,7 @@ static inline int iavf_aq_rc_to_posix(int aq_ret, int aq_rc)
+>  	if (aq_ret == IAVF_ERR_ADMIN_QUEUE_TIMEOUT)
+>  		return -EAGAIN;
+>  
+> -	if (!((u32)aq_rc < (sizeof(aq_to_posix) / sizeof((aq_to_posix)[0]))))
+> +	if (!((u32)aq_rc < ARRAY_SIZE(aq_to_posix)))
+>  		return -ERANGE;
 
-Just FYI, the timeouts in SCMI can be platform specific. So each platform
-have flexibility to choose it's own choice of timeout and need not be
-stuck with so called *Juno values".
+If you want to use a cast,
 
-The architects of SCMI believe the transfers(especially DVFS) must not exceed
-few 100s of uS and worst case for any transfers must be few ms. My initial
-choice of 30ms was based on the jiffes based timer and 100Hz. Architect claim
-that is too much, but I thought 3 jiffies at minimum in case we start timer
-when we are close to the boundaries.
+	if ((u32)aq_rc >= ARRAY_SIZE(aq_to_posix))
+		return -ERANGE;
 
-> Talking proper code-design, the timeout (if at all) shouldn't even be
-> a hardcoded value, but instead taken from the platform.
-> 
-> > When comparing the two usage models, it's clear that the minimum
-> > latency for a message delivery is always at least the time time
-> > to process an interrupt, plus at least one expensive MMIO read
-> > and one less expensive posted MMIO write for an Ack. If we
-> > have a doorbell plus out-of-band message, we need an extra
-> > DMA barrier and a read from coherent memory, both of which can
-> > be noticeable. As soon as messages are queued in the current
-> > model, the maximum latency increases by a potentially unbounded
-> > number of round-trips, while in the doorbell model that problem
-> > does not exist, so I agree that we need to handle both modes
-> > in the kernel deal with all existing hardware as well as firmware
-> > that requires low-latency communication.
-> >
-> From the test case Sudeep last shared, the scmi usage on mhu doesn't
-> not even hit any bottleneck ... the test "failed" because of the too
-> small hardcoded timeout value. Otherwise the current code actually
-> shows better numbers.
+would be a more common and simpler style, though
+perhaps testing ac_rc < 0 would be more intelligible.
 
-No disagreement on the latter part. But we can't ignore the bottlenecks
-even if they are rare.
+	if (ac_rc < 0 || ac_rq >= ARRAY_SIZE(aq_to_posix))
+		return -ERANGE;
 
-> We need some synthetic tests to bring the limitation to the surface. I
-> agree that there may be such a test case, however fictitious. For that
-> reason, I am ok with the doorbell mode.
->
 
-Thanks !
 
--- 
-Regards,
-Sudeep
