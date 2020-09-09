@@ -2,154 +2,167 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F37C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A7DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B65208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063F320732
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsydC3cW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RXMckBVO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgIIHhg (ORCPT
+        id S1730154AbgIIHiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:37:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58742 "EHLO
+        Wed, 9 Sep 2020 03:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730262AbgIIHhJ (ORCPT
+        with ESMTP id S1726408AbgIIHh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:37:09 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E8AC061755;
-        Wed,  9 Sep 2020 00:37:09 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id m1so1400127ilj.10;
-        Wed, 09 Sep 2020 00:37:09 -0700 (PDT)
+        Wed, 9 Sep 2020 03:37:56 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFA1C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:37:56 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id s2so918174pjr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9XplU/yDVZod7CQ9qpAr+SAIUpan2fYE9ZFD5UbHSjo=;
-        b=EsydC3cWGV5Dkt1QDytC8dB6gCR2nJKlMi0uCSEDWFYuakbamQOijx3ov3GHvRhLBU
-         QP3OcQkFYLotAFBcFhrM39Ahdtdx0FLUJajXYRltrmANlmfvndldYRImCYQLdHZt3IKe
-         ZNN9ubYuQJsXDd6eFL3Trx3Kw8aiAqz79ffcS2QyCTU3HFnmEAKEr20lAALYpdjn7Av1
-         6ZShmkABQRjuVlqRqde1buu/fQDctMUWqIz2UymaY676oNv+zo4QrMH6jiATdRLtCfVj
-         AMaCxjzUR/EHGoA0FBeeMbyWxFIyE+LMukDNCAwzhd/oI5G8QgsQ30NHleaL3gzlwGtQ
-         46Cg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iy/APQd+Om2zvfiNSuBSqVLHET3wSuMQMAbhPYL7p8g=;
+        b=RXMckBVOzfWh5lB0NGjYDRdVwoFWX6RIu3D4DLvpoZYEsN2bn7czl8s92gvRXRuvC1
+         jkKloomDCmnelqvDVvGV+DDqOaLVv1Ly/uBqYJvYsQY/xzk7+KG7Utpo5zmK7Hirybcp
+         w/YLYhv45WVnQ+CS5HsuPUJB1XkxczMgYCUW0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9XplU/yDVZod7CQ9qpAr+SAIUpan2fYE9ZFD5UbHSjo=;
-        b=mI6tkjjmTrxgqfV/YsQ4L8DbZD0WTmM5eDko+FEOO8HD0trFgOkSF1SVazziH7FvAw
-         XQTSzh+AKkj9v3xuZZgtLnDbWC8YRhqJdV5YcbgNz8KDjXrhiZdx17eGKNwjbH0yspQS
-         AeizcUEoEVnBtngL2/RU44ELl+63JnzRrcCLn8mxJVBAbq1p/FNlluuh5ny+vwr9Oa6v
-         GwRFRRQZaXnLWoO6y0WYseqMC4gTfIfAAo1Z0dh6BGLJyYO0Pky9f+km679WKZ82+V+4
-         GycT1G2yi6a/qRVVxt01BwWdDZBZxG9JWOGsmySVTp2W1xEYYMNr5GIQbA6X5qKqlR9o
-         ABJA==
-X-Gm-Message-State: AOAM530u/LlaKsfwid7mS9W90wuixcrtWVBVEaT7b+boXGFZFB+xho9C
-        7Bp7RpjufrN/+o7D3m/jTzLnKGKZnx/v7T7aSOg=
-X-Google-Smtp-Source: ABdhPJz8uHZflvzrflCvmUJfx+x3RiqZkWqsTrkVrrl+8sX6vVGZdBlDIPNkr1jiZlE4u+HgUQB7+Ex+KbZmsqM5c/E=
-X-Received: by 2002:a92:d482:: with SMTP id p2mr2689631ilg.9.1599637028313;
- Wed, 09 Sep 2020 00:37:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iy/APQd+Om2zvfiNSuBSqVLHET3wSuMQMAbhPYL7p8g=;
+        b=eQxAGisyu2u79VF4fCKetdJaaiJTLnblei9rui/g4RseCKYeNr+i4UV5OiW+20mUDq
+         rv2fzJOfUvm16/lfqPrgg8wqwYN0yLO2cG/NEhXkJIQtI6LH+WMXhzjh5ERpqqT785fv
+         74JSb3UDtaVAYrxaNOB/EV4qiQkRpwoVnT9dwSLoZUWHFTdMMkdsdU0+C6X/91EPWcGP
+         Kz2J02qgm9fCea6CW//QRViIP5FLrf91dPBz08qRMQ8MrF3cSVsN+TAfSEEFTuADoHCd
+         j9G5WGJP2skP2cleggnGiPZBSYzti2SGaMigscYGgnYCLfa5YaArS0obxkYkRLj4AbPb
+         bdTg==
+X-Gm-Message-State: AOAM533Z6UWm/gZgeXf96SWiTlTzL8iNmP087bbqKkAn0KE+xMnu6A9k
+        IA8RYtUisHXOuskHp9RXYUyIBrqymcXT6A==
+X-Google-Smtp-Source: ABdhPJymus8agbUoPSDDSSddmS+9FIwgQYcgK1fT6qDpKUASDuNarYsPQQLpgt3Qgn+nsXWqsxaInQ==
+X-Received: by 2002:a17:90b:1107:: with SMTP id gi7mr2342742pjb.233.1599637075433;
+        Wed, 09 Sep 2020 00:37:55 -0700 (PDT)
+Received: from localhost ([2401:fa00:9:15:7220:84ff:fe09:cabc])
+        by smtp.gmail.com with ESMTPSA id h65sm1693068pfb.210.2020.09.09.00.37.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 00:37:54 -0700 (PDT)
+From:   Sam McNally <sammc@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Imre Deak <imre.deak@intel.com>, Sam McNally <sammc@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2] drm/dp_mst: Add ddc i2c device links for DP MST connectors
+Date:   Wed,  9 Sep 2020 17:37:38 +1000
+Message-Id: <20200909173712.v2.1.Iaa9c3d7c4332cf8717653f3d3ae6f2b955aa3fc6@changeid>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
-References: <25817189-49a7-c64f-26ee-78d4a27496b6@huawei.com>
- <CAOQ4uxhejJzjKLZCt=b87KAX0sC3RAZ2FHEZbu4188Ar-bkmOg@mail.gmail.com>
- <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com> <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
- <20200908171859.GA29953@casper.infradead.org> <CAOQ4uxjX2GAJhD70=6SmwdXPH6TuOzGugtdYupDjLLywC2H5Ag@mail.gmail.com>
- <96abf6e3-2442-8871-c9f3-be981c0a1965@huawei.com>
-In-Reply-To: <96abf6e3-2442-8871-c9f3-be981c0a1965@huawei.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 9 Sep 2020 10:36:57 +0300
-Message-ID: <CAOQ4uxjNcjFtQuc9AeWgEO7G3CeGm3vL_wK6UhbHkxOZuRYOeQ@mail.gmail.com>
-Subject: Re: Question: Why is there no notification when a file is opened
- using filp_open()?
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wangle6@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 10:00 AM Xiaoming Ni <nixiaoming@huawei.com> wrote:
->
-> On 2020/9/9 11:44, Amir Goldstein wrote:
-> > On Tue, Sep 8, 2020 at 8:19 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >>
-> >> On Tue, Sep 08, 2020 at 04:18:29PM +0300, Amir Goldstein wrote:
-> >>> On Tue, Sep 8, 2020 at 3:53 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
-> >>>> For example, in fs/coredump.c, do_coredump() calls filp_open() to
-> >>>> generate core files.
-> >>>> In this scenario, the fsnotify_open() notification is missing.
-> >>>
-> >>> I am not convinced that we should generate an event.
-> >>> You will have to explain in what is the real world use case that requires this
-> >>> event to be generated.
-> >>
-> >> Take the typical usage for fsnotify of a graphical file manager.
-> >> It would be nice if the file manager showed a corefile as soon as it
-> >> appeared in a directory rather than waiting until some other operation
-> >> in that directory caused those directory contents to be refreshed.
-> >
-> > fsnotify_open() is not the correct notification for file managers IMO.
-> > fsnotify_create() is and it will be called in this case.
-> >
-> > If the reason you are interested in open events is because you want
-> > to monitor the entire filesystem then welcome to the future -
-> > FAN_CREATE is supported since kernel v5.1.
-> >
-> > Is there another real life case you have in mind where you think users
-> > should be able to get an open fd for a file that the kernel has opened?
-> > Because that is what FAN_OPEN will do.
-> >
->
-> There are also cases where file is opened in read-only mode using
-> filp_open().
->
-> case1: nfsd4_init_recdir() call filp_open()
-> filp_open()
-> nfsd4_init_recdir() fs/nfsd/nfs4recover.c#L543
->
-> L70: static char user_recovery_dirname[PATH_MAX] =
-> "/var/lib/nfs/v4recovery";
-> L543: nn->rec_file = filp_open(user_recovery_dirname, O_RDONLY |
-> O_DIRECTORY, 0);
->
->
-> case2: ima_read_policy()
-> filp_open()
-> kernel_read_file_from_path()  fs/exec.c#L1004
-> ima_read_policy()  security/integrity/ima/ima_fs.c#L286
-> ima_write_policy() security/integrity/ima/ima_fs.c#L335
-> ima_measure_policy_ops   security/integrity/ima/ima_fs.c#L443
-> sys_write()
->
-> case3: use do_file_open_root() to open file
-> do_file_open_root()
-> file_open_root()   fs/open.c#L1159
-> kernel_read_file_from_path_initns()  fs/exec.c#L1029
-> fw_get_filesystem_firmware()  drivers/base/firmware_loader/main.c#L498
->
-> Do we need to add fsnotify_open() in these scenarios?
+DP MST DDC I2C devices are not parented to their connectors. This makes
+it challenging to associate the ddc i2c device with its connector from
+userspace. With further refactoring, this can be changed, but in the
+meantime, follow the pattern of commit e1a29c6c5955 ("drm: Add ddc link
+in sysfs created by drm_connector"), creating sysfs ddc links to the
+associated i2c device for MST DP connectors.
 
-We do not *need* to add fsnotify_open() if there is no concrete use case
-from real life that needs it.
+If the connector is created and registered before the i2c device, create
+the link when registering the i2c device; otherwise, create the link
+after registering the connector.
 
-Matthew gave an example of a real life use case and I explained why IMO
-we don't need to add fsnotify_open() for the use case that he described.
+Signed-off-by: Sam McNally <sammc@chromium.org>
+---
 
-If you want to add fsnotify_open() to any call site, please come up with
-a real life use case - not a made up one, one that really exists and where
-the open event is really needed.
+Changes in v2:
+- Reworded description to avoid accusing an innocent commit of
+  responsibility for the problem being addressed
 
-grepping the code for callers of filp_open() is not enough.
+ drivers/gpu/drm/drm_dp_mst_topology.c | 29 +++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-Thanks,
-Amir.
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 17dbed0a9800..e60a6b8af3c1 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2159,11 +2159,23 @@ static void build_mst_prop_path(const struct drm_dp_mst_branch *mstb,
+ int drm_dp_mst_connector_late_register(struct drm_connector *connector,
+ 				       struct drm_dp_mst_port *port)
+ {
++	int ret;
+ 	DRM_DEBUG_KMS("registering %s remote bus for %s\n",
+ 		      port->aux.name, connector->kdev->kobj.name);
+ 
+ 	port->aux.dev = connector->kdev;
+-	return drm_dp_aux_register_devnode(&port->aux);
++	ret = drm_dp_aux_register_devnode(&port->aux);
++	if (ret)
++		return ret;
++
++	if (port->pdt != DP_PEER_DEVICE_NONE &&
++	    drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
++		ret = sysfs_create_link(&port->connector->kdev->kobj,
++					&port->aux.ddc.dev.kobj, "ddc");
++		if (ret)
++			drm_dp_aux_unregister_devnode(&port->aux);
++	}
++	return ret;
+ }
+ EXPORT_SYMBOL(drm_dp_mst_connector_late_register);
+ 
+@@ -5439,6 +5451,7 @@ static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
+ {
+ 	struct drm_dp_aux *aux = &port->aux;
+ 	struct device *parent_dev = port->mgr->dev->dev;
++	int ret;
+ 
+ 	aux->ddc.algo = &drm_dp_mst_i2c_algo;
+ 	aux->ddc.algo_data = aux;
+@@ -5453,7 +5466,17 @@ static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
+ 	strlcpy(aux->ddc.name, aux->name ? aux->name : dev_name(parent_dev),
+ 		sizeof(aux->ddc.name));
+ 
+-	return i2c_add_adapter(&aux->ddc);
++	ret = i2c_add_adapter(&aux->ddc);
++	if (ret)
++		return ret;
++
++	if (port->connector && port->connector->kdev) {
++		ret = sysfs_create_link(&port->connector->kdev->kobj,
++					&port->aux.ddc.dev.kobj, "ddc");
++		if (ret)
++			i2c_del_adapter(&port->aux.ddc);
++	}
++	return ret;
+ }
+ 
+ /**
+@@ -5462,6 +5485,8 @@ static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
+  */
+ static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_mst_port *port)
+ {
++	if (port->connector && port->connector->kdev)
++		sysfs_remove_link(&port->connector->kdev->kobj, "ddc");
+ 	i2c_del_adapter(&port->aux.ddc);
+ }
+ 
+-- 
+2.28.0.526.ge36021eeef-goog
+
