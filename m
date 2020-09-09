@@ -2,190 +2,230 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2612AC2D0E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D617C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A3721D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599673791;
-	bh=je19kXLLPeXGnvJ2cpDOUeTXsKizvTv7mb1EaLQTtgE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DCBXxwuPqV4D44Q3t/gPBSYhQUQ485HvE+rIbucGomZc9N7vJnFAjVoEeQuIl1oVH
-	 WH1xzHAdXnzC0hS3nHhwUkDTntyreJrhJk4vsx9TEMjx/mu02JSBDodrmzbqFWdlcA
-	 gaqQegokX3ABzprIR0dCwtztr1HufoLxBAxM7UGM=
+	by mail.kernel.org (Postfix) with ESMTP id 0489721D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="deFW1JQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgIIRtp (ORCPT
+        id S1729161AbgIIRt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgIIRtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:49:40 -0400
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2D621D7D;
-        Wed,  9 Sep 2020 17:49:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599673775;
-        bh=je19kXLLPeXGnvJ2cpDOUeTXsKizvTv7mb1EaLQTtgE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fols9K8K9dpRLbuLhLcJb9qUeeCiTKsuENoJrq+YBNeC0RK/ZlH1kHvO5EDKRABAp
-         yD13dwjts1JX3l9VaH8AGbnOCA9svC0V2YMwvgnpGgF1YnZm7nx35PURL8jrcDh9te
-         2JVdXPmWRdf9FlSYzobSMWPUf5iv+c6DEZcTsdQ4=
-Received: by mail-oo1-f52.google.com with SMTP id k13so783867oor.2;
+        Wed, 9 Sep 2020 13:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgIIRtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:49:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EB8C061757;
+        Wed,  9 Sep 2020 10:49:35 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id m5so2595279pgj.9;
         Wed, 09 Sep 2020 10:49:35 -0700 (PDT)
-X-Gm-Message-State: AOAM532Rw7UfJeDCqHp0Fen9WfMgO7k81ipJNMNR1pwLlhI2PZdT38Zc
-        E3MYFDjkhpjuRW9mWbIfJLHSq2AoGozmiVHNmQ==
-X-Google-Smtp-Source: ABdhPJzux78h4fn3WeT1EexUmlZfFAVO0RI5YO1uu9bfULqzMYzDuIWqUmStC0pX3w+IPhasTVC0BPqSbE28OFRux5E=
-X-Received: by 2002:a4a:d38c:: with SMTP id i12mr1548249oos.81.1599673774912;
- Wed, 09 Sep 2020 10:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vr8be9z5ve289rWYH4FMLgISuz5QCRzwF700gd1BO2s=;
+        b=deFW1JQCJtN43zETrg87xyX00GC6XmUZm6gHSR8oVtoMk0dRAZk+bp/j2/8V/mAC6P
+         JqbsxKqi7oWFaQFSiPur2nhwwhCMR9iPj5dPlk3Wo4GC04LXwE/MJMb/XZQzGwhpOhyM
+         pO3EBmlURwpsdEtbmE/cem3eycFX9pU+Zhma9JwstuSJRPdBK1uFwy3EZe70qzbKXNxa
+         OvzgBYShIB8J0FGsg0sAJvL+yizh/7K5yL6LfZqilLe8wdCle00BWtSL156cATJ15R5N
+         XCfpArynh0vhidHx1G/2BqgQ4jKB+bF+BgUB2xtTWtjyf1cEt6ENgmrE5bONWbyolSsi
+         zsww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vr8be9z5ve289rWYH4FMLgISuz5QCRzwF700gd1BO2s=;
+        b=NYa5fM/ZP1/bkcPNsY0Y0t92Qx5L80yN+GeS/2soZpsZjF25LgzE0WqNRepinEr4QL
+         JXlM3SJX2hKAW7ZgjIXnYg0INXtSqVemMZuEMR8mY4MG4YkiShJhVkUKi9AoePtddcqW
+         mvyLN91sIxWhO9TEKgm1B9PBDBpiryquGCkEMlPmE9KJorkfmbVS9q4xpfC7wX0QAW0z
+         i9Ep0Z8B6+kOE06ekvfQzlDCo9Kln7JCHCodfGo4mUxHHFcfyR+zz7aj8Ldzc3Yr340x
+         KHBOD8/pS7iWyhRY9Ma6P4NBpoG+Iv1gUVKvkrmZdZ35Sl7bInbICivFA6hRUS7nQdPU
+         hZzA==
+X-Gm-Message-State: AOAM532gc89Z9NVn4GAvP/tgnpN8s1wB+0ca5cRHSeoTwSsM0cAvcOPw
+        vhTdkqJFaX7tssD9nUnax+Lw+GtVJQo=
+X-Google-Smtp-Source: ABdhPJx1xIZJXBh/EmG2Xo+Hxj8YeCTDmSbQ9oSQrzB6M55tmeV4EqlIR/AxDv60o0Z0rV4M2BocSA==
+X-Received: by 2002:a17:902:ed13:b029:d0:89f1:9e32 with SMTP id b19-20020a170902ed13b02900d089f19e32mr2040378pld.14.1599673774771;
+        Wed, 09 Sep 2020 10:49:34 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id a20sm3254825pfa.59.2020.09.09.10.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 10:49:34 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     olteanv@gmail.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v2] net: dsa: b53: Report VLAN table occupancy via devlink
+Date:   Wed,  9 Sep 2020 10:49:31 -0700
+Message-Id: <20200909174932.4138500-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200907100039.1731457-1-cychiang@chromium.org>
- <20200907100039.1731457-3-cychiang@chromium.org> <20200908203357.GA861143@bogus>
- <CAFv8NwLMAkFhVT-ML7QHbnSkqmgh=5SrNSik5eSCTHB1=DGQ0A@mail.gmail.com>
-In-Reply-To: <CAFv8NwLMAkFhVT-ML7QHbnSkqmgh=5SrNSik5eSCTHB1=DGQ0A@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 9 Sep 2020 11:49:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKW2bpHP60MX4eFmtfzkvaHJ670m6e8H29=u=mDAYg63w@mail.gmail.com>
-Message-ID: <CAL_JsqKW2bpHP60MX4eFmtfzkvaHJ670m6e8H29=u=mDAYg63w@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
-To:     Cheng-yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 3:24 AM Cheng-yi Chiang <cychiang@chromium.org> wrote:
->
-> On Wed, Sep 9, 2020 at 4:34 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Sep 07, 2020 at 06:00:38PM +0800, Cheng-Yi Chiang wrote:
-> > > Add devicetree bindings documentation file for sc7180 sound card.
-> > >
-> > > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > > ---
-> > >  .../bindings/sound/qcom,sc7180.yaml           | 143 ++++++++++++++++++
-> > >  1 file changed, 143 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> > > new file mode 100644
-> > > index 000000000000..ae809346ca80
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> > > @@ -0,0 +1,143 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
-> > > +
-> > > +maintainers:
-> > > +  - Rohit kumar <rohitkr@codeaurora.org>
-> > > +  - Cheng-Yi Chiang <cychiang@chromium.org>
-> > > +
-> > > +description:
-> > > +  This binding describes the SC7180 sound card which uses LPASS for audio.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: qcom,sc7180-sndcard
-> > > +
-> > > +  audio-routing:
-> > > +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> > > +    description:
-> > > +      A list of the connections between audio components. Each entry is a
-> > > +      pair of strings, the first being the connection's sink, the second
-> > > +      being the connection's source.
-> > > +
-> > > +  model:
-> > > +    $ref: /schemas/types.yaml#/definitions/string
-> > > +    description: User specified audio sound card name
-> > > +
-> > > +  headset-jack:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description: phandle of the codec for headset detection
-> > > +
-> > > +  hdmi-jack:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description: phandle of the codec for hdmi jack detection
-> >
-> > You already have links to these devices. Why duplicate it here?
-> >
-> > What if you had 2 headsets? This doesn't scale.
-> >
-> Hi Rob, thanks for reviewing.
-> There was some discussion in
-> https://patchwork.kernel.org/patch/11737905/#23571643 about how to
-> specify the dailink that has a headset jack.
-> I would like to pass the information of headset jack and hdmi jack to
-> the machine driver so the machine driver can call
-> snd_soc_component_set_jack to set jack when init the corresponding link.
-> Headset jack and hdmi jack will be treated differently for button and
-> event type.
-> Because of this, we can not just set a property "jack" in the link.
+We already maintain an array of VLANs used by the switch so we can
+simply iterate over it to report the occupancy via devlink.
 
-Don't design your binding around some driver architecture. Limitations
-of ASoC are not reasons for your binding.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v2:
 
-For DP and HDMI, we assume HPD is supported generally as that's a
-standard function for HDMI/DP controllers. There's a 'no-hpd' property
-for cases of broken HPD. That hardware description is part of the
-device HPD is connected to which is the HDMI/DP controller/bridge or
-the connector node in the case of a GPIO line. That doesn't belong in
-the virtual sound card.
+- make count u64
+- correct typo: s/PARMA/PARAM/
 
-I would assume a codec to be similar. The codec node (the alc5682
-node) should have any jack related properties (or possibly implicitly
-support it by default).
+ drivers/net/dsa/b53/b53_common.c | 60 ++++++++++++++++++++++++++++++--
+ drivers/net/dsa/b53/b53_priv.h   |  1 +
+ drivers/net/dsa/bcm_sf2.c        |  8 ++++-
+ 3 files changed, 66 insertions(+), 3 deletions(-)
 
-> As for the 2 headsets case (I guess you mean hp jack and mic jack), on
-> this board we will not have this use case.
-> If someone really wants to build hp jack and mic jack on the board
-> based on this machine driver, we can add two more property hp-jack and
-> mic-jack to specify that,
-> as the machine driver will need to know the different jack types
-> anyway. What do you think ?
+diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
+index 26fcff85d881..6a5796c32721 100644
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -977,6 +977,54 @@ int b53_get_sset_count(struct dsa_switch *ds, int port, int sset)
+ }
+ EXPORT_SYMBOL(b53_get_sset_count);
+ 
++enum b53_devlink_resource_id {
++	B53_DEVLINK_PARAM_ID_VLAN_TABLE,
++};
++
++static u64 b53_devlink_vlan_table_get(void *priv)
++{
++	struct b53_device *dev = priv;
++	struct b53_vlan *vl;
++	unsigned int i;
++	u64 count = 0;
++
++	for (i = 0; i < dev->num_vlans; i++) {
++		vl = &dev->vlans[i];
++		if (vl->members)
++			count++;
++	}
++
++	return count;
++}
++
++int b53_setup_devlink_resources(struct dsa_switch *ds)
++{
++	struct devlink_resource_size_params size_params;
++	struct b53_device *dev = ds->priv;
++	int err;
++
++	devlink_resource_size_params_init(&size_params, dev->num_vlans,
++					  dev->num_vlans,
++					  1, DEVLINK_RESOURCE_UNIT_ENTRY);
++
++	err = dsa_devlink_resource_register(ds, "VLAN", dev->num_vlans,
++					    B53_DEVLINK_PARAM_ID_VLAN_TABLE,
++					    DEVLINK_RESOURCE_ID_PARENT_TOP,
++					    &size_params);
++	if (err)
++		goto out;
++
++	dsa_devlink_resource_occ_get_register(ds,
++					      B53_DEVLINK_PARAM_ID_VLAN_TABLE,
++					      b53_devlink_vlan_table_get, dev);
++
++	return 0;
++out:
++	dsa_devlink_resources_unregister(ds);
++	return err;
++}
++EXPORT_SYMBOL(b53_setup_devlink_resources);
++
+ static int b53_setup(struct dsa_switch *ds)
+ {
+ 	struct b53_device *dev = ds->priv;
+@@ -992,8 +1040,10 @@ static int b53_setup(struct dsa_switch *ds)
+ 	b53_reset_mib(dev);
+ 
+ 	ret = b53_apply_config(dev);
+-	if (ret)
++	if (ret) {
+ 		dev_err(ds->dev, "failed to apply configuration\n");
++		return ret;
++	}
+ 
+ 	/* Configure IMP/CPU port, disable all other ports. Enabled
+ 	 * ports will be configured with .port_enable
+@@ -1012,7 +1062,12 @@ static int b53_setup(struct dsa_switch *ds)
+ 	 */
+ 	ds->vlan_filtering_is_global = true;
+ 
+-	return ret;
++	return b53_setup_devlink_resources(ds);
++}
++
++static void b53_teardown(struct dsa_switch *ds)
++{
++	dsa_devlink_resources_unregister(ds);
+ }
+ 
+ static void b53_force_link(struct b53_device *dev, int port, int link)
+@@ -2141,6 +2196,7 @@ static int b53_get_max_mtu(struct dsa_switch *ds, int port)
+ static const struct dsa_switch_ops b53_switch_ops = {
+ 	.get_tag_protocol	= b53_get_tag_protocol,
+ 	.setup			= b53_setup,
++	.teardown		= b53_teardown,
+ 	.get_strings		= b53_get_strings,
+ 	.get_ethtool_stats	= b53_get_ethtool_stats,
+ 	.get_sset_count		= b53_get_sset_count,
+diff --git a/drivers/net/dsa/b53/b53_priv.h b/drivers/net/dsa/b53/b53_priv.h
+index e942c60e4365..c55c0a9f1b47 100644
+--- a/drivers/net/dsa/b53/b53_priv.h
++++ b/drivers/net/dsa/b53/b53_priv.h
+@@ -328,6 +328,7 @@ void b53_br_set_stp_state(struct dsa_switch *ds, int port, u8 state);
+ void b53_br_fast_age(struct dsa_switch *ds, int port);
+ int b53_br_egress_floods(struct dsa_switch *ds, int port,
+ 			 bool unicast, bool multicast);
++int b53_setup_devlink_resources(struct dsa_switch *ds);
+ void b53_port_event(struct dsa_switch *ds, int port);
+ void b53_phylink_validate(struct dsa_switch *ds, int port,
+ 			  unsigned long *supported,
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 3263e8a0ae67..723820603107 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -936,7 +936,12 @@ static int bcm_sf2_sw_setup(struct dsa_switch *ds)
+ 	b53_configure_vlan(ds);
+ 	bcm_sf2_enable_acb(ds);
+ 
+-	return 0;
++	return b53_setup_devlink_resources(ds);
++}
++
++static void bcm_sf2_sw_teardown(struct dsa_switch *ds)
++{
++	dsa_devlink_resources_unregister(ds);
+ }
+ 
+ /* The SWITCH_CORE register space is managed by b53 but operates on a page +
+@@ -1073,6 +1078,7 @@ static int bcm_sf2_sw_get_sset_count(struct dsa_switch *ds, int port,
+ static const struct dsa_switch_ops bcm_sf2_ops = {
+ 	.get_tag_protocol	= b53_get_tag_protocol,
+ 	.setup			= bcm_sf2_sw_setup,
++	.teardown		= bcm_sf2_sw_teardown,
+ 	.get_strings		= bcm_sf2_sw_get_strings,
+ 	.get_ethtool_stats	= bcm_sf2_sw_get_ethtool_stats,
+ 	.get_sset_count		= bcm_sf2_sw_get_sset_count,
+-- 
+2.25.1
 
-I was thinking more of a case of having 2 of the same thing. Perhaps 2
-HDMI outputs. Or if you have DP instead of HDMI? Just going to add
-'dp-jack'?
-
-Rob
