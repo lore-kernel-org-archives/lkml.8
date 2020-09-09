@@ -2,83 +2,128 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC3CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51077C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F75D21919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yGH9AJ1t";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o5YfzSV4"
+	by mail.kernel.org (Postfix) with ESMTP id 1CFC62068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgIII7c (ORCPT
+        id S1729005AbgIIJAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:59:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60272 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgIII73 (ORCPT
+        Wed, 9 Sep 2020 05:00:36 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:50400 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgIIJAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:59:29 -0400
-Date:   Wed, 9 Sep 2020 10:59:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599641967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qTFH7A1qLhF9Q9Z2IReycvvbcaMRprJFGejHS6u86RU=;
-        b=yGH9AJ1tqFBNaZ+9TYFZvM9/1VYbWLMgHrraLHCvLWIPM1y8M36X1ivl9CqdmxuVfUhcBQ
-        XasT4wQz1e0LJ5Eqvi9NFk9kX3uFciFj47iHoUoNvbKcCYut7Qinc+TKDHEb3bEDkyvwLV
-        cnV3cZWpHQeJEjvxZ38pS+f+bRW4nv+JFcDfEFHI79SwnfzClvRDMMcwHN1h2gBQ+HF3Wl
-        mO2A/QjqtXjq5uK7LS/crh+APPFN/NKagvn1Wkh1gzq4W+2VF1y83ogq1pJho/vSb5LNyH
-        0gvAS/mP6/e/n3u1eK6upCkwVGWPFTQtoBzFysMMHSFglUnf5Wiex7+A0M5+iQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599641967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qTFH7A1qLhF9Q9Z2IReycvvbcaMRprJFGejHS6u86RU=;
-        b=o5YfzSV444sEZFxZBQkHS8B3mGD5PHh+PB70jV+gtrEqbMaCKDA2tIR8jezsGWFHzv3kRM
-        y0GRxJ8kIG0muMBQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Mike Galbraith <efault@gmx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.9-rc3-rt3
-Message-ID: <20200909085925.dlakwg7kwdz7flj4@linutronix.de>
-References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
- <6ed14b9743f5ce400137a4ae5561604575e72b13.camel@gmx.de>
- <91828ea63ecd61d40bba0358e1c0efbe62976ba6.camel@gmx.de>
- <20200909082056.sw32jevyhdm4mzcm@linutronix.de>
- <327d42059a3d31bcb3439d5fae8b3c36019d8a68.camel@gmx.de>
+        Wed, 9 Sep 2020 05:00:35 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 022E91C0B8C; Wed,  9 Sep 2020 11:00:34 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 11:00:33 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Alexander Dahl <ada@thorsis.com>
+Cc:     linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Alexander Dahl <post@lespocky.de>, devicetree@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] leds: pwm: Make automatic labels work
+Message-ID: <20200909090033.GD10891@amd>
+References: <20200831210232.28052-1-post@lespocky.de>
+ <a8f9068b-d78d-3ba5-6747-f79ed8e641bd@gmail.com>
+ <2019500.FJf2EgCAKA@ada>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
 Content-Disposition: inline
-In-Reply-To: <327d42059a3d31bcb3439d5fae8b3c36019d8a68.camel@gmx.de>
+In-Reply-To: <2019500.FJf2EgCAKA@ada>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-09 10:56:41 [+0200], Mike Galbraith wrote:
-> On Wed, 2020-09-09 at 10:20 +0200, Sebastian Andrzej Siewior wrote:
-> >
-> > Do you see the lockdep splat without nouveau?
-> 
-> Yeah.  Lappy uses i915, but lockdep also shuts itself off.
 
-You sent the config, I will try to throw it later on kvm and actual
-hardware and see what happens.
+--BRE3mIcgqKzpedwo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> BTW, methinks RT had nothing to do with the nouveau burp.
+Hi!
 
-that is good to hear :)
+> > > for leds-gpio you can use the properties 'function' and 'color' in the
+> > > devicetree node and omit 'label', the label is constructed
+> > > automatically.  This is a common feature supposed to be working for a=
+ll
+> > > LED drivers.  However it did not yet work for the 'leds-pwm' driver.
+> > > This series fixes the driver and takes the opportunity to update the
+> > > dt-bindings accordingly.
+> > >=20
+> > > v1: based on v5.9-rc2, backport on v5.4.59 tested and working
+> > >=20
+> > > v2: based on v5.9-rc3, added the dt-bindings update patch
+> > >=20
+> > > Greets
+> > > Alex
+> > >=20
+> > > Alexander Dahl (2):
+> > >    leds: pwm: Allow automatic labels for DT based devices
+> > >    dt-bindings: leds: Convert pwm to yaml
+> > >  =20
+> > >   .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
+> > >   .../devicetree/bindings/leds/leds-pwm.yaml    | 85 ++++++++++++++++=
++++
+> > >   drivers/leds/leds-pwm.c                       |  9 +-
+> > >   3 files changed, 93 insertions(+), 51 deletions(-)
+> > >   delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.=
+txt
+> > >   create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.=
+yaml
+> >=20
+> > For both patches:
+> >=20
+> > Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>=20
+> I'd like to make a v3 and change the license of the .yaml file to "(GPL-2=
+=2E0-
+> only OR BSD-2-Clause)" as suggested by checkpatch and [1].  Can I keep yo=
+ur=20
+> Acked-by for that?
+>=20
+> Besides: those suggestions are obviously valid for new bindings.  What ab=
+out=20
+> old bindings (.txt), which had no explicit SPDX tag or license note befor=
+e? =20
+> What license would apply there?  Is the .yaml file technically new, when =
+it=20
+> was mostly just converted from .txt?
 
-> 	-Mike
+If it is based on previous .txt binding, you have to respect previous
+author's license. That probably means GPL-2.0 only.
 
-Sebastian
+Alternatively, you can contact original author(s) to get permission to
+relicense under (GPL-2.0-only OR BSD-2-Clause).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--BRE3mIcgqKzpedwo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9YmbEACgkQMOfwapXb+vLZKgCgrKZ1RB1Ep+Opcm6Thf0u4JM2
+1xkAoK6e5DOd661jEaNbLA7SVm57YF0B
+=w6wt
+-----END PGP SIGNATURE-----
+
+--BRE3mIcgqKzpedwo--
