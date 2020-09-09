@@ -2,106 +2,105 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65209C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3409FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2061220C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A1E20C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="es1xOsqi"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="MiqgAN2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIIUa0 (ORCPT
+        id S1729298AbgIIUbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:30:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
+        Wed, 9 Sep 2020 16:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIUa0 (ORCPT
+        with ESMTP id S1728954AbgIIUbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:30:26 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAF1C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 13:30:25 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id m6so4369025wrn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 13:30:25 -0700 (PDT)
+        Wed, 9 Sep 2020 16:31:05 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB02C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 13:31:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t7so1906993pjd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 13:31:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=EH/tYSNFoJCWr2t8aRsA0EDrUno7CjChlXcQg1phvUQ=;
-        b=es1xOsqiZH1BYB2PLDy2j2YtABYVa1MdPrIAiWWOaVI/C0Y16S/Ja0vPpouNWvvrrT
-         NekHNPMJaIS4/C6FCEQSisMK3Ec02U9l0J3dtMYVfeiTft95aQkjuNK+delx9x4HbbBP
-         ZL4ZU/LuIj7ajdB6EW5Z4L05zI0CM7ExA4iBW9iyfS7t+25MvHoq+03eFoUXBEFvmKYh
-         +fbAeYe5uy6qLtuvK0cOBjZv6g3SYF8Jf5c6j/C4d3y99yK1Do1WVDdyTfXf2UG10wLi
-         0OQZHC5ie62VbpWaKkM2yiMO8G5RVfwdPti7AEn4eQxzWFsgVmxBQ1TDNMgaUFkOM3ni
-         DrQg==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8+h8nOrddZ60rlqGY9p7zSWVef5h+u0J2bJfQopxnyQ=;
+        b=MiqgAN2OnenhsyDpyowqhXqf6C6CRJ6jVfkqQesa+MBeanQoilnFquVDff+DJUzapj
+         km6Fowe25oRZ+qYHDZ/VAt5qim0j3EzThGbAvQLyq1faD5fUYevP5KAv+B92wZwakyHy
+         Zmx9m+FV4gP+7WUYXWgW/vj+TXgnADnqytLUWTVwZDzpeQ56e5VOKivWCizhVSxJatFE
+         QvFmSFuSVVV1Z5wkPBoljWJHLfw1eAy2OH3dsz4qGlgnF1QCCuH9nWMWpMHNQs1Zq9OD
+         N9TuKc5tCYspc2dDK//nNIWJ8mfrH+k4RDSeYINS2IBNOO3QMf0rqUj7mBDbZygGWI30
+         FwmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=EH/tYSNFoJCWr2t8aRsA0EDrUno7CjChlXcQg1phvUQ=;
-        b=t7c5SUMwzFW5ahdWzUcl/YgpDNH2h8QDWtJ2PPuFAfvAr8LTlBRms8IJiJQgWuBxl6
-         z+uOTwMc1Cb3hUc2XHDdt5/AHjcsxBK4Vh6OIiW4MLWWvYGUth4lpSnMdaOo8qGtwrNZ
-         rSGtuSNr1PTh3mpawtJKoCxhOlKnlFWKQD43oDksh8VqcqtAZic2I+YQ02SROpzbuU6l
-         ORVhR83LHjGCRet2TtHvgiwtk+aHeUyFFc57+yNlw4KWMnpCgq1EW5rUaWlMpd5EFAtR
-         77QVu/6xZ0tesd1c5skRHgAiBOX2YiXmba5bpPCA7ZOAKHtIWz0SYGSprM299OeY9jbJ
-         fpaA==
-X-Gm-Message-State: AOAM530dtzDSAS4Dxfuy7S12Y8FgcFT4YWkSF/4r8NmRau9aE6xhksjX
-        /ZWlS8Evaex0ZyGg6rk8+0IHaQBUZnbs19H/
-X-Google-Smtp-Source: ABdhPJyFPNZuENu1QBsJFAeobwACdwMTtJMX4e3vhAAmnMuWUXK9jLB0B2nuiiFis6TRa8ZLoR2e6Q==
-X-Received: by 2002:a5d:4e0b:: with SMTP id p11mr5507451wrt.32.1599683424396;
-        Wed, 09 Sep 2020 13:30:24 -0700 (PDT)
-Received: from [192.168.0.18] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id n14sm298873wmi.33.2020.09.09.13.30.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 13:30:23 -0700 (PDT)
-Subject: Re: [PATCH 1/2] w1: Use kfree_sensitive instead of memset+kfree
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>, linux-kernel@vger.kernel.org
-References: <20200909194122.212486-1-alex.dewar90@gmail.com>
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Message-ID: <534193cc-24be-592b-0713-1973bbb0217f@gmail.com>
-Date:   Wed, 9 Sep 2020 21:30:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20200909194122.212486-1-alex.dewar90@gmail.com>
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8+h8nOrddZ60rlqGY9p7zSWVef5h+u0J2bJfQopxnyQ=;
+        b=RP0x0ucidTXkuN4rdx+TPnXyZgX4J2SQGADx1DUcCej37EMJWj3Kk7K3ixtgkvK6c2
+         UPIQvoh7gErwpASmSOnlWrV7XGV4b7bUSj6iEOo5f5BxZdWMpI3NFgu3h/uJnxhSs5kd
+         jKf4u4Sa4NJ2hafe18uTOZjmYu/Y8xmzNw/LTtZa2w/PEhrvmk+HHuU4B0Rmty7VxXAj
+         P+M1SFC5uDyCaBXbyGW5ajhmLOgoHd+0LJbUXUzCbkXj06lvSV7PGdikXzNcJ6kkCaZN
+         0Lq6l2t6OLhvTpLptI//JiVi/O16woxchAU9ojbzk3s+vYhaEl4eDdjTYDAhtQlhyXlT
+         4gNQ==
+X-Gm-Message-State: AOAM530Fzl/v9VAoUid45zyXpUCKzexrsHN+y8xHoI0W243ghb6HrnK2
+        au8QGoca4OiQS0e0o1hbqxUABw==
+X-Google-Smtp-Source: ABdhPJxe3euwzyJoC/f5HEii0QnaurgSe+quMpchKvFdeV9Etihcx+hbO9sMKi7a+vuksp+62X0OeA==
+X-Received: by 2002:a17:90a:3e4f:: with SMTP id t15mr2308869pjm.19.1599683462094;
+        Wed, 09 Sep 2020 13:31:02 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id 31sm2962434pgs.59.2020.09.09.13.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 13:31:01 -0700 (PDT)
+Date:   Wed, 09 Sep 2020 13:31:01 -0700 (PDT)
+X-Google-Original-Date: Wed, 09 Sep 2020 13:30:24 PDT (-0700)
+Subject:     Re: [PATCH v2 2/3] soc: sifive: Add SiFive specific Cadence DDR controller driver
+In-Reply-To: <20200909060045.GA13647@infradead.org>
+CC:     Christoph Hellwig <hch@infradead.org>, dkangude@cadence.com,
+        yash.shah@sifive.com, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, bp@alien8.de,
+        mchehab@kernel.org, tony.luck@intel.com,
+        devicetree@vger.kernel.org, aou@eecs.berkeley.edu,
+        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
+        rrichter@marvell.com, james.morse@arm.com,
+        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Message-ID: <mhng-1b96da02-cbf5-42f4-bc30-a1c5c9cce5fa@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-09 20:41, Alex Dewar wrote:
-> Issue identified with Coccinelle.
-Hmm, on second thoughts, I'm not sure this memory is so sensitive after 
-all. Should we just remove the call to memset?
+On Tue, 08 Sep 2020 23:00:45 PDT (-0700), Christoph Hellwig wrote:
+> On Tue, Sep 08, 2020 at 08:12:16PM -0700, Palmer Dabbelt wrote:
+>> I don't know enough about the block to know if the subtle difference in
+>> register names/offsets means.  They look properly jumbled up (ie, not just an
+>> offset), so maybe there's just different versions or that's the SiFive-specific
+>> part I had bouncing around my head?  Either way, it seems like one driver with
+>> some simple configuration could handle both of these -- either sticking the
+>> offsets in the DT (if they're going to be different everywhere) or by coming up
+>> with some version sort of thing (if there's a handful of these).
 >
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> ---
->   drivers/w1/w1.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
-> index e58c7592008d..4f597b0fd1da 100644
-> --- a/drivers/w1/w1.c
-> +++ b/drivers/w1/w1.c
-> @@ -71,8 +71,7 @@ static void w1_master_release(struct device *dev)
->   	struct w1_master *md = dev_to_w1_master(dev);
->   
->   	dev_dbg(dev, "%s: Releasing %s.\n", __func__, md->name);
-> -	memset(md, 0, sizeof(struct w1_master) + sizeof(struct w1_bus_master));
-> -	kfree(md);
-> +	kfree_sensitive(md);
->   }
->   
->   static void w1_slave_release(struct device *dev)
+> regmap can be used to handle non-uniform register layouts for the same
+> functionality.
 
+Ah, cool, I hadn't seen that before.  That seems like the way to go if this is
+truly an implementatic-specific register mapping.  As I was falling asleep last
+night I remembered that we did end up with implementation-specific register
+maps for some of the IP we integrated.  That was usually the case for IP where
+we had some signals that we just didn't know what to do with, and while I know
+the DDR integration was a real trip I'm not sure if that's where these
+registers came from.
+
+Hopefully someone who has better access to these hardware implementations can
+comment.
