@@ -8,100 +8,99 @@ X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DB1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CD7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 877C020936
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E98B20936
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tw2Y/Kfr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O0Z05hJv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgIICSR (ORCPT
+        id S1729860AbgIICT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:18:17 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46670 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728970AbgIICSB (ORCPT
+        Tue, 8 Sep 2020 22:19:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33720 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgIICTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:18:01 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892EXVH110453;
-        Wed, 9 Sep 2020 02:17:50 GMT
+        Tue, 8 Sep 2020 22:19:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892JE6B151330;
+        Wed, 9 Sep 2020 02:19:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=+6EeTRUGbtx/wzn7rd/wXstaBoeEwA1blINQVhp/ggI=;
- b=Tw2Y/KfrfMFylSY28sOErTj+Kv+Koy80AGC8Hfh7UWI7p0C4G8JhtBoQGsKHZGE1lLm4
- Y0WXzgWTKyO7CiFfZ1bcp+5g/l/eBlhfyMYjfioJYxMCsn2vgcE1bijUTkc41Q3guw9D
- sdbvmXvpDqESeOniudx3yF5tdhMdI4naajt1iY58GIH1Z8dSlaPwlRWfE2FfYm/XkdBj
- oLpe2rYMXqzrvksx1rDEpTWmGNo0QjB7YRH57KSgUGU4hBkFQrpFARzBzv0Rlojnf99W
- U5UuWyFU1Un701QmE3JrBdqeBJ1KJXHDKsRFijsT7cSpr3HMgxhtt4HiXVN+Ahp3F9u2 uA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33c2mkxw9v-1
+ bh=eH2iHa+jCN0rFFGdRN8keS1i3vJsoBSgUzoLO5Z9pSg=;
+ b=O0Z05hJvf5lMFx3XqSoW6RKVh1ev7W/kGmTC56dmYl+eP80ekY3mJ/t8iMbeXzoJPqMV
+ bkyfF/HbYGvmmMTvgrTivt8EDoNiOnjJkNOUAFQnYdoUJ8j+8Ie6QFF0PGLPmk/WCX5X
+ 5bNihZdin/Bb/zAemXm3sp7t/7LuRGDMaa3XLZhIEWuVimq6YmgmIvE/xwdrziChkZp9
+ Gh2yg8iuUkY7CjBZaUzX6AiGez9lyoqAYio9LEOArBu3L3ebQ5b4IqDRD4IdKvJq233g
+ flPT77My+Dui3z9LO2dp2lxxvnVMu6zbWLcCz2eonerv4/ernqVY/prvZDyAndiMfw+K pA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 33c23qy11v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 02:17:50 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892GLKE025937;
-        Wed, 9 Sep 2020 02:17:49 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 33cmkwwtqb-1
+        Wed, 09 Sep 2020 02:19:40 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892F1ip132023;
+        Wed, 9 Sep 2020 02:17:39 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 33cmk53ycp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Sep 2020 02:17:49 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0892HlwM009697;
-        Wed, 9 Sep 2020 02:17:48 GMT
+        Wed, 09 Sep 2020 02:17:39 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0892HaXQ010872;
+        Wed, 9 Sep 2020 02:17:37 GMT
 Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 08 Sep 2020 19:17:47 -0700
+        with ESMTP ; Tue, 08 Sep 2020 19:17:36 -0700
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        linux-scsi@vger.kernel.org, avri.altman@wdc.com
+To:     rnayak@codeaurora.org, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, linux-scsi@vger.kernel.org,
+        saravanak@google.com, kernel-team@android.com, salyzyn@google.com,
+        hongwus@codeaurora.org, Can Guo <cang@codeaurora.org>
 Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        chaotian.jing@mediatek.com, kuohong.wang@mediatek.com,
-        bvanassche@acm.org, chun-hung.wu@mediatek.com,
-        cc.chou@mediatek.com, peter.wang@mediatek.com,
-        andy.teng@mediatek.com, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] scsi: ufs-mediatek: Modify the minimum RX/TX lane count to 2
-Date:   Tue,  8 Sep 2020 22:17:31 -0400
-Message-Id: <159961781204.6233.3580543216052006167.b4-ty@oracle.com>
+        Bart Van Assche <bvanassche@acm.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: Re: [PATCH v2] scsi: ufs: Remove an unpaired ufshcd_scsi_unblock_requests() in err_handler()
+Date:   Tue,  8 Sep 2020 22:17:22 -0400
+Message-Id: <159961781204.6233.3735126099362298555.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819084340.7021-1-stanley.chu@mediatek.com>
-References: <20200819084340.7021-1-stanley.chu@mediatek.com>
+In-Reply-To: <1597798958-24322-1-git-send-email-cang@codeaurora.org>
+References: <1597798958-24322-1-git-send-email-cang@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009090019
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090019
+ engine=8.12.0-2006250000 definitions=main-2009090020
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 16:43:40 +0800, Stanley Chu wrote:
+On Tue, 18 Aug 2020 18:02:29 -0700, Can Guo wrote:
 
-> MediaTek UFS host starts to support 2 lanes, thus modify the
-> minimum lane count to 2.
-> 
-> This modification shall not impact old 1-lane host because
-> PA_CONNECTEDRXDATALANES and PA_CONNECTEDTXDATALANES will limit the
-> target lanes properly during power mode change. So we could relax
-> the limitation in ufs_dev_params.
+> Commit 5586dd8ea250 ("scsi: ufs: Fix a race condition between error handler
+> and runtime PM ops") moves the ufshcd_scsi_block_requests() inside
+> err_handler(), but forgets to remove the ufshcd_scsi_unblock_requests() in
+> the early return path. Correct the coding mistake.
 
 Applied to 5.10/scsi-queue, thanks!
 
-[1/1] scsi: ufs: ufs-mediatek: Modify the minimum RX/TX lane count to 2
-      https://git.kernel.org/mkp/scsi/c/460d74a0911c
+[1/1] scsi: ufs: Remove an unpaired ufshcd_scsi_unblock_requests() in err_handler()
+      https://git.kernel.org/mkp/scsi/c/50807f22c89f
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
