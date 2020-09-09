@@ -2,102 +2,102 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B36C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24E5C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8FFD21973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C4021D7B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599641435;
+	bh=3brvJRSqkSgs/2gqVdKI2of8iGbX+HzT97KJlz3luXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2nQV1qaeu3/AZoR+n1o6+i0XI5rraiHC4gOu/xfDYX8uucMoqELbsLqE1AUv0v7bu
+	 7+03jz3Va1iMaMBH/tlrDNLXP4LP1RTsHMBxz04hEnD26VrL9sdTZD+XmL2IKKMYax
+	 xFFrJ5qtoQjyMDJhbWx5+UOEuh3SgZcKFRTJV6l4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgIIIuS (ORCPT
+        id S1729822AbgIIIud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:50:18 -0400
-Received: from mail-il1-f206.google.com ([209.85.166.206]:55353 "EHLO
-        mail-il1-f206.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728551AbgIIItY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:49:24 -0400
-Received: by mail-il1-f206.google.com with SMTP id a15so1470449ilb.22
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:49:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Hmc2r7eesuS8hDT5sY5ndDBpeHvg0B9Mp2Q2pIVeAhQ=;
-        b=E1MvMa8i5WfGpdfJa5XYMW9j0vh7OcVZVH0C7jJQu0IYHlvvhDU/ZMf0A92Fwy2Y4x
-         vVZLUh4J03nF5Ll5q/x8aqQHoMz/jIMS499TMRcxaav+b+a7BNWboBbYHdjYCGCidSp4
-         TSznruHzQsKND7tVnuF4MJbP8Wo0eExreuA+NZYCJKnR62TKz5hOUuphJZOfGUkfvPwv
-         Dn7Q5nvfaZvMy95+GjuBC+froN1u7WxV+z7kjl0pVytY/zR3ZI6dB+yEf9C8MkU2ouY4
-         bokKomReNtmf15JqtlInRQVR8uB7GplR+3MLTRFHkIxG/fHocmNSdSG6OR+mib6waXlb
-         UodA==
-X-Gm-Message-State: AOAM533PytftC8l9lBIUOuGBnjmJSzXOWdQFpGv6kETVrOXpOUaonV2b
-        qK/r+5QqadkRUqoVLhbPkC3fNrIKzXNEbXxYOfEzeSdcSpCO
-X-Google-Smtp-Source: ABdhPJxoMRKRTwWdxdXUfgMHZQIkaFn/xWyh4vyruirgPIBRjn9gLzghekwhJjrYO7UQ2Zc99DWXrwQldvZR/amubDmOOitKbaCk
+        Wed, 9 Sep 2020 04:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgIIIua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:50:30 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C80A2218AC;
+        Wed,  9 Sep 2020 08:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599641429;
+        bh=3brvJRSqkSgs/2gqVdKI2of8iGbX+HzT97KJlz3luXY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pXzO2ZOIUIkiJTzva5kMNDyZDu71A/X4nx147Zo3tMAhVckYbbK1mqZ6OJxf+dLUz
+         K1pYBgu/8k1pS1by1NGNXZbS85P8vtqcHmjUTYn1BTi8e5zqwgNYqTF3TBgCPz3Cpr
+         HQng+gm3VKPXaFsSTsvHHiJooaMH7HigMCjELsmU=
+Date:   Wed, 9 Sep 2020 10:50:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?6rmA7ZiE7Iic?= <h10.kim@samsung.com>
+Cc:     Edward Cree <ecree@solarflare.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Alexander Lobakin <alobakin@dlink.ru>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: Re: [PATCH 5.4 086/129] net: core: use listified Rx for
+ GRO_NORMAL in napi_gro_receive()
+Message-ID: <20200909085039.GA583189@kroah.com>
+References: <20200909063718.GA311356@kroah.com>
+ <20200908152229.689878733@linuxfoundation.org>
+ <20200908152234.000867723@linuxfoundation.org>
+ <70529b6c-7b00-d760-c0c0-42f0ea5784f3@solarflare.com>
+ <CGME20200909063710epcas2p340688acd14fad9e0fe53a66d06fd14a7@epcms2p4>
+ <20200909072101epcms2p457639b69a22434d140c01aeecd3ef46e@epcms2p4>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c002:: with SMTP id q2mr2827066ild.171.1599641363124;
- Wed, 09 Sep 2020 01:49:23 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 01:49:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003798d705aedd870d@google.com>
-Subject: memory leak in mgmt_cmd_status
-From:   syzbot <syzbot+80f5bab4eb14d14e7386@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200909072101epcms2p457639b69a22434d140c01aeecd3ef46e@epcms2p4>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Sep 09, 2020 at 04:21:01PM +0900, 김현순 wrote:
+> Dear Greg,
+> 
+>  
+> 
+> I didn't intent to gain performance from this patch. Indeed i requested this
+> patch to resolve the bug we are experiencing.
+> 
+>  
+> 
+> Different from kernel 4.19, napi gro made additional data structure called
+> rx_list, and for some reason, the list is always used after napi_gro_flush,
+> which is intended to be created to flush all gro (both merged and non-merged)
+> packets to network stack. Network packets received from network interface are
+> passed to rx_list once, and the rx_list is later flushed to network stack.
+> However, on the other hand, napi_gro_receive doesn't insert packet to rx_list.
+> Instead, it flushes to network stack directly. This causes out of order because
+> there might be some packets in rx_list (which has groups of packets that are
+> not flushed to network stack yet). If the packet from the same stream remains
+> in rx_list, and napi_gro_receive on next packet (from the same stream) is
+> called, this posterior packet will arrive to network stack first, which causes
+> out of order.
+> 
+>  
+> 
+> And two patches mentioned by Edward are already in the branch. The patch i am
+> requesting is somewhat missing in android kernel, not sure the reason why.
 
-syzbot found the following issue on:
+Ah, you are right, this is odd.  Edward, those patches are already in
+the 5.4.y tree, which makes this patch not being present odd.
 
-HEAD commit:    6f6a73c8 Merge tag 'drm-fixes-2020-09-08' of git://anongit..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=152e3245900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7954285d6e960c0f
-dashboard link: https://syzkaller.appspot.com/bug?extid=80f5bab4eb14d14e7386
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16877335900000
+I'll go add it back....
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+80f5bab4eb14d14e7386@syzkaller.appspotmail.com
+thanks,
 
-2020/09/09 02:38:52 executed programs: 3
-2020/09/09 02:38:58 executed programs: 5
-2020/09/09 02:39:03 executed programs: 7
-BUG: memory leak
-unreferenced object 0xffff888119d41a00 (size 224):
-  comm "kworker/u5:0", pid 1520, jiffies 4294954656 (age 28.430s)
-  hex dump (first 32 bytes):
-    d0 30 1c 2b 81 88 ff ff d0 30 1c 2b 81 88 ff ff  .0.+.....0.+....
-    00 00 00 00 00 00 00 00 00 30 1c 2b 81 88 ff ff  .........0.+....
-  backtrace:
-    [<000000007a3b2b8a>] __alloc_skb+0x5e/0x250 net/core/skbuff.c:198
-    [<000000003fe180cd>] alloc_skb include/linux/skbuff.h:1094 [inline]
-    [<000000003fe180cd>] mgmt_cmd_status+0x31/0x140 net/bluetooth/mgmt_util.c:102
-    [<00000000a98852de>] mgmt_set_discoverable_complete+0x18e/0x1c0 net/bluetooth/mgmt.c:1351
-    [<000000000d6aa222>] discoverable_update_work+0x7a/0xa0 net/bluetooth/hci_request.c:2595
-    [<00000000159838c7>] process_one_work+0x213/0x4d0 kernel/workqueue.c:2269
-    [<0000000087b95ef0>] worker_thread+0x58/0x4b0 kernel/workqueue.c:2415
-    [<0000000059403542>] kthread+0x164/0x190 kernel/kthread.c:292
-    [<00000000d35ee226>] ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+greg k-h
