@@ -2,117 +2,118 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8541C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F351C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6385E206F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6686720732
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JHn0ucpb"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FOtGqEmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgIIHwf (ORCPT
+        id S1730204AbgIIHwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728347AbgIIHwQ (ORCPT
+        Wed, 9 Sep 2020 03:52:43 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:38536 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726683AbgIIHwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:52:16 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA76BC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:52:15 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id q13so2140021ejo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HWzTcfsUucf6xK0PgWam/0llyorvOiQpmzd/WH0rzEI=;
-        b=JHn0ucpbFptR2XwJsLpf3B3I8Jb8+p+ZxLVHiaEprms1TZBZVHmyajckuNJneXyo/E
-         n6ChFk/GDJ9Bb2TV3sTmzv7PCqFB9mgIvob1gDk2YGsBlqddSqVXQvom2AEX8CzvD6Av
-         +89xra7KyskO+KxXIq4LHWb2nhAXJUBRTPSvbuDth8pEOisvvhp7mTx5s5n+VlD9i+F+
-         +yoAN5GFQSFoy2IMypPzol2gnQmk5DsLlgxrozrZ2TCbUrw9kmp5q/UPIqvEBaF6yDUO
-         SG0T5BYLGJ8ynxjjMKI81W28XhAdR8vL+zuycHK6WuNmkgQHvmwtqkXhWFAideCxpUJD
-         UhQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HWzTcfsUucf6xK0PgWam/0llyorvOiQpmzd/WH0rzEI=;
-        b=LkdxkF1UWiMsiPG+FSXOvi/+85XHPd2fTGTN1lpC1UedTpBB2nhyj+Gg1eyK/kaUQA
-         ebdpb5uV5F7RDtA9uOC+bY3rt+79CFdF78p/xc2vjzpCt/d+mfJALAUO+r1kd0eDCuFR
-         cd5itx54s9Mfsl7/rVfwECkm8WCQEQt9d2G+JPp5Oiv0qrXXIfbmBf4cUDEgionffVAx
-         BxYRNNzw+CxrDsLC/JNgdz2JHHHW7oxjzNdYELW075RREz6i1D4X1xqkLYyxJXV86ISF
-         C9Z0ByRbCHNM9+uaArwAhZnvbT8SaRQIUrPLy0V6124gCif8Ik7K/5uOoTyAkgi2Yazs
-         tHhw==
-X-Gm-Message-State: AOAM531GpunQoXrY6grB1x24McyFd3zsMhPQWDadW1ehDaisgU9RrLc/
-        xtmrkh1oVkxurW2jJSFKjs/Zeraq6231ZIdkoqLV8g==
-X-Google-Smtp-Source: ABdhPJz+6UOF4BG8/W6sIFI70JJizk5dU9R7D/MZ9rShWVsH2AyjmmrdC/daKZVrq3ZVzyL5cvOJP9mXerd8fvFOTL0=
-X-Received: by 2002:a17:906:fccb:: with SMTP id qx11mr2456963ejb.429.1599637933588;
- Wed, 09 Sep 2020 00:52:13 -0700 (PDT)
+        Wed, 9 Sep 2020 03:52:42 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0897THKP002323;
+        Wed, 9 Sep 2020 00:52:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0220;
+ bh=5ZFf+00m+Z9AHL1BXPxRAa9/d2QM/IBTr8+oNq8HF/w=;
+ b=FOtGqEmvKY27Mnl/4VEeBUNcfgMWaTsn0XhLOd26snSuVc7C+3N6/GN0KM64/7Td1Jq2
+ ctMPsPtD93gYvfgKZqajInZE+D9lLoUlDUG7pb2Xu/DYj0YNF4LEWUcf7oa4aiFXsu9E
+ /FquEL1p9B0HtJJcJ2POwAXOryx/Cx2kNwMN3GaU9OMRKAeYHXbdexoEap0qEy8H0GLU
+ bQQSZAcVZyH2OJIJRz0I/6kzdkYQp1cH0TuhH166Mtu7UO6YcsfHkF8JqWeEWtMSPfTu
+ NI6ZnOyVL5syVNsEwgLk2yABIIdqx0O12AxqkCNobxNwBMCIkcPHVZli9rGthIbokT1M yw== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 33ccvr5mex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 00:52:38 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
+ 2020 00:52:37 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 9 Sep 2020 00:52:37 -0700
+Received: from [10.6.200.75] (NN-LT0019.marvell.com [10.6.200.75])
+        by maili.marvell.com (Postfix) with ESMTP id 46EFD3F703F;
+        Wed,  9 Sep 2020 00:52:34 -0700 (PDT)
+Subject: Re: [EXT] [PATCH 3/5] net/qlcnic: Convert to SPDX license identifiers
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-spdx@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
+ <20200908123451.7215-4-lukas.bulwahn@gmail.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <25a5ea3c-fcc6-15a4-cdd3-6226d1700f96@marvell.com>
+Date:   Wed, 9 Sep 2020 10:52:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101
+ Thunderbird/81.0
 MIME-Version: 1.0
-References: <20200905133549.24606-1-warthog618@gmail.com> <CAMpxmJUhTp=KHy_MU7feNDvM+A43u0o0Jjfc3SmSSBh98jjdyQ@mail.gmail.com>
- <20200909011625.GB8496@sol>
-In-Reply-To: <20200909011625.GB8496@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 9 Sep 2020 09:52:02 +0200
-Message-ID: <CAMpxmJVuydgi65_hJWyH4nTFMuaTgvWggwyC=s3ZPxAhxEpC9w@mail.gmail.com>
-Subject: Re: [PATCH v7 00/20] gpio: cdev: add uAPI v2
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200908123451.7215-4-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 3:16 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Tue, Sep 08, 2020 at 06:07:49PM +0200, Bartosz Golaszewski wrote:
-> > On Sat, Sep 5, 2020 at 3:36 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> [ snip]
->
-> > >
-> > >  drivers/gpio/Kconfig        |   29 +-
-> > >  drivers/gpio/Makefile       |    2 +-
-> > >  drivers/gpio/gpiolib-cdev.c | 1277 +++++++++++++++++++++++++++++++++--
-> > >  drivers/gpio/gpiolib-cdev.h |   15 +
-> > >  drivers/gpio/gpiolib.c      |    5 +
-> > >  drivers/gpio/gpiolib.h      |    6 +
-> > >  include/uapi/linux/gpio.h   |  317 ++++++++-
-> > >  tools/gpio/gpio-event-mon.c |  146 ++--
-> > >  tools/gpio/gpio-hammer.c    |   56 +-
-> > >  tools/gpio/gpio-utils.c     |  176 ++++-
-> > >  tools/gpio/gpio-utils.h     |   48 +-
-> > >  tools/gpio/gpio-watch.c     |   16 +-
-> > >  tools/gpio/lsgpio.c         |   60 +-
-> > >  13 files changed, 1948 insertions(+), 205 deletions(-)
-> > >
-> > >
-> > > base-commit: feeaefd378cae2f6840f879d6123ef265f8aee79
-> > > --
-> > > 2.28.0
-> > >
-> >
-> > To me this looks good enough to queue for v5.10. I think you'll need
-> > to resend the selftests patches and get an ack from selftests
-> > maintainer. Once that's done we can get this series into next.
-> >
->
-> I can hardly resend what has never been sent ;-).
->
-> This series is complete without the selftest changes.  Once this is in tree
-> somewhere, so I have something to base them on, I'll bounce them off
-> Shuah.
->
 
-Oops, sorry I got confused by Shuah's mail.
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> All files in this driver directory contain the following notice:
+> 
+>   See LICENSE.qlcnic for copyright and licensing details.
+> 
+> LICENSE.qlacnic can be found in
+> Documentation/networking/device_drivers/qlogic/. The file contains:
+> 
+>   - A copyright notice
+> 
+>     This copyright notice is redundant as all files contain the same
+>     copyright notice already
+> 
+>   - A license notice
+> 
+>     You may modify and redistribute the device driver code under the
+>     GNU General Public License (a copy of which is attached hereto as
+>     Exhibit A) published by the Free Software Foundation (version 2).
+> 
+>     This can be replaced with the corresponding SPDX license identifier
+>     (GPL-2.0-only) in the source files which reference this license
+>     file.
+> 
+>   - The full GPLv2 license text
+> 
+>     A redundant copy of LICENSES/preferred/GPL-2.0
+> 
+> Remove the notices and add the SPDX license identifier GPL-2.0-only to the
+> source files.
+> 
+> Finally remove the now redundant LICENSE.qlcnic file.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Richard Fontana <rfontana@redhat.com>
+> Reviewed-by: Jilayne Lovejoy <opensource@jilayne.com>
+> Reviewed-by: Alexios Zavras <alexios.zavras@intel.com>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Bartosz
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+
+
+Thanks,
+  Igor
