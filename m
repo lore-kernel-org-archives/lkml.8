@@ -2,120 +2,154 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB487C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F37C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CAE21D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599637067;
-	bh=IO6r3KJjp/JFwGSMPo4xWi2ollridTbwoQYxHByZFVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=exQSAZzFwEV6RQ6eRLahLC4HYzployZvmRaWQoGqCH0gFHwwnv5OPz2TxdpkETwfc
-	 w1S99i+Z9zxYFenjFtol8bIjkXyrCFc9pJMGwdt1Pd8WogkUvc/TNzCiMHFPSHP7Se
-	 nIWpSzZNgRiB8sFX0TDM43GeUKI9SgUxs1q0xrH0=
+	by mail.kernel.org (Postfix) with ESMTP id 09B65208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsydC3cW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgIIHhk (ORCPT
+        id S1729455AbgIIHhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:37:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730260AbgIIHhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:37:06 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7949620732;
-        Wed,  9 Sep 2020 07:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599637026;
-        bh=IO6r3KJjp/JFwGSMPo4xWi2ollridTbwoQYxHByZFVQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aRKeYoPdqKaLssElezrS6ihoIHfR2NnGSHiWt2UlFzmKIA0QrRUh4XFEkkWrWe6qv
-         Vag/j/T4Br7kHkdOjNhRYkFZz8rFY6pHYOlT8Pe/ifeW3NGjYsW71soYB7iFP3q0EN
-         Yiu/tFe+TcCaY2uSrRCFLTrX4lEP3YB5PgD4u6ps=
-Date:   Wed, 9 Sep 2020 09:37:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v1] driver core: Annotate dev_err_probe() with
- __must_check
-Message-ID: <20200909073716.GA560912@kroah.com>
-References: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
- <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
- <20200826155507.GV1891694@smile.fi.intel.com>
- <973f4d54da796db4fcc9b643b10889cbc8839989.camel@perches.com>
- <CAJKOXPcCAPy-v38dyY_74H_6vrgj0mmEf6KaupVKJb4E2Ha_Ug@mail.gmail.com>
- <20200909070244.GC311356@kroah.com>
- <CAJKOXPd=TfCNfHPdsQZ42VEcUZOFZroXg7xmA82zSA=AbADxKw@mail.gmail.com>
+        Wed, 9 Sep 2020 03:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58742 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730262AbgIIHhJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:37:09 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E8AC061755;
+        Wed,  9 Sep 2020 00:37:09 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id m1so1400127ilj.10;
+        Wed, 09 Sep 2020 00:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9XplU/yDVZod7CQ9qpAr+SAIUpan2fYE9ZFD5UbHSjo=;
+        b=EsydC3cWGV5Dkt1QDytC8dB6gCR2nJKlMi0uCSEDWFYuakbamQOijx3ov3GHvRhLBU
+         QP3OcQkFYLotAFBcFhrM39Ahdtdx0FLUJajXYRltrmANlmfvndldYRImCYQLdHZt3IKe
+         ZNN9ubYuQJsXDd6eFL3Trx3Kw8aiAqz79ffcS2QyCTU3HFnmEAKEr20lAALYpdjn7Av1
+         6ZShmkABQRjuVlqRqde1buu/fQDctMUWqIz2UymaY676oNv+zo4QrMH6jiATdRLtCfVj
+         AMaCxjzUR/EHGoA0FBeeMbyWxFIyE+LMukDNCAwzhd/oI5G8QgsQ30NHleaL3gzlwGtQ
+         46Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9XplU/yDVZod7CQ9qpAr+SAIUpan2fYE9ZFD5UbHSjo=;
+        b=mI6tkjjmTrxgqfV/YsQ4L8DbZD0WTmM5eDko+FEOO8HD0trFgOkSF1SVazziH7FvAw
+         XQTSzh+AKkj9v3xuZZgtLnDbWC8YRhqJdV5YcbgNz8KDjXrhiZdx17eGKNwjbH0yspQS
+         AeizcUEoEVnBtngL2/RU44ELl+63JnzRrcCLn8mxJVBAbq1p/FNlluuh5ny+vwr9Oa6v
+         GwRFRRQZaXnLWoO6y0WYseqMC4gTfIfAAo1Z0dh6BGLJyYO0Pky9f+km679WKZ82+V+4
+         GycT1G2yi6a/qRVVxt01BwWdDZBZxG9JWOGsmySVTp2W1xEYYMNr5GIQbA6X5qKqlR9o
+         ABJA==
+X-Gm-Message-State: AOAM530u/LlaKsfwid7mS9W90wuixcrtWVBVEaT7b+boXGFZFB+xho9C
+        7Bp7RpjufrN/+o7D3m/jTzLnKGKZnx/v7T7aSOg=
+X-Google-Smtp-Source: ABdhPJz8uHZflvzrflCvmUJfx+x3RiqZkWqsTrkVrrl+8sX6vVGZdBlDIPNkr1jiZlE4u+HgUQB7+Ex+KbZmsqM5c/E=
+X-Received: by 2002:a92:d482:: with SMTP id p2mr2689631ilg.9.1599637028313;
+ Wed, 09 Sep 2020 00:37:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPd=TfCNfHPdsQZ42VEcUZOFZroXg7xmA82zSA=AbADxKw@mail.gmail.com>
+References: <25817189-49a7-c64f-26ee-78d4a27496b6@huawei.com>
+ <CAOQ4uxhejJzjKLZCt=b87KAX0sC3RAZ2FHEZbu4188Ar-bkmOg@mail.gmail.com>
+ <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com> <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
+ <20200908171859.GA29953@casper.infradead.org> <CAOQ4uxjX2GAJhD70=6SmwdXPH6TuOzGugtdYupDjLLywC2H5Ag@mail.gmail.com>
+ <96abf6e3-2442-8871-c9f3-be981c0a1965@huawei.com>
+In-Reply-To: <96abf6e3-2442-8871-c9f3-be981c0a1965@huawei.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 9 Sep 2020 10:36:57 +0300
+Message-ID: <CAOQ4uxjNcjFtQuc9AeWgEO7G3CeGm3vL_wK6UhbHkxOZuRYOeQ@mail.gmail.com>
+Subject: Re: Question: Why is there no notification when a file is opened
+ using filp_open()?
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wangle6@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 09:08:14AM +0200, Krzysztof Kozlowski wrote:
-> On Wed, 9 Sep 2020 at 09:02, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+On Wed, Sep 9, 2020 at 10:00 AM Xiaoming Ni <nixiaoming@huawei.com> wrote:
+>
+> On 2020/9/9 11:44, Amir Goldstein wrote:
+> > On Tue, Sep 8, 2020 at 8:19 PM Matthew Wilcox <willy@infradead.org> wrote:
+> >>
+> >> On Tue, Sep 08, 2020 at 04:18:29PM +0300, Amir Goldstein wrote:
+> >>> On Tue, Sep 8, 2020 at 3:53 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
+> >>>> For example, in fs/coredump.c, do_coredump() calls filp_open() to
+> >>>> generate core files.
+> >>>> In this scenario, the fsnotify_open() notification is missing.
+> >>>
+> >>> I am not convinced that we should generate an event.
+> >>> You will have to explain in what is the real world use case that requires this
+> >>> event to be generated.
+> >>
+> >> Take the typical usage for fsnotify of a graphical file manager.
+> >> It would be nice if the file manager showed a corefile as soon as it
+> >> appeared in a directory rather than waiting until some other operation
+> >> in that directory caused those directory contents to be refreshed.
 > >
-> > On Wed, Sep 09, 2020 at 08:29:25AM +0200, Krzysztof Kozlowski wrote:
-> > > On Wed, 26 Aug 2020 at 18:18, Joe Perches <joe@perches.com> wrote:
-> > > >
-> > > > On Wed, 2020-08-26 at 18:55 +0300, Andy Shevchenko wrote:
-> > > > > On Wed, Aug 26, 2020 at 08:44:30AM -0700, Joe Perches wrote:
-> > > > > > On Wed, 2020-08-26 at 13:44 +0300, Andy Shevchenko wrote:
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > > > -int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-> > > > > > > +int __must_check dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-> > >
-> > > +Cc Stephen and Greg,
-> > >
-> > > Hi Andy,
-> > >
-> > > Did this patch ended up in next somehow? I am surprised because now I
-> > > got warnings for perfectly fine code:
-> > > https://lore.kernel.org/linux-next/20200909155654.76fe3bd6@canb.auug.org.au/T/#u
-> > >
-> > > This creates simply false warnings instead of hints for "optimization".
+> > fsnotify_open() is not the correct notification for file managers IMO.
+> > fsnotify_create() is and it will be called in this case.
 > >
-> > Yes, it got merged into m y driver core tree.
+> > If the reason you are interested in open events is because you want
+> > to monitor the entire filesystem then welcome to the future -
+> > FAN_CREATE is supported since kernel v5.1.
 > >
-> > I'll fix up the tty build warning, should be easy enough, the patch is
-> > below.
-> 
-> Yes, this fix suppresses the warning but the question is whether we
-> really want the warning?
-> Such fixes mean additional code which the compiler might not optimize
-> (unless it inlines the dev_err_probe()). This additional code is
-> purely for suppressing the warning, without any meaning on its own.
-> Actually it might be even confusing for someone to see:
-> if (ret)
->   ret = dev_err_probe(ret);
+> > Is there another real life case you have in mind where you think users
+> > should be able to get an open fd for a file that the kernel has opened?
+> > Because that is what FAN_OPEN will do.
+> >
+>
+> There are also cases where file is opened in read-only mode using
+> filp_open().
+>
+> case1: nfsd4_init_recdir() call filp_open()
+> filp_open()
+> nfsd4_init_recdir() fs/nfsd/nfs4recover.c#L543
+>
+> L70: static char user_recovery_dirname[PATH_MAX] =
+> "/var/lib/nfs/v4recovery";
+> L543: nn->rec_file = filp_open(user_recovery_dirname, O_RDONLY |
+> O_DIRECTORY, 0);
+>
+>
+> case2: ima_read_policy()
+> filp_open()
+> kernel_read_file_from_path()  fs/exec.c#L1004
+> ima_read_policy()  security/integrity/ima/ima_fs.c#L286
+> ima_write_policy() security/integrity/ima/ima_fs.c#L335
+> ima_measure_policy_ops   security/integrity/ima/ima_fs.c#L443
+> sys_write()
+>
+> case3: use do_file_open_root() to open file
+> do_file_open_root()
+> file_open_root()   fs/open.c#L1159
+> kernel_read_file_from_path_initns()  fs/exec.c#L1029
+> fw_get_filesystem_firmware()  drivers/base/firmware_loader/main.c#L498
+>
+> Do we need to add fsnotify_open() in these scenarios?
 
-Yeah, that is dumb, as the patch I made shows :(
+We do not *need* to add fsnotify_open() if there is no concrete use case
+from real life that needs it.
 
-> warn_unused_result should point errors, not "optimization
-> opportunities". If you want to have opportunity, add a coccinelle
-> rule. Or a checkpatch rule. Not a compiler warning.
+Matthew gave an example of a real life use case and I explained why IMO
+we don't need to add fsnotify_open() for the use case that he described.
 
-Ok, I now agree, I'll go revert this patch and trust that driver authors
-will "do the right thing" here...
+If you want to add fsnotify_open() to any call site, please come up with
+a real life use case - not a made up one, one that really exists and where
+the open event is really needed.
 
-thanks,
+grepping the code for callers of filp_open() is not enough.
 
-greg k-h
+Thanks,
+Amir.
