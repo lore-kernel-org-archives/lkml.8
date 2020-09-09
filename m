@@ -2,105 +2,101 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC22EC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A70B3216C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5qIP+HJ"
+	by mail.kernel.org (Postfix) with ESMTP id DB6E7216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgIIJg4 (ORCPT
+        id S1730245AbgIIJhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgIIJgu (ORCPT
+        Wed, 9 Sep 2020 05:37:14 -0400
+Received: from regular1.263xmail.com ([211.150.70.195]:56020 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgIIJhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:36:50 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44160C061573;
-        Wed,  9 Sep 2020 02:36:48 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id l63so1933000edl.9;
-        Wed, 09 Sep 2020 02:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Pv6iapq4O5SjVtL1iPYVDh7JKWlokNzhK+8UbOeBFUo=;
-        b=l5qIP+HJ3LRN88aaWALWmY59d9psHRG4Hb0Srkk15LDEvgmE5fi/+JourmV+safV+4
-         jeF4v2tkPmlGclswpxcp7fQD4/T95DcHOKTjy8M7a1hBEkMU9DXgamVslHRPCDGTLqaj
-         AJ0mzWZ0Z7YKniv4BH3qtlBDqHJaOc5HQzwTNbIhz6xerBIjnhqKELWMgzOCVeNHGPbg
-         vzQdQK3T3jscMzP1G00X4+mCKSYT4GNS7Mw2RyaGDoI06sF3xXIi3StOIkP8+Iq5tubG
-         fyY/KaOklPT3WVqwszVuVvyx6QGiAogRXq4QiEmN+Fc++B2DVUZnC4pHEuGOyuWgIGD7
-         BbEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Pv6iapq4O5SjVtL1iPYVDh7JKWlokNzhK+8UbOeBFUo=;
-        b=OyNIGLsf9W3UkrHnUI3F6U3R83mf8NKTrgJOnXwnf71unDS8TDrDm0emUgPOJggMkB
-         NcRmkb9QPdwYEyKambRPoqHz20GOTt2yN1m+mjACowi6Isbre1RWV5fd0yugUYk2CLf3
-         EQrMQXgoF6KtI4RIbrBA/y82/8EnXI1nD7RhnmmJgPba/Z3mQim6VIUDP5nXv6dRl0t1
-         s/Of7iyT3iWaJFtH2wij7iCfKAh/ViaF8umlKJll/jcZp0Ap3Q8apIQ7HjgUrPtZB2Lc
-         T8UNBDVuu3ak0j51xUPtTNTxbY9uPVyjaAOQ4skTjWNLNbOeVTbPparSTFQZpOFmi9Gz
-         20fQ==
-X-Gm-Message-State: AOAM5316yb8xgg7E5TSI3zYuRzUK52MCqHBNAPlWRACWCti+UzI1321W
-        xR2wJAXeMIbKjE1YLc/kUnU9OybITbmzm9MS
-X-Google-Smtp-Source: ABdhPJyHkS4fr/EaoKgqk7aw9pkfvPCT6zW8m7v5aBiX5PcAhV8fYS3EhOdjTPhbI5mF/c4VhkvQ6g==
-X-Received: by 2002:a05:6402:644:: with SMTP id u4mr3118816edx.182.1599644206902;
-        Wed, 09 Sep 2020 02:36:46 -0700 (PDT)
-Received: from felia ([2001:16b8:2d44:6000:6108:df55:7b8e:67d4])
-        by smtp.gmail.com with ESMTPSA id y21sm1542739eju.46.2020.09.09.02.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 02:36:46 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Wed, 9 Sep 2020 11:36:44 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     Igor Russkikh <irusskikh@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH 0/5 REBASED to v5.9-rc4] Qlogic drivers: Convert
- to SPDX license identifiers
-In-Reply-To: <DM6PR18MB305266178BB9982CBDF05319AF260@DM6PR18MB3052.namprd18.prod.outlook.com>
-Message-ID: <alpine.DEB.2.21.2009091126290.5622@felia>
-References: <20200908123451.7215-1-lukas.bulwahn@gmail.com> <e5688d4c-f512-6705-6bb1-db832828fb35@marvell.com> <DM6PR18MB305266178BB9982CBDF05319AF260@DM6PR18MB3052.namprd18.prod.outlook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 9 Sep 2020 05:37:12 -0400
+Received: from localhost (unknown [192.168.167.235])
+        by regular1.263xmail.com (Postfix) with ESMTP id 17FAA1429;
+        Wed,  9 Sep 2020 17:37:01 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from localhost.localdomain (unknown [125.88.171.115])
+        by smtp.263.net (postfix) whith ESMTP id P22910T140609314805504S1599644205131669_;
+        Wed, 09 Sep 2020 17:37:01 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <b5ed33ce01a696681b3a5834883ecf40>
+X-RL-SENDER: yili@winhong.com
+X-SENDER: yili@winhong.com
+X-LOGIN-NAME: yili@winhong.com
+X-FST-TO: akpm@linux-foundation.org
+X-SENDER-IP: 125.88.171.115
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yi Li <yili@winhong.com>
+To:     akpm@linux-foundation.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com
+Cc:     yilikernel@gmail.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        clin@suse.com, mark.rutland@arm.com, maz@kernel.org,
+        anshuman.khandual@arm.com, ardb@kernel.org, geert@linux-m68k.org,
+        rppt@kernel.org, Yi Li <yili@winhong.com>
+Subject: [PATCH] Remove duplicate include file
+Date:   Wed,  9 Sep 2020 17:36:32 +0800
+Message-Id: <20200909093632.1278408-1-yili@winhong.com>
+X-Mailer: git-send-email 2.25.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove duplicate include file
+
+Signed-off-by: Yi Li <yili@winhong.com>
+---
+ arch/arm/mm/mmu.c | 1 -
+ mm/slab.h         | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index c36f977b2ccb..7bbcdb29413e 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -34,7 +34,6 @@
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/pci.h>
+-#include <asm/fixmap.h>
+ 
+ #include "fault.h"
+ #include "mm.h"
+diff --git a/mm/slab.h b/mm/slab.h
+index 6cc323f1313a..95e5cc1bb2a3 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -46,7 +46,6 @@ struct kmem_cache {
+ #include <linux/kmemleak.h>
+ #include <linux/random.h>
+ #include <linux/sched/mm.h>
+-#include <linux/kmemleak.h>
+ 
+ /*
+  * State of the slab allocator.
+-- 
+2.25.3
 
 
-On Wed, 9 Sep 2020, Nilesh Javali wrote:
 
-> Lukas,
-> 
-> I have Acked for the storage drivers and opt for option B below for spdx maintainers to pick.
->
-
-Thomas, Greg,
-
-We got everything straightened out with Igor and Nilesh.
-
-Can you pick this patchset with Igor's and Nilesh's Acked-bys into the 
-spdx tree and forward it to Linus?
-
-One down. Another century of license work ahead to get it done :)
-
-Thanks,
-
-Lukas
