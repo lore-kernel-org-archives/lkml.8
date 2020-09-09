@@ -2,123 +2,291 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07841C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B6AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8C5208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="cc2Qt1f4"
+	by mail.kernel.org (Postfix) with ESMTP id 34FCC2080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599676579;
+	bh=ia9hTJyZgEKfRDINp42R4WNkVvq9pCYrEhY2mO62t5E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ve3XN0nbKJilMyHj44acbgM5l0Uh0Wp34gHcS9H4Fm4A3eCd/HMdrE0TBg2+BgdA+
+	 gUXYvN0c3PRXeVy0UIi5GxbeplpyuDcmHESiAOgApqS+JeEqljgZ4MNJIcTNXszUnm
+	 o1cNwznquYOqdtzU72m4K5jpFXUrkwS6YSpOEDyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgIISeh (ORCPT
+        id S1727087AbgIISgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728936AbgIISeg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:34:36 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376EDC061756
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 11:34:34 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id h4so4272634ioe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 11:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cc1mTJ4YBbjlfzPf25X2vuH8TH88kzjymIjnYwRDABQ=;
-        b=cc2Qt1f4dpUC0QpPCXg+9Y9XLHMA8xk6SiF4s5nmfrtFNkxDNTaG9UecXJsuyI+qKu
-         4uk4C9AxB33jv2tLG4CDXx6E8VpPQAeLG/oD9Jy7QsgmSfWzrRmK9QJHt+tZ2KnrJPEN
-         l1l7iHZWQXFC62PlvMDliggM6kXjdhhSib5wbP7JRdAIBVceTg+n0crB7GqY9SqwmSgy
-         3g2tQrPYRRWyMKaQiFKxUcMG6DxHO7x263SxL4be5W6CzxtNbAVbt8f+j8zm1MDX/8Vq
-         6N5BN/J1ZZCK0KUuyeiSBa4vAMF+V75zVCllRN6ERTjnW1/ltYGFkU9V0OufLgeRg6X8
-         Cnbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cc1mTJ4YBbjlfzPf25X2vuH8TH88kzjymIjnYwRDABQ=;
-        b=eNfQVxQ/dk871rS0DH8nD4cEE634aHpoxToX/xWaKhAIwEoFMlEpRvPIKcF3YUftZA
-         yFcuyOALi3bDC1mYz3hbEa/Ku9xVoWfHojIdiObzgRKzJ3IGs/jbrYKsrjMVC9HNN+j5
-         /59qunhx9LMMFRCQuGAXgdcuy8tU0OY80VeOh1bRRQ7mNaiWGsIRvZaBM177DwGfNAW0
-         pshEX5oC7AK3PB0xtyRlhay1V2zIFszhtCtsj+QQHXinuFY/MaOZ68ElmUuL+/2ksR0w
-         /Y+DjCtnvJlICZ87aIAK02hjIagjj9xKaHWOMe7hYeO5qbEVwC9VIOcQSDFgxTAehmiq
-         t0BA==
-X-Gm-Message-State: AOAM531j2Bc7twAmsrFRrYCzTCbGe2LH1W48zf3xWG3TXxeiz2Bei5+g
-        oIjrZLjEzoilfCHs1lR55i8ceHkQ99xZZX7y7U21MQ==
-X-Google-Smtp-Source: ABdhPJxYIuKJ2FPIIDSc4fLvVsbvhDs4vwhRgTwzcnsP3YQbp/Eiiw42aHUKGWVr36iO8wKIwRx2XebS9rnI749AuKw=
-X-Received: by 2002:a6b:bc82:: with SMTP id m124mr4580365iof.172.1599676473721;
- Wed, 09 Sep 2020 11:34:33 -0700 (PDT)
+        Wed, 9 Sep 2020 14:36:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgIISgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:36:08 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B328120C09;
+        Wed,  9 Sep 2020 18:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599676567;
+        bh=ia9hTJyZgEKfRDINp42R4WNkVvq9pCYrEhY2mO62t5E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=knGyXOGF7f7i/Ki2r7Ku7Scb0TISK5qGEPUfKpe9uiNoehhN5k559yVdz5F+H4eHA
+         8xWDS0vile5v7kmyfpeZEJb92c6JNYqo1/kMaas25tZDZym8w0B4ccwCXITaydSann
+         1bhIeZEsp06NKSEgL7v2PSAZOv+r3qOgET7c/hFk=
+Date:   Wed, 9 Sep 2020 19:36:00 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 08/18] iio: adc: stm32: Simplify with dev_err_probe()
+Message-ID: <20200909193600.41970d8c@archlinux>
+In-Reply-To: <20200829064726.26268-8-krzk@kernel.org>
+References: <20200829064726.26268-1-krzk@kernel.org>
+        <20200829064726.26268-8-krzk@kernel.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200905130336.967622-1-luka.kovacic@sartura.hr>
- <20200905130336.967622-5-luka.kovacic@sartura.hr> <CAHp75VfwPa9zL6HCz+qqXJ1rK2JB=ewRiK1qdrgsyxixA5R5Lg@mail.gmail.com>
- <20200909103638.GB9222@amd> <CAHp75VcV6Tn8dVjWhOW7bfcjwA_Vabw91FJ=OYit3e1rvPp1qQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcV6Tn8dVjWhOW7bfcjwA_Vabw91FJ=OYit3e1rvPp1qQ@mail.gmail.com>
-From:   =?UTF-8?B?THVrYSBLb3ZhxI1pxI0=?= <luka.kovacic@sartura.hr>
-Date:   Wed, 9 Sep 2020 20:34:22 +0200
-Message-ID: <CADZsf3ZH5BAJO_0+sWtXfZuOMdOmJGFWaU_AmgOt0wDjt2_U0g@mail.gmail.com>
-Subject: Re: [PATCH 4/7] drivers: leds: Add the iEi WT61P803 PUZZLE LED driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello everyone,
+On Sat, 29 Aug 2020 08:47:16 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-I'm sending the email again, as I didn't send it as plain text
-earlier, sorry.
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+I don't have the thread to hand, but this tripped a warning next
+and the patch was dropped as a result. See below.
 
-Thanks for the comments, I'll review them and fix the issues.
+Jonathan
+> ---
+> 
+> Changes since v2:
+> 1. Wrap dev_err_probe() lines at 80 character
+> 
+> Changes since v1:
+> 1. Convert to devm_clk_get_optional
+> 2. Update also stm32-dfsdm-core and stm32-dac-core.
+> 3. Wrap around 100 characters (accepted by checkpatch).
+> ---
+>  drivers/iio/adc/stm32-adc-core.c   | 75 ++++++++++--------------------
+>  drivers/iio/adc/stm32-adc.c        | 10 ++--
+>  drivers/iio/adc/stm32-dfsdm-adc.c  | 10 ++--
+>  drivers/iio/adc/stm32-dfsdm-core.c |  9 ++--
+>  drivers/iio/dac/stm32-dac-core.c   |  5 +-
+>  5 files changed, 35 insertions(+), 74 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index 0e2068ec068b..3f27b4817a42 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -582,11 +582,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
+>  	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
+>  	if (IS_ERR(priv->syscfg)) {
+>  		ret = PTR_ERR(priv->syscfg);
+> -		if (ret != -ENODEV) {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(dev, "Can't probe syscfg: %d\n", ret);
+> -			return ret;
+> -		}
+> +		if (ret != -ENODEV)
+> +			return dev_err_probe(dev, ret, "Can't probe syscfg\n");
+> +
+>  		priv->syscfg = NULL;
+>  	}
+>  
+> @@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
+>  		priv->booster = devm_regulator_get_optional(dev, "booster");
+>  		if (IS_ERR(priv->booster)) {
+>  			ret = PTR_ERR(priv->booster);
+> -			if (ret != -ENODEV) {
+> -				if (ret != -EPROBE_DEFER)
+> -					dev_err(dev, "can't get booster %d\n",
+> -						ret);
+> -				return ret;
+> -			}
+> +			if (ret != -ENODEV)
+> +				dev_err_probe(dev, ret, "can't get booster\n");
 
-This is currently the only iEi Puzzle series device that is using this
-microcontroller. Their Intel-based platforms most likely will not use
-this MCU, as they resorted to using more standard components there.
+This tripped a warning and got the patch dropped because we no longer
+return on error.
 
-Some upcoming iEi Puzzle ARM-based boards might also implement this
-microcontroller, so I do agree that using the new API would be beneficial
-to future proof the driver.
+> +
+>  			priv->booster = NULL;
+>  		}
+>  	}
+> @@ -612,11 +607,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
+>  		priv->vdd = devm_regulator_get_optional(dev, "vdd");
+>  		if (IS_ERR(priv->vdd)) {
+>  			ret = PTR_ERR(priv->vdd);
+> -			if (ret != -ENODEV) {
+> -				if (ret != -EPROBE_DEFER)
+> -					dev_err(dev, "can't get vdd %d\n", ret);
+> -				return ret;
+> -			}
+> +			if (ret != -ENODEV)
+> +				return dev_err_probe(dev, ret, "can't get vdd\n");
+> +
+>  			priv->vdd = NULL;
+>  		}
+>  	}
+> @@ -669,42 +662,24 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>  	priv->common.phys_base = res->start;
+>  
+>  	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
+> -	if (IS_ERR(priv->vdda)) {
+> -		ret = PTR_ERR(priv->vdda);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
+> -		return ret;
+> -	}
+> +	if (IS_ERR(priv->vdda))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->vdda),
+> +				     "vdda get failed\n");
+>  
+>  	priv->vref = devm_regulator_get(&pdev->dev, "vref");
+> -	if (IS_ERR(priv->vref)) {
+> -		ret = PTR_ERR(priv->vref);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "vref get failed, %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	priv->aclk = devm_clk_get(&pdev->dev, "adc");
+> -	if (IS_ERR(priv->aclk)) {
+> -		ret = PTR_ERR(priv->aclk);
+> -		if (ret != -ENOENT) {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(&pdev->dev, "Can't get 'adc' clock\n");
+> -			return ret;
+> -		}
+> -		priv->aclk = NULL;
+> -	}
+> -
+> -	priv->bclk = devm_clk_get(&pdev->dev, "bus");
+> -	if (IS_ERR(priv->bclk)) {
+> -		ret = PTR_ERR(priv->bclk);
+> -		if (ret != -ENOENT) {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(&pdev->dev, "Can't get 'bus' clock\n");
+> -			return ret;
+> -		}
+> -		priv->bclk = NULL;
+> -	}
+> +	if (IS_ERR(priv->vref))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->vref),
+> +				     "vref get failed\n");
+> +
+> +	priv->aclk = devm_clk_get_optional(&pdev->dev, "adc");
+> +	if (IS_ERR(priv->aclk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->aclk),
+> +				     "Can't get 'adc' clock\n");
+> +
+> +	priv->bclk = devm_clk_get_optional(&pdev->dev, "bus");
+> +	if (IS_ERR(priv->bclk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->bclk),
+> +				     "Can't get 'bus' clock\n");
+>  
+>  	ret = stm32_adc_core_switches_probe(dev, priv);
+>  	if (ret)
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 3eb9ebe8372f..b3f31f147347 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1805,13 +1805,9 @@ static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
+>  	adc->dma_chan = dma_request_chan(dev, "rx");
+>  	if (IS_ERR(adc->dma_chan)) {
+>  		ret = PTR_ERR(adc->dma_chan);
+> -		if (ret != -ENODEV) {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(dev,
+> -					"DMA channel request failed with %d\n",
+> -					ret);
+> -			return ret;
+> -		}
+> +		if (ret != -ENODEV)
+> +			return dev_err_probe(dev, ret,
+> +					     "DMA channel request failed with\n");
+>  
+>  		/* DMA is optional: fall back to IRQ mode */
+>  		adc->dma_chan = NULL;
+> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> index 5e10fb4f3704..c7e0109315f8 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> @@ -1473,13 +1473,9 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
+>  	/* Optionally request DMA */
+>  	ret = stm32_dfsdm_dma_request(dev, indio_dev);
+>  	if (ret) {
+> -		if (ret != -ENODEV) {
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(dev,
+> -					"DMA channel request failed with %d\n",
+> -					ret);
+> -			return ret;
+> -		}
+> +		if (ret != -ENODEV)
+> +			return dev_err_probe(dev, ret,
+> +					     "DMA channel request failed with\n");
+>  
+>  		dev_dbg(dev, "No DMA support\n");
+>  		return 0;
+> diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+> index 26e2011c5868..0b8bea88b011 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-core.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-core.c
+> @@ -243,12 +243,9 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+>  	 * on use case.
+>  	 */
+>  	priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
+> -	if (IS_ERR(priv->clk)) {
+> -		ret = PTR_ERR(priv->clk);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
+> -		return ret;
+> -	}
+> +	if (IS_ERR(priv->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
+> +				     "Failed to get clock\n");
+>  
+>  	priv->aclk = devm_clk_get(&pdev->dev, "audio");
+>  	if (IS_ERR(priv->aclk))
+> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
+> index 7e5809ba0dee..906436780347 100644
+> --- a/drivers/iio/dac/stm32-dac-core.c
+> +++ b/drivers/iio/dac/stm32-dac-core.c
+> @@ -150,10 +150,7 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  	rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+>  	if (rst) {
+>  		if (IS_ERR(rst)) {
+> -			ret = PTR_ERR(rst);
+> -			if (ret != -EPROBE_DEFER)
+> -				dev_err(dev, "reset get failed, %d\n", ret);
+> -
+> +			ret = dev_err_probe(dev, PTR_ERR(rst), "reset get failed\n");
+>  			goto err_hw_stop;
+>  		}
+>  
 
-Kind regards,
-Luka
-
-On Wed, Sep 9, 2020 at 3:52 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Sep 9, 2020 at 1:36 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > > > Add support for the iEi WT61P803 PUZZLE LED driver.
-> > > > Currently only the front panel power LED is supported.
-> > > >
-> > > > This driver depends on the iEi WT61P803 PUZZLE MFD driver.
-> > >
-> > > Can we make it OF independent?
-> > > See below how to achieve this.
-> >
-> > Is there reason to believe this will be found in non-OF systems?
->
-> It's one aspect. Another one is to give a better example to anybody
-> who might use this to copy'n'paste from. I believe that most of the
-> LED drivers can appear on non-DT systems.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
