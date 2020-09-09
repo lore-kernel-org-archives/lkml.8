@@ -2,109 +2,109 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D173C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2253C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4BF020BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA99520BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEMv6CEc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hdEHm7z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgIIVQH (ORCPT
+        id S1728617AbgIIVRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44594 "EHLO
+        Wed, 9 Sep 2020 17:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728617AbgIIVPz (ORCPT
+        with ESMTP id S1726534AbgIIVRJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:15:55 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50ADAC061573;
-        Wed,  9 Sep 2020 14:15:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u21so5417672ljl.6;
-        Wed, 09 Sep 2020 14:15:55 -0700 (PDT)
+        Wed, 9 Sep 2020 17:17:09 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA99CC061755
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:17:08 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o68so3410766pfg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HnVKigTPD0SFBmS6CufvtEE5hp82hUFW+McOGmr8ObQ=;
-        b=AEMv6CEcQnDBpdKHTGDMpkqWbBkkyC3XIxDghgAq6QwSz0FWI1czP7m0rAzo79YaUO
-         HhSPr/YEjsCxhLZNISf2Be4NR3orDy7ZMU3ziy+PCzsbiOvedaK+eULC3/znoKwQpZQN
-         yEFMKl+0lLsRF885mZeeYpXmXqdzwu2hriKD0arnoUdoFgdQq/W7VbK0tMmb4llhPzLH
-         mylxshFdjPd7CFrrJjAFAcdxxmHgEZQUtW8vDl46F6E2AS+0y0rImqP+AIcfI+PYsOlt
-         0lsDcTyRVia/TrfsxcEeguz4Au8Zcsz1oZXSrbyLfaWKtThupylDm5rqOR7ozYYE3wOt
-         ou7Q==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CCe3ziH+ElemTVm2NqfWzU9PRtLXI604MAgAcQj1O7c=;
+        b=hdEHm7z6jg8LsyV0hWWKIoyb509W1HSRjJPTgb0RNsN9MIU/VeTM4XVD4fCgOlssvS
+         9aRXKuJu2OhmqVeFGdA/adLLrvq2aDyuOaON0YYTtPw8pgi5E4Rg7mqm4qmSHbGaXLR+
+         GrsPXAmMOKCjthtoQDoYmyNycqKI6tTEUmsI4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HnVKigTPD0SFBmS6CufvtEE5hp82hUFW+McOGmr8ObQ=;
-        b=j6YOlfc+i9nYu4BbHNVQbikoz3VLtx3rKUbGHci6QejzkdvPQtYnom1IAI18aKAspo
-         HiHJLVYkLp4Q8n5vBO7Q+e24u5HM+H7z9me9Bqa8Pn95esVHwCSgL/WmWSnRzeUB+gKp
-         u0tBOHrEy8iIaCcI9RqJuyr57FrHZ1lhdi9kNbfTpftF3stT+SfP69ECRb7WX19qiiD6
-         2pIpVYB6NGMsXwYXVl72YbOYJmlF9vU+0HceaCTcp1miAQpbH1FZeqJCjKwwyeDI9EHg
-         o5vebFgTAxU5RFjI0A8TdaGEyCDG75CywStqg+0LPX5XwtAfYp8IMOsM79AFdl3Cgga3
-         sT8A==
-X-Gm-Message-State: AOAM530NuBi/HUzoz2zhQPZS4csxmEaW8rqw/WjWoEr6i4sj6lXLQ5N4
-        6fMvbysnFNdhHhvLdR/N5tYO6ALxong=
-X-Google-Smtp-Source: ABdhPJxp8VYmLXdjWwfoDoXk3NH/mFiHKjQmDtqVaj5hvvbbW+sEPnZMlMfqd4r/5YSVXyKy5zLhqw==
-X-Received: by 2002:a2e:3c08:: with SMTP id j8mr2597735lja.358.1599686153003;
-        Wed, 09 Sep 2020 14:15:53 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id j7sm821561lfb.41.2020.09.09.14.15.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 14:15:52 -0700 (PDT)
-Subject: Re: [PATCH v5 27/36] memory: tegra-mc: Register as interconnect
- provider
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200814000621.8415-1-digetx@gmail.com>
- <20200814000621.8415-28-digetx@gmail.com>
- <923b6801-5194-b936-13c6-0972761c29b8@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <01996606-84cd-909d-8dfc-4f33bdf8f3cc@gmail.com>
-Date:   Thu, 10 Sep 2020 00:15:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=CCe3ziH+ElemTVm2NqfWzU9PRtLXI604MAgAcQj1O7c=;
+        b=gEkuoHmQX9BS7YZbuqCJYC3ICpw/SgrTkpfRirQt5w9/J6MV+CuLzLP1+qGMiq8Z8a
+         i9iX1LVaa9kjvNL4vKR09egnsogMG5AURU24RbTHZG/tb8xOJ4rwdeobpa/wG2xkj+EM
+         74FyO4wZJQijOIMhbJGmu6jEiHOF/kW1Q8HwJiHetumkQSzSbQCgj0ayvv71uHvJPeql
+         uZurYSYmZq5NaxiHgs8UOutryD/Tvk9rabUkET8SfB9IKhw+vXbhaimsaRlWSz8Mu2H1
+         C/eLsr17RErL+ZCu9ZR0E92i5wG0eWaoKxp9MeUcX3CTelcMdjHdUrttciW6xFMB+0K0
+         p0Ag==
+X-Gm-Message-State: AOAM531vUlYXSB3j4lZPdFKZyGlDD8tp4IZ6DPDMAfY1cazVIMjzMx9S
+        lm2zTEYa9AmW1eKJ8F9RmZjyUw==
+X-Google-Smtp-Source: ABdhPJy8UUmcbw02VQE4xwOZuH25tjtT7DN/IXk9ewpMdTyFfoUhn/F4CyZLiVVtN/bQK7eC+MFIjQ==
+X-Received: by 2002:a17:902:c149:: with SMTP id 9mr1381263plj.10.1599686228449;
+        Wed, 09 Sep 2020 14:17:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j19sm3601421pfi.51.2020.09.09.14.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 14:17:07 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-kselftest@vger.kernel.org,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] selftests/lkdtm: Use "comm" instead of "diff" for dmesg
+Date:   Wed,  9 Sep 2020 14:17:00 -0700
+Message-Id: <20200909211700.2399399-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <923b6801-5194-b936-13c6-0972761c29b8@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-09.09.2020 11:31, Georgi Djakov пишет:
-> On 8/14/20 03:06, Dmitry Osipenko wrote:
->> Now memory controller is a memory interconnection provider. This allows us
->> to use interconnect API in order to change memory configuration.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> Thanks Dmitry! Looks good to me.
-> 
-> Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
-> 
+Instead of full GNU diff (which smaller boot environments may not have),
+use "comm" which is more available.
 
-Thanks you!
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
+Fixes: f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running tests")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: add --nocheck-order, thanks to Joe Lawrence
+v1: https://lore.kernel.org/lkml/202006261358.3E8AA623A9@keescook/
+---
+ tools/testing/selftests/lkdtm/run.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+index 8383eb89d88a..bb7a1775307b 100755
+--- a/tools/testing/selftests/lkdtm/run.sh
++++ b/tools/testing/selftests/lkdtm/run.sh
+@@ -82,7 +82,7 @@ dmesg > "$DMESG"
+ ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
+ 
+ # Record and dump the results
+-dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
++dmesg | comm --nocheck-order -13 "$DMESG" - > "$LOG" || true
+ 
+ cat "$LOG"
+ # Check for expected output
+-- 
+2.25.1
+
