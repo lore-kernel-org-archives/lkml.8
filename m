@@ -2,115 +2,71 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D96C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B64CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3B42166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qAQAXtOz"
+	by mail.kernel.org (Postfix) with ESMTP id D5F312166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbgIIQrn (ORCPT
+        id S1730865AbgIIQsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730999AbgIIQrI (ORCPT
+        Wed, 9 Sep 2020 12:48:05 -0400
+Received: from codesynthesis.com ([142.44.161.217]:34250 "EHLO
+        codesynthesis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730986AbgIIQrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:47:08 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6C0C061573;
-        Wed,  9 Sep 2020 09:47:07 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id a3so3017926oib.4;
-        Wed, 09 Sep 2020 09:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n3Y+1un3H1D6oJKWN3rI/d5EPhk7L+MJ/htHdyocAoA=;
-        b=qAQAXtOzsZ0sv3YdGzm6xc5j7lysX+ULODN3Fq9+2UQq9/VHPmsThip6XfnudOeKvL
-         Mokc60xqwZAm08xseabSB5eDVTcPMKEcJpQ2IqZ2PO6hjJt1mPHa/NpaOSK8Ng0Y3xEi
-         AEZZpNZFolJy3If3zVDLeu9tPJvqwJtiYvs8oESLMdmaoh0O8oRCNJ3TCnOapH19RoSc
-         cwQBgfD079XNoaOBlCQqiMjs7zlYbM6Eu29UfSIRh85ZjWQgx8XtRdVP4oo9qGrv5au3
-         kUAqS0q2EyNcwUKbq15qUiYCEc4MG49OMlIS4/oZMGoei3yb5+4Cd1FUL5Ih3ThyGP0f
-         WBLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n3Y+1un3H1D6oJKWN3rI/d5EPhk7L+MJ/htHdyocAoA=;
-        b=GL0QL6eJ3pr2888bMHAdp5SvcYnROHYOhgxrv25b+uK+1CptmWWEWOCwMfy7/nTihS
-         NJVL0oWcsdkFKS/uEKW/C0+A4qfmEaWRDqsw4mh7/PvWn/nkiAjwQlJDw4eZxtYlHK4g
-         EhAHqKLHM4GQzY8+zBKqGRuTMR3XWKVzptffVNKo90h/nU/eJU+0kc998iD65cxglHhN
-         O6Kboea/1vJ986+HozaSnVK9WzwYWHkxS1IsZgXneWF1ojd1W6A7N1Bk+TMlca6/7PBx
-         So+KvMf+TdzUYaL1o4xbiW2g+r8Ahn2PdRbg+k5t8JgV75ubQNYi0rByfSXcbaQ4BtuJ
-         sjnQ==
-X-Gm-Message-State: AOAM532wI+Z7MU8YnVBpNie4mfd71Ao9aCdYfHkxaaKSas446pJub8/Q
-        vm3+ku9EMb/gBfQuxlPm9Jf/1cV52t8=
-X-Google-Smtp-Source: ABdhPJzNLIwCZKb6actD3gqsnpt2pv3CoJ0V79tILh6f9Hfne/GydDWQZDoIMsjZyftM6MSMefkAxA==
-X-Received: by 2002:a05:6808:1a:: with SMTP id u26mr1168579oic.78.1599670027117;
-        Wed, 09 Sep 2020 09:47:07 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k1sm456972oot.20.2020.09.09.09.47.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Sep 2020 09:47:06 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 09:47:05 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.8 000/186] 5.8.8-rc1 review
-Message-ID: <20200909164705.GE1479@roeck-us.net>
-References: <20200908152241.646390211@linuxfoundation.org>
+        Wed, 9 Sep 2020 12:47:40 -0400
+X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Sep 2020 12:47:39 EDT
+Received: from brak.codesynthesis.com (unknown [105.226.107.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by codesynthesis.com (Postfix) with ESMTPSA id 851435F138;
+        Wed,  9 Sep 2020 14:09:48 +0000 (UTC)
+Received: by brak.codesynthesis.com (Postfix, from userid 1000)
+        id 9751F1A800C4; Wed,  9 Sep 2020 16:09:43 +0200 (SAST)
+Date:   Wed, 9 Sep 2020 16:09:43 +0200
+From:   Boris Kolpackov <boris@codesynthesis.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] kconfig: fix incomplete type 'struct gstr' warning
+Message-ID: <boris.20200909155725@codesynthesis.com>
+References: <20200908221638.2782778-1-masahiroy@kernel.org>
+ <20200908221638.2782778-2-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200908221638.2782778-2-masahiroy@kernel.org>
+Organization: Code Synthesis
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 05:22:22PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.8.8 release.
-> There are 186 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-> Anything received after that time might be too late.
-> 
+Masahiro Yamada <masahiroy@kernel.org> writes:
 
-Build results:
-	total: 154 pass: 153 fail: 1
-Failed builds:
-	powerpc:allmodconfig
-Qemu test results:
-	total: 430 pass: 430 fail: 0
+> Currently, get_relations_str() is declared before the struct gstr
+> definition.
 
-The powerpc problem is the same as before:
+Yes, I also ran into this while building the kconfig code with MSVC.
+I just moved the struct gstr definition before lkc_proto.h #include
+but your fix works just as well.
 
-Inconsistent kallsyms data
-Try make KALLSYMS_EXTRA_PASS=1 as a workaround
+Acked-by: Boris Kolpackov <boris@codesynthesis.com>
 
-KALLSYMS_EXTRA_PASS=1 doesn't help. The problem is sporadic, elusive, and all
-but impossible to bisect. The same build passes on another system, for example,
-with a different load pattern. It may pass with -j30 and fail with -j40.
-The problem started at some point after v5.8, and got worse over time; by now
-it almost always happens. I'd be happy to debug if there is a means to do it,
-but I don't have an idea where to even start. I'd disable KALLSYMS in my
-test configurations, but the symbol is selected from various places and thus
-difficult to disable. So unless I stop building ppc:allmodconfig entirely
-we'll just have to live with the failure.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+> BTW, some are declared in lkc.h and some in lkc_proto.h, but the
+> difference is unclear. I guess some refactoring is needed.
 
-Guenter
+Yes, please. My (potentially incorrect) understanding is that lkc_proto.h
+was for functions that are not (or should not be) used by clients but
+should nevertheless have prototypes due to -Wmissing-prototypes. I,
+however, believe this no longer holds and so would vote to merge
+lkc_proto.h into lkc.h.
