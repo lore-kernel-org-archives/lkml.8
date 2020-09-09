@@ -2,102 +2,97 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E67EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6947BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6F2F21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEQEt0vi"
+	by mail.kernel.org (Postfix) with ESMTP id 2148E21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599680624;
+	bh=REM5ChS7A22GwS9jcBwomnw42kGODkfBdYtOmypColo=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=Ah8keP23SomFxMCGorwTquBFXZeSmaFFA7XkgfD3hqZuPkny0vat6FAfpyQt8gaA9
+	 tjasCo7V4UP/IfG9wHS4x03Ovpj57B8wwPJu8Wjvkhs/JH14j7tqpZjevL6SoL9jU/
+	 Z8DScIJlKFu/TtdTPR/lugpFB3P+uVz8OE1V2fNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgIITll (ORCPT
+        id S1727893AbgIITnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIITlj (ORCPT
+        Wed, 9 Sep 2020 15:43:43 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:38348 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIITnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:41:39 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D876C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:41:39 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g4so4214230wrs.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7XrmoZ2BYly3f5uTpv031CSkAY88yc/On/yMOgU2Hd4=;
-        b=UEQEt0viSrmmWl85zt2NVLgJjfkwH9EqFEr8VF54y2KvOTiW2yENFKBx/Ekpdoi7YO
-         FO41CUYAoDI43CaHOvNAmKcdYumD0ozGr9o2iVNKEMoPt97OAkCcTPpTNilhKt39o/aZ
-         0DAEQe1E4c7NaBt7bsB1j9Q/gfZzgOhfk2a98WBdIMYOAt/MlwpnaSLGkOEYKiLQfAT6
-         cVLd2qGrZZJ3O2+BV9vTDWc7s7ixsaiNsypvMF5d/dQGdRosDcn1wUjGyLXRXR6b+DhH
-         aRUw46uLc5nUEpTg3WKRk9Rmrh9KvDwEh5eY1np9BOmAvEdH1/29HHH3xoHa+Wbp3SK2
-         i5uA==
+        Wed, 9 Sep 2020 15:43:40 -0400
+Received: by mail-ej1-f66.google.com with SMTP id i22so5289230eja.5;
+        Wed, 09 Sep 2020 12:43:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7XrmoZ2BYly3f5uTpv031CSkAY88yc/On/yMOgU2Hd4=;
-        b=e+W4XypJaxkVapbZAjtoNY5gP/4DcqDOgrev/StEKDwW43vyk7162+prCLz9oaqXcK
-         uXNcHAlD3/YhgCsjrwy9Nf5DA1GoQO3g1hMc/SOipQcMSyNyXMssdkA9Y0gQ5ZlxJPyE
-         FRMMJPaagY7VJktn0ywwo/PRXbdgJsQV5+rnmZlAO39ToX4wZW1vEEn+/Wc0Ju9MZ5U8
-         Y7gUG53Lc4ek7MGeIrcK8VcpAa+qjn+y0ykaOsAg30G3x3qS8BctHr6wIOmIV3AVXa0j
-         U35TUBlOh+LeJeXL3/cSL9CwI4qDPmLzgSLjE/0zVJy1D2wzfyqMaB3ZHM2DbYIL2NBc
-         vhWg==
-X-Gm-Message-State: AOAM532B9uwNuJgQ7e8fSqgi9Jsy9eyoGIyyDZr474rB9lrPguR7MgO/
-        fWECtk+ehFmDtbsKoBw6sMM=
-X-Google-Smtp-Source: ABdhPJxRY8/qKNEGtWyZ0RIIXtrKPru23aEmWZffvyHIeOsyYCgDMinZJVn5WM3F/SsdsHeJNJ1DvA==
-X-Received: by 2002:adf:828e:: with SMTP id 14mr5810669wrc.217.1599680496578;
-        Wed, 09 Sep 2020 12:41:36 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id w7sm5633947wrm.92.2020.09.09.12.41.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 12:41:36 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Evgeniy Polyakov <zbr@ioremap.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] w1: Remove pointless debug code
-Date:   Wed,  9 Sep 2020 20:41:32 +0100
-Message-Id: <20200909194132.212925-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GYrujSeHLlrIuqFch9Co1kvUCUdPKeLia6WoU1oQSBE=;
+        b=PzxisdhuyGKwd1NF0wXCG8TZiNpTl/KT+E1P1mbcNrDTa6lc+7jTRB0/XR+CJP9Gsn
+         51XUr7ewOpCpFcybyzVelCDpQ++22dYuKGSNy69tw5hWstwsbZ5hqZvoa2peDsfh6iZu
+         T/a4CWOZUE7IYqTkEgQnXkhbosgwdqyuMhr5JT7rWdCV/PmZpnBKKf+uYtEBEViyEclt
+         rTO7w+0nJRddHwPTg/CK2jsQ4BewdtU6JPIETgXTR63cl9G+ax1AOeUXhkbkATzzysgo
+         6ii6Lh+vPoBOZVAxp2Z/xyq+uFG7+3MBbde9sSnXYiSowjtWUWqsBJQO6ngfFU4Ooc4L
+         VKXQ==
+X-Gm-Message-State: AOAM530RvkG3HXUkOwq0Z41oUwrLwdhkoCRml4LPs/J/8U/7yPTqYk77
+        EZRcww5TDspiLbytWEMqxlQ=
+X-Google-Smtp-Source: ABdhPJypFVYMywNXOVcZc2Z0ISwLTR57hTvYVWqB8kCnxxkMBCNZkwQ5wttH+UwTNdi5iMmd0d7plg==
+X-Received: by 2002:a17:907:9ed:: with SMTP id ce13mr5081258ejc.180.1599680618145;
+        Wed, 09 Sep 2020 12:43:38 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id z21sm3537912eja.72.2020.09.09.12.43.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Sep 2020 12:43:37 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 21:43:34 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 10/25] ARM: dts: s5pv210: add RTC 32 KHz clock in Aquilla
+Message-ID: <20200909194334.GC21431@kozik-lap>
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-11-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907161141.31034-11-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It doesn't seem obvious why zeroing sl before freeing it would help with
-debugging, so just remove this code.
+On Mon, Sep 07, 2020 at 06:11:26PM +0200, Krzysztof Kozlowski wrote:
+> The S3C RTC requires 32768 Hz clock as input which is provided by PMIC.
+> However there is no such clock provider but rather a regulator driver
+> which registers the clock as a regulator.  This is an old driver which
+> will not be updated so add a workaround - a fixed-clock to fill missing
+> clock phandle reference in S3C RTC.
+> 
+> This fixes dtbs_check warnings:
+> 
+>   rtc@e2800000: clocks: [[2, 145]] is too short
+>   rtc@e2800000: clock-names: ['rtc'] is too short
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/s5pv210-aquila.dts | 17 +++++++++++++++++
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/w1/w1.c | 3 ---
- 1 file changed, 3 deletions(-)
+Applied 10-19.
 
-diff --git a/drivers/w1/w1.c b/drivers/w1/w1.c
-index 4f597b0fd1da..02a0e66144a4 100644
---- a/drivers/w1/w1.c
-+++ b/drivers/w1/w1.c
-@@ -801,9 +801,6 @@ int w1_unref_slave(struct w1_slave *sl)
- 
- 		w1_family_notify(BUS_NOTIFY_DEL_DEVICE, sl);
- 		device_unregister(&sl->dev);
--		#ifdef DEBUG
--		memset(sl, 0, sizeof(*sl));
--		#endif
- 		kfree(sl);
- 	}
- 	atomic_dec(&dev->refcnt);
--- 
-2.28.0
+Best regards,
+Krzysztof
 
