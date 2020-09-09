@@ -2,104 +2,196 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C43C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D38C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9089B21D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11ED120732
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pb3C821k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vKfNkPvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgIIHhJ (ORCPT
+        id S1729953AbgIIHhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:37:09 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:24754 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729449AbgIIHfY (ORCPT
+        Wed, 9 Sep 2020 03:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730256AbgIIHhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:35:24 -0400
-X-UUID: 5074c0d77afe43019ca9202107d2f689-20200909
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UU4g24a8gBnKtYu4tzeO/9s0b7IrNvX3qtQVd8/MiV4=;
-        b=pb3C821k14yZI1N8hWvgy6/00XTGprrhtPch8U6st/qWOCbbjcltyghmng1cw3evdVxTjoc75aJggsv2zmEvYpGJBe5tKj6hu9ZISMZQNsS9JS35BhT0ZGbIXdJ9ouGDHAaEtLH43AAVRw/po+bxSh4UMQNBVRf2MSIXcvW0Ub4=;
-X-UUID: 5074c0d77afe43019ca9202107d2f689-20200909
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 359205686; Wed, 09 Sep 2020 15:35:18 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 9 Sep 2020 15:35:17 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 9 Sep 2020 15:35:16 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>, Bin Liu <b-liu@ti.com>,
-        Sasi Kumar <sasi.kumar@broadcom.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v3 09/11] usb: gadget: bdc: fix checkpatch.pl tab warning
-Date:   Wed, 9 Sep 2020 15:33:00 +0800
-Message-ID: <1599636782-7654-9-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1599636782-7654-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1599636782-7654-1-git-send-email-chunfeng.yun@mediatek.com>
+        Wed, 9 Sep 2020 03:37:04 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B07F5C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:37:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id m6so1812837wrn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:37:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wWgDfU9nZzKqdvbVx8y3VyybzRdiTj4qfLQtg4MRrko=;
+        b=vKfNkPvSqiCi09QBOevuKE3WTzNxDu6Exs/ueisabXStQuSK3AB5ekMSlyhO5Ekvzn
+         Qd42VrxYIuys9XrdUyMAgBTxiOfliJDL/us5t5yVi/CRjDKifwYXMMWmsN6IENcrBNn0
+         2u8lOJf7c5sdSWLaXG0j1K1QdQv4UacDhefcSjtVSzcPgMBw8i7Y0T/8F8iaeOaJBbOC
+         3HmFIgTcbFfE1C1wPpIcIN6tQoefM20O7EQEn6KaMJVASgtpOz3Z/0JtPUDnMhAB31Ou
+         wuNA7DVOA9MllnqftEPlF8ZOYjL6ksA2pJQPP8YeU0qTjxikv/kDs9yYbovFv+EyyUnz
+         xU6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wWgDfU9nZzKqdvbVx8y3VyybzRdiTj4qfLQtg4MRrko=;
+        b=AfeI9zOZmpJKo7/kbgeJskOQVDrVxUHIWOUGGmw3+BdMpUBz/qGs4v9gdegVmseawT
+         t+6jk+qwTh5Vv72R6TWknN2WHJg3xcS3uBpeUlspoFhJq+MoMOgt8X8wwEaFgsDidaSV
+         WqQSdXfh2CF5IgNQcOYCss+DyT+Ggbko/iNjpQzyuhAsZxYI+q+CU3jt7lAegNXmGukq
+         ZbJf64DmQ4NPXC2U+RTA2atlT41Yu4RfFXKLA2ZpCwALWZU2dLfvVnOsJHyEcE39qHUf
+         6v/EC/NZvfgoqao23d9yUmAFvwo2beQySuNmsZUM4LZIQIL8jPoYeIFTtVy8o9ePdnOm
+         i/lQ==
+X-Gm-Message-State: AOAM531bm4bZqmq5WZfaIcvf0X3wpWyTgCg82cqGDLGW/lWO2UVwlemo
+        bsGFGUUbP7jqhAZ0LE36AApWoA==
+X-Google-Smtp-Source: ABdhPJzwqJgPmAj9vMXTqolup+yM+UOmHtcxAg+FNcdJ6X/69jQchDfjUR+5dlw1mGEfxngwZltkHQ==
+X-Received: by 2002:adf:e391:: with SMTP id e17mr2316189wrm.289.1599637022185;
+        Wed, 09 Sep 2020 00:37:02 -0700 (PDT)
+Received: from dell ([91.110.221.179])
+        by smtp.gmail.com with ESMTPSA id 91sm3266190wrq.9.2020.09.09.00.37.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 00:37:01 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 08:36:59 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v4 9/9] mfd: mt6360: Merge different sub-devices I2C
+ read/write
+Message-ID: <20200909073659.GA218742@dell>
+References: <1597661277-27862-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597661277-27862-10-git-send-email-gene.chen.richtek@gmail.com>
+ <20200828104053.GM1826686@dell>
+ <CAE+NS37uFoDhWyGkw0WTu+tR+_85EwzYRqecNMG6nK6b2J=9jg@mail.gmail.com>
+ <20200908114819.GO4400@dell>
+ <CAE+NS36MVA=9e0Ev73gpJ-gOcY+_aNveTr+DhquD6iqY-GKXCQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 2AA1BD8FC07D38044651672ED39F80B5D8FADBE1F94501DD414C70C1A821AA682000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE+NS36MVA=9e0Ev73gpJ-gOcY+_aNveTr+DhquD6iqY-GKXCQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V0FSTklORzpTVVNQRUNUX0NPREVfSU5ERU5UOiBzdXNwZWN0IGNvZGUgaW5kZW50IGZvciBjb25k
-aXRpb25hbCBzdGF0ZW1lbnRzDQpXQVJOSU5HOlRBQlNUT1A6IFN0YXRlbWVudHMgc2hvdWxkIHN0
-YXJ0IG9uIGEgdGFic3RvcA0KDQpDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFp
-bC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRl
-ay5jb20+DQpBY2tlZC1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+
-DQotLS0NCnYzOiBhZGQgYWNrZWQtYnkgRmxvcmlhbg0KDQp2MjogYWRkIENjIEZsb3JpYW4NCi0t
-LQ0KIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19jbWQuYyB8IDIgKy0NCiBkcml2ZXJz
-L3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZXAuYyAgfCA0ICsrLS0NCiAyIGZpbGVzIGNoYW5nZWQs
-IDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-dXNiL2dhZGdldC91ZGMvYmRjL2JkY19jbWQuYyBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRj
-L2JkY19jbWQuYw0KaW5kZXggNDRjMmE1ZS4uOTk1Zjc5YyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-dXNiL2dhZGdldC91ZGMvYmRjL2JkY19jbWQuYw0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3Vk
-Yy9iZGMvYmRjX2NtZC5jDQpAQCAtMTYzLDcgKzE2Myw3IEBAIGludCBiZGNfY29uZmlnX2VwKHN0
-cnVjdCBiZGMgKmJkYywgc3RydWN0IGJkY19lcCAqZXApDQogCQkJCQl1c2JfZW5kcG9pbnRfeGZl
-cl9pc29jKGRlc2MpKSB7DQogCQkJcGFyYW0yIHw9IHNpOw0KIAkJCWlmICh1c2JfZW5kcG9pbnRf
-eGZlcl9pc29jKGRlc2MpICYmIGNvbXBfZGVzYykNCi0JCQkJCW11bCA9IGNvbXBfZGVzYy0+Ym1B
-dHRyaWJ1dGVzOw0KKwkJCQltdWwgPSBjb21wX2Rlc2MtPmJtQXR0cmlidXRlczsNCiANCiAJCX0N
-CiAJCXBhcmFtMiB8PSBtdWwgPDwgRVBNX1NISUZUOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNi
-L2dhZGdldC91ZGMvYmRjL2JkY19lcC5jIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRj
-X2VwLmMNCmluZGV4IDNmYjM2YzguLmQyMjdkMjYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9n
-YWRnZXQvdWRjL2JkYy9iZGNfZXAuYw0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMv
-YmRjX2VwLmMNCkBAIC0yNzUsNyArMjc1LDcgQEAgc3RhdGljIGlubGluZSBpbnQgZmluZF9lbmRf
-YmRpKHN0cnVjdCBiZGNfZXAgKmVwLCBpbnQgbmV4dF9od2RfYmRpKQ0KIAllbmRfYmRpID0gbmV4
-dF9od2RfYmRpIC0gMTsNCiAJaWYgKGVuZF9iZGkgPCAwKQ0KIAkJZW5kX2JkaSA9IGVwLT5iZF9s
-aXN0Lm1heF9iZGkgLSAxOw0KLQkgZWxzZSBpZiAoKGVuZF9iZGkgJSAoZXAtPmJkX2xpc3QubnVt
-X2Jkc190YWJsZS0xKSkgPT0gMCkNCisJZWxzZSBpZiAoKGVuZF9iZGkgJSAoZXAtPmJkX2xpc3Qu
-bnVtX2Jkc190YWJsZS0xKSkgPT0gMCkNCiAJCWVuZF9iZGktLTsNCiANCiAJcmV0dXJuIGVuZF9i
-ZGk7DQpAQCAtNzk1LDcgKzc5NSw3IEBAIHN0YXRpYyBpbnQgZXBfZGVxdWV1ZShzdHJ1Y3QgYmRj
-X2VwICplcCwgc3RydWN0IGJkY19yZXEgKnJlcSkNCiAJCQlzdGFydF9wZW5kaW5nID0gdHJ1ZTsN
-CiAJCQllbmRfcGVuZGluZyA9IHRydWU7DQogCQl9IGVsc2UgaWYgKGVuZF9iZGkgPj0gY3Vycl9o
-d19kcXBpIHx8IGVuZF9iZGkgPD0gZXFwX2JkaSkgew0KLQkJCQllbmRfcGVuZGluZyA9IHRydWU7
-DQorCQkJZW5kX3BlbmRpbmcgPSB0cnVlOw0KIAkJfQ0KIAl9IGVsc2Ugew0KIAkJaWYgKHN0YXJ0
-X2JkaSA+PSBjdXJyX2h3X2RxcGkpIHsNCi0tIA0KMS45LjENCg==
+On Wed, 09 Sep 2020, Gene Chen wrote:
 
+> Lee Jones <lee.jones@linaro.org> 於 2020年9月8日 週二 下午7:48寫道：
+> >
+> > On Tue, 01 Sep 2020, Gene Chen wrote:
+> >
+> > > Lee Jones <lee.jones@linaro.org> 於 2020年8月28日 週五 下午6:40寫道：
+> > > >
+> > > > On Mon, 17 Aug 2020, Gene Chen wrote:
+> > > >
+> > > > > From: Gene Chen <gene_chen@richtek.com>
+> > > > >
+> > > > > Remove unuse register definition.
+> > > >
+> > > > This should be in a separate patch.
+> > > >
+> > > > > Merge different sub-devices I2C read/write functions into one Regmap,
+> > > > > because PMIC and LDO part need CRC bits for access protection.
+> > > > >
+> > > > > Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> > > > > ---
+> > > > >  drivers/mfd/Kconfig        |   1 +
+> > > > >  drivers/mfd/mt6360-core.c  | 260 +++++++++++++++++++++++++++++++++++++++------
+> > > > >  include/linux/mfd/mt6360.h | 240 -----------------------------------------
+> > > > >  3 files changed, 226 insertions(+), 275 deletions(-)
+> > > > >  delete mode 100644 include/linux/mfd/mt6360.h
+> > > > >
+> > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > index a37d7d1..0684ddc 100644
+> > > > > --- a/drivers/mfd/Kconfig
+> > > > > +++ b/drivers/mfd/Kconfig
+> > > > > @@ -913,6 +913,7 @@ config MFD_MT6360
+> > > > >       select MFD_CORE
+> > > > >       select REGMAP_I2C
+> > > > >       select REGMAP_IRQ
+> > > > > +     select CRC8
+> > > > >       depends on I2C
+> > > > >       help
+> > > > >         Say Y here to enable MT6360 PMU/PMIC/LDO functional support.
+> > > > > diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+> > > > > index 677c974..e995220 100644
+> > > > > --- a/drivers/mfd/mt6360-core.c
+> > > > > +++ b/drivers/mfd/mt6360-core.c
+> > > > > @@ -14,7 +14,53 @@
+> > > > >  #include <linux/regmap.h>
+> > > > >  #include <linux/slab.h>
+> > > > >
+> > > > > -#include <linux/mfd/mt6360.h>
+> > > > > +enum {
+> > > > > +     MT6360_SLAVE_TCPC = 0,
+> > > > > +     MT6360_SLAVE_PMIC,
+> > > > > +     MT6360_SLAVE_LDO,
+> > > > > +     MT6360_SLAVE_PMU,
+> > > > > +     MT6360_SLAVE_MAX,
+> > > > > +};
+> > > > > +
+> > > > > +struct mt6360_ddata {
+> > > > > +     struct i2c_client *i2c[MT6360_SLAVE_MAX];
+> > > > > +     struct device *dev;
+> > > > > +     struct regmap *regmap;
+> > > > > +     struct regmap_irq_chip_data *irq_data;
+> > > > > +     unsigned int chip_rev;
+> > > > > +     u8 crc8_tbl[CRC8_TABLE_SIZE];
+> > > > > +};
+> > > >
+> > > > This is not a new structure, right?  Where was this before?  Surely it
+> > > > should be removed from wherever it was in the same patch that places
+> > > > it here?
+> > > >
+> > >
+> > > No, it is merge from header file to source code for unuse in other sub-module.
+> >
+> > So where did it come from and why don't I see the removal in this
+> > patch?
+> >
+> 
+> Change is in the bottom of this patch.
+> There is a little confuse part in "[PATCH v4 5/9] mfd: mt6360: Rename
+> mt6360_pmu_data by mt6360_ddata"
+> The "PATCH 5/9" change mt6360_pmu_data to mt6360_ddata instead of mt6360_data.
+> I will update PATCH v5 to fix it.
+> 
+> [PATCH v4 9/9]
+> diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
+> -struct mt6360_data {
+> -       struct i2c_client *i2c[MT6360_SLAVE_MAX];
+> -       struct device *dev;
+> -       struct regmap *regmap;
+> -       struct regmap_irq_chip_data *irq_data;
+> -       unsigned int chip_rev;
+> -};
+> 
+> [PATCH v4 5/9]
+> diff --git a/include/linux/mfd/mt6360.h b/include/linux/mfd/mt6360.h
+> -struct mt6360_pmu_data {
+> +struct mt6360_data {
+>         struct i2c_client *i2c[MT6360_SLAVE_MAX];
+>         struct device *dev;
+>         struct regmap *regmap;
+
+Oh, you've renamed it whilst moving it.  That is probably not best
+practise, as it causes this kind of confusion.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
