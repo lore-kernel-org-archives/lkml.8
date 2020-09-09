@@ -2,78 +2,80 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B8FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1783CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8EE20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D530720C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTyimvyU"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="y8KsdU2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731079AbgIIQiy (ORCPT
+        id S1730567AbgIIQjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58002 "EHLO
+        Wed, 9 Sep 2020 12:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731117AbgIIQhQ (ORCPT
+        with ESMTP id S1731114AbgIIQhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 12:37:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBD7C06134D;
-        Wed,  9 Sep 2020 06:56:59 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so3033394wrl.12;
-        Wed, 09 Sep 2020 06:56:59 -0700 (PDT)
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1E1C06135D
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:03:36 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id a8so2452259ilk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BEYCNqgyVOK8LPHm0pW4gAQlXSGsL9SxMYctPkZYsHs=;
-        b=DTyimvyUJkz5jsk/uhVkU2oSMDIcAlgsNGEUGmPcgAL38LkplJ71fCV1INCXFoATQ/
-         x4acNttWaBovxqTj7wCmX+AcTsozmKZtgfIvmtynQQ1rTSWPO2BTcPbGbpCm+W8zB0b/
-         LsUVJZTYghi3q+cSZmOgRbnQrgGwuqLt3FI1Q1148EC02AZQI8PdQTgTVUxtdLpKpjgS
-         ChW+JAMIDUtN/064x10uzDfFLJykGFDXxsYtoSnuH/csnnfB+uxlWA7PPQh7FbZ+rhI7
-         yffBubaG1T4R8w+dJxwZwbqRmU6IpkjMV25kW5h4Fm0PVvvAjNWXghHjhX8wOqpxA2c4
-         mepw==
+        bh=kCsxeCMw67opcoElUs8hZzWLlvUYaz8JdahayB2RUI4=;
+        b=y8KsdU2xS4h9wwHh/xYDwErwKAwdbag1RHnw+sM66m/fustnVCcke5hzrzLLhpqjyI
+         gAKCWN9X6Ps6x4mAijLqE21trmg9mvsJQ6ZXE0ar9XW5AIXWCAZTNu+/gqEJ6wq0O0gL
+         AzlVewdt+lb/VWNKuLkTogy0q7/FP96IucjOTs0oY3gRRxpBURUZKYXuGXdIarA/8MZG
+         bVbuGmOJ4V48/zvhddDGTpiR5+vFcOkBtV4tQZyGNtf7K6xTmUEgpvSiEmEAXSDc32oN
+         uTt5aC7e2b47Bf/C77XLGczztZb6xRGZ3YIqp8kpjfAi8rNQJ7u+jP0IMx/wbKphG5W1
+         NfiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BEYCNqgyVOK8LPHm0pW4gAQlXSGsL9SxMYctPkZYsHs=;
-        b=tbLTx+L/cE4vj5mleX5MnoHGIqIkxmMCdl/kQt0SIUV3vYzsOLTbwLaehcQo7VKfev
-         icyPp4ysF66bIse653IL8hRybwkhflit0bi3y2LSoQmseSmi8IT+63f6+tjgXGm3zoVC
-         qqZRnzbm+vhXvWSl3lscgLSAEigkyMYroQDS/HknelhohnUQunIzv0LhiQyzRN6ruGiz
-         9HEwMOnpqkCbH0gD/fEZl5z2el11zmCGM9vdBUsYd0YVtr6F1byAmYdxfDYagnwsWly7
-         Mqy64dGlUxbC3dqUKWCzrFZl6er4qMuFJIf2gXK/nIPnMd/oZg8e1JhCou1v68Yai/UC
-         ePnQ==
-X-Gm-Message-State: AOAM532ULL4hwIV4HWOUI8Pvjh4U+RtsYvGsiRoUglA7KBLwBh3qX9vl
-        FdjJJZdOEieJKEbna4v2yhU562NoDZE=
-X-Google-Smtp-Source: ABdhPJw1g2DznKLop0gjKRUfU3u5Dl/1ECcNw6HJ524feFznXNwBISGkn0wO6A++0KBND14/MEnGIg==
-X-Received: by 2002:adf:ba83:: with SMTP id p3mr4330840wrg.246.1599659818085;
-        Wed, 09 Sep 2020 06:56:58 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.201])
-        by smtp.gmail.com with ESMTPSA id q20sm3966068wmj.5.2020.09.09.06.56.57
+        bh=kCsxeCMw67opcoElUs8hZzWLlvUYaz8JdahayB2RUI4=;
+        b=MEXzm35I+YZsN76FOUlzFDNS6UG2BelBOeKPjtbuShdqpoRPdMe8miGGvUUFrs9lcN
+         haHUApQgiSlucPyyFXoox3dTg1Onk56rNqv8GyPeqrDKag2uB6DLvzknFrHEYnCVqEV3
+         ++iXeaD6YO1BysjLeuiiMHZ2axooNRP4KpaqTzEP6gCWC9NLcmlwcJ3yjybzwymP2Hon
+         +p5xMpGBInPOmeqOuM01bKHX/4x0gW6Q1i4hKdJaHb4iFJPPmfQD8kaCUdrbwIEIkgYh
+         kpI7NsD5hXOwtsVnXnq6UO/V8kARtFSvogt7sQMkigvU6pp9Ff2bSTfQHzLLCVxu0xCl
+         m13w==
+X-Gm-Message-State: AOAM531bzg8YJT1Uve6030GaE9VcbB2xgxYk6m//5xSu4fSxDg1POTw0
+        jUAfprOfa+Ey/W23QL2/QsDyOu9FwhiniAkV
+X-Google-Smtp-Source: ABdhPJywiqVd3crHHoKQ2WPdED4AxcZSebQ/f1P0yVO+Jydm2uWgdHboDeu9R4fZh5S89cAdslOriA==
+X-Received: by 2002:a92:985a:: with SMTP id l87mr3668939ili.2.1599660214146;
+        Wed, 09 Sep 2020 07:03:34 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c2sm1464286ilo.7.2020.09.09.07.03.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 06:56:57 -0700 (PDT)
-Subject: Re: linux-next: Fixes tag needs some work in the mediatek tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>
-References: <20200909204951.5d3196d0@canb.auug.org.au>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <cefa0d86-d9ed-d2be-91db-b060aafd8b52@gmail.com>
-Date:   Wed, 9 Sep 2020 15:56:56 +0200
+        Wed, 09 Sep 2020 07:03:33 -0700 (PDT)
+Subject: Re: INFO: task hung in io_sq_thread_stop
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        syzbot <syzbot+3c23789ea938faaef049@syzkaller.appspotmail.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <00000000000030a45905aedd879d@google.com>
+ <20200909100355.ibz4jc5ctnwbmy5v@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <fa8f11bf-d0e6-42b9-0a2e-2bb4c8679b99@kernel.dk>
+Date:   Wed, 9 Sep 2020 08:03:32 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200909204951.5d3196d0@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20200909100355.ibz4jc5ctnwbmy5v@steredhat>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,27 +83,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/9/20 4:03 AM, Stefano Garzarella wrote:
+> On Wed, Sep 09, 2020 at 01:49:22AM -0700, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    dff9f829 Add linux-next specific files for 20200908
+>> git tree:       linux-next
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=112f880d900000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=3c23789ea938faaef049
+>> compiler:       gcc (GCC) 10.1.0-syz 20200507
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c082a5900000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1474f5f9900000
+>>
+>> Bisection is inconclusive: the first bad commit could be any of:
+>>
+>> d730b1a2 io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+>> 7ec3d1dd io_uring: allow disabling rings during the creation
+> 
+> I'm not sure it is related, but while rebasing I forgot to update the
+> right label in the error path.
+> 
+> Since the check of ring state is after the increase of ctx refcount, we
+> need to decrease it jumping to 'out' label instead of 'out_fput':
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index d00eb6bf6ce9..f35da516095a 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -8649,7 +8649,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+>                 goto out_fput;
+> 
+>         if (ctx->flags & IORING_SETUP_R_DISABLED)
+> -               goto out_fput;
+> +               goto out;
+> 
+>         /*
+>          * For SQ polling, the thread will do all submissions and completions.
+> 
+> I'll send a patch ASAP and check if it solves this issue.
 
+I think that's a separate bug, it's definitely a bug. So please do send
+the fix, thanks.
 
-On 09/09/2020 12:49, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->    845d404207f1 ("arm: dts: mt7623: move display nodes to separate mt7623n.dtsi")
-> 
-> Fixes tag
-> 
->    Fixes: 1f6ed224594 ("arm: dts: mt7623: add Mali-450 device node")
-> 
-> has these problem(s):
-> 
->    - SHA1 should be at least 12 digits long
->      Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->      or later) just making sure it is not set (or set to "auto").
-> 
+-- 
+Jens Axboe
 
-Fixed now and pushed again. Thanks for noting.
-
-Regards,
-Matthias
