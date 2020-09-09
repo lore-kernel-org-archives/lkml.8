@@ -2,215 +2,266 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02046C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E44C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF84721D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FA821D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:32:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCb96bd/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8G3B3Rx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgIIKcC (ORCPT
+        id S1729990AbgIIKcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
+        Wed, 9 Sep 2020 06:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgIIK2e (ORCPT
+        with ESMTP id S1729622AbgIIK23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:28:34 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B472C061755;
-        Wed,  9 Sep 2020 03:28:33 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n14so1767568pff.6;
-        Wed, 09 Sep 2020 03:28:33 -0700 (PDT)
+        Wed, 9 Sep 2020 06:28:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE75C061756;
+        Wed,  9 Sep 2020 03:28:27 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id i26so2719819ejb.12;
+        Wed, 09 Sep 2020 03:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
-        b=cCb96bd/ZKzxjj8K1XHiEsSYKl0+uzDOsAIFm4kWQ/A63lA1YimHbZb8E5/pAIAdkK
-         miBFsadcPYjnX5fDL7u6IqO+nH+A3VvmFtMyNEUvmtD77YlrDqLxdDp06sbhgMfvnBhw
-         9TeoolQwqjNFCsDtsskFXvj7Hh+zOYG2/0bs/tW5bbMO0Eg5BWs5GYr5PKSKvA+80ZHJ
-         MO53Hjvib/TXOQDs2TlnjoVEkGLbGm/9T/Z6JE8AnTk8JhCpBKZLSDs5pMOcUaIKAWk2
-         /b+xqoVAraQBFXUwyahA1OTCQhRGc91BBMn/0oW7uXdW2Ch7GKREmFV1NGhph6H0lhHc
-         Y87A==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=5L0FYmrgLc/AeGlMxciewQL4fVagS62WHvA7C0Mha2U=;
+        b=E8G3B3RxvtYLubvdBoAyQYrMASGo5lSSd9o6lL1PQY+8YqUa8et09R0wmnamuetkYE
+         fMiH6pkm3pDMJ1+j5TROIfrzSEPpnnGGKfmtgWYDJ/Dmm/MZ59/U0LhRZ4APUKPE7Oi6
+         VSdY4UhyUO5hQPOKd2Q86a+jM+Yo/8leB1c3MxDVxOfmLINUA0DdM65aaenVqLoSyH4p
+         CNzEWMPk1WlcmWhxkglMo2jrzoHdYYbO2BKnZwvYyizfCBViVHTHyvbdeZO+5g4cIlAe
+         Yz7IghsuDIcUrle9WLnJ5EKriRu0vVCIQGySsGsycETQhGxsDoV/9VhmYeJAO/rZANLZ
+         I+OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
-        b=I/FlbDYaNogGd/awbG5PmdlAnsemFuxZpz3IIwMCL3GvlmR4kq0C/Wo+8h9FAJrp1y
-         +HMsW8HxtV91ICZrkycj2YPauE3PdfAQmPzEsaqhXb4ETxDPHunor2XOPFKe/1FLTGco
-         WL8rxlBx70fqZiUIQ5h2od9egFm+WpWfMq3BjLUxdKls+ieeKH6BkN0RIg/v8uwpUzPV
-         3TH7vnZRHWmtD2Ia2tkWEha3hgzEacWrH22iACym5klONfMwSwRQYgcCf4Igd9oGpxyJ
-         u2odsL0VBWRjt+5M2YEo40Rmn0oaxfiXYNJLh8nV+D/9357ru7H5jL1TFB/hC17l2RtR
-         KX/A==
-X-Gm-Message-State: AOAM531/VzdgX94ZOyxQ+/qLXrwWultZ0kN7IqKANkZ1BbfRD2kgDtVG
-        3lTHnQXo+o9S2oeKNHMNmNr0h5cQa/8=
-X-Google-Smtp-Source: ABdhPJyYuIUXKtRFKGyzp0mxaALhib1jIhD00A67xYUX+vzjAWF+gvkxCWgc+Hz944LY83NUI0mWDQ==
-X-Received: by 2002:a63:2782:: with SMTP id n124mr108572pgn.319.1599647312706;
-        Wed, 09 Sep 2020 03:28:32 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.28.29
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=5L0FYmrgLc/AeGlMxciewQL4fVagS62WHvA7C0Mha2U=;
+        b=rPHzaHjoBn3wopjjE9JsF7Ygmry8J4DqUyuo64MQBncaHWRdIW4RXdLVB4ihVdtLnB
+         alUt2TuaD64mFc8uo5hK7yMCcONuuHzZcOBIg49VYp2jRfnvbbwVX2FenIhiYlqdQrOa
+         dHNXXIUZRRTAbV4ZBUEoFTsfGmu9TAvyK4IVZVmr4rn0W9IhidCEqMNYwNK/8cePquZk
+         BoCFRZ7H6KLdAbiyB1CRxdQ8IUspR9kTRP75uXNsbd3bb8hE7HDqYjv7ihwY94tOeCjZ
+         h9aPt2KVFKXmNB6QVML6whbz+Htmul+fDg4XRX8xC09fvuEeasOLpzB2kts4fCLjBdOx
+         eGpw==
+X-Gm-Message-State: AOAM5304nXR7UMO8H6xV/GzSVyNFCAidJu2tXn7ttsYOIYcjiNZ1wVUI
+        ejaleWcmNchDbhaMvRq0Kyk=
+X-Google-Smtp-Source: ABdhPJw0ydGLeroaQ4ovup4psjNpZukG2PQ9o2yOH3qe+YtDqrNa41WAoM9ok/DKKz4QeeguH05VwQ==
+X-Received: by 2002:a17:906:e08f:: with SMTP id gh15mr2811259ejb.443.1599647305752;
+        Wed, 09 Sep 2020 03:28:25 -0700 (PDT)
+Received: from felia ([2001:16b8:2d44:6000:6108:df55:7b8e:67d4])
+        by smtp.gmail.com with ESMTPSA id y21sm1690502eju.46.2020.09.09.03.28.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 03:28:32 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v8 14/20] tools: gpio: port lsgpio to v2 uAPI
-Date:   Wed,  9 Sep 2020 18:26:34 +0800
-Message-Id: <20200909102640.1657622-15-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200909102640.1657622-1-warthog618@gmail.com>
-References: <20200909102640.1657622-1-warthog618@gmail.com>
+        Wed, 09 Sep 2020 03:28:25 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 9 Sep 2020 12:28:23 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     John Mathew <john.mathew@unikie.com>
+cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        willy@infradead.org, valentin.schneider@arm.com
+Subject: Re: [RFC PATCH v8 1/3] docs: scheduler: Restructure scheduler
+ documentation.
+In-Reply-To: <20200902162632.10271-2-john.mathew@unikie.com>
+Message-ID: <alpine.DEB.2.21.2009091223470.5622@felia>
+References: <20200902162632.10271-1-john.mathew@unikie.com> <20200902162632.10271-2-john.mathew@unikie.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Port the lsgpio tool to the latest GPIO uAPI.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/lsgpio.c | 60 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 38 insertions(+), 22 deletions(-)
 
-diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
-index b08d7a5e779b..deda38244026 100644
---- a/tools/gpio/lsgpio.c
-+++ b/tools/gpio/lsgpio.c
-@@ -25,57 +25,73 @@
- 
- struct gpio_flag {
- 	char *name;
--	unsigned long mask;
-+	unsigned long long mask;
- };
- 
- struct gpio_flag flagnames[] = {
- 	{
--		.name = "kernel",
--		.mask = GPIOLINE_FLAG_KERNEL,
-+		.name = "used",
-+		.mask = GPIO_V2_LINE_FLAG_USED,
-+	},
-+	{
-+		.name = "input",
-+		.mask = GPIO_V2_LINE_FLAG_INPUT,
- 	},
- 	{
- 		.name = "output",
--		.mask = GPIOLINE_FLAG_IS_OUT,
-+		.mask = GPIO_V2_LINE_FLAG_OUTPUT,
- 	},
- 	{
- 		.name = "active-low",
--		.mask = GPIOLINE_FLAG_ACTIVE_LOW,
-+		.mask = GPIO_V2_LINE_FLAG_ACTIVE_LOW,
- 	},
- 	{
- 		.name = "open-drain",
--		.mask = GPIOLINE_FLAG_OPEN_DRAIN,
-+		.mask = GPIO_V2_LINE_FLAG_OPEN_DRAIN,
- 	},
- 	{
- 		.name = "open-source",
--		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
-+		.mask = GPIO_V2_LINE_FLAG_OPEN_SOURCE,
- 	},
- 	{
- 		.name = "pull-up",
--		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_UP,
- 	},
- 	{
- 		.name = "pull-down",
--		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN,
- 	},
- 	{
- 		.name = "bias-disabled",
--		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
-+		.mask = GPIO_V2_LINE_FLAG_BIAS_DISABLED,
- 	},
- };
- 
--void print_flags(unsigned long flags)
-+static void print_attributes(struct gpio_v2_line_info *info)
- {
- 	int i;
--	int printed = 0;
-+	const char *field_format = "%s";
- 
- 	for (i = 0; i < ARRAY_SIZE(flagnames); i++) {
--		if (flags & flagnames[i].mask) {
--			if (printed)
--				fprintf(stdout, " ");
--			fprintf(stdout, "%s", flagnames[i].name);
--			printed++;
-+		if (info->flags & flagnames[i].mask) {
-+			fprintf(stdout, field_format, flagnames[i].name);
-+			field_format = ", %s";
- 		}
- 	}
-+
-+	if ((info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING) &&
-+	    (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING))
-+		fprintf(stdout, field_format, "both-edges");
-+	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING)
-+		fprintf(stdout, field_format, "rising-edge");
-+	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
-+		fprintf(stdout, field_format, "falling-edge");
-+
-+	for (i = 0; i < info->num_attrs; i++) {
-+		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
-+			fprintf(stdout, ", debounce_period=%dusec",
-+				info->attrs[0].debounce_period);
-+	}
- }
- 
- int list_device(const char *device_name)
-@@ -109,18 +125,18 @@ int list_device(const char *device_name)
- 
- 	/* Loop over the lines and print info */
- 	for (i = 0; i < cinfo.lines; i++) {
--		struct gpioline_info linfo;
-+		struct gpio_v2_line_info linfo;
- 
- 		memset(&linfo, 0, sizeof(linfo));
--		linfo.line_offset = i;
-+		linfo.offset = i;
- 
--		ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &linfo);
-+		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_IOCTL, &linfo);
- 		if (ret == -1) {
- 			ret = -errno;
- 			perror("Failed to issue LINEINFO IOCTL\n");
- 			goto exit_close_error;
- 		}
--		fprintf(stdout, "\tline %2d:", linfo.line_offset);
-+		fprintf(stdout, "\tline %2d:", linfo.offset);
- 		if (linfo.name[0])
- 			fprintf(stdout, " \"%s\"", linfo.name);
- 		else
-@@ -131,7 +147,7 @@ int list_device(const char *device_name)
- 			fprintf(stdout, " unused");
- 		if (linfo.flags) {
- 			fprintf(stdout, " [");
--			print_flags(linfo.flags);
-+			print_attributes(&linfo);
- 			fprintf(stdout, "]");
- 		}
- 		fprintf(stdout, "\n");
--- 
-2.28.0
+On Wed, 2 Sep 2020, John Mathew wrote:
 
+> Add new sections to enable addition of new documentation on
+> the scheduler. Existing documentation is moved under the related
+> new sections. The sections are
+>   - overview
+>   - sched-features
+>   - arch-specific.rst
+>   - sched-debugging.rst
+> 
+> Suggested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Signed-off-by: John Mathew <john.mathew@unikie.com>
+> ---
+>  Documentation/scheduler/arch-specific.rst   | 12 +++++++++
+>  Documentation/scheduler/index.rst           | 30 +++++++++++----------
+>  Documentation/scheduler/overview.rst        |  5 ++++
+>  Documentation/scheduler/sched-debugging.rst | 14 ++++++++++
+>  Documentation/scheduler/sched-features.rst  | 25 +++++++++++++++++
+>  5 files changed, 72 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/scheduler/arch-specific.rst
+>  create mode 100644 Documentation/scheduler/overview.rst
+>  create mode 100644 Documentation/scheduler/sched-debugging.rst
+>  create mode 100644 Documentation/scheduler/sched-features.rst
+> 
+> diff --git a/Documentation/scheduler/arch-specific.rst b/Documentation/scheduler/arch-specific.rst
+> new file mode 100644
+> index 000000000000..3e5af3a0695e
+> --- /dev/null
+> +++ b/Documentation/scheduler/arch-specific.rst
+> @@ -0,0 +1,12 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +Architecture Specific Scheduler Implementation Differences
+> +==========================================================
+
+That is a terribly long title, how about Architecture Specifics?
+
+I am wondering if this should be on the toplevel documentation structure
+directly under Linux Scheduler.
+
+I think the x86 and MIPS context switch documentation could be placed
+under Process context switching in a section Architecture Specifics.
+
+> +
+> +.. class:: toc-title
+> +
+> +	   Table of contents
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
+> index 88900aabdbf7..6e88a070c503 100644
+> --- a/Documentation/scheduler/index.rst
+> +++ b/Documentation/scheduler/index.rst
+> @@ -1,24 +1,26 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+>  ===============
+>  Linux Scheduler
+>  ===============
+>  
+> -.. toctree::
+> -    :maxdepth: 1
+> +This documentation outlines the Linux kernel scheduler with its concepts,
+> +details about the scheduler design and its data structures and architecture
+> +specific implementation differences.
+> +
+>  
+> +.. class:: toc-title
+> +
+> +    Table of contents
+> +
+> +.. toctree::
+> +    :maxdepth: 2
+>  
+> -    completion
+> -    sched-arch
+> -    sched-bwc
+> -    sched-deadline
+> +    overview
+>      sched-design-CFS
+> -    sched-domains
+> -    sched-capacity
+> -    sched-energy
+> -    sched-nice-design
+> -    sched-rt-group
+> -    sched-stats
+> -
+> -    text_files
+> +    sched-features
+> +    arch-specific
+> +    sched-debugging
+>  
+>  .. only::  subproject and html
+>  
+> diff --git a/Documentation/scheduler/overview.rst b/Documentation/scheduler/overview.rst
+> new file mode 100644
+> index 000000000000..a1d2d26629eb
+> --- /dev/null
+> +++ b/Documentation/scheduler/overview.rst
+> @@ -0,0 +1,5 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +====================
+> +Scheduler overview
+
+s/Scheduler overview/Scheduler Overview/
+
+for some more consistent capitalisation.
+
+> +====================
+> \ No newline at end of file
+
+That could be the cause for the git am errors.
+
+> diff --git a/Documentation/scheduler/sched-debugging.rst b/Documentation/scheduler/sched-debugging.rst
+> new file mode 100644
+> index 000000000000..e332069f99d6
+> --- /dev/null
+> +++ b/Documentation/scheduler/sched-debugging.rst
+> @@ -0,0 +1,14 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +Scheduler Debugging Interface
+> +==============================
+> +
+> +.. class:: toc-title
+> +
+> +	   Table of contents
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   sched-stats
+> +   text_files
+> diff --git a/Documentation/scheduler/sched-features.rst b/Documentation/scheduler/sched-features.rst
+> new file mode 100644
+> index 000000000000..8eb90e86e489
+> --- /dev/null
+> +++ b/Documentation/scheduler/sched-features.rst
+> @@ -0,0 +1,25 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +Scheduler Features
+> +===================
+> +
+> +.. class:: toc-title
+> +
+> +	Table of contents
+> +
+> +.. toctree::
+> +   :maxdepth: 1
+> +
+> +   completion
+> +   sched-arch
+> +   sched-bwc
+> +   sched-deadline
+> +   sched-domains
+> +   sched-capacity
+> +   sched-energy
+> +   sched-nice-design
+> +   sched-rt-group
+> +   sched-stats
+> +
+> +   text_files
+
+I guess it is fine to place everything here for now, but more clean-up 
+would probably move those to the appropriate documentation structure, 
+right?
+
+
+> +
+> -- 
+> 2.17.1
+> 
+> 
