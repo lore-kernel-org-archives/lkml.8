@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF2EC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3736DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB85F2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:59:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24B62087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599670766;
-	bh=DbbVi8JHa1eEPXHrLwj3ICxCD+h+VHi3eWubC5Fj7jU=;
+	s=default; t=1599670775;
+	bh=/bHl1yHvnGqPKNbvJvHMSS5pZd7oY1zhfyqb1y94N8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+ggpFuKZdlvHgKHzZYb4refM/+3BKSJq8ZUQogCuBDBLCv7ZNJ0QgptoybeiIMaS
-	 CC8oC278Bi1jAAOrwOS0IXUHUiqdth3pdz7stZBEijwAFDhkF+Tk6WaDvXYkBJxBDu
-	 uVlCPXvV07we1cyhe5mrn/EuAjatYE40LC0w6aT8=
+	b=mMKMfIG/YFFWhjOEjPDtJ7gtEqtIcKgUq+0SzizHHBaKR+WdgoQTU6lxHovqOwIsp
+	 59THChZ9+Gg5kAegI4hnALyRk8VBxVFK9PILHA7UVbksMmaW23SuklfWcqhq81Q9ST
+	 +SG2e49Vd38aBwp2AAVRfGjkP8KanNPg0Pyr3l/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731193AbgIIQ7W (ORCPT
+        id S1731195AbgIIQ7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51680 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 12:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730638AbgIIPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730644AbgIIPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 11:51:12 -0400
 Received: from mail.kernel.org (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F59722228;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B44F22224;
         Wed,  9 Sep 2020 14:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599660665;
-        bh=DbbVi8JHa1eEPXHrLwj3ICxCD+h+VHi3eWubC5Fj7jU=;
+        bh=/bHl1yHvnGqPKNbvJvHMSS5pZd7oY1zhfyqb1y94N8k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhJPN8Jtk0NBCWNDKBLJ5O9Ph3gfVoSBT71xUwASOVB9GqvAbBjd7Q54s570o5S5S
-         gfwjFDuDQpIMfjTOO6buzD/PV3WGtz2qKakFwBO5NGWwAZw42Fwz3HKioNOJOj+LBL
-         TFtn4Z6y0qTTQAmRqaZfmA2KgjeGbVef/6aaR26A=
+        b=FCK6umZ/T1bgfxy0JCt+Ww14qBxq5foV4KXk4yy+EPtB5Y0u/S1ZBpjPv+g9xPtXv
+         SqsRk79xfI2OzOoxhGFp9OosrB6Vy+aR6p49iktgbnvULxELbw4TcBswrWwHqbTrXX
+         xcui4rdXkUcSmR/EWTcqLMYRKpnUPnG5DLlKi2/I=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kG0oR-00DUXa-MR; Wed, 09 Sep 2020 16:11:03 +0200
+        id 1kG0oR-00DUXX-LW; Wed, 09 Sep 2020 16:11:03 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Jonathan Corbet <corbet@lwn.net>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 23/30] docs: submitting-patches: use :doc: for references
-Date:   Wed,  9 Sep 2020 16:10:54 +0200
-Message-Id: <3ba405f579cf35ef2b39dd210d8ad46adc79f0ad.1599660067.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 22/30] kunit: test.h: solve kernel-doc warnings
+Date:   Wed,  9 Sep 2020 16:10:53 +0200
+Message-Id: <8fc5501c341836d8591f8dd11721585cc8694d73.1599660067.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599660067.git.mchehab+huawei@kernel.org>
 References: <cover.1599660067.git.mchehab+huawei@kernel.org>
@@ -60,76 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two broken references at submitting-patches.rst:
+There are some warnings there:
+	./include/kunit/test.h:90: warning: Function parameter or member 'name' not described in 'kunit_resource'
+	./include/kunit/test.h:353: warning: Function parameter or member 'res' not described in 'kunit_add_resource'
+	./include/kunit/test.h:367: warning: Function parameter or member 'res' not described in 'kunit_add_named_resource'
+	./include/kunit/test.h:367: warning: Function parameter or member 'name' not described in 'kunit_add_named_resource'
+	./include/kunit/test.h:367: warning: Function parameter or member 'data' not described in 'kunit_add_named_resource'
+	./include/kunit/test.h:367: warning: Excess function parameter 'name_data' description in 'kunit_add_named_resource'
 
-	Documentation/process/submitting-patches.rst:240: WARNING: undefined label: security-bugs (if the link has no caption the label must precede a section header)
-	Documentation/process/submitting-patches.rst:336: WARNING: undefined label: documentation/process/email-clients.rst (if the link has no caption the label must precede a section header)
-
-Those are due to some recent renames and file moves.
-
-It turns that maintaining :ref: is currently harder than using
-:doc:, as we now have a script to help checking such references.
-
-So, replace :ref: to :doc: there, making them to point to the
-current file name.
+Address them, ensuring that all non-private arguments will
+be properly described. With that regards, at struct kunit_resource,
+the free argument is described as user-provided. So, this
+doesn't seem to belong to the "private" part of the struct.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/process/submitting-patches.rst | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ include/kunit/test.h | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index 04cd41567186..58586ffe2808 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -10,13 +10,10 @@ can greatly increase the chances of your change being accepted.
- 
- This document contains a large number of suggestions in a relatively terse
- format.  For detailed information on how the kernel development process
--works, see :ref:`Documentation/process <development_process_main>`.
--Also, read :ref:`Documentation/process/submit-checklist.rst <submitchecklist>`
--for a list of items to check before
--submitting code.  If you are submitting a driver, also read
--:ref:`Documentation/process/submitting-drivers.rst <submittingdrivers>`;
--for device tree binding patches, read
--Documentation/devicetree/bindings/submitting-patches.rst.
-+works, see :doc:`development-process`. Also, read :doc:`submit-checklist`
-+for a list of items to check before submitting code.  If you are submitting
-+a driver, also read :doc:`submitting-drivers`; for device tree binding patches,
-+read :doc:`submitting-patches`.
- 
- This documentation assumes that you're using ``git`` to prepare your patches.
- If you're unfamiliar with ``git``, you would be well-advised to learn how to
-@@ -241,7 +238,7 @@ If you have a patch that fixes an exploitable security bug, send that patch
- to security@kernel.org.  For severe bugs, a short embargo may be considered
- to allow distributors to get the patch out to users; in such cases,
- obviously, the patch should not be sent to any public lists. See also
--:ref:`Documentation/admin-guide/security-bugs.rst <security-bugs>`.
-+:doc:`/admin-guide/security-bugs`.
- 
- Patches that fix a severe bug in a released kernel should be directed
- toward the stable maintainers by putting a line like this::
-@@ -313,9 +310,8 @@ decreasing the likelihood of your MIME-attached change being accepted.
- Exception:  If your mailer is mangling patches then someone may ask
- you to re-send them using MIME.
- 
--See :ref:`Documentation/process/email-clients.rst <email_clients>`
--for hints about configuring your e-mail client so that it sends your patches
--untouched.
-+See :doc:`/process/email-clients` for hints about configuring your e-mail
-+client so that it sends your patches untouched.
- 
- Respond to review comments
- --------------------------
-@@ -333,7 +329,7 @@ for their time.  Code review is a tiring and time-consuming process, and
- reviewers sometimes get grumpy.  Even in that case, though, respond
- politely and address the problems they have pointed out.
- 
--See :ref:`Documentation/process/email-clients.rst` for recommendations on email
-+See :doc:`email-clients` for recommendations on email
- clients and mailing list etiquette.
- 
- 
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 59f3144f009a..41b3a266bf8c 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -25,6 +25,7 @@ typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+ /**
+  * struct kunit_resource - represents a *test managed resource*
+  * @data: for the user to store arbitrary data.
++ * @name: optional name
+  * @free: a user supplied function to free the resource. Populated by
+  * kunit_resource_alloc().
+  *
+@@ -80,10 +81,10 @@ typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+  */
+ struct kunit_resource {
+ 	void *data;
+-	const char *name;		/* optional name */
+-
+-	/* private: internal use only. */
++	const char *name;
+ 	kunit_resource_free_t free;
++
++	/* private: internal use only. */
+ 	struct kref refcount;
+ 	struct list_head node;
+ };
+@@ -343,6 +344,7 @@ static inline void kunit_put_resource(struct kunit_resource *res)
+  *        none is supplied, the resource data value is simply set to @data.
+  *	  If an init function is supplied, @data is passed to it instead.
+  * @free: a user-supplied function to free the resource (if needed).
++ * @res: The resource.
+  * @data: value to pass to init function or set in resource data field.
+  */
+ int kunit_add_resource(struct kunit *test,
+@@ -356,7 +358,9 @@ int kunit_add_resource(struct kunit *test,
+  * @test: The test context object.
+  * @init: a user-supplied function to initialize the resource data, if needed.
+  * @free: a user-supplied function to free the resource data, if needed.
+- * @name_data: name and data to be set for resource.
++ * @res: The resource.
++ * @name: name to be set for resource.
++ * @data: value to pass to init function or set in resource data field.
+  */
+ int kunit_add_named_resource(struct kunit *test,
+ 			     kunit_resource_init_t init,
 -- 
 2.26.2
 
