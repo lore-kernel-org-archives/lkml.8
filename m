@@ -2,69 +2,120 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A22C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6E5C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1012177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599611276;
-	bh=2LZCwU8UpJcj0ae9NmaJz2EpwentD/rjiwDLn66U+d4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r7p6wmdcpazIR1J5TwJWqMcxZByIzGNTrObH8mDjdKU8ZuGhIVsx81jbvOwJ+T0b/
-	 b4lG1f0Fded6oiTbWsBW/gXtQH2P7pnlvfSZCbZAxsPn8rAprt0HEIRctxUsPWSBBq
-	 IuYQtgffk8jWHFBlwN+l5RR1V+Abpv1hHQ1Y3TkU=
+	by mail.kernel.org (Postfix) with ESMTP id 4CA8A2145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sPXC7IsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgIIA1z (ORCPT
+        id S1728483AbgIIAe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 20:27:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgIIA1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 20:27:53 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF832145D;
-        Wed,  9 Sep 2020 00:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599611273;
-        bh=2LZCwU8UpJcj0ae9NmaJz2EpwentD/rjiwDLn66U+d4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fzFmi5nKxcXnvPQpdMiRMsZ5EEaKi1c4xG2aQwynZF/kqI2uMGDUsLJUPbzaideC8
-         CSoGa8B/w4GjsQFMA7I6p3zdYxynLBi6W7c9xltXxow8QE8FbLLi+/2qTmcAEP+vrZ
-         z7HtgLB/HwaCC4W3XXUSameRn9zzscy9yfx+VumY=
-Date:   Tue, 8 Sep 2020 17:27:51 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     nikolay@cumulusnetworks.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, paulmck@kernel.org,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        peterz@infradead.org, christian.brauner@ubuntu.com,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sfr@canb.auug.org.au, roopa@nvidia.com
-Subject: Re: [PATCH net-next] rcu: prevent RCU_LOCKDEP_WARN() from
- swallowing the condition
-Message-ID: <20200908172751.4da35d60@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <5ABC15D5-3709-4CA4-A747-6A7812BB12DD@cumulusnetworks.com>
-References: <20200908090049.7e528e7f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200908173624.160024-1-kuba@kernel.org>
-        <5ABC15D5-3709-4CA4-A747-6A7812BB12DD@cumulusnetworks.com>
+        Tue, 8 Sep 2020 20:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgIIAe4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 20:34:56 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2711EC061573;
+        Tue,  8 Sep 2020 17:34:55 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id u13so776864pgh.1;
+        Tue, 08 Sep 2020 17:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5uNeaE2Rby/fnh3O4xhlUXs/uwBS9UavtgyEhlwwdSg=;
+        b=sPXC7IsLPz2deia5p0HcEvsDKR9Kr9crl7xYr/9eu5D8tyxWOUHPSEF22CnqKWsN9s
+         y/fwUO6jW6b7YrclRXF1jvV8UKzwH0L30fJByTWmghdYjXTcc/ukXgxMDZo9rokArl4H
+         L+0+iX7RI9bUg3cEDditunnR0787Sz0mQg3bHOJ8m1oUHKFnSsEx/9wvhDpCNNYy5Fu5
+         RDoBSoaYhWipgzCQ7A4L9e3hagfbmofsl1Tc2qJVQ5UIYewGO5XPEcQKiKID6HRUvRMY
+         lTvounISuepcxoZqvoNsm/d7RQba7VJs3BiRoCC+8r0KbId1J1cU44g/uhv6T/7XNO10
+         NEUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5uNeaE2Rby/fnh3O4xhlUXs/uwBS9UavtgyEhlwwdSg=;
+        b=U5HhPmDE1e7vOAIJ20SIS0GJ4WjzR+VuhvPvTWkxTcZdTYbtjzoQbwvoQiRnw8pr6h
+         ggKWG2iZfxIzlLWwSaM7WTwbnWHxRk/QEt/9A6e5nhL6xVkZAAf8OBafpE6ixnfBVk6W
+         bgm4LWUucYG7gmGayHhGyI9QgC/fgUdad3wKrKoDXRZVusu1MJW7qNjuGrfA09NmaIGI
+         EZ3gkrEVpR8NEmv+3ThEnUwH2n8erm6avV+dsu1AMG4+J/AdKeV0WWO7m35JXm+G8QEG
+         SHnMT0/WC2HS9ah5C+hvdSNk3zMVSywRzWs0aZa9rScy6Ncd0XJY/MQk/hZ0iXe0oMtP
+         CqRQ==
+X-Gm-Message-State: AOAM533UScRs2thNj3haCNBGelpIOKvOXP8YZpGEtwII78ztYjeSvR5l
+        mzeyyT7GoS/A6nNowkxrQ7w=
+X-Google-Smtp-Source: ABdhPJwyvCbykwwDH6n64RR0FkjJokMm2pR13sCHSy9QE0J+66OUiBwzezq0TSZTyrQvgYntDRBeng==
+X-Received: by 2002:a17:902:8a93:: with SMTP id p19mr1175793plo.101.1599611694678;
+        Tue, 08 Sep 2020 17:34:54 -0700 (PDT)
+Received: from zen.local (174-21-64-208.tukw.qwest.net. [174.21.64.208])
+        by smtp.gmail.com with ESMTPSA id l12sm315018pjq.31.2020.09.08.17.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 17:34:54 -0700 (PDT)
+From:   Trent Piepho <tpiepho@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org,
+        "bcousson@baylibre.comLinus Walleij" <linus.walleij@linaro.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
+Date:   Tue, 08 Sep 2020 17:34:53 -0700
+Message-ID: <3192458.miyTKKkx7g@zen.local>
+In-Reply-To: <20200701013320.130441-3-drew@beagleboard.org>
+References: <20200701013320.130441-1-drew@beagleboard.org> <20200701013320.130441-3-drew@beagleboard.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 08 Sep 2020 21:15:56 +0300 nikolay@cumulusnetworks.com wrote:
-> Ah, you want to solve it for all. :) 
-> Looks and sounds good to me, 
-> Reviewed-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+On Tuesday, June 30, 2020 6:33:20 PM PDT Drew Fustini wrote:
+> Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
+> requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
+> conf and pin mux values separate.
 
-Actually, I give up, lockdep_is_held() is not defined without
-CONFIG_LOCKDEP, let's just go with your patch..
+> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> @@ -278,7 +278,7 @@ scm: scm@0 {
+>  				am33xx_pinmux: pinmux@800 {
+>  					compatible = "pinctrl-single";
+>  					reg = <0x800 0x238>;
+> -					#pinctrl-cells = <1>;
+> +					#pinctrl-cells = <2>;
+
+>  #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
+> -#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
+> +#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+
+If a dts file uses am33xx_pinmux from am33xx-l4.dtsi, but does not use the
+AM33XX_PADCONF() macro for all pin settings, like say it uses AM33XX_IOPAD(),
+then the dtb will be totally broken as pin addresses and values will all be
+off.
+
+Similarly, using AM33XX_PADCONF() with a different pinctrl defined elsewhere
+would also break.
+
+In the latest linux-next kernel, I found one case of the former problem, in
+am335x-guardian.dts.
+
+The barebox bootloader had all the am33xx boards broken when the dts change
+was imported without adding the OR-two-values special case to the pinctrl
+driver.  Which I then tracked to here.
+
+
