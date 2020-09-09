@@ -2,118 +2,322 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FCFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240D2C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634AC21941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E262228A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599664980;
+	bh=tM5snS//h/e7EQ06jlx7lfN6U8tLMdLL8+JPpa90vnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UrN3k3HmIVRs9LbEY4u5Skt/A+iOxY8vHkROZs+1QGgVdXNG4UNm90qud5Jf6PJ3V
+	 PbMl9wTixF36dXj05St5R/sD7S8sCMQvhMQibGvZza+Tm+Pjfs5oz1r8DGShZRgGoH
+	 YM+M/3GKa/ZY0j+CxMaS48Jhwx8hHGMhxpDK+634=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgIIPVw (ORCPT
+        id S1729785AbgIIPWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:21:52 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:35999 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbgIIL2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:28:32 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MG9Xu-1kJCr04Bbw-00GaHP; Wed, 09 Sep 2020 13:27:15 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/23] Use asm-generic for mmu_context no-op functions
-Date:   Wed,  9 Sep 2020 13:27:08 +0200
-Message-Id: <159965079776.3591084.10754647036857628984.b4-ty@arndb.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
-References: <20200901141539.1757549-1-npiggin@gmail.com>
+        Wed, 9 Sep 2020 11:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgIIL2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:28:31 -0400
+Received: from localhost (unknown [122.179.21.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C456521D7E;
+        Wed,  9 Sep 2020 11:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599650835;
+        bh=tM5snS//h/e7EQ06jlx7lfN6U8tLMdLL8+JPpa90vnE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MfvK1PCU8BLI1AE1/u7ohhZn/IMHaar4w1qShyo0aWQTqwSBcMFoFXdirCMRKlEP+
+         /JXuTCxLgkj7o/Mk6YvUMORmqXwtAE1xCEjrkXYgAUx/HiRHYVavEwZ1saCuIOk6DU
+         DgZ+7gMRrei821PqE8fc73P0MOgUFiMNc8Ivae0g=
+Date:   Wed, 9 Sep 2020 16:57:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com, peter.ujfalusi@ti.com
+Subject: Re: [PATCH v6 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+Message-ID: <20200909112708.GN77521@vkoul-mobl>
+References: <cover.1599605765.git.mallikarjunax.reddy@linux.intel.com>
+ <ff2de5b0e4cd414420d48377c7c97c45d71f6197.1599605765.git.mallikarjunax.reddy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7OMazxQ6DY8MEF6H/bZ/vvXzzHh3+g8R4o0uC3slmdaoHjeIgYq
- yYLMHXATL1HlHzETUxMec1heCWdAqn5Xbe34Z7iqBpu9Y+QREbqvwyqSFWcQXq6+OkYWUq4
- mlJxy2fwrK+/O2uwi47EP5zNbeaSwyCVP23+DW/IriB8kDIZHKFD40PKK96QjJV0N2KRzcV
- XgsmqvhStI+/vCfKlCM9A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YBNooPUWFN8=:iu760Z4R7UBivMuwhQHeHx
- YWGUNWbZBoBYfk7wdQPrvP1mVGFgET9PxQovhGbZlFI5aEYtZuOzHfM/eRykMdbMQ6ww1LpMc
- WK7ZuviVeyXh5f8DYbWBSRFbHi7frupdJsOKbULIrnLSZpdcX/PmV9M7eC2i4AHqbGInC63cs
- z+hNRtsNbWqEhoyXzsPm49s+EKw+XpUQZM50TYKqMcSbprL3tkjFiOxFGWpCFWmidcZ+qj/+l
- EKg37uALHPRd2MfjLG0mKt9/hR5zuy57OeAJax1lCwlORQa5kpTvsOhUR5hxRFgN4ZXFQk9wp
- 3ooVViweyIcusk1tEDI+U9N5c/qXBG7FnGvHREG4qGAfcBw/HTT0zvh8TPR+0HAbcA+Y29nV3
- HIOH1B6nt0FWzIDzno0O9y/cfTwxDLtOxPqrv+oVWlCsRH8DA63nGHDSTFpE+Q9qCCHzctsVv
- pLp4TLvZegnYRHmCF44R+K/A/H6jKrFe/snW7gywhGynxLUVNO8MThghQtVUt6m5t8YHcD1wG
- I/nCCzrTddRlOqIWNT56HKsDJIL6wmlw0xY0V0PXxA/4Hc+4+7xVpEAMttmEa+2airyFYsLaL
- HIgm4ihHJlHkDCu6WVpWN+D+zYIH/sVzsaQ+0+KB8BMQos8oc4NYbUSlP7RAX9wV7aP47qTMR
- CWebRmcNhnV55e6Ni/NUvroWkjws9gk8V1vyndOZU09izuC7dDHDUgY6lVvOaN8zv0h9sox/h
- gscn/yomTex4SVx5LjeVs4jcvyTcr5Pe3XjyR3nvBkLqTFH5dx7HqJNAyqFp5a3OGfu2Gc9Zv
- qHxP6rHut/gY4hmgJ/SZ/5dZJlXZe+6D6/6HWtbIDvbVPTNE7E/I3CRmKD9daBAzcGBYTMu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff2de5b0e4cd414420d48377c7c97c45d71f6197.1599605765.git.mallikarjunax.reddy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2 Sep 2020 00:15:16 +1000, Nicholas Piggin wrote:
-> It would be nice to be able to modify mmu_context functions or add a
-> hook without updating all architectures, many of which will be no-ops.
+Hi Amireddy,
+
+On 09-09-20, 07:07, Amireddy Mallikarjuna reddy wrote:
+> Add DT bindings YAML schema for DMA controller driver
+> of Lightning Mountain(LGM) SoC.
 > 
-> The motivation for this series is a change to lazy mmu handling, but
-> this series stands on its own as a good cleanup whether or not we end
-> up making that change.
+> Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+> ---
+> v1:
+> - Initial version.
 > 
-> [...]
+> v2:
+> - Fix bot errors.
+> 
+> v3:
+> - No change.
+> 
+> v4:
+> - Address Thomas langer comments
+>   - use node name pattern as dma-controller as in common binding.
+>   - Remove "_" (underscore) in instance name.
+>   - Remove "port-" and "chan-" in attribute name for both 'dma-ports' & 'dma-channels' child nodes.
+> 
+> v5:
+> - Moved some of the attributes in 'dma-ports' & 'dma-channels' child nodes to dma client/consumer side as cells in 'dmas' properties.
+> 
+> v6:
+> - Add additionalProperties: false
+> - completely removed 'dma-ports' and 'dma-channels' child nodes.
+> - Moved channel dt properties to client side dmas.
+> - Use standard dma-channels and dma-channel-mask properties.
+> - Documented reset-names
+> - Add description for dma-cells
+> ---
+>  .../devicetree/bindings/dma/intel,ldma.yaml        | 154 +++++++++++++++++++++
+>  1 file changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> new file mode 100644
+> index 000000000000..4a2a12b829eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Lightning Mountain centralized low speed DMA and high speed DMA controllers.
+> +
+> +maintainers:
+> +  - chuanhua.lei@intel.com
+> +  - mallikarjunax.reddy@intel.com
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> + $nodename:
+> +   pattern: "^dma-controller(@.*)?$"
+> +
+> + compatible:
+> +  enum:
+> +   - intel,lgm-cdma
+> +   - intel,lgm-dma2tx
+> +   - intel,lgm-dma1rx
+> +   - intel,lgm-dma1tx
+> +   - intel,lgm-dma0tx
+> +   - intel,lgm-dma3
+> +   - intel,lgm-toe-dma30
+> +   - intel,lgm-toe-dma31
 
-Applied to asm-generic, thanks!
+Should this not say oneOf?
 
-[01/23] asm-generic: add generic MMU versions of mmu context functions
-        (no commit info)
-[02/23] alpha: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[03/23] arc: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[04/23] arm: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[05/23] arm64: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[06/23] csky: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[07/23] hexagon: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[08/23] ia64: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[09/23] m68k: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[10/23] microblaze: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[11/23] mips: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[12/23] nds32: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[13/23] nios2: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[14/23] openrisc: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[15/23] parisc: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[16/23] powerpc: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[17/23] riscv: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[18/23] s390: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[19/23] sh: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[20/23] sparc: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[21/23] um: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[22/23] x86: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
-[23/23] xtensa: use asm-generic/mmu_context.h for no-op implementations
-        (no commit info)
+> +
+> + reg:
+> +  maxItems: 1
+> +
+> + "#dma-cells":
+> +  const: 11
 
-       Arnd
+wow that is a big one
+
+> +  description:
+> +    The first & second cell is channel and port id's respectievly.
+
+What does port id mean?
+
+Can you please describe each parameter
+
+> +    Third & fourth cells is Per channel data & descriptor endianness configuration respectievly according to SoC requirement.
+
+What does per channel data refer? Isnt this all little endian?
+
+> +    Fifth cell is Per channel byte offset(0~128)
+
+Offset of?
+
+> +    Sixth cell is per channel Write non-posted type for DMA RX last data beat of every descriptor.
+
+Am not sure what this means?
+
+> +    Seventh cell is per channel packet drop enabled or disabled.
+
+Same here
+
+> +    Eighth and nighth cells, The first is header mode size, the second is checksum enable or disable.
+> +       If enabled, header mode size is ignored. If disabled, header mode size must be provided.
+> +    Last two cells is Per channel dma hardware descriptor configuration.
+> +       The first parameter is descriptor physical address and the second parameter hardware descriptor number
+
+Do you really use all these parameters, or most of them are filled with
+defaults?
+
+> +
+> + dma-channels:
+> +  minimum: 1
+> +  maximum: 16
+> +
+> + dma-channel-mask:
+> +  $ref: /schemas/types.yaml#/definitions/uint32-array
+
+This is already defined in
+Documentation/devicetree/bindings/dma/dma-common.yaml, no need to define
+this here
+
+> +  items:
+> +    minItems: 1
+> +    # Should be enough
+
+> +
+> + clocks:
+> +  maxItems: 1
+> +
+> + resets:
+> +  maxItems: 1
+> +
+> + reset-names:
+> +  items:
+> +    - const: ctrl
+> +
+> + interrupts:
+> +  maxItems: 1
+> +
+> + intel,dma-poll-cnt:
+> +   $ref: /schemas/types.yaml#definitions/uint32
+> +   description:
+> +     DMA descriptor polling counter. It may need fine tune according
+> +     to the system application scenario.
+
+What does this mean? How will system application fine tune?
+
+> +
+> + intel,dma-byte-en:
+> +   type: boolean
+> +   description:
+> +     DMA byte enable is only valid for DMA write(RX).
+> +     Byte enable(1) means DMA write will be based on the number of dwords
+> +     instead of the whole burst.
+
+You already have this in #dma-cells, so why here. If here then why in
+dma-cells
+
+> +
+> + intel,dma-drb:
+> +    type: boolean
+> +    description:
+> +      DMA descriptor read back to make sure data and desc synchronization.
+
+I think this is also in #dma-cells?
+
+> +
+> + intel,dma-burst:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +       Specifiy the DMA burst size(in dwords), the valid value will be 8, 16, 32.
+> +       Default is 16 for data path dma, 32 is for memcopy DMA.
+
+Burst should come from client, why is this here?
+
+> +
+> + intel,dma-polling-cnt:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +       DMA descriptor polling counter. It may need fine tune according to
+> +       the system application scenario.
+
+What does this counter do?
+
+> +
+> + intel,dma-desc-in-sram:
+> +    type: boolean
+> +    description:
+> +       DMA descritpors in SRAM or not. Some old controllers descriptors
+> +       can be in DRAM or SRAM. The new ones are all in SRAM.
+
+What does this do?
+
+> +
+> + intel,dma-orrc:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +       DMA outstanding read counter. The maximum value is 16, and it may
+> +       need fine tune according to the system application scenarios.
+
+What does this do?
+
+> +
+> + intel,dma-dburst-wr:
+> +    type: boolean
+> +    description:
+> +       Enable RX dynamic burst write. It only applies to RX DMA and memcopy DMA.
+
+What does this do?
+
+> +
+> +required:
+> + - compatible
+> + - reg
+> + - '#dma-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> + - |
+> +   dma0: dma-controller@e0e00000 {
+> +     compatible = "intel,lgm-cdma";
+> +     reg = <0xe0e00000 0x1000>;
+> +     #dma-cells = <11>;
+> +     dma-channels = <16>;
+> +     dma-channel-mask = <0xFFFF>;
+> +     interrupt-parent = <&ioapic1>;
+> +     interrupts = <82 1>;
+> +     resets = <&rcu0 0x30 0>;
+> +     reset-names = "ctrl";
+> +     clocks = <&cgu0 80>;
+> +     intel,dma-poll-cnt = <4>;
+> +     intel,dma-byte-en;
+> +     intel,dma-drb;
+> +   };
+> + - |
+> +   dma3: dma-controller@ec800000 {
+> +     compatible = "intel,lgm-dma3";
+> +     reg = <0xec800000 0x1000>;
+> +     clocks = <&cgu0 71>;
+> +     resets = <&rcu0 0x10 9>;
+> +     #dma-cells = <11>;
+> +     intel,dma-burst = <32>;
+> +     intel,dma-polling-cnt = <16>;
+> +     intel,dma-desc-in-sram;
+> +     intel,dma-orrc = <16>;
+> +     intel,dma-byte-en;
+> +     intel,dma-dburst-wr;
+> +   };
+> -- 
+> 2.11.0
+
+-- 
+~Vinod
