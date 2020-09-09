@@ -2,135 +2,106 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F73C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A21C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10892076C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hye34L+g"
+	by mail.kernel.org (Postfix) with ESMTP id 56292215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599639829;
+	bh=Yk5f469iMe5uWClYWw+4w6OxQkIrjVVzv2bmDLHjXYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TAQETNN/csSyfQOh8H5ZatLAhyS58SLCCxzNuJooPv4ZG/RdpOmosgiFPzTdf0OJU
+	 hNHBnWvy/UtCmUYUS3Ej12G3s2v+UHzabGqcuA/PHlDFUg8sL8i8UrB7uDBiHViwzr
+	 na8Zzjw2D2ngw+4j/5InF0nrv3ATr1VOy3MxBvqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgIIIX3 (ORCPT
+        id S1729014AbgIIIXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:23:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43185 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726414AbgIIIX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:23:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599639804;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ipg+kGRxf4wxWeQOhvAJYTIzegDq0gtF7D+pA4396Qw=;
-        b=hye34L+gA6pRupUUmu0wORcHDDnfHuPyyhSkc/7vgNzOm001FvlwV9kK8tltHtDeT8E6z7
-        3iRSvsPmMQTHum5xHoEZ8CP4Mfm3WL987XCvo0ktDMvE8Mv0wfy3fT99IWy9qArjpNOej8
-        0e44kih1xtZ+Lyun7K80DH+8/WjpvnI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-veC0PqnwMK6cPElMzpBeTQ-1; Wed, 09 Sep 2020 04:23:23 -0400
-X-MC-Unique: veC0PqnwMK6cPElMzpBeTQ-1
-Received: by mail-wm1-f69.google.com with SMTP id x81so503354wmg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:23:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ipg+kGRxf4wxWeQOhvAJYTIzegDq0gtF7D+pA4396Qw=;
-        b=l+wEfhHwb9oviilzsVoDHyud8VczJbTSqzy2/PXQByniW3yk8hSuM2ueZ9jAiXeLct
-         wc283nusik5YItsYiOpkaG/N8R24Bsn0XweygyA0GI87bned3ENWOhCt0i1zuDE18O8R
-         Gbr5WIjt87jHJrXw54wmds+T6Q5wLfofBr1UYf2xKRxKW8wpJnGRtUb5Kr2X21lhN6gV
-         9xerSFho/EyUqAwkGMUK1wbsQ7DUDoksERK5HJEV/xgmt9WPQlDmChqH4BydS1AU6SG+
-         U/httHcBYyOXF0V1ap8KZBnTGxEjuBBJwSFsPlM7NpFnzO0uzgZluQTWwzBi2vdy6PRN
-         JM0w==
-X-Gm-Message-State: AOAM532E8Sw0ovkpMRxk/111qhCz6D2Y0MbyM9tzTGs9iRpWKjywPdLB
-        g40hV3UG1h8cYU09B3F2t8XGFO+QO7T3dcBh6xy2oGmh8cFW/vrEJZ6tBVLHcUhiy3C740YlhtA
-        JA6VmV18DDW13ZO8NlQPcJcRQ
-X-Received: by 2002:a05:600c:2246:: with SMTP id a6mr2493837wmm.38.1599639801897;
-        Wed, 09 Sep 2020 01:23:21 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxe4nQzns/RJMYzARqqL49tYar+YFQfC6QojwjzqbtuqOGYc6Q3M7yHZV1wTiTye79EV4m7mA==
-X-Received: by 2002:a05:600c:2246:: with SMTP id a6mr2493821wmm.38.1599639801726;
-        Wed, 09 Sep 2020 01:23:21 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id m3sm3246714wme.31.2020.09.09.01.23.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 01:23:21 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Paul K ." <kronenpj@kronenpj.dyndns.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/3] KVM: SVM: Get rid of handle_fastpath_set_msr_irqoff()
-In-Reply-To: <1599620043-12908-1-git-send-email-wanpengli@tencent.com>
-References: <1599620043-12908-1-git-send-email-wanpengli@tencent.com>
-Date:   Wed, 09 Sep 2020 10:23:20 +0200
-Message-ID: <87h7s7mk93.fsf@vitty.brq.redhat.com>
+        Wed, 9 Sep 2020 04:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbgIIIXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:23:42 -0400
+Received: from localhost (p54b33098.dip0.t-ipconnect.de [84.179.48.152])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 823552076C;
+        Wed,  9 Sep 2020 08:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599639822;
+        bh=Yk5f469iMe5uWClYWw+4w6OxQkIrjVVzv2bmDLHjXYw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YZe0HoVzUIgRWM3KPO86BpYg5a8BnYcAfxf6e82HppawaU50U9lxnIpf3Ku1F2IBJ
+         jObg2dxqyvt7AiX/Ka160aLnUeZkhthwnYDAvdYfw2U8MFzL5rpKKB8+dpKMc0H8bR
+         /0fPCUxZonQAHaQPNbKhylyl/BJASHCYkf48P6Oc=
+Date:   Wed, 9 Sep 2020 10:23:38 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+Cc:     andriy.shevchenko@linux.intel.com,
+        chris.packham@alliedtelesis.co.nz, jarkko.nikula@linux.intel.com,
+        jdelvare@suse.de, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] i2c: algo-pca: Reapply i2c bus settings after
+ reset
+Message-ID: <20200909082338.GC2272@ninjato>
+References: <20200908203247.14374-1-evan.nimmo@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+Content-Disposition: inline
+In-Reply-To: <20200908203247.14374-1-evan.nimmo@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
 
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Analysis from Sean:
->
->  | svm->next_rip is reset in svm_vcpu_run() only after calling 
->  | svm_exit_handlers_fastpath(), which will cause SVM's 
->  | skip_emulated_instruction() to write a stale RIP.
->  
+--kVXhAStRUZ/+rrGn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This should only happen when svm->vmcb->control.next_rip is not set by
-hardware as skip_emulated_instruction() itself sets 'svm->next_rip'
-otherwise, right?
+On Wed, Sep 09, 2020 at 08:32:47AM +1200, Evan Nimmo wrote:
+> If something goes wrong (such as the SCL being stuck low) then we need
+> to reset the PCA chip. The issue with this is that on reset we lose all
+> config settings and the chip ends up in a disabled state which results
+> in a lock up/high CPU usage. We need to re-apply any configuration that
+> had previously been set and re-enable the chip.
+>=20
+> Signed-off-by: Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+> Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Wolfram Sang <wsa@kernel.org>
 
-> Let's get rid of handle_fastpath_set_msr_irqoff() in svm_exit_handlers_fastpath()
-> to have a quick fix.
+Applied to for-current, thanks!
 
-which in the light of the whole seeries seems to be appropriate, so:
+For the record, were you able to test both, PCA9564 and PCA9665?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
->
-> Reported-by: Paul K. <kronenpj@kronenpj.dyndns.org>
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Paul K. <kronenpj@kronenpj.dyndns.org>
-> Cc: <stable@vger.kernel.org> # v5.8-rc1+
-> Fixes: 404d5d7bff0d (KVM: X86: Introduce more exit_fastpath_completion enum values)
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 19e622a..c61bc3b 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3349,11 +3349,6 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
->  
->  static fastpath_t svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
->  {
-> -	if (!is_guest_mode(vcpu) &&
-> -	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
-> -	    to_svm(vcpu)->vmcb->control.exit_info_1)
-> -		return handle_fastpath_set_msr_irqoff(vcpu);
-> -
->  	return EXIT_FASTPATH_NONE;
->  }
+--kVXhAStRUZ/+rrGn
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Vitaly
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9YkQoACgkQFA3kzBSg
+Kbb+QQ/9E7gUmj6g6blrvZZpCuk9+cGTLSBERDhTHqADvFLASAzYwW6sd5ZIMYkI
+FkYxSngIxqbhxLDPcPJGiTzp2m6+Fg/nkcAOEqePWHxlluhZ09E5pOPznBtdaoPa
+OuXSi60LuHk8S9tUluox2UbHohlVOJ46gMtbzT7bW2/tcer3WL+I5Q1XHTqIsE9w
+bA7xZStj03hto3GHT+gB9O2HjF/dgnkUSqAIkX/mlGj2RGenfpxAmuYeo7D87ozK
+Br+1nb9ZiqYNdawSRXoI2xyvtuFkCNGUq+YWbwJYqHFiICdz7Q2+0mJk+uRqPqdk
+XhMfmzc6OvFrqNLOw+o5Vd6m2INiLdo9dHtiWzT1B4eujliqZpfZ0ky1cCwNXU3Q
+VojyoJ1uaX+PgdeAl4IczCDPrBv6dvz7nXo4bj03Vjdhzce40RpFXn3tfs05idnR
+fciO//UlJNdjk2FR3qaK5dWWLGANrKtPcW+y7BXr5BNgMHBRXeUg+3g5pjrw0eg6
+JSBud0OsqCCZv2V3Angg5pQI2q+FmSMW7q48MZJzNUmg8V7UI1D4SVu62Nf8mVDO
+hluoM80Yfqs1PnXjQP3lqEQKSV35HOUMR95Hb7/r4oPsvAr6VB4EFwuRm7Hqit/v
+fQpVPJ3cyjJP7GWPP26um0SLLz+F2xe9urjQLZ3FakaiY7fpFIY=
+=7ey7
+-----END PGP SIGNATURE-----
+
+--kVXhAStRUZ/+rrGn--
