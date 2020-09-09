@@ -2,210 +2,96 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0281FC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8107DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B771221D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:19:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nvSB7U1Y"
+	by mail.kernel.org (Postfix) with ESMTP id 3A34821D7F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgIIKTx (ORCPT
+        id S1726036AbgIIKYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:19:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgIIKTp (ORCPT
+        Wed, 9 Sep 2020 06:24:08 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34906 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgIIKXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:19:45 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE623C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 03:19:44 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e11so1506466wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 03:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MYtyV9sjpexCNQizdjqRW/SdiWDHf0KUeZqsLzbBBXw=;
-        b=nvSB7U1YSQLRXpNDcMP9RUL4PGdEF8Pp4cI2ebpoYmMzEcjiDJLpG6b3HJObeEVAxL
-         cijYVLuZEmfuyeKiiZN8Q6lt2h87SXNCljv8Xm5odSlNFG3IzsWZMaKBsHIF8GcmTvzX
-         tAKWudAP91pOakcxDjcrP8IsABvDDWwVina9w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MYtyV9sjpexCNQizdjqRW/SdiWDHf0KUeZqsLzbBBXw=;
-        b=k5+MTa4A5hGXaODKhuuPBUxXDNp8qSef8ZUfcCfW0yas4T5+4UWUFYF2JYYRO3OgvU
-         OqmztR916aXC47YHKTQNSyUkL8UaAVTYmqc45MPDmJxdpxb5GuhjaJDhdsCyvBehc4aJ
-         UAy4ay5fBcBBsML4hMzYKxidOaBsr04oUspKGVQnXCAatThwJdUMEUKt2ZHz4y0/EYCM
-         d7PwHR1DKTn6OD6Dz6ZJfI4wn5GfKmuMn/RN78g2eEuBwD96uaWTD1wDUJ1Fm3sJ2m5n
-         ofM+IWU9K32tgamsVOQBZJj3J00PgkIn7XfaPz2suUMYACXn5y9WaKAWrRtD58sd+Zkx
-         Ebzw==
-X-Gm-Message-State: AOAM530TdFnijnuyx7tCYd1fiuPG6jpJOZrZN3oLx62UocB/gHOx9/Wi
-        hGVLaewJVLLhMuT6+yqqXZHyqrUL65PtnKSC+4bVYA==
-X-Google-Smtp-Source: ABdhPJyiGLD2o5Mp0hKfuqc3sTpSUwV4QU2ftFwRMsUfKEu8ElxuFddp9M1CKV0LCUYsOZUPyqBuF/zKTLMFrnRTRBU=
-X-Received: by 2002:a7b:c3c8:: with SMTP id t8mr2821349wmj.101.1599646782754;
- Wed, 09 Sep 2020 03:19:42 -0700 (PDT)
+        Wed, 9 Sep 2020 06:23:49 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 95BAC1C0B87; Wed,  9 Sep 2020 12:23:46 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 12:23:45 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        =?utf-8?B?5ZGo5q2j?= <sernia.zhou@foxmail.com>,
+        =?utf-8?B?5ryG6bmP5oyv?= <aric.pzqi@ingenic.com>, od@zcrc.me,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] USB: PHY: JZ4770: Fix uninitialized value written to
+ HW register
+Message-ID: <20200909102345.GA9222@amd>
+References: <20200827124308.71963-1-paul@crapouillou.net>
+ <20200827124308.71963-2-paul@crapouillou.net>
+ <87v9h4i6t5.fsf@kernel.org>
+ <PN4QFQ.KWNBY2ZWQ7XC2@crapouillou.net>
+ <87bliwi5kx.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200907100039.1731457-1-cychiang@chromium.org>
- <20200907100039.1731457-3-cychiang@chromium.org> <20200908203357.GA861143@bogus>
- <CAFv8NwLMAkFhVT-ML7QHbnSkqmgh=5SrNSik5eSCTHB1=DGQ0A@mail.gmail.com>
-In-Reply-To: <CAFv8NwLMAkFhVT-ML7QHbnSkqmgh=5SrNSik5eSCTHB1=DGQ0A@mail.gmail.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Wed, 9 Sep 2020 18:19:16 +0800
-Message-ID: <CAFv8NwJXyzUsCQZu1cU0t7NUJDpS_DyxZM=ZhU+jGoQj97i3Jw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Doug Anderson <dianders@chromium.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Content-Disposition: inline
+In-Reply-To: <87bliwi5kx.fsf@kernel.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 5:23 PM Cheng-yi Chiang <cychiang@chromium.org> wrote:
->
-> On Wed, Sep 9, 2020 at 4:34 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Sep 07, 2020 at 06:00:38PM +0800, Cheng-Yi Chiang wrote:
-> > > Add devicetree bindings documentation file for sc7180 sound card.
-> > >
-> > > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > > ---
-> > >  .../bindings/sound/qcom,sc7180.yaml           | 143 ++++++++++++++++++
-> > >  1 file changed, 143 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> > > new file mode 100644
-> > > index 000000000000..ae809346ca80
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> > > @@ -0,0 +1,143 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
-> > > +
-> > > +maintainers:
-> > > +  - Rohit kumar <rohitkr@codeaurora.org>
-> > > +  - Cheng-Yi Chiang <cychiang@chromium.org>
-> > > +
-> > > +description:
-> > > +  This binding describes the SC7180 sound card which uses LPASS for audio.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: qcom,sc7180-sndcard
-> > > +
-> > > +  audio-routing:
-> > > +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> > > +    description:
-> > > +      A list of the connections between audio components. Each entry is a
-> > > +      pair of strings, the first being the connection's sink, the second
-> > > +      being the connection's source.
-> > > +
-> > > +  model:
-> > > +    $ref: /schemas/types.yaml#/definitions/string
-> > > +    description: User specified audio sound card name
-> > > +
-> > > +  headset-jack:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description: phandle of the codec for headset detection
-> > > +
-> > > +  hdmi-jack:
-> > > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > > +    description: phandle of the codec for hdmi jack detection
-> >
-> > You already have links to these devices. Why duplicate it here?
-> >
-> > What if you had 2 headsets? This doesn't scale.
-> >
-> Hi Rob, thanks for reviewing.
-> There was some discussion in
-> https://patchwork.kernel.org/patch/11737905/#23571643 about how to
-> specify the dailink that has a headset jack.
-> I would like to pass the information of headset jack and hdmi jack to
-> the machine driver so the machine driver can call
-> snd_soc_component_set_jack to set jack when init the corresponding link.
-> Headset jack and hdmi jack will be treated differently for button and
-> event type.
-> Because of this, we can not just set a property "jack" in the link.
->
-> As for the 2 headsets case (I guess you mean hp jack and mic jack), on
-> this board we will not have this use case.
-> If someone really wants to build hp jack and mic jack on the board
-> based on this machine driver, we can add two more property hp-jack and
-> mic-jack to specify that,
-> as the machine driver will need to know the different jack types
-> anyway. What do you think ?
->
-> Or could you please suggest a proper way to pass such information ?
->
-> Thanks!
-> >
-Alternatively we can probably do
 
-                dai-link@0 {
-                        link-name = "MultiMedia0";
-                        reg = <0>;
-                        cpu {
-                                sound-dai = <&lpass_cpu 0>;
-                        };
-                        headset_jack;
-                        codec {
-                                sound-dai = <&alc5682 0>;
-                        };
-                };
-                dai-link@2 {
-                        link-name = "MultiMedia2";
-                        reg = <2>;
-                        cpu {
-                                sound-dai = <&lpass_hdmi 0>;
-                        };
-                        hdmi_jack;
-                        codec {
-                                sound-dai = <&msm_dp>;
-                        };
-                };
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Or even put the flag into codec {}.
-Please let me know if you feel this is a better way.
-I think it will make the driver code a little more complicated, but
-the interface on dts might looks cleaner.
-Thanks!
+Hi!
 
-> > Rob
+> >>>  -	reg =3D USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT=20
+> >>> |	USBPCR_TXPREEMPHTUNE |
+> >>>  +	return USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT |=20
+> >>> USBPCR_TXPREEMPHTUNE |
+> >>>   		USBPCR_COMMONONN | USBPCR_POR;
+> >>>  -	writel(reg, priv->base + REG_USBPCR_OFFSET);
+> >>=20
+> >> not a bug fix
+> >
+> > Well, if you don't like my bug fix, next time wait for my Reviewed-by.
+>=20
+> why so angry? Take a break every once in a while. Besides, someone else
+> already sent the oneliner before you ;-)
+
+Your behaviour is pretty good explanation for angry people on the
+mailing list.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9YrTEACgkQMOfwapXb+vJ8tACgjD/mpcjYY3DfFtCvIm+G/xF4
+z9oAoIKgzqrArYXBGniQrGbo/5qKu8n5
+=hxC1
+-----END PGP SIGNATURE-----
+
+--YiEDa0DAkWCtVeE4--
