@@ -2,105 +2,142 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A3C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939FCC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78B0921D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F60521941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qXgkdU5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbgIISU7 (ORCPT
+        id S1730022AbgIISUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:20:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50565 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIISUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:20:54 -0400
-IronPort-SDR: YN1LAWgC2/12RsdyHbuvZHcBkVAh8iAZZZmCQComvX3gTw50wSsRcJCfGosvcWuhRVH6Zj4ni4
- lseqfwuK1X5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="157675415"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="157675415"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 11:20:53 -0700
-IronPort-SDR: 0X3f4HDZDd/UL7ET0LNATUE+dfEK5vvQBE6PcJX+AHRv6QP9F/y5p1xiTNr0QTcV0JKI6QbVU7
- XSWIhB6Xqhyw==
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="449298417"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 11:20:52 -0700
-Date:   Wed, 9 Sep 2020 11:20:51 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
-Message-ID: <20200909182051.GA31883@agluck-desk2.amr.corp.intel.com>
-References: <20200906212130.GA28456@zn.tnic>
- <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
- <20200908094650.GA25236@zn.tnic>
- <20200908100837.GC25236@zn.tnic>
- <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
- <20200908152539.GE25236@zn.tnic>
- <20200909113022.GA12237@zn.tnic>
+        Wed, 9 Sep 2020 14:20:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37134 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIISUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:20:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089EdGeS055361;
+        Wed, 9 Sep 2020 14:41:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=h6y6WG3zhGQaU+uqolHKa4rZq0wEiHiUEuGCpqBnCxU=;
+ b=qXgkdU5hP/usLZQAIcf8Iy8dOMot2CleWzLeMSLZsHLWujbogAtw8nQ+j711GUARiayq
+ wm/NGaUciipGKRjuqZXyRQwTlWae9zJ25IhwKOS7y/yo3Ohceg2rFtJ04YHMoe/00KF+
+ y2nKY7qwlYooHb7lLP4Y7Si0BkE7qq+Dverptuy7epWWCG36t19+l1v7I4tEJnoyXZ2Q
+ MNz+fg/XXuhLZRYU2T/7ZjfESETnCm0pz4b+h9beXyduqBsyZ9aGS2hthV/SCsRO8ky3
+ bd+AGP3xkR0045C00NmkSYf7EvM+opd0ZmoHNISsRbLs6Vujj+sLl69MkekGb/gt306a DA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 33c23r29ws-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Sep 2020 14:41:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089Ef4EG032991;
+        Wed, 9 Sep 2020 14:41:31 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 33cmk6prw1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Sep 2020 14:41:31 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089EfUC6034192;
+        Wed, 9 Sep 2020 14:41:31 GMT
+Received: from localhost.localdomain (dhcp-10-65-175-55.vpn.oracle.com [10.65.175.55])
+        by aserp3020.oracle.com with ESMTP id 33cmk6pru6-2;
+        Wed, 09 Sep 2020 14:41:31 +0000
+From:   Tom Hromatka <tom.hromatka@oracle.com>
+To:     tom.hromatka@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, fweisbec@gmail.com,
+        tglx@linutronix.de, mingo@kernel.org, adobriyan@gmail.com
+Subject: [RESEND PATCH 1/2] tick-sched: Do not clear the iowait and idle times
+Date:   Wed,  9 Sep 2020 08:41:21 -0600
+Message-Id: <20200909144122.77210-2-tom.hromatka@oracle.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200909144122.77210-1-tom.hromatka@oracle.com>
+References: <20200909144122.77210-1-tom.hromatka@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909113022.GA12237@zn.tnic>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 01:30:22PM +0200, Borislav Petkov wrote:
-> I guess something as straightforward as this:
+A customer reported that when a cpu goes offline and then comes back
+online, the overall cpu idle and iowait data in /proc/stat decreases.
+This is wreaking havoc with their cpu usage calculations.
 
-Do we think there will be other places where we want this
-MSR-or-die behaviour?  If there are, then most of this
-belongs elsewhere from arch/x86/kernel/cpu/mce/core.c
+Prior to this patch:
 
-> ---
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 0ba24dfffdb2..9893caaf2696 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -373,10 +373,27 @@ static int msr_to_offset(u32 msr)
->  	return -1;
->  }
->  
-> +__visible bool ex_handler_rdmsr_fault(const struct exception_table_entry *fixup,
-> +				      struct pt_regs *regs, int trapnr,
-> +				      unsigned long error_code,
-> +				      unsigned long fault_addr)
-> +{
-> +	if (pr_warn_once("MSR access error: RDMSR from 0x%x at rIP: 0x%lx (%pS)\n",
+	        user nice system    idle iowait
+	cpu  1390748  636 209444 9802206  19598
+	cpu1  178384   75  24545 1392450   3025
 
-The "_once" version seems a little pointless when the next statement in the function
-is "panic()".
+take cpu1 offline and bring it back online
 
-"warn" seems understated for an error that is going to crash the system.
-Just go for "pr_emerg()".
+	        user nice system    idle iowait
+	cpu  1391209  636 209682 8453440  16595
+	cpu1  178440   75  24572     627      0
 
-There seems no consistency on using "rIP" or "RIP" ... but I think "RIP"
-is slightly ahead.
+To prevent this, do not clear the idle and iowait times for the
+cpu that has come back online.
 
-> +			 (unsigned int)regs->cx, regs->ip, (void *)regs->ip))
-> +		show_stack_regs(regs);
-> +
-> +	panic("MCA Architectural violation!\n");
+With this patch:
 
-nitpick: I don't thing Architectural needs to be capitalized.
+	        user nice system    idle iowait
+	cpu   129913   17  17590  166512    704
+	cpu1   15916    3   2395   20989     47
 
-> +
-> +	while (true)
-> +		cpu_relax();
+take cpu1 offline and bring it back online
 
-Ugh. Is this why you have warn_once() ... because panic might return?
+	        user nice system    idle iowait
+	cpu   130089   17  17686  184625    711
+        cpu1   15942    3   2401   23088     47
 
-Above comments also apply to the wrmsr path.
+Signed-off-by: Tom Hromatka <tom.hromatka@oracle.com>
+---
+ kernel/time/tick-sched.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
--Tony
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 3e2dc9b8858c..8103bad7bbd6 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -1375,13 +1375,22 @@ void tick_setup_sched_timer(void)
+ void tick_cancel_sched_timer(int cpu)
+ {
+ 	struct tick_sched *ts = &per_cpu(tick_cpu_sched, cpu);
++	ktime_t idle_sleeptime, iowait_sleeptime;
+ 
+ # ifdef CONFIG_HIGH_RES_TIMERS
+ 	if (ts->sched_timer.base)
+ 		hrtimer_cancel(&ts->sched_timer);
+ # endif
+ 
++	/* save off and restore the idle_sleeptime and the iowait_sleeptime
++	 * to avoid discontinuities and ensure that they are monotonically
++	 * increasing
++	 */
++	idle_sleeptime = ts->idle_sleeptime;
++	iowait_sleeptime = ts->iowait_sleeptime;
+ 	memset(ts, 0, sizeof(*ts));
++	ts->idle_sleeptime = idle_sleeptime;
++	ts->iowait_sleeptime = iowait_sleeptime;
+ }
+ #endif
+ 
+-- 
+2.25.4
+
