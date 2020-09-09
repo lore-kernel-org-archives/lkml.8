@@ -2,136 +2,142 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC40C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E07215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C2B207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TO8o1zkq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhfnWYxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgIIIl4 (ORCPT
+        id S1729719AbgIIImZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:41:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59220 "EHLO
+        Wed, 9 Sep 2020 04:42:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51343 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725877AbgIIIlz (ORCPT
+        with ESMTP id S1726605AbgIIImJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:41:55 -0400
+        Wed, 9 Sep 2020 04:42:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599640913;
+        s=mimecast20190719; t=1599640927;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=T36t7fQZrvyiAzT5j5Q2jRiJ36nfS5YR20jv9iVoAto=;
-        b=TO8o1zkqOAPz7lusmAiR3Eqq4BLkai6FkVarSKwOeH1C3L0TUaRrUIgQ3Niy3YC6EE6M1F
-        r0yBnQt0EKNXEBQ2lVGOkTQXX6+WZUsbovuys5Rhq3aUGNM0AQ2bZNB+Ahi5lBoV+tKL41
-        5HFQMUZ6dHar338IMd5a4RZGTrF/F+c=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-sIX0-UBKNtC5bJ7q6n_Qig-1; Wed, 09 Sep 2020 04:41:52 -0400
-X-MC-Unique: sIX0-UBKNtC5bJ7q6n_Qig-1
-Received: by mail-wr1-f71.google.com with SMTP id a10so691291wrw.22
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:41:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=T36t7fQZrvyiAzT5j5Q2jRiJ36nfS5YR20jv9iVoAto=;
-        b=KinyOJuvZSsDBKTQscbm0Bp9P4ukjXU/a+YAyKG0Tt93ckcYWTOBmlHG7IG7QyttzQ
-         BCa99ORrHAO9U8BW+aV1KYZGzMyciMn836bXW0djzm9dVP2yVAOvQVYKvzQ0P0Zcne1y
-         eaGYeOp94u+P03q3AU/nImY7IBi5ELBCUH24aeOem54AaqhAgDLl/rHq1ZwPOw4weNzV
-         eRCkhNDoNs09P+ZB9ifJiF2lqgO9VRJAlIyki6Jz9hLgcShxuE4GwoEJjicfQt5H3tZZ
-         +bxFscXWrE5+YAqqeS5N0YDwt/T2soxrNfhrm4Q0tdaXJ3VmxY4A3IRhi13U+S6CKH/X
-         2aQA==
-X-Gm-Message-State: AOAM532smhbkL6HaPhIE1hWCUrogsl6qCUWJ+/ZocY9TN+ouHTtWImUq
-        S9K7sZ8FbAOhQqy6HpS+S2GokgOOV69TLR491uaoe9XyGbDEHBv640EyCTsV+UzCnjo4GdbdoUc
-        +jMBnyBR+W9jQV9yZ0OXUnTyF
-X-Received: by 2002:a05:600c:252:: with SMTP id 18mr2275266wmj.63.1599640910872;
-        Wed, 09 Sep 2020 01:41:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwlN5J94Y8BYA6qYXY7wIIaOrIgJb7mS6rfcMp2Fpo44YIPTD6vwynEu5UzWqHoGtXWhNv+2Q==
-X-Received: by 2002:a05:600c:252:: with SMTP id 18mr2275246wmj.63.1599640910690;
-        Wed, 09 Sep 2020 01:41:50 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id l10sm2827473wmh.27.2020.09.09.01.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 01:41:49 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Paul K ." <kronenpj@kronenpj.dyndns.org>
-Subject: Re: [PATCH 3/3] KVM: SVM: Reenable handle_fastpath_set_msr_irqoff() after complete_interrupts()
-In-Reply-To: <1599620139-13019-1-git-send-email-wanpengli@tencent.com>
-References: <1599620139-13019-1-git-send-email-wanpengli@tencent.com>
-Date:   Wed, 09 Sep 2020 10:41:48 +0200
-Message-ID: <87blifmjeb.fsf@vitty.brq.redhat.com>
+        bh=DtMgeTKjCn17clYv2JEnI3ffDcOPCVRLd/V3CjCE3+4=;
+        b=HhfnWYxhpdT5yvSbuWlWoGg+iM3zrdzumz8Ij4gJIhXiweCs5ceaWjFFHJIt6gSpZHsmWM
+        0Gg3Al+czx3nG+0BDCsx6Yc6R7IWeizV5MbI6fcf9MprtPSetDdAafr17rCARoQO9Lo0ZF
+        cskJE+phvKFhPStLm2Kf4uc3qa5HK6A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-_Ya4rfJ9P0yaQlRETl-ZPw-1; Wed, 09 Sep 2020 04:42:06 -0400
+X-MC-Unique: _Ya4rfJ9P0yaQlRETl-ZPw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D592981F02E;
+        Wed,  9 Sep 2020 08:42:03 +0000 (UTC)
+Received: from [10.72.12.24] (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D6F760C15;
+        Wed,  9 Sep 2020 08:41:46 +0000 (UTC)
+Subject: Re: [RFC PATCH 00/22] Enhance VHOST to enable SoC-to-SoC
+ communication
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200702082143.25259-1-kishon@ti.com>
+ <20200702055026-mutt-send-email-mst@kernel.org>
+ <603970f5-3289-cd53-82a9-aa62b292c552@redhat.com>
+ <14c6cad7-9361-7fa4-e1c6-715ccc7e5f6b@ti.com>
+ <59fd6a0b-8566-44b7-3dae-bb52b468219b@redhat.com>
+ <ce9eb6a5-cd3a-a390-5684-525827b30f64@ti.com>
+ <da2b671c-b05d-a57f-7bdf-8b1043a41240@redhat.com>
+ <fee8a0fb-f862-03bd-5ede-8f105b6af529@ti.com>
+ <b2178e1d-2f5c-e8a3-72fb-70f2f8d6aa45@redhat.com>
+ <45a8a97c-2061-13ee-5da8-9877a4a3b8aa@ti.com>
+ <c8739d7f-e12e-f6a2-7018-9eeaf6feb054@redhat.com>
+ <20200828123409.4cd2a812.cohuck@redhat.com>
+ <ac8f7e4f-9f46-919a-f5c2-89b07794f0ab@ti.com>
+ <9cd58cd1-0041-3d98-baf7-6e5bc2e7e317@redhat.com>
+ <20200908183701.60b93441.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d6e4be52-78d8-546c-20a4-23bdaea68ba5@redhat.com>
+Date:   Wed, 9 Sep 2020 16:41:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200908183701.60b93441.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
 
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Moving the call to svm_exit_handlers_fastpath() after svm_complete_interrupts() 
-> since svm_complete_interrupts() consumes rip and reenable the function 
-> handle_fastpath_set_msr_irqoff() call in svm_exit_handlers_fastpath().
->
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Paul K. <kronenpj@kronenpj.dyndns.org>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 74bcf0a..ac819f0 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3347,6 +3347,11 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
->  
->  static fastpath_t svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
->  {
-> +	if (!is_guest_mode(vcpu) &&
-> +	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
-> +	    to_svm(vcpu)->vmcb->control.exit_info_1)
-> +		return handle_fastpath_set_msr_irqoff(vcpu);
-> +
->  	return EXIT_FASTPATH_NONE;
->  }
->  
-> @@ -3495,7 +3500,6 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
->  	stgi();
->  
->  	/* Any pending NMI will happen here */
-> -	exit_fastpath = svm_exit_handlers_fastpath(vcpu);
->  
->  	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
->  		kvm_after_interrupt(&svm->vcpu);
-> @@ -3529,6 +3533,7 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
->  		svm_handle_mce(svm);
->  
->  	svm_complete_interrupts(svm);
-> +	exit_fastpath = svm_exit_handlers_fastpath(vcpu);
->  
->  	vmcb_mark_all_clean(svm->vmcb);
->  	return exit_fastpath;
+On 2020/9/9 上午12:37, Cornelia Huck wrote:
+>> Then you need something that is functional equivalent to virtio PCI
+>> which is actually the concept of vDPA (e.g vDPA provides alternatives if
+>> the queue_sel is hard in the EP implementation).
+> It seems I really need to read up on vDPA more... do you have a pointer
+> for diving into this alternatives aspect?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
--- 
-Vitaly
+See vpda_config_ops in include/linux/vdpa.h
+
+Especially this part:
+
+     int (*set_vq_address)(struct vdpa_device *vdev,
+                   u16 idx, u64 desc_area, u64 driver_area,
+                   u64 device_area);
+
+This means for the devices (e.g endpoint device) that is hard to 
+implement virtio-pci layout, it can use any other register layout or 
+vendor specific way to configure the virtqueue.
+
+
+>
+>>> "Virtio Over NTB" should anyways be a new transport.
+>>>> Does that make any sense?
+>>> yeah, in the approach I used the initial features are hard-coded in
+>>> vhost-rpmsg (inherent to the rpmsg) but when we have to use adapter
+>>> layer (vhost only for accessing virtio ring and use virtio drivers on
+>>> both front end and backend), based on the functionality (e.g, rpmsg),
+>>> the vhost should be configured with features (to be presented to the
+>>> virtio) and that's why additional layer or APIs will be required.
+>> A question here, if we go with vhost bus approach, does it mean the
+>> virtio device can only be implemented in EP's userspace?
+> Can we maybe implement an alternative bus as well that would allow us
+> to support different virtio device implementations (in addition to the
+> vhost bus + userspace combination)?
+
+
+That should be fine, but I'm not quite sure that implementing the device 
+in kerne (kthread) is the good approach.
+
+Thanks
+
+
+>
 
