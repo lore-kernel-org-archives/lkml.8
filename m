@@ -2,92 +2,133 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623F0C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A86C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232B42080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37C42080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIICYZ (ORCPT
+        id S1728347AbgIIC2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:24:25 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42086 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726369AbgIICYY (ORCPT
+        Tue, 8 Sep 2020 22:28:12 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:35271 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbgIIC2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:24:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=25;SR=0;TI=SMTPD_---0U8MLMVV_1599618258;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U8MLMVV_1599618258)
+        Tue, 8 Sep 2020 22:28:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U8MaSxt_1599618487;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U8MaSxt_1599618487)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 09 Sep 2020 10:24:19 +0800
-Date:   Wed, 9 Sep 2020 10:24:18 +0800
+          Wed, 09 Sep 2020 10:28:07 +0800
+Date:   Wed, 9 Sep 2020 10:28:07 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
-        shy828301@gmail.com, vbabka@suse.cz, minchan@kernel.org, cai@lca.pw
-Subject: Re: [PATCH v18 00/32] per memcg lru_lock: reviews
-Message-ID: <20200909022418.GA14584@L-31X9LVDL-1304.local>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/mmap: leave adjust_next as virtual address instead of
+ page frame number
+Message-ID: <20200909022807.GB14584@L-31X9LVDL-1304.local>
 Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
- <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
- <alpine.LSU.2.11.2008262301240.4405@eggly.anvils>
- <alpine.LSU.2.11.2009081640070.7256@eggly.anvils>
+References: <20200828081031.11306-1-richard.weiyang@linux.alibaba.com>
+ <85daf46b-0d85-588a-2d6f-883afa6076dc@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2009081640070.7256@eggly.anvils>
+In-Reply-To: <85daf46b-0d85-588a-2d6f-883afa6076dc@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 04:41:00PM -0700, Hugh Dickins wrote:
-[...]
->[PATCH v18 06/32] mm/thp: narrow lru locking
->Why? What part does this play in the series? "narrow lru locking" can
->also be described as "widen page cache locking": you are changing the
->lock ordering, and not giving any reason to do so. This may be an
->excellent change, or it may be a terrible change: I find that usually
->lock ordering is forced upon us, and it's rare to meet an instance like
->this that could go either way, and I don't know myself how to judge it.
+On Tue, Sep 08, 2020 at 05:31:22PM +0200, Vlastimil Babka wrote:
+>On 8/28/20 10:10 AM, Wei Yang wrote:
+>> Instead of convert adjust_next between virtual address and page frame
+>> number, let's just store the virtual address into adjust_next.
 >
->I do want this commit to go in, partly because it has been present in
->all the testing we have done, and partly because I *can at last* see a
->logical advantage to it - it also nests lru_lock inside memcg->move_lock,
->allowing lock_page_memcg() to be used to stabilize page->mem_cgroup when
->getting per-memcg lru_lock - though only in one place, starting in v17,
->do you actually use that (and, warning: it's not used correctly there).
->
->I'm not very bothered by how the local_irq_disable() looks to RT: THP
->seems a very bad idea in an RT kernel.  Earlier I asked you to run this
->past Kirill and Matthew and Johannes: you did so, thank you, and Kirill
->has blessed it, and no one has nacked it, and I have not noticed any
->disadvantage from this change in lock ordering (documented in 23/32),
->so I'm now going to say
->
->Acked-by: Hugh Dickins <hughd@google.com>
->
->But I wish you could give some reason for it in the commit message!
->
->Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->Is that correct? Or Wei Yang suggested some part of it perhaps?
+>IMHO more precisely/less confusing it's "bytes" and "pages" instead of "virtual
+>address" (which is absolute address, but this variable holds a difference) and
+>"page frame number" (which is related to absolute physical address, but what we
+>have is difference in pages in virtual address space).
 >
 
-If my memory is correct, we had some offline discussion about this change.
+Thanks for your comment.
+
+To be honest, I am not sure which one is more precise. English is not my
+mother tongue. If others think this is better, I am fine to adjust this.
+
+>> Also, this patch fixes one typo in the comment of
+>> vma_adjust_trans_huge().
+>> 
+>> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>
+>Other than that, seems like it leads to less shifting, so
+>Acked-by: Vlastimil Babka <vbabka@suse.cz>
+>
+>> ---
+>>  mm/huge_memory.c | 4 ++--
+>>  mm/mmap.c        | 8 ++++----
+>>  2 files changed, 6 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 78c84bee7e29..2c633ba14440 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -2300,13 +2300,13 @@ void vma_adjust_trans_huge(struct vm_area_struct *vma,
+>>  
+>>  	/*
+>>  	 * If we're also updating the vma->vm_next->vm_start, if the new
+>> -	 * vm_next->vm_start isn't page aligned and it could previously
+>> +	 * vm_next->vm_start isn't hpage aligned and it could previously
+>>  	 * contain an hugepage: check if we need to split an huge pmd.
+>>  	 */
+>>  	if (adjust_next > 0) {
+>>  		struct vm_area_struct *next = vma->vm_next;
+>>  		unsigned long nstart = next->vm_start;
+>> -		nstart += adjust_next << PAGE_SHIFT;
+>> +		nstart += adjust_next;
+>>  		if (nstart & ~HPAGE_PMD_MASK &&
+>>  		    (nstart & HPAGE_PMD_MASK) >= next->vm_start &&
+>>  		    (nstart & HPAGE_PMD_MASK) + HPAGE_PMD_SIZE <= next->vm_end)
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index 90b1298d4222..e4c9bbfd4103 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -758,7 +758,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>  			 * vma expands, overlapping part of the next:
+>>  			 * mprotect case 5 shifting the boundary up.
+>>  			 */
+>> -			adjust_next = (end - next->vm_start) >> PAGE_SHIFT;
+>> +			adjust_next = (end - next->vm_start);
+>>  			exporter = next;
+>>  			importer = vma;
+>>  			VM_WARN_ON(expand != importer);
+>> @@ -768,7 +768,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>  			 * split_vma inserting another: so it must be
+>>  			 * mprotect case 4 shifting the boundary down.
+>>  			 */
+>> -			adjust_next = -((vma->vm_end - end) >> PAGE_SHIFT);
+>> +			adjust_next = -(vma->vm_end - end);
+>>  			exporter = vma;
+>>  			importer = next;
+>>  			VM_WARN_ON(expand != importer);
+>> @@ -840,8 +840,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>>  	}
+>>  	vma->vm_pgoff = pgoff;
+>>  	if (adjust_next) {
+>> -		next->vm_start += adjust_next << PAGE_SHIFT;
+>> -		next->vm_pgoff += adjust_next;
+>> +		next->vm_start += adjust_next;
+>> +		next->vm_pgoff += adjust_next >> PAGE_SHIFT;
+>>  	}
+>>  
+>>  	if (root) {
+>> 
 
 -- 
 Wei Yang
