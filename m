@@ -2,107 +2,98 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCE6C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F05C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E4A2078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="hn4uTxWf"
+	by mail.kernel.org (Postfix) with ESMTP id EC8792078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgIIHT3 (ORCPT
+        id S1729912AbgIIHTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgIIHTY (ORCPT
+        Wed, 9 Sep 2020 03:19:49 -0400
+Received: from smtp-8fac.mail.infomaniak.ch ([83.166.143.172]:47991 "EHLO
+        smtp-8fac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729779AbgIIHTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:19:24 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07137C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:19:24 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id kk9so902048pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=7yi/vsERj3XSiUmPF9/ytkB61PwQoPSacfDXXxnQXzM=;
-        b=hn4uTxWfwCO2Go8jK7YZ0cVEpAJS7tuMGyZgZkA8UNovAOsFFk0FIruGG0U1lQTwXH
-         ZvNE0IIUZX1ZbYH2oYr412I5ddkmOu2Bl3bYaiOPMJyNfs1P2q16x+yq9n37Dc+41Wcx
-         /EsjKmVoHkYRBAVorjpKp2UiBc7pHcKJDR3sM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7yi/vsERj3XSiUmPF9/ytkB61PwQoPSacfDXXxnQXzM=;
-        b=VeupulzwG+cy84nLO9EmmtUNumXtOdUglcnFE2GbQsy3HpPqGhg28hhLJSPkEJyZTu
-         kSc9p+RY3b5pTwhGz82tQTK95OLGgTlJP9wetWsdFJp/QQ61h1lA6IqK3deUiPUwCvka
-         AZ7Q/jFnp2HZnVobg+s4JU5K6631PlaxtEeobhzC7XBwo7AvlyM6rFiQBjvYvLhFHZbK
-         h3X1RNikn80i2b/Q/URHg7uQTit73+fczTQrIY8EMyKw+ZxmoK8dYI4n2d6oBb2ktAfe
-         KyOCpsB2HPd3MJAwNUM4hFzETZbo2quitEuPunk3/dSnYpAmjAIG1aGBq6EZQ3XXy1Sc
-         dEjw==
-X-Gm-Message-State: AOAM531bXUwoG9q6mjuVJz4M2qx/G6qjXKk7Stt16s9lRJIP8RhvgyAK
-        TzvtMquMGnJgLGQq72jjvoGJzA==
-X-Google-Smtp-Source: ABdhPJzsoWtEs9yiO0+OBwfOeMP55wB7jvsEYZFOrTReGuLx2A5RE6IU3IIYxMb5LEaNl//q6iPS2A==
-X-Received: by 2002:a17:90a:7084:: with SMTP id g4mr2224010pjk.116.1599635963495;
-        Wed, 09 Sep 2020 00:19:23 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id 194sm1583885pfy.44.2020.09.09.00.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 00:19:22 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi@sslab.ics.keio.ac.jp, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Klaus Doth <kdlnx@doth.eu>, Rui Feng <rui_feng@realsil.com.cn>,
-        Ricky Wu <ricky_wu@realtek.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] misc: rtsx: Fix memory leak in rtsx_pci_probe
-Date:   Wed,  9 Sep 2020 07:18:51 +0000
-Message-Id: <20200909071853.4053-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 9 Sep 2020 03:19:46 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BmYKr480Wzlhj0M;
+        Wed,  9 Sep 2020 09:19:12 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4BmYKn34q7zlh8TL;
+        Wed,  9 Sep 2020 09:19:09 +0200 (CEST)
+Subject: Re: [RFC PATCH v8 0/3] Add support for AT_INTERPRETED (was O_MAYEXEC)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200908075956.1069018-1-mic@digikod.net>
+ <20200908185026.GU1236603@ZenIV.linux.org.uk>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <e3223b50-0d00-3b64-1e09-cfb1b9648b02@digikod.net>
+Date:   Wed, 9 Sep 2020 09:19:11 +0200
+User-Agent: 
+MIME-Version: 1.0
+In-Reply-To: <20200908185026.GU1236603@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When mfd_add_devices() fail, pcr->slots should also be freed. However,
-the current implementation does not free the member, leading to a memory
-leak.
 
-Fix this by adding a new goto label that frees pcr->slots.
+On 08/09/2020 20:50, Al Viro wrote:
+> On Tue, Sep 08, 2020 at 09:59:53AM +0200, Mickaël Salaün wrote:
+>> Hi,
+>>
+>> This height patch series rework the previous O_MAYEXEC series by not
+>> adding a new flag to openat2(2) but to faccessat2(2) instead.  As
+>> suggested, this enables to perform the access check on a file descriptor
+>> instead of on a file path (while opening it).  This may require two
+>> checks (one on open and then with faccessat2) but it is a more generic
+>> approach [8].
+> 
+> Again, why is that folded into lookup/open/whatnot, rather than being
+> an operation applied to a file (e.g. O_PATH one)?
+> 
 
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
----
- drivers/misc/cardreader/rtsx_pcr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index 37ccc67f4914..f2b2805942f5 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -1562,12 +1562,14 @@ static int rtsx_pci_probe(struct pci_dev *pcidev,
- 	ret = mfd_add_devices(&pcidev->dev, pcr->id, rtsx_pcr_cells,
- 			ARRAY_SIZE(rtsx_pcr_cells), NULL, 0, NULL);
- 	if (ret < 0)
--		goto disable_irq;
-+		goto free_slots;
- 
- 	schedule_delayed_work(&pcr->idle_work, msecs_to_jiffies(200));
- 
- 	return 0;
- 
-+free_slots:
-+	kfree(pcr->slots);
- disable_irq:
- 	free_irq(pcr->irq, (void *)pcr);
- disable_msi:
--- 
-2.17.1
-
+I don't understand your question. AT_INTERPRETED can and should be used
+with AT_EMPTY_PATH. The two checks I wrote about was for IMA.
