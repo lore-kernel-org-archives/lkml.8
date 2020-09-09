@@ -2,147 +2,222 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2EFC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B548FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11539206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:14:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OWoVztvk"
+	by mail.kernel.org (Postfix) with ESMTP id 7E2C121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbgIIROr (ORCPT
+        id S1731303AbgIIROo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:14:47 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5095 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729521AbgIIP3H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:29:07 -0400
-X-UUID: 54b65d48d9f9404a9b46936ce49638ad-20200909
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=gd8IHDDlRyngneuXbVMKDrh2dBx36h1OwZpzKd/37SU=;
-        b=OWoVztvk/2gDHOQxxxuKbkXcfJo7Um4vHFAzTMDtSQqWZGt47UKRQCOdnJQWfU40AqkqH3tbGIg8ZQ7oF3O0diov6WuVAFsxIS/FOpIVbbZrJgRRHbSK1XspGRK95euy3/yumzj1F2VSPuuGrvqZqvgqqaXY6NTzlxHXDU6x0Tc=;
-X-UUID: 54b65d48d9f9404a9b46936ce49638ad-20200909
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 712776735; Wed, 09 Sep 2020 21:34:42 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 9 Sep 2020 21:34:40 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 9 Sep 2020 21:34:39 +0800
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <hector.yuan@mediatek.com>
-Subject: [PATCH v6 2/2] dt-bindings: cpufreq: add bindings for MediaTek cpufreq HW
-Date:   Wed, 9 Sep 2020 21:34:36 +0800
-Message-ID: <1599658476-16562-3-git-send-email-hector.yuan@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1599658476-16562-1-git-send-email-hector.yuan@mediatek.com>
-References: <1599658476-16562-1-git-send-email-hector.yuan@mediatek.com>
+        Wed, 9 Sep 2020 13:14:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730236AbgIIP3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:29:42 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 742603448DFDBD0050E8;
+        Wed,  9 Sep 2020 21:37:34 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
+ 21:37:25 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <vkoul@kernel.org>, <yung-chuan.liao@linux.intel.com>,
+        <pierre-louis.bossart@linux.intel.com>, <sanyog.r.kale@intel.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] soundwire: intel: Remove ununsed function
+Date:   Wed, 9 Sep 2020 21:15:31 +0800
+Message-ID: <20200909131531.31380-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIkhlY3Rvci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KDQpBZGQgZGV2
-aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgSFcgZHJpdmVyLg0KDQpTaWduZWQtb2ZmLWJ5
-OiBIZWN0b3IuWXVhbiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2JpbmRp
-bmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAgMTQxICsrKysrKysr
-KysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0MSBpbnNlcnRpb25zKCspDQogY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcHVmcmVxL2Nw
-dWZyZXEtbWVkaWF0ZWstaHcueWFtbA0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55
-YW1sDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uMTE4YTE2Mw0KLS0tIC9k
-ZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEv
-Y3B1ZnJlcS1tZWRpYXRlay1ody55YW1sDQpAQCAtMCwwICsxLDE0MSBAQA0KKyMgU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KKyVZQU1MIDEu
-Mg0KKy0tLQ0KKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvY3B1ZnJlcS9jcHVm
-cmVxLW1lZGlhdGVrLWh3LnlhbWwjDQorJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21l
-dGEtc2NoZW1hcy9jb3JlLnlhbWwjDQorDQordGl0bGU6IE1lZGlhVGVrJ3MgQ1BVRlJFUSBCaW5k
-aW5ncw0KKw0KK21haW50YWluZXJzOg0KKyAgLSBIZWN0b3IgWXVhbiA8aGVjdG9yLnl1YW5AbWVk
-aWF0ZWsuY29tPg0KKw0KK2Rlc2NyaXB0aW9uOg0KKyAgQ1BVRlJFUSBIVyBpcyBhIGhhcmR3YXJl
-IGVuZ2luZSB1c2VkIGJ5IE1lZGlhVGVrDQorICBTb0NzIHRvIG1hbmFnZSBmcmVxdWVuY3kgaW4g
-aGFyZHdhcmUuIEl0IGlzIGNhcGFibGUgb2YgY29udHJvbGxpbmcgZnJlcXVlbmN5DQorICBmb3Ig
-bXVsdGlwbGUgY2x1c3RlcnMuDQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGlibGU6DQorICAg
-IGNvbnN0OiAibWVkaWF0ZWssY3B1ZnJlcS1odyINCisNCisgIHJlZzoNCisgICAgbWluSXRlbXM6
-IDENCisgICAgbWF4SXRlbXM6IDINCisgICAgZGVzY3JpcHRpb246IHwNCisgICAgICBBZGRyZXNz
-ZXMgYW5kIHNpemVzIGZvciB0aGUgbWVtb3J5IG9mIHRoZSBIVyBiYXNlcyBpbiBlYWNoIGZyZXF1
-ZW5jeSBkb21haW4uDQorDQorICByZWctbmFtZXM6DQorICAgIGl0ZW1zOg0KKyAgICAgIC0gY29u
-c3Q6ICJmcmVxLWRvbWFpbjAiDQorICAgICAgLSBjb25zdDogImZyZXEtZG9tYWluMSINCisgICAg
-ZGVzY3JpcHRpb246IHwNCisgICAgICBGcmVxdWVuY3kgZG9tYWluIG5hbWUuIGkuZS4NCisgICAg
-ICAiZnJlcS1kb21haW4wIiwgImZyZXEtZG9tYWluMSIuDQorDQorICAiI2ZyZXEtZG9tYWluLWNl
-bGxzIjoNCisgICAgY29uc3Q6IDENCisgICAgZGVzY3JpcHRpb246IHwNCisgICAgICBOdW1iZXIg
-b2YgY2VsbHMgaW4gYSBmcmVxZW5jeSBkb21haW4gc3BlY2lmaWVyLg0KKw0KKyAgbXRrLWZyZXEt
-ZG9tYWluOg0KKyAgICBtYXhJdGVtczogMQ0KKyAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAgIERl
-ZmluZSB0aGlzIGNwdSBiZWxvbmdzIHRvIHdoaWNoIGZyZXF1ZW5jeSBkb21haW4uIGkuZS4NCisg
-ICAgICBjcHUwLTMgYmVsb25nIHRvIGZyZXF1ZW5jeSBkb21haW4wLA0KKyAgICAgIGNwdTQtNiBi
-ZWxvbmcgdG8gZnJlcXVlbmN5IGRvbWFpbjEuDQorDQorcmVxdWlyZWQ6DQorICAtIGNvbXBhdGli
-bGUNCisgIC0gcmVnDQorICAtIHJlZy1uYW1lcw0KKyAgLSAiI2ZyZXEtZG9tYWluLWNlbGxzIg0K
-Kw0KK2V4YW1wbGVzOg0KKyAgLSB8DQorICAgIGNwdXMgew0KKyAgICAgICAgICAgICNhZGRyZXNz
-LWNlbGxzID0gPDE+Ow0KKyAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKyAgICAg
-ICAgICAgIGNwdTA6IGNwdUAwIHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1
-IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAg
-ICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10
-ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAwPjsNCisgICAgICAgICAgICAgICAgcmVnID0g
-PDB4MDAwPjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTE6IGNwdUAxIHsN
-CisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1t
-ZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1
-ZnJlcV9odyAwPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4MTAwPjsNCisgICAgICAgICAg
-ICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTI6IGNwdUAyIHsNCisgICAgICAgICAgICAgICAgZGV2
-aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29y
-dGV4LWE1NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAg
-ICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAwPjsNCisgICAgICAg
-ICAgICAgICAgcmVnID0gPDB4MjAwPjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAg
-IGNwdTM6IGNwdUAzIHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisg
-ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAgICAgICAg
-ICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVx
-LWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAwPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAw
-PjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTQ6IGNwdUA0IHsNCisgICAg
-ICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2Qg
-PSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9o
-dyAxPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4NDAwPjsNCisgICAgICAgICAgICB9Ow0K
-Kw0KKyAgICAgICAgICAgIGNwdTU6IGNwdUA1IHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5
-cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1
-NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAg
-ICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAxPjsNCisgICAgICAgICAgICAg
-ICAgcmVnID0gPDB4NTAwPjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTY6
-IGNwdUA2IHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3NSI7DQorICAgICAgICAgICAgICAg
-IGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFp
-biA9IDwmY3B1ZnJlcV9odyAxPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4NjAwPjsNCisg
-ICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTc6IGNwdUA3IHsNCisgICAgICAgICAg
-ICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
-ICJhcm0sY29ydGV4LWE3NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNj
-aSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAxPjsN
-CisgICAgICAgICAgICAgICAgcmVnID0gPDB4NzAwPjsNCisgICAgICAgICAgICB9Ow0KKyAgICB9
-Ow0KKw0KKyAgICAvKiAuLi4gKi8NCisNCisgICAgc29jIHsNCisgICAgICAgICNhZGRyZXNzLWNl
-bGxzID0gPDI+Ow0KKyAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQorDQorICAgICAgICBjcHVm
-cmVxX2h3OiBjcHVmcmVxQDExYmMwMCB7DQorICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxjcHVmcmVxLWh3IjsNCisgICAgICAgICAgICByZWcgPSA8MCAweDExYmMxMCAwIDB4OGM+
-LA0KKyAgICAgICAgICAgICAgIDwwIDB4MTFiY2EwIDAgMHg4Yz47DQorICAgICAgICAgICAgcmVn
-LW5hbWVzID0gImZyZXEtZG9tYWluMCIsICJmcmVxLWRvbWFpbjEiOw0KKyAgICAgICAgICAgICNm
-cmVxLWRvbWFpbi1jZWxscyA9IDwxPjsNCisgICAgICAgIH07DQorICAgIH07DQorDQorDQorDQor
-DQotLSANCjEuNy45LjUNCg==
+If CONFIG_PM is not set, build warns:
+
+drivers/soundwire/intel.c:488:12: warning: 'intel_link_power_down' defined but not used [-Wunused-function]
+
+Move this to #ifdef block.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/soundwire/intel.c | 137 +++++++++++++++++++-------------------
+ 1 file changed, 68 insertions(+), 69 deletions(-)
+
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index e047910d73f5..ea53291c80dd 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -399,27 +399,6 @@ static void intel_shim_glue_to_master_ip(struct sdw_intel *sdw)
+ 	/* at this point Master IP has full control of the I/Os */
+ }
+ 
+-/* this needs to be called with shim_lock */
+-static void intel_shim_master_ip_to_glue(struct sdw_intel *sdw)
+-{
+-	unsigned int link_id = sdw->instance;
+-	void __iomem *shim = sdw->link_res->shim;
+-	u16 ioctl;
+-
+-	/* Glue logic */
+-	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
+-	ioctl |= SDW_SHIM_IOCTL_BKE;
+-	ioctl |= SDW_SHIM_IOCTL_COE;
+-	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
+-	usleep_range(10, 15);
+-
+-	ioctl &= ~(SDW_SHIM_IOCTL_MIF);
+-	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
+-	usleep_range(10, 15);
+-
+-	/* at this point Integration Glue has full control of the I/Os */
+-}
+-
+ static int intel_shim_init(struct sdw_intel *sdw, bool clock_stop)
+ {
+ 	void __iomem *shim = sdw->link_res->shim;
+@@ -485,54 +464,6 @@ static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
+ 	mutex_unlock(sdw->link_res->shim_lock);
+ }
+ 
+-static int intel_link_power_down(struct sdw_intel *sdw)
+-{
+-	u32 link_control, spa_mask, cpa_mask;
+-	unsigned int link_id = sdw->instance;
+-	void __iomem *shim = sdw->link_res->shim;
+-	u32 *shim_mask = sdw->link_res->shim_mask;
+-	int ret = 0;
+-
+-	mutex_lock(sdw->link_res->shim_lock);
+-
+-	intel_shim_master_ip_to_glue(sdw);
+-
+-	if (!(*shim_mask & BIT(link_id)))
+-		dev_err(sdw->cdns.dev,
+-			"%s: Unbalanced power-up/down calls\n", __func__);
+-
+-	*shim_mask &= ~BIT(link_id);
+-
+-	if (!*shim_mask) {
+-
+-		dev_dbg(sdw->cdns.dev, "%s: powering down all links\n", __func__);
+-
+-		/* Link power down sequence */
+-		link_control = intel_readl(shim, SDW_SHIM_LCTL);
+-
+-		/* only power-down enabled links */
+-		spa_mask = FIELD_PREP(SDW_SHIM_LCTL_SPA_MASK, ~sdw->link_res->link_mask);
+-		cpa_mask = FIELD_PREP(SDW_SHIM_LCTL_CPA_MASK, sdw->link_res->link_mask);
+-
+-		link_control &=  spa_mask;
+-
+-		ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
+-	}
+-
+-	link_control = intel_readl(shim, SDW_SHIM_LCTL);
+-
+-	mutex_unlock(sdw->link_res->shim_lock);
+-
+-	if (ret < 0) {
+-		dev_err(sdw->cdns.dev, "%s: could not power down link\n", __func__);
+-
+-		return ret;
+-	}
+-
+-	sdw->cdns.link_up = false;
+-	return 0;
+-}
+-
+ static void intel_shim_sync_arm(struct sdw_intel *sdw)
+ {
+ 	void __iomem *shim = sdw->link_res->shim;
+@@ -1541,6 +1472,74 @@ int intel_master_process_wakeen_event(struct platform_device *pdev)
+  */
+ 
+ #ifdef CONFIG_PM
++/* this needs to be called with shim_lock */
++static void intel_shim_master_ip_to_glue(struct sdw_intel *sdw)
++{
++	unsigned int link_id = sdw->instance;
++	void __iomem *shim = sdw->link_res->shim;
++	u16 ioctl;
++
++	/* Glue logic */
++	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
++	ioctl |= SDW_SHIM_IOCTL_BKE;
++	ioctl |= SDW_SHIM_IOCTL_COE;
++	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
++	usleep_range(10, 15);
++
++	ioctl &= ~(SDW_SHIM_IOCTL_MIF);
++	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
++	usleep_range(10, 15);
++
++	/* at this point Integration Glue has full control of the I/Os */
++}
++
++static int intel_link_power_down(struct sdw_intel *sdw)
++{
++	u32 link_control, spa_mask, cpa_mask;
++	unsigned int link_id = sdw->instance;
++	void __iomem *shim = sdw->link_res->shim;
++	u32 *shim_mask = sdw->link_res->shim_mask;
++	int ret = 0;
++
++	mutex_lock(sdw->link_res->shim_lock);
++
++	intel_shim_master_ip_to_glue(sdw);
++
++	if (!(*shim_mask & BIT(link_id)))
++		dev_err(sdw->cdns.dev,
++			"%s: Unbalanced power-up/down calls\n", __func__);
++
++	*shim_mask &= ~BIT(link_id);
++
++	if (!*shim_mask) {
++
++		dev_dbg(sdw->cdns.dev, "%s: powering down all links\n", __func__);
++
++		/* Link power down sequence */
++		link_control = intel_readl(shim, SDW_SHIM_LCTL);
++
++		/* only power-down enabled links */
++		spa_mask = FIELD_PREP(SDW_SHIM_LCTL_SPA_MASK, ~sdw->link_res->link_mask);
++		cpa_mask = FIELD_PREP(SDW_SHIM_LCTL_CPA_MASK, sdw->link_res->link_mask);
++
++		link_control &=  spa_mask;
++
++		ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
++	}
++
++	link_control = intel_readl(shim, SDW_SHIM_LCTL);
++
++	mutex_unlock(sdw->link_res->shim_lock);
++
++	if (ret < 0) {
++		dev_err(sdw->cdns.dev, "%s: could not power down link\n", __func__);
++
++		return ret;
++	}
++
++	sdw->cdns.link_up = false;
++	return 0;
++}
+ 
+ static int __maybe_unused intel_suspend(struct device *dev)
+ {
+-- 
+2.17.1
+
 
