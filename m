@@ -2,249 +2,113 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAC7C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA24C208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C20B2208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nmZLQ6+M";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tuLo8PDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgIIHkQ (ORCPT
+        id S1730270AbgIIHkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 9 Sep 2020 03:40:20 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:37937 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728207AbgIIHkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 03:40:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56268 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgIIHkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:40:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4CE83B681;
-        Wed,  9 Sep 2020 07:40:13 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 09:40:11 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200909074011.GD7348@dhcp22.suse.cz>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 49361B5F;
+        Wed,  9 Sep 2020 03:40:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 09 Sep 2020 03:40:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=X/RsFQ5HlelnnKT+1vSUuFaLunI
+        ADUqucIeToVv5e7U=; b=nmZLQ6+M7wipsv5xIEOQ5/ZVBzhSox7qiTSL9wBDZK7
+        +/n363NMSEqVLasoF5rZ2n34zy7xunUyoUzCvZvROY92j9MVuF3RodLciV1FKRGi
+        8RK0+QGR6r/4bOm9v6d2spS6qowWr6o707aTXTAlvSDkJUQ34PmKkqA+PxoP+Zmg
+        kmg+Nj0e9ckV0ZwZdLyKQtKfamKV2zaTlYV+DJsHQJD1UMTnPOebKvE2wSC3v9QL
+        vRdFv1PcvNac5d16vmZfaAhqCfnwYIoIY2tU5AsvIpyZOTEct87al9nrLIYXQY56
+        yW5h+KvWLUk+krvSVp54mao2EGcxCnUjFbH3STUoksw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=X/RsFQ
+        5HlelnnKT+1vSUuFaLunIADUqucIeToVv5e7U=; b=tuLo8PDK/HhNWEbx450ilQ
+        5R6rAxNgmFsScEQd9IGdJOujrLWvXbe/K7Q7W5n6rPEkNW9ZK3LGkDHR9dbG0/Vj
+        GuibySXwpQjP9glpiC3qAaAveKJezbjQYl+sZ13kd/UVhVkMDg/Co0+xVSanZADW
+        3U7Mw+K9Iwh+ZftqzHfXtwas3zCjXF0y0/FnDRnSfgAJ9mmf5Dumu5Pkb5YuyVYe
+        qp4A/vJ17YvGDTrFHMDaMzDWvbd0HvJ+wO79xi2OZt9iiPY696+UHErvM28uNGgJ
+        4sajZdOorhVV1bDZou3Bs78PU8GXNbQcylqkk0zhOTHwnt5YodU8m4Mu4EqH51Aw
+        ==
+X-ME-Sender: <xms:3YZYX_QaD9j_FJvcg8ACp2Y6-3w6PeBPr5czz8jgIvSsNiHerUNXaw>
+    <xme:3YZYXwzOi0nOhh3dAiRanorIsKfY5xQsyxCSwt7MnKViHyDdA3_4o-MreRCEREKSw
+    d5ofZ6VBmDHRA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehgedguddvhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuhe
+    ejgfffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecukfhppeek
+    fedrkeeirdejgedrieegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:3YZYX03bFT5K7Riu6r_DgR_3peNJsOuGL-rzB4zbtGl69j41uUoe5A>
+    <xmx:3YZYX_D5NEgB_9JxWMtx_Lx6N0LoNDHbKK98NFAa36AcSvDy9KuSHQ>
+    <xmx:3YZYX4jPnxzgnzitydXHFvZs9RpdTOyIrNhl7jxnMICu4-Vkukpbog>
+    <xmx:3oZYXxu8MFSsl1JHIGTNKG4gz2AQcGw0oSiZIpUqBJz5mmLhrXDM9g>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 798143064AC8;
+        Wed,  9 Sep 2020 03:40:13 -0400 (EDT)
+Date:   Wed, 9 Sep 2020 09:40:25 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the driver-core tree
+Message-ID: <20200909074025.GA561485@kroah.com>
+References: <20200909172317.170984de@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200908170835.85440-1-ldufour@linux.ibm.com>
+In-Reply-To: <20200909172317.170984de@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[reposting because the malformed cc list confused my email client]
-
-On Tue 08-09-20 19:08:35, Laurent Dufour wrote:
-> In register_mem_sect_under_node() the system_state’s value is checked to
-> detect whether the operation the call is made during boot time or during an
-> hot-plug operation. Unfortunately, that check is wrong on some
-> architecture, and may lead to sections being registered under multiple
-> nodes if node's memory ranges are interleaved.
-
-Why is this check arch specific?
-
-> This can be seen on PowerPC LPAR after multiple memory hot-plug and
-> hot-unplug operations are done. At the next reboot the node's memory ranges
-> can be interleaved
-
-What is the exact memory layout?
-
-> and since the call to link_mem_sections() is made in
-> topology_init() while the system is in the SYSTEM_SCHEDULING state, the
-> node's id is not checked, and the sections registered multiple times.
-
-So a single memory section/memblock belongs to two numa nodes?
-
-> In
-> that case, the system is able to boot but later hot-plug operation may lead
-> to this panic because the node's links are correctly broken:
-
-Correctly broken? Could you provide more details on the inconsistency
-please?
-
-Which physical memory range you are trying to add here and what is the
-node affinity?
-
-> ------------[ cut here ]------------
-> kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
-> Oops: Exception in kernel mode, sig: 5 [#1]
-> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-> Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
-> CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
-> NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
-> REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
-> MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
-> CFAR: c000000000846d20 IRQMASK: 0
-> GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
-> GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
-> GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
-> GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
-> GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
-> GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
-> GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
-> GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
-> NIP [c000000000403f34] add_memory_resource+0x244/0x340
-> LR [c000000000403f2c] add_memory_resource+0x23c/0x340
-> Call Trace:
-> [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
-> [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
-> [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
-> [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
-> [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
-> [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
-> [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
-> [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
-> [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
-> [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
-> [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
-> [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
-> [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
-> Instruction dump:
-> 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
-> 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
-> ---[ end trace 562fd6c109cd0fb2 ]---
-
-The BUG_ON on failure is absolutely horrendous. There must be a better
-way to handle a failure like that. The failure means that
-sysfs_create_link_nowarn has failed. Please describe why that is the
-case.
-
-> This patch addresses the root cause by not relying on the system_state
-> value to detect whether the call is due to a hot-plug operation or not. An
-> additional parameter is added to link_mem_sections() to tell the context of
-> the call and this parameter is propagated to register_mem_sect_under_node()
-> throuugh the walk_memory_blocks()'s call.
-
-This looks like a hack to me and it deserves a better explanation. The
-existing code is a hack on its own and it is inconsistent with other
-boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
-places IIRC. Would it help to use the same here as well? Maybe we want to
-wrap that inside a helper (early_memory_init()) and use it at all
-places.
-
-> Fixes: 4fbce633910e ("mm/memory_hotplug.c: make register_mem_sect_under_node() a callback of walk_memory_range()")
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> Cc: stable@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> ---
->  drivers/base/node.c  | 20 +++++++++++++++-----
->  include/linux/node.h |  6 +++---
->  mm/memory_hotplug.c  |  3 ++-
->  3 files changed, 20 insertions(+), 9 deletions(-)
+On Wed, Sep 09, 2020 at 05:23:17PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 508b80f6329b..27f828eeb531 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -762,14 +762,19 @@ static int __ref get_nid_for_pfn(unsigned long pfn)
->  }
->  
->  /* register memory section under specified node if it spans that node */
-> +struct rmsun_args {
-> +	int	nid;
-> +	bool	hotadd;
-> +};
->  static int register_mem_sect_under_node(struct memory_block *mem_blk,
-> -					 void *arg)
-> +					void *args)
->  {
->  	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
->  	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
->  	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
-> -	int ret, nid = *(int *)arg;
-> +	int ret, nid = ((struct rmsun_args *)args)->nid;
->  	unsigned long pfn;
-> +	bool hotadd = ((struct rmsun_args *)args)->hotadd;
->  
->  	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
->  		int page_nid;
-> @@ -789,7 +794,7 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
->  		 * case, during hotplug we know that all pages in the memory
->  		 * block belong to the same node.
->  		 */
-> -		if (system_state == SYSTEM_BOOTING) {
-> +		if (!hotadd) {
->  			page_nid = get_nid_for_pfn(pfn);
->  			if (page_nid < 0)
->  				continue;
-> @@ -832,10 +837,15 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
->  			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
->  }
->  
-> -int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)
-> +int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn,
-> +		      bool hotadd)
->  {
-> +	struct rmsun_args args;
-> +
-> +	args.nid = nid;
-> +	args.hotadd = hotadd;
->  	return walk_memory_blocks(PFN_PHYS(start_pfn),
-> -				  PFN_PHYS(end_pfn - start_pfn), (void *)&nid,
-> +				  PFN_PHYS(end_pfn - start_pfn), (void *)&args,
->  				  register_mem_sect_under_node);
->  }
->  
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 4866f32a02d8..6df9a4548650 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -100,10 +100,10 @@ typedef  void (*node_registration_func_t)(struct node *);
->  
->  #if defined(CONFIG_MEMORY_HOTPLUG_SPARSE) && defined(CONFIG_NUMA)
->  extern int link_mem_sections(int nid, unsigned long start_pfn,
-> -			     unsigned long end_pfn);
-> +			     unsigned long end_pfn, bool hotadd);
->  #else
->  static inline int link_mem_sections(int nid, unsigned long start_pfn,
-> -				    unsigned long end_pfn)
-> +				    unsigned long end_pfn, bool hotadd)
->  {
->  	return 0;
->  }
-> @@ -128,7 +128,7 @@ static inline int register_one_node(int nid)
->  		if (error)
->  			return error;
->  		/* link memory sections under this node */
-> -		error = link_mem_sections(nid, start_pfn, end_pfn);
-> +		error = link_mem_sections(nid, start_pfn, end_pfn, false);
->  	}
->  
->  	return error;
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index e9d5ab5d3ca0..28028db8364a 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1080,7 +1080,8 @@ int __ref add_memory_resource(int nid, struct resource *res)
->  	}
->  
->  	/* link memory sections under this node.*/
-> -	ret = link_mem_sections(nid, PFN_DOWN(start), PFN_UP(start + size - 1));
-> +	ret = link_mem_sections(nid, PFN_DOWN(start), PFN_UP(start + size - 1),
-> +				true);
->  	BUG_ON(ret);
->  
->  	/* create new memmap entry */
-> -- 
-> 2.28.0
--- 
-Michal Hocko
-SUSE Labs
+> After merging the driver-core tree, today's linux-next build produced
+> this warning:
+> 
+> drivers/mmc/host/davinci_mmc.c: In function 'davinci_mmcsd_probe':
+> drivers/mmc/host/davinci_mmc.c:1243:4: warning: ignoring return value of 'dev_err_probe' declared with attribute 'warn_unused_result' [-Wunused-result]
+>  1243 |    dev_err_probe(&pdev->dev, ret,
+>       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  1244 |           "could not parse of data\n");
+>       |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Introduced by commit
+> 
+>   e1f82a0dcf38 ("driver core: Annotate dev_err_probe() with __must_check")
+> 
+> interacting with commit
+> 
+>   3a35e7e1bd50 ("mmc: davinci: Simplify with dev_err_probe()")
+> 
+> from the mmc tree.
+
+Offending patch now dropped from the driver-core tree, thanks.
+
+greg k-h
