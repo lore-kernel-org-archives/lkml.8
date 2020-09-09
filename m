@@ -2,146 +2,143 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A59FC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E9AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4DB21532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28C5215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PC3VAOwV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iMBqAbWC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPnzPnO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIII0R (ORCPT
+        id S1727782AbgIII0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:26:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60122 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgIII0Q (ORCPT
+        Wed, 9 Sep 2020 04:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgIII0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:26:16 -0400
-Date:   Wed, 09 Sep 2020 08:26:12 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599639973;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QoDD1UDHTlJFMLx9+RNng8Fd9vf19kX3LXI/EPptrC0=;
-        b=PC3VAOwVybDTf8GPzx8pjT6Y/hC7lBII2+oTwXXS/3Ehgdj2VOAS203Y0qp18f+uyqD+hS
-        /thKbVSHFJ4X5OsTGTlGbZlXYJEC0jXKd+9liwaZ0AFgq+brAkGPVb9/wr1+M9jW+CcPpg
-        WXK3W+YA05iI8OoBcbHUB6Wg/e5iq2iTjOq0rJ180pN/LsMbXbAcp/Y9X0V1cKVxEdX7vk
-        +vyJIx/v9xT1n5BAbnDml4nNPhuXWaOAZIVlo1XEY7FraaBQvqxOb4NJEuxRdnGBhYzM1C
-        +SxLI0epwGnk+RBxSnnpmWcbbzMb8Zdai1x7dFUccF6czktXYZEn8p70gRmk9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599639973;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QoDD1UDHTlJFMLx9+RNng8Fd9vf19kX3LXI/EPptrC0=;
-        b=iMBqAbWC2jRtBf0RHg2K8mr94DRlCVOcQK7RMU+RjhAzyd64Io5HaSCFxS9m0NnGCfbezI
-        uvgtqkfj/kqjeWBg==
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Move sd_flag_debug out of #ifdef
- CONFIG_SYSCTL
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200908184956.23369-1-valentin.schneider@arm.com>
-References: <20200908184956.23369-1-valentin.schneider@arm.com>
+        Wed, 9 Sep 2020 04:26:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6BEC061755;
+        Wed,  9 Sep 2020 01:26:20 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id w2so1407800wmi.1;
+        Wed, 09 Sep 2020 01:26:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0tser96rfwYDofy0EPeasgbVCZPbEY4uhvx+UNJk7TY=;
+        b=BPnzPnO4oojkbPwwQ+0Z61XoMwy6xYQQjtqbkQFAMBZZi0u2dYGWUYuTuhCQDBnylT
+         pxRTHvu/EFFhd/QFpWTxRI/iQkaI7wvBE6NqGmbAJQl6jzPAdc+YZevHGIB4vQy1UTP2
+         kFhNq2lvB61ZSBHEtCsg6fWNkQUYp1VTsHfgy4NAEgUNhICBJmxpVlAmVPXrRdKJP8lQ
+         pDv/AgNWCr5FQfsegNeWRO3S2jATIcW4F21Z4J4AV85E/oe0Hw5X4BjFZy1daUaXkyQs
+         z7B+/v4LZEoAQ93xKVCYVlduyJcBC+iVMJ8LdP66/9/azKhj/0/qrQZL7MwM0R5jrgh5
+         QMsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0tser96rfwYDofy0EPeasgbVCZPbEY4uhvx+UNJk7TY=;
+        b=H6IGnv1J3rIDTCeCdnYA7NgoDDFoLR/ejQgiXm7cw7ni5bA/NS4/VSCYrTdj9HFeFn
+         F4vq8GnbjePRGafYXrBBQJc66DP96YQp7X7rKPwdhlluHEVvy57yHKTnU93mtIN1Pa1s
+         yRMyTyGM0TKNaufo/FVSao1xA7TUz+D/iffF2aeEHq6JIq0C1jnxf8ULwALBhy4f+oTJ
+         lUA5i5FNT9sWdBHe4VxmRwTbqUCp7n5b4HonZA1PbWWwOYcZOn7BbFoz+SYkqdmBM6+a
+         nZboFk8kjCtnFQENYbVh4FbrUhDtxQZbAhVSTd1mN6FL/BiI06W4pglndMXrqTdEWv0I
+         8uDw==
+X-Gm-Message-State: AOAM531uP+LrO8SQtFBMdbvaccescBbcNYXiqCyDmxuIV/b0vPq5hVqA
+        Te9mtULUYVU/Rj2QNPoVdm4=
+X-Google-Smtp-Source: ABdhPJyraZ15izydbCG6UBgB4j4rhsVZ2DuZgUSzsoM3JvzdEpsWBZA+CaCVMh9UKb9tgibKOdkJtQ==
+X-Received: by 2002:a1c:dec2:: with SMTP id v185mr2357481wmg.1.1599639978820;
+        Wed, 09 Sep 2020 01:26:18 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.201])
+        by smtp.gmail.com with ESMTPSA id o128sm2672667wmo.39.2020.09.09.01.26.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 01:26:18 -0700 (PDT)
+Subject: Re: [PATCH v21 4/4] arm64: dts: mt8183: add scp node
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Eddie Huang <eddie.huang@mediatek.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20191112110330.179649-1-pihsun@chromium.org>
+ <20191112110330.179649-5-pihsun@chromium.org>
+ <2abf8fdd-7b7c-73b0-beea-9c9ac56869dc@gmail.com>
+ <CA+G9fYt9AujG6gyfeV5AaAv0EgggUfGT1jow8DJjVfetVWV3EA@mail.gmail.com>
+ <CAJKOXPeV9zCg4v0kBfToGdJSxswbKtT16LVYADALpYRHqWXBOg@mail.gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <ced30a81-5893-6379-cdc1-c2e57d35bae4@gmail.com>
+Date:   Wed, 9 Sep 2020 10:26:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159963997277.20229.10716555225789484968.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAJKOXPeV9zCg4v0kBfToGdJSxswbKtT16LVYADALpYRHqWXBOg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     848785df48835eefebe0c4eb5da7690690b0a8b7
-Gitweb:        https://git.kernel.org/tip/848785df48835eefebe0c4eb5da7690690b0a8b7
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Tue, 08 Sep 2020 19:49:56 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 09 Sep 2020 10:09:03 +02:00
 
-sched/topology: Move sd_flag_debug out of #ifdef CONFIG_SYSCTL
+On 02/09/2020 18:23, Krzysztof Kozlowski wrote:
+> On Wed, 2 Sep 2020 at 16:45, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>
+>> On Thu, 27 Aug 2020 at 15:44, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>>>
+>>>
+>>>
+>>> On 12/11/2019 12:03, Pi-Hsun Shih wrote:
+>>>> From: Eddie Huang <eddie.huang@mediatek.com>
+>>>>
+>>>> Add scp node to mt8183 and mt8183-evb
+>>>>
+>>>> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+>>>> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+>>>> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
+>>>
+>>> Sorry I somehow oversaw this. Next time please don't doubt to ping me.
+>>>
+>>> Bjorn, do I understand correctly that you don't send emails to the list
+>>> informing of the inclusion of a patch/series in your tree?
+>>>
+>>> Anyway applied now to v5.9-next/dts64 :)
+>>
+>> arm64 build dtbs failed on linux next 20200902.
+> 
 
-The last sd_flag_debug shuffle inadvertently moved its definition within
-an #ifdef CONFIG_SYSCTL region. While CONFIG_SYSCTL is indeed required to
-produce the sched domain ctl interface (which uses sd_flag_debug to output
-flag names), it isn't required to run any assertion on the sched_domain
-hierarchy itself.
+Sorry I was on vacation.
 
-Move the definition of sd_flag_debug to a CONFIG_SCHED_DEBUG region of
-topology.c.
+> I just hit it as well... I wish the kernel was built after applying
+> patches... it would make the next a better place.
+> 
 
-Now at long last we have:
+Right...
 
-- sd_flag_debug declared in include/linux/sched/topology.h iff
-  CONFIG_SCHED_DEBUG=y
-- sd_flag_debug defined in kernel/sched/topology.c, conditioned by:
-  - CONFIG_SCHED_DEBUG, with an explicit #ifdef block
-  - CONFIG_SMP, as a requirement to compile topology.c
+I'll remove the patch now until this is fixed. Once again sorry for the trouble.
 
-With this change, all symbols pertaining to SD flag metadata (with the
-exception of __SD_FLAG_CNT) are now defined exclusively within topology.c
-
-Fixes: 8fca9494d4b4 ("sched/topology: Move sd_flag_debug out of linux/sched/topology.h")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200908184956.23369-1-valentin.schneider@arm.com
----
- kernel/sched/debug.c    | 6 ------
- kernel/sched/topology.c | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 0d7896d..0655524 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -245,12 +245,6 @@ set_table_entry(struct ctl_table *entry,
- 	entry->proc_handler = proc_handler;
- }
- 
--#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
--const struct sd_flag_debug sd_flag_debug[] = {
--#include <linux/sched/sd_flags.h>
--};
--#undef SD_FLAG
--
- static int sd_ctl_doflags(struct ctl_table *table, int write,
- 			  void *buffer, size_t *lenp, loff_t *ppos)
- {
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index aa1676a..249bec7 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -25,6 +25,12 @@ static inline bool sched_debug(void)
- 	return sched_debug_enabled;
- }
- 
-+#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
-+const struct sd_flag_debug sd_flag_debug[] = {
-+#include <linux/sched/sd_flags.h>
-+};
-+#undef SD_FLAG
-+
- static int sched_domain_debug_one(struct sched_domain *sd, int cpu, int level,
- 				  struct cpumask *groupmask)
- {
+Regards,
+Matthias
