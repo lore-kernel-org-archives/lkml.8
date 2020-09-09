@@ -4,73 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5783C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764F6C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D8D207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DFB207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:01:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JF9xLeJ0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KqZV5GUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgIIGBH (ORCPT
+        id S1728197AbgIIGBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 02:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44038 "EHLO
+        Wed, 9 Sep 2020 02:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIGBE (ORCPT
+        with ESMTP id S1725772AbgIIGBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 02:01:04 -0400
+        Wed, 9 Sep 2020 02:01:41 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A012AC061573;
-        Tue,  8 Sep 2020 23:01:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6950C061573;
+        Tue,  8 Sep 2020 23:01:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=r6fCejwG0iL+7qa2R9K1o31Ku9WHMAs55cEybInLu9E=; b=JF9xLeJ05bJ4buQmwRppivJZg7
-        hFBS727vORj6a1zw4y4aYHspScHg5i4VntwFdoGCQYpCZL1OyicDHWHvHZoy/G6ncasFwH7y8OIRT
-        ghAVAt9dGdjfCqdV95OoxVE0Zz6SI55zoXXitO29keTsBQBTpDig9Iu0X8XTlC6iDHAFZJxuJnoTK
-        tjqCXcUncL8T+FRE/4KZ2aH+JcimPgSzCvgsFvC3WCeO9Es1spYOg8RSKXorg9wkFExMJNhOy8Iqs
-        YPrurd+4pJsFbPkX/3L/Uehh7dhZdXSvA1KdPrvKcX6KT1ontnkgZDbwbY5pMVjb/4eYukLmLbm6q
-        rzbwh/Xw==;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=KqZV5GUVG5Yi95fslNkDvhBrTZ
+        Lr3UkbjuEFNKSj28RDeRcZGhqW3/dHYpE13iYscjaSAnWpVOAEuvqFNxrEo4yqz8Wfea2V7LsfhDu
+        ea4MCI/Eo4T7pIKxyz1KjD6r+63jjg3NJI9vi6xxTGFK+HnA6US8vQB6aKTHFyl5sg7dY9MELfC7L
+        szmHbJUrBtUalgL+5HvfMgUUGQEuND/GibZMwN+95DOiox8XEXHSs30cRpPY+L0i05Tp73Oo1ZKYO
+        785vbRLkb697yQ+GF2QjVKw4q4zTGvTmNKIf3B11y5tqpyjErwzbdl4y95NeHW8LUlVWNU0Z7qxC9
+        t/QgLw+w==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFt9x-0003xX-H6; Wed, 09 Sep 2020 06:00:45 +0000
-Date:   Wed, 9 Sep 2020 07:00:45 +0100
+        id 1kFtAo-00041V-Pd; Wed, 09 Sep 2020 06:01:38 +0000
+Date:   Wed, 9 Sep 2020 07:01:38 +0100
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, dkangude@cadence.com,
-        yash.shah@sifive.com, robh+dt@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, bp@alien8.de,
-        mchehab@kernel.org, tony.luck@intel.com,
-        devicetree@vger.kernel.org, aou@eecs.berkeley.edu,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
-        rrichter@marvell.com, james.morse@arm.com,
-        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] soc: sifive: Add SiFive specific Cadence DDR
- controller driver
-Message-ID: <20200909060045.GA13647@infradead.org>
-References: <20200907061126.GA14999@infradead.org>
- <mhng-d2a95187-c772-4c5d-b30b-b053a3195177@palmerdabbelt-glaptop1>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Subject: Re: [RESEND PATCH 1/1] block: Set same_page to false in
+ __bio_try_merge_page if ret is false
+Message-ID: <20200909060138.GB13647@infradead.org>
+References: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <mhng-d2a95187-c772-4c5d-b30b-b053a3195177@palmerdabbelt-glaptop1>
+In-Reply-To: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 08:12:16PM -0700, Palmer Dabbelt wrote:
-> I don't know enough about the block to know if the subtle difference in
-> register names/offsets means.  They look properly jumbled up (ie, not just an
-> offset), so maybe there's just different versions or that's the SiFive-specific
-> part I had bouncing around my head?  Either way, it seems like one driver with
-> some simple configuration could handle both of these -- either sticking the
-> offsets in the DT (if they're going to be different everywhere) or by coming up
-> with some version sort of thing (if there's a handful of these).
+Looks good,
 
-regmap can be used to handle non-uniform register layouts for the same
-functionality.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
