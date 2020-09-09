@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953F1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E663C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5774221D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21FA20897
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="lfcpDCfD"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="lRhBIwf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgIIT5P (ORCPT
+        id S1729455AbgIIT53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60680 "EHLO
+        Wed, 9 Sep 2020 15:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgIIT4z (ORCPT
+        with ESMTP id S1726801AbgIIT4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:56:55 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4998C061757
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:56:54 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id o8so5310853ejb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:56:54 -0700 (PDT)
+        Wed, 9 Sep 2020 15:56:52 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C81C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:56:51 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c10so3932876edk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:56:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sartura-hr.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QB9wVyxK3s2UE2GnjM0Q5M2uDYbxba5hPikMpTPdfXg=;
-        b=lfcpDCfDZLFxIAuHTN3XX8/Qe5vYvmjC30526Mdj+sEcJkfqCvxokRMuOLu8MLrUjI
-         RIEkKF35kFN84+XrYikuBmeFBOHIJsVdutcVVGEOJGw+an7aDaY7D3XCuZw7p01CalIt
-         U/U5EoVVd8W4zEXELgGBK8tGOt98+4qGZs3Vz5q4EYXWrtHohH3aPtZaaDG51zu1u2Ce
-         4VecX1v/NGT5zRV3MYrExLNUySek5C/0/VuGaRl786w/RVCSDq3Aa7lKpywdpy5QOsF1
-         ur/KQb4WcCBT36jt20Xj+Q2Iv864WZJ1su7sshESJidZ2xFaSgDQOdx/YYAw6DzpYMUo
-         ngww==
+        bh=4Gg66pi3MvXZIr12COgqvRgMCQp4+Tv92UGPdWGbVRw=;
+        b=lRhBIwf4QridhXR0XhTYyH/cCye+U4bv0ohXULGB5bCIAKirXiK4CX8liDEwWLOPvF
+         OuZpEA/NvyOoV45Des6uaKQ2Us4FRVEILvfq2eQdTKKQ2wr4nlHjYFkiagzuuuwoIpFJ
+         5GwwNGq1Wc3nx+u8BuISSfUMI/sJU3NQUBbfFflUe8oK1TB24lDnY7jYyD3hsZEdjIGM
+         LTZlRk7mBNLKTpO8Gh2pRnlBWzihRdKw6fNtqsKmpB/K4Q2JjKKQaHFrXwpZmhwshlOz
+         4jE+7H7XqTOzDaN2HTfaT4XVc74pmBJ/dYpFne0KW/7qKM8U6XH/dDSOKfhQllZi++Ds
+         6Eig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QB9wVyxK3s2UE2GnjM0Q5M2uDYbxba5hPikMpTPdfXg=;
-        b=V8jwZMpxWT1CiBHCBIoSnzgG3eb3PqDTjD2qzcWGk2xg26FWoZW72/a7A2TqXrR/3u
-         +MQbAHQUspZ0T3sh/ggqBCIHyK+Wb1Y2O8UTZjnsPygl5su3w2q+B0PtC/ekMYuKq9cs
-         g/3w5AajwwVsVyokI3Qr39WAa94MIOd2dN2wIzD0d+Hddcx4j/Q86Aog89rMx9qZjyLd
-         HpNzkDnSwYBmnaq4Pv04+giCWXPwE/zE+nkw+KT1BP/jh5lYwGFciEYAHxSt4yVzWGJO
-         ZfECZP/inKp/u6LWpk/Vcbzm6G5UJ21yVa1kq74dlSyA3xyyQ8CyedOWY+EAGcJ7RbiQ
-         7tJw==
-X-Gm-Message-State: AOAM53240cr4Mo+aKrb6Fw03G41WpcydQYRVdLo/GZ0NSViPFd96ZKdV
-        elJentYzYYwSQd/4mgHVBFL4wA==
-X-Google-Smtp-Source: ABdhPJzYXNfLuoOpt1VUoQHPJ9WWWQuRB+IQVME30IpZLeGziq0TA5FhFMEXVL9MaevZ6t/AO5fXNQ==
-X-Received: by 2002:a17:906:874f:: with SMTP id hj15mr5570675ejb.539.1599681411641;
-        Wed, 09 Sep 2020 12:56:51 -0700 (PDT)
+        bh=4Gg66pi3MvXZIr12COgqvRgMCQp4+Tv92UGPdWGbVRw=;
+        b=pLHWQzJk2SZQH79ApmDOrLnjSkBPF0GdoFsxsgCG51tiLR3Af4lLP1FYouMNFWvSQ/
+         G3GHPmEsmjSQSrtQ3pOEayE7RJOcy0W2FKiVqGOFw1esZIGvAgb6ulMfoB6hRmLTHlWM
+         M6YtUEFIrdeH7yH5TsAlPjHdlyhd4AGmcKILoG/JrOwx43GjJS8SKCj045f/aQgeOWvM
+         Bh/SUb+Utar/4TC+UYJSAKFDp9zRNysFbE6ixPE3po+CjxqHR65EALXwXh2+jjMX3OBq
+         zRY8UTpOCVhkJ3LltVk6XdajLmyqpdqbRE/h3UHat92e6HgUsPf2DA3cKpFfQMbs4UF/
+         43/g==
+X-Gm-Message-State: AOAM5321cXJE2hdhheGJP5LfZmSuMQzCEFVyp283k9sBPggJ1e4J6x/l
+        aQsnJfgbzf1zq3Ibn1h0x+V4zw==
+X-Google-Smtp-Source: ABdhPJzoOPhaXoBgeESP+e4XyEKNLLFqtqrodHpbLQrvsWZXAr9c2tZ4UxWPk1VgXkORTROYgBz4sw==
+X-Received: by 2002:aa7:cd90:: with SMTP id x16mr5681315edv.302.1599681409952;
+        Wed, 09 Sep 2020 12:56:49 -0700 (PDT)
 Received: from localhost.localdomain (dh207-97-133.xnet.hr. [88.207.97.133])
-        by smtp.googlemail.com with ESMTPSA id n26sm3510870ejz.89.2020.09.09.12.56.50
+        by smtp.googlemail.com with ESMTPSA id n26sm3510870ejz.89.2020.09.09.12.56.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 12:56:51 -0700 (PDT)
+        Wed, 09 Sep 2020 12:56:49 -0700 (PDT)
 From:   Robert Marko <robert.marko@sartura.hr>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Robert Marko <robert.marko@sartura.hr>,
         Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH v2 3/4] arm: dts: add Alfa Network AP120C-AC
-Date:   Wed,  9 Sep 2020 21:56:39 +0200
-Message-Id: <20200909195640.3127341-4-robert.marko@sartura.hr>
+Subject: [PATCH v2 2/4] arm: dts: add 8devices Jalapeno
+Date:   Wed,  9 Sep 2020 21:56:38 +0200
+Message-Id: <20200909195640.3127341-3-robert.marko@sartura.hr>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200909195640.3127341-1-robert.marko@sartura.hr>
 References: <20200909195640.3127341-1-robert.marko@sartura.hr>
@@ -78,26 +78,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ALFA Network AP120C-AC is a dual-band ceiling AP, based on Qualcomm
-IPQ4018 + QCA8075 platform.
+8devices Jalapeno is a dual-band SoM, based on Qualcomm
+IPQ4018 + QCA8072 platform.
 
 Specification:
-
-- Qualcomm IPQ4018 (717 MHz)
-- 256 MB of RAM (DDR3)
-- 16 MB (SPI NOR) + 128 or 512 MB (SPI NAND) of flash
-- 2x Gbps Ethernet, with 802.3af PoE support in one port
-- 2T2R 2.4/5 GHz (IPQ4018), with ext. FEMs (QFE1952, QFE1922)
-- 3x U.FL connectors
-- 1x 1.8 dBi (Bluetooth) and 2x 3/5 dBi dual-band (Wi-Fi) antennas
-- Atmel/Microchip AT97SC3205T TPM module (I2C bus)
-- TI CC2540 Bluetooth LE module (USB 2.0 bus)
-- 1x button (reset)
-- 1x USB 2.0
-- DC jack for main power input (12 V)
-- UART header available on PCB (2.0 mm pitch)
-
-This adds DTS for both the generic and custom Bit edition for Sartura.
+QCA IPQ4018, Quad core ARM v7 Cortex A7 717MHz
+256 MB of DDR3 RAM
+8 MB of SPI NOR flash
+128 MB of Winbond SPI NAND flash
+WLAN1: Qualcomm Atheros QCA4018 2.4GHz 802.11bgn 2:2x2
+WLAN2: Qualcomm Atheros QCA4018 5GHz 802.11a/n/ac 2:2x2
+ETH: Qualcomm Atheros QCA8072 Gigabit Switch (1 x LAN, 1 x WAN)
 
 Signed-off-by: Robert Marko <robert.marko@sartura.hr>
 Cc: Luka Perkov <luka.perkov@sartura.hr>
@@ -105,176 +96,82 @@ Cc: Luka Perkov <luka.perkov@sartura.hr>
 Changes since v1:
 * Drop include that does not exist
 
- arch/arm/boot/dts/Makefile                    |   2 +
- .../boot/dts/qcom-ipq4018-ap120c-ac-bit.dts   |  28 ++
- arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dts  |  27 ++
- arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dtsi | 254 ++++++++++++++++++
- 4 files changed, 311 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4018-ap120c-ac-bit.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dts
- create mode 100644 arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dtsi
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts | 214 ++++++++++++++++++++
+ 2 files changed, 215 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9b474208057d..246d82fc5fcd 100644
+index 4572db3fa5ae..9b474208057d 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -890,6 +890,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+@@ -890,6 +890,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
  	qcom-apq8074-dragonboard.dtb \
  	qcom-apq8084-ifc6540.dtb \
  	qcom-apq8084-mtp.dtb \
-+	qcom-ipq4018-ap120c-ac.dtb \
-+	qcom-ipq4018-ap120c-ac-bit.dtb \
- 	qcom-ipq4018-jalapeno.dtb \
++	qcom-ipq4018-jalapeno.dtb \
  	qcom-ipq4019-ap.dk01.1-c1.dtb \
  	qcom-ipq4019-ap.dk04.1-c1.dtb \
-diff --git a/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac-bit.dts b/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac-bit.dts
+ 	qcom-ipq4019-ap.dk04.1-c3.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts b/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
 new file mode 100644
-index 000000000000..028ac8e24797
+index 000000000000..394412619894
 --- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac-bit.dts
-@@ -0,0 +1,28 @@
++++ b/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
+@@ -0,0 +1,214 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+
-+#include "qcom-ipq4018-ap120c-ac.dtsi"
-+
-+/ {
-+	model = "ALFA Network AP120C-AC Bit";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		power {
-+			label = "ap120c-ac:green:power";
-+			gpios = <&tlmm 5 GPIO_ACTIVE_LOW>;
-+			default-state = "on";
-+		};
-+
-+		wlan {
-+			label = "ap120c-ac:green:wlan";
-+			gpios = <&tlmm 3 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		support {
-+			label = "ap120c-ac:green:support";
-+			gpios = <&tlmm 2 GPIO_ACTIVE_HIGH>;
-+			panic-indicator;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dts b/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dts
-new file mode 100644
-index 000000000000..b7916fc26d68
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dts
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+
-+#include "qcom-ipq4018-ap120c-ac.dtsi"
-+
-+/ {
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		status: status {
-+			label = "ap120c-ac:blue:status";
-+			gpios = <&tlmm 5 GPIO_ACTIVE_LOW>;
-+			default-state = "keep";
-+		};
-+
-+		wlan2g {
-+			label = "ap120c-ac:green:wlan2g";
-+			gpios = <&tlmm 3 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy0tpt";
-+		};
-+
-+		wlan5g {
-+			label = "ap120c-ac:red:wlan5g";
-+			gpios = <&tlmm 2 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "phy1tpt";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dtsi b/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dtsi
-new file mode 100644
-index 000000000000..1f3b1ce82108
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4018-ap120c-ac.dtsi
-@@ -0,0 +1,254 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++// Copyright (c) 2018, Robert Marko <robimarko@gmail.com>
 +
 +#include "qcom-ipq4019.dtsi"
 +#include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/input/input.h>
 +
 +/ {
-+	model = "ALFA Network AP120C-AC";
-+	compatible = "alfa-network,ap120c-ac";
-+
-+	keys {
-+		compatible = "gpio-keys";
-+
-+		reset {
-+			label = "reset";
-+			gpios = <&tlmm 63 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+		};
-+	};
++	model = "8devices Jalapeno";
++	compatible = "8dev,jalapeno";
 +};
 +
 +&tlmm {
-+	i2c0_pins: i2c0_pinmux {
-+		mux_i2c {
-+			function = "blsp_i2c0";
-+			pins = "gpio58", "gpio59";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
 +	mdio_pins: mdio_pinmux {
-+		mux_mdio {
++		pinmux_1 {
 +			pins = "gpio53";
 +			function = "mdio";
-+			bias-pull-up;
 +		};
 +
-+		mux_mdc {
++		pinmux_2 {
 +			pins = "gpio52";
 +			function = "mdc";
++		};
++
++		pinconf {
++			pins = "gpio52", "gpio53";
 +			bias-pull-up;
 +		};
 +	};
 +
-+	serial0_pins: serial0_pinmux {
-+		mux_uart {
++	serial_pins: serial_pinmux {
++		mux {
 +			pins = "gpio60", "gpio61";
 +			function = "blsp_uart0";
 +			bias-disable;
 +		};
 +	};
 +
-+	spi0_pins: spi0_pinmux {
-+		mux_spi {
++	spi_0_pins: spi_0_pinmux {
++		pin {
 +			function = "blsp_spi0";
 +			pins = "gpio55", "gpio56", "gpio57";
-+			drive-strength = <12>;
++			drive-strength = <2>;
 +			bias-disable;
 +		};
 +
-+		mux_cs {
++		pin_cs {
 +			function = "gpio";
-+			pins = "gpio54", "gpio4";
++			pins = "gpio54", "gpio59";
 +			drive-strength = <2>;
 +			bias-disable;
 +			output-high;
 +		};
-+	};
-+
-+	usb-power {
-+		line-name = "USB-power";
-+		gpios = <1 GPIO_ACTIVE_HIGH>;
-+		gpio-hog;
-+		output-high;
 +	};
 +};
 +
@@ -290,26 +187,16 @@ index 000000000000..1f3b1ce82108
 +	status = "okay";
 +};
 +
-+&blsp1_i2c3 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&i2c0_pins>;
-+	pinctrl-names = "default";
-+
-+	tpm@29 {
-+		compatible = "atmel,at97sc3204t";
-+		reg = <0x29>;
-+	};
-+};
-+
 +&blsp1_spi1 {
 +	status = "okay";
 +
-+	pinctrl-0 = <&spi0_pins>;
++	pinctrl-0 = <&spi_0_pins>;
 +	pinctrl-names = "default";
-+	cs-gpios = <&tlmm 54 GPIO_ACTIVE_HIGH>, <&tlmm 4 GPIO_ACTIVE_HIGH>;
++	cs-gpios = <&tlmm 54 GPIO_ACTIVE_HIGH>, <&tlmm 59 GPIO_ACTIVE_HIGH>;
 +
 +	flash@0 {
++		status = "okay";
++
 +		compatible = "jedec,spi-nor";
 +		reg = <0>;
 +		spi-max-frequency = <24000000>;
@@ -365,25 +252,15 @@ index 000000000000..1f3b1ce82108
 +				reg = <0x00170000 0x00010000>;
 +				read-only;
 +			};
-+
-+			partition@180000 {
-+				label = "priv_data1";
-+				reg = <0x00180000 0x00010000>;
-+				read-only;
-+			};
-+
-+			partition@190000 {
-+				label = "priv_data2";
-+				reg = <0x00190000 0x00010000>;
-+				read-only;
-+			};
 +		};
 +	};
 +
-+	nand@1 {
++	spi-nand@1 {
++		status = "okay";
++
 +		compatible = "spi-nand";
 +		reg = <1>;
-+		spi-max-frequency = <40000000>;
++		spi-max-frequency = <24000000>;
 +
 +		partitions {
 +			compatible = "fixed-partitions";
@@ -406,7 +283,7 @@ index 000000000000..1f3b1ce82108
 +&blsp1_uart1 {
 +	status = "okay";
 +
-+	pinctrl-0 = <&serial0_pins>;
++	pinctrl-0 = <&serial_pins>;
 +	pinctrl-names = "default";
 +};
 +
@@ -427,11 +304,18 @@ index 000000000000..1f3b1ce82108
 +
 +&wifi0 {
 +	status = "okay";
++
++	qcom,ath10k-calibration-variant = "8devices-Jalapeno";
 +};
 +
 +&wifi1 {
 +	status = "okay";
-+	qcom,ath10k-calibration-variant = "ALFA-Network-AP120C-AC";
++
++	qcom,ath10k-calibration-variant = "8devices-Jalapeno";
++};
++
++&usb3_ss_phy {
++	status = "okay";
 +};
 +
 +&usb3_hs_phy {
@@ -440,11 +324,6 @@ index 000000000000..1f3b1ce82108
 +
 +&usb3 {
 +	status = "okay";
-+
-+	dwc3@8a00000 {
-+		phys = <&usb3_hs_phy>;
-+		phy-names = "usb2-phy";
-+	};
 +};
 +
 +&usb2_hs_phy {
