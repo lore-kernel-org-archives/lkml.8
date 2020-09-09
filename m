@@ -2,147 +2,59 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3171FC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA55C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E226C20757
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2713A20757
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgIIRiF (ORCPT
+        id S1730082AbgIIRie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:38:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:45962 "EHLO foss.arm.com"
+        Wed, 9 Sep 2020 13:38:34 -0400
+Received: from ms.lwn.net ([45.79.88.28]:58560 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727856AbgIIRh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:37:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D80F0101E;
-        Wed,  9 Sep 2020 10:37:56 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A28B23F68F;
-        Wed,  9 Sep 2020 10:37:55 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 18:37:49 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     George Cherian <gcherian@marvell.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "guohanjun@huawei.com" <guohanjun@huawei.com>
-Subject: Re: [PATCH] arm64: PCI: fix memleak when calling pci_iomap/unmap()
-Message-ID: <20200909173749.GA11781@e121166-lin.cambridge.arm.com>
-References: <20200907104546.GC26513@gaia>
- <BYAPR18MB267959E6FE4BEF38D0A4611EC5280@BYAPR18MB2679.namprd18.prod.outlook.com>
- <20200907112118.GD26513@gaia>
- <20200909113613.GB6384@e121166-lin.cambridge.arm.com>
- <20200909135400.GB13047@gaia>
+        id S1727010AbgIIRiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:38:24 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 2EF6D7C0;
+        Wed,  9 Sep 2020 17:38:24 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 11:38:23 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: deprecated.rst: Update zero-length/one-element
+ arrays section
+Message-ID: <20200909113823.50014d58@lwn.net>
+In-Reply-To: <20200901010949.GA21398@embeddedor>
+References: <20200901010949.GA21398@embeddedor>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909135400.GB13047@gaia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 02:54:01PM +0100, Catalin Marinas wrote:
-> On Wed, Sep 09, 2020 at 12:36:13PM +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Sep 07, 2020 at 12:21:19PM +0100, Catalin Marinas wrote:
-> > > On Mon, Sep 07, 2020 at 10:51:21AM +0000, George Cherian wrote:
-> > > > Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > > On Sat, Sep 05, 2020 at 10:48:11AM +0800, Yang Yingliang wrote:
-> > > > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c index
-> > > > > > 1006ed2d7c604..ddfa1c53def48 100644
-> > > > > > --- a/arch/arm64/kernel/pci.c
-> > > > > > +++ b/arch/arm64/kernel/pci.c
-> > > > > > @@ -217,4 +217,9 @@ void pcibios_remove_bus(struct pci_bus *bus)
-> > > > > >  	acpi_pci_remove_bus(bus);
-> > > > > >  }
-> > > > > >
-> > > > > > +void pci_iounmap(struct pci_dev *dev, void __iomem *addr) {
-> > > > > > +	iounmap(addr);
-> > > > > > +}
-> > > > > > +EXPORT_SYMBOL(pci_iounmap);
-> > > > > 
-> > > > > So, what's wrong with the generic pci_iounmap() implementation?
-> > > > > Shouldn't it call iounmap() already?
-> > > > 
-> > > > Since ARM64 selects CONFIG_GENERIC_PCI_IOMAP and not
-> > > > CONFIG_GENERIC_IOMAP,  the pci_iounmap function is reduced to a NULL
-> > > > function. Due to this, even the managed release variants or even the explicit
-> > > > pci_iounmap calls doesn't really remove the mappings leading to leak.
-> > > 
-> > > Ah, I missed the fact that pci_iounmap() depends on a different
-> > > config option.
-> > > 
-> > > > https://lkml.org/lkml/2020/8/20/28
-> > > 
-> > > So is this going to be fixed in the generic code? That would be my
-> > > preference.
-> > > 
-> > > A problem with the iounmap() in the proposed patch is that the region
-> > > may have been an I/O port, so we could end up unmapping the I/O space.
-> > 
-> > It boils down to finding a way to match a VA to a BAR resource so that
-> > we can mirror on pci_iounmap() what's done in pci_iomap_range() (ie
-> > check BAR resource flags to define how/if to unmap them), that would do
-> > as a generic pci_iounmap() implementation.
-> 
-> In the !CONFIG_GENERIC_IOMAP case (arm64), for IORESOURCE_IO,
-> pci_iomap_range() calls __pci_ioport_map() which, with the default
-> ioport_map(), it ends up with a simple PCI_IOBASE + (port &
-> IO_SPACE_LIMIT).
-> 
-> pci_iounmap() could check whether the pointer is in the PCI_IOBASE -
-> PCI_IOBASE+IO_SPACE_LIMIT range before calling ioremap(), unless the
-> arch code re-defined ioport_map. Something like below (not even
-> compiled):
+On Mon, 31 Aug 2020 20:09:49 -0500
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-I gave it some thought - with the current state of affairs (which is not
-ideal - this *_IOMAP stuff is ways too complex) it is likely to be the
-safest/only way we can have this in generic code, short of implementing
-what I mentioned (but that implies keeping track of BAR VA mappings)
-or cleaning up this nest of defines.
-
-Lorenzo
-
-> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> index dabf8cb7203b..fada420c9cd6 100644
-> --- a/include/asm-generic/io.h
-> +++ b/include/asm-generic/io.h
-> @@ -919,6 +919,11 @@ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
->  #define pci_iounmap pci_iounmap
->  static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
->  {
-> +#ifndef ARCH_HAS_IOPORT_MAP
-> +	if (p >= PCI_IOBASE && p < PCI_IOBASE + IO_SPACE_LIMIT)
-> +		return;
-> +	iounmap(p);
-> +#endif
->  }
->  #endif
->  #endif /* CONFIG_GENERIC_IOMAP */
-> @@ -1009,7 +1014,9 @@ static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
->  
->  #ifdef CONFIG_HAS_IOPORT_MAP
->  #ifndef CONFIG_GENERIC_IOMAP
-> -#ifndef ioport_map
-> +#ifdef ioport_map
-> +#define ARCH_HAS_IOPORT_MAP
-> +#else
->  #define ioport_map ioport_map
->  static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
->  {
+> Update information in the zero-length and one-element arrays section
+> and illustrate how to make use of the new flex_array_size() helper,
+> together with struct_size() and a flexible-array member.
 > 
-> -- 
-> Catalin
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  Documentation/process/deprecated.rst | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+
+Applied, thanks.
+
+jon
