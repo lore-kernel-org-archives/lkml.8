@@ -2,114 +2,115 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3167C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83391C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D3D21532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TPNA/FdS";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="MeQLCKmy"
+	by mail.kernel.org (Postfix) with ESMTP id 4A20421919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599635313;
+	bh=6ctIdj1JKPdC6u7FCrti5Jj/1OKztUwr9e2Ne0IjYFk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IcuygaGTBIV+AmQRMoWHNKU70KVSkqXhjByfu/B2q1QQR8/LRymcfnY5f/Zst0EKC
+	 dGG5s9Fvg+Zx+LXIS0NDB9jp1wOBan3MQ1X4NFH0yOdqpCHgOshtWTYigeQBdGqGgE
+	 pAH+9hvYa+TYOua9VLenrgyJKrI8kTyplS5CZYEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgIIHHh (ORCPT
+        id S1726535AbgIIHI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:07:37 -0400
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:47244
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725863AbgIIHHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:07:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599635255;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=IX0qpGF6RZPTD4fnxFnuXuw4dThJiaZOCS3toSRRGfU=;
-        b=TPNA/FdSr2vG4KNbVuQpTvGu1FRogAMbk5/k2kULKXll4KILO9mFdoMMx0/mI8Ql
-        MvJl+i2M+iOsqKVT1ZztRw04XJqu8E/s/bnwp9XRiSXyCdRg1aqegES/tEXqRakqg3m
-        HhTPyu3Z+/hMBMnSaRbV2jtuBluc7aVahYP+09Pc=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599635255;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=IX0qpGF6RZPTD4fnxFnuXuw4dThJiaZOCS3toSRRGfU=;
-        b=MeQLCKmyFc+vYpCWdcqKqQJW9hslp+y0LGqldyG0zd45UIMRP3Ai54MSOY8wdH1K
-        mOTfAHN9y9tWEqoOPBroUWIKWOQswpfq/Ma1bjBYB1/nLiv0TY2M9gF1ygszZ5UCyc5
-        XhP+hb6eP5vfQIG2NHwv3X6Xn/qZoiPbn2H4Ugbg=
+        Wed, 9 Sep 2020 03:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbgIIHI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:08:28 -0400
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DBE821D7F
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599635307;
+        bh=6ctIdj1JKPdC6u7FCrti5Jj/1OKztUwr9e2Ne0IjYFk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AakcNNs6EXawnDgTUjWi4myGNB/+xYkhGOpwpu7VoKGEDyTVhbx7VdJpaQa1rpxul
+         8mcH7EvGLk4Q4l8foFLqkjx5VT+R5mJhIIv5DHBqofTjXNqWs4bG7xCAHLa+JxqjCg
+         tLNKSWvAu9rcnCZT4ZO8DtHPVqXeqkCVV2qql2CQ=
+Received: by mail-ej1-f44.google.com with SMTP id q13so1973786ejo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:08:27 -0700 (PDT)
+X-Gm-Message-State: AOAM5320FqIJDEPLXWy15obZmj1s2uaKIkAiJ5rDIlSOqvIwKwzFhNF2
+        KFl2B7A4K1oGVsreQf0kFD+VN551+vz9PBtULP4=
+X-Google-Smtp-Source: ABdhPJzlHWBFPUOqL4Da6iSu7m22b0hvyeBdFoiTJ2FO7v79JDXFknzAz9LRVhRRzppJhLuxSnQE72wKC/BprZMcztw=
+X-Received: by 2002:a17:906:8401:: with SMTP id n1mr2180768ejx.215.1599635305980;
+ Wed, 09 Sep 2020 00:08:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 9 Sep 2020 07:07:34 +0000
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Subject: Re: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to
- llcc registers
-In-Reply-To: <CAD=FV=WsUopZPHJzHe1+pa=pzKQda0yQKUCtnPrni3Dmx7aV3g@mail.gmail.com>
-References: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
- <CAD=FV=WsUopZPHJzHe1+pa=pzKQda0yQKUCtnPrni3Dmx7aV3g@mail.gmail.com>
-Message-ID: <0101017471b0ee7c-d406adca-451c-418d-a07e-e6edb1643177-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.09-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
+ <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
+ <20200826155507.GV1891694@smile.fi.intel.com> <973f4d54da796db4fcc9b643b10889cbc8839989.camel@perches.com>
+ <CAJKOXPcCAPy-v38dyY_74H_6vrgj0mmEf6KaupVKJb4E2Ha_Ug@mail.gmail.com> <20200909070244.GC311356@kroah.com>
+In-Reply-To: <20200909070244.GC311356@kroah.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 9 Sep 2020 09:08:14 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPd=TfCNfHPdsQZ42VEcUZOFZroXg7xmA82zSA=AbADxKw@mail.gmail.com>
+Message-ID: <CAJKOXPd=TfCNfHPdsQZ42VEcUZOFZroXg7xmA82zSA=AbADxKw@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Annotate dev_err_probe() with __must_check
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 9 Sep 2020 at 09:02, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Sep 09, 2020 at 08:29:25AM +0200, Krzysztof Kozlowski wrote:
+> > On Wed, 26 Aug 2020 at 18:18, Joe Perches <joe@perches.com> wrote:
+> > >
+> > > On Wed, 2020-08-26 at 18:55 +0300, Andy Shevchenko wrote:
+> > > > On Wed, Aug 26, 2020 at 08:44:30AM -0700, Joe Perches wrote:
+> > > > > On Wed, 2020-08-26 at 13:44 +0300, Andy Shevchenko wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > -int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> > > > > > +int __must_check dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> >
+> > +Cc Stephen and Greg,
+> >
+> > Hi Andy,
+> >
+> > Did this patch ended up in next somehow? I am surprised because now I
+> > got warnings for perfectly fine code:
+> > https://lore.kernel.org/linux-next/20200909155654.76fe3bd6@canb.auug.org.au/T/#u
+> >
+> > This creates simply false warnings instead of hints for "optimization".
+>
+> Yes, it got merged into m y driver core tree.
+>
+> I'll fix up the tty build warning, should be easy enough, the patch is
+> below.
 
-On 2020-09-08 20:30, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Sep 7, 2020 at 10:36 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> --- a/include/linux/soc/qcom/llcc-qcom.h
->> +++ b/include/linux/soc/qcom/llcc-qcom.h
->> @@ -73,6 +73,7 @@ struct llcc_edac_reg_data {
->>   * @bitmap: Bit map to track the active slice ids
->>   * @offsets: Pointer to the bank offsets array
->>   * @ecc_irq: interrupt for llcc cache error detection and reporting
->> + * @need_llcc_config: check if llcc configuration is required
->>   */
->>  struct llcc_drv_data {
->>         struct regmap *regmap;
->> @@ -85,6 +86,7 @@ struct llcc_drv_data {
->>         unsigned long *bitmap;
->>         u32 *offsets;
->>         int ecc_irq;
->> +       bool need_llcc_config;
-> 
-> Do you really need to add this into "struct llcc_drv_data"?  You use
-> it once at probe time and you could just pass it in to
-> qcom_llcc_cfg_program(), or just pass the "struct qcom_llcc_config" to
-> qcom_llcc_cfg_program()?  It's not a huge deal, but it would make your
-> patch simpler and keep an extra element out of the include file.
-> 
+Yes, this fix suppresses the warning but the question is whether we
+really want the warning?
+Such fixes mean additional code which the compiler might not optimize
+(unless it inlines the dev_err_probe()). This additional code is
+purely for suppressing the warning, without any meaning on its own.
+Actually it might be even confusing for someone to see:
+if (ret)
+  ret = dev_err_probe(ret);
 
-I just kept it following how other properties were passed to
-qcom_llcc_cfg_program(), but yes its better to just pass
-qcom_llcc_config to qcom_llcc_cfg_program() so that any future
-additions also can use it, will change it in the next version.
+warn_unused_result should point errors, not "optimization
+opportunities". If you want to have opportunity, add a coccinelle
+rule. Or a checkpatch rule. Not a compiler warning.
 
-> In any case:
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Best regards,
+Krzysztof
