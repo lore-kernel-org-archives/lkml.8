@@ -2,131 +2,103 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1783CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB8FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D530720C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9848215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:39:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="y8KsdU2x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQpvhIB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbgIIQjK (ORCPT
+        id S1731066AbgIIQjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:39:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        Wed, 9 Sep 2020 12:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731114AbgIIQhQ (ORCPT
+        with ESMTP id S1731082AbgIIQhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:37:16 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1E1C06135D
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:03:36 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id a8so2452259ilk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:03:36 -0700 (PDT)
+        Wed, 9 Sep 2020 12:37:15 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A532C061346;
+        Wed,  9 Sep 2020 06:52:39 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id n3so1346340pjq.1;
+        Wed, 09 Sep 2020 06:52:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kCsxeCMw67opcoElUs8hZzWLlvUYaz8JdahayB2RUI4=;
-        b=y8KsdU2xS4h9wwHh/xYDwErwKAwdbag1RHnw+sM66m/fustnVCcke5hzrzLLhpqjyI
-         gAKCWN9X6Ps6x4mAijLqE21trmg9mvsJQ6ZXE0ar9XW5AIXWCAZTNu+/gqEJ6wq0O0gL
-         AzlVewdt+lb/VWNKuLkTogy0q7/FP96IucjOTs0oY3gRRxpBURUZKYXuGXdIarA/8MZG
-         bVbuGmOJ4V48/zvhddDGTpiR5+vFcOkBtV4tQZyGNtf7K6xTmUEgpvSiEmEAXSDc32oN
-         uTt5aC7e2b47Bf/C77XLGczztZb6xRGZ3YIqp8kpjfAi8rNQJ7u+jP0IMx/wbKphG5W1
-         NfiQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ijCapkR9xLuIbyX+brDKlgI4YJ2GKv1b98NiflJOr8c=;
+        b=TQpvhIB8mAoPHnxUUYHYKh2Ojvveec7c3l080EdGK6DjVlkNL7tt/oXWaOi12qruOJ
+         ORV2aFSYWalR+IXpmNVrbLUQMg/Q55iVMlFlxCIjsCKVAoz2OVuMIVCkE/0Ff3m+PO/g
+         OswWzMFWgr2ukwyRUkIn3t0iWJS9OopSbCdVbJMyIArhz9tzwEm44GCURB/hJk91s0/t
+         IUyaFEhqjDuHP46OGkZ2Gcr9dp7J9UCSEo3hSkyCtHer6bab9RmesX8lnkr449IBu7Nr
+         xFYmK6adO1SjRkCLXaYjA3y2sRciVPZkgzEw1z+eG4nn3CleWdtKNDm/yLzM2DPvE+fc
+         C3jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kCsxeCMw67opcoElUs8hZzWLlvUYaz8JdahayB2RUI4=;
-        b=MEXzm35I+YZsN76FOUlzFDNS6UG2BelBOeKPjtbuShdqpoRPdMe8miGGvUUFrs9lcN
-         haHUApQgiSlucPyyFXoox3dTg1Onk56rNqv8GyPeqrDKag2uB6DLvzknFrHEYnCVqEV3
-         ++iXeaD6YO1BysjLeuiiMHZ2axooNRP4KpaqTzEP6gCWC9NLcmlwcJ3yjybzwymP2Hon
-         +p5xMpGBInPOmeqOuM01bKHX/4x0gW6Q1i4hKdJaHb4iFJPPmfQD8kaCUdrbwIEIkgYh
-         kpI7NsD5hXOwtsVnXnq6UO/V8kARtFSvogt7sQMkigvU6pp9Ff2bSTfQHzLLCVxu0xCl
-         m13w==
-X-Gm-Message-State: AOAM531bzg8YJT1Uve6030GaE9VcbB2xgxYk6m//5xSu4fSxDg1POTw0
-        jUAfprOfa+Ey/W23QL2/QsDyOu9FwhiniAkV
-X-Google-Smtp-Source: ABdhPJywiqVd3crHHoKQ2WPdED4AxcZSebQ/f1P0yVO+Jydm2uWgdHboDeu9R4fZh5S89cAdslOriA==
-X-Received: by 2002:a92:985a:: with SMTP id l87mr3668939ili.2.1599660214146;
-        Wed, 09 Sep 2020 07:03:34 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c2sm1464286ilo.7.2020.09.09.07.03.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 07:03:33 -0700 (PDT)
-Subject: Re: INFO: task hung in io_sq_thread_stop
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        syzbot <syzbot+3c23789ea938faaef049@syzkaller.appspotmail.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-References: <00000000000030a45905aedd879d@google.com>
- <20200909100355.ibz4jc5ctnwbmy5v@steredhat>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fa8f11bf-d0e6-42b9-0a2e-2bb4c8679b99@kernel.dk>
-Date:   Wed, 9 Sep 2020 08:03:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ijCapkR9xLuIbyX+brDKlgI4YJ2GKv1b98NiflJOr8c=;
+        b=CglJo5YTMwhZy6U/qo+JoIXISbuolyyt7myATNBC3mKtQ8KD1D82kt4OEzlfgGqide
+         EnEhXDrBScygWoLIaxmfoF0xo3iTKAmLDIHF3AA+seH8HAT16kHuCHveBXiXJoNLtBRg
+         e2igbncgiPTkmrJJgOgOy217F9Q98u6mkBwdeNsLQCxba5DxzcX4KtDBoTY+VAZXRjsh
+         JeuMlhmQeOMN9ebNUyAFhnty86hn/gpZ9r9mQLcWFBb78eVL45/YvIlVdVz295+HyiFc
+         9EEqhAwsIQqhSGrbTz/Nd08IBkVIxjR2RduxQWrsU1nZeb0HSgIUmFDzrbKr6K3GneKl
+         Ni8g==
+X-Gm-Message-State: AOAM531HH9pqd3h36lP/O+pmmNmmB0U48Tmd1Zd3osG/oXyd4friVn9S
+        yMk0ZmjGv5NNm2mZoBXgR5WHVJYgKvsrF/swyRyKj2oocmJmUA==
+X-Google-Smtp-Source: ABdhPJxlkAfs7B9JEE/N2GFojP20lgwfdq5VPigaVxLUUrzzdVSRxRi6pB9QGT8N3cLXmxdkUNF42Nav5QPJpu2ug4U=
+X-Received: by 2002:a17:90b:fc4:: with SMTP id gd4mr931343pjb.129.1599659558356;
+ Wed, 09 Sep 2020 06:52:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200909100355.ibz4jc5ctnwbmy5v@steredhat>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200905130336.967622-1-luka.kovacic@sartura.hr>
+ <20200905130336.967622-5-luka.kovacic@sartura.hr> <CAHp75VfwPa9zL6HCz+qqXJ1rK2JB=ewRiK1qdrgsyxixA5R5Lg@mail.gmail.com>
+ <20200909103638.GB9222@amd>
+In-Reply-To: <20200909103638.GB9222@amd>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 9 Sep 2020 16:52:20 +0300
+Message-ID: <CAHp75VcV6Tn8dVjWhOW7bfcjwA_Vabw91FJ=OYit3e1rvPp1qQ@mail.gmail.com>
+Subject: Re: [PATCH 4/7] drivers: leds: Add the iEi WT61P803 PUZZLE LED driver
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Luka Kovacic <luka.kovacic@sartura.hr>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        luka.perkov@sartura.hr
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 4:03 AM, Stefano Garzarella wrote:
-> On Wed, Sep 09, 2020 at 01:49:22AM -0700, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    dff9f829 Add linux-next specific files for 20200908
->> git tree:       linux-next
->> console output: https://syzkaller.appspot.com/x/log.txt?x=112f880d900000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
->> dashboard link: https://syzkaller.appspot.com/bug?extid=3c23789ea938faaef049
->> compiler:       gcc (GCC) 10.1.0-syz 20200507
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c082a5900000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1474f5f9900000
->>
->> Bisection is inconclusive: the first bad commit could be any of:
->>
->> d730b1a2 io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
->> 7ec3d1dd io_uring: allow disabling rings during the creation
-> 
-> I'm not sure it is related, but while rebasing I forgot to update the
-> right label in the error path.
-> 
-> Since the check of ring state is after the increase of ctx refcount, we
-> need to decrease it jumping to 'out' label instead of 'out_fput':
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index d00eb6bf6ce9..f35da516095a 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -8649,7 +8649,7 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
->                 goto out_fput;
-> 
->         if (ctx->flags & IORING_SETUP_R_DISABLED)
-> -               goto out_fput;
-> +               goto out;
-> 
->         /*
->          * For SQ polling, the thread will do all submissions and completions.
-> 
-> I'll send a patch ASAP and check if it solves this issue.
+On Wed, Sep 9, 2020 at 1:36 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > > Add support for the iEi WT61P803 PUZZLE LED driver.
+> > > Currently only the front panel power LED is supported.
+> > >
+> > > This driver depends on the iEi WT61P803 PUZZLE MFD driver.
+> >
+> > Can we make it OF independent?
+> > See below how to achieve this.
+>
+> Is there reason to believe this will be found in non-OF systems?
 
-I think that's a separate bug, it's definitely a bug. So please do send
-the fix, thanks.
+It's one aspect. Another one is to give a better example to anybody
+who might use this to copy'n'paste from. I believe that most of the
+LED drivers can appear on non-DT systems.
 
 -- 
-Jens Axboe
-
+With Best Regards,
+Andy Shevchenko
