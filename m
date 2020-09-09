@@ -2,79 +2,90 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E61C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22132C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5162065E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D1821D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:06:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y81IBlfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgIISG0 (ORCPT
+        id S1730145AbgIISGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:06:26 -0400
-Received: from mailout11.rmx.de ([94.199.88.76]:53510 "EHLO mailout11.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIISGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:06:21 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout11.rmx.de (Postfix) with ESMTPS id 4BmqhS4G7Bz41XB;
-        Wed,  9 Sep 2020 20:06:16 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4Bmqh76S15z2xDp;
-        Wed,  9 Sep 2020 20:05:59 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.12) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 9 Sep
- 2020 20:05:26 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] iio: light: as73211: New driver
-Date:   Wed, 9 Sep 2020 20:05:06 +0200
-Message-ID: <2755372.56de54GTkM@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <20200903194352.38a4a850@archlinux>
-References: <20200805055744.31909-1-ceggers@arri.de> <20200901194600.4e9e7db6@archlinux> <20200903194352.38a4a850@archlinux>
+        Wed, 9 Sep 2020 14:06:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39976 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729717AbgIISGj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:06:39 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 089F1sVY098364;
+        Wed, 9 Sep 2020 10:01:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599663715;
+        bh=MwI22PibRFOWQwMQJkln6M8QN2qmj+Or25iJeEI4Q/Y=;
+        h=To:CC:From:Subject:Date;
+        b=Y81IBlfQilc6cV1c9BkiR4VIoe/1EjbNtN+ZfKRdB4BkqE3fwOWGf3S8y2RLr/ASc
+         HqTEa4+S2TGAl8rtw87UuoFPVqNqg7Do7V6VvvzrtyQ2Jh3OiyVZtE+dXB17R1YY2k
+         nDL1xnoW639rF+SRvWfoAKcWNTtwShyi5GrexR1E=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 089F1sdk027270
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Sep 2020 10:01:54 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 9 Sep
+ 2020 10:01:54 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 9 Sep 2020 10:01:54 -0500
+Received: from [10.250.71.177] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089F1pP5101317;
+        Wed, 9 Sep 2020 10:01:52 -0500
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "tiwai@suse.com" <tiwai@suse.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Subject: [RFC] Device addition to the tlv320adcx140 and tas2562
+Message-ID: <8c47c81f-5f83-2cf4-7bf1-62201b35bed3@ti.com>
+Date:   Wed, 9 Sep 2020 10:01:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.12]
-X-RMX-ID: 20200909-200605-4Bmqh76S15z2xDp-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Hello
 
-sorry for the delay, I was on holiday last week.
+Looking for guidance on how to move forward with adding a device to 
+existing drivers.
 
-On Thursday, 3 September 2020, 20:43:52 CEST, Jonathan Cameron wrote:
-> 
-> I've done this halving change because I'm fairly sure it's right and want
-> to get a clean report from 0-day before I do a pull request at the
-> weekend.  Still time to change if anyone shouts quickly. If not
-> there is still plenty of time for a fix.
+For the TLV320adcx140 driver I have another device which is register and 
+bitmap compatible but it does not support Analog microphones or Line In 
+like the x140.
 
-looks correct for me.
+Should I add a new driver specifically for this part or should I add the 
+new audio maps, widgets and controls to the existing driver?  This would 
+make this existing driver really big in terms of LoC and object size.
 
-Thanks
-Christian
+Similar question for the TAS2562.  I have a new device that is register 
+and bitmap compatible but removes the I/V sense. Adding this new device 
+to the existing driver wouldn't be as intrusive as the x140 as the audio 
+map and controls are much simpler
 
-
-
+Dan
 
