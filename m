@@ -2,133 +2,135 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E395C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AB8C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 967AA21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:26:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNAVYHr5"
+	by mail.kernel.org (Postfix) with ESMTP id 718522080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgIIH0i (ORCPT
+        id S1728214AbgIIH0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIH0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:26:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C6CC061573;
-        Wed,  9 Sep 2020 00:26:32 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d6so1371411pfn.9;
-        Wed, 09 Sep 2020 00:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NB8HBUKnl+eWfZNHIQZWAbfkL9C5IcAO+9Z1lg426u8=;
-        b=hNAVYHr5uxDesz7m8yBEg9nTrnbnzLgkuYvjloOejB/N6d8aae8dTdQu2xhhan0Vtl
-         viJO7ZNo030PGxkXyTbUWpTLuecLUIQqkBS8LH3U7RamoG+oAkaDuHOi1A+4PZjSmPqi
-         EoBVK7TpvxlDjdnHPXyH3Yt8wyrKOK8XGgzfYVPpmIKGXeE12M8psa9BW0zZQJ/aHR+4
-         KF/ZtkQjl2s+FQdRkBIGBmzK0/R0Z4NYX3mb0hIpGiLpkbIV26/G31SgEorcqReRRZiM
-         ikR/C5UVkQ4ft+STBWWOMXlnHbrPVrbPt6HloxfdmkPRVFO2/z1j6cGnR0nhUwxzeynF
-         JkHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NB8HBUKnl+eWfZNHIQZWAbfkL9C5IcAO+9Z1lg426u8=;
-        b=t12lx9coJGdoCnAhFce6SBCJ5KTJ+px911baX2lT8OOkEaJBI7YwISalcBHIRJnQPM
-         1ghh+kbzWyfS1NOsc0f8HreEG+nesx+v3DOnEkoyCR2qF/JIrT6t+ImlHlMaA2hlGyvC
-         OH4C6LOSjmFDHcnkLuiqol6/a5ue9ikaZuWj69QEOuMwshx1dwol/LhFJ8o09sD7sCA5
-         ejd9FImKnhExzDMakc9ZQb7im3W4hXMA4oiePsnf3F5oiDJkZ9pXnRk6zrGS7acRBHc6
-         TnsCsinPiS27wMv0a/UW1a/14y4RHlnv+lTef9jM0AWt5QB/JPVUPwg8alb6YrOVTTDP
-         MWhA==
-X-Gm-Message-State: AOAM533U9m8ANTHHsZQ7JFppywn+2ugCSnohk/6FKMLGGdTdZicbJnvd
-        dMjhkviDCGu5N4Vx4//0ww==
-X-Google-Smtp-Source: ABdhPJxgN58H3LqRJckQL6qJXd2ZuTLY65XPV2ud3K7OCYkyiqQA+x1vw7hC5sQIXpCuHOBgInDgkQ==
-X-Received: by 2002:a17:902:c38a:: with SMTP id g10mr2551819plg.23.1599636392271;
-        Wed, 09 Sep 2020 00:26:32 -0700 (PDT)
-Received: from localhost.localdomain (n11212042027.netvigator.com. [112.120.42.27])
-        by smtp.gmail.com with ESMTPSA id r10sm1129570pjp.49.2020.09.09.00.26.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 00:26:31 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Miao-chen Chou <mcchou@chromium.org>,
+        Wed, 9 Sep 2020 03:26:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48182 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbgIIH0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:26:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 697F7AD3C;
+        Wed,  9 Sep 2020 07:26:38 +0000 (UTC)
+Subject: Re: [PATCH 10/19] paride/pcd: use bdev_check_media_change
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        syzkaller-bugs@googlegroups.com
-Subject: [Linux-kernel-mentees] [PATCH v2] Bluetooth: Fix memory leak in read_adv_mon_features()
-Date:   Wed,  9 Sep 2020 03:25:51 -0400
-Message-Id: <20200909072551.1101031-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200908200635.1099360-1-yepeilin.cs@gmail.com>
-References: <20200908200635.1099360-1-yepeilin.cs@gmail.com>
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20200908145347.2992670-1-hch@lst.de>
+ <20200908145347.2992670-11-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <69c82450-93ee-51e5-a724-6b48c1481e7d@suse.de>
+Date:   Wed, 9 Sep 2020 09:26:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20200908145347.2992670-11-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-read_adv_mon_features() is leaking memory. Free `rp` before returning.
+On 9/8/20 4:53 PM, Christoph Hellwig wrote:
+> The pcd driver does not have a ->revalidate_disk method, so it can just
+> use bdev_check_media_change without any additional changes.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> ---
+>  drivers/block/paride/pcd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
+> index 5124eca90e8337..70da8b86ce587d 100644
+> --- a/drivers/block/paride/pcd.c
+> +++ b/drivers/block/paride/pcd.c
+> @@ -233,7 +233,7 @@ static int pcd_block_open(struct block_device *bdev, fmode_t mode)
+>  	struct pcd_unit *cd = bdev->bd_disk->private_data;
+>  	int ret;
+>  
+> -	check_disk_change(bdev);
+> +	bdev_check_media_change(bdev);
+>  
+>  	mutex_lock(&pcd_mutex);
+>  	ret = cdrom_open(&cd->info, bdev, mode);
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Fixes: e5e1e7fd470c ("Bluetooth: Add handler of MGMT_OP_READ_ADV_MONITOR_FEATURES")
-Reported-and-tested-by: syzbot+f7f6e564f4202d8601c6@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=f7f6e564f4202d8601c6
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-I forgot the "Link:" tag yesterday. Sorry about that.
+Cheers,
 
-Change in v2:
-    - add a proper "Link:" tag.
-
- net/bluetooth/mgmt.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 5bbe71002fb9..f96251f818fc 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -4157,7 +4157,7 @@ static int read_adv_mon_features(struct sock *sk, struct hci_dev *hdev,
- {
- 	struct adv_monitor *monitor = NULL;
- 	struct mgmt_rp_read_adv_monitor_features *rp = NULL;
--	int handle;
-+	int handle, err;
- 	size_t rp_size = 0;
- 	__u32 supported = 0;
- 	__u16 num_handles = 0;
-@@ -4192,9 +4192,13 @@ static int read_adv_mon_features(struct sock *sk, struct hci_dev *hdev,
- 	if (num_handles)
- 		memcpy(&rp->handles, &handles, (num_handles * sizeof(u16)));
- 
--	return mgmt_cmd_complete(sk, hdev->id,
--				 MGMT_OP_READ_ADV_MONITOR_FEATURES,
--				 MGMT_STATUS_SUCCESS, rp, rp_size);
-+	err = mgmt_cmd_complete(sk, hdev->id,
-+				MGMT_OP_READ_ADV_MONITOR_FEATURES,
-+				MGMT_STATUS_SUCCESS, rp, rp_size);
-+
-+	kfree(rp);
-+
-+	return err;
- }
- 
- static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
+Hannes
 -- 
-2.25.1
-
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
