@@ -2,164 +2,191 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5061FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FD6C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDDCC2068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F6E2068D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XbQz4n9i"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="To2pXLS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIIOuq (ORCPT
+        id S1730242AbgIIOxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 10:50:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47550 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729935AbgIIMbT (ORCPT
+        Wed, 9 Sep 2020 10:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729992AbgIIMbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 08:31:19 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089CJwer171227;
-        Wed, 9 Sep 2020 08:29:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=GkaEv/0DUgjoFJ/sLWVerb24X+/pHjQgNqP/DNe1tXI=;
- b=XbQz4n9iTHtJDGQO9CZAgLFI2HTH0DExHrpy9r8Jb6UgN/j9t+yJW4DDEJ/r6mXI2D1e
- kEueEF6svz/bwwdJsy4ZKnHZmJiGpPZeQ2ru7yXD1mb1H3zWTzlGZA1e1M0hHMGQpwti
- 1OaYI6tidGwSMZ6jHjA2ujxFfweEL++pxbQmD88za0Sd+bgLMk9cweQCaPZVFHV35cDX
- YuuiNfDVXOOefxWa8DlE744vBqJTgFub2JvXbc4IqpnQzeu010RHZNYF+vuCC+9BalTI
- VKOHs8iCEkMfwoe3+X4Unbc8lgOi0i/jim59CEBNL0QrsBBm0haWZaGWerQhf2XpTpM+ Mg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33exyar9ak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 08:29:15 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089CKbKB173414;
-        Wed, 9 Sep 2020 08:29:14 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33exyar97k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 08:29:14 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089CMkts028029;
-        Wed, 9 Sep 2020 12:29:10 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8ch08-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 12:29:10 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089CT8mO22217190
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 12:29:08 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD7B64204F;
-        Wed,  9 Sep 2020 12:29:06 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7957C42045;
-        Wed,  9 Sep 2020 12:29:05 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.79.102])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed,  9 Sep 2020 12:29:05 +0000 (GMT)
-Date:   Wed, 9 Sep 2020 14:29:04 +0200
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200909142904.00b72921@thinkpad>
-In-Reply-To: <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
-        <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
-        <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 9 Sep 2020 08:31:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A62C0617A2
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 05:31:09 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id c196so2158368pfc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 05:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HM4mLAC7ka65HRVFrNTUTXBml1sSF6LU+w6QZrEOI0E=;
+        b=To2pXLS+CElqpWw/LYEfxzwEQy0Lx+QQzzs4VF+gXxYZg3Cre0hsAT0+B5zeFlJeH7
+         EpOrEFWbUXdX4nJQGYu2L+rruk2tS2SURZVHDrBXZN1qCoARvHUOCelN6Eb4Aoos/1Jo
+         7Hmc18vet7gY8eQoab57YhqYTxswbTtTwTjlXwEKcXfRmMaYI4zGLQPedCk8TFSzW9lw
+         6kDdTN7IBl9jAyQ/VAr+Y1Gh7odimVJsQtwcafx6r72K9ZRtt1OBcoXhfVKCwMvKFYtM
+         u3yG6c3VGw3h4DtRR5b0EZbaN+67THiYwRh/6bLKFHNiqoU4VKIGWIA2z6F1C/Xhviee
+         eNyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HM4mLAC7ka65HRVFrNTUTXBml1sSF6LU+w6QZrEOI0E=;
+        b=d2Ila1dpmu2FZxdGxGP0JgauMCpmHeM1LpXOEGfJFIGpfHb1M1/Vc8msohfn9T9kzV
+         pxaUyj2C00KPVEM/qC8qrGVUA3hFgUT6PEK7cUq4HwDOVDLgHLNJiq3qnz4zAmPCrpU8
+         hCiVOuGucWfXOraZPznzTjseEuq4aN9AYN62uHEa4c8f40VYf5kvft3sDDIpdBItRzjh
+         kS9O8MHVZM6qkUMwMiBVwcjm96KQ3uItcvKYukGAZ27ywOVAQiaeHPhMFXx5OAa1rC+w
+         jPVRtNPxv6zboounlO0hjedVKYtBnoAEKt6z1l/o2AFt/ItPd09o40WV9u0pFlzSL9jG
+         70ug==
+X-Gm-Message-State: AOAM530hhBPfGtnCrAZB+s8dgPIhNtmtuC4GB7vrjG+leydMYtQ2a/82
+        AFlfHdjnHodOlGE170qb89tLTz9AR31WZI/y
+X-Google-Smtp-Source: ABdhPJwCwieOoRAkQYI4f5mC3H8EyEmUxaJHIrRf5gfWWoyy8yWDcACcoCU9mC8kvBiyrMbiwbPtRA==
+X-Received: by 2002:a05:6a00:238c:: with SMTP id f12mr589752pfc.99.1599654668589;
+        Wed, 09 Sep 2020 05:31:08 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id e19sm2897596pfl.135.2020.09.09.05.31.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 05:31:07 -0700 (PDT)
+Subject: Re: [PATCH kernel] srcu: Fix static initialization
+To:     paulmck@kernel.org
+Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+References: <20200908144306.33355-1-aik@ozlabs.ru>
+ <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
+ <20200909115010.GG29330@paulmck-ThinkPad-P72>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <37f76aac-d8e3-8ab1-24e9-c417b719e2a6@ozlabs.ru>
+Date:   Wed, 9 Sep 2020 22:31:03 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200909115010.GG29330@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_06:2020-09-09,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 suspectscore=0 mlxscore=0 malwarescore=0 spamscore=0
- phishscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 07:30:50 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
 
-> On 9/7/20 11:00 AM, Gerald Schaefer wrote:
-> > Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
-> > code") introduced a subtle but severe bug on s390 with gup_fast, due to
-> > dynamic page table folding.
+
+On 09/09/2020 21:50, Paul E. McKenney wrote:
+> On Wed, Sep 09, 2020 at 07:24:11PM +1000, Alexey Kardashevskiy wrote:
+>>
+>>
+>> On 09/09/2020 00:43, Alexey Kardashevskiy wrote:
+>>> init_srcu_struct_nodes() is called with is_static==true only internally
+>>> and when this happens, the srcu->sda is not initialized in
+>>> init_srcu_struct_fields() and we crash on dereferencing @sdp.
+>>>
+>>> This fixes the crash by moving "if (is_static)" out of the loop which
+>>> only does useful work for is_static=false case anyway.
+>>>
+>>> Found by syzkaller.
+>>>
+>>> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+>>> ---
+>>>  kernel/rcu/srcutree.c | 5 +++--
+>>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+>>> index c100acf332ed..49b54a50bde8 100644
+>>> --- a/kernel/rcu/srcutree.c
+>>> +++ b/kernel/rcu/srcutree.c
+>>> @@ -135,6 +135,9 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
+>>>  				   levelspread[level - 1];
+>>>  	}
+>>>  
+>>> +	if (is_static)
+>>> +		return;
+>>
+>> Actually, this is needed here too:
+>>
+>>  if (!ssp->sda)
+>>          return;
+>>
+>> as
+>> ssp->sda = alloc_percpu(struct srcu_data)
+>>
+>> can fail if the process is killed too soon - it is quite easy to get
+>> this situation with syzkaller (syscalls fuzzer)
+>>
+>> Makes sense?
 > 
-> Would it be fair to say that the "fake" page table entries s390
-> allocates on the stack are what's causing the trouble here?  That might
-> be a nice thing to open up with here.  "Dynamic page table folding"
-> really means nothing to me.
+> Just to make sure that I understand, these failures occur when the task
+> running init_srcu_struct_nodes() is killed, correct?
 
-Sorry, I guess my previous reply does not really explain "what the heck
-is dynamic page table folding?".
+There are multiple user tasks (8) which open /dev/kvm, do 1 ioctl -
+KVM_CREATE_VM - and terminate, running on 8 vcpus, 8 VMs, crashes every
+20min or so, less tasks or vcpus - and the problem does not appear.
 
-On s390, we can have different number of page table levels for different
-processes / mms. We always start with 3 levels, and update dynamically
-on process demand to 4 or 5 levels, hence the dynamic folding. Still,
-the PxD_SIZE/SHIFT is defined statically, so that e.g. pXd_addr_end() will
-not reflect this dynamic behavior.
 
-For the various pagetable walkers using pXd_addr_end() (w/o READ_ONCE
-logic) this is no problem. With static folding, iteration over the folded
-levels will always happen at pgd level (top-level folding). For s390,
-we stay at the respective level and iterate there (dynamic middle-level
-folding), only return to pgd level if there really were 5 levels.
+> 
+> Or has someone managed to invoke (say) synchronize_srcu() on a
+> dynamically allocated srcu_struct before invoking init_srcu_struct() on
+> that srcu_struct?  
 
-This only works well as long there are real pagetable pointers involved,
-that can also be used for iteration. For gup_fast, or any other future
-pagetable walkers using the READ_ONCE logic w/o lock, that is not true.
-There are pointers involved to local pXd values on the stack, because of
-the READ_ONCE logic, and our middle-level iteration will suddenly iterate
-over such stack pointers instead of pagetable pointers.
+Nah, none of that :)
 
-This will be addressed by making the pXd_addr_end() dynamic, for which
-we need to see the pXd value in order to determine its level / type.
+init_srcu_struct_nodes() assumes ssp->sda!=NULL but alloc_percpu() fails
+here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/percpu.c#n1734
+===
+	} else if (mutex_lock_killable(&pcpu_alloc_mutex)) {
+			pcpu_memcg_post_alloc_hook(objcg, NULL, 0, size);
+			return NULL;
+===
+
+I am still up to reading that osr-rcuusage.pdf to provide better
+analysis :) Thanks,
+
+
+> This would be an SRCU usage bug.  If you dynamically
+> allocate your srcu_struct, you are absolutely required to invoke
+> init_srcu_struct() on it before doing anything else with it.
+> 
+> Or am I missing something here?
+> 
+> (The rcutorture test suite does test both static and dynamic allocation
+> of the srcu_struct, so I am expecting something a bit subtle here.)
+> 
+> 							Thanx, Paul
+> 
+>>> +
+>>>  	/*
+>>>  	 * Initialize the per-CPU srcu_data array, which feeds into the
+>>>  	 * leaves of the srcu_node tree.
+>>> @@ -161,8 +164,6 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
+>>>  		timer_setup(&sdp->delay_work, srcu_delay_timer, 0);
+>>>  		sdp->ssp = ssp;
+>>>  		sdp->grpmask = 1 << (cpu - sdp->mynode->grplo);
+>>> -		if (is_static)
+>>> -			continue;
+>>>  
+>>>  		/* Dynamically allocated, better be no srcu_read_locks()! */
+>>>  		for (i = 0; i < ARRAY_SIZE(sdp->srcu_lock_count); i++) {
+>>>
+>>
+>> -- 
+>> Alexey
+
+-- 
+Alexey
