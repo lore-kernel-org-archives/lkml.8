@@ -2,71 +2,178 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B64CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F39C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F312166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894A82166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N+MbeIjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgIIQsF (ORCPT
+        id S1730930AbgIIQso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:48:05 -0400
-Received: from codesynthesis.com ([142.44.161.217]:34250 "EHLO
-        codesynthesis.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730986AbgIIQrk (ORCPT
+        Wed, 9 Sep 2020 12:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730927AbgIIQHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:47:40 -0400
-X-Greylist: delayed 4199 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Sep 2020 12:47:39 EDT
-Received: from brak.codesynthesis.com (unknown [105.226.107.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by codesynthesis.com (Postfix) with ESMTPSA id 851435F138;
-        Wed,  9 Sep 2020 14:09:48 +0000 (UTC)
-Received: by brak.codesynthesis.com (Postfix, from userid 1000)
-        id 9751F1A800C4; Wed,  9 Sep 2020 16:09:43 +0200 (SAST)
-Date:   Wed, 9 Sep 2020 16:09:43 +0200
-From:   Boris Kolpackov <boris@codesynthesis.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] kconfig: fix incomplete type 'struct gstr' warning
-Message-ID: <boris.20200909155725@codesynthesis.com>
-References: <20200908221638.2782778-1-masahiroy@kernel.org>
- <20200908221638.2782778-2-masahiroy@kernel.org>
+        Wed, 9 Sep 2020 12:07:39 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D86AC061234
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:45:42 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x23so2544355wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5VKePPT3rsU28wXCAu1Xs2KBd1A5X4Nlem8vFp45sFs=;
+        b=N+MbeIjrkaWZSL1rnQBBMQ3t8EgtJ5pPqrCari+s74htlzysCeT43xiaa6jOYcy32h
+         4CDd9PSLQ49+GE9aRevle7XYa++OWOquZVftThJ4b3J3mk7MOdGIvX/YVJ4/atzSziBT
+         QHOhNZJHMYRC2WOAByxQXcbJ/TxQLqB4Sr3+9q2HGHmYaySmzrk2sQUUz+Kpl7Ek4wAU
+         cKekwJ1cvRmuB3pCyekrgNUPB9OXHj9eOSQD19+VXVp1lZB1x9oVUJJXVhHAbiYN+eAf
+         kA4jU0llu01THgYWYLbkq9qRnuFNG/4WMZXx0YeYtEuuVct/E2BvPHB6tDgTCXe1CJoG
+         BVVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5VKePPT3rsU28wXCAu1Xs2KBd1A5X4Nlem8vFp45sFs=;
+        b=opx6Lo100TdSFAJwSEzgWKMI0qx9XQKEdQpjNKf2DjZ8a9EXsIKsU3mdWBr3dPoDQX
+         P1VXRvI03SpOq7t6VHj6jG/0zUkRcQQmKexwtJxckD07h27EsDdzng881uhSq/iFWOFl
+         x8p9bN2SqSG9wvihBTrBQr3gebRA7CPJQW4Euk+VZ0J0oCTkeL0HssP4VCEyYS05HVjn
+         aHBWoexpu30ehYe4MBGl0M7euotB1pUliesCYSWtDwSQkKyl4PQFv28Hlnx4ctAOjQUO
+         EeynOI/W2rrpGMsfEubbglBE3/PjrHa5HeyfVVkXy+aF5e0sYcf/eiLTYYHHTDvbY63E
+         CobQ==
+X-Gm-Message-State: AOAM532c14gjNP6F/Bs74WR8CE6bkraSJ/+xZbqRtdeLqfKMhzl5vzrc
+        C/0gv1jkL75hpieAO2Ug3UUGCg==
+X-Google-Smtp-Source: ABdhPJxqI/pYnfEs6qSjztlLK9/QHes6XgHB85V3brQWGlC3Taa9IcIFuEaRLZOMRfZ2rAfTnQSxVA==
+X-Received: by 2002:a1c:1904:: with SMTP id 4mr3865768wmz.119.1599662741033;
+        Wed, 09 Sep 2020 07:45:41 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id v2sm4773397wrm.16.2020.09.09.07.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 07:45:39 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 15:45:37 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Alexandru Stan <amstan@chromium.org>, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during
+ interpolation
+Message-ID: <20200909144537.daq2exfihhxm6bai@holly.lan>
+References: <20200721042522.2403410-1-amstan@chromium.org>
+ <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
+ <20200904113822.xoyt4w5x7vwvh7cr@holly.lan>
+ <20200907075018.GM2352366@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908221638.2782778-2-masahiroy@kernel.org>
-Organization: Code Synthesis
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200907075018.GM2352366@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <masahiroy@kernel.org> writes:
+On Mon, Sep 07, 2020 at 09:50:18AM +0200, Daniel Vetter wrote:
+> On Fri, Sep 04, 2020 at 12:38:22PM +0100, Daniel Thompson wrote:
+> > On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
+> > > Some displays need the low end of the curve cropped in order to make
+> > > them happy. In that case we still want to have the 0% point, even though
+> > > anything between 0% and 5%(example) would be skipped.
+> > 
+> > For backlights it is not defined that 0 means off and, to be honest, 0
+> > means off is actually rather weird for anything except transflexive
+> > or front lit reflective displays[1]. There is a problem on several
+> > systems that when the backlight slider is reduced to zero you can't
+> > see the screen properly to turn it back up. This patch looks like it
+> > would make that problem worse by hurting systems with will written
+> > device trees.
+> > 
+> > There is some nasty legacy here: some backlight displays that are off
+> > at zero and that sucks because userspace doesn't know whether zero is
+> > off or lowest possible setting.
+> > 
+> > Nevertheless perhaps a better way to handle this case is for 0 to map to
+> > 5% power and for the userspace to turn the backlight on/off as final
+> > step in an animated backlight fade out (and one again for a fade in).
+> 
+> Afaik chromeos encodes "0 means off" somewhere in there stack. We've
+> gotten similar patches for the i915 backlight driver when we started
+> obeying the panel's lower limit in our pwm backlight driver thing that's
+> sometimes used instead of acpi.
 
-> Currently, get_relations_str() is declared before the struct gstr
-> definition.
+Out of interest... were they accepted?
 
-Yes, I also ran into this while building the kconfig code with MSVC.
-I just moved the struct gstr definition before lkc_proto.h #include
-but your fix works just as well.
-
-Acked-by: Boris Kolpackov <boris@codesynthesis.com>
+I did took a quick look at intel_panel.c and didn't see anything
+that appeared to be special casing zero but I thought I might double
+check.
 
 
-> BTW, some are declared in lkc.h and some in lkc_proto.h, but the
-> difference is unclear. I guess some refactoring is needed.
+Daniel.
 
-Yes, please. My (potentially incorrect) understanding is that lkc_proto.h
-was for functions that are not (or should not be) used by clients but
-should nevertheless have prototypes due to -Wmissing-prototypes. I,
-however, believe this no longer holds and so would vote to merge
-lkc_proto.h into lkc.h.
+
+> There's also the problem that with fancy panels with protocol (dsi, edp,
+> ...) shutting of the backlight completely out of the proper power sequence
+> hangs the panel (for some panels at least), so providing a backlight off
+> that doesn't go through the drm modeset sequence isn't always possible.
+> 
+> It's a bit a mess indeed :-/
+> -Daniel
+> 
+> > 
+> > 
+> > Daniel.
+> > 
+> > > 
+> > > Signed-off-by: Alexandru Stan <amstan@chromium.org>
+> > > ---
+> > > 
+> > >  drivers/video/backlight/pwm_bl.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > > 
+> > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > > index 5193a72305a2..b24711ddf504 100644
+> > > --- a/drivers/video/backlight/pwm_bl.c
+> > > +++ b/drivers/video/backlight/pwm_bl.c
+> > > @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
+> > >  			/* Fill in the last point, since no line starts here. */
+> > >  			table[x2] = y2;
+> > >  
+> > > +			/*
+> > > +			 * If we don't start at 0 yet we're increasing, assume
+> > > +			 * the dts wanted to crop the low end of the range, so
+> > > +			 * insert a 0 to provide a display off mode.
+> > > +			 */
+> > > +			if (table[0] > 0 && table[0] < table[num_levels - 1])
+> > > +				table[0] = 0;
+> > > +
+> > >  			/*
+> > >  			 * As we use interpolation lets remove current
+> > >  			 * brightness levels table and replace for the
+> > > -- 
+> > > 2.27.0
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
