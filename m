@@ -2,100 +2,135 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F7AC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109C8C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A065B215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599640803;
-	bh=BbnDVHB8A3xGCPsPhdOsOXW5HCi8ljWrh90xTXF0bG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oOpSteY84w3xB78rxT4tLzLccweCzKXtjcVL9EL/erItlhdP/uioVTNEiIGyFjzSO
-	 ZHCnPotU/dFP9FDlMpTOZQzBJLsvCZfXIfkrp0Akr+UfW/Vve8qDEvnx2xFa/FsJ0C
-	 tQTw3obgF40vIKdTsj+EktbGlZBnID3ppmzdm2Oc=
+	by mail.kernel.org (Postfix) with ESMTP id A828F215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCxfoG85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgIIIkC (ORCPT
+        id S1727976AbgIIIl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34730 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgIIIkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:40:00 -0400
-Received: from localhost (p54b33098.dip0.t-ipconnect.de [84.179.48.152])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B617B207DE;
-        Wed,  9 Sep 2020 08:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599640799;
-        bh=BbnDVHB8A3xGCPsPhdOsOXW5HCi8ljWrh90xTXF0bG8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lm6hFqTbTg7XG5FwExZc+8SS+2F4VxeNefAxyj38zMMcDUrf16thfT2z5N1BoWUcZ
-         NkmTTNhjIxYA7OvakAlhp4B6LXbI6kHDsx3b6qLyixiwgA8o7cPcB6eIFkEPz9UyzG
-         c7UkZA46xf49/6S7o+uWOz/a3MnsN3ZKsqshDTxM=
-Date:   Wed, 9 Sep 2020 10:39:56 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     pierre-yves.mordret@st.com, alexandre.torgue@st.com,
-        linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v3 2/2] i2c: stm32f7: Add SMBus Host-Notify protocol
- support
-Message-ID: <20200909083956.GG2272@ninjato>
-References: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
- <1596431876-24115-3-git-send-email-alain.volmat@st.com>
+        Wed, 9 Sep 2020 04:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgIIIlz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:41:55 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62399C061573;
+        Wed,  9 Sep 2020 01:41:55 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id g10so1614074otq.9;
+        Wed, 09 Sep 2020 01:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VXHXXV715sJGvUd4gjnShEaVrmyYwXRLuNaJb8O8w9Y=;
+        b=GCxfoG85fPs+aC2goM6GRmpl9a0HZJlzmp22qMa6XqflGM2Y6etiGlEODS++mRNXtX
+         mrPSot5h/upKBw5pz6rsf59r90lS9QdsqGEwcdY7s0tZ3UPQ/BIJzwGOivmFhnn2ZG6e
+         RLLczMN++oMR0rlKZD+T4FdM6dU90Cb/DSpdo+JaBk0pp35KSvse1gBwYbYzZ/0pywPv
+         zaGEvnTlAOXirNCtQPgEmxyX52UMGpHtnb+0S1AMBhyZuvl5U7f6Jzf/LLJvfyH4ghFv
+         XNeSo23ecZWs5cHeGLj1JsLt5udTJyCZZWTfkQGrNLjpSzSVGqHOHWBW7l76yKOeRIWy
+         M9iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VXHXXV715sJGvUd4gjnShEaVrmyYwXRLuNaJb8O8w9Y=;
+        b=hO0l4HRYWMuQZ5Wyw2Isig8vVmyXtIk3CWaXheF4k+KIhO7FKqrEAm8NdydQwUBS9R
+         iQPYLIX1Cik/M3GHARLFcEngkAjsX8CL2oXAbWHweUyRg+YgrKrDeajLJQyQ+x5Xt36V
+         dqRrh2UhskWvZmRaLxkm1eKHtgj2sB0H8sHiAIX89IknQrT0HoPeWrqyCiPLeoA7CEq1
+         lIhwEvfPsiVSWMYNyThdb3uPJapq3rt2N7X8/vRCleJe2qVXGy6wEh5VZ4Dakfn3ngb4
+         8um3LDI4S0falFDP7C59Yn5glxSIQca1oxIETiWUzadWc00bvF1YS3ZyHe03ggtWurq4
+         0ebA==
+X-Gm-Message-State: AOAM530JHoa/VkkaBNIeK+O9J6eNdRYeqG8UngwuvbtybWWbbn4oA3cP
+        ie2RHszo1rNX6Yx/P3lmkFIHeUBOeng7wASXAhkSQYig
+X-Google-Smtp-Source: ABdhPJy+c9dSxfXe7HdL/2aH0Yvc1jgsVB8kwjUUGri9OvrCGDI+rlRiV1IaX+2rd2CJOx7w/41RZCCN4RzNf8iy06U=
+X-Received: by 2002:a9d:c44:: with SMTP id 62mr2273269otr.185.1599640914398;
+ Wed, 09 Sep 2020 01:41:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2E/hm+v6kSLEYT3h"
-Content-Disposition: inline
-In-Reply-To: <1596431876-24115-3-git-send-email-alain.volmat@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1597827327-25055-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1597827327-25055-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 9 Sep 2020 16:41:43 +0800
+Message-ID: <CANRm+Cx=6zc=KTw5XwMQTdOG3m67MCcmthRuFR-VTnOTB06kow@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: LAPIC: Fix updating DFR missing apic map recalculation
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---2E/hm+v6kSLEYT3h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 03, 2020 at 07:17:56AM +0200, Alain Volmat wrote:
-> Rely on the core functions to implement the host-notify
-> protocol via the a I2C slave device.
->=20
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-
-Applied to for-next, thanks!
-
-
---2E/hm+v6kSLEYT3h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9YlNwACgkQFA3kzBSg
-KbYZxg/9H/2L3ghZ/LP17brMo/1wYK2lflEHShTBQHcbVNg82QaXJn8CVoh9lfwe
-npimgd5SZXQWD6gXfMbS+ddR2YkVw5VM4RG8w72Ga6fmY0xoqWlf5Ynew2opCRC/
-HaDTDuOKrSbMvTCTIm+9QnUyjBPNABXqteamcT9Tk4j7XfmBNt9f0e8o1kEvCxSg
-gsbYnXWDDe7XSj65uY0NLcYsmyuRWiP0yWZmKmecitPS1UITrrJ02XSZ1Wd0hDTM
-0ymGLf2UhNgLI0rc4odRb03aFzDxBt6NpgqfW7Y9jPXq3cA7IOc5Vh76aruJ+hnT
-gr+7bY1wDmbbp/uWN23z/XC+tPFEvO+DC9pecuBUEBKAsn43HxR4zRB3to1Sa392
-VpqBlT7gT0Mk7iYQvry8pqc5WO4eSzZNUUl+kNJE2FVjZj9Fvt9M4khglacz+sKi
-eCI+fmKlsY0IhUvaGksjztRES+aZXWSzfYfv+IvnQCDipUrua9r4cjKa8z2Q9Qzu
-WIEAarMjZoSAKNpyX7ObWTZ1pJCNFx5NBxrSMzJxrntzGqBK0MSUxRnEMRTBVeb3
-1M95a8yxD/qT7WC25jxRQZoEa/Jy8r5G5NKmB8wD5dWNANxzRpc2Y1/vpqJySp+R
-fcKixlnlm1Dwd+AfL+5WCkMz8ZZuZqhZuGv2+NH0VvHab+xhCVM=
-=uIIc
------END PGP SIGNATURE-----
-
---2E/hm+v6kSLEYT3h--
+Any Reviewed-by for these two patches? :)
+On Wed, 19 Aug 2020 at 16:55, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> There is missing apic map recalculation after updating DFR, if it is
+> INIT RESET, in x2apic mode, local apic is software enabled before.
+> This patch fix it by introducing the function kvm_apic_set_dfr() to
+> be called in INIT RESET handling path.
+>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 5ccbee7..248095a 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -310,6 +310,12 @@ static inline void kvm_apic_set_ldr(struct kvm_lapic *apic, u32 id)
+>         atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+>  }
+>
+> +static inline void kvm_apic_set_dfr(struct kvm_lapic *apic, u32 val)
+> +{
+> +       kvm_lapic_set_reg(apic, APIC_DFR, val);
+> +       atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+> +}
+> +
+>  static inline u32 kvm_apic_calc_x2apic_ldr(u32 id)
+>  {
+>         return ((id >> 4) << 16) | (1 << (id & 0xf));
+> @@ -1984,10 +1990,9 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+>                 break;
+>
+>         case APIC_DFR:
+> -               if (!apic_x2apic_mode(apic)) {
+> -                       kvm_lapic_set_reg(apic, APIC_DFR, val | 0x0FFFFFFF);
+> -                       atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+> -               } else
+> +               if (!apic_x2apic_mode(apic))
+> +                       kvm_apic_set_dfr(apic, val | 0x0FFFFFFF);
+> +               else
+>                         ret = 1;
+>                 break;
+>
+> @@ -2303,7 +2308,7 @@ void kvm_lapic_reset(struct kvm_vcpu *vcpu, bool init_event)
+>                              SET_APIC_DELIVERY_MODE(0, APIC_MODE_EXTINT));
+>         apic_manage_nmi_watchdog(apic, kvm_lapic_get_reg(apic, APIC_LVT0));
+>
+> -       kvm_lapic_set_reg(apic, APIC_DFR, 0xffffffffU);
+> +       kvm_apic_set_dfr(apic, 0xffffffffU);
+>         apic_set_spiv(apic, 0xff);
+>         kvm_lapic_set_reg(apic, APIC_TASKPRI, 0);
+>         if (!apic_x2apic_mode(apic))
+> --
+> 2.7.4
+>
