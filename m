@@ -2,240 +2,181 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D335C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33DFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6BE021D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DAC421D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkT30qhx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tZcdNOua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgIIRwU (ORCPT
+        id S1728463AbgIIRxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41428 "EHLO
+        Wed, 9 Sep 2020 13:53:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIRwQ (ORCPT
+        with ESMTP id S1726489AbgIIRxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:52:16 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6D4C061756;
-        Wed,  9 Sep 2020 10:45:12 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id j185so1850762vsc.3;
-        Wed, 09 Sep 2020 10:45:12 -0700 (PDT)
+        Wed, 9 Sep 2020 13:53:08 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231DDC061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 10:53:08 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so3134061wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 10:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O3vYoY1GAe9tpknHQc0RwFHJ6RGfGD1/cS+RCnnqiN8=;
-        b=gkT30qhxrho1d26Ot2GGjRAuJj0JDnOjNNmd3k+np9NwkQvHzfv30pjwYEdZ+paL6f
-         oMXwcQFLAScBi1KGrK4ELBtyFb/p7XhCd3tr0PDHhwA5rpFVl5kueRV7M39m775qPCm+
-         5b0FZ+uxJon8/tQVXLPQ0WAvGuekHLy7eoo4y+xwT/sFB869N6Q86nhqaezKqNUmLfAu
-         Mgy8Ag8UBvn+RXAa940KlRCtSkSvPRT1JMWsTekRepVKXSe8Gz/o+ne9DDGbQOPv0SSP
-         TLfe026QSnSoS1/woDbXBEFqXiYWc+qq/7YsLHKC/20h/voPPJAo1uaN04+4zILCkBEY
-         lGXw==
+        bh=81bPiN/545geCaIVpzuoDosAeqfaE3oH20jaKbiHmFo=;
+        b=tZcdNOua4o0C664+yOEvAEPO8AQloNdD+WAws8ZAB2Nj4Z+F4tqQeVnBR0Y6lrC/nW
+         p7MMx5eGBNquFus/kCnzJeoJ8TCYG/SulwBkcfUFAZGv6QAVCQLxSPA1PJ1JXjp4PSXe
+         JUXVM7KLf8y97hX+F6LqOXQlfjo5QuE+L+Bcwot3uOF+mb3BXnhAj6AOVv4wXaZvvQC2
+         cDYivC6jfrEH1pTiIavQE0Zy7mUdwKh3g29ew9/LdVExScgchf7AG6JHSsfixmvM4H/T
+         U/+3VTOtSE7ZXWjqdiO0e2rcUc1T575I+7WQJXzzTWDPB9zZLPs8GaaO2QZIgwF3135j
+         SpRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O3vYoY1GAe9tpknHQc0RwFHJ6RGfGD1/cS+RCnnqiN8=;
-        b=OvOlvbT6IvNI3qseqvZLd/gyg7jOht+GBnoYEJVTDSg/3v5Ny3bQxHlSW22INaG/9o
-         jQ1uvQproL66Q5uz4eWYa9T/P8UiWjOUOUCDQN5sByUJtXm303xMfUmB7hZ7WbY0Phs3
-         Bv8BhbPUvhWPOi/GYevmy/O/vskorXIaYbhCcB4tO+slgPwm1w3c4l6cJYzI7q2WdqCz
-         xHQJb/PvlV+6P4BKbNf1Z0VocudmA/2G7wONb/x946d8VCGkoBb80HPm6dvuZkWKEWEY
-         J6H+PPYvI91JsJNxC6ZWShIxbwkfkZ0KlsoDWMtTYUSYoG7Jnkb1r9UCq6CzDtKa1ZHP
-         s03w==
-X-Gm-Message-State: AOAM533742UddGzuJEzWls/O+JLLRTex38Ze2ev8qFy/N/QtJJF0rV98
-        0cIq4rBcuiaRICysvmPO5Zo0jzO4iJtGCc+7TSE=
-X-Google-Smtp-Source: ABdhPJxYjACfO7VveyxuFg6yxsHGThx4cPmu1tDss0++Dt6iiTat+nVx5Ch53f2zjmawrfrDuTvnbY/VzKgYBGZ73Aw=
-X-Received: by 2002:a67:fb4a:: with SMTP id e10mr1558920vsr.58.1599673510965;
- Wed, 09 Sep 2020 10:45:10 -0700 (PDT)
+        bh=81bPiN/545geCaIVpzuoDosAeqfaE3oH20jaKbiHmFo=;
+        b=mue/mk39F87LPkEnk5ObDZ2akPABs+n7bR4xT5DmyU6PjUDZdE8LDm2bOiRdfKUMwl
+         rcs5DCBTBCEFQSYDDokWIM+TIa98lju6kSeFplU92CBSDOot77YewTmF81GbUmEN+sX0
+         thO090qvUA/ceFdQFtaJCb5ELnOD6C26j4o230/vrRBi9M83triVEZY7K13977M2pAQ0
+         iH/FonHLf4BNWTBL1YuOPPAuMJw4XuyJK1It+1Aca+LHKbtjzQ/hWgVzNUcfDZfkMdU0
+         CUHQ+2joFI3xfy5tsng0tmvfVKaytFm2AzYj6E1d+ac2EMeLpZSDem7Pkmlar74g58MG
+         KjNg==
+X-Gm-Message-State: AOAM532ORDfiFCP6hptUyONQlbcUj0HKhunVje2RjhfIluL7XCc3YL+M
+        0AhzVbBXJC7g5qjEc4JF3w5+QxcubJ9he8rC6ZxA9w==
+X-Google-Smtp-Source: ABdhPJxqjpvGx1MWX2rhPnvdfxhmmhvZFATqyRorhRwUTsvphO68oVDz0uFvoGlyNH8JlaVSoivWKQMNx+GFNAyuJww=
+X-Received: by 2002:a1c:f402:: with SMTP id z2mr4525670wma.87.1599673986537;
+ Wed, 09 Sep 2020 10:53:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYvg7voMNArr3nPpv_dRn10RwYos075NW_b5rFbBLZ=-8g@mail.gmail.com>
- <20200909144745.504c4cbfeea9bc298e3c6b9b@kernel.org> <20200909080025.GC3864@alley>
- <20200909122502.GB668220@kroah.com>
-In-Reply-To: <20200909122502.GB668220@kroah.com>
-From:   jim.cromie@gmail.com
-Date:   Wed, 9 Sep 2020 11:44:44 -0600
-Message-ID: <CAJfuBxzNFmgY=Wbz99K8QTxkBVDaJn5+gTTxUTJTtkJe7nxfsQ@mail.gmail.com>
-Subject: Re: kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, Jason Baron <jbaron@akamai.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+References: <20200909080220.254585-1-irogers@google.com> <20200909080220.254585-2-irogers@google.com>
+ <CAM9d7cgNNBw0d2c39+1D=0peGrxRV3P33aoczKMu5Qxffkd2CQ@mail.gmail.com>
+In-Reply-To: <CAM9d7cgNNBw0d2c39+1D=0peGrxRV3P33aoczKMu5Qxffkd2CQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 9 Sep 2020 10:52:54 -0700
+Message-ID: <CAP-5=fUH3w+UckdzqkUvp0vAz1gFMqrYNF6wE8ib5kPjXqM2Yg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf metricgroup: Fix uncore metric expressions
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Hongbo Yao <yaohongbo@huawei.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>, Jin@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 6:24 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Sep 9, 2020 at 2:53 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Wed, Sep 09, 2020 at 10:00:25AM +0200, Petr Mladek wrote:
-> > On Wed 2020-09-09 14:47:45, Masami Hiramatsu wrote:
-> > > Hi Naresh,
-> > >
-> > > Thanks for reporting, it seems that you have run the kselftests/livepatch/test-livepatch.sh.
-> > > Then, I think it is better to report to Livepatch maintainers too. (I Cc'd them)
-> > >
-> > > Thank you,
-> > >
-> > > On Wed, 9 Sep 2020 10:24:09 +0530
-> > > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > > While testing livepatch test cases on x86_64 with Linux next 20200908 tag kernel
-> > > > this kernel BUG noticed several times.
-> > > >
-> > > > metadata:
-> > > >   git branch: master
-> > > >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > > >   git commit: dff9f829e5b0181d4ed9d35aa62d695292399b54
-> > > >   git describe: next-20200908
-> > > >     kernel-config:
-> > > > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/853/config
-> > > >
-> > > > kernel BUG log,
-> > > > ----------------------
-> > > > [  634.063970] % rmmod test_klp_livepatch
-> > > > [  634.114787] test_klp_atomic_replace: this has been live patched
-> > > > [  634.121953] % echo 0 > /sys/kernel/livepatch/test_klp_atomic_replace/enabled
-> > > > [  634.129391] livepatch: 'test_klp_atomic_replace': starting
-> > > > unpatching transition
-> > > > [  634.143990] livepatch: 'test_klp_atomic_replace': unpatching complete
-> > > > [  634.156223] % rmmod test_klp_atomic_replace
-> > > > [  634.235451] ------------[ cut here ]------------
-> > > > [  634.240314] kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
-> > > > [  634.246584] invalid opcode: 0000 [#1] SMP PTI
-> > > > [  634.250955] CPU: 0 PID: 12791 Comm: test-livepatch. Tainted: G
-> > > >   W     K   5.9.0-rc4-next-20200908 #1
-> > > > [  634.260615] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > > > 2.2 05/23/2018
-> > > > [  634.268007] RIP: 0010:ddebug_exec_query+0x77b/0xb90
-> > > > [  634.272886] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
-> > > > 00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
-> > > > fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
-> > > > 8b 15
-> > > > [  634.291630] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
-> > > > [  634.296856] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
-> > > > [  634.303987] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
-> > > > [  634.311111] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
-> > > > [  634.318236] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
-> > > > [  634.325368] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
-> > > > [  634.332500] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
-> > > > knlGS:0000000000000000
-> > > > [  634.340578] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [  634.346315] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
-> > > > [  634.353446] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > [  634.360570] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > [  634.367693] Call Trace:
-> > > > [  634.370139]  ? lock_acquire+0xa6/0x390
-> > > > [  634.373892]  ? __might_fault+0x34/0x80
-> > > > [  634.377648]  ddebug_exec_queries+0x6e/0x140
-> > > > [  634.381831]  ddebug_proc_write+0x4b/0xa0
-> > > > [  634.385756]  full_proxy_write+0x5f/0x90
-> > > > [  634.389595]  vfs_write+0xed/0x240
-> > > > [  634.392915]  ksys_write+0xad/0xf0
-> > > > [  634.396233]  ? syscall_trace_enter+0x17a/0x240
-> > > > [  634.400670]  __x64_sys_write+0x1a/0x20
-> > > > [  634.404416]  do_syscall_64+0x37/0x50
-> > > > [  634.407993]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > [  634.413038] RIP: 0033:0x7fd371b84144
-> > > > [  634.416617] Code: 89 02 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00
-> > > > 00 00 00 00 66 90 48 8d 05 c1 e7 2c 00 8b 00 85 c0 75 13 b8 01 00 00
-> > > > 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 41 54 49 89 d4 55 48 89
-> > > > f5 53
-> > > > [  634.435362] RSP: 002b:00007ffd19447658 EFLAGS: 00000246 ORIG_RAX:
-> > > > 0000000000000001
-> > > > [  634.442928] RAX: ffffffffffffffda RBX: 00000000000000bc RCX: 00007fd371b84144
-> > > > [  634.450059] RDX: 00000000000000bc RSI: 0000000000e6cf70 RDI: 0000000000000001
-> > > > [  634.457181] RBP: 0000000000e6cf70 R08: 00000000000000e9 R09: 0000000000000000
-> > > > [  634.464305] R10: 00007ffd19447c48 R11: 0000000000000246 R12: 00007fd371e4e760
-> > > > [  634.471429] R13: 00000000000000bc R14: 00007fd371e49760 R15: 00000000000000bc
-> > > > [  634.478559] Modules linked in: trace_printk sch_fq 8021q
-> > > > iptable_filter xt_mark ip_tables cls_bpf sch_ingress veth algif_hash
-> > > > x86_pkg_temp_thermal fuse [last unloaded: test_klp_atomic_replace]
-> > > > [  634.495695] ---[ end trace d04d7e11bd1458bf ]---
-> > > > [  634.500333] RIP: 0010:ddebug_exec_query+0x77b/0xb90
-> > > > [  634.505218] Code: 4c 89 ad 70 ff ff ff e9 db fb ff ff b8 03 00 00
-> > > > 00 e9 20 fb ff ff b8 02 00 00 00 e9 16 fb ff ff b8 01 00 00 00 e9 0c
-> > > > fb ff ff <0f> 0b 31 c0 e9 03 fb ff ff 49 89 f4 48 89 f7 e9 78 f9 ff ff
-> > > > 8b 15
-> > > > [  634.523969] RSP: 0018:ffff9f0c80a5bd18 EFLAGS: 00010246
-> > > > [  634.529197] RAX: 000000000000003d RBX: 0000000000000000 RCX: 0000000000000000
-> > > > [  634.536330] RDX: 000000000000003d RSI: 0000000000000000 RDI: ffff90db906583ec
-> > > > [  634.543462] RBP: ffff9f0c80a5bde8 R08: 000000000000000a R09: 000000000000003b
-> > > > [  634.550593] R10: ffff90db92610000 R11: 0000000000000246 R12: ffff90db906583ec
-> > > > [  634.557727] R13: ffffffffbe87cbc0 R14: 0000000000000000 R15: 0000000000000004
-> > > > [  634.564869] FS:  00007fd37249a740(0000) GS:ffff90dbefa00000(0000)
-> > > > knlGS:0000000000000000
-> > > > [  634.572953] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [  634.578699] CR2: 0000000000e6d00c CR3: 000000026a4b8004 CR4: 00000000003706f0
-> > > > [  634.585829] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > [  634.592964] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> >
-> > It is caused by the commit 42f07816ac0cc79792811 ("dyndbg:
-> > fix problem parsing format="foo bar"). It modified the condition
-> > when the above BUG() gets triggered.
-> >
-> > It has even been reported by the kernel test robot, see
-> > https://lore.kernel.org/lkml/20200902074124.GP4299@shao2-debian/
-> >
-> >
-> > It is triggered when the livepatching selftest is trying to restore the
-> > original setting of dynamic debug messages in the livepatch framework.
-> >
-> > It can get reliably reproduced by the following call:
-> >
-> > $> echo -n 'file kernel/livepatch/transition.c line 586 =_' > \
-> >    /sys/kernel/debug/dynamic_debug/control
-> >
-> >
-> > Adding people from the problematic patch into CC.
-> >
-> > I haven't dived into the dynamic debug code yet. The logic might
-> > be wrong.
-> >
-> > Anyway, the BUG_ON() should get replaced by a normal error message.
-> > There is no reason to panic() when a string can't be parsed !!!
+> Hi Ian,
 >
-> The above mentioned patch was trying to fix things so that the BUG_ON()
-> would not be hit, I guess that's not really happening here :(
+> On Wed, Sep 9, 2020 at 5:02 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > A metric like DRAM_BW_Use has on SkylakeX events uncore_imc/cas_count_read/
+> > and uncore_imc/case_count_write/. These events open 6 events per socket
+> > with pmu names of uncore_imc_[0-5]. The current metric setup code in
+> > find_evsel_group assumes one ID will map to 1 event to be recorded in
+> > metric_events. For events with multiple matches, the first event is
+> > recorded in metric_events (avoiding matching >1 event with the same
+> > name) and the evlist_used updated so that duplicate events aren't
+> > removed when the evlist has unused events removed.
+> >
+> > Before this change:
+> > $ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> >              41.14 MiB  uncore_imc/cas_count_read/
+> >      1,002,614,251 ns   duration_time
+> >
+> >        1.002614251 seconds time elapsed
+> >
+> > After this change:
+> > $ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> >             157.47 MiB  uncore_imc/cas_count_read/ #     0.00 DRAM_BW_Use
 >
-> Jim, can you look into this?
+> Hmm.. I guess the 0.00 result is incorrect, no?
+
+Agreed. There are a number of pre-existing bugs in this code. I'll try
+to look into this one.
+
+> >             126.97 MiB  uncore_imc/cas_count_write/
+> >      1,003,019,728 ns   duration_time
+> >
+> > Erroneous duplication introduced in:
+> > commit 2440689d62e9 ("perf metricgroup: Remove duped metric group events").
+> >
+> > Fixes: ded80bda8bc9 ("perf expr: Migrate expr ids table to a hashmap").
+> > Reported-by: Jin, Yao <yao.jin@linux.intel.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> [SNIP]
+> > @@ -248,6 +260,16 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+> >                 ev = metric_events[i];
+> >                 ev->metric_leader = ev;
+> >                 set_bit(ev->idx, evlist_used);
+> > +               /*
+> > +                * Mark two events with identical names in the same group as
+> > +                * being in use as uncore events may be duplicated for each pmu.
+> > +                */
+> > +               evlist__for_each_entry(perf_evlist, ev) {
+> > +                       if (metric_events[i]->leader == ev->leader &&
+> > +                           !strcmp(metric_events[i]->name, ev->name)) {
+> > +                               set_bit(ev->idx, evlist_used);
 >
-> thanks,
+> I'm not sure whether they are grouped together.
+> But if so, you can use for_each_group_member(ev, leader).
+
+Good suggestion, unfortunately the groups may be removed for things
+like NMI watchdog or --metric-no-group and so there wouldn't be a
+leader to follow. We could do something like this:
+
+if (metric_events[i]->leader) {
+  for_each_group_member(ev, leader) {
+    if (!strcmp(metric_events[i]->name, ev->name))
+      set_bit(ev->idx, evlist_used);
+  }
+} else {
+  evlist__for_each_entry(perf_evlist, ev) {
+    if (!ev->leader && !strcmp(metric_events[i]->name, ev->name))
+      set_bit(ev->idx, evlist_used);
+  }
+ }
+}
+
+What do you think?
+
+Thanks,
+Ian
+
+> Thanks
+> Namhyung
 >
-> greg k-h
-
-Ive been down with a stomach bug for past week,
-Im feeling normal-ish now, but playing catchup, and taking some NMIs.
-
-
- commit 42f07816ac0cc79792811 ("dyndbg: fix problem parsing format="foo bar").
-
-I'm miffed and embarrassed that the quick fix also broke.
-Im not experienced enough to know what "normal" handling looks like
-for reactive breakages like this...
-
-If you want to revert the 2 commits (original feature + fixup),
-Id find some stress relief in that, and would take a clean run at it later.
-
-I hope to steal a few hrs from the catchup tasks to investigate this RSN.
-
-thanks and apologies
-Jim
+>
+> > +                       }
+> > +               }
+> >         }
+> >
+> >         return metric_events[0];
+> > --
+> > 2.28.0.526.ge36021eeef-goog
+> >
