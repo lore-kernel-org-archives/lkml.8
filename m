@@ -2,105 +2,119 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=BAYES_20,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SHORT_SHORTNER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEF1C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A559C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E2D2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:10:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mail.go.id header.i=@mail.go.id header.b="j0s1TCCX";
-	dkim=pass (2048-bit key) header.d=mail.go.id header.i=@mail.go.id header.b="4XirW6qg"
+	by mail.kernel.org (Postfix) with ESMTP id 51E922087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgIIRKx (ORCPT
+        id S1730550AbgIIRLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:10:53 -0400
-Received: from sakti.mail.go.id ([103.8.238.38]:3902 "EHLO
-        mailserver.mail.go.id" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730317AbgIIPfD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:35:03 -0400
-X-Greylist: delayed 1328 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Sep 2020 11:35:02 EDT
-Received: from mailserver.mail.go.id (mailserver.mail.go.id [127.0.0.1])
-        by mailserver.mail.go.id (Postfix) with ESMTP id 4BmlNs2nn0z9JJHy
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 21:52:29 +0700 (WIB)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.go.id;
-        s=default; t=1599663149;
-        bh=kzJWSXLBri+2IYskEEy5zjDCo07ZCxJ+7J/ZvAzbPwk=;
-        h=To:From:Subject:Date:From;
-        b=j0s1TCCX+XGhgOyr3bd/WU82vAlv4ukZ51E6u8zcYN/nqDxAkP2fmGhPZcCCkJy1W
-         EuA8U8r4zNMlcAz8gYme8uwvLAwuVrFKJ6Hih+n/2N9amk1RIgW30w4dyDMuN1QDhj
-         onzfBDwFpFh0v0uTlCsqipmdkOX7z2bbP3RRFxQMVVQ+lEEb4P1n32rsm7iHeeuk1N
-         uypkeTpvqecTapgiiBTcCTTu0V2laGNC4EeUC3NCMYQ3EGw0VojtzdbTsG1GJ9nX1t
-         f41rFeZtOuObnpKmSKShh+YO4YQrdflZ7z4fCdTNpY/B+ikoF8IywiBE9BgpQKW8Sb
-         cwfuHQFHKwwYw==
-X-Virus-Scanned: Debian amavisd-new at mailserver.mail.go.id
-Authentication-Results: mailserver.mail.go.id (amavisd-new);
-        dkim=pass (2048-bit key) header.d=mail.go.id
-Received: from mailserver.mail.go.id ([127.0.0.1])
-        by mailserver.mail.go.id (mailserver.mail.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id HXuJA95OeNJ9 for <linux-kernel@vger.kernel.org>;
-        Wed,  9 Sep 2020 21:52:27 +0700 (WIB)
-Received: from mail.go.id (unknown [14.169.252.80])
-        by mailserver.mail.go.id (Postfix) with ESMTPSA id 4Bml836pHJz9BMqP;
-        Wed,  9 Sep 2020 21:41:20 +0700 (WIB)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.go.id;
-        s=default; t=1599662514;
-        bh=kzJWSXLBri+2IYskEEy5zjDCo07ZCxJ+7J/ZvAzbPwk=;
-        h=To:From:Subject:Date:From;
-        b=4XirW6qg33xXQ4rrDPeP93kZXQQ5oA805NktRd0bNaonOglTbe1Ga35AN+muJQ9FC
-         gL6eFK6QfWHRnkOhIuIqWGOQHe7sLAuXVDHT2vVSRnKOKqzUrdugptOD9aQokFwutl
-         Yptd2puA8vzbfPvuK/pH4szyNrSd0Pa5EQSzsiVez0mgiOXZBoBqwymNAHtSeoDjby
-         fx6eO2aJIWRhgiUFayl7KKbxNJGT1KPE5B9jBSpl7FMd95Vh6Pvhia8xvZ+Eu3WBRX
-         r4EN/uqVGHSxVWtfwJvuvCBq6B3+thr2nMw4gIthkwFNq0OjlaBAzo4wa482qiQWKl
-         MzX1+9irc93OA==
-To:     "shilpa shet" <shilpa_shet@yahoo.com>,
-        "karmachari5" <karmachari5@yahoo.com>,
-        "pradhan" <pradhan@comcast.net>,
-        "meena sathe" <meena_sathe@yahoo.com>,
-        "unitedhindufront" <unitedhindufront@gmail.com>,
-        "linux kernel" <linux-kernel@vger.kernel.org>,
-        "eci sec jec nct delhi v k harit" <electionjec@gmail.com>,
-        "eci ex KJ RAO" <kjrao27@hotmail.com>
-From:   zamzam318 <eppi.permana@mail.go.id>
-Subject: =?UTF-8?Q?=5BAttenzione!=5D_Mattina._Spero_?= =?UTF-8?Q?tu_stia_bene.?=
-Message-ID: <cbad3eb9-c66c-40b0-b25b-071f73442e97@mail.go.id>
-Date:   Wed, 9 Sep 2020 04:41:21 -1000
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.1
+        Wed, 9 Sep 2020 13:11:08 -0400
+Received: from mga11.intel.com ([192.55.52.93]:19272 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730317AbgIIRK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:10:58 -0400
+IronPort-SDR: 4bZWr28V0muMRHpAwVI5HolmG70awak0f/3q3YhNfoSgXz6NVkQIc09KFxNKdXWWY+Uxn0iE4d
+ fHV/EtUi0Ubw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155842243"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="155842243"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 10:10:56 -0700
+IronPort-SDR: 5qT68Jsn0cJQAktVnxQeDCfV8fH0mpJfxEtiS+SvivGmWwong8TxccfnMWaV91WoWzHQrBbXr3
+ ET5pqWXNskJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="333886837"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by orsmga008.jf.intel.com with ESMTP; 09 Sep 2020 10:10:56 -0700
+Date:   Wed, 9 Sep 2020 10:10:56 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        eperezma@redhat.com, peterx@redhat.com, mst@redhat.com,
+        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] intel-iommu: don't disable ATS for device without page
+ aligned request
+Message-ID: <20200909171056.GF104641@otc-nc-03>
+References: <20200909083432.9464-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909083432.9464-1-jasowang@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-https://bit.ly/3lAAQqz
+Hi Jason
 
+On Wed, Sep 09, 2020 at 04:34:32PM +0800, Jason Wang wrote:
+> Commit 61363c1474b1 ("iommu/vt-d: Enable ATS only if the device uses
+> page aligned address.") disables ATS for device that can do unaligned
+> page request.
 
+Did you take a look at the PCI specification?
+Page Aligned Request is in the ATS capability Register.
 
+ATS Capability Register (Offset 0x04h)
 
+bit (5):
+Page Aligned Request - If Set, indicates the Untranslated address is always
+aligned to 4096 byte boundary. Setting this field is recommended. This
+field permits software to distinguish between implemntations compatible
+with this specification and those compatible with an earlier version of
+this specification in which a Requester was permitted to supply anything in
+bits [11:2].
 
-Buon divertimento,zamzam318@yahoo.com
+> 
+> This looks wrong, since the commit log said it's because the page
+> request descriptor doesn't support reporting unaligned request.
 
- 
+I don't think you can change the definition from ATS to PRI. Both are
+orthogonal feature.
 
+> 
+> A victim is Qemu's virtio-pci which doesn't advertise the page aligned
+> address. Fixing by disable PRI instead of ATS if device doesn't have
+> page aligned request.
 
+This is a requirement for the Intel IOMMU's.
 
+You say virtio, so is it all emulated device or you talking about some
+hardware that implemented virtio-pci compliant hw? If you are sure the
+device actually does comply with the requirement, but just not enumerating
+the capability, you can maybe work a quirk to overcome that?
 
- =====================NEWS=====================
+Now PRI also has an alignment requirement, and Intel IOMMU's requires that
+as well. If your device supports SRIOV as well, PASID and PRI are
+enumerated just on the PF and not the VF. You might want to pay attension
+to that. We are still working on a solution for that problem.
 
+I don't think this is the right fix for your problem. 
 
-
- Cutting down trash with bamboo packaging 
-Universal Biopack makes packaging that it sells to restaurants and manufacturers. But rather than plastic, it uses a mixture of bamboo and cassava.
-
-  
-
-==============================================
+> 
+> Cc: stable@vger.kernel.org
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
