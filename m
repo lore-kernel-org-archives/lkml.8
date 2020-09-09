@@ -2,112 +2,170 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B028C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6741C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7612087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDAE21D40
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 13:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599659571;
+	bh=9SV+/keZQaLlsbt6dY6GLxcu53/x0HY3jCvWzsM40EU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=JMwGffpG35MfF6ZNdHAe8mi+CeWtkepyFm+lXpCzfQjcQTpTk5rSiqEHvkXrELbXu
+	 OgUJ1WFvX6T1SBwCCXjJ0PZmQsHqjUSPFOCy8rajbrAuu1wTPBVY1ufG5Z5YefYIFe
+	 bBqVFcGUxvh9O+aEHvcZkod9eVG7vmEmGHwHJeSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgIINvy (ORCPT
+        id S1730479AbgIINws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 09:51:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51252 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730400AbgIINZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 09:25:01 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DA026C71AC4136B1ABFA;
-        Wed,  9 Sep 2020 21:23:51 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:23:49 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <sgoutham@marvell.com>,
-        <bprakash@marvell.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: cavium: Fix a bunch of kerneldoc parameter issues
-Date:   Wed, 9 Sep 2020 21:21:09 +0800
-Message-ID: <20200909132109.71466-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Sep 2020 09:52:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730236AbgIINX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 09:23:58 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B71B2087C;
+        Wed,  9 Sep 2020 13:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599657813;
+        bh=9SV+/keZQaLlsbt6dY6GLxcu53/x0HY3jCvWzsM40EU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NnNoII6trox+kORTlYP8POR6Q5+c/+Nm5eQVS706pe6Ta0P53Jc40DO1fkCBVvIpe
+         VgISw0Dkv3b7E95vQdGdQW1IbvU6zuTGNpQIjncw0D5+v32sc6R2x1cdunqq3Hs7e6
+         OWmhLCkOtCLDYGDqNAuGsFr4WIeLcJOspvrBSvFY=
+Date:   Wed, 9 Sep 2020 08:23:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        John Garry <john.garry@huawei.com>,
+        Don Brace <don.brace@microsemi.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
+Subject: Re: [PATCH v2 01/15] scsi: megaraid_sas: use generic power management
+Message-ID: <20200909132332.GA696701@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909100315.GA13015@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename ptp to ptp_info.
+On Wed, Sep 09, 2020 at 03:33:15PM +0530, Vaibhav Gupta wrote:
+> On Tue, Sep 08, 2020 at 12:32:09PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Jul 20, 2020 at 07:04:14PM +0530, Vaibhav Gupta wrote:
+> > > With legacy PM hooks, it was the responsibility of a driver to manage PCI
+> > > states and also the device's power state. The generic approach is to let
+> > > the PCI core handle the work.
+> > > 
+> > > PCI core passes "struct device*" as an argument to the .suspend() and
+> > > .resume() callbacks. As the .suspend() work with "struct instance*",
+> > > extract it from "struct device*" using dev_get_drv_data().
+> > > 
+> > > Driver was also using PCI helper functions like pci_save/restore_state(),
+> > > pci_disable/enable_device(), pci_set_power_state() and pci_enable_wake().
+> > > They should not be invoked by the driver.
+> > > 
+> > > Compile-tested only.
+> > > 
+> > > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> > > ---
+> > >  drivers/scsi/megaraid/megaraid_sas_base.c | 61 ++++++-----------------
+> > >  1 file changed, 16 insertions(+), 45 deletions(-)
+> > > 
+> > > diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+> > > index 00668335c2af..4a6ee7778977 100644
+> > > --- a/drivers/scsi/megaraid/megaraid_sas_base.c
+> > > +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+> > > @@ -7539,25 +7539,21 @@ static void megasas_shutdown_controller(struct megasas_instance *instance,
+> > >  	megasas_return_cmd(instance, cmd);
+> > >  }
+> > >  
+> > > -#ifdef CONFIG_PM
+> > >  /**
+> > >   * megasas_suspend -	driver suspend entry point
+> > > - * @pdev:		PCI device structure
+> > > - * @state:		PCI power state to suspend routine
+> > > + * @dev:		Device structure
+> > >   */
+> > > -static int
+> > > -megasas_suspend(struct pci_dev *pdev, pm_message_t state)
+> > > +static int __maybe_unused
+> > > +megasas_suspend(struct device *dev)
+> > >  {
+> > > -	struct megasas_instance *instance;
+> > > -
+> > > -	instance = pci_get_drvdata(pdev);
+> > > +	struct megasas_instance *instance = dev_get_drvdata(dev);
+> > >  
+> > >  	if (!instance)
+> > >  		return 0;
+> > >  
+> > >  	instance->unload = 1;
+> > >  
+> > > -	dev_info(&pdev->dev, "%s is called\n", __func__);
+> > > +	dev_info(dev, "%s is called\n", __func__);
+> > >  
+> > >  	/* Shutdown SR-IOV heartbeat timer */
+> > >  	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
+> > > @@ -7579,7 +7575,7 @@ megasas_suspend(struct pci_dev *pdev, pm_message_t state)
+> > >  
+> > >  	tasklet_kill(&instance->isr_tasklet);
+> > >  
+> > > -	pci_set_drvdata(instance->pdev, instance);
+> > > +	dev_set_drvdata(dev, instance);
+> > 
+> > It *might* be correct to replace "instance->pdev" with "dev", but it's
+> > not obvious and deserves some explanation.  It's true that you can
+> > replace &pdev->dev with dev, but I don't know anything about
+> > instance->dev.
 
-Fix W=1 compile warnings (invalid kerneldoc):
+Sorry, I meant "instance->pdev" here.
 
-drivers/net/ethernet/cavium/common/cavium_ptp.c:94: warning: Excess function parameter 'ptp' description in 'cavium_ptp_adjfine'
-drivers/net/ethernet/cavium/common/cavium_ptp.c:141: warning: Excess function parameter 'ptp' description in 'cavium_ptp_adjtime'
-drivers/net/ethernet/cavium/common/cavium_ptp.c:163: warning: Excess function parameter 'ptp' description in 'cavium_ptp_gettime'
-drivers/net/ethernet/cavium/common/cavium_ptp.c:185: warning: Excess function parameter 'ptp' description in 'cavium_ptp_settime'
-drivers/net/ethernet/cavium/common/cavium_ptp.c:208: warning: Excess function parameter 'ptp' description in 'cavium_ptp_enable'
+> > I don't think this change is actually necessary, is it?
+> > "instance->pdev" is still a pci_dev pointer, so pci_set_drvdata()
+> > should work fine. ...
+> > 
+> There is no instance->dev . The 'dev' passed dev_set_drvdata() is
+> same &pdev->dev. 
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/ethernet/cavium/common/cavium_ptp.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Yes, it's true that "dev" here is the same as the "&pdev->dev" we had
+previously.  But we passed "instance->pdev" (not "pdev") to
+pci_set_drvdata().  So the question is whether instance->pdev->dev ==
+dev.
 
-diff --git a/drivers/net/ethernet/cavium/common/cavium_ptp.c b/drivers/net/ethernet/cavium/common/cavium_ptp.c
-index 81ff9ac73f9a..9fd717b9cf69 100644
---- a/drivers/net/ethernet/cavium/common/cavium_ptp.c
-+++ b/drivers/net/ethernet/cavium/common/cavium_ptp.c
-@@ -86,7 +86,7 @@ EXPORT_SYMBOL(cavium_ptp_put);
- 
- /**
-  * cavium_ptp_adjfine() - Adjust ptp frequency
-- * @ptp: PTP clock info
-+ * @ptp_info: PTP clock info
-  * @scaled_ppm: how much to adjust by, in parts per million, but with a
-  *              16 bit binary fractional field
-  */
-@@ -134,7 +134,7 @@ static int cavium_ptp_adjfine(struct ptp_clock_info *ptp_info, long scaled_ppm)
- 
- /**
-  * cavium_ptp_adjtime() - Adjust ptp time
-- * @ptp:   PTP clock info
-+ * @ptp_info:   PTP clock info
-  * @delta: how much to adjust by, in nanosecs
-  */
- static int cavium_ptp_adjtime(struct ptp_clock_info *ptp_info, s64 delta)
-@@ -155,7 +155,7 @@ static int cavium_ptp_adjtime(struct ptp_clock_info *ptp_info, s64 delta)
- 
- /**
-  * cavium_ptp_gettime() - Get hardware clock time with adjustment
-- * @ptp: PTP clock info
-+ * @ptp_info: PTP clock info
-  * @ts:  timespec
-  */
- static int cavium_ptp_gettime(struct ptp_clock_info *ptp_info,
-@@ -177,7 +177,7 @@ static int cavium_ptp_gettime(struct ptp_clock_info *ptp_info,
- 
- /**
-  * cavium_ptp_settime() - Set hardware clock time. Reset adjustment
-- * @ptp: PTP clock info
-+ * @ptp_info: PTP clock info
-  * @ts:  timespec
-  */
- static int cavium_ptp_settime(struct ptp_clock_info *ptp_info,
-@@ -199,7 +199,7 @@ static int cavium_ptp_settime(struct ptp_clock_info *ptp_info,
- 
- /**
-  * cavium_ptp_enable() - Request to enable or disable an ancillary feature.
-- * @ptp: PTP clock info
-+ * @ptp_info: PTP clock info
-  * @rq:  request
-  * @on:  is it on
-  */
--- 
-2.17.1
+They *might* be the same, but I don't think it's obvious.
 
+> The dev pointer used here, points to same value.
+> 
+> pci_get_drvdata() and pci_set_drvdata() invoke dev_get_drvdata() and
+> dev_set_drvdata() respectively. And they do nothing else. Seems like
+> additional unnecessary function calls and operations.
