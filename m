@@ -2,143 +2,141 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94574C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB7EC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5077F221E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CE121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Er4vt2Rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbgIIRQh (ORCPT
+        id S1730483AbgIIRQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 9 Sep 2020 13:16:37 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:53328 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730177AbgIIP2P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:28:15 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1kG0i8-000WWy-GA; Wed, 09 Sep 2020 08:04:32 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1kG0i7-0006Mj-GK; Wed, 09 Sep 2020 08:04:32 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kairui Song <kasong@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        kexec@lists.infradead.org
-References: <20200909075016.104407-1-kasong@redhat.com>
-Date:   Wed, 09 Sep 2020 09:04:16 -0500
-In-Reply-To: <20200909075016.104407-1-kasong@redhat.com> (Kairui Song's
-        message of "Wed, 9 Sep 2020 15:50:13 +0800")
-Message-ID: <87ft7r82sf.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+Received: from mail-dm6nam12on2055.outbound.protection.outlook.com ([40.107.243.55]:6240
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730104AbgIIP2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:28:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZtyXAIt6OyybJkr9nfs4+eCO6Byk3WkxuebvMvjmi2LVzv4baRQSNs7GRG0u54r5T6EFe+ot7rmzbGUV33XkTpoi00MHqn2M7tJz1Znfn3zDUI9cBQQwz6yVOzbegd+ZfjhRX6z5p/LDuOb3SpYfx2ooYcr0W3w+1oKvluA4BNiqQ2cBRtiFfM1vTBm2QnhxkZNAYyIEBDtsP9KqsOx7besePh0Z3qSKfWdRUADptkIE81TH5PA9A9wdv8GjEN2L5TYT8gY+iiaO98F9wFvIOSJyOws9w2b1XoMdedYjdbSkvDjOQx+aoMCIpiFmMo6nlYlb072UbUWSmDKHh0YdvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0LIqqRRZFHpqrPav0tzguRT+BK+vaosDlAzX5ow/r+o=;
+ b=MTuK4+97/z8/FAkrErJOJNnzI5F/wgNQLSVfoGJuSnjoKgKBKzQhSPKGLjZ5PTlv/HIeC+9p5HBGT0n/wltOFHSkZfaaY+NHhwX+XkbA/ODiS0pLGtW/cQIiIrmMntn9BvN/4oA8trRs+wLjsBAUENs1CewNLm2M67VB5vqpqBrPAwQpkNeLpGpQqwd64eP3pIVvEbPVvwELxqeXd/8Ldex4x/iEtapvhCik+3KmT9PmwaklRBRHyCGIRSpd3io7r2SHV8p5gjgHk0GpJE3vXm1OezlBoSfHtTKxBL7bfL0b1JX/TycvlCa3bjt0ibm+RenlWx1MZ4D1+yv4MFg7hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0LIqqRRZFHpqrPav0tzguRT+BK+vaosDlAzX5ow/r+o=;
+ b=Er4vt2RnPnKUahUHfLtTh30XkRad6E2ojhq5MxOEznOYr2jeJCNuY3j8Q8JYhU5s9JAopkobluboUqmIcVpTHYwNdVwdzfZg1uYTMVZbLMSHjnXE87B4GfhpB4dqTQT3ki1nPwNIMYzDX1PTR9/ySm/5DchbphY2E1m/fAnNKzQ=
+Received: from MN2PR19CA0058.namprd19.prod.outlook.com (2603:10b6:208:19b::35)
+ by BL0PR02MB6516.namprd02.prod.outlook.com (2603:10b6:208:1ca::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 9 Sep
+ 2020 15:27:17 +0000
+Received: from BL2NAM02FT046.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:19b:cafe::fc) by MN2PR19CA0058.outlook.office365.com
+ (2603:10b6:208:19b::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend
+ Transport; Wed, 9 Sep 2020 15:27:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT046.mail.protection.outlook.com (10.152.76.118) with Microsoft SMTP
+ Server id 15.20.3348.17 via Frontend Transport; Wed, 9 Sep 2020 15:27:16
+ +0000
+Received: from [149.199.38.66] (port=45015 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <amit.kumar-mahapatra@xilinx.com>)
+        id 1kG1zv-00055w-KW; Wed, 09 Sep 2020 08:26:59 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <amit.kumar-mahapatra@xilinx.com>)
+        id 1kG20B-00068i-Fh; Wed, 09 Sep 2020 08:27:15 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 089FRDVE024327;
+        Wed, 9 Sep 2020 08:27:13 -0700
+Received: from [10.140.6.25] (helo=xhdnagasure40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <amit.kumar-mahapatra@xilinx.com>)
+        id 1kG208-00068K-Ll; Wed, 09 Sep 2020 08:27:13 -0700
+From:   Amit Kumar Mahapatra <amit.kumar-mahapatra@xilinx.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.simek@xilinx.com, sgoud@xilinx.com, nagasure@xilinx.com,
+        Amit Kumar Mahapatra <amit.kumar-mahapatra@xilinx.com>
+Subject: [PATCH 0/3]spi: spi-zynqmp-gqspi: Update driver to use spi-mem framework
+Date:   Wed,  9 Sep 2020 09:27:05 -0600
+Message-Id: <20200909152708.2767-1-amit.kumar-mahapatra@xilinx.com>
+X-Mailer: git-send-email 2.17.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1kG0i7-0006Mj-GK;;;mid=<87ft7r82sf.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19GmTEcapAWi/Q2ocXgqmTk+cb5s6MSJTg=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC PATCH 0/3] Add writing support to vmcore for reusing oldmem
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-MS-Office365-Filtering-Correlation-Id: 5fe18689-7f25-4e37-8921-08d854d4d5c1
+X-MS-TrafficTypeDiagnostic: BL0PR02MB6516:
+X-Microsoft-Antispam-PRVS: <BL0PR02MB6516A644B9AD6F44A10CD5B8BA260@BL0PR02MB6516.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UzL4jyiSb5TPjIEx52DBVuO2zxFtoLuDwAxCq8HFfTI4T2yuguxJapYAFczc9G9lxJsfORFpT5WruZ1kRkeGBCWhmpa5gk2PTxMNbZoCFURHZa5mdzm2yOtYD2DylfCBWDQ/LDs9UML4UDzBCYr8wYeXpv+HZTHxq4Nt92lsk6SUvfZOKnh3hkux+MJRZZUAfIo82QoCF2u+YGy+UV6hG5AijM9LjEK0O3qrzh8C49C+PvwHlBgnFJUE10iQ+dG+dnA3vtJq8Eq6p40K0+ZxG5/vcW0+KR25sfW7IIWYwPlzPIFauPVUuQcwrLgRayJYnzSXeApr7vST7y+H4fppTiJk5YwBS3/XNSgWG7hBe7jdKM8H+OXr2lkSfZJU3/nBfotwCrbCOiBfCCD/WTBvnw==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(39860400002)(376002)(346002)(136003)(46966005)(426003)(70206006)(70586007)(47076004)(9786002)(82740400003)(316002)(8936002)(6666004)(107886003)(5660300002)(2616005)(2906002)(36756003)(6916009)(26005)(1076003)(15650500001)(8676002)(186003)(336012)(82310400003)(4744005)(4326008)(356005)(81166007)(478600001)(83380400001)(7696005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 15:27:16.8735
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fe18689-7f25-4e37-8921-08d854d4d5c1
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT046.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB6516
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kairui Song <kasong@redhat.com> writes:
+This patch series:
+ - Fixes kernel-doc warnings in ZynqMP qspi controller driver file.
+ - Updates the ZynqMP qspi controller driver to use spi-mem framework.
+ - Fixes incorrect indentation in ZynqMP qspi controller driver file.
+---
+Tested: flashcp and mtd_utils
+Branch: for-next
+---
+Amit Kumar Mahapatra (3):
+  spi: spi-zynqmp-gqspi: Fix kernel-doc warnings
+  spi: spi-zynqmp-gqspi: Update driver to use spi-mem framework
+  spi: spi-zynqmp-gqspi: Fix incorrect indentation
 
-> Currently vmcore only supports reading, this patch series is an RFC
-> to add writing support to vmcore. It's x86_64 only yet, I'll add other
-> architecture later if there is no problem with this idea.
->
-> My purpose of adding writing support is to reuse the crashed kernel's
-> old memory in kdump kernel, reduce kdump memory pressure, and
-> allow kdump to run with a smaller crashkernel reservation.
->
-> This is doable because in most cases, after kernel panic, user only
-> interested in the crashed kernel itself, and userspace/cache/free
-> memory pages are not dumped. `makedumpfile` is widely used to skip
-> these pages. Kernel pages usually only take a small part of
-> the whole old memory. So there will be many reusable pages.
->
-> By adding writing support, userspace then can use these pages as a fast
-> and temporary storage. This helps reduce memory pressure in many ways.
->
-> For example, I've written a POC program based on this, it will find
-> the reusable pages, and creates an NBD device which maps to these pages.
-> The NBD device can then be used as swap, or to hold some temp files
-> which previouly live in RAM.
->
-> The link of the POC tool: https://github.com/ryncsn/kdumpd
+ drivers/spi/spi-zynqmp-gqspi.c | 720 +++++++++++++++++++--------------
+ 1 file changed, 407 insertions(+), 313 deletions(-)
 
-A couple of thoughts.
-1) Unless I am completely mistaken treating this as a exercise in
-   memory hotplug would be much simpler.
+--
+2.17.1
 
-   AKA just plug in the memory that is not needed as part of the kdump.
-
-   I see below that you have problems doing this because
-   of fragmentation.  I still think hotplug is doable using some
-   kind of fragmented memory zone.
-   
-2) The purpose of the memory reservation is because hardware is
-   still potentially running agains the memory of the old kernel.
-
-   By the time we have brought up a new kernel enough of the hardware
-   may have been reinitialized that we don't have to worry about
-   hardware randomly dma'ing into the memory used by the old kernel.
-
-   With IOMMUs and care we may be able to guarantee for some machine
-   configurations it is impossible for DMA to come from some piece of
-   hardware that is present but the kernel does not have a driver
-   loaded for.
-
-
-I really do not like this approach because it is fundamentlly doing the
-wrong thing.  Adding write support to read-only drivers.  I do not see
-anywhere that you even mentioned the hard problem and the reason we
-reserve memory in the first place.  Hardware spontaneously DMA'ing onto
-it.
-
-> It's have been a long time issue that kdump suffers from OOM issue
-> with limited crashkernel memory. So reusing old memory could be very
-> helpful.
-
-There is a very fine line here between reusing existing code (aka
-drivers and userspace) and doing something that should work.
-
-It might make sense to figure out what is using so much memory
-that an OOM is triggered.
-
-Ages ago I did something that was essentially dumping the kernels printk
-buffer to the serial console in case of a crash and I had things down to
-something comparatively miniscule like 8M or less.
-
-My memory is that historically it has been high performance scsi raid
-drivers or something like that, that are behind the need to have such
-large memory reservations.
-
-Now that I think about it, you aren't by any chance doing something
-silly like running systemd in your initrd are you?  Are these OOMs by
-any chance a userspace problem rather than a problem with inefficient
-drivers?
-
-
-In summary you either need to show that it is safe to reuse the
-memory of the old kernel, or do some work to reduce the memory footprint
-of the crashdump kernel, and the crashdump userspace. 
-
-Eric
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
