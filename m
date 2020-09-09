@@ -2,196 +2,283 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F978C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435B5C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D542087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBFD208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HC5Ww9Nt"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MhOb6r4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbgIIIME (ORCPT
+        id S1726970AbgIIILL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729860AbgIIIL6 (ORCPT
+        Wed, 9 Sep 2020 04:11:11 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14047 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgIIILF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:11:58 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C935C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:11:58 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id j185so857078vsc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nKdqPjqDFfHRMf/XA+KUr72ZflIzyRtrjQk6IDY1xAE=;
-        b=HC5Ww9NtA0ci3XvaOTxTTQu5xn6MYQ0fbWSI8XpDmXdD5/zURS4DHti0j2deZrqQxf
-         BsoHZHOPDTzwpJPG4nrr1DUYw4E/2CnLlOAqnFAkGomr9XXzd+8f+BdL+zyRL3H5Gk3t
-         0sT4JTOY7gmPywBd8128yMTp9sjQ3cVxGf+r5gHyiLALFuE7obUQhn/SAGmMZg/d5xB8
-         HV9elqNF5GSxucmsrHz+a9YXID4gvx+rERxM6KecjYsmsgnUog4jmMExk0s8jIM8Aj9g
-         48tfp85bAoEPAQpkCGuccLvfy9hzRaUkqFisvSatHNuA1X/VHC122zDIk/6EJ0+1TWR+
-         BE2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nKdqPjqDFfHRMf/XA+KUr72ZflIzyRtrjQk6IDY1xAE=;
-        b=NCNgb5VY7SA/LrU+B6+ijYevTXmWSTRENjDyg/hEyNFjfMRmh7cdXjllvYiIZfenXd
-         O/rILR/mmWfi5gwQ6SJSjbW07fmebLBdEyGX4Ia7xUAuGX1ndzYQ61VA2kp5sqxa8XrE
-         u0k2/+NVsDQbr2+LHl6aP9fvHgXWzYdga652ACf9YHsXOzpCC0bCkvJeU8kqyZety3ay
-         n4JO46DmZMqBeHvLB+5sGQPJ2QrZV1nLx7xc9Aa1niaKCkJGmkKdxDPg73WjlVgyiSRf
-         It3PFq7HhRLj8QXtXi+py50xfOLiDjeLbJRDCgTuO2l+8xh8XXQmmVxkTHPswMVMU3FB
-         KBDg==
-X-Gm-Message-State: AOAM530i9Xi71FhAEVFGhpqC2UcLuSkXPNzo+gcfFs8iOy2K/2XJomk1
-        GqGrBY5evAv6uP6oH4I6J9Yy2fpZ0pBb0GZPqkoL7w==
-X-Google-Smtp-Source: ABdhPJwOrsN0F3PCf7X8sxg5rr2tDNxsyMAPCRs0iEwwBZyxPVE2ENQnIIsDNxArWPzu2lDFlX3pP59bN7/EAYDZoDk=
-X-Received: by 2002:a67:7c52:: with SMTP id x79mr1548525vsc.21.1599639117011;
- Wed, 09 Sep 2020 01:11:57 -0700 (PDT)
+        Wed, 9 Sep 2020 04:11:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f588d920000>; Wed, 09 Sep 2020 01:08:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 09 Sep 2020 01:11:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 09 Sep 2020 01:11:05 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
+ 2020 08:11:01 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 9 Sep 2020 08:11:01 +0000
+Received: from jckuo-lt.nvidia.com (Not Verified[10.19.100.126]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f588e130000>; Wed, 09 Sep 2020 01:11:00 -0700
+From:   JC Kuo <jckuo@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <robh@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>, JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH v3 07/15] phy: tegra: xusb: Add sleepwalk and suspend/resume
+Date:   Wed, 9 Sep 2020 16:10:33 +0800
+Message-ID: <20200909081041.3190157-8-jckuo@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200909081041.3190157-1-jckuo@nvidia.com>
+References: <20200909081041.3190157-1-jckuo@nvidia.com>
 MIME-Version: 1.0
-References: <20200908152221.082184905@linuxfoundation.org>
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 9 Sep 2020 13:41:45 +0530
-Message-ID: <CA+G9fYsjO2khWuitvNrtrmVuOW3hQiWNc+XHoTmTE0+xKT3dBw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/88] 4.19.144-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599638930; bh=jJfxEXfaUKOiABpCTz58nFn3fkjkzFBrCqgg90V/bw8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=MhOb6r4nYkhXF9UBM+x/a9pXK/ovy+Xuv7MfOpVSf0jNUENosE+Jlbx+ZZNTr/GAz
+         GGuBI6bIF3GofmRwzBuKyo2ldM6FHviOS9qV4DhqwOYLiYbCXWNMoHY/gtxzEsBKQ9
+         mXRTcYlNAOBH4usXIG1a9jtEwdxdDBfIc0nhtHa5CkiQMLfXTJJTKKJLmd3jHJyZ/d
+         7W7Oka8XCzt/xOx3Td7HV5/4USHnECQlB1c0VhJfo7DQXS2xIp+Fh5aG6FXGGwgNNu
+         ZdjbYvYp+iHCID8y1kM9zkPsoKw3V3YFyikH4PV/iV/2ifxMWW8ZLU6iEV67sVX5+a
+         wV7DwMp82Yjnw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 at 21:18, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.144 release.
-> There are 88 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.144-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+This commit adds sleepwalk/wake and suspend/resume interfaces
+to Tegra XUSB PHY driver.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Tegra XUSB host controller driver makes use of sleepwalk functions
+to enable/disable sleepwalk circuit which is in always-on partition
+and can respond to USB resume signals when controller is not powered.
+Sleepwalk can be enabled/disabled for any USB UPHY individually.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+  - tegra_xusb_padctl_enable_phy_sleepwalk()
+  - tegra_xusb_padctl_disable_phy_sleepwalk()
 
-Summary
-------------------------------------------------------------------------
+Tegra XUSB host controller driver makes use of wake functions to
+enable/disable/query wake circuit which is in always-on partition
+can wake system up when USB resume happens.
+Wake circuit can be enabled/disabled for any USB PHY individually.
 
-kernel: 4.19.144-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 539e30e8c9cd0a71379976e504f64e148d714ba3
-git describe: v4.19.143-89-g539e30e8c9cd
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.143-89-g539e30e8c9cd
+  - tegra_xusb_padctl_enable_phy_wake()
+  - tegra_xusb_padctl_disable_phy_wake()
+  - tegra_xusb_padctl_remote_wake_detected()
 
-No regressions (compared to build v4.19.143)
+This commit also adds two system suspend stubs that can be used to
+save and restore XUSB PADCTL context during system suspend and
+resume.
+  - tegra_xusb_padctl_suspend_noirq()
+  - tegra_xusb_padctl_resume_noirq()
 
-No fixes (compared to build v4.19.143)
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
+---
+v3:
+   commit message improvement, no change in code
 
-Ran 36520 total tests in the following environments and test suites.
+ drivers/phy/tegra/xusb.c       | 73 ++++++++++++++++++++++++++++++++++
+ drivers/phy/tegra/xusb.h       |  9 +++++
+ include/linux/phy/tegra/xusb.h |  8 ++++
+ 3 files changed, 90 insertions(+)
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* ltp-tracing-tests
-* perf
-* v4l2-compliance
-* ltp-controllers-tests
-* ltp-fs-tests
-* ltp-hugetlb-tests
-* network-basic-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* igt-gpu-tools
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index b92478a350df..bc700e6a5519 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -1274,10 +1274,36 @@ static int tegra_xusb_padctl_remove(struct platform=
+_device *pdev)
+ 	return err;
+ }
+=20
++static int tegra_xusb_padctl_suspend_noirq(struct device *dev)
++{
++	struct tegra_xusb_padctl *padctl =3D dev_get_drvdata(dev);
++
++	if (padctl->soc && padctl->soc->ops && padctl->soc->ops->suspend_noirq)
++		return padctl->soc->ops->suspend_noirq(padctl);
++
++	return 0;
++}
++
++static int tegra_xusb_padctl_resume_noirq(struct device *dev)
++{
++	struct tegra_xusb_padctl *padctl =3D dev_get_drvdata(dev);
++
++	if (padctl->soc && padctl->soc->ops && padctl->soc->ops->resume_noirq)
++		return padctl->soc->ops->resume_noirq(padctl);
++
++	return 0;
++}
++
++static const struct dev_pm_ops tegra_xusb_padctl_pm_ops =3D {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_xusb_padctl_suspend_noirq,
++				      tegra_xusb_padctl_resume_noirq)
++};
++
+ static struct platform_driver tegra_xusb_padctl_driver =3D {
+ 	.driver =3D {
+ 		.name =3D "tegra-xusb-padctl",
+ 		.of_match_table =3D tegra_xusb_padctl_of_match,
++		.pm =3D &tegra_xusb_padctl_pm_ops,
+ 	},
+ 	.probe =3D tegra_xusb_padctl_probe,
+ 	.remove =3D tegra_xusb_padctl_remove,
+@@ -1344,6 +1370,53 @@ int tegra_xusb_padctl_hsic_set_idle(struct tegra_xus=
+b_padctl *padctl,
+ }
+ EXPORT_SYMBOL_GPL(tegra_xusb_padctl_hsic_set_idle);
+=20
++int tegra_xusb_padctl_enable_phy_sleepwalk(struct tegra_xusb_padctl *padct=
+l, struct phy *phy,
++					   enum usb_device_speed speed)
++{
++	if (padctl->soc->ops->enable_phy_sleepwalk)
++		return padctl->soc->ops->enable_phy_sleepwalk(padctl, phy,
++							      speed);
++
++	return -ENOTSUPP;
++}
++EXPORT_SYMBOL_GPL(tegra_xusb_padctl_enable_phy_sleepwalk);
++
++int tegra_xusb_padctl_disable_phy_sleepwalk(struct tegra_xusb_padctl *padc=
+tl, struct phy *phy)
++{
++	if (padctl->soc->ops->disable_phy_sleepwalk)
++		return padctl->soc->ops->disable_phy_sleepwalk(padctl, phy);
++
++	return -ENOTSUPP;
++}
++EXPORT_SYMBOL_GPL(tegra_xusb_padctl_disable_phy_sleepwalk);
++
++int tegra_xusb_padctl_enable_phy_wake(struct tegra_xusb_padctl *padctl, st=
+ruct phy *phy)
++{
++	if (padctl->soc->ops->enable_phy_wake)
++		return padctl->soc->ops->enable_phy_wake(padctl, phy);
++
++	return -ENOTSUPP;
++}
++EXPORT_SYMBOL_GPL(tegra_xusb_padctl_enable_phy_wake);
++
++int tegra_xusb_padctl_disable_phy_wake(struct tegra_xusb_padctl *padctl, s=
+truct phy *phy)
++{
++	if (padctl->soc->ops->disable_phy_wake)
++		return padctl->soc->ops->disable_phy_wake(padctl, phy);
++
++	return -ENOTSUPP;
++}
++EXPORT_SYMBOL_GPL(tegra_xusb_padctl_disable_phy_wake);
++
++bool tegra_xusb_padctl_remote_wake_detected(struct tegra_xusb_padctl *padc=
+tl, struct phy *phy)
++{
++	if (padctl->soc->ops->remote_wake_detected)
++		return padctl->soc->ops->remote_wake_detected(phy);
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(tegra_xusb_padctl_remote_wake_detected);
++
+ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padct=
+l,
+ 					   unsigned int port, bool enable)
+ {
+diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+index 9463bc74729e..c796344e3062 100644
+--- a/drivers/phy/tegra/xusb.h
++++ b/drivers/phy/tegra/xusb.h
+@@ -11,6 +11,7 @@
+ #include <linux/mutex.h>
+ #include <linux/workqueue.h>
+=20
++#include <linux/usb/ch9.h>
+ #include <linux/usb/otg.h>
+ #include <linux/usb/role.h>
+=20
+@@ -396,6 +397,8 @@ struct tegra_xusb_padctl_ops {
+ 			 const struct tegra_xusb_padctl_soc *soc);
+ 	void (*remove)(struct tegra_xusb_padctl *padctl);
+=20
++	int (*suspend_noirq)(struct tegra_xusb_padctl *padctl);
++	int (*resume_noirq)(struct tegra_xusb_padctl *padctl);
+ 	int (*usb3_save_context)(struct tegra_xusb_padctl *padctl,
+ 				 unsigned int index);
+ 	int (*hsic_set_idle)(struct tegra_xusb_padctl *padctl,
+@@ -404,6 +407,12 @@ struct tegra_xusb_padctl_ops {
+ 				    unsigned int index, bool enable);
+ 	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
+ 	int (*utmi_port_reset)(struct phy *phy);
++	int (*enable_phy_sleepwalk)(struct tegra_xusb_padctl *padctl, struct phy =
+*phy,
++				    enum usb_device_speed speed);
++	int (*disable_phy_sleepwalk)(struct tegra_xusb_padctl *padctl, struct phy=
+ *phy);
++	int (*enable_phy_wake)(struct tegra_xusb_padctl *padctl, struct phy *phy)=
+;
++	int (*disable_phy_wake)(struct tegra_xusb_padctl *padctl, struct phy *phy=
+);
++	bool (*remote_wake_detected)(struct phy *phy);
+ };
+=20
+ struct tegra_xusb_padctl_soc {
+diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.=
+h
+index 71d956935405..f24d4744db17 100644
+--- a/include/linux/phy/tegra/xusb.h
++++ b/include/linux/phy/tegra/xusb.h
+@@ -8,6 +8,7 @@
+=20
+ struct tegra_xusb_padctl;
+ struct device;
++enum usb_device_speed;
+=20
+ struct tegra_xusb_padctl *tegra_xusb_padctl_get(struct device *dev);
+ void tegra_xusb_padctl_put(struct tegra_xusb_padctl *padctl);
+@@ -23,4 +24,11 @@ int tegra_xusb_padctl_set_vbus_override(struct tegra_xus=
+b_padctl *padctl,
+ int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
+ int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
+ 					 unsigned int port);
++int tegra_xusb_padctl_enable_phy_sleepwalk(struct tegra_xusb_padctl *padct=
+l, struct phy *phy,
++					   enum usb_device_speed speed);
++int tegra_xusb_padctl_disable_phy_sleepwalk(struct tegra_xusb_padctl *padc=
+tl, struct phy *phy);
++int tegra_xusb_padctl_enable_phy_wake(struct tegra_xusb_padctl *padctl, st=
+ruct phy *phy);
++int tegra_xusb_padctl_disable_phy_wake(struct tegra_xusb_padctl *padctl, s=
+truct phy *phy);
++bool tegra_xusb_padctl_remote_wake_detected(struct tegra_xusb_padctl *padc=
+tl, struct phy *phy);
++
+ #endif /* PHY_TEGRA_XUSB_H */
 --=20
-Linaro LKFT
-https://lkft.linaro.org
+2.25.1
+
