@@ -2,188 +2,151 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAAFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A2DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7748520BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VNowW2ly"
+	by mail.kernel.org (Postfix) with ESMTP id 09C0B20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbgIJCZV (ORCPT
+        id S1730869AbgIJCZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgIJCMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:12:03 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3F5C06135B
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:07 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a9so2177643pjg.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
-        b=VNowW2ly+OWfn5GZCmTDhCW9xLT4atxeanWR69s2Rzr4xxAn6MOwk/5Z3N1pfmDbYm
-         s3aKeV7ebDpugOu0L1SpWSxEYCYuN3cmSv1/YT6Wr6t0hN00I2/5e0ohYQ3gQHei8Cu2
-         qGNS0CCGRFY/gn/VDGEkQt97AGutqkEmhdKGE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6TZt2amfy5qzjmnWe5xTFuhN9jzSvSMQp9lB8VeO0GI=;
-        b=OUOUAH17ATdkqsHMXqX4DvNFktxWlTV8te1vlsIYSEmB7ODvuOu2QnQrvzlhfR8T2u
-         1yH+XpGwCJcifyjkmhj+4E2hxg5wcSAbJ7fzZIMbxQGHgyx1MVIWFyKZRx5UDHztx5RI
-         6LqhYTW0f9LUwbqq1g3kwV+jOEb+d3NG6N1r/+E1vtgYoxXW3d4mT4gpd2LsFWSd859y
-         71axIUfBxBELSXor/E+xKBbAV6URt8t012aaVnYFC5G657uAunrSGof41plI+AXLBMX/
-         S4OVSPtzx2N0BzzaJbvqrFd2kLVI0psn4ZmO8Br+/MBcBI3E7B/3Pm+yGrArC1gwejwb
-         LIUw==
-X-Gm-Message-State: AOAM531MjhxSaSeVj08bpFFjY+jozN8n7oqtQAfmI6pUj6+TBWanRI5G
-        xYW5wMPbDvxWhuPjI2rFDf4RCw==
-X-Google-Smtp-Source: ABdhPJweiVf7XGI9JekQmbo0Ln+nbnNIqf+ht1aIYPxTWmEQOz0wAdQpZJbtlAi9hvBRiBFId7uBwQ==
-X-Received: by 2002:a17:90b:4018:: with SMTP id ie24mr3066548pjb.9.1599698946895;
-        Wed, 09 Sep 2020 17:49:06 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 17:49:06 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-Subject: [PATCH v3 02/10] phy: qcom-qmp: Move phy mode into struct qmp_phy
-Date:   Wed,  9 Sep 2020 17:48:54 -0700
-Message-Id: <20200910004902.2252694-3-swboyd@chromium.org>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-In-Reply-To: <20200910004902.2252694-1-swboyd@chromium.org>
-References: <20200910004902.2252694-1-swboyd@chromium.org>
+        Wed, 9 Sep 2020 22:25:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15314 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730474AbgIJCUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:20:45 -0400
+IronPort-SDR: HEKUlnnV9/n89oqLkpUUuex/6sr58wWQ1Z0d4rVxV1RIFu7YsuJSzOCDP4d2MNgDlzbLVvYb9o
+ bnGZe/wZN60Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="219993016"
+X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
+   d="scan'208";a="219993016"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:11:14 -0700
+IronPort-SDR: fzHpDfMRCDWEtqxV0VCjjY+Wk9RyNgD94xJSzjQ6FGpVAX8dNRL3MRzPEF/7ta749lWnSmuYNB
+ lqb2Ab5IAiPg==
+X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
+   d="scan'208";a="304673436"
+Received: from pbhangod-mobl.amr.corp.intel.com (HELO [10.213.170.146]) ([10.213.170.146])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:11:12 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+ <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
+ <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
+ <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
+ <20200901102758.GY6642@arm.com>
+ <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+ <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
+ <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
+ <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
+ <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
+ <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
+ <5979c58d-a6e3-d14d-df92-72cdeb97298d@intel.com>
+ <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
+ <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <a881837d-c844-30e8-a614-8b92be814ef6@intel.com>
+Date:   Wed, 9 Sep 2020 16:11:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy mode pertains to the phy itself, i.e. 'struct qmp_phy', not the
-wrapper, i.e. 'struct qcom_qmp'. Move the phy mode into the phy
-structure to more accurately reflect what is going on. This also cleans
-up 'struct qcom_qmp' so that it can eventually be the place where qmp
-wrapper wide data is located, paving the way for the USB3+DP combo phy.
+On 9/9/20 4:07 PM, Yu, Yu-cheng wrote:
+> What if a writable mapping is passed to madvise(MADV_SHSTK)?  Should
+> that be rejected?
 
-Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-Cc: Chandan Uddaraju <chandanu@codeaurora.org>
-Cc: Vara Reddy <varar@codeaurora.org>
-Cc: Tanmay Shah <tanmay@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Jonathan Marek <jonathan@marek.ca>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 562053ce9455..7ee9e966dc6d 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1812,6 +1812,7 @@ struct qmp_phy_cfg {
-  * @index: lane index
-  * @qmp: QMP phy to which this lane belongs
-  * @lane_rst: lane's reset controller
-+ * @mode: current PHY mode
-  */
- struct qmp_phy {
- 	struct phy *phy;
-@@ -1825,6 +1826,7 @@ struct qmp_phy {
- 	unsigned int index;
- 	struct qcom_qmp *qmp;
- 	struct reset_control *lane_rst;
-+	enum phy_mode mode;
- };
- 
- /**
-@@ -1843,7 +1845,6 @@ struct qmp_phy {
-  * @phy_mutex: mutex lock for PHY common block initialization
-  * @init_count: phy common block initialization count
-  * @phy_initialized: indicate if PHY has been initialized
-- * @mode: current PHY mode
-  * @ufs_reset: optional UFS PHY reset handle
-  */
- struct qcom_qmp {
-@@ -1861,7 +1862,6 @@ struct qcom_qmp {
- 	struct mutex phy_mutex;
- 	int init_count;
- 	bool phy_initialized;
--	enum phy_mode mode;
- 
- 	struct reset_control *ufs_reset;
- };
-@@ -2801,9 +2801,8 @@ static int qcom_qmp_phy_set_mode(struct phy *phy,
- 				 enum phy_mode mode, int submode)
- {
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
--	struct qcom_qmp *qmp = qphy->qmp;
- 
--	qmp->mode = mode;
-+	qphy->mode = mode;
- 
- 	return 0;
- }
-@@ -2816,8 +2815,8 @@ static void qcom_qmp_phy_enable_autonomous_mode(struct qmp_phy *qphy)
- 	void __iomem *pcs_misc = qphy->pcs_misc;
- 	u32 intr_mask;
- 
--	if (qmp->mode == PHY_MODE_USB_HOST_SS ||
--	    qmp->mode == PHY_MODE_USB_DEVICE_SS)
-+	if (qphy->mode == PHY_MODE_USB_HOST_SS ||
-+	    qphy->mode == PHY_MODE_USB_DEVICE_SS)
- 		intr_mask = ARCVR_DTCT_EN | ALFPS_DTCT_EN;
- 	else
- 		intr_mask = ARCVR_DTCT_EN | ARCVR_DTCT_EVENT_SEL;
-@@ -2863,7 +2862,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
- 	struct qmp_phy *qphy = qmp->phys[0];
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 
--	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qmp->mode);
-+	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qphy->mode);
- 
- 	/* Supported only for USB3 PHY */
- 	if (cfg->type != PHY_TYPE_USB3)
-@@ -2889,7 +2888,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
- 	const struct qmp_phy_cfg *cfg = qmp->cfg;
- 	int ret = 0;
- 
--	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qmp->mode);
-+	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qphy->mode);
- 
- 	/* Supported only for USB3 PHY */
- 	if (cfg->type != PHY_TYPE_USB3)
--- 
-Sent by a computer, using git, on the internet
-
+It doesn't matter to me.  Even if it's readable, it _stops_ being even
+directly readable after it's a shadow stack, right?  I don't think
+writes are special in any way.  If anything, we *want* it to be writable
+because that indicates that it can be written to, and we will want to
+write to it soon.
