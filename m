@@ -2,88 +2,98 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C522C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D2AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCC22166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbTIs2+2"
+	by mail.kernel.org (Postfix) with ESMTP id E968720C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599670807;
+	bh=bDug0htbPkTs/pWzV7NVGwmuxDPdL8W15RowRtsr554=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GKec+NMTg/bQw25t8kF/CWFgCq7DKch08Uk+pXOU7MN3t3SnHfJ6dv8ZwzoapMjxR
+	 VqTWV46FHQSZMWxLLxMvO+5cZFlT9zmfxrvo4P/xObC5zl4l9QkdHfiYlf9eu/2Z0A
+	 KXHK7CmEZbWWnstujH/GjDRAAwYw5vO/FpfIzGng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbgIIQ7r (ORCPT
+        id S1731227AbgIIRAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:59:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731065AbgIIQ67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:58:59 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A665C061573;
-        Wed,  9 Sep 2020 09:58:57 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id o16so1638583pjr.2;
-        Wed, 09 Sep 2020 09:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YwWId/wck3bd+vLBnYQNSdgBdWb7exMcGqB9S1NWJKE=;
-        b=UbTIs2+2ydRVwB+sLVePiz7hJjucPqR+ntLyd137U6pdYBnUTo/6A9Rb77ECihq95S
-         sFATauSuQMctvBVq1NJQ8q93gdLaMg4i+g+lxRbFlE1792i5YNORNVJkdl9aoDF332i4
-         f7TpQgbVTlMiKeR0KdGCTs/xB4eHJ6SfTSrdyhWuRF3hQ34hqScbdSfkSX79PX2OAJw1
-         EUqyUm9eDZe/Qh8NbMBgtyCneuDzF4n7CLDSEhwl55hdXuD7L+zbKq9zg94jiQKYoQCx
-         aehyZEJ3fPMsiMM6wy1Krz+j2muU794mY1VlgKgmcog+UscpVDkHoDy9TFr71RM+W7tN
-         cTIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YwWId/wck3bd+vLBnYQNSdgBdWb7exMcGqB9S1NWJKE=;
-        b=sY4YM1yAPa565cBDMPygaUaOD++4rdPuYDaNFvhzZW4MSZMqi6PMoxrPSwdhEp1Y2x
-         /qy5gO9RVHpP16yM34RKhMpMO3fGpuZdvi7BiPjALd0lveBqH4G9Cr9CeMcSX/tYmYTV
-         Qgf7E+2X1zMscGaUBPz7VucJEtYgxMPCADeSO7VII06jSV+TztJcK6TwZVmw4krUZsvr
-         B+kCqQ8zCnbJEzj+U73joFIny611WmAgpWmUcp1LHv24Eo6wW15b3zMdBBhF64NVXhYi
-         /aQKdkQckClD7e0jH4Q0JenyE3nSzm6iBffM06u4BnGv/478XzjS9WjIZeqhR3SQ40og
-         xI9w==
-X-Gm-Message-State: AOAM530xQVqpwmhIE5Ei8QkUxMlutJQ0nCVGB/fUtS0ZCBQQaO2z4xKm
-        00umvGbl94+VFS5PmluBCJCc2lL6U9YCeaV/Sgx87MyAU7Nzdg==
-X-Google-Smtp-Source: ABdhPJzheBF5r0rY0eVQhDpQnLbgUkatHbevzu+QTXFNxqXzrPI6QkJ1AbupNIWBFOxMGd2Z9B0v0iBmSZl9C5oIpfw=
-X-Received: by 2002:a17:90b:fc4:: with SMTP id gd4mr1608163pjb.129.1599670737094;
- Wed, 09 Sep 2020 09:58:57 -0700 (PDT)
+        Wed, 9 Sep 2020 13:00:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730657AbgIIPvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:51:12 -0400
+Received: from mail.kernel.org (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DEEC221EE;
+        Wed,  9 Sep 2020 14:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599660665;
+        bh=bDug0htbPkTs/pWzV7NVGwmuxDPdL8W15RowRtsr554=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gQv2sxO0Zsye0NXp8e8i/m2mlH4a/zBs+UbaZSmg8+GubGmhR4KlcQOT59f3DDPaz
+         oCTHkIrIM+nOM/RxTwixwrDYTBps0kQqlESbc5dIUPSB5xWI1Tr86xIBy3x8DXdV90
+         oKr7jCzvLsLIOxTd6lm+o83rg6E7JZtAWq83pHm8=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kG0oR-00DUXK-Ha; Wed, 09 Sep 2020 16:11:03 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 18/30] block: bio: fix a warning at the kernel-doc markups
+Date:   Wed,  9 Sep 2020 16:10:49 +0200
+Message-Id: <73fb7b91726f95ba038fbff025bdecdc8faaf204.1599660067.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599660067.git.mchehab+huawei@kernel.org>
+References: <cover.1599660067.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200909154439.10308-1-ceggers@arri.de>
-In-Reply-To: <20200909154439.10308-1-ceggers@arri.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 9 Sep 2020 19:58:39 +0300
-Message-ID: <CAHp75VeAoDaBtaSb0Qeb=kHPg6kGvx71_iL2snC5iHh4cKPhRA@mail.gmail.com>
-Subject: Re: [PATCH] iio: light: as73211: Increase measurement timeout
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 6:45 PM Christian Eggers <ceggers@arri.de> wrote:
->
-> We found some sensors which are much slower (20% at room temperature)
-> than nominal. According to the data sheet, up to 27% is possible. Now I
-> add 33% to the nominal time out, hopefully this is enough.
+Using "@bio's parent" causes the following waring:
+	./block/bio.c:10: WARNING: Inline emphasis start-string without end-string.
 
-I'm wondering if this is a function of temperature.
-And if that has an actual thermistor inside...
+The main problem here is that this would be converted into:
 
+	**bio**'s parent
+
+By kernel-doc, which is not a valid notation. It would be
+possible to use, instead, this kernel-doc markup:
+
+	``bio's`` parent
+
+Yet, here, is probably simpler to just use an altenative language:
+
+	the parent of @bio
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ block/bio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/block/bio.c b/block/bio.c
+index a9931f23d933..ccd3ab549d41 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -327,7 +327,7 @@ static void bio_chain_endio(struct bio *bio)
+ /**
+  * bio_chain - chain bio completions
+  * @bio: the target bio
+- * @parent: the @bio's parent bio
++ * @parent: the parent bio of @bio
+  *
+  * The caller won't have a bi_end_io called when @bio completes - instead,
+  * @parent's bi_end_io won't be called until both @parent and @bio have
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2
+
