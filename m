@@ -2,70 +2,134 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ACEC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145FCC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E162166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8A321941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599671151;
+	bh=RcvdW5Wbw4qy2lBe4rstSsTHPZDNnLXT4NSX7F6cCe8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Gyp9OBxHOlvCjXgjaatLDSuCmn5Oe+wXeSlmevDnKb0Wq1AJ+WT6gMDzacoJBDD/d
+	 YqyYi21JTfSaixz1vhBARJ6A//iHGp4gegxmKNwelc2mbAxgPBwqTS4cY6cQdtkpML
+	 0cAo9TNr1T8eifo6s2KowfU6mZUYM3Cj2UjjNlMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbgIIRFe (ORCPT
+        id S1730567AbgIIRFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:05:34 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52594 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730413AbgIIPnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:43:00 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kG0V6-00DvHc-T5; Wed, 09 Sep 2020 15:51:04 +0200
-Date:   Wed, 9 Sep 2020 15:51:04 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Divya Koppera <Divya.Koppera@microchip.com>
-Cc:     hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-        kuba@kernel.org, marex@denx.de, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH v1 net-next] net: phy: mchp: Add support for LAN8814 QUAD
- PHY
-Message-ID: <20200909135104.GG3290129@lunn.ch>
-References: <20200909093419.32102-1-Divya.Koppera@microchip.com>
+        Wed, 9 Sep 2020 13:05:49 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43031 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728443AbgIIPnJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:43:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u4so4129289ljd.10;
+        Wed, 09 Sep 2020 08:43:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mbZsg6zJ9YzguB6nUiWhHT7YZ4ojzslnf2Tm9G1IUuk=;
+        b=RRZvhfOmZjPXeOoSewPmfTLRGlgj3Q+lfz6Tu73WDmMilhIlROcIyUTP3Yt/OrPgI3
+         nurEIkz+GV5w/+3j4nKYK18YylMKeXs69LdFOlxSDVoOwsAgpqrar7B26/XDM5takrB8
+         khk9MBrQUl7jHEL2Zvm4m9/apEkXZIn1+NVrmuEfJJe8SeV+f4YEuVaN/AE8DrdsPfhk
+         qZIpKiZIlUBVHxNa8aalgc5VcBl2aZW9OtQxao3maAfh4xS2Ik7APp6cEJ4WrSog4G/Z
+         83h0dx0fmI6AP3bE8ZnnjMiSbQMFH1/6Twoib90IE8sPL8kuWpT+DXIyZ7DVUAqK/4J+
+         ThVw==
+X-Gm-Message-State: AOAM530OtwjqgkDg90Rd/lSwx5tANZOaSJ92OeHVNj4UGfur33vYZL7B
+        Hp8a33tpXHfaSmOl33Z2H8YESKS5gFs=
+X-Google-Smtp-Source: ABdhPJwS3wrvbRTJ2zVlaE3xujZfh71HbLpExorB/edTGouYaURh6yY6hL4+gTtV9bo8bpSFq7F1lw==
+X-Received: by 2002:a2e:141d:: with SMTP id u29mr2062438ljd.243.1599661890371;
+        Wed, 09 Sep 2020 07:31:30 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id u9sm514049lju.95.2020.09.09.07.31.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 07:31:29 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1kG18A-000418-UP; Wed, 09 Sep 2020 16:31:26 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH 1/2] serial: core: fix port-lock initialisation
+Date:   Wed,  9 Sep 2020 16:31:00 +0200
+Message-Id: <20200909143101.15389-2-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200909143101.15389-1-johan@kernel.org>
+References: <20200909143101.15389-1-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909093419.32102-1-Divya.Koppera@microchip.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -1314,6 +1314,21 @@ static struct phy_driver ksphy_driver[] = {
->  	.get_stats	= kszphy_get_stats,
->  	.suspend	= genphy_suspend,
->  	.resume		= kszphy_resume,
-> +}, {
-> +	.phy_id		= PHY_ID_LAN8814,
-> +	.phy_id_mask	= MICREL_PHY_ID_MASK,
-> +	.name		= "Microchip INDY Gigabit Quad PHY",
-> +	.driver_data	= &ksz9021_type,
-> +	.probe		= kszphy_probe,
-> +	.get_features	= ksz9031_get_features,
+Commit f743061a85f5 ("serial: core: Initialise spin lock before use in
+uart_configure_port()") tried to work around a breakage introduced by
+commit a3cb39d258ef ("serial: core: Allow detach and attach serial
+device for console") by adding a second initialisation of the port lock
+when registering the port.
 
-static int ksz9031_get_features(struct phy_device *phydev)
-{
-	int ret;
+As reported by the build robots [1], this doesn't really solve the
+regression introduced by the console-detach changes and also adds a
+second redundant initialisation of the lock for normal ports.
 
-	ret = genphy_read_abilities(phydev);
-	if (ret < 0)
-		return ret;
+Start cleaning up this mess by removing the redundant initialisation and
+making sure that the port lock is again initialised once-only for ports
+that aren't already in use as a console.
 
-	/* Silicon Errata Sheet (DS80000691D or DS80000692D):
+[1] https://lore.kernel.org/r/20200802054852.GR23458@shao2-debian
 
+Fixes: f743061a85f5 ("serial: core: Initialise spin lock before use in uart_configure_port()")
+Fixes: a3cb39d258ef ("serial: core: Allow detach and attach serial device for console")
+Cc: stable <stable@vger.kernel.org>     # 5.7
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/tty/serial/serial_core.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-Hi Divya
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index f797c971cd82..53b79e1fcbc8 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2378,13 +2378,6 @@ uart_configure_port(struct uart_driver *drv, struct uart_state *state,
+ 		/* Power up port for set_mctrl() */
+ 		uart_change_pm(state, UART_PM_STATE_ON);
+ 
+-		/*
+-		 * If this driver supports console, and it hasn't been
+-		 * successfully registered yet, initialise spin lock for it.
+-		 */
+-		if (port->cons && !(port->cons->flags & CON_ENABLED))
+-			__uart_port_spin_lock_init(port);
+-
+ 		/*
+ 		 * Ensure that the modem control lines are de-activated.
+ 		 * keep the DTR setting that is set in uart_set_options()
+@@ -2900,7 +2893,12 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+ 		goto out;
+ 	}
+ 
+-	uart_port_spin_lock_init(uport);
++	/*
++	 * If this port is in use as a console then the spinlock is already
++	 * initialised.
++	 */
++	if (!uart_console_enabled(uport))
++		__uart_port_spin_lock_init(uport);
+ 
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+-- 
+2.26.2
 
-Do these erratas apply to this PHY as well?
-
-   Andrew
