@@ -2,92 +2,61 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2367C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9212820C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:33:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="SRwj4zfF"
+	by mail.kernel.org (Postfix) with ESMTP id DA4302087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbgIIQcp (ORCPT
+        id S1731120AbgIIQdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
+        Wed, 9 Sep 2020 12:33:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731160AbgIIQcV (ORCPT
+        with ESMTP id S1730710AbgIIQci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:32:21 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26929C061363
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:06:23 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id h4so3267236ioe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eHcdzC1Vjr+eEnGNce0StnaH8r/3dCNL4SRhcQUMlRk=;
-        b=SRwj4zfFnrfJCYIIa0d/pBN8bUN1FeFiAh96+74cn1CriZXzI62ZHkuLvFCm6P31lL
-         AAOxNZRtYsFtarUskfSyDHgH5fLM4ZtWeKnXcmmKHIaiBKiZNP67+5fR0W0PYjWJIIEF
-         K/PWJr/LqEGo9WHPdegONBrkQLVHa0/EC+BlUxnGBk4/LmqeOO2PXhuT7v9pv2KWydkH
-         U8kkt+8qIX+hlCCV3yYb1+qmBEuPB5wRlccXD0ilVAlYXH8t6Ktl2UoYqQ4p2VJqrOAD
-         voO4N5MntQYmhAR4e36C1c+DcZIgl1QkLbYtrW1phmIzBa8UfN6iN2O5LDMLoySEEKMf
-         7/xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eHcdzC1Vjr+eEnGNce0StnaH8r/3dCNL4SRhcQUMlRk=;
-        b=uTbZJrk8r+a/qpvJBy32LF14Fm8EPCNpFD3796K4pgp5FeufU2T9/e5geDnvwLjHwo
-         il2X8HZ6x68++qLFjh005LDOrIyO+UmhSfZeRrwqJwvaBw4A41Oe7GEhY1juCewKgvgj
-         3Nux2VHLUKrzkr4gq6iFh4DuicLHImSpXZMiff7DDBhlKQ8JpIP37rJOYEwJvaFLbC61
-         5DovPq+mKFThSZogUIjPDW2K5gEd824qtZ5CpfIdYwkI5flm+GJ5ohVJrrv8IhgaVrn4
-         aVqg2IJ2aNdiHZgbllNJhTZtqD0SeeC2vrvVsHsXHK/cp3fHD8GGIOYJG+VQP1cqz3kB
-         5dng==
-X-Gm-Message-State: AOAM530rJMvJ8r6ALh/wOaUWIYyuFcNaQ0Mp5TFPOUudsbumNALIp/JG
-        mBQVk0j0QShsKViWxmhmvvRRXQ==
-X-Google-Smtp-Source: ABdhPJwtzLv8bwenmUUA+lfQ5tOU/l3y2j8uN59etgpB1Dhk5UazCcenXSIw2/PDFTejToUeurv5fg==
-X-Received: by 2002:a05:6602:584:: with SMTP id v4mr3535381iox.195.1599660378888;
-        Wed, 09 Sep 2020 07:06:18 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id y19sm1373254ili.47.2020.09.09.07.06.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 07:06:18 -0700 (PDT)
-Subject: Re: [PATCH -next] io_uring: Remove unneeded semicolon
-To:     Zheng Bin <zhengbin13@huawei.com>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     yi.zhang@huawei.com
-References: <20200909121237.39914-1-zhengbin13@huawei.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cef491f9-0df7-ec9f-ebb2-0f62adcdc39d@kernel.dk>
-Date:   Wed, 9 Sep 2020 08:06:17 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200909121237.39914-1-zhengbin13@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 9 Sep 2020 12:32:38 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB535C0617A9;
+        Wed,  9 Sep 2020 06:37:35 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 4BmjkP4f7pz9sV5; Wed,  9 Sep 2020 23:37:33 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        a.zummo@towertech.it, mpe@ellerman.id.au, leoyang.li@nxp.com,
+        benh@kernel.crashing.org, Biwen Li <biwen.li@oss.nxp.com>
+Cc:     devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+In-Reply-To: <20200527034228.23793-1-biwen.li@oss.nxp.com>
+References: <20200527034228.23793-1-biwen.li@oss.nxp.com>
+Subject: Re: [v3 1/2] dts: ppc: t4240rdb: remove interrupts property
+Message-Id: <159965824243.811679.11439322992907877530.b4-ty@ellerman.id.au>
+Date:   Wed,  9 Sep 2020 23:37:33 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 6:12 AM, Zheng Bin wrote:
-> Fixes coccicheck warning:
+On Wed, 27 May 2020 11:42:27 +0800, Biwen Li wrote:
+> Since the interrupt pin for RTC DS1374 is not connected
+> to the CPU on T4240RDB, remove the interrupt property
+> from the device tree.
 > 
-> fs/io_uring.c:4242:13-14: Unneeded semicolon
+> This also fix the following warning for hwclock.util-linux:
+> $ hwclock.util-linux
+> hwclock.util-linux: select() to /dev/rtc0
+> to wait for clock tick timed out
 
-Thanks, applied.
+Applied to powerpc/next.
 
--- 
-Jens Axboe
+[1/2] powerpc/dts/t4240rdb: remove interrupts property
+      https://git.kernel.org/powerpc/c/8c7614d648037b0776e0b76cb62911be3b059ea4
+[2/2] powerc/dtc/t1024rdb: remove interrupts property
+      https://git.kernel.org/powerpc/c/843dc8ee23d1b353fa9cc24da3e52be0111d5931
 
+cheers
