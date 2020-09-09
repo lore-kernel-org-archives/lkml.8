@@ -2,245 +2,178 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCB4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896C3C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3EC20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4928720C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Wc1XdlPY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XkshsgiE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgIILp7 (ORCPT
+        id S1729789AbgIILs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:45:59 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:36005 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728709AbgIILmO (ORCPT
+        Wed, 9 Sep 2020 07:48:26 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30775 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729986AbgIILoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:42:14 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id FyTjkidmrXgwIFyTlkZIq7; Wed, 09 Sep 2020 13:41:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1599651695; bh=t3nBPHAPbCW5CVT8PmiIHhtDrxm+7LqfL0hFVYdvpmI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Wc1XdlPY3CUSUNVGoAWyXWVzBBWlMrY9QrDaD7ZPqTvPQMrtOuSSUmy/1UJOZkys6
-         btsCGG8+JNYdkmb0DTb+ltrBUW2UOInpykoJdIItAOjEjMa+9DjI/P3P49R6DMr7IP
-         lZZMp8dDpRhCHBXwrcsIR65EPOfBHP3bwzLvI/qigG6+8L0Qve2CXXMgp5ZIsYcCPY
-         A0bJZYgCV+1inTt9l3Krw/hGKwmzHVU2DsoHdtU3oJn3AAWdeA4jxGvR4aa6L8Iico
-         wynzGpdOBBwEL6xn8t3ctbxH9Y/bPa7+KB2ZE+5KZWSToQyBQAQe0keVA5ioubzVIU
-         saysxB8IMhumA==
-Subject: Re: [PATCH v5 1/7] media: v4l2: Extend pixel formats to unify
- single/multi-planar handling (and more)
-To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
-        laurent.pinchart@ideasonboard.com, sakari.ailus@iki.fi,
-        linux-media@vger.kernel.org
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        tfiga@chromium.org, hiroh@chromium.org, nicolas@ndufresne.ca,
-        Brian.Starkey@arm.com, kernel@collabora.com,
-        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
-        frkoenig@chromium.org, mjourdan@baylibre.com,
-        stanimir.varbanov@linaro.org
-References: <20200804192939.2251988-1-helen.koike@collabora.com>
- <20200804192939.2251988-2-helen.koike@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <767d6287-bd9c-b342-d14c-124e58c143e6@xs4all.nl>
-Date:   Wed, 9 Sep 2020 13:41:31 +0200
+        Wed, 9 Sep 2020 07:44:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599651857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=VMMi7EKygLSRL4gNx8fYOq7nfSc3N9XfpNyRkxlAIKA=;
+        b=XkshsgiEHfxa07uCNvuqrl9xwQI48Rlz81sV6v5hwd1Gxf2C6UR0lp5h4Ymj4ouUoENOfZ
+        /Ju/t9PWR2lK/umNPkOnD7hPiSU0UI4bh+RvQlnMACahJ79C/r71jG0zr+IfnqJ6QS7uU8
+        YsNIeI6IeU4wPjSzCXSJvE1y/t45vho=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-12-cfL4s0SrNeqjjKE-ej8KmQ-1; Wed, 09 Sep 2020 07:44:15 -0400
+X-MC-Unique: cfL4s0SrNeqjjKE-ej8KmQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60CB080732B;
+        Wed,  9 Sep 2020 11:44:14 +0000 (UTC)
+Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B78E37E8D9;
+        Wed,  9 Sep 2020 11:44:12 +0000 (UTC)
+Subject: Re: [RFC 5/5] mm, page_alloc: disable pcplists during page isolation
+To:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200907163628.26495-1-vbabka@suse.cz>
+ <20200907163628.26495-6-vbabka@suse.cz>
+ <d5d5ef64-b239-0640-5640-75c7a3c78584@suse.cz>
+ <20200909113647.GG7348@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <c417a996-67d8-8935-ce57-a5dac4408691@redhat.com>
+Date:   Wed, 9 Sep 2020 13:44:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200804192939.2251988-2-helen.koike@collabora.com>
+In-Reply-To: <20200909113647.GG7348@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNIHLJxvWIYVsfcjX2GrJmKIFrV8ZC/OeuHmlr3ml5L7r1/92XJ88orCUpht6dxvkW6GQHpYJqRP+DfaOzh4DDWErH/qy/QxgTS3VngIVja8BQDJx8CW
- zuCuz+CibuBFxPIRTJN2m4wkX0p6nLRVqxC/nAS1z9p408j1yV+4DAqxMpA1dtoDwDicmukG3ikFpgQmZzZFM82YPREbxiRV9ZdLB1Xb7npUcLshQyJmTMNa
- 9+Oo6fQqK2HMt7BXFO/5NX+KkwNPmXH275avIrNSonORMbR1SdOJ4imbM3qKTauyRMFCW3jvzli+EA022VgdNoNBUaouzdWqMD68nAqi1W58s+/k6U9e2abo
- Pqv7pjv/Ek4CDIh4keiLJLZCdpGMW45VjIvKxUpTLXd257cqnxYqKCCvY8AEYsuUD363VUoyxREP+uoZAy1KfUSb/4uyHmoNByqIISiriQqL42LKiPfG13z9
- 80HAAV1N1D7KeJMmHrqy2W7KBGGNuSQOy1J/1Z0Ske/+UI/SMAvsboDkEy1qtYV+nsjg9HBSmQ2O1FlqFj/k/kZoXesWXh6g9lzDl6sePmRBmSSOyWKt20kx
- vYCPwx6bFXIctfHP4yh5K2cC25j9EQ2XWQpWe+/8CdLbqacXQ75+BiMEzbY2ZLpb3SzoYw7e4ibhw3xap8Pd6YqLEQax6K+DZM/74BAm2XyNA7J0yQ6hmNqj
- aItSMWX2tv5rJy6FxTbLUUHmizAAR+1sLazWR+X53aZrODL16RfdGVcvpoI7xYHa2gDUbNpcZ35ZPaKeJFG8Ub6BS2IsIM/ZV6FHREwJCi/fmZdGr//Osg==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
-
-Some review comments, concentrating on the uAPI.
-
-On 04/08/2020 21:29, Helen Koike wrote:
-> This is part of the multiplanar and singleplanar unification process.
-> v4l2_ext_pix_format is supposed to work for both cases.
+On 09.09.20 13:36, Michal Hocko wrote:
+> On Wed 09-09-20 12:48:54, Vlastimil Babka wrote:
+>> Here's a version that will apply on top of next-20200908. The first 4 patches need no change.
+>>
+>> ----8<----
+>> >From 8febc17272b8e8b378e2e5ea5e76b2616f029c5b Mon Sep 17 00:00:00 2001
+>> From: Vlastimil Babka <vbabka@suse.cz>
+>> Date: Mon, 7 Sep 2020 17:20:39 +0200
+>> Subject: [PATCH] mm, page_alloc: disable pcplists during page isolation
+>>
+>> Page isolation can race with process freeing pages to pcplists in a way that
+>> a page from isolated pageblock can end up on pcplist. This can be fixed by
+>> repeated draining of pcplists, as done by patch "mm/memory_hotplug: drain
+>> per-cpu pages again during memory offline" in [1].
+>>
+>> David and Michal would prefer that this race was closed in a way that callers
+>> of page isolation don't need to care about drain. David suggested disabling
+>> pcplists usage completely during page isolation, instead of repeatedly draining
+>> them.
+>>
+>> To achieve this without adding special cases in alloc/free fastpath, we can use
+>> the same 'trick' as boot pagesets - when pcp->high is 0, any pcplist addition
+>> will be immediately flushed.
+>>
+>> The race can thus be closed by setting pcp->high to 0 and draining pcplists
+>> once in start_isolate_page_range(). The draining will serialize after processes
+>> that already disabled interrupts and read the old value of pcp->high in
+>> free_unref_page_commit(), and processes that have not yet disabled interrupts,
+>> will observe pcp->high == 0 when they are rescheduled, and skip pcplists.
+>> This guarantees no stray pages on pcplists in zones where isolation happens.
+>>
+>> We can use the variable zone->nr_isolate_pageblock (protected by zone->lock)
+>> to detect transitions from 0 to 1 (to change pcp->high to 0 and issue drain)
+>> and from 1 to 0 (to restore original pcp->high and batch values cached in
+>> struct zone). We have to avoid external updates to high and batch by taking
+>> pcp_batch_high_lock. To allow multiple isolations in parallel, change this
+>> lock from mutex to rwsem.
+>>
+>> For callers that pair start_isolate_page_range() with
+>> undo_isolated_page_range() properly, this is transparent. Currently that's
+>> alloc_contig_range(). __offline_pages() doesn't call undo_isolated_page_range()
+>> in the succes case, so it has to be carful to handle restoring pcp->high and batch
+>> and unlocking pcp_batch_high_lock.
 > 
-> We also add the concept of modifiers already employed in DRM to expose
-> HW-specific formats (like tiled or compressed formats) and allow
-> exchanging this information with the DRM subsystem in a consistent way.
-> 
-> Note that only V4L2_BUF_TYPE_VIDEO_[OUTPUT,CAPTURE] are accepted in
-> v4l2_ext_format, other types will be rejected if you use the
-> {G,S,TRY}_EXT_PIX_FMT ioctls.
-> 
-> New hooks have been added to v4l2_ioctl_ops to support those new ioctls
-> in drivers, but, in the meantime, the core takes care of converting
-> {S,G,TRY}_EXT_PIX_FMT requests into {S,G,TRY}_FMT so that old drivers can
-> still work if the userspace app/lib uses the new ioctls.
-> The conversion is also done the other around to allow userspace
-> apps/libs using {S,G,TRY}_FMT to work with drivers implementing the
-> _ext_ hooks.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> ---
-> Changes in v5:
-> - change sizes and reorder fields to avoid holes in the struct and make
->   it the same for 32 and 64 bits
-> - removed __attribute__ ((packed)) from uapi structs
-> - Fix doc warning from make htmldocs
-> - Updated commit message with EXT_PIX prefix for the ioctls.
-> 
-> Changes in v4:
-> - Use v4l2_ext_pix_format directly in the ioctl, drop v4l2_ext_format,
-> making V4L2_BUF_TYPE_VIDEO_[OUTPUT,CAPTURE] the only valid types.
-> - Add reserved fields
-> - Removed num_planes from struct v4l2_ext_pix_format
-> - Removed flag field from struct v4l2_ext_pix_format, since the only
->   defined value is V4L2_PIX_FMT_FLAG_PREMUL_ALPHA only used by vsp1,
->   where we can use modifiers, or add it back later through the reserved
->   bits.
-> - In v4l2_ext_format_to_format(), check if modifier is != MOD_LINEAR &&
->   != MOD_INVALID
-> - Fix type assignment in v4l_g_fmt_ext_pix()
-> - Rebased on top of media/master (post 5.8-rc1)
-> 
-> Changes in v3:
-> - Rebased on top of media/master (post 5.4-rc1)
-> 
-> Changes in v2:
-> - Move the modifier in v4l2_ext_format (was formerly placed in
->   v4l2_ext_plane)
-> - Fix a few bugs in the converters and add a strict parameter to
->   allow conversion of uninitialized/mis-initialized objects
-> ---
->  drivers/media/v4l2-core/v4l2-dev.c   |  21 +-
->  drivers/media/v4l2-core/v4l2-ioctl.c | 585 +++++++++++++++++++++++----
->  include/media/v4l2-ioctl.h           |  34 ++
->  include/uapi/linux/videodev2.h       |  56 +++
->  4 files changed, 615 insertions(+), 81 deletions(-)
-> 
+> I was hoping that it would be possible to have this completely hidden
+> inside start_isolate_page_range code path. If we need some sort of
+> disable_pcp_free/enable_pcp_free then it seems like a better fit to have
+> an explicit API for that (the naming would be obviously different
+> because we do not want to call out pcp free lists). I strongly suspect
+> that only the memory hotplug really cares for this hard guanrantee.
+> alloc_contig_range simply goes with EBUSY.
 
-<snip>
+There will be different alloc_contig_range() demands in the future: try
+fast (e.g., loads of small CMA allocations) vs. try hard (e.g.,
+virtio-mem). We can add ways to specify that.
 
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index c7b70ff53bc1d..7123c6a4d9569 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -2254,6 +2254,58 @@ struct v4l2_pix_format_mplane {
->  	__u8				reserved[7];
->  } __attribute__ ((packed));
->  
-> +/**
-> + * struct v4l2_plane_ext_pix_format - additional, per-plane format definition
-> + * @sizeimage:		maximum size in bytes required for data, for which
-> + *			this plane will be used.
-> + *			Should be set to zero for unused planes.
-> + * @bytesperline:	distance in bytes between the leftmost pixels in two
-> + *			adjacent lines
-> + * @reserved:		extra space reserved for future fields, must be set to 0
-> + */
-> +struct v4l2_plane_ext_pix_format {
-> +	__u32 sizeimage;
-> +	__u32 bytesperline;
-> +	__u32 reserved;
+-- 
+Thanks,
 
-I'd use reserved[4] here.
+David / dhildenb
 
-> +};
-> +
-> +/**
-> + * struct v4l2_ext_pix_format - extended single/multiplanar format definition
-> + * @type:		type of the data stream; V4L2_BUF_TYPE_VIDEO_CAPTURE or
-> + *			V4L2_BUF_TYPE_VIDEO_OUTPUT
-> + * @width:		image width in pixels
-> + * @height:		image height in pixels
-> + * @field:		enum v4l2_field; field order (for interlaced video)
-> + * @pixelformat:	little endian four character code (fourcc)
-> + * @modifier:		modifier applied to the format (used for tiled formats
-> + *			and other kind of HW-specific formats, like compressed
-> + *			formats)
-
-This should refer to the drm.h header since we're reusing the DRM modifiers.
-
-> + * @colorspace:		enum v4l2_colorspace; supplemental to pixelformat
-> + * @plane_fmt:		per-plane information
-> + * @ycbcr_enc:		enum v4l2_ycbcr_encoding, Y'CbCr encoding
-> + * @hsv_enc:		enum v4l2_hsv_encoding, HSV encoding
-> + * @quantization:	enum v4l2_quantization, colorspace quantization
-> + * @xfer_func:		enum v4l2_xfer_func, colorspace transfer function
-> + * @reserved:		extra space reserved for future fields, must be set to 0
-> + */
-> +struct v4l2_ext_pix_format {
-> +	__u32 type;
-> +	__u32 width;
-> +	__u32 height;
-> +	__u32 field;
-> +	__u64 modifier;
-> +	__u32 pixelformat;
-> +	__u32 colorspace;
-> +	struct v4l2_plane_ext_pix_format plane_fmt[VIDEO_MAX_PLANES];
-> +	union {
-> +		__u32 ycbcr_enc;
-> +		__u32 hsv_enc;
-> +	};
-> +	__u32 quantization;
-> +	__u32 xfer_func;
-
-I'd reorder this:
-
-	struct v4l2_plane_ext_pix_format plane_fmt[VIDEO_MAX_PLANES];
-	__u32 pixelformat;
-	__u32 colorspace;
-	__u32 xfer_func;
-	union {
-		__u32 ycbcr_enc;
-		__u32 hsv_enc;
-	};
-	__u32 quantization;
-
-The reason for reordering is that I like to keep the colorimetry fields in
-that order since that is how these fields are processed mathematically: you
-apply the colorspace matrix first, then the transfer function, then optionally
-convert to Y'CbCr or HSV and finally you quantize the result.
-
-There is also a __u32 flags; field missing (needed for V4L2_PIX_FMT_FLAG_PREMUL_ALPHA
-and for the upcoming CSC support).
-
-> +	__u32 reserved[9];
-> +};
-> +
->  /**
->   * struct v4l2_sdr_format - SDR format definition
->   * @pixelformat:	little endian four character code (fourcc)
-> @@ -2571,6 +2623,10 @@ struct v4l2_create_buffers {
->  
->  #define VIDIOC_QUERY_EXT_CTRL	_IOWR('V', 103, struct v4l2_query_ext_ctrl)
->  
-> +#define VIDIOC_G_EXT_PIX_FMT	_IOWR('V', 104, struct v4l2_ext_pix_format)
-> +#define VIDIOC_S_EXT_PIX_FMT	_IOWR('V', 105, struct v4l2_ext_pix_format)
-> +#define VIDIOC_TRY_EXT_PIX_FMT	_IOWR('V', 106, struct v4l2_ext_pix_format)
-> +
->  /* Reminder: when adding new ioctls please add support for them to
->     drivers/media/v4l2-core/v4l2-compat-ioctl32.c as well! */
->  
-> 
-
-Regards,
-
-	Hans
