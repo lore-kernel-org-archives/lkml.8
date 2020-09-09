@@ -2,156 +2,149 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8904CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD50C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 326C921919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000472166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="snsjbUkl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u/+ts5j5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbgIIQnv (ORCPT
+        id S1730991AbgIIQoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730991AbgIIQMs (ORCPT
+        Wed, 9 Sep 2020 12:44:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50632 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730993AbgIIQnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:12:48 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8A4C06138F
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 06:46:19 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y2so1606079lfy.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 06:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OFXb0fPeLozHIVk13q+oqzPm3YSyHqohd5OhKkyGBzk=;
-        b=snsjbUklactjQNaOxCa7O3dIYtSGEg2ycGoP/cP0ENJaq6E1pxjSgNYk/K28kQk8wS
-         DmGXJF927zgRygzhmTP2PWZdovyGVz9WpC2ykyIfltp92TUwWpJuAqdX6CSQD5TL1XNp
-         fHOPBouWFy6DN7Q1STE438GKb73xVEyXQMaxopP/cyk3z5T5RhgwljPTCw3v0vgPPwIJ
-         KFqpigwngqqiCjwmCxoNTc6BSnwNvwwQMOjXGB5tW+MWntbgcVer+zwxAGhhFRFfJY2Z
-         Nuygjq+UM+c+nMm0NKfrjQ/TjObKOpgZct0cA3365yaUpMMNRKwk42YUCKvbbI4WkkrL
-         JR/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OFXb0fPeLozHIVk13q+oqzPm3YSyHqohd5OhKkyGBzk=;
-        b=Mtc22PXI8w4WXtfBjhYF/r4DnVZk/au2InFQl1RLmorQbngun4rtZ/HfLEUGBY1uyt
-         y3zW7ZM9GLP4aKkBAjfqYSi6P46Ense5WNAmXWLI+ZeTAiuAST6dIik+xJd/qzlbYwsy
-         EnwK3qfGMJS6456L5XxcSFp1RzD2FjQNxSXm4ng20d0mKXqCHBjziyHM/2KDiNjt+2zc
-         UqOaC7MC3oB6CS33J6nCm5+/kt/ZmvHNjujhy+3nB/yJH6X5pyylTyXPeD18+ISOq+BG
-         TUMxwrOVfhjiDuHCZELPfLnvD+4k6r0SpDDevCTHeoNIBI5qmghvq4aLFa5ZdrVg+i2M
-         zJEA==
-X-Gm-Message-State: AOAM532yZ3iJk0qeTYLAOZDhqgZy4gzAJrqT+Q8iRi0sKLIoOQm5lj8j
-        9JS0hcGXwCW4WXfWVXsnaf7ohw==
-X-Google-Smtp-Source: ABdhPJyTk4108hBQZgn/Y4gNdjt/2DgtafCRGGwNLgK9b1ovUuZLK9iu9GKM7+vEJY6b23OBMrgy6Q==
-X-Received: by 2002:a19:8907:: with SMTP id l7mr1931403lfd.105.1599659177768;
-        Wed, 09 Sep 2020 06:46:17 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w4sm584720lfq.75.2020.09.09.06.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 06:46:17 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 338DA1036AE; Wed,  9 Sep 2020 16:46:22 +0300 (+03)
-Date:   Wed, 9 Sep 2020 16:46:22 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 01/16] mm: add pagechain container for storing
- multiple pages.
-Message-ID: <20200909134622.xkuzx5nf4xq2vudh@box>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200902180628.4052244-2-zi.yan@sent.com>
- <20200907122228.4zlyfysdul3s62me@box>
- <50FA95D1-9222-48C0-9223-C1267E8C7A4A@nvidia.com>
+        Wed, 9 Sep 2020 12:43:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 089FAAnU061479;
+        Wed, 9 Sep 2020 10:10:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599664210;
+        bh=y4ypjBJCmmVVWSAzOMpL0Yzjxk7jCoHxtQOFSri+Anw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=u/+ts5j5SpV+waYzgQySKVrYaTAvl6uBOp84sSfEcJAW//jpLjWcjzkvnMwA3Frda
+         DcgUnu9/SR6ASEHDG8soaQr/EkhVrE5ai+thntuHL3iTqY/7r++fqS6qUx7nOGhlcq
+         SPIlVSjWsVfaLxzELrbxRnvkTv2hHoKgNfcaYKp8=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089FAAeT090290;
+        Wed, 9 Sep 2020 10:10:10 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 9 Sep
+ 2020 10:10:09 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 9 Sep 2020 10:10:09 -0500
+Received: from [10.250.34.59] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089FA99W115484;
+        Wed, 9 Sep 2020 10:10:09 -0500
+Subject: Re: [v4,2/4] dt-binding: reset-controller: ti: add
+ 'mediatek,infra-reset' to compatible
+To:     Rob Herring <robh@kernel.org>
+CC:     Crystal Guo <crystal.guo@mediatek.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?UTF-8?B?U2VpeWEgV2FuZyAo546L6L+65ZCbKQ==?= 
+        <seiya.wang@mediatek.com>,
+        =?UTF-8?B?U3RhbmxleSBDaHUgKOacseWOn+mZnik=?= 
+        <stanley.chu@mediatek.com>,
+        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
+        <Yingjoe.Chen@mediatek.com>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?WW9uZyBMaWFuZyAo5qKB5YuHKQ==?= <Yong.Liang@mediatek.com>
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-3-crystal.guo@mediatek.com>
+ <20200825190219.GA1125997@bogus> <1598440183.30048.14.camel@mhfsdcap03>
+ <6c292056-1cb1-bc6c-0422-46e047dcf08f@ti.com>
+ <CAL_JsqKuL7XM2CL3z0OQdRua5YJO2ZRdsoE3fdAH948mKGfWnA@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <b91c4ddf-8f12-2154-0a41-bf9563b5aefd@ti.com>
+Date:   Wed, 9 Sep 2020 10:10:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <50FA95D1-9222-48C0-9223-C1267E8C7A4A@nvidia.com>
+In-Reply-To: <CAL_JsqKuL7XM2CL3z0OQdRua5YJO2ZRdsoE3fdAH948mKGfWnA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:11:05AM -0400, Zi Yan wrote:
-> On 7 Sep 2020, at 8:22, Kirill A. Shutemov wrote:
+On 9/8/20 1:49 PM, Rob Herring wrote:
+> On Wed, Sep 2, 2020 at 5:26 PM Suman Anna <s-anna@ti.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 8/26/20 6:09 AM, Crystal Guo wrote:
+>>> On Wed, 2020-08-26 at 03:02 +0800, Rob Herring wrote:
+>>>> On Mon, Aug 17, 2020 at 11:03:22AM +0800, Crystal Guo wrote:
+>>>>> The TI syscon reset controller provides a common reset management,
+>>>>> and is suitable for MTK SoCs. Add compatible 'mediatek,infra-reset',
+>>>>> which denotes to use ti reset-controller driver directly.
+>>>>>
+>>>>> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 1 +
+>>>>>  1 file changed, 1 insertion(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+>>>>> index ab041032339b..5a0e9365b51b 100644
+>>>>> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+>>>>> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+>>>>> @@ -25,6 +25,7 @@ Required properties:
+>>>>>                         "ti,k2l-pscrst"
+>>>>>                         "ti,k2hk-pscrst"
+>>>>>                         "ti,syscon-reset"
+>>>>> +                       "mediatek,infra-reset", "ti,syscon-reset"
+>>>>
+>>>> You need your own binding doc. If you can use the same driver then fine,
+>>>> but that's a separate issue. There's also reset-simple driver if you
+>>>> have just array of 32-bit registers with a bit per reset.
+>>>>
+>>>> Don't repeat 'ti,reset-bits' either.
+>>>
+>>> Do you mean I should add a Mediatek reset binding doc, although Mediatek
+>>> reuse the TI reset controller directly?
+>>
+>> Hmm, how do you envision not repeating the same bits in a separate binding?
 > 
-> > On Wed, Sep 02, 2020 at 02:06:13PM -0400, Zi Yan wrote:
-> >> From: Zi Yan <ziy@nvidia.com>
-> >>
-> >> When depositing page table pages for 1GB THPs, we need 512 PTE pages +
-> >> 1 PMD page. Instead of counting and depositing 513 pages, we can use the
-> >> PMD page as a leader page and chain the rest 512 PTE pages with ->lru.
-> >> This, however, prevents us depositing PMD pages with ->lru, which is
-> >> currently used by depositing PTE pages for 2MB THPs. So add a new
-> >> pagechain container for PMD pages.
-> >>
-> >> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> >
-> > Just deposit it to a linked list in the mm_struct as we do for PMD if
-> > split ptl disabled.
-> >
-> 
-> Thank you for checking the patches. Since we don’t have PUD split lock
-> yet, I store the PMD page table pages in a newly added linked list head
-> in mm_struct like you suggested above.
-> 
-> I was too vague about my pagechain design for depositing page table pages
-> for PUD THPs. Sorry about the confusion. Let me clarify why
-> I am doing this pagechain here too. I am sure there would be
-> some other designs and I am happy to change my code.
-> 
-> In my design, I did not store all page table pages in a single list.
-> I first deposit 512 PTE pages in one PMD page table page’s pmd_huge_pte
-> using pgtable_trans_huge_depsit(), then deposit the PMD page to
-> a newly added linked list in mm_struct. Since pmd_huge_pte shares space
-> with half of lru in struct page, we cannot use lru to link all PMD
-> pages together. As a result, I added pagechain. Also in this way,
-> we can avoid these things:
-> 
-> 1. when we withdraw the PMD page during PUD THP split, we don’t need
-> to withdraw 513 page, set up one PMD page, then, deposit 512 PTE pages
-> in that PMD page.
-> 
-> 2. we don’t mix PMD page table pages and PTE page table pages in a single
-> list, since they are initialized in different ways. Otherwise, we need
-> to maintain a subtle rule in the single page table page list that in every
-> 513 pages, first one is PMD page table page and the rest are PTE page
-> table pages.
-> 
-> As I am typing, I also realize that my current design does not work
-> when PMD split lock is disabled, so I will fix it. I would store PMD pages
-> and PTE pages in two separate lists in mm_struct.
-> 
-> 
-> Any comments?
+> I mean 'ti,reset-bits' isn't really something that should have been in
+> DT in the first place, but rather implied by the compatible string.
 
-Okay, fair enough.
+Ok, should I be deprecating this and move this data to driver then?
 
-Although, I think you can get away without a new data structure. We don't
-need double-linked list to deposit page tables. You can rework PTE tables
-deposit code to have single-linked list and use one pointer of ->lru (with
-proper name) and make PMD tables deposit to use the other one. This way
-you can avoid conflict for ->lru.
+I am assuming that is how you are envisioning the new Mediatek binding to be
+atleast.
 
-Does it make sense?
+regards
+Suman
 
--- 
- Kirill A. Shutemov
+> 
+>> Does it help if I convert this to YAML first without a ti, prefix in the file name?
+> 
+> No, I don't think this should be a shared binding. The driver may be
+> able to be shared, but that's independent from the binding.
+> 
+> Rob
+> 
+
