@@ -2,92 +2,136 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6262C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDA6C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0532080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800AC2080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E8z5TGHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GomwRcHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIIShb (ORCPT
+        id S1726226AbgIISoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:37:31 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33374 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIISh2 (ORCPT
+        Wed, 9 Sep 2020 14:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgIISn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:37:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089Ee08v072586;
-        Wed, 9 Sep 2020 14:41:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : mime-version : content-transfer-encoding;
- s=corp-2020-01-29; bh=ya+QMUymLQUNC5iL3dsPaQ1FPjA+xSOY9snK3tbq+SE=;
- b=E8z5TGHtsMn0+9RDsXZg3uoJKM8luetu3D1+64GWHDAxIFc27pb+CS+9A2ABl7sF0dDd
- DVrpshAl3ymsXLxw4oIUKYai6cW7k+85wRZbevS3DURpmU6P5XhyQ52nVKqMIXKIKBUp
- MlfytnjQr45ijN5uWdNwrRhDYJjgjgO95reLj0b8JkIzognwuc+GHUwZStLLkT4tZaFU
- FoMypWAjp83rRVvob3Up0nslE7QLEemreUBdqOA1GlJG/3JeLlwokJXs5xxKu5S9mlgV
- IoOmOT4O0P6e2tT98CaPqXujQlHndpwV21khUHrlplfwah6ZceAQMuf7pGxIzCypGJhc Gw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 33c3an24mn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 14:41:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089Ef4Ll033004;
-        Wed, 9 Sep 2020 14:41:31 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 33cmk6prv4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 14:41:31 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089EfUC4034192;
-        Wed, 9 Sep 2020 14:41:30 GMT
-Received: from localhost.localdomain (dhcp-10-65-175-55.vpn.oracle.com [10.65.175.55])
-        by aserp3020.oracle.com with ESMTP id 33cmk6pru6-1;
-        Wed, 09 Sep 2020 14:41:30 +0000
-From:   Tom Hromatka <tom.hromatka@oracle.com>
-To:     tom.hromatka@oracle.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, fweisbec@gmail.com,
-        tglx@linutronix.de, mingo@kernel.org, adobriyan@gmail.com
-Subject: [RESEND PATCH 0/2] iowait and idle fixes in /proc/stat
-Date:   Wed,  9 Sep 2020 08:41:20 -0600
-Message-Id: <20200909144122.77210-1-tom.hromatka@oracle.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 9 Sep 2020 14:43:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21915C061573;
+        Wed,  9 Sep 2020 11:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=EaCCaUS/GA5zKTWx+EqB8AflyC7OJgYop8KOzI5rmeE=; b=GomwRcHmRkv+TFrVR0WQdaBrR0
+        IdVlKI/PUaruAuCEPKQBmtZ7JZL4we75h3/irAUxJ5gsU6M6mTs94C2fOhTV5pfIxcT3EddDzUl3v
+        bu8NKjOCp53mKvhHgrfPPxWkyrooRmtL8rXlsAQoHv7o2YfeSyCdsDl3NgWQ472DZXJGPePZ55nSQ
+        2OKgY8UtasfDK043LRoY1nwBTIYe2u5DI6qP7K08HwvybWJBo+CFTJ2p/0tzGYKZYGX/OGo7ChH74
+        BOTNo89H1Y+r6WmkB5DnHB9RsbMya/p7/YqieedDFsC5IKr9tKeJzgWaoH852g0zCtGTfYU7xTrVI
+        PBNIWO2Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kG549-0005ns-Am; Wed, 09 Sep 2020 18:43:34 +0000
+Subject: Re: [PATCH net-next + leds v2 2/7] leds: add generic API for LEDs
+ that can be controlled by hardware
+To:     =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+ <20200909162552.11032-3-marek.behun@nic.cz>
+ <84bfc0ce-752d-9d1f-1043-fabe4cc25b15@infradead.org>
+ <20200909203121.73bfcfa1@dellmb.labs.office.nic.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <444169ca-cfd7-dcb5-3ce6-59d3bfea6190@infradead.org>
+Date:   Wed, 9 Sep 2020 11:43:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200909203121.73bfcfa1@dellmb.labs.office.nic.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A customer is using /proc/stat to track cpu usage in a VM and noted
-that the iowait and idle times behave strangely when a cpu goes
-offline and comes back online.
+On 9/9/20 11:31 AM, Marek Behún wrote:
+> On Wed, 9 Sep 2020 11:20:00 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> Hi,
+>>
+>> On 9/9/20 9:25 AM, Marek Behún wrote:
+>>> Many an ethernet PHY (and other chips) supports various HW control
+>>> modes for LEDs connected directly to them.
+>>>
+>>> This patch adds a generic API for registering such LEDs when
+>>> described in device tree. This API also exposes generic way to
+>>> select between these hardware control modes.
+>>>
+>>> This API registers a new private LED trigger called dev-hw-mode.
+>>> When this trigger is enabled for a LED, the various HW control
+>>> modes which are supported by the device for given LED can be
+>>> get/set via hw_mode sysfs file.
+>>>
+>>> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+>>> ---
+>>>  .../sysfs-class-led-trigger-dev-hw-mode       |   8 +
+>>>  drivers/leds/Kconfig                          |  10 +
+>>>  drivers/leds/Makefile                         |   1 +
+>>>  drivers/leds/leds-hw-controlled.c             | 227
+>>> ++++++++++++++++++ include/linux/leds-hw-controlled.h            |
+>>> 74 ++++++ 5 files changed, 320 insertions(+)
+>>>  create mode 100644
+>>> Documentation/ABI/testing/sysfs-class-led-trigger-dev-hw-mode
+>>> create mode 100644 drivers/leds/leds-hw-controlled.c create mode
+>>> 100644 include/linux/leds-hw-controlled.h 
+>>
+>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>> index 1c181df24eae4..5e47ab21aafb4 100644
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -49,6 +49,16 @@ config LEDS_BRIGHTNESS_HW_CHANGED
+>>>  
+>>>  	  See Documentation/ABI/testing/sysfs-class-led for
+>>> details. 
+>>> +config LEDS_HW_CONTROLLED
+>>> +	bool "API for LEDs that can be controlled by hardware"
+>>> +	depends on LEDS_CLASS  
+>>
+>> 	depends on OF || COMPILE_TEST
+>> ?
+>>
+> 
+> I specifically did not add OF dependency so that this can be also used
+> on non-OF systems. A device driver may register such LED itself...
+> That's why hw_controlled_led_brightness_set symbol is exported.
+> 
+> Do you think I shouldn't do it?
 
-This patchset addresses two issues that can cause iowait and idle
-to fluctuate up and down.  With these changes, cpu iowait and idle
-now only monotonically increase.
+I have no problem with it as it is.
 
-Tom Hromatka (2):
-  tick-sched: Do not clear the iowait and idle times
-  /proc/stat: Simplify iowait and idle calculations when cpu is offline
+>>> +	select LEDS_TRIGGERS
+>>> +	help
+>>> +	  This option enables support for a generic API via which
+>>> other drivers
+>>> +	  can register LEDs that can be put into hardware
+>>> controlled mode, eg.  
 
- fs/proc/stat.c           | 24 ++++++------------------
- kernel/time/tick-sched.c |  9 +++++++++
- 2 files changed, 15 insertions(+), 18 deletions(-)
-
+thanks.
 -- 
-2.25.4
+~Randy
 
