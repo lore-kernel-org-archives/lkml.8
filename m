@@ -4,133 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE3BC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83941215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C5E215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="D5wkIpZg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VNiAEN4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgIIIiC (ORCPT
+        id S1728626AbgIIIis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:38:02 -0400
-Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:60533
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726293AbgIIIiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:38:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VCQVplxlwj9iX6Gz5PzqSHmDOTLaStvKu0DtCBinkE8B83pqI9GAWjgnvB/da88TQIlalIm88xPKY4SbFy6fd9tkqpsfOZ16Ch3pav2zCy+Cia92y77Xf1MtFBusdNRUn7fwlmmqsT06n11vnnciffOxk6BvqLswMSdFXUno6Z0iFWl4cKMB6ayYMcgKt83hPEcMH49WpbQxvq6gCDCljlbNnl6BvhvnelBW7k+7QFPr/a3oAZn89IOkp0H/bn89VaOjYMArgMQFWtHaLTdG034rIXw+oi+j0fXX7fziEC75wanXMjnz8nip/uxhQunm+N9jxu6sAq9MPBxqM0jkWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zWKU3+E0uGMriPbQVbqUoLuf5GcXi4s5+g1Ao3ohpvI=;
- b=gscHa5pLHzqePG+BUYxi8Rozz2hj+MzZKgjxvFg6KijPqazo03G/iVjfeEWVgYIumZWYMifThYwSry3mclWdueIzLTN7D3+yLF/qUtPcRRF35Aw4hYPcYBEt4cmE3q2jB6U1B70VHICH8FP76F08C9/cVYOTzCLAAoBKhn8LKlMpuYuozUsp9Fsa206AaTxHgCQDzPi1Nojchif0hCVQ6n/NHKxsZTJTSNSo4mrdwB0SrNxg+w8JVYARB9YlGiD96TN91560YjlSxYIusAWxrx0csVekiGzVo4pCszXec76bJMBU+WutCLcL4HKYm6pavzknYN2yxbT2yM5hmNZDJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=tw.synaptics.com; dmarc=pass action=none
- header.from=tw.synaptics.com; dkim=pass header.d=tw.synaptics.com; arc=none
+        Wed, 9 Sep 2020 04:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgIIIil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:38:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAFFC061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:38:41 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id m6so2013493wrn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:38:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zWKU3+E0uGMriPbQVbqUoLuf5GcXi4s5+g1Ao3ohpvI=;
- b=D5wkIpZgavx6juHXCqQ0WC8I7ZBPBSXSddiCygxzzn7T4CZ2GZyvfP1YOwpF9e69HXbYD5cIxcKZ1VGuGaz7nJcYKz+46AqrFAc4gc+3mlEtfiE0lECx3q+ASJTP0tSOhL/mB+C9rRWh+gFuOit3JdG9rpeU5JRBKBEk/vQkWNM=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=tw.synaptics.com;
-Received: from SN6PR03MB3952.namprd03.prod.outlook.com (2603:10b6:805:75::26)
- by SA0PR03MB5562.namprd03.prod.outlook.com (2603:10b6:806:b7::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Wed, 9 Sep
- 2020 08:37:55 +0000
-Received: from SN6PR03MB3952.namprd03.prod.outlook.com
- ([fe80::3c54:f5cf:3148:407e]) by SN6PR03MB3952.namprd03.prod.outlook.com
- ([fe80::3c54:f5cf:3148:407e%7]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
- 08:37:55 +0000
-From:   Vincent Huang <vincent.huang@tw.synaptics.com>
-To:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Vincent Huang <vincent.huang@tw.synaptics.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andrew Duggan <aduggan@synaptics.com>
-Subject: [PATCH] Input: trackpoint - add new trackpoint variant IDs
-Date:   Wed,  9 Sep 2020 16:36:32 +0800
-Message-Id: <20200909083632.12971-1-vincent.huang@tw.synaptics.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: HK0PR03CA0103.apcprd03.prod.outlook.com
- (2603:1096:203:b0::19) To SN6PR03MB3952.namprd03.prod.outlook.com
- (2603:10b6:805:75::26)
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UHQkjp+Ul8wul3YrlRDrBucDkyHt0QKEfdiQK6HCyts=;
+        b=VNiAEN4udfbH4+C0R/M2mp5yFUqGIJP2zhlm05WWisyOSOFH8hDUZB7/EKeG2LMjtT
+         CSfsKPwjr1Qb092qdjEVwoLDwNpPcxSfrYME4Gq8kZ3ellS0OnyCUSsf9IKqjs9GlCbL
+         UdVFVkacXEiQl/Bj46MK+uGD5tUD/iJkOzAFy7IM3TofGDGH4XidqiJmcRFbhSqaZje5
+         bElHkdzvMC+h94i2zrlnHdfLI+YQtRo+e0E4CyRazv5X/FXhS+EUyojN9d94cVLo6iWc
+         EJxv7dIP7k9ioorDHKv7wOk3RBPKAUq4GjZkaDRAbrjy4OuCwuIAm0WZ3Nl7GOwKH0Ms
+         JvPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UHQkjp+Ul8wul3YrlRDrBucDkyHt0QKEfdiQK6HCyts=;
+        b=dLzqJhO8tFus9GhkAS9YqQ0kLMfm2/31xDcZgbytiMb8dOh0vH5JUd7Bun/o5eU7Qd
+         5V8AMDi9mH3uQMv81/bBe2i1o43BJXfdpL1vYCKJPkKbuCgfmZKWAIeszQil/RKllvmO
+         CAt61kncDsWvg6KW0mC1SDZRcOJW7EYymn+nKk0a5my+tkxfNAP6Z4MJmhZ43dfRN5kv
+         Xn73f9JwoWr9XYhxK61ry8At/3eDdAHzCBp3B42ZTRZY8FAawfN4q1AMaDGIhbLx6bVq
+         8dA45MqUFIw7HXILUYtXDfTPeLppar1S+GLaiiUGMA8JmW85tTcMlQmVLqVr7zrKeRbT
+         q1/w==
+X-Gm-Message-State: AOAM533H/8uZcFe3JyxNQm97w/mgCU6N/krgIxk8GJ5Xt3cXwZqeo3i4
+        /uq5rlYuoSQmuFjINF6iSKucHQ==
+X-Google-Smtp-Source: ABdhPJy715CrU6E8EgLhwBkVRe15wumZzEjDxPVMrDaTPbg4r8wwa1dSrjfVxSI7XmOReFGD8GkYoQ==
+X-Received: by 2002:a5d:634e:: with SMTP id b14mr2568628wrw.190.1599640719478;
+        Wed, 09 Sep 2020 01:38:39 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id g12sm2909022wro.89.2020.09.09.01.38.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 01:38:38 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     alyssa.rosenzweig@collabora.com
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] drm/meson: osd-afbcd: enable XRGB/ARGB8888 on GXM
+Date:   Wed,  9 Sep 2020 10:38:35 +0200
+Message-Id: <20200909083835.8240-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (60.250.40.148) by HK0PR03CA0103.apcprd03.prod.outlook.com (2603:1096:203:b0::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 08:37:52 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [60.250.40.148]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5f506b8a-222a-4c6b-0886-08d8549ba5b0
-X-MS-TrafficTypeDiagnostic: SA0PR03MB5562:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR03MB556216190B3A85D7B826A5F5D6260@SA0PR03MB5562.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:404;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xe6ywytwovSIgUBTSmEQ5jKr3CouQBNLpxxzKGe5GaMTDwwh6bueCdExCwaY1vQx3EVB6XjoUf127P8JutCVWwBwursm/R0PUpktW1zydEdzt0CYbogyxWfnVr+hxdMSdJK0rL/99md4Wxwzsz45W/AlFlaHwQFLNiXY+xtAiL9bxRFec93cL+T42drX9IKPebTYeucaF7DA07DlP6PPInZMkvLr9gyRmtFlztROnTJwXxYP6Y6WgbJX+zBjnESo+2OFLh6TwUTwdz4LBH6z0SiZrvoU7MRy9IXk1ht1iiLYG04I6TM/eI+T+jDcey8s8XTdFwlXfD+NFbHOOzSo8ai7vzqlOBvzI/s52SiCyxmGb2jg7pFE+iLMhnUDl7Xc
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR03MB3952.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(396003)(136003)(366004)(39860400002)(66946007)(8936002)(1076003)(4326008)(478600001)(6512007)(8676002)(66476007)(66556008)(2616005)(956004)(6666004)(86362001)(54906003)(107886003)(26005)(52116002)(2906002)(6486002)(44832011)(316002)(186003)(16526019)(69590400008)(5660300002)(6506007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: FpNzgB+cq8bMUd3oVBw8ELdlAC/FkHnEBmz01A7CB2h3+IWXHnaYniuLv/T/nc73oVE8y0kLW+Yj2qCf2CVX1+5b/guMY3wAKvc+H19y7pjHnreKf8dvFlBdjARc8yAsYRlJdEFZVbpnuRyeD1mhzaWWULUfY5ozfqwZxWKoHia8W3ODuMaTMM32HinR+l8mAK0wUGu4+2GHproBPc7aUZlXzOJINF0GZE1GRfLCLf5RSgsE/6WvPbG6RaUnZUcOdzGF0X+uYF1zR3HMbyQM/oHuBW1ZOcmORDzjF2JoG9qKs47tbCe2SRpYrnuwiud4rNn9VBf7KNPFwPdLt9C3jzDwX3BFXCRBqQaZNYEM0+zIqJyfgPd/oNZWN9mYUZz6wCemMcQWWHvlRGFJavPTPb9h/Win3RIgtipZpvwknPS6k8c8GRnG/CY/k0Crf9fIBSYhWDxjgF9XziPhYFN22qZP63NIM2owpbj5IuaWn09idZ/9WzZUoRYcuEAuVvMUXd16pqD6abwaitW//Bz57k7kMdYN4AXdLV+pmda7qD/mJZkdf5gPDRoxrEKi1YLITkwPIDCF4th6g1o5CAo9FkF+2HUBtFVtoeUADyKdt1mhiXgkFeiHlsH4Q5il8B4z0ci8KTkflQBJSMgxXk2WXg==
-X-OriginatorOrg: tw.synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f506b8a-222a-4c6b-0886-08d8549ba5b0
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR03MB3952.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 08:37:55.3913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OaqFYuiCPstSkMAyNE8MpjKmrazxSM6q4hZA8YkmSJ1OQRafETMRtDVI5ZpdtOc2N5aPcOsxmfkxGRxBI3VK/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR03MB5562
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add trackpoint variant IDs to allow supported control
-on Synaptics trackpoints
+This allows XRGB/ARGB8888 on GXM following AFBC support in panfrost.
 
-Signed-off-by: Vincent Huang <vincent.huang@tw.synaptics.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/input/mouse/trackpoint.c | 2 ++
- drivers/input/mouse/trackpoint.h | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/gpu/drm/meson/meson_osd_afbcd.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/mouse/trackpoint.c
-index 3eefee2ee2a1..c54d2f9e1c4a 100644
---- a/drivers/input/mouse/trackpoint.c
-+++ b/drivers/input/mouse/trackpoint.c
-@@ -21,6 +21,8 @@ static const char * const trackpoint_variants[] = {
- 	[TP_VARIANT_ALPS]	= "ALPS",
- 	[TP_VARIANT_ELAN]	= "Elan",
- 	[TP_VARIANT_NXP]	= "NXP",
-+	[TP_VARIANT_JYT_SYNAPTICS]	= "JYT_SYNAPTICS",
-+	[TP_VARIANT_SYNAPTICS]	= "SYNAPTICS",
- };
- 
- /*
-diff --git a/drivers/input/mouse/trackpoint.h b/drivers/input/mouse/trackpoint.h
-index 5cb93ed26085..42eda7d4ba08 100644
---- a/drivers/input/mouse/trackpoint.h
-+++ b/drivers/input/mouse/trackpoint.h
-@@ -28,6 +28,8 @@
- #define TP_VARIANT_ALPS		0x02
- #define TP_VARIANT_ELAN		0x03
- #define TP_VARIANT_NXP		0x04
-+#define TP_VARIANT_JYT_SYNAPTICS		0x05
-+#define TP_VARIANT_SYNAPTICS		0x06
- 
- /*
-  * Commands
+diff --git a/drivers/gpu/drm/meson/meson_osd_afbcd.c b/drivers/gpu/drm/meson/meson_osd_afbcd.c
+index f12e0271f166..f8399e795d3f 100644
+--- a/drivers/gpu/drm/meson/meson_osd_afbcd.c
++++ b/drivers/gpu/drm/meson/meson_osd_afbcd.c
+@@ -58,7 +58,9 @@
+ static int meson_gxm_afbcd_pixel_fmt(u64 modifier, uint32_t format)
+ {
+ 	switch (format) {
++	case DRM_FORMAT_XRGB8888:
+ 	case DRM_FORMAT_XBGR8888:
++	case DRM_FORMAT_ARGB8888:
+ 	case DRM_FORMAT_ABGR8888:
+ 		return OSD1_AFBCD_RGB32;
+ 	/* TOFIX support mode formats */
 -- 
-2.25.1
+2.22.0
 
