@@ -2,123 +2,137 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9063AC2BC11
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A25C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5952145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC344216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nB2KDW+O"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VIQZJDjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIIACR (ORCPT
+        id S1728899AbgIIAP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 20:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45574 "EHLO
+        Tue, 8 Sep 2020 20:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgIIACN (ORCPT
+        with ESMTP id S1726560AbgIIAP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 20:02:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6263EC061755;
-        Tue,  8 Sep 2020 17:02:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f18so513866pfa.10;
-        Tue, 08 Sep 2020 17:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y360yayiYOlJxCwr5rfn4KJb8o+8ztUz73tehQvWcw8=;
-        b=nB2KDW+OR3WPaSBsU4mvY6t5wlDL3Q3x+eUGspx4Q+OeIiVcDwU8IXooaN2P+zVym7
-         AiiTFYHMzCR2bVvtK5J2UIl70gKwRJDwVNo9dr5QIS5WbMx6fCfdh0g7Duh4ve4IbgJ1
-         u+ZtXBw56z07JaNwoXaYnHZeeg7gozrF2Kqgt/FUhJmUzm7FsSIJkP4Bp2CtgMI73zin
-         Z0Kta8k5Q9c0BCXrc3zoaAfd3xTElFTeO1S2e6KAy57oblpMnLAlqMYzJrNDb3py4ZdX
-         WzxS4Qrc4L6KCG9RA7NkHhaoHgrS7/LJuXx+bVMXtIEKZbYvUlno+aGUVJD8zcFk4qli
-         eM9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y360yayiYOlJxCwr5rfn4KJb8o+8ztUz73tehQvWcw8=;
-        b=KWcAJKxRytWL8bZg2Z2eB4ZFAKefq+uyeNOB3ToNDFE/uM4nw6XZzLcVqTn5Y2tFqY
-         IK+YsYK6LO5koM1V6NLtryex/ObHcx22hIRo3osaTtMNYYkam0SVDt5T6SLhzS9GZcTv
-         Qq/VKBuAaeug2RVLw8Nts4cGxKcLq49xGzAXLGvlJ2QmughKAN4Z3y/bYgmMKOoJdzNX
-         3Wxf3YCHFDa+VlVbNAZJeIFuPgDwPph9EQ+opdFZ6EUc8i1iEICLrj461Mr65H+CBz2+
-         becDF0i+ymfn+MN6hsvDd9+55dNHyT8Rqf+OXWF9yOG8paOA98O1FdlsF35qg0iLpz4B
-         DSdA==
-X-Gm-Message-State: AOAM531KS/weDL0Rw3w0sgfbKj9MyJQMwEARvoGydKR46pcZszAhUecF
-        wJMbKnm7NqDYMMvLaoeh5czuIyXn18NSqD2z
-X-Google-Smtp-Source: ABdhPJz9b8f5fWVX9O69rFi5FU4utYtNyPoAMzrRpPE1kXlTGjA+Da2t+c7sAX61071qBkj98UdmIA==
-X-Received: by 2002:aa7:80cc:: with SMTP id a12mr1161340pfn.4.1599609732930;
-        Tue, 08 Sep 2020 17:02:12 -0700 (PDT)
-Received: from zen.local (174-21-64-208.tukw.qwest.net. [174.21.64.208])
-        by smtp.gmail.com with ESMTPSA id a13sm146249pgq.41.2020.09.08.17.02.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 17:02:12 -0700 (PDT)
-From:   Trent Piepho <tpiepho@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v4 1/2] pinctrl: single: parse #pinctrl-cells = 2
-Date:   Tue, 08 Sep 2020 16:52:58 -0700
-Message-ID: <3139716.CMS8C0sQ7x@zen.local>
-In-Reply-To: <20200701013320.130441-2-drew@beagleboard.org>
-References: <20200701013320.130441-1-drew@beagleboard.org> <20200701013320.130441-2-drew@beagleboard.org>
+        Tue, 8 Sep 2020 20:15:26 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98514C061573;
+        Tue,  8 Sep 2020 17:15:25 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmMwf3hRVz9sTN;
+        Wed,  9 Sep 2020 10:15:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599610516;
+        bh=G+c9Aw/7aQyit4FCnnuNFGGwhaFlmH6imUDb7V5FlrU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VIQZJDjmN5ooJV1EOuT0seYLgl1asNZyHGb7Fj5/eeMCHyxXzKrA///xqvuL54OUz
+         Pu+at0VpSAL34i/pYp+firANdwvhFBKDa+OLUkGe79DoBGFAdik6LlnmzVhErSqCQz
+         TnB52AOKYpAF8FQBlzA2z4JCgPxg6e9qtsH7m98zOuAqVZTOuSLGxdQHWKQKeHPnod
+         TZTcp3hHrs5gpOyd/MIKU6cTriX09PU94nP5XTKRYlFcSbvia3vv0RH5h7K0siWJJq
+         H6m4RSVNzuwAqZeZKAw85BCq5bnJqZHaGiJMqIChtB0glD1mNO+V9h/V44E/5dDsSy
+         Ye8PE6pTT8xgA==
+Date:   Wed, 9 Sep 2020 10:15:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: build warnings in Linus' tree
+Message-ID: <20200909101508.2dcbfdc6@canb.auug.org.au>
+In-Reply-To: <20200908131439.xj6nzi6nny3u5icb@treble>
+References: <20200908091102.4c2d7b37@canb.auug.org.au>
+        <20200908131439.xj6nzi6nny3u5icb@treble>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; boundary="Sig_/v0fIXRqK3vdwoSVeNUT=q5P";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 30, 2020 6:33:19 PM PDT Drew Fustini wrote:
-> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux), then
-> pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
-> get the value to store in the register.
+--Sig_/v0fIXRqK3vdwoSVeNUT=q5P
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Josh,
 
-> -		vals[found].val = pinctrl_spec.args[1];
-> +
-> +		switch (pinctrl_spec.args_count) {
-> +		case 2:
-> +			vals[found].val = pinctrl_spec.args[1];
-> +			break;
-> +		case 3:
-> +			vals[found].val = (pinctrl_spec.args[1] | 
-pinctrl_spec.args[2]);
-> +			break;
-> +		}
-> 
->  		dev_dbg(pcs->dev, "%pOFn index: 0x%x value: 0x%x\n",
->  			pinctrl_spec.np, offset, 
-pinctrl_spec.args[1]);
+On Tue, 8 Sep 2020 08:14:39 -0500 Josh Poimboeuf <jpoimboe@redhat.com> wrot=
+e:
+>
+> On Tue, Sep 08, 2020 at 09:11:02AM +1000, Stephen Rothwell wrote:
+> >=20
+> > Building Linus' tree, today's linux-next build (x86_64 allmodconfig)
+> > produced these warnings:
+> >=20
+> > arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x2a3: un=
+reachable instruction
+> > net/core/skbuff.o: warning: objtool: skb_push.cold()+0x1b: unreachable =
+instruction
+> > arch/x86/mm/mmio-mod.o: warning: objtool: pre()+0x21a: unreachable inst=
+ruction
+> > arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x14=
+2: unreachable instruction
+> > kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x26: unreachab=
+le instruction
+> > kernel/cred.o: warning: objtool: get_task_cred.cold()+0x19: unreachable=
+ instruction
+> > drivers/misc/sgi-gru/grukservices.o: warning: objtool: gru_wait_abort_p=
+roc()+0x97: unreachable instruction
+> > drivers/scsi/pcmcia/aha152x_core.o: warning: objtool: is_complete()+0x6=
+c6: unreachable instruction
+> > drivers/message/fusion/mptbase.o: warning: objtool: mpt_SoftResetHandle=
+r()+0x4a5: unreachable instruction
+> > drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool: ahd_intr()+0x2a9=
+: unreachable instruction
+> > drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.o: warning: objtoo=
+l: otx2_sq_append_tso()+0xab6: unreachable instruction
+> > fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit.cold()+0x12: u=
+nreachable instruction
+> > fs/btrfs/backref.o: warning: objtool: btrfs_backref_finish_upper_links(=
+)+0x818: unreachable instruction
+> > fs/btrfs/relocation.o: warning: objtool: update_backref_cache.isra.0()+=
+0x3bf: unreachable instruction
+> > drivers/atm/horizon.o: warning: objtool: rx_data_av_handler()+0x452: un=
+reachable instruction =20
+>=20
+> I suspect these will all be fixed by this livepatching pull request:
+>=20
+>   https://lkml.kernel.org/r/20200907082036.GC8084@alley
 
-If #pinctrl-cells value is greater than 2, nothing will set vals[found].val to 
-anything other than zero (from when it's calloc'ed) and the pinctrl will 
-silently be programmed to zero.
+Yep, all but the vmx_handle_exit_irqoff() one as Linus noted.
 
-The debug printout was not change to print vals[found].val, so it will 
-continue to print the value of the 2nd cell.
+Thanks.
+--=20
+Cheers,
+Stephen Rothwell
 
-The result is that a #pinctrl-cells of 3 will produce no warning or error, 
-program the pinctrl to zero, whilst at the same time emit debug log messages 
-that it is programming the expected values.
+--Sig_/v0fIXRqK3vdwoSVeNUT=q5P
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-The device tree documentation still states that #pinctrl-cells must be 1 when 
-using pinctrl-single,pins.  This new special case of ORing two values is not 
-documented.
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YHowACgkQAVBC80lX
+0Gz7XggAmPLYEKpqSvIpVbgZnlEiqEIRbPTUL4Btb5ymsq481Tt8kD++wlcGBUHE
+YqkCKNGyYInbDn85LAlNlx3WD1LY7Q2k0zq6xJkwZXXrxh1xiqcL+B28YCYHE+lR
+Qokw4jDtm+ARf1o7lhdAoW0dQMy6Jda6wRXNCOxwUsnSLPeXLN0tDqliT0HzIiOs
+lLC9T/4cikd++MGqCQFu/ARBPtAtmJ/KfZhpz7hWNPyvRfm+x8Nq4kYUgrwW7o7K
+Fvzn1hRPCtrCc5z0dD1yDfCu8DnpfOUPy6W/fKg1zBio9esn65vDkt4V4no7cO25
+YCUWV9uRzNMrifwUnR0dwmBL2Ew1AQ==
+=ColM
+-----END PGP SIGNATURE-----
 
-
+--Sig_/v0fIXRqK3vdwoSVeNUT=q5P--
