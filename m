@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D51AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E4C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09476206F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2CB21D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R71SFSui"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp/XONrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbgIIK3f (ORCPT
+        id S1730092AbgIIK3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57154 "EHLO
+        Wed, 9 Sep 2020 06:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729808AbgIIK2r (ORCPT
+        with ESMTP id S1727976AbgIIK24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:28:47 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3740AC061756;
-        Wed,  9 Sep 2020 03:28:47 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l191so1755317pgd.5;
-        Wed, 09 Sep 2020 03:28:47 -0700 (PDT)
+        Wed, 9 Sep 2020 06:28:56 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5B2C061755;
+        Wed,  9 Sep 2020 03:28:56 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q4so1108059pjh.5;
+        Wed, 09 Sep 2020 03:28:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fUdV44j+aZOh9NjfP0p2CTGZmk4MYDgkv51zw4YvHxk=;
-        b=R71SFSuicwyBKJXqZmJ0ZrK/k+lcEyOzwQgkd9j+OYaIA2QdBlaXqEo3Srvh7VfPxE
-         MViGUKtmHGLIRB+HOL7g8KPoRVQVmCZ9/B3xJ147X8MfAlVb9VBJSKh4hl4ZTUN5HZvL
-         XaMwNR9w2ecP8fcq07DtSf2qbncS5K6rCbnTyblx8huy9nThz94U7nk8LVjnrzVFf+4l
-         y01pHKeAf4q4BZPuoVDdENXHVPsQA7U+g7xpV3GaZwAotDnmPrhNQ1ivzBeG4+kVlA2v
-         JXxfma318e4dBtXeY+qHGPM8+2S1Uhn7DEER99nUwlF61AD2s+7suDguqfmwr/KbhUnJ
-         fBow==
+        bh=zeAqt+L6g1vrQKWXIoolqUPOf3l3HNvz8g6zB2yyrdI=;
+        b=cp/XONrnITjJvTEJnZWmc+6kAuQBpU4NQ/onQHdCVlnul1JAaJ1FbgPDXQI5JwVkdv
+         crHzNow5rqnJTwbEHwedv9Aodmr8GekzB8r5bqjygkLmCrVAxe/p8c2lWPb6hIjl1RSL
+         ANmFUtfkmEqxOtObM4g13no2VjqUnfzu5WI557LKDmUH3raDOJ3TdfrfCZ9KXzgd3D8t
+         lO8W4WnDvKZ2z3FJZq0sOYYZGCdaq02c0NBRAqr6zzI9s2soPT6hrEA4UZQG7K5OslJt
+         lg+98Dwft0uhJLezw/wiTijvwPlqs3owafq7XkNeIMaG1nuB7bVODlWEMFt0RGWf+NRy
+         WL5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fUdV44j+aZOh9NjfP0p2CTGZmk4MYDgkv51zw4YvHxk=;
-        b=is03A4f+2MNe5xHFoH3XtcPHj+6L6ZX++k8CD7yiAqq0YDVGyEsy4Djoa4kC0vf4+1
-         6Fn2BijFP3pX/sce9O5yzb7EblCIt9pX8C5eYq2uTy8cHuAmzbTx0vfULU9Edz7IuQ1k
-         8UTwjn5W1+iBbVlNownk4Iq+08Ae1eFMg79pAgvIa7cum0e770heAC74dxzj7T825qlL
-         3fsJxu/y5OUE0cy28hIE95ps571gCUQicYzkh2gpzrWghiPr5d8RjW8GhmKcWRlvEpJO
-         xVKa05ejWnYZCtvWmbH+BQ8+S7OFzkYPfF1UetD3dW+poFpX1qh1q7cS5AlQeem74cQy
-         f8CQ==
-X-Gm-Message-State: AOAM530hbVRcFTQkHigtU2d19wx/ap4E8hw9XHYqwILyo7xx7QPrt9kN
-        gv3D2FzjBNtDheDuwkXW8gbmqYGJTPg=
-X-Google-Smtp-Source: ABdhPJwliJttOow+lJGe7XvhT0m9RSr3eG4SftOb9oKlLxZzPhaNhJ4IxkXt6QxEjmJViWaohIRGyQ==
-X-Received: by 2002:a63:24c2:: with SMTP id k185mr102255pgk.415.1599647326095;
-        Wed, 09 Sep 2020 03:28:46 -0700 (PDT)
+        bh=zeAqt+L6g1vrQKWXIoolqUPOf3l3HNvz8g6zB2yyrdI=;
+        b=dgxW80yg9XlUA6wsTFUj5ZqTDlzM43icu5mPoiT988ZNm+uRcGIN0gkMdJtnPXv2Ft
+         f8PQTjItDML1/nYP5G2hkJ4B0zfYIWb33jyCt/3Z3pJMATcsaqKpQrVlqYJhazkfBTDj
+         oEvW9Tko7ZvpV2ugJgx6UBuui6qVjJv59kWDlsoPT8LIiuUCVYNU0CKJtIj0/4uRgyIk
+         J1NnSKSY6GJsgrjyr/Eg+/KDr6c1i2/FrU6LxvBQE2s9yznopQ6zO8r6Fy/4SutWun+c
+         1FkcXCndAMukWvDYKLZbuLCKgKMSGTZTVlwhNeWl/Dvj2Huwg9GlIbSN9qYqXqGP9GOo
+         AcnA==
+X-Gm-Message-State: AOAM531oyBANL+s/b/UbnGh9ttpixrFoDBDQItTkop9+5zadUi8R3YRy
+        YvDJevD1ltVReoIzdtFQwJoADaLa148=
+X-Google-Smtp-Source: ABdhPJxilr7Tep2QKMvG5xpaY5ioo9Tes+49ZCjkj7y5Zz62M7fHfpuKeOYaGD5fVQSSO6rSPzUEzg==
+X-Received: by 2002:a17:90a:a50d:: with SMTP id a13mr250462pjq.180.1599647335481;
+        Wed, 09 Sep 2020 03:28:55 -0700 (PDT)
 Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.28.42
+        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.28.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 03:28:45 -0700 (PDT)
+        Wed, 09 Sep 2020 03:28:54 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v8 17/20] tools: gpio: port gpio-hammer to v2 uAPI
-Date:   Wed,  9 Sep 2020 18:26:37 +0800
-Message-Id: <20200909102640.1657622-18-warthog618@gmail.com>
+Subject: [PATCH v8 19/20] tools: gpio: add multi-line monitoring to gpio-event-mon
+Date:   Wed,  9 Sep 2020 18:26:39 +0800
+Message-Id: <20200909102640.1657622-20-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200909102640.1657622-1-warthog618@gmail.com>
 References: <20200909102640.1657622-1-warthog618@gmail.com>
@@ -77,433 +77,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Port the gpio-hammer tool to the latest GPIO uAPI.
+Extend gpio-event-mon to support monitoring multiple lines.
+This would require multiple lineevent requests to implement using uAPI v1,
+but can be performed with a single line request using uAPI v2.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- tools/gpio/gpio-hammer.c |  32 +++++---
- tools/gpio/gpio-utils.c  | 164 ++++++++++++++++++++++++++++++++-------
- tools/gpio/gpio-utils.h  |  46 ++++++++++-
- 3 files changed, 197 insertions(+), 45 deletions(-)
+ tools/gpio/gpio-event-mon.c | 45 ++++++++++++++++++++++++++++---------
+ 1 file changed, 34 insertions(+), 11 deletions(-)
 
-diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-index a2c7577fad5c..54fdf59dd320 100644
---- a/tools/gpio/gpio-hammer.c
-+++ b/tools/gpio/gpio-hammer.c
-@@ -25,23 +25,30 @@
- int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
- 		  unsigned int loops)
+diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
+index d6a831200c18..e50bb107ea3a 100644
+--- a/tools/gpio/gpio-event-mon.c
++++ b/tools/gpio/gpio-event-mon.c
+@@ -26,7 +26,8 @@
+ #include "gpio-utils.h"
+ 
+ int monitor_device(const char *device_name,
+-		   unsigned int line,
++		   unsigned int *lines,
++		   unsigned int num_lines,
+ 		   struct gpio_v2_line_config *config,
+ 		   unsigned int loops)
  {
--	struct gpiohandle_data data;
-+	struct gpio_v2_line_values values;
-+	struct gpio_v2_line_config config;
- 	char swirr[] = "-\\|/";
- 	int fd;
- 	int ret;
- 	int i, j;
- 	unsigned int iteration = 0;
+@@ -47,7 +48,7 @@ int monitor_device(const char *device_name,
+ 		goto exit_free_name;
+ 	}
  
--	memset(&data.values, 0, sizeof(data.values));
--	ret = gpiotools_request_linehandle(device_name, lines, num_lines,
--					   GPIOHANDLE_REQUEST_OUTPUT, &data,
--					   "gpio-hammer");
-+	memset(&config, 0, sizeof(config));
-+	config.flags = GPIO_V2_LINE_FLAG_OUTPUT;
-+
-+	ret = gpiotools_request_line(device_name, lines, num_lines,
-+				     &config, "gpio-hammer");
+-	ret = gpiotools_request_line(device_name, &line, 1, config,
++	ret = gpiotools_request_line(device_name, lines, num_lines, config,
+ 				     "gpio-event-mon");
  	if (ret < 0)
- 		goto exit_error;
- 	else
- 		fd = ret;
+ 		goto exit_device_close;
+@@ -55,8 +56,10 @@ int monitor_device(const char *device_name,
+ 		lfd = ret;
  
--	ret = gpiotools_get_values(fd, &data);
+ 	/* Read initial states */
+-	values.mask = 1;
 +	values.mask = 0;
-+	values.bits = 0;
+ 	values.bits = 0;
 +	for (i = 0; i < num_lines; i++)
 +		gpiotools_set_bit(&values.mask, i);
-+
-+	ret = gpiotools_get_values(fd, &values);
- 	if (ret < 0)
- 		goto exit_close_error;
- 
-@@ -53,7 +60,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
+ 	ret = gpiotools_get_values(lfd, &values);
+ 	if (ret < 0) {
+ 		fprintf(stderr,
+@@ -65,9 +68,23 @@ int monitor_device(const char *device_name,
+ 		goto exit_line_close;
  	}
- 	fprintf(stdout, "] on %s, initial states: [", device_name);
- 	for (i = 0; i < num_lines; i++) {
--		fprintf(stdout, "%d", data.values[i]);
-+		fprintf(stdout, "%d", gpiotools_test_bit(values.bits, i));
- 		if (i != (num_lines - 1))
- 			fprintf(stdout, ", ");
- 	}
-@@ -64,14 +71,14 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
- 	while (1) {
- 		/* Invert all lines so we blink */
- 		for (i = 0; i < num_lines; i++)
--			data.values[i] = !data.values[i];
-+			gpiotools_change_bit(&values.bits, i);
  
--		ret = gpiotools_set_values(fd, &data);
-+		ret = gpiotools_set_values(fd, &values);
- 		if (ret < 0)
- 			goto exit_close_error;
- 
- 		/* Re-read values to get status */
--		ret = gpiotools_get_values(fd, &data);
-+		ret = gpiotools_get_values(fd, &values);
- 		if (ret < 0)
- 			goto exit_close_error;
- 
-@@ -82,7 +89,8 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
- 
- 		fprintf(stdout, "[");
- 		for (i = 0; i < num_lines; i++) {
--			fprintf(stdout, "%d: %d", lines[i], data.values[i]);
-+			fprintf(stdout, "%d: %d", lines[i],
+-	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
+-	fprintf(stdout, "Initial line value: %d\n",
+-		gpiotools_test_bit(values.bits, 0));
++	if (num_lines == 1) {
++		fprintf(stdout, "Monitoring line %d on %s\n", lines[0], device_name);
++		fprintf(stdout, "Initial line value: %d\n",
++			gpiotools_test_bit(values.bits, 0));
++	} else {
++		fprintf(stdout, "Monitoring lines %d", lines[0]);
++		for (i = 1; i < num_lines - 1; i++)
++			fprintf(stdout, ", %d", lines[i]);
++		fprintf(stdout, " and %d on %s\n", lines[i], device_name);
++		fprintf(stdout, "Initial line values: %d",
++			gpiotools_test_bit(values.bits, 0));
++		for (i = 1; i < num_lines - 1; i++)
++			fprintf(stdout, ", %d",
 +				gpiotools_test_bit(values.bits, i));
- 			if (i != (num_lines - 1))
- 				fprintf(stdout, ", ");
++		fprintf(stdout, " and %d\n",
++			gpiotools_test_bit(values.bits, i));
++	}
+ 
+ 	while (1) {
+ 		struct gpio_v2_line_event event;
+@@ -126,7 +143,7 @@ void print_usage(void)
+ 	fprintf(stderr, "Usage: gpio-event-mon [options]...\n"
+ 		"Listen to events on GPIO lines, 0->1 1->0\n"
+ 		"  -n <name>  Listen on GPIOs on a named device (must be stated)\n"
+-		"  -o <n>     Offset to monitor\n"
++		"  -o <n>     Offset of line to monitor (may be repeated)\n"
+ 		"  -d         Set line as open drain\n"
+ 		"  -s         Set line as open source\n"
+ 		"  -r         Listen for rising edges\n"
+@@ -146,7 +163,8 @@ void print_usage(void)
+ int main(int argc, char **argv)
+ {
+ 	const char *device_name = NULL;
+-	unsigned int line = -1;
++	unsigned int lines[GPIO_V2_LINES_MAX];
++	unsigned int num_lines = 0;
+ 	unsigned int loops = 0;
+ 	struct gpio_v2_line_config config;
+ 	int c;
+@@ -162,7 +180,12 @@ int main(int argc, char **argv)
+ 			device_name = optarg;
+ 			break;
+ 		case 'o':
+-			line = strtoul(optarg, NULL, 10);
++			if (num_lines >= GPIO_V2_LINES_MAX) {
++				print_usage();
++				return -1;
++			}
++			lines[num_lines] = strtoul(optarg, NULL, 10);
++			num_lines++;
+ 			break;
+ 		case 'd':
+ 			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
+@@ -182,7 +205,7 @@ int main(int argc, char **argv)
  		}
-@@ -97,7 +105,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int num_lines,
- 	ret = 0;
+ 	}
  
- exit_close_error:
--	gpiotools_release_linehandle(fd);
-+	gpiotools_release_line(fd);
- exit_error:
- 	return ret;
+-	if (!device_name || line == -1) {
++	if (!device_name || num_lines == 0) {
+ 		print_usage();
+ 		return -1;
+ 	}
+@@ -191,5 +214,5 @@ int main(int argc, char **argv)
+ 		       "falling edges\n");
+ 		config.flags |= EDGE_FLAGS;
+ 	}
+-	return monitor_device(device_name, line, &config, loops);
++	return monitor_device(device_name, lines, num_lines, &config, loops);
  }
-diff --git a/tools/gpio/gpio-utils.c b/tools/gpio/gpio-utils.c
-index d527980bcb94..37187e056c8b 100644
---- a/tools/gpio/gpio-utils.c
-+++ b/tools/gpio/gpio-utils.c
-@@ -100,20 +100,87 @@ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
- 	free(chrdev_name);
- 	return ret < 0 ? ret : req.fd;
- }
-+
-+/**
-+ * gpiotools_request_line() - request gpio lines in a gpiochip
-+ * @device_name:	The name of gpiochip without prefix "/dev/",
-+ *			such as "gpiochip0"
-+ * @lines:		An array desired lines, specified by offset
-+ *			index for the associated GPIO device.
-+ * @num_lines:		The number of lines to request.
-+ * @config:		The new config for requested gpio. Reference
-+ *			"linux/gpio.h" for config details.
-+ * @consumer:		The name of consumer, such as "sysfs",
-+ *			"powerkey". This is useful for other users to
-+ *			know who is using.
-+ *
-+ * Request gpio lines through the ioctl provided by chardev. User
-+ * could call gpiotools_set_values() and gpiotools_get_values() to
-+ * read and write respectively through the returned fd. Call
-+ * gpiotools_release_line() to release these lines after that.
-+ *
-+ * Return:		On success return the fd;
-+ *			On failure return the errno.
-+ */
-+int gpiotools_request_line(const char *device_name, unsigned int *lines,
-+			   unsigned int num_lines,
-+			   struct gpio_v2_line_config *config,
-+			   const char *consumer)
-+{
-+	struct gpio_v2_line_request req;
-+	char *chrdev_name;
-+	int fd;
-+	int i;
-+	int ret;
-+
-+	ret = asprintf(&chrdev_name, "/dev/%s", device_name);
-+	if (ret < 0)
-+		return -ENOMEM;
-+
-+	fd = open(chrdev_name, 0);
-+	if (fd == -1) {
-+		ret = -errno;
-+		fprintf(stderr, "Failed to open %s, %s\n",
-+			chrdev_name, strerror(errno));
-+		goto exit_free_name;
-+	}
-+
-+	memset(&req, 0, sizeof(req));
-+	for (i = 0; i < num_lines; i++)
-+		req.offsets[i] = lines[i];
-+
-+	req.config = *config;
-+	strcpy(req.consumer, consumer);
-+	req.num_lines = num_lines;
-+
-+	ret = ioctl(fd, GPIO_V2_GET_LINE_IOCTL, &req);
-+	if (ret == -1) {
-+		ret = -errno;
-+		fprintf(stderr, "Failed to issue %s (%d), %s\n",
-+			"GPIO_GET_LINE_IOCTL", ret, strerror(errno));
-+	}
-+
-+	if (close(fd) == -1)
-+		perror("Failed to close GPIO character device file");
-+exit_free_name:
-+	free(chrdev_name);
-+	return ret < 0 ? ret : req.fd;
-+}
-+
- /**
-  * gpiotools_set_values(): Set the value of gpio(s)
-  * @fd:			The fd returned by
-- *			gpiotools_request_linehandle().
-- * @data:		The array of values want to set.
-+ *			gpiotools_request_line().
-+ * @values:		The array of values want to set.
-  *
-  * Return:		On success return 0;
-  *			On failure return the errno.
-  */
--int gpiotools_set_values(const int fd, struct gpiohandle_data *data)
-+int gpiotools_set_values(const int fd, struct gpio_v2_line_values *values)
- {
- 	int ret;
- 
--	ret = ioctl(fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, data);
-+	ret = ioctl(fd, GPIO_V2_LINE_SET_VALUES_IOCTL, values);
- 	if (ret == -1) {
- 		ret = -errno;
- 		fprintf(stderr, "Failed to issue %s (%d), %s\n",
-@@ -127,17 +194,17 @@ int gpiotools_set_values(const int fd, struct gpiohandle_data *data)
- /**
-  * gpiotools_get_values(): Get the value of gpio(s)
-  * @fd:			The fd returned by
-- *			gpiotools_request_linehandle().
-- * @data:		The array of values get from hardware.
-+ *			gpiotools_request_line().
-+ * @values:		The array of values get from hardware.
-  *
-  * Return:		On success return 0;
-  *			On failure return the errno.
-  */
--int gpiotools_get_values(const int fd, struct gpiohandle_data *data)
-+int gpiotools_get_values(const int fd, struct gpio_v2_line_values *values)
- {
- 	int ret;
- 
--	ret = ioctl(fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, data);
-+	ret = ioctl(fd, GPIO_V2_LINE_GET_VALUES_IOCTL, values);
- 	if (ret == -1) {
- 		ret = -errno;
- 		fprintf(stderr, "Failed to issue %s (%d), %s\n",
-@@ -169,6 +236,27 @@ int gpiotools_release_linehandle(const int fd)
- 	return ret;
- }
- 
-+/**
-+ * gpiotools_release_line(): Release the line(s) of gpiochip
-+ * @fd:			The fd returned by
-+ *			gpiotools_request_line().
-+ *
-+ * Return:		On success return 0;
-+ *			On failure return the errno.
-+ */
-+int gpiotools_release_line(const int fd)
-+{
-+	int ret;
-+
-+	ret = close(fd);
-+	if (ret == -1) {
-+		perror("Failed to close GPIO LINE device file");
-+		ret = -errno;
-+	}
-+
-+	return ret;
-+}
-+
- /**
-  * gpiotools_get(): Get value from specific line
-  * @device_name:	The name of gpiochip without prefix "/dev/",
-@@ -180,11 +268,14 @@ int gpiotools_release_linehandle(const int fd)
-  */
- int gpiotools_get(const char *device_name, unsigned int line)
- {
--	struct gpiohandle_data data;
-+	int ret;
-+	unsigned int value;
- 	unsigned int lines[] = {line};
- 
--	gpiotools_gets(device_name, lines, 1, &data);
--	return data.values[0];
-+	ret = gpiotools_gets(device_name, lines, 1, &value);
-+	if (ret)
-+		return ret;
-+	return value;
- }
- 
- 
-@@ -195,27 +286,35 @@ int gpiotools_get(const char *device_name, unsigned int line)
-  * @lines:		An array desired lines, specified by offset
-  *			index for the associated GPIO device.
-  * @num_lines:		The number of lines to request.
-- * @data:		The array of values get from gpiochip.
-+ * @values:		The array of values get from gpiochip.
-  *
-  * Return:		On success return 0;
-  *			On failure return the errno.
-  */
- int gpiotools_gets(const char *device_name, unsigned int *lines,
--		   unsigned int num_lines, struct gpiohandle_data *data)
-+		   unsigned int num_lines, unsigned int *values)
- {
--	int fd;
-+	int fd, i;
- 	int ret;
- 	int ret_close;
-+	struct gpio_v2_line_config config;
-+	struct gpio_v2_line_values lv;
- 
--	ret = gpiotools_request_linehandle(device_name, lines, num_lines,
--					   GPIOHANDLE_REQUEST_INPUT, data,
--					   CONSUMER);
-+	memset(&config, 0, sizeof(config));
-+	config.flags = GPIO_V2_LINE_FLAG_INPUT;
-+	ret = gpiotools_request_line(device_name, lines, num_lines,
-+				     &config, CONSUMER);
- 	if (ret < 0)
- 		return ret;
- 
- 	fd = ret;
--	ret = gpiotools_get_values(fd, data);
--	ret_close = gpiotools_release_linehandle(fd);
-+	for (i = 0; i < num_lines; i++)
-+		gpiotools_set_bit(&lv.mask, i);
-+	ret = gpiotools_get_values(fd, &lv);
-+	if (!ret)
-+		for (i = 0; i < num_lines; i++)
-+			values[i] = gpiotools_test_bit(lv.bits, i);
-+	ret_close = gpiotools_release_line(fd);
- 	return ret < 0 ? ret : ret_close;
- }
- 
-@@ -232,11 +331,9 @@ int gpiotools_gets(const char *device_name, unsigned int *lines,
- int gpiotools_set(const char *device_name, unsigned int line,
- 		  unsigned int value)
- {
--	struct gpiohandle_data data;
- 	unsigned int lines[] = {line};
- 
--	data.values[0] = value;
--	return gpiotools_sets(device_name, lines, 1, &data);
-+	return gpiotools_sets(device_name, lines, 1, &value);
- }
- 
- /**
-@@ -246,22 +343,31 @@ int gpiotools_set(const char *device_name, unsigned int line,
-  * @lines:		An array desired lines, specified by offset
-  *			index for the associated GPIO device.
-  * @num_lines:		The number of lines to request.
-- * @data:		The array of values set to gpiochip, must be
-+ * @value:		The array of values set to gpiochip, must be
-  *			0(low) or 1(high).
-  *
-  * Return:		On success return 0;
-  *			On failure return the errno.
-  */
- int gpiotools_sets(const char *device_name, unsigned int *lines,
--		   unsigned int num_lines, struct gpiohandle_data *data)
-+		   unsigned int num_lines, unsigned int *values)
- {
--	int ret;
-+	int ret, i;
-+	struct gpio_v2_line_config config;
- 
--	ret = gpiotools_request_linehandle(device_name, lines, num_lines,
--					   GPIOHANDLE_REQUEST_OUTPUT, data,
--					   CONSUMER);
-+	memset(&config, 0, sizeof(config));
-+	config.flags = GPIO_V2_LINE_FLAG_OUTPUT;
-+	config.num_attrs = 1;
-+	config.attrs[0].attr.id = GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES;
-+	for (i = 0; i < num_lines; i++) {
-+		gpiotools_set_bit(&config.attrs[0].mask, i);
-+		gpiotools_assign_bit(&config.attrs[0].attr.values,
-+				     i, values[i]);
-+	}
-+	ret = gpiotools_request_line(device_name, lines, num_lines,
-+				     &config, CONSUMER);
- 	if (ret < 0)
- 		return ret;
- 
--	return gpiotools_release_linehandle(ret);
-+	return gpiotools_release_line(ret);
- }
-diff --git a/tools/gpio/gpio-utils.h b/tools/gpio/gpio-utils.h
-index 324729577865..f8ea4fac14d5 100644
---- a/tools/gpio/gpio-utils.h
-+++ b/tools/gpio/gpio-utils.h
-@@ -12,7 +12,9 @@
- #ifndef _GPIO_UTILS_H_
- #define _GPIO_UTILS_H_
- 
-+#include <stdbool.h>
- #include <string.h>
-+#include <linux/types.h>
- 
- #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
- 
-@@ -26,16 +28,52 @@ int gpiotools_request_linehandle(const char *device_name, unsigned int *lines,
- 				 unsigned int num_lines, unsigned int flag,
- 				 struct gpiohandle_data *data,
- 				 const char *consumer_label);
--int gpiotools_set_values(const int fd, struct gpiohandle_data *data);
--int gpiotools_get_values(const int fd, struct gpiohandle_data *data);
- int gpiotools_release_linehandle(const int fd);
- 
-+int gpiotools_request_line(const char *device_name,
-+			   unsigned int *lines,
-+			   unsigned int num_lines,
-+			   struct gpio_v2_line_config *config,
-+			   const char *consumer);
-+int gpiotools_set_values(const int fd, struct gpio_v2_line_values *values);
-+int gpiotools_get_values(const int fd, struct gpio_v2_line_values *values);
-+int gpiotools_release_line(const int fd);
-+
- int gpiotools_get(const char *device_name, unsigned int line);
- int gpiotools_gets(const char *device_name, unsigned int *lines,
--		   unsigned int num_lines, struct gpiohandle_data *data);
-+		   unsigned int num_lines, unsigned int *values);
- int gpiotools_set(const char *device_name, unsigned int line,
- 		  unsigned int value);
- int gpiotools_sets(const char *device_name, unsigned int *lines,
--		   unsigned int num_lines, struct gpiohandle_data *data);
-+		   unsigned int num_lines, unsigned int *values);
-+
-+/* helper functions for gpio_v2_line_values bits */
-+static inline void gpiotools_set_bit(__u64 *b, int n)
-+{
-+	*b |= 1ULL << n;
-+}
-+
-+static inline void gpiotools_change_bit(__u64 *b, int n)
-+{
-+	*b ^= 1ULL << n;
-+}
-+
-+static inline void gpiotools_clear_bit(__u64 *b, int n)
-+{
-+	*b &= ~(1ULL << n);
-+}
-+
-+static inline int gpiotools_test_bit(__u64 b, int n)
-+{
-+	return !!(b & 1ULL << n);
-+}
-+
-+static inline void gpiotools_assign_bit(__u64 *b, int n, bool value)
-+{
-+	if (value)
-+		gpiotools_set_bit(b, n);
-+	else
-+		gpiotools_clear_bit(b, n);
-+}
- 
- #endif /* _GPIO_UTILS_H_ */
 -- 
 2.28.0
 
