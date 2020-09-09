@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA86C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3827C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48502145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A0020708
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbgIIJKV (ORCPT
+        id S1730174AbgIIJKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:10:21 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28799 "EHLO mga05.intel.com"
+        Wed, 9 Sep 2020 05:10:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:52492 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgIIJKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:10:04 -0400
-IronPort-SDR: jxLtzq+F1fi9lQ3jz02mTKsofPck9fyvYIMlOVX9pgAK2NwqAmVaREq8jW/KbT9492JW9MCdCy
- xd7SN5cC7byw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="243111461"
+        id S1730116AbgIIJKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:10:47 -0400
+IronPort-SDR: H7wXtc4ZVuz0fYpUhd0Wfc6pbowmIRcf76i0LBPlfK1W9PSw7rOYMpx+6mW7CTLFIeuGN19OxZ
+ udSs0ip5fWOw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="219854481"
 X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="243111461"
+   d="scan'208";a="219854481"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:10:01 -0700
-IronPort-SDR: rZpk5Z4odKGLtLzltwGuhgScQp4Dp92VrSL4e68D5TH4P2Q/gxdovziIHfE34vMww7rcvuivKY
- lhKHsAG05jJg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:10:44 -0700
+IronPort-SDR: F+E3oAXsVOEwyBwiltRHGteggz6AZQfVmeORawrTkU4oxySaH4nt3Hy6uGxA7yo2rsvY2OK9BL
+ eQHV/cBLp+CQ==
 X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="343831390"
+   d="scan'208";a="328836109"
 Received: from shsi6026.sh.intel.com (HELO localhost) ([10.239.147.135])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:09:59 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:10:41 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -44,12 +44,10 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Yu Wang <yu1.wang@intel.com>,
         Reinette Chatre <reinette.chatre@intel.com>,
-        Shuo Liu <shuo.a.liu@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v3 07/17] virt: acrn: Introduce an ioctl to set vCPU registers state
-Date:   Wed,  9 Sep 2020 17:08:26 +0800
-Message-Id: <20200909090836.46762-8-shuo.a.liu@intel.com>
+        Shuo Liu <shuo.a.liu@intel.com>
+Subject: [PATCH v3 10/17] virt: acrn: Introduce PCI configuration space PIO accesses combiner
+Date:   Wed,  9 Sep 2020 17:08:29 +0800
+Message-Id: <20200909090836.46762-11-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200909090836.46762-1-shuo.a.liu@intel.com>
 References: <20200909090836.46762-1-shuo.a.liu@intel.com>
@@ -62,185 +60,187 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-A virtual CPU of User VM has different context due to the different
-registers state. ACRN userspace needs to set the virtual CPU
-registers state (e.g. giving a initial registers state to a virtual
-BSP of a User VM).
+A User VM can access its virtual PCI configuration spaces via port IO
+approach, which has two following steps:
+ 1) writes address into port 0xCF8
+ 2) put/get data in/from port 0xCFC
 
-HSM provides an ioctl ACRN_IOCTL_SET_VCPU_REGS to do the virtual CPU
-registers state setting. The ioctl passes the registers state from ACRN
-userspace to the hypervisor directly.
+To distribute a complete PCI configuration space access one time, HSM
+need to combine such two accesses together.
+
+Combine two paired PIO I/O requests into one PCI I/O request and
+continue the I/O request distribution.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
-Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Zhi Wang <zhi.a.wang@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: Yu Wang <yu1.wang@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/virt/acrn/hsm.c       | 14 +++++++
- drivers/virt/acrn/hypercall.h | 13 +++++++
- include/uapi/linux/acrn.h     | 71 +++++++++++++++++++++++++++++++++++
- 3 files changed, 98 insertions(+)
+ drivers/virt/acrn/acrn_drv.h |  2 +
+ drivers/virt/acrn/ioreq.c    | 76 ++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/acrn.h    | 15 +++++++
+ 3 files changed, 93 insertions(+)
 
-diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-index bc85a3c14f87..aa6e9999d147 100644
---- a/drivers/virt/acrn/hsm.c
-+++ b/drivers/virt/acrn/hsm.c
-@@ -9,6 +9,7 @@
-  *	Yakui Zhao <yakui.zhao@intel.com>
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index 9a8e3bb007b1..4f86feaa5e1b 100644
+--- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -154,6 +154,7 @@ extern rwlock_t acrn_vm_list_lock;
+  * @default_client:		The default I/O request client
+  * @ioreq_buf:			I/O request shared buffer
+  * @ioreq_page:			The page of the I/O request shared buffer
++ * @pci_conf_addr:		Address of a PCI configuration access emulation
   */
+ struct acrn_vm {
+ 	struct device			*dev;
+@@ -169,6 +170,7 @@ struct acrn_vm {
+ 	struct acrn_ioreq_client	*default_client;
+ 	struct acrn_io_request_buffer	*ioreq_buf;
+ 	struct page			*ioreq_page;
++	u32				pci_conf_addr;
+ };
  
-+#include <linux/io.h>
- #include <linux/miscdevice.h>
- #include <linux/mm.h>
- #include <linux/module.h>
-@@ -46,6 +47,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- {
- 	struct acrn_vm *vm = filp->private_data;
- 	struct acrn_vm_creation *vm_param;
-+	struct acrn_vcpu_regs *cpu_regs;
- 	int ret = 0;
- 
- 	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
-@@ -93,6 +95,18 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- 	case ACRN_IOCTL_DESTROY_VM:
- 		ret = acrn_vm_destroy(vm);
- 		break;
-+	case ACRN_IOCTL_SET_VCPU_REGS:
-+		cpu_regs = memdup_user((void __user *)ioctl_param,
-+				       sizeof(struct acrn_vcpu_regs));
-+		if (IS_ERR(cpu_regs))
-+			return PTR_ERR(cpu_regs);
-+
-+		ret = hcall_set_vcpu_regs(vm->vmid, virt_to_phys(cpu_regs));
-+		if (ret < 0)
-+			dev_err(vm->dev, "Failed to set regs state of VM%u!\n",
-+				vm->vmid);
-+		kfree(cpu_regs);
-+		break;
- 	default:
- 		dev_warn(vm->dev, "Unknown IOCTL 0x%x!\n", cmd);
- 		ret = -ENOTTY;
-diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
-index 426b66cadb1f..f29cfae08862 100644
---- a/drivers/virt/acrn/hypercall.h
-+++ b/drivers/virt/acrn/hypercall.h
-@@ -19,6 +19,7 @@
- #define HC_START_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x02)
- #define HC_PAUSE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x03)
- #define HC_RESET_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x05)
-+#define HC_SET_VCPU_REGS		_HC_ID(HC_ID, HC_ID_VM_BASE + 0x06)
- 
- /**
-  * hcall_create_vm() - Create a User VM
-@@ -75,4 +76,16 @@ static inline long hcall_reset_vm(u64 vmid)
- 	return acrn_hypercall1(HC_RESET_VM, vmid);
+ struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+diff --git a/drivers/virt/acrn/ioreq.c b/drivers/virt/acrn/ioreq.c
+index d1c5664bda89..a9953e4322a5 100644
+--- a/drivers/virt/acrn/ioreq.c
++++ b/drivers/virt/acrn/ioreq.c
+@@ -221,6 +221,80 @@ int acrn_ioreq_client_wait(struct acrn_ioreq_client *client)
+ 	return 0;
  }
  
-+/**
-+ * hcall_set_vcpu_regs() - Set up registers of virtual CPU of a User VM
-+ * @vmid:	User VM ID
-+ * @regs_state:	Service VM GPA of registers state
-+ *
-+ * Return: 0 on success, <0 on failure
-+ */
-+static inline long hcall_set_vcpu_regs(u64 vmid, u64 regs_state)
++static bool is_cfg_addr(struct acrn_io_request *req)
 +{
-+	return acrn_hypercall2(HC_SET_VCPU_REGS, vmid, regs_state);
++	return ((req->type == ACRN_IOREQ_TYPE_PORTIO) &&
++		(req->reqs.pio_request.address == 0xcf8));
 +}
 +
- #endif /* __ACRN_HSM_HYPERCALL_H */
++static bool is_cfg_data(struct acrn_io_request *req)
++{
++	return ((req->type == ACRN_IOREQ_TYPE_PORTIO) &&
++		((req->reqs.pio_request.address >= 0xcfc) &&
++		 (req->reqs.pio_request.address < (0xcfc + 4))));
++}
++
++/* The low 8-bit of supported pci_reg addr.*/
++#define PCI_LOWREG_MASK  0xFC
++/* The high 4-bit of supported pci_reg addr */
++#define PCI_HIGHREG_MASK 0xF00
++/* Max number of supported functions */
++#define PCI_FUNCMAX	7
++/* Max number of supported slots */
++#define PCI_SLOTMAX	31
++/* Max number of supported buses */
++#define PCI_BUSMAX	255
++#define CONF1_ENABLE	0x80000000UL
++/*
++ * A PCI configuration space access via PIO 0xCF8 and 0xCFC normally has two
++ * following steps:
++ *   1) writes address into 0xCF8 port
++ *   2) accesses data in/from 0xCFC
++ * This function combines such paired PCI configuration space I/O requests into
++ * one ACRN_IOREQ_TYPE_PCICFG type I/O request and continues the processing.
++ */
++static bool handle_cf8cfc(struct acrn_vm *vm,
++			  struct acrn_io_request *req, u16 vcpu)
++{
++	int offset, pci_cfg_addr, pci_reg;
++	bool is_handled = false;
++
++	if (is_cfg_addr(req)) {
++		WARN_ON(req->reqs.pio_request.size != 4);
++		if (req->reqs.pio_request.direction == ACRN_IOREQ_DIR_WRITE)
++			vm->pci_conf_addr = req->reqs.pio_request.value;
++		else
++			req->reqs.pio_request.value = vm->pci_conf_addr;
++		is_handled = true;
++	} else if (is_cfg_data(req)) {
++		if (!(vm->pci_conf_addr & CONF1_ENABLE)) {
++			if (req->reqs.pio_request.direction ==
++					ACRN_IOREQ_DIR_READ)
++				req->reqs.pio_request.value = 0xffffffff;
++			is_handled = true;
++		} else {
++			offset = req->reqs.pio_request.address - 0xcfc;
++
++			req->type = ACRN_IOREQ_TYPE_PCICFG;
++			pci_cfg_addr = vm->pci_conf_addr;
++			req->reqs.pci_request.bus =
++					(pci_cfg_addr >> 16) & PCI_BUSMAX;
++			req->reqs.pci_request.dev =
++					(pci_cfg_addr >> 11) & PCI_SLOTMAX;
++			req->reqs.pci_request.func =
++					(pci_cfg_addr >> 8) & PCI_FUNCMAX;
++			pci_reg = (pci_cfg_addr & PCI_LOWREG_MASK) +
++				   ((pci_cfg_addr >> 16) & PCI_HIGHREG_MASK);
++			req->reqs.pci_request.reg = pci_reg + offset;
++		}
++	}
++
++	if (is_handled)
++		ioreq_complete_request(vm, vcpu, req);
++
++	return is_handled;
++}
++
+ static bool in_range(struct acrn_ioreq_range *range,
+ 		     struct acrn_io_request *req)
+ {
+@@ -380,6 +454,8 @@ static int acrn_ioreq_dispatch(struct acrn_vm *vm)
+ 				ioreq_complete_request(vm, i, req);
+ 				continue;
+ 			}
++			if (handle_cf8cfc(vm, req, i))
++				continue;
+ 
+ 			spin_lock_bh(&vm->ioreq_clients_lock);
+ 			client = find_ioreq_client(vm, req);
 diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-index 364b1a783074..1d5b82e154fb 100644
+index 8eb687f1482c..31cf0fd73bcc 100644
 --- a/include/uapi/linux/acrn.h
 +++ b/include/uapi/linux/acrn.h
-@@ -36,6 +36,75 @@ struct acrn_vm_creation {
- 	__u8	reserved2[8];
+@@ -20,6 +20,7 @@
+ 
+ #define ACRN_IOREQ_TYPE_PORTIO		0
+ #define ACRN_IOREQ_TYPE_MMIO		1
++#define ACRN_IOREQ_TYPE_PCICFG		2
+ 
+ #define ACRN_IOREQ_DIR_READ		0
+ #define ACRN_IOREQ_DIR_WRITE		1
+@@ -40,6 +41,18 @@ struct acrn_pio_request {
+ 	__u32	value;
  } __attribute__((aligned(8)));
  
-+struct acrn_gp_regs {
-+	__u64	rax;
-+	__u64	rcx;
-+	__u64	rdx;
-+	__u64	rbx;
-+	__u64	rsp;
-+	__u64	rbp;
-+	__u64	rsi;
-+	__u64	rdi;
-+	__u64	r8;
-+	__u64	r9;
-+	__u64	r10;
-+	__u64	r11;
-+	__u64	r12;
-+	__u64	r13;
-+	__u64	r14;
-+	__u64	r15;
-+};
-+
-+struct acrn_descriptor_ptr {
-+	__u16	limit;
-+	__u64	base;
-+	__u16	reserved[3];
-+} __attribute__ ((__packed__));
-+
-+struct acrn_regs {
-+	struct acrn_gp_regs		gprs;
-+	struct acrn_descriptor_ptr	gdt;
-+	struct acrn_descriptor_ptr	idt;
-+
-+	__u64				rip;
-+	__u64				cs_base;
-+	__u64				cr0;
-+	__u64				cr4;
-+	__u64				cr3;
-+	__u64				ia32_efer;
-+	__u64				rflags;
-+	__u64				reserved_64[4];
-+
-+	__u32				cs_ar;
-+	__u32				cs_limit;
-+	__u32				reserved_32[3];
-+
-+	__u16				cs_sel;
-+	__u16				ss_sel;
-+	__u16				ds_sel;
-+	__u16				es_sel;
-+	__u16				fs_sel;
-+	__u16				gs_sel;
-+	__u16				ldt_sel;
-+	__u16				tr_sel;
-+
-+	__u16				reserved_16[4];
-+};
-+
-+/**
-+ * struct acrn_vcpu_regs - Info of vCPU registers state
-+ * @vcpu_id:	vCPU ID
-+ * @reserved0:	Reserved
-+ * @vcpu_regs:	vCPU registers state
-+ *
-+ * This structure will be passed to hypervisor directly.
-+ */
-+struct acrn_vcpu_regs {
-+	__u16			vcpu_id;
-+	__u16			reserved0[3];
-+	struct acrn_regs	vcpu_regs;
++/* Need keep same header fields with pio_request */
++struct acrn_pci_request {
++	__u32	direction;
++	__u32	reserved[3];
++	__u64	size;
++	__u32	value;
++	__u32	bus;
++	__u32	dev;
++	__u32	func;
++	__u32	reg;
 +} __attribute__((aligned(8)));
 +
- /* The ioctl type, documented in ioctl-number.rst */
- #define ACRN_IOCTL_TYPE			0xA2
- 
-@@ -52,5 +121,7 @@ struct acrn_vm_creation {
- 	_IO(ACRN_IOCTL_TYPE, 0x13)
- #define ACRN_IOCTL_RESET_VM		\
- 	_IO(ACRN_IOCTL_TYPE, 0x15)
-+#define ACRN_IOCTL_SET_VCPU_REGS	\
-+	_IOW(ACRN_IOCTL_TYPE, 0x16, struct acrn_vcpu_regs)
- 
- #endif /* _UAPI_ACRN_H */
+ /**
+  * struct acrn_io_request - 256-byte ACRN I/O request
+  * @type:		Type of this request (ACRN_IOREQ_TYPE_*).
+@@ -48,6 +61,7 @@ struct acrn_pio_request {
+  * @reserved0:		Reserved fields.
+  * @reqs:		Union of different types of request. Byte offset: 64.
+  * @reqs.pio_request:	PIO request data of the I/O request.
++ * @reqs.pci_request:	PCI configuration space request data of the I/O request.
+  * @reqs.mmio_request:	MMIO request data of the I/O request.
+  * @reqs.data:		Raw data of the I/O request.
+  * @reserved1:		Reserved fields.
+@@ -107,6 +121,7 @@ struct acrn_io_request {
+ 	__u32	reserved0[14];
+ 	union {
+ 		struct acrn_pio_request		pio_request;
++		struct acrn_pci_request		pci_request;
+ 		struct acrn_mmio_request	mmio_request;
+ 		__u64				data[8];
+ 	} reqs;
 -- 
 2.28.0
 
