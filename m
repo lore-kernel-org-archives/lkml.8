@@ -2,98 +2,223 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E19EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E89C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF1121D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599679464;
-	bh=nlWFWCSnvtY0mLZZMeSCfQTCzDo6swiuvKmc7yHCNKo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Xnln3GXWVPol/pWbAa5iFMr+BcZXx1h7t5fbDlLaqvoijV1CTblo1ILv4JdLyelmt
-	 othGyqXxUJVz7avVdsw/LQwDLPYS1XdkCwC437rQ0avnTXrOnSvWx40MvvsAcSBh0i
-	 uSJvdQk+oT2p2RM8QqW2LWng2wrA2HEXgqnntjg8=
+	by mail.kernel.org (Postfix) with ESMTP id 55EAE21D43
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:26:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JTKL18PN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgIITYX (ORCPT
+        id S1727820AbgIIT0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgIITYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:24:20 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B37921D6C;
-        Wed,  9 Sep 2020 19:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599679459;
-        bh=nlWFWCSnvtY0mLZZMeSCfQTCzDo6swiuvKmc7yHCNKo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sGernz+e3OSlmlp0EJtUXxym+NlLEqgNzI10OLNLp31q+b3OgL4LqM5V8dv4evoNc
-         FY25iTbxowqkMImgPoJoCtfKBtBRWjwf50b+NxM+QYHy3QiDfK//UdeV35yNangfrx
-         7PSTyufqVpLbiBvFYXKPTuI1VvBd6Rk9f05cy/aY=
-Date:   Wed, 9 Sep 2020 12:24:17 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Moshe Shemesh <moshe@nvidia.com>
-Cc:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
- to devlink reload command
-Message-ID: <20200909122417.49b637eb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <b0550422-83a4-4e97-46e3-cb5f431a6dd7@nvidia.com>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
-        <1598801254-27764-2-git-send-email-moshe@mellanox.com>
-        <20200831121501.GD3794@nanopsycho.orion>
-        <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
-        <20200902094627.GB2568@nanopsycho>
-        <20200902083025.43407d8f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200903055729.GB2997@nanopsycho.orion>
-        <20200903124719.75325f0c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200904090450.GH2997@nanopsycho.orion>
-        <20200904125647.799e66e4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <6bd0fa45-68ce-b82d-98e6-327c6cd50e80@nvidia.com>
-        <20200907105850.34726158@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <b0550422-83a4-4e97-46e3-cb5f431a6dd7@nvidia.com>
+        Wed, 9 Sep 2020 15:26:47 -0400
+Received: from mail-co1nam11on2058.outbound.protection.outlook.com ([40.107.220.58]:4736
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726184AbgIIT0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 15:26:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mHipMGUHyBVKoPpvW1bvwqTjXFrw59o4S6tcpJjyMnaUdSpUoDlBkjGAE/DsX1YKzRueNN+RLo6cfgywcM2rKTuLonXcm7TOufBm9U8NqArRFQANZLIO1IMA22RNGLKEtBdqxU9GE4CnRZsB3ETRqA4vqz+48BCgT74guZmu79lOLnbcknMbNxE11atHBjPafuAZrM+ScgxwwYpiko2J2nnpNOcyDMK/9sTt4vxOHCMx4WyP+Iv/eEjywuaJjswQ/I+oXPVzvKJlgfWXgIx9C9O7/WarWghaCcfSQJDcuZc/Y3HymHIEV/LnkH2INuKaSKH9JvH2RV5NV570lmlw5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c3e1SZuEkIeUX96FPRvQ1YvKfoixlGlZlhT5U+QMD9c=;
+ b=OhZ9PJN7eX5pYJ8ZLrhdRu/4caZCxW/kbcRlz1TOqbUZVas8uNdbU881PENKQQhx8Ce1oJNuyN+TnnA8jR3C0SDXi4OZztOOcTXLdI5kx3TB6bRVm7ChlfJTnqTMAOyHBVMQPM44rtDTnn9x/YP3IC2DfHxtPD5Sk+fS3fJA3xrGSZT/NM2B72VjuuWhZ2lKG+xHZ831AMAaq3ZMaFVQUumfIGwnCbwm0imnDIkWndrcZg8HHimH3jjdlu30rmV+OgZ8gCAEDChFLRkb2bJUVxZMlWCWPe/U2YjKY9+i8amfRtsC+7dlj8b6DZql+3dtcr0G7kk7shx/S2wTMo8pBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c3e1SZuEkIeUX96FPRvQ1YvKfoixlGlZlhT5U+QMD9c=;
+ b=JTKL18PNJyhfuF+Ai3cP5EY4uAU+P2ByWvEdZ5u8W1sUGF5OXIUqyfVbD25fGf5145fAX73iacLp3jDGbDqEtoYaIuMuXlX+f/pblCpEeMia1R7HfYoxyUueYx8eFvHMLXyH28fylnNXOVKLRj5lt2Y63raA9xtU3QiuPCws80c=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN1PR12MB2590.namprd12.prod.outlook.com (2603:10b6:802:2e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 9 Sep
+ 2020 19:26:41 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::ccd9:728:9577:200d]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::ccd9:728:9577:200d%4]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
+ 19:26:41 +0000
+Subject: RE: [PATCH v5 00/12] SVM cleanup and INVPCID feature support
+To:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "jmattson@google.com" <jmattson@google.com>
+Cc:     "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+References: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu>
+From:   Babu Moger <babu.moger@amd.com>
+Message-ID: <fe0deb21-1128-ab8e-fe3e-c9863398095c@amd.com>
+Date:   Wed, 9 Sep 2020 14:26:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM3PR08CA0011.namprd08.prod.outlook.com
+ (2603:10b6:0:52::21) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.31.136] (165.204.77.1) by DM3PR08CA0011.namprd08.prod.outlook.com (2603:10b6:0:52::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 19:26:40 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: cc09f171-ad4b-408d-65c4-08d854f64764
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2590:
+X-Microsoft-Antispam-PRVS: <SN1PR12MB259034DE3AC54844C13D54E395260@SN1PR12MB2590.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: E21uwF9O3uiChS2C26748rlX7Sx3LHdz3MeX431lWnSrKlOWSYjNbL8TcQ3cHmgKscBZxtOdTSq+eKWc3+sWEOtPICv12bGQuxCP4oU4mU2mvvax5/y1N1KxqlA8rjulxaXsKMIKk0rNQFKf2/oT2wlfoKOHIT/Lz8ENx2umvUQHBKo21ulO4VulpzLUO0uqzYjMYhOOJ+XDS9xzpBoBMZRPcU4o5weizJII0lttNHrfkGf+6Kr/F9pJ28UcJistVSXC1Xm9BGoPSMBoWHdrir0Nk1sxjJserxM2piu/kshAIwVAa+2HDJ17FM+A8pHSVOvOb2u8nYO5m64yXSPcwmRfo7+ejeP0xtWqBoz+Pd//zKp+RkVQtFnJw9zPvVn4t6QTNNIs4jhnstlZ74Faq2H1kOcJMj9an5VyLJzKikC1Q17Q20nEdMcBiSaKeTj56//fNK4JnUjjk44Sluvx2Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(136003)(396003)(39860400002)(44832011)(478600001)(52116002)(7416002)(53546011)(16576012)(316002)(16526019)(186003)(31696002)(26005)(6486002)(8676002)(2906002)(86362001)(5660300002)(956004)(8936002)(2616005)(83380400001)(66556008)(4326008)(66476007)(66946007)(36756003)(54906003)(966005)(31686004)(110136005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 3Mn+xWcOTMOClkV9sKLSgYWdHk2OhhT5edIdyLfe2jgVh/Qz7dmyK2qMxxzpYpoFEps1w19LsTLOe9Ov1lrFiIJNi/XPHH6VWN5moSXbN4guPf5wO8OcaybSlr5BAb6EjsfvguOXAvKgq6gliTvWh87nBuWRAor1xuS/v4HKNaJcwITpOR4q69UJlx5OCg3iTgqqxrstv1r3vfpC1fPvoQ9ABfC1hms88e/zD0y2CdMEwcLy0nd2kzcypLihezlEwpK2QyRtTEDJK4bBOkMaN4bV4h8eMWk3bNjiOTGjuvy7BaLa39KOKs+QXpm5jfdbr4yhA4Y58teNb0AXvOwC+mql1Ihovomp/mH6VdNhoNbCbUf60SviwYM2I9Z4FPVEsrKPb4EWI+MKRvbuNC5alCCmZVxLOGVQXaFFwdkEAjjxaz2R1NdG62gFd/P4jwGrIegcR8fbkioYkTSVnYpGsWxCw6t7vy8POE9IPJhsEY+u8yz4FWX/sojMi5CzY93Oa9XeMx/pYAxbhH8h/R0RFOWd6GEA1Pjscq/GSaAPXyIXpoGZNAh+A+ww+ilU4RhZ/tEPSEjzfMXa0Ng7VCUyCdlPoaKIUT0sv0sBdkMRTzXrEnHHoK6+SPfpXUPULmF8SaHSl2YxnIJU4sUPSfvnQQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc09f171-ad4b-408d-65c4-08d854f64764
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 19:26:41.0774
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Fxj5l6BuR1PFk7Dyu6YWtExGTCxvZ+ZTvg2EG6/WYMmc4/9r9WX1ZObb7iRLwy7Z
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2590
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 16:27:19 +0300 Moshe Shemesh wrote:
-> On 9/7/2020 8:58 PM, Jakub Kicinski wrote:
-> > On Mon, 7 Sep 2020 16:46:01 +0300 Moshe Shemesh wrote: =20
-> >>> In that sense I don't like --live because it doesn't really say much.
-> >>> AFAIU it means 1) no link flap; 2) < 2 sec datapath downtime; 3) no
-> >>> configuration is lost in kernel or device (including netdev config,
-> >>> link config, flow rules, counters etc.). I was hoping at least the
-> >>> documentation in patch 14 would be more precise. =20
-> >> Actually, while writing "no-reset" or "live-patching" I meant also no
-> >> downtime at all and nothing resets (config, rules ... anything), that
-> >> fits mlx5 live-patching.
-> >>
-> >> However, to make it more generic,  I can allow few seconds downtime and
-> >> add similar constrains as you mentioned here to "no-reset". I will add
-> >> that to the documentation patch. =20
-> > Oh! If your device supports no downtime and packet loss at all that's
-> > great. You don't have to weaken the definition now, whoever needs a
-> > weaker definition can add a different constraint level later, no? =20
->=20
-> Yes, but if we are thinking there will be more levels, maybe the flag=20
-> "--live" or "--no_reset" is less extendable, we may need new attr. I=20
-> mean should I have uAPI command line like:
->=20
-> $ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action {=20
-> driver_reinit | fw_activate } [ limit_level=C2=A0 no_reset ] ]
+Hi Paolo,
+Let me know if you have feedback on this series? I was thinking of
+refreshing the series. There is one minor comment on PATCH v5 04/12(from Jim).
+Thanks
+Babu
 
-That LGTM, thanks.
+> -----Original Message-----
+> From: Moger, Babu <Babu.Moger@amd.com>
+> Sent: Wednesday, August 26, 2020 2:14 PM
+> To: pbonzini@redhat.com; vkuznets@redhat.com;
+> sean.j.christopherson@intel.com; jmattson@google.com
+> Cc: wanpengli@tencent.com; kvm@vger.kernel.org; joro@8bytes.org;
+> x86@kernel.org; linux-kernel@vger.kernel.org; Moger, Babu
+> <Babu.Moger@amd.com>; mingo@redhat.com; bp@alien8.de;
+> hpa@zytor.com; tglx@linutronix.de
+> Subject: [PATCH v5 00/12] SVM cleanup and INVPCID feature support
+> 
+> The following series adds the support for PCID/INVPCID on AMD guests.
+> While doing it re-structured the vmcb_control_area data structure to combine
+> all the intercept vectors into one 32 bit array. Makes it easy for future additions.
+> Re-arranged few pcid related code to make it common between SVM and VMX.
+> 
+> INVPCID interceptions are added only when the guest is running with shadow
+> page table enabled. In this case the hypervisor needs to handle the tlbflush
+> based on the type of invpcid instruction.
+> 
+> For the guests with nested page table (NPT) support, the INVPCID feature works
+> as running it natively. KVM does not need to do any special handling.
+> 
+> AMD documentation for INVPCID feature is available at "AMD64 Architecture
+> Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34(or
+> later)"
+> 
+> The documentation can be obtained at the links below:
+> Link: https://www.amd.com/system/files/TechDocs/24593.pdf
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+> ---
+> v5:
+>  All the changes are related to rebase.
+>  Aplies cleanly on mainline and kvm(master) tree.
+>  Resending it to get some attention.
+> 
+> v4:
+> 
+> https://lore.kernel.org/lkml/159676101387.12805.18038347880482984693.stgi
+> t@bmoger-ubuntu/
+>  1. Changed the functions __set_intercept/__clr_intercept/__is_intercept to
+>     to vmcb_set_intercept/vmcb_clr_intercept/vmcb_is_intercept by passing
+>     vmcb_control_area structure(Suggested by Paolo).
+>  2. Rearranged the commit 7a35e515a7055 ("KVM: VMX: Properly handle
+> kvm_read/write_guest_virt*())
+>     to make it common across both SVM/VMX(Suggested by Jim Mattson).
+>  3. Took care of few other comments from Jim Mattson. Dropped "Reviewed-
+> by"
+>     on few patches which I have changed since v3.
+> 
+> v3:
+> 
+> https://lore.kernel.org/lkml/159597929496.12744.14654593948763926416.stgi
+> t@bmoger-ubuntu/
+>  1. Addressing the comments from Jim Mattson. Follow the v2 link below
+>     for the context.
+>  2. Introduced the generic __set_intercept, __clr_intercept and is_intercept
+>     using native __set_bit, clear_bit and test_bit.
+>  3. Combined all the intercepts vectors into single 32 bit array.
+>  4. Removed set_intercept_cr, clr_intercept_cr, set_exception_intercepts,
+>     clr_exception_intercept etc. Used the generic set_intercept and
+>     clr_intercept where applicable.
+>  5. Tested both L1 guest and l2 nested guests.
+> 
+> v2:
+> 
+> https://lore.kernel.org/lkml/159234483706.6230.13753828995249423191.stgit
+> @bmoger-ubuntu/
+>   - Taken care of few comments from Jim Mattson.
+>   - KVM interceptions added only when tdp is off. No interceptions
+>     when tdp is on.
+>   - Reverted the fault priority to original order in VMX.
+> 
+> v1:
+> 
+> https://lore.kernel.org/lkml/159191202523.31436.11959784252237488867.stgi
+> t@bmoger-ubuntu/
+> 
+> Babu Moger (12):
+>       KVM: SVM: Introduce vmcb_(set_intercept/clr_intercept/_is_intercept)
+>       KVM: SVM: Change intercept_cr to generic intercepts
+>       KVM: SVM: Change intercept_dr to generic intercepts
+>       KVM: SVM: Modify intercept_exceptions to generic intercepts
+>       KVM: SVM: Modify 64 bit intercept field to two 32 bit vectors
+>       KVM: SVM: Add new intercept vector in vmcb_control_area
+>       KVM: nSVM: Cleanup nested_state data structure
+>       KVM: SVM: Remove set_cr_intercept, clr_cr_intercept and is_cr_intercept
+>       KVM: SVM: Remove set_exception_intercept and clr_exception_intercept
+>       KVM: X86: Rename and move the function vmx_handle_memory_failure to
+> x86.c
+>       KVM: X86: Move handling of INVPCID types to x86
+>       KVM:SVM: Enable INVPCID feature on AMD
+> 
+> 
+>  arch/x86/include/asm/svm.h      |  117 +++++++++++++++++++++++++----------
+>  arch/x86/include/uapi/asm/svm.h |    2 +
+>  arch/x86/kvm/svm/nested.c       |   66 +++++++++-----------
+>  arch/x86/kvm/svm/svm.c          |  131 ++++++++++++++++++++++++++------------
+> -
+>  arch/x86/kvm/svm/svm.h          |   87 +++++++++-----------------
+>  arch/x86/kvm/trace.h            |   21 ++++--
+>  arch/x86/kvm/vmx/nested.c       |   12 ++--
+>  arch/x86/kvm/vmx/vmx.c          |   95 ----------------------------
+>  arch/x86/kvm/vmx/vmx.h          |    2 -
+>  arch/x86/kvm/x86.c              |  106 ++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/x86.h              |    3 +
+>  11 files changed, 364 insertions(+), 278 deletions(-)
+> 
+> --
+> Signature
