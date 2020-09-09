@@ -2,121 +2,115 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76357C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE086C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCFD21D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="bZ6AbRD7";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EXv2/wL+"
+	by mail.kernel.org (Postfix) with ESMTP id 6782D2080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599652894;
+	bh=gk5ai7/vsUBs2dl7VhzTb79HWtwuO4OdRiCJ/geHW4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vlUusqVJtSvziVT6RKOBwOTo5n31mhGV1dW4RQjGfpMm1Qo8lwceg1BJF3KkD1z6E
+	 LiL+0i0xyL47A5lksro+8zS1L8W+di7EOPEhYQEHhErqurTu+56vtkx0c+zlcPsTDV
+	 y8UJdVe3fQ+Hzmqz2AJH0DlqkINucl06pIhVR0Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbgIIL5A (ORCPT
+        id S1730157AbgIIMA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:57:00 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:34497 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729953AbgIILnt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:43:49 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id BE898814;
-        Wed,  9 Sep 2020 07:43:29 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 09 Sep 2020 07:43:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=LcSEf2owcJHCj
-        Pa16Zg09G2i2DUcxJkRqFzecAp/HtA=; b=bZ6AbRD7u66dko5cTz3cpWVpzed9w
-        q6uumoWgfaNL43r9tYEKf7oL5mQGAE4nuWIW8GqP0Mp44uIdcZD69B0HkU6EqK55
-        kBrzB0YNHNQxFH7QdeeFO0OWBExzesHRDBvinTr63Cw5LZxnJDdI4pgnIOXt7ZiO
-        5O1MYu3oHwigU2rILT+IIErLqZ4ENCxC/QxaYar/OK8FW0qbwv9FMXZ1uVNnPuLl
-        5D0vWT8BhaDxpZl1Xgg5qm0Bq+tjBdtR7nZKb9pPvIp8IoKMsPszAAXSqyF49sf2
-        TiicuHQQSU6ONvU3P4wNu4iDQdOHBqzBOZ2VEzddCPPJPKnTmKa19rNJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=LcSEf2owcJHCjPa16Zg09G2i2DUcxJkRqFzecAp/HtA=; b=EXv2/wL+
-        jTUD01yoC/djmvaabRGRZnLTOm2QlHzPoxahe5va0saui1v08s7D5/emBYyR/fc4
-        iC9B5eZykQMAAdeoTQ/QwGG48nbrzt25DiCFzfdfpN7gOTYYjfDUxPL/IQPuQKML
-        7IDbZ0g/MNQOK9dCFhK9O/2h6CQ62nSF5pSo/dZh8OMC5WVc2T+ROBnSQbO5mViY
-        ZOVWus9SjkXc68/eZ8OjB9cZJQF4punfMvHlCt+dN9DkDmtpVMOqxTKct5vnpB3Q
-        2fvxXy4bsyLIAxAUdsAhE8MTw5ZqIPZD9QRy5Sj50FLFf5i0ErNx4uKGjiHxl9KM
-        uEBHsJTsd3TMIQ==
-X-ME-Sender: <xms:4b9YXz8lSYKNgUBLxa6eCdp9mqTneq5uXQ-eis1nzbAiqAmdOtnZ3Q>
-    <xme:4b9YX_uRpXAX0DdE4ZHDN1wa_BnSXLvMcKklegrEnxnW3H8gFxkE2wLCanr-kjN5x
-    eQ-MWEcSZxi6IcLxA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehhedggedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecuggftrfgrthhtvghrnhepjefgvdevheetkeevgeegleelgfelte
-    etjeffleffvdduudevieffgeetleevhfetnecukfhppedugedrvddruddtledrkeehnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvg
-    ifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:4b9YXxACa-y3zhQ5FEIbVuI00gMTRVss4w4yUsT5gGreecWvvKxMNg>
-    <xmx:4b9YX_esDdlOKPLkMDKygvQPYjXZFdGNyWONNBT4rG-riWtJNnCc4Q>
-    <xmx:4b9YX4NTMJaAL5dHRCFuG__KT2Ois28Enqf5h2_aLTwCX_BV9GC-Mg>
-    <xmx:4b9YX308xn8AVqfutDB0HjFF7xvr031lQFuwJF3HKufu11Rd0Mh-hQ>
-Received: from localhost.localdomain (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9B53B3065B97;
-        Wed,  9 Sep 2020 07:43:26 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, joel@jms.id.au,
-        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] pinctrl: aspeed: Use the right pinconf mask
-Date:   Wed,  9 Sep 2020 21:13:11 +0930
-Message-Id: <20200909114312.2863675-3-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200909114312.2863675-1-andrew@aj.id.au>
-References: <20200909114312.2863675-1-andrew@aj.id.au>
+        Wed, 9 Sep 2020 08:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbgIILmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:42:13 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EBA1207DE;
+        Wed,  9 Sep 2020 11:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599649899;
+        bh=gk5ai7/vsUBs2dl7VhzTb79HWtwuO4OdRiCJ/geHW4g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xt32yCIJZrUnpBjf6/MToHhOH5aK0XvmwKj0BwuSH4Fcsie9nQ0R0tHFTEEnVTFIP
+         29njlrTtNhos9A/wOErrHOF4fNWmUSFQ9GV2x/XbjDPYvt+u9vNWaHJT8TSYsNQWbr
+         xUrm/P+mViuyxOWWowDpQZ7V6BMBiafgTH9hvMDw=
+Received: by pali.im (Postfix)
+        id B61AE7A9; Wed,  9 Sep 2020 13:11:36 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 13:11:36 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Joseph Hwang <josephsih@chromium.org>
+Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        luiz.dentz@gmail.com, chromeos-bluetooth-upstreaming@chromium.org,
+        josephsih@google.com, Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] Bluetooth: sco: expose WBS packet length in
+ socket option
+Message-ID: <20200909111136.ghp5p56m4cxfjreo@pali>
+References: <20200909094202.3863687-1-josephsih@chromium.org>
+ <20200909174129.v2.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909174129.v2.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Aspeed pinconf data structures are split into 'conf' and 'map'
-types, where the 'conf' struct defines which register and bitfield to
-manipulate, while the 'map' struct defines what value to write to
-the register and bitfield.
+On Wednesday 09 September 2020 17:42:02 Joseph Hwang wrote:
+> It is desirable to expose the wideband speech packet length via
+> a socket option to the user space so that the user space can set
+> the value correctly in configuring the sco connection.
 
-Both structs have a mask member, and the wrong mask was being used to
-tell the regmap which bits to update.
+Hello! I'm fine with change below, but I would suggest to put more
+details into commit message. This change has nothing to do with wideband
+nor with exporting socket option to userspace -- which is already done
+via SCO_OPTIONS option. Also it is relevant to SCO socket with any codec
+data, not only wideband.
 
-A todo is to look at whether we can remove the mask from the 'map'
-struct.
+This commit description should rather mention that it defines new
+getsockopt options BT_SNDMTU/BT_RCVMTU for SCO socket to be compatible
+with other bluetooth sockets and that these options return same value as
+option SCO_OPTIONS which is already present on existing kernels.
 
-Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-Fixes: 5f52c853847f ("pinctrl: aspeed: Use masks to describe pinconf bitfields")
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-index d8972911d505..e03ee78b2434 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-@@ -534,7 +534,7 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
- 		val = pmap->val << __ffs(pconf->mask);
- 
- 		rc = regmap_update_bits(pdata->scu, pconf->reg,
--					pmap->mask, val);
-+					pconf->mask, val);
- 
- 		if (rc < 0)
- 			return rc;
--- 
-2.25.1
-
+> 
+> Reviewed-by: Alain Michaud <alainm@chromium.org>
+> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> ---
+> 
+> (no changes since v1)
+> 
+>  net/bluetooth/sco.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
+> index dcf7f96ff417e6..79ffcdef0b7ad5 100644
+> --- a/net/bluetooth/sco.c
+> +++ b/net/bluetooth/sco.c
+> @@ -1001,6 +1001,12 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
+>  			err = -EFAULT;
+>  		break;
+>  
+> +	case BT_SNDMTU:
+> +	case BT_RCVMTU:
+> +		if (put_user(sco_pi(sk)->conn->mtu, (u32 __user *)optval))
+> +			err = -EFAULT;
+> +		break;
+> +
+>  	default:
+>  		err = -ENOPROTOOPT;
+>  		break;
+> -- 
+> 2.28.0.526.ge36021eeef-goog
+> 
