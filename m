@@ -2,184 +2,149 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B023C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BE4C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F070121973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:36:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MnAYd8sc"
+	by mail.kernel.org (Postfix) with ESMTP id 6A4DA216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599644168;
+	bh=WhCbCOYAgVBM6ESgc/BWT45n0KWObYl8AhVF0LbOeRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZysWgwC9PiMXZHlua96FCTmcGvtc++qyHLzK5OjOVTOhNKmKDvD0MUyQkCEnSbgYY
+	 73bQaODj9acpwGQDOek7wP3uUHzVW5Y/adoHIpVpgT3SsCBpUCzqtUsQclPvGb1JdU
+	 wVhRkKh0YOLLP0v+ZcVIasJ0f9n3ZY/WBLMvZxxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbgIIJgG (ORCPT
+        id S1730179AbgIIJgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 9 Sep 2020 05:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730131AbgIIJf6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:35:58 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1252C061757
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:35:57 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id b12so1924737edz.11
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gEj+lZMiE2N3jtcmr4bdk2b4ihEa+T3DPwIHNq/FC0A=;
-        b=MnAYd8sc0uAXa4xqRVnzLJOadO+X8KmqyIdvburVZXxUL900xJEyapW1Ct9zaawwd8
-         kdze07iRXbco8NxlLs0ExiS6gTmQetCxZiIOmR9Yg+M8EawfaFn1iWYEgpGI0s42KylK
-         dgB2r/HBUaniUTEIOcju/3mYFv4TyrExxjQTEOV00ZCEmbREPRWjjF7D9qzN19ighwhP
-         0AsQKxChLAS+EvKvrfXgdsB0KUeINDtJ4IS3ZcAFQRpC/Muyg2qAxI6VwmuhLuXlBUFL
-         8Q/nrHAacTrDozB1be9KjpVvtf3rTEIi0Ockq4zC2UPya7XOiPu4h5bCZRpWpz52UZcQ
-         zWPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gEj+lZMiE2N3jtcmr4bdk2b4ihEa+T3DPwIHNq/FC0A=;
-        b=nHNzk8XNR0j+y9XoRZeyVQLQPKuGEm4cg+0zKc4H5uw+gtj3Sz6UzYDdlTnCGyH35W
-         bXRloQ39hJ15uDaOMRKoR/S8SsZRmvyKAHXiUnYEXWlpI+7ukXWt3hp7l8sQUy41RQBe
-         WUNBvB7oaB4z1zQYovwxSpOHafSyPueaJ2i6szwtQKZjP+KsIziqwnBuAMQqWIJLL0C4
-         LJEWyi7WNrIonvweqRMM6ySiDIEsRUQG7vq3LTmeoUSlNHqP0m+NxUR5Sw+5OcfE4vTM
-         aQQ0N+errIK3cFzFN31NzxL+5fD7vAaosnkW/H/eZeFDKoGLc77rPzgYAsSsLmndP57Z
-         NWRQ==
-X-Gm-Message-State: AOAM533rep6YTbVPooM+SJMD5V+D9sAjIqU6p5OJu9p1lz9EUW3z/tNR
-        R50kP7EmwUUtkbN/QwqJquv9GUqBTVD3ngMQ7vxCmg==
-X-Google-Smtp-Source: ABdhPJwhn4migTaK4XUgkdD/7pGNuIDSlXbAnJe2m4X+uNc0EalSYsW9Z+emyP0Y7X4qKQ74oQEQGGD1thAkW+JQzkY=
-X-Received: by 2002:aa7:c9ce:: with SMTP id i14mr3328398edt.186.1599644156363;
- Wed, 09 Sep 2020 02:35:56 -0700 (PDT)
+Received: from mail.kernel.org ([198.145.29.99]:52406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730136AbgIIJgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:36:00 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EAD62087C;
+        Wed,  9 Sep 2020 09:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599644159;
+        bh=WhCbCOYAgVBM6ESgc/BWT45n0KWObYl8AhVF0LbOeRU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FN3smRmor9Z1cEEK3TX/DIf7Jl/x7cExqmZOic2iQnUbIrI0hsCU00CqsGBJWuRmZ
+         3XwgvBHoMCJf7aHNRVQ4/NwXAulPMLL1aeXx1WgLiTejGOVc3dBTVjuydHlnB9FeFU
+         otjBmtLoOVgU+vP5aLGuqGj53acpQwMDaUfEq/NU=
+Date:   Wed, 9 Sep 2020 11:36:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuo.a.liu@intel.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Yakui Zhao <yakui.zhao@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengwei Yin <fengwei.yin@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [PATCH v3 02/17] x86/acrn: Introduce acrn_{setup,
+ remove}_intr_handler()
+Message-ID: <20200909093609.GA607744@kroah.com>
+References: <20200909090836.46762-1-shuo.a.liu@intel.com>
+ <20200909090836.46762-3-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-References: <20200903081550.6012-1-sakari.ailus@linux.intel.com> <20200903081550.6012-7-sakari.ailus@linux.intel.com>
-In-Reply-To: <20200903081550.6012-7-sakari.ailus@linux.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 9 Sep 2020 11:35:45 +0200
-Message-ID: <CAMpxmJX40=iYYxL9Uvs1Pjj9c3NvZBGJ9Mh9-87T0c==FKEXRw@mail.gmail.com>
-Subject: Re: [PATCH v8 6/6] at24: Support probing while off
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Bingbu Cao <bingbu.cao@intel.com>,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        linux-media <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909090836.46762-3-shuo.a.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 10:15 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> In certain use cases (where the chip is part of a camera module, and the
-> camera module is wired together with a camera privacy LED), powering on
-> the device during probe is undesirable. Add support for the at24 to
-> execute probe while being powered off. For this to happen, a hint in form
-> of a device property is required from the firmware.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+On Wed, Sep 09, 2020 at 05:08:21PM +0800, shuo.a.liu@intel.com wrote:
+> From: Shuo Liu <shuo.a.liu@intel.com>
+> 
+> The ACRN Hypervisor builds an I/O request when a trapped I/O access
+> happens in User VM. Then, ACRN Hypervisor issues an upcall by sending
+> a notification interrupt to the Service VM. HSM in the Service VM needs
+> to hook the notification interrupt to handle I/O requests.
+> 
+> Notification interrupts from ACRN Hypervisor are already supported and
+> a, currently uninitialized, callback called.
+> 
+> Export two APIs for HSM to setup/remove its callback.
+> 
+> Originally-by: Yakui Zhao <yakui.zhao@intel.com>
+> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Fengwei Yin <fengwei.yin@intel.com>
+> Cc: Zhi Wang <zhi.a.wang@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: Yu Wang <yu1.wang@intel.com>
+> Cc: Reinette Chatre <reinette.chatre@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->  drivers/misc/eeprom/at24.c | 43 +++++++++++++++++++++++---------------
->  1 file changed, 26 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 8f5de5f10bbea..2d24e33788d7d 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -595,6 +595,7 @@ static int at24_probe(struct i2c_client *client)
->         bool i2c_fn_i2c, i2c_fn_block;
->         unsigned int i, num_addresses;
->         struct at24_data *at24;
-> +       bool low_power;
->         struct regmap *regmap;
->         bool writable;
->         u8 test_byte;
-> @@ -733,25 +734,30 @@ static int at24_probe(struct i2c_client *client)
->
->         i2c_set_clientdata(client, at24);
->
-> -       err = regulator_enable(at24->vcc_reg);
-> -       if (err) {
-> -               dev_err(dev, "Failed to enable vcc regulator\n");
-> -               return err;
-> -       }
-> +       low_power = acpi_dev_state_low_power(&client->dev);
-> +       if (!low_power) {
-> +               err = regulator_enable(at24->vcc_reg);
-> +               if (err) {
-> +                       dev_err(dev, "Failed to enable vcc regulator\n");
-> +                       return err;
-> +               }
->
-> -       /* enable runtime pm */
-> -       pm_runtime_set_active(dev);
-> +               pm_runtime_set_active(dev);
-> +       }
->         pm_runtime_enable(dev);
->
->         /*
-> -        * Perform a one-byte test read to verify that the
-> -        * chip is functional.
-> +        * Perform a one-byte test read to verify that the chip is functional,
-> +        * unless powering on the device is to be avoided during probe (i.e.
-> +        * it's powered off right now).
->          */
-> -       err = at24_read(at24, 0, &test_byte, 1);
-> -       if (err) {
-> -               pm_runtime_disable(dev);
-> -               regulator_disable(at24->vcc_reg);
-> -               return -ENODEV;
-> +       if (!low_power) {
-> +               err = at24_read(at24, 0, &test_byte, 1);
-> +               if (err) {
-> +                       pm_runtime_disable(dev);
-> +                       regulator_disable(at24->vcc_reg);
-> +                       return -ENODEV;
-> +               }
->         }
->
->         pm_runtime_idle(dev);
-> @@ -771,9 +777,11 @@ static int at24_remove(struct i2c_client *client)
->         struct at24_data *at24 = i2c_get_clientdata(client);
->
->         pm_runtime_disable(&client->dev);
-> -       if (!pm_runtime_status_suspended(&client->dev))
-> -               regulator_disable(at24->vcc_reg);
-> -       pm_runtime_set_suspended(&client->dev);
-> +       if (!acpi_dev_state_low_power(&client->dev)) {
-> +               if (!pm_runtime_status_suspended(&client->dev))
-> +                       regulator_disable(at24->vcc_reg);
-> +               pm_runtime_set_suspended(&client->dev);
-> +       }
->
->         return 0;
+>  arch/x86/include/asm/acrn.h |  8 ++++++++
+>  arch/x86/kernel/cpu/acrn.c  | 19 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>  create mode 100644 arch/x86/include/asm/acrn.h
+> 
+> diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
+> new file mode 100644
+> index 000000000000..ff259b69cde7
+> --- /dev/null
+> +++ b/arch/x86/include/asm/acrn.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_ACRN_H
+> +#define _ASM_X86_ACRN_H
+> +
+> +void acrn_setup_intr_handler(void (*handler)(void));
+> +void acrn_remove_intr_handler(void);
+> +
+> +#endif /* _ASM_X86_ACRN_H */
+> diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+> index 0b2c03943ac6..bd1d7e759a0f 100644
+> --- a/arch/x86/kernel/cpu/acrn.c
+> +++ b/arch/x86/kernel/cpu/acrn.c
+> @@ -9,7 +9,11 @@
+>   *
+>   */
+>  
+> +#define pr_fmt(fmt) "acrn: " fmt
+> +
+>  #include <linux/interrupt.h>
+> +
+> +#include <asm/acrn.h>
+>  #include <asm/apic.h>
+>  #include <asm/cpufeatures.h>
+>  #include <asm/desc.h>
+> @@ -55,6 +59,21 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_acrn_hv_callback)
+>  	set_irq_regs(old_regs);
 >  }
-> @@ -810,6 +818,7 @@ static struct i2c_driver at24_driver = {
->         .probe_new = at24_probe,
->         .remove = at24_remove,
->         .id_table = at24_ids,
-> +       .flags = I2C_DRV_FL_ALLOW_LOW_POWER_PROBE,
->  };
->
->  static int __init at24_init(void)
-> --
-> 2.20.1
->
+>  
+> +void acrn_setup_intr_handler(void (*handler)(void))
+> +{
+> +	if (acrn_intr_handler)
+> +		pr_warn("Overwrite the acrn_intr_handler.\n");
 
-This currently conflicts with the fix I queued for at24 for v5.9.
-Which tree is going to take this series?
+What can someone do with this warning?  If it's really an "error", why
+not prevent this from happening?
 
-Bartosz
+Don't scare users with things they can do nothing about.
+
+thanks,
+
+greg k-h
