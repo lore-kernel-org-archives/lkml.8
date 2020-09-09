@@ -2,82 +2,118 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53412C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD008C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF3221D43
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32E921D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgIILoS (ORCPT
+        id S1730061AbgIILo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:44:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51370 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729781AbgIILgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:36:54 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7199ABA412A1C7E37A53;
-        Wed,  9 Sep 2020 19:19:59 +0800 (CST)
-Received: from kernelci-master.huawei.com (10.175.101.6) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 9 Sep 2020 19:19:53 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Hulk Robot <hulkci@huawei.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "Pekka Enberg" <penberg@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Xu" <peterx@redhat.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        "Michel Lespinasse" <walken@google.com>,
-        Mike Rapoport <rppt@kernel.org>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] riscv/mm/fault: fix old-style-declaration warning
-Date:   Wed, 9 Sep 2020 19:29:01 +0800
-Message-ID: <20200909112901.5002-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Sep 2020 07:44:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35004 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729741AbgIILgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:36:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1CE90AC97;
+        Wed,  9 Sep 2020 11:36:49 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 13:36:47 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [RFC 5/5] mm, page_alloc: disable pcplists during page isolation
+Message-ID: <20200909113647.GG7348@dhcp22.suse.cz>
+References: <20200907163628.26495-1-vbabka@suse.cz>
+ <20200907163628.26495-6-vbabka@suse.cz>
+ <d5d5ef64-b239-0640-5640-75c7a3c78584@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.175.101.6]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d5d5ef64-b239-0640-5640-75c7a3c78584@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc report build warning as follows:
+On Wed 09-09-20 12:48:54, Vlastimil Babka wrote:
+> Here's a version that will apply on top of next-20200908. The first 4 patches need no change.
+> 
+> ----8<----
+> >From 8febc17272b8e8b378e2e5ea5e76b2616f029c5b Mon Sep 17 00:00:00 2001
+> From: Vlastimil Babka <vbabka@suse.cz>
+> Date: Mon, 7 Sep 2020 17:20:39 +0200
+> Subject: [PATCH] mm, page_alloc: disable pcplists during page isolation
+> 
+> Page isolation can race with process freeing pages to pcplists in a way that
+> a page from isolated pageblock can end up on pcplist. This can be fixed by
+> repeated draining of pcplists, as done by patch "mm/memory_hotplug: drain
+> per-cpu pages again during memory offline" in [1].
+> 
+> David and Michal would prefer that this race was closed in a way that callers
+> of page isolation don't need to care about drain. David suggested disabling
+> pcplists usage completely during page isolation, instead of repeatedly draining
+> them.
+> 
+> To achieve this without adding special cases in alloc/free fastpath, we can use
+> the same 'trick' as boot pagesets - when pcp->high is 0, any pcplist addition
+> will be immediately flushed.
+> 
+> The race can thus be closed by setting pcp->high to 0 and draining pcplists
+> once in start_isolate_page_range(). The draining will serialize after processes
+> that already disabled interrupts and read the old value of pcp->high in
+> free_unref_page_commit(), and processes that have not yet disabled interrupts,
+> will observe pcp->high == 0 when they are rescheduled, and skip pcplists.
+> This guarantees no stray pages on pcplists in zones where isolation happens.
+> 
+> We can use the variable zone->nr_isolate_pageblock (protected by zone->lock)
+> to detect transitions from 0 to 1 (to change pcp->high to 0 and issue drain)
+> and from 1 to 0 (to restore original pcp->high and batch values cached in
+> struct zone). We have to avoid external updates to high and batch by taking
+> pcp_batch_high_lock. To allow multiple isolations in parallel, change this
+> lock from mutex to rwsem.
+> 
+> For callers that pair start_isolate_page_range() with
+> undo_isolated_page_range() properly, this is transparent. Currently that's
+> alloc_contig_range(). __offline_pages() doesn't call undo_isolated_page_range()
+> in the succes case, so it has to be carful to handle restoring pcp->high and batch
+> and unlocking pcp_batch_high_lock.
 
-arch/riscv/mm/fault.c:81:1: warning:
- 'inline' is not at beginning of declaration [-Wold-style-declaration]
-   81 | static void inline vmalloc_fault(struct pt_regs *regs, int code, unsigned long addr)
-      | ^~~~~~
-
-This commit fix it by moving 'inline' after 'static'.
-
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- arch/riscv/mm/fault.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
-index a23eaf5ce95c..a173432ccf82 100644
---- a/arch/riscv/mm/fault.c
-+++ b/arch/riscv/mm/fault.c
-@@ -78,7 +78,7 @@ static inline void bad_area(struct pt_regs *regs, struct mm_struct *mm, int code
- 	no_context(regs, addr);
- }
+I was hoping that it would be possible to have this completely hidden
+inside start_isolate_page_range code path. If we need some sort of
+disable_pcp_free/enable_pcp_free then it seems like a better fit to have
+an explicit API for that (the naming would be obviously different
+because we do not want to call out pcp free lists). I strongly suspect
+that only the memory hotplug really cares for this hard guanrantee.
+alloc_contig_range simply goes with EBUSY.
  
--static void inline vmalloc_fault(struct pt_regs *regs, int code, unsigned long addr)
-+static inline void vmalloc_fault(struct pt_regs *regs, int code, unsigned long addr)
- {
- 	pgd_t *pgd, *pgd_k;
- 	pud_t *pud, *pud_k;
+> This commit also changes drain_all_pages() to not trust reading pcp->count during
+> drain for page isolation - I believe that could be racy and lead to missing some
+> cpu's to drain. If others agree, this can be separated and potentially backported.
+> 
+> [1] https://lore.kernel.org/linux-mm/20200903140032.380431-1-pasha.tatashin@soleen.com/
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  include/linux/gfp.h |  1 +
+>  mm/internal.h       |  4 +++
+>  mm/memory_hotplug.c | 55 ++++++++++++++++++++++++++++-------------
+>  mm/page_alloc.c     | 60 +++++++++++++++++++++++++++++----------------
+>  mm/page_isolation.c | 45 ++++++++++++++++++++++++++++------
+>  5 files changed, 119 insertions(+), 46 deletions(-)
 
+This has turned out much larger than I would expect.
+-- 
+Michal Hocko
+SUSE Labs
