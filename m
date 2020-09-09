@@ -2,105 +2,335 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A224C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7169DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217EF20897
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599680947;
-	bh=3R4p8duQAT+mum6skAEpmvoigfKOvgfHvzziJedrzsg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kKuSesafaPZEVlvtAEN1Jb4RLr+FudS3qbnbwrnHCPjHEAbmKraG9X25k7F6CAVHr
-	 PXWkQCkEa0I/BNuYKbWDlDE+JR6CeP3bMpiE4jalAT/CoeVNs4mt3OyzSoV9+yPDXx
-	 mgTklsD8cdCxxUtnTAIyYWr4QZFbAIqVByPEqF8M=
+	by mail.kernel.org (Postfix) with ESMTP id 26FDB21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="KSMOBl5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgIITtG (ORCPT
+        id S1729860AbgIITtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbgIITtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:49:01 -0400
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3152F20897;
-        Wed,  9 Sep 2020 19:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599680941;
-        bh=3R4p8duQAT+mum6skAEpmvoigfKOvgfHvzziJedrzsg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cngdoWqB0m7T3YZTw8yhmP8HVpL42lJfhHjKPl6iKwXlcysC9yVoSgLyCb1ePrl3E
-         BUY2AdLMlKTSPGZGTr4yrxbtoD2XuK8c6/ziHyVO1k/UN8Sko4Kv0Uf91WTWwoAlv6
-         8jE3C0g4ilFlJR9x53vuytj+/tdfdI6K46Lx4Cy4=
-Received: by mail-oi1-f179.google.com with SMTP id w16so3604469oia.2;
-        Wed, 09 Sep 2020 12:49:01 -0700 (PDT)
-X-Gm-Message-State: AOAM531uL0wrc2avsK2eUP2ayClujZgVnCpN7+6Mc6RJB3WnjjmGj06s
-        rNPIwG5Ti0EXvc1Fwasu1ayw81EFVcQoATqJww==
-X-Google-Smtp-Source: ABdhPJwmIIBieKiBgKub6+sUhN3HdNG5Hc7zk9mdSoIcxBQpfCH6k9NzxOLwcnl+EX589Mqy/1Z66dzbrHuoNlpsPeI=
-X-Received: by 2002:aca:4cc7:: with SMTP id z190mr1720504oia.147.1599680940504;
- Wed, 09 Sep 2020 12:49:00 -0700 (PDT)
+        Wed, 9 Sep 2020 15:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbgIITs3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 15:48:29 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02797C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:48:27 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id z23so5246253ejr.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:48:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=a631SFYqGAi4ZEcUvZPpBm0hxLcC/ZMlJ2/z5Bt7trQ=;
+        b=KSMOBl5tjoSiPq1aAb/sxmCKm5v8L6qpKEC4hlYAIz7A6XwGRwbjP8fFj0aW3PEv94
+         /sAqOoiEINWlGMJVUN6rRDGy6W3bVNbIuL0dt4Sk9P3sndd5mMG3/SelCfO2idzF6hBD
+         KLi0D9hCms6q+h0y1lFJsvVBokE31qS0bk0Wndbh+jq0mBYEgInoiUYP0BexQEXl10YL
+         EjJ0Zs7Weq7lJ7dgBn6e7TwocGt1g8SLRlfD83c3duySlfr7qavTlP3lDtZi0JiFfgRi
+         Tn6Xq2xSno3DN/t0nJgMNcxiVY0g9e3OLCzzVz1gu6eArPmzrUfCph34HFYq+4GP3I8T
+         V1yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=a631SFYqGAi4ZEcUvZPpBm0hxLcC/ZMlJ2/z5Bt7trQ=;
+        b=QHtX5pTWmEuFO6y991QzdVTfouoDA5IEk0f2MtIFnDqRsEfcuN0m4p1npmWJQw+Xxr
+         5Ni4qaj0ik0O2hNE47kb5cTenjrTcB7sZUEZSFlRH+NgORHmWkvDJpWLE4rxl9bcK7+6
+         2BrMpWSzuiumhgg6ERULogKxdwZx5skfwoyy3TJNnIdVE56l/UaQblmlfvqwzt/CvXJK
+         6CSQs8VmbJSL4PgZvtPFP2uMnoSAHvJaxmyVx/aorfMwcgimLSzdnwWn5KyYxDBEOBZZ
+         QsrjfTRXV9j9E1IHf4e0xOe0CeQBaJjY6hynD0PlmvLIUTAP6/aEx4fK5Ng8tOlM2ana
+         OeCQ==
+X-Gm-Message-State: AOAM533z+KBItbqS3g3G7/h/Ueh5jBjoGu25BvOwpSwb+x0hnLr9TH9K
+        AK2S3fQNZCO7wg88kHEECvV6HQ==
+X-Google-Smtp-Source: ABdhPJw3OXDp248W+AGX4A/e9CF6exReYH3e8cW08qsenUu252YdZZvge8Bn7kKy+jrVMwziHph4Xw==
+X-Received: by 2002:a17:906:344e:: with SMTP id d14mr5505849ejb.42.1599680905660;
+        Wed, 09 Sep 2020 12:48:25 -0700 (PDT)
+Received: from localhost.localdomain (dh207-97-133.xnet.hr. [88.207.97.133])
+        by smtp.googlemail.com with ESMTPSA id hk14sm3461452ejb.88.2020.09.09.12.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 12:48:25 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH 2/4] arm: dts: add 8devices Jalapeno
+Date:   Wed,  9 Sep 2020 21:48:14 +0200
+Message-Id: <20200909194816.3125213-3-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200909194816.3125213-1-robert.marko@sartura.hr>
+References: <20200909194816.3125213-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
-References: <20200907204045.95530-1-sebastian.reichel@collabora.com> <20200907204045.95530-4-sebastian.reichel@collabora.com>
-In-Reply-To: <20200907204045.95530-4-sebastian.reichel@collabora.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 9 Sep 2020 13:48:49 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ8E4Y-kaksCXBC=_sEf4Nz8bZr-4=_g5_PjWtQJm8jsA@mail.gmail.com>
-Message-ID: <CAL_JsqJ8E4Y-kaksCXBC=_sEf4Nz8bZr-4=_g5_PjWtQJm8jsA@mail.gmail.com>
-Subject: Re: [PATCHv2 3/4] Input: rotary-encoder - Use dev_err_probe
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@collabora.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 2:40 PM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
->
-> Simplify driver a bit by making use of dev_err_probe.
->
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  drivers/input/misc/rotary_encoder.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-> index e9a5dbb10513..16ad86fad7cb 100644
-> --- a/drivers/input/misc/rotary_encoder.c
-> +++ b/drivers/input/misc/rotary_encoder.c
-> @@ -241,12 +241,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
->                 device_property_read_bool(dev, "rotary-encoder,relative-axis");
->
->         encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
-> -       if (IS_ERR(encoder->gpios)) {
-> -               err = PTR_ERR(encoder->gpios);
-> -               if (err != -EPROBE_DEFER)
-> -                       dev_err(dev, "unable to get gpios: %d\n", err);
-> -               return err;
-> -       }
-> +       if (IS_ERR(encoder->gpios))
-> +               return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
+8devices Jalapeno is a dual-band SoM, based on Qualcomm
+IPQ4018 + QCA8072 platform.
 
-I hadn't seen dev_err_probe...
+Specification:
+QCA IPQ4018, Quad core ARM v7 Cortex A7 717MHz
+256 MB of DDR3 RAM
+8 MB of SPI NOR flash
+128 MB of Winbond SPI NAND flash
+WLAN1: Qualcomm Atheros QCA4018 2.4GHz 802.11bgn 2:2x2
+WLAN2: Qualcomm Atheros QCA4018 5GHz 802.11a/n/ac 2:2x2
+ETH: Qualcomm Atheros QCA8072 Gigabit Switch (1 x LAN, 1 x WAN)
 
-Just FYI, I'm working on a different fix here which is to print errors
-in the subsystems instead. We already do this for IRQs, so why not
-everything else? The original reason was no resource is sometimes not
-an error, but now we have *_optional calls to handle this case for
-most all subsystems. It's a coccinelle script (hacked up from
-platform_get_irq.cocci) to convert all the drivers.
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts | 215 ++++++++++++++++++++
+ 2 files changed, 216 insertions(+)
+ create mode 100644 arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
 
-Rob
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 4572db3fa5ae..9b474208057d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -890,6 +890,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8074-dragonboard.dtb \
+ 	qcom-apq8084-ifc6540.dtb \
+ 	qcom-apq8084-mtp.dtb \
++	qcom-ipq4018-jalapeno.dtb \
+ 	qcom-ipq4019-ap.dk01.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c1.dtb \
+ 	qcom-ipq4019-ap.dk04.1-c3.dtb \
+diff --git a/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts b/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
+new file mode 100644
+index 000000000000..3def87e76c48
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
+@@ -0,0 +1,215 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++// Copyright (c) 2018, Robert Marko <robimarko@gmail.com>
++
++#include "qcom-ipq4019.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/soc/qcom,tcsr.h>
++
++/ {
++	model = "8devices Jalapeno";
++	compatible = "8dev,jalapeno";
++};
++
++&tlmm {
++	mdio_pins: mdio_pinmux {
++		pinmux_1 {
++			pins = "gpio53";
++			function = "mdio";
++		};
++
++		pinmux_2 {
++			pins = "gpio52";
++			function = "mdc";
++		};
++
++		pinconf {
++			pins = "gpio52", "gpio53";
++			bias-pull-up;
++		};
++	};
++
++	serial_pins: serial_pinmux {
++		mux {
++			pins = "gpio60", "gpio61";
++			function = "blsp_uart0";
++			bias-disable;
++		};
++	};
++
++	spi_0_pins: spi_0_pinmux {
++		pin {
++			function = "blsp_spi0";
++			pins = "gpio55", "gpio56", "gpio57";
++			drive-strength = <2>;
++			bias-disable;
++		};
++
++		pin_cs {
++			function = "gpio";
++			pins = "gpio54", "gpio59";
++			drive-strength = <2>;
++			bias-disable;
++			output-high;
++		};
++	};
++};
++
++&watchdog {
++	status = "okay";
++};
++
++&prng {
++	status = "okay";
++};
++
++&blsp_dma {
++	status = "okay";
++};
++
++&blsp1_spi1 {
++	status = "okay";
++
++	pinctrl-0 = <&spi_0_pins>;
++	pinctrl-names = "default";
++	cs-gpios = <&tlmm 54 GPIO_ACTIVE_HIGH>, <&tlmm 59 GPIO_ACTIVE_HIGH>;
++
++	flash@0 {
++		status = "okay";
++
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <24000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "SBL1";
++				reg = <0x00000000 0x00040000>;
++				read-only;
++			};
++
++			partition@40000 {
++				label = "MIBIB";
++				reg = <0x00040000 0x00020000>;
++				read-only;
++			};
++
++			partition@60000 {
++				label = "QSEE";
++				reg = <0x00060000 0x00060000>;
++				read-only;
++			};
++
++			partition@c0000 {
++				label = "CDT";
++				reg = <0x000c0000 0x00010000>;
++				read-only;
++			};
++
++			partition@d0000 {
++				label = "DDRPARAMS";
++				reg = <0x000d0000 0x00010000>;
++				read-only;
++			};
++
++			partition@e0000 {
++				label = "u-boot-env";
++				reg = <0x000e0000 0x00010000>;
++			};
++
++			partition@f0000 {
++				label = "u-boot";
++				reg = <0x000f0000 0x00080000>;
++				read-only;
++			};
++
++			partition@170000 {
++				label = "ART";
++				reg = <0x00170000 0x00010000>;
++				read-only;
++			};
++		};
++	};
++
++	spi-nand@1 {
++		status = "okay";
++
++		compatible = "spi-nand";
++		reg = <1>;
++		spi-max-frequency = <24000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "ubi1";
++				reg = <0x00000000 0x04000000>;
++			};
++
++			partition@4000000 {
++				label = "ubi2";
++				reg = <0x04000000 0x04000000>;
++			};
++		};
++	};
++};
++
++&blsp1_uart1 {
++	status = "okay";
++
++	pinctrl-0 = <&serial_pins>;
++	pinctrl-names = "default";
++};
++
++&cryptobam {
++	status = "okay";
++};
++
++&crypto {
++	status = "okay";
++};
++
++&mdio {
++	status = "okay";
++
++	pinctrl-0 = <&mdio_pins>;
++	pinctrl-names = "default";
++};
++
++&wifi0 {
++	status = "okay";
++
++	qcom,ath10k-calibration-variant = "8devices-Jalapeno";
++};
++
++&wifi1 {
++	status = "okay";
++
++	qcom,ath10k-calibration-variant = "8devices-Jalapeno";
++};
++
++&usb3_ss_phy {
++	status = "okay";
++};
++
++&usb3_hs_phy {
++	status = "okay";
++};
++
++&usb3 {
++	status = "okay";
++};
++
++&usb2_hs_phy {
++	status = "okay";
++};
++
++&usb2 {
++	status = "okay";
++};
+-- 
+2.26.2
+
