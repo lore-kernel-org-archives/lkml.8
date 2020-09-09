@@ -2,173 +2,174 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F4E22269
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599664609;
-	bh=oAgyl5YCzOi2Oys2dADhKhmSZ1VDNwqV2xCYDMZdcWw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=IyxqNrwX17GgbiOYNEL3MgLPSZqH772yuZQvT2fx/HkLk7x7bSkoTi+huW9pdIVX2
-	 56t8FQS3MtjzQfkJ17RmulQbtYukuDv1GaQnZ24dcSAPkCeRKvImDnhBwXqPHAre3x
-	 yVrri+VD3TjxU8/rS17pUXylU/cFVzNpmkrlgG88=
+	by mail.kernel.org (Postfix) with ESMTP id 7E3E322286
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:18:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B44seAHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgIIPQn (ORCPT
+        id S1726440AbgIIPSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:16:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729135AbgIILao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:30:44 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        Wed, 9 Sep 2020 11:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729275AbgIILan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:30:43 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CE6C06179A
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:30:32 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0ae7002c1f5e624f33a6aa.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:e700:2c1f:5e62:4f33:a6aa])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F5820897;
-        Wed,  9 Sep 2020 11:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599650561;
-        bh=oAgyl5YCzOi2Oys2dADhKhmSZ1VDNwqV2xCYDMZdcWw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=VGlHUA84CYJaxv0ABm+a7LxuNh29gVlf7PMfczNBCR98EuKwBIr0Bd91ClwrEdbao
-         ZJmTM2fuC1vKlva5mCMB7bzzkTO9BoXDAgwzncyqAvGsXx1PyTsiLJdMRE2XiO4/rq
-         m3UHhFdkjCrWGoIUrbT2sCHDNVlTZYQL/eUnmEZA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AB27F3523091; Wed,  9 Sep 2020 04:22:41 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 04:22:41 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: RCU:  Question   rcu_preempt_blocked_readers_cgp  in
-  rcu_gp_fqs_loop func
-Message-ID: <20200909112241.GE29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200818220245.GO27891@paulmck-ThinkPad-P72>
- <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
- <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
- <20200819135654.GB3875610@google.com>
- <20200819152159.GX27891@paulmck-ThinkPad-P72>
- <20200819155808.GA8817@pc636>
- <20200820223957.GB120898@google.com>
- <20200821153328.GH2855@paulmck-ThinkPad-P72>
- <BYAPR11MB263285B19261BE8096D87F65FF260@BYAPR11MB2632.namprd11.prod.outlook.com>
- <BYAPR11MB2632FD34F68A89CCE039018BFF260@BYAPR11MB2632.namprd11.prod.outlook.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AA3541EC027B;
+        Wed,  9 Sep 2020 13:30:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599651028;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=gF6Scd5cy14X4AN/Sb0Jw5aLe2Jbw6dlDTXmjAO/chs=;
+        b=B44seAHY/4PMrl8i9ZcuoUnJZeHFdAigK0HDA+DdaVbTPNxcue5uHmM2SlQKqM+t9J9G+b
+        8EmTh0tHmrb4+Xe/wetu/GOXDfOsinxsiEWEGjmpYxwRFpUKA5IDpLYRQMK1CQySP3GrKM
+        igb7amYKtNw/VwScXLlD7byipQopFmg=
+Date:   Wed, 9 Sep 2020 13:30:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
+Message-ID: <20200909113022.GA12237@zn.tnic>
+References: <20200906212130.GA28456@zn.tnic>
+ <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
+ <20200908094650.GA25236@zn.tnic>
+ <20200908100837.GC25236@zn.tnic>
+ <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
+ <20200908152539.GE25236@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BYAPR11MB2632FD34F68A89CCE039018BFF260@BYAPR11MB2632.namprd11.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200908152539.GE25236@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 07:03:39AM +0000, Zhang, Qiang wrote:
-> 
-> When config preempt RCU,  and then  there are multiple levels  node,  the current task is preempted  in rcu  read critical region.
-> the current task be add to "rnp->blkd_tasks" link list,  and the "rnp->gp_tasks"  may be assigned a value .  these rnp is leaf node in RCU tree.
-> 
-> But in "rcu_gp_fqs_loop" func, we check blocked readers in root node. 
-> 
-> static void rcu_gp_fqs_loop(void)
->  {
->             .....
->             struct rcu_node *rnp = rcu_get_root();
->             .....
->             if (!READ_ONCE(rnp->qsmask) &&
->                                !rcu_preempt_blocked_readers_cgp(rnp))    ------> rnp is root node
->                      break;
->             ....
-> }
-> 
-> the root node's blkd_tasks never add task, the "rnp->gp_tasks" is never be assigned value,  this check is invailed.
->  Should we check leaf nodes like this 
+I guess something as straightforward as this:
 
-There are two cases:
+---
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 0ba24dfffdb2..9893caaf2696 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -373,10 +373,27 @@ static int msr_to_offset(u32 msr)
+ 	return -1;
+ }
+ 
++__visible bool ex_handler_rdmsr_fault(const struct exception_table_entry *fixup,
++				      struct pt_regs *regs, int trapnr,
++				      unsigned long error_code,
++				      unsigned long fault_addr)
++{
++	if (pr_warn_once("MSR access error: RDMSR from 0x%x at rIP: 0x%lx (%pS)\n",
++			 (unsigned int)regs->cx, regs->ip, (void *)regs->ip))
++		show_stack_regs(regs);
++
++	panic("MCA Architectural violation!\n");
++
++	while (true)
++		cpu_relax();
++
++	return true;
++}
++
+ /* MSR access wrappers used for error injection */
+ static u64 mce_rdmsrl(u32 msr)
+ {
+-	u64 v;
++	DECLARE_ARGS(val, low, high);
+ 
+ 	if (__this_cpu_read(injectm.finished)) {
+ 		int offset = msr_to_offset(msr);
+@@ -386,21 +403,42 @@ static u64 mce_rdmsrl(u32 msr)
+ 		return *(u64 *)((char *)this_cpu_ptr(&injectm) + offset);
+ 	}
+ 
+-	if (rdmsrl_safe(msr, &v)) {
+-		WARN_ONCE(1, "mce: Unable to read MSR 0x%x!\n", msr);
+-		/*
+-		 * Return zero in case the access faulted. This should
+-		 * not happen normally but can happen if the CPU does
+-		 * something weird, or if the code is buggy.
+-		 */
+-		v = 0;
+-	}
++	/*
++	 * RDMSR on MCA MSRs should not fault. If they do, this is very much an
++	 * architectural violation and needs to be reported to hw vendor. Panic
++	 * the box to not allow any further progress.
++	 */
++	asm volatile("1: rdmsr\n"
++		     "2:\n"
++		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_rdmsr_fault)
++		     : EAX_EDX_RET(val, low, high) : "c" (msr));
+ 
+-	return v;
++
++	return EAX_EDX_VAL(val, low, high);
++}
++
++__visible bool ex_handler_wrmsr_fault(const struct exception_table_entry *fixup,
++				      struct pt_regs *regs, int trapnr,
++				      unsigned long error_code,
++				      unsigned long fault_addr)
++{
++	if (pr_warn_once("MSR access error: WRMSR to 0x%x (tried to write 0x%08x%08x) at rIP: 0x%lx (%pS)\n",
++			 (unsigned int)regs->cx, (unsigned int)regs->dx, (unsigned int)regs->ax,
++			 regs->ip, (void *)regs->ip))
++		show_stack_regs(regs);
++
++	panic("MCA Architectural violation!\n");
++
++	while (true)
++		cpu_relax();
++
++	return true;
+ }
+ 
+ static void mce_wrmsrl(u32 msr, u64 v)
+ {
++	u32 low, high;
++
+ 	if (__this_cpu_read(injectm.finished)) {
+ 		int offset = msr_to_offset(msr);
+ 
+@@ -408,7 +446,15 @@ static void mce_wrmsrl(u32 msr, u64 v)
+ 			*(u64 *)((char *)this_cpu_ptr(&injectm) + offset) = v;
+ 		return;
+ 	}
+-	wrmsrl(msr, v);
++
++	low  = (u32)v;
++	high = (u32)(v >> 32);
++
++	/* See comment in mce_rdmsrl() */
++	asm volatile("1: wrmsr\n"
++		     "2:\n"
++		     _ASM_EXTABLE_HANDLE(1b, 2b, ex_handler_wrmsr_fault)
++		     : : "c" (msr), "a"(low), "d" (high) : "memory");
+ }
+ 
+ /*
 
-1.	There is only a single rcu_node structure, which is both root
-	and leaf.  In this case, the current check is required:  Both
-	->qsmask and the ->blkd_tasks list must be checked.  Your
-	rcu_preempt_blocked_readers() would work in this case, but
-	the current code is a bit faster because it does not need
-	to acquire the ->lock nor does it need the loop overhead.
+-- 
+Regards/Gruss,
+    Boris.
 
-2.	There are multiple levels.  In this case, as you say, the root
-	rcu_node structure's ->blkd_tasks list will always be empty.
-	But also in this case, the root rcu_node structure's ->qsmask
-	cannot be zero until all the leaf rcu_node structures' ->qsmask
-	fields are zero and their ->blkd_tasks lists no longer have
-	tasks blocking the current grace period.  This means that your
-	rcu_preempt_blocked_readers() function would never return
-	true in this case.
-
-So the current code is fine.
-
-Are you seeing failures on mainline kernels?  If so, what is the failure
-mode?
-
-							Thanx, Paul
-
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -1846,6 +1846,25 @@ static bool rcu_gp_init(void)
->  	return true;
->  }
->  
-> +static bool rcu_preempt_blocked_readers(void)
-> +{
-> +	struct rcu_node *rnp;
-> +	unsigned long flags;
-> +	bool ret = false;
-> +
-> +	rcu_for_each_leaf_node(rnp) {
-> +		raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> +		if (rcu_preempt_blocked_readers_cgp(rnp)) {
-> +			ret = true;
-> +			raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> +			break;
-> +		}
-> +		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  /*
->   * Helper function for swait_event_idle_exclusive() wakeup at force-quiescent-state
->   * time.
-> @@ -1864,7 +1883,7 @@ static bool rcu_gp_fqs_check_wake(int *gfp)
->  		return true;
->  
->  	// The current grace period has completed.
-> -	if (!READ_ONCE(rnp->qsmask) && !rcu_preempt_blocked_readers_cgp(rnp))
-> +	if (!READ_ONCE(rnp->qsmask) && !rcu_preempt_blocked_readers())
->  		return true;
->  
->  	return false;
-> @@ -1927,7 +1946,7 @@ static void rcu_gp_fqs_loop(void)
->  		/* Locking provides needed memory barriers. */
->  		/* If grace period done, leave loop. */
->  		if (!READ_ONCE(rnp->qsmask) &&
-> -		    !rcu_preempt_blocked_readers_cgp(rnp))
-> +		    !rcu_preempt_blocked_readers())
->  			break;
->  		/* If time for quiescent-state forcing, do it. */
->  		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
-> -- 
-> 
-> 
-> thanks
-> Qiang
+https://people.kernel.org/tglx/notes-about-netiquette
