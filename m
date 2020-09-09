@@ -2,160 +2,281 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72CAC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D81EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C7C20708
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599643256;
-	bh=DlA9S72+RxODfy/0PBwFbJslFddkMuCm1adp0wImsaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J6dtKXJYdwF5KB5281/0XvuYHMduo5NbvsbKEPguAVrBTLcVvizooBcI3vtTH9w7T
-	 jzu0+OR6RajQQ1uTkgWwfiFr7se9LKJon8DoUYfpukFQLbZhbKnmo2JtQfuAguERia
-	 tRJsRh6OhVdOrFmSaGKnyitTYG/Dt6rlpEfggtDM=
+	by mail.kernel.org (Postfix) with ESMTP id B6B4C20757
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:22:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aUGOvQBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgIIJUy (ORCPT
+        id S1727976AbgIIJW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:20:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43396 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgIIJUw (ORCPT
+        Wed, 9 Sep 2020 05:22:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19846 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726426AbgIIJWZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:20:52 -0400
-Received: by mail-ed1-f66.google.com with SMTP id n13so1886316edo.10;
-        Wed, 09 Sep 2020 02:20:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PNmAfjU4H8Zs5sT50QV1b9clmpM+rEqrxgMSd1310HY=;
-        b=DLA3Vrq01UT2vsRpkdsbBH1ScpPCezhLJy8R0iucwWzvHO232sc4JrgI17NyaiILZW
-         SlE9yesYUJwJmUGb9jzqjWQxkrVbPRy5FPy8cesarw+lFXqPXj5112jPohaAoUkbWdqp
-         bzhZUMuimnjbBfD3zfwaKxQImKwVCEElsvQZoeiwdFOSSAt/2r//LbGKq28vZZLLDryB
-         iHiCJacpKKdIB8B1oHM0ndwdKJDrXjQo36XTTnZhAT+Zw68YeIsMCOdISp6lPNmic8pV
-         vlywY9GzgAWKxyhYAyc+RKkio+CT6MdSuLdWFM3hy6NvMr/7t/AHV/tJk1f128KaN1jl
-         n0Vg==
-X-Gm-Message-State: AOAM5325QuZpnTNH4h9koyPuGiwhfSZJj3foRZHBSPn0eKREf7VaoEnW
-        k4/c41kaluMPsgtyZs/95aw=
-X-Google-Smtp-Source: ABdhPJyvE1fotHFbZZdQmEQ+CwuYf7b6JGPrd//NJAWkJjBm7V86ddJ0cwro1l4DBy1w1oj1V485DQ==
-X-Received: by 2002:a50:e70e:: with SMTP id a14mr3019138edn.93.1599643250032;
-        Wed, 09 Sep 2020 02:20:50 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id r15sm1435034edv.94.2020.09.09.02.20.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Sep 2020 02:20:49 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 11:20:47 +0200
-From:   "krzk@kernel.org" <krzk@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tharvey@gateworks.com" <tharvey@gateworks.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "rjones@gateworks.com" <rjones@gateworks.com>
-Subject: Re: [PATCH] dt-bindings: mfd: Correct interrupt flags in examples
-Message-ID: <20200909092047.GA4184@kozik-lap>
-References: <20200908145900.4423-1-krzk@kernel.org>
- <5ea2a75a873b6291962f6b6a7949e9d185187911.camel@fi.rohmeurope.com>
- <20200909081716.GA11775@kozik-lap>
- <745c815f716fa8245f17cb2e189529e382df63da.camel@fi.rohmeurope.com>
+        Wed, 9 Sep 2020 05:22:25 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08992Qw5022108;
+        Wed, 9 Sep 2020 05:22:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=xd+ott3Rzs8WNz1p/NH6/N5NpbYUaRzKH7ZUE/dqo4k=;
+ b=aUGOvQBh1DLhTz1jBEZoVx8h9jBG7P828M7j8fNvWDwFu7R5tBWjHfWC3FOJNuFiqXRp
+ LDWNJ1F0lvnWDec0la6MaK5ZXZo+Pk+qGcCdHSAT3Wl+j7uKyMUE2mMXPfgMiUlrJQLS
+ 0Ez9yZ+DzdN0ypWNLY9ULrZKVaMDUc5QRWb/RNA5YArJNJMDIk1JMJ79n69KkGvXrqkw
+ 8UJm3zgVI2N6xIuxaTy9qvMGs0ZGblj4foPngw9/1yZT2ou4svNx0BwBGqRoBRCtq6IP
+ 5ia662SOnteipnkZJydOU+MefGDFbxMyyh/P98g8k46SRXjXwkCEON85u74EzqQY8WWC Nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33euhx1m9m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 05:22:10 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08992mBr023090;
+        Wed, 9 Sep 2020 05:22:05 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33euhx1m7c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 05:22:04 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0899DaOp001277;
+        Wed, 9 Sep 2020 09:22:02 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 33dxdr1gm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 09:22:02 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0899KQX366126192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Sep 2020 09:20:26 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BEF04C044;
+        Wed,  9 Sep 2020 09:21:59 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2427C4C040;
+        Wed,  9 Sep 2020 09:21:59 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.19.60])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  9 Sep 2020 09:21:59 +0000 (GMT)
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
+ <20200908170835.85440-1-ldufour@linux.ibm.com>
+ <20200909074011.GD7348@dhcp22.suse.cz>
+ <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+ <20200909090953.GE7348@dhcp22.suse.cz>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+Date:   Wed, 9 Sep 2020 11:21:58 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <745c815f716fa8245f17cb2e189529e382df63da.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200909090953.GE7348@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 08:57:36AM +0000, Vaittinen, Matti wrote:
-> Hello Krzysztof,
+Le 09/09/2020 à 11:09, Michal Hocko a écrit :
+> On Wed 09-09-20 09:48:59, Laurent Dufour wrote:
+>> Le 09/09/2020 à 09:40, Michal Hocko a écrit :
+>>> [reposting because the malformed cc list confused my email client]
+>>>
+>>> On Tue 08-09-20 19:08:35, Laurent Dufour wrote:
+>>>> In register_mem_sect_under_node() the system_state’s value is checked to
+>>>> detect whether the operation the call is made during boot time or during an
+>>>> hot-plug operation. Unfortunately, that check is wrong on some
+>>>> architecture, and may lead to sections being registered under multiple
+>>>> nodes if node's memory ranges are interleaved.
+>>>
+>>> Why is this check arch specific?
+>>
+>> I was wrong the check is not arch specific.
+>>
+>>>> This can be seen on PowerPC LPAR after multiple memory hot-plug and
+>>>> hot-unplug operations are done. At the next reboot the node's memory ranges
+>>>> can be interleaved
+>>>
+>>> What is the exact memory layout?
+>>
+>> For instance:
+>> [    0.000000] Early memory node ranges
+>> [    0.000000]   node   1: [mem 0x0000000000000000-0x000000011fffffff]
+>> [    0.000000]   node   2: [mem 0x0000000120000000-0x000000014fffffff]
+>> [    0.000000]   node   1: [mem 0x0000000150000000-0x00000001ffffffff]
+>> [    0.000000]   node   0: [mem 0x0000000200000000-0x000000048fffffff]
+>> [    0.000000]   node   2: [mem 0x0000000490000000-0x00000007ffffffff]
 > 
-> On Wed, 2020-09-09 at 10:17 +0200, krzk@kernel.org wrote:
-> > On Wed, Sep 09, 2020 at 06:30:44AM +0000, Vaittinen, Matti wrote:
-> > > On Tue, 2020-09-08 at 16:59 +0200, Krzysztof Kozlowski wrote:
-> > > > GPIO_ACTIVE_x flags are not correct in the context of interrupt
-> > > > flags.
-> > > > These are simple defines so they could be used in DTS but they
-> > > > will
-> > > > not
-> > > > have the same meaning:
-> > > > 1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
-> > > > 2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
-> > > > 
-> > > > Correct the interrupt flags, assuming the author of the code
-> > > > wanted
-> > > > some
-> > > > logical behavior behind the name "ACTIVE_xxx", this is:
-> > > >   ACTIVE_LOW => IRQ_TYPE_LEVEL_LOW
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > 
-> > > For BD70528:
-> > > Acked-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > 
-> > > > ---
-> > > >  Documentation/devicetree/bindings/mfd/act8945a.txt          | 2
-> > > > +-
-> > > >  Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml    | 3
-> > > > ++-
-> > > >  Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt | 2
-> > > > +-
-> > > >  3 files changed, 4 insertions(+), 3 deletions(-)
-> > > > 
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-
-> > > > pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-
-> > > > pmic.txt
-> > > > index c3c02ce73cde..386eec06cf08 100644
-> > > > --- a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > > > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
-> > > > @@ -39,7 +39,7 @@ pmic: pmic@4b {
-> > > >  	compatible = "rohm,bd70528";
-> > > >  	reg = <0x4b>;
-> > > >  	interrupt-parent = <&gpio1>;
-> > > > -	interrupts = <29 GPIO_ACTIVE_LOW>;
-> > > > +	interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-> > > 
-> > > This is how it should have been from the beginning :) Thanks!
-> > 
-> > I start to wonder now. It seems some boards do not configure a pull
-> > up
-> > there, so IRQ_TYPE_LEVEL_LOW is wrong - causes the line to stay in
-> > low
-> > state.  But actually this maybe is a problem of missing pull up, not
-> > the
-> > IRQ flag?
+> Include this into the changelog.
 > 
-> The BD70528 is designed so that it will use level active interrupts -
-> and line is pulled down when IRQ is active. Thus the example should
-> have IRQ_TYPE_LEVEL_LOW - and your fix is correct.
+>>>> and since the call to link_mem_sections() is made in
+>>>> topology_init() while the system is in the SYSTEM_SCHEDULING state, the
+>>>> node's id is not checked, and the sections registered multiple times.
+>>>
+>>> So a single memory section/memblock belongs to two numa nodes?
+>>
+>> If the node id is not checked in register_mem_sect_under_node(), yes that the case.
 > 
-> After that being said - I can't comment on actual board using BD70528
-> (or other ROHM ICs) - even less I can comment boards using other ICs.
-> 
-> After that being said - it's not a rare mistake to configure level
-> active IRQs to be triggered at edge - it actually works most of the
-> time - untill they deadlock at the race of generating new IRQ between
-> reading the status and acking the line... I've debugged way too many
-> such cases...
-> 
-> Anyways, for BD70528 DTS example your fix looks correct. Thanks.
+> I do not follow. register_mem_sect_under_node is about user interface.
+> This is independent on the low level memory representation - aka memory
+> section. I do not think we can handle a section in multiple zones/nodes.
+> Memblock in multiple zones/nodes is a different story and interleaving
+> physical memory layout can indeed lead to it. This is something that we
+> do not allow for runtime hotplug but have to somehow live with that - at
+> least not crash.
 
-Thanks. I found this error in multiple DTS files - most probably a copy
-paste from example or from evalkit (e.g. imx8mm-evk.dts). The trouble is
-that I don't have the schematics for them and at least in one hardware
-(Variscite VAR-SOM-MX8M which I am using) it looks like logic got
-reversed...
+register_mem_sect_under_node() is called at boot time and when memory is hot 
+added. In the later case the assumption is made that all the pages of the added 
+block are in the same node. And that's a valid assumption. However at boot time 
+the call is made using the node's whole range, lowest address to highest address 
+for that node. In the case there are interleaved ranges, this means the 
+interleaved sections are registered for each nodes which is not correct.
 
-Best regards,
-Krzysztof
+>>>> In
+>>>> that case, the system is able to boot but later hot-plug operation may lead
+>>>> to this panic because the node's links are correctly broken:
+>>>
+>>> Correctly broken? Could you provide more details on the inconsistency
+>>> please?
+>>
+>> laurent@ltczep3-lp4:~$ ls -l /sys/devices/system/memory/memory21
+>> total 0
+>> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node1 -> ../../node/node1
+>> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node2 -> ../../node/node2
+>> -rw-r--r-- 1 root root 65536 Aug 24 05:27 online
+>> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_device
+>> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_index
+>> drwxr-xr-x 2 root root     0 Aug 24 05:27 power
+>> -r--r--r-- 1 root root 65536 Aug 24 05:27 removable
+>> -rw-r--r-- 1 root root 65536 Aug 24 05:27 state
+>> lrwxrwxrwx 1 root root     0 Aug 24 05:25 subsystem -> ../../../../bus/memory
+>> -rw-r--r-- 1 root root 65536 Aug 24 05:25 uevent
+>> -r--r--r-- 1 root root 65536 Aug 24 05:27 valid_zones
+> 
+> OK, so there are two nodes referenced here. Not terrible from the user
+> point of view. Such a memory block will refuse to offline or online
+> IIRC.
 
+No the memory block is still owned by one node, only the sysfs representation is 
+wrong. So the memory block can be hot unplugged, but only one node's link will 
+be cleaned, and a '/syss/devices/system/node#/memory21' link will remain and 
+that will be detected later when that memory block is hot plugged again.
+
+>   
+>>> Which physical memory range you are trying to add here and what is the
+>>> node affinity?
+>>
+>> None is added, the root cause of the issue is happening at boot time.
+> 
+> Let me clarify my question. The crash has clearly happened during the
+> hotplug add_memory_resource - which is clearly not a boot time path.
+> I was askin for more information about why this has failed. It is quite
+> clear that sysfs machinery has failed and that led to BUG_ON but we are
+> mising an information on why. What was the physical memory range to be
+> added and why sysfs failed?
+
+The BUG_ON is detecting a bad state generated earlier, at boot time because 
+register_mem_sect_under_node() didn't check for the block's node id.
+
+>   
+>>>> ------------[ cut here ]------------
+>>>> kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
+>>>> Oops: Exception in kernel mode, sig: 5 [#1]
+>>>> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+>>>> Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
+>>>> CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
+>>>> NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
+>>>> REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
+>>>> MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
+>>>> CFAR: c000000000846d20 IRQMASK: 0
+>>>> GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
+>>>> GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
+>>>> GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
+>>>> GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
+>>>> GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
+>>>> GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
+>>>> GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
+>>>> GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
+>>>> NIP [c000000000403f34] add_memory_resource+0x244/0x340
+>>>> LR [c000000000403f2c] add_memory_resource+0x23c/0x340
+>>>> Call Trace:
+>>>> [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
+>>>> [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
+>>>> [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
+>>>> [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
+>>>> [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
+>>>> [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
+>>>> [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
+>>>> [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
+>>>> [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
+>>>> [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
+>>>> [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
+>>>> [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
+>>>> [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
+>>>> Instruction dump:
+>>>> 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
+>>>> 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
+>>>> ---[ end trace 562fd6c109cd0fb2 ]---
+>>>
+>>> The BUG_ON on failure is absolutely horrendous. There must be a better
+>>> way to handle a failure like that. The failure means that
+>>> sysfs_create_link_nowarn has failed. Please describe why that is the
+>>> case.
+>>>
+>>>> This patch addresses the root cause by not relying on the system_state
+>>>> value to detect whether the call is due to a hot-plug operation or not. An
+>>>> additional parameter is added to link_mem_sections() to tell the context of
+>>>> the call and this parameter is propagated to register_mem_sect_under_node()
+>>>> throuugh the walk_memory_blocks()'s call.
+>>>
+>>> This looks like a hack to me and it deserves a better explanation. The
+>>> existing code is a hack on its own and it is inconsistent with other
+>>> boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
+>>> places IIRC. Would it help to use the same here as well? Maybe we want to
+>>> wrap that inside a helper (early_memory_init()) and use it at all
+>>> places.
+>>
+>> I agree, this looks like a hack to check for the system_state value.
+>> I'll follow the David's proposal and introduce an enum detailing when the
+>> node id check has to be done or not.
+> 
+> I am not sure an enum is going to make the existing situation less
+> messy. Sure we somehow have to distinguish boot init and runtime hotplug
+> because they have different constrains. I am arguing that a) we should
+> have a consistent way to check for those and b) we shouldn't blow up
+> easily just because sysfs infrastructure has failed to initialize.
+
+For the point a, using the enum allows to know in register_mem_sect_under_node() 
+if the link operation is due to a hotplug operation or done at boot time.
+
+For the point b, one option would be ignore the link error in the case the link 
+is already existing, but that BUG_ON() had the benefit to highlight the root issue.
+
+Cheers,
+Laurent.
