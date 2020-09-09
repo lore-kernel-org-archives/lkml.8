@@ -2,127 +2,144 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D393C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8215C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1012F2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E120216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Jrfn9/c4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QWNcBJbg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgIIJeF (ORCPT
+        id S1729663AbgIIJei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:34:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14434 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727113AbgIIJeA (ORCPT
+        Wed, 9 Sep 2020 05:34:38 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:7972 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgIIJeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:34:00 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0899X4bm015662;
-        Wed, 9 Sep 2020 05:33:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=1c4mbqTzqzCmgGuR4293Re4zs3byhVY8MStQAuq9a+U=;
- b=Jrfn9/c4nSkWpgl3ijTVc4PMqgCkGwt4GUamCF9hP3X3I+yM45EudqNNgJgQh2tY7i4Z
- cUgT7v1oiCn5e8L45RbvzgFaynD/8vj+C1/kCKKzH1Wz5P5d0aTBPY0ZWWfMQKOYlIjz
- TBZNDYY1VD723eswPgJcDpXgy7/3Sd/rtoUpb1oNL5bcQ/Qgzq6PYicirPWm8BSIo8HS
- 3elGlHI7vnQY9zcnyi/9rpyZqHy3dZE3yH0pFKR/cf5k2TMdIROOdiQDR8I4yuY1+8qj
- CVeG6kKtaS/L/jrQcM+flX53VjG/ICg3prXj6XH1tu3YNqOgKda6DlFptw7thrLmLgJt CQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33eq25t87k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 05:33:49 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0899X88s016233;
-        Wed, 9 Sep 2020 05:33:08 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33eq25t7ys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 05:33:08 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0899RBB3011790;
-        Wed, 9 Sep 2020 09:32:47 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8cbe8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 09:32:47 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0899Winf27591064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 09:32:44 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86A9F4C04E;
-        Wed,  9 Sep 2020 09:32:44 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7DF44C046;
-        Wed,  9 Sep 2020 09:32:43 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.19.60])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Sep 2020 09:32:43 +0000 (GMT)
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-To:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>
-Cc:     akpm@linux-foundation.org, Oscar Salvador <osalvador@suse.de>,
-        rafael@kernel.org, nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
- <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <9ad553f2-ebbf-cae5-5570-f60d2c965c41@redhat.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <23a9ab54-a7bf-5bc2-2a60-e8a1246ed537@linux.ibm.com>
-Date:   Wed, 9 Sep 2020 11:32:43 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Wed, 9 Sep 2020 05:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1599644070; x=1631180070;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=LAfgB1jqP412cl4V+7EuYf+QjFKubW9+J+4ICIUJxqA=;
+  b=QWNcBJbgIbHbLAs0Scc+24+aJxrT8Uz1A9lXfQk47SyINM1cP2ZC9+pk
+   ahagg+ViLPHpXHROp8WbTg0ceWYMvf1JmIwa8RtHppNfzkka0dkGpoW8G
+   ay5nAcm1NedjxPuUs6BI/Xvsmi2NtVnbJuCoX6c0rkbpqjVmxT83VNtcg
+   AlE+iXLIIspOKTZb1Bzk4Cb7t4Kc9IIkpFg4bHi989LduzW5j/OK8xL0c
+   TTSLDgRA5TXPIQnj9A8AH2K/dNmtIDzb5CaYZyK6/Ul/vUk19sZi5No14
+   xVk59oXA4T9HA5sGr5LnMVghO2VpzpgwRsv0PS/p3/dQlQeg10YJqg1UI
+   A==;
+IronPort-SDR: 2UjhJNsuBkIP+KE9133pQ3IFo7Zg0g3v+/KKxLeMKrAoK0Yi8bBo2fwJvSG9Orqv1boJsYK3j6
+ gbtP8J7xPkJfPf86YicExLMKayhWdhcsJ+YxQi0+itgciusdxWfP95bi5vaoxMMtrAK+9qkugw
+ VMUtrQc+4usFPYePW5BqOQRX6X4NfGIDOsXxND82pm0LFTqtfV8CTHdunEjr4RHNTVSlTeg0N3
+ lpqKnABIRbKqmSOxgM0Q1SB7r4gMhiwoo/RsphAV4KzvlYpU/PUuXtsW/PZtGVhUbY+IfnLKpr
+ jkM=
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="91109851"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Sep 2020 02:34:29 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 9 Sep 2020 02:34:04 -0700
+Received: from training-HP-280-G1-MT-PC.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 9 Sep 2020 02:33:59 -0700
+From:   Divya Koppera <Divya.Koppera@microchip.com>
+To:     <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <marex@denx.de>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <UNGLinuxDriver@microchip.com>
+Subject: [PATCH v1 net-next] net: phy: mchp: Add support for LAN8814 QUAD PHY
+Date:   Wed, 9 Sep 2020 15:04:19 +0530
+Message-ID: <20200909093419.32102-1-Divya.Koppera@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <9ad553f2-ebbf-cae5-5570-f60d2c965c41@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 malwarescore=0 clxscore=1015 adultscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 impostorscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090081
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 09/09/2020 à 11:24, David Hildenbrand a écrit :
->>> I am not sure an enum is going to make the existing situation less
->>> messy. Sure we somehow have to distinguish boot init and runtime hotplug
->>> because they have different constrains. I am arguing that a) we should
->>> have a consistent way to check for those and b) we shouldn't blow up
->>> easily just because sysfs infrastructure has failed to initialize.
->>
->> For the point a, using the enum allows to know in register_mem_sect_under_node()
->> if the link operation is due to a hotplug operation or done at boot time.
->>
->> For the point b, one option would be ignore the link error in the case the link
->> is already existing, but that BUG_ON() had the benefit to highlight the root issue.
->>
-> 
-> WARN_ON_ONCE() would be preferred  - not crash the system but still
-> highlight the issue.
+LAN8814 is a low-power, quad-port triple-speed (10BASE-T/100BASETX/1000BASE-T)
+Ethernet physical layer transceiver (PHY). It supports transmission and
+reception of data on standard CAT-5, as well as CAT-5e and CAT-6, unshielded
+twisted pair (UTP) cables.
 
-Indeed, calling sysfs_create_link() instead of sysfs_create_link_nowarn() in 
-register_mem_sect_under_node() and ignoring EEXIST returned value should do the job.
+LAN8814 supports industry-standard QSGMII (Quad Serial Gigabit Media
+Independent Interface) and Q-USGMII (Quad Universal Serial Gigabit Media
+Independent Interface) providing chip-to-chip connection to four Gigabit
+Ethernet MACs using a single serialized link (differential pair) in each
+direction.
 
-I'll do that in a separate patch.
+The LAN8814 SKU supports high-accuracy timestamping functions to
+support IEEE-1588 solutions using Microchip Ethernet switches, as well as
+customer solutions based on SoCs and FPGAs.
+
+The LAN8804 SKU has same features as that of LAN8814 SKU except that it does
+not support 1588, SyncE, or Q-USGMII with PCH/MCH.
+
+This adds support for 10BASE-T, 100BASE-TX, and 1000BASE-T,
+QSGMII link with the MAC.
+
+Signed-off-by: Divya Koppera<divya.koppera@microchip.com>
+---
+ drivers/net/phy/micrel.c   | 16 ++++++++++++++++
+ include/linux/micrel_phy.h |  1 +
+ 2 files changed, 17 insertions(+)
+
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 3fe552675dd2..9f60865587ea 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -1314,6 +1314,21 @@ static struct phy_driver ksphy_driver[] = {
+ 	.get_stats	= kszphy_get_stats,
+ 	.suspend	= genphy_suspend,
+ 	.resume		= kszphy_resume,
++}, {
++	.phy_id		= PHY_ID_LAN8814,
++	.phy_id_mask	= MICREL_PHY_ID_MASK,
++	.name		= "Microchip INDY Gigabit Quad PHY",
++	.driver_data	= &ksz9021_type,
++	.probe		= kszphy_probe,
++	.get_features	= ksz9031_get_features,
++	.config_init	= ksz9031_config_init,
++	.soft_reset	= genphy_soft_reset,
++	.read_status	= ksz9031_read_status,
++	.get_sset_count	= kszphy_get_sset_count,
++	.get_strings	= kszphy_get_strings,
++	.get_stats	= kszphy_get_stats,
++	.suspend	= genphy_suspend,
++	.resume		= kszphy_resume,
+ }, {
+ 	.phy_id		= PHY_ID_KSZ9131,
+ 	.phy_id_mask	= MICREL_PHY_ID_MASK,
+@@ -1387,6 +1402,7 @@ static struct mdio_device_id __maybe_unused micrel_tbl[] = {
+ 	{ PHY_ID_KSZ8081, MICREL_PHY_ID_MASK },
+ 	{ PHY_ID_KSZ8873MLL, MICREL_PHY_ID_MASK },
+ 	{ PHY_ID_KSZ886X, MICREL_PHY_ID_MASK },
++	{ PHY_ID_LAN8814, MICREL_PHY_ID_MASK },
+ 	{ }
+ };
+ 
+diff --git a/include/linux/micrel_phy.h b/include/linux/micrel_phy.h
+index 75f880c25bb8..416ee6dd2574 100644
+--- a/include/linux/micrel_phy.h
++++ b/include/linux/micrel_phy.h
+@@ -27,6 +27,7 @@
+ #define PHY_ID_KSZ8061		0x00221570
+ #define PHY_ID_KSZ9031		0x00221620
+ #define PHY_ID_KSZ9131		0x00221640
++#define PHY_ID_LAN8814		0x00221660
+ 
+ #define PHY_ID_KSZ886X		0x00221430
+ #define PHY_ID_KSZ8863		0x00221435
+-- 
+2.17.1
+
