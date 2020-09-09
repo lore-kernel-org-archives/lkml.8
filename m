@@ -2,105 +2,120 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41917C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6BEC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2E021D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895DD21D6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WDDG/wks"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ih+9wWx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgIIVB1 (ORCPT
+        id S1729741AbgIIVDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
+        Wed, 9 Sep 2020 17:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgIIVBX (ORCPT
+        with ESMTP id S1726414AbgIIVDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:01:23 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71229C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:01:23 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 5so2970522pgl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:01:23 -0700 (PDT)
+        Wed, 9 Sep 2020 17:03:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467B4C061573;
+        Wed,  9 Sep 2020 14:03:05 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s2so1954883pjr.4;
+        Wed, 09 Sep 2020 14:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=duyVyKDxPe1AVCpSV8nmqOMfTiZWSiAAWpLSXZctuCQ=;
-        b=WDDG/wksKWGosu3IMdzqGPi7tJ00A2nker4TK2MQr4gMxAJ0Hv/9J7iEGSdWQABZS7
-         3Bzjz5we0K9w5ZOXO/2ZOWqxAJ89FrGo8H2zTRFwjbbfWzIUht7jS1zsoWgOkWHwteN/
-         b3wY30sv0huQRQw8irbr0tUtTaFiJolNWCk58=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kk3dtIEIHLrcJXCtVTcb0P6ovpZXfJeh6sKbAWAj1no=;
+        b=Ih+9wWx7tV8Gh3D9ZZOkimGpNEiSmyOQr8AmYz36svx2Lr954NP4kKJ86JWA2YHSNx
+         f3lcFYyvCm5+CCgt0IXOKx7LkeGFYeVYiK3rc1s8p3v2qQhMqvXqhOaZm8BiZGOYqP8N
+         c2dN+MH1bBxxjj4x6SDnnW+J0PtJjlOQiS2KorrhzojRuQpOt7pf0Q7W3E8kVs2G7CUi
+         f06r1D5CRPNz2T8+oi5s4oxpECfpQhl2wfrnBeVzqkr8rcMkhdLGkoZ4zfzLQ0bg14nP
+         tdcyxIpz5WzM1h7UytzRqWSoH0QEXm3KMxFPY+d+CKzgZHExf4jaA383k7DbgK9p4vhC
+         Bbuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=duyVyKDxPe1AVCpSV8nmqOMfTiZWSiAAWpLSXZctuCQ=;
-        b=BQ6DAfNum2BDhLeeaMHSoKWBQsyGJNIKWzViP099evjsmxdOtbbYE5aMuMimHPDk6Y
-         w8fHjW2WsRVbUtGXgReTakUKDbzawGAavdt4EF24slwOBBrvAliSSdtQpM6I4FJ2OWrp
-         8S4doC8QgvtKn0RyvzgLdBlkMkgjb0GgsrzfhnwHcbbgj1kRayG2MnrfZoeuBFr98P+k
-         RBFIZRSJQAx9Mlv3W9CBmzdBERshRkY9kyHqwtEoFJx9iH2yPQrCDeOTkFxDkqhogO3P
-         uA/Czqukf/MlPQm1Ap2KFBOlAsNOkbKEgFjzab6Z6B4yWRg+U+CGMCN91qBmLQuUEuL6
-         fOyg==
-X-Gm-Message-State: AOAM531qmm5K72og2+1oKNWIdKsPoBlKDZ8s2b0LbUbaTfHS1gvfH0WP
-        eyRyU21l2rdxjZTi2SSXR1fIiA==
-X-Google-Smtp-Source: ABdhPJwJsKtee7G0BdFWC5QA9AFECTGvN2nTCL5ApuQihIP7Apej3l/19Ja6S8vixGqws9tOBfI/fQ==
-X-Received: by 2002:a65:49c7:: with SMTP id t7mr1943498pgs.131.1599685281943;
-        Wed, 09 Sep 2020 14:01:21 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id s9sm2984482pgm.40.2020.09.09.14.01.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 14:01:21 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kk3dtIEIHLrcJXCtVTcb0P6ovpZXfJeh6sKbAWAj1no=;
+        b=rJU9Wm+4ppjxMdgyYjES1cZzi6FODQPgU46QNXI7ZIbonFkausqbU47o7GCQmJxH4U
+         mR5DbSzUNux/knFhHuNkO4AToobSe3nInjIBByllKcxOdX+4jJpAEO6XhZ1o+S/UUF7C
+         XBDSLZl47W8wmbz3gztLO4n+/91rnxVop4TfpXD73b4cVC9TzGLtMdjH4Qbg9zQR5/MH
+         y6vXtAVxKAQkr4gWZWJXHVTkVMusoddBy37JNQjsGJaRgC79+DUjbeXBwSfUCEqnMzJ5
+         ibg1yWkCl7ob6IGBpau4JceBHlj8AUPEC6PVaW+OAK5TzQT8LYj2lfNlBQG9YsreW9Pb
+         dp3A==
+X-Gm-Message-State: AOAM532V4IN8/MYAvo93S9p+BYS4J66t5vRGOg46GsX9avPPTlzevAkQ
+        vyGmzW6EWDUrM0GqGzuP+D8=
+X-Google-Smtp-Source: ABdhPJzGfNy97zcL46hxGh9zbWvFhq+8lbc6+7e336RdPNYCnFw34GFIjCkyQca02CQCHc+DPUtv4g==
+X-Received: by 2002:a17:90a:8d05:: with SMTP id c5mr2271219pjo.222.1599685384654;
+        Wed, 09 Sep 2020 14:03:04 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g32sm2951874pgl.89.2020.09.09.14.02.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 14:03:03 -0700 (PDT)
+Subject: Re: [PATCH 1/5] dt-bindings: spi: Fix spi-bcm-qspi compatible
+ ordering
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        "maintainer:BROADCOM SPI DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+References: <20200827181842.1000451-1-f.fainelli@gmail.com>
+ <20200827181842.1000451-2-f.fainelli@gmail.com>
+ <20200909204111.GA3041530@bogus>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <0ab569c8-593a-aaa5-daaf-12860ce5931a@gmail.com>
+Date:   Wed, 9 Sep 2020 14:02:55 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CABXOdTdYJs4_nS=Oj5J=_Y0Q34Uo_i0mY=KKkr0PvUOjOOxG-w@mail.gmail.com>
-References: <20200909202609.1630698-1-swboyd@chromium.org> <CABXOdTdYJs4_nS=Oj5J=_Y0Q34Uo_i0mY=KKkr0PvUOjOOxG-w@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: Don't populate lightbar device if it isn't there
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>
-To:     Guenter Roeck <groeck@google.com>
-Date:   Wed, 09 Sep 2020 14:01:20 -0700
-Message-ID: <159968528004.454335.687873020977684163@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+In-Reply-To: <20200909204111.GA3041530@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Guenter Roeck (2020-09-09 13:48:41)
-> On Wed, Sep 9, 2020 at 1:26 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > -static int get_lightbar_version(struct cros_ec_dev *ec,
-> > -                               uint32_t *ver_ptr, uint32_t *flg_ptr)
-> > -{
-> > -       struct ec_params_lightbar *param;
-> > -       struct ec_response_lightbar *resp;
-> > -       struct cros_ec_command *msg;
-> > -       int ret;
-> > -
-> > -       msg =3D alloc_lightbar_cmd_msg(ec);
-> > -       if (!msg)
-> > -               return 0;
-> > -
-> > -       param =3D (struct ec_params_lightbar *)msg->data;
-> > -       param->cmd =3D LIGHTBAR_CMD_VERSION;
-> > -       ret =3D cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> > -       if (ret < 0) {
->=20
-> I am quite sure this conflicts against the patch series I submitted
-> earlier, specifically "cros_ec_lightbar: Accept more error codes from
-> cros_ec_cmd_xfer_status".
 
-Thanks! A pointer to git commit would have been helpful to find it even
-faster but I got it now. I'll rebase and resend.
+
+On 9/9/2020 1:41 PM, Rob Herring wrote:
+> On Thu, 27 Aug 2020 11:18:38 -0700, Florian Fainelli wrote:
+>> The binding is currently incorrectly defining the compatible strings
+>> from least specific to most specific instead of the converse. Re-order
+>> them from most specific (left) to least specific (right) and fix the
+>> examples as well.
+>>
+>> Fixes: 5fc78f4c842a ("spi: Broadcom BRCMSTB, NSP, NS2 SoC bindings")
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>   .../bindings/spi/brcm,spi-bcm-qspi.txt           | 16 ++++++++--------
+>>   1 file changed, 8 insertions(+), 8 deletions(-)
+>>
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+
+Thanks, and sorry about the nagging on IRC :)
+-- 
+Florian
