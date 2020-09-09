@@ -2,111 +2,143 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE23CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589D3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8688C21532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0910C206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="In0ND108"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="GhZMVx7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730538AbgIIRVZ (ORCPT
+        id S1730083AbgIIRVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:21:25 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16841 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729941AbgIIRU5 (ORCPT
+        Wed, 9 Sep 2020 13:21:48 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:42061 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727113AbgIIPXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:20:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f58d8380000>; Wed, 09 Sep 2020 06:27:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 09 Sep 2020 06:27:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 09 Sep 2020 06:27:33 -0700
-Received: from [10.26.75.108] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
- 2020 13:27:22 +0000
-Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
- to devlink reload command
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
- <1598801254-27764-2-git-send-email-moshe@mellanox.com>
- <20200831121501.GD3794@nanopsycho.orion>
- <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
- <20200902094627.GB2568@nanopsycho>
- <20200902083025.43407d8f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200903055729.GB2997@nanopsycho.orion>
- <20200903124719.75325f0c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200904090450.GH2997@nanopsycho.orion>
- <20200904125647.799e66e4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <6bd0fa45-68ce-b82d-98e6-327c6cd50e80@nvidia.com>
- <20200907105850.34726158@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Moshe Shemesh <moshe@nvidia.com>
-Message-ID: <b0550422-83a4-4e97-46e3-cb5f431a6dd7@nvidia.com>
-Date:   Wed, 9 Sep 2020 16:27:19 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 9 Sep 2020 11:23:10 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id G14wkjX7EXgwIG14xkZkWe; Wed, 09 Sep 2020 16:28:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599661688; bh=+xRI7RCVjWPFLjTuzSdpKFeCB3MzDQJw+96p0B8ybuQ=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=GhZMVx7pRGfoeYUSkx+6M0RckAcR1G9X/4Z1Z7eKsxh9pkUJuKeQkeHnsrDfozlB7
+         fV1d5JNDKC61U1UFhVchtDeVN3NaJxdVdmFBRbzDoyaTDB8l/K0yYz0oj0ZT1MCIO6
+         TOfNLINWQVC4n7rQq5AThsjvsPmygt8tmZ6ll8qlBvgzZCimKb1VEIbmhreGVeoZTc
+         fLZ85a/y1BBSAcV5fczOpK5HQ0Wpv0QjvKH4qfdMYKaH41yINXEpkBQbb4X740v1KB
+         1CBv6JL9Qk9JzlYLkmNnMgMdcqeBHT8YuVDaq/HZBogfWRz55VpFtTsfwvyi9gn47y
+         hxuBCrPmakEBw==
+Subject: Re: [PATCH] media: em28xx: fix function pointer check
+To:     trix@redhat.com, mchehab@kernel.org, natechancellor@gmail.com,
+        ndesaulniers@google.com, brad@nextdimension.cc, mkrufky@linuxtv.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20200903145038.20076-1-trix@redhat.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <65584276-f49c-15c9-5f20-a4e5f5fe5085@xs4all.nl>
+Date:   Wed, 9 Sep 2020 16:28:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200907105850.34726158@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200903145038.20076-1-trix@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599658040; bh=OugWLf77e29jNSxlOkOYuMZsn3NrrTySpTzRlJPN99o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=In0ND108KpeaY4kZvrXL9+qbX7Xa4WCVVY7wgfX8/otBJAqS8tl4ve4QGRObf8RFZ
-         ukKMmV/lPK/IXOCIXhjSeteSqQbxCcGe1VqL85VYSk/S2QH8ZhItgSlJqGVe15njsP
-         1L3Fw3WAEzwp90m8e7PT/BPZvh83XJ89Y3qYrz7gsv4fwRrq7KY1seanNXl2ERj5Zb
-         phQHThh7qdi3X4pv2bQYgAKJUFq9kfsU66Bkl8TCHsbqqygfzmsXPiXqjvRWX1+B+8
-         tv2WcyT3m4yNmXDRzFOQDvDFNfIEALmbFCO81EOBTcgi1fqgWmBD5sgXPiiF8C7mZi
-         93F2QjlTxYxWg==
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfK0x4z69G0pcN0tTyBl9g89oLI40CCA1Pcs6+GL8aCFjhEJWXG1+Fp/IEtwiTOlOPLh63xcX/ctPdCy/4klHm+VaxJzPhy+afVtZY62B2TEirP2HL1qf
+ YV/AfjMvr86y2vsJj//XYI3hm8N57Og9gM30h6lUlp9j+94aX/BSkc5DzA9hJF/3Qzqy9zCQ2ovoCZoX2oN/ynVm+bMoVvJ9mXoVw+dS/ECWlUZyTyT6ZQNG
+ qmBqg4DFcYXVSz1HLXcvyXQ66fz50w5zNVJHdbMzE7xTrxHlFUNBdDwvLckTvbRQD6RRu+iMx2jKZXBYlM0LMusm6z0Wdly4uY25757jT6wJ2Uvj2JkKoVtL
+ 7EDr/cykZK+ssUldtBs17BGk7XZd/V8fH3hbcuEj6MNvlB5nu1LS5L1STLA37L14Yy8bl24HxIWRRTG39hvNz52p1+OOU5c88TW/YguYpjq2c954K2MQYryY
+ c2dSOckvGMqKK5W1okBJ3RE/UfoNy3pDnj3oJW/UcNb5ekMesMT7V+U1gJF+dEagNWHtMPX+ioSIEW7ERdqOYadyQ5DTAHQpFRXKVA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/09/2020 16:50, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> clang static analyzer reports this problem
+> 
+> em28xx-core.c:1162:4: warning: Called function pointer
+>   is null (null dereference)
+>         ops->suspend(dev->dev_next);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> This is the problem block
+> 
+> 	if (ops->suspend)
+> 		ops->suspend(dev);
+> 	if (dev->dev_next)
+> 		ops->suspend(dev->dev_next);
+> 
+> The check for ops->suspend only covers one statement.
+> So fix the check consistent with other similar in
+> the file.
+> 
+> Change a similar check in em28xx_resume_extension()
+> to use consistent logic as its siblings.
+> 
+> Fixes: be7fd3c3a8c5 ("media: em28xx: Hauppauge DualHD second tuner functionality")
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/media/usb/em28xx/em28xx-core.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
+> index e6088b5d1b80..d60f4c2a661d 100644
+> --- a/drivers/media/usb/em28xx/em28xx-core.c
+> +++ b/drivers/media/usb/em28xx/em28xx-core.c
+> @@ -1156,10 +1156,11 @@ int em28xx_suspend_extension(struct em28xx *dev)
+>  	dev_info(&dev->intf->dev, "Suspending extensions\n");
+>  	mutex_lock(&em28xx_devlist_mutex);
+>  	list_for_each_entry(ops, &em28xx_extension_devlist, next) {
+> -		if (ops->suspend)
+> +		if (ops->suspend) {
+>  			ops->suspend(dev);
+> -		if (dev->dev_next)
+> -			ops->suspend(dev->dev_next);
+> +			if (dev->dev_next)
+> +				ops->suspend(dev->dev_next);
+> +		}
+>  	}
+>  	mutex_unlock(&em28xx_devlist_mutex);
+>  	return 0;
+> @@ -1172,11 +1173,11 @@ int em28xx_resume_extension(struct em28xx *dev)
+>  	dev_info(&dev->intf->dev, "Resuming extensions\n");
+>  	mutex_lock(&em28xx_devlist_mutex);
+>  	list_for_each_entry(ops, &em28xx_extension_devlist, next) {
+> -		if (!ops->resume)
+> -			continue;
 
-On 9/7/2020 8:58 PM, Jakub Kicinski wrote:
-> On Mon, 7 Sep 2020 16:46:01 +0300 Moshe Shemesh wrote:
->>> In that sense I don't like --live because it doesn't really say much.
->>> AFAIU it means 1) no link flap; 2) < 2 sec datapath downtime; 3) no
->>> configuration is lost in kernel or device (including netdev config,
->>> link config, flow rules, counters etc.). I was hoping at least the
->>> documentation in patch 14 would be more precise.
->> Actually, while writing "no-reset" or "live-patching" I meant also no
->> downtime at all and nothing resets (config, rules ... anything), that
->> fits mlx5 live-patching.
->>
->> However, to make it more generic,  I can allow few seconds downtime and
->> add similar constrains as you mentioned here to "no-reset". I will add
->> that to the documentation patch.
-> Oh! If your device supports no downtime and packet loss at all that's
-> great. You don't have to weaken the definition now, whoever needs a
-> weaker definition can add a different constraint level later, no?
+Actually, this code is fine: if !ops->resume, then just continue.
 
+So there is no need to change this resume code.
 
-Yes, but if we are thinking there will be more levels, maybe the flag=20
-"--live" or "--no_reset" is less extendable, we may need new attr. I=20
-mean should I have uAPI command line like:
+And in fact, I think it would be best if the same approach was used in
+em28xx_suspend_extension.
 
-$ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action {=20
-driver_reinit | fw_activate } [ limit_level=C2=A0 no_reset ] ]
+Regards,
 
+	Hans
+
+> -		ops->resume(dev);
+> -		if (dev->dev_next)
+> -			ops->resume(dev->dev_next);
+> +		if (ops->resume) {
+> +			ops->resume(dev);
+> +			if (dev->dev_next)
+> +				ops->resume(dev->dev_next);
+> +		}
+>  	}
+>  	mutex_unlock(&em28xx_devlist_mutex);
+>  	return 0;
+> 
 
