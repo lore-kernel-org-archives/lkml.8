@@ -2,303 +2,220 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F34AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E3DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE6621919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599669761;
-	bh=T9JYiXS8GL05l1tqFNRNBraSvHr9QrLWPaj3a7uoPIQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TB6HO0v57rQR+CQAxzX7iUnaXVPlKUMQyYOx6C5w7QB6dwUThfFSSFMuonPxM2/+Y
-	 l4WH9B2MiJ3hL52HE7DbsWWlsN5k4BpdLWUPcKYOIMv+hSjyEkXaZZFhAbbieHPjBO
-	 X/L4bGUaWsDXSt9h13Zef6H8JHXfAloDb5+TjUoM=
+	by mail.kernel.org (Postfix) with ESMTP id C687021919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yf164iXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgIIQmj (ORCPT
+        id S1731024AbgIIQnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbgIIQQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:16:29 -0400
-Received: from coco.lan (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98804206A2;
-        Wed,  9 Sep 2020 14:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599660018;
-        bh=T9JYiXS8GL05l1tqFNRNBraSvHr9QrLWPaj3a7uoPIQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Qfh8ZSAuwIvidjJ8ad5XeugdQGqnoc/O3FHnkddYA5ilAmTFsiCy0nTvm1jHHSiJI
-         bSrfqKTOmr+PBHmWDEUgHPCV+TySq8/GxdD/jisf0lpVCLLZZbvjbNxO/ctaD/NBOX
-         P/P9zC+qxYGDWa5JCWKBfg2Ao/Ymbj1NzeCWh/T0=
-Date:   Wed, 9 Sep 2020 16:00:12 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Andrii Nakryiko <andriin@fb.com>, <andrii.nakryiko@gmail.com>
-Cc:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>, <ast@fb.com>,
-        <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 bpf-next 5/5] docs/bpf: add BPF ring buffer design
- notes
-Message-ID: <20200909160012.02622870@coco.lan>
-In-Reply-To: <20200909155305.21380532@coco.lan>
-References: <20200529075424.3139988-1-andriin@fb.com>
-        <20200529075424.3139988-6-andriin@fb.com>
-        <20200909155305.21380532@coco.lan>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 9 Sep 2020 12:43:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53748 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730967AbgIIQnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:43:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599669810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z2tU+qSkg//p3QUUJru+1eyE4zumits1z47PmsvMV+I=;
+        b=Yf164iXIqOJiK6bwQelGdpr3FbyN2FuuKRa+hJVVja1i7nPsEEehNtohIEVJ1SRBR9Ig47
+        b/750mbnnOQJOnWCEAXIEnqPlPxUGMYD1qNJAOaY0gIaq4CymY5u+ZjHZDgp5ZuUslfZPJ
+        AtBH8bOc8Aifw4rWqdXpFJU1dopTDhE=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-441-Gm9ohxF3PfCAXMxKd9isiA-1; Wed, 09 Sep 2020 12:43:28 -0400
+X-MC-Unique: Gm9ohxF3PfCAXMxKd9isiA-1
+Received: by mail-il1-f197.google.com with SMTP id f20so2501347ilg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:43:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z2tU+qSkg//p3QUUJru+1eyE4zumits1z47PmsvMV+I=;
+        b=mvha0VtfC89LN5JQjPkTJsGvWDG7pal3pO81M2lXqWA+71PQ7RHqFhwV0LuCSthRw4
+         hNuZik1YQa0qNzrRRSkZ5FbQEA7dOGUtr2NNeBwWGgfdpAoC1U0/F8024YtxOc2hWO5P
+         ZJf5Zyb9ZQ15Sbwj7DflfgUIEbsTzsa5LxRD73lfet6jPg0WUi4EIuV9y8hDZACcu/dt
+         n5AG+UYGomgx+LAuWAhFQztjyrY3DJwqju6aOq+31eBhRa0YBlzsOPVs7XvWFI1iP9mL
+         K3Wor7oGtO1sbtxoFJ9PhXhtv81YRf/7INRAgJiwnY4PBr4pD+ccYRNO83dfYGzc9urQ
+         4Tyg==
+X-Gm-Message-State: AOAM530n1FnAgEwZuJAsZmES05KXySisO6MwGOe3mr+lcYwIbN1aRUcd
+        /53vCuP5/5VOST7jP9/QQdkmUX69vum9hYB9pxsyISsGURkSxrtQn04+dQP6Wv1ts6QJWMEv+Be
+        +EfCGGD7TDBh7DopCrVQFcGhIxacWhfsqWDaCjAg2
+X-Received: by 2002:a05:6638:3ea:: with SMTP id s10mr4765105jaq.2.1599669807526;
+        Wed, 09 Sep 2020 09:43:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyPyoLRjK9qtZWv+ZlsNHBWd/SwUfOIB38VulKCabiJgAxyFKq3OA+JoQVEjsAHf4toENijNuL9TjDY+Oc9zOM=
+X-Received: by 2002:a05:6638:3ea:: with SMTP id s10mr4765033jaq.2.1599669806457;
+ Wed, 09 Sep 2020 09:43:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200909075016.104407-1-kasong@redhat.com> <87ft7r82sf.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87ft7r82sf.fsf@x220.int.ebiederm.org>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Thu, 10 Sep 2020 00:43:15 +0800
+Message-ID: <CACPcB9f4k+MV2JeNRjo_vd5FCMkjOMdBCpC6zAn4Z3o8jy_eug@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] Add writing support to vmcore for reusing oldmem
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        kexec@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 9 Sep 2020 15:53:05 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+On Wed, Sep 9, 2020 at 10:04 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Kairui Song <kasong@redhat.com> writes:
+>
+> > Currently vmcore only supports reading, this patch series is an RFC
+> > to add writing support to vmcore. It's x86_64 only yet, I'll add other
+> > architecture later if there is no problem with this idea.
+> >
+> > My purpose of adding writing support is to reuse the crashed kernel's
+> > old memory in kdump kernel, reduce kdump memory pressure, and
+> > allow kdump to run with a smaller crashkernel reservation.
+> >
+> > This is doable because in most cases, after kernel panic, user only
+> > interested in the crashed kernel itself, and userspace/cache/free
+> > memory pages are not dumped. `makedumpfile` is widely used to skip
+> > these pages. Kernel pages usually only take a small part of
+> > the whole old memory. So there will be many reusable pages.
+> >
+> > By adding writing support, userspace then can use these pages as a fast
+> > and temporary storage. This helps reduce memory pressure in many ways.
+> >
+> > For example, I've written a POC program based on this, it will find
+> > the reusable pages, and creates an NBD device which maps to these pages.
+> > The NBD device can then be used as swap, or to hold some temp files
+> > which previouly live in RAM.
+> >
+> > The link of the POC tool: https://github.com/ryncsn/kdumpd
+>
+> A couple of thoughts.
+> 1) Unless I am completely mistaken treating this as a exercise in
+>    memory hotplug would be much simpler.
+>
+>    AKA just plug in the memory that is not needed as part of the kdump.
+>
+>    I see below that you have problems doing this because
+>    of fragmentation.  I still think hotplug is doable using some
+>    kind of fragmented memory zone.
+>
+> 2) The purpose of the memory reservation is because hardware is
+>    still potentially running agains the memory of the old kernel.
+>
+>    By the time we have brought up a new kernel enough of the hardware
+>    may have been reinitialized that we don't have to worry about
+>    hardware randomly dma'ing into the memory used by the old kernel.
+>
+>    With IOMMUs and care we may be able to guarantee for some machine
+>    configurations it is impossible for DMA to come from some piece of
+>    hardware that is present but the kernel does not have a driver
+>    loaded for.\
+>
+> I really do not like this approach because it is fundamentlly doing the
+> wrong thing.  Adding write support to read-only drivers.  I do not see
+> anywhere that you even mentioned the hard problem and the reason we
+> reserve memory in the first place.  Hardware spontaneously DMA'ing onto
+> it.
+>
+That POC tool looks ugly for now as it only a draft to prove this
+works, sorry about it.
 
-> Em Fri, 29 May 2020 00:54:24 -0700
-> Andrii Nakryiko <andriin@fb.com> escreveu:
-> 
-> > Add commit description from patch #1 as a stand-alone documentation under
-> > Documentation/bpf, as it might be more convenient format, in long term
-> > perspective.
-> > 
-> > Suggested-by: Stanislav Fomichev <sdf@google.com>
-> > Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-> > ---
-> >  Documentation/bpf/ringbuf.rst | 209 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 209 insertions(+)
-> >  create mode 100644 Documentation/bpf/ringbuf.rst
-> > 
-> > diff --git a/Documentation/bpf/ringbuf.rst b/Documentation/bpf/ringbuf.rst
-> > new file mode 100644
-> > index 000000000000..75f943f0009d
-> > --- /dev/null
-> > +++ b/Documentation/bpf/ringbuf.rst
-> > @@ -0,0 +1,209 @@
-> > +===============
-> > +BPF ring buffer
-> > +===============
-> > +
-> > +This document describes BPF ring buffer design, API, and implementation details.
-> > +
-> > +.. contents::
-> > +    :local:
-> > +    :depth: 2
-> > +
-> > +Motivation
-> > +----------
-> > +
-> > +There are two distinctive motivators for this work, which are not satisfied by
-> > +existing perf buffer, which prompted creation of a new ring buffer
-> > +implementation.
-> > +
-> > +- more efficient memory utilization by sharing ring buffer across CPUs;
-> > +- preserving ordering of events that happen sequentially in time, even across
-> > +  multiple CPUs (e.g., fork/exec/exit events for a task).
-> > +
-> > +These two problems are independent, but perf buffer fails to satisfy both.
-> > +Both are a result of a choice to have per-CPU perf ring buffer.  Both can be
-> > +also solved by having an MPSC implementation of ring buffer. The ordering
-> > +problem could technically be solved for perf buffer with some in-kernel
-> > +counting, but given the first one requires an MPSC buffer, the same solution
-> > +would solve the second problem automatically.
-> > +
-> > +Semantics and APIs
-> > +------------------
-> > +
-> > +Single ring buffer is presented to BPF programs as an instance of BPF map of
-> > +type ``BPF_MAP_TYPE_RINGBUF``. Two other alternatives considered, but
-> > +ultimately rejected.
-> > +
-> > +One way would be to, similar to ``BPF_MAP_TYPE_PERF_EVENT_ARRAY``, make
-> > +``BPF_MAP_TYPE_RINGBUF`` could represent an array of ring buffers, but not
-> > +enforce "same CPU only" rule. This would be more familiar interface compatible
-> > +with existing perf buffer use in BPF, but would fail if application needed more
-> > +advanced logic to lookup ring buffer by arbitrary key.
-> > +``BPF_MAP_TYPE_HASH_OF_MAPS`` addresses this with current approach.
-> > +Additionally, given the performance of BPF ringbuf, many use cases would just
-> > +opt into a simple single ring buffer shared among all CPUs, for which current
-> > +approach would be an overkill.
-> > +
-> > +Another approach could introduce a new concept, alongside BPF map, to represent
-> > +generic "container" object, which doesn't necessarily have key/value interface
-> > +with lookup/update/delete operations. This approach would add a lot of extra
-> > +infrastructure that has to be built for observability and verifier support. It
-> > +would also add another concept that BPF developers would have to familiarize
-> > +themselves with, new syntax in libbpf, etc. But then would really provide no
-> > +additional benefits over the approach of using a map.  ``BPF_MAP_TYPE_RINGBUF``
-> > +doesn't support lookup/update/delete operations, but so doesn't few other map
-> > +types (e.g., queue and stack; array doesn't support delete, etc).
-> > +
-> > +The approach chosen has an advantage of re-using existing BPF map
-> > +infrastructure (introspection APIs in kernel, libbpf support, etc), being
-> > +familiar concept (no need to teach users a new type of object in BPF program),
-> > +and utilizing existing tooling (bpftool). For common scenario of using a single
-> > +ring buffer for all CPUs, it's as simple and straightforward, as would be with
-> > +a dedicated "container" object. On the other hand, by being a map, it can be
-> > +combined with ``ARRAY_OF_MAPS`` and ``HASH_OF_MAPS`` map-in-maps to implement
-> > +a wide variety of topologies, from one ring buffer for each CPU (e.g., as
-> > +a replacement for perf buffer use cases), to a complicated application
-> > +hashing/sharding of ring buffers (e.g., having a small pool of ring buffers
-> > +with hashed task's tgid being a look up key to preserve order, but reduce
-> > +contention).
-> > +
-> > +Key and value sizes are enforced to be zero. ``max_entries`` is used to specify
-> > +the size of ring buffer and has to be a power of 2 value.
-> > +
-> > +There are a bunch of similarities between perf buffer
-> > +(``BPF_MAP_TYPE_PERF_EVENT_ARRAY``) and new BPF ring buffer semantics:
-> > +
-> > +- variable-length records;
-> > +- if there is no more space left in ring buffer, reservation fails, no
-> > +  blocking;
-> > +- memory-mappable data area for user-space applications for ease of
-> > +  consumption and high performance;
-> > +- epoll notifications for new incoming data;
-> > +- but still the ability to do busy polling for new data to achieve the
-> > +  lowest latency, if necessary.
-> > +
-> > +BPF ringbuf provides two sets of APIs to BPF programs:
-> > +
-> > +- ``bpf_ringbuf_output()`` allows to *copy* data from one place to a ring
-> > +  buffer, similarly to ``bpf_perf_event_output()``;
-> > +- ``bpf_ringbuf_reserve()``/``bpf_ringbuf_commit()``/``bpf_ringbuf_discard()``
-> > +  APIs split the whole process into two steps. First, a fixed amount of space
-> > +  is reserved. If successful, a pointer to a data inside ring buffer data
-> > +  area is returned, which BPF programs can use similarly to a data inside
-> > +  array/hash maps. Once ready, this piece of memory is either committed or
-> > +  discarded. Discard is similar to commit, but makes consumer ignore the
-> > +  record.
-> > +
-> > +``bpf_ringbuf_output()`` has disadvantage of incurring extra memory copy,
-> > +because record has to be prepared in some other place first. But it allows to
-> > +submit records of the length that's not known to verifier beforehand. It also
-> > +closely matches ``bpf_perf_event_output()``, so will simplify migration
-> > +significantly.
-> > +
-> > +``bpf_ringbuf_reserve()`` avoids the extra copy of memory by providing a memory
-> > +pointer directly to ring buffer memory. In a lot of cases records are larger
-> > +than BPF stack space allows, so many programs have use extra per-CPU array as
-> > +a temporary heap for preparing sample. bpf_ringbuf_reserve() avoid this needs
-> > +completely. But in exchange, it only allows a known constant size of memory to
-> > +be reserved, such that verifier can verify that BPF program can't access memory
-> > +outside its reserved record space. bpf_ringbuf_output(), while slightly slower
-> > +due to extra memory copy, covers some use cases that are not suitable for
-> > +``bpf_ringbuf_reserve()``.
-> > +
-> > +The difference between commit and discard is very small. Discard just marks
-> > +a record as discarded, and such records are supposed to be ignored by consumer
-> > +code. Discard is useful for some advanced use-cases, such as ensuring
-> > +all-or-nothing multi-record submission, or emulating temporary
-> > +``malloc()``/``free()`` within single BPF program invocation.
-> > +
-> > +Each reserved record is tracked by verifier through existing
-> > +reference-tracking logic, similar to socket ref-tracking. It is thus
-> > +impossible to reserve a record, but forget to submit (or discard) it.
-> > +
-> > +``bpf_ringbuf_query()`` helper allows to query various properties of ring
-> > +buffer.  Currently 4 are supported:
-> > +
-> > +- ``BPF_RB_AVAIL_DATA`` returns amount of unconsumed data in ring buffer;
-> > +- ``BPF_RB_RING_SIZE`` returns the size of ring buffer;
-> > +- ``BPF_RB_CONS_POS``/``BPF_RB_PROD_POS`` returns current logical possition
-> > +  of consumer/producer, respectively.
-> > +
-> > +Returned values are momentarily snapshots of ring buffer state and could be
-> > +off by the time helper returns, so this should be used only for
-> > +debugging/reporting reasons or for implementing various heuristics, that take
-> > +into account highly-changeable nature of some of those characteristics.
-> > +
-> > +One such heuristic might involve more fine-grained control over poll/epoll
-> > +notifications about new data availability in ring buffer. Together with
-> > +``BPF_RB_NO_WAKEUP``/``BPF_RB_FORCE_WAKEUP`` flags for output/commit/discard
-> > +helpers, it allows BPF program a high degree of control and, e.g., more
-> > +efficient batched notifications. Default self-balancing strategy, though,
-> > +should be adequate for most applications and will work reliable and efficiently
-> > +already.
-> > +
-> > +Design and Implementation
-> > +-------------------------
-> > +
-> > +This reserve/commit schema allows a natural way for multiple producers, either
-> > +on different CPUs or even on the same CPU/in the same BPF program, to reserve
-> > +independent records and work with them without blocking other producers. This
-> > +means that if BPF program was interruped by another BPF program sharing the
-> > +same ring buffer, they will both get a record reserved (provided there is
-> > +enough space left) and can work with it and submit it independently. This
-> > +applies to NMI context as well, except that due to using a spinlock during
-> > +reservation, in NMI context, ``bpf_ringbuf_reserve()`` might fail to get
-> > +a lock, in which case reservation will fail even if ring buffer is not full.
-> > +
-> > +The ring buffer itself internally is implemented as a power-of-2 sized
-> > +circular buffer, with two logical and ever-increasing counters (which might
-> > +wrap around on 32-bit architectures, that's not a problem):
-> > +
-> > +- consumer counter shows up to which logical position consumer consumed the
-> > +  data;
-> > +- producer counter denotes amount of data reserved by all producers.
-> > +
-> > +Each time a record is reserved, producer that "owns" the record will
-> > +successfully advance producer counter. At that point, data is still not yet
-> > +ready to be consumed, though. Each record has 8 byte header, which contains the
-> > +length of reserved record, as well as two extra bits: busy bit to denote that
-> > +record is still being worked on, and discard bit, which might be set at commit
-> > +time if record is discarded. In the latter case, consumer is supposed to skip
-> > +the record and move on to the next one. Record header also encodes record's
-> > +relative offset from the beginning of ring buffer data area (in pages). This
-> > +allows ``bpf_ringbuf_commit()``/``bpf_ringbuf_discard()`` to accept only the
-> > +pointer to the record itself, without requiring also the pointer to ring buffer
-> > +itself. Ring buffer memory location will be restored from record metadata
-> > +header. This significantly simplifies verifier, as well as improving API
-> > +usability.
-> > +
-> > +Producer counter increments are serialized under spinlock, so there is
-> > +a strict ordering between reservations. Commits, on the other hand, are
-> > +completely lockless and independent. All records become available to consumer
-> > +in the order of reservations, but only after all previous records where
-> > +already committed. It is thus possible for slow producers to temporarily hold
-> > +off submitted records, that were reserved later.
-> > +
-> > +Reservation/commit/consumer protocol is verified by litmus tests in
-> > +Documentation/litmus_tests/bpf-rb/_.
-> 
-> Are there any missing patch that were supposed to be merged before this
-> one:
-> 
-> There's no Documentation/litmus_tests/bpf-rb/_. This currently
-> causes a warning at the Kernel's building system:
-> 
-> 	$ ./scripts/documentation-file-ref-check 
-> 	Documentation/bpf/ringbuf.rst: Documentation/litmus_tests/bpf-rb/_
-> 
-> (This is reported when someone calls "make htmldocs")
-> 
-> Could you please fix this?
+For the patch, yes, it is expecting IOMMU to lower the chance of
+potential DMA issue, and expecting DMA will not hit userspace/free
+page, or at least won't override a massive amount of reusable old
+memory. And I thought about some solutions for the potential DMA
+issue.
 
-Btw, make htmldocs also complains with:
+As old memories are used as a block device, which is proxied by
+userspace, so upon each IO, the userspace tool could do an integrity
+check of the corresponding data stored in old mem, and keep multiple
+copies of the data. (eg. use 512M of old memory to hold a 128M block
+device). These copies will be kept far away from each other regarding
+the physical memory location. The reusable old memories are sparse so
+the actual memory containing the data should be also sparse.
+So if some part is corrupted, it is still recoverable. Unless the DMA
+went very wrong and wiped a large region of memory, but if such thing
+happens, it's most likely kernel pages are also being wiped by DMA, so
+the vmcore is already corrupted and kdump may not help. But at least
+it won't fail silently, the userspace tool can still do something like
+dump some available data to an easy to setup target.
 
-	Documentation/bpf/ringbuf.rst:197: WARNING: Unknown target name: "bench_ringbuf.c".
+And also that's one of the reasons not using old memory as kdump's
+memory directly.
 
-(this one is reported by Sphinx)
+> > It's have been a long time issue that kdump suffers from OOM issue
+> > with limited crashkernel memory. So reusing old memory could be very
+> > helpful.
+>
+> There is a very fine line here between reusing existing code (aka
+> drivers and userspace) and doing something that should work.
+>
+> It might make sense to figure out what is using so much memory
+> that an OOM is triggered.
+>
+> Ages ago I did something that was essentially dumping the kernels printk
+> buffer to the serial console in case of a crash and I had things down to
+> something comparatively miniscule like 8M or less.
+>
+> My memory is that historically it has been high performance scsi raid
+> drivers or something like that, that are behind the need to have such
+> large memory reservations.
+>
+> Now that I think about it, you aren't by any chance doing something
+> silly like running systemd in your initrd are you?  Are these OOMs by
+> any chance a userspace problem rather than a problem with inefficient
+> drivers?
+
+The problem with the user space is that, kdump is expected to dump to
+different kinds of dump targets, and there are some very memory
+consuming ones, eg. the NFSv3 case. And there are many other labor
+heavy jobs for the dump target setup, like network setup, lvm setup,
+iscsi setup, multipath etc, etc, not to mention potential corner cases
+with these dump targets. And it is not practical to reimplement them
+again in a memory friendly way.
+
+And the user space is growing, even if user only included "bash
+makedumpfile ssh ip" and required libs in initramfs, which are
+essential for dumping the vmcore over SSH (dump over SSH is commonly
+used), the initramfs will take 20M after decompressed.
+
+The kernel driver memory usage is trackable and I only encountered a
+few of such issues, and many have applied workaround for kdump. And if
+userspace memory pressure is reduced, kernel will also have more
+memory.
+
+And now in Fedora, it is using the existing tool Dracut to generate
+the initramfs, which heavily depends on systemd indeed. Even with
+these helpers, it has been taking quite some work to support all the
+dump targets.
+
+>
+> In summary you either need to show that it is safe to reuse the
+> memory of the old kernel, or do some work to reduce the memory footprint
+> of the crashdump kernel, and the crashdump userspace.
+>
+> Eric
+>
 
 
-> 
-> Thanks,
-> Mauro
+--
+Best Regards,
+Kairui Song
 
-
-
-Thanks,
-Mauro
