@@ -2,121 +2,249 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BF1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAC7C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C39620732
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA24C208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbgIIHjn (ORCPT
+        id S1730233AbgIIHkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:39:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55644 "EHLO mx2.suse.de"
+        Wed, 9 Sep 2020 03:40:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56268 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgIIHjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:39:37 -0400
+        id S1726226AbgIIHkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:40:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9788DB666;
-        Wed,  9 Sep 2020 07:39:35 +0000 (UTC)
-Subject: Re: [PATCH 19/19] block: remove check_disk_change
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20200908145347.2992670-1-hch@lst.de>
- <20200908145347.2992670-20-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <bb2b4f3c-dc54-c5f5-e270-f72efff58f80@suse.de>
-Date:   Wed, 9 Sep 2020 09:39:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mx2.suse.de (Postfix) with ESMTP id 4CE83B681;
+        Wed,  9 Sep 2020 07:40:13 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 09:40:11 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+Message-ID: <20200909074011.GD7348@dhcp22.suse.cz>
+References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
+ <20200908170835.85440-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-20-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200908170835.85440-1-ldufour@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 4:53 PM, Christoph Hellwig wrote:
-> Remove the now unused check_disk_change helper.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+[reposting because the malformed cc list confused my email client]
+
+On Tue 08-09-20 19:08:35, Laurent Dufour wrote:
+> In register_mem_sect_under_node() the system_state’s value is checked to
+> detect whether the operation the call is made during boot time or during an
+> hot-plug operation. Unfortunately, that check is wrong on some
+> architecture, and may lead to sections being registered under multiple
+> nodes if node's memory ranges are interleaved.
+
+Why is this check arch specific?
+
+> This can be seen on PowerPC LPAR after multiple memory hot-plug and
+> hot-unplug operations are done. At the next reboot the node's memory ranges
+> can be interleaved
+
+What is the exact memory layout?
+
+> and since the call to link_mem_sections() is made in
+> topology_init() while the system is in the SYSTEM_SCHEDULING state, the
+> node's id is not checked, and the sections registered multiple times.
+
+So a single memory section/memblock belongs to two numa nodes?
+
+> In
+> that case, the system is able to boot but later hot-plug operation may lead
+> to this panic because the node's links are correctly broken:
+
+Correctly broken? Could you provide more details on the inconsistency
+please?
+
+Which physical memory range you are trying to add here and what is the
+node affinity?
+
+> ------------[ cut here ]------------
+> kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
+> Oops: Exception in kernel mode, sig: 5 [#1]
+> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
+> CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
+> NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
+> REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
+> MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
+> CFAR: c000000000846d20 IRQMASK: 0
+> GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
+> GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
+> GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
+> GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
+> GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
+> GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
+> GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
+> GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
+> NIP [c000000000403f34] add_memory_resource+0x244/0x340
+> LR [c000000000403f2c] add_memory_resource+0x23c/0x340
+> Call Trace:
+> [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
+> [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
+> [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
+> [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
+> [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
+> [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
+> [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
+> [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
+> [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
+> [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
+> [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
+> [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
+> [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
+> Instruction dump:
+> 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
+> 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
+> ---[ end trace 562fd6c109cd0fb2 ]---
+
+The BUG_ON on failure is absolutely horrendous. There must be a better
+way to handle a failure like that. The failure means that
+sysfs_create_link_nowarn has failed. Please describe why that is the
+case.
+
+> This patch addresses the root cause by not relying on the system_state
+> value to detect whether the call is due to a hot-plug operation or not. An
+> additional parameter is added to link_mem_sections() to tell the context of
+> the call and this parameter is propagated to register_mem_sect_under_node()
+> throuugh the walk_memory_blocks()'s call.
+
+This looks like a hack to me and it deserves a better explanation. The
+existing code is a hack on its own and it is inconsistent with other
+boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
+places IIRC. Would it help to use the same here as well? Maybe we want to
+wrap that inside a helper (early_memory_init()) and use it at all
+places.
+
+> Fixes: 4fbce633910e ("mm/memory_hotplug.c: make register_mem_sect_under_node() a callback of walk_memory_range()")
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> Cc: stable@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
 > ---
->  fs/block_dev.c        | 20 --------------------
->  include/linux/genhd.h |  1 -
->  2 files changed, 21 deletions(-)
+>  drivers/base/node.c  | 20 +++++++++++++++-----
+>  include/linux/node.h |  6 +++---
+>  mm/memory_hotplug.c  |  3 ++-
+>  3 files changed, 20 insertions(+), 9 deletions(-)
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Cheers,
-
-Hannes
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 508b80f6329b..27f828eeb531 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -762,14 +762,19 @@ static int __ref get_nid_for_pfn(unsigned long pfn)
+>  }
+>  
+>  /* register memory section under specified node if it spans that node */
+> +struct rmsun_args {
+> +	int	nid;
+> +	bool	hotadd;
+> +};
+>  static int register_mem_sect_under_node(struct memory_block *mem_blk,
+> -					 void *arg)
+> +					void *args)
+>  {
+>  	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
+>  	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
+>  	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
+> -	int ret, nid = *(int *)arg;
+> +	int ret, nid = ((struct rmsun_args *)args)->nid;
+>  	unsigned long pfn;
+> +	bool hotadd = ((struct rmsun_args *)args)->hotadd;
+>  
+>  	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
+>  		int page_nid;
+> @@ -789,7 +794,7 @@ static int register_mem_sect_under_node(struct memory_block *mem_blk,
+>  		 * case, during hotplug we know that all pages in the memory
+>  		 * block belong to the same node.
+>  		 */
+> -		if (system_state == SYSTEM_BOOTING) {
+> +		if (!hotadd) {
+>  			page_nid = get_nid_for_pfn(pfn);
+>  			if (page_nid < 0)
+>  				continue;
+> @@ -832,10 +837,15 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+>  			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
+>  }
+>  
+> -int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)
+> +int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn,
+> +		      bool hotadd)
+>  {
+> +	struct rmsun_args args;
+> +
+> +	args.nid = nid;
+> +	args.hotadd = hotadd;
+>  	return walk_memory_blocks(PFN_PHYS(start_pfn),
+> -				  PFN_PHYS(end_pfn - start_pfn), (void *)&nid,
+> +				  PFN_PHYS(end_pfn - start_pfn), (void *)&args,
+>  				  register_mem_sect_under_node);
+>  }
+>  
+> diff --git a/include/linux/node.h b/include/linux/node.h
+> index 4866f32a02d8..6df9a4548650 100644
+> --- a/include/linux/node.h
+> +++ b/include/linux/node.h
+> @@ -100,10 +100,10 @@ typedef  void (*node_registration_func_t)(struct node *);
+>  
+>  #if defined(CONFIG_MEMORY_HOTPLUG_SPARSE) && defined(CONFIG_NUMA)
+>  extern int link_mem_sections(int nid, unsigned long start_pfn,
+> -			     unsigned long end_pfn);
+> +			     unsigned long end_pfn, bool hotadd);
+>  #else
+>  static inline int link_mem_sections(int nid, unsigned long start_pfn,
+> -				    unsigned long end_pfn)
+> +				    unsigned long end_pfn, bool hotadd)
+>  {
+>  	return 0;
+>  }
+> @@ -128,7 +128,7 @@ static inline int register_one_node(int nid)
+>  		if (error)
+>  			return error;
+>  		/* link memory sections under this node */
+> -		error = link_mem_sections(nid, start_pfn, end_pfn);
+> +		error = link_mem_sections(nid, start_pfn, end_pfn, false);
+>  	}
+>  
+>  	return error;
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e9d5ab5d3ca0..28028db8364a 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1080,7 +1080,8 @@ int __ref add_memory_resource(int nid, struct resource *res)
+>  	}
+>  
+>  	/* link memory sections under this node.*/
+> -	ret = link_mem_sections(nid, PFN_DOWN(start), PFN_UP(start + size - 1));
+> +	ret = link_mem_sections(nid, PFN_DOWN(start), PFN_UP(start + size - 1),
+> +				true);
+>  	BUG_ON(ret);
+>  
+>  	/* create new memmap entry */
+> -- 
+> 2.28.0
 -- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+Michal Hocko
+SUSE Labs
