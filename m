@@ -2,107 +2,157 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61342C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF45C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F51021D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A1A208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Wz131WDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbgIIRUa (ORCPT
+        id S1730509AbgIIRUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36472 "EHLO
+        Wed, 9 Sep 2020 13:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730889AbgIIRUM (ORCPT
+        with ESMTP id S1729941AbgIIPZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:20:12 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD02C061573;
-        Wed,  9 Sep 2020 10:20:11 -0700 (PDT)
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id BDBD037C;
-        Wed,  9 Sep 2020 17:20:09 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 11:20:08 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Connor Kuehl <ckuehl@redhat.com>
-Cc:     pbonzini@redhat.com, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: kvm: fix referenced ioctl symbol
-Message-ID: <20200909112008.23859385@lwn.net>
-In-Reply-To: <20200819211952.251984-1-ckuehl@redhat.com>
-References: <20200819211952.251984-1-ckuehl@redhat.com>
-Organization: LWN.net
+        Wed, 9 Sep 2020 11:25:13 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9E2C061360
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:05:36 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d190so3273372iof.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1GNvQaJVVbJaa5hqastQ4V9UWSsrJ3TzEQOTc6YZGA0=;
+        b=Wz131WDagK/Rxky/VsKTxm9iJtyF3lZsrhvUt6kH/ULppLy487y62HkZGYeM1pXKOZ
+         DeQ8y3Q16GCVRKCyngWbLjZIjWc72QhidG0e5bcZSKpjLE09P3yHLmATe3Z+FpCFgcTQ
+         W2/C/2AzVGHUu6cHHEPWt6mkn5ZNMcG4xCvMcuGt+NA0M9fQHvWeaRORq0/VJy00UBFW
+         SVuEXZBNl1PaMP21xD5W8PtNgRJ4ghTKDdVbnJzTuhHM+YiLMWOFq46dlbALB9SQ435V
+         /wamSrkHIbLha24honWVVkDwyaCkp0a1caYMHllncnc93uHxavoJRQhw5/gkMF+A5Q2G
+         wUVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1GNvQaJVVbJaa5hqastQ4V9UWSsrJ3TzEQOTc6YZGA0=;
+        b=CnRKdAIYJ2t9qtyQFfwvikkUXYbU1JQq4jxfRQHhdh/sxKbptzLXoZcbea/OnnNLj/
+         qFlyACwjssFHvpa1IltzjyyXI9fTNeWIJuiLXmGnt4ZtwpO3yhYKgMqLZspWHlbAyVC7
+         y3MW56gbzpfYKSXnq0MvAixQ0lEy9YgDXzWzf3n276zWlkZC9z+ewHT24ximdN+hxbdN
+         ZEktDRv6fCkbz/oC2SOEbaHrnRPjpiHjCsmD1xDzybBHPdcDc8FwlCEcSfqMDqsU5pq4
+         WqkcfNDsRnpVHhBB+m3dxBB3Ltzy2x2p05PhIEHHKypv229bmLaf2J9qWJYLkXYnhaG+
+         JSZA==
+X-Gm-Message-State: AOAM5300NEKyCkuQzoIICdEySfLbXKhOXNeDy9ZIauXbJC5KByTcvhxM
+        Es8awQDViyApdAoU6k1F6hLhHQ==
+X-Google-Smtp-Source: ABdhPJxR0dWjX+LAG42vqffCSj6/FEsKntR0oewD/D0VWfxuQhn1DExXR02/p7rg4pZ6AeBZyQoUdQ==
+X-Received: by 2002:a02:cb99:: with SMTP id u25mr3965325jap.99.1599660335262;
+        Wed, 09 Sep 2020 07:05:35 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m15sm1464546ild.8.2020.09.09.07.05.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 07:05:34 -0700 (PDT)
+Subject: Re: INFO: task hung in io_sq_thread_stop
+To:     Hillf Danton <hdanton@sina.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     syzbot <syzbot+3c23789ea938faaef049@syzkaller.appspotmail.com>,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <00000000000030a45905aedd879d@google.com>
+ <20200909134317.19732-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4d55d988-d45e-ba36-fed7-342e0a6ab16e@kernel.dk>
+Date:   Wed, 9 Sep 2020 08:05:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200909134317.19732-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 16:19:52 -0500
-Connor Kuehl <ckuehl@redhat.com> wrote:
+On 9/9/20 7:43 AM, Hillf Danton wrote:
+> 
+> On Wed, 9 Sep 2020 12:03:55 +0200 Stefano Garzarella wrote:
+>> On Wed, Sep 09, 2020 at 01:49:22AM -0700, syzbot wrote:
+>>> Hello,
+>>>
+>>> syzbot found the following issue on:
+>>>
+>>> HEAD commit:    dff9f829 Add linux-next specific files for 20200908
+>>> git tree:       linux-next
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=112f880d900000
+>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=3c23789ea938faaef049
+>>> compiler:       gcc (GCC) 10.1.0-syz 20200507
+>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c082a5900000
+>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1474f5f9900000
+>>>
+>>> Bisection is inconclusive: the first bad commit could be any of:
+>>>
+>>> d730b1a2 io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+>>> 7ec3d1dd io_uring: allow disabling rings during the creation
+>>
+>> I'm not sure it is related, but while rebasing I forgot to update the
+>> right label in the error path.
+>>
+>> Since the check of ring state is after the increase of ctx refcount, we
+>> need to decrease it jumping to 'out' label instead of 'out_fput':
+> 
+> I think we need to fix 6a7bb9ff5744 ("io_uring: remove need for
+> sqd->ctx_lock in io_sq_thread()") because the syzbot report
+> indicates the io_sq_thread has to wake up the kworker before
+> scheduling, and in turn the kworker has the chance to unpark it.
+> 
+> Below is the minimum walkaround I can have because it can't
+> ensure the parker will be waken in every case.
+> 
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -6834,6 +6834,10 @@ static int io_sq_thread(void *data)
+>  			io_sq_thread_drop_mm();
+>  		}
+>  
+> +		if (kthread_should_park()) {
+> +			/* wake up parker before scheduling */
+> +			continue;
+> +		}
+>  		if (ret & SQT_SPIN) {
+>  			io_run_task_work();
+>  			cond_resched();
+> 
 
-> The actual symbol that is exported and usable is
-> 'KVM_MEMORY_ENCRYPT_OP', not 'KVM_MEM_ENCRYPT_OP'
-> 
-> $ git grep -l KVM_MEM_ENCRYPT_OP
-> Documentation/virt/kvm/amd-memory-encryption.rst
-> 
-> $ git grep -l KVM_MEMORY_ENCRYPT_OP
-> Documentation/virt/kvm/api.rst
-> arch/x86/kvm/x86.c
-> include/uapi/linux/kvm.h
-> tools/include/uapi/linux/kvm.h
-> 
-> While we're in there, update the KVM API category for
-> KVM_MEMORY_ENCRYPT_OP. It is called on a VM file descriptor.
-> 
-> Signed-off-by: Connor Kuehl <ckuehl@redhat.com>
-> ---
->  Documentation/virt/kvm/amd-memory-encryption.rst | 6 +++---
->  Documentation/virt/kvm/api.rst                   | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index 2d44388438cc..09a8f2a34e39 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -53,11 +53,11 @@ key management interface to perform common hypervisor activities such as
->  encrypting bootstrap code, snapshot, migrating and debugging the guest. For more
->  information, see the SEV Key Management spec [api-spec]_
->  
-> -The main ioctl to access SEV is KVM_MEM_ENCRYPT_OP.  If the argument
-> -to KVM_MEM_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
-> +The main ioctl to access SEV is KVM_MEMORY_ENCRYPT_OP.  If the argument
-> +to KVM_MEMORY_ENCRYPT_OP is NULL, the ioctl returns 0 if SEV is enabled
->  and ``ENOTTY` if it is disabled (on some older versions of Linux,
->  the ioctl runs normally even with a NULL argument, and therefore will
-> -likely return ``EFAULT``).  If non-NULL, the argument to KVM_MEM_ENCRYPT_OP
-> +likely return ``EFAULT``).  If non-NULL, the argument to KVM_MEMORY_ENCRYPT_OP
->  must be a struct kvm_sev_cmd::
->  
->         struct kvm_sev_cmd {
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index eb3a1316f03e..506c8426c583 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -4211,7 +4211,7 @@ H_GET_CPU_CHARACTERISTICS hypercall.
->  
->  :Capability: basic
->  :Architectures: x86
-> -:Type: system
-> +:Type: vm
->  :Parameters: an opaque platform specific structure (in/out)
->  :Returns: 0 on success; -1 on error
->  
-So this appears to have fallen through the cracks.  It looks correct to
-me, so I've applied it, thanks.
+I think this should go in the slow path:
 
-jon
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 652cc53432d4..1c4fa2a0fd82 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -6839,6 +6839,8 @@ static int io_sq_thread(void *data)
+ 		} else if (ret == SQT_IDLE) {
+ 			list_for_each_entry(ctx, &sqd->ctx_list, sqd_list)
+ 				io_ring_set_wakeup_flag(ctx);
++			if (kthread_should_park())
++				continue;
+ 			schedule();
+ 			start_jiffies = jiffies;
+ 		}
+
+-- 
+Jens Axboe
+
