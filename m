@@ -2,366 +2,177 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E449C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0159FC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D440321D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DBE21D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nn80wmq4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYtMSabF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgIIJsx (ORCPT
+        id S1727975AbgIIJtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50966 "EHLO
+        Wed, 9 Sep 2020 05:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgIIJsr (ORCPT
+        with ESMTP id S1726005AbgIIJtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:48:47 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15426C061573;
-        Wed,  9 Sep 2020 02:48:47 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id u3so1078287pjr.3;
-        Wed, 09 Sep 2020 02:48:47 -0700 (PDT)
+        Wed, 9 Sep 2020 05:49:13 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CE4AC061573;
+        Wed,  9 Sep 2020 02:49:12 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u13so1702887pgh.1;
+        Wed, 09 Sep 2020 02:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qQLOx4lboBJj/WJQbW/iAO3Ytg7264C/ffuMfUy96Ug=;
-        b=nn80wmq4XXx2zmLnRo1OM2NtkreT2HFfuQdZYu7hnC9A4VUT9kSMWYzzlv2F2tE2Np
-         1f5vFqQUspTJH+ZDhQ43Mw0RsnZGnngB14uAy6BkQR46teV/o7yIU5XPO23wV3sibHP8
-         5cEzQIzRy/5M0bsWS1lmYKwlvtS0XjEebrLqNpbZxmeRNz1leRkdPR1nBFnTaQQrPNZJ
-         57/ZjoLsz1XBfG2LUumNx2zeIomWZJLsA0HdSpK5R49MwGg7EXX9TxlkpFmYdKLzGG7H
-         F5g0FEQma2hTeZQhQc1niXtSVMhNnFgO0qfHGOs+gPK5CLIC0HscQ0WkG9MTDWACmC4G
-         uWWw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ui6wdAkLPmIGVZc/XTe51VcL+XWEI5jxee8nxyq2t0Q=;
+        b=QYtMSabFIGqB7+Sw3QDcgw7vUDTBo0IG1wW2a9ylFbisyzlkRX7q7ger15wG9T+nLa
+         AOGGBaf1JeMtFEK40bwn4vJO8rN4InlVCzp/lYRu6ZhdrmM8VtpSAjMi+uPxb1FZZB+p
+         fuai9uuNMv1qVptZX++76hmY3ziDGiHezQzVWP+rO2S8TiNw0qNTcr/yVoq53l3EvPXx
+         +abma0MYLzYMNa1KnmVkVu9iI5CfMFPf+ozBPmWQH7cOc6dQQEzDdkqT3OdVp6XiGmSf
+         1PrXGT6F9b01+MRQ36QB/WXpTMkWymEnuG2XrZ0gFDpZfUVSTzvYU2sX0YOxQsKWNcoa
+         b5mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qQLOx4lboBJj/WJQbW/iAO3Ytg7264C/ffuMfUy96Ug=;
-        b=Sub5ft/0mt7DFYtcP80EOoJbrb45wyhQMe0kd8CAGU7Ct6K59rp70enYGv0y/Xm/KZ
-         86X6U61uI2cz5g72Qp/DKEqRHuTezkM95Y8K0EhJE/f/0hyRMKK9DY+Fr0oZ/0cO94rO
-         3ImSnMhexlgHjKFit4cxPD8nSmYefnQp0JMAfqvvXxFVZ7/bVkjzrTJNxAcSm7creoJI
-         cET2aL6xRaso+rbAbg6h9DcT2KIIBXN1PebSBGfemfM0NDEyeqecVlwmFwcMwm8k3KE4
-         ojD2OsLGoBzUHH7bE+gIAI5hzm6MDxsh8HMlWq8aAuGLE8M/Dqu+1qpP+bAAhPjUp1DU
-         TfZw==
-X-Gm-Message-State: AOAM532/CG3PcDq6dgdNa97bwTl3r3BjO9Heis5iNxyVSJCQb1ruV9re
-        A94GJwmvN22HGewT+QYRf4rJSWJtpmA=
-X-Google-Smtp-Source: ABdhPJxwMoBIZW/bbrMMaspHgiEXXqjo8MpvZEzK8Pwlq1eG4XN0Nz6oflJS9ThBBIS5pF+W02fkpg==
-X-Received: by 2002:a17:90b:3105:: with SMTP id gc5mr85211pjb.225.1599644926585;
-        Wed, 09 Sep 2020 02:48:46 -0700 (PDT)
-Received: from sh05419pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id u14sm2224149pfc.203.2020.09.09.02.48.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:48:46 -0700 (PDT)
-From:   Hongtao Wu <wuht06@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
-Subject: [PATCH v3 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe controller
-Date:   Wed,  9 Sep 2020 17:48:32 +0800
-Message-Id: <1599644912-29245-3-git-send-email-wuht06@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599644912-29245-1-git-send-email-wuht06@gmail.com>
-References: <1599644912-29245-1-git-send-email-wuht06@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ui6wdAkLPmIGVZc/XTe51VcL+XWEI5jxee8nxyq2t0Q=;
+        b=bMWu9KGaTdQoJVcEopEy0kHfv8A3vmJBXEzeHQG3MA6FD49CUZ19Ra2f+i+CAfbr9h
+         W0W5ybIXs2NGzv0Qj2Px6esOIA1F7GOEcpLyFsjg+hoAKSbRgzlox3+qX3LQQCFV/XCv
+         dsNVRI8+qnJSTUUq2OuqNvFyfyI9hKvIYDmpspONY62Rs52BVRePQLMoCFBw+x325qBK
+         FQvXpx/bZzucnNVz2JoIdDKWLOO9lI+gSCjwJMXo7pbqhtiVcMT3Vz+/W3aHmEj8GMiw
+         UqVknSbqdh/iW0HBAavLqOMpMyLbtPkjAdshFdBA8DonH3Mx+5PtVJFp7WO+nz8bSBEW
+         vZLg==
+X-Gm-Message-State: AOAM530V3pglewjCUWiIkZVg4/7cX8s4331uEiY1AtboZUSMd21q5i5Y
+        4osFB/MF4+waXHKnbAZc9N8=
+X-Google-Smtp-Source: ABdhPJzhyEFk3jQ+icqIaETDFC8xxnIRyvj9MGcQp5GnV73bajiuBmQ9pCYR5vPppL/HDaPQw10NrA==
+X-Received: by 2002:a65:5502:: with SMTP id f2mr20108pgr.418.1599644951847;
+        Wed, 09 Sep 2020 02:49:11 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id c199sm2147138pfc.128.2020.09.09.02.49.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 02:49:11 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 17:49:06 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL
+ and GPIO_V2_LINE_GET_VALUES_IOCTL
+Message-ID: <20200909094906.GA1550063@sol>
+References: <20200905133549.24606-1-warthog618@gmail.com>
+ <20200905133549.24606-8-warthog618@gmail.com>
+ <20200909092401.GA1431678@sol>
+ <CAMpxmJXh9pKMAXgPWSCPXeyjP0CSo=A5SgLPrL2eRxX-LAyKag@mail.gmail.com>
+ <20200909093523.GA1506132@sol>
+ <CAMpxmJVU9ZniBjFSuhYYaDLUX1jeYeEjYJzdoy06J24SiVNn3w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJVU9ZniBjFSuhYYaDLUX1jeYeEjYJzdoy06J24SiVNn3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hongtao Wu <billows.wu@unisoc.com>
+On Wed, Sep 09, 2020 at 11:41:35AM +0200, Bartosz Golaszewski wrote:
+> On Wed, Sep 9, 2020 at 11:35 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Wed, Sep 09, 2020 at 11:26:00AM +0200, Bartosz Golaszewski wrote:
+> > > On Wed, Sep 9, 2020 at 11:24 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > On Sat, Sep 05, 2020 at 09:35:36PM +0800, Kent Gibson wrote:
+> > > > > Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+> > > > > returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
+> > > > >
+> > > > > The struct linereq implementation is based on the v1 struct linehandle
+> > > > > implementation.
+> > > > >
+> > > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > > ---
+> > > > >
+> > > >
+> > > > [snip]
+> > > >
+> > > > >               if (copy_from_user(&offset, ip, sizeof(offset)))
+> > > > >                       return -EFAULT;
+> > > > > @@ -1104,6 +1505,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+> > > > >                MAJOR(devt), gdev->id);
+> > > > >
+> > > > >       return 0;
+> > > > > +     /*
+> > > > > +      * array sizes must ensure 64-bit alignment and not create holes in
+> > > > > +      * the struct packing.
+> > > > > +      */
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
+> > > > > +
+> > > > > +     /*
+> > > > > +      * check that uAPI structs are 64-bit aligned for 32/64-bit
+> > > > > +      * compatibility
+> > > > > +      */
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
+> > > > > +     BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
+> > > > >  }
+> > > > >
+> > > >
+> > > > A couple of things here - these should all be !IS_ALIGNED.
+> > > > And the BUILD_BUG_ON gets compiled out, and so doesn't fail, if they are
+> > > > after the return.
+> > > >
+> > > > How would you like that fixed - v8 or a patch once v7 is in?
+> > > >
+> > > > Cheers,
+> > > > Kent.
+> > >
+> > > v8 please. Why is it compiled out though? Does it need some config option?
+> > >
+> >
+> > Not sure - haven't looked into it.  I only noticed the condition was
+> > inverted in passing, and when I flipped it it still compiled.
+> > Moving the return to the end of the function made them all fail,
+> > as they should if IS_ALIGNED is true.
+> >
+> > Having BUILD_BUG_ON being able to compile out quietly is a problem in
+> > itself.  Nothing special in my setup that I am aware of.
+> >
+> > Cheers,
+> > Kent.
+> 
+> From include/linux/compiler_types.h:
+> 
+> 295 #ifdef __OPTIMIZE__
+> 296 # define __compiletime_assert(condition, msg, prefix, suffix)           \
+> 297         do {                                                            \
+> 298                 extern void prefix ## suffix(void)
+> __compiletime_error(msg); \
+> 299                 if (!(condition))                                       \
+> 300                         prefix ## suffix();                             \
+> 301         } while (0)
+> 302 #else
+> 303 # define __compiletime_assert(condition, msg, prefix, suffix) do {
+> } while (0)
+> 304 #endif
+> 
+> __OPTIMIZE__ is a predefined macro. I'm not sure about your setup but
+> it it's defined for me in all my yocto SDK builds and BUILD_BUG_ON(1)
+> fails as expected.
+> 
 
-This series adds PCIe controller driver for Unisoc SoCs.
-This controller is based on DesignWare PCIe IP.
+Even when placed after the return, as was the case here?
 
-Signed-off-by: Hongtao Wu <billows.wu@unisoc.com>
----
- drivers/pci/controller/dwc/Kconfig     |  13 ++
- drivers/pci/controller/dwc/Makefile    |   1 +
- drivers/pci/controller/dwc/pcie-sprd.c | 231 +++++++++++++++++++++++++++++++++
- 3 files changed, 245 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
-
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 044a376..0553010 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -311,4 +311,17 @@ config PCIE_AL
- 	  required only for DT-based platforms. ACPI platforms with the
- 	  Annapurna Labs PCIe controller don't need to enable this.
-
-+
-+config PCIE_SPRD
-+	tristate "Unisoc PCIe controller - Host Mode"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	depends on PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	help
-+	  Unisoc PCIe controller uses the DesignWare core. It can be configured
-+	  as an Endpoint (EP) or a Root complex (RC). In order to enable host
-+	  mode (the controller works as RC), PCIE_SPRD must be selected.
-+	  Say Y or M here if you want to PCIe RC controller support on Unisoc
-+	  SoCs.
-+
- endmenu
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a751553..eb546e9 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PCI_MESON) += pci-meson.o
- obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
- obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
- obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
-+obj-$(CONFIG_PCIE_SPRD) += pcie-sprd.o
-
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/controller/dwc/pcie-sprd.c b/drivers/pci/controller/dwc/pcie-sprd.c
-new file mode 100644
-index 0000000..cec4f34
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-sprd.c
-@@ -0,0 +1,231 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe host controller driver for Unisoc SoCs
-+ *
-+ * Copyright (C) 2020 Unisoc, Inc.
-+ *
-+ * Author: Hongtao Wu <Billows.Wu@unisoc.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+
-+#include "pcie-designware.h"
-+
-+#define NUM_OF_ARGS 5
-+
-+struct sprd_pcie {
-+	struct dw_pcie pci;
-+};
-+
-+static int sprd_pcie_syscon_setting(struct platform_device *pdev, char *env)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int i, count, err;
-+	u32 type, delay, reg, mask, val, tmp_val;
-+	struct of_phandle_args out_args;
-+	struct regmap *iomap;
-+	struct device *dev = &pdev->dev;
-+
-+	if (!of_find_property(np, env, NULL)) {
-+		dev_info(dev, "There isn't property %s in dts\n", env);
-+		return 0;
-+	}
-+
-+	count = of_property_count_elems_of_size(np, env,
-+					(NUM_OF_ARGS + 1) * sizeof(u32));
-+	dev_info(dev, "Property (%s) reg count is %d :\n", env, count);
-+
-+	for (i = 0; i < count; i++) {
-+		err = of_parse_phandle_with_fixed_args(np, env, NUM_OF_ARGS,
-+						       i, &out_args);
-+		if (err < 0)
-+			return err;
-+
-+		type = out_args.args[0];
-+		delay = out_args.args[1];
-+		reg = out_args.args[2];
-+		mask = out_args.args[3];
-+		val = out_args.args[4];
-+
-+		iomap = syscon_node_to_regmap(out_args.np);
-+
-+		switch (type) {
-+		case 0:
-+			regmap_update_bits(iomap, reg, mask, val);
-+			break;
-+
-+		case 1:
-+			regmap_read(iomap, reg, &tmp_val);
-+			tmp_val &= (~mask);
-+			tmp_val |= (val & mask);
-+			regmap_write(iomap, reg, tmp_val);
-+			break;
-+		default:
-+			break;
-+		}
-+
-+		if (delay)
-+			usleep_range(delay, delay + 10);
-+
-+		regmap_read(iomap, reg, &tmp_val);
-+		dev_dbg(dev,
-+			"%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
-+			i, reg, mask, val, tmp_val);
-+	}
-+
-+	return i;
-+}
-+
-+static int sprd_pcie_perst_assert(struct platform_device *pdev)
-+{
-+	return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-assert");
-+}
-+
-+static int sprd_pcie_perst_deassert(struct platform_device *pdev)
-+{
-+	return sprd_pcie_syscon_setting(pdev, "sprd,pcie-perst-deassert");
-+}
-+
-+static int sprd_pcie_power_on(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct device *dev = &pdev->dev;
-+
-+	ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweron-syscons");
-+	if (ret < 0)
-+		dev_err(dev,
-+			"failed to set pcie poweroff syscons, return %d\n",
-+			ret);
-+
-+	sprd_pcie_perst_deassert(pdev);
-+
-+	return ret;
-+}
-+
-+static int sprd_pcie_power_off(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct device *dev = &pdev->dev;
-+
-+	sprd_pcie_perst_assert(pdev);
-+
-+	ret = sprd_pcie_syscon_setting(pdev, "sprd,pcie-poweroff-syscons");
-+	if (ret < 0)
-+		dev_err(dev,
-+			"failed to set pcie poweroff syscons, return %d\n",
-+			ret);
-+
-+	return ret;
-+}
-+
-+static int sprd_pcie_host_init(struct pcie_port *pp)
-+{
-+	int ret;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	dw_pcie_setup_rc(pp);
-+	dw_pcie_msi_init(pp);
-+
-+	ret = dw_pcie_wait_for_link(pci);
-+	if (ret)
-+		dev_err(pci->dev, "pcie ep may has not been powered on yet\n");
-+
-+	return ret;
-+}
-+
-+static const struct dw_pcie_host_ops sprd_pcie_host_ops = {
-+	.host_init = sprd_pcie_host_init,
-+};
-+
-+static int sprd_add_pcie_port(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sprd_pcie *ctrl = platform_get_drvdata(pdev);
-+	struct dw_pcie *pci = &ctrl->pci;
-+	struct pcie_port *pp = &pci->pp;
-+
-+	pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "dbi");
-+	if (IS_ERR(pci->dbi_base)) {
-+		dev_err(dev, "failed to get rc dbi base\n");
-+		return PTR_ERR(pci->dbi_base);
-+	}
-+
-+	pp->ops = &sprd_pcie_host_ops;
-+
-+	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-+		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
-+		if (pp->msi_irq < 0) {
-+			dev_err(dev, "failed to get msi, return %d\n",
-+				pp->msi_irq);
-+			return pp->msi_irq;
-+		}
-+	}
-+
-+	return dw_pcie_host_init(pp);
-+}
-+
-+static int sprd_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sprd_pcie *ctrl;
-+	struct dw_pcie *pci;
-+	int ret;
-+
-+	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
-+		return -ENOMEM;
-+
-+	pci = &ctrl->pci;
-+	pci->dev = dev;
-+
-+	platform_set_drvdata(pdev, ctrl);
-+
-+	ret = sprd_pcie_power_on(pdev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get pcie poweron syscons, return %d\n",
-+			ret);
-+		goto err_power_off;
-+	}
-+
-+	ret = sprd_add_pcie_port(pdev);
-+	if (ret) {
-+		dev_warn(dev, "failed to initialize RC controller\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+
-+err_power_off:
-+	sprd_pcie_power_off(pdev);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id sprd_pcie_of_match[] = {
-+	{
-+		.compatible = "sprd,pcie-rc",
-+	},
-+	{},
-+};
-+
-+static struct platform_driver sprd_pcie_driver = {
-+	.probe = sprd_pcie_probe,
-+	.driver = {
-+		.name = "sprd-pcie",
-+		.of_match_table = sprd_pcie_of_match,
-+	},
-+};
-+
-+module_platform_driver(sprd_pcie_driver);
-+
-+MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
-+MODULE_LICENSE("GPL v2");
---
-2.7.4
-
+Kent.
