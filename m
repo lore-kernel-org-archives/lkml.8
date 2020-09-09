@@ -2,98 +2,121 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68332C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CCFC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2A821741
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:38:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dexb87pG"
+	by mail.kernel.org (Postfix) with ESMTP id 5896321741
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 06:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599633533;
+	bh=0LICaIi3kq+D5+WUKy3euwWWHpUAdW91oDd8z/1M29w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JJ4WRaTi/X9z0ntLDldv5iQAmUh3cpH0gw7ASpimj4t2Z049HkBXwpnVvUHUgPP+U
+	 tD+cAsElzZj6j2rYL7G1fFuuJ33CF4erI94xH7jmXLMIrEdmIG0ule9Sg30eWWyMcy
+	 ejovKZQ27EK24OUxT7nCix4B47XsbOJuO1J9Zw1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgIIGh7 (ORCPT
+        id S1726688AbgIIGiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 02:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgIIGh4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 02:37:56 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB22FC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 23:37:55 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id o20so1259136pfp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 23:37:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zecV6RuB4y2mB3liQOpyZpbo7kgRDtaYDwp3K0dNDoc=;
-        b=Dexb87pGwDw4pV9xV4pfHE89/qFy4yJ0Zk8peQjmLkglfG9xkJ57jQm1GJNmEz1MCo
-         Ykxk5lFLvx6ckJb7sZu0muGYTORoL4Fa7c7lvIlZSk1PoRbeRSSxUBlKa1fz2YaFKjTS
-         dBp9vz1p14QbXV5lTdhdnLEozsONmNDPgYZlk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zecV6RuB4y2mB3liQOpyZpbo7kgRDtaYDwp3K0dNDoc=;
-        b=Aw/LPKyR45Nefp+P+Nnh1Qw52vK/zgtA/Huc2aPAA8dOIzBaib9EMnM/oEDqIe39tA
-         1eSOPnEq+/6qwun/LtJ60JBuLZxIIHQ0pw35auFR/JRVf322dp0dTL9WEVQ+aUU8idwF
-         u9kQHP5VXI2grHHsVlfGo7uZZZ+WF8D86HgcSSch8VX0pKqOh+195qZQqzGuZcceDlXF
-         cumJa20p9rUgqXreh4BvOKuLDGIjZ/MAEazoUB6U039GNApSdMxuMYyAcROjcrigHOjz
-         kWdgOXjzVctt+EtjY4VqWXhA1ktkjzQ4h3UdPiYFiLt59KK1/Ts1walVeaVTYZQmHDDo
-         J4UQ==
-X-Gm-Message-State: AOAM533AQfaSmpbUhpsGXL0zpOX+OcatdOq2A3I3IhlDg2JGZi6ZsiKg
-        k+OD/qI1Id+Gq4QpWIbLgWPRXA==
-X-Google-Smtp-Source: ABdhPJzVFpj31Mp6r4rw+U259cnsxp1tUF+KbnPij8BOKuYTU5G32u3HLnEPowDoLMO/s7kOfLCVlQ==
-X-Received: by 2002:a63:30c:: with SMTP id 12mr1942293pgd.66.1599633473538;
-        Tue, 08 Sep 2020 23:37:53 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id z26sm1405769pfa.55.2020.09.08.23.37.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 23:37:52 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH] docs: stable-ABI: Document /sys/kernel/notes
-Date:   Tue,  8 Sep 2020 23:37:52 -0700
-Message-Id: <20200909063752.931283-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+        Wed, 9 Sep 2020 02:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgIIGiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 02:38:52 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D556A21741;
+        Wed,  9 Sep 2020 06:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599633531;
+        bh=0LICaIi3kq+D5+WUKy3euwWWHpUAdW91oDd8z/1M29w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Jp57dpmvW6RZRQ/Q3ee2aYo1WyvA0CdonAJXWlPJFSp0DVEUUCfbbPIXfTZxR6JGZ
+         VqlQfi9lr3LFljeT5/e9mqu6sVfXHM7pChjIhqtWS4LUcR+FwYDu4XYw3Vr98qqCXN
+         D4ssE2HyRBcMKLnuclh6Rc7TwoXlAYuLXGAX36tQ=
+Received: by mail-ej1-f43.google.com with SMTP id e23so1912938eja.3;
+        Tue, 08 Sep 2020 23:38:50 -0700 (PDT)
+X-Gm-Message-State: AOAM533KqA8vElnsAQVCOpYDuLNBE+QUdthanTF6qwnMHz9i0VepBXfD
+        IvHouQn4Dovoqj4ZD5APg/tQWt6o64lEtVourZs=
+X-Google-Smtp-Source: ABdhPJxu1LAZZBSbaQFerdoZWgfls+KYS5zgk5uAtWmk8I3aUMxP7E8uAOqPPoAgEXA7LSjdzyHKKC+Ud3xoRO4QS+8=
+X-Received: by 2002:a17:906:82d1:: with SMTP id a17mr2112835ejy.385.1599633529441;
+ Tue, 08 Sep 2020 23:38:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200908201319.3567-1-krzk@kernel.org> <20200908201319.3567-4-krzk@kernel.org>
+ <af09a19d-3261-a1bb-4d38-e7f543648154@ti.com>
+In-Reply-To: <af09a19d-3261-a1bb-4d38-e7f543648154@ti.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 9 Sep 2020 08:38:37 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfPsbbo3yTe4bL+-V=9YsHnyeiZt-dd2psQZezFdqb9DQ@mail.gmail.com>
+Message-ID: <CAJKOXPfPsbbo3yTe4bL+-V=9YsHnyeiZt-dd2psQZezFdqb9DQ@mail.gmail.com>
+Subject: Re: [PATCH 4/7] power: supply: bq27xxx: use BIT() for bit flags
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the notes file in sysfs as the running vmlinux's .note section
-in binary format. Hopefully this helps someone like me realize the
-kernel exposes the note section in sysfs in the future. Take the date
-from when the file was introduced. It's been a while so presumably this
-is stable and not testing material.
+On Tue, 8 Sep 2020 at 22:53, Dan Murphy <dmurphy@ti.com> wrote:
+>
+> Krzysztof
+>
+> On 9/8/20 3:13 PM, Krzysztof Kozlowski wrote:
+> > BIT() is a preferred way to toggle bit-like flags: no problems with 32/64
+> > bit systems, less chances for mistakes.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >   drivers/power/supply/bq27xxx_battery.c | 15 ++++++++-------
+> >   1 file changed, 8 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+> > index 2deac3fbb036..e971af43dd45 100644
+> > --- a/drivers/power/supply/bq27xxx_battery.c
+> > +++ b/drivers/power/supply/bq27xxx_battery.c
+> > @@ -847,13 +847,14 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
+> >
+> >   #define bq27z561_dm_regs 0
+> >   #define bq28z610_dm_regs 0
+> > -
+> > -#define BQ27XXX_O_ZERO       0x00000001
+> > -#define BQ27XXX_O_OTDC       0x00000002 /* has OTC/OTD overtemperature flags */
+> > -#define BQ27XXX_O_UTOT  0x00000004 /* has OT overtemperature flag */
+> > -#define BQ27XXX_O_CFGUP      0x00000008
+> > -#define BQ27XXX_O_RAM        0x00000010
+> > -#define BQ27Z561_O_BITS      0x00000020
+> > +#define bq34z100_dm_regs 0
+> > +
+> > +#define BQ27XXX_O_ZERO               BIT(0)
+> > +#define BQ27XXX_O_OTDC               BIT(1) /* has OTC/OTD overtemperature flags */
+> > +#define BQ27XXX_O_UTOT               BIT(2) /* has OT overtemperature flag */
+> > +#define BQ27XXX_O_CFGUP              BIT(3)
+> > +#define BQ27XXX_O_RAM                BIT(4)
+> > +#define BQ27Z561_O_BITS              BIT(5)
+> >
+>
+> It seems you have added whitespaces that you submitted a patch to fix in
+> 3/7.
 
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- Documentation/ABI/stable/sysfs-kernel-notes | 5 +++++
- 1 file changed, 5 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-kernel-notes
+I shouldn't... 3/7 is different #define: BQ27Z561_FLAG_FC
+Here it might look like not indented properly due to the patch format.
+In the file, when applying, the entries are aligned correctly.
 
-diff --git a/Documentation/ABI/stable/sysfs-kernel-notes b/Documentation/ABI/stable/sysfs-kernel-notes
-new file mode 100644
-index 000000000000..2c76ee9e67f7
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-kernel-notes
-@@ -0,0 +1,5 @@
-+What:		/sys/kernel/notes
-+Date:		July 2009
-+Contact:	<linux-kernel@vger.kernel.org>
-+Description:	The /sys/kernel/notes file contains the binary representation
-+		of the running vmlinux's .notes section.
--- 
-Sent by a computer, using git, on the internet
+>
+> Also squash 3 and 4.
 
+Whitespace with BIT conversion? Sure, I can. These are separate places
+and different types of cleanup, but no problem to squash them.
+
+Best regards,
+Krzysztof
