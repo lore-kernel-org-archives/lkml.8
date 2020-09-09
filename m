@@ -2,107 +2,109 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E2FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39E6C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40847208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599637771;
-	bh=Ujzu08sFRyCMDhvVsoI1m0iKA5o9FG6NKI6n+mvre50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W8JoS106VPU1c6X2iUsiU/eiFr0JMdV1o1mXQ5VPvCv0pe2QH7l7RDJv/1cpaO9oD
-	 h1OBBbRLyDjsZ5mopKzZiwBJjXxFJHKp/uMx+/QWwOL2tDMkYGCNTs7xcB/v1PhdMD
-	 npOkLsFroh5o5aq7U2yrYUFAOd1wadxNNAy38mh4=
+	by mail.kernel.org (Postfix) with ESMTP id 6BD82208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgIIHt2 (ORCPT
+        id S1728458AbgIIHtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:49:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 03:49:40 -0400
+Received: from mga11.intel.com ([192.55.52.93]:33039 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgIIHt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:49:27 -0400
-Received: from localhost (unknown [122.179.21.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0297620732;
-        Wed,  9 Sep 2020 07:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599637766;
-        bh=Ujzu08sFRyCMDhvVsoI1m0iKA5o9FG6NKI6n+mvre50=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qWC5m8O3Px8t6xUn6sKDugGjmYp7K7Be5rDCf/75V9oDDKcRRfVGENN8ile3NHh+E
-         TKPHDonJGeYrvwU9Xl6Z3DHI9WtM+HRwc1I3IOqq45oHvRg1NdH0FpCfVHTbCYfbZJ
-         fna6S1rlo4q/If2O98KCX6AHc8Yr+3YOGd1pm0dA=
-Date:   Wed, 9 Sep 2020 13:19:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, pierre-louis.bossart@linux.intel.com,
-        tiwai@suse.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-Subject: Re: [PATCH v3 0/3] ASoC: Add sdw stream operations to dailink ops.
-Message-ID: <20200909074918.GJ77521@vkoul-mobl>
-References: <20200904182854.3944-1-yung-chuan.liao@linux.intel.com>
- <46f44acb-7d4b-965c-a6e2-98a4da79e6cc@perex.cz>
+        id S1725975AbgIIHtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:49:39 -0400
+IronPort-SDR: xZG0TLYED3DQ3GYwqhvT0aI8PwVcEOBUi8wAu+7LlqaOAlqS4BOqE/mqgPGOFUQzwTt+25BnwL
+ 76u6sbBSYfmQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155764832"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="155764832"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 00:49:38 -0700
+IronPort-SDR: ZW37UUCOy1QRW9RgXi/SN6w7f1IqMwGoNIL/LukNFw31uIiUoDpn1TkrrHibzmhz3xRQwpe4NY
+ 8NaQ6aNDvEZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="286140168"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Sep 2020 00:49:36 -0700
+Date:   Wed, 9 Sep 2020 15:45:21 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     mdf@kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, hao.wu@intel.com, yilun.xu@intel.com
+Subject: Re: [PATCH] add the FPGA Device Feature List (DFL) EMIF support
+Message-ID: <20200909074521.GB10039@yilunxu-OptiPlex-7050>
+References: <1599553645-26928-1-git-send-email-yilun.xu@intel.com>
+ <20200908090335.GA24693@pi3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <46f44acb-7d4b-965c-a6e2-98a4da79e6cc@perex.cz>
+In-Reply-To: <20200908090335.GA24693@pi3>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-09-20, 14:26, Jaroslav Kysela wrote:
-> Dne 04. 09. 20 v 20:28 Bard Liao napsal(a):
-> > Sdw stream operation APIs can be called once per stream. Move these
-> > operations to dailink ops. The linked series is "soundwire: Remove sdw
-> > stream operations from Intel soundwire dai".
-> > 
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > 
-> > Changes in v3:
-> >  - s/ASOC/ASoC
-> > 
-> > Pierre-Louis Bossart (3):
-> >   ASoC: soc-dai: clarify return value for get_sdw_stream()
-> >   ASoC: Intel: sof_sdw: add dailink .trigger callback
-> >   ASoC: Intel: sof_sdw: add dailink .prepare and .hw_free callback
-> > 
-> >  include/sound/soc-dai.h          |  3 +-
-> >  sound/soc/intel/boards/sof_sdw.c | 81 ++++++++++++++++++++++++++++++++
-> >  2 files changed, 83 insertions(+), 1 deletion(-)
-> > 
+On Tue, Sep 08, 2020 at 11:03:35AM +0200, Krzysztof Kozlowski wrote:
+> On Tue, Sep 08, 2020 at 04:27:24PM +0800, Xu Yilun wrote:
+> > This patch depend on the patchsets: "Modularization of DFL private
+> > feature drivers" & "add dfl bus support to MODULE_DEVICE_TABLE()"
 > 
-> This patchset depends on the SoundWire patchset
->   "[PATCH v2 0/4] soundwire: Remove sdw stream operations from Intel" and
-> cannot be used standalone. I believe that one maintainer should accept it or
-> there should be a co-ordination between Mark and Vinod to push this in sync.
-> We should really settle, how to accept such changes. I believe that Vinod
-> should take it with the ack from Mark for this case. Please, don't require to
-> split changes which depends on each other.
+> The need for bus I understand but why it depends on the "Modularization
+> of DFL private feature drivers"?
 
-I did ask about dependencies, and IIRC looking at code there were none.
-Yes you need both the parts to make it work, but both the trees build
-fine and these will go for 5.10, so I think these merged are okay.
+Sorry, maybe the titles of the two Patch 0 make confusion.
+
+The patchset "Modularization of DFL private feature drivers" implements
+the dfl bus.
+
+The "add dfl bus support to MODULE_DEVICE_TABLE()" adds the support for
+dfl driver module autoloading by changing script/mod. It creates the
+dfl-bus.h head file that would be used in this driver.
 
 > 
-> For all above patches (I tested them):
-> 
-> Acked-by: Jaroslav Kysela <perex@perex.cz>
-> 
-> -- 
-> Jaroslav Kysela <perex@perex.cz>
-> Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+> Anyway I will need a stable tag with mentioned dependencies or this will
+> wait for the next cycle.
 
--- 
-~Vinod
+OK. Maybe I sent it a little earlier. I could wait until the dependencies
+are applied.
+
+Thanks,
+Yilun
+
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+> > 
+> > https://lore.kernel.org/linux-fpga/1599488581-16386-1-git-send-email-yilun.xu@intel.com/
+> > 
+> > The driver supports the EMIF controller on Intel Programmable
+> > Acceleration Card (PAC). The controller manages the on-board memory of
+> > the PCIe card.
+> > 
+> > Xu Yilun (1):
+> >   memory: dfl-emif: add the DFL EMIF private feature driver
+> > 
+> >  .../ABI/testing/sysfs-bus-dfl-devices-emif         |  25 +++
+> >  drivers/memory/Kconfig                             |   9 +
+> >  drivers/memory/Makefile                            |   2 +
+> >  drivers/memory/dfl-emif.c                          | 211 +++++++++++++++++++++
+> >  4 files changed, 247 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-emif
+> >  create mode 100644 drivers/memory/dfl-emif.c
+> > 
+> > -- 
+> > 2.7.4
+> > 
