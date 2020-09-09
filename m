@@ -2,144 +2,110 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7594AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE269C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28CCE207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FC821919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gvxxZAB0"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="MskrfZnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgIIHVt (ORCPT
+        id S1730022AbgIIHWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:21:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56334 "EHLO
+        Wed, 9 Sep 2020 03:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728297AbgIIHVa (ORCPT
+        with ESMTP id S1726036AbgIIHWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:21:30 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF5BC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 00:21:29 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id k15so1353190pfc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:21:29 -0700 (PDT)
+        Wed, 9 Sep 2020 03:22:33 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766ACC061573;
+        Wed,  9 Sep 2020 00:22:32 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id lo4so2030745ejb.8;
+        Wed, 09 Sep 2020 00:22:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3Cckn9EcRCOy7+IrqhRAkRB9fhj6npQVnQRV+Ywzibc=;
-        b=gvxxZAB0tPUxEA0Thi4h7/smwnXShApL7/fFLgGCHldHmOEE2BTAehvz980zF0bC5V
-         1jyjKn1EcadTXdtjYvSp6exlDKHQgRGcsYiGmfs1pvalHPOjt9P3+KqwM1/PjcdN6uw5
-         ofBzbQ6swdXhEMJZ9w0hU/qrJcw4o4uQvTUWQ=
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rO8zY4SOk/PyIA4prlUmHLVh2+ctXvivZUrMTHOdfHA=;
+        b=MskrfZnZsX7Iuf32LZyCZNzbIGXaeW+mK14mUDqYgOSribmqAZDvmz6KL5ttLjqipX
+         0HopvRMl/pbef4OquOPAaByTp17ipnjqwMBRTDF5vqky3Dq5MqT4nfy6qxe8qVvr8lQw
+         NkfivOti0pWe4NwtLb/25Q40m9Yhaj4s3RJIw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3Cckn9EcRCOy7+IrqhRAkRB9fhj6npQVnQRV+Ywzibc=;
-        b=fl/AZWTaNuBLR+/k7voog4/XKWeyMLUF6MyAJwp+APxnzstHjnL+vajv3LQGzoE9Lt
-         1BKYl/LkWfFBxrH1bVE4PUCajHXDoN08oVTi4f4tWkosN7LAfVkzyg+p4rfTEx3x2Q+c
-         51jcpRUA1lO0y2CcoRJJJS+hjiWfqp8THBTvyiEMhPAAIXm6H7A6BplbMFq7hzarObg6
-         n0FzRjoQS+WVA2S1zhTmfL5YYJ7ppZh8NI+rL250Vb6pUxb1UJofzW1tGXl8DQuitsZx
-         gvmRJKtq7FldUoPeNpQpEhb9IsEI263ljd4QVtDgjvLuV4uSiGkdE0S1bVKcywByPks6
-         NIwA==
-X-Gm-Message-State: AOAM531Qc6tY6z8Bigp/XkmM8fo9SXZbdCmLg4fqcaG5ElimdjcQRbAY
-        5t9d2TXb7ob5uXIJK9WlXLIAJ89EGn2m8g==
-X-Google-Smtp-Source: ABdhPJyVJbjJSTx1Z989hLkxbOZzvUOJE6v28wOoJgdZ3iUdbEym7T5IeDt/Vu4kikQytkZs652qvg==
-X-Received: by 2002:a17:902:ea82:b029:d1:7ed9:5470 with SMTP id x2-20020a170902ea82b02900d17ed95470mr1734756plb.26.1599636088605;
-        Wed, 09 Sep 2020 00:21:28 -0700 (PDT)
-Received: from localhost ([2401:fa00:9:15:7220:84ff:fe09:cabc])
-        by smtp.gmail.com with ESMTPSA id x9sm1240120pgi.87.2020.09.09.00.21.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 00:21:28 -0700 (PDT)
-From:   Sam McNally <sammc@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sam McNally <sammc@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 3/4] drm_dp_mst_topology: export two functions
-Date:   Wed,  9 Sep 2020 17:20:51 +1000
-Message-Id: <20200909172023.v2.3.I6c917ff82a1d2ae2253a3bd4d750d58879387cac@changeid>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-In-Reply-To: <20200909172023.v2.1.I8693156f555875e5c8342e86ab37ce968dfdd277@changeid>
-References: <20200909172023.v2.1.I8693156f555875e5c8342e86ab37ce968dfdd277@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rO8zY4SOk/PyIA4prlUmHLVh2+ctXvivZUrMTHOdfHA=;
+        b=D2Nbfm6vR2Ir+mJJqwOJLvL1aQKTl2wEL4P8bzatz3TTEOubwz7xwABpW7T467RHEQ
+         V9Z2bTj1voh0f07uQjBWe2uq0HA0Awtt1rOPMfr+GLoiL25K3fIRVdlY/H3H9LSxY3RR
+         e9y0+H1PLt8RBNq0obdvHDBCXy71+U5ob8CNUh77GddBg0gotZeMjM/v5Zkj4/p/BILQ
+         XAdJQFylFN8s6UttWcOxv5NbA115MEcZDoN/e4yc4KV95IyoTHIryG8BkwCFzVL+5q+2
+         DZW1y3K2qyestvjwyIuTEyxd+hIzjWuJpZl0roeSePgoLX5zYjrCf2JQecqYSmBEqQjP
+         TX7w==
+X-Gm-Message-State: AOAM532ZCdybSw4ccKP4NVLLlGSNZlahm2PuM0ms8a2i9j75tXaONwDY
+        vuzfIg86Tc5AQ/zpKkpofie3lWYoA29MO1Ppb0NF487K
+X-Google-Smtp-Source: ABdhPJzG8i0Ylu6Upc12ayDxcIwkT9Rb3MGN1wQb3dn2PS0s9yBulo2UK0UfKwHfUno3cr8owVw38kBJQrVRgFCbzL0=
+X-Received: by 2002:a17:906:4c58:: with SMTP id d24mr2472778ejw.108.1599636151097;
+ Wed, 09 Sep 2020 00:22:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200812112400.2406734-1-joel@jms.id.au> <1e56af7945b93a22e31ba6d81da82cbdb1b237b6.camel@ozlabs.org>
+In-Reply-To: <1e56af7945b93a22e31ba6d81da82cbdb1b237b6.camel@ozlabs.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 9 Sep 2020 07:22:19 +0000
+Message-ID: <CACPK8XfZ6hLv0Ls0g=b5wdr6A3ei3nzVKDgyOt5Su_Y8g8yQ7A@mail.gmail.com>
+Subject: Re: [PATCH] ARM: aspeed: g5: Do not set sirq polarity
+To:     Jeremy Kerr <jk@ozlabs.org>
+Cc:     Oskar Senft <osk@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+On Thu, 27 Aug 2020 at 06:27, Jeremy Kerr <jk@ozlabs.org> wrote:
+>
+> Hi Joel,
+>
+> > A feature was added to the aspeed vuart driver to configure the vuart
+> > interrupt (sirq) polarity according to the LPC/eSPI strapping register.
+> >
+> > Systems that depend on a active low behaviour (sirq_polarity set to 0)
+> > such as OpenPower boxes also use LPC, so this relationship does not
+> > hold.
+> >
+> > The property was added for a Tyan S7106 system which is not supported
+> > in the kernel tree. Should this or other systems wish to use this
+> > feature of the driver they should add it to the machine specific device
+> > tree.
+> >
+> > Fixes: c791fc76bc72 ("arm: dts: aspeed: Add vuart aspeed,sirq-polarity-sense...")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Joel Stanley <joel@jms.id.au>
+>
+> LGTM. I've tested this on the s2600st, which is strapped for eSPI. All
+> good there too, as expected.
+>
+> Tested-by: Jeremy Kerr <jk@ozlabs.org>
+>
+> and/or:
+>
+> Reviewed-by: Jeremy Kerr <jk@ozlabs.org>
 
-These are required for the CEC MST support.
+Thanks Jeremy. I have queued this for 5.10 and applied it to the openbmc tree.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Signed-off-by: Sam McNally <sammc@chromium.org>
----
+We should also remove the code from the aspeed-vuart driver, as it is
+not correct. Better would be a property that is set according to the
+system's hardware design.
 
-(no changes since v1)
+Cheers,
 
- drivers/gpu/drm/drm_dp_mst_topology.c | 6 ++----
- include/drm/drm_dp_mst_helper.h       | 4 ++++
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 0d753201adbd..c783a2a1c114 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -62,8 +62,6 @@ struct drm_dp_pending_up_req {
- static bool dump_dp_payload_table(struct drm_dp_mst_topology_mgr *mgr,
- 				  char *buf);
- 
--static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port);
--
- static int drm_dp_dpcd_write_payload(struct drm_dp_mst_topology_mgr *mgr,
- 				     int id,
- 				     struct drm_dp_payload *payload);
-@@ -1864,7 +1862,7 @@ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
-  * drm_dp_mst_topology_try_get_port()
-  * drm_dp_mst_topology_get_port()
-  */
--static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
-+void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
- {
- 	topology_ref_history_lock(port->mgr);
- 
-@@ -1935,7 +1933,7 @@ drm_dp_mst_topology_get_port_validated_locked(struct drm_dp_mst_branch *mstb,
- 	return NULL;
- }
- 
--static struct drm_dp_mst_port *
-+struct drm_dp_mst_port *
- drm_dp_mst_topology_get_port_validated(struct drm_dp_mst_topology_mgr *mgr,
- 				       struct drm_dp_mst_port *port)
- {
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-index c7c79e0ced18..d036222e0d64 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -754,6 +754,10 @@ drm_dp_mst_detect_port(struct drm_connector *connector,
- 		       struct drm_dp_mst_topology_mgr *mgr,
- 		       struct drm_dp_mst_port *port);
- 
-+struct drm_dp_mst_port *drm_dp_mst_topology_get_port_validated
-+(struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port);
-+void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port);
-+
- struct edid *drm_dp_mst_get_edid(struct drm_connector *connector, struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port);
- 
- 
--- 
-2.28.0.526.ge36021eeef-goog
-
+Joel
