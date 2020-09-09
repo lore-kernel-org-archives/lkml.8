@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D51C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37999C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDF2206F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8207206F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9VhCey8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mfzd/YmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgIIK2l (ORCPT
+        id S1729912AbgIIK2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56956 "EHLO
+        Wed, 9 Sep 2020 06:28:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgIIK1j (ORCPT
+        with ESMTP id S1729621AbgIIK2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:27:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F07C061573;
-        Wed,  9 Sep 2020 03:27:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id md22so1135737pjb.0;
-        Wed, 09 Sep 2020 03:27:38 -0700 (PDT)
+        Wed, 9 Sep 2020 06:28:25 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65BAC061573;
+        Wed,  9 Sep 2020 03:28:24 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id j34so1751826pgi.7;
+        Wed, 09 Sep 2020 03:28:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1rVwlHjHNekh14PBFJ9edGeazCsM5cgIewowY8Usnac=;
-        b=P9VhCey8QpA58BXKEORRd0qL2T/ojU55qa3ODjWaLAgrvgJ8ySmQZEktoksOPAxFG1
-         C2U0FpCaQNHXJI7nRGHDSzrEVY99iAVfXW9SpdfUOlhzzFqolV5T896Viob9EZQKB6Me
-         DWloMGakXX7mVpi0JiPzJxA/eZWrwIVZcRBXQSEGurv/MOq1KqHU75zfpLezXjtT+C14
-         mv/yH+qBH5V8Wx/W5R1MHH5WaCNko9Ua5SzCyJ67K3L4I0gMTnZx+r+olSY1Qwc5nS8j
-         yLt2vMU9nwdxdrHWrW22CyzFf8fXeBqpJUxEGfHRwF36vYPQLVECQpxBuqKANK6CGZpJ
-         5cwQ==
+        bh=wQ/pxWSH3DoONk30d+8cbo4S8Mhv82D5BPzYgdqdReE=;
+        b=Mfzd/YmPzTMqC6C2PmKBvGLugF4Nrr5lLcXigjxu3RUKhNojsXfUTftcI26XHEYekm
+         sIOnOuh3741WEAcHcbQFYiDYqwjsvxHImvcIoJk0BKTPOgORTAi7snEva2qmOj4n/fpq
+         Y7fIjeTcD6BwBhiFiCyuc1c6NLgCfCMgtIajk2Oio3DXyILrp+gBBCWkzCUCDXoibBmR
+         us0pfzDeMK1VeWYx37LM/KC1SC1Ey8cVROl4ceFvkEfCwld/gXSIlMJTpTTja0wyH6w/
+         mlhHs3TS3ChSJQOsDpD909OrCsUY4rDd31HfGoW8dmrIWbV95XUrR57rFgwCP9x6PUPY
+         Iz/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1rVwlHjHNekh14PBFJ9edGeazCsM5cgIewowY8Usnac=;
-        b=RsledpG51bF9NoQnZvVNbh5BXIMwS23vO76nSnLDZPm6hD9JYfaYfnfaTVcHvJZ1Np
-         uH800doCnCESV9npnfgMqsmG8geSxh8Kk2fceyPMJs0IZ2HeA6lY9gHQG6kCGWC6l8Bv
-         Dy6Plx4qQ1ALG8TlPRv7F+53S2viL9LkwxgqyJ4RD48XxB/QVEKhAAzw/W3rj/9qy3uj
-         6mB4LuO4SFSCQolLoGurv9bJX3yZmjuEiBtF+mjIuhxjXil0aIFXeZ6FoQ5lkDHrFbiv
-         7m//SU+3bAZTovm5DDsbieK8uNtHuduNYlk9uU5m4A9zNful3gJcFrmBAdEWlpp6tD2c
-         i8mw==
-X-Gm-Message-State: AOAM530jq93yK06BXXGj0WfWpbpcgiYEv80KVQyVvWOwtCm/GsFH7RbI
-        RUIgrQlqLaw/UE+aLL0KEAjFIQ45Qqo=
-X-Google-Smtp-Source: ABdhPJz1S+XeHS2GvzYSu+Gn/0pPlxKWfyUsC2xb3u2DvC7HYW64geAmrF4oIW1sGPObulE5aB4Lsw==
-X-Received: by 2002:a17:90a:81:: with SMTP id a1mr246286pja.136.1599647257211;
-        Wed, 09 Sep 2020 03:27:37 -0700 (PDT)
+        bh=wQ/pxWSH3DoONk30d+8cbo4S8Mhv82D5BPzYgdqdReE=;
+        b=G7obATQr7gRL74Nxm1SycBDEKoaNp57VZM/37Ma28oWGM4rGLG2tttv2ZO3T6JgKoF
+         +hTr9BWgTwbqVj7tqu/kIBl4/o6egIaZ6xmTXfw/88ij51zd99hUIMDGyUy5Q1VoSJx8
+         xE7dGw7HDMtrxzuVa/KLpQxu3NZsVf3kMo6UdhAereDySsF8dh9W9nNc+GHy1nnWtXi0
+         VF8KWLlGgPQqcqwhBKYOy9Bk80YgfTxi+xdeUTEVPVdZJHqp/9kEP/qH2DouNDzfkoLV
+         OSktLoJXv+zOQzEmSGGE80vrJRDujzbCj364hnd9sY8nSBJmYghTioBogTo1Fopp0PCV
+         7hUA==
+X-Gm-Message-State: AOAM532uryL8zRPMLUeS8nXKU18MBZeF9M6ldkueqJw/+VqKkaNju99A
+        t7UBb0kNTdxh6wuN8mo88oQtvoUyFzY=
+X-Google-Smtp-Source: ABdhPJwzeGIx7bVZlcvs4bOgz9oubV9D8bEnErcXqf4/Da0owg5Utp6s2jme/L8n6PScmimNgoP96w==
+X-Received: by 2002:a63:4e4f:: with SMTP id o15mr134547pgl.202.1599647303794;
+        Wed, 09 Sep 2020 03:28:23 -0700 (PDT)
 Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.27.34
+        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.28.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 03:27:36 -0700 (PDT)
+        Wed, 09 Sep 2020 03:28:23 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v8 04/20] gpio: uapi: define uAPI v2
-Date:   Wed,  9 Sep 2020 18:26:24 +0800
-Message-Id: <20200909102640.1657622-5-warthog618@gmail.com>
+Subject: [PATCH v8 12/20] gpiolib: cdev: support setting debounce
+Date:   Wed,  9 Sep 2020 18:26:32 +0800
+Message-Id: <20200909102640.1657622-13-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200909102640.1657622-1-warthog618@gmail.com>
 References: <20200909102640.1657622-1-warthog618@gmail.com>
@@ -77,426 +77,456 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new version of the uAPI to address existing 32/64-bit alignment
-issues, add support for debounce and event sequence numbers, allow
-requested lines with different configurations, and provide some future
-proofing by adding padding reserved for future use.
+Add support for setting debounce on a line via the GPIO uAPI.
+Where debounce is not supported by hardware, a software debounce is
+provided.
 
-The alignment issue relates to the gpioevent_data, which packs to different
-sizes on 32-bit and 64-bit platforms. That creates problems for 32-bit apps
-running on 64-bit kernels.  uAPI v2 addresses that particular issue, and
-the problem more generally, by adding pad fields that explicitly pad
-structs out to 64-bit boundaries, so they will pack to the same size now,
-and even if some of the reserved padding is used for __u64 fields in the
-future.
+The implementation of the software debouncer waits for the line to be
+stable for the debounce period before determining if a level change,
+and a corresponding edge event, has occurred.  This provides maximum
+protection against glitches, but also introduces a debounce_period
+latency to edge events.
 
-The new structs have been analysed with pahole to ensure that they
-are sized as expected and contain no implicit padding.
-
-The lack of future proofing in v1 makes it impossible to, for example,
-add the debounce feature that is included in v2.
-The future proofing is addressed by providing configurable attributes in
-line config and reserved padding in all structs for future features.
-Specifically, the line request, config, info, info_changed and event
-structs receive updated versions and new ioctls.
-
-As the majority of the structs and ioctls were being replaced, it is
-opportune to rework some of the other aspects of the uAPI:
-
-v1 has three different flags fields, each with their own separate
-bit definitions.  In v2 that is collapsed to one - gpio_v2_line_flag.
-
-The handle and event requests are merged into a single request, the line
-request, as the two requests were mostly the same other than the edge
-detection provided by event requests.  As a byproduct, the v2 uAPI allows
-for multiple lines producing edge events on the same line handle.
-This is a new capability as v1 only supports a single line in an event
-request.
-
-As a consequence, there are now only two types of file handle to be
-concerned with, the chip and the line, and it is clearer which ioctls
-apply to which type of handle.
-
-There is also some minor renaming of fields for consistency compared to
-their v1 counterparts, e.g. offset rather than lineoffset or line_offset,
-and consumer rather than consumer_label.
-
-Additionally, v1 GPIOHANDLES_MAX becomes GPIO_V2_LINES_MAX in v2 for
-clarity, and the gpiohandle_data __u8 array becomes a bitmap in
-gpio_v2_line_values.
-
-The v2 uAPI is mostly a reorganisation and extension of v1, so userspace
-code, particularly libgpiod, should readily port to it.
+The software debouncer is integrated with the edge detection as it
+utilises the line interrupt, and integration is simpler than getting
+the two to interwork.  Where software debounce AND edge detection is
+required, the debouncer provides both.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
 
-Changes for v7:
- - use _BITULL for flag constants
+Changes for v6:
+ - as per cover letter
+
+Changes for v5:
+ - as per cover letter
 
 Changes for v4:
- - clarify bitmap width in GPIO_V2_LINES_MAX description
+ - fix handling of mask in line_get_values
 
 Changes for v3:
- - relocated commentary into commit description
- - hard limit max requested lines to 64 so bitmaps always fit in a single
-   u64.
- - prefix all v2 symbols with GPIO_V2
- - 64-bit flag values to ULL
- - use __aligned_u64 to ensure 64-bit fields are 64-bit aligned
- - support masked get values, as per set values.
+ - only GPIO_V2 field renaming
 
 Changes for v2:
- - lower case V1 and V2, except in capitalized names
- - hyphenate 32/64-bit
- - rename bitmap field to bits
- - drop PAD_SIZE consts in favour of hard coded numbers
- - sort includes
- - change config flags to __u64
- - increase padding of gpioline_event
- - relocate GPIOLINE_CHANGED enum into v2 section (is common with v1)
- - rework config to collapse direction, drive, bias and edge enums back
-   into flags and add optional attributes that can be associated with a
-   subset of the requested lines.
+ - improve documentation on fields shared by threads.
+ - use READ_ONCE/WRITE_ONCE for shared fields rather than atomic_t
+   which was overkill.
 
-Changes for v1 (since the RFC):
- - document the constraints on array sizes to maintain 32/64 alignment
- - add sequence numbers to gpioline_event
- - use bitmap for values instead of array of __u8
- - gpioline_info_v2 contains gpioline_config instead of its composite fields
- - provide constants for all array sizes, especially padding
- - renamed "GPIOLINE_FLAG_V2_KERNEL" to "GPIOLINE_FLAG_V2_USED"
- - renamed "default_values" to "values"
- - made gpioline_direction zero based
- - document clock used in gpioline_event timestamp
- - add event_buffer_size to gpioline_request
- - rename debounce to debounce_period
- - rename lines to num_lines
+ drivers/gpio/gpiolib-cdev.c | 252 ++++++++++++++++++++++++++++++++++--
+ drivers/gpio/gpiolib.c      |   3 +
+ drivers/gpio/gpiolib.h      |   4 +
+ 3 files changed, 248 insertions(+), 11 deletions(-)
 
- include/uapi/linux/gpio.h | 274 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 267 insertions(+), 7 deletions(-)
-
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index 285cc10355b2..87074886e73d 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -11,11 +11,14 @@
- #ifndef _UAPI_GPIO_H_
- #define _UAPI_GPIO_H_
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 12d5c6543c15..059d8e44c71b 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -6,6 +6,7 @@
+ #include <linux/build_bug.h>
+ #include <linux/cdev.h>
+ #include <linux/compat.h>
++#include <linux/compiler.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/file.h>
+@@ -22,6 +23,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/timekeeping.h>
+ #include <linux/uaccess.h>
++#include <linux/workqueue.h>
+ #include <uapi/linux/gpio.h>
  
-+#include <linux/const.h>
- #include <linux/ioctl.h>
- #include <linux/types.h>
- 
- /*
-  * The maximum size of name and label arrays.
-+ *
-+ * Must be a multiple of 8 to ensure 32/64-bit alignment of structs.
+ #include "gpiolib.h"
+@@ -396,6 +398,9 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+  * events for the corresponding line request. This is drawn from the @req.
+  * @line_seqno: the seqno for the current edge event in the sequence of
+  * events for this line.
++ * @work: the worker that implements software debouncing
++ * @sw_debounced: flag indicating if the software debouncer is active
++ * @level: the current debounced physical level of the line
   */
- #define GPIO_MAX_NAME_SIZE 32
- 
-@@ -32,6 +35,248 @@ struct gpiochip_info {
- 	__u32 lines;
+ struct line {
+ 	struct gpio_desc *desc;
+@@ -411,7 +416,27 @@ struct line {
+ 	 */
+ 	u64 timestamp;
+ 	u32 req_seqno;
++	/*
++	 * line_seqno is used by either edge_irq_thread() or
++	 * debounce_work_func() which are themselves mutually exclusive.
++	 */
+ 	u32 line_seqno;
++	/*
++	 * -- debouncer specific fields --
++	 */
++	struct delayed_work work;
++	/*
++	 * sw_debounce is shared by linereq_set_config(), which is the only
++	 * setter, and linereq_get_values(), which can live with a slightly
++	 * stale value.
++	 */
++	unsigned int sw_debounced;
++	/*
++	 * level is shared by debounce_work_func(), which is the only
++	 * setter, and linereq_get_values() which can live with a slightly
++	 * stale value.
++	 */
++	unsigned int level;
  };
  
-+/*
-+ * Maximum number of requested lines.
-+ *
-+ * Must be no greater than 64, as bitmaps are restricted here to 64-bits
-+ * for simplicity, and a multiple of 2 to ensure 32/64-bit alignment of
-+ * structs.
-+ */
-+#define GPIO_V2_LINES_MAX 64
-+
-+/*
-+ * The maximum number of configuration attributes associated with a line
-+ * request.
-+ */
-+#define GPIO_V2_LINE_NUM_ATTRS_MAX 10
-+
-+/**
-+ * enum gpio_v2_line_flag - &struct gpio_v2_line_attribute.flags values
-+ */
-+enum gpio_v2_line_flag {
-+	GPIO_V2_LINE_FLAG_USED			= _BITULL(0), /* line not available for request */
-+	GPIO_V2_LINE_FLAG_ACTIVE_LOW		= _BITULL(1),
-+	GPIO_V2_LINE_FLAG_INPUT			= _BITULL(2),
-+	GPIO_V2_LINE_FLAG_OUTPUT		= _BITULL(3),
-+	GPIO_V2_LINE_FLAG_EDGE_RISING		= _BITULL(4),
-+	GPIO_V2_LINE_FLAG_EDGE_FALLING		= _BITULL(5),
-+	GPIO_V2_LINE_FLAG_OPEN_DRAIN		= _BITULL(6),
-+	GPIO_V2_LINE_FLAG_OPEN_SOURCE		= _BITULL(7),
-+	GPIO_V2_LINE_FLAG_BIAS_PULL_UP		= _BITULL(8),
-+	GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN	= _BITULL(9),
-+	GPIO_V2_LINE_FLAG_BIAS_DISABLED		= _BITULL(10),
-+};
-+
-+/**
-+ * struct gpio_v2_line_values - Values of GPIO lines
-+ * @mask: a bitmap identifying the lines to get or set, with each bit
-+ * number corresponding to the index into &struct
-+ * gpio_v2_line_request.offsets.
-+ * @bits: a bitmap containing the value of the lines, set to 1 for active
-+ * and 0 for inactive.  Note that this is the logical value, which will be
-+ * the opposite of the physical value if the line is configured as active
-+ * low.
-+ */
-+struct gpio_v2_line_values {
-+	__aligned_u64 mask;
-+	__aligned_u64 bits;
-+};
-+
-+/**
-+ * enum gpio_v2_line_attr_id - &struct gpio_v2_line_attribute.id values
-+ */
-+enum gpio_v2_line_attr_id {
-+	GPIO_V2_LINE_ATTR_ID_FLAGS		= 1,
-+	GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES	= 2,
-+	GPIO_V2_LINE_ATTR_ID_DEBOUNCE		= 3,
-+};
-+
-+/**
-+ * struct gpio_v2_line_attribute - a configurable attribute of a line
-+ * @id: attribute identifier with value from &enum gpio_v2_line_attr_id
-+ * @padding: reserved for future use and must be zero filled
-+ * @flags: if id is GPIO_V2_LINE_ATTR_ID_FLAGS, the flags for the GPIO
-+ * line, with values from enum gpio_v2_line_flag, such as
-+ * GPIO_V2_LINE_FLAG_ACTIVE_LOW, GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed
-+ * together.  This overrides the default flags contained in the &struct
-+ * gpio_v2_line_config for the associated line.
-+ * @values: if id is GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES, a bitmap
-+ * containing the values to which the lines will be set, with each bit
-+ * number corresponding to the index into &struct
-+ * gpio_v2_line_request.offsets.
-+ * @debounce_period: if id is GPIO_V2_LINE_ATTR_ID_DEBOUNCE, the desired
-+ * debounce period, in microseconds
-+ */
-+struct gpio_v2_line_attribute {
-+	__u32 id;
-+	__u32 padding;
-+	union {
-+		__aligned_u64 flags;
-+		__aligned_u64 values;
-+		__u32 debounce_period;
-+	};
-+};
-+
-+/**
-+ * struct gpio_v2_line_config_attribute - a configuration attribute
-+ * associated with one or more of the requested lines.
-+ * @mask: a bitmap identifying the lines to which the attribute applies,
-+ * with each bit number corresponding to the index into &struct
-+ * gpio_v2_line_request.offsets.
-+ * @attr: the configurable attribute
-+ */
-+struct gpio_v2_line_config_attribute {
-+	__aligned_u64 mask;
-+	struct gpio_v2_line_attribute attr;
-+};
-+
-+/**
-+ * struct gpio_v2_line_config - Configuration for GPIO lines
-+ * @flags: flags for the GPIO lines, with values from enum
-+ * gpio_v2_line_flag, such as GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-+ * GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed together.  This is the default for
-+ * all requested lines but may be overridden for particular lines using
-+ * attrs.
-+ * @num_attrs: the number of attributes in attrs
-+ * @padding: reserved for future use and must be zero filled
-+ * @attrs: the configuration attributes associated with the requested
-+ * lines.  Any attribute should only be associated with a particular line
-+ * once.  If an attribute is associated with a line multiple times then the
-+ * first occurrence (i.e. lowest index) has precedence.
-+ */
-+struct gpio_v2_line_config {
-+	__aligned_u64 flags;
-+	__u32 num_attrs;
-+	/*
-+	 * Pad to fill implicit padding and provide space for future use.
-+	 */
-+	__u32 padding[5];
-+	struct gpio_v2_line_config_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
-+};
-+
-+/**
-+ * struct gpio_v2_line_request - Information about a request for GPIO lines
-+ * @offsets: an array of desired lines, specified by offset index for the
-+ * associated GPIO device
-+ * @consumer: a desired consumer label for the selected GPIO lines such as
-+ * "my-bitbanged-relay"
-+ * @config: requested configuration for the lines.
-+ * @num_lines: number of lines requested in this request, i.e. the number
-+ * of valid fields in the GPIO_V2_LINES_MAX sized arrays, set to 1 to
-+ * request a single line
-+ * @event_buffer_size: a suggested minimum number of line events that the
-+ * kernel should buffer.  This is only relevant if edge detection is
-+ * enabled in the configuration. Note that this is only a suggested value
-+ * and the kernel may allocate a larger buffer or cap the size of the
-+ * buffer. If this field is zero then the buffer size defaults to a minimum
-+ * of num_lines*16.
-+ * @padding: reserved for future use and must be zero filled
-+ * @fd: if successful this field will contain a valid anonymous file handle
-+ * after a GPIO_GET_LINE_IOCTL operation, zero or negative value means
-+ * error
-+ */
-+struct gpio_v2_line_request {
-+	__u32 offsets[GPIO_V2_LINES_MAX];
-+	char consumer[GPIO_MAX_NAME_SIZE];
-+	struct gpio_v2_line_config config;
-+	__u32 num_lines;
-+	__u32 event_buffer_size;
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[5];
-+	__s32 fd;
-+};
-+
-+/**
-+ * struct gpio_v2_line_info - Information about a certain GPIO line
-+ * @name: the name of this GPIO line, such as the output pin of the line on
-+ * the chip, a rail or a pin header name on a board, as specified by the
-+ * gpio chip, may be empty
-+ * @consumer: a functional name for the consumer of this GPIO line as set
-+ * by whatever is using it, will be empty if there is no current user but
-+ * may also be empty if the consumer doesn't set this up
-+ * @flags: flags for the GPIO line, such as GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-+ * GPIO_V2_LINE_FLAG_OUTPUT etc, OR:ed together
-+ * @offset: the local offset on this GPIO device, fill this in when
-+ * requesting the line information from the kernel
-+ * @num_attrs: the number of attributes in attrs
-+ * @attrs: the configuration attributes associated with the line.
-+ * @padding: reserved for future use
-+ */
-+struct gpio_v2_line_info {
-+	char name[GPIO_MAX_NAME_SIZE];
-+	char consumer[GPIO_MAX_NAME_SIZE];
-+	__u32 offset;
-+	__u32 num_attrs;
-+	__aligned_u64 flags;
-+	struct gpio_v2_line_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[4];
-+};
-+
-+enum gpio_v2_line_changed_type {
-+	GPIO_V2_LINE_CHANGED_REQUESTED	= 1,
-+	GPIO_V2_LINE_CHANGED_RELEASED	= 2,
-+	GPIO_V2_LINE_CHANGED_CONFIG	= 3,
-+};
-+
-+/**
-+ * struct gpio_v2_line_info_changed - Information about a change in status
-+ * of a GPIO line
-+ * @info: updated line information
-+ * @timestamp: estimate of time of status change occurrence, in nanoseconds
-+ * @event_type: the type of change with a value from enum
-+ * gpio_v2_line_changed_type
-+ * @padding: reserved for future use
-+ */
-+struct gpio_v2_line_info_changed {
-+	struct gpio_v2_line_info info;
-+	__aligned_u64 timestamp;
-+	__u32 event_type;
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[5];
-+};
-+
-+enum gpio_v2_line_event_id {
-+	GPIO_V2_LINE_EVENT_RISING_EDGE	= 1,
-+	GPIO_V2_LINE_EVENT_FALLING_EDGE	= 2,
-+};
-+
-+/**
-+ * struct gpio_v2_line_event - The actual event being pushed to userspace
-+ * @timestamp: best estimate of time of event occurrence, in nanoseconds.
-+ * The timestamp is read from CLOCK_MONOTONIC and is intended to allow the
-+ * accurate measurement of the time between events.  It does not provide
-+ * the wall-clock time.
-+ * @id: event identifier with value from enum gpio_v2_line_event_id
-+ * @offset: the offset of the line that triggered the event
-+ * @seqno: the sequence number for this event in the sequence of events for
-+ * all the lines in this line request
-+ * @line_seqno: the sequence number for this event in the sequence of
-+ * events on this particular line
-+ * @padding: reserved for future use
-+ */
-+struct gpio_v2_line_event {
-+	__aligned_u64 timestamp;
-+	__u32 id;
-+	__u32 offset;
-+	__u32 seqno;
-+	__u32 line_seqno;
-+	/*
-+	 * Pad struct to 64-bit boundary and provide space for future use.
-+	 */
-+	__u32 padding[6];
-+};
-+
-+/*
-+ *  ABI v1
-+ */
-+
- /* Informational flags */
- #define GPIOLINE_FLAG_KERNEL		(1UL << 0) /* Line used by the kernel */
- #define GPIOLINE_FLAG_IS_OUT		(1UL << 1)
-@@ -149,8 +394,6 @@ struct gpiohandle_config {
- 	__u32 padding[4]; /* padding for future use */
- };
- 
--#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
--
  /**
-  * struct gpiohandle_data - Information of values on a GPIO handle
-  * @values: when getting the state of lines this contains the current
-@@ -161,9 +404,6 @@ struct gpiohandle_data {
- 	__u8 values[GPIOHANDLES_MAX];
+@@ -539,6 +564,159 @@ static irqreturn_t edge_irq_handler(int irq, void *p)
+ 	return IRQ_WAKE_THREAD;
+ }
+ 
++/*
++ * returns the current debounced logical value.
++ */
++static unsigned int debounced_value(struct line *line)
++{
++	unsigned int value;
++
++	/*
++	 * minor race - debouncer may be stopped here, so edge_detector_stop
++	 * must leave the value unchanged so the following will read the level
++	 * from when the debouncer was last running.
++	 */
++	value = READ_ONCE(line->level);
++
++	if (test_bit(FLAG_ACTIVE_LOW, &line->desc->flags))
++		value = !value;
++
++	return value;
++}
++
++static irqreturn_t debounce_irq_handler(int irq, void *p)
++{
++	struct line *line = p;
++
++	mod_delayed_work(system_wq, &line->work,
++		usecs_to_jiffies(READ_ONCE(line->desc->debounce_period)));
++
++	return IRQ_HANDLED;
++}
++
++static void debounce_work_func(struct work_struct *work)
++{
++	struct gpio_v2_line_event le;
++	struct line *line = container_of(work, struct line, work.work);
++	struct linereq *lr;
++	int ret, level;
++
++	level = gpiod_get_raw_value_cansleep(line->desc);
++	if (level < 0) {
++		pr_debug_ratelimited("debouncer failed to read line value\n");
++		return;
++	}
++
++	if (READ_ONCE(line->level) == level)
++		return;
++
++	WRITE_ONCE(line->level, level);
++
++	/* -- edge detection -- */
++	if (!line->eflags)
++		return;
++
++	/* switch from physical level to logical - if they differ */
++	if (test_bit(FLAG_ACTIVE_LOW, &line->desc->flags))
++		level = !level;
++
++	/* ignore edges that are not being monitored */
++	if (((line->eflags == GPIO_V2_LINE_FLAG_EDGE_RISING) && !level) ||
++	    ((line->eflags == GPIO_V2_LINE_FLAG_EDGE_FALLING) && level))
++		return;
++
++	/* Do not leak kernel stack to userspace */
++	memset(&le, 0, sizeof(le));
++
++	lr = line->req;
++	le.timestamp = ktime_get_ns();
++	le.offset = gpio_chip_hwgpio(line->desc);
++	line->line_seqno++;
++	le.line_seqno = line->line_seqno;
++	le.seqno = (lr->num_lines == 1) ?
++		le.line_seqno : atomic_inc_return(&lr->seqno);
++
++	if (level)
++		/* Emit low-to-high event */
++		le.id = GPIO_V2_LINE_EVENT_RISING_EDGE;
++	else
++		/* Emit high-to-low event */
++		le.id = GPIO_V2_LINE_EVENT_FALLING_EDGE;
++
++	ret = kfifo_in_spinlocked_noirqsave(&lr->events, &le,
++					    1, &lr->wait.lock);
++	if (ret)
++		wake_up_poll(&lr->wait, EPOLLIN);
++	else
++		pr_debug_ratelimited("event FIFO is full - event dropped\n");
++}
++
++static int debounce_setup(struct line *line,
++			  unsigned int debounce_period)
++{
++	unsigned long irqflags;
++	int ret, level, irq;
++
++	/* try hardware */
++	ret = gpiod_set_debounce(line->desc, debounce_period);
++	if (!ret) {
++		WRITE_ONCE(line->desc->debounce_period, debounce_period);
++		return ret;
++	}
++	if (ret != -ENOTSUPP)
++		return ret;
++
++	if (debounce_period) {
++		/* setup software debounce */
++		level = gpiod_get_raw_value_cansleep(line->desc);
++		if (level < 0)
++			return level;
++
++		irq = gpiod_to_irq(line->desc);
++		if (irq <= 0)
++			return -ENODEV;
++
++		WRITE_ONCE(line->level, level);
++		irqflags = IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING;
++		ret = request_irq(irq, debounce_irq_handler, irqflags,
++				  line->req->label, line);
++		if (ret)
++			return ret;
++
++		WRITE_ONCE(line->sw_debounced, 1);
++		line->irq = irq;
++	}
++	return 0;
++}
++
++static bool gpio_v2_line_config_debounced(struct gpio_v2_line_config *lc,
++					  unsigned int line_idx)
++{
++	unsigned int i;
++	u64 mask = BIT_ULL(line_idx);
++
++	for (i = 0; i < lc->num_attrs; i++) {
++		if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) &&
++		    (lc->attrs[i].mask & mask))
++			return true;
++	}
++	return false;
++}
++
++static u32 gpio_v2_line_config_debounce_period(struct gpio_v2_line_config *lc,
++					       unsigned int line_idx)
++{
++	unsigned int i;
++	u64 mask = BIT_ULL(line_idx);
++
++	for (i = 0; i < lc->num_attrs; i++) {
++		if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE) &&
++		    (lc->attrs[i].mask & mask))
++			return lc->attrs[i].attr.debounce_period;
++	}
++	return 0;
++}
++
+ static void edge_detector_stop(struct line *line)
+ {
+ 	if (line->irq) {
+@@ -546,12 +724,18 @@ static void edge_detector_stop(struct line *line)
+ 		line->irq = 0;
+ 	}
+ 
++	cancel_delayed_work_sync(&line->work);
++	WRITE_ONCE(line->sw_debounced, 0);
+ 	line->eflags = 0;
++	/* do not change line->level - see comment in debounced_value */
+ }
+ 
+ static int edge_detector_setup(struct line *line,
++			       struct gpio_v2_line_config *lc,
++			       unsigned int line_idx,
+ 			       u64 eflags)
+ {
++	u32 debounce_period;
+ 	unsigned long irqflags = 0;
+ 	int irq, ret;
+ 
+@@ -562,8 +746,16 @@ static int edge_detector_setup(struct line *line,
+ 			return ret;
+ 	}
+ 	line->eflags = eflags;
++	if (gpio_v2_line_config_debounced(lc, line_idx)) {
++		debounce_period = gpio_v2_line_config_debounce_period(lc, line_idx);
++		ret = debounce_setup(line, debounce_period);
++		if (ret)
++			return ret;
++		WRITE_ONCE(line->desc->debounce_period, debounce_period);
++	}
+ 
+-	if (!eflags)
++	/* detection disabled or sw debouncer will provide edge detection */
++	if (!eflags || READ_ONCE(line->sw_debounced))
+ 		return 0;
+ 
+ 	irq = gpiod_to_irq(line->desc);
+@@ -588,15 +780,31 @@ static int edge_detector_setup(struct line *line,
+ 	return 0;
+ }
+ 
+-static int edge_detector_update(struct line *line, u64 eflags,
+-				bool polarity_change)
++static int edge_detector_update(struct line *line,
++				struct gpio_v2_line_config *lc,
++				unsigned int line_idx,
++				u64 eflags, bool polarity_change)
+ {
+-	if ((line->eflags == eflags) && !polarity_change)
++	unsigned int debounce_period =
++		gpio_v2_line_config_debounce_period(lc, line_idx);
++
++	if ((line->eflags == eflags) && !polarity_change &&
++	    (READ_ONCE(line->desc->debounce_period) == debounce_period))
+ 		return 0;
+ 
+-	edge_detector_stop(line);
++	/* sw debounced and still will be...*/
++	if ((debounce_period != 0) && READ_ONCE(line->sw_debounced)) {
++		line->eflags = eflags;
++		WRITE_ONCE(line->desc->debounce_period, debounce_period);
++		return 0;
++	}
++
++	/* reconfiguring edge detection or sw debounce being disabled */
++	if ((line->irq && !READ_ONCE(line->sw_debounced)) ||
++	    (!debounce_period && READ_ONCE(line->sw_debounced)))
++		edge_detector_stop(line);
+ 
+-	return edge_detector_setup(line, eflags);
++	return edge_detector_setup(line, lc, line_idx, eflags);
+ }
+ 
+ static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
+@@ -694,6 +902,11 @@ static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
+ 		ret = gpio_v2_line_flags_validate(flags);
+ 		if (ret)
+ 			return ret;
++
++		/* debounce requires explicit input */
++		if (gpio_v2_line_config_debounced(lc, i) &&
++		    !(flags & GPIO_V2_LINE_FLAG_INPUT))
++			return -EINVAL;
+ 	}
+ 	return 0;
+ }
+@@ -728,7 +941,7 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
+ 	struct gpio_v2_line_values lv;
+ 	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
+ 	struct gpio_desc **descs;
+-	unsigned int i, didx, num_get;
++	unsigned int i, val, didx, num_get;
+ 	int ret;
+ 
+ 	/* NOTE: It's ok to read values of output lines. */
+@@ -767,7 +980,11 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
+ 	lv.bits = 0;
+ 	for (didx = 0, i = 0; i < lr->num_lines; i++) {
+ 		if (lv.mask & BIT_ULL(i)) {
+-			if (test_bit(didx, vals))
++			if (lr->lines[i].sw_debounced)
++				val = debounced_value(&lr->lines[i]);
++			else
++				val = test_bit(didx, vals);
++			if (val)
+ 				lv.bits |= BIT_ULL(i);
+ 			didx++;
+ 		}
+@@ -871,7 +1088,7 @@ static long linereq_set_config_unlocked(struct linereq *lr,
+ 			if (ret)
+ 				return ret;
+ 
+-			ret = edge_detector_update(&lr->lines[i],
++			ret = edge_detector_update(&lr->lines[i], lc, i,
+ 					flags & GPIO_V2_LINE_EDGE_FLAGS,
+ 					polarity_change);
+ 			if (ret)
+@@ -1065,8 +1282,11 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+ 	lr->gdev = gdev;
+ 	get_device(&gdev->dev);
+ 
+-	for (i = 0; i < ulr.num_lines; i++)
++	for (i = 0; i < ulr.num_lines; i++) {
+ 		lr->lines[i].req = lr;
++		WRITE_ONCE(lr->lines[i].sw_debounced, 0);
++		INIT_DELAYED_WORK(&lr->lines[i].work, debounce_work_func);
++	}
+ 
+ 	/* Make sure this is terminated */
+ 	ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
+@@ -1126,7 +1346,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+ 			if (ret)
+ 				goto out_free_linereq;
+ 
+-			ret = edge_detector_setup(&lr->lines[i],
++			ret = edge_detector_setup(&lr->lines[i], lc, i,
+ 					flags & GPIO_V2_LINE_EDGE_FLAGS);
+ 			if (ret)
+ 				goto out_free_linereq;
+@@ -1597,6 +1817,8 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 	struct gpio_chip *gc = desc->gdev->chip;
+ 	bool ok_for_pinctrl;
+ 	unsigned long flags;
++	u32 debounce_period;
++	unsigned int num_attrs = 0;
+ 
+ 	memset(info, 0, sizeof(*info));
+ 	info->offset = gpio_chip_hwgpio(desc);
+@@ -1656,6 +1878,14 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 	if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
+ 		info->flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
+ 
++	debounce_period = READ_ONCE(desc->debounce_period);
++	if (debounce_period) {
++		info->attrs[num_attrs].id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
++		info->attrs[num_attrs].debounce_period = debounce_period;
++		num_attrs++;
++	}
++	info->num_attrs = num_attrs;
++
+ 	spin_unlock_irqrestore(&gpio_lock, flags);
+ }
+ 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e4c81dca7f8b..8eb91f01debd 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2046,6 +2046,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 		clear_bit(FLAG_IS_HOGGED, &desc->flags);
+ #ifdef CONFIG_OF_DYNAMIC
+ 		desc->hog = NULL;
++#endif
++#ifdef CONFIG_GPIO_CDEV
++		WRITE_ONCE(desc->debounce_period, 0);
+ #endif
+ 		ret = true;
+ 	}
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index 39b356160937..671805a79a15 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -124,6 +124,10 @@ struct gpio_desc {
+ #ifdef CONFIG_OF_DYNAMIC
+ 	struct device_node	*hog;
+ #endif
++#ifdef CONFIG_GPIO_CDEV
++	/* debounce period in microseconds */
++	unsigned int		debounce_period;
++#endif
  };
  
--#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpiohandle_data)
--#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpiohandle_data)
--
- /* Eventrequest flags */
- #define GPIOEVENT_REQUEST_RISING_EDGE	(1UL << 0)
- #define GPIOEVENT_REQUEST_FALLING_EDGE	(1UL << 1)
-@@ -207,11 +447,31 @@ struct gpioevent_data {
- 	__u32 id;
- };
- 
-+/*
-+ * v1 and v2 ioctl()s
-+ */
- #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
-+#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0C, __u32)
-+
-+/*
-+ * v2 ioctl()s
-+ */
-+#define GPIO_V2_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x05, struct gpio_v2_line_info)
-+#define GPIO_V2_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x06, struct gpio_v2_line_info)
-+#define GPIO_V2_GET_LINE_IOCTL _IOWR(0xB4, 0x07, struct gpio_v2_line_request)
-+#define GPIO_V2_LINE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0D, struct gpio_v2_line_config)
-+#define GPIO_V2_LINE_GET_VALUES_IOCTL _IOWR(0xB4, 0x0E, struct gpio_v2_line_values)
-+#define GPIO_V2_LINE_SET_VALUES_IOCTL _IOWR(0xB4, 0x0F, struct gpio_v2_line_values)
-+
-+/*
-+ * v1 ioctl()s
-+ */
- #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
--#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_info)
--#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
- #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
- #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
-+#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpiohandle_data)
-+#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpiohandle_data)
-+#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0A, struct gpiohandle_config)
-+#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0B, struct gpioline_info)
- 
- #endif /* _UAPI_GPIO_H_ */
+ int gpiod_request(struct gpio_desc *desc, const char *label);
 -- 
 2.28.0
 
