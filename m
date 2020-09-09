@@ -2,200 +2,190 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E3BC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ECEC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0307620708
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDE220708
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbgIIJPp (ORCPT
+        id S1727935AbgIIJRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:15:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:40334 "EHLO foss.arm.com"
+        Wed, 9 Sep 2020 05:17:12 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62578 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbgIIJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:15:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5BE61FB;
-        Wed,  9 Sep 2020 02:15:42 -0700 (PDT)
-Received: from [192.168.1.179] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AD523F66E;
-        Wed,  9 Sep 2020 02:15:40 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
-To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        eric.auger@redhat.com
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
-        Juan Quintela <quintela@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Peter Maydell <Peter.Maydell@arm.com>,
-        Haibo Xu <Haibo.Xu@arm.com>
-References: <20200904160018.29481-1-steven.price@arm.com>
- <20200907152812.GJ2682@work-vm>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <b457fdd2-785b-8692-c3a0-95ae73fec746@arm.com>
-Date:   Wed, 9 Sep 2020 10:15:39 +0100
+        id S1725826AbgIIJRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:17:08 -0400
+IronPort-SDR: 4UfoviER+163ZOfzvllxRS/M+W5Ldi8Ryv0yri+p+qHvLJVmuHgWLSYY5x76tEdwZa0KKFqs3/
+ diG40ofYg8CQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="146013094"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="146013094"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:16:52 -0700
+IronPort-SDR: Eu5LFEF7mQvPvjaKgHiNi+EAI6twzANJVXLRWHJjqt2BIA4DKeAAOOzWigLRgh7pJRkcZk2JZB
+ paZ/kvhmY5KQ==
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="480390735"
+Received: from vdc-station-04.ger.corp.intel.com (HELO [10.251.165.91]) ([10.251.165.91])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:16:41 -0700
+Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
+ dma-iommu api
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, kvm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+ <20200529124523.GA11817@infradead.org>
+ <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
+ <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
+ <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
+ <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
+ <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
+ <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com>
+ <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
+ <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com>
+ <b27cae1f-07ff-bef2-f125-a5f0d968016d@linux.intel.com>
+ <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
+From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Organization: Intel Corporation UK Plc
+Message-ID: <7106602a-9964-851e-9c4e-d8acf4033b89@linux.intel.com>
+Date:   Wed, 9 Sep 2020 10:16:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200907152812.GJ2682@work-vm>
+In-Reply-To: <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/09/2020 16:28, Dr. David Alan Gilbert wrote:
-> (cc'ing in Eric Auger)
+
+On 08/09/2020 23:43, Tom Murphy wrote:
+> On Tue, 8 Sep 2020 at 16:56, Tvrtko Ursulin
+> <tvrtko.ursulin@linux.intel.com> wrote:
+>>
+>>
+>> On 08/09/2020 16:44, Logan Gunthorpe wrote:
+>>> On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
+>>>>> b/drivers/gpu/drm/i915/i915
+>>>>> index b7b59328cb76..9367ac801f0c 100644
+>>>>> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
+>>>>> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
+>>>>> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
+>>>>>     } __sgt_iter(struct scatterlist *sgl, bool dma) {
+>>>>>            struct sgt_iter s = { .sgp = sgl };
+>>>>>
+>>>>> +       if (sgl && !sg_dma_len(s.sgp))
+>>>>
+>>>> I'd extend the condition to be, just to be safe:
+>>>>       if (dma && sgl && !sg_dma_len(s.sgp))
+>>>>
+>>>
+>>> Right, good catch, that's definitely necessary.
+>>>
+>>>>> +               s.sgp = NULL;
+>>>>> +
+>>>>>            if (s.sgp) {
+>>>>>                    s.max = s.curr = s.sgp->offset;
+>>>>> -               s.max += s.sgp->length;
+>>>>> -               if (dma)
+>>>>> +
+>>>>> +               if (dma) {
+>>>>> +                       s.max += sg_dma_len(s.sgp);
+>>>>>                            s.dma = sg_dma_address(s.sgp);
+>>>>> -               else
+>>>>> +               } else {
+>>>>> +                       s.max += s.sgp->length;
+>>>>>                            s.pfn = page_to_pfn(sg_page(s.sgp));
+>>>>> +               }
+>>>>
+>>>> Otherwise has this been tested or alternatively how to test it? (How to
+>>>> repro the issue.)
+>>>
+>>> It has not been tested. To test it, you need Tom's patch set without the
+>>> last "DO NOT MERGE" patch:
+>>>
+>>> https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
+>>
+>> Tom, do you have a branch somewhere I could pull from? (Just being lazy
+>> about downloading a bunch of messages from the archives.)
 > 
-> * Steven Price (steven.price@arm.com) wrote:
->> Arm's Memory Tagging Extension (MTE) adds 4 bits of tag data to every 16
->> bytes of memory in the system. This along with stashing a tag within the
->> high bit of virtual addresses allows runtime checking of memory
->> accesses.
->>
->> These patches add support to KVM to enable MTE within a guest. They are
->> based on Catalin's v9 MTE user-space support series[1].
->>
->> I'd welcome feedback on the proposed user-kernel ABI. Specifically this
->> series currently:
->>
->>   1. Requires the VMM to enable MTE per-VCPU.
->>   2. Automatically promotes (normal host) memory given to the guest to be
->>      tag enabled (sets PG_mte_tagged), if any VCPU has MTE enabled. The
->>      tags are cleared if the memory wasn't previously MTE enabled.
->>   3. Doesn't provide any new methods for the VMM to access the tags on
->>      memory.
->>
->> (2) and (3) are particularly interesting from the aspect of VM migration.
->> The guest is able to store/retrieve data in the tags (presumably for the
->> purpose of tag checking, but architecturally it could be used as just
->> storage). This means that when migrating a guest the data needs to be
->> transferred (or saved/restored).
->>
->> MTE tags are controlled by the same permission model as normal pages
->> (i.e. a read-only page has read-only tags), so the normal methods of
->> detecting guest changes to pages can be used. But this would also
->> require the tags within a page to be migrated at the same time as the
->> data (since the access control for tags is the same as the normal data
->> within a page).
+> I don't unfortunately. I'm working locally with poor internet.
 > 
-> (Without understanding anything about your tag system...)
-> 
-> Note that during (normal, non-postcopy) migration the consistency can
-> be a little loose - until the guest starts running; i.e. you can send
-> a page that's in themiddle of being modified as long as you make sure
-> you send it again later so that what the guest sees on the destination
-> when it runs is consistent; i.e. it would be fine to send your tags
-> separately to your data and allow them to get a little out of sync, as
-> long as they caught up before the guest ran.
-
-Yes, you can obviously pro-actively send data early as you as you 
-appropriately deal with any potential changes that the guest might make. 
-I'm not very familiar with exactly how QEMU handles this, so it might 
-not be a problem - I just wanted to point out that we don't have 
-separate access permissions.
-
->> (3) may be problematic and I'd welcome input from those familiar with
->> VMMs. User space cannot access tags unless the memory is mapped with the
->> PROT_MTE flag. However enabling PROT_MTE will also enable tag checking
->> for the user space process (assuming the VMM enables tag checking for
->> the process) and since the tags in memory are controlled by the guest
->> it's unlikely the VMM would have an appropriately tagged pointer for its
->> access. This means the VMM would either need to maintain two mappings of
->> memory (one to access tags, the other to access data) or disable tag
->> checking during the accesses to data.
-> 
-> Imagine I had a second mapping; what would it look like; how would I get
-> and restore the tags?
-
-At a very simple level you could do something like:
-
-  normal_mapping = mmap(..., PROT_READ | PROT_WRITE, ..., fd, 0);
-  mte_mapping = mmap(..., PROT_READ | PROT_WRITE | PROT_MTE, ..., fd, 0);
-
-  /* access normal mapping as normal */
-  normal_mapping[offset] = 0xf00 + normal_mapping[offset + 1];
-
-  /* read tag from mte_mapping */
-  uint64_t tag = ldg(&mte_mapping[offset]);
-
-  /* write a new tag value (8)
-   * NOTE: tags are stored in the top byte, hence the shift
-   */
-  stg(0x8ULL << 56, &mte_mapping[offset]);
-
-Where stg() and ldg() are simple wrappers around the new instructions:
-
-  stg:
-         STG x0, [x1]
-         RET
-
-  ldg:
-         LDG x0, [x0]
-         RET
-
-> In terms of migration stream, I guess we have two ways to do this,
-> either it rides shotgun on the main RAM section pages, transmitting
-> those few extra bytes whenever we transmit a page, or you have a
-> separate iteratable device for RAMtags, and it just transmits those.
-> How you keep the two together is an interesting question.
-> The shotgun method sounds nasty to avoid putting special cases in the,
-> already hairy, RAM code.
-
-As you say above it may be possible to simply let the normal RAM and 
-tags get out of sync. E.g. if you send all the normal RAM (marking 
-read-only as you go), then all the tags (not changing the permissions) 
-you will end up with all the pages that have remained read-only (i.e. 
-the guest hasn't modified) being consistent on the destination. Pages 
-that have been written by the guest will be inconsistent, but you were 
-going to have to resend those anyway.
-
-However for post-migration copy you need to copy *both* normal RAM and 
-tags before resuming the guest. You might need special cases for this.
-
->> If it's not practical to either disable tag checking in the VMM or
->> maintain multiple mappings then the alternatives I'm aware of are:
 >>
->>   * Provide a KVM-specific method to extract the tags from guest memory.
->>     This might also have benefits in terms of providing an easy way to
->>     read bulk tag data from guest memory (since the LDGM instruction
->>     isn't available at EL0).
->>   * Provide support for user space setting the TCMA0 or TCMA1 bits in
->>     TCR_EL1. These would allow the VMM to generate pointers which are not
->>     tag checked.
+>> What GPU is in your Lenovo x1 carbon 5th generation and what
+>> graphical/desktop setup I need to repro?
 > 
-> I guess you want the VMM to do as much tagged checked access as possible
-> on it's own data structures?
+> 
+> Is this enough info?:
+> 
+> $ lspci -vnn | grep VGA -A 12
+> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD
+> Graphics 620 [8086:5916] (rev 02) (prog-if 00 [VGA controller])
+>      Subsystem: Lenovo ThinkPad X1 Carbon 5th Gen [17aa:224f]
+>      Flags: bus master, fast devsel, latency 0, IRQ 148
+>      Memory at eb000000 (64-bit, non-prefetchable) [size=16M]
+>      Memory at 60000000 (64-bit, prefetchable) [size=256M]
+>      I/O ports at e000 [size=64]
+>      [virtual] Expansion ROM at 000c0000 [disabled] [size=128K]
+>      Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>      Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>      Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>      Capabilities: [d0] Power Management version 2
+>      Capabilities: [100] Process Address Space ID (PASID)
+>      Capabilities: [200] Address Translation Service (ATS)
 
-Ideally yes, you would want the VMM to have checked accesses for all 
-it's internal data structures because that gives the maximum benefit 
-from MTE.
+Works for a start. What about the steps to repro? Any desktop 
+environment and it is just visual corruption, no hangs/stalls or such?
 
-> How do things like virtio work where the qemu or kernel is accessing
-> guest memory for IO?
+I've submitted a series consisting of what I understood are the patches 
+needed to repro the issue to our automated CI here:
 
-Since virtio is effectively emulating a device it should be treated like 
-a device - no tag checking and no tag storage used. This would be the 
-obvious situation where you would use "normal_mapping" as above so tags 
-wouldn't be visible or checked.
+https://patchwork.freedesktop.org/series/81489/
 
-Really the VMM is only interested in guest tags for the migration case 
-where it simply needs to preserve them. I don't expect the guest and VMM 
-(or hypervisor) to communicate using tagged memory.
+So will see if it will catch something, or more targeted testing will be 
+required. Hopefully it does trip over in which case I can add the patch 
+suggested by Logan on top and see if that fixes it. Or I'll need to 
+write a new test case.
 
-Steve
+If you could glance over my series to check I identified the patches 
+correctly it would be appreciated.
+
+Regards,
+
+Tvrtko
