@@ -5,36 +5,36 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E1DC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C513CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110002080A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD022080A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="FFePVVaj"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="fCs8lADv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbgIIQ1B (ORCPT
+        id S1731010AbgIIQ1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:27:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56140 "EHLO
+        Wed, 9 Sep 2020 12:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731071AbgIIQ0E (ORCPT
+        with ESMTP id S1731022AbgIIQ0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:26:04 -0400
+        Wed, 9 Sep 2020 12:26:06 -0400
 Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3966DC0613ED;
-        Wed,  9 Sep 2020 09:26:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA41C061795;
+        Wed,  9 Sep 2020 09:26:05 -0700 (PDT)
 Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 790C0140A76;
+        by mail.nic.cz (Postfix) with ESMTP id D5423140A7D;
         Wed,  9 Sep 2020 18:25:55 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1599668755; bh=ZrVlwYH21zVLENLWv1RHoCy4rTc2/MBngwHI5nVk+sk=;
+        t=1599668755; bh=ETijTD2hHqyWxW2zwXhqdFU5Xk5g005codDN5mEO12w=;
         h=From:To:Date;
-        b=FFePVVajsmNyWURu2rdDUSTaREBB6CsBiagszeJWJJvVROiUuJAsaAutbMfKIWmne
-         miPgZK4F4TJZZ5btbfM5Yr7dznZvo9mCmBllbTd2fJXm1BsP4kW8cLJGIWILtokaIE
-         T+bKddxLiBE5IfZIVViPov4YFIOz9cEKJWkZ1dpU=
+        b=fCs8lADvaSZx/tRW4It7vvjDQqLxXSf0ofh5ycAqs4qKwAnJ4M6nEOm7C/kWYjWzS
+         ldSpXT1S247pBH6u+pIBV4mjNWMCYm3h+/2ed8WqrHa7K9IgMbq5PVpQOMQnqiu28j
+         QeqYGFpVaS3hXsCIXMtHtGEsFgOywhS5gt+T5jio=
 From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 To:     netdev@vger.kernel.org
 Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
@@ -45,9 +45,9 @@ Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
         Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
         "David S. Miller" <davem@davemloft.net>,
         =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH net-next + leds v2 5/7] net: phy: add support for LEDs controlled by ethernet PHY chips
-Date:   Wed,  9 Sep 2020 18:25:50 +0200
-Message-Id: <20200909162552.11032-6-marek.behun@nic.cz>
+Subject: [PATCH net-next + mvebu v2 7/7] arm64: dts: armada-3720-turris-mox: add nodes for ethernet PHY LEDs
+Date:   Wed,  9 Sep 2020 18:25:52 +0200
+Message-Id: <20200909162552.11032-8-marek.behun@nic.cz>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200909162552.11032-1-marek.behun@nic.cz>
 References: <20200909162552.11032-1-marek.behun@nic.cz>
@@ -62,162 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses the new API for HW controlled LEDs to add support for
-probing and control of LEDs connected to an ethernet PHY chip.
-
-A PHY driver wishing to utilize this API needs to implement the methods
-in struct hw_controlled_led_ops and set the member led_ops in struct
-phy_driver to point to that structure.
+Add nodes for the green and yellow LEDs that are connected to the
+ethernet PHY chip on Turris MOX A.
 
 Signed-off-by: Marek Behún <marek.behun@nic.cz>
 ---
- drivers/net/phy/phy_device.c | 103 +++++++++++++++++++++++++++++++++++
- include/linux/phy.h          |   4 ++
- 2 files changed, 107 insertions(+)
+ .../dts/marvell/armada-3720-turris-mox.dts    | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 38f56d39f1229..54d5c88e4d4b2 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -2820,6 +2820,103 @@ static bool phy_drv_supports_irq(struct phy_driver *phydrv)
- 	return phydrv->config_intr && phydrv->ack_interrupt;
- }
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+index f3a678e0fd99b..6da03b6c69c0a 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/bus/moxtet.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/leds/common.h>
+ #include "armada-372x.dtsi"
  
-+#if IS_ENABLED(CONFIG_LEDS_HW_CONTROLLED)
-+
-+/* PHY mutex lock wrappers for operations on PHY HW controlled LEDs, so that PHY drivers
-+ * implementing these operations don't have to lock phydev->lock themselves.
-+ */
-+static int phy_led_init(struct device *dev, struct hw_controlled_led *led)
-+{
-+	struct phy_device *phydev = to_phy_device(dev);
-+	int ret;
-+
-+	mutex_lock(&phydev->lock);
-+	ret = phydev->drv->led_ops->led_init(dev, led);
-+	mutex_unlock(&phydev->lock);
-+
-+	return ret;
-+}
-+
-+static int phy_led_brightness_set(struct device *dev, struct hw_controlled_led *led,
-+				  enum led_brightness brightness)
-+{
-+	struct phy_device *phydev = to_phy_device(dev);
-+	int ret;
-+
-+	mutex_lock(&phydev->lock);
-+	ret = phydev->drv->led_ops->led_brightness_set(dev, led, brightness);
-+	mutex_unlock(&phydev->lock);
-+
-+	return ret;
-+}
-+
-+static const char *phy_led_iter_hw_mode(struct device *dev, struct hw_controlled_led *led,
-+					void **iter)
-+{
-+	struct phy_device *phydev = to_phy_device(dev);
-+	const char *ret;
-+
-+	mutex_lock(&phydev->lock);
-+	ret = phydev->drv->led_ops->led_iter_hw_mode(dev, led, iter);
-+	mutex_unlock(&phydev->lock);
-+
-+	return ret;
-+}
-+
-+static int phy_led_set_hw_mode(struct device *dev, struct hw_controlled_led *led, const char *mode)
-+{
-+	struct phy_device *phydev = to_phy_device(dev);
-+	int ret;
-+
-+	mutex_lock(&phydev->lock);
-+	ret = phydev->drv->led_ops->led_set_hw_mode(dev, led, mode);
-+	mutex_unlock(&phydev->lock);
-+
-+	return ret;
-+}
-+
-+static const char *phy_led_get_hw_mode(struct device *dev, struct hw_controlled_led *led)
-+{
-+	struct phy_device *phydev = to_phy_device(dev);
-+	const char *ret;
-+
-+	mutex_lock(&phydev->lock);
-+	ret = phydev->drv->led_ops->led_get_hw_mode(dev, led);
-+	mutex_unlock(&phydev->lock);
-+
-+	return ret;
-+}
-+
-+static const struct hw_controlled_led_ops phy_hw_controlled_led_ops = {
-+	.led_init		= phy_led_init,
-+	.led_brightness_set	= phy_led_brightness_set,
-+	.led_iter_hw_mode	= phy_led_iter_hw_mode,
-+	.led_set_hw_mode	= phy_led_set_hw_mode,
-+	.led_get_hw_mode	= phy_led_get_hw_mode,
-+};
-+
-+static int of_phy_probe_leds(struct phy_device *phydev)
-+{
-+	char devicename[32];
-+
-+	if (!phydev->drv->led_ops)
-+		return 0;
-+
-+	snprintf(devicename, sizeof(devicename), "ethernet-phy%i", phydev->phyindex);
-+
-+	return of_register_hw_controlled_leds(&phydev->mdio.dev, devicename,
-+					      &phy_hw_controlled_led_ops);
-+}
-+
-+#else /* !IS_ENABLED(CONFIG_LEDS_HW_CONTROLLED) */
-+
-+static inline int of_phy_probe_leds(struct phy_device *phydev)
-+{
-+	return 0;
-+}
-+
-+#endif /* !IS_ENABLED(CONFIG_LEDS_HW_CONTROLLED) */
-+
- /**
-  * phy_probe - probe and init a PHY device
-  * @dev: device to probe and init
-@@ -2922,6 +3019,12 @@ static int phy_probe(struct device *dev)
+ / {
+@@ -273,6 +274,28 @@ &mdio {
  
- 	mutex_unlock(&phydev->lock);
- 
-+	/* LEDs have to be registered with phydev mutex unlocked, because some operations can be
-+	 * called during registration that lock the mutex themselves
-+	 */
-+	if (!err)
-+		of_phy_probe_leds(phydev);
+ 	phy1: ethernet-phy@1 {
+ 		reg = <1>;
 +
- 	return err;
- }
- 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 52881e21ad951..8a4ab72c74dd4 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -14,6 +14,7 @@
- #include <linux/compiler.h>
- #include <linux/spinlock.h>
- #include <linux/ethtool.h>
-+#include <linux/leds-hw-controlled.h>
- #include <linux/linkmode.h>
- #include <linux/netlink.h>
- #include <linux/mdio.h>
-@@ -741,6 +742,9 @@ struct phy_driver {
- 	int (*set_loopback)(struct phy_device *dev, bool enable);
- 	int (*get_sqi)(struct phy_device *dev);
- 	int (*get_sqi_max)(struct phy_device *dev);
++		leds {
++			compatible = "linux,hw-controlled-leds";
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	/* PHY connected and controlled LEDs */
-+	const struct hw_controlled_led_ops *led_ops;
- };
- #define to_phy_driver(d) container_of(to_mdio_common_driver(d),		\
- 				      struct phy_driver, mdiodrv)
++			led@0 {
++				reg = <0>;
++				color = <LED_COLOR_ID_GREEN>;
++				function = LED_FUNCTION_STATUS;
++				linux,default-trigger = "dev-hw-mode";
++				linux,default-hw-mode = "1Gbps/100Mbps/10Mbps";
++			};
++
++			led@1 {
++				reg = <1>;
++				color = <LED_COLOR_ID_YELLOW>;
++				function = LED_FUNCTION_ACTIVITY;
++				linux,default-trigger = "dev-hw-mode";
++				linux,default-hw-mode = "blink-act";
++			};
++		};
+ 	};
+ 
+ 	/* switch nodes are enabled by U-Boot if modules are present */
 -- 
 2.26.2
 
