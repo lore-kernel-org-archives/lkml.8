@@ -2,145 +2,157 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228AEC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FE1C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D658D21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599645199;
-	bh=9+azOBmQAbvrkoBP3shjYeyaD0BqltDrloM4QLv2reo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1x/NtiTc9L2DFyfBEac0knAOpf/5Wv0VW0PUMfvzYxTecYoWrNxwwA8LahbpssQwb
-	 HJTK1K+m+TzwFohc1rnx4I+7scOwJ+dkzylDFlkf6GDG8u553lsEEKHYXNZYcIUm60
-	 an+u1PspQPWqLJidzlusQpEXXOJz02jfmbJ3fOZw=
+	by mail.kernel.org (Postfix) with ESMTP id B0BF821D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgIIJxS (ORCPT
+        id S1727936AbgIIJxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:53:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54196 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgIIJxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:53:16 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x23so1655920wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:53:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5vmWMH1A25UpofAkiL5wYFS/ULJOPz3j8rpLW3h7/cY=;
-        b=EsGYWbAikEBRjcc/sujs6iy5BBhfmQmVnJRGQa5XvZAXkK+fXYq/Z5fmHKs7+J/ybd
-         1EQGPlyKvThof5DpL1/GEOSX9i81iLu5pIizRtjjpIRmxO3rRaAYtvEpj6o2gfnoyjOs
-         rKrGDBOTA2c45mB1fGYdj/Ox8oY/pX6aEC++svM/7HZVniJY5mHdSdHFds4XSah7+/5Y
-         x40rZ/v892emcZxJ4xzjfaBLFAWmS/i5yM3u99eslnGNeJnHb1cKkBnXCwJb6M35iRAv
-         DzwuMTwFgrURBvXEjat4oQq2HKQeUZ//D8PA8mGwl+/wXxQxnezyPeDfwzp4ggFcD/A0
-         4yDw==
-X-Gm-Message-State: AOAM530wljwCR/PfWvQxj+qU6DJo4ALKWfUZ8tVfjDO6pGNQK/W3azsK
-        GJDLK7YpEcf3ZYYTHWJs17scylxuXMqrU+ifVoA=
-X-Google-Smtp-Source: ABdhPJxl8uaVSt53fPgQQJ9q3iYyv41oDWaotXGBv9wGvkc5B8gNOHukYLVXL7f3e1UZJfLijSgZoahs2Iv9QpfMiFw=
-X-Received: by 2002:a1c:6341:: with SMTP id x62mr2728082wmb.70.1599645192671;
- Wed, 09 Sep 2020 02:53:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200909080220.254585-1-irogers@google.com> <20200909080220.254585-2-irogers@google.com>
-In-Reply-To: <20200909080220.254585-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 9 Sep 2020 18:53:01 +0900
-Message-ID: <CAM9d7cgNNBw0d2c39+1D=0peGrxRV3P33aoczKMu5Qxffkd2CQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf metricgroup: Fix uncore metric expressions
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 9 Sep 2020 05:53:37 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56374 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgIIJxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:53:35 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz90LplhfX98TAA--.4442S2;
+        Wed, 09 Sep 2020 17:53:16 +0800 (CST)
+From:   Zejiang Tang <tangzejiang@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>, Jin@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] Improve perf option help information in perf.txt
+Date:   Wed,  9 Sep 2020 17:53:14 +0800
+Message-Id: <1599645194-8438-1-git-send-email-tangzejiang@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxz90LplhfX98TAA--.4442S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJry5KFW8Jry8urW3Wr4fAFb_yoW5JFW8pa
+        9Ikry3tr1DJ343Awn5Jw1IvFyfWrZa9a13Gw1Skr48Xr1DCrsagFyYkFyFqFy7XFy8AayU
+        Kr42qFy3Grs2yw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkab7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8uwCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7TmhUUUUU=
+X-CM-SenderInfo: pwdqw6phmlt03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ian,
+Perf could use many options, such as:-vv, --exec-path,
+--html-path, -p, --paginate,--no-pager, --debugfs-dir,
+--buildid-dir, --list-cmds, --list-opts. Add these options
+in perf.txt.
 
-On Wed, Sep 9, 2020 at 5:02 PM Ian Rogers <irogers@google.com> wrote:
->
-> A metric like DRAM_BW_Use has on SkylakeX events uncore_imc/cas_count_read/
-> and uncore_imc/case_count_write/. These events open 6 events per socket
-> with pmu names of uncore_imc_[0-5]. The current metric setup code in
-> find_evsel_group assumes one ID will map to 1 event to be recorded in
-> metric_events. For events with multiple matches, the first event is
-> recorded in metric_events (avoiding matching >1 event with the same
-> name) and the evlist_used updated so that duplicate events aren't
-> removed when the evlist has unused events removed.
->
-> Before this change:
-> $ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
->
->  Performance counter stats for 'system wide':
->
->              41.14 MiB  uncore_imc/cas_count_read/
->      1,002,614,251 ns   duration_time
->
->        1.002614251 seconds time elapsed
->
-> After this change:
-> $ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
->
->  Performance counter stats for 'system wide':
->
->             157.47 MiB  uncore_imc/cas_count_read/ #     0.00 DRAM_BW_Use
+Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
+---
+ tools/perf/Documentation/perf.txt | 69 ++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 22 deletions(-)
 
-Hmm.. I guess the 0.00 result is incorrect, no?
+diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+index 3f37ded..c130a3c 100644
+--- a/tools/perf/Documentation/perf.txt
++++ b/tools/perf/Documentation/perf.txt
+@@ -12,32 +12,57 @@ SYNOPSIS
+ 
+ OPTIONS
+ -------
+---debug::
+-	Setup debug variable (see list below) in value
+-	range (0, 10). Use like:
+-	  --debug verbose   # sets verbose = 1
+-	  --debug verbose=2 # sets verbose = 2
+-
+-	List of debug variables allowed to set:
+-	  verbose          - general debug messages
+-	  ordered-events   - ordered events object debug messages
+-	  data-convert     - data convert command debug messages
+-	  stderr           - write debug output (option -v) to stderr
+-	                     in browser mode
+-	  perf-event-open  - Print perf_event_open() arguments and
+-			     return value
+-
+---buildid-dir::
+-	Setup buildid cache directory. It has higher priority than
+-	buildid.dir config file option.
++-h::
++--help::
++        Run perf help command.
+ 
+ -v::
+ --version::
+-  Display perf version.
++        Display perf version.
+ 
+--h::
+---help::
+-  Run perf help command.
++-vv::
++        Print the compiled-in status of libraries.
++
++--exec-path::
++        Display or set exec path.
++
++--html-path::
++        Display html documentation path.
++
++-p::
++--paginate::
++        Set up pager.
++
++--no-pager::
++        Do not set pager.
++
++--buildid-dir::
++        Setup buildid cache directory. It has higher priority
++        than buildid.dir config file option.
++
++--list-cmds::
++        List the most commonly used perf commands.
++
++--list-opts::
++        List available perf options.
++
++--debugfs-dir::
++        Set debugfs directory or set environment variable PERF_DEBUGFS_DIR.
++
++--debug::
++        Setup debug variable (see list below) in value
++        range (0, 10). Use like:
++          --debug verbose   # sets verbose = 1
++          --debug verbose=2 # sets verbose = 2
++
++        List of debug variables allowed to set:
++          verbose          - general debug messages
++          ordered-events   - ordered events object debug messages
++          data-convert     - data convert command debug messages
++          stderr           - write debug output (option -v) to stderr
++                             in browser mode
++          perf-event-open  - Print perf_event_open() arguments and
++                             return value
+ 
+ DESCRIPTION
+ -----------
+-- 
+2.1.0
 
-
->             126.97 MiB  uncore_imc/cas_count_write/
->      1,003,019,728 ns   duration_time
->
-> Erroneous duplication introduced in:
-> commit 2440689d62e9 ("perf metricgroup: Remove duped metric group events").
->
-> Fixes: ded80bda8bc9 ("perf expr: Migrate expr ids table to a hashmap").
-> Reported-by: Jin, Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-[SNIP]
-> @@ -248,6 +260,16 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->                 ev = metric_events[i];
->                 ev->metric_leader = ev;
->                 set_bit(ev->idx, evlist_used);
-> +               /*
-> +                * Mark two events with identical names in the same group as
-> +                * being in use as uncore events may be duplicated for each pmu.
-> +                */
-> +               evlist__for_each_entry(perf_evlist, ev) {
-> +                       if (metric_events[i]->leader == ev->leader &&
-> +                           !strcmp(metric_events[i]->name, ev->name)) {
-> +                               set_bit(ev->idx, evlist_used);
-
-I'm not sure whether they are grouped together.
-But if so, you can use for_each_group_member(ev, leader).
-
-Thanks
-Namhyung
-
-
-> +                       }
-> +               }
->         }
->
->         return metric_events[0];
-> --
-> 2.28.0.526.ge36021eeef-goog
->
