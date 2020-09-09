@@ -2,189 +2,108 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4573C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB41C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C59721973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FBE21973
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="lYOXpY5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIIJ6c (ORCPT
+        id S1726426AbgIIJ7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:58:32 -0400
-Received: from mail-io1-f79.google.com ([209.85.166.79]:38536 "EHLO
-        mail-io1-f79.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbgIIJ6Y (ORCPT
+        Wed, 9 Sep 2020 05:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgIIJ7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:58:24 -0400
-Received: by mail-io1-f79.google.com with SMTP id e21so1586714iod.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:58:23 -0700 (PDT)
+        Wed, 9 Sep 2020 05:59:18 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0798BC061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:59:18 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c8so2023213edv.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uPMqruMk4SDQT+ALFW5dQCv1EhNC+IuTKTg7lA6BnvM=;
+        b=lYOXpY5kw+Jaz8EcIZLaUttGOkcZ+TNm+J6dq6gap07GPQqkhvQ442c7nS82t8GwY+
+         apOlHsi8vjhganiPUWzmxHBuW4ZMWhuyrp6o78A9NR+JHNUtVNNSizWDF8cDnnER7YnV
+         j7DMC9w0lntF64fafUMvso7BzzPMi5ePTbEWU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=uWeEmvYITQnMvBnpcJO6GKoW9bXJbiVcnO0AlirR3JA=;
-        b=GRIXLalE3Yfnxwk81FBdWI02jnqxDjOGLr3nioTGvVzJFqe3dOcitm7YwT7lEdxlp9
-         R0igsoNXOl5ijFFUlDFfabHLR4dRbZ58pv4mgBkLi7dRPW8pIIFMrohIackr7pMaOr2/
-         9PqZPq9JHrz3timF0vut5Typzf3tXxhtvBhhrOITx6QxAaT0An7mK8LHJdjPCWmseBT+
-         2r2opRY3c23DXDaKCHdi/Z3+Mg2Yp5FeTYzncLqR8g2gXWg9mA+nIz/52ML0i5SFqF5W
-         oSKlB/2ZjKmZrTddTHZns3Xm6KVUNaxeTP6M72UG1Rb7UGT7BdLkMa5YMgJlbkV2dT/5
-         R4Jg==
-X-Gm-Message-State: AOAM530UnwyqBzsdFpg2ClD+OjWVq/bPNgy+X41KJ/4ejNc3Q3SptMYz
-        eZSeiuw+ojPY+wvbKNGEb9sjP9szERAgYUR/mwSeP4GOVdAb
-X-Google-Smtp-Source: ABdhPJyT2fiKic6EiQG5oWSiDu3gkK4Kb46xs4s0wPwFt2pZ04gdgHanHEQRKNhp2vi9tZZ28aMQVrZI7tYObXg9Hs2UG5Dq77s1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uPMqruMk4SDQT+ALFW5dQCv1EhNC+IuTKTg7lA6BnvM=;
+        b=MAjD4Hz2s0LUI/0d6QRT33UrF4FG2ikCckIfmk0TkIUyDRdK9WbjaIw912Kat5b9in
+         7B5xiyjM4rUXHDATMObTXzK/EK2KkZAPA/H7S7gWS1jcmFJedTH76941JFVlDK5fxkDa
+         aXsPNrmTAJLwpSCPvoYCQsDCbmtnE5J3+vi6E4mLRBxDTk2Bjsx8xxGhGQ6Et5TNs/Hk
+         8FbhQyC0TeiCXlAOX58qocEY8ffPllbJMSUwMwYw3Hyfqv1mthCHCdAqEkpSWvaZK7S6
+         kWx+yCxV7MQc30BBTfVE0+AVcX19BxPdIbmKdlZDN/U9+L73omYiN8gE18zNgJSNUWf/
+         QWeA==
+X-Gm-Message-State: AOAM532BXDMKlLN7r+QW02bAB4GFO2jrSsU1oxcSCPseU/38rB/bunf4
+        QVwUnWbJHD+Zd3dnFYrqJJO62A==
+X-Google-Smtp-Source: ABdhPJymF5qS6Ccow3hQ6AumA7SQr7+QCaXLRwptH1Hv/AQWQo0GwjJQZyDvsOIlVWzEi0Ahhs5GHg==
+X-Received: by 2002:a05:6402:50f:: with SMTP id m15mr3406910edv.41.1599645556723;
+        Wed, 09 Sep 2020 02:59:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c093:400::5:4614])
+        by smtp.gmail.com with ESMTPSA id r16sm1617107edc.57.2020.09.09.02.59.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 02:59:16 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 10:59:15 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     zangchunxin@bytedance.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [External] Re: [PATCH] mm/vmscan: fix infinite loop in
+ drop_slab_node
+Message-ID: <20200909095915.GA1412646@chrisdown.name>
+References: <20200908142456.89626-1-zangchunxin@bytedance.com>
+ <20200908150945.GA1301981@chrisdown.name>
+ <CAMZfGtXDXzv8FEZa7cw6v+jV4ODnVuA3_UGEGWm7eTtZWCU+Bw@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr2646457ioq.41.1599645503122;
- Wed, 09 Sep 2020 02:58:23 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 02:58:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000faf37f05aede7db6@google.com>
-Subject: KMSAN: uninit-value in skb_release_data (3)
-From:   syzbot <syzbot+067cfb341865e4074630@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, keescook@chromium.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, pankaj.laxminarayan.bharadiya@intel.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAMZfGtXDXzv8FEZa7cw6v+jV4ODnVuA3_UGEGWm7eTtZWCU+Bw@mail.gmail.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Muchun Song writes:
+>1. Double the threshold currently hard coded as "10" with each iteration
+>    suggested by Vlastimil. It is also a good idea.
 
-syzbot found the following issue on:
+I think this sounds reasonable, although I'd like to see what the difference in 
+reclaim looks like in practice.
 
-HEAD commit:    3b3ea602 x86: add failure injection to get/put/clear_user
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bdcb35900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=067cfb341865e4074630
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1712e7cd900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143305f9900000
+>2. In the while loop, we can check whether the TASK_KILLABLE
+>    signal is set, if so, we should break the loop. like the following code
+>    snippe. Thanks.
+>
+>@@ -704,6 +704,9 @@ void drop_slab_node(int nid)
+>  do {
+>  struct mem_cgroup *memcg = NULL;
+>
+>+ if (fatal_signal_pending(current))
+>+ return;
+>+
+>  freed = 0;
+>  memcg = mem_cgroup_iter(NULL, NULL, NULL);
+>  do {
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+067cfb341865e4074630@syzkaller.appspotmail.com
+Regardless of anything, I think this is probably a good idea. Could you send it 
+as a patch? :-)
 
-=====================================================
-BUG: KMSAN: uninit-value in compound_head include/linux/page-flags.h:182 [inline]
-BUG: KMSAN: uninit-value in put_page include/linux/mm.h:1154 [inline]
-BUG: KMSAN: uninit-value in __skb_frag_unref include/linux/skbuff.h:2999 [inline]
-BUG: KMSAN: uninit-value in skb_release_data+0x4b4/0xde0 net/core/skbuff.c:604
-CPU: 1 PID: 8773 Comm: syz-executor104 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- compound_head include/linux/page-flags.h:182 [inline]
- put_page include/linux/mm.h:1154 [inline]
- __skb_frag_unref include/linux/skbuff.h:2999 [inline]
- skb_release_data+0x4b4/0xde0 net/core/skbuff.c:604
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb+0x9e/0x320 net/core/skbuff.c:678
- kfree_skb+0x323/0x390 net/core/skbuff.c:696
- validate_xmit_skb+0x1386/0x1aa0 net/core/dev.c:3659
- __dev_queue_xmit+0x2aa5/0x4470 net/core/dev.c:4123
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4164
- mrp_queue_xmit net/802/mrp.c:351 [inline]
- mrp_join_timer+0x1fc/0x380 net/802/mrp.c:595
- call_timer_fn+0x226/0x550 kernel/time/timer.c:1404
- expire_timers+0x4fc/0x780 kernel/time/timer.c:1449
- __run_timers+0xaf4/0xd30 kernel/time/timer.c:1773
- run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
- __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:23 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:50 [inline]
- do_softirq_own_stack+0x7c/0xa0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:390 [inline]
- __irq_exit_rcu+0x226/0x270 kernel/softirq.c:420
- irq_exit_rcu+0xe/0x10 kernel/softirq.c:432
- sysvec_apic_timer_interrupt+0x107/0x130 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:593
-RIP: 0010:console_unlock+0x195c/0x1e10 kernel/printk/printk.c:2503
-Code: c8 00 00 00 48 8b 9c 24 c0 00 00 00 e8 5d d3 00 00 48 85 db 0f 85 89 00 00 00 4c 89 bc 24 28 01 00 00 ff b4 24 28 01 00 00 9d <44> 89 f0 34 01 22 44 24 3f 44 89 f3 0a 5c 24 2a 3c 01 74 76 f6 c3
-RSP: 0018:ffff8880b7c8a830 EFLAGS: 00000282
-RAX: 00007ffffffff000 RBX: 0000000000000000 RCX: ffff88811a098000
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 000000000001b9a0
-RBP: ffff8880b7c8a9b8 R08: ffffea000000000f R09: ffff88812fffa000
-R10: 0000000000000000 R11: 00000000ffffffff R12: ffffffff925cad60
-R13: ffff88811a0989d8 R14: 0000000000000000 R15: 0000000000000282
- vprintk_emit+0x48f/0x990 kernel/printk/printk.c:2028
- vprintk_default+0x90/0xa0 kernel/printk/printk.c:2046
- vprintk_func+0x2f7/0x300 kernel/printk/printk_safe.c:393
- printk+0x18b/0x1d3 kernel/printk/printk.c:2077
- addrconf_notify+0x2f35/0x6400 net/ipv6/addrconf.c:3542
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0x123/0x290 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2027 [inline]
- __dev_notify_flags+0x90e/0xb90 net/core/dev.c:8330
- rtnl_configure_link+0x492/0x4e0 net/core/rtnetlink.c:3028
- __rtnl_newlink net/core/rtnetlink.c:3357 [inline]
- rtnl_newlink+0x2f10/0x3ed0 net/core/rtnetlink.c:3397
- rtnetlink_rcv_msg+0x142b/0x18c0 net/core/rtnetlink.c:5460
- netlink_rcv_skb+0x6d7/0x7e0 net/netlink/af_netlink.c:2469
- rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x11c8/0x1490 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x173a/0x1840 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0xc82/0x1240 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x6d1/0x840 net/socket.c:2439
- __do_sys_sendmsg net/socket.c:2448 [inline]
- __se_sys_sendmsg+0x97/0xb0 net/socket.c:2446
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2446
- do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x441929
-Code: Bad RIP value.
-RSP: 002b:00007ffca7a67de8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441929
-RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000005
-RBP: 00007ffca7a67df0 R08: 0000000100000000 R09: 0000000100000000
-R10: 0000000100000000 R11: 0000000000000246 R12: 00000000000244e3
-R13: 0000000000402800 R14: 0000000000000000 R15: 0000000000000000
+Thanks,
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2839 [inline]
- __kmalloc_node_track_caller+0xeab/0x12e0 mm/slub.c:4478
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x35f/0xb30 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- mrp_pdu_init net/802/mrp.c:300 [inline]
- mrp_pdu_append_vecattr_event+0x4ad/0x2310 net/802/mrp.c:399
- mrp_attr_event+0x2a1/0x4e0 net/802/mrp.c:494
- mrp_mad_event net/802/mrp.c:574 [inline]
- mrp_join_timer+0x10e/0x380 net/802/mrp.c:591
- call_timer_fn+0x226/0x550 kernel/time/timer.c:1404
- expire_timers+0x4fc/0x780 kernel/time/timer.c:1449
- __run_timers+0xaf4/0xd30 kernel/time/timer.c:1773
- run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
- __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Chris
