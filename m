@@ -2,85 +2,136 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C65AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF22C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27139206C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5222206C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:02:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQwbwBbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIIJBW (ORCPT
+        id S1726726AbgIIJCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:01:22 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:58385 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725877AbgIIJBV (ORCPT
+        Wed, 9 Sep 2020 05:02:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42265 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725917AbgIIJC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:01:21 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="466743560"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 11:01:19 +0200
-Date:   Wed, 9 Sep 2020 11:01:18 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Cocci] [PATCH v2] scripts: coccicheck: Do not use shift command
- when rule is specified
-In-Reply-To: <1a2ddefa-59dc-460c-59d5-5c6c1754d20b@web.de>
-Message-ID: <alpine.DEB.2.22.394.2009091059311.2651@hadrien>
-References: <1a2ddefa-59dc-460c-59d5-5c6c1754d20b@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Wed, 9 Sep 2020 05:02:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599642148;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UwK/UCn7nj/bDtxyg3u6KBsLtSFGCtiaPO7yxlcqvrQ=;
+        b=LQwbwBbDQTK1dJWqheR46LeuwQe+scys0zvUqDtk2SGjwlMMkXUvadMgC2ANOtf4aEzLv8
+        +SVcyhiB1rysBlmjig9cs3Xr5VO4CMYt1vdtZJwDoqjBXNCxSmQOQffoIQYcfHZJwRqJ71
+        0VWcNvVMTPEaZ66RggbTB6sGCP1lHkU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-mdNZZnLJOlelVXruIZe3Xg-1; Wed, 09 Sep 2020 05:02:24 -0400
+X-MC-Unique: mdNZZnLJOlelVXruIZe3Xg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C0BC801AE5;
+        Wed,  9 Sep 2020 09:02:21 +0000 (UTC)
+Received: from [10.72.12.24] (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BAC560C87;
+        Wed,  9 Sep 2020 09:02:09 +0000 (UTC)
+Subject: Re: [PATCH] i2c: virtio: add a virtio i2c frontend driver
+To:     Jie Deng <jie.deng@intel.com>, linux-i2c@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, wsa+renesas@sang-engineering.com, wsa@kernel.org,
+        andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
+        jdelvare@suse.de, Sergey.Semin@baikalelectronics.ru,
+        krzk@kernel.org, rppt@kernel.org, loic.poulain@linaro.org,
+        tali.perry1@gmail.com, bjorn.andersson@linaro.org,
+        shuo.a.liu@intel.com, conghui.chen@intel.com, yu1.wang@intel.com
+References: <0efc2605c8c06b4b1bf68cbad5536c4a900dc019.1599110284.git.jie.deng@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <acf0e13d-3080-81e8-9cb1-82af6935d402@redhat.com>
+Date:   Wed, 9 Sep 2020 17:02:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-688164862-1599642079=:2651"
+In-Reply-To: <0efc2605c8c06b4b1bf68cbad5536c4a900dc019.1599110284.git.jie.deng@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-688164862-1599642079=:2651
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+On 2020/9/3 下午1:34, Jie Deng wrote:
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -6,6 +6,9 @@
+>   # ACPI drivers
+>   obj-$(CONFIG_I2C_SCMI)		+= i2c-scmi.o
+>   
+> +# VIRTIO I2C host controller driver
+> +obj-$(CONFIG_I2C_VIRTIO)	+= i2c-virtio.o
+> +
+>   # PC SMBus host controller drivers
+>   obj-$(CONFIG_I2C_ALI1535)	+= i2c-ali1535.o
+>   obj-$(CONFIG_I2C_ALI1563)	+= i2c-ali1563.o
+> diff --git a/drivers/i2c/busses/i2c-virtio.c b/drivers/i2c/busses/i2c-virtio.c
+> new file mode 100644
+> index 0000000..47f9fd1
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-virtio.c
+> @@ -0,0 +1,276 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Virtio I2C Bus Driver
+> + *
+> + * Copyright (c) 2020 Intel Corporation. All rights reserved.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/completion.h>
+> +#include <linux/err.h>
+> +#include <linux/i2c.h>
+> +#include <linux/io.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/wait.h>
+> +
+> +#include <linux/virtio.h>
+> +#include <linux/virtio_ids.h>
+> +#include <linux/virtio_config.h>
+> +
+> +#define VIRTIO_I2C_MSG_OK	0
+> +#define VIRTIO_I2C_MSG_ERR	1
+> +
+> +/**
+> + * struct virtio_i2c_hdr - the virtio I2C message header structure
+> + * @addr: i2c_msg addr, the slave address
+> + * @flags: i2c_msg flags
+> + * @len: i2c_msg len
+> + */
+> +struct virtio_i2c_hdr {
+> +	__virtio16 addr;
+> +	__virtio16 flags;
+> +	__virtio16 len;
+> +} __packed;
 
 
+Btw, this part should belong to uAPI, and you need to define the status 
+in uAPI.
 
-On Wed, 9 Sep 2020, Markus Elfring wrote:
+Thanks
 
-> > Modify coccicheck to use the shift command only when
-> > number of shell arguments is not zero.
->
-> I suggest to add the tag “Fixes” to the commit message.
-
-I don't think there is any need for that.  This is not a patch that should
-be backported.  The previous situation did not cause any problem with the
-execution of make coccicheck, only a tiresome warning message.
-
-julia
-
->
->
-> > Changes in V2:
-> > 	- Fix spelling errors as suggested by Markus Elfring
->
-> Would you like to adjust the last word in the previous patch subject accordingly?
->
-> Regards,
-> Markus
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
---8323329-688164862-1599642079=:2651--
