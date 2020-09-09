@@ -2,110 +2,115 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C541DC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89725C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 879C020C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34569218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGAYc71d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xr0TqVWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgIITET (ORCPT
+        id S1727005AbgIITJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
+        Wed, 9 Sep 2020 15:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgIITES (ORCPT
+        with ESMTP id S1725772AbgIITJO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:04:18 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5221FC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:04:18 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t10so4129269wrv.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:04:18 -0700 (PDT)
+        Wed, 9 Sep 2020 15:09:14 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71111C061573;
+        Wed,  9 Sep 2020 12:09:13 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a9so3491692wmm.2;
+        Wed, 09 Sep 2020 12:09:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=DL1SEibpeaqz3go7znBIkPpEohNdMbTETgjj6/Qc+uI=;
-        b=bGAYc71dTBUOxZpxb7MWxow5YO9o0MBt1KqSE2i6A/MBqhBn839NsSqZeMoJMbawYF
-         oU0KA7NSK55AppGuSbmHixR8pnue99eSMn2eEXpriKkdSWLHFU0e8GvU127KRvRHQ8GF
-         RI19me743BgvvDuiXedHL9g/35MYle5WNbNGus79KBPU0bEcT9cG7u22U3ypXvJ7IutF
-         qx9BY+ff6WNmhp9ikh48ylgrbs4blr0GxIWejb4ZnqBKnwTZZYnK3leh/zhHbMKRm/4Z
-         16hUjqkRI6sunC0YvSsXILW5Ti0OB85exvPkpcyOLSYDHy/q+i3MJqE2ZGF5OT+F4G4g
-         qr+w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3CtnsHu1kocc8uwLlDaSSxN5AfuSpASFecFNMuqKHqI=;
+        b=Xr0TqVWcl1f3bR1fLi1bK3iFtjf3T3nwYBn4qS4SvMW9SkenRS+jnybhPFvwb/APP+
+         gwGqheFmi7Vh0WPGI5P1tU9VsnUhGiTLp43Tdpp0mURPswE6QMyo8EDUqY7SEZeHRUtY
+         MWnFxi87H6ZmNyNPr5+f+V8G945Rdq7eCNTi5p/e23unmdflSx3oyQoJv60527Ek7cgr
+         DkHiYLHXx9+PHRuuPUdTpZj+l0vxMI5k8lEAEST88k7TdG0tA2N/02CnGqJw8JtSwUOY
+         3U3C18G17PCheM/Hl+KiTPOZIy7VjWFXGDsov1cJm+5ZHrDfeBKbnmtdmleL08wggObM
+         XCfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DL1SEibpeaqz3go7znBIkPpEohNdMbTETgjj6/Qc+uI=;
-        b=MT6ezj2N+53iXgzgS/MHXLhMbH7SQ19+Fe6EMfnumiWrXtpFAsdNFqF8t8+l66+C7x
-         CZT7FTPk5pUP7p080VsyZMo2TunVnRZfxJVZ1QZXluPMUnC0ZjOl52eX8HBFFxeP6vqS
-         mggYehvDV6dp8VNQRm0JULNYNf4uVOecS+7G0Aky5ItPKpu2ERXWBXsAIvZEZ+77RWAU
-         BytR1/192m8UR63arNKsuGNrkD4fbW1U66dv1VoeR6dIO0SiztC3PXEai1zgJKmVy+uC
-         HdDbstgRHrjytawi4ZcHidEVkLaHgNw+MXPCKugdFuKxEzLLuVhhirSDJpV9YLYPEUtV
-         VLAA==
-X-Gm-Message-State: AOAM533pUeuxDVuOj1ZxcmWwi8hFsfQJcCt5vKcxo3dTDVBRp9HlufBi
-        cLlAO8wAPN4b47Vmmrw2pD9hNf4/xUc5XwFD
-X-Google-Smtp-Source: ABdhPJwnSjwKUhbDxSi4Hx9jU8v3Rzho6NFLXjRpmX50GxpevZ75GgJaoCwlPEPcwEOoXbPZ7MnDdg==
-X-Received: by 2002:adf:db43:: with SMTP id f3mr5634313wrj.219.1599678256633;
-        Wed, 09 Sep 2020 12:04:16 -0700 (PDT)
-Received: from [192.168.0.16] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id f1sm5492410wrt.20.2020.09.09.12.04.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 12:04:16 -0700 (PDT)
-Subject: Re: [PATCH] fs: omfs: use kmemdup() rather than kmalloc+memcpy
-To:     Bob Copeland <me@bobcopeland.com>,
-        linux-karma-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-References: <20200824211755.597245-1-alex.dewar90@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3CtnsHu1kocc8uwLlDaSSxN5AfuSpASFecFNMuqKHqI=;
+        b=VTCn+glHkT7t+a5qCwfBN3RNoKh6yD/l4D3oM80NsRkyuqUKmT2kv46M7IfIlXRyVp
+         4AAfcouI6dsJmqER+3W2N9wHQxqV0qAYs7RNBXAFVsHwwwgcA0sKmx6i9tr7TuOLSixy
+         qbkSO0Au0lLy9hgaFURIJXlU1oupDF+R0SSfT8extf3+ltESEMOhxo/qEb/nLeHCfTvP
+         pB//BnhuyeJXKljG8VraGhoWrGSa17/3rLV0IV390kisRUQy07RkovdUwxpm8Hh6U3Jo
+         RMHgXCz4mRU/Bj5nhGXRjib1fhaeavLeAQP1qUn/ru/rSyZZUCLyGWITAnU87Rk6O9Sq
+         zfXg==
+X-Gm-Message-State: AOAM5305ipTVxQCNtEmS5DUsN32xHARnXY2rO9kgvsHB7JiyPWuMP9yr
+        HIRZoIKRXzyukUaIdvKKNB0=
+X-Google-Smtp-Source: ABdhPJyOefeiMFkPtAS+u9KKFh1ftgY9to3EIPbs6NcaiNIlTcgWE17qOnji0DYHm6wmjlL1VvK4vg==
+X-Received: by 2002:a7b:ca56:: with SMTP id m22mr4673591wml.12.1599678551993;
+        Wed, 09 Sep 2020 12:09:11 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id b187sm93304wmb.8.2020.09.09.12.09.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 12:09:11 -0700 (PDT)
 From:   Alex Dewar <alex.dewar90@gmail.com>
-Message-ID: <5efaa7be-1890-0169-d133-8dd40b238d6d@gmail.com>
-Date:   Wed, 9 Sep 2020 20:04:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ima: Use kmemdup rather than kmalloc+memcpy
+Date:   Wed,  9 Sep 2020 20:09:06 +0100
+Message-Id: <20200909190907.164013-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200824211755.597245-1-alex.dewar90@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/08/2020 22:17, Alex Dewar wrote:
-> Issue identified with Coccinelle.
-Gentle ping?
->
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> ---
->   fs/omfs/inode.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/fs/omfs/inode.c b/fs/omfs/inode.c
-> index b76ec6b88ded..8867cefa79cf 100644
-> --- a/fs/omfs/inode.c
-> +++ b/fs/omfs/inode.c
-> @@ -363,12 +363,11 @@ static int omfs_get_imap(struct super_block *sb)
->   		bh = sb_bread(sb, block++);
->   		if (!bh)
->   			goto nomem_free;
-> -		*ptr = kmalloc(sb->s_blocksize, GFP_KERNEL);
-> +		*ptr = kmemdup(bh->b_data, sb->s_blocksize, GFP_KERNEL);
->   		if (!*ptr) {
->   			brelse(bh);
->   			goto nomem_free;
->   		}
-> -		memcpy(*ptr, bh->b_data, sb->s_blocksize);
->   		if (count < sb->s_blocksize)
->   			memset((void *)*ptr + count, 0xff,
->   				sb->s_blocksize - count);
+Issue identified with Coccinelle.
+
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ security/integrity/ima/ima_policy.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index b4de33074b37..1de3140b334f 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -284,15 +284,14 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
+ 	struct ima_rule_entry *nentry;
+ 	int i;
+ 
+-	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
+-	if (!nentry)
+-		return NULL;
+-
+ 	/*
+ 	 * Immutable elements are copied over as pointers and data; only
+ 	 * lsm rules can change
+ 	 */
+-	memcpy(nentry, entry, sizeof(*nentry));
++	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
++	if (!nentry)
++		return NULL;
++
+ 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
+ 
+ 	for (i = 0; i < MAX_LSM_RULES; i++) {
+-- 
+2.28.0
 
