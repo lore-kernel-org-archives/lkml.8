@@ -7,68 +7,66 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9191DC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FDEC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B6B2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8CD420C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tsCjd686"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cvL1h9nX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbgIIQvp (ORCPT
+        id S1731153AbgIIQv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
+        Wed, 9 Sep 2020 12:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730730AbgIIQFE (ORCPT
+        with ESMTP id S1730720AbgIIQFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 12:05:04 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B7BC0617A0
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:04:21 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g4so3565547wrs.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:04:21 -0700 (PDT)
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972DDC0617B1
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:04:24 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g4so3565713wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=525kvdCFfP6vs4euxtRyN/bmEj6gYMQQf93QffJLH3A=;
-        b=tsCjd686H2XcxuZwg50wJa8jxHM60y6x5v+SKzXYwU47orkfCv3NDMlaRM+myScK/D
-         XDFtgC4ypLQvlLNbXTeT8OarPbAWxN/0euZR3PpyKHd0xywLRn6tz0j5Rh3ZX57sKbGF
-         HgzMW9gUbEZ86wzctxI4pBcFAVz6xqFd4gUDiLB4TPTF/kKYPZtIxCad5cXmlaWQA/Yq
-         V8H+hzERhOsIWtH6FXNmv21X5Ish/Y65rmFIbGsWh236ij4dg32oMfp4CgwHJnolWA4r
-         sBW4ogBZI6i94fnIRdnpn5Mxt6AoUyk+HAJTpINivcLjM5vPtI4F/Vpin0jNNR0qcZ/D
-         kOgA==
+        bh=vgg0Drz8zo+lQwM7EXGGKvLI+hvN7gZtyPm/VP553No=;
+        b=cvL1h9nXfB4PJJq/e8iaVIE0lAtZEUldzYk7G+DOxesgjcyeh3lFoH6VUV5paWo+2f
+         zoG9gGGz08+6riwAqPHo/ywfIUNhU4++BcaE+qmrxWeEd0j7g2fegHMwaHzhaDHxjW42
+         I4yDbXnXVKRe/0gOMyvit1ZWZJ62T/FavpV8vlp2kiWJ8aBlqfJhHJtEdyn/NHARRKfr
+         sKEplMXQD6sQj3j3oqXWGCd2c4/z7NyZL5806d5nPJSsNP6wNvMmVMAIkJJ/3WuX4OH0
+         kHhG9xK7XEd8qiS29ZeN4LcrAlS16vwjfDFcb3tU6STTC1W0/9vGCnwX04FZk1n9Rnb7
+         mgqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=525kvdCFfP6vs4euxtRyN/bmEj6gYMQQf93QffJLH3A=;
-        b=H9NXEH9yR/5EPKASSOHQ/zujYOBgyiLV4xMEdcVDzHns3E72GCBvOHQPHwgeUo+n2k
-         sRVw+RLgPjLgwTAbuPBCeE0AHLdhl6yPRYV7o1qQuv06ekdyaTNn1T+/WDsQBbcOzF/3
-         dPfSjXrezDnyepm24ffPTWPPQpUZGA2yhyahsFbgbCuKeH/Hg6UqpGDqPBw2ekCG5sT/
-         eAW+vWxh2gUQkTgnXKrECM1FYNlNCg/mP5FFxjnMQjbWnSVa0Gh4juGLGNG/RSPG0ZSo
-         FdFZWubNom6FXvB64OKyk3tPQsweWJaOVNf7X297UgcZSVRLw/5cTb7pLJeJxmnvL0hi
-         44dA==
-X-Gm-Message-State: AOAM533ZZhgMBhmRsFg5d/nu1N+9WkLZVUm+rOWtBxXncsGJmjjhHEeW
-        YneCHikxLgeB5oMwUcYs1sjLYg==
-X-Google-Smtp-Source: ABdhPJxlZaMGy1wnS6RuAf/ra7q+ROMfSMgTlio9QHnRZDZEnBprM5gFMtIESCe2xil5ZgJ01A61eg==
-X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr5019825wru.180.1599667460271;
-        Wed, 09 Sep 2020 09:04:20 -0700 (PDT)
+        bh=vgg0Drz8zo+lQwM7EXGGKvLI+hvN7gZtyPm/VP553No=;
+        b=X3NSxM2/KLJnCFjqbX3zGfLytDjk2JjpKwL27epEL1QucfoLiQVG6uR+8Pi8cI4hFd
+         AKtigwLpPYaE2RMVYtt4Bzd+r1iY3O5OOJcf6+z5SEfAuOC89QAIvgQo3ufzmix1Y4fK
+         OqXpHRqqTavJx5k+C3WLJ93XxdW7KSd84oiLON5/yJf2e8uVQMcTlrEre4Ltj6YP7wOo
+         h8Y0K5QdQCu8ivOmyT2Pv1VxdFQp+EcNCl+Grezm6mrxWVgoUsuLPNRlC68Usvr4BVEA
+         0GdKYrcblT6gcTDrrETyk+9G7REQRXfcxeyze7FDggLhGLGI0l6IN1j38rPKI31oav01
+         HTRg==
+X-Gm-Message-State: AOAM531TZrqBBNunynCgVbocqyF8WOv8M80xe62SLP95WFguVyzVkZJy
+        0+9WzeHXBMGx8vjHpoO7Rby6WAYu6NPGgGlI
+X-Google-Smtp-Source: ABdhPJyhA56ZPn7zhGV+NzrFhVIB0ghngJMEVy9ru3brR2WQ2skP9ky+KN8SoHdCYCH1eesOk/Ra6g==
+X-Received: by 2002:adf:fd90:: with SMTP id d16mr4743738wrr.52.1599667463126;
+        Wed, 09 Sep 2020 09:04:23 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
-        by smtp.gmail.com with ESMTPSA id y6sm4850700wrn.41.2020.09.09.09.04.18
+        by smtp.gmail.com with ESMTPSA id y6sm4850700wrn.41.2020.09.09.09.04.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 09:04:19 -0700 (PDT)
+        Wed, 09 Sep 2020 09:04:22 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, balbi@kernel.org,
-        martin.blumenstingl@googlemail.com
+To:     khilman@baylibre.com
 Cc:     linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH 3/5] usb: dwc-meson-g12a: Add support for USB on AXG SoCs
-Date:   Wed,  9 Sep 2020 18:04:07 +0200
-Message-Id: <20200909160409.8678-4-narmstrong@baylibre.com>
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 5/5] arm64: dts: meson-axg-s400: enable USB OTG
+Date:   Wed,  9 Sep 2020 18:04:09 +0200
+Message-Id: <20200909160409.8678-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200909160409.8678-1-narmstrong@baylibre.com>
 References: <20200909160409.8678-1-narmstrong@baylibre.com>
@@ -79,51 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic AXG is close from the GXL Glue but with a single OTG PHY.
-
-It needs the same init sequence as GXL & GXM, but it seems it doesn't need
-the host disconnect bit.
+This enables USB OTG on the S400 board.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index 1f7f4d88ed9d..90275c13c224 100644
---- a/drivers/usb/dwc3/dwc3-meson-g12a.c
-+++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -215,6 +215,19 @@ static struct dwc3_meson_g12a_drvdata gxm_drvdata = {
- 	.usb_post_init = dwc3_meson_gxl_usb_post_init,
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index cb1360ae1211..5f131debcbad 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -584,3 +584,13 @@
+ 	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
  };
- 
-+static struct dwc3_meson_g12a_drvdata axg_drvdata = {
-+	.otg_switch_supported = true,
-+	.clks = meson_gxl_clocks,
-+	.num_clks = ARRAY_SIZE(meson_gxl_clocks),
-+	.phy_names = meson_a1_phy_names,
-+	.num_phys = ARRAY_SIZE(meson_a1_phy_names),
-+	.setup_regmaps = dwc3_meson_gxl_setup_regmaps,
-+	.usb2_init_phy = dwc3_meson_gxl_usb2_init_phy,
-+	.set_phy_mode = dwc3_meson_gxl_set_phy_mode,
-+	.usb_init = dwc3_meson_g12a_usb_init,
-+	.usb_post_init = dwc3_meson_gxl_usb_post_init,
++
++&usb {
++	status = "okay";
++	dr_mode = "otg";
++	vbus-supply = <&usb_pwr>;
 +};
 +
- static struct dwc3_meson_g12a_drvdata g12a_drvdata = {
- 	.otg_switch_supported = true,
- 	.clks = meson_g12a_clocks,
-@@ -930,6 +943,10 @@ static const struct of_device_id dwc3_meson_g12a_match[] = {
- 		.compatible = "amlogic,meson-gxm-usb-ctrl",
- 		.data = &gxm_drvdata,
- 	},
-+	{
-+		.compatible = "amlogic,meson-axg-usb-ctrl",
-+		.data = &axg_drvdata,
-+	},
- 	{
- 		.compatible = "amlogic,meson-g12a-usb-ctrl",
- 		.data = &g12a_drvdata,
++&usb2_phy1 {
++	phy-supply = <&vcc_5v>;
++};
 -- 
 2.22.0
 
