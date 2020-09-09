@@ -2,124 +2,154 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E727C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06451C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30912076C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42BA21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:11:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIIHKs (ORCPT
+        id S1729808AbgIIHKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:10:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33312 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbgIIHKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:10:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 63553B61F;
-        Wed,  9 Sep 2020 07:10:28 +0000 (UTC)
-Subject: Re: [PATCH 08/19] xsysace: use bdev_check_media_change
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20200908145347.2992670-1-hch@lst.de>
- <20200908145347.2992670-9-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <b858ada6-966e-eac5-b985-4f23c022af34@suse.de>
-Date:   Wed, 9 Sep 2020 09:10:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 9 Sep 2020 03:10:55 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:48150 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729305AbgIIHKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:10:41 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0897AKaD4024324, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb05.realtek.com.tw[172.21.6.98])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0897AKaD4024324
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 9 Sep 2020 15:10:20 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 9 Sep 2020 15:10:20 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2044.4; Wed, 9 Sep 2020 15:10:19 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::3d72:efbe:f42a:2926]) by
+ RTEXMB01.realtek.com.tw ([fe80::3d72:efbe:f42a:2926%13]) with mapi id
+ 15.01.2044.004; Wed, 9 Sep 2020 15:10:19 +0800
+From:   =?big5?B?p2Sp/rzhIFJpY2t5?= <ricky_wu@realtek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "rui_feng@realsil.com.cn" <rui_feng@realsil.com.cn>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "puranjay12@gmail.com" <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "vailbhavgupta40@gamail.com" <vailbhavgupta40@gamail.com>
+Subject: RE: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix driving parameter
+Thread-Topic: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix
+ driving parameter
+Thread-Index: AQHWhP62uKuuQJQ5k0+R6Z2U1e37UKlezqwAgAES/lA=
+Date:   Wed, 9 Sep 2020 07:10:19 +0000
+Message-ID: <a5abd0d6029646ff8faae61cc4a4dd55@realtek.com>
+References: <20200907100731.7722-1-ricky_wu@realtek.com>
+ <20200908222834.GA646416@bjorn-Precision-5520>
+In-Reply-To: <20200908222834.GA646416@bjorn-Precision-5520>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.88.99]
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-9-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 4:53 PM, Christoph Hellwig wrote:
-> Switch to use bdev_check_media_change instead of check_disk_change and
-> call ace_revalidate_disk manually.  Given that ace_revalidate_disk only
-> deals with media change events, the extra call into ->revalidate_disk
-> from bdev_disk_changed is not required either, so stop wiring up the
-> method.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> ---
->  drivers/block/xsysace.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWls
+dG86aGVsZ2Fhc0BrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAwOSwg
+MjAyMCA2OjI5IEFNDQo+IFRvOiCnZKn+vOEgUmlja3kNCj4gQ2M6IGFybmRAYXJuZGIuZGU7IGdy
+ZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOw0KPiB1bGYuaGFu
+c3NvbkBsaW5hcm8ub3JnOyBydWlfZmVuZ0ByZWFsc2lsLmNvbS5jbjsgbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsNCj4gcHVyYW5qYXkxMkBnbWFpbC5jb207IGxpbnV4LXBjaUB2Z2VyLmtl
+cm5lbC5vcmc7DQo+IHZhaWxiaGF2Z3VwdGE0MEBnYW1haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjUgMi8yXSBtaXNjOiBydHN4OiBBZGQgcG93ZXIgc2F2aW5nIGZ1bmN0aW9ucyBhbmQg
+Zml4IGRyaXZpbmcNCj4gcGFyYW1ldGVyDQo+IA0KPiBPbiBNb24sIFNlcCAwNywgMjAyMCBhdCAw
+NjowNzozMVBNICswODAwLCByaWNreV93dUByZWFsdGVrLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBS
+aWNreSBXdSA8cmlja3lfd3VAcmVhbHRlay5jb20+DQo+ID4NCj4gPiB2NDoNCj4gPiBzcGxpdCBw
+b3dlciBkb3duIGZsb3cgYW5kIHBvd2VyIHNhdmluZyBmdW5jdGlvbiB0byB0d28gcGF0Y2gNCj4g
+Pg0KPiA+IHY1Og0KPiA+IGZpeCB1cCBtb2RpZmllZCBjaGFuZ2UgdW5kZXIgdGhlIC0tLSBsaW5l
+DQo+IA0KPiBIZWhlLCB0aGlzIGNhbWUgb3V0ICphYm92ZSogdGhlICItLS0iIGxpbmUgOikNCj4g
+DQo+ID4gQWRkIHJ0czUyMmEgTDEgc3ViLXN0YXRlIHN1cHBvcnQNCj4gPiBTYXZlIG1vcmUgcG93
+ZXIgb24gcnRzNTIyNyBydHM1MjQ5IHJ0czUyNWEgcnRzNTI2MA0KPiA+IEZpeCBydHM1MjYwIGRy
+aXZpbmcgcGFyYW1ldGVyDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSaWNreSBXdSA8cmlja3lf
+d3VAcmVhbHRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0
+czUyMjcuYyAgfCAxMTIgKysrKysrKysrKysrKysrKysrKysrLQ0KPiA+ICBkcml2ZXJzL21pc2Mv
+Y2FyZHJlYWRlci9ydHM1MjQ5LmMgIHwgMTQ1DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KystDQo+ID4gIGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0czUyNjAuYyAgfCAgMjggKysrLS0t
+DQo+ID4gIGRyaXZlcnMvbWlzYy9jYXJkcmVhZGVyL3J0c3hfcGNyLmggfCAgMTcgKysrKw0KPiA+
+ICA0IGZpbGVzIGNoYW5nZWQsIDI4MyBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvY2FyZHJlYWRlci9ydHM1MjI3LmMNCj4g
+Yi9kcml2ZXJzL21pc2MvY2FyZHJlYWRlci9ydHM1MjI3LmMNCj4gPiBpbmRleCA3NDczOTFlM2Zi
+NWQuLjg4NTkwMTE2NzJjYiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL21pc2MvY2FyZHJlYWRl
+ci9ydHM1MjI3LmMNCj4gPiArKysgYi9kcml2ZXJzL21pc2MvY2FyZHJlYWRlci9ydHM1MjI3LmMN
+Cj4gPiBAQCAtNzIsMTUgKzcyLDgwIEBAIHN0YXRpYyB2b2lkIHJ0czUyMjdfZmV0Y2hfdmVuZG9y
+X3NldHRpbmdzKHN0cnVjdA0KPiBydHN4X3BjciAqcGNyKQ0KPiA+DQo+ID4gIAlwY2lfcmVhZF9j
+b25maWdfZHdvcmQocGRldiwgUENSX1NFVFRJTkdfUkVHMiwgJnJlZyk7DQo+ID4gIAlwY3JfZGJn
+KHBjciwgIkNmZyAweCV4OiAweCV4XG4iLCBQQ1JfU0VUVElOR19SRUcyLCByZWcpOw0KPiA+ICsJ
+aWYgKHJ0c3hfY2hlY2tfbW1jX3N1cHBvcnQocmVnKSkNCj4gPiArCQlwY3ItPmV4dHJhX2NhcHMg
+fD0gRVhUUkFfQ0FQU19OT19NTUM7DQo+ID4gIAlwY3ItPnNkMzBfZHJpdmVfc2VsXzN2MyA9IHJ0
+c3hfcmVnX3RvX3NkMzBfZHJpdmVfc2VsXzN2MyhyZWcpOw0KPiA+ICAJaWYgKHJ0c3hfcmVnX2No
+ZWNrX3JldmVyc2Vfc29ja2V0KHJlZykpDQo+ID4gIAkJcGNyLT5mbGFncyB8PSBQQ1JfUkVWRVJT
+RV9TT0NLRVQ7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgdm9pZCBydHM1MjI3X2luaXRfZnJv
+bV9jZmcoc3RydWN0IHJ0c3hfcGNyICpwY3IpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBwY2lfZGV2
+ICpwZGV2ID0gcGNyLT5wY2k7DQo+ID4gKwlpbnQgbDFzczsNCj4gPiArCXUzMiBsdmFsOw0KPiA+
+ICsJc3RydWN0IHJ0c3hfY3Jfb3B0aW9uICpvcHRpb24gPSAmcGNyLT5vcHRpb247DQo+ID4gKw0K
+PiA+ICsJbDFzcyA9IHBjaV9maW5kX2V4dF9jYXBhYmlsaXR5KHBkZXYsIFBDSV9FWFRfQ0FQX0lE
+X0wxU1MpOw0KPiA+ICsJaWYgKCFsMXNzKQ0KPiA+ICsJCXJldHVybjsNCj4gPiArDQo+ID4gKwlw
+Y2lfcmVhZF9jb25maWdfZHdvcmQocGRldiwgbDFzcyArIFBDSV9MMVNTX0NUTDEsICZsdmFsKTsN
+Cj4gDQo+IFRoaXMgbG9va3MgYSBsaXR0bGUgcHJvYmxlbWF0aWMuICBQQ0lfTDFTU19DVEwxIGlz
+IGFuIGFyY2hpdGVjdGVkDQo+IHJlZ2lzdGVyIGluIHRoZSBBU1BNIEwxIFBNIFN1YnN0YXRlcyBj
+YXBhYmlsaXR5LCBhbmQgaXRzIHZhbHVlIG1heQ0KPiBjaGFuZ2UgYXQgcnVudGltZSBiZWNhdXNl
+IGRyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIG1hbmFnZXMgaXQuDQo+IA0KPiBJdCBsb29rcyBsaWtl
+IHRoZSBjb2RlIGJlbG93IGRvZXMgZGV2aWNlLXNwZWNpZmljIGNvbmZpZ3VyYXRpb24gYmFzZWQN
+Cj4gb24gdGhlIGN1cnJlbnQgUENJX0wxU1NfQ1RMMSB2YWx1ZS4gIEJ1dCB3aGF0IGhhcHBlbnMg
+aWYgYXNwbS5jDQo+IGNoYW5nZXMgUENJX0wxU1NfQ1RMMSBsYXRlcj8NCj4gDQoNCldlIGFyZSBn
+b2luZyB0byBtYWtlIHN1cmUgYW5kIHNldCB0aGUgYmVzdCBjb25maWd1cmF0aW9uIG9uIHRoZSBj
+dXJyZW50IHRpbWUsIA0KaWYgaG9zdCBjaGFuZ2UgdGhlIGNhcGFiaWxpdHkgbGF0ZXIsIGl0IGRv
+ZXNuJ3QgYWZmZWN0IGZ1bmN0aW9uLCBvbmx5IGFmZmVjdCBhIGxpdHRsZSBwb3dlciBzYXZpbmcg
+ICANCg0KPiA+ICsJaWYgKENIS19QQ0lfUElEKHBjciwgMHg1MjJBKSkgew0KPiA+ICsJCWlmICgw
+ID09IChsdmFsICYgMHgwRikpDQo+ID4gKwkJCXJ0c3hfcGNpX2VuYWJsZV9vb2JzX3BvbGxpbmco
+cGNyKTsNCj4gPiArCQllbHNlDQo+ID4gKwkJCXJ0c3hfcGNpX2Rpc2FibGVfb29ic19wb2xsaW5n
+KHBjcik7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKGx2YWwgJiBQQ0lfTDFTU19DVEwxX0FT
+UE1fTDFfMSkNCj4gPiArCQlydHN4X3NldF9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMV9FTik7DQo+
+ID4gKwllbHNlDQo+ID4gKwkJcnRzeF9jbGVhcl9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMV9FTik7
+DQo+ID4gKw0KPiA+ICsJaWYgKGx2YWwgJiBQQ0lfTDFTU19DVEwxX0FTUE1fTDFfMikNCj4gPiAr
+CQlydHN4X3NldF9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMl9FTik7DQo+ID4gKwllbHNlDQo+ID4g
+KwkJcnRzeF9jbGVhcl9kZXZfZmxhZyhwY3IsIEFTUE1fTDFfMl9FTik7DQo+ID4gKw0KPiA+ICsJ
+aWYgKGx2YWwgJiBQQ0lfTDFTU19DVEwxX1BDSVBNX0wxXzEpDQo+ID4gKwkJcnRzeF9zZXRfZGV2
+X2ZsYWcocGNyLCBQTV9MMV8xX0VOKTsNCj4gPiArCWVsc2UNCj4gPiArCQlydHN4X2NsZWFyX2Rl
+dl9mbGFnKHBjciwgUE1fTDFfMV9FTik7DQo+ID4gKw0KPiA+ICsJaWYgKGx2YWwgJiBQQ0lfTDFT
+U19DVEwxX1BDSVBNX0wxXzIpDQo+ID4gKwkJcnRzeF9zZXRfZGV2X2ZsYWcocGNyLCBQTV9MMV8y
+X0VOKTsNCj4gPiArCWVsc2UNCj4gPiArCQlydHN4X2NsZWFyX2Rldl9mbGFnKHBjciwgUE1fTDFf
+Ml9FTik7DQo+ID4gKw0KPiA+ICsJaWYgKG9wdGlvbi0+bHRyX2VuKSB7DQo+ID4gKwkJdTE2IHZh
+bDsNCj4gPiArDQo+ID4gKwkJcGNpZV9jYXBhYmlsaXR5X3JlYWRfd29yZChwY3ItPnBjaSwgUENJ
+X0VYUF9ERVZDVEwyLCAmdmFsKTsNCj4gDQo+IFNhbWUgdGhpbmcgaGVyZS4gIEkgZG9uJ3QgdGhp
+bmsgdGhlIFBDSSBjb3JlIGN1cnJlbnRseSBjaGFuZ2VzDQo+IFBDSV9FWFBfREVWQ1RMMiBhZnRl
+ciBib290LCBidXQgaXQncyBub3QgYSBnb29kIGlkZWEgdG8gYXNzdW1lIGl0J3MNCj4gZ29pbmcg
+dG8gYmUgY29uc3RhbnQuDQo+IA0KDQpUaGUgc2FtZSByZXBseQ0KDQo+ID4gKwkJaWYgKHZhbCAm
+IFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pIHsNCj4gPiArCQkJb3B0aW9uLT5sdHJfZW5hYmxlZCA9
+IHRydWU7DQo+ID4gKwkJCW9wdGlvbi0+bHRyX2FjdGl2ZSA9IHRydWU7DQo+ID4gKwkJCXJ0c3hf
+c2V0X2x0cl9sYXRlbmN5KHBjciwgb3B0aW9uLT5sdHJfYWN0aXZlX2xhdGVuY3kpOw0KPiA+ICsJ
+CX0gZWxzZSB7DQo+ID4gKwkJCW9wdGlvbi0+bHRyX2VuYWJsZWQgPSBmYWxzZTsNCj4gPiArCQl9
+DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKHJ0c3hfY2hlY2tfZGV2X2ZsYWcocGNyLCBBU1BN
+X0wxXzFfRU4gfCBBU1BNX0wxXzJfRU4NCj4gPiArCQkJCXwgUE1fTDFfMV9FTiB8IFBNX0wxXzJf
+RU4pKQ0KPiA+ICsJCW9wdGlvbi0+Zm9yY2VfY2xrcmVxXzAgPSBmYWxzZTsNCj4gPiArCWVsc2UN
+Cj4gPiArCQlvcHRpb24tPmZvcmNlX2Nsa3JlcV8wID0gdHJ1ZTsNCj4gPiArDQo+ID4gK30NCj4g
+DQo+IC0tLS0tLVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5n
+IHRoaXMgZS1tYWlsLg0K
