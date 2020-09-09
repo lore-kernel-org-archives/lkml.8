@@ -2,133 +2,88 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567F7C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84434C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0470E21D46
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC6C21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599674419;
+	bh=/od97QU4j5gIbyc2XC5wtjt5niD3XibN2goJI7ZBqsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FPT+pnuK1aYPIWnOMc8q6j4wHXTxOc1/3hto+sqdXXYNZtJUnV2EHZd7r8qxAvkmX
+	 txB024+3GaIOHd/1s9HjL40jTWuqacfBCk4T0BrT4t6KUJg/hV+8C+ycmeLoaJSbXf
+	 glgey1AEjmOfecA01sCiRhO0bkTaV7R5drU8EJ/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgIIR7w (ORCPT
+        id S1727856AbgIISAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:59:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35182 "EHLO mx2.suse.de"
+        Wed, 9 Sep 2020 14:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgIIR7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:59:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5822FAD20;
-        Wed,  9 Sep 2020 18:00:02 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/vmscan: fix infinite loop in drop_slab_node
-To:     zangchunxin@bytedance.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-References: <20200909152047.27905-1-zangchunxin@bytedance.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <16906d44-9e3c-76a1-f1a9-ced61e865467@suse.cz>
-Date:   Wed, 9 Sep 2020 19:59:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726408AbgIISAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:00:14 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C72F021D46;
+        Wed,  9 Sep 2020 18:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599674414;
+        bh=/od97QU4j5gIbyc2XC5wtjt5niD3XibN2goJI7ZBqsw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HEqb4Cth+SDmb8tk04OIY2x8keXt5AxTySFEePo3y21voysy+rSk2fHXvbhd4DfII
+         mOfpMHUE5YNi0PV+DFQgvhsBaM5W78XW2HIWq+Koop2fdiPnCXUM4rjKXMEyL9MZO3
+         nGyIjGxHhHjH6BMOq0NpAK9NeExiQj09etquc9k8=
+Date:   Wed, 9 Sep 2020 20:00:23 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.8 000/186] 5.8.8-rc1 review
+Message-ID: <20200909180023.GA1003763@kroah.com>
+References: <20200908152241.646390211@linuxfoundation.org>
+ <a2949ad4-fa8f-1944-7835-4cb5e4c4134e@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200909152047.27905-1-zangchunxin@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2949ad4-fa8f-1944-7835-4cb5e4c4134e@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 5:20 PM, zangchunxin@bytedance.com wrote:
-> From: Chunxin Zang <zangchunxin@bytedance.com>
+On Tue, Sep 08, 2020 at 07:39:08PM -0600, Shuah Khan wrote:
+> On 9/8/20 9:22 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.8.8 release.
+> > There are 186 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.8-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> On our server, there are about 10k memcg in one machine. They use memory
-> very frequently. When I tigger drop caches，the process will infinite loop
-> in drop_slab_node.
+> Compiled and booted on my test system. No dmesg regressions.
 > 
-> There are two reasons:
-> 1.We have too many memcgs, even though one object freed in one memcg, the
->   sum of object is bigger than 10.
-> 
-> 2.We spend a lot of time in traverse memcg once. So, the memcg who
->   traversed at the first have been freed many objects. Traverse memcg next
->   time, the freed count bigger than 10 again.
-> 
-> We can get the following info through 'ps':
-> 
->   root:~# ps -aux | grep drop
->   root  357956 ... R    Aug25 21119854:55 echo 3 > /proc/sys/vm/drop_caches
->   root 1771385 ... R    Aug16 21146421:17 echo 3 > /proc/sys/vm/drop_caches
->   root 1986319 ... R    18:56 117:27 echo 3 > /proc/sys/vm/drop_caches
->   root 2002148 ... R    Aug24 5720:39 echo 3 > /proc/sys/vm/drop_caches
->   root 2564666 ... R    18:59 113:58 echo 3 > /proc/sys/vm/drop_caches
->   root 2639347 ... R    Sep03 2383:39 echo 3 > /proc/sys/vm/drop_caches
->   root 3904747 ... R    03:35 993:31 echo 3 > /proc/sys/vm/drop_caches
->   root 4016780 ... R    Aug21 7882:18 echo 3 > /proc/sys/vm/drop_caches
-> 
-> Use bpftrace follow 'freed' value in drop_slab_node:
-> 
->   root:~# bpftrace -e 'kprobe:drop_slab_node+70 {@ret=hist(reg("bp")); }'
->   Attaching 1 probe...
->   ^B^C
-> 
->   @ret:
->   [64, 128)        1 |                                                    |
->   [128, 256)      28 |                                                    |
->   [256, 512)     107 |@                                                   |
->   [512, 1K)      298 |@@@                                                 |
->   [1K, 2K)       613 |@@@@@@@                                             |
->   [2K, 4K)      4435 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
->   [4K, 8K)       442 |@@@@@                                               |
->   [8K, 16K)      299 |@@@                                                 |
->   [16K, 32K)     100 |@                                                   |
->   [32K, 64K)     139 |@                                                   |
->   [64K, 128K)     56 |                                                    |
->   [128K, 256K)    26 |                                                    |
->   [256K, 512K)     2 |                                                    |
-> 
-> In the while loop, we can check whether the TASK_KILLABLE signal is set,
-> if so, we should break the loop.
+> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-That's definitely a good change, thanks. I would just maybe consider:
-- Test in the memcg iteration loop? If you have 10k memcgs as you mention, this
-can still take long until the test happens?
-- Exit also on other signals such as SIGABRT, SIGTERM? If I write to drop_caches
-and think it's too long, I would prefer to kill it by ctrl-c and not just kill
--9. Dunno if the canonical way of testing for this is if
-(signal_pending(current)) or differently.
-- IMHO it's still worth to bail out in your scenario even without a signal, e.g.
-by the doubling of threshold. But it can be a separate patch.
+Thanks for testing all of them and letting me know.
 
-Thanks!
-
-> Signed-off-by: Chunxin Zang <zangchunxin@bytedance.com>
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
-> 	changelogs in v2: 
-> 	1) Via check TASK_KILLABLE signal break loop.
-> 
->  mm/vmscan.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b6d84326bdf2..c3ed8b45d264 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -704,6 +704,9 @@ void drop_slab_node(int nid)
->  	do {
->  		struct mem_cgroup *memcg = NULL;
->  
-> +		if (fatal_signal_pending(current))
-> +			return;
-> +
->  		freed = 0;
->  		memcg = mem_cgroup_iter(NULL, NULL, NULL);
->  		do {
-> 
-
+greg k-h
