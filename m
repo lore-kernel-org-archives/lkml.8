@@ -2,83 +2,111 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4B0C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE23CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDEA21532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599672071;
-	bh=Ucg/VGBbh9jVN1vdrF37GPG3g7nBAbka0slS9uXk/vI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CPZmt4aobKYzNX7o5uIsNZoAvxCoUD4EQfeMppcFYVFYmhqt9LJfJ64KrFqkMe0Tl
-	 Yb1mScAgd0o+vL1A/yBgEu/ocx0N+LmFi2oThtUpM3Pv4VnL8ETVLCQIMBYub/qBr9
-	 tteKyBQJ4aLzGSAko+MDtuSkn236Ce5A/ISwmQJI=
+	by mail.kernel.org (Postfix) with ESMTP id 8688C21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="In0ND108"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgIIPZN (ORCPT
+        id S1730538AbgIIRVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgIIPYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:24:15 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A03321941;
-        Wed,  9 Sep 2020 15:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599664938;
-        bh=Ucg/VGBbh9jVN1vdrF37GPG3g7nBAbka0slS9uXk/vI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LiGIWoUn3rIWwcR41W9+pP3V3CcF4KmVOL+XP8KZQoiVkzIZ5XGGbniZz28510v3B
-         B3WRU3zxaFuEDN2h8/+d9LO/blRBV1zdNL8eISdUBKThQ2uHz5VYdFUaIjtG7t9+Z0
-         sexPSntTstShuAERv9SiklWxV3YDnxQ1ls5yHEFw=
-Date:   Wed, 9 Sep 2020 17:22:28 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] [PATCH 0/5 REBASED to v5.9-rc4] Qlogic drivers: Convert to
- SPDX license identifiers
-Message-ID: <20200909152228.GD691964@kroah.com>
-References: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
- <e5688d4c-f512-6705-6bb1-db832828fb35@marvell.com>
- <DM6PR18MB305266178BB9982CBDF05319AF260@DM6PR18MB3052.namprd18.prod.outlook.com>
- <alpine.DEB.2.21.2009091126290.5622@felia>
+        Wed, 9 Sep 2020 13:21:25 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16841 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729941AbgIIRU5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:20:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f58d8380000>; Wed, 09 Sep 2020 06:27:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 09 Sep 2020 06:27:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 09 Sep 2020 06:27:33 -0700
+Received: from [10.26.75.108] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
+ 2020 13:27:22 +0000
+Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
+ to devlink reload command
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
+ <1598801254-27764-2-git-send-email-moshe@mellanox.com>
+ <20200831121501.GD3794@nanopsycho.orion>
+ <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
+ <20200902094627.GB2568@nanopsycho>
+ <20200902083025.43407d8f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200903055729.GB2997@nanopsycho.orion>
+ <20200903124719.75325f0c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200904090450.GH2997@nanopsycho.orion>
+ <20200904125647.799e66e4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <6bd0fa45-68ce-b82d-98e6-327c6cd50e80@nvidia.com>
+ <20200907105850.34726158@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Moshe Shemesh <moshe@nvidia.com>
+Message-ID: <b0550422-83a4-4e97-46e3-cb5f431a6dd7@nvidia.com>
+Date:   Wed, 9 Sep 2020 16:27:19 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2009091126290.5622@felia>
+In-Reply-To: <20200907105850.34726158@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599658040; bh=OugWLf77e29jNSxlOkOYuMZsn3NrrTySpTzRlJPN99o=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:Content-Type:
+         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
+         X-ClientProxiedBy;
+        b=In0ND108KpeaY4kZvrXL9+qbX7Xa4WCVVY7wgfX8/otBJAqS8tl4ve4QGRObf8RFZ
+         ukKMmV/lPK/IXOCIXhjSeteSqQbxCcGe1VqL85VYSk/S2QH8ZhItgSlJqGVe15njsP
+         1L3Fw3WAEzwp90m8e7PT/BPZvh83XJ89Y3qYrz7gsv4fwRrq7KY1seanNXl2ERj5Zb
+         phQHThh7qdi3X4pv2bQYgAKJUFq9kfsU66Bkl8TCHsbqqygfzmsXPiXqjvRWX1+B+8
+         tv2WcyT3m4yNmXDRzFOQDvDFNfIEALmbFCO81EOBTcgi1fqgWmBD5sgXPiiF8C7mZi
+         93F2QjlTxYxWg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 11:36:44AM +0200, Lukas Bulwahn wrote:
-> 
-> 
-> On Wed, 9 Sep 2020, Nilesh Javali wrote:
-> 
-> > Lukas,
-> > 
-> > I have Acked for the storage drivers and opt for option B below for spdx maintainers to pick.
-> >
-> 
-> Thomas, Greg,
-> 
-> We got everything straightened out with Igor and Nilesh.
-> 
-> Can you pick this patchset with Igor's and Nilesh's Acked-bys into the 
-> spdx tree and forward it to Linus?
 
-Yes, I will do so, thanks.
+On 9/7/2020 8:58 PM, Jakub Kicinski wrote:
+> On Mon, 7 Sep 2020 16:46:01 +0300 Moshe Shemesh wrote:
+>>> In that sense I don't like --live because it doesn't really say much.
+>>> AFAIU it means 1) no link flap; 2) < 2 sec datapath downtime; 3) no
+>>> configuration is lost in kernel or device (including netdev config,
+>>> link config, flow rules, counters etc.). I was hoping at least the
+>>> documentation in patch 14 would be more precise.
+>> Actually, while writing "no-reset" or "live-patching" I meant also no
+>> downtime at all and nothing resets (config, rules ... anything), that
+>> fits mlx5 live-patching.
+>>
+>> However, to make it more generic,  I can allow few seconds downtime and
+>> add similar constrains as you mentioned here to "no-reset". I will add
+>> that to the documentation patch.
+> Oh! If your device supports no downtime and packet loss at all that's
+> great. You don't have to weaken the definition now, whoever needs a
+> weaker definition can add a different constraint level later, no?
 
-greg k-h
+
+Yes, but if we are thinking there will be more levels, maybe the flag=20
+"--live" or "--no_reset" is less extendable, we may need new attr. I=20
+mean should I have uAPI command line like:
+
+$ devlink dev reload DEV [ netns { PID | NAME | ID } ] [ action {=20
+driver_reinit | fw_activate } [ limit_level=C2=A0 no_reset ] ]
+
+
