@@ -2,88 +2,89 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1B6821D24
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED772177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FtBdSMBM"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PD2foST8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgIICjg (ORCPT
+        id S1729614AbgIICkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:39:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36421 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726002AbgIICjg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:39:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599619175;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+kOlksnHlL2YKiZmwkKZv4xGASnLuZsp0UtpeOcpuVA=;
-        b=FtBdSMBMM0Wb5c7GG5EOiD/CbiA33wsQQIpENrEUIdyinW3/R+P/k/1mD/bRIihZUNxC7b
-        SxW0AR2xYlYqc4rlySl6dw9Hf+tyBXhMqsvwuIeaic2HePSOS/hDmh4v8ifII6HDeC/wGg
-        aENUipG+XS5i+bSQfHM8CSJ8u9k7PaA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-wAFVfAntNYSuExNRwqOGJQ-1; Tue, 08 Sep 2020 22:39:33 -0400
-X-MC-Unique: wAFVfAntNYSuExNRwqOGJQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3353E8018AB;
-        Wed,  9 Sep 2020 02:39:31 +0000 (UTC)
-Received: from T590 (ovpn-12-76.pek2.redhat.com [10.72.12.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D8D1D5D9E8;
-        Wed,  9 Sep 2020 02:39:22 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 10:39:18 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "Zhao, Haifeng" <haifeng.zhao@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "Zhang, ShanshanX" <shanshanx.zhang@intel.com>,
-        "Jia, Pei P" <pei.p.jia@intel.com>
-Subject: Re: [PATCH] Revert "block: revert back to synchronous request_queue
- removal"
-Message-ID: <20200909023918.GA1473752@T590>
-References: <20200908075047.5140-1-haifeng.zhao@intel.com>
- <20200908142128.GA3463@infradead.org>
- <MWHPR11MB1696A6C649BD434390418FE797260@MWHPR11MB1696.namprd11.prod.outlook.com>
+        Tue, 8 Sep 2020 22:40:03 -0400
+Received: from mout.gmx.net ([212.227.17.21]:34037 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbgIICkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 22:40:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599619161;
+        bh=7JR4k3M+f91YpKQkJyCiYOLKXQWgm9AD9avtoW/wwn8=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=PD2foST8q8hykP0jVDeAuTelc3wEKIcJ6Lh2iwwlc+WQpMkiTw5j2+2DsXv/xgym3
+         YEsrODh4o3UlcS5TZ+y1+UXrjSJADGCyBQ6K2lZ0DJDo2QedEMqV3LSISLWfU5nJ/D
+         sizzTqVvHP/REHavk+9zf8tlsbOc5WljT86xvH24=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.simpson.net ([185.191.217.72]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRTNF-1jvASq2Zmv-00NUwB; Wed, 09
+ Sep 2020 04:39:21 +0200
+Message-ID: <fb56b88424482baca8a2f178092a0de634256c59.camel@gmx.de>
+Subject: Re: v5.9-rc3-rt3 boot time networking lockdep splat
+From:   Mike Galbraith <efault@gmx.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed, 09 Sep 2020 04:39:20 +0200
+In-Reply-To: <20200908150612.6qlygag7e7pzhr22@linutronix.de>
+References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+         <46a2b89ec8d953a4be18c7389c7d8c66310a7ff0.camel@gmx.de>
+         <20200908121902.zlfd3balosnu7ies@linutronix.de>
+         <3471761a379062a474ba32f9d0157eb3020244cf.camel@gmx.de>
+         <20200908150612.6qlygag7e7pzhr22@linutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR11MB1696A6C649BD434390418FE797260@MWHPR11MB1696.namprd11.prod.outlook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Ve4zNWrfY1ZdbKJPjsbxxp4H+fkftsXodXClmEfoxh92vdoNwVk
+ jNDJ5ftnKRJvoivQDEUFa4y3KyCXZ21MZF1vq4XFbDAbI9Tk20Rw7WaOC1dL6DdtNIyH/Y4
+ F0Tbyb808MFMOGTCYyFDD6pMtd5jEy34AyuVbHERRV3+7NAUI3O0CKOBlWdwUUyrlMLQ1qF
+ rke+faN4Gu6+XoHfOcxZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:94VbXjfdyNs=:bAoK3I3lJT+v57nnMdfXwv
+ iP5e4hNZMW45S3dAzHORon3+RTqeEENR/M53+41gYHR1teDXPXch/9F8jTco1xeIQIQWZkDJR
+ UjU23SIzsX6mVs2I/XQ4RoQROKTbpLOula9FvtgJe/eBZgHweYd7LwxrWiC97LdPKyv7DgoHJ
+ Y+ef3vmB7lDzhDkv30jINlIYGocjVvazVDR31AKtStznwZruD553oddNfl3Ccq6f4cY11C4Zb
+ KTUptK2b0eqQkNYDh5/FZrl04qRlbuoBZVW6YnRCjs9VmGy7pzMILUJb+rRUCLGHfGZ9YHuC+
+ LC0pdIyFXwQCZmz4x0YfvmuEJXhxWxjALDaHC6tI5vGYYrV8aQCjmdhKjAVqV/yI5Ejzmabrk
+ tWOnZHPXDmywFKtmeLeWMw6yUH+WJXJdHC8p98cUsKhNjkzmnCvHXlt0Nh1aLypBVfKeW1vne
+ epst72kzlPArH+6fIp69NwQct5ezckrlouhOwdohctYrf4IZIzwoaNhlRShVBvEbNUBlGKvkg
+ vWwVfvkcbtXOSv7KylKuadFPhCZqItJQXA31m0UNCi5iZNK+RvYmY9qWMQVABj5jhWCP6yhID
+ jsl9lgvVFSxcocH/XcEwPYbxRsw82QIC1rUDDKnGPCCy562qWX6b38JDsoxViYxuEjZPWdbRf
+ pdQ6eQ3R0fLjnkk9cGTg7rGBXlqk5PCQd4xGtY4n8WBEbBJbsebWz+jZJSKFCh5qQRTsqjIjN
+ 7W7Kh/2zYKY/fhE1sOZwy8gtEv2qG89gWHrRvPRtzUICKjYNinTmZTbi3XQQAfu6B+YIe20U2
+ 35Ra2nAI2WuKdoxQtjCrKj43G9uker11Jci4yuWSZ90VGc8AFp7kXVbHnJZZrPJlwri31saOa
+ ouc0bXGjPKxylqsKdOerL43MdrA+u65RJci1GItmPXqVjSwA7qjpl42slDPGK453tNwn641xA
+ OMNHxuhqx3AtNcgAotxGpICkAetkwIDyxq9YnNCBuNwn6/e+yQxXoudOzkMSyssPM+YF/QECW
+ CAYGI+nZJok++fAsrNwJsZfYw09+gw3wlO5nrj0byv6W6njjw2XRW/GVTAAJSDvZR3jX1Oj79
+ FSDuCdkEWY+JHpQVEWlQuUl+7Jj4IHJw2SC++lQpJECPjo28gnkeaszZEnI0bX+32zKXuvtpU
+ fURc63etiM/c4VmjSBOcMg8b9T6oTxxp2fbCvozDOvHhzSoq8wVfMw4RE5V/yXumAEn1EuHwu
+ uj8k9sc2mWAxHmr2T
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Haifeng,
+On Tue, 2020-09-08 at 17:06 +0200, Sebastian Andrzej Siewior wrote:
+>
+> This should cure it:
 
-On Wed, Sep 09, 2020 at 02:11:20AM +0000, Zhao, Haifeng wrote:
-> Ming, Christoph,
->     Could you point out the patch aimed to fix this issue ? I would like to try it.   This issue blocked my other PCI patch developing and verification work, 
-> I am not a BLOCK/NVMe expert, wouldn't to be trapped into other sub-system bugs, so just reported it for other expert's quick fix. 
-> 
+It did.
 
-Please try the following patch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cafe01ef8fcb248583038e1be071383530fe355a
-
-Thanks,
-Ming
+	-Mike
 
