@@ -2,78 +2,66 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B86CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A78C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D120B20EDD
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="cBquiHz0"
+	by mail.kernel.org (Postfix) with ESMTP id 3741E20C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgIICo5 (ORCPT
+        id S1728264AbgIICwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:44:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:20870 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728584AbgIICot (ORCPT
+        Tue, 8 Sep 2020 22:52:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgIICwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:44:49 -0400
-X-UUID: ccbc6fc3f2734fae9e1af17c079dd564-20200909
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KnlunEIZPJSAevHwEXlWcgiUgHwh3n6Mc+pcg4rLANE=;
-        b=cBquiHz0epDUS0Vkcb2xmaLJMoow8PRtHX0wa0rC2s+uCZSiWBdbDY+hgE+nnZCfvhCrPdBuzTIOItUwCSp8gd+dP5f/ZuATOGsaBXRvk/b95U8Tl0M+r9s0PGPtfnct7v2XHeZeWSRoXWm7dHvYQ910fSFXl599yuNMAW0AOPI=;
-X-UUID: ccbc6fc3f2734fae9e1af17c079dd564-20200909
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1341309525; Wed, 09 Sep 2020 10:44:46 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 9 Sep 2020 10:44:45 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 9 Sep 2020 10:44:45 +0800
-Message-ID: <1599619486.8380.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spmi: document binding for the
- Mediatek SPMI controller
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Stephen Boyd <sboyd@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
-Date:   Wed, 9 Sep 2020 10:44:46 +0800
-In-Reply-To: <20200908204950.GA893759@bogus>
-References: <1598006677-7953-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1598006677-7953-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200908204950.GA893759@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 8 Sep 2020 22:52:02 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89266C061573;
+        Tue,  8 Sep 2020 19:52:02 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 88BFD11E3E4C2;
+        Tue,  8 Sep 2020 19:35:14 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 19:52:00 -0700 (PDT)
+Message-Id: <20200908.195200.348674254136090256.davem@davemloft.net>
+To:     kuba@kernel.org
+Cc:     tanhuazhong@huawei.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, salil.mehta@huawei.com,
+        yisen.zhuang@huawei.com, linuxarm@huawei.com
+Subject: Re: [PATCH net-next 0/7] net: hns3: misc updates
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200908120538.4ba70787@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
+        <20200908120538.4ba70787@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+X-Mailer: Mew version 6.8 on Emacs 27.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 08 Sep 2020 19:35:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIFR1ZSwgMjAyMC0wOS0wOCBhdCAxNDo0OSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6DQo+IE9uIEZyaSwgQXVnIDIxLCAyMDIwIGF0IDA2OjQ0OjM2UE0gKzA4MDAsIEhzaW4tSHNp
-dW5nIFdhbmcgd3JvdGU6DQo+ID4gVGhpcyBhZGRzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBTUE1J
-IGNvbnRyb2xsZXIgZm91bmQgb24gTWVkaWF0ZWsgU29Dcy4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4NCj4g
-PiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BtaS9zcG1pLW10ay1wbWlmLnR4
-dCAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAz
-MyBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc3BtaS9zcG1pLW10ay1wbWlmLnR4dA0KPiANCj4gQmluZGluZ3Mg
-YXJlIGluIERUIHNjaGVtYSBmb3JtYXQgbm93LiBQbGVhc2UgY29udmVydCB0aGlzLg0KPiANCj4g
-Um9iDQoNClRoYW5rcywgSSB3aWxsIHVwZGF0ZSBpdCB3aXRoIGNvcnJlY3QgZm9ybWF0IGluIG5l
-eHQgcGF0Y2guDQo=
+From: Jakub Kicinski <kuba@kernel.org>
+Date: Tue, 8 Sep 2020 12:05:38 -0700
 
+> On Tue, 8 Sep 2020 10:59:47 +0800 Huazhong Tan wrote:
+>> There are some misc updates for the HNS3 ethernet driver.
+>> 
+>> #1 narrows two local variable range in hclgevf_reset_prepare_wait().
+>> #2 adds reset failure check in periodic service task.
+>> #3~#7 adds some cleanups.
+> 
+> Looks trivial:
+> 
+> Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+
+Series applied, thanks everyone.
