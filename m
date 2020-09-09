@@ -2,142 +2,98 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0304CC2D0A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8020DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2B8A21532
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJhRk3GI"
+	by mail.kernel.org (Postfix) with ESMTP id 3D79B21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599640421;
+	bh=/Xns4HHW2G2UxmwEFbWTwgk0vs0gt6z6T5GSbFIQFPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z3uHQE6NvvOF0sAQVHXszbAkGODCRmRFdb2e4DL0NB79T76EzRxTW03VFVe+p3AJP
+	 StTY5sNAuvFINrXEgAI2HqmUtnMTIE/JwvsOL/a0hSdIFqjcWfIPOYxhL0DbnW3yIy
+	 G6LxBDxkrGpdPYmPFxDRsBl3CDq3pi76/UZes5L8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgIIIch (ORCPT
+        id S1728442AbgIIIdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgIIIcR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:32:17 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC491C061795
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:32:14 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id b79so1451910wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5IJCSjrEn+K5BXTvQyEYOcEg4gKAR761WPsWlnOts1w=;
-        b=PJhRk3GI8VIBMF78GGQCdbyNVhkQoDOI6HF3H/7gTqVx9S37ttnKpWFMNxXrPG/ExG
-         uXB3dgBtBe7cqGfk3Yeu9Nr75rOZLfa9OajnMb8Z8yYV5uREO4xbQOi3bqYQdh7v1u/X
-         BkOyAGiqxyLwLJgKMnYucJ1+3bpDMXe8eK5hrcKvGHu6EKiPiC+YPoS4LS38mkX3ylA9
-         8fQ2vFCFkf71a1NQcEbPtp+InerT+xexlC0SeZIfPhlC1iwu/jlCH//GR0bYsQqJ2zgR
-         cnPrnY+EnxV6jazS8JkaTMr/LMIHxmCj4NtP5rVX67+MDoz8o9ZuK0RCwdXr9EwpeD0X
-         EoZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5IJCSjrEn+K5BXTvQyEYOcEg4gKAR761WPsWlnOts1w=;
-        b=I0ZL4IwdUrU7o1adHl0LdTQwCaScu4HS/Hi7HZv5Aifag9AfDzvPsHwIrokMcfQNMK
-         7MJgT+fLUZIgmdwCY+qrJy22CZgh1M+5voArfpJAHZ7maRxDF2RAkg124hbzr2ozEtsY
-         jO/9Uy4aV7pqJy/1rNWiK/ODWxwWU++D74TCb2istDDJLqIGkqdCASKcafG77YaqWqbO
-         84AbYY8s9EXk18ymu9W509FqjU6B7P8BHcNyZaafg0j0Ntjv3KMtaOhaEbpVQ96ym1qg
-         pdupaTEonFMJzNI1R5HuVP0R1/3Jrod4V3Et3ZniipdtgFlpPA0lONW5dd7Hz8uwxqxc
-         V+CA==
-X-Gm-Message-State: AOAM53309QLrzfQ0RKOE1iosCYrRL++4fCW6fbrdHqAbuDnwacirveYk
-        7Jnn86YrJMvw82ddPyBcBOx54A==
-X-Google-Smtp-Source: ABdhPJwSyTMGp2lVRmcfrT9lC3qRBNvHbvfXboIB2MMpAJIXrQ+CTdseGHFKRbiUALEmofcFeMUsjw==
-X-Received: by 2002:a1c:6a11:: with SMTP id f17mr2240814wmc.143.1599640333594;
-        Wed, 09 Sep 2020 01:32:13 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id 8sm3298743wrl.7.2020.09.09.01.32.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 01:32:13 -0700 (PDT)
-Subject: Re: [PATCH v5 33/36] memory: tegra30-emc: Register as interconnect
- provider
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200814000621.8415-1-digetx@gmail.com>
- <20200814000621.8415-34-digetx@gmail.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <afe7866b-26a3-8372-ed60-48740283f037@linaro.org>
-Date:   Wed, 9 Sep 2020 11:32:10 +0300
+        Wed, 9 Sep 2020 04:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgIIIdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:33:37 -0400
+Received: from localhost (p54b33098.dip0.t-ipconnect.de [84.179.48.152])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA64321532;
+        Wed,  9 Sep 2020 08:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599640417;
+        bh=/Xns4HHW2G2UxmwEFbWTwgk0vs0gt6z6T5GSbFIQFPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CbamQ2FFRyfNb/M2maIUspr/rjDwE9SwzJk3wlEBYFxmsBkL62ss7cv2DfQxVdorW
+         XdgYCqvFLr7kcP/tgYYdK34SS6AZ0Mx0yHlDTRLLXlzQKCoUcduaMlBYEq9yeraPLR
+         /u2RdDUXiuNO5i1m2a/2ZUEF6Ttl8tM3L5pD3Bbs=
+Date:   Wed, 9 Sep 2020 10:33:34 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     linux@rempel-privat.de, kernel@pengutronix.de, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH] i2c: imx: Use dev_err_probe() to simplify error handling
+Message-ID: <20200909083334.GE2272@ninjato>
+References: <1597203954-1803-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200814000621.8415-34-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zjcmjzIkjQU2rmur"
+Content-Disposition: inline
+In-Reply-To: <1597203954-1803-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/20 03:06, Dmitry Osipenko wrote:
-> Now external memory controller is a memory interconnection provider.
-> This allows us to use interconnect API to change memory configuration.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+--zjcmjzIkjQU2rmur
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 12, 2020 at 11:45:54AM +0800, Anson Huang wrote:
+> dev_err_probe() can reduce code size, uniform error handling and record t=
+he
+> defer probe reason etc., use it to simplify the code.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+Applied to for-next, thanks!
+
+
+--zjcmjzIkjQU2rmur
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9Yk14ACgkQFA3kzBSg
+KbZh/BAAq21CPjCqhk2Uf/IkNhLJiAZzBHHALBUH2PRPvkOJg+yu90fSdAmRUDJ8
+GaahF5wxRjyvn0Kgo4mzBq4pCANegTxd+6Rii7n7x0Nyx8w/oRQX5PyABYxKxNaB
+7/BJQK9DzGw2gimnom9YYMfCiY2b0hKgzhOIHQTDoFofiseAc712hAzWOqH4Tqes
+gmELgFdSFAF529r8NiGB0u0mHFHuaGplLyxB7z37sUaEwvc5wsehP7MhRqlOEwTY
+frDALIHWhUSLO/jtOaDIPidn27rPlvk09vEQyvDNMLzZCJSii3lsVu6wXb2I8kWv
+dXxl0+WztpScy9ohdret8K2BAQacYyNFf3bHEwENXicaAZI5AaYKZ1MttSLXijR4
+TquyzOWfbm5oJPHzZMjXrLPsnqiVCxbBWdtXeChln2l6HFUHBHP/8HYwV1diZ2OM
+yp5nkUuFSrO1OEW1yxb/MbAalj8kUJt6lgdsE4tERJBoMuhY0mt40I8yAZLIj7Jw
+QiHlQe9SqvlrW7DFs07ClQ4jqWeEC6O2TONLrktQZJS2ttry37MpHCaHpJK8mdI0
+oB2EYDdlJyqht3vlaPeubgPVND1KZihDAaJ6kkbSfKbXRgzykDx8vZecA7l+cpxT
+JpGp8LvVqDDqoavMuOmMTxyOXaVQMdHjRgmtzks2sct75Nu9ZNk=
+=G/tr
+-----END PGP SIGNATURE-----
+
+--zjcmjzIkjQU2rmur--
