@@ -2,112 +2,134 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74336C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4307FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3228620757
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IA4ct3z9"
+	by mail.kernel.org (Postfix) with ESMTP id EF34521D40
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 05:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599630849;
+	bh=pbyS4ZMWYMUKwmpi3BhxrHHLzLjXuJLnUN/DArAAcCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ixcQ4QzQikkLV3FKyd9USSHtZpOMIV/fV/+85FBEidWupm2HATdfxbtVQzZQShJCH
+	 r9N3/BDpNF4ArkH+Z3MTglzf8+trWd3l6t/ow8ySS+Gl1riSmtcqjJfF3uftOE1Nh7
+	 ABRs2CU90eM+5lZ7HMeNgq288NgY9S1lNHf7pquc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgIIFvS (ORCPT
+        id S1725991AbgIIFyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 01:51:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37235 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725856AbgIIFvP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 01:51:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599630673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=il5f2exuzL5JakB/RTDDV/wE8hpRfPQoB+xkGYphses=;
-        b=IA4ct3z94wXWOSdUGB/5Ob1Fdp3Lrw7xPoNy/KvQ8k2rQ1slqZdHiYgC2zOp7489z6LCaE
-        mDVZ0zasa39uJIHLS2UmaeL1WOjLJXrE6Mwlo5QGy+eAS4YjyDPMUvnCzhJh1QiCXla79P
-        TEH3V0eHpJwKRfVyh0MJM+tQMuNOZ34=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-e3FzrWjcNlWx7TgN_fydOQ-1; Wed, 09 Sep 2020 01:51:08 -0400
-X-MC-Unique: e3FzrWjcNlWx7TgN_fydOQ-1
-Received: by mail-wr1-f72.google.com with SMTP id 33so536629wre.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 22:51:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=il5f2exuzL5JakB/RTDDV/wE8hpRfPQoB+xkGYphses=;
-        b=VTLDDY7iKemjydi7ZIftcBWnOgKO/Hq8YzFH1fAGVivCcg8xS/ffQbmjbnNoNq2px0
-         6ax2V/XUT7Z1YImz2WwepPWdWA18C6JJzGPB6hHJ0KAB0EL6GqXVyBoeR4idt1RVbh3n
-         o7byYdIVIIV9Yilb5iF0Ee1gIqrjVCBhppWUPfN1c1JKWwyvguCygZ3DbPd7n/aRTzRQ
-         BG7NUzHSVNGSxZMDdTJlze1cFkFeAffLrM/nBunVBFO+CMHCDRzI3CfeCPXSybeesQot
-         C+uQ/MbdrL7aJurjqtBpmME3x76Hl+cIPJBDCEjrhjuQEHwiQUG/L2JfjrNRTygKZ+8p
-         mo6A==
-X-Gm-Message-State: AOAM532QJDM20uWCM/R/qd3SxtEmKtyQ3NWa3cB0PODa3QL60ZQACMHa
-        OrWBNGJjzUgoUrTH5ttDKSS5YI4emnU6tGfMoi2uu+pbR5aDfXBNW2BRZZ02lNJyYlEtGqPxlbE
-        b8HfC7gGbU9uvFTed+pDYLUMX
-X-Received: by 2002:a7b:c768:: with SMTP id x8mr1885693wmk.189.1599630667670;
-        Tue, 08 Sep 2020 22:51:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyMkW1TqwP4Ye4ockimpubn1IIW7MJimFAD5OWipotdjICi8VTmGvrUnlcAK5spXy824A0ytw==
-X-Received: by 2002:a7b:c768:: with SMTP id x8mr1885676wmk.189.1599630667450;
-        Tue, 08 Sep 2020 22:51:07 -0700 (PDT)
-Received: from localhost.localdomain (ca-18-214-147.service.infuturo.it. [151.18.214.147])
-        by smtp.gmail.com with ESMTPSA id f6sm2630914wme.32.2020.09.08.22.51.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 22:51:06 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 07:51:03 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     peterz@infradead.org, mingo@redhat.com, rostedt@goodmis.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        luca.abeni@santannapisa.it, tommaso.cucinotta@santannapisa.it,
-        alessio.balsini@gmail.com, bristot@redhat.com,
-        dietmar.eggemann@arm.com, linux-rt-users@vger.kernel.org,
-        mtosatti@redhat.com, williams@redhat.com,
-        valentin.schneider@arm.com
-Subject: Re: [RFC PATCH v2 0/6] SCHED_DEADLINE server infrastructure
-Message-ID: <20200909055103.GA18215@localhost.localdomain>
-References: <20200807095051.385985-1-juri.lelli@redhat.com>
- <20200908222252.GC1005@bug>
+        Wed, 9 Sep 2020 01:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbgIIFyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 01:54:07 -0400
+Received: from localhost (unknown [172.98.75.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC8532166E;
+        Wed,  9 Sep 2020 05:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599630846;
+        bh=pbyS4ZMWYMUKwmpi3BhxrHHLzLjXuJLnUN/DArAAcCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Up3DXdI8JG6lYgGcC0tVjYoVSP1nLZyG6no0UVGh0mcYcuP7bLalh/ZHMcaxkd8ZT
+         4hKkD4LUFJoxQFZYfY0KmG9+m5OcFoTb6CHL9YtBOQqvWQ53gbXqE+GdKD+ZcMeAHE
+         2uF6//oVS8x+8pzmKdA8VqSS/nBIguX1Si2IuUBY=
+Date:   Wed, 9 Sep 2020 07:54:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Felipe Franciosi <felipe@nutanix.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Matej Genci <matej.genci@nutanix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH] Rescan the entire target on transport reset when LUN is 0
+Message-ID: <20200909055403.GA310264@kroah.com>
+References: <CY4PR02MB33354370E0A81E75DD9DFE74FB520@CY4PR02MB3335.namprd02.prod.outlook.com>
+ <200ad446-1242-9555-96b6-4fa94ee27ec7@redhat.com>
+ <CCFAFEBB-8250-4627-B25D-3B9054954C45@nutanix.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908222252.GC1005@bug>
+In-Reply-To: <CCFAFEBB-8250-4627-B25D-3B9054954C45@nutanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-On 09/09/20 00:22, Pavel Machek wrote:
-> Hi!
+On Tue, Sep 08, 2020 at 05:53:16PM +0000, Felipe Franciosi wrote:
 > 
-> > This is RFC v2 of Peter's SCHED_DEADLINE server infrastructure
-> > implementation [1].
+> 
+> > On Sep 8, 2020, at 3:22 PM, Paolo Bonzini <pbonzini@redhat.com> wrote:
 > > 
-> > SCHED_DEADLINE servers can help fixing starvation issues of low priority tasks (e.g., 
-> > SCHED_OTHER) when higher priority tasks monopolize CPU cycles. Today we have RT 
-> > Throttling; DEADLINE servers should be able to replace and improve that.
+> > On 28/08/20 14:21, Matej Genci wrote:
+> >> VirtIO 1.0 spec says
+> >>    The removed and rescan events ... when sent for LUN 0, they MAY
+> >>    apply to the entire target so the driver can ask the initiator
+> >>    to rescan the target to detect this.
+> >> 
+> >> This change introduces the behaviour described above by scanning the
+> >> entire scsi target when LUN is set to 0. This is both a functional and a
+> >> performance fix. It aligns the driver with the spec and allows control
+> >> planes to hotplug targets with large numbers of LUNs without having to
+> >> request a RESCAN for each one of them.
+> >> 
+> >> Signed-off-by: Matej Genci <matej@nutanix.com>
+> >> Suggested-by: Felipe Franciosi <felipe@nutanix.com>
+> >> ---
+> >> drivers/scsi/virtio_scsi.c | 7 ++++++-
+> >> 1 file changed, 6 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+> >> index bfec84aacd90..a4b9bc7b4b4a 100644
+> >> --- a/drivers/scsi/virtio_scsi.c
+> >> +++ b/drivers/scsi/virtio_scsi.c
+> >> @@ -284,7 +284,12 @@ static void virtscsi_handle_transport_reset(struct virtio_scsi *vscsi,
+> >> 
+> >> 	switch (virtio32_to_cpu(vscsi->vdev, event->reason)) {
+> >> 	case VIRTIO_SCSI_EVT_RESET_RESCAN:
+> >> -		scsi_add_device(shost, 0, target, lun);
+> >> +		if (lun == 0) {
+> >> +			scsi_scan_target(&shost->shost_gendev, 0, target,
+> >> +					 SCAN_WILD_CARD, SCSI_SCAN_INITIAL);
+> >> +		} else {
+> >> +			scsi_add_device(shost, 0, target, lun);
+> >> +		}
+> >> 		break;
+> >> 	case VIRTIO_SCSI_EVT_RESET_REMOVED:
+> >> 		sdev = scsi_device_lookup(shost, 0, target, lun);
+> >> 
+> > 
+> > 
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 > 
-> It would be worth noting what "server" is in this context.
-
-It comes from Constant Bandwidth Server (CBS), that SCHED_DEADLINE is
-implementing [1].
-
+> Cc: stable@vger.kernel.org
 > 
-> It is not white box with CPU inside, it is not even an userland process, afaict.
+> Thanks, Paolo.
 > 
-> Subject is quite confusing.
+> I'm Cc'ing stable as I believe this fixes a driver bug where it
+> doesn't follow the spec. Per commit message, today devices are
+> required to issue RESCAN events for each LUN behind a target when
+> hotplugging, or risking the driver not seeing the new LUNs.
+> 
+> Is this enough? Or should we resend after merge per below?
+> https://www.kernel.org/doc/Documentation/process/stable-kernel-rules.rst
 
-Best,
-Juri
+You need to let stable know the git commit id of the patch in Linus's
+tree if the cc: stable is not on the final commit that gets merged.
 
-1 - https://elixir.bootlin.com/linux/latest/source/Documentation/scheduler/sched-deadline.rst#L42
+thanks,
+
+greg k-h
 
