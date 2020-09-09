@@ -2,111 +2,130 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60122C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ACDC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145CE22204
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026BF22248
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="goRSfJaa"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pP83bq75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgIIORj (ORCPT
+        id S1730497AbgIIOUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 10:17:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24480 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730268AbgIINGI (ORCPT
+        Wed, 9 Sep 2020 10:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729822AbgIINF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 09:06:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599656762;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xxQpbfVe+Ifq+wURKd+XyljLsPLKIMNuX/nStuM1m48=;
-        b=goRSfJaaREZoldPrAyjwvH7RZ5Asm0zDXNvNaakJ3JhrdhZ71tCJg8U69WrxPKeeMMsKTY
-        UDsJwEj5Zq856Lq3w6rPekrHuLfO2FC1+r6vEphAfSrJWgzrPIFU82QibZAV79hmHu0tI2
-        V71CZhhLKhm1C8BctUQBh8AihH+E8Gc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-343-Ykj5AGabP3q9lIr5ay0lSQ-1; Wed, 09 Sep 2020 08:46:53 -0400
-X-MC-Unique: Ykj5AGabP3q9lIr5ay0lSQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5A5C51B5;
-        Wed,  9 Sep 2020 12:46:51 +0000 (UTC)
-Received: from treble (ovpn-117-163.rdu2.redhat.com [10.10.117.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B335319936;
-        Wed,  9 Sep 2020 12:46:46 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 07:46:44 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200909124644.dndmfnoob5qzd7xi@treble>
-References: <bef9e78f9486d2a06c3e026d401511ffa117b0da.1598973982.git.jpoimboe@redhat.com>
- <20200908174329.ryfprry62e4tuodw@treble>
- <01b027d0d46d4572b3b16e2b49f0f2b3@AcuMS.aculab.com>
+        Wed, 9 Sep 2020 09:05:26 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB9B7C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 06:05:21 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id j3so1423082qvi.7
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 06:05:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SQiYBb9hIxC2l4xPBV67YXsRJO9uNM2atVYfM8q4ou8=;
+        b=pP83bq75IxsdMCDo379I0Q+Yw0WLU7W25iHcm/NAdOU4dk/3KQeaVC5V+pfGTpmjXW
+         Gpn5tif/F15CgHcQb4U7ql9Dz6Wmu3MthNL9mE6Cumt4rZu5TWxsRoclfaUIXgUocGbM
+         pmL17BtjKqtlTBtdvZn7TcyXLDF6awGA3i0KZA5PSqV7XqaApbdVtQPFJ7lli/EiNHqR
+         9lx2zwT0jmis/pdIIn09cKsFEDH3+7X+NuQCodI5jqv2DcqEE+0DjriVNzLnm+xmdWOz
+         PKMGEJCMwy2wkxLknBRVoL81kq6jouZ+wlEKsokwmO/lkusgjrBgLts5EXtZ2UQZWWFO
+         Cc2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SQiYBb9hIxC2l4xPBV67YXsRJO9uNM2atVYfM8q4ou8=;
+        b=jsNKdGMTS4+GyAA7LbjmeyRosIqgaumjFDF3X0hXrMX4Di9UCACDmL7e7Wo+CuqjPF
+         +D5j0PC9cfALwDGwsQ7zwKuL4DqNZaQRQK9fjU/xeDc1J1DQrqxMpRzzxSYTh/ZIj9WF
+         MFWr5NUgtT8wuZooGTUCtfW3ZFn+0PUwCEFFj/hzGlpgruN7+e9vZ+RNq2vWJnpifnrE
+         OTBZG2gIzkZR9Ptr13QeGb5JbRvWcrEA3NzjkmlGIyJgg/uf2xnOxlQQEFBEtteBn11B
+         OXAeobY0+GKaP6dmPQHCXkl6IfYNDrbIz1nLrjfPu9l89aco7yMSIHjTCnBgdwLT81e2
+         KZEA==
+X-Gm-Message-State: AOAM532FDsFSl4GuAGXoA9/TRWfbu1lCnUTji6gpVzvz09MRm2UXM7yn
+        poDCaih5369KQLtPUS9Vig+INw==
+X-Google-Smtp-Source: ABdhPJyyKUUZm4KYEm/R6Wux6480vc2XFPJDGKd9JoI86/628ERRBVCDKOZ5LZxRrcQzjhnpSrv3Ug==
+X-Received: by 2002:a05:6214:1045:: with SMTP id l5mr3984047qvr.110.1599656720625;
+        Wed, 09 Sep 2020 06:05:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id 192sm2534880qkm.110.2020.09.09.06.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 06:05:19 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kFzmo-003JUV-UL; Wed, 09 Sep 2020 10:05:18 -0300
+Date:   Wed, 9 Sep 2020 10:05:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Ming Mao <maoming.maoming@huawei.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-mm@kvack.org, alex.williamson@redhat.com,
+        akpm@linux-foundation.org, cohuck@redhat.com,
+        jianjay.zhou@huawei.com, weidong.huang@huawei.com,
+        peterx@redhat.com, aarcange@redhat.com, wangyunjian@huawei.com,
+        willy@infradead.org, jhubbard@nvidia.com
+Subject: Re: [PATCH V4 1/2] vfio dma_map/unmap: optimized for hugetlbfs pages
+Message-ID: <20200909130518.GE87483@ziepe.ca>
+References: <20200908133204.1338-1-maoming.maoming@huawei.com>
+ <20200908133204.1338-2-maoming.maoming@huawei.com>
+ <20200909080114.GA8321@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01b027d0d46d4572b3b16e2b49f0f2b3@AcuMS.aculab.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200909080114.GA8321@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 08:20:07AM +0000, David Laight wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Sent: 08 September 2020 18:43
-> > Hi x86 maintainers,
-> ...
-> > > --- a/arch/x86/lib/putuser.S
-> > > +++ b/arch/x86/lib/putuser.S
-> > > @@ -38,6 +38,8 @@ SYM_FUNC_START(__put_user_1)
-> > >  	ENTER
-> > >  	cmp TASK_addr_limit(%_ASM_BX),%_ASM_CX
-> > >  	jae .Lbad_put_user
-> > > +	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-> > > +	and %_ASM_BX, %_ASM_CX
-> > >  	ASM_STAC
-> > >  1:	movb %al,(%_ASM_CX)
-> > >  	xor %eax,%eax
+On Wed, Sep 09, 2020 at 09:01:14AM +0100, Christoph Hellwig wrote:
+> I really don't think this approach is any good.  You workaround
+> a deficiency in the pin_user_pages API in one particular caller for
+> one particular use case.
+
+RDMA has the same basic issues, this should should not be solved with
+workarounds in VFIO - a common API would be good
+
+> I think you'd rather want either:
 > 
-> For 64bit the sbb+and pattern can be replaced by an instruction
-> that clears the high bit (eg btr $63, %rcx).
-> This isn't dependant on the earlier instructions so can execute
-> in parallel with them.
+>  (1) a FOLL_HUGEPAGE flag for the pin_user_pages API family that returns
+>      a single struct page for any kind of huge page, which would also
+>      benefit all kinds of other users rather than adding these kinds of
+>      hacks to vfio.
 
-Wouldn't that break with KERNEL_DS?
+How to use? The VMAs can have mixed page sizes so the caller would
+have to somehow switch and call twice? Not sure this is faster.
 
-> I still think that doing the same comparisons in access_ok()
-> and for the pointer masking is silly - and they should get merged.
+>  (2) add a bvec version of the API that returns a variable size
+>      "extent"
 
-I agree, but as I said multiple times already, that will be a much
-bigger change (tree-wide and multi-arch) which comes later.
+This is the best one, I think.. The IOMMU setup can have multiple page
+sizes, so having largest contiguous blocks pre-computed should speed
+that up.
 
--- 
-Josh
+vfio should be a win to use a sgl rather than a page list?
 
+Especially if we can also reduce the number of pages pinned by only
+pinning head pages..
+
+> I had started on (2) a while ago, and here is branch with my code (which
+> is broken and fails test, but might be a start):
+> 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/gup-bvec
+> 
+> But for now I wonder if (1) is the better start, which could still be
+> reused to (2) later.
+
+What about some 'pin_user_page_sgl' as a stepping stone?
+
+Switching from that point to bvec seems like a smaller step?
+
+Jason
