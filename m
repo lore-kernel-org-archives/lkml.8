@@ -2,89 +2,171 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC4BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B91C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BED772177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94CF20936
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:41:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PD2foST8"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="uR9qzCZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbgIICkD (ORCPT
+        id S1728970AbgIIClT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:40:03 -0400
-Received: from mout.gmx.net ([212.227.17.21]:34037 "EHLO mout.gmx.net"
+        Tue, 8 Sep 2020 22:41:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29124 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgIICkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:40:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599619161;
-        bh=7JR4k3M+f91YpKQkJyCiYOLKXQWgm9AD9avtoW/wwn8=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-        b=PD2foST8q8hykP0jVDeAuTelc3wEKIcJ6Lh2iwwlc+WQpMkiTw5j2+2DsXv/xgym3
-         YEsrODh4o3UlcS5TZ+y1+UXrjSJADGCyBQ6K2lZ0DJDo2QedEMqV3LSISLWfU5nJ/D
-         sizzTqVvHP/REHavk+9zf8tlsbOc5WljT86xvH24=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from homer.simpson.net ([185.191.217.72]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRTNF-1jvASq2Zmv-00NUwB; Wed, 09
- Sep 2020 04:39:21 +0200
-Message-ID: <fb56b88424482baca8a2f178092a0de634256c59.camel@gmx.de>
-Subject: Re: v5.9-rc3-rt3 boot time networking lockdep splat
-From:   Mike Galbraith <efault@gmx.de>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Date:   Wed, 09 Sep 2020 04:39:20 +0200
-In-Reply-To: <20200908150612.6qlygag7e7pzhr22@linutronix.de>
-References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
-         <46a2b89ec8d953a4be18c7389c7d8c66310a7ff0.camel@gmx.de>
-         <20200908121902.zlfd3balosnu7ies@linutronix.de>
-         <3471761a379062a474ba32f9d0157eb3020244cf.camel@gmx.de>
-         <20200908150612.6qlygag7e7pzhr22@linutronix.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.34.4 
-MIME-Version: 1.0
+        id S1726605AbgIIClM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 22:41:12 -0400
+IronPort-SDR: vy+PemRLhu+quuvxUmUQ9gq+RiWclY4jSjcRf17VmB+Amgw8bbQgSJp6YeV0yO5avEy/k98ko/
+ t4ZTKhgurZQQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155659294"
+X-IronPort-AV: E=Sophos;i="5.76,408,1592895600"; 
+   d="scan'208";a="155659294"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 19:41:12 -0700
+IronPort-SDR: ONobC3Pu7Js9+iTPkSF+6bXLZFA44kr1EuVIrpG8LDvRLzwrKNCuRibjU3fRuxeucdbCBVTQZq
+ 9YpFeK3Ff8Lw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,408,1592895600"; 
+   d="scan'208";a="480291764"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga005.jf.intel.com with ESMTP; 08 Sep 2020 19:41:11 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Sep 2020 19:41:11 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 8 Sep 2020 19:41:11 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.51) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Tue, 8 Sep 2020 19:41:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KMBOugqT4vemq9TWNz1ULROlsqmCclhhag9YG/CIX4+c2Ei7gEFOjMCpuDKyrdcgTYV5lD1gqRAJTaToVnrFdT5FdOl4gQbFhTL3/0C6LaFDhCjKmtAB8HbnEVWXFUtLKghA/iB2wd8yL+HQWCrW523S3LKC6BgUoxFxgoGR5XFMIz6Vcwisy88M+1kJqrozghJPgYnyGZu4PUFl78WZ4rELtFmP43eDxffEsJI62BxXLOoinqixRLIZyygl+cnh/lJ9L27Yv5oGqPJFDG3tcenLnUrlLU+KZYgIRXcrHnOEeGPPn4sWJemoCMQyE+fhmZoNHPCY4CojfTy1jf23bQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zh7f1YaratsRAjIA4vL1ZnYkOW1obYn+Qh9fsznHGUo=;
+ b=PsEyJlN1WBVUipU2/P0nG9MSFMRHeSzypFIodL7rCzEAwE9nxcyzhxtnAUA/ftbwjciEKWznCGadGWDpL3nECzaL+INGaF4Ui1XtiySnOkU6Zbo+tRoc5C5zunEiI/pgqInE19jmLg9XQTA9z6/aOrQG1p3S+10Q5pZEuUXFQ1PNwzQe2XpNEw9Zqt09Dc+kZUR0bI4bU5ERuH6aYjhdWNSLiy1LlvuhQgWDMeeoUykwlodl75UG5kkfnAFt5Y2dqfmAoyKPkvHs4UWRurZgFo0W5llvkpElwCB0S8/5Zd6UgHxKnLKnVaIfWfQ8xUqm9JEA7OTkq9fuXr1bQTTWqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zh7f1YaratsRAjIA4vL1ZnYkOW1obYn+Qh9fsznHGUo=;
+ b=uR9qzCZyBQ2lBL9nYIHj+KWv8o/mkIaosXjvsiNX5k1+pqFvs+2pvGCjgY40YcNX+K2kCwQtpV0hKWdpZ7e1WlUzoWgoKLRpdGszihvTxL7uTslkPMhHJOFg9bM7aymP8nUdUPI2m/2pRQRRoVbpnCgE2gPkJlOBvEsG8yQt/rY=
+Received: from MWHPR11MB1696.namprd11.prod.outlook.com (2603:10b6:300:23::23)
+ by MWHPR1101MB2175.namprd11.prod.outlook.com (2603:10b6:301:5b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Wed, 9 Sep
+ 2020 02:41:08 +0000
+Received: from MWHPR11MB1696.namprd11.prod.outlook.com
+ ([fe80::ec4a:90cc:bdb4:5a5a]) by MWHPR11MB1696.namprd11.prod.outlook.com
+ ([fe80::ec4a:90cc:bdb4:5a5a%9]) with mapi id 15.20.3348.019; Wed, 9 Sep 2020
+ 02:41:08 +0000
+From:   "Zhao, Haifeng" <haifeng.zhao@intel.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "Zhang, ShanshanX" <shanshanx.zhang@intel.com>,
+        "Jia, Pei P" <pei.p.jia@intel.com>
+Subject: RE: [PATCH] Revert "block: revert back to synchronous request_queue
+ removal"
+Thread-Topic: [PATCH] Revert "block: revert back to synchronous request_queue
+ removal"
+Thread-Index: AQHWhbUmn1JF/TbogUavgTta1QMeJqley0QAgADEb6CAAAm2AIAAAGQg
+Date:   Wed, 9 Sep 2020 02:41:08 +0000
+Message-ID: <MWHPR11MB16967EE0DEBE2BBE23D3748A97260@MWHPR11MB1696.namprd11.prod.outlook.com>
+References: <20200908075047.5140-1-haifeng.zhao@intel.com>
+ <20200908142128.GA3463@infradead.org>
+ <MWHPR11MB1696A6C649BD434390418FE797260@MWHPR11MB1696.namprd11.prod.outlook.com>
+ <20200909023918.GA1473752@T590>
+In-Reply-To: <20200909023918.GA1473752@T590>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.207]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1f42aa85-4702-4e8e-f7dd-08d85469ce9c
+x-ms-traffictypediagnostic: MWHPR1101MB2175:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR1101MB2175EB418C5953B8C75862C797260@MWHPR1101MB2175.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vPATqRBAlWrq7fNWbfq54Suv7X6GSLJCgjedbkk1s7oEqMuuIqLe53BeI3MvmAKeuY2xK1P51tq1Nq2sw6jJbUcobHOIytv8xW3UsV0lKP/uUFkRzfwVDI6ifHzZhzsoj2XxuSqMGRQKETwBHL+f+AjjB8VXVYjHZPn2a2B0xuIsHMtYa2aGYXtTR/mYlOazXbzTIiBlj/iMrNXQmQRZ/aoASbXHmwwjK2rPBdRkboVuzZDAVRnpzFNY96HgeVGwLEZxrn1jntvc02pUN//J5oQ+ID7nDeot2/RgSjOolZZYPLFPCElflwyveYrpCGLDvpPLYGlzPk6D+VhAp+NHxkQX8FiVRPtbPS/Q3IZ6meS/p1SBc+UBGNZDywqf/2a+qY/iv/1xqXXb9/P3hGFZ0g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1696.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(4744005)(9686003)(53546011)(7696005)(66446008)(6506007)(64756008)(6916009)(76116006)(71200400001)(66556008)(66476007)(66946007)(86362001)(107886003)(186003)(26005)(4326008)(5660300002)(2906002)(54906003)(8676002)(316002)(52536014)(966005)(8936002)(478600001)(55016002)(33656002)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: JRqRwzoPIGBoqJYnSQqtkPi0sI7kH7knaw0AxxprAuWAjthkStvVjxtoREvuJB78y9ZTMHmMDbfnOTHgcfe9aT6Iqbsmbj6LwI9ojcR9jFzQrTFCEMf+8sPqYiOPGvq7TOp3Xng7cItibs0zcGV3QuVIx/ZnarEmHCp+WA35F2NVJ4O1MeSwhJdjTE2301/3ls64VZLNIV5huz22GrcFtDmVghJWZ0UpSEPAhKG0xRQGH0NOML/ROMyZxoaerb13RqfZ4cmdyqXn0E3hHe87OxNsLxqOdUR/2lSwxwpVM9jb6WD5c5WdDkbK9z0dbhbE3JdmfL936u4bta8jDJNO9nBFmbdIAhevfom7B1lfnvchh4+7fw/oVVe7fWEIn1ynyXHxXTzxRFoW3Tgutbonso32IKbNWUNLljYTKzAhUoWc0e8zENOkAXuzmPQwHZ5FXD/Rd200FmzAp6QAvekDRMs2lipzaUyVUS31tGiI+T9lISdRvf5QQrBZN/i8Rqc4LJpMxPMTIIe6tfa/WTVi972SVfaaSRoa75MfL23ppjvW+I7WiZfh1la5a8+50KjXmr9pkn1NALgI8xwqraW50ubOz+M6/T7AdG5niYXrTHHBons6HW323+FlMz2mPBiGpg0OPfBSejtMudUxUucUng==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ve4zNWrfY1ZdbKJPjsbxxp4H+fkftsXodXClmEfoxh92vdoNwVk
- jNDJ5ftnKRJvoivQDEUFa4y3KyCXZ21MZF1vq4XFbDAbI9Tk20Rw7WaOC1dL6DdtNIyH/Y4
- F0Tbyb808MFMOGTCYyFDD6pMtd5jEy34AyuVbHERRV3+7NAUI3O0CKOBlWdwUUyrlMLQ1qF
- rke+faN4Gu6+XoHfOcxZQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:94VbXjfdyNs=:bAoK3I3lJT+v57nnMdfXwv
- iP5e4hNZMW45S3dAzHORon3+RTqeEENR/M53+41gYHR1teDXPXch/9F8jTco1xeIQIQWZkDJR
- UjU23SIzsX6mVs2I/XQ4RoQROKTbpLOula9FvtgJe/eBZgHweYd7LwxrWiC97LdPKyv7DgoHJ
- Y+ef3vmB7lDzhDkv30jINlIYGocjVvazVDR31AKtStznwZruD553oddNfl3Ccq6f4cY11C4Zb
- KTUptK2b0eqQkNYDh5/FZrl04qRlbuoBZVW6YnRCjs9VmGy7pzMILUJb+rRUCLGHfGZ9YHuC+
- LC0pdIyFXwQCZmz4x0YfvmuEJXhxWxjALDaHC6tI5vGYYrV8aQCjmdhKjAVqV/yI5Ejzmabrk
- tWOnZHPXDmywFKtmeLeWMw6yUH+WJXJdHC8p98cUsKhNjkzmnCvHXlt0Nh1aLypBVfKeW1vne
- epst72kzlPArH+6fIp69NwQct5ezckrlouhOwdohctYrf4IZIzwoaNhlRShVBvEbNUBlGKvkg
- vWwVfvkcbtXOSv7KylKuadFPhCZqItJQXA31m0UNCi5iZNK+RvYmY9qWMQVABj5jhWCP6yhID
- jsl9lgvVFSxcocH/XcEwPYbxRsw82QIC1rUDDKnGPCCy562qWX6b38JDsoxViYxuEjZPWdbRf
- pdQ6eQ3R0fLjnkk9cGTg7rGBXlqk5PCQd4xGtY4n8WBEbBJbsebWz+jZJSKFCh5qQRTsqjIjN
- 7W7Kh/2zYKY/fhE1sOZwy8gtEv2qG89gWHrRvPRtzUICKjYNinTmZTbi3XQQAfu6B+YIe20U2
- 35Ra2nAI2WuKdoxQtjCrKj43G9uker11Jci4yuWSZ90VGc8AFp7kXVbHnJZZrPJlwri31saOa
- ouc0bXGjPKxylqsKdOerL43MdrA+u65RJci1GItmPXqVjSwA7qjpl42slDPGK453tNwn641xA
- OMNHxuhqx3AtNcgAotxGpICkAetkwIDyxq9YnNCBuNwn6/e+yQxXoudOzkMSyssPM+YF/QECW
- CAYGI+nZJok++fAsrNwJsZfYw09+gw3wlO5nrj0byv6W6njjw2XRW/GVTAAJSDvZR3jX1Oj79
- FSDuCdkEWY+JHpQVEWlQuUl+7Jj4IHJw2SC++lQpJECPjo28gnkeaszZEnI0bX+32zKXuvtpU
- fURc63etiM/c4VmjSBOcMg8b9T6oTxxp2fbCvozDOvHhzSoq8wVfMw4RE5V/yXumAEn1EuHwu
- uj8k9sc2mWAxHmr2T
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1696.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f42aa85-4702-4e8e-f7dd-08d85469ce9c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2020 02:41:08.6288
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gKwM9bsyKgiGY5hcpdHqLXUTi10SordYLi5IqFYCsZB6MnVGHKbzVMer6TMs9ufzVV2EzPT9ZNmvz+VgGMyuEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2175
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-09-08 at 17:06 +0200, Sebastian Andrzej Siewior wrote:
->
-> This should cure it:
+Ming,=20
+    Got it, will try and give you feedback. Thanks,
 
-It did.
+-----Original Message-----
+From: Ming Lei <ming.lei@redhat.com>=20
+Sent: Wednesday, September 9, 2020 10:39 AM
+To: Zhao, Haifeng <haifeng.zhao@intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>; axboe@kernel.dk; bhelgaas@google=
+.com; linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; linux-pci@=
+vger.kernel.org; mcgrof@kernel.org; Zhang, ShanshanX <shanshanx.zhang@intel=
+.com>; Jia, Pei P <pei.p.jia@intel.com>
+Subject: Re: [PATCH] Revert "block: revert back to synchronous request_queu=
+e removal"
 
-	-Mike
+Hello Haifeng,
+
+On Wed, Sep 09, 2020 at 02:11:20AM +0000, Zhao, Haifeng wrote:
+> Ming, Christoph,
+>     Could you point out the patch aimed to fix this issue ? I would like =
+to try it.   This issue blocked my other PCI patch developing and verificat=
+ion work,=20
+> I am not a BLOCK/NVMe expert, wouldn't to be trapped into other sub-syste=
+m bugs, so just reported it for other expert's quick fix.=20
+>=20
+
+Please try the following patch:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3Dcafe01ef8fcb248583038e1be071383530fe355a
+
+Thanks,
+Ming
 
