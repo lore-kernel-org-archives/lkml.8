@@ -2,143 +2,207 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589D3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29805C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0910C206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="GhZMVx7p"
+	by mail.kernel.org (Postfix) with ESMTP id D153E206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599672187;
+	bh=ojYXfjO2DurN2C/opB53TRYM7STqyjyLj7tArEbYnYU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TfFrr3Ai2X45aUArlSaFhjJsdi/uatYr83KDrLaRw/nWrgJYQVNepOwsRv2RyWA0T
+	 qxXKVytEjSoEVXkGk3q6f1aQP10xriBM3Acv+fbEwbw15UoycnEJgCp5OCtqD90vpd
+	 YuS/6XR8qrQVAZd+quM3YVDniSk3JRuFB7zWiKss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgIIRVs (ORCPT
+        id S1730092AbgIIRXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:21:48 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:42061 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727113AbgIIPXK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:23:10 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id G14wkjX7EXgwIG14xkZkWe; Wed, 09 Sep 2020 16:28:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1599661688; bh=+xRI7RCVjWPFLjTuzSdpKFeCB3MzDQJw+96p0B8ybuQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=GhZMVx7pRGfoeYUSkx+6M0RckAcR1G9X/4Z1Z7eKsxh9pkUJuKeQkeHnsrDfozlB7
-         fV1d5JNDKC61U1UFhVchtDeVN3NaJxdVdmFBRbzDoyaTDB8l/K0yYz0oj0ZT1MCIO6
-         TOfNLINWQVC4n7rQq5AThsjvsPmygt8tmZ6ll8qlBvgzZCimKb1VEIbmhreGVeoZTc
-         fLZ85a/y1BBSAcV5fczOpK5HQ0Wpv0QjvKH4qfdMYKaH41yINXEpkBQbb4X740v1KB
-         1CBv6JL9Qk9JzlYLkmNnMgMdcqeBHT8YuVDaq/HZBogfWRz55VpFtTsfwvyi9gn47y
-         hxuBCrPmakEBw==
-Subject: Re: [PATCH] media: em28xx: fix function pointer check
-To:     trix@redhat.com, mchehab@kernel.org, natechancellor@gmail.com,
-        ndesaulniers@google.com, brad@nextdimension.cc, mkrufky@linuxtv.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200903145038.20076-1-trix@redhat.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <65584276-f49c-15c9-5f20-a4e5f5fe5085@xs4all.nl>
-Date:   Wed, 9 Sep 2020 16:28:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 9 Sep 2020 13:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbgIIRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:23:02 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0452166E;
+        Wed,  9 Sep 2020 17:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599672181;
+        bh=ojYXfjO2DurN2C/opB53TRYM7STqyjyLj7tArEbYnYU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=W40okwbvhzb3YNdQWWE61AnHf+7XtiOdb6MNYys5tClUSQqHRyUMpvh3j0fpRj3NS
+         33B56q0jVNPBQ3AsfsIRkXkarAFSMhPU2JsKSxRbZo06tvNmgrXsWwK3ewSbwGSrxC
+         B3BdieaaNhVMHkaDJiSZWYP+jSTalp6OSB3k8Ud8=
+Received: by mail-ot1-f42.google.com with SMTP id g10so2954608otq.9;
+        Wed, 09 Sep 2020 10:23:01 -0700 (PDT)
+X-Gm-Message-State: AOAM532QNqalj6R3eFLxyi/WKh/V+wpgcVI5mHOwFIhUjqcJfy/ZkstH
+        Yg8ez7sZHgduM4r4zDXprgUh9ezNBpfhIC0Ihg==
+X-Google-Smtp-Source: ABdhPJwF/BBwg1karh3OP6yS1l/x+0g03zifHTvvij6uGN/zcwIb/C59SHbjSoa84vatAmS8zyZQIW9jDnoPNpIu7AQ=
+X-Received: by 2002:a9d:411:: with SMTP id 17mr1405892otc.192.1599672180697;
+ Wed, 09 Sep 2020 10:23:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200903145038.20076-1-trix@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfK0x4z69G0pcN0tTyBl9g89oLI40CCA1Pcs6+GL8aCFjhEJWXG1+Fp/IEtwiTOlOPLh63xcX/ctPdCy/4klHm+VaxJzPhy+afVtZY62B2TEirP2HL1qf
- YV/AfjMvr86y2vsJj//XYI3hm8N57Og9gM30h6lUlp9j+94aX/BSkc5DzA9hJF/3Qzqy9zCQ2ovoCZoX2oN/ynVm+bMoVvJ9mXoVw+dS/ECWlUZyTyT6ZQNG
- qmBqg4DFcYXVSz1HLXcvyXQ66fz50w5zNVJHdbMzE7xTrxHlFUNBdDwvLckTvbRQD6RRu+iMx2jKZXBYlM0LMusm6z0Wdly4uY25757jT6wJ2Uvj2JkKoVtL
- 7EDr/cykZK+ssUldtBs17BGk7XZd/V8fH3hbcuEj6MNvlB5nu1LS5L1STLA37L14Yy8bl24HxIWRRTG39hvNz52p1+OOU5c88TW/YguYpjq2c954K2MQYryY
- c2dSOckvGMqKK5W1okBJ3RE/UfoNy3pDnj3oJW/UcNb5ekMesMT7V+U1gJF+dEagNWHtMPX+ioSIEW7ERdqOYadyQ5DTAHQpFRXKVA==
+References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+ <863c9c1e44cfbe6184bf0bd4893ff456af0e7bb8.1598043782.git.cristian.ciocaltea@gmail.com>
+ <20200908214724.GA959481@bogus> <20200909160334.GA385382@BV030612LT>
+In-Reply-To: <20200909160334.GA385382@BV030612LT>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 9 Sep 2020 11:22:48 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL+21YH+_w3e6PnW0GqPyEAD6uU-hqHZercKK0xQwCOjg@mail.gmail.com>
+Message-ID: <CAL_JsqL+21YH+_w3e6PnW0GqPyEAD6uU-hqHZercKK0xQwCOjg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2020 16:50, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> clang static analyzer reports this problem
-> 
-> em28xx-core.c:1162:4: warning: Called function pointer
->   is null (null dereference)
->         ops->suspend(dev->dev_next);
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This is the problem block
-> 
-> 	if (ops->suspend)
-> 		ops->suspend(dev);
-> 	if (dev->dev_next)
-> 		ops->suspend(dev->dev_next);
-> 
-> The check for ops->suspend only covers one statement.
-> So fix the check consistent with other similar in
-> the file.
-> 
-> Change a similar check in em28xx_resume_extension()
-> to use consistent logic as its siblings.
-> 
-> Fixes: be7fd3c3a8c5 ("media: em28xx: Hauppauge DualHD second tuner functionality")
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  drivers/media/usb/em28xx/em28xx-core.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
-> index e6088b5d1b80..d60f4c2a661d 100644
-> --- a/drivers/media/usb/em28xx/em28xx-core.c
-> +++ b/drivers/media/usb/em28xx/em28xx-core.c
-> @@ -1156,10 +1156,11 @@ int em28xx_suspend_extension(struct em28xx *dev)
->  	dev_info(&dev->intf->dev, "Suspending extensions\n");
->  	mutex_lock(&em28xx_devlist_mutex);
->  	list_for_each_entry(ops, &em28xx_extension_devlist, next) {
-> -		if (ops->suspend)
-> +		if (ops->suspend) {
->  			ops->suspend(dev);
-> -		if (dev->dev_next)
-> -			ops->suspend(dev->dev_next);
-> +			if (dev->dev_next)
-> +				ops->suspend(dev->dev_next);
-> +		}
->  	}
->  	mutex_unlock(&em28xx_devlist_mutex);
->  	return 0;
-> @@ -1172,11 +1173,11 @@ int em28xx_resume_extension(struct em28xx *dev)
->  	dev_info(&dev->intf->dev, "Resuming extensions\n");
->  	mutex_lock(&em28xx_devlist_mutex);
->  	list_for_each_entry(ops, &em28xx_extension_devlist, next) {
-> -		if (!ops->resume)
-> -			continue;
+On Wed, Sep 9, 2020 at 10:03 AM Cristian Ciocaltea
+<cristian.ciocaltea@gmail.com> wrote:
+>
+> Hi Rob,
+>
+> Thanks for reviewing!
+>
+> On Tue, Sep 08, 2020 at 03:47:24PM -0600, Rob Herring wrote:
+> > On Sat, Aug 22, 2020 at 01:19:47AM +0300, Cristian Ciocaltea wrote:
+> > > Add devicetree binding for Actions Semi ATC260x PMICs.
+> > >
+> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > ---
+> > >  .../bindings/mfd/actions,atc260x.yaml         | 221 ++++++++++++++++++
+> > >  1 file changed, 221 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/actions,atc260x.yaml b/Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
+> > > new file mode 100644
+> > > index 000000000000..4a55bbe1306e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
+> > > @@ -0,0 +1,221 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/actions,atc260x.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Actions Semi ATC260x Power Management IC bindings
+> > > +
+> > > +maintainers:
+> > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > +
+> > > +description: |
+> > > +  ATC260x series PMICs integrates Audio Codec, Power Management, RTC, IR
+> > > +  and GPIO controller blocks. Currently only the PM related functionalities
+> > > +  (i.e. regulators and system power-off/reboot) for the ATC2603C and ATC2609A
+> > > +  chip variants are supported.
+> > > +  ATC2603C includes 3 programmable DC-DC converters and 9 LDO regulators.
+> > > +  ATC2609A includes 5 programmable DC-DC converters and 10 LDO regulators.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - actions,atc2603c
+> > > +      - actions,atc2609a
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  pwrc:
+> > > +    type: object
+> > > +    description: |
+> > > +      The power controller integrated in ATC260x provides system power-off
+> > > +      and reboot operations.
+> >
+> > No need for this node as there are no properties, just instantiate
+> > what's needed in the MFD driver.
+>
+> My intention was to allow the user specify what functionality in the MFD
+> shall be enabled. For this particular case, if the 'pwrc' node is not
+> provided, the power-off/reboot functions will be disabled.
 
-Actually, this code is fine: if !ops->resume, then just continue.
+IIRC, there's a flag property for this already.
 
-So there is no need to change this resume code.
+>
+> > > +
+> > > +    properties:
+> > > +      compatible:
+> > > +        enum:
+> > > +          - actions,atc2603c-pwrc
+> > > +          - actions,atc2609a-pwrc
+> > > +
+> > > +    required:
+> > > +      - compatible
+> > > +
+> > > +    additionalProperties: false
+> > > +
+> > > +  onkey:
+> > > +    type: object
+> > > +    description: |
+> > > +      Use the ONKEY built into ATC260x PMICs as an input device reporting
+> > > +      power button status. ONKEY can be used to wakeup from low power
+> > > +      modes and force a reset on long press.
+> > > +
+> > > +    properties:
+> > > +      compatible:
+> > > +        enum:
+> > > +          - actions,atc2603c-onkey
+> > > +          - actions,atc2609a-onkey
+> > > +
+> > > +      actions,reset-time-sec:
+> > > +        description: |
+> > > +          Duration in seconds which the key should be kept pressed for device
+> > > +          to reset automatically. The hardware default is 8. Use 0 to disable
+> > > +          this functionality.
+> > > +        enum: [0, 6, 8, 10, 12]
+> >
+> > We already have 'power-off-time-sec' in input.yaml. How about adding
+> > 'reset-time-sec' there.
+>
+> Thanks for the suggestion, I was actually looking for this before
+> choosing the custom property and just assumed this was not added for
+> a particular reason.
 
-And in fact, I think it would be best if the same approach was used in
-em28xx_suspend_extension.
+Probably just because the usual behavior of holding the power button
+is to power off rather than reset.
 
-Regards,
+> So I'm going to handle it. Would you like me to send a separate patch
+> (not part of this series)?
 
-	Hans
+Separate patch yes, but it can be part of the series.
 
-> -		ops->resume(dev);
-> -		if (dev->dev_next)
-> -			ops->resume(dev->dev_next);
-> +		if (ops->resume) {
-> +			ops->resume(dev);
-> +			if (dev->dev_next)
-> +				ops->resume(dev->dev_next);
-> +		}
->  	}
->  	mutex_unlock(&em28xx_devlist_mutex);
->  	return 0;
-> 
+> > This could really just be a property in the parent node.
+>
+> This is similar with 'pwrc': if 'onkey' node is not present, the ONKEY
+> functionality will not be enabled.
 
+Would you really want/need to support wakeup, but disable long press
+feature? Seems like a single property would be sufficient.
+
+> Is there a better/recommended approach to manage this MFD feature
+> selection?
+
+But we have child nodes for this in other cases, so I guess it is fine.
+
+Rob
