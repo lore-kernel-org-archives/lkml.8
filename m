@@ -2,100 +2,188 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C42C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A22C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62A9321582
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:50:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G2BRIMl+"
+	by mail.kernel.org (Postfix) with ESMTP id 058892087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIIKuH (ORCPT
+        id S1729455AbgIIKvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:50:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726920AbgIIKuA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:50:00 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF48C061573;
-        Wed,  9 Sep 2020 03:49:59 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bmf0w5BfQz9sTN;
-        Wed,  9 Sep 2020 20:49:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599648593;
-        bh=EvMjLLWYG8ye+Nkj1kVAl8lm1kSDGW8sok9j5nmLSXk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=G2BRIMl+xcnrQ7PGQJb2uxdherMo+z+DbZWTx5sXyv1DI4uxVEI/8hv0d0hFOwKVX
-         DJ61SIZU7Xh9s3iDiC0xjxosQ44ic9u2MtsSdPRIHbT6Rx+6I8JjrCcMtIS7PXQu5+
-         oys4KdUM2fCCIY61hR+Sw/yDJAdL2B+pljrAcGb/tirzgrHPFGWOGdA7LuSESIWDcW
-         C8nGofv2OZkTnWhoEZrq8iGuuXxNwoakPsOod5xRQBNas/1Eqd69CL90xgYjIWhk1a
-         e1UPIgte5yIdb2OjrYKiFUzQJ66o7z8jYH+K5FoogexmQ0YPcHQK/SXzaGlkDyEMzc
-         FsrHnbMITSZ4A==
-Date:   Wed, 9 Sep 2020 20:49:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>
-Subject: linux-next: Fixes tag needs some work in the mediatek tree
-Message-ID: <20200909204951.5d3196d0@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/T0nlLIBYi1r0k9carTJ=B3u";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 9 Sep 2020 06:51:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:41582 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgIIKux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:50:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28C1A31B;
+        Wed,  9 Sep 2020 03:50:53 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.195.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DF1F3F68F;
+        Wed,  9 Sep 2020 03:50:51 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: watchdog: sp-805: Convert to Json-schema
+Date:   Wed,  9 Sep 2020 11:50:46 +0100
+Message-Id: <20200909105046.160991-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/T0nlLIBYi1r0k9carTJ=B3u
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Convert the ARM SP-805 watchdog IP DT binding over to Json-schema.
 
-Hi all,
+A straight-forward conversion, but the requirement for providing two
+clocks got strengthened from "should" to "must".
 
-In commit
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+---
+Hi,
 
-  845d404207f1 ("arm: dts: mt7623: move display nodes to separate mt7623n.d=
-tsi")
+this is just the bindings conversion patch, updated to address Rob's
+comments:
+- Remove redundant primecell.yaml inclusion
+- Reference watchdog.yaml
+- Drop now redundant timeout-sec property
+- Add unevaluatedProperties
 
-Fixes tag
+The DT fixes are independent and now partly already queued, so I am
+posting this separately.
 
-  Fixes: 1f6ed224594 ("arm: dts: mt7623: add Mali-450 device node")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
 Cheers,
-Stephen Rothwell
+Andre
 
---Sig_/T0nlLIBYi1r0k9carTJ=B3u
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ .../bindings/watchdog/arm,sp805.txt           | 32 ---------
+ .../bindings/watchdog/arm,sp805.yaml          | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+deleted file mode 100644
+index bee6f1f0e41b..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-ARM AMBA Primecell SP805 Watchdog
+-
+-SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
+-can be used to identify the peripheral type, vendor, and revision.
+-This value can be used for driver matching.
+-
+-As SP805 WDT is a primecell IP, it follows the base bindings specified in
+-'arm/primecell.txt'
+-
+-Required properties:
+-- compatible:  Should be "arm,sp805" & "arm,primecell"
+-- reg:         Should contain location and length for watchdog timer register
+-- clocks:      Clocks driving the watchdog timer hardware. This list should be
+-               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
+-               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
+-               frequency
+-- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
+-               second one
+-
+-Optional properties:
+-- interrupts:  Should specify WDT interrupt number
+-- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
+-               default timeout is determined by the driver
+-
+-Example:
+-	watchdog@66090000 {
+-		compatible = "arm,sp805", "arm,primecell";
+-		reg = <0x66090000 0x1000>;
+-		interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&wdt_clk>, <&apb_pclk>;
+-		clock-names = "wdog_clk", "apb_pclk";
+-	};
+diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
+new file mode 100644
+index 000000000000..a69cac8ec208
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/arm,sp805.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM AMBA Primecell SP805 Watchdog
++
++maintainers:
++  - Viresh Kumar <vireshk@kernel.org>
++
++description: |+
++  The Arm SP805 IP implements a watchdog device, which triggers an interrupt
++  after a configurable time period. If that interrupt has not been serviced
++  when the next interrupt would be triggered, the reset signal is asserted.
++
++allOf:
++  - $ref: /schemas/watchdog/watchdog.yaml#
++
++# Need a custom select here or 'arm,primecell' will match on lots of nodes
++select:
++  properties:
++    compatible:
++      contains:
++        const: arm,sp805
++  required:
++    - compatible
++
++properties:
++  compatible:
++    items:
++      - const: arm,sp805
++      - const: arm,primecell
++
++  interrupts:
++    maxItems: 1
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: |
++      Clocks driving the watchdog timer hardware. The first clock is used
++      for the actual watchdog counter. The second clock drives the register
++      interface.
++    minItems: 2
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: wdog_clk
++      - const: apb_pclk
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    watchdog@66090000 {
++        compatible = "arm,sp805", "arm,primecell";
++        reg = <0x66090000 0x1000>;
++        interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&wdt_clk>, <&apb_pclk>;
++        clock-names = "wdog_clk", "apb_pclk";
++    };
+-- 
+2.17.1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9Ys1AACgkQAVBC80lX
-0Gz0vQf9HGqlDZ4guJsaWjozr8yoEvYivDX3R38A2SAm3r6SrfRxWSet/T4ZyCGW
-6cwAkd17sIF3+qwe8Vgj6DcnmOEw28Jv/u6aZgRYsdDvCGxPdRRJ/7maha405MXu
-o6Czhocxu9mQfTAf85dPqSkAc7+WEfpeolxcSq5AHxV3ylclVlyAzFhFzHAiX5VW
-PUrMNXSjwdY9y009AuIIhYAtc0L8dVpjId1u4aWlQP57PykfTn8raDq0WmsSRZL4
-wJzuq2P7F9QRzQBvfNEF1l67hsgGSIMGoWWl5C1CFdHng7djL9RYWcJhTxKKwkhf
-JBRlzY4qWhqNHF5cZIFMzLD4rA3vuA==
-=JWjY
------END PGP SIGNATURE-----
-
---Sig_/T0nlLIBYi1r0k9carTJ=B3u--
