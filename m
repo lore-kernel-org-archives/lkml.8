@@ -2,241 +2,203 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E51CC10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A052145D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:09:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8bZqPNp"
+	by mail.kernel.org (Postfix) with ESMTP id 587F02145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbgIIJJt (ORCPT
+        id S1729953AbgIIJJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:09:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727085AbgIIJJq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:09:46 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2716CC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 02:09:46 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id i17so1630063oig.10
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 02:09:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lp4vuPsvFxDFpD3RPxxQA9GDt79f5fSUFEakGXQllkE=;
-        b=X8bZqPNpcH6+/UUTOlrjCUxpBIHRpxYnhOVxM9oVc76gpNUIHtMobQJxnLGp2RHGb4
-         Ag+2MVXMcEdEA5t+cj1rLZk0Loc4qT1G9mve+/e3J57GPskWXfTbKzlUAspPm1JYQSV/
-         8xdRiRdynXSrUFPoqwxTCuuPf2R5OVVoYvbt1xSfcQ4urDIBFVnF9H6kmQnrjb3bZOyO
-         2y1f9ogfYDKHVe1Fg/AckWNNvnU8JFinD76QEsugAs6t7Qavjw8fFb6SnfZVdzwKTI9l
-         /CTKR4aq+vjinFMOaI1/hFpbqqSEsAgOOlBvbHYTYgit2N1FeQnGeWkpHsw10i0o12vY
-         2PXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Lp4vuPsvFxDFpD3RPxxQA9GDt79f5fSUFEakGXQllkE=;
-        b=G6s03++dpaWIIbTa2JXIaDukJGQL0UioOdG3mfOgu5B2zGACicJTWU6uIbB/lpmBGe
-         SaHnu9iTX9DoBJAqCd+PZrCji74KOXSp1U8XWaHEI1SBs4+ummkbSyUGaVpFFWP1MTfn
-         KLGXnnNiqXao00LlfMjwD2nMyAHl4VhfuvH8r3IzFqKtWDLmhei2bPfEhKiUT34eDnHJ
-         xG0O3gJFkcwbDJNrBMDzprHmARr66CdWpzW6jUb+VVIcxcwcX78mD6Ux45WxRMBYR5Hk
-         PN61XdSzHe9Mdc91gViJTMo9dJ/C51d2+ddAF3trZao2kM0V5YnwoQpAirWEPUfZXOGG
-         bWDg==
-X-Gm-Message-State: AOAM5331i9jwk+GWCMgalyDgnANOdUJb4oRCEpi+86c0RxOv0vESdz2x
-        bd+Lp0fLeJ0ICOauNvcfNrc=
-X-Google-Smtp-Source: ABdhPJyP27LE1UC7njpXncKDhJawWmQ1Ejpu8fVvV8tdd7fcZld6Lvd9Z4q2EY3q8EfEC6geCr9Ofg==
-X-Received: by 2002:aca:e144:: with SMTP id y65mr24383oig.101.1599642584322;
-        Wed, 09 Sep 2020 02:09:44 -0700 (PDT)
-Received: from localhost.localdomain ([50.236.19.102])
-        by smtp.gmail.com with ESMTPSA id 187sm342993oie.42.2020.09.09.02.09.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:09:43 -0700 (PDT)
-From:   qianjun.kernel@gmail.com
-To:     tglx@linutronix.de, peterz@infradead.org, will@kernel.org,
-        luto@kernel.org, linux-kernel@vger.kernel.org
-Cc:     laoar.shao@gmail.com, urezki@gmail.com,
-        jun qian <qianjun.kernel@gmail.com>
-Subject: [PATCH V6 1/1] Softirq:avoid large sched delay from the pending softirqs
-Date:   Wed,  9 Sep 2020 17:09:31 +0800
-Message-Id: <20200909090931.8836-1-qianjun.kernel@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Wed, 9 Sep 2020 05:09:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55136 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgIIJJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:09:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 30825B03A;
+        Wed,  9 Sep 2020 09:09:55 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 11:09:53 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+Message-ID: <20200909090953.GE7348@dhcp22.suse.cz>
+References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
+ <20200908170835.85440-1-ldufour@linux.ibm.com>
+ <20200909074011.GD7348@dhcp22.suse.cz>
+ <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: jun qian <qianjun.kernel@gmail.com>
+On Wed 09-09-20 09:48:59, Laurent Dufour wrote:
+> Le 09/09/2020 à 09:40, Michal Hocko a écrit :
+> > [reposting because the malformed cc list confused my email client]
+> > 
+> > On Tue 08-09-20 19:08:35, Laurent Dufour wrote:
+> > > In register_mem_sect_under_node() the system_state’s value is checked to
+> > > detect whether the operation the call is made during boot time or during an
+> > > hot-plug operation. Unfortunately, that check is wrong on some
+> > > architecture, and may lead to sections being registered under multiple
+> > > nodes if node's memory ranges are interleaved.
+> > 
+> > Why is this check arch specific?
+> 
+> I was wrong the check is not arch specific.
+> 
+> > > This can be seen on PowerPC LPAR after multiple memory hot-plug and
+> > > hot-unplug operations are done. At the next reboot the node's memory ranges
+> > > can be interleaved
+> > 
+> > What is the exact memory layout?
+> 
+> For instance:
+> [    0.000000] Early memory node ranges
+> [    0.000000]   node   1: [mem 0x0000000000000000-0x000000011fffffff]
+> [    0.000000]   node   2: [mem 0x0000000120000000-0x000000014fffffff]
+> [    0.000000]   node   1: [mem 0x0000000150000000-0x00000001ffffffff]
+> [    0.000000]   node   0: [mem 0x0000000200000000-0x000000048fffffff]
+> [    0.000000]   node   2: [mem 0x0000000490000000-0x00000007ffffffff]
 
-When get the pending softirqs, it need to process all the pending
-softirqs in the while loop. If the processing time of each pending
-softirq is need more than 2 msec in this loop, or one of the softirq
-will running a long time, according to the original code logic, it
-will process all the pending softirqs without wakeuping ksoftirqd,
-which will cause a relatively large scheduling delay on the
-corresponding CPU, which we do not wish to see. The patch will check
-the total time to process pending softirq, if the time exceeds 2 ms
-we need to wakeup the ksofirqd to aviod large sched delay.
+Include this into the changelog.
 
-Signed-off-by: jun qian <qianjun.kernel@gmail.com>
----
- kernel/softirq.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 69 insertions(+), 14 deletions(-)
+> > > and since the call to link_mem_sections() is made in
+> > > topology_init() while the system is in the SYSTEM_SCHEDULING state, the
+> > > node's id is not checked, and the sections registered multiple times.
+> > 
+> > So a single memory section/memblock belongs to two numa nodes?
+> 
+> If the node id is not checked in register_mem_sect_under_node(), yes that the case.
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index c4201b7f..1f696c8 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -25,6 +25,7 @@
- #include <linux/smpboot.h>
- #include <linux/tick.h>
- #include <linux/irq.h>
-+#include <linux/sched/clock.h>
+I do not follow. register_mem_sect_under_node is about user interface.
+This is independent on the low level memory representation - aka memory
+section. I do not think we can handle a section in multiple zones/nodes.
+Memblock in multiple zones/nodes is a different story and interleaving
+physical memory layout can indeed lead to it. This is something that we
+do not allow for runtime hotplug but have to somehow live with that - at
+least not crash.
  
- #define CREATE_TRACE_POINTS
- #include <trace/events/irq.h>
-@@ -199,18 +200,17 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+> > > In
+> > > that case, the system is able to boot but later hot-plug operation may lead
+> > > to this panic because the node's links are correctly broken:
+> > 
+> > Correctly broken? Could you provide more details on the inconsistency
+> > please?
+> 
+> laurent@ltczep3-lp4:~$ ls -l /sys/devices/system/memory/memory21
+> total 0
+> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node1 -> ../../node/node1
+> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node2 -> ../../node/node2
+> -rw-r--r-- 1 root root 65536 Aug 24 05:27 online
+> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_device
+> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_index
+> drwxr-xr-x 2 root root     0 Aug 24 05:27 power
+> -r--r--r-- 1 root root 65536 Aug 24 05:27 removable
+> -rw-r--r-- 1 root root 65536 Aug 24 05:27 state
+> lrwxrwxrwx 1 root root     0 Aug 24 05:25 subsystem -> ../../../../bus/memory
+> -rw-r--r-- 1 root root 65536 Aug 24 05:25 uevent
+> -r--r--r-- 1 root root 65536 Aug 24 05:27 valid_zones
+
+OK, so there are two nodes referenced here. Not terrible from the user
+point of view. Such a memory block will refuse to offline or online
+IIRC.
  
- /*
-  * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
-- * but break the loop if need_resched() is set or after 2 ms.
-- * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
-- * certain cases, such as stop_machine(), jiffies may cease to
-- * increment and so we need the MAX_SOFTIRQ_RESTART limit as
-- * well to make sure we eventually return from this method.
-+ * but break the loop if need_resched() is set or after MAX_SOFTIRQ_TIME_NS
-+ * ns. In the loop, if the processing time of the softirq has exceeded
-+ * MAX_SOFTIRQ_TIME_NS ns, we also need to break the loop to wakeup the
-+ * ksofirqd.
-  *
-  * These limits have been established via experimentation.
-  * The two things to balance is latency against fairness -
-  * we want to handle softirqs as soon as possible, but they
-  * should not be able to lock up the box.
-  */
--#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
-+#define MAX_SOFTIRQ_TIME_NS 2000000
- #define MAX_SOFTIRQ_RESTART 10
+> > Which physical memory range you are trying to add here and what is the
+> > node affinity?
+> 
+> None is added, the root cause of the issue is happening at boot time.
+
+Let me clarify my question. The crash has clearly happened during the
+hotplug add_memory_resource - which is clearly not a boot time path.
+I was askin for more information about why this has failed. It is quite
+clear that sysfs machinery has failed and that led to BUG_ON but we are
+mising an information on why. What was the physical memory range to be
+added and why sysfs failed?
  
- #ifdef CONFIG_TRACE_IRQFLAGS
-@@ -246,15 +246,20 @@ static inline void lockdep_softirq_end(bool in_hardirq)
- static inline void lockdep_softirq_end(bool in_hardirq) { }
- #endif
- 
-+DEFINE_PER_CPU(__u32, pending_new_flag);
-+DEFINE_PER_CPU(__u32, pending_next_bit);
-+#define SOFTIRQ_PENDING_MASK ((1UL << NR_SOFTIRQS) - 1)
-+
- asmlinkage __visible void __softirq_entry __do_softirq(void)
- {
--	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
-+	u64 end = sched_clock() + MAX_SOFTIRQ_TIME_NS;
- 	unsigned long old_flags = current->flags;
- 	int max_restart = MAX_SOFTIRQ_RESTART;
- 	struct softirq_action *h;
- 	bool in_hardirq;
--	__u32 pending;
--	int softirq_bit;
-+	__u32 pending, pending_left, pending_new;
-+	int softirq_bit, next_bit;
-+	unsigned long flags;
- 
- 	/*
- 	 * Mask out PF_MEMALLOC as the current task context is borrowed for the
-@@ -277,10 +282,33 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 
- 	h = softirq_vec;
- 
--	while ((softirq_bit = ffs(pending))) {
--		unsigned int vec_nr;
-+	next_bit = per_cpu(pending_next_bit, smp_processor_id());
-+	per_cpu(pending_new_flag, smp_processor_id()) = 0;
-+
-+	pending_left = pending &
-+		(SOFTIRQ_PENDING_MASK << next_bit);
-+	pending_new = pending &
-+		(SOFTIRQ_PENDING_MASK >> (NR_SOFTIRQS - next_bit));
-+
-+	/*
-+	 * In order to be fair, we shold process the pengding bits by the
-+	 * last processing order.
-+	 */
-+	while ((softirq_bit = ffs(pending_left)) ||
-+		(softirq_bit = ffs(pending_new))) {
- 		int prev_count;
-+		unsigned int vec_nr = 0;
- 
-+		/*
-+		 * when the left pengding bits have been handled, we should
-+		 * to reset the h to softirq_vec.
-+		 */
-+		if (!ffs(pending_left)) {
-+			if (per_cpu(pending_new_flag, smp_processor_id()) == 0) {
-+				h = softirq_vec;
-+				per_cpu(pending_new_flag, smp_processor_id()) = 1;
-+			}
-+		}
- 		h += softirq_bit - 1;
- 
- 		vec_nr = h - softirq_vec;
-@@ -298,17 +326,44 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 			preempt_count_set(prev_count);
- 		}
- 		h++;
--		pending >>= softirq_bit;
-+
-+		if (ffs(pending_left))
-+			pending_left >>= softirq_bit;
-+		else
-+			pending_new >>= softirq_bit;
-+
-+		/*
-+		 * the softirq's action has been run too much time,
-+		 * so it may need to wakeup the ksoftirqd
-+		 */
-+		if (need_resched() && sched_clock() > end) {
-+			/*
-+			 * Ensure that the remaining pending bits will be
-+			 * handled.
-+			 */
-+			local_irq_save(flags);
-+			if (ffs(pending_left))
-+				or_softirq_pending((pending_left << (vec_nr + 1)) |
-+							pending_new);
-+			else
-+				or_softirq_pending(pending_new << (vec_nr + 1));
-+			local_irq_restore(flags);
-+			per_cpu(pending_next_bit, smp_processor_id()) = vec_nr + 1;
-+			break;
-+		}
- 	}
- 
-+	/* reset the pending_next_bit */
-+	per_cpu(pending_next_bit, smp_processor_id()) = 0;
-+
- 	if (__this_cpu_read(ksoftirqd) == current)
- 		rcu_softirq_qs();
- 	local_irq_disable();
- 
- 	pending = local_softirq_pending();
- 	if (pending) {
--		if (time_before(jiffies, end) && !need_resched() &&
--		    --max_restart)
-+		if (!need_resched() && --max_restart &&
-+		    sched_clock() <= end)
- 			goto restart;
- 
- 		wakeup_softirqd();
+> > > ------------[ cut here ]------------
+> > > kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
+> > > Oops: Exception in kernel mode, sig: 5 [#1]
+> > > LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> > > Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
+> > > CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
+> > > NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
+> > > REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
+> > > MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
+> > > CFAR: c000000000846d20 IRQMASK: 0
+> > > GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
+> > > GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
+> > > GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
+> > > GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
+> > > GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
+> > > GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
+> > > GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
+> > > GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
+> > > NIP [c000000000403f34] add_memory_resource+0x244/0x340
+> > > LR [c000000000403f2c] add_memory_resource+0x23c/0x340
+> > > Call Trace:
+> > > [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
+> > > [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
+> > > [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
+> > > [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
+> > > [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
+> > > [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
+> > > [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
+> > > [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
+> > > [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
+> > > [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
+> > > [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
+> > > [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
+> > > [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
+> > > Instruction dump:
+> > > 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
+> > > 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
+> > > ---[ end trace 562fd6c109cd0fb2 ]---
+> > 
+> > The BUG_ON on failure is absolutely horrendous. There must be a better
+> > way to handle a failure like that. The failure means that
+> > sysfs_create_link_nowarn has failed. Please describe why that is the
+> > case.
+> > 
+> > > This patch addresses the root cause by not relying on the system_state
+> > > value to detect whether the call is due to a hot-plug operation or not. An
+> > > additional parameter is added to link_mem_sections() to tell the context of
+> > > the call and this parameter is propagated to register_mem_sect_under_node()
+> > > throuugh the walk_memory_blocks()'s call.
+> > 
+> > This looks like a hack to me and it deserves a better explanation. The
+> > existing code is a hack on its own and it is inconsistent with other
+> > boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
+> > places IIRC. Would it help to use the same here as well? Maybe we want to
+> > wrap that inside a helper (early_memory_init()) and use it at all
+> > places.
+> 
+> I agree, this looks like a hack to check for the system_state value.
+> I'll follow the David's proposal and introduce an enum detailing when the
+> node id check has to be done or not.
+
+I am not sure an enum is going to make the existing situation less
+messy. Sure we somehow have to distinguish boot init and runtime hotplug
+because they have different constrains. I am arguing that a) we should
+have a consistent way to check for those and b) we shouldn't blow up
+easily just because sysfs infrastructure has failed to initialize.
 -- 
-1.8.3.1
-
+Michal Hocko
+SUSE Labs
