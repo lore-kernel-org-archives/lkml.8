@@ -2,111 +2,116 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF17C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A4E206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="Yc1/H8ef"
+	by mail.kernel.org (Postfix) with ESMTP id A280821919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgIIRPk (ORCPT
+        id S1731237AbgIIRQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbgIIP3F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:29:05 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21494C0612F8
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:39:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z1so3254573wrt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=11MI0KiTsfDovJmHLIZ6mGMd2aO/GNiEEd0QOHNHXg0=;
-        b=Yc1/H8efLlur4NsZLckZuVxVv7eBKW+pOWMidUFk8KtU0BAoPVPXWk16J5mKnNrmIi
-         oWB20T+Z2wVlAeFQT3uhLlx8nm1qKbo+/rKT870Cni1Y1rvHVkbmASg+/AfCDUB8dHFb
-         TLVHSYXSJi6UFU0cTS/U9tEbHBhBLAjxYjnFM7MYgQNxIJtG4KvvC38iEKyftKrY9H+1
-         HSx0E0vxEPJhDXm3VLoD5HTSk56PQ8Z3oow2H9NPpBHJXjDQQLsyXgx6lPJRPrPZoIQc
-         adu/KyZfOH0QEy/Tx3fMUNsu8auumg3t/aka3gUOr2/dPsvtlMe+R4Te4NvYpDU6Qx1s
-         Hzag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=11MI0KiTsfDovJmHLIZ6mGMd2aO/GNiEEd0QOHNHXg0=;
-        b=fOuNhqOT2Q9vq2xown16l1V6FfgKvOTFSngkEaL0aPnzL47BJnTf6/oJk6PVm9kx37
-         Ip5Zd3l22G89n9vblcg4+wIjE3UuIg0GcvICgQvY9cPCnXvNXR5r19q0uSGi605iPteK
-         1prwtfHs76mB3OvZO+pCpgfqlj/G9ugIqjXdLjAHXk2s6DnP4Jo+q1TqvZj5ISknaq0i
-         7z/Rljdr7xfApyVVMQvnpumLNLmSgqCrOUAdF+k2yZYCBW4Ed8dXKZxZhBdr56Q+KDRK
-         GB1cz1fgCin6hta2Z5znOpJl3qJVhuPUyaKh3zux2ErNAeSohT6bHnIt2G/tKpYCa7lJ
-         KdVQ==
-X-Gm-Message-State: AOAM531eVe1f6iiX+4TtsdsHasDWV0K9j3mqAz6+dkjp74KQp4ejP4o0
-        VLMpxLyfQJE4oq/jpsYST9c7zVYZNtMIAw==
-X-Google-Smtp-Source: ABdhPJwg4KZor8Ulp7aL3kakuSHdnlGpdMIVAnOUc1hsbL6VzzEtJVLgSQ4Wqa+k6cfbfZJG5X8vFw==
-X-Received: by 2002:adf:edcc:: with SMTP id v12mr4240797wro.240.1599662396424;
-        Wed, 09 Sep 2020 07:39:56 -0700 (PDT)
-Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8ddf:bedd:580e:7a7e])
-        by smtp.gmail.com with ESMTPSA id z15sm4368511wrv.94.2020.09.09.07.39.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 07:39:55 -0700 (PDT)
-Subject: Re: [MPTCP][PATCH v2 net 2/2] mptcp: fix subflow's remote_id issues
-To:     Geliang Tang <geliangtang@gmail.com>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Florian Westphal <fw@strlen.de>,
-        Peter Krystad <peter.krystad@linux.intel.com>
-Cc:     netdev@vger.kernel.org, mptcp@lists.01.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1599532593.git.geliangtang@gmail.com>
- <0127c08400bdf65c03438b0b6e90e4ab72ea1576.1599532593.git.geliangtang@gmail.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <4c6c23fc-f493-ce9e-953f-679109de5fc8@tessares.net>
-Date:   Wed, 9 Sep 2020 16:39:54 +0200
+        Wed, 9 Sep 2020 13:16:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:28962 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730181AbgIIP2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:28:22 -0400
+IronPort-SDR: u/qbi1gTMXwhiA5qBdPXMMgfTHw567dAAkns7X+4bDhXx6pe5JNKHXH9U6JyrwTQHFbDQq5NKi
+ i/s9iXQLJPug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155728553"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="155728553"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 06:49:26 -0700
+IronPort-SDR: y782X0eff+IGeTeKdlXJWyejH8ArzkbdbpXRdce83ifEs2ysMjfkaoanYmSAds9BB+zVYm7HDX
+ nG4T8f6lNeww==
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="505456868"
+Received: from rsetyawa-mobl1.amr.corp.intel.com (HELO [10.212.20.145]) ([10.212.20.145])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 06:49:25 -0700
+Subject: Re: [PATCH -next] soundwire: intel: Remove ununsed function
+To:     YueHaibing <yuehaibing@huawei.com>, vkoul@kernel.org,
+        yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200909131531.31380-1-yuehaibing@huawei.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <14a09132-d0ed-7129-73df-cbeb3154429b@linux.intel.com>
+Date:   Wed, 9 Sep 2020 08:46:10 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <0127c08400bdf65c03438b0b6e90e4ab72ea1576.1599532593.git.geliangtang@gmail.com>
+In-Reply-To: <20200909131531.31380-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geliang,
 
-On 08/09/2020 04:49, Geliang Tang wrote:
-> This patch set the init remote_id to zero, otherwise it will be a random
-> number.
+
+On 9/9/20 8:15 AM, YueHaibing wrote:
+> If CONFIG_PM is not set, build warns:
 > 
-> Then it added the missing subflow's remote_id setting code both in
-> __mptcp_subflow_connect and in subflow_ulp_clone.
+> drivers/soundwire/intel.c:488:12: warning: 'intel_link_power_down' defined but not used [-Wunused-function]
 > 
-> Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
-> Fixes: ec3edaa7ca6ce ("mptcp: Add handling of outgoing MP_JOIN requests")
-> Fixes: f296234c98a8f ("mptcp: Add handling of incoming MP_JOIN requests")
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+> Move this to #ifdef block.
 
-Thank you for the v2!
+Yes, thanks for the report, it's a valid issue, but maybe the fix is to 
+add __maybe_unused more consistently and remove the CONFIG_PM dependency.
 
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Vinod, what would you prefer?
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index e047910d73f5..7640308174ab 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -1540,8 +1540,6 @@ int intel_master_process_wakeen_event(struct 
+platform_device *pdev)
+   * PM calls
+   */
+
+-#ifdef CONFIG_PM
+-
+  static int __maybe_unused intel_suspend(struct device *dev)
+  {
+         struct sdw_cdns *cdns = dev_get_drvdata(dev);
+@@ -1596,7 +1594,7 @@ static int __maybe_unused intel_suspend(struct 
+device *dev)
+         return 0;
+  }
+
+-static int intel_suspend_runtime(struct device *dev)
++static int __maybe_unused intel_suspend_runtime(struct device *dev)
+  {
+         struct sdw_cdns *cdns = dev_get_drvdata(dev);
+         struct sdw_intel *sdw = cdns_to_intel(cdns);
+@@ -1751,7 +1749,7 @@ static int __maybe_unused intel_resume(struct 
+device *dev)
+         return ret;
+  }
+
+-static int intel_resume_runtime(struct device *dev)
++static int __maybe_unused intel_resume_runtime(struct device *dev)
+  {
+         struct sdw_cdns *cdns = dev_get_drvdata(dev);
+         struct sdw_intel *sdw = cdns_to_intel(cdns);
+@@ -1924,8 +1922,6 @@ static int intel_resume_runtime(struct device *dev)
+         return ret;
+  }
+
+-#endif
+-
+  static const struct dev_pm_ops intel_pm = {
+         SET_SYSTEM_SLEEP_PM_OPS(intel_suspend, intel_resume)
+         SET_RUNTIME_PM_OPS(intel_suspend_runtime, intel_resume_runtime, 
+NULL)
+
+
