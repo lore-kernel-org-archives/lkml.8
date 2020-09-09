@@ -2,335 +2,121 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7169DC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A48CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26FDB21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD55B21D7D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="KSMOBl5t"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H0bHFQ3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgIITtL (ORCPT
+        id S1729953AbgIITtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
+        Wed, 9 Sep 2020 15:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbgIITs3 (ORCPT
+        with ESMTP id S1729865AbgIITtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:48:29 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02797C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:48:27 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id z23so5246253ejr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:48:26 -0700 (PDT)
+        Wed, 9 Sep 2020 15:49:12 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED28C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 12:49:11 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id s2so1867390pjr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 12:49:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a631SFYqGAi4ZEcUvZPpBm0hxLcC/ZMlJ2/z5Bt7trQ=;
-        b=KSMOBl5tjoSiPq1aAb/sxmCKm5v8L6qpKEC4hlYAIz7A6XwGRwbjP8fFj0aW3PEv94
-         /sAqOoiEINWlGMJVUN6rRDGy6W3bVNbIuL0dt4Sk9P3sndd5mMG3/SelCfO2idzF6hBD
-         KLi0D9hCms6q+h0y1lFJsvVBokE31qS0bk0Wndbh+jq0mBYEgInoiUYP0BexQEXl10YL
-         EjJ0Zs7Weq7lJ7dgBn6e7TwocGt1g8SLRlfD83c3duySlfr7qavTlP3lDtZi0JiFfgRi
-         Tn6Xq2xSno3DN/t0nJgMNcxiVY0g9e3OLCzzVz1gu6eArPmzrUfCph34HFYq+4GP3I8T
-         V1yQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oqhYmx0NFZNOAJE/eiypbxplY3MuONMIE6qhP6ssddY=;
+        b=H0bHFQ3ASMEAVTRUPtHvl7e6oC+0uJShA88H73hKX19wZcyGfPYU3ObDK/Y4120mWt
+         ybQL2m65jouKpt/NlMoDXLYE1qWA7pxMuoi0ztnpQ3V6o5/yX8ZXd/2s7TV3MF3ANKJX
+         vFku7hYNnUG2uqMyhPP+wCL+4OMsefFwdXQmc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a631SFYqGAi4ZEcUvZPpBm0hxLcC/ZMlJ2/z5Bt7trQ=;
-        b=QHtX5pTWmEuFO6y991QzdVTfouoDA5IEk0f2MtIFnDqRsEfcuN0m4p1npmWJQw+Xxr
-         5Ni4qaj0ik0O2hNE47kb5cTenjrTcB7sZUEZSFlRH+NgORHmWkvDJpWLE4rxl9bcK7+6
-         2BrMpWSzuiumhgg6ERULogKxdwZx5skfwoyy3TJNnIdVE56l/UaQblmlfvqwzt/CvXJK
-         6CSQs8VmbJSL4PgZvtPFP2uMnoSAHvJaxmyVx/aorfMwcgimLSzdnwWn5KyYxDBEOBZZ
-         QsrjfTRXV9j9E1IHf4e0xOe0CeQBaJjY6hynD0PlmvLIUTAP6/aEx4fK5Ng8tOlM2ana
-         OeCQ==
-X-Gm-Message-State: AOAM533z+KBItbqS3g3G7/h/Ueh5jBjoGu25BvOwpSwb+x0hnLr9TH9K
-        AK2S3fQNZCO7wg88kHEECvV6HQ==
-X-Google-Smtp-Source: ABdhPJw3OXDp248W+AGX4A/e9CF6exReYH3e8cW08qsenUu252YdZZvge8Bn7kKy+jrVMwziHph4Xw==
-X-Received: by 2002:a17:906:344e:: with SMTP id d14mr5505849ejb.42.1599680905660;
-        Wed, 09 Sep 2020 12:48:25 -0700 (PDT)
-Received: from localhost.localdomain (dh207-97-133.xnet.hr. [88.207.97.133])
-        by smtp.googlemail.com with ESMTPSA id hk14sm3461452ejb.88.2020.09.09.12.48.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oqhYmx0NFZNOAJE/eiypbxplY3MuONMIE6qhP6ssddY=;
+        b=UxT47g/fwFOEb6txOjDTs/IC1yFoSpPCIcj0StiFZfVZssUnvkRTsecPgtzR9+LjLk
+         0SDjquYa2NYqtO1Cb6WGgdC6Cgd0mbDE7MfbttsNOsOYUCqK0H6PqtW10aZsKAMJa+FC
+         c3TCqSGTxCC4yNmh6WKhGcT27qt26J+XWSILvSVNHDtivcB6U0l3ph7O1rbu4MdeEroS
+         sEcBNW/x3uyqlDgWwMl++z98dxb84ReVrqIU2XSAq+0u8icWssIhWf04E01XE4AmwvPj
+         70RrRZa5vjAR0FMBlUEtnTYuMV4crUK4a79y7CYVojko2DN/hb1cJcCAx8dnffduoMEw
+         3Ubw==
+X-Gm-Message-State: AOAM533wFX48Mn1R4ycTqcpOW7qI7NLfACaQaqJnw1Zxf4v4z57y2oN5
+        nngNzMvi9MYC6iro77h4y7X5yQ==
+X-Google-Smtp-Source: ABdhPJxU9aNjxN137DFaJhJ9P+8qFGxNKraARUvOOUlchRyN5dF2XrloEu5kn+x5DFLgaSun59zKsA==
+X-Received: by 2002:a17:90a:c83:: with SMTP id v3mr2067243pja.229.1599680951499;
+        Wed, 09 Sep 2020 12:49:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f19sm3231001pfj.25.2020.09.09.12.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 12:48:25 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: [PATCH 2/4] arm: dts: add 8devices Jalapeno
-Date:   Wed,  9 Sep 2020 21:48:14 +0200
-Message-Id: <20200909194816.3125213-3-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200909194816.3125213-1-robert.marko@sartura.hr>
-References: <20200909194816.3125213-1-robert.marko@sartura.hr>
+        Wed, 09 Sep 2020 12:49:10 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 12:49:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/lkdtm: Use "comm" instead of "diff" for dmesg
+Message-ID: <202009091247.C10CDA60C@keescook>
+References: <202006261358.3E8AA623A9@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006261358.3E8AA623A9@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-8devices Jalapeno is a dual-band SoM, based on Qualcomm
-IPQ4018 + QCA8072 platform.
 
-Specification:
-QCA IPQ4018, Quad core ARM v7 Cortex A7 717MHz
-256 MB of DDR3 RAM
-8 MB of SPI NOR flash
-128 MB of Winbond SPI NAND flash
-WLAN1: Qualcomm Atheros QCA4018 2.4GHz 802.11bgn 2:2x2
-WLAN2: Qualcomm Atheros QCA4018 5GHz 802.11a/n/ac 2:2x2
-ETH: Qualcomm Atheros QCA8072 Gigabit Switch (1 x LAN, 1 x WAN)
+On Fri, Jun 26, 2020 at 01:59:43PM -0700, Kees Cook wrote:
+> Instead of full GNU diff (which smaller boot environments may not have),
+> use "comm" which is more available.
+> 
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Link: https://lore.kernel.org/lkml/CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com
+> Fixes: f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running tests")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts | 215 ++++++++++++++++++++
- 2 files changed, 216 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
+Shuah, this really needs to land to fix lkdtm tests on busybox. Can
+you add this to -next? (Or is it better to direct this to Greg for the
+lkdtm tree?)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4572db3fa5ae..9b474208057d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -890,6 +890,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8074-dragonboard.dtb \
- 	qcom-apq8084-ifc6540.dtb \
- 	qcom-apq8084-mtp.dtb \
-+	qcom-ipq4018-jalapeno.dtb \
- 	qcom-ipq4019-ap.dk01.1-c1.dtb \
- 	qcom-ipq4019-ap.dk04.1-c1.dtb \
- 	qcom-ipq4019-ap.dk04.1-c3.dtb \
-diff --git a/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts b/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
-new file mode 100644
-index 000000000000..3def87e76c48
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom-ipq4018-jalapeno.dts
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+// Copyright (c) 2018, Robert Marko <robimarko@gmail.com>
-+
-+#include "qcom-ipq4019.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/soc/qcom,tcsr.h>
-+
-+/ {
-+	model = "8devices Jalapeno";
-+	compatible = "8dev,jalapeno";
-+};
-+
-+&tlmm {
-+	mdio_pins: mdio_pinmux {
-+		pinmux_1 {
-+			pins = "gpio53";
-+			function = "mdio";
-+		};
-+
-+		pinmux_2 {
-+			pins = "gpio52";
-+			function = "mdc";
-+		};
-+
-+		pinconf {
-+			pins = "gpio52", "gpio53";
-+			bias-pull-up;
-+		};
-+	};
-+
-+	serial_pins: serial_pinmux {
-+		mux {
-+			pins = "gpio60", "gpio61";
-+			function = "blsp_uart0";
-+			bias-disable;
-+		};
-+	};
-+
-+	spi_0_pins: spi_0_pinmux {
-+		pin {
-+			function = "blsp_spi0";
-+			pins = "gpio55", "gpio56", "gpio57";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		pin_cs {
-+			function = "gpio";
-+			pins = "gpio54", "gpio59";
-+			drive-strength = <2>;
-+			bias-disable;
-+			output-high;
-+		};
-+	};
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&prng {
-+	status = "okay";
-+};
-+
-+&blsp_dma {
-+	status = "okay";
-+};
-+
-+&blsp1_spi1 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&spi_0_pins>;
-+	pinctrl-names = "default";
-+	cs-gpios = <&tlmm 54 GPIO_ACTIVE_HIGH>, <&tlmm 59 GPIO_ACTIVE_HIGH>;
-+
-+	flash@0 {
-+		status = "okay";
-+
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <24000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "SBL1";
-+				reg = <0x00000000 0x00040000>;
-+				read-only;
-+			};
-+
-+			partition@40000 {
-+				label = "MIBIB";
-+				reg = <0x00040000 0x00020000>;
-+				read-only;
-+			};
-+
-+			partition@60000 {
-+				label = "QSEE";
-+				reg = <0x00060000 0x00060000>;
-+				read-only;
-+			};
-+
-+			partition@c0000 {
-+				label = "CDT";
-+				reg = <0x000c0000 0x00010000>;
-+				read-only;
-+			};
-+
-+			partition@d0000 {
-+				label = "DDRPARAMS";
-+				reg = <0x000d0000 0x00010000>;
-+				read-only;
-+			};
-+
-+			partition@e0000 {
-+				label = "u-boot-env";
-+				reg = <0x000e0000 0x00010000>;
-+			};
-+
-+			partition@f0000 {
-+				label = "u-boot";
-+				reg = <0x000f0000 0x00080000>;
-+				read-only;
-+			};
-+
-+			partition@170000 {
-+				label = "ART";
-+				reg = <0x00170000 0x00010000>;
-+				read-only;
-+			};
-+		};
-+	};
-+
-+	spi-nand@1 {
-+		status = "okay";
-+
-+		compatible = "spi-nand";
-+		reg = <1>;
-+		spi-max-frequency = <24000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "ubi1";
-+				reg = <0x00000000 0x04000000>;
-+			};
-+
-+			partition@4000000 {
-+				label = "ubi2";
-+				reg = <0x04000000 0x04000000>;
-+			};
-+		};
-+	};
-+};
-+
-+&blsp1_uart1 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&serial_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&cryptobam {
-+	status = "okay";
-+};
-+
-+&crypto {
-+	status = "okay";
-+};
-+
-+&mdio {
-+	status = "okay";
-+
-+	pinctrl-0 = <&mdio_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&wifi0 {
-+	status = "okay";
-+
-+	qcom,ath10k-calibration-variant = "8devices-Jalapeno";
-+};
-+
-+&wifi1 {
-+	status = "okay";
-+
-+	qcom,ath10k-calibration-variant = "8devices-Jalapeno";
-+};
-+
-+&usb3_ss_phy {
-+	status = "okay";
-+};
-+
-+&usb3_hs_phy {
-+	status = "okay";
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb2_hs_phy {
-+	status = "okay";
-+};
-+
-+&usb2 {
-+	status = "okay";
-+};
+Thanks!
+
+-Kees
+
+> ---
+>  tools/testing/selftests/lkdtm/run.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
+> index 8383eb89d88a..5fe23009ae13 100755
+> --- a/tools/testing/selftests/lkdtm/run.sh
+> +++ b/tools/testing/selftests/lkdtm/run.sh
+> @@ -82,7 +82,7 @@ dmesg > "$DMESG"
+>  ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
+>  
+>  # Record and dump the results
+> -dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
+> +dmesg | comm -13 "$DMESG" - > "$LOG" || true
+>  
+>  cat "$LOG"
+>  # Check for expected output
+> -- 
+> 2.25.1
+> 
+> 
+> -- 
+> Kees Cook
+
 -- 
-2.26.2
-
+Kees Cook
