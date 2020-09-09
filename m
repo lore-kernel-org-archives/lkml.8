@@ -2,152 +2,197 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96923C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082A4C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6611521D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58CE21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:20:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W6u3PSCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgIISUR (ORCPT
+        id S1729789AbgIISUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:20:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15400 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIISUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:20:16 -0400
-IronPort-SDR: XdmjDk4Of8qkiVFpoRvI7z8V6sr6lu5b3DTfpc4XvtSXnPumbqP6OJ8nLzCKBI6QAljnK2tHYL
- MTqrEKoWYUiQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="243208633"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="243208633"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 11:20:15 -0700
-IronPort-SDR: cSPFvWkeYJDKN+Z0GgBxBfjV5HB1QVMzc0QvYXiLFB/PK957/GoRXZ75RkdqM9wRMgBPzP2eWt
- Vhus2SZT4sfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="341655830"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by FMSMGA003.fm.intel.com with SMTP; 09 Sep 2020 11:20:11 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 09 Sep 2020 21:20:10 +0300
-Date:   Wed, 9 Sep 2020 21:20:10 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Koba Ko <koba.ko@canonical.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>
-Subject: Re: [PATCH] drm/dp: For MST hub, Get max_link_rate&max_lane from
- extended rx capability field if EXTENDED_RECEIVER_CAPABILITY_FILED_PRESENT
- is set.
-Message-ID: <20200909182010.GO6112@intel.com>
-References: <20200827053053.11271-1-koba.ko@canonical.com>
- <CAJB-X+WPiUR8N5sLMS2UC-rPHj=TGJy2ezeBPjjeUXzbN5bfcg@mail.gmail.com>
- <b1dcaf433b7ebe2d0284693724f0e7d8a7fa4825.camel@redhat.com>
+        Wed, 9 Sep 2020 14:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIISUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:20:18 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ADD2C061573;
+        Wed,  9 Sep 2020 11:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Gs7l2ozHR0HxDr2hbk3gqjz3Et8a8q1twWwZC7hxypY=; b=W6u3PSCFmSajTX3+XLDF/fiiG7
+        +efOlDW3xUWpArrgADLOP/BB8Pa2PP1S4JczSLNNV0hxeJIJAbwE69Ym7L+PIR2oKcYxIAuQgwo90
+        KbGrlZlKSoiy1Y+SKznpbvvw0azanhsi50kZlrC93YY4gGFMqpnP6v2QxFrdM4rfQF215wfM5iGia
+        dzCWdjQ0UEsVfhk60DUTjKsLHcEkra5RAv4usFfHjCTGTc3jvKNqljHXaBk35EpJxnQCEjK48VQr0
+        pOH0dYxvUt8tvmBC1X6diLy4uSHmwFmGBRmphI0psMq7lygxlhcd3YwJ1aXP+RkFp5PoK5jjKLJXh
+        zIipE4iw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kG4hR-0004S1-Or; Wed, 09 Sep 2020 18:20:08 +0000
+Subject: Re: [PATCH net-next + leds v2 2/7] leds: add generic API for LEDs
+ that can be controlled by hardware
+To:     =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>,
+        netdev@vger.kernel.org
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+ <20200909162552.11032-3-marek.behun@nic.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <84bfc0ce-752d-9d1f-1043-fabe4cc25b15@infradead.org>
+Date:   Wed, 9 Sep 2020 11:20:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200909162552.11032-3-marek.behun@nic.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1dcaf433b7ebe2d0284693724f0e7d8a7fa4825.camel@redhat.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 12:33:09PM -0400, Lyude Paul wrote:
-> We just added a new helper for DPCD retrieval to drm_dp_helper.c (which also
-> handles grabbing the extended receiver caps), we should probably make use of
-> it here 
+Hi,
 
-Someone should really rework this whole thing so that the driver can
-pass in the link rate+lane count when setting up the link. There's no
-reason to assume that the source device capabilities match or exceed
-the MST device caps. It would also allow the driver the dynamically
-adjust these in response to link failures.
-
-> On Wed, 2020-09-09 at 14:31 +0800, Koba Ko wrote:
-> > On Thu, Aug 27, 2020 at 1:30 PM Koba Ko <koba.ko@canonical.com> wrote:
-> > > Currently, DRM get the capability of the mst hub only from DP_DPCD_REV and
-> > > get the slower speed even the mst hub can run in the faster speed.
-> > > 
-> > > As per DP-1.3, First check DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT.
-> > > If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 1, read the DP_DP13_DPCD_REV
-> > > to
-> > > get the faster capability.
-> > > If DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT is 0, read DP_DPCD_REV.
-> > > 
-> > > Signed-off-by: Koba Ko <koba.ko@canonical.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_dp_mst_topology.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > index 67dd72ea200e..3b84c6801281 100644
-> > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > @@ -3497,6 +3497,8 @@ static int drm_dp_get_vc_payload_bw(u8 dp_link_bw,
-> > > u8  dp_link_count)
-> > >  int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr,
-> > > bool mst_state)
-> > >  {
-> > >         int ret = 0;
-> > > +       u8 dpcd_ext = 0;
-> > > +       unsigned int dpcd_offset = 0;
-> > >         struct drm_dp_mst_branch *mstb = NULL;
-> > > 
-> > >         mutex_lock(&mgr->payload_lock);
-> > > @@ -3510,9 +3512,15 @@ int drm_dp_mst_topology_mgr_set_mst(struct
-> > > drm_dp_mst_topology_mgr *mgr, bool ms
-> > >                 struct drm_dp_payload reset_pay;
-> > > 
-> > >                 WARN_ON(mgr->mst_primary);
-> > > +               drm_dp_dpcd_read(mgr->aux,
-> > > +                                DP_TRAINING_AUX_RD_INTERVAL,
-> > > +                                &dpcd_ext, sizeof(dpcd_ext));
-> > > +
-> > > +               dpcd_offset =
-> > > +                       ((dpcd_ext &
-> > > DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT) ?  DP_DP13_DPCD_REV :
-> > > DP_DPCD_REV);
-> > > 
-> > >                 /* get dpcd info */
-> > > -               ret = drm_dp_dpcd_read(mgr->aux, DP_DPCD_REV, mgr->dpcd,
-> > > DP_RECEIVER_CAP_SIZE);
-> > > +               ret = drm_dp_dpcd_read(mgr->aux, dpcd_offset, mgr->dpcd,
-> > > DP_RECEIVER_CAP_SIZE);
-> > >                 if (ret != DP_RECEIVER_CAP_SIZE) {
-> > >                         DRM_DEBUG_KMS("failed to read DPCD\n");
-> > >                         goto out_unlock;
-> > > --
-> > > 2.25.1
-> > > 
-> > Add Lyude Paul
-> > 
-> -- 
-> Cheers,
-> 	Lyude Paul (she/her)
-> 	Software Engineer at Red Hat
+On 9/9/20 9:25 AM, Marek Beh√∫n wrote:
+> Many an ethernet PHY (and other chips) supports various HW control modes
+> for LEDs connected directly to them.
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> This patch adds a generic API for registering such LEDs when described
+> in device tree. This API also exposes generic way to select between
+> these hardware control modes.
+> 
+> This API registers a new private LED trigger called dev-hw-mode. When
+> this trigger is enabled for a LED, the various HW control modes which
+> are supported by the device for given LED can be get/set via hw_mode
+> sysfs file.
+> 
+> Signed-off-by: Marek Beh√∫n <marek.behun@nic.cz>
+> ---
+>  .../sysfs-class-led-trigger-dev-hw-mode       |   8 +
+>  drivers/leds/Kconfig                          |  10 +
+>  drivers/leds/Makefile                         |   1 +
+>  drivers/leds/leds-hw-controlled.c             | 227 ++++++++++++++++++
+>  include/linux/leds-hw-controlled.h            |  74 ++++++
+>  5 files changed, 320 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-led-trigger-dev-hw-mode
+>  create mode 100644 drivers/leds/leds-hw-controlled.c
+>  create mode 100644 include/linux/leds-hw-controlled.h
+> 
 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 1c181df24eae4..5e47ab21aafb4 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -49,6 +49,16 @@ config LEDS_BRIGHTNESS_HW_CHANGED
+>  
+>  	  See Documentation/ABI/testing/sysfs-class-led for details.
+>  
+> +config LEDS_HW_CONTROLLED
+> +	bool "API for LEDs that can be controlled by hardware"
+> +	depends on LEDS_CLASS
+
+	depends on OF || COMPILE_TEST
+?
+
+> +	select LEDS_TRIGGERS
+> +	help
+> +	  This option enables support for a generic API via which other drivers
+> +	  can register LEDs that can be put into hardware controlled mode, eg.
+
+	                                                                   e.g.
+
+> +	  a LED connected to an ethernet PHY can be configured to blink on
+
+	  an LED
+
+> +	  network activity.
+> +
+>  comment "LED drivers"
+>  
+>  config LEDS_88PM860X
+
+
+> diff --git a/include/linux/leds-hw-controlled.h b/include/linux/leds-hw-controlled.h
+> new file mode 100644
+> index 0000000000000..2c9b8a06def18
+> --- /dev/null
+> +++ b/include/linux/leds-hw-controlled.h
+> @@ -0,0 +1,74 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Generic API for LEDs that can be controlled by hardware (eg. by an ethernet PHY chip)
+> + *
+> + * Copyright (C) 2020 Marek Behun <marek.behun@nic.cz>
+> + */
+> +#ifndef _LINUX_LEDS_HW_CONTROLLED_H_
+> +#define _LINUX_LEDS_HW_CONTROLLED_H_
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/leds.h>
+> +
+> +struct hw_controlled_led {
+> +	struct led_classdev cdev;
+> +	const struct hw_controlled_led_ops *ops;
+> +	struct mutex lock;
+> +
+> +	/* these members are filled in by OF if OF is enabled */
+> +	int addr;
+> +	bool active_low;
+> +	bool tristate;
+> +
+> +	/* also filled in by OF, but changed by led_set_hw_mode operation */
+> +	const char *hw_mode;
+> +
+> +	void *priv;
+> +};
+> +#define led_cdev_to_hw_controlled_led(l) container_of(l, struct hw_controlled_led, cdev)
+> +
+> +/* struct hw_controlled_led_ops: Operations on LEDs that can be controlled by HW
+> + *
+> + * All the following operations must be implemented:
+> + * @led_init: Should initialize the LED from OF data (and sanity check whether they are correct).
+> + *            This should also change led->cdev.max_brightness, if the value differs from default,
+> + *            which is 1.
+> + * @led_brightness_set: Sets brightness.
+> + * @led_iter_hw_mode: Iterates available HW control mode names for this LED.
+> + * @led_set_hw_mode: Sets HW control mode to value specified by given name.
+> + * @led_get_hw_mode: Returns current HW control mode name.
+> + */
+
+Convert that struct info to kernel-doc?
+
+> +struct hw_controlled_led_ops {
+> +	int (*led_init)(struct device *dev, struct hw_controlled_led *led);
+> +	int (*led_brightness_set)(struct device *dev, struct hw_controlled_led *led,
+> +				  enum led_brightness brightness);
+> +	const char *(*led_iter_hw_mode)(struct device *dev, struct hw_controlled_led *led,
+> +					void **iter);
+> +	int (*led_set_hw_mode)(struct device *dev, struct hw_controlled_led *led,
+> +			       const char *mode);
+> +	const char *(*led_get_hw_mode)(struct device *dev, struct hw_controlled_led *led);
+> +};
+> +
+
+> +
+> +#endif /* _LINUX_LEDS_HW_CONTROLLED_H_ */
+
+thanks.
 -- 
-Ville Syrj‰l‰
-Intel
+~Randy
+
