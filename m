@@ -2,122 +2,186 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39C3C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2E6C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9361920897
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="SmXDZKzA"
+	by mail.kernel.org (Postfix) with ESMTP id 2E5F020897
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599651150;
+	bh=XKDmQ0bqy92t9jtJ3x9aobjKXKmgrA4CFv/XSy5GDXc=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=JSYlzCb5ZamdMyGVmZhBabnycTd0toIzsQ+wFgacHU7mVKRcM3l+W9BEC1UEBvxcG
+	 uFIHqntD7fCkYEDx6F2LCRpY1YsknAoNwOlXnrF5oOxPkJ1WiUSCnPRiNzdYkNXqE9
+	 mzp5FGyiSKi3mcfepcptLuHxFFb00tTGDd+DPs4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgIILbT (ORCPT
+        id S1728551AbgIILcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:31:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgIIL2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:28:30 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27536C061796;
-        Wed,  9 Sep 2020 04:28:20 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 9 Sep 2020 07:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgIIL2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:28:53 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmfmN3SGmz9sTd;
-        Wed,  9 Sep 2020 21:24:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1599650649;
-        bh=McxY0vGyvNVlrIIx6KzYtU4PcHnFzd9G9dek0Ykf36c=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=SmXDZKzAAkIskfZPfi7qrbi2STOAaRgkLgLUwpRIri563PnPrs5blw/OlSwl2MX5i
-         69HKj9JHLONl1Qz3CbYvZy/4cbddpiJHmROqXSbmg8WJh+BTuQXH9dKNRHILZpAo1t
-         hze5cgR0ZcFpNy/5f5QSzsCR/ywLKY3MFV1MB2evwZ2HPd+YxWui6TnWbMXUjz3bFE
-         Dflejkj7ciOj6dUGOWs0UizA/kfuOX43D8JH9M1T139ttlnt9G8+OPWPLzwt3iVOxx
-         uuXIzjXH4T67FDy3bvc2QCqjoeC0dD5axnVjQL4imxfeD2KhwwbuLyb1WJFKSm2qYS
-         /CHKbJLh3kYdA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Libor Pechacek <lpechacek@suse.cz>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Leonardo Bras <leobras.c@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 3/7] mm/memory_hotplug: prepare passing flags to add_memory() and friends
-In-Reply-To: <3bc5b464-3229-d442-714a-ec33b5728ac6@redhat.com>
-References: <20200908201012.44168-1-david@redhat.com> <20200908201012.44168-4-david@redhat.com> <20200909071759.GD435421@kroah.com> <3bc5b464-3229-d442-714a-ec33b5728ac6@redhat.com>
-Date:   Wed, 09 Sep 2020 21:24:02 +1000
-Message-ID: <87eenbry5p.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8002921D80;
+        Wed,  9 Sep 2020 11:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599650932;
+        bh=XKDmQ0bqy92t9jtJ3x9aobjKXKmgrA4CFv/XSy5GDXc=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=GKA7u0qB0ObFtx6VQw6sxG3Rnsfp0SSXh7xS597jvH0H0SRrxT264C2/0JsrA62ng
+         1DeQnF7rkvNSM3oY13x2B/E6K/xQM9WY6nQE7/nl1rrIFg0DXRsZneJguFsqS2EdBf
+         7GI3WmdB6PA+Qb3Jv0JQ/zbNGIZ6m3N8YfqCaUSM=
+Received: by pali.im (Postfix)
+        id 3E1C87A9; Wed,  9 Sep 2020 13:28:50 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 13:28:50 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20200909112850.hbtgkvwqy2rlixst@pali>
+References: <20200716110423.xtfyb3n6tn5ixedh@pali>
+ <20200814080824.dg57kmbimyf3ushe@pali>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200814080824.dg57kmbimyf3ushe@pali>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
-> On 09.09.20 09:17, Greg Kroah-Hartman wrote:
->> On Tue, Sep 08, 2020 at 10:10:08PM +0200, David Hildenbrand wrote:
->>> We soon want to pass flags, e.g., to mark added System RAM resources.
->>> mergeable. Prepare for that.
->> 
->> What are these random "flags", and how do we know what should be passed
->> to them?
->> 
->> Why not make this an enumerated type so that we know it all works
->> properly, like the GPF_* flags are?  Passing around a random unsigned
->> long feels very odd/broken...
->
-> Agreed, an enum (mhp_flags) seems to give a better hint what can
-> actually be passed. Thanks!
+Hello! I'm adding more people to loop.
 
-You probably know this but ...
+Can somebody look at these race conditions and my patch?
 
-Just using a C enum doesn't get you any type safety.
-
-You can get some checking via sparse by using __bitwise, which is what
-gfp_t does. You don't actually have to use an enum for that, it works
-with #defines also.
-
-Or you can wrap the flag in a struct, the way atomic_t does, and then
-the compiler will prevent passing plain integers in place of your custom
-type.
-
-cheers
+On Friday 14 August 2020 10:08:24 Pali Rohár wrote:
+> Hello! I would like to remind this issue which I reported month ago.
+> 
+> On Thursday 16 July 2020 13:04:23 Pali Rohár wrote:
+> > Hello Bjorn!
+> > 
+> > I see following error message in dmesg which looks like a race condition:
+> > 
+> > sysfs: cannot create duplicate filename '/devices/platform/soc/d0070000.pcie/pci0000:00/0000:00:00.0/config'
+> > 
+> > I looked at it deeper and found out that in PCI subsystem code is race
+> > condition between pci_bus_add_device() and pci_sysfs_init() calls. Both
+> > of these functions calls pci_create_sysfs_dev_files() and calling this
+> > function more times for same pci device throws above error message.
+> > 
+> > There can be two different race conditions:
+> > 
+> > 1. pci_bus_add_device() called pcibios_bus_add_device() or
+> > pci_fixup_device() but have not called pci_create_sysfs_dev_files() yet.
+> > Meanwhile pci_sysfs_init() is running and pci_create_sysfs_dev_files()
+> > was called for newly registered device. In this case function
+> > pci_create_sysfs_dev_files() is called two times, ones from
+> > pci_bus_add_device() and once from pci_sysfs_init().
+> > 
+> > 2. pci_sysfs_init() is called. It first sets sysfs_initialized to 1
+> > which unblock calling pci_create_sysfs_dev_files(). Then another bus
+> > registers new PCI device and calls pci_bus_add_device() which calls
+> > pci_create_sysfs_dev_files() and registers sysfs files. Function
+> > pci_sysfs_init() continues execution and calls function
+> > pci_create_sysfs_dev_files() also for this newly registered device. So
+> > pci_create_sysfs_dev_files() is again called two times.
+> > 
+> > 
+> > I workaround both race conditions I created following hack patch. After
+> > applying it I'm not getting that 'sysfs: cannot create duplicate filename'
+> > error message anymore.
+> > 
+> > Can you look at it how to fix both race conditions in proper way?
+> 
+> Is this workaround diff enough? Or are you going to prepare something better?
+> 
+> Please let me know if I should send this diff as regular patch.
+> 
+> > 
+> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> > index 8e40b3e6da77..691be2258c4e 100644
+> > --- a/drivers/pci/bus.c
+> > +++ b/drivers/pci/bus.c
+> > @@ -316,7 +316,7 @@ void pci_bus_add_device(struct pci_dev *dev)
+> >  	 */
+> >  	pcibios_bus_add_device(dev);
+> >  	pci_fixup_device(pci_fixup_final, dev);
+> > -	pci_create_sysfs_dev_files(dev);
+> > +	pci_create_sysfs_dev_files(dev, false);
+> >  	pci_proc_attach_device(dev);
+> >  	pci_bridge_d3_update(dev);
+> >  
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index 6d78df981d41..b0c4852a51dd 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -1328,13 +1328,13 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
+> >  	return retval;
+> >  }
+> >  
+> > -int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
+> > +int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing)
+> >  {
+> >  	int retval;
+> >  	int rom_size;
+> >  	struct bin_attribute *attr;
+> >  
+> > -	if (!sysfs_initialized)
+> > +	if (!sysfs_initializing && !sysfs_initialized)
+> >  		return -EACCES;
+> >  
+> >  	if (pdev->cfg_size > PCI_CFG_SPACE_SIZE)
+> > @@ -1437,18 +1437,21 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
+> >  static int __init pci_sysfs_init(void)
+> >  {
+> >  	struct pci_dev *pdev = NULL;
+> > -	int retval;
+> > +	int retval = 0;
+> >  
+> > -	sysfs_initialized = 1;
+> >  	for_each_pci_dev(pdev) {
+> > -		retval = pci_create_sysfs_dev_files(pdev);
+> > +		if (!pci_dev_is_added(pdev))
+> > +			continue;
+> > +		retval = pci_create_sysfs_dev_files(pdev, true);
+> >  		if (retval) {
+> >  			pci_dev_put(pdev);
+> > -			return retval;
+> > +			goto out;
+> >  		}
+> >  	}
+> >  
+> > -	return 0;
+> > +out:
+> > +	sysfs_initialized = 1;
+> > +	return retval;
+> >  }
+> >  late_initcall(pci_sysfs_init);
+> >  
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 6d3f75867106..304294c7171e 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -19,7 +19,7 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> >  
+> >  /* Functions internal to the PCI core code */
+> >  
+> > -int pci_create_sysfs_dev_files(struct pci_dev *pdev);
+> > +int pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing);
+> >  void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
+> >  #if !defined(CONFIG_DMI) && !defined(CONFIG_ACPI)
+> >  static inline void pci_create_firmware_label_files(struct pci_dev *pdev)
+> > 
