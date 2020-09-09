@@ -2,81 +2,64 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE56C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 01:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EB2C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 01:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71762177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 01:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599616048;
-	bh=HIZQAcIhvCWCDUalYUFNSvSXSQut6/KRl1BsHvQIMfM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=xO4g4kGLjfEjr4LG7JCn3uvEV9AKGK8mhAXaFl5TVbd7uidnZwKt5Bhzd37TZC9zg
-	 Siwov9R0XRRNt54GQUO6VqNALeWGMCIZXsaAtxxg3MjU/EbEvwusKnn851o9R7wGHO
-	 9ZB/QrxV5c6o/8tNdRp8zm5HTgUtUr+R+z2mfYoo=
+	by mail.kernel.org (Postfix) with ESMTP id 2258A216C4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 01:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbgIIBr0 (ORCPT
+        id S1729005AbgIIBs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 21:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgIIBrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 21:47:25 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D18C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 18:47:25 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id y5so960313otg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 18:47:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7J7Og61LtakBvmJjtl5qwmWiJpdAG4wxn73qQlVnYUk=;
-        b=JvaA8IDBUzk/iItxfRh7zYTrtZHZ3HNvLPNQAzQZQP4HoU8DQN8PFkILrp3FpvZ0QY
-         xv9SzYeLIYUuBN3AvY4ttCEOQfXkYCcr31zb2M4iuEyoU4RluLbuU/sBKIAaO5o+/T6f
-         ixFWipdv4UHGnutG974SCwjBkKfNcLiVj8PfE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7J7Og61LtakBvmJjtl5qwmWiJpdAG4wxn73qQlVnYUk=;
-        b=DoPFIktWEUCzVnqMokNnFUBnPFpOCC9O9Q+n8hRkpR0YiTGEWh2ZnH0SdJxFEzZ2xl
-         z/urcFiSSKC+patwL9zG50sxUP+hW7ohLd00iruEpS84IbJA9CHF3M74aNjseE98fwf/
-         vSPP82l+nIcW/TFlRWywdJPd5/k8wb2IVpxwvgbnIKwpfkcJH0VMBghjMi1f6507DkZQ
-         Re3AJFE7slLnYxOhimmVp5mfcEnhkuej5sFNUjQ55FVH2/y7+6fDkgM14ZXPejgj8AuB
-         YoF8CKsOJ0USTyEMgAmz4zDFFOOAuPIlBdAfCTS7zWW0APe1AqOvRg7k8UAEbke1/3i+
-         EHmA==
-X-Gm-Message-State: AOAM531BJQ/U1b8YGnj3V+zW230/OC8iWTNOP/QZO0d5r9ZyLAeW/8JN
-        4iUUFZbOAshWcLjSS/ecx7NNGQ==
-X-Google-Smtp-Source: ABdhPJwvyNDTdJEG9ZJhMMUMe4t15KpUbW1ZJrgT6n7AhiPuwxPlUMl1IimiBeLQQzpGpDiXVqB1LA==
-X-Received: by 2002:a9d:7698:: with SMTP id j24mr1356269otl.112.1599616044677;
-        Tue, 08 Sep 2020 18:47:24 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id p9sm174120oti.22.2020.09.08.18.47.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 18:47:24 -0700 (PDT)
-Subject: Re: [PATCH 4.14 00/65] 4.14.197-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <ef15d591-70d0-6be5-486c-49cf9c0bba62@linuxfoundation.org>
-Date:   Tue, 8 Sep 2020 19:47:23 -0600
+        Tue, 8 Sep 2020 21:48:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27213 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726489AbgIIBs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 21:48:58 -0400
+IronPort-SDR: dl9OiB639T105wpa2hfuLPkWy15wpnJOxctgUKv8jTNuWz+Q8iGM9pIIsoP/4H6DGW6iJM04Pi
+ nlFAvInmUqVA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="145969381"
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="145969381"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 18:48:58 -0700
+IronPort-SDR: iu1TM291fKLzW13YkpPo+t+WTXhU6OwMMLl9NaOEaJe/bkV8fk4PoCH/IQPpFihFj7CFCpN+QZ
+ QO3ApYZpMMQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="407316380"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Sep 2020 18:48:55 -0700
+Cc:     baolu.lu@linux.intel.com, Tom Murphy <murphyt7@tcd.ie>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
+ dma-iommu
+To:     Christoph Hellwig <hch@infradead.org>
+References: <20200903201839.7327-1-murphyt7@tcd.ie>
+ <20200903201839.7327-6-murphyt7@tcd.ie>
+ <20200907070035.GA25114@infradead.org>
+ <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
+ <20200908053619.GA15418@infradead.org> <20200908055510.GA19078@infradead.org>
+ <9655fdc9-6ea0-e4c1-e104-a9a8981ecb1e@linux.intel.com>
+ <20200908062326.GB20774@infradead.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a10026ea-6de5-b7b1-80af-8000dfd4601b@linux.intel.com>
+Date:   Wed, 9 Sep 2020 09:43:09 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+In-Reply-To: <20200908062326.GB20774@infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,29 +68,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 9:25 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.197 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Christoph,
+
+On 9/8/20 2:23 PM, Christoph Hellwig wrote:
+> On Tue, Sep 08, 2020 at 02:04:53PM +0800, Lu Baolu wrote:
+>> Do you mind telling where can I find Marek's series?
 > 
-> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-> Anything received after that time might be too late.
+> [PATCH v10 00/30] DRM: fix struct sg_table nents vs. orig_nents misuse
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.197-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> on various lists including the iommu one.
 > 
 
-Compiled and booted on my test system. No dmesg regressions.
+It seems that more work is needed in i915 driver. I will added below
+quirk as you suggested.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -851,6 +851,31 @@ static int __finalise_sg(struct device *dev, struct 
+scatterlist *sg, int nents,
+         unsigned int cur_len = 0, max_len = dma_get_max_seg_size(dev);
+         int i, count = 0;
 
-thanks,
--- Shuah
++       /*
++        * The Intel graphic device driver is used to assume that the 
+returned
++        * sg list is not combound. This blocks the efforts of 
+converting the
++        * Intel IOMMU driver to dma-iommu api's. Add this quirk to make the
++        * device driver work and should be removed once it's fixed in i915
++        * driver.
++        */
++       if (dev_is_pci(dev) &&
++           to_pci_dev(dev)->vendor == PCI_VENDOR_ID_INTEL &&
++           (to_pci_dev(dev)->class >> 16) == PCI_BASE_CLASS_DISPLAY) {
++               for_each_sg(sg, s, nents, i) {
++                       unsigned int s_iova_off = sg_dma_address(s);
++                       unsigned int s_length = sg_dma_len(s);
++                       unsigned int s_iova_len = s->length;
++
++                       s->offset += s_iova_off;
++                       s->length = s_length;
++                       sg_dma_address(s) = dma_addr + s_iova_off;
++                       sg_dma_len(s) = s_length;
++                       dma_addr += s_iova_len;
++               }
++
++               return nents;
++       }
++
+
+Best regards,
+baolu
