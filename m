@@ -2,193 +2,100 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C59CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1ACC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E64AD2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cOMX0UY4"
+	by mail.kernel.org (Postfix) with ESMTP id 057FA208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgIIIT4 (ORCPT
+        id S1729298AbgIIIUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgIIITe (ORCPT
+        Wed, 9 Sep 2020 04:20:15 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:27351 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726111AbgIIIUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:19:34 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EEEC061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:19:32 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id e14so849834vsa.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:19:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kxsSOAH08Cb/1H/bCrBQPy36KVRAJlGoYW7Z2pWiU/Y=;
-        b=cOMX0UY4FYViplh6wKAtEd2R02thFI01xq7M4Hwgzxr6DPjpx42kGVOuNX4FehUxDq
-         jtAGZKKTc6CogSuICHLSl5SVGpHJkzvjjT7/R78wtczR//U3KOad5nXbPLZYPd4qgbCI
-         6AxM0h99CzEZm/aoWs1a1guDPj1fzCO1LCRnLXGj3P8OFgLfJYndgpu075HF8j/XPbRD
-         URtJTARScj6SDwUPxmmK9zlDqJjEbFzV60qjEY38Wub9w2YKtT4SfavjVepnbQsjPM6k
-         83pCPUfZpfEz7OxT059ibeEv7jn1z7AZmPjRKol+duvekZVImqc5Z7Dfcc6fIHOHAYw0
-         q5Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kxsSOAH08Cb/1H/bCrBQPy36KVRAJlGoYW7Z2pWiU/Y=;
-        b=tXwX8XvrwPsx3ac+U80ioqES4EWfARYPuvZbPDjZ6IfRkjSFmaGE7QHA9fJfbJtDhm
-         Ltz8n6Ait3jesRjaN8Cz7R0yzpUZQjH+aKNpxRTwOP2cqILNZ2G+QB60SZw1jgFE4BIV
-         7jpgT8KxAdMkpPeFz8dfpc7tYsa/KPAl/tq2/LjmBCRto/OiOpg1CkLY9rMN5Lc1PrWk
-         CehyISOCwaCL45+8roF5Ue2pzHfVFoj8uYQyIv6DAoM5u/z+CFxpYdHVUPRkxkAGv/Ag
-         dK5OmvyVVJqpsJexNKxsnP32Cp34cde1SpVQYWeL2r059hi9CPh4KbC+WOcs92KVyp8u
-         sj9A==
-X-Gm-Message-State: AOAM530E4OsyZhzFQHwjgRTV74owYWXulWI6dd+W1rRge81OodvyaCcl
-        Fa4ABIam2VQxHUPPqKz1geGFNeIrlLpLdazroOTY4g==
-X-Google-Smtp-Source: ABdhPJzGs/uInKpVTHQiAOSJVnUQ3v1i+kKqOuY/ow1h7pWk17jvJw6jTMYM/5DIOGoGbnIx822Dej3ONmk1xHi0lMk=
-X-Received: by 2002:a05:6102:204b:: with SMTP id q11mr1845302vsr.40.1599639571640;
- Wed, 09 Sep 2020 01:19:31 -0700 (PDT)
+        Wed, 9 Sep 2020 04:20:14 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-161-BdXcDBudNH26BNJoUCbwvw-1; Wed, 09 Sep 2020 09:20:08 +0100
+X-MC-Unique: BdXcDBudNH26BNJoUCbwvw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 9 Sep 2020 09:20:07 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 9 Sep 2020 09:20:07 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Josh Poimboeuf' <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: RE: [PATCH v2] x86/uaccess: Use pointer masking to limit uaccess
+ speculation
+Thread-Topic: [PATCH v2] x86/uaccess: Use pointer masking to limit uaccess
+ speculation
+Thread-Index: AQHWhgeZBzEzlDBqrkarsC8PutwJjalf9DHA
+Date:   Wed, 9 Sep 2020 08:20:07 +0000
+Message-ID: <01b027d0d46d4572b3b16e2b49f0f2b3@AcuMS.aculab.com>
+References: <bef9e78f9486d2a06c3e026d401511ffa117b0da.1598973982.git.jpoimboe@redhat.com>
+ <20200908174329.ryfprry62e4tuodw@treble>
+In-Reply-To: <20200908174329.ryfprry62e4tuodw@treble>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20200908152217.022816723@linuxfoundation.org>
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 9 Sep 2020 13:49:20 +0530
-Message-ID: <CA+G9fYt2CNnV+-7jbvwff=0q=UvMp4baCPy61evpXtVT-f-xVw@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/65] 4.14.197-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 at 21:22, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.197 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.197-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+RnJvbTogSm9zaCBQb2ltYm9ldWYgPGpwb2ltYm9lQHJlZGhhdC5jb20+DQo+IFNlbnQ6IDA4IFNl
+cHRlbWJlciAyMDIwIDE4OjQzDQo+IEhpIHg4NiBtYWludGFpbmVycywNCi4uLg0KPiA+IC0tLSBh
+L2FyY2gveDg2L2xpYi9wdXR1c2VyLlMNCj4gPiArKysgYi9hcmNoL3g4Ni9saWIvcHV0dXNlci5T
+DQo+ID4gQEAgLTM4LDYgKzM4LDggQEAgU1lNX0ZVTkNfU1RBUlQoX19wdXRfdXNlcl8xKQ0KPiA+
+ICAJRU5URVINCj4gPiAgCWNtcCBUQVNLX2FkZHJfbGltaXQoJV9BU01fQlgpLCVfQVNNX0NYDQo+
+ID4gIAlqYWUgLkxiYWRfcHV0X3VzZXINCj4gPiArCXNiYiAlX0FTTV9CWCwgJV9BU01fQlgJCS8q
+IHVhY2Nlc3NfbWFza19wdHIoKSAqLw0KPiA+ICsJYW5kICVfQVNNX0JYLCAlX0FTTV9DWA0KPiA+
+ICAJQVNNX1NUQUMNCj4gPiAgMToJbW92YiAlYWwsKCVfQVNNX0NYKQ0KPiA+ICAJeG9yICVlYXgs
+JWVheA0KDQpGb3IgNjRiaXQgdGhlIHNiYithbmQgcGF0dGVybiBjYW4gYmUgcmVwbGFjZWQgYnkg
+YW4gaW5zdHJ1Y3Rpb24NCnRoYXQgY2xlYXJzIHRoZSBoaWdoIGJpdCAoZWcgYnRyICQ2MywgJXJj
+eCkuDQpUaGlzIGlzbid0IGRlcGVuZGFudCBvbiB0aGUgZWFybGllciBpbnN0cnVjdGlvbnMgc28g
+Y2FuIGV4ZWN1dGUNCmluIHBhcmFsbGVsIHdpdGggdGhlbS4NCg0KSSBzdGlsbCB0aGluayB0aGF0
+IGRvaW5nIHRoZSBzYW1lIGNvbXBhcmlzb25zIGluIGFjY2Vzc19vaygpDQphbmQgZm9yIHRoZSBw
+b2ludGVyIG1hc2tpbmcgaXMgc2lsbHkgLSBhbmQgdGhleSBzaG91bGQgZ2V0IG1lcmdlZC4NCg0K
+V2hpbGUgaXQgbWF5IGJlIHBvc3NpYmxlIHRvIGZha2UgJ2FzbSB2b2xhdGlsZSBnb3RvIHdpdGgg
+b3V0cHV0cycNCmJ5IHVzaW5nIGEgbG9jYWwgYXNtIHJlZ2lzdGVyIHZhcmlhYmxlIGFuZCBhbHRl
+cm5hdGl2ZSBwYXR0ZXJuDQptaWdodCBiZSB0byBoYXZlIGFjY2Vzc19vaygpIHJldHVybiAwIChm
+YWlsKSBvciB+MCAob2spLg0KVGhlbiB0aGUgdXNhZ2UgY2FuIGJlICh3aXRoIGEgbG9hZCBvZiBj
+YXN0cyk6DQoJcDEgPSBwICYgYWNjZXNzX29rKHApOw0KCWlmICghcDEgJiYgcCkNCgkJcmV0dXJu
+IC1FRkFVTFQ7DQoJZm9vKCpwMSk7DQpXaXRoIGFueSBsdWNrIHRoZSBjb21waWxlciB3aWxsIHVz
+ZSB0aGUgcmVzdWx0IG9mIHRoZSAmIGZvciB0aGUNCiFwMSB0ZXN0Lg0KDQoJRGF2aWQNCg0KCQ0K
+DQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFy
+bSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAo
+V2FsZXMpDQo=
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.14.197-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: d520aac0cd79e557dd7d2ae06370d104a9f48645
-git describe: v4.14.196-66-gd520aac0cd79
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.196-66-gd520aac0cd79
-
-No regressions (compared to build v4.14.196)
-
-No fixes (compared to build v4.14.196)
-
-Ran 33476 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* v4l2-compliance
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-fs-tests
-* ltp-open-posix-tests
-* ltp-tracing-tests
-* igt-gpu-tools
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
