@@ -2,156 +2,173 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EB2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA0C21919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F4E22269
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599664609;
+	bh=oAgyl5YCzOi2Oys2dADhKhmSZ1VDNwqV2xCYDMZdcWw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=IyxqNrwX17GgbiOYNEL3MgLPSZqH772yuZQvT2fx/HkLk7x7bSkoTi+huW9pdIVX2
+	 56t8FQS3MtjzQfkJ17RmulQbtYukuDv1GaQnZ24dcSAPkCeRKvImDnhBwXqPHAre3x
+	 yVrri+VD3TjxU8/rS17pUXylU/cFVzNpmkrlgG88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgIIPOs (ORCPT
+        id S1729789AbgIIPQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:14:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53988 "EHLO mx2.suse.de"
+        Wed, 9 Sep 2020 11:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729971AbgIIL5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:57:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7A5B9AD1E;
-        Wed,  9 Sep 2020 11:53:59 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 13:53:57 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 0/8] memcg: Enable fine-grained per process memory
- control
-Message-ID: <20200909115357.GI7348@dhcp22.suse.cz>
-References: <20200817140831.30260-1-longman@redhat.com>
- <20200818091453.GL2674@hirez.programming.kicks-ass.net>
- <20200818092617.GN28270@dhcp22.suse.cz>
- <20200818095910.GM2674@hirez.programming.kicks-ass.net>
- <20200818100516.GO28270@dhcp22.suse.cz>
- <20200818101844.GO2674@hirez.programming.kicks-ass.net>
- <20200818134900.GA829964@cmpxchg.org>
- <20200821193716.GU3982@worktop.programming.kicks-ass.net>
- <20200824165850.GA932571@cmpxchg.org>
+        id S1729135AbgIILao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:30:44 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1F5820897;
+        Wed,  9 Sep 2020 11:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599650561;
+        bh=oAgyl5YCzOi2Oys2dADhKhmSZ1VDNwqV2xCYDMZdcWw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=VGlHUA84CYJaxv0ABm+a7LxuNh29gVlf7PMfczNBCR98EuKwBIr0Bd91ClwrEdbao
+         ZJmTM2fuC1vKlva5mCMB7bzzkTO9BoXDAgwzncyqAvGsXx1PyTsiLJdMRE2XiO4/rq
+         m3UHhFdkjCrWGoIUrbT2sCHDNVlTZYQL/eUnmEZA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AB27F3523091; Wed,  9 Sep 2020 04:22:41 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 04:22:41 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: RCU:  Question   rcu_preempt_blocked_readers_cgp  in
+  rcu_gp_fqs_loop func
+Message-ID: <20200909112241.GE29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200818220245.GO27891@paulmck-ThinkPad-P72>
+ <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
+ <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <20200819135654.GB3875610@google.com>
+ <20200819152159.GX27891@paulmck-ThinkPad-P72>
+ <20200819155808.GA8817@pc636>
+ <20200820223957.GB120898@google.com>
+ <20200821153328.GH2855@paulmck-ThinkPad-P72>
+ <BYAPR11MB263285B19261BE8096D87F65FF260@BYAPR11MB2632.namprd11.prod.outlook.com>
+ <BYAPR11MB2632FD34F68A89CCE039018BFF260@BYAPR11MB2632.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824165850.GA932571@cmpxchg.org>
+In-Reply-To: <BYAPR11MB2632FD34F68A89CCE039018BFF260@BYAPR11MB2632.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Sorry, this slipped through cracks]
+On Wed, Sep 09, 2020 at 07:03:39AM +0000, Zhang, Qiang wrote:
+> 
+> When config preempt RCU,  and then  there are multiple levels  node,  the current task is preempted  in rcu  read critical region.
+> the current task be add to "rnp->blkd_tasks" link list,  and the "rnp->gp_tasks"  may be assigned a value .  these rnp is leaf node in RCU tree.
+> 
+> But in "rcu_gp_fqs_loop" func, we check blocked readers in root node. 
+> 
+> static void rcu_gp_fqs_loop(void)
+>  {
+>             .....
+>             struct rcu_node *rnp = rcu_get_root();
+>             .....
+>             if (!READ_ONCE(rnp->qsmask) &&
+>                                !rcu_preempt_blocked_readers_cgp(rnp))    ------> rnp is root node
+>                      break;
+>             ....
+> }
+> 
+> the root node's blkd_tasks never add task, the "rnp->gp_tasks" is never be assigned value,  this check is invailed.
+>  Should we check leaf nodes like this 
 
-On Mon 24-08-20 12:58:50, Johannes Weiner wrote:
-> On Fri, Aug 21, 2020 at 09:37:16PM +0200, Peter Zijlstra wrote:
-[...]
-> > Arguably seeing the rate drop to near 0 is a very good point to consider
-> > running cgroup-OOM.
-> 
-> Agreed. In the past, that's actually what we did: In cgroup1, you
-> could disable the kernel OOM killer, and when reclaim failed at the
-> limit, the allocating task would be put on a waitqueue until woken up
-> by a freeing event. Conceptually this is clean & straight-forward.
-> 
-> However,
-> 
-> 1. Putting allocation contexts with unknown locks to indefinite sleep
->    caused deadlocks, for obvious reasons. Userspace OOM killing tends
->    to take a lot of task-specific locks when scanning through /proc
->    files for kill candidates, and can easily get stuck.
-> 
->    Using bounded over indefinite waits is simply acknowledging that
->    the deadlock potential when connecting arbitrary task stacks in the
->    system through free->alloc ordering is equally difficult to plan
->    out as alloc->free ordering.
-> 
->    The non-cgroup OOM killer actually has the same deadlock potential,
->    where the allocating/killing task can hold resources that the OOM
->    victim requires to exit. The OOM reaper hides it, the static
->    emergency reserves hide it - but to truly solve this problem, you
->    would have to have full knowledge of memory & lock ordering
->    dependencies of those tasks. And then can still end up with
->    scenarios where the only answer is panic().
+There are two cases:
 
-Yes. Even killing all eligible tasks is not guaranteed to help the
-situation because a) resources might be not bound to a process life time
-(e.g. tmpfs) or ineligible task might be holding resources that block
-others to do the proper cleanup. OOM reaper is here to make sure we
-reclaim some of the address space of the victim and we go over all
-eligible tasks rather than getting stuck at the first victim for ever.
- 
-> 2. I don't recall ever seeing situations in cgroup1 where the precise
->    matching of allocation rate to freeing rate has allowed cgroups to
->    run sustainably after reclaim has failed. The practical benefit of
->    a complicated feedback loop over something crude & robust once
->    we're in an OOM situation is not apparent to me.
+1.	There is only a single rcu_node structure, which is both root
+	and leaf.  In this case, the current check is required:  Both
+	->qsmask and the ->blkd_tasks list must be checked.  Your
+	rcu_preempt_blocked_readers() would work in this case, but
+	the current code is a bit faster because it does not need
+	to acquire the ->lock nor does it need the loop overhead.
 
-Yes, this is usually go OOM and kill something. Running on a very edge
-of the (memcg) oom doesn't tend to be sustainable and I am not sure it
-makes sense to optimize for.
+2.	There are multiple levels.  In this case, as you say, the root
+	rcu_node structure's ->blkd_tasks list will always be empty.
+	But also in this case, the root rcu_node structure's ->qsmask
+	cannot be zero until all the leaf rcu_node structures' ->qsmask
+	fields are zero and their ->blkd_tasks lists no longer have
+	tasks blocking the current grace period.  This means that your
+	rcu_preempt_blocked_readers() function would never return
+	true in this case.
 
->    [ That's different from the IO-throttling *while still doing
->      reclaim* that Dave brought up. *That* justifies the same effort
->      we put into dirty throttling. I'm only talking about the
->      situation where reclaim has already failed and we need to
->      facilitate userspace OOM handling. ]
-> 
-> So that was the motivation for the bounded sleeps. They do not
-> guarantee containment, but they provide a reasonable amount of time
-> for the userspace OOM handler to intervene, without deadlocking.
+So the current code is fine.
 
-Yes, memory.high is mostly a best effort containment. We do have the
-hard limit to put a stop on runaways or if you are watching for PSI then
-the high limit throttling would give you enough idea to take an action
-from the userspace.
+Are you seeing failures on mainline kernels?  If so, what is the failure
+mode?
 
-> That all being said, the semantics of the new 'high' limit in cgroup2
-> have allowed us to move reclaim/limit enforcement out of the
-> allocation context and into the userspace return path.
-> 
-> See the call to mem_cgroup_handle_over_high() from
-> tracehook_notify_resume(), and the comments in try_charge() around
-> set_notify_resume().
-> 
-> This already solves the free->alloc ordering problem by allowing the
-> allocation to exceed the limit temporarily until at least all locks
-> are dropped, we know we can sleep etc., before performing enforcement.
-> 
-> That means we may not need the timed sleeps anymore for that purpose,
-> and could bring back directed waits for freeing-events again.
-> 
-> What do you think? Any hazards around indefinite sleeps in that resume
-> path? It's called before __rseq_handle_notify_resume and the
-> arch-specific resume callback (which appears to be a no-op currently).
-> 
-> Chris, Michal, what are your thoughts? It would certainly be simpler
-> conceptually on the memcg side.
+							Thanx, Paul
 
-I would need a more specific description. But as I've already said. It
-doesn't seem that we are in a need to fix any practical problem here.
-High limit implementation has changed quite a lot recently. I would
-rather see it settled for a while and see how it behaves in wider
-variety of workloads before changing the implementation again.
-
--- 
-Michal Hocko
-SUSE Labs
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -1846,6 +1846,25 @@ static bool rcu_gp_init(void)
+>  	return true;
+>  }
+>  
+> +static bool rcu_preempt_blocked_readers(void)
+> +{
+> +	struct rcu_node *rnp;
+> +	unsigned long flags;
+> +	bool ret = false;
+> +
+> +	rcu_for_each_leaf_node(rnp) {
+> +		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> +		if (rcu_preempt_blocked_readers_cgp(rnp)) {
+> +			ret = true;
+> +			raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> +			break;
+> +		}
+> +		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Helper function for swait_event_idle_exclusive() wakeup at force-quiescent-state
+>   * time.
+> @@ -1864,7 +1883,7 @@ static bool rcu_gp_fqs_check_wake(int *gfp)
+>  		return true;
+>  
+>  	// The current grace period has completed.
+> -	if (!READ_ONCE(rnp->qsmask) && !rcu_preempt_blocked_readers_cgp(rnp))
+> +	if (!READ_ONCE(rnp->qsmask) && !rcu_preempt_blocked_readers())
+>  		return true;
+>  
+>  	return false;
+> @@ -1927,7 +1946,7 @@ static void rcu_gp_fqs_loop(void)
+>  		/* Locking provides needed memory barriers. */
+>  		/* If grace period done, leave loop. */
+>  		if (!READ_ONCE(rnp->qsmask) &&
+> -		    !rcu_preempt_blocked_readers_cgp(rnp))
+> +		    !rcu_preempt_blocked_readers())
+>  			break;
+>  		/* If time for quiescent-state forcing, do it. */
+>  		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
+> -- 
+> 
+> 
+> thanks
+> Qiang
