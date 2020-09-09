@@ -2,115 +2,116 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89725C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8608C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34569218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A08221D6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xr0TqVWc"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xn3olNCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgIITJQ (ORCPT
+        id S1726883AbgIITVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIITJO (ORCPT
+        Wed, 9 Sep 2020 15:21:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725772AbgIITVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:09:14 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71111C061573;
-        Wed,  9 Sep 2020 12:09:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a9so3491692wmm.2;
-        Wed, 09 Sep 2020 12:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3CtnsHu1kocc8uwLlDaSSxN5AfuSpASFecFNMuqKHqI=;
-        b=Xr0TqVWcl1f3bR1fLi1bK3iFtjf3T3nwYBn4qS4SvMW9SkenRS+jnybhPFvwb/APP+
-         gwGqheFmi7Vh0WPGI5P1tU9VsnUhGiTLp43Tdpp0mURPswE6QMyo8EDUqY7SEZeHRUtY
-         MWnFxi87H6ZmNyNPr5+f+V8G945Rdq7eCNTi5p/e23unmdflSx3oyQoJv60527Ek7cgr
-         DkHiYLHXx9+PHRuuPUdTpZj+l0vxMI5k8lEAEST88k7TdG0tA2N/02CnGqJw8JtSwUOY
-         3U3C18G17PCheM/Hl+KiTPOZIy7VjWFXGDsov1cJm+5ZHrDfeBKbnmtdmleL08wggObM
-         XCfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3CtnsHu1kocc8uwLlDaSSxN5AfuSpASFecFNMuqKHqI=;
-        b=VTCn+glHkT7t+a5qCwfBN3RNoKh6yD/l4D3oM80NsRkyuqUKmT2kv46M7IfIlXRyVp
-         4AAfcouI6dsJmqER+3W2N9wHQxqV0qAYs7RNBXAFVsHwwwgcA0sKmx6i9tr7TuOLSixy
-         qbkSO0Au0lLy9hgaFURIJXlU1oupDF+R0SSfT8extf3+ltESEMOhxo/qEb/nLeHCfTvP
-         pB//BnhuyeJXKljG8VraGhoWrGSa17/3rLV0IV390kisRUQy07RkovdUwxpm8Hh6U3Jo
-         RMHgXCz4mRU/Bj5nhGXRjib1fhaeavLeAQP1qUn/ru/rSyZZUCLyGWITAnU87Rk6O9Sq
-         zfXg==
-X-Gm-Message-State: AOAM5305ipTVxQCNtEmS5DUsN32xHARnXY2rO9kgvsHB7JiyPWuMP9yr
-        HIRZoIKRXzyukUaIdvKKNB0=
-X-Google-Smtp-Source: ABdhPJyOefeiMFkPtAS+u9KKFh1ftgY9to3EIPbs6NcaiNIlTcgWE17qOnji0DYHm6wmjlL1VvK4vg==
-X-Received: by 2002:a7b:ca56:: with SMTP id m22mr4673591wml.12.1599678551993;
-        Wed, 09 Sep 2020 12:09:11 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id b187sm93304wmb.8.2020.09.09.12.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 12:09:11 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ima: Use kmemdup rather than kmalloc+memcpy
-Date:   Wed,  9 Sep 2020 20:09:06 +0100
-Message-Id: <20200909190907.164013-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Wed, 9 Sep 2020 15:21:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089J5enk077421;
+        Wed, 9 Sep 2020 15:20:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=wI2LxfXNbDDIWk+xzWG3L8PJPVjUR3KEWKVAUC1zG7g=;
+ b=Xn3olNCnyQbPW4fO0sfB3M7imcUtD4sOJvn2ymxDutok9DNIPUHONSFCc66B6WA8kdXY
+ zJ/mAokkqV08mqDeNW6p8yyWyQVInV/ESL9vIwHlKtz0EwH8kpcl7Ve8fkKjf1dkk9n7
+ hPI9aJG0wX+t2TTAnhOXssLhNF7iqPQek3ldRELGWbn5EDt4EEGzRhpzl15uGdYcs5Pt
+ RltwfBEsK21HHeuO/VExL/1tBXWlzh2CbNm6dVGcQen93Ud0w6tHTWEJiKLxm8FmkVHf
+ X70WSYR9YRAyssOis21kz/PH6he9aAjy6jJN+OoqR51b86i/6hOP+AT0KfDk4tCpDUxD YA== 
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33f47eshya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 15:20:58 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089JBtJP026932;
+        Wed, 9 Sep 2020 19:20:57 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 33d46mw1m8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 19:20:57 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089JKuCj49873192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Sep 2020 19:20:56 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 56765AE060;
+        Wed,  9 Sep 2020 19:20:56 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 163E2AE05F;
+        Wed,  9 Sep 2020 19:20:55 +0000 (GMT)
+Received: from oc6857751186.ibm.com (unknown [9.65.215.230])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed,  9 Sep 2020 19:20:54 +0000 (GMT)
+Subject: Re: [PATCH] scsi: ibmvfc: Fix error return in ibmvfc_probe()
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200907083949.154251-1-jingxiangfeng@huawei.com>
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+Message-ID: <93fb2dbf-b386-4009-95e2-508c56c68607@linux.ibm.com>
+Date:   Wed, 9 Sep 2020 12:20:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200907083949.154251-1-jingxiangfeng@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_13:2020-09-09,2020-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 suspectscore=2 lowpriorityscore=0 spamscore=0
+ clxscore=1011 malwarescore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Issue identified with Coccinelle.
+On 9/7/20 1:39 AM, Jing Xiangfeng wrote:
+> Fix to return error code PTR_ERR() from the error handling case instead
+> of 0.
+> 
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- security/integrity/ima/ima_policy.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Acked-by: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index b4de33074b37..1de3140b334f 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -284,15 +284,14 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 	struct ima_rule_entry *nentry;
- 	int i;
- 
--	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
--	if (!nentry)
--		return NULL;
--
- 	/*
- 	 * Immutable elements are copied over as pointers and data; only
- 	 * lsm rules can change
- 	 */
--	memcpy(nentry, entry, sizeof(*nentry));
-+	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
-+	if (!nentry)
-+		return NULL;
-+
- 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--- 
-2.28.0
+> ---
+>  drivers/scsi/ibmvscsi/ibmvfc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
+> index ea7c8930592d..70daa0605082 100644
+> --- a/drivers/scsi/ibmvscsi/ibmvfc.c
+> +++ b/drivers/scsi/ibmvscsi/ibmvfc.c
+> @@ -4928,6 +4928,7 @@ static int ibmvfc_probe(struct vio_dev *vdev, const struct vio_device_id *id)
+>  	if (IS_ERR(vhost->work_thread)) {
+>  		dev_err(dev, "Couldn't create kernel thread: %ld\n",
+>  			PTR_ERR(vhost->work_thread));
+> +		rc = PTR_ERR(vhost->work_thread);
+>  		goto free_host_mem;
+>  	}
+>  
+> 
 
