@@ -2,513 +2,178 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB62DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3035C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8361B20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B573A21D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nmkuLIjB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ATCEs4ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbgIJCZM (ORCPT
+        id S1730881AbgIJCYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730432AbgIJCIu (ORCPT
+        Wed, 9 Sep 2020 22:24:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58534 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730682AbgIJCIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:08:50 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46627C061360
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:09 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m15so67122pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kBDddNjU/wapOzEC5TxnT4kNSsm+/7LvyM4b1ErSlOU=;
-        b=nmkuLIjBAdhzveSh9lvdTCaTymVWhrJbEjZbNHi5MNOTdvB/2heKFxdH48ImhRhIT6
-         NNvlNSGPEAAc9nxdAlSi149i7znMhBvFax1gbuOyK4ikHch2ln96rDkZ52brBqGTc37N
-         PtNSiLwkBDKXeNGc11IkngcuSBf0Lx7oTz7mw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kBDddNjU/wapOzEC5TxnT4kNSsm+/7LvyM4b1ErSlOU=;
-        b=I3/tHSlboiYFwfNj9YLgDA5GSu2j2hz9Jm48t4PRoaGJNho0kHBKVQtXnDH1WPuNlo
-         SakDD0Ao7svimU1R0Ic8iSvjCFeoIpM+5JzPGa1z6Ivd14blNWchBzvMC1ggFz8ZsJ3h
-         nqlxIncJsMRjyh8/WvYWtxK8Z8DEOnJOihNVYZ3GNjysaMuCZTucuabgPaoXnGsfP28a
-         6t6xsUzojMNXt0aAXqwXilM9eEm07poCqNeKSgNO7eqKLvofKroT5AMaZjeJ68rut4vI
-         PXAIvq9gedcERC8TexZ5heiHfadg2hwSaseku+spC7VHb6fVwLGF6DOohiUP8sHUH5Ya
-         K9hQ==
-X-Gm-Message-State: AOAM531SeM8/vV64WuBx50h7ScccG6o4TsS5cqLJy4MJhHG6yqcnzreN
-        jgguUOjgGgZMBPGxO12KT2QmYg==
-X-Google-Smtp-Source: ABdhPJzZUuzYXH5OLCOgvRhIxZQ/2DHOO5U4XyPPe1uRieSAlBk0C3WSEuJOceC2FX0PtUa2xS6hzA==
-X-Received: by 2002:a17:902:9303:: with SMTP id bc3mr3297470plb.170.1599698949252;
-        Wed, 09 Sep 2020 17:49:09 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 17:49:08 -0700 (PDT)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-Subject: [PATCH v3 04/10] phy: qcom-qmp: Move 'serdes' and 'cfg' into 'struct qcom_phy'
-Date:   Wed,  9 Sep 2020 17:48:56 -0700
-Message-Id: <20200910004902.2252694-5-swboyd@chromium.org>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-In-Reply-To: <20200910004902.2252694-1-swboyd@chromium.org>
-References: <20200910004902.2252694-1-swboyd@chromium.org>
+        Wed, 9 Sep 2020 22:08:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599703717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9lUmVHlRg0jPhlantuCk3hiT6WHd/nIzITZFw+wGi90=;
+        b=ATCEs4iarH6CiAeGnelgL9WXp+fL2etKppxLdsXEkK3w42lMmjX0/VCN+huEfWEmHk89Po
+        IECVmvxKpbfW9a8Qm5FmV1BTnUuBABUEoiJCGU5hpUwxGqgRD+O6NOAlHQFB3p+Y/mc5vw
+        kRjxnA1JqRa5L+MaH+6hLuKSCW+bU48=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-PdjO5lmxOoqImIc6M2pBzA-1; Wed, 09 Sep 2020 19:07:52 -0400
+X-MC-Unique: PdjO5lmxOoqImIc6M2pBzA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97082801F98;
+        Wed,  9 Sep 2020 23:07:50 +0000 (UTC)
+Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 209F57EED4;
+        Wed,  9 Sep 2020 23:07:48 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 17:07:46 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
+Message-ID: <20200909170746.2286b83a@w520.home>
+In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
+References: <20200903164117.GA312152@bjorn-Precision-5520>
+        <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The serdes I/O region is where the PLL for the phy is controlled.
-Sometimes the PLL is shared between multiple phys, for example in the
-PCIe case where there are three phys inside the same wrapper. Other
-times the PLL is for a single phy, i.e. some USB3 phys. To complete the
-trifecta we have the USB3+DP combo phy where the USB3 and DP phys each
-have their own serdes region because they have their own PLL while they
-both share a common I/O region pertaining to the USB type-c pinout and
-cable orientation.
+On Thu, 3 Sep 2020 13:10:02 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-Let's move the serdes iomem pointer into 'struct qmp_phy' so that we can
-correlate PLL control to the phy that uses it. This allows us to support
-the USB3+DP combo phy in this driver. This isn't a problem for the
-3-lane/phy PCIe phy because there is a common init function that is the
-only place the serdes region is programmed.
+> On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
+> > On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:  
+> >> Per the PCIe spec, VFs cannot implement the MSE bit
+> >> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
+> >> Use a dev_flags bit to signify this requirement.  
+> > 
+> > This approach seems sensible to me, but
+> > 
+> >    - This is confusing because while the spec does not use "MSE" to
+> >      refer to the Command Register "Memory Space Enable" bit
+> >      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
+> >      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
+> >      course, you're not talking about that here.  Maybe something like
+> >      this?
+> > 
+> >        For VFs, the Memory Space Enable bit in the Command Register is
+> >        hard-wired to 0.
+> > 
+> >        Add a dev_flags bit to signify devices where the Command
+> >        Register Memory Space Enable bit does not control the device's
+> >        response to MMIO accesses.  
+> 
+> Will do.  I'll change the usage of the MSE acronym in the other patches 
+> as well.
+> 
+> > 
+> >    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
+> >      plan to *use* this, but I'd rather use a term that describes the
+> >      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".  
+> 
+> Sure, I will change.
+> 
+> > 
+> >    - How do we decide whether to use dev_flags vs a bitfield like
+> >      dev->is_virtfn?  The latter seems simpler unless there's a reason
+> >      to use dev_flags.  If there's a reason, maybe we could add a
+> >      comment at pci_dev_flags for future reference.
+> >   
+> 
+> Something like:
+> 
+> /*
+>   * Device does not implement PCI_COMMAND_MEMORY - this is true for any
+>   * device marked is_virtfn, but is also true for any VF passed-through
+>   * a lower-level hypervisor where emulation of the Memory Space Enable
+>   * bit was not provided.
+>   */
+> PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
+> 
+> ?
+> 
+> >    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
+> >      that's what I use for consistency.  
+> 
+> Sure, will do.  I'll roll up a new version once I have feedback from 
+> Alex on the vfio changes.
 
-Furthermore, move the configuration data that contains most of the
-register programming sequences to the qmp phy struct. This data isn't
-qmp wrapper specific. It is phy specific data used to tune various
-settings for things like pre-emphasis, bias, etc.
+The usage of MSE threw me a bit too, as Bjorn notes that's specific to
+the SR-IOV capability.  I think this also uncovers a latent bug in our
+calling of vfio_bar_restore(), it really doesn't do a good job of
+determining whether an enable bit is implemented, regardless of whether
+it's a VF or the device simply doesn't use that address space.  For
+example I imagine you could reproduce triggering a reset recovery on
+s390 by trying to write the VF command register to 1 with setpci from a
+guest (since you won't have is_virtfn to bail out of the recovery
+function).  I think we'll still need this dev_flag to differentiate
+unimplmented and enabled versus simply unimplemented to resolve that
+though, so the change looks ok to me. Thanks,
 
-Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-Cc: Chandan Uddaraju <chandanu@codeaurora.org>
-Cc: Vara Reddy <varar@codeaurora.org>
-Cc: Tanmay Shah <tanmay@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Manu Gautam <mgautam@codeaurora.org>
-Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Jonathan Marek <jonathan@marek.ca>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 113 ++++++++++++++--------------
- 1 file changed, 56 insertions(+), 57 deletions(-)
+Alex
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 4a23ba9361b3..40c051813c34 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1802,6 +1802,8 @@ struct qmp_phy_cfg {
-  * struct qmp_phy - per-lane phy descriptor
-  *
-  * @phy: generic phy
-+ * @cfg: phy specific configuration
-+ * @serdes: iomapped memory space for phy's serdes (i.e. PLL)
-  * @tx: iomapped memory space for lane's tx
-  * @rx: iomapped memory space for lane's rx
-  * @pcs: iomapped memory space for lane's pcs
-@@ -1816,6 +1818,8 @@ struct qmp_phy_cfg {
-  */
- struct qmp_phy {
- 	struct phy *phy;
-+	const struct qmp_phy_cfg *cfg;
-+	void __iomem *serdes;
- 	void __iomem *tx;
- 	void __iomem *rx;
- 	void __iomem *pcs;
-@@ -1833,14 +1837,12 @@ struct qmp_phy {
-  * struct qcom_qmp - structure holding QMP phy block attributes
-  *
-  * @dev: device
-- * @serdes: iomapped memory space for phy's serdes
-  * @dp_com: iomapped memory space for phy's dp_com control block
-  *
-  * @clks: array of clocks required by phy
-  * @resets: array of resets required by phy
-  * @vregs: regulator supplies bulk data
-  *
-- * @cfg: phy specific configuration
-  * @phys: array of per-lane phy descriptors
-  * @phy_mutex: mutex lock for PHY common block initialization
-  * @init_count: phy common block initialization count
-@@ -1848,14 +1850,12 @@ struct qmp_phy {
-  */
- struct qcom_qmp {
- 	struct device *dev;
--	void __iomem *serdes;
- 	void __iomem *dp_com;
- 
- 	struct clk_bulk_data *clks;
- 	struct reset_control **resets;
- 	struct regulator_bulk_data *vregs;
- 
--	const struct qmp_phy_cfg *cfg;
- 	struct qmp_phy **phys;
- 
- 	struct mutex phy_mutex;
-@@ -2478,8 +2478,8 @@ static void qcom_qmp_phy_configure(void __iomem *base,
- static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- {
- 	struct qcom_qmp *qmp = qphy->qmp;
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
--	void __iomem *serdes = qmp->serdes;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
-+	void __iomem *serdes = qphy->serdes;
- 	void __iomem *pcs = qphy->pcs;
- 	void __iomem *dp_com = qmp->dp_com;
- 	int ret, i;
-@@ -2510,7 +2510,7 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 		ret = reset_control_deassert(qmp->resets[i]);
- 		if (ret) {
- 			dev_err(qmp->dev, "%s reset deassert failed\n",
--				qmp->cfg->reset_list[i]);
-+				qphy->cfg->reset_list[i]);
- 			goto err_rst;
- 		}
- 	}
-@@ -2592,10 +2592,11 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
- 	return ret;
- }
- 
--static int qcom_qmp_phy_com_exit(struct qcom_qmp *qmp)
-+static int qcom_qmp_phy_com_exit(struct qmp_phy *qphy)
- {
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
--	void __iomem *serdes = qmp->serdes;
-+	struct qcom_qmp *qmp = qphy->qmp;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
-+	void __iomem *serdes = qphy->serdes;
- 	int i = cfg->num_resets;
- 
- 	mutex_lock(&qmp->phy_mutex);
-@@ -2630,7 +2631,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- {
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
- 	struct qcom_qmp *qmp = qphy->qmp;
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
- 	void __iomem *tx = qphy->tx;
- 	void __iomem *rx = qphy->rx;
- 	void __iomem *pcs = qphy->pcs;
-@@ -2755,7 +2756,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- 	if (cfg->has_lane_rst)
- 		reset_control_assert(qphy->lane_rst);
- err_lane_rst:
--	qcom_qmp_phy_com_exit(qmp);
-+	qcom_qmp_phy_com_exit(qphy);
- 
- 	return ret;
- }
-@@ -2763,8 +2764,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- static int qcom_qmp_phy_disable(struct phy *phy)
- {
- 	struct qmp_phy *qphy = phy_get_drvdata(phy);
--	struct qcom_qmp *qmp = qphy->qmp;
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
- 
- 	clk_disable_unprepare(qphy->pipe_clk);
- 
-@@ -2787,7 +2787,7 @@ static int qcom_qmp_phy_disable(struct phy *phy)
- 	if (cfg->has_lane_rst)
- 		reset_control_assert(qphy->lane_rst);
- 
--	qcom_qmp_phy_com_exit(qmp);
-+	qcom_qmp_phy_com_exit(qphy);
- 
- 	return 0;
- }
-@@ -2804,8 +2804,7 @@ static int qcom_qmp_phy_set_mode(struct phy *phy,
- 
- static void qcom_qmp_phy_enable_autonomous_mode(struct qmp_phy *qphy)
- {
--	struct qcom_qmp *qmp = qphy->qmp;
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
- 	void __iomem *pcs = qphy->pcs;
- 	void __iomem *pcs_misc = qphy->pcs_misc;
- 	u32 intr_mask;
-@@ -2834,8 +2833,7 @@ static void qcom_qmp_phy_enable_autonomous_mode(struct qmp_phy *qphy)
- 
- static void qcom_qmp_phy_disable_autonomous_mode(struct qmp_phy *qphy)
- {
--	struct qcom_qmp *qmp = qphy->qmp;
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
- 	void __iomem *pcs = qphy->pcs;
- 	void __iomem *pcs_misc = qphy->pcs_misc;
- 
-@@ -2855,7 +2853,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
- 	struct qmp_phy *qphy = qmp->phys[0];
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
- 
- 	dev_vdbg(dev, "Suspending QMP phy, mode:%d\n", qphy->mode);
- 
-@@ -2880,7 +2878,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
- 	struct qmp_phy *qphy = qmp->phys[0];
--	const struct qmp_phy_cfg *cfg = qmp->cfg;
-+	const struct qmp_phy_cfg *cfg = qphy->cfg;
- 	int ret = 0;
- 
- 	dev_vdbg(dev, "Resuming QMP phy, mode:%d\n", qphy->mode);
-@@ -2912,10 +2910,10 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int qcom_qmp_phy_vreg_init(struct device *dev)
-+static int qcom_qmp_phy_vreg_init(struct device *dev, const struct qmp_phy_cfg *cfg)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
--	int num = qmp->cfg->num_vregs;
-+	int num = cfg->num_vregs;
- 	int i;
- 
- 	qmp->vregs = devm_kcalloc(dev, num, sizeof(*qmp->vregs), GFP_KERNEL);
-@@ -2923,24 +2921,24 @@ static int qcom_qmp_phy_vreg_init(struct device *dev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < num; i++)
--		qmp->vregs[i].supply = qmp->cfg->vreg_list[i];
-+		qmp->vregs[i].supply = cfg->vreg_list[i];
- 
- 	return devm_regulator_bulk_get(dev, num, qmp->vregs);
- }
- 
--static int qcom_qmp_phy_reset_init(struct device *dev)
-+static int qcom_qmp_phy_reset_init(struct device *dev, const struct qmp_phy_cfg *cfg)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
- 	int i;
- 
--	qmp->resets = devm_kcalloc(dev, qmp->cfg->num_resets,
-+	qmp->resets = devm_kcalloc(dev, cfg->num_resets,
- 				   sizeof(*qmp->resets), GFP_KERNEL);
- 	if (!qmp->resets)
- 		return -ENOMEM;
- 
--	for (i = 0; i < qmp->cfg->num_resets; i++) {
-+	for (i = 0; i < cfg->num_resets; i++) {
- 		struct reset_control *rst;
--		const char *name = qmp->cfg->reset_list[i];
-+		const char *name = cfg->reset_list[i];
- 
- 		rst = devm_reset_control_get(dev, name);
- 		if (IS_ERR(rst)) {
-@@ -2953,10 +2951,10 @@ static int qcom_qmp_phy_reset_init(struct device *dev)
- 	return 0;
- }
- 
--static int qcom_qmp_phy_clk_init(struct device *dev)
-+static int qcom_qmp_phy_clk_init(struct device *dev, const struct qmp_phy_cfg *cfg)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
--	int num = qmp->cfg->num_clks;
-+	int num = cfg->num_clks;
- 	int i;
- 
- 	qmp->clks = devm_kcalloc(dev, num, sizeof(*qmp->clks), GFP_KERNEL);
-@@ -2964,7 +2962,7 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < num; i++)
--		qmp->clks[i].id = qmp->cfg->clk_list[i];
-+		qmp->clks[i].id = cfg->clk_list[i];
- 
- 	return devm_clk_bulk_get(dev, num, qmp->clks);
- }
-@@ -2998,12 +2996,6 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
- 	struct clk_init_data init = { };
- 	int ret;
- 
--	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
--	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
--		/* not all phys register pipe clocks, so return success */
--		return 0;
--	}
--
- 	ret = of_property_read_string(np, "clock-output-names", &init.name);
- 	if (ret) {
- 		dev_err(qmp->dev, "%pOFn: No clock-output-names\n", np);
-@@ -3054,7 +3046,8 @@ static const struct phy_ops qcom_qmp_pcie_ufs_ops = {
- };
- 
- static
--int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
-+int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id,
-+			void __iomem *serdes, const struct qmp_phy_cfg *cfg)
- {
- 	struct qcom_qmp *qmp = dev_get_drvdata(dev);
- 	struct phy *generic_phy;
-@@ -3067,6 +3060,8 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
- 	if (!qphy)
- 		return -ENOMEM;
- 
-+	qphy->cfg = cfg;
-+	qphy->serdes = serdes;
- 	/*
- 	 * Get memory resources for each phy lane:
- 	 * Resources are indexed as: tx -> 0; rx -> 1; pcs -> 2.
-@@ -3091,7 +3086,7 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
- 	 * back to old legacy behavior of assuming they can be reached at an
- 	 * offset from the first lane.
- 	 */
--	if (qmp->cfg->is_dual_lane_phy) {
-+	if (cfg->is_dual_lane_phy) {
- 		qphy->tx2 = of_iomap(np, 3);
- 		qphy->rx2 = of_iomap(np, 4);
- 		if (!qphy->tx2 || !qphy->rx2) {
-@@ -3124,8 +3119,8 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
- 	snprintf(prop_name, sizeof(prop_name), "pipe%d", id);
- 	qphy->pipe_clk = of_clk_get_by_name(np, prop_name);
- 	if (IS_ERR(qphy->pipe_clk)) {
--		if (qmp->cfg->type == PHY_TYPE_PCIE ||
--		    qmp->cfg->type == PHY_TYPE_USB3) {
-+		if (cfg->type == PHY_TYPE_PCIE ||
-+		    cfg->type == PHY_TYPE_USB3) {
- 			ret = PTR_ERR(qphy->pipe_clk);
- 			if (ret != -EPROBE_DEFER)
- 				dev_err(dev,
-@@ -3137,7 +3132,7 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
- 	}
- 
- 	/* Get lane reset, if any */
--	if (qmp->cfg->has_lane_rst) {
-+	if (cfg->has_lane_rst) {
- 		snprintf(prop_name, sizeof(prop_name), "lane%d", id);
- 		qphy->lane_rst = of_reset_control_get(np, prop_name);
- 		if (IS_ERR(qphy->lane_rst)) {
-@@ -3146,7 +3141,7 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
- 		}
- 	}
- 
--	if (qmp->cfg->type == PHY_TYPE_UFS || qmp->cfg->type == PHY_TYPE_PCIE)
-+	if (cfg->type == PHY_TYPE_UFS || cfg->type == PHY_TYPE_PCIE)
- 		ops = &qcom_qmp_pcie_ufs_ops;
- 
- 	generic_phy = devm_phy_create(dev, np, ops);
-@@ -3244,6 +3239,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 	struct device_node *child;
- 	struct phy_provider *phy_provider;
- 	void __iomem *base;
-+	void __iomem *serdes;
-+	const struct qmp_phy_cfg *cfg;
- 	int num, id;
- 	int ret;
- 
-@@ -3255,8 +3252,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 	dev_set_drvdata(dev, qmp);
- 
- 	/* Get the specific init parameters of QMP phy */
--	qmp->cfg = of_device_get_match_data(dev);
--	if (!qmp->cfg)
-+	cfg = of_device_get_match_data(dev);
-+	if (!cfg)
- 		return -EINVAL;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -3265,10 +3262,10 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 
- 	/* per PHY serdes; usually located at base address */
--	qmp->serdes = base;
-+	serdes = base;
- 
- 	/* per PHY dp_com; if PHY has dp_com control block */
--	if (qmp->cfg->has_phy_dp_com_ctrl) {
-+	if (cfg->has_phy_dp_com_ctrl) {
- 		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 						   "dp_com");
- 		base = devm_ioremap_resource(dev, res);
-@@ -3280,15 +3277,15 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 
- 	mutex_init(&qmp->phy_mutex);
- 
--	ret = qcom_qmp_phy_clk_init(dev);
-+	ret = qcom_qmp_phy_clk_init(dev, cfg);
- 	if (ret)
- 		return ret;
- 
--	ret = qcom_qmp_phy_reset_init(dev);
-+	ret = qcom_qmp_phy_reset_init(dev, cfg);
- 	if (ret)
- 		return ret;
- 
--	ret = qcom_qmp_phy_vreg_init(dev);
-+	ret = qcom_qmp_phy_vreg_init(dev, cfg);
- 	if (ret) {
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "failed to get regulator supplies: %d\n",
-@@ -3298,7 +3295,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 
- 	num = of_get_available_child_count(dev->of_node);
- 	/* do we have a rogue child node ? */
--	if (num > qmp->cfg->nlanes)
-+	if (num > cfg->nlanes)
- 		return -EINVAL;
- 
- 	qmp->phys = devm_kcalloc(dev, num, sizeof(*qmp->phys), GFP_KERNEL);
-@@ -3316,7 +3313,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		/* Create per-lane phy */
--		ret = qcom_qmp_phy_create(dev, child, id);
-+		ret = qcom_qmp_phy_create(dev, child, id, serdes, cfg);
- 		if (ret) {
- 			dev_err(dev, "failed to create lane%d phy, %d\n",
- 				id, ret);
-@@ -3327,11 +3324,13 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 		 * Register the pipe clock provided by phy.
- 		 * See function description to see details of this pipe clock.
- 		 */
--		ret = phy_pipe_clk_register(qmp, child);
--		if (ret) {
--			dev_err(qmp->dev,
--				"failed to register pipe clock source\n");
--			goto err_node_put;
-+		if (cfg->type == PHY_TYPE_USB3 || cfg->type == PHY_TYPE_PCIE) {
-+			ret = phy_pipe_clk_register(qmp, child);
-+			if (ret) {
-+				dev_err(qmp->dev,
-+					"failed to register pipe clock source\n");
-+				goto err_node_put;
-+			}
- 		}
- 		id++;
- 	}
--- 
-Sent by a computer, using git, on the internet
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>   drivers/pci/iov.c   | 1 +
+> >>   include/linux/pci.h | 2 ++
+> >>   2 files changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> >> index b37e08c..2bec77c 100644
+> >> --- a/drivers/pci/iov.c
+> >> +++ b/drivers/pci/iov.c
+> >> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> >>   	virtfn->device = iov->vf_device;
+> >>   	virtfn->is_virtfn = 1;
+> >>   	virtfn->physfn = pci_dev_get(dev);
+> >> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
+> >>   
+> >>   	if (id == 0)
+> >>   		pci_read_vf_config_common(virtfn);
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index 8355306..9316cce 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -227,6 +227,8 @@ enum pci_dev_flags {
+> >>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+> >>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
+> >>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> >> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
+> >> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
+> >>   };
+> >>   
+> >>   enum pci_irq_reroute_variant {
+> >> -- 
+> >> 1.8.3.1
+> >>  
+> 
 
