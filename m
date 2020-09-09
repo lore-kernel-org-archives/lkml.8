@@ -2,146 +2,169 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FE0C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADCEE207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028D5215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MkLV2iGR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yTOeDS0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbgIIQSG (ORCPT
+        id S1730966AbgIIQSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:18:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730885AbgIIQN0 (ORCPT
+        Wed, 9 Sep 2020 12:18:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:46348 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730950AbgIIQPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:13:26 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089G3hGt094150;
-        Wed, 9 Sep 2020 12:12:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=l58yEDHShi5ObMeKXd9i1HaDyPqzpve8oVA61+yeocE=;
- b=MkLV2iGRLrJMnX5uAc0U1tKsI6PtfCpTFLq0ne+qlZoGDxasR0vpXy0ZPQFv53fQioKS
- Njkr3bSJU9cSed7Dznmbo9BmJczRYk4RfUadU7jKzxZzmlvIbclW1mWXcF38rx/3YBHD
- DHGFzRfbHRhULHpR4pMwew+G5+a7cM4wQ8S6KHO0/Vn8+p0qPD1IaNDa27Ys8fdQ7ayu
- mkAPh04ADJ9xzS/1izjRTf5b07VXHfPvqzONbas5SsWm0Wr8YBUObSz63a3/j7CZP7rT
- EXGtrBqSj1ncxxjLbt/3Wb6mGFGOd2DCOaIuQKq8Kp7HtL1bzAl06aqbqtEuMqwEMpQZ BA== 
+        Wed, 9 Sep 2020 12:15:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089EcaZO039982;
+        Wed, 9 Sep 2020 14:43:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=6ULPP3Gb9cEI6JekEdlEIOYKhWs71LEp2bfdfN7zhRs=;
+ b=yTOeDS0wHSkYYU8WFkoIh5Ce9ZZOxElSYphhkwTfRfseKTRFiGQy0361GiDxIjsNLECN
+ NB2W+blqs9WmJI80WNRon39lhU7mS+KCMm6Owh48l2DXLYAtJqLSj5+1FeBS/LBGwWhi
+ /AgtY8a5hK3ebeqeTIvrJhQrcVWKV2m1VZHB5PZUxaJJtGMaa703FemfNLRIYrY9sZg7
+ HVls44NA6J8YeIvurcGQrIWlU7FIacnPJOYMsKVv097yhRQzWvYrh14R/DmKZh3gGD58
+ VpzDfGNJRENM+JkFXVCN8JlABBsrlglZG8i5fA0t+kcGcdiBDWwHabzjkTDAhUqVyes/ Pw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 33c2mm27me-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Sep 2020 14:43:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089Ef5Tp033108;
+        Wed, 9 Sep 2020 14:41:32 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33eyv56ynt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 12:12:20 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089G4E1s096945;
-        Wed, 9 Sep 2020 12:12:19 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33eyv56yn1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 12:12:19 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089GA6XD019174;
-        Wed, 9 Sep 2020 16:12:17 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06fra.de.ibm.com with ESMTP id 33e5gmrvyy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 16:12:17 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089GCEnm26673490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Sep 2020 16:12:14 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23E2111C054;
-        Wed,  9 Sep 2020 16:12:14 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E726D11C052;
-        Wed,  9 Sep 2020 16:12:12 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.79.102])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed,  9 Sep 2020 16:12:12 +0000 (GMT)
-Date:   Wed, 9 Sep 2020 18:12:11 +0200
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH v2 0/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200909181211.1cad8d28@thinkpad>
-In-Reply-To: <20200908193650.1c1511d0@thinkpad>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
-        <20200907201256.GC1976319@kernel.org>
-        <9bde9857-fdfd-e384-ea27-a14e5a06f1e6@csgroup.eu>
-        <20200908193650.1c1511d0@thinkpad>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by aserp3020.oracle.com with ESMTP id 33cmk6prwy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Sep 2020 14:41:32 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089EfUC8034192;
+        Wed, 9 Sep 2020 14:41:32 GMT
+Received: from localhost.localdomain (dhcp-10-65-175-55.vpn.oracle.com [10.65.175.55])
+        by aserp3020.oracle.com with ESMTP id 33cmk6pru6-3;
+        Wed, 09 Sep 2020 14:41:31 +0000
+From:   Tom Hromatka <tom.hromatka@oracle.com>
+To:     tom.hromatka@oracle.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, fweisbec@gmail.com,
+        tglx@linutronix.de, mingo@kernel.org, adobriyan@gmail.com
+Subject: [RESEND PATCH 2/2] /proc/stat: Simplify iowait and idle calculations when cpu is offline
+Date:   Wed,  9 Sep 2020 08:41:22 -0600
+Message-Id: <20200909144122.77210-3-tom.hromatka@oracle.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200909144122.77210-1-tom.hromatka@oracle.com>
+References: <20200909144122.77210-1-tom.hromatka@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_09:2020-09-09,2020-09-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- clxscore=1015 impostorscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090139
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
+ phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 19:36:50 +0200
-Gerald Schaefer <gerald.schaefer@linux.ibm.com> wrote:
+A customer reported that when a cpu goes offline, the iowait and idle
+times reported in /proc/stat will sometimes spike.  This is being
+caused by a different data source being used for these values when a
+cpu is offline.
 
-[..]
-> 
-> It seems now that the generalization is very well accepted so far,
-> apart from some apparent issues on arm. Also, merging 2 + 3 and
-> putting them first seems to be acceptable, so we could do that for
-> v3, if there are no objections.
-> 
-> Of course, we first need to address the few remaining issues for
-> arm(32?), which do look quite confusing to me so far. BTW, sorry for
-> the compile error with patch 3, I guess we did the cross-compile only
-> for 1 + 2 applied, to see the bloat-o-meter changes. But I guess
-> patch 3 already proved its usefulness by that :-)
+Prior to this patch:
 
-Umm, replace "arm" with "power", sorry. No issues on arm so far, but
-also no ack I think.
+put the system under heavy load so that there is little idle time
 
-Thanks to Christophe for the power change, and to Mike for volunteering
-for some cross compilation and cross-arch testing. Will send v3 with
-merged and re-ordered patches after some more testing.
+	       user nice system    idle iowait
+	cpu  109515   17  32111  220686    607
+
+take cpu1 offline
+
+	       user nice system    idle iowait
+	cpu  113742   17  32721  220724    612
+
+bring cpu1 back online
+
+	       user nice system    idle iowait
+	cpu  118332   17  33430  220687    607
+
+To prevent this, let's use the same data source whether a cpu is
+online or not.
+
+With this patch:
+
+put the system under heavy load so that there is little idle time
+
+	       user nice system    idle iowait
+	cpu   14096   16   4646  157687    426
+
+take cpu1 offline
+
+	       user nice system    idle iowait
+	cpu   21614   16   7179  157687    426
+
+bring cpu1 back online
+
+	       user nice system    idle iowait
+	cpu   27362   16   9555  157688    426
+
+Signed-off-by: Tom Hromatka <tom.hromatka@oracle.com>
+---
+ fs/proc/stat.c | 24 ++++++------------------
+ 1 file changed, 6 insertions(+), 18 deletions(-)
+
+diff --git a/fs/proc/stat.c b/fs/proc/stat.c
+index 46b3293015fe..35b92539e711 100644
+--- a/fs/proc/stat.c
++++ b/fs/proc/stat.c
+@@ -47,32 +47,20 @@ static u64 get_iowait_time(struct kernel_cpustat *kcs, int cpu)
+ 
+ static u64 get_idle_time(struct kernel_cpustat *kcs, int cpu)
+ {
+-	u64 idle, idle_usecs = -1ULL;
++	u64 idle, idle_usecs;
+ 
+-	if (cpu_online(cpu))
+-		idle_usecs = get_cpu_idle_time_us(cpu, NULL);
+-
+-	if (idle_usecs == -1ULL)
+-		/* !NO_HZ or cpu offline so we can rely on cpustat.idle */
+-		idle = kcs->cpustat[CPUTIME_IDLE];
+-	else
+-		idle = idle_usecs * NSEC_PER_USEC;
++	idle_usecs = get_cpu_idle_time_us(cpu, NULL);
++	idle = idle_usecs * NSEC_PER_USEC;
+ 
+ 	return idle;
+ }
+ 
+ static u64 get_iowait_time(struct kernel_cpustat *kcs, int cpu)
+ {
+-	u64 iowait, iowait_usecs = -1ULL;
+-
+-	if (cpu_online(cpu))
+-		iowait_usecs = get_cpu_iowait_time_us(cpu, NULL);
++	u64 iowait, iowait_usecs;
+ 
+-	if (iowait_usecs == -1ULL)
+-		/* !NO_HZ or cpu offline so we can rely on cpustat.iowait */
+-		iowait = kcs->cpustat[CPUTIME_IOWAIT];
+-	else
+-		iowait = iowait_usecs * NSEC_PER_USEC;
++	iowait_usecs = get_cpu_iowait_time_us(cpu, NULL);
++	iowait = iowait_usecs * NSEC_PER_USEC;
+ 
+ 	return iowait;
+ }
+-- 
+2.25.4
+
