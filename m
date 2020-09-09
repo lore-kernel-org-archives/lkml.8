@@ -2,134 +2,112 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53099C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AC7C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8D121741
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3F12078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BOZkXJ6/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iBrZT9eE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgIIHSE (ORCPT
+        id S1727087AbgIIHSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIIHR7 (ORCPT
+        Wed, 9 Sep 2020 03:18:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45408 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725864AbgIIHSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:17:59 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF3AC061573;
-        Wed,  9 Sep 2020 00:17:58 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l191so1418823pgd.5;
-        Wed, 09 Sep 2020 00:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=64Bt6kd9gxNJLRVuqcxKj5M+pb5+qbe839Gm0r/zIvo=;
-        b=BOZkXJ6/UZfd/Smz8exM0/GCMabLwdZY0S7okls6rxu14xZzEAcX+7DHmsZISbkkg1
-         yI+W8ytZ2T8AY61EhOAtxyLw/FXWXvZ8zE3VvXxr0LX0FbUVdMosXzPdv7nuDZzbWrkz
-         Mq+leo06/a5x3b+9W+6QJAP+RWsyDJrKakDSaqjR+ch+HTVPMwA9vL25n4E5ufexmJfx
-         5RuG0VmZbBZydIVVUfcO+9WXm3igrUCRTWEIvanjZY4RmigvsMwz8KyfXu7TDXj/DuGZ
-         6uQ8GIDFcht7e76ccDGhc/3kIpHbgTIfiJpCWNpM8Bqdg88VJuTWxAKDS8rVfZYDUBLN
-         YyNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=64Bt6kd9gxNJLRVuqcxKj5M+pb5+qbe839Gm0r/zIvo=;
-        b=Y4UYQGpzbXyxbhQZ1aliF6qPEQZzplLB6I+ccPiRFr1nycbAdokz4qsPJHczBahpXA
-         xUXkHHDO1cw3CvGQl/OoHuULY0UPRCs+seMKNEY6ToEREgukGt7CoqpEQxGvGCvM9oHH
-         VmDgPQyXFEUiu9WW6UP19dWTdHYjB+/gBwIq8NcljM+nlIDi1kl+n6WyPiiDbu1Qtve0
-         rWJ54RgD4ydPjcLTGtNW0Zq96wylaDzp3794Z6kdzAya83DCyKQmzJiOG4goNNVS3Q8F
-         5cZ4Vkmv44w4oZ6i7v4PM+yHvRo8yPDXUZCqf9eP13GBAHBEh+tviJgSowQxyBJ1nse5
-         YWIQ==
-X-Gm-Message-State: AOAM530UuglL65IWHw1WU0h5LWsBEVIuGGPmzlQ+Pn/18I104/MI1wFP
-        WZTSA7Ze0ZLyjXW9Hyoo1A==
-X-Google-Smtp-Source: ABdhPJxuGhKjFWPHlV7tWVd/A6dvlcDQsvdVZO4mWSI4b/JsVgqaXXITNfUrG/50JWsRL7CjUveweg==
-X-Received: by 2002:a17:902:7203:b029:d0:cbe1:e73a with SMTP id ba3-20020a1709027203b02900d0cbe1e73amr2786781plb.21.1599635878103;
-        Wed, 09 Sep 2020 00:17:58 -0700 (PDT)
-Received: from localhost.localdomain (n11212042027.netvigator.com. [112.120.42.27])
-        by smtp.gmail.com with ESMTPSA id y3sm1699661pfb.18.2020.09.09.00.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 00:17:57 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH net v2] Bluetooth: Fix slab-out-of-bounds read in hci_le_direct_adv_report_evt()
-Date:   Wed,  9 Sep 2020 03:17:00 -0400
-Message-Id: <20200909071700.1100748-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200805180902.684024-1-yepeilin.cs@gmail.com>
-References: <20200805180902.684024-1-yepeilin.cs@gmail.com>
+        Wed, 9 Sep 2020 03:18:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599635908;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+wEruRxAJjrmlSOAHKv/rV6Jug/EyrZcjQjuyHvA45g=;
+        b=iBrZT9eEcBm9NpKo/8XBwTgtgHIcPId5U5sD2t1ljYpDA9zjzsCU1A8+HHUlm8EpknEBjP
+        t1INpESFCwzEHhDq90HcwnDtzJDTGlrmr9FUeLjxW+f+EuCx01mX/9hXSSv1poneQzDKks
+        uApaVeeM5LW9T9ZMDXPYKM3aD/+dXIs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-515-5r-hCqJsMJyEZPXWaqrx3Q-1; Wed, 09 Sep 2020 03:18:23 -0400
+X-MC-Unique: 5r-hCqJsMJyEZPXWaqrx3Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D3E418BA296;
+        Wed,  9 Sep 2020 07:18:22 +0000 (UTC)
+Received: from localhost (ovpn-12-76.pek2.redhat.com [10.72.12.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C6C488356F;
+        Wed,  9 Sep 2020 07:18:17 +0000 (UTC)
+From:   Ming Lei <ming.lei@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Veronika Kabatova <vkabatov@redhat.com>,
+        Sagi Grimberg <sagi@grimberg.me>, Tejun Heo <tj@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: [PATCH V4 0/3] percpu_ref & block: reduce memory footprint of percpu_ref in fast path
+Date:   Wed,  9 Sep 2020 15:18:10 +0800
+Message-Id: <20200909071813.1580038-1-ming.lei@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`num_reports` is not being properly checked. A malformed event packet with
-a large `num_reports` number makes hci_le_direct_adv_report_evt() read out
-of bounds. Fix it.
+Hi,
 
-Cc: stable@vger.kernel.org
-Fixes: 2f010b55884e ("Bluetooth: Add support for handling LE Direct Advertising Report events")
-Reported-and-tested-by: syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=24ebd650e20bd263ca01
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-Change in v2:
-    - add "Cc: stable@" tag.
+The 1st patch removes memory footprint of percpu_ref in fast path
+from 7 words to 2 words, since it is often used in fast path and
+embedded in user struct.
 
- net/bluetooth/hci_event.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+The 2nd patch moves .q_usage_counter to 1st cacheline of
+'request_queue'.
 
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 4b7fc430793c..aec43ae488d1 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5863,21 +5863,19 @@ static void hci_le_direct_adv_report_evt(struct hci_dev *hdev,
- 					 struct sk_buff *skb)
- {
- 	u8 num_reports = skb->data[0];
--	void *ptr = &skb->data[1];
-+	struct hci_ev_le_direct_adv_info *ev = (void *)&skb->data[1];
- 
--	hci_dev_lock(hdev);
-+	if (!num_reports || skb->len < num_reports * sizeof(*ev) + 1)
-+		return;
- 
--	while (num_reports--) {
--		struct hci_ev_le_direct_adv_info *ev = ptr;
-+	hci_dev_lock(hdev);
- 
-+	for (; num_reports; num_reports--, ev++)
- 		process_adv_report(hdev, ev->evt_type, &ev->bdaddr,
- 				   ev->bdaddr_type, &ev->direct_addr,
- 				   ev->direct_addr_type, ev->rssi, NULL, 0,
- 				   false);
- 
--		ptr += sizeof(*ev);
--	}
--
- 	hci_dev_unlock(hdev);
- }
- 
+Simple test on null_blk shows ~2% IOPS boost on one 16cores(two threads
+per core) machine, dual socket/numa.
+
+V4:
+	- rename percpu_ref_inited as percpu_ref_is_initialized
+
+V3:
+	- fix kernel oops on MD
+	- add patch for avoiding to use percpu-refcount internal from md
+	  code
+	- pass Red Hat CKI test which is done by Veronika Kabatova
+
+V2:
+	- pass 'gfp' to kzalloc() for fixing block/027 failure reported by
+	kernel test robot
+	- protect percpu_ref_is_zero() with destroying percpu-refcount by
+	spin lock  
+
+
+Ming Lei (3):
+  percpu_ref: add percpu_ref_is_initialized for MD
+  percpu_ref: reduce memory footprint of percpu_ref in fast path
+  block: move 'q_usage_counter' into front of 'request_queue'
+
+ drivers/infiniband/sw/rdmavt/mr.c |   2 +-
+ drivers/md/md.c                   |   2 +-
+ include/linux/blkdev.h            |   3 +-
+ include/linux/percpu-refcount.h   |  46 ++++------
+ lib/percpu-refcount.c             | 137 +++++++++++++++++++++++-------
+ 5 files changed, 126 insertions(+), 64 deletions(-)
+
+Cc: Veronika Kabatova <vkabatov@redhat.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Bart Van Assche <bvanassche@acm.org>
 -- 
-2.25.1
+2.25.2
 
