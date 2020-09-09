@@ -2,149 +2,248 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B818EC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 620002166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7087721D40
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:46:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Bth+Smwy"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YZG+Xk2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgIIQq1 (ORCPT
+        id S1730944AbgIIQqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:46:27 -0400
-Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:20520
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730854AbgIIQHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:07:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VqFYzdSj8Qrw84dBOWXu9UqPydbuVLBliKNoLNcy2P0txyS7CqQhSO69uj3+AvK2ca4IbayNj9rv3g+b4U4Rp19FHCfJgOOFx7bazHf3OH5+Xpwfj5x0nUJe4cZiv0f68JU2cNJOVAgx5E7zGoMGjgOCs7W39EScpIWKrlkjg/jh/xMIQvzRTsEUIiDbBkGhiqaQ0JGXwj0bsfg3eCdo8bZfoJCaaqK6teoHqKMlrhFojqW/FzndCB6xECmGl/DxZSzApMc5KCgqEv14kdyiiZdyO8bFoAwT9x2mw/VzvGCWkUgQRSW/VRNsRsmanUzkeHV4xzf6IUZcJeUcfIiCzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zcxFN4oeON1YsgquLNgKALNnxmet68CBuPz9ddGyWCg=;
- b=Vrf6uZEW3FFDu2L7MRhTktaIv2+Rk8uvfWEv6iLpSdWP66GZIrztfjleIdaKJUoz79qd4ATGUBQIQVvg8334jPuY/oTSCXkYpm3oFs3U4xvzoRDf2/jZErL5X8iBv9c/FinmFp6xQa77Cxtkr23chPijqQGBeYuht77MXq2qeY6+c/ONmblHr7a78XqXojlvPE3ApoH48wBe/K66QJIPHpgX3gXsC81+kWp8Tlteqm4eTPbQSyCHxdJNWp/QPJpMLq5OSs25Jm0s9qQ5f9a7V0TXNuccYzKQLIdWujJoxTi7tReBc/Bi9f2v/PNj4/QT0G3aBIxYswXoQrXJ307zIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zcxFN4oeON1YsgquLNgKALNnxmet68CBuPz9ddGyWCg=;
- b=Bth+Smwynou/e5OsirBmh5bK6Hloh47qNYzSa0cvyO0YJlwoAHEYgbRTsjkYsrVfZYxhkvhHN2NJ+uYSQgbgQxxOKvGUyWQbmU9G5IYtYV1ei8cFBE1HkYUrNDgO1RWOHQIlZBhz41nnStn7t6B2sJR3RmsbqQkR0bD/zrhlqeI=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13)
- by VI1PR0402MB3710.eurprd04.prod.outlook.com (2603:10a6:803:25::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 9 Sep
- 2020 13:45:02 +0000
-Received: from VE1PR04MB6702.eurprd04.prod.outlook.com
- ([fe80::1dce:f6ac:a750:5ed0]) by VE1PR04MB6702.eurprd04.prod.outlook.com
- ([fe80::1dce:f6ac:a750:5ed0%6]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
- 13:45:02 +0000
-From:   Wasim Khan <wasim.khan@oss.nxp.com>
-To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, V.sethi@nxp.com
-Cc:     Wasim Khan <wasim.khan@nxp.com>
-Subject: [PATCH 2/6] arm64: dts: ls1012a: Add label to pcie nodes
-Date:   Wed,  9 Sep 2020 19:14:32 +0530
-Message-Id: <1599659076-28121-3-git-send-email-wasim.khan@oss.nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599659076-28121-1-git-send-email-wasim.khan@oss.nxp.com>
-References: <1599659076-28121-1-git-send-email-wasim.khan@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0095.apcprd02.prod.outlook.com
- (2603:1096:4:90::35) To VE1PR04MB6702.eurprd04.prod.outlook.com
- (2603:10a6:803:123::13)
+        Wed, 9 Sep 2020 12:46:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38008 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730625AbgIIQHk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:07:40 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089G3U2S087988;
+        Wed, 9 Sep 2020 12:07:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=GOBHIxB9XcDj6VPq8bqibnaOg00HGwD0dSp/bZD1+iU=;
+ b=YZG+Xk2caimXf8cWdV2JhkNnv1OIcGS9Ri+wVnq/kjIIBDbH7LqPQ4C5lllQojgIVgpI
+ m8N07A1liTnByUtpB24HrydeQzQ8TtHZ8lZwf7QdyC0RiU/nyOi4ckFNYUJP4Smy/GHB
+ amuIkV+UXRX0bLx6p6tCTuoMVAGMpeOozwc+7wA1gWR54nPuuJrNqR2P8IAtebZ+gsDW
+ Bwtw5Zvxn0841fTJW3V2lgF6awOvv0I3DlTRiX76Z/q6Oy7pKWYf2w+jsaoDQtEChWHz
+ Bi3RCreNNDjBI4H29kMnMmwq6y25NUg66s92Lmfvd8/Fg8zP821xsJB4QYQyl2aod17B 9Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33f1pgsbjn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 12:07:22 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 089G3xFI089982;
+        Wed, 9 Sep 2020 12:07:21 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33f1pgsbgc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 12:07:21 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089G264Y015712;
+        Wed, 9 Sep 2020 16:07:19 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 33c2a84t13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 16:07:18 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089G7Gor25559480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Sep 2020 16:07:16 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1574B4C040;
+        Wed,  9 Sep 2020 16:07:16 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 608AB4C04A;
+        Wed,  9 Sep 2020 16:07:15 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.19.60])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  9 Sep 2020 16:07:15 +0000 (GMT)
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
+ <20200908170835.85440-1-ldufour@linux.ibm.com>
+ <20200909074011.GD7348@dhcp22.suse.cz>
+ <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+ <20200909090953.GE7348@dhcp22.suse.cz>
+ <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+ <20200909105914.GF7348@dhcp22.suse.cz>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+Date:   Wed, 9 Sep 2020 18:07:15 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03032.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0095.apcprd02.prod.outlook.com (2603:1096:4:90::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 13:45:00 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 22ab4025-bf79-4828-352d-08d854c68d56
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3710:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB3710C0EAB4CAD8C3064CA620D1260@VI1PR0402MB3710.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RtPexlNRtc7yh/bF9whGQeSfKuly4YiXdzt9rei8CT+9c6zAv5ow3VhofWHC86TVRgk0k1BzeKsgCASKyZ9/Nm4pQT3LGBJvTCdukqMS0Hqs+jpRtqGT0aH5myI+7LC3HBYYZrWhdKnXbQ9zW7TcWJDOcQJslnh9cKi5Neg2GTcBBZhFONvzex2JoeUarIY7ONnjXHz2n4QePxa44OiH/iSklIVMwAQyF7dsV9bTzY9zlv5x2jLYYCLV74p2SMaZtBttETV0JlKYPWqgBAFlGtnKEHw5XcirNduj8iRX2Jk4YDZhavyqeNtdgXf00Lnv/m6N0FL9if8PT2GO+6tE/knewraE806xvruiP6UbLLn3yn3ADVFrixZW4ryZJ655
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6702.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(346002)(39860400002)(136003)(376002)(8936002)(5660300002)(1006002)(2616005)(16526019)(186003)(8676002)(316002)(956004)(6486002)(44832011)(83380400001)(478600001)(66946007)(6506007)(6666004)(55236004)(52116002)(2906002)(66476007)(66556008)(4326008)(6512007)(26005)(86362001)(110426005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 767uMNuyttYB1MnjzecEjpWIthzr3LMe6rYFf3yAD8IxIlgTARp1A7z75GJSJacO512+CWGmy8D3fDHl7d5K+SVYeGQOrM5NSuCtxNpUkeQ8TzDMGHMQTCGh/PzApBvzR30JFYrCG5JKjgl2UzOKnMtVXN1/vrPVtakH/0CiV6IB+rW1C1P53JB3gECbXOL3VxfALU5oLMFlTxIkPYRTE3ZiwtmvrCezLT475HTOZaAp2lnPYk51tkvaOPqtP6JTfZzdAka60QlzrLwcmESif/aRfoeIGApc3pUp0ewK6BJDYrK/p95NMOfVCO2oLuoy3nhwTn1hALjwN5FeKXo3jcAY7AXlLwGP9ufPhDUz2VQU88/hxj9R3sFuUlPM2rtnv5OWWyx3BUwztKohc6wKI6Hn3c6SCsAkcGiVlCHVXm3LUUhTaIJ1e0x1uKlDY0cRZYNVyydEZIPN/wY6Nr5z/UPTWqYw1/J8po09cikwCx58uGGwkQlynBAiiZ2lZjP1OjFJbKcI2cW7Qn8VoXsuVlLAsDQ8lWq1r/hhD3cwPuQEcq0jZMMkiUOpDvCDWPPqhYQBdlxlmSjcQTd9kGlURq93NryUZxDVk8l9EVQAR3Bgfy4np9uPO7hddYUJubidHz/uQwJZ/mapPJAZPm9DXw==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22ab4025-bf79-4828-352d-08d854c68d56
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6702.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 13:45:02.6189
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lrEQ9/sb1lF4EI7mRpSyICNykBaX1nwVhekSAuM36ITEMmlvQjblKWHOAsIU2WTNlg7YrSgUrisiYfH/9ePbNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3710
+In-Reply-To: <20200909105914.GF7348@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_09:2020-09-09,2020-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 mlxscore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wasim Khan <wasim.khan@nxp.com>
+Le 09/09/2020 à 12:59, Michal Hocko a écrit :
+> On Wed 09-09-20 11:21:58, Laurent Dufour wrote:
+>> Le 09/09/2020 à 11:09, Michal Hocko a écrit :
+>>> On Wed 09-09-20 09:48:59, Laurent Dufour wrote:
+>>>> Le 09/09/2020 à 09:40, Michal Hocko a écrit :
+> [...]
+>>>>>> In
+>>>>>> that case, the system is able to boot but later hot-plug operation may lead
+>>>>>> to this panic because the node's links are correctly broken:
+>>>>>
+>>>>> Correctly broken? Could you provide more details on the inconsistency
+>>>>> please?
+>>>>
+>>>> laurent@ltczep3-lp4:~$ ls -l /sys/devices/system/memory/memory21
+>>>> total 0
+>>>> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node1 -> ../../node/node1
+>>>> lrwxrwxrwx 1 root root     0 Aug 24 05:27 node2 -> ../../node/node2
+>>>> -rw-r--r-- 1 root root 65536 Aug 24 05:27 online
+>>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_device
+>>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 phys_index
+>>>> drwxr-xr-x 2 root root     0 Aug 24 05:27 power
+>>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 removable
+>>>> -rw-r--r-- 1 root root 65536 Aug 24 05:27 state
+>>>> lrwxrwxrwx 1 root root     0 Aug 24 05:25 subsystem -> ../../../../bus/memory
+>>>> -rw-r--r-- 1 root root 65536 Aug 24 05:25 uevent
+>>>> -r--r--r-- 1 root root 65536 Aug 24 05:27 valid_zones
+>>>
+>>> OK, so there are two nodes referenced here. Not terrible from the user
+>>> point of view. Such a memory block will refuse to offline or online
+>>> IIRC.
+>>
+>> No the memory block is still owned by one node, only the sysfs
+>> representation is wrong. So the memory block can be hot unplugged, but only
+>> one node's link will be cleaned, and a '/syss/devices/system/node#/memory21'
+>> link will remain and that will be detected later when that memory block is
+>> hot plugged again.
+> 
+> OK, so you need to hotremove first and hotadd again to trigger the
+> problem. It is not like you would be a hot adding something new. This is
+> a useful information to have in the changelog.
+> 
+>>>>> Which physical memory range you are trying to add here and what is the
+>>>>> node affinity?
+>>>>
+>>>> None is added, the root cause of the issue is happening at boot time.
+>>>
+>>> Let me clarify my question. The crash has clearly happened during the
+>>> hotplug add_memory_resource - which is clearly not a boot time path.
+>>> I was askin for more information about why this has failed. It is quite
+>>> clear that sysfs machinery has failed and that led to BUG_ON but we are
+>>> mising an information on why. What was the physical memory range to be
+>>> added and why sysfs failed?
+>>
+>> The BUG_ON is detecting a bad state generated earlier, at boot time because
+>> register_mem_sect_under_node() didn't check for the block's node id.
+>>
+>>>>>> ------------[ cut here ]------------
+>>>>>> kernel BUG at /Users/laurent/src/linux-ppc/mm/memory_hotplug.c:1084!
+>>>>>> Oops: Exception in kernel mode, sig: 5 [#1]
+>>>>>> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+>>>>>> Modules linked in: rpadlpar_io rpaphp pseries_rng rng_core vmx_crypto gf128mul binfmt_misc ip_tables x_tables xfs libcrc32c crc32c_vpmsum autofs4
+>>>>>> CPU: 8 PID: 10256 Comm: drmgr Not tainted 5.9.0-rc1+ #25
+>>>>>> NIP:  c000000000403f34 LR: c000000000403f2c CTR: 0000000000000000
+>>>>>> REGS: c0000004876e3660 TRAP: 0700   Not tainted  (5.9.0-rc1+)
+>>>>>> MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 24000448  XER: 20040000
+>>>>>> CFAR: c000000000846d20 IRQMASK: 0
+>>>>>> GPR00: c000000000403f2c c0000004876e38f0 c0000000012f6f00 ffffffffffffffef
+>>>>>> GPR04: 0000000000000227 c0000004805ae680 0000000000000000 00000004886f0000
+>>>>>> GPR08: 0000000000000226 0000000000000003 0000000000000002 fffffffffffffffd
+>>>>>> GPR12: 0000000088000484 c00000001ec96280 0000000000000000 0000000000000000
+>>>>>> GPR16: 0000000000000000 0000000000000000 0000000000000004 0000000000000003
+>>>>>> GPR20: c00000047814ffe0 c0000007ffff7c08 0000000000000010 c0000000013332c8
+>>>>>> GPR24: 0000000000000000 c0000000011f6cc0 0000000000000000 0000000000000000
+>>>>>> GPR28: ffffffffffffffef 0000000000000001 0000000150000000 0000000010000000
+>>>>>> NIP [c000000000403f34] add_memory_resource+0x244/0x340
+>>>>>> LR [c000000000403f2c] add_memory_resource+0x23c/0x340
+>>>>>> Call Trace:
+>>>>>> [c0000004876e38f0] [c000000000403f2c] add_memory_resource+0x23c/0x340 (unreliable)
+>>>>>> [c0000004876e39c0] [c00000000040408c] __add_memory+0x5c/0xf0
+>>>>>> [c0000004876e39f0] [c0000000000e2b94] dlpar_add_lmb+0x1b4/0x500
+>>>>>> [c0000004876e3ad0] [c0000000000e3888] dlpar_memory+0x1f8/0xb80
+>>>>>> [c0000004876e3b60] [c0000000000dc0d0] handle_dlpar_errorlog+0xc0/0x190
+>>>>>> [c0000004876e3bd0] [c0000000000dc398] dlpar_store+0x198/0x4a0
+>>>>>> [c0000004876e3c90] [c00000000072e630] kobj_attr_store+0x30/0x50
+>>>>>> [c0000004876e3cb0] [c00000000051f954] sysfs_kf_write+0x64/0x90
+>>>>>> [c0000004876e3cd0] [c00000000051ee40] kernfs_fop_write+0x1b0/0x290
+>>>>>> [c0000004876e3d20] [c000000000438dd8] vfs_write+0xe8/0x290
+>>>>>> [c0000004876e3d70] [c0000000004391ac] ksys_write+0xdc/0x130
+>>>>>> [c0000004876e3dc0] [c000000000034e40] system_call_exception+0x160/0x270
+>>>>>> [c0000004876e3e20] [c00000000000d740] system_call_common+0xf0/0x27c
+>>>>>> Instruction dump:
+>>>>>> 48442e35 60000000 0b030000 3cbe0001 7fa3eb78 7bc48402 38a5fffe 7ca5fa14
+>>>>>> 78a58402 48442db1 60000000 7c7c1b78 <0b030000> 7f23cb78 4bda371d 60000000
+>>>>>> ---[ end trace 562fd6c109cd0fb2 ]---
+>>>>>
+>>>>> The BUG_ON on failure is absolutely horrendous. There must be a better
+>>>>> way to handle a failure like that. The failure means that
+>>>>> sysfs_create_link_nowarn has failed. Please describe why that is the
+>>>>> case.
+>>>>>
+>>>>>> This patch addresses the root cause by not relying on the system_state
+>>>>>> value to detect whether the call is due to a hot-plug operation or not. An
+>>>>>> additional parameter is added to link_mem_sections() to tell the context of
+>>>>>> the call and this parameter is propagated to register_mem_sect_under_node()
+>>>>>> throuugh the walk_memory_blocks()'s call.
+>>>>>
+>>>>> This looks like a hack to me and it deserves a better explanation. The
+>>>>> existing code is a hack on its own and it is inconsistent with other
+>>>>> boot time detection. We are using (system_state < SYSTEM_RUNNING) at other
+>>>>> places IIRC. Would it help to use the same here as well? Maybe we want to
+>>>>> wrap that inside a helper (early_memory_init()) and use it at all
+>>>>> places.
+>>>>
+>>>> I agree, this looks like a hack to check for the system_state value.
+>>>> I'll follow the David's proposal and introduce an enum detailing when the
+>>>> node id check has to be done or not.
+>>>
+>>> I am not sure an enum is going to make the existing situation less
+>>> messy. Sure we somehow have to distinguish boot init and runtime hotplug
+>>> because they have different constrains. I am arguing that a) we should
+>>> have a consistent way to check for those and b) we shouldn't blow up
+>>> easily just because sysfs infrastructure has failed to initialize.
+>>
+>> For the point a, using the enum allows to know in
+>> register_mem_sect_under_node() if the link operation is due to a hotplug
+>> operation or done at boot time.
+> 
+> Yes, but let me repeat. We have a mess here and different paths check
+> for the very same condition by different ways. We need to unify those.
 
-Add label to pcie nodes
+What are you suggesting to unify these checks (using a MP_* enum as suggested by 
+David, something else)?
 
-Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi       | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts
-index 9927b09..242f4b0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts
-@@ -87,7 +87,7 @@
- 	status = "okay";
- };
- 
--&pcie {
-+&pcie1 {
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index ff19ec4..6a2c091 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /*
-- * Device Tree Include file for Freescale Layerscape-1012A family SoC.
-+ * Device Tree Include file for NXP Layerscape-1012A family SoC.
-  *
-  * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2019-2020 NXP
-  *
-  */
- 
-@@ -489,7 +490,7 @@
- 			interrupts = <0 126 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--		pcie: pcie@3400000 {
-+		pcie1: pcie@3400000 {
- 			compatible = "fsl,ls1012a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
--- 
-2.7.4
+> 
+>> For the point b, one option would be ignore the link error in the case the
+>> link is already existing, but that BUG_ON() had the benefit to highlight the
+>> root issue.
+> 
+> Yes BUG_ON is obviously an over-reaction. The system is not in a state
+> to die anytime soon.
+> 
 
