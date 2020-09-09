@@ -2,536 +2,465 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5CEC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995A5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6DB21D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPa0/9/r"
+	by mail.kernel.org (Postfix) with ESMTP id 4181E21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599644714;
+	bh=RTYydk0NiZQrmbVcS5T84EHPFgOHmi1rT1/phKERnkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sdxuczxu3kWW6zwktBoFmS8KqYvNvU98go7jSOU+D3Xn4EHfZ7+PVEgDnFwBJhBWG
+	 YUxxLASoPIyt28puqySG/rh95RwxHgUDijQOfZJ/s2JQlAG6lZrfqnPrjL95Etp4U+
+	 IA85sFy8TB9vvEPZfB0/qB10PseiViQBuepQ8dJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgIIJoq (ORCPT
+        id S1730127AbgIIJpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgIIJme (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:42:34 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBADCC061756;
-        Wed,  9 Sep 2020 02:42:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l9so1665996wme.3;
-        Wed, 09 Sep 2020 02:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VBWrzLaWgvERfZXWdf1tz2E//xZoCgKLR1vFli6+1D4=;
-        b=NPa0/9/rtOBNIPygOUbt7jEjhEJ1MOT3fMAAxxLUaebUFwJ9OiTT8L54e90WZDep2z
-         545HcY3k++k0DtSg4soZTHcWoHPjIhkbfJO5mcqRNihjMHf4aw5uOd1NBSTDrCbBrinC
-         6CjKyebg/3ry9njV9FCZg1OAN3JLXNxCMsFj1q2+2KSfwIj4s8bVda2Iurcass1z2iLg
-         Y15Kkp5RLpoL1G+4kj00PH2RVOpeWMZX8B5EErkKQd5INmfEeiAL+Q6ySgmIUtY0aJlo
-         e6BrakefxHhFPuuwRL44Ieb7Y5kLQ41a/2AUZhWKEcDLUibR9g/9PPo1s/l2FgSDaDdK
-         f7hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VBWrzLaWgvERfZXWdf1tz2E//xZoCgKLR1vFli6+1D4=;
-        b=mzKuNAl0yqZ53EOUPqRnwRCGgPR+lPx4/pYUrBWe6U+GX4MjXYy0oI32TVfG+Fgy4a
-         MxqFMBslga5ZZkWXlI3cR9r/o9SOwokS8xbGwsbgjZ+ZDuw5M/Uc9F9jnJnhOAYAjwAM
-         b/tR167hRtH8d2e63c5i7sXvMhkK9rfQOkxyjM04w9wl1e026giOLeBiTfMi29/YIuPg
-         kEIOD+4f6hsI8DefS7L/CHmlBVNiBigzHfhq6waao/CpVGSGzO51dL93ZLhXR1SJBG61
-         IsQevVVBWLMKQ2czBEKt9+uzdtjm2pPRSvLTJOuKA2BIRppD2crWcx20FmCGy52n9KpD
-         Ku+w==
-X-Gm-Message-State: AOAM532iwu+KoC86cwMHlhMEutsHV1Mld4bfoYtHCdAnvifCQV7B3IrI
-        moVXFDcNAaoZeY2YjqybJztbgGkjW4w=
-X-Google-Smtp-Source: ABdhPJx8VLl38MJu9Ut6xnjEAJVot7X9zLqEMuBjpaRQwqDQrMPa7P8pAyW+Ex+EhE42W9PqDXDJ6A==
-X-Received: by 2002:a1c:5a56:: with SMTP id o83mr2781596wmb.77.1599644552524;
-        Wed, 09 Sep 2020 02:42:32 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.113.201])
-        by smtp.gmail.com with ESMTPSA id a11sm3053430wmm.18.2020.09.09.02.42.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 02:42:32 -0700 (PDT)
-Subject: Re: [PATCH v6 3/4] arm: dts: mt7623: add display subsystem related
- device nodes
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-References: <20200904110002.88966-1-linux@fw-web.de>
- <20200904110002.88966-4-linux@fw-web.de>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2d0248ea-2cb0-b8de-0c81-23160bd213c4@gmail.com>
-Date:   Wed, 9 Sep 2020 11:42:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 9 Sep 2020 05:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729298AbgIIJpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:45:08 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0D521973;
+        Wed,  9 Sep 2020 09:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599644706;
+        bh=RTYydk0NiZQrmbVcS5T84EHPFgOHmi1rT1/phKERnkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jD3z7tSnCm7Audw15dHQcZFzbob34VAAKij55leTxoFJ6SeDHudADGoBVuF+jKr9l
+         GlROoArIfPA8U1H9CbBCUYboJ8SgIsrzQQ8EJF6GK9Tda/mBKJfvKougQiyDx3QVfE
+         VkmOxjQLJIz5AHKakSnZpzgHiG9OleYJoK7Yv3LY=
+Date:   Wed, 9 Sep 2020 11:45:16 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuo.a.liu@intel.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [PATCH v3 06/17] virt: acrn: Introduce VM management interfaces
+Message-ID: <20200909094516.GB607744@kroah.com>
+References: <20200909090836.46762-1-shuo.a.liu@intel.com>
+ <20200909090836.46762-7-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904110002.88966-4-linux@fw-web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909090836.46762-7-shuo.a.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 04/09/2020 13:00, Frank Wunderlich wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+On Wed, Sep 09, 2020 at 05:08:25PM +0800, shuo.a.liu@intel.com wrote:
+> From: Shuo Liu <shuo.a.liu@intel.com>
 > 
-> Add display subsystem related device nodes for MT7623.
+> The VM management interfaces expose several VM operations to ACRN
+> userspace via ioctls. For example, creating VM, starting VM, destroying
+> VM and so on.
 > 
-> Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
-
-Applied to v5.9-next/dts32
-
-Thanks!
-
+> The ACRN Hypervisor needs to exchange data with the ACRN userspace
+> during the VM operations. HSM provides VM operation ioctls to the ACRN
+> userspace and communicates with the ACRN Hypervisor for VM operations
+> via hypercalls.
+> 
+> HSM maintains a list of User VM. Each User VM will be bound to an
+> existing file descriptor of /dev/acrn_hsm. The User VM will be
+> destroyed when the file descriptor is closed.
+> 
+> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> Cc: Zhi Wang <zhi.a.wang@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: Yu Wang <yu1.wang@intel.com>
+> Cc: Reinette Chatre <reinette.chatre@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
-> changed
-> v5->v6:
->    change compatible of hdmi-node because of changes in hdmi-phy
-> v4->v5:
->    add nodes to new mt7623n.dtsi to avoid conflict with mt7623a
-> v3->v4:
->    drop display_components which is duplicate of existing mmsys
-> v2->v3:
->    drop bls to dpi routing
+>  .../userspace-api/ioctl/ioctl-number.rst      |  1 +
+>  MAINTAINERS                                   |  1 +
+>  drivers/virt/acrn/Makefile                    |  2 +-
+>  drivers/virt/acrn/acrn_drv.h                  | 22 +++++-
+>  drivers/virt/acrn/hsm.c                       | 66 ++++++++++++++++
+>  drivers/virt/acrn/hypercall.h                 | 78 +++++++++++++++++++
+>  drivers/virt/acrn/vm.c                        | 69 ++++++++++++++++
+>  include/uapi/linux/acrn.h                     | 56 +++++++++++++
+>  8 files changed, 293 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/virt/acrn/hypercall.h
+>  create mode 100644 drivers/virt/acrn/vm.c
+>  create mode 100644 include/uapi/linux/acrn.h
 > 
-> arm: dts: mt7623: use mt2701 compatible for hdmi node
-> ---
->   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 ++++++++
->   arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 ++++++++
->   arch/arm/boot/dts/mt7623n.dtsi                | 172 ++++++++++++++++++
->   3 files changed, 316 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 344f8c65c4aa..f41f221e56ca 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -21,6 +21,19 @@ chosen {
->   		stdout-path = "serial2:115200n8";
->   	};
->   
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +		type = "d";
-> +		ddc-i2c-bus = <&hdmiddc0>;
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index 2a198838fca9..ac60efedb104 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -319,6 +319,7 @@ Code  Seq#    Include File                                           Comments
+>  0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
+>                                                                       <mailto:kenji@bitgate.com>
+>  0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
+> +0xA2  all    uapi/linux/acrn.h                                       ACRN hypervisor
+>  0xA3  80-8F                                                          Port ACL  in development:
+>                                                                       <mailto:tlewis@mindspring.com>
+>  0xA3  90-9F  linux/dtlk.h
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3030d0e93d02..d4c1ef303c2d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -443,6 +443,7 @@ S:	Supported
+>  W:	https://projectacrn.org
+>  F:	Documentation/virt/acrn/
+>  F:	drivers/virt/acrn/
+> +F:	include/uapi/linux/acrn.h
+>  
+>  AD1889 ALSA SOUND DRIVER
+>  L:	linux-parisc@vger.kernel.org
+> diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
+> index 6920ed798aaf..cf8b4ed5e74e 100644
+> --- a/drivers/virt/acrn/Makefile
+> +++ b/drivers/virt/acrn/Makefile
+> @@ -1,3 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_ACRN_HSM)	:= acrn.o
+> -acrn-y := hsm.o
+> +acrn-y := hsm.o vm.o
+> diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+> index 29eedd696327..043ae6840995 100644
+> --- a/drivers/virt/acrn/acrn_drv.h
+> +++ b/drivers/virt/acrn/acrn_drv.h
+> @@ -3,16 +3,36 @@
+>  #ifndef __ACRN_HSM_DRV_H
+>  #define __ACRN_HSM_DRV_H
+>  
+> +#include <linux/acrn.h>
+> +#include <linux/dev_printk.h>
+>  #include <linux/types.h>
+>  
+> +#include "hypercall.h"
 > +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi0_out>;
-> +			};
-> +		};
-> +	};
+>  #define ACRN_INVALID_VMID (0xffffU)
+>  
+> +#define ACRN_VM_FLAG_DESTROYED		0U
+> +extern struct list_head acrn_vm_list;
+> +extern rwlock_t acrn_vm_list_lock;
+>  /**
+>   * struct acrn_vm - Properties of ACRN User VM.
+> + * @dev:	The struct device this VM belongs to
+> + * @list:	Entry within global list of all VMs
+>   * @vmid:	User VM ID
+> + * @vcpu_num:	Number of virtual CPUs in the VM
+> + * @flags:	Flags (ACRN_VM_FLAG_*) of the VM. This is VM flag management
+> + *		in HSM which is different from the &acrn_vm_creation.vm_flag.
+>   */
+>  struct acrn_vm {
+> -	u16	vmid;
+> +	struct device		*dev;
+> +	struct list_head	list;
+> +	u16			vmid;
+> +	int			vcpu_num;
+> +	unsigned long		flags;
+>  };
+>  
+> +struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+> +			       struct acrn_vm_creation *vm_param);
+> +int acrn_vm_destroy(struct acrn_vm *vm);
 > +
->   	cpus {
->   		cpu@0 {
->   			proc-supply = <&mt6323_vproc_reg>;
-> @@ -114,10 +127,18 @@ memory@80000000 {
->   	};
->   };
->   
-> +&bls {
-> +	status = "okay";
-> +};
+>  #endif /* __ACRN_HSM_DRV_H */
+> diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+> index 28a3052ffa55..bc85a3c14f87 100644
+> --- a/drivers/virt/acrn/hsm.c
+> +++ b/drivers/virt/acrn/hsm.c
+> @@ -19,6 +19,8 @@
+>  
+>  #include "acrn_drv.h"
+>  
+> +static struct miscdevice acrn_dev;
 > +
->   &btif {
->   	status = "okay";
->   };
->   
-> +&cec {
-> +	status = "okay";
-> +};
+>  /*
+>   * When /dev/acrn_hsm is opened, a 'struct acrn_vm' object is created to
+>   * represent a VM instance and continues to be associated with the opened file
+> @@ -34,14 +36,77 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
+>  		return -ENOMEM;
+>  
+>  	vm->vmid = ACRN_INVALID_VMID;
+> +	vm->dev = get_device(acrn_dev.this_device);
+
+You are grabbing a reference on a static structure?
+
+Ugh, who reviewed this code before it was sent out???
+
+Think about what you just asked for here, and if that actually makes any
+sense at all...
+
+>  	filp->private_data = vm;
+>  	return 0;
+>  }
+>  
+> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+> +			   unsigned long ioctl_param)
+> +{
+> +	struct acrn_vm *vm = filp->private_data;
+> +	struct acrn_vm_creation *vm_param;
+> +	int ret = 0;
 > +
->   &cir {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&cir_pins_a>;
-> @@ -128,6 +149,21 @@ &crypto {
->   	status = "okay";
->   };
->   
-> +&dpi0 {
-> +	status = "okay";
+> +	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
+> +		dev_err(vm->dev, "ioctl 0x%x: Invalid VM state!\n", cmd);
+> +		return -EFAULT;
+
+You did not just cause a memory fault, so please do not return that
+error to userspace, it will just get confused.
+
+And does this allow userspace to spam the kernel log with errors by
+calling this ioctl with invalid commands?  If so, make this a debugging
+message please.
+
+> +	}
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			dpi0_out: endpoint {
-> +				remote-endpoint = <&hdmi0_in>;
-> +			};
-> +		};
-> +	};
-> +};
+> +	switch (cmd) {
+> +	case ACRN_IOCTL_CREATE_VM:
+> +		vm_param = memdup_user((void __user *)ioctl_param,
+> +				       sizeof(struct acrn_vm_creation));
+> +		if (IS_ERR(vm_param))
+> +			return PTR_ERR(vm_param);
 > +
->   &eth {
->   	status = "okay";
->   
-> @@ -199,6 +235,42 @@ fixed-link {
->   	};
->   };
->   
-> +&hdmi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_pins_a>;
-> +	status = "okay";
+> +		vm = acrn_vm_create(vm, vm_param);
+> +		if (!vm) {
+> +			ret = -EFAULT;
+
+Again, this is not a fault, fix all of these up please.
+
+And you really are doing the validation of the parameters in the
+hypervisor itself?  You should add a comment here explicitly saying you
+are trusting that layer to do this, as it will come up in the future
+once bugs start being reported :)
+
+> +			kfree(vm_param);
+> +			break;
+> +		}
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			hdmi0_in: endpoint {
-> +				remote-endpoint = <&dpi0_out>;
-> +			};
-> +		};
+> +		if (copy_to_user((void __user *)ioctl_param, vm_param,
+> +				 sizeof(struct acrn_vm_creation))) {
+> +			acrn_vm_destroy(vm);
+> +			ret = -EFAULT;
+
+That's a correct error :)
+
+> +		}
 > +
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi0_out: endpoint {
-> +				remote-endpoint = <&hdmi_connector_in>;
-> +			};
-> +		};
-> +	};
-> +};
+> +		kfree(vm_param);
+> +		break;
+> +	case ACRN_IOCTL_START_VM:
+> +		ret = hcall_start_vm(vm->vmid);
+> +		if (ret < 0)
+> +			dev_err(vm->dev, "Failed to start VM %u!\n", vm->vmid);
+> +		break;
+> +	case ACRN_IOCTL_PAUSE_VM:
+> +		ret = hcall_pause_vm(vm->vmid);
+> +		if (ret < 0)
+> +			dev_err(vm->dev, "Failed to pause VM %u!\n", vm->vmid);
+> +		break;
+> +	case ACRN_IOCTL_RESET_VM:
+> +		ret = hcall_reset_vm(vm->vmid);
+> +		if (ret < 0)
+> +			dev_err(vm->dev, "Failed to restart VM %u!\n", vm->vmid);
+> +		break;
+> +	case ACRN_IOCTL_DESTROY_VM:
+> +		ret = acrn_vm_destroy(vm);
+> +		break;
+> +	default:
+> +		dev_warn(vm->dev, "Unknown IOCTL 0x%x!\n", cmd);
+> +		ret = -ENOTTY;
+> +	}
 > +
-> +&hdmiddc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_ddc_pins_a>;
-> +	status = "okay";
-> +};
+> +	return ret;
+> +}
 > +
-> +&hdmi_phy {
-> +	mediatek,ibias = <0xa>;
-> +	mediatek,ibias_up = <0x1c>;
-> +	status = "okay";
-> +};
+>  static int acrn_dev_release(struct inode *inode, struct file *filp)
+>  {
+>  	struct acrn_vm *vm = filp->private_data;
+>  
+> +	acrn_vm_destroy(vm);
+> +	put_device(vm->dev);
+>  	kfree(vm);
+>  	return 0;
+>  }
+> @@ -50,6 +115,7 @@ static const struct file_operations acrn_fops = {
+>  	.owner		= THIS_MODULE,
+>  	.open		= acrn_dev_open,
+>  	.release	= acrn_dev_release,
+> +	.unlocked_ioctl = acrn_dev_ioctl,
+>  };
+>  
+>  static struct miscdevice acrn_dev = {
+> diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
+> new file mode 100644
+> index 000000000000..426b66cadb1f
+> --- /dev/null
+> +++ b/drivers/virt/acrn/hypercall.h
+> @@ -0,0 +1,78 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * ACRN HSM: hypercalls of ACRN Hypervisor
+> + */
+> +#ifndef __ACRN_HSM_HYPERCALL_H
+> +#define __ACRN_HSM_HYPERCALL_H
+> +#include <asm/acrn.h>
 > +
->   &i2c0 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&i2c0_pins_a>;
-> diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> index f8efcc364bc3..1b9b9a8145a7 100644
-> --- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> +++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-> @@ -24,6 +24,19 @@ chosen {
->   		stdout-path = "serial2:115200n8";
->   	};
->   
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +		type = "d";
-> +		ddc-i2c-bus = <&hdmiddc0>;
+> +/*
+> + * Hypercall IDs of the ACRN Hypervisor
+> + */
+> +#define _HC_ID(x, y) (((x) << 24) | (y))
 > +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi0_out>;
-> +			};
-> +		};
-> +	};
+> +#define HC_ID 0x80UL
 > +
->   	cpus {
->   		cpu@0 {
->   			proc-supply = <&mt6323_vproc_reg>;
-> @@ -106,10 +119,18 @@ sound {
->   	};
->   };
->   
-> +&bls {
-> +	status = "okay";
-> +};
+> +#define HC_ID_VM_BASE			0x10UL
+> +#define HC_CREATE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x00)
+> +#define HC_DESTROY_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x01)
+> +#define HC_START_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x02)
+> +#define HC_PAUSE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x03)
+> +#define HC_RESET_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x05)
 > +
->   &btif {
->   	status = "okay";
->   };
->   
-> +&cec {
-> +	status = "okay";
-> +};
+> +/**
+> + * hcall_create_vm() - Create a User VM
+> + * @vminfo:	Service VM GPA of info of User VM creation
+> + *
+> + * Return: 0 on success, <0 on failure
+> + */
+> +static inline long hcall_create_vm(u64 vminfo)
+> +{
+> +	return acrn_hypercall1(HC_CREATE_VM, vminfo);
+> +}
 > +
->   &cir {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&cir_pins_a>;
-> @@ -120,6 +141,21 @@ &crypto {
->   	status = "okay";
->   };
->   
-> +&dpi0 {
-> +	status = "okay";
+> +/**
+> + * hcall_start_vm() - Start a User VM
+> + * @vmid:	User VM ID
+> + *
+> + * Return: 0 on success, <0 on failure
+> + */
+> +static inline long hcall_start_vm(u64 vmid)
+> +{
+> +	return acrn_hypercall1(HC_START_VM, vmid);
+> +}
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			dpi0_out: endpoint {
-> +				remote-endpoint = <&hdmi0_in>;
-> +			};
-> +		};
-> +	};
-> +};
+> +/**
+> + * hcall_pause_vm() - Pause a User VM
+> + * @vmid:	User VM ID
+> + *
+> + * Return: 0 on success, <0 on failure
+> + */
+> +static inline long hcall_pause_vm(u64 vmid)
+> +{
+> +	return acrn_hypercall1(HC_PAUSE_VM, vmid);
+> +}
 > +
->   &eth {
->   	status = "okay";
->   
-> @@ -203,6 +239,42 @@ fixed-link {
->   	};
->   };
->   
-> +&hdmi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_pins_a>;
-> +	status = "okay";
+> +/**
+> + * hcall_destroy_vm() - Destroy a User VM
+> + * @vmid:	User VM ID
+> + *
+> + * Return: 0 on success, <0 on failure
+> + */
+> +static inline long hcall_destroy_vm(u64 vmid)
+> +{
+> +	return acrn_hypercall1(HC_DESTROY_VM, vmid);
+> +}
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		port@0 {
-> +			reg = <0>;
-> +			hdmi0_in: endpoint {
-> +				remote-endpoint = <&dpi0_out>;
-> +			};
-> +		};
+> +/**
+> + * hcall_reset_vm() - Reset a User VM
+> + * @vmid:	User VM ID
+> + *
+> + * Return: 0 on success, <0 on failure
+> + */
+> +static inline long hcall_reset_vm(u64 vmid)
+> +{
+> +	return acrn_hypercall1(HC_RESET_VM, vmid);
+> +}
 > +
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi0_out: endpoint {
-> +				remote-endpoint = <&hdmi_connector_in>;
-> +			};
-> +		};
-> +	};
-> +};
+> +#endif /* __ACRN_HSM_HYPERCALL_H */
+> diff --git a/drivers/virt/acrn/vm.c b/drivers/virt/acrn/vm.c
+> new file mode 100644
+> index 000000000000..851a9481a78e
+> --- /dev/null
+> +++ b/drivers/virt/acrn/vm.c
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ACRN_HSM: Virtual Machine management
+> + *
+> + * Copyright (C) 2020 Intel Corporation. All rights reserved.
+> + *
+> + * Authors:
+> + *	Jason Chen CJ <jason.cj.chen@intel.com>
+> + *	Yakui Zhao <yakui.zhao@intel.com>
+> + */
+> +#include <linux/io.h>
+> +#include <linux/mm.h>
+> +#include <linux/slab.h>
 > +
-> +&hdmiddc0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_ddc_pins_a>;
-> +	status = "okay";
-> +};
+> +#include "acrn_drv.h"
 > +
-> +&hdmi_phy {
-> +	mediatek,ibias = <0xa>;
-> +	mediatek,ibias_up = <0x1c>;
-> +	status = "okay";
-> +};
+> +/* List of VMs */
+> +LIST_HEAD(acrn_vm_list);
+> +/*
+> + * acrn_vm_list is read in a tasklet which dispatch I/O requests and is wrote
+> + * in VM creation ioctl. Use the rwlock mechanism to protect it.
+> + */
+> +DEFINE_RWLOCK(acrn_vm_list_lock);
 > +
->   &i2c0 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&i2c0_pins_a>;
-> diff --git a/arch/arm/boot/dts/mt7623n.dtsi b/arch/arm/boot/dts/mt7623n.dtsi
-> index a47e82468895..1880ac9e32cf 100644
-> --- a/arch/arm/boot/dts/mt7623n.dtsi
-> +++ b/arch/arm/boot/dts/mt7623n.dtsi
-> @@ -10,6 +10,11 @@
->   #include <dt-bindings/memory/mt2701-larb-port.h>
->   
->   / {
-> +	aliases {
-> +		rdma0 = &rdma0;
-> +		rdma1 = &rdma1;
-> +	};
+> +struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+> +			       struct acrn_vm_creation *vm_param)
+> +{
+> +	int ret;
 > +
->   	g3dsys: syscon@13000000 {
->   		compatible = "mediatek,mt7623-g3dsys",
->   			     "mediatek,mt2701-g3dsys",
-> @@ -131,4 +136,171 @@ smi_common: smi@1000c000 {
->   		clock-names = "apb", "smi", "async";
->   		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
->   	};
+> +	ret = hcall_create_vm(virt_to_phys(vm_param));
+> +	if (ret < 0 || vm_param->vmid == ACRN_INVALID_VMID) {
+> +		dev_err(vm->dev, "Failed to create VM! Error: %d\n", ret);
+> +		return NULL;
+> +	}
 > +
-> +	ovl: ovl@14007000 {
-> +		compatible = "mediatek,mt7623-disp-ovl",
-> +			     "mediatek,mt2701-disp-ovl";
-> +		reg = <0 0x14007000 0 0x1000>;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_OVL>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-> +		mediatek,larb = <&larb0>;
-> +	};
+> +	vm->vmid = vm_param->vmid;
+> +	vm->vcpu_num = vm_param->vcpu_num;
 > +
-> +	rdma0: rdma@14008000 {
-> +		compatible = "mediatek,mt7623-disp-rdma",
-> +			     "mediatek,mt2701-disp-rdma";
-> +		reg = <0 0x14008000 0 0x1000>;
-> +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_RDMA>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
+> +	write_lock_bh(&acrn_vm_list_lock);
+> +	list_add(&vm->list, &acrn_vm_list);
+
+Wait, why do you have a global list of devices?  Shouldn't that device
+be tied to the vm structure?  Who will be iterating this list that does
+not have the file handle to start with?
+
+
+
+> +	write_unlock_bh(&acrn_vm_list_lock);
 > +
-> +	wdma@14009000 {
-> +		compatible = "mediatek,mt7623-disp-wdma",
-> +			     "mediatek,mt2701-disp-wdma";
-> +		reg = <0 0x14009000 0 0x1000>;
-> +		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_WDMA>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
+> +	dev_dbg(vm->dev, "VM %u created.\n", vm->vmid);
+> +	return vm;
+> +}
 > +
-> +	bls: pwm@1400a000 {
-> +		compatible = "mediatek,mt7623-disp-pwm",
-> +			     "mediatek,mt2701-disp-pwm";
-> +		reg = <0 0x1400a000 0 0x1000>;
-> +		#pwm-cells = <2>;
-> +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
-> +			 <&mmsys CLK_MM_DISP_BLS>;
-> +		clock-names = "main", "mm";
-> +		status = "disabled";
-> +	};
+> +int acrn_vm_destroy(struct acrn_vm *vm)
+> +{
+> +	int ret;
 > +
-> +	color: color@1400b000 {
-> +		compatible = "mediatek,mt7623-disp-color",
-> +			     "mediatek,mt2701-disp-color";
-> +		reg = <0 0x1400b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_COLOR>;
-> +	};
+> +	if (vm->vmid == ACRN_INVALID_VMID ||
+> +	    test_and_set_bit(ACRN_VM_FLAG_DESTROYED, &vm->flags))
+> +		return 0;
 > +
-> +	dsi: dsi@1400c000 {
-> +		compatible = "mediatek,mt7623-dsi",
-> +			     "mediatek,mt2701-dsi";
-> +		reg = <0 0x1400c000 0 0x1000>;
-> +		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
-> +			 <&mmsys CLK_MM_DSI_DIG>,
-> +			 <&mipi_tx0>;
-> +		clock-names = "engine", "digital", "hs";
-> +		phys = <&mipi_tx0>;
-> +		phy-names = "dphy";
-> +		status = "disabled";
-> +	};
-> +
-> +	mutex: mutex@1400e000 {
-> +		compatible = "mediatek,mt7623-disp-mutex",
-> +			     "mediatek,mt2701-disp-mutex";
-> +		reg = <0 0x1400e000 0 0x1000>;
-> +		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_MUTEX_32K>;
-> +	};
-> +
-> +	rdma1: rdma@14012000 {
-> +		compatible = "mediatek,mt7623-disp-rdma",
-> +			     "mediatek,mt2701-disp-rdma";
-> +		reg = <0 0x14012000 0 0x1000>;
-> +		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	dpi0: dpi@14014000 {
-> +		compatible = "mediatek,mt7623-dpi",
-> +			     "mediatek,mt2701-dpi";
-> +		reg = <0 0x14014000 0 0x1000>;
-> +		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
-> +			 <&mmsys CLK_MM_DPI1_ENGINE>,
-> +			 <&apmixedsys CLK_APMIXED_TVDPLL>;
-> +		clock-names = "pixel", "engine", "pll";
-> +		status = "disabled";
-> +	};
-> +
-> +	hdmi0: hdmi@14015000 {
-> +		compatible = "mediatek,mt7623-hdmi",
-> +			     "mediatek,mt2701-hdmi";
-> +		reg = <0 0x14015000 0 0x400>;
-> +		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
-> +			 <&mmsys CLK_MM_HDMI_PLL>,
-> +			 <&mmsys CLK_MM_HDMI_AUDIO>,
-> +			 <&mmsys CLK_MM_HDMI_SPDIF>;
-> +		clock-names = "pixel", "pll", "bclk", "spdif";
-> +		phys = <&hdmi_phy>;
-> +		phy-names = "hdmi";
-> +		mediatek,syscon-hdmi = <&mmsys 0x900>;
-> +		cec = <&cec>;
-> +		status = "disabled";
-> +	};
-> +
-> +	mipi_tx0: mipi-dphy@10010000 {
-> +		compatible = "mediatek,mt7623-mipi-tx",
-> +			     "mediatek,mt2701-mipi-tx";
-> +		reg = <0 0x10010000 0 0x90>;
-> +		clocks = <&clk26m>;
-> +		clock-output-names = "mipi_tx0_pll";
-> +		#clock-cells = <0>;
-> +		#phy-cells = <0>;
-> +	};
-> +
-> +	cec: cec@10012000 {
-> +		compatible = "mediatek,mt7623-cec",
-> +			     "mediatek,mt8173-cec";
-> +		reg = <0 0x10012000 0 0xbc>;
-> +		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&infracfg CLK_INFRA_CEC>;
-> +		status = "disabled";
-> +	};
-> +
-> +	hdmi_phy: phy@10209100 {
-> +		compatible = "mediatek,mt7623-hdmi-phy",
-> +			     "mediatek,mt2701-hdmi-phy";
-> +		reg = <0 0x10209100 0 0x24>;
-> +		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
-> +		clock-names = "pll_ref";
-> +		clock-output-names = "hdmitx_dig_cts";
-> +		#clock-cells = <0>;
-> +		#phy-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
-> +	hdmiddc0: i2c@11013000 {
-> +		compatible = "mediatek,mt7623-hdmi-ddc",
-> +			     "mediatek,mt8173-hdmi-ddc";
-> +		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-> +		reg = <0 0x11013000 0 0x1C>;
-> +		clocks = <&pericfg CLK_PERI_I2C3>;
-> +		clock-names = "ddc-i2c";
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> +&pio {
-> +	hdmi_pins_a: hdmi-default {
-> +		pins-hdmi {
-> +			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
-> +			input-enable;
-> +			bias-pull-down;
-> +		};
-> +	};
-> +
-> +	hdmi_ddc_pins_a: hdmi_ddc-default {
-> +		pins-hdmi-ddc {
-> +			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
-> +				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
-> +		};
-> +	};
->   };
-> 
+> +	/* Remove from global VM list */
+> +	write_lock_bh(&acrn_vm_list_lock);
+> +	list_del_init(&vm->list);
+> +	write_unlock_bh(&acrn_vm_list_lock);
+
+Again, why this list at all?
+
+thanks,
+
+greg k-h
