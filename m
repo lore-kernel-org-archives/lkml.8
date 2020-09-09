@@ -2,77 +2,90 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206BFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9FDC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E440021919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B4121919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:04:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PTtQzQuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbgIIREB (ORCPT
+        id S1730673AbgIIRER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:04:01 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11759 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730349AbgIIPq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:46:29 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CEF1D1ADD43EFCF8CF07;
-        Wed,  9 Sep 2020 21:44:58 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
- 21:44:49 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <edubezval@gmail.com>, <j-keerthy@ti.com>, <rui.zhang@intel.com>,
-        <daniel.lezcano@linaro.org>, <amitk@kernel.org>,
-        <sudipm.mukherjee@gmail.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] thermal: ti-soc-thermal: Remove unused function ti_thermal_get_temp()
-Date:   Wed, 9 Sep 2020 21:44:48 +0800
-Message-ID: <20200909134448.30344-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 9 Sep 2020 13:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730551AbgIIREK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:04:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13401C061573;
+        Wed,  9 Sep 2020 10:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LfHxT4ZNG1X4ZvN2dtQwo2pwpei3uAvCD6OoC4DuCCA=; b=PTtQzQukf2s/Vju2X06eMGOIWP
+        yiKhMDLhWzkhhzXfGg5yOClIpORVoMG0/fj6/fpwo52WI1xZPN5qKbPPCsMiNn0HPycb4loydQe7S
+        I6WrDdx271lhA3YooKU3xJDSgsMCZyHvpo86ehdFhVeKuyESTJNrwTEiRPQOwJfafit1oD5PsZCgx
+        MFxdeLOJPKdwBNxs+qH9oG9W3ybCDan9eMHA3eGFa0liIqhXormAofOtqmu5+vGxHN3/rPBfYcXRs
+        ys5s3+t08k47reP+/evgeFtoXj55NgSu/kMDsPjPinUWRrwZmVzZwdHRTCZ2HLoSovpn8vQAS2/pI
+        +qSPo5CQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kG3Vq-0007vP-FL; Wed, 09 Sep 2020 17:04:03 +0000
+Date:   Wed, 9 Sep 2020 18:04:02 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Ming Mao <maoming.maoming@huawei.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-mm@kvack.org, alex.williamson@redhat.com,
+        akpm@linux-foundation.org, cohuck@redhat.com,
+        jianjay.zhou@huawei.com, weidong.huang@huawei.com,
+        peterx@redhat.com, aarcange@redhat.com, wangyunjian@huawei.com,
+        jhubbard@nvidia.com
+Subject: Re: [PATCH V4 1/2] vfio dma_map/unmap: optimized for hugetlbfs pages
+Message-ID: <20200909170402.GJ6583@casper.infradead.org>
+References: <20200908133204.1338-1-maoming.maoming@huawei.com>
+ <20200908133204.1338-2-maoming.maoming@huawei.com>
+ <20200909080114.GA8321@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909080114.GA8321@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b263b473bf62 ("thermal: ti-soc-thermal: Remove redundant code")
-left behind this, remove it.
+On Wed, Sep 09, 2020 at 09:01:14AM +0100, Christoph Hellwig wrote:
+>  (1) a FOLL_HUGEPAGE flag for the pin_user_pages API family that returns
+>      a single struct page for any kind of huge page, which would also
+>      benefit all kinds of other users rather than adding these kinds of
+>      hacks to vfio.
+>  (2) add a bvec version of the API that returns a variable size
+>      "extent"
+> 
+> I had started on (2) a while ago, and here is branch with my code (which
+> is broken and fails test, but might be a start):
+> 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/gup-bvec
+> 
+> But for now I wonder if (1) is the better start, which could still be
+> reused to (2) later.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 8 --------
- 1 file changed, 8 deletions(-)
+(1) doesn't work.  Suppose you have a 16kB MAP_PRIVATE of a file which happens
+to have a THP in the page cache.  When you write a byte, that base page gets
+copied and your bvec for that 16kB needs to look something like:
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index 2ce4b19f312a..93b28c7ce83d 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -106,14 +106,6 @@ static inline int __ti_thermal_get_temp(void *devdata, int *temp)
- 	return ret;
- }
- 
--static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
--				      int *temp)
--{
--	struct ti_thermal_data *data = thermal->devdata;
--
--	return __ti_thermal_get_temp(data, temp);
--}
--
- static int __ti_thermal_get_trend(void *p, int trip, enum thermal_trend *trend)
- {
- 	struct ti_thermal_data *data = p;
--- 
-2.17.1
+{ page A, offset 0, length 4096 },
+{ page B, offset 0, length 4096 },
+{ page A, offset 8192, length 8192 },
 
-
+You can come up with other scenarios, like partial mappings of THPs with
+an adjacent VMA of a different THP, but I think we just need to make
+(2) work.
