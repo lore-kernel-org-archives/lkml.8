@@ -2,123 +2,102 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58AFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2502166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UXJ67XSB"
+	by mail.kernel.org (Postfix) with ESMTP id 294972166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599671864;
+	bh=N/D7fR7BGgOx2lZpaHNGW+Rl2JGBL1AiJ7z668klV+c=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WrqAYnx7e88wQv0Ru7/xDxsvaNNg8KY84mgXIGGyF58L8Mivyh+5hUMQNupNmi1ae
+	 BWUvPScC/bf0VKkz5UREUbjCfhgnBrcVN1A4Z3iampRFQrjJlAe2uhJw6IcsqXh37g
+	 HgB5BBzokOVpi0RkO/a6AYYJhH06eFUftA50PAN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbgIIRRh (ORCPT
+        id S1731306AbgIIRRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:17:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36902 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730172AbgIIP2A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 13:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729717AbgIIP2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 11:28:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599665250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+BCz3wPlVfUrMQm65Je9XbtrGnOGZT7lnY6dkRWqnmM=;
-        b=UXJ67XSBfhoW0sPqHv+AhMU4/udt5w6wdlmNsoq3DelZA8V0qJ9aAfSToWCRfkoohT9P5+
-        0kYs0ZATv8JkqR96BvTwzn9zyH/MDNqmcpUH9nlWEJKP+RkRal8wlcUlQfUnNTYPlSGcSF
-        Id2BmOGmwj9mbTNZbfCLjmnU891/WgU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-6B6-ByPUO9KRZAKC5KxUow-1; Wed, 09 Sep 2020 11:09:14 -0400
-X-MC-Unique: 6B6-ByPUO9KRZAKC5KxUow-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D82318BA290;
-        Wed,  9 Sep 2020 15:09:12 +0000 (UTC)
-Received: from wsfd-advnetlab06.anl.lab.eng.bos.redhat.com (wsfd-advnetlab06.anl.lab.eng.bos.redhat.com [10.19.107.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5242A19C4F;
-        Wed,  9 Sep 2020 15:09:06 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, frederic@kernel.org,
-        mtosatti@redhat.com, sassmann@redhat.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jerinj@marvell.com,
-        mathias.nyman@intel.com, jiri@nvidia.com
-Subject: [RFC][Patch v1 3/3] PCI: Limit pci_alloc_irq_vectors as per housekeeping CPUs
-Date:   Wed,  9 Sep 2020 11:08:18 -0400
-Message-Id: <20200909150818.313699-4-nitesh@redhat.com>
-In-Reply-To: <20200909150818.313699-1-nitesh@redhat.com>
-References: <20200909150818.313699-1-nitesh@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id B79F022283;
+        Wed,  9 Sep 2020 15:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599664687;
+        bh=N/D7fR7BGgOx2lZpaHNGW+Rl2JGBL1AiJ7z668klV+c=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=slbCvm8U9lnMRQ+hYn/j7ofXUJ13IRFPxhcVUHN1f8DL+IaFG+Ya316Ugp94pgsLs
+         jxEDbN4cgxppFXnS7x2Qg3d9KlFoiCLKsbwkNh2FDiXRKMdRJDAfJ6+hQV42yv099P
+         5vZDq1/udt0+KpTcENIgTTFXEUjgIX+juo6fXGMs=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] arm64: dts: imx8mm-var-som-symphony: Adjust ethernet pin configuration
+Date:   Wed,  9 Sep 2020 17:17:54 +0200
+Message-Id: <20200909151755.17783-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200909151755.17783-1-krzk@kernel.org>
+References: <20200909151755.17783-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch limits the pci_alloc_irq_vectors max vectors that is passed on
-by the caller based on the available housekeeping CPUs by only using the
-minimum of the two.
+The Symphony board uses GPIO from expander as Ethernet PHY reset pin,
+not the GPIO1_IO9.
 
-A minimum of the max_vecs passed and available housekeeping CPUs is
-derived to ensure that we don't create excess vectors which can be
-problematic specifically in an RT environment. This is because for an RT
-environment unwanted IRQs are moved to the housekeeping CPUs from
-isolated CPUs to keep the latency overhead to a minimum. If the number of
-housekeeping CPUs are significantly lower than that of the isolated CPUs
-we can run into failures while moving these IRQs to housekeeping due to
-per CPU vector limit.
-
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- include/linux/pci.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../dts/freescale/imx8mm-var-som-symphony.dts | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 835530605c0d..750ba927d963 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -38,6 +38,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/resource_ext.h>
-+#include <linux/sched/isolation.h>
- #include <uapi/linux/pci.h>
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+index 1c427260e887..07214d7dfc06 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+@@ -181,6 +181,26 @@
+ 	status = "disabled";
+ };
  
- #include <linux/pci_ids.h>
-@@ -1797,6 +1798,21 @@ static inline int
- pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
- 		      unsigned int max_vecs, unsigned int flags)
- {
-+	unsigned int num_housekeeping = num_housekeeping_cpus();
-+	unsigned int num_online = num_online_cpus();
++&pinctrl_fec1 {
++	fsl,pins = <
++		MX8MM_IOMUXC_ENET_MDC_ENET1_MDC			0x3
++		MX8MM_IOMUXC_ENET_MDIO_ENET1_MDIO		0x3
++		MX8MM_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
++		MX8MM_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
++		MX8MM_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
++		MX8MM_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
++		MX8MM_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
++		MX8MM_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
++		MX8MM_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
++		MX8MM_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
++		MX8MM_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
++		MX8MM_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
++		MX8MM_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
++		MX8MM_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
++		/* Remove the MX8MM_IOMUXC_GPIO1_IO09_GPIO1_IO9 as not used */
++	>;
++};
 +
-+	/*
-+	 * Try to be conservative and at max only ask for the same number of
-+	 * vectors as there are housekeeping CPUs. However, skip any
-+	 * modification to the of max vectors in two conditions:
-+	 * 1. If the min_vecs requested are higher than that of the
-+	 *    housekeeping CPUs as we don't want to prevent the initialization
-+	 *    of a device.
-+	 * 2. If there are no isolated CPUs as in this case the driver should
-+	 *    already have taken online CPUs into consideration.
-+	 */
-+	if (min_vecs < num_housekeeping && num_housekeeping != num_online)
-+		max_vecs = min_t(int, max_vecs, num_housekeeping);
- 	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
- 					      NULL);
- }
+ &iomuxc {
+ 	pinctrl_captouch: captouchgrp {
+ 		fsl,pins = <
 -- 
-2.27.0
+2.17.1
 
