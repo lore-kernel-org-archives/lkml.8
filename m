@@ -2,137 +2,94 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED845C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADC0C20732
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E3320768
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Aai15vFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgIIS15 (ORCPT
+        id S1728463AbgIISau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:27:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53088 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIIS1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:27:51 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kG4oc-00DxUV-6F; Wed, 09 Sep 2020 20:27:30 +0200
-Date:   Wed, 9 Sep 2020 20:27:30 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next + leds v2 1/7] dt-bindings: leds: document
- binding for HW controlled LEDs
-Message-ID: <20200909182730.GK3290129@lunn.ch>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-2-marek.behun@nic.cz>
+        Wed, 9 Sep 2020 14:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIISar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:30:47 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906A9C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 11:30:47 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id z13so4238234iom.8
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 11:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=98xyvtYgbwa5J67c7RkI6GnQwliGFXe74W0JhOQBOmc=;
+        b=Aai15vFl3dYqGw9K5b3xK4POAF5zorYpaKKRyIxIZqV4MkjapQJdc5WoBCxIdDvoQe
+         7FdlRAedwzY1qpqwlJ5d+oVkEoZFtbyilOo5PeMvP4vfl//XjFD28AIWbmbRXihnb49x
+         JbVoj7qo0eWkzJVqnZ3EfR9rqCRwG9dCMJoxkLi4ToOLHhfZC3SzjOM+82YB9SjmG1R5
+         a33hxHQK4Io4do/ldHL0Nwp+Us6ESgUxv94eNJDwEE8kOAIZj98CWh42I5BQfrPOtm/D
+         GfnSrPywZHKaSWgiqluDNEtHluhP8WGr1YnzmI21OdCOYBTano9T1NdzUMKvE3YznXEE
+         +6HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=98xyvtYgbwa5J67c7RkI6GnQwliGFXe74W0JhOQBOmc=;
+        b=QAOtj/4J6Gt+ULM+QO7Ccggujti5QCKGsobs5739Ch/RNn+FNsTG2XNgqHvLoiP36E
+         9zVxTeoIvn5YxAQ6ff7TpkB8ytE+YudhkfZl5l5t4lADN+wCSSBVd510rrd4PLyXEl11
+         wAuEQwrEHavHN6VBCWrfv79IT39NekNlklfeOK0INK1HX5lWpXM/K0NxkPILG0hN9l/+
+         9l5Qn4ThRDEgzpFV1MfX0mBVZJvg1RVkzHEMb7PdLolcvGw1a10Z2wzVeBgkqj2A/sE2
+         eBAFjuQJCIYuEpZ873J8wE27yjjGGu1f8x05SfpdWCVQS/jzKb3N2S5a+QolSy++AlMU
+         ZH7A==
+X-Gm-Message-State: AOAM533W8HBTV2aaPswQk94yYNYqBYmf2/2Kengn5Nx9co0Vf7hMyhTR
+        /Rxnt4gzHWDjlklhCsO2Uf5+4A==
+X-Google-Smtp-Source: ABdhPJzDQCDM7qsjK2rY35N17lqTgsC2hAs5QECTlf9biMd54YdHkaHJRtjNBTH3FQACUVf86OCMNw==
+X-Received: by 2002:a05:6602:2f88:: with SMTP id u8mr4410307iow.175.1599676246841;
+        Wed, 09 Sep 2020 11:30:46 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u9sm1501725iow.26.2020.09.09.11.30.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 11:30:46 -0700 (PDT)
+Subject: Re: [PATCH for-next] io_uring: fix ctx refcounting in
+ io_uring_enter()
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200909151900.60321-1-sgarzare@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9080c3fa-a726-b664-f634-0ea7dfda80e0@kernel.dk>
+Date:   Wed, 9 Sep 2020 12:30:45 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200909162552.11032-2-marek.behun@nic.cz>
+In-Reply-To: <20200909151900.60321-1-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 06:25:46PM +0200, Marek Behún wrote:
-> Document binding for LEDs connected to and controlled by various chips
-> (such as ethernet PHY chips).
+On 9/9/20 9:19 AM, Stefano Garzarella wrote:
+> If the ring is disabled we don't decrease the 'ctx' refcount since
+> we wrongly jump to 'out_fput' label.
 > 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../leds/linux,hw-controlled-leds.yaml        | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml b/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> new file mode 100644
-> index 0000000000000..eaf6e5d80c5f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/linux,hw-controlled-leds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LEDs that can be controlled by hardware (eg. by an ethernet PHY chip)
-> +
-> +maintainers:
-> +  - Marek Behún <marek.behun@nic.cz>
-> +
-> +description:
-> +  Many an ethernet PHY (and other chips) supports various HW control modes
-> +  for LEDs connected directly to them. With this binding such LEDs can be
-> +  described.
-> +
-> +properties:
-> +  compatible:
-> +    const: linux,hw-controlled-leds
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^led@[0-9a-f]+$":
-> +    type: object
-> +    allOf:
-> +      - $ref: common.yaml#
-> +    description:
-> +      This node represents a LED device connected to a chip that can control
-> +      the LED in various HW controlled modes.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        description:
-> +          This property identifies the LED to the chip the LED is connected to
-> +          (eg. an ethernet PHY chip can have multiple LEDs connected to it).
-> +
-> +      enable-active-high:
-> +        description:
-> +          Polarity of LED is active high. If missing, assumed default is active
-> +          low.
-> +        type: boolean
-> +
-> +      led-tristate:
-> +        description:
-> +          LED pin is tristate type. If missing, assumed false.
-> +        type: boolean
-> +
-> +      linux,default-hw-mode:
-> +        description:
-> +          This parameter, if present, specifies the default HW triggering mode
-> +          of the LED when LED trigger is set to `dev-hw-mode`.
-> +          Available values are specific per device the LED is connected to and
-> +          per LED itself.
-> +        $ref: /schemas/types.yaml#definitions/string
-> +
-> +    required:
-> +      - reg
+> Instead let's jump to 'out' label where we decrease the 'ctx' refcount.
 
-My Yaml foo is not very good. Do you need to list colour, function and
-linux,default-trigger, or do they automagically get included from the
-generic LED binding?
+Applied, thanks.
 
-	Andrew
+-- 
+Jens Axboe
+
