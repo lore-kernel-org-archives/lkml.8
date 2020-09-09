@@ -2,97 +2,164 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6947BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC24C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2148E21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599680624;
-	bh=REM5ChS7A22GwS9jcBwomnw42kGODkfBdYtOmypColo=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=Ah8keP23SomFxMCGorwTquBFXZeSmaFFA7XkgfD3hqZuPkny0vat6FAfpyQt8gaA9
-	 tjasCo7V4UP/IfG9wHS4x03Ovpj57B8wwPJu8Wjvkhs/JH14j7tqpZjevL6SoL9jU/
-	 Z8DScIJlKFu/TtdTPR/lugpFB3P+uVz8OE1V2fNY=
+	by mail.kernel.org (Postfix) with ESMTP id 1241A21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 19:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SX3ufc4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgIITnn (ORCPT
+        id S1728297AbgIITn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 15:43:43 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:38348 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIITnk (ORCPT
+        Wed, 9 Sep 2020 15:43:59 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47260 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbgIITn5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 15:43:40 -0400
-Received: by mail-ej1-f66.google.com with SMTP id i22so5289230eja.5;
-        Wed, 09 Sep 2020 12:43:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GYrujSeHLlrIuqFch9Co1kvUCUdPKeLia6WoU1oQSBE=;
-        b=PzxisdhuyGKwd1NF0wXCG8TZiNpTl/KT+E1P1mbcNrDTa6lc+7jTRB0/XR+CJP9Gsn
-         51XUr7ewOpCpFcybyzVelCDpQ++22dYuKGSNy69tw5hWstwsbZ5hqZvoa2peDsfh6iZu
-         T/a4CWOZUE7IYqTkEgQnXkhbosgwdqyuMhr5JT7rWdCV/PmZpnBKKf+uYtEBEViyEclt
-         rTO7w+0nJRddHwPTg/CK2jsQ4BewdtU6JPIETgXTR63cl9G+ax1AOeUXhkbkATzzysgo
-         6ii6Lh+vPoBOZVAxp2Z/xyq+uFG7+3MBbde9sSnXYiSowjtWUWqsBJQO6ngfFU4Ooc4L
-         VKXQ==
-X-Gm-Message-State: AOAM530RvkG3HXUkOwq0Z41oUwrLwdhkoCRml4LPs/J/8U/7yPTqYk77
-        EZRcww5TDspiLbytWEMqxlQ=
-X-Google-Smtp-Source: ABdhPJypFVYMywNXOVcZc2Z0ISwLTR57hTvYVWqB8kCnxxkMBCNZkwQ5wttH+UwTNdi5iMmd0d7plg==
-X-Received: by 2002:a17:907:9ed:: with SMTP id ce13mr5081258ejc.180.1599680618145;
-        Wed, 09 Sep 2020 12:43:38 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id z21sm3537912eja.72.2020.09.09.12.43.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 09 Sep 2020 12:43:37 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 21:43:34 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 10/25] ARM: dts: s5pv210: add RTC 32 KHz clock in Aquilla
-Message-ID: <20200909194334.GC21431@kozik-lap>
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-11-krzk@kernel.org>
+        Wed, 9 Sep 2020 15:43:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 089JhoDh021373;
+        Wed, 9 Sep 2020 14:43:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599680630;
+        bh=/czBZGu7D21+O5ILIP8EVJaQjv5J+NV+j9SplcX4p5U=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=SX3ufc4kBVGrw83Vhk3IXeA2Me+HTIdZ99b6vJoyK0VbBrOqasyCzY64BWfDKw96U
+         GiPlENPDZ9bF3Dy430pcGFjg+fL0bhSciZ6EdDxUJ7kj1lWEaoWjgm5v26t85sOrqq
+         Rtb73vNaAbgUAQWtjpHaVb6iIaEcuyo95HWHJNNg=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 089JhoBQ050848
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 9 Sep 2020 14:43:50 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 9 Sep
+ 2020 14:43:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 9 Sep 2020 14:43:49 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 089JhmPM130087;
+        Wed, 9 Sep 2020 14:43:49 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <santosh.shilimkar@oracle.com>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [RESEND PATCH next v2 1/2] soc: ti: k3: ringacc: add am65x sr2.0 support
+Date:   Wed, 9 Sep 2020 22:43:37 +0300
+Message-ID: <20200909194338.21840-2-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200909194338.21840-1-grygorii.strashko@ti.com>
+References: <20200909194338.21840-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200907161141.31034-11-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 06:11:26PM +0200, Krzysztof Kozlowski wrote:
-> The S3C RTC requires 32768 Hz clock as input which is provided by PMIC.
-> However there is no such clock provider but rather a regulator driver
-> which registers the clock as a regulator.  This is an old driver which
-> will not be updated so add a workaround - a fixed-clock to fill missing
-> clock phandle reference in S3C RTC.
-> 
-> This fixes dtbs_check warnings:
-> 
->   rtc@e2800000: clocks: [[2, 145]] is too short
->   rtc@e2800000: clock-names: ['rtc'] is too short
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/s5pv210-aquila.dts | 17 +++++++++++++++++
+The AM65x SR2.0 Ringacc has fixed errata i2023 "RINGACC, UDMA: RINGACC and
+UDMA Ring State Interoperability Issue after Channel Teardown". This errata
+also fixed for J271E SoC.
 
-Applied 10-19.
+Use SOC bus data for K3 SoC identification and enable i2023 errate w/a only
+for the AM65x SR1.0. This also makes obsolete "ti,dma-ring-reset-quirk" DT
+property.
 
-Best regards,
-Krzysztof
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/soc/ti/k3-ringacc.c | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+index 6dcc21dde0cb..1147dc4c1d59 100644
+--- a/drivers/soc/ti/k3-ringacc.c
++++ b/drivers/soc/ti/k3-ringacc.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/sys_soc.h>
+ #include <linux/soc/ti/k3-ringacc.h>
+ #include <linux/soc/ti/ti_sci_protocol.h>
+ #include <linux/soc/ti/ti_sci_inta_msi.h>
+@@ -208,6 +209,15 @@ struct k3_ringacc {
+ 	const struct k3_ringacc_ops *ops;
+ };
+ 
++/**
++ * struct k3_ringacc - Rings accelerator SoC data
++ *
++ * @dma_ring_reset_quirk:  DMA reset w/a enable
++ */
++struct k3_ringacc_soc_data {
++	unsigned dma_ring_reset_quirk:1;
++};
++
+ static long k3_ringacc_ring_get_fifo_pos(struct k3_ring *ring)
+ {
+ 	return K3_RINGACC_FIFO_WINDOW_SIZE_BYTES -
+@@ -1051,9 +1061,6 @@ static int k3_ringacc_probe_dt(struct k3_ringacc *ringacc)
+ 		return ret;
+ 	}
+ 
+-	ringacc->dma_ring_reset_quirk =
+-			of_property_read_bool(node, "ti,dma-ring-reset-quirk");
+-
+ 	ringacc->tisci = ti_sci_get_by_phandle(node, "ti,sci");
+ 	if (IS_ERR(ringacc->tisci)) {
+ 		ret = PTR_ERR(ringacc->tisci);
+@@ -1084,9 +1091,22 @@ static int k3_ringacc_probe_dt(struct k3_ringacc *ringacc)
+ 						 ringacc->rm_gp_range);
+ }
+ 
++static const struct k3_ringacc_soc_data k3_ringacc_soc_data_sr1 = {
++	.dma_ring_reset_quirk = 1,
++};
++
++static const struct soc_device_attribute k3_ringacc_socinfo[] = {
++	{ .family = "AM65X",
++	  .revision = "SR1.0",
++	  .data = &k3_ringacc_soc_data_sr1
++	},
++	{/* sentinel */}
++};
++
+ static int k3_ringacc_init(struct platform_device *pdev,
+ 			   struct k3_ringacc *ringacc)
+ {
++	const struct soc_device_attribute *soc;
+ 	void __iomem *base_fifo, *base_rt;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *res;
+@@ -1103,6 +1123,13 @@ static int k3_ringacc_init(struct platform_device *pdev,
+ 	if (ret)
+ 		return ret;
+ 
++	soc = soc_device_match(k3_ringacc_socinfo);
++	if (soc && soc->data) {
++		const struct k3_ringacc_soc_data *soc_data = soc->data;
++
++		ringacc->dma_ring_reset_quirk = soc_data->dma_ring_reset_quirk;
++	}
++
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rt");
+ 	base_rt = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(base_rt))
+-- 
+2.17.1
 
