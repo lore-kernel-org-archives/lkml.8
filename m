@@ -2,245 +2,482 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E19C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C174C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 790DD2087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0798B20C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zsDBJ8Ay"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="R6qBombe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbgIIQgB (ORCPT
+        id S1731210AbgIIQgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730949AbgIIQ0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:26:11 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD0DC061799
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 09:26:08 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id v15so2438578pgh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 09:26:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ur0jsYUj72BqgbcrHRQljmDeSLUciAGdL7rcnu/ICrQ=;
-        b=zsDBJ8Ay5xaEkF/FfyJBAdmUhPz2eDWzkABSH82qTlpMEWaYpTT2gtQBJgT/fzb0EF
-         lxWJEmQ3HpS5fT3HE19viHDtDsvzQEyKA8Vl3fE4xMpVC5iuvThEwRi8HGRozlN/ZgSp
-         bhg3Vq5PdpT89gNH3fUstvcPJkBb5+8t/mgqnmKpoMMZjE3PpinxaceQG0xXRhGwuSDv
-         Z0H2LjYjZFI+dzZiw2jgbJjX8sP7MMpNsYxIzqF7XD4Rfc5t8xrsyRFWT93zci7UhhhM
-         hW/ElpGkiOj0Ht/KQMxW+MpHyykp08QUMz/gRSqgukZ+B3xMuC6APDIp/gdjwps3oNF9
-         gtzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ur0jsYUj72BqgbcrHRQljmDeSLUciAGdL7rcnu/ICrQ=;
-        b=ttdfGz4ttvDEmA1LG7O5BRMEoiiZS5chnnGqCp4yO53WEdYCHTDznqPNuyzhwA2I2S
-         KVy5i4bZwYjI/dQm6Mmkm3kkPEBHY1rTeMBl61iogHV2nxil3yQcVwP8Vg3Z0o2m2iqM
-         LLrf6gFDi6HB5NyS65hnr80Gw1yoHg3HXMEzxTv+ZljvYdQ8iD5fNYXJdwCyG7d0y7Qt
-         iAhWQVZ4n60tGod7ZUeiCzKvEskMvTG9NRV/mcFnNq+vw+xw6QrR+IcuJIAGTtXvsflI
-         aV2rxK4AIRT/0c7dw5lRdIEdWqLEyIyEnbOc+zt1/+KZ26s7TqbMCOqOefp8bthTmbRU
-         Yr7A==
-X-Gm-Message-State: AOAM530n9hoq4cypYrDR8O5QMCMhnkvOWQpmcwdOof/GuMNavG9d5vhU
-        LtNmnT4q7CYUoQmEB9GaPM9k2A==
-X-Google-Smtp-Source: ABdhPJzKaRKjnDLDamt3CY34N5as3uDt3auHxWJf5YGeEbwYcQTt4fGMDRZ0NeG4OXqcnHq1AXXHvQ==
-X-Received: by 2002:a17:902:b108:b029:d0:cbe1:e740 with SMTP id q8-20020a170902b108b02900d0cbe1e740mr1641016plr.27.1599668767760;
-        Wed, 09 Sep 2020 09:26:07 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id gm17sm2388308pjb.46.2020.09.09.09.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 09:26:07 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 10:26:05 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>, liuqi115@huawei.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxarm@huawei.com, Coresight ML <coresight@lists.linaro.org>
-Subject: Re: [RFC PATCH v2] coresight: etm4x: Modify core-commit of cpu to
- avoid the overflow of HiSilicon ETM
-Message-ID: <20200909162605.GB553266@xps15>
-References: <1597824397-29894-1-git-send-email-liuqi115@huawei.com>
- <20200827204426.GD22307@xps15>
- <548c973d-6964-ca5c-4c8d-fbc2386f3349@arm.com>
- <CAJ9a7Vh8r4q8sCJnOdrrONZpM42QNbMpZGiebXs-mGW=MgmM3Q@mail.gmail.com>
+        Wed, 9 Sep 2020 12:36:08 -0400
+Received: from mail.nic.cz ([217.31.204.67]:34820 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731068AbgIIQ0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:26:06 -0400
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTP id A4CB5140A77;
+        Wed,  9 Sep 2020 18:25:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1599668755; bh=CCID+6XO7E5eXop8eKP/NFb1pvL8WXiQXdWzIDrO1ko=;
+        h=From:To:Date;
+        b=R6qBombeGlUUJI8+cD9oVr800xcBkPHmLu9PoxsEh9GYi5WmDhU2uYJ5Q1Z1euztx
+         aI+N6LjqzkoFeGn7xzuRS4eqSgaQ84EFPqgQw6Z+qWwIQI1MNL0FA0VADA88Ssb+xc
+         xd2B9yPTQa/694GSdImzwU4rDjxPBKBhTUIh3ryE=
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To:     netdev@vger.kernel.org
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support for LEDs controlled by Marvell PHYs
+Date:   Wed,  9 Sep 2020 18:25:51 +0200
+Message-Id: <20200909162552.11032-7-marek.behun@nic.cz>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200909162552.11032-1-marek.behun@nic.cz>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ9a7Vh8r4q8sCJnOdrrONZpM42QNbMpZGiebXs-mGW=MgmM3Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: /
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 12:30:02PM +0100, Mike Leach wrote:
-> Hi,
-> 
-> On Wed, 2 Sep 2020 at 11:36, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> >
-> > On 08/27/2020 09:44 PM, Mathieu Poirier wrote:
-> > > Hi Liu,
-> > >
-> > > On Wed, Aug 19, 2020 at 04:06:37PM +0800, Qi Liu wrote:
-> > >> When too much trace information is generated on-chip, the ETM will
-> > >> overflow, and cause data loss. This is a common phenomenon on ETM
-> > >> devices.
-> > >>
-> > >> But sometimes we do not want to lose performance trace data, so we
-> > >> suppress the speed of instructions sent from CPU core to ETM to
-> > >> avoid the overflow of ETM.
-> > >>
-> > >> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> > >> ---
-> > >>
-> > >> Changes since v1:
-> > >> - ETM on HiSilicon Hip09 platform supports backpressure, so does
-> > >> not need to modify core commit.
-> > >>
-> > >>   drivers/hwtracing/coresight/coresight-etm4x.c | 43 +++++++++++++++++++++++++++
-> > >>   1 file changed, 43 insertions(+)
-> > >>
-> > >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> > >> index 7797a57..7641f89 100644
-> > >> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> > >> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> > >> @@ -43,6 +43,10 @@ MODULE_PARM_DESC(boot_enable, "Enable tracing on boot");
-> > >>   #define PARAM_PM_SAVE_NEVER          1 /* never save any state */
-> > >>   #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
-> > >>
-> > >> +#define CORE_COMMIT_CLEAR   0x3000
-> > >> +#define CORE_COMMIT_SHIFT   12
-> > >> +#define HISI_ETM_AMBA_ID_V1 0x000b6d01
-> > >> +
-> > >>   static int pm_save_enable = PARAM_PM_SAVE_FIRMWARE;
-> > >>   module_param(pm_save_enable, int, 0444);
-> > >>   MODULE_PARM_DESC(pm_save_enable,
-> > >> @@ -104,11 +108,40 @@ struct etm4_enable_arg {
-> > >>      int rc;
-> > >>   };
-> > >>
-> > >> +static void etm4_cpu_actlr1_cfg(void *info)
-> > >> +{
-> > >> +    struct etm4_enable_arg *arg = (struct etm4_enable_arg *)info;
-> > >> +    u64 val;
-> > >> +
-> > >> +    asm volatile("mrs %0,s3_1_c15_c2_5" : "=r"(val));
-> >
-> >
-> > The ID register (S3_1_C15_c2_5) falls into implementation defined space.
-> > See Arm ARM DDI 0487F.a, section "D12.3.2  Reserved encodings for
-> > IMPLEMENTATION DEFINED registers".
-> >
-> > So, please stop calling this "etm4_cpu_actlr1_cfg". Since,
-> > 1) actlr1 is not an architected name for the said encoding
-> > 2) The id register could mean something else on another CPU.
-> >
-> > Rather this should indicate platform/CPU specific. e.g,
-> >
-> > etm4_cpu_hisilicon_config_core_commit()
-> >
-> >
-> > >> +    val &= ~CORE_COMMIT_CLEAR;
-> > >> +    val |= arg->rc << CORE_COMMIT_SHIFT;
-> > >> +    asm volatile("msr s3_1_c15_c2_5,%0" : : "r"(val));
-> > >> +}
-> > >> +
-> > >> +static void etm4_config_core_commit(int cpu, int val)
-> > >> +{
-> > >> +    struct etm4_enable_arg arg = {0};
-> > >> +
-> > >> +    arg.rc = val;
-> > >> +    smp_call_function_single(cpu, etm4_cpu_actlr1_cfg, &arg, 1);
-> > >
-> > > Function etm4_enable/disable_hw() are already running on the CPU they are
-> > > supposed to so no need to call smp_call_function_single().
-> > >
-> > >> +}
-> > >> +
-> > >>   static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
-> > >>   {
-> > >>      int i, rc;
-> > >> +    struct amba_device *adev;
-> > >>      struct etmv4_config *config = &drvdata->config;
-> > >>      struct device *etm_dev = &drvdata->csdev->dev;
-> > >> +    struct device *dev = drvdata->csdev->dev.parent;
-> > >> +
-> > >> +    adev = container_of(dev, struct amba_device, dev);
-> > >> +    /*
-> > >> +     * If ETM device is HiSilicon ETM device, reduce the
-> > >> +     * core-commit to avoid ETM overflow.
-> > >> +     */
-> > >> +    if (adev->periphid == HISI_ETM_AMBA_ID_V1)
-> >
-> > Please could you move this check to the function above ?
-> > Ideally, it would be good to have something like :
-> >
-> >         etm4_config_impdef_features();
-> >
-> > And :
-> >
-> >         etm4_config_impdef_features(struct etm4_drvdata *drvdata)
-> >         {
-> >                 etm4_cpu_hisilicon_config_core_commit(drvdata);
-> >         }
-> >
-> 
-> In addition to the above, Is it worth having this implementation
-> defined code gated in the kernel configuration - like we do for core
-> features sometimes?
-> i,.e.
-> CONFIG_ETM4X_IMPDEF_FEATURE (controls overall impdef support in the driver)
-> and
-> CONFIG_ETM4X_IMPDEF_HISILICON (depends on CONFIG_ETM4X_IMPDEF_FEATURE )
-> 
-> This way we keep non ETM architectural code off platforms that cannot
-> use it / test it.
->
+This patch adds support for controlling the LEDs connected to several
+families of Marvell PHYs via the PHY HW LED trigger API. These families
+are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
+be added.
 
-That's a good idea - they do the same for CPU erratas.
+This patch does not yet add support for compound LED modes. This could
+be achieved via the LED multicolor framework.
+
+Settings such as HW blink rate or pulse stretch duration are not yet
+supported.
+
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+---
+ drivers/net/phy/marvell.c | 314 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 312 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
+index bb86ac0bd0920..7aedb529e1540 100644
+--- a/drivers/net/phy/marvell.c
++++ b/drivers/net/phy/marvell.c
+@@ -148,6 +148,13 @@
+ #define MII_88E1510_PHY_LED_DEF		0x1177
+ #define MII_88E1510_PHY_LED0_LINK_LED1_ACTIVE	0x1040
  
-> 
-> > >
-> > > Do you have any documentation on this back pressure feature?  I doubt this is
-> > > specific to Hip09 platform and as such would prefer to have a more generic
-> > > approach that works on any platform that supports it.
-> > >
-> > > Anyone on the CS mailing list that knows what this is about?
-> >
-> > I believe this is hisilicon specific. May be same across their CPUs, may
-> > be a specific one. There is no architectural guarantee.
-> >
-> 
-> This could be an implementation of the feature provided by the
-> TRCSTALLCTRL register - which allows PE to be stalled in response to
-> the ETM fifos approaching overflow.
-> At present we do nothing with this feature as we have yet to see a
-> target with it implemented, but if this is the case then it is an
-> ETMv4 architectural feature that could be added into the main driver
-> code,  with use/access gated by the relevent TRCIDR bit.
-> 
-> Regards
-> 
-> Mike
-> 
-> 
-> >
-> > Cheers
-> > Suzuki
-> 
-> 
-> 
-> -- 
-> Mike Leach
-> Principal Engineer, ARM Ltd.
-> Manchester Design Centre. UK
++#define MII_PHY_LED_POLARITY_CTRL	17
++#define MII_PHY_LED_TIMER_CTRL		18
++#define MII_PHY_LED45_CTRL		19
++
++#define MII_PHY_LED_CTRL_FORCE_ON	0x9
++#define MII_PHY_LED_CTRL_FORCE_OFF	0x8
++
+ #define MII_M1011_PHY_STATUS		0x11
+ #define MII_M1011_PHY_STATUS_1000	0x8000
+ #define MII_M1011_PHY_STATUS_100	0x4000
+@@ -252,6 +259,8 @@
+ #define LPA_PAUSE_FIBER		0x180
+ #define LPA_PAUSE_ASYM_FIBER	0x100
+ 
++#define MARVELL_PHY_MAX_LEDS	6
++
+ #define NB_FIBER_STATS	1
+ 
+ MODULE_DESCRIPTION("Marvell PHY driver");
+@@ -280,6 +289,7 @@ struct marvell_priv {
+ 	u32 last;
+ 	u32 step;
+ 	s8 pair;
++	u16 legacy_led_config_mask;
+ };
+ 
+ static int marvell_read_page(struct phy_device *phydev)
+@@ -662,8 +672,300 @@ static int m88e1510_config_aneg(struct phy_device *phydev)
+ 	return err;
+ }
+ 
++#if IS_ENABLED(CONFIG_LEDS_HW_CONTROLLED)
++
++enum {
++	COMMON			= BIT(0),
++	L1V0_RECV		= BIT(1),
++	L1V0_COPPER		= BIT(2),
++	L1V5_100_FIBER		= BIT(3),
++	L1V5_100_10		= BIT(4),
++	L2V2_INIT		= BIT(5),
++	L2V2_PTP		= BIT(6),
++	L2V2_DUPLEX		= BIT(7),
++	L3V0_FIBER		= BIT(8),
++	L3V0_LOS		= BIT(9),
++	L3V5_TRANS		= BIT(10),
++	L3V7_FIBER		= BIT(11),
++	L3V7_DUPLEX		= BIT(12),
++};
++
++struct marvell_led_mode_info {
++	const char *name;
++	s8 regval[MARVELL_PHY_MAX_LEDS];
++	u32 flags;
++};
++
++static const struct marvell_led_mode_info marvell_led_mode_info[] = {
++	{ "link",			{ 0x0,  -1, 0x0,  -1,  -1,  -1, }, COMMON },
++	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, COMMON },
++	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, COMMON },
++	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, COMMON },
++	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, COMMON },
++	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, COMMON },
++	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
++	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, COMMON },
++	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
++	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, COMMON },
++	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
++	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, COMMON },
++	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, COMMON },
++	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
++	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
++	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, COMMON },
++	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, COMMON },
++	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, COMMON },
++	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, COMMON },
++	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
++	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
++	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
++	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, COMMON },
++	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, COMMON },
++	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
++	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
++	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
++	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
++	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, COMMON },
++};
++
++struct marvell_leds_info {
++	u32 family;
++	int nleds;
++	u32 flags;
++};
++
++#define LED(fam, n, flg)							\
++	{									\
++		.family = MARVELL_PHY_FAMILY_ID(MARVELL_PHY_ID_88E##fam),	\
++		.nleds = (n),							\
++		.flags = (flg),							\
++	}									\
++
++static const struct marvell_leds_info marvell_leds_info[] = {
++	LED(1112,  4, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS |
++		      L3V7_FIBER),
++	LED(1121R, 3, COMMON | L1V5_100_10),
++	LED(1240,  6, COMMON | L3V5_TRANS),
++	LED(1340S, 6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
++	LED(1510,  3, COMMON | L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
++	LED(1545,  6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
++};
++
++static inline int marvell_led_reg(int led)
++{
++	switch (led) {
++	case 0 ... 3:
++		return MII_PHY_LED_CTRL;
++	case 4 ... 5:
++		return MII_PHY_LED45_CTRL;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int marvell_led_set_regval(struct phy_device *phydev, int led, u16 val)
++{
++	u16 mask;
++	int reg;
++
++	reg = marvell_led_reg(led);
++	if (reg < 0)
++		return reg;
++
++	val <<= (led % 4) * 4;
++	mask = 0xf << ((led % 4) * 4);
++
++	return phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, reg, mask, val);
++}
++
++static int marvell_led_get_regval(struct phy_device *phydev, int led)
++{
++	int reg, val;
++
++	reg = marvell_led_reg(led);
++	if (reg < 0)
++		return reg;
++
++	val = phy_read_paged(phydev, MII_MARVELL_LED_PAGE, reg);
++	if (val < 0)
++		return val;
++
++	val >>= (led % 4) * 4;
++	val &= 0xf;
++
++	return val;
++}
++
++static int marvell_led_set_polarity(struct phy_device *phydev, int led, bool active_low,
++				    bool tristate)
++{
++	int reg, shift;
++	u16 mask, val;
++
++	switch (led) {
++	case 0 ... 3:
++		reg = MII_PHY_LED_POLARITY_CTRL;
++		break;
++	case 4 ... 5:
++		reg = MII_PHY_LED45_CTRL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	val = 0;
++	if (!active_low)
++		val |= BIT(0);
++	if (tristate)
++		val |= BIT(1);
++
++	shift = led * 2;
++	val <<= shift;
++	mask = 0x3 << shift;
++
++	return phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, reg, mask, val);
++}
++
++static int marvell_led_brightness_set(struct device *dev, struct hw_controlled_led *led,
++				      enum led_brightness brightness)
++{
++	struct phy_device *phydev = to_phy_device(dev);
++	u8 val;
++
++	/* don't do anything if HW control is enabled */
++	if (led->cdev.trigger == &hw_control_led_trig)
++		return 0;
++
++	val = brightness ? MII_PHY_LED_CTRL_FORCE_ON : MII_PHY_LED_CTRL_FORCE_OFF;
++
++	return marvell_led_set_regval(phydev, led->addr, val);
++}
++
++static inline bool is_valid_led_mode(struct hw_controlled_led *led,
++				     const struct marvell_led_mode_info *mode)
++{
++	const struct marvell_leds_info *info = led->priv;
++
++	return mode->regval[led->addr] != -1 && (info->flags & mode->flags);
++}
++
++static const char *marvell_led_iter_hw_mode(struct device *dev, struct hw_controlled_led *led,
++					    void **iter)
++{
++	const struct marvell_led_mode_info *mode = *iter;
++
++	if (!mode)
++		mode = marvell_led_mode_info;
++
++	if (mode - marvell_led_mode_info == ARRAY_SIZE(marvell_led_mode_info))
++		goto end;
++
++	while (!is_valid_led_mode(led, mode)) {
++		++mode;
++		if (mode - marvell_led_mode_info == ARRAY_SIZE(marvell_led_mode_info))
++			goto end;
++	}
++
++	*iter = (void *)(mode + 1);
++	return mode->name;
++end:
++	*iter = NULL;
++	return NULL;
++}
++
++static int marvell_led_set_hw_mode(struct device *dev, struct hw_controlled_led *led,
++				   const char *name)
++{
++	struct phy_device *phydev = to_phy_device(dev);
++	const struct marvell_led_mode_info *mode;
++	int i;
++
++	if (!name)
++		return 0;
++
++	for (i = 0; i < ARRAY_SIZE(marvell_led_mode_info); ++i) {
++		mode = &marvell_led_mode_info[i];
++
++		if (!is_valid_led_mode(led, mode))
++			continue;
++
++		if (sysfs_streq(name, mode->name))
++			return marvell_led_set_regval(phydev, led->addr, mode->regval[led->addr]);
++	}
++
++	return -EINVAL;
++}
++
++static const char *marvell_led_get_hw_mode(struct device *dev, struct hw_controlled_led *led)
++{
++	struct phy_device *phydev = to_phy_device(dev);
++	const struct marvell_led_mode_info *mode;
++	int i, regval;
++
++	regval = marvell_led_get_regval(phydev, led->addr);
++	if (regval < 0)
++		return NULL;
++
++	for (i = 0; i < ARRAY_SIZE(marvell_led_mode_info); ++i) {
++		mode = &marvell_led_mode_info[i];
++
++		if (!is_valid_led_mode(led, mode))
++			continue;
++
++		if (mode->regval[led->addr] == regval)
++			return mode->name;
++	}
++
++	return NULL;
++}
++
++static int marvell_led_init(struct device *dev, struct hw_controlled_led *led)
++{
++	struct phy_device *phydev = to_phy_device(dev);
++	const struct marvell_leds_info *info = NULL;
++	struct marvell_priv *priv = phydev->priv;
++	int ret, i;
++
++	for (i = 0; i < ARRAY_SIZE(marvell_leds_info); ++i) {
++		if (MARVELL_PHY_FAMILY_ID(phydev->phy_id) == marvell_leds_info[i].family) {
++			info = &marvell_leds_info[i];
++			break;
++		}
++	}
++
++	if (!info)
++		return -EOPNOTSUPP;
++
++	if (led->addr >= info->nleds)
++		return -EINVAL;
++
++	led->priv = (void *)info;
++	led->cdev.max_brightness = 1;
++
++	ret = marvell_led_set_polarity(phydev, led->addr, led->active_low, led->tristate);
++	if (ret < 0)
++		return ret;
++
++	/* ensure marvell_config_led below does not change settings we have set for this LED */
++	if (led->addr < 3)
++		priv->legacy_led_config_mask &= ~(0xf << (led->addr * 4));
++
++	return 0;
++}
++
++static const struct hw_controlled_led_ops marvell_led_ops = {
++	.led_init		= marvell_led_init,
++	.led_brightness_set	= marvell_led_brightness_set,
++	.led_iter_hw_mode	= marvell_led_iter_hw_mode,
++	.led_set_hw_mode	= marvell_led_set_hw_mode,
++	.led_get_hw_mode	= marvell_led_get_hw_mode,
++};
++
++#endif /* IS_ENABLED(CONFIG_LEDS_HW_CONTROLLED) */
++
+ static void marvell_config_led(struct phy_device *phydev)
+ {
++	struct marvell_priv *priv = phydev->priv;
+ 	u16 def_config;
+ 	int err;
+ 
+@@ -688,8 +990,9 @@ static void marvell_config_led(struct phy_device *phydev)
+ 		return;
+ 	}
+ 
+-	err = phy_write_paged(phydev, MII_MARVELL_LED_PAGE, MII_PHY_LED_CTRL,
+-			      def_config);
++	def_config &= priv->legacy_led_config_mask;
++	err = phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, MII_PHY_LED_CTRL,
++			       priv->legacy_led_config_mask, def_config);
+ 	if (err < 0)
+ 		phydev_warn(phydev, "Fail to config marvell phy LED.\n");
+ }
+@@ -2580,6 +2883,7 @@ static int marvell_probe(struct phy_device *phydev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	priv->legacy_led_config_mask = 0xffff;
+ 	phydev->priv = priv;
+ 
+ 	return 0;
+@@ -2656,6 +2960,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.get_stats = marvell_get_stats,
+ 		.get_tunable = m88e1011_get_tunable,
+ 		.set_tunable = m88e1011_set_tunable,
++		.led_ops = hw_controlled_led_ops_ptr(&marvell_led_ops),
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1111,
+@@ -2717,6 +3022,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.get_stats = marvell_get_stats,
+ 		.get_tunable = m88e1011_get_tunable,
+ 		.set_tunable = m88e1011_set_tunable,
++		.led_ops = hw_controlled_led_ops_ptr(&marvell_led_ops),
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1318S,
+@@ -2796,6 +3102,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.get_sset_count = marvell_get_sset_count,
+ 		.get_strings = marvell_get_strings,
+ 		.get_stats = marvell_get_stats,
++		.led_ops = hw_controlled_led_ops_ptr(&marvell_led_ops),
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1116R,
+@@ -2844,6 +3151,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.cable_test_start = marvell_vct7_cable_test_start,
+ 		.cable_test_tdr_start = marvell_vct5_cable_test_tdr_start,
+ 		.cable_test_get_status = marvell_vct7_cable_test_get_status,
++		.led_ops = hw_controlled_led_ops_ptr(&marvell_led_ops),
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1540,
+@@ -2896,6 +3204,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.cable_test_start = marvell_vct7_cable_test_start,
+ 		.cable_test_tdr_start = marvell_vct5_cable_test_tdr_start,
+ 		.cable_test_get_status = marvell_vct7_cable_test_get_status,
++		.led_ops = hw_controlled_led_ops_ptr(&marvell_led_ops),
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E3016,
+@@ -2964,6 +3273,7 @@ static struct phy_driver marvell_drivers[] = {
+ 		.get_stats = marvell_get_stats,
+ 		.get_tunable = m88e1540_get_tunable,
+ 		.set_tunable = m88e1540_set_tunable,
++		.led_ops = hw_controlled_led_ops_ptr(&marvell_led_ops),
+ 	},
+ 	{
+ 		.phy_id = MARVELL_PHY_ID_88E1548P,
+-- 
+2.26.2
+
