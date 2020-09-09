@@ -2,200 +2,124 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8217BC10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9D2C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6DE21973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FZBXLkFz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="AvatYPzM"
+	by mail.kernel.org (Postfix) with ESMTP id 4D14A21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgIIHEV (ORCPT
+        id S1729753AbgIIHE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:04:21 -0400
-Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:54358
-        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727820AbgIIHEB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:04:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599635040;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=yyZlFrBbj3mCUI/S6kobHVWb+8g7yss2Z7S57ZfQS00=;
-        b=FZBXLkFz62bMWjcmzghRM/72fIqaZmWBHqWVkVhJGKOOyTZuvRaAeMiblou5a42M
-        r/YqB5+yBK1HmPpuZFjXEobTV6uvNEM1nt2KINwt6dmqdhFx2O6cOKGUyg/5TjjrTU3
-        kkkkaUNnqfmbRr84OgrCBj4ST8G4aHsASUYRiq5U=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599635040;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=yyZlFrBbj3mCUI/S6kobHVWb+8g7yss2Z7S57ZfQS00=;
-        b=AvatYPzMzkeDNEujC9ND7zVJxLrlI3Ma91lGNonPBc09ezlZ/Aj+BebpomnSbxh0
-        9njN6uaw/coI/+48DIqt6gzm2dqrSltJ23HPaU3Ie6mGFyJZgd+WyGc6z+ziDupT/3u
-        /hrcpVPvFlEAykKLDuhBJPcWHO4HNv9UfaULQxwM=
+        Wed, 9 Sep 2020 03:04:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55466 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729212AbgIIHAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:00:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DC3A6AD77;
+        Wed,  9 Sep 2020 07:00:15 +0000 (UTC)
+Subject: Re: [PATCH 03/19] ataflop: use bdev_check_media_change
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20200908145347.2992670-1-hch@lst.de>
+ <20200908145347.2992670-4-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <85feac00-f445-b88b-9bc0-f8e3ec6fbd1d@suse.de>
+Date:   Wed, 9 Sep 2020 09:00:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 9 Sep 2020 07:04:00 +0000
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Subject: Re: [PATCHv3] soc: qcom: llcc: Support chipsets that can write to
- llcc registers
-In-Reply-To: <159958993124.450588.14302117254509761157@swboyd.mtv.corp.google.com>
-References: <010101746c377537-ce93e925-598b-4dce-bb16-4cda020f4d6f-000000@us-west-2.amazonses.com>
- <159958993124.450588.14302117254509761157@swboyd.mtv.corp.google.com>
-Message-ID: <0101017471ada945-235f5256-432a-4354-87f0-8c8b4a681aa7-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.09-54.240.27.55
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+In-Reply-To: <20200908145347.2992670-4-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020-09-09 00:02, Stephen Boyd wrote:
-> Quoting Sai Prakash Ranjan (2020-09-07 22:36:48)
->> From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
->> 
->> Older chipsets may not be allowed to configure certain LLCC registers
->> as that is handled by the secure side software. However, this is not
->> the case for newer chipsets and they must configure these registers
->> according to the contents of the SCT table, while keeping in mind that
->> older targets may not have these capabilities. So add support to allow
->> such configuration of registers to enable capacity based allocation
->> and power collapse retention for capable chipsets.
->> 
->> Reason for choosing capacity based allocation rather than the default
->> way based allocation is because capacity based allocation allows more
->> finer grain partition and provides more flexibility in configuration.
->> As for the retention through power collapse, it has an advantage where
->> the cache hits are more when we wake up from power collapse although
->> it does burn more power but the exact power numbers are not known at
->> the moment.
->> 
->> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
->> (sai: use existing config instead of dt property and commit msg 
->> change)
+On 9/8/20 4:53 PM, Christoph Hellwig wrote:
+> Switch to use bdev_check_media_change instead of check_disk_change and
+> call floppy_revalidate manually.  Given that floppy_revalidate only
+> deals with media change events, the extra call into ->revalidate_disk
+> from bdev_disk_changed is not required either, so stop wiring up the
+> method.
 > 
-> Should be the following format:
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> ---
+>  drivers/block/ataflop.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> [saiprakash.ranjan@codeaurora.org: use existing...]
-> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Hmm, is this documented somewhere because a quick grep shows
-quite a few places where just the first name is added. Plus
-there is already a signed-off-by line below this, so we know
-that it is this 'sai' who made the extra changes.
+Cheers,
 
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->> diff --git a/drivers/soc/qcom/llcc-qcom.c 
->> b/drivers/soc/qcom/llcc-qcom.c
->> index 429b5a60a1ba..b908656ce519 100644
->> --- a/drivers/soc/qcom/llcc-qcom.c
->> +++ b/drivers/soc/qcom/llcc-qcom.c
->> @@ -45,6 +45,9 @@
->>  #define LLCC_TRP_ATTR0_CFGn(n)        (0x21000 + SZ_8 * n)
->>  #define LLCC_TRP_ATTR1_CFGn(n)        (0x21004 + SZ_8 * n)
->> 
->> +#define LLCC_TRP_SCID_DIS_CAP_ALLOC   0x21F00
->> +#define LLCC_TRP_PCB_ACT              0x21F04
-> 
-> Use lowercase hex please. LLCC_COMMON_STATUS0 is using lowercase.
-> 
-
-Ok
-
->> +
->>  #define BANK_OFFSET_STRIDE           0x80000
->> 
->>  /**
->> @@ -89,6 +92,7 @@ struct llcc_slice_config {
->>  struct qcom_llcc_config {
->>         const struct llcc_slice_config *sct_data;
->>         int size;
->> +       bool need_llcc_cfg;
->>  };
->> 
->>  static const struct llcc_slice_config sc7180_data[] =  {
->> @@ -122,11 +126,13 @@ static const struct llcc_slice_config 
->> sdm845_data[] =  {
->>  static const struct qcom_llcc_config sc7180_cfg = {
->>         .sct_data       = sc7180_data,
->>         .size           = ARRAY_SIZE(sc7180_data),
->> +       .need_llcc_cfg  = true,
->>  };
->> 
->>  static const struct qcom_llcc_config sdm845_cfg = {
->>         .sct_data       = sdm845_data,
->>         .size           = ARRAY_SIZE(sdm845_data),
->> +       .need_llcc_cfg  = false,
-> 
-> false is the default so just leave it out?
-> 
-
-Done on purpose as I wanted to be explicit here so that
-anyone reading it knows that it doesn't support configuring
-in kernel. Yes the default is false but it won't hurt to be
-explicit here to avoid confusion.
-
->>  };
->> 
->>  static struct llcc_drv_data *drv_data = (void *) -EPROBE_DEFER;
->> @@ -327,6 +333,7 @@ static int qcom_llcc_cfg_program(struct 
->> platform_device *pdev)
->>         u32 attr0_val;
->>         u32 max_cap_cacheline;
->>         u32 sz;
->> +       u32 disable_cap_alloc, retain_pc;
->>         int ret = 0;
->>         const struct llcc_slice_config *llcc_table;
->>         struct llcc_slice_desc desc;
->> @@ -369,6 +376,21 @@ static int qcom_llcc_cfg_program(struct 
->> platform_device *pdev)
->>                                         attr0_val);
->>                 if (ret)
->>                         return ret;
->> +
->> +               if (drv_data->need_llcc_config) {
->> +                       disable_cap_alloc = 
->> llcc_table[i].dis_cap_alloc << llcc_table[i].slice_id;
-> 
-> Can we move u32 disable_cap_alloc, retain_pc here? That would keep it
-> local to this if condition. Or make llc_table[i].slice_id into a local
-> variable so the shift line isn't so long? Or make the body of this 
-> while
-> loop a new function that takes an llcc_table[i] pointer so that lines
-> are easier to read?
-> 
-
-The whole function qcom_llcc_cfg_program() is just a loop so
-adding another function moving that loop wouldn't look good.
-llc_table[i].slice_id is already used elsewhere in this function
-and changing everywhere is not related to this patch. So I will
-go with your suggestion to move disable_cap_alloc and retain_pc
-to if block.
-
-Thanks for the review.
-
-Thanks,
-Sai
-
+Hannes
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
