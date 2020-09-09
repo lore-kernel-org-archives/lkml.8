@@ -2,102 +2,204 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8633FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BDAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C062206E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37062206E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrPAVlhO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbgIIRNr (ORCPT
+        id S1730326AbgIIRNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35472 "EHLO
+        Wed, 9 Sep 2020 13:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbgIIRNh (ORCPT
+        with ESMTP id S1730061AbgIIPcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 13:13:37 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB65C061573;
-        Wed,  9 Sep 2020 10:13:37 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kG3em-00DIaQ-My; Wed, 09 Sep 2020 17:13:16 +0000
-Date:   Wed, 9 Sep 2020 18:13:16 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH v8 0/3] Add support for AT_INTERPRETED (was O_MAYEXEC)
-Message-ID: <20200909171316.GW1236603@ZenIV.linux.org.uk>
-References: <20200908075956.1069018-1-mic@digikod.net>
- <20200908185026.GU1236603@ZenIV.linux.org.uk>
- <e3223b50-0d00-3b64-1e09-cfb1b9648b02@digikod.net>
+        Wed, 9 Sep 2020 11:32:22 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD645C061756;
+        Wed,  9 Sep 2020 08:31:07 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id 185so2734618oie.11;
+        Wed, 09 Sep 2020 08:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tSgsq9zZhpkzLhA9Y8uyv8bzBmNho/QvRHp/rEYJJaQ=;
+        b=jrPAVlhOCfDjcxMkdtnXgoaMQ9g+BE0Bt8xsYrxiGhf/ja44JVGrjaUzbbC++rjxk2
+         PgBsVIb/zKiLAZOxNnW4uyKru1hpEtHCj1Ex3/jqh8HnrQhFPffLILS2hi8nDT6rnVP+
+         eC7eCOLYTXuNbEGSRa9Io9ULDN2YDAnMjzkRWS0+w4k3j1nIY969bGHriDGbPMlPcSxR
+         WY1WmxGBgIE1hAulMioHSnl1IgKi1nkx7Rxno6nw3Wnhuop6nbw4jqrxlzwvjJ/nfOAo
+         R0d6M3x3rysIvLQ98MZcT+/RQjEre8h+VUKQYvHYFJHlBh4UQ1Sn0wcKCjZvpAdAAC9D
+         jD3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tSgsq9zZhpkzLhA9Y8uyv8bzBmNho/QvRHp/rEYJJaQ=;
+        b=LGzGAk6+nCXE8hAy2riuZTzfxHdKRFLzqIUjOP6VwK2Z6b2kzPna1n9nvbnU7BE24N
+         K/Lf/1WuSqpk0sV3DsSHCIUTxvwozkhvtuYDbF7P2e8yDN+x+iykOnJtMUc5cXJmk8Ur
+         YDbirDpadBob4xr6PF+Y7xCrtaoakT33q1nk4yW8AE0RYpXDQXQA+1xmkiIPTnYKeC/R
+         DEJmhlZH/DBlJK9lE6kbFbMtBClz2eh9dbV+NJP30bQ1ioSmSFNn69YBP+7ttSdQD1uU
+         sB97rYyBJp3LsVEh2Mrmceuylw9Fe3VJJTqFkT5aPSQZb6GlZ1KJ/k4gD7jYuBSADCeN
+         cA9w==
+X-Gm-Message-State: AOAM5334DTFcMoixUzJ4/vVM2ITgyGWnzbbPrYdqFJErxUod4JTuZY5D
+        vnpd0Qdssv3gtYC9oWfs1C9hKPgZDLE=
+X-Google-Smtp-Source: ABdhPJwmLueZHLJ64xudh7umkHBP7kF/oOLmyEL+d1nLqrlPu7RN/sQciFpuqObAvspMiYRf9Pa1Qw==
+X-Received: by 2002:aca:fd58:: with SMTP id b85mr972902oii.20.1599665467200;
+        Wed, 09 Sep 2020 08:31:07 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c14sm432507ooi.9.2020.09.09.08.31.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 08:31:06 -0700 (PDT)
+Subject: Re: [PATCH] hwmon: (pmbus) Expose PEC debugfs attribute
+To:     Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org
+Cc:     jdelvare@suse.com, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200909132411.2906159-1-andrew@aj.id.au>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <4f2de881-1391-b1b1-18b3-8d3a06653da9@roeck-us.net>
+Date:   Wed, 9 Sep 2020 08:31:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e3223b50-0d00-3b64-1e09-cfb1b9648b02@digikod.net>
+In-Reply-To: <20200909132411.2906159-1-andrew@aj.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 09:19:11AM +0200, Mickaël Salaün wrote:
+On 9/9/20 6:24 AM, Andrew Jeffery wrote:
+> Enable runtime debug control of whether the PEC byte is exchanged with
+> the PMBus device.
 > 
-> On 08/09/2020 20:50, Al Viro wrote:
-> > On Tue, Sep 08, 2020 at 09:59:53AM +0200, Mickaël Salaün wrote:
-> >> Hi,
-> >>
-> >> This height patch series rework the previous O_MAYEXEC series by not
-> >> adding a new flag to openat2(2) but to faccessat2(2) instead.  As
-> >> suggested, this enables to perform the access check on a file descriptor
-> >> instead of on a file path (while opening it).  This may require two
-> >> checks (one on open and then with faccessat2) but it is a more generic
-> >> approach [8].
-> > 
-> > Again, why is that folded into lookup/open/whatnot, rather than being
-> > an operation applied to a file (e.g. O_PATH one)?
-> > 
+> Some manufacturers have asked for the PEC to be disabled as part of
+> debugging driver communication issues with devices.
 > 
-> I don't understand your question. AT_INTERPRETED can and should be used
-> with AT_EMPTY_PATH. The two checks I wrote about was for IMA.
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  drivers/hwmon/pmbus/pmbus_core.c | 39 ++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+> index 44535add3a4a..51c8502b35e9 100644
+> --- a/drivers/hwmon/pmbus/pmbus_core.c
+> +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> @@ -2346,6 +2346,42 @@ static int pmbus_debugfs_get_status(void *data, u64 *val)
+>  DEFINE_DEBUGFS_ATTRIBUTE(pmbus_debugfs_ops_status, pmbus_debugfs_get_status,
+>  			 NULL, "0x%04llx\n");
+>  
+> +static int pmbus_debugfs_get_pec(void *data, u64 *val)
+> +{
+> +	struct i2c_client *client = data;
+> +
+> +	*val = !!(client->flags & I2C_CLIENT_PEC);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pmbus_debugfs_set_pec(void *data, u64 val)
+> +{
+> +	int rc;
+> +	struct i2c_client *client = data;
+> +
+> +	if (!val) {
+> +		client->flags &= ~I2C_CLIENT_PEC;
+> +		return 0;
+> +	}
+> +
+> +	if (val != 1)
+> +		return -EINVAL;
+> +
+> +	rc = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	if (!(rc & PB_CAPABILITY_ERROR_CHECK))
+> +		return -ENOTSUPP;
 
-Once more, with feeling: don't hide that behind existing syscalls.
-If you want to tell LSM have a look at given fs object in a special
-way, *add* *a* *new* *system* *call* *for* *doing* *just* *that*.
+WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP
+
+> +
+> +	client->flags |= I2C_CLIENT_PEC;
+> +
+> +	return 0;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(pmbus_debugfs_ops_pec, pmbus_debugfs_get_pec,
+> +			 pmbus_debugfs_set_pec, "0x%1llu\n");
+
+ERROR: Prefixing 0x with decimal output is defective
+
+(since the displayed value is a boolean, it is also quite useless).
+
+> +
+>  static int pmbus_init_debugfs(struct i2c_client *client,
+>  			      struct pmbus_data *data)
+>  {
+> @@ -2374,6 +2410,9 @@ static int pmbus_init_debugfs(struct i2c_client *client,
+>  	if (!entries)
+>  		return -ENOMEM;
+>  
+> +	debugfs_create_file("pec", 0664, data->debugfs, client,
+> +			    &pmbus_debugfs_ops_pec);
+> +
+>  	for (i = 0; i < data->info->pages; ++i) {
+>  		/* Check accessibility of status register if it's not page 0 */
+>  		if (!i || pmbus_check_status_register(client, i)) {
+> 
+
