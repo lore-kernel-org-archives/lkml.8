@@ -2,132 +2,172 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A28C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E59C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE306215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E60721532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599640483;
+	bh=21LxBOTrKH0j+egIc6/B0p/g/nvYShniy58Zvs7itDM=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=tBMBMTNWn0QvCGf3Nhmnd5Ri7aq06AJ10vMbtqihH8dQcWMK1L3eqy9tLu7HhZW9d
+	 NDkmEq4XtlWUxR4zJEezifkp5ApbDB4MY3n6UISoFtx8h510Y30xHWUCczK+/GQ1ie
+	 ECxhPLWmwCIZFizuoSBsBqu6VlvloPnUJfFhP/+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgIIIdt (ORCPT
+        id S1727113AbgIIIel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:33:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20695 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgIIIdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:33:47 -0400
-IronPort-SDR: lb5ns/Thwp9sgI1XRLPXwt7iEgesGVycuxcnBnYHqQAPFY2i+ryc/sXJXSTPZhv8J+a+rJUSZd
- qDElLPqIZ0wQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="222496062"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="222496062"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 01:33:46 -0700
-IronPort-SDR: cpi5SoaFuZf4vJUtvAmBWGnqKlUO+eVPMSqB/cbUPSJZ/HNe4QZ8yVxG3iA4gQIrUf8J6iJp6r
- 53FdVwHKuN8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="300081735"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga003.jf.intel.com with ESMTP; 09 Sep 2020 01:33:43 -0700
-Date:   Wed, 9 Sep 2020 16:29:29 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
-        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
-        lgoncalv@redhat.com, hao.wu@intel.com, yilun.xu@intel.com
-Subject: Re: [PATCH v4 2/2] mfd: intel-m10-bmc: add Max10 BMC chip support
-  for Intel FPGA PAC
-Message-ID: <20200909082929.GA23764@yilunxu-OptiPlex-7050>
-References: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
- <1597822497-25107-3-git-send-email-yilun.xu@intel.com>
- <20200828100236.GF1826686@dell>
- <20200829182405.GA27132@yilunxu-OptiPlex-7050>
- <20200908120356.GQ4400@dell>
- <20200909060140.GB27300@yilunxu-OptiPlex-7050>
- <20200909073140.GC4400@dell>
+        Wed, 9 Sep 2020 04:34:41 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:45769 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgIIIek (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 04:34:40 -0400
+Received: by mail-ej1-f68.google.com with SMTP id i26so2283053ejb.12;
+        Wed, 09 Sep 2020 01:34:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vsALB+bxuuEP7Stns5jLN4qt786xLJXYhZvHFA9movY=;
+        b=XSf68dHX7NAWM4nzgtejdreYFS8CJQ3ikO4MFMFfcxO6Y+tdjDe2tB0O1K4sUaovBI
+         /Bitupjop/7i9/+xc1wyMfyn2yuj4ulAJf8C8VOyYOpopPj6w6QDL/4CBZDC/KPqhORu
+         hA3G98yTqRcUwkKWNbtfp5ARmY1kd90v6tm+nAp0jaVrR3+ZAaIJmk8gKrseQTULXZXs
+         FcqxRTkfcwbIoEi1AMzCGn5UYweSFuoO+QPRpEvO6DZcXBlxvQ2TG6wpXCDW3K2C1PRt
+         /LeLstgTYWRj/5FFbZeXU64AeDh63g1/4pHO+qdGIzjC9GnBozyZrdK1eheRslTykF4d
+         uuCA==
+X-Gm-Message-State: AOAM5335XkngKzU1Qtff2hlouG5rQqjgO4Qfxw2c3Ydk+kkIhZnBaU0v
+        840PeWQ/cbY1ZvRuZ04o1Lw=
+X-Google-Smtp-Source: ABdhPJzNWdfEaEJMrGWJQ6SgVZ2LZkowL8XUPe1AidTLBAqeR320x6AIAcMg2mNv6uF3Dy3F+cwHGw==
+X-Received: by 2002:a17:906:1b55:: with SMTP id p21mr2628419ejg.457.1599640477647;
+        Wed, 09 Sep 2020 01:34:37 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id b13sm1320130edf.89.2020.09.09.01.34.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Sep 2020 01:34:36 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 10:34:34 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Adam Ford <aford173@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Alifer Moraes <alifer.wsdm@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 3/8] arm64: dts: imx8mm: Correct interrupt flags in
+ examples
+Message-ID: <20200909083434.GB11775@kozik-lap>
+References: <20200908150241.5771-1-krzk@kernel.org>
+ <20200908150241.5771-3-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200909073140.GC4400@dell>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200908150241.5771-3-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 08:31:40AM +0100, Lee Jones wrote:
-> On Wed, 09 Sep 2020, Xu Yilun wrote:
+On Tue, Sep 08, 2020 at 05:02:36PM +0200, Krzysztof Kozlowski wrote:
+> GPIO_ACTIVE_x flags are not correct in the context of interrupt flags.
+> These are simple defines so they could be used in DTS but they will not
+> have the same meaning:
+> 1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
+> 2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
 > 
-> > > > > > + * m10bmc_raw_read - read m10bmc register per addr
-> > > > > > + * m10bmc_sys_read - read m10bmc system register per offset
-> > > > > > + */
-> > > > > > +static inline int
-> > > > > > +m10bmc_raw_read(struct intel_m10bmc *m10bmc, unsigned int addr,
-> > > > > > +		unsigned int *val)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	ret = regmap_read(m10bmc->regmap, addr, val);
-> > > > > > +	if (ret)
-> > > > > > +		dev_err(m10bmc->dev, "fail to read raw reg %x: %d\n",
-> > > > > > +			addr, ret);
-> > > > > > +
-> > > > > > +	return ret;
-> > > > > > +}
-> > > > > > +
-> > > > > > +#define m10bmc_sys_read(m10bmc, offset, val) \
-> > > > > > +	m10bmc_raw_read(m10bmc, M10BMC_SYS_BASE + (offset), val)
-> > > > > 
-> > > > > No unnecessary abstractions.
-> > > > > 
-> > > > > Just use the Regmap API directly please.
-> > > > 
-> > > > Could we keep the 2 definition?
-> > > > 
-> > > > For m10bmc_raw_read(), we make it to help print some error info if
-> > > > regmap RW fail. So we don't have to write "if (ret) dev_err" every time
-> > > > we use regmap.
-> > > 
-> > > How many call sites are there?
-> > 
-> > There are about 20 calls of the register read in m10bmc base driver and
-> > sub device drivers. Most of them calls m10bmc_sys_read().
-> > I prefer to keep the function for unified error log, but I'm also good
-> > to follow your opinion. How do you think?
+> Correct the interrupt flags, assuming the author of the code wanted some
+> logical behavior behind the name "ACTIVE_xxx", this is:
+>   ACTIVE_LOW  => IRQ_TYPE_LEVEL_LOW
+>   ACTIVE_HIGH => IRQ_TYPE_LEVEL_HIGH
 > 
-> Avoidable abstraction is one of my pet hates.  However,
-> unified/centralised error handling is a valid(ish) reason for
-> abstraction to exist.  Do you really need to know which read failed?
-> Is there a case where a read from only a particular register would
-> fail where others succeed?
-
-I think it do helps we know which read failed in the first place when
-communication error happens between FPGA & BMC.
-
-Generally, if the error happens randomly on all registers, it may be the
-problem of SPI bus.
-
-But it is possible in some case error happens on some registers while
-others are fine. The BMC has a internal Avalon mmio bus inside, and sub devices
-connect on the bus. But the sub devices may response to the bus read/write
-request differently according to hardware design. Once I run into a case
-that the sub device stucks on one particular register read for long time
-cause it prepares data so slowly. And the driver always timeout on that
-register.
-
-Thanks,
-Yilun
-
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi      | 2 +-
+>  arch/arm64/boot/dts/freescale/imx8mm-evk.dts              | 2 +-
+>  arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts | 2 +-
+>  arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi         | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> > I also realize that it is not necessary that we define so many
-> > m10bmc_raw_bulk_read/bulk_write/update_bits ... which are not frequently
-> > used. We could change them.
-> 
-> Yes please.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> index 620a124dfb5f..fdce665d7ac4 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
+> @@ -74,7 +74,7 @@
+>  		reg = <0x4b>;
+>  		pinctrl-0 = <&pinctrl_pmic>;
+>  		interrupt-parent = <&gpio1>;
+> -		interrupts = <3 GPIO_ACTIVE_LOW>;
+> +		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+
+All rohm,bd71847 PMIC interrupts should be rather EDGE_FALLING.  Some of
+the boards do not have external pull ups and most of the boards do not
+configure internal pull up.  Level low would cause the interrupt line to
+stay low all the time.
+
+Best regards,
+Krzysztof
+
+>  		rohm,reset-snvs-powered;
+>  
+>  		regulators {
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> index 38134d201eef..609d73e19fee 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> @@ -166,7 +166,7 @@
+>  		reg = <0x4b>;
+>  		pinctrl-0 = <&pinctrl_pmic>;
+>  		interrupt-parent = <&gpio1>;
+> -		interrupts = <3 GPIO_ACTIVE_LOW>;
+> +		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+>  		rohm,reset-snvs-powered;
+>  
+>  		regulators {
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+> index 0bca737964d5..b84d94e10c26 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
+> @@ -133,7 +133,7 @@
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&pinctrl_captouch>;
+>  		interrupt-parent = <&gpio5>;
+> -		interrupts = <4 GPIO_ACTIVE_HIGH>;
+> +		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+>  
+>  		touchscreen-size-x = <800>;
+>  		touchscreen-size-y = <480>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
+> index c371cb34b3f7..49743d2f60c1 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som.dtsi
+> @@ -137,7 +137,7 @@
+>  		reg = <0x4b>;
+>  		pinctrl-0 = <&pinctrl_pmic>;
+>  		interrupt-parent = <&gpio2>;
+> -		interrupts = <8 GPIO_ACTIVE_LOW>;
+> +		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+>  		rohm,reset-snvs-powered;
+>  
+>  		regulators {
+> -- 
+> 2.17.1
 > 
