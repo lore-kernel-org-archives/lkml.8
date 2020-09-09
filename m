@@ -2,127 +2,128 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8EBC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1239C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482EC206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZyRw62Q"
+	by mail.kernel.org (Postfix) with ESMTP id 79AFD206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbgIJCVO (ORCPT
+        id S1730751AbgIJCVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:21:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730521AbgIJCSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:18:51 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339CDC06179B;
-        Wed,  9 Sep 2020 19:18:34 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id n2so4493637oij.1;
-        Wed, 09 Sep 2020 19:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oOk59Y9agev+P1pRd+FxE/mXDXASrAFWiJH4a1Tl+Zw=;
-        b=AZyRw62QIBBWqODqgus8QIlDN9ibQ7DqITmcyT1IhPcNEonrlcxsqhKKDp8Ak7WyJj
-         rB/O10IRiA8Hu2uF7zkMR/gTloOBd3ArSRLEnZWOxbM5HvZKROv281KCgRRCK8E1U8+/
-         EnH4Ltms45F4lU3oeU3utrA763/BcUK7OM4BsZ0/6i/ra3vl2MTrh/c2zcL8HraOgp8+
-         AkKRju51Kr/fWnIRVPtDkLhI9RFc6JnO6fembZvQH8X9Xqs8AZgnj2F6vYzH42q9+IAD
-         EIqb+H6j2VTi181/k82+ylN0/UuwaBCLoEMDhT8nqpNkiLTe13hE7lIadoIQG75RsgyB
-         d1fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oOk59Y9agev+P1pRd+FxE/mXDXASrAFWiJH4a1Tl+Zw=;
-        b=n0PakEsG9HQ2u9vaMxhzCFsFY5g6p6mpX7jPnY9r8V+j2ti7FRm09v6VxLFh1jN58Y
-         vEFYWI9+GAllZ78UtUW/VpoujOsW0uQRmWqlM5U7jRlLo70ad+QZ+WSlsqBarbEQEJrU
-         xNFXE+C8U9DdOl9y6JG1Xxkt9bCf/y0S3us3AVcLkYPE1e1hW5cob4mPJSoPSDta4FUv
-         9l+tPQRDeFo8nZPrtOgGzw+X2Vru1W9q8qoUqRHs7iHjtWTxTVA6kV8fO1zrElYVaaWd
-         2RMHrSvoWHvhd8wX5nSwTr/YwWKyPqWkgMFU6HRPrldsKkQ9pJwVHEcHaGIytz4wIh7t
-         fmSg==
-X-Gm-Message-State: AOAM533jdegbRjy5i/QMYbMGp/WS8oP2vnjgY4jYQE1nMz+V9F2nK5Gh
-        aWlpvI9t1gm/TEjWLT8gwfg0AREqrlbxitMepuP11f01
-X-Google-Smtp-Source: ABdhPJwpsA7xA/pdpr3ILoTVp47C6lLv9rrw4dQ9G6VM5XmEXEcVZC0d3lzZK9HRNJmv413CJZyiiSGNfWvBaOMtIX8=
-X-Received: by 2002:a05:6808:3d6:: with SMTP id o22mr2296687oie.150.1599704313667;
- Wed, 09 Sep 2020 19:18:33 -0700 (PDT)
+        Wed, 9 Sep 2020 22:21:21 -0400
+Received: from mga03.intel.com ([134.134.136.65]:52209 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730729AbgIJCSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:18:35 -0400
+IronPort-SDR: IzZnHC92zX56tSI2JiAj352zGjlBYSii2icYTIWU6+U42tFtgHuCRMcIcjkEdLw/wlOBPU59GC
+ FRgfqUtlQXKg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="158468124"
+X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
+   d="scan'208";a="158468124"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:07:09 -0700
+IronPort-SDR: qkfpSoKV1QeBLR8tjA8HAJxMsc61Q3klbLaexWsYoj4/2+poJ8zDHk1wXd4u6VEzMkKvkZoTVx
+ KbyeR31mj0lQ==
+X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
+   d="scan'208";a="300309339"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.243.130]) ([10.212.243.130])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:07:08 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+ <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
+ <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
+ <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
+ <20200901102758.GY6642@arm.com>
+ <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+ <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
+ <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
+ <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
+ <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
+ <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
+ <5979c58d-a6e3-d14d-df92-72cdeb97298d@intel.com>
+ <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
+Date:   Wed, 9 Sep 2020 16:07:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <CAPJCdB=HzNJp36tjD0=-R-cs4+8=xhxAfmR-tZ2DkpcyiugH-g@mail.gmail.com>
- <20200910015950.GA748330@bjorn-Precision-5520>
-In-Reply-To: <20200910015950.GA748330@bjorn-Precision-5520>
-From:   Jiang Biao <benbjiang@gmail.com>
-Date:   Thu, 10 Sep 2020 10:18:22 +0800
-Message-ID: <CAPJCdB=3hjZiC4P3G9T0G5XFnkxRvfpx_+3Qj5AQESAG-kpbEw@mail.gmail.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, 10 Sep 2020 at 09:59, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Sep 10, 2020 at 09:54:02AM +0800, Jiang Biao wrote:
-> > Hi,
-> >
-> > On Thu, 10 Sep 2020 at 09:25, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >
-> > > On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
-> > > > From: Jiang Biao <benbjiang@tencent.com>
-> > > >
-> > > > pci_read_config() could block several ms in kernel space, mainly
-> > > > caused by the while loop to call pci_user_read_config_dword().
-> > > > Singel pci_user_read_config_dword() loop could consume 130us+,
-> > > >               |    pci_user_read_config_dword() {
-> > > >               |      _raw_spin_lock_irq() {
-> > > > ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> > > > ! 137.582 us  |      }
-> > > >               |      pci_read() {
-> > > >               |        raw_pci_read() {
-> > > >               |          pci_conf1_read() {
-> > > >   0.230 us    |            _raw_spin_lock_irqsave();
-> > > >   0.035 us    |            _raw_spin_unlock_irqrestore();
-> > > >   8.476 us    |          }
-> > > >   8.790 us    |        }
-> > > >   9.091 us    |      }
-> > > > ! 147.263 us  |    }
-> > > > and dozens of the loop could consume ms+.
-> > > >
-> > > > If we execute some lspci commands concurrently, ms+ scheduling
-> > > > latency could be detected.
-> > > >
-> > > > Add scheduling chance in the loop to improve the latency.
-> > >
-> > > Thanks for the patch, this makes a lot of sense.
-> > >
-> > > Shouldn't we do the same in pci_write_config()?
-> > Yes, IMHO, that could be helpful too.
->
-> If it's feasible, it would be nice to actually verify that it makes a
-> difference.  I know config writes should be faster than reads, but
-> they're certainly not as fast as a CPU can pump out data, so there
-> must be *some* mechanism that slows the CPU down.
-We did catch 5ms+ latency caused by pci_read_config() triggered by
-concurrent lspcis, and latency disappeared after this patch.
-For pci_write_config path, we have not met the case actually.:)
-I'll have some tries to verify that, and would send another patch if verified.
-
-Thx.
-Regards,
-Jiang
+On 9/9/2020 3:59 PM, Dave Hansen wrote:
+> On 9/9/20 3:08 PM, Yu, Yu-cheng wrote:
+>> After looking at this more, I found the changes are more similar to
+>> mprotect() than madvise().  We are going to change an anonymous mapping
+>> to a read-only mapping, and add the VM_SHSTK flag to it.  Would an
+>> x86-specific mprotect(PROT_SHSTK) make more sense?
+>>
+>> One alternative would be requiring a read-only mapping for
+>> madvise(MADV_SHSTK).  But that is inconvenient for the application.
+> 
+> Why?  It's just:
+> 
+> 	mmap()/malloc();
+> 	mprotect(PROT_READ);
+> 	madvise(MADV_SHSTK);
+> 
+> vs.
+> 
+> 	mmap()/malloc();
+> 	mprotect(PROT_SHSTK);
+> 
+> I'm not sure a single syscall counts as inconvenient.
+> 
+> I don't quite think we should use a PROT_ bit for this.  It seems like
+> the kind of thing that could be fragile and break existing expectations.
+>   I don't care _that_ strongly though.
+> 
+What if a writable mapping is passed to madvise(MADV_SHSTK)?  Should 
+that be rejected?
