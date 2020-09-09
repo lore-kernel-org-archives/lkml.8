@@ -2,162 +2,147 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA68C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6DCC2D0E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD5A521D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9906721D91
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUS5XxD2"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Us/H2Jet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgIIJvi (ORCPT
+        id S1729789AbgIIJvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgIIJvh (ORCPT
+        Wed, 9 Sep 2020 05:51:43 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58624 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725826AbgIIJvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:51:37 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6231DC061573;
-        Wed,  9 Sep 2020 02:51:37 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id u13so1706855pgh.1;
-        Wed, 09 Sep 2020 02:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/9l1F2fFs2dFU7DfJaEfmDwpck1jBFfm2qL4yv6i45A=;
-        b=gUS5XxD26ZqiyNIqxlgKKs1/c7QFsxEH6CoGq9vg+43Xi818ir8GnGC14nZcyjs5N9
-         4YcZE76uvR0x9I4oMz3/jNgpmRz5m2wGQFnCirGqSnqJWTnz6vpHB/YEVsy8goMTLypT
-         xtW4iTa5CSFWxHkDaDSG64BAAuqK5NRqH1Hd1VoH3bS6nNctyiIF9PN9HdzqaHfaaZ6E
-         sYfLQHR73Sh/urkiEgZwViqIc2rZF4Fxzcoh6Af/+b4pyOsvHbTBod2os3UrDWAJlbjo
-         yVvZVkkThHDFIMCLvSqPYE6B7xCkPY5fD7VmtkLcfpt+EoiO4K+uUp+TVKVEFbg5WS57
-         7wKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/9l1F2fFs2dFU7DfJaEfmDwpck1jBFfm2qL4yv6i45A=;
-        b=q78xFu1tevyCwbzzhXqUnwEtzF2tEllrL5p20JRdrLWYw7qtZUVQTqL/seH3FMBV15
-         N9YL5GeYpBo5iyFTsJuBL3imUskIdA2qtSrSoNJsRwEYsh8o3ejGDyBpFzuU6O7a0VFk
-         PP7tCtQ4dlAm2ude/K5557nOBLLXzPkJoRV0exDeT8QCFmCHms8TBCXJt9qbOo4agSmC
-         2ByJDVg5TfjS/EsywrdzzBiodcqw1VL+YVufs1Jojo00XS9lh8W+liDSt70Gwfn8wCCj
-         Gd6cpdlNpMzPzeJT1UQIwTpO5xuIT+MjYwmuCtIkWZe3vHfUVSHf2oS+JnWgVEWXUQAX
-         rhJg==
-X-Gm-Message-State: AOAM5331Kszz9wXMVBl7MULJMBxqbN7tldlhGm5WhKyM5dzSqM4E6r0N
-        kdFOt4sD0qrQeoFDw7Y2G++DavWPOtrb
-X-Google-Smtp-Source: ABdhPJxPvdD+1JahpDgWNitQ/DG2DsQjU5/g4ZEcoeE50l/NWqFVWK6cL3krfXar1a6p6baMtWmGGw==
-X-Received: by 2002:a63:d449:: with SMTP id i9mr18251pgj.83.1599645096850;
-        Wed, 09 Sep 2020 02:51:36 -0700 (PDT)
-Received: from localhost.localdomain (n11212042027.netvigator.com. [112.120.42.27])
-        by smtp.gmail.com with ESMTPSA id 25sm1603638pjh.57.2020.09.09.02.51.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 02:51:36 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v3] block/scsi-ioctl: Prevent kernel-infoleak in scsi_put_cdrom_generic_arg()
-Date:   Wed,  9 Sep 2020 05:50:57 -0400
-Message-Id: <20200909095057.1214104-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727190013.324812-1-yepeilin.cs@gmail.com>
-References: <20200727190013.324812-1-yepeilin.cs@gmail.com>
+        Wed, 9 Sep 2020 05:51:40 -0400
+X-UUID: 6990db4903854f788c4d9b05af687098-20200909
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=gd8IHDDlRyngneuXbVMKDrh2dBx36h1OwZpzKd/37SU=;
+        b=Us/H2JetY0FhX4VXNOYmwH+mYB6dLDO0voNMGqo28FJMhNnOPh+QwqE5yQJCEKrJvliLZ2cfjccfFk3/d/Es+iTm140qcBzxNoQ7KPIWovjf2OpmLZ6+3o/W0UvaROZ4g4mi1gNY0VhelcR0zruOSzYz2otyhJ+w42MSpFCHkYQ=;
+X-UUID: 6990db4903854f788c4d9b05af687098-20200909
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <hector.yuan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1772419787; Wed, 09 Sep 2020 17:51:36 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 9 Sep 2020 17:51:34 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 9 Sep 2020 17:51:35 +0800
+From:   Hector Yuan <hector.yuan@mediatek.com>
+To:     <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <hector.yuan@mediatek.com>
+Subject: [PATCH v5 2/2] dt-bindings: cpufreq: add bindings for MediaTek cpufreq HW
+Date:   Wed, 9 Sep 2020 17:51:26 +0800
+Message-ID: <1599645086-10169-3-git-send-email-hector.yuan@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1599645086-10169-1-git-send-email-hector.yuan@mediatek.com>
+References: <1599645086-10169-1-git-send-email-hector.yuan@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scsi_put_cdrom_generic_arg() is potentially copying uninitialized stack
-memory to userspace, since the compiler may leave a 3-byte hole in the
-middle of `cgc32`. Prevent it by adding a padding field to `struct
-compat_cdrom_generic_command`.
-
-Cc: stable@vger.kernel.org
-Fixes: f3ee6e63a9df ("compat_ioctl: move CDROM_SEND_PACKET handling into scsi")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-Change in v3:
-    - Improve commit message. scsi_put_cdrom_generic_arg() does not
-      *always* leak kernel information. It is compiler dependent.
-      Reference: https://www.nccgroup.com/us/about-us/newsroom-and-events/blog/2019/october/padding-the-struct-how-a-compiler-optimization-can-disclose-stack-memory/
-    - Base the patch against mainline 5.9-rc4.
-
-Change in v2:
-    - Add a padding field to `struct compat_cdrom_generic_command`,
-      instead of doing memset() on `cgc32`. (Suggested by Jens Axboe
-      <axboe@kernel.dk>)
-
-$ # before
-$ pahole -C "compat_cdrom_generic_command" !$
-pahole -C "compat_cdrom_generic_command" block/scsi_ioctl.o
-struct compat_cdrom_generic_command {
-	unsigned char              cmd[12];              /*     0    12 */
-	compat_caddr_t             buffer;               /*    12     4 */
-	compat_uint_t              buflen;               /*    16     4 */
-	compat_int_t               stat;                 /*    20     4 */
-	compat_caddr_t             sense;                /*    24     4 */
-	unsigned char              data_direction;       /*    28     1 */
-
-	/* XXX 3 bytes hole, try to pack */
-
-	compat_int_t               quiet;                /*    32     4 */
-	compat_int_t               timeout;              /*    36     4 */
-	compat_caddr_t             reserved[1];          /*    40     4 */
-
-	/* size: 44, cachelines: 1, members: 9 */
-	/* sum members: 41, holes: 1, sum holes: 3 */
-	/* last cacheline: 44 bytes */
-};
-$ # after
-$ pahole -C "compat_cdrom_generic_command" block/scsi_ioctl.o
-struct compat_cdrom_generic_command {
-	unsigned char              cmd[12];              /*     0    12 */
-	compat_caddr_t             buffer;               /*    12     4 */
-	compat_uint_t              buflen;               /*    16     4 */
-	compat_int_t               stat;                 /*    20     4 */
-	compat_caddr_t             sense;                /*    24     4 */
-	unsigned char              data_direction;       /*    28     1 */
-	unsigned char              pad[3];               /*    29     3 */
-	compat_int_t               quiet;                /*    32     4 */
-	compat_int_t               timeout;              /*    36     4 */
-	compat_caddr_t             reserved[1];          /*    40     4 */
-
-	/* size: 44, cachelines: 1, members: 10 */
-	/* last cacheline: 44 bytes */
-};
-$ _
-
- block/scsi_ioctl.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
-index ef722f04f88a..72108404718f 100644
---- a/block/scsi_ioctl.c
-+++ b/block/scsi_ioctl.c
-@@ -651,6 +651,7 @@ struct compat_cdrom_generic_command {
- 	compat_int_t	stat;
- 	compat_caddr_t	sense;
- 	unsigned char	data_direction;
-+	unsigned char	pad[3];
- 	compat_int_t	quiet;
- 	compat_int_t	timeout;
- 	compat_caddr_t	reserved[1];
--- 
-2.25.1
+RnJvbTogIkhlY3Rvci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KDQpBZGQgZGV2
+aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgSFcgZHJpdmVyLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBIZWN0b3IuWXVhbiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2JpbmRp
+bmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAgMTQxICsrKysrKysr
+KysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0MSBpbnNlcnRpb25zKCspDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcHVmcmVxL2Nw
+dWZyZXEtbWVkaWF0ZWstaHcueWFtbA0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55
+YW1sDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uMTE4YTE2Mw0KLS0tIC9k
+ZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEv
+Y3B1ZnJlcS1tZWRpYXRlay1ody55YW1sDQpAQCAtMCwwICsxLDE0MSBAQA0KKyMgU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KKyVZQU1MIDEu
+Mg0KKy0tLQ0KKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvY3B1ZnJlcS9jcHVm
+cmVxLW1lZGlhdGVrLWh3LnlhbWwjDQorJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21l
+dGEtc2NoZW1hcy9jb3JlLnlhbWwjDQorDQordGl0bGU6IE1lZGlhVGVrJ3MgQ1BVRlJFUSBCaW5k
+aW5ncw0KKw0KK21haW50YWluZXJzOg0KKyAgLSBIZWN0b3IgWXVhbiA8aGVjdG9yLnl1YW5AbWVk
+aWF0ZWsuY29tPg0KKw0KK2Rlc2NyaXB0aW9uOg0KKyAgQ1BVRlJFUSBIVyBpcyBhIGhhcmR3YXJl
+IGVuZ2luZSB1c2VkIGJ5IE1lZGlhVGVrDQorICBTb0NzIHRvIG1hbmFnZSBmcmVxdWVuY3kgaW4g
+aGFyZHdhcmUuIEl0IGlzIGNhcGFibGUgb2YgY29udHJvbGxpbmcgZnJlcXVlbmN5DQorICBmb3Ig
+bXVsdGlwbGUgY2x1c3RlcnMuDQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGlibGU6DQorICAg
+IGNvbnN0OiAibWVkaWF0ZWssY3B1ZnJlcS1odyINCisNCisgIHJlZzoNCisgICAgbWluSXRlbXM6
+IDENCisgICAgbWF4SXRlbXM6IDINCisgICAgZGVzY3JpcHRpb246IHwNCisgICAgICBBZGRyZXNz
+ZXMgYW5kIHNpemVzIGZvciB0aGUgbWVtb3J5IG9mIHRoZSBIVyBiYXNlcyBpbiBlYWNoIGZyZXF1
+ZW5jeSBkb21haW4uDQorDQorICByZWctbmFtZXM6DQorICAgIGl0ZW1zOg0KKyAgICAgIC0gY29u
+c3Q6ICJmcmVxLWRvbWFpbjAiDQorICAgICAgLSBjb25zdDogImZyZXEtZG9tYWluMSINCisgICAg
+ZGVzY3JpcHRpb246IHwNCisgICAgICBGcmVxdWVuY3kgZG9tYWluIG5hbWUuIGkuZS4NCisgICAg
+ICAiZnJlcS1kb21haW4wIiwgImZyZXEtZG9tYWluMSIuDQorDQorICAiI2ZyZXEtZG9tYWluLWNl
+bGxzIjoNCisgICAgY29uc3Q6IDENCisgICAgZGVzY3JpcHRpb246IHwNCisgICAgICBOdW1iZXIg
+b2YgY2VsbHMgaW4gYSBmcmVxZW5jeSBkb21haW4gc3BlY2lmaWVyLg0KKw0KKyAgbXRrLWZyZXEt
+ZG9tYWluOg0KKyAgICBtYXhJdGVtczogMQ0KKyAgICBkZXNjcmlwdGlvbjogfA0KKyAgICAgIERl
+ZmluZSB0aGlzIGNwdSBiZWxvbmdzIHRvIHdoaWNoIGZyZXF1ZW5jeSBkb21haW4uIGkuZS4NCisg
+ICAgICBjcHUwLTMgYmVsb25nIHRvIGZyZXF1ZW5jeSBkb21haW4wLA0KKyAgICAgIGNwdTQtNiBi
+ZWxvbmcgdG8gZnJlcXVlbmN5IGRvbWFpbjEuDQorDQorcmVxdWlyZWQ6DQorICAtIGNvbXBhdGli
+bGUNCisgIC0gcmVnDQorICAtIHJlZy1uYW1lcw0KKyAgLSAiI2ZyZXEtZG9tYWluLWNlbGxzIg0K
+Kw0KK2V4YW1wbGVzOg0KKyAgLSB8DQorICAgIGNwdXMgew0KKyAgICAgICAgICAgICNhZGRyZXNz
+LWNlbGxzID0gPDE+Ow0KKyAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKyAgICAg
+ICAgICAgIGNwdTA6IGNwdUAwIHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1
+IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAg
+ICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10
+ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAwPjsNCisgICAgICAgICAgICAgICAgcmVnID0g
+PDB4MDAwPjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTE6IGNwdUAxIHsN
+CisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1t
+ZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1
+ZnJlcV9odyAwPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4MTAwPjsNCisgICAgICAgICAg
+ICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTI6IGNwdUAyIHsNCisgICAgICAgICAgICAgICAgZGV2
+aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29y
+dGV4LWE1NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAg
+ICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAwPjsNCisgICAgICAg
+ICAgICAgICAgcmVnID0gPDB4MjAwPjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAg
+IGNwdTM6IGNwdUAzIHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisg
+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAgICAgICAg
+ICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVx
+LWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAwPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4MzAw
+PjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTQ6IGNwdUA0IHsNCisgICAg
+ICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJhcm0sY29ydGV4LWE1NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2Qg
+PSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9o
+dyAxPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4NDAwPjsNCisgICAgICAgICAgICB9Ow0K
+Kw0KKyAgICAgICAgICAgIGNwdTU6IGNwdUA1IHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5
+cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE1
+NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAg
+ICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAxPjsNCisgICAgICAgICAgICAg
+ICAgcmVnID0gPDB4NTAwPjsNCisgICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTY6
+IGNwdUA2IHsNCisgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3NSI7DQorICAgICAgICAgICAgICAg
+IGVuYWJsZS1tZXRob2QgPSAicHNjaSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFp
+biA9IDwmY3B1ZnJlcV9odyAxPjsNCisgICAgICAgICAgICAgICAgcmVnID0gPDB4NjAwPjsNCisg
+ICAgICAgICAgICB9Ow0KKw0KKyAgICAgICAgICAgIGNwdTc6IGNwdUA3IHsNCisgICAgICAgICAg
+ICAgICAgZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
+ICJhcm0sY29ydGV4LWE3NSI7DQorICAgICAgICAgICAgICAgIGVuYWJsZS1tZXRob2QgPSAicHNj
+aSI7DQorICAgICAgICAgICAgICAgIG10ay1mcmVxLWRvbWFpbiA9IDwmY3B1ZnJlcV9odyAxPjsN
+CisgICAgICAgICAgICAgICAgcmVnID0gPDB4NzAwPjsNCisgICAgICAgICAgICB9Ow0KKyAgICB9
+Ow0KKw0KKyAgICAvKiAuLi4gKi8NCisNCisgICAgc29jIHsNCisgICAgICAgICNhZGRyZXNzLWNl
+bGxzID0gPDI+Ow0KKyAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQorDQorICAgICAgICBjcHVm
+cmVxX2h3OiBjcHVmcmVxQDExYmMwMCB7DQorICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxjcHVmcmVxLWh3IjsNCisgICAgICAgICAgICByZWcgPSA8MCAweDExYmMxMCAwIDB4OGM+
+LA0KKyAgICAgICAgICAgICAgIDwwIDB4MTFiY2EwIDAgMHg4Yz47DQorICAgICAgICAgICAgcmVn
+LW5hbWVzID0gImZyZXEtZG9tYWluMCIsICJmcmVxLWRvbWFpbjEiOw0KKyAgICAgICAgICAgICNm
+cmVxLWRvbWFpbi1jZWxscyA9IDwxPjsNCisgICAgICAgIH07DQorICAgIH07DQorDQorDQorDQor
+DQotLSANCjEuNy45LjUNCg==
 
