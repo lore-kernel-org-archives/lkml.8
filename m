@@ -2,125 +2,188 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E5AC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32890C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A17620639
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8C02067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:04:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRIw3wD8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgIIQDW (ORCPT
+        id S1730761AbgIIQD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:03:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12310 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbgIIQDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:03:17 -0400
-IronPort-SDR: HKl1DivXqlVXKm0dIHHkPlBxJbflXQ2chWLlLxcNCLDiWdpl+4R1A+pQddHgAdhf8XYdomAdVF
- gVtwZLqY2JIw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155811594"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="155811594"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 07:39:27 -0700
-IronPort-SDR: GCSL0Ela4Jea3HKxxVgV9QfVD1pxCMqZXJtu2wol68k9I9lZ4TGaJNC5CJ0ZPDrkyaIqa4e/tr
- efe1lYen/FNQ==
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="505473210"
-Received: from rsetyawa-mobl1.amr.corp.intel.com (HELO [10.212.20.145]) ([10.212.20.145])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 07:39:26 -0700
-Subject: Re: [PATCH] soundwire: bus: add enumerated slave to device list
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org, yung-chuan.liao@linux.intel.com
-Cc:     sanyog.r.kale@intel.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-References: <20200909082711.11670-1-srinivas.kandagatla@linaro.org>
- <80081c70-9137-c9f0-9813-8166275ef7af@linux.intel.com>
- <ab107351-dbde-7f6d-c588-11572aed5d2d@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4cdcda10-bdc6-211f-d279-e74f57684b79@linux.intel.com>
-Date:   Wed, 9 Sep 2020 09:39:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 9 Sep 2020 12:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730853AbgIIQDU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:03:20 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6340AC061756;
+        Wed,  9 Sep 2020 09:03:20 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id b17so2844392ilh.4;
+        Wed, 09 Sep 2020 09:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mZe2FLTTSbE/n6F/d5+lxuoP/zvLhPAND2sQnvRdXKE=;
+        b=SRIw3wD8qb36rmAmhUx8CXTUO1iuSHIemzcH6+WeAaawmp0fB33Ujk193jrG62al2T
+         R5uvU+3NsCNxEaKxjp+QuOX2sdI4vCSogTaRSM3k5cQ47KneChIRp7W5oSbTdfWnZWRA
+         9dXGwL2GILBNoMEOSATqdL968UflSWG+zmBPUinBAyDEh3Valqq3SvKC2tq1wcrTv1tP
+         bJdvywxBsW6V/A0fqEWLEmucOxg4r8VbQMTeTkBJIE0X72hzIffcPA+wjFL1ut9FuyLJ
+         JqXKzhnY9G2UKaMijZ0DMYj1lz4M+Pnv5GogE8y4d6t0HLHJQH+gm26ITsqMTeJ2eoue
+         sg9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mZe2FLTTSbE/n6F/d5+lxuoP/zvLhPAND2sQnvRdXKE=;
+        b=c9wB9buLJP1HtXJkKn9gJBwjX7NL8JUB0o9kQAGMpd4QLzWMM3RqyoRaqg+KDhKYGQ
+         cKfkb5OP30XfCINf0C2uAjOGpYGaAVSpfHmQilZ/TZx5oaWIesPzHTTKhCtNhnvffjR/
+         73uJGxqhdFCxmKsX+SGdfF5hn7X3MG799oH1OEOKJKQfFjrXUsaGXVqsnqkWbE19TW6i
+         mn9RJKEHq18rcnQN7/J9mkUQkLjRo/xmESnS4wrrtJPI8ZvWvJjJ44jdnFhNLv0MV9n1
+         NLyUh5Tf+q4rUF0Nk6dNgq7lFrf4qLMHQl6NScskvLjI5DpGk3mNN3jRgjTOIj8PXKZC
+         7I8Q==
+X-Gm-Message-State: AOAM530YeXN9l1DqEoKYk/DnAn37n7VpgKK0G9Dm7EotIpG6vuA+eV5Z
+        v473u/XSukMLVPOc/b3pVezRzGyplZUaQ01dCn0=
+X-Google-Smtp-Source: ABdhPJxo1IKLB8JPIGdfnvsji8BNwsuBg4u/4N9QEkxeUOGJ7mX7I3Td0l3eSdGggQuU3P3jUgxO24p4tKPkU/vH2Ac=
+X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr4250436ils.72.1599667399564;
+ Wed, 09 Sep 2020 09:03:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ab107351-dbde-7f6d-c588-11572aed5d2d@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <25817189-49a7-c64f-26ee-78d4a27496b6@huawei.com>
+ <CAOQ4uxhejJzjKLZCt=b87KAX0sC3RAZ2FHEZbu4188Ar-bkmOg@mail.gmail.com>
+ <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com> <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
+ <20200908171859.GA29953@casper.infradead.org> <CAOQ4uxjX2GAJhD70=6SmwdXPH6TuOzGugtdYupDjLLywC2H5Ag@mail.gmail.com>
+ <96abf6e3-2442-8871-c9f3-be981c0a1965@huawei.com> <CAOQ4uxjNcjFtQuc9AeWgEO7G3CeGm3vL_wK6UhbHkxOZuRYOeQ@mail.gmail.com>
+ <20200909111130.GD24207@quack2.suse.cz>
+In-Reply-To: <20200909111130.GD24207@quack2.suse.cz>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 9 Sep 2020 19:03:07 +0300
+Message-ID: <CAOQ4uxj91QxZHSYc46ZTNV59Qr-bEEUKS3n4FvU_UU4VUVkbBg@mail.gmail.com>
+Subject: Re: Question: Why is there no notification when a file is opened
+ using filp_open()?
+To:     Jan Kara <jack@suse.cz>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wangle6@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 9, 2020 at 2:11 PM Jan Kara <jack@suse.cz> wrote:
+>
+> On Wed 09-09-20 10:36:57, Amir Goldstein wrote:
+> > On Wed, Sep 9, 2020 at 10:00 AM Xiaoming Ni <nixiaoming@huawei.com> wrote:
+> > >
+> > > On 2020/9/9 11:44, Amir Goldstein wrote:
+> > > > On Tue, Sep 8, 2020 at 8:19 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >>
+> > > >> On Tue, Sep 08, 2020 at 04:18:29PM +0300, Amir Goldstein wrote:
+> > > >>> On Tue, Sep 8, 2020 at 3:53 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
+> > > >>>> For example, in fs/coredump.c, do_coredump() calls filp_open() to
+> > > >>>> generate core files.
+> > > >>>> In this scenario, the fsnotify_open() notification is missing.
+> > > >>>
+> > > >>> I am not convinced that we should generate an event.
+> > > >>> You will have to explain in what is the real world use case that requires this
+> > > >>> event to be generated.
+> > > >>
+> > > >> Take the typical usage for fsnotify of a graphical file manager.
+> > > >> It would be nice if the file manager showed a corefile as soon as it
+> > > >> appeared in a directory rather than waiting until some other operation
+> > > >> in that directory caused those directory contents to be refreshed.
+> > > >
+> > > > fsnotify_open() is not the correct notification for file managers IMO.
+> > > > fsnotify_create() is and it will be called in this case.
+> > > >
+> > > > If the reason you are interested in open events is because you want
+> > > > to monitor the entire filesystem then welcome to the future -
+> > > > FAN_CREATE is supported since kernel v5.1.
+> > > >
+> > > > Is there another real life case you have in mind where you think users
+> > > > should be able to get an open fd for a file that the kernel has opened?
+> > > > Because that is what FAN_OPEN will do.
+> > > >
+> > >
+> > > There are also cases where file is opened in read-only mode using
+> > > filp_open().
+> > >
+> > > case1: nfsd4_init_recdir() call filp_open()
+> > > filp_open()
+> > > nfsd4_init_recdir() fs/nfsd/nfs4recover.c#L543
+> > >
+> > > L70: static char user_recovery_dirname[PATH_MAX] =
+> > > "/var/lib/nfs/v4recovery";
+> > > L543: nn->rec_file = filp_open(user_recovery_dirname, O_RDONLY |
+> > > O_DIRECTORY, 0);
+> > >
+> > >
+> > > case2: ima_read_policy()
+> > > filp_open()
+> > > kernel_read_file_from_path()  fs/exec.c#L1004
+> > > ima_read_policy()  security/integrity/ima/ima_fs.c#L286
+> > > ima_write_policy() security/integrity/ima/ima_fs.c#L335
+> > > ima_measure_policy_ops   security/integrity/ima/ima_fs.c#L443
+> > > sys_write()
+> > >
+> > > case3: use do_file_open_root() to open file
+> > > do_file_open_root()
+> > > file_open_root()   fs/open.c#L1159
+> > > kernel_read_file_from_path_initns()  fs/exec.c#L1029
+> > > fw_get_filesystem_firmware()  drivers/base/firmware_loader/main.c#L498
+> > >
+> > > Do we need to add fsnotify_open() in these scenarios?
+> >
+> > We do not *need* to add fsnotify_open() if there is no concrete use case
+> > from real life that needs it.
+> >
+> > Matthew gave an example of a real life use case and I explained why IMO
+> > we don't need to add fsnotify_open() for the use case that he described.
+> >
+> > If you want to add fsnotify_open() to any call site, please come up with
+> > a real life use case - not a made up one, one that really exists and where
+> > the open event is really needed.
+> >
+> > grepping the code for callers of filp_open() is not enough.
+>
+> Yeah. So in kernel, things are both ways. There are filp_open() users that
+> do take care to manually generate fsnotify_open() event (most notably
+> io_uring, exec, or do_handle_open) and there are others as Xiaoming found
+> which just don't bother.  I'm not sure filp_open() should unconditionally
+> generate fsnotify_open() event as IMO some of those notifications would be
+> more confusing than useful.
+>
+> OTOH it is true that e.g. for core dumping we will generate other fsnotify
+> events such as FSNOTIFY_CLOSE (which is generated in __fput()) so missing
 
->>> Currently slave devices are only added either from device tree or acpi
->>> entries. However lets say, there is wrong or no entry of a slave device
->>> in DT that is enumerated, then there is no way for user to know all
->>> the enumerated devices on the bus.
->>
->> Sorry Srinivas, I don't understand your point.
->>
->> The sysfs entries will include all devices that are described in 
->> platform firmware (be it DT or ACPI).
-> 
-> yes that is true, but it will not include all the enumerated devices on 
-> the bus!
-> 
-> In my case on a new board I was trying to figure out what devices are on 
-> the bus even before even adding any device tree entries!
+And to be fair, those kernel callers will probably also end up generating
+FS_ACCESS/FS_MODIFY too.
 
-We've seen this before but dynamic debug provides all the information 
-you need. see e.g. the logs from 
-https://sof-ci.01.org/linuxpr/PR2425/build4447/devicetest/
+> FSNOTIFY_OPEN is somewhat confusing. So having some consistency in this
+> (either by generating FSNOTIFY_OPEN or by not generating FSNOTIFY_CLOSE)
+> would be IMO desirable.
 
-jf-cml-rvp-sdw-1 kernel: [  289.751974] soundwire sdw-master-0: Slave 
-attached, programming device number
-jf-cml-rvp-sdw-1 kernel: [  289.752121] soundwire sdw-master-0: SDW 
-Slave Addr: 10025d070000 <<< HERE
-jf-cml-rvp-sdw-1 kernel: [  289.752122] soundwire sdw-master-0: SDW 
-Slave class_id 0, part_id 700, mfg_id 25d, unique_id 0, version 1
+Well, dropping events (FS_CLOSE in particular) didn't go down well the
+last time we tried it:
+https://lore.kernel.org/linux-fsdevel/CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com/
 
-  > In second case I had a typo in the device tree entry and sysfs 
-displayed
-> devices with that typo rather than actual enumerated device id.
+I am just wondering who is using FS_OPEN these days and whether
+they would care about this change and if not, why are we doing it?
 
-That's a feature, not a bug? We use what address the platform firmware 
-provides. If it's inaccurate then nothing can work.
+The argument that it is confusing to see FS_ACCESS/FS_MODIFY/FS_CLOSE
+and not seeing FS_OPEN is only half true - it is common to see that
+pattern when the file is already open when starting to watch, so application
+should not break because of that pattern.
 
->> If you add to sysfs entries unknown devices which happen to be present 
->> on the bus, then what? How would you identify them from the devices 
->> that are described in firmware?
-> 
-> Both of them should be displayed in sysfs, core should be able to 
-> differentiate this based on the presence of fw_node or of_node and not 
-> bind!
-
-Core yes but user not so much. If the intent is to list the devices 
-present on the bus, your patch still requires manual work.
-
->> Also the sysfs entries describe properties, but if you haven't bound a 
->> driver then how would this work?
-> 
-> This is would be informative, atleast in cases like me!
-> 
-> All I want to know is the list of enumerated devices on the bus, If 
-> doing this way is not the right thing, then am happy to try any suggestion!
-> 
-> For now I have managed to figure out enumerated device ids on the bus 
-> with this patch, I was hoping that other people would also hit such 
-> issue, so I sent this patch!
-
-Now I get your point but
-a) you already have a dynamic debug trace to list all devices
-b) adding 'undeclared' devices would make things quite murky and is only 
-half of the solution. We already struggle because we already have 
-'ghost' devices in sysfs that are not physically present, and no way to 
-differentiate between the two. If we did add those entries, then we'd 
-need two new sysfs attributes such as
-'declared' and 'enumerated'.
+Thanks,
+Amir.
