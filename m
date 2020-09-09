@@ -2,112 +2,92 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5EFC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B84EC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB3620732
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD836206F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V33VD2Bb"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="VNE7eGd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgIIHxC (ORCPT
+        id S1728709AbgIIHzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgIIHw7 (ORCPT
+        Wed, 9 Sep 2020 03:55:20 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:38018 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726399AbgIIHzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:52:59 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05F0C061573;
-        Wed,  9 Sep 2020 00:52:58 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y4so2250111ljk.8;
-        Wed, 09 Sep 2020 00:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yVb2e282hdQLrLNJBNJnpxjhygO2ulaSK5Qta1nt9i4=;
-        b=V33VD2Bb8Ip+WebEyfnQv1anRM4DsXTVmLZ7UG6OdWG/VA0/t9rUFMdrGahlSJRz0P
-         ASJxKJ6tiYV8ZZKpgdOIQt5qoCMpWGCz4qrNCYQiKvsZ5J3XW0mnWY7kJdXgFmDLN0mL
-         IjWveowF7IFmjnJxhzzpoDqwELXv6XjEffk+VIhnkUsiXmYnFIR6RjW47UCtlJz2Xxnx
-         dNNJpZsnjc6/r2FHH24hC9J/Dx3SFNO8w6bf9B4dEpOGkoe7FXOFVKfAHxOtnIHDKl5n
-         nuXH3dqSrnigC7w/C+ZQvV1tuqoKR923O8U0Gz2uNHQAaKb4mmvXdYxYSf3Pu/HEKGVF
-         k7yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yVb2e282hdQLrLNJBNJnpxjhygO2ulaSK5Qta1nt9i4=;
-        b=XrqiSO2TWB5QTv8FRh2hmprnBSkFa4ozJHRSVyENVjXft0oTdTsXdgZKFj3RPdT9J5
-         aNLtwA44wCRYTnxUAQcYpZoLk7aFZqgR/jLRStmMD0Pl63UoPiRqd4xKOZvgo46DMK6o
-         qd8T1tJiMPoNsLl26noujLKJRBFznYGvc8OxvOehMUWOVFHiHGZVDf2BNV/fyg9pgxzR
-         WTTuY6D1RcQQYiR6ffPDCvOe58Dw3rhtFN0mvMcV188VVpmPqn4uIS3dyZMZXWHffzXy
-         F5www2yHWHB14sScULmu6rdtM9qUC876YjtRxsam5jxeKG1vpGbVytCFgcVHkPd1iRd1
-         gItg==
-X-Gm-Message-State: AOAM531ZZ+/KWaqnFlqYP3Ky2hCrvOmtemcl+/gnIjX6yqSgI5oyyyw4
-        2AQt29sEdeDCheGdnEV4qnqcA4J4GE6VDg==
-X-Google-Smtp-Source: ABdhPJxdOqw2y2E84GnrvUgPx4Wu/D8bPg+SVh1Tju19gcvcov5tEsIOa3Lw+N4xZh0hT6Djx969PA==
-X-Received: by 2002:a2e:a418:: with SMTP id p24mr1289871ljn.205.1599637977185;
-        Wed, 09 Sep 2020 00:52:57 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:290:64e3:f5dd:84ac:70b0:5629? ([2a00:1fa0:290:64e3:f5dd:84ac:70b0:5629])
-        by smtp.gmail.com with ESMTPSA id s11sm530099ljh.56.2020.09.09.00.52.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 00:52:56 -0700 (PDT)
-Subject: Re: [PATCH 16/19] sd: use bdev_check_media_change
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-References: <20200908145347.2992670-1-hch@lst.de>
- <20200908145347.2992670-17-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <31787d3e-05d2-3601-a88b-3c1ba5933f48@gmail.com>
-Date:   Wed, 9 Sep 2020 10:52:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 9 Sep 2020 03:55:18 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08975UI5016693;
+        Wed, 9 Sep 2020 00:55:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0220;
+ bh=WMlUyTptfef2ZZMiT/FpV0KuG7I2KWn4l+YZAIuGk18=;
+ b=VNE7eGd+k5mKJgUl9OrIpJ1634+sBrv9wTu50HSEy2c0LVnPhidUGo/eccy8VGFQ3jgO
+ 2uMIlNpWtai1ImbmLlOz6zJjPRhXvYzcE1iwJqVb1iEPIGK+ckc8G97jTHn+dg044kJk
+ V/uwlS5+9WnISe7fgJCardfgvJfZUEN2vjWDOeHhIsxhwCCs3/NEYlI7TlOB6Kk4PXWD
+ nrRNItwMuj+Cd8eNWT4pJPL+jqjeMlTD4e3VmfZ8GUWvw87IRtWds1uktTGAtfBEmOk+
+ N9tGjXZsJ+j6Scio/DdR3MEadjdbEgC/FHHSyhfXbh9y746jYFlaRstJL9gGn1Do1QYf xg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 33c81pxvs5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 00:55:15 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
+ 2020 00:55:14 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 9 Sep 2020 00:55:14 -0700
+Received: from [10.6.200.75] (NN-LT0019.marvell.com [10.6.200.75])
+        by maili.marvell.com (Postfix) with ESMTP id 34A4F3F7044;
+        Wed,  9 Sep 2020 00:55:11 -0700 (PDT)
+Subject: Re: [EXT] [PATCH 0/5 REBASED to v5.9-rc4] Qlogic drivers: Convert to
+ SPDX license identifiers
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-spdx@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Nilesh Javali <njavali@marvell.com>
+References: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <e5688d4c-f512-6705-6bb1-db832828fb35@marvell.com>
+Date:   Wed, 9 Sep 2020 10:55:10 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101
+ Thunderbird/81.0
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-17-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.09.2020 17:53, Christoph Hellwig wrote:
 
-> Switch to use bdev_check_media_change instead of check_disk_change and
-> call sd_revalidate_disk manually.  As sd also calls sd_revalidate_disk
-> manually during probe and open, , the extra call into ->revalidate_disk
 
-    Too many commas. :-)
-
-> from bdev_disk_changed is not required either, so stop wiring up the
-> method.
+> Igor, can you please ack these patches?
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-[...]
+> Igor, please also let us know:
+>   A. if you will pick them up and let them travel through your tree, or
+>   B. if the spdx maintainers shall pick them up and they shall route them
+>      directly to Linus.
 
-MBR, Sergei
+Thanks Lukas,
+
+Acked on ethernet driver patches. For storage drivers I believe you'll have
+ACK from Nilesh.
+
+We don't manage our own tree, we normally do directly on netdev list.
+Thus I think its safe to go with (B) and do this through spdx tree.
+
+Regards,
+  Igor
