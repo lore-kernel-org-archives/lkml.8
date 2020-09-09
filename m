@@ -2,144 +2,100 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0B5C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE1DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F48C21919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZmuo4hr"
+	by mail.kernel.org (Postfix) with ESMTP id 7785321919
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgIIIqr (ORCPT
+        id S1730181AbgIIIq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730128AbgIIIqj (ORCPT
+        Wed, 9 Sep 2020 04:46:56 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:49220 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730158AbgIIIqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:46:39 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12FFC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:46:38 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id gf14so1000427pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:46:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LI1eT1wVUUbEcJhIlIYcasKfk7EA1KHs1hVsDnExyOI=;
-        b=aZmuo4hrrmyxV15MZvTpjPdhO69+xbBqijiZ719cFJe9E+irJ9yvuzUTLIf3BHXE7s
-         O9RYz5mWXZJwB/Jx5VwbLmxzGmc4i4Ki80IjhtbqJH9D5kZmOHlwaGzu4wBqNcfixgTk
-         14TrMfxg9DkXDZizrKNFpbHoJdfJKAP5S92vqp7YW2Uik39jpZAQoUeYYLaMt4Obbrck
-         GwPmNLdQDGvcaIEftHU1mNNYbGDzX1qjlsH2eZHMJciIWhUzFkLewBj1/HjWXFzxOBGZ
-         OCRlucCI5/oOZLMFlQk0EPzdtkenBkRpp8QHVI55sDsj0VPVdYy4989Linda/NC5JmXZ
-         xiBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LI1eT1wVUUbEcJhIlIYcasKfk7EA1KHs1hVsDnExyOI=;
-        b=RzW7JXUFGCAHE8kKiKi1Hgzh3QEjanGzCIbRhOqokhBZuzjxv+fW1KTTmE8z2CIZ9d
-         /rsT8QZcGMCM+edoNXlpiXyeZlbCNo514gJFM4IusGeQufjGm4BlgDuQq/QwmhFmLKG+
-         PlQdyht6Inp6M88OdlBD5gF1eZbI6NodgmX2gE4JC0IIMJoJk8g3nkXjNSNxgEHXvmEz
-         LLUVCejVJ3y438c1fJyUQTowWINXtxv+rVNVjiePBEXJgwjE4+9/MW96Xnp28Q7aiwu/
-         eCkLkh2I09C9MqVcVK3V/IUGO2Mz5VPcNKmQENhGvYK2WOIzLjOC1AP9VZVwsVIEgqM9
-         V2fw==
-X-Gm-Message-State: AOAM530TwiuwPKlJFOUSNkaCPhfLfO2NALSJAcZtK83Yze5O8M5JYnQd
-        cHcAbTKM8zwT3/M+dJqEsePiGPv8HY878eHZhUU=
-X-Google-Smtp-Source: ABdhPJwG4NUZMl7Oq+tys9v7UEH4acrxs7ggLj+InMb9GpBSK7XWkGwnX3fl5EMKvqmUd3xMp4JrOlQ7fa7X1adAHCU=
-X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr2552470pjb.181.1599641198404;
- Wed, 09 Sep 2020 01:46:38 -0700 (PDT)
+        Wed, 9 Sep 2020 04:46:47 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id F21A51C0B87; Wed,  9 Sep 2020 10:46:43 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 10:46:43 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Gene Chen <gene.chen.richtek@gmail.com>,
+        jacek.anaszewski@gmail.com, matthias.bgg@gmail.com,
+        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Subject: Re: [PATCH 1/2] leds: mt6360: Add LED driver for MT6360
+Message-ID: <20200909084643.GB10891@amd>
+References: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1598441840-15226-2-git-send-email-gene.chen.richtek@gmail.com>
+ <1b6e8bf7-fc11-542b-f570-cebb0b6c3442@ti.com>
 MIME-Version: 1.0
-References: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
- <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
- <20200826155507.GV1891694@smile.fi.intel.com> <973f4d54da796db4fcc9b643b10889cbc8839989.camel@perches.com>
- <CAJKOXPcCAPy-v38dyY_74H_6vrgj0mmEf6KaupVKJb4E2Ha_Ug@mail.gmail.com>
- <20200909070244.GC311356@kroah.com> <CAJKOXPd=TfCNfHPdsQZ42VEcUZOFZroXg7xmA82zSA=AbADxKw@mail.gmail.com>
- <20200909073716.GA560912@kroah.com>
-In-Reply-To: <20200909073716.GA560912@kroah.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 9 Sep 2020 11:46:21 +0300
-Message-ID: <CAHp75VfePEHzuSqfhChFNPsh+Jq+-_VqdDULxtFbzKR5DsT7WA@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Annotate dev_err_probe() with __must_check
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pvezYHf7grwyp3Bc"
+Content-Disposition: inline
+In-Reply-To: <1b6e8bf7-fc11-542b-f570-cebb0b6c3442@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 10:40 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Wed, Sep 09, 2020 at 09:08:14AM +0200, Krzysztof Kozlowski wrote:
-> > On Wed, 9 Sep 2020 at 09:02, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > On Wed, Sep 09, 2020 at 08:29:25AM +0200, Krzysztof Kozlowski wrote:
-> > > > On Wed, 26 Aug 2020 at 18:18, Joe Perches <joe@perches.com> wrote:
-> > > > > On Wed, 2020-08-26 at 18:55 +0300, Andy Shevchenko wrote:
-> > > > > > On Wed, Aug 26, 2020 at 08:44:30AM -0700, Joe Perches wrote:
-> > > > > > > On Wed, 2020-08-26 at 13:44 +0300, Andy Shevchenko wrote:
-> > > > > >
-> > > > > > ...
-> > > > > >
-> > > > > > > > -int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-> > > > > > > > +int __must_check dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
-> > > >
-> > > > +Cc Stephen and Greg,
-> > > >
-> > > > Hi Andy,
-> > > >
-> > > > Did this patch ended up in next somehow? I am surprised because now I
-> > > > got warnings for perfectly fine code:
-> > > > https://lore.kernel.org/linux-next/20200909155654.76fe3bd6@canb.auug.org.au/T/#u
-> > > >
-> > > > This creates simply false warnings instead of hints for "optimization".
-> > >
-> > > Yes, it got merged into m y driver core tree.
-> > >
-> > > I'll fix up the tty build warning, should be easy enough, the patch is
-> > > below.
-> >
-> > Yes, this fix suppresses the warning but the question is whether we
-> > really want the warning?
-> > Such fixes mean additional code which the compiler might not optimize
-> > (unless it inlines the dev_err_probe()). This additional code is
-> > purely for suppressing the warning, without any meaning on its own.
-> > Actually it might be even confusing for someone to see:
-> > if (ret)
-> >   ret = dev_err_probe(ret);
 
-The problem here is that the dev_err_probe() returns int on purpose.
-In your patch what I can see it seems another issue is that the driver
-is semi converted to devm API and thus uses goto:s here and there.
+--pvezYHf7grwyp3Bc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Yeah, that is dumb, as the patch I made shows :(
+Hi!
+>=20
+> >@@ -271,6 +271,17 @@ config LEDS_MT6323
+> >  	  This option enables support for on-chip LED drivers found on
+> >  	  Mediatek MT6323 PMIC.
 
-I agree.
 
-> > warn_unused_result should point errors, not "optimization
-> > opportunities". If you want to have opportunity, add a coccinelle
-> > rule. Or a checkpatch rule. Not a compiler warning.
->
-> Ok, I now agree, I'll go revert this patch and trust that driver authors
-> will "do the right thing" here...
+=2E..522 lines...
 
-I'm fine (as I stated during a review of that patch) to go either way,
-but I see it would be nice to have drivers be better thought about
-using devm APIs.
+> >+static int mt6360_init_isnk_properties(struct mt6360_led *led, struct l=
+ed_init_data *init_data)
+> >+{
+> >+	struct led_classdev *isnk =3D &led->isnk;
+> >+
+> >+	isnk->max_brightness =3D mt6360_get_isnk_max_level(led->led_no);
 
--- 
-With Best Regards,
-Andy Shevchenko
+> This function is called once seems a bit much to have a service function =
+for
+> a simple switch case.
+
+Please remove code you are not commenting on. That a) reduces
+bandwidth requirements but more importantly b) makes it easier to find
+your comments.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pvezYHf7grwyp3Bc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9YlnMACgkQMOfwapXb+vLvDgCgi0jys/9Gg6FdVPAtrooeRyXJ
+TPMAoIHj0ruueSBPPi4OfU/aJK0VNp3O
+=kq07
+-----END PGP SIGNATURE-----
+
+--pvezYHf7grwyp3Bc--
