@@ -2,160 +2,138 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA79C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BB7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8EB21973
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599622086;
-	bh=yzC3pCeyfI5uFIun3bqi6B7dO5+teVjviJKxlHi7g9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YIHhqoZ61mne2qMpIU9YKBooHfw6cboOp/S9TJUUV7jXVjFzunRbss0NxcE+TLBwL
-	 SuXtGUuqZQPhE4R5jR3W+SvpgcY4r/GuunkjrdTut9IyGjvfeHM8bObe6sruVeFzdm
-	 O3u0Hek5aa3LWWq2Q19OjlneyE06iyWK/knzSRj0=
+	by mail.kernel.org (Postfix) with ESMTP id EF73A20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjWTMZKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgIID2F (ORCPT
+        id S1728297AbgIIDgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 23:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgIID2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 23:28:04 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37DCB20EDD;
-        Wed,  9 Sep 2020 03:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599622083;
-        bh=yzC3pCeyfI5uFIun3bqi6B7dO5+teVjviJKxlHi7g9g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OJAKmp492OjH2PaDukesr862GMPGdJqtGH/Cb2DCicdFsGLJcT40D/dj58DQL46+v
-         CFAKWJBacg906/jo17EUZ4aoCdu3CinvlsJeH023JxrsjUKtLcjWaLnBqKnjEu81Fo
-         rDfThrbofVVxfxadvUNtGItHW2Mt1+lfK+yCCEQs=
-Date:   Tue, 8 Sep 2020 20:28:02 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: clean up vm_map_ram() call
-Message-ID: <20200909032802.GA3377963@google.com>
-References: <20200909023634.3821423-1-daeho43@gmail.com>
- <4c8971ce-98b5-4675-8310-5e9af0a14bb6@huawei.com>
+        Tue, 8 Sep 2020 23:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgIIDg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 23:36:28 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930B1C061573;
+        Tue,  8 Sep 2020 20:36:27 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id v78so861532ybv.5;
+        Tue, 08 Sep 2020 20:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X3uD9iTsb4n/SxPFUpHhLW1PU5XlJVEQOctSvYt+PUA=;
+        b=MjWTMZKw7wFRWnAHnZLw9pw3hUnD6nflWH5N7AKEWVq9C/MgLJ0rvEzpbhbYifJ7g2
+         j1+dkY9hA3e2LLShzfJhbubVGDER46F/ejHT2ENYXwLzDJ9CBgZHQeq1DFWCVh7iNdEe
+         KYmFXQMX6vtePP/OSPIhE5XbICyrNK9RWK8Td4SstRF2XhHK3xaKT1nVfGcEp9VkWjm/
+         /5BVke9GwcGV+hn6CBe7Zlpudrw1apWviBjsqlc8vNU2ZwC4dYQzZ699BKK9yHmJf5Z5
+         n+K2nO7DyZDGTUxlHv+Lejkwn1m0Ghb0JgDN+uo4hLaDf3b4xc+z46fQQo6wLoefo9Zp
+         7/Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X3uD9iTsb4n/SxPFUpHhLW1PU5XlJVEQOctSvYt+PUA=;
+        b=eAeMuWQkLrRz7dz/BjbyU2+dcePWTR05mTNafHGMMtMmgh6IhpbK6zSYzVCya6qn2O
+         95PEP58Ew2NzreiaIvs3EGDn+WjxqihNnEGZ0jjBZi4hKtM9P2/yUHJM6qlhQMjQSgkP
+         AnoRXBUFCpNwAjm6xxmkiryGzGS5sxcKfxxsw4NnMq2yRFdp/HAIcVIScwXM3bnGqKiK
+         WGEJMk7B2/r7M+0OO/c022BdVIi4+xORKVim5Gwll4y8xg1TmPwJWNXQRS3Nm1UElnJM
+         Y9USaXYGQADZWIkiJKimZfUPCAAa3iRipV1fh0D/NgeGhhB31CTR5F3J85OyPKHQCjhj
+         /1Dw==
+X-Gm-Message-State: AOAM533ELtv5SqKm+ZhZ4NhHDXde31ha9UeMi6Q1ni9rc2dkod90u2BU
+        qjdTR8gtFmA7CYObYDxMyZzXGfZ/UnMavuGHHeCojevk4C0+Lg==
+X-Google-Smtp-Source: ABdhPJypGQNApEm4nqJsRSyze+6XsGrF0vUUGz2wpF9K26/NWnd98fxE1Z41CF1Fi1l/r3qfzH0GNJHz/3g3R8b21AI=
+X-Received: by 2002:a25:aba5:: with SMTP id v34mr2952978ybi.337.1599622586652;
+ Tue, 08 Sep 2020 20:36:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c8971ce-98b5-4675-8310-5e9af0a14bb6@huawei.com>
+References: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
+In-Reply-To: <bfee107c7d1075cab6ec297afbd3ace68955b836.1599620898.git.riteshh@linux.ibm.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Wed, 9 Sep 2020 11:36:15 +0800
+Message-ID: <CACVXFVMPHhA9_Pk-KGROimwxJBM_5SHmjH+CKkkNLJWGk2gmFw@mail.gmail.com>
+Subject: Re: [RESEND PATCH 1/1] block: Set same_page to false in
+ __bio_try_merge_page if ret is false
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "open list:XFS FILESYSTEM" <linux-xfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09, Chao Yu wrote:
-> On 2020/9/9 10:36, Daeho Jeong wrote:
-> > From: Daeho Jeong <daehojeong@google.com>
-> > 
-> > Made f2fs_vmap() wrapper to handle vm_map_ram() stuff.
-> > 
-> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> 
-> LGTM,
-> 
-> I think it should be merged into original patch. :)
-> 
-> Maybe Jaeguek could help to do that.
+On Wed, Sep 9, 2020 at 11:16 AM Ritesh Harjani <riteshh@linux.ibm.com> wrote:
+>
+> If we hit the UINT_MAX limit of bio->bi_iter.bi_size and so we are anyway
+> not merging this page in this bio, then it make sense to make same_page
+> also as false before returning.
+>
+> Without this patch, we hit below WARNING in iomap.
+> This mostly happens with very large memory system and / or after tweaking
+> vm dirty threshold params to delay writeback of dirty data.
+>
+> WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
+>  CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
+>  Call Trace:
+>   __remove_mapping+0x154/0x320 (unreliable)
+>   iomap_releasepage+0x80/0x180
+>   try_to_release_page+0x94/0xe0
+>   invalidate_inode_page+0xc8/0x110
+>   invalidate_mapping_pages+0x1dc/0x540
+>   generic_fadvise+0x3c8/0x450
+>   xfs_file_fadvise+0x2c/0xe0 [xfs]
+>   vfs_fadvise+0x3c/0x60
+>   ksys_fadvise64_64+0x68/0xe0
+>   sys_fadvise64+0x28/0x40
+>   system_call_exception+0xf8/0x1c0
+>   system_call_common+0xf0/0x278
+>
+> Fixes: cc90bc68422 ("block: fix "check bi_size overflow before merge"")
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+> Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> ---
+> RESEND: added "fixes" tag
+>
+>  block/bio.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/block/bio.c b/block/bio.c
+> index a7366c02c9b5..675ecd81047b 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -877,8 +877,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+>                 struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+>
+>                 if (page_is_mergeable(bv, page, len, off, same_page)) {
+> -                       if (bio->bi_iter.bi_size > UINT_MAX - len)
+> +                       if (bio->bi_iter.bi_size > UINT_MAX - len) {
+> +                               *same_page = false;
+>                                 return false;
+> +                       }
+>                         bv->bv_len += len;
+>                         bio->bi_iter.bi_size += len;
+>                         return true;
 
-Yeah, no worries. :)
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-> 
-> Thanks,
-> 
-> > ---
-> >   fs/f2fs/compress.c | 42 ++++++++++++++++++------------------------
-> >   1 file changed, 18 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> > index 357303d8514b..7895186cc765 100644
-> > --- a/fs/f2fs/compress.c
-> > +++ b/fs/f2fs/compress.c
-> > @@ -557,6 +557,20 @@ static void f2fs_compress_free_page(struct page *page)
-> >   #define MAX_VMAP_RETRIES	3
-> > +static void *f2fs_vmap(struct page **pages, unsigned int count)
-> > +{
-> > +	int i;
-> > +	void *buf = NULL;
-> > +
-> > +	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
-> > +		buf = vm_map_ram(pages, count, -1);
-> > +		if (buf)
-> > +			break;
-> > +		vm_unmap_aliases();
-> > +	}
-> > +	return buf;
-> > +}
-> > +
-> >   static int f2fs_compress_pages(struct compress_ctx *cc)
-> >   {
-> >   	struct f2fs_sb_info *sbi = F2FS_I_SB(cc->inode);
-> > @@ -593,23 +607,13 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
-> >   		}
-> >   	}
-> > -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
-> > -		cc->rbuf = vm_map_ram(cc->rpages, cc->cluster_size, -1);
-> > -		if (cc->rbuf)
-> > -			break;
-> > -		vm_unmap_aliases();
-> > -	}
-> > +	cc->rbuf = f2fs_vmap(cc->rpages, cc->cluster_size);
-> >   	if (!cc->rbuf) {
-> >   		ret = -ENOMEM;
-> >   		goto out_free_cpages;
-> >   	}
-> > -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
-> > -		cc->cbuf = vm_map_ram(cc->cpages, cc->nr_cpages, -1);
-> > -		if (cc->cbuf)
-> > -			break;
-> > -		vm_unmap_aliases();
-> > -	}
-> > +	cc->cbuf = f2fs_vmap(cc->cpages, cc->nr_cpages);
-> >   	if (!cc->cbuf) {
-> >   		ret = -ENOMEM;
-> >   		goto out_vunmap_rbuf;
-> > @@ -728,23 +732,13 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
-> >   			goto out_free_dic;
-> >   	}
-> > -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
-> > -		dic->rbuf = vm_map_ram(dic->tpages, dic->cluster_size, -1);
-> > -		if (dic->rbuf)
-> > -			break;
-> > -		vm_unmap_aliases();
-> > -	}
-> > +	dic->rbuf = f2fs_vmap(dic->tpages, dic->cluster_size);
-> >   	if (!dic->rbuf) {
-> >   		ret = -ENOMEM;
-> >   		goto destroy_decompress_ctx;
-> >   	}
-> > -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
-> > -		dic->cbuf = vm_map_ram(dic->cpages, dic->nr_cpages, -1);
-> > -		if (dic->cbuf)
-> > -			break;
-> > -		vm_unmap_aliases();
-> > -	}
-> > +	dic->cbuf = f2fs_vmap(dic->cpages, dic->nr_cpages);
-> >   	if (!dic->cbuf) {
-> >   		ret = -ENOMEM;
-> >   		goto out_vunmap_rbuf;
-> > 
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+-- 
+Ming Lei
