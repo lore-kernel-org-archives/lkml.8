@@ -2,206 +2,139 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC4BC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4D7C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE0E21582
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599649712;
-	bh=yzAVVTGejCUdvUjaQabL2dAqIR8EN08fQBJMkB8pdBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2tjUsVCS+dYs8vTY6FrXIgyfMBrr9kYYScj7UviC8kmYl1KDEmFvZNcK0VN7V0Wyw
-	 c/m0DAPWWgRQ+3b3alT1X/7F3+o7KlNli/SHrkxoAOPqPt/uBWKB0OtEICboG8rMep
-	 vp0pHXoiwQuUzAG13O5oHr+ASH4S1GtlmmIdQZFk=
+	by mail.kernel.org (Postfix) with ESMTP id 8309C21D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R365BsX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgIILH1 (ORCPT
+        id S1728631AbgIILKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 9 Sep 2020 07:10:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729663AbgIILH1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 07:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727055AbgIILGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:06:34 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9041D207DE;
-        Wed,  9 Sep 2020 11:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599649577;
-        bh=yzAVVTGejCUdvUjaQabL2dAqIR8EN08fQBJMkB8pdBA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NFcIcQ/0JBDUyaDGa+cShYbmKdhfVzFonCO0aevmzDLjjkrTYxuSOb7ZHNKK9zb7W
-         s1w+mr3agpxd3e+Mp1agfx1A93cWg8zC9JEyT/po9tCM6LXJLXVd9JDf4gLsTuowbm
-         lhnGMjiUrLYuUANxNMP33v5RA2P55UVf+7M5wJgw=
-Received: by pali.im (Postfix)
-        id 55B817A9; Wed,  9 Sep 2020 13:06:15 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 13:06:15 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Joseph Hwang <josephsih@chromium.org>
-Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
-        luiz.dentz@gmail.com, chromeos-bluetooth-upstreaming@chromium.org,
-        josephsih@google.com, Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Bluetooth: btusb: define HCI packet sizes of USB
- Alts
-Message-ID: <20200909110615.qbwb3m34l2mkv743@pali>
-References: <20200909094202.3863687-1-josephsih@chromium.org>
- <20200909174129.v2.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02ADC061757
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:07:13 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id jw11so1180359pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vov2dA/KW/bn72Ejzr9klJyhX5C88qedShxokRR3aNg=;
+        b=R365BsX7Ty4AzzqOSLwELZjOZev1K7gL80aq+v4OVAV6+F4TcWo9C+0dMIYzsLxkVx
+         +i8yCdt9e569HVDNWo1DDHrtItgxrB9kATz3/PqjbR3nbgUDebwF3G81O7b3dWiaTKlK
+         g+lOVocaZ8uCYuiExZFnnyj+X9iT3nXMfAdEj+yNQaaQcoRBKK6qR1KbGsKRr10Jep/j
+         h0cUBCGDCrWIydOWCVVWvoay4gX2I2PZDWgd/MZyXWFWKNpTN3t/Nm3tV46jQIpc3Nu7
+         hYmUfP2voxzFM4xbvV3h16QnYOELlaYWGHnkkz+YBlYP10XikBbMa93P8JkODTS0UwCn
+         uPzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vov2dA/KW/bn72Ejzr9klJyhX5C88qedShxokRR3aNg=;
+        b=sLlr8pKQlfPOlQamV++e6I8VC1MaciKbp1/I80dMQ/j8sdOSBQdNJMp4F6Fi1pTLHu
+         81Eu0eRPijAz0UFVuIUCAPm+4I8QVh9ozK8Rw6MVJFP7g7JdyseX3dBco2n7a0BW+mLd
+         dssyB311RZvQ5ZQOKTK1lkeVfLd7lZp7YqMFaJuixyWn6Fo8UXiMDctgYfwARPXCelUM
+         dvfHA+p6Np9MaaXG4u3WeDve3QZyUOq052YZwHi1lwLrw1Me3gKkJVo9dYOH74RGCreZ
+         UIST5/uGZlrYvmr+edpz4inEg/fLDWLusB9rn8sR3f0fKT/mosVBG2Ol+ZJH0L45WtFu
+         bH0w==
+X-Gm-Message-State: AOAM530iS6iWwfNv6ZC9ZGktVXHjk5iBMhmQ2Uw1YORXYL9b8AbvYPjC
+        Z/x3NdZH2FTVBr+BjIgXbRLSMQ==
+X-Google-Smtp-Source: ABdhPJyCZVgnQXi30pqYsiZcXXeTmANMigiEsaDsJ6dg0Pg/CZzHHwSMlI2D1oXOAeWt1zTAKG+xhg==
+X-Received: by 2002:a17:90a:13c7:: with SMTP id s7mr393903pjf.124.1599649633150;
+        Wed, 09 Sep 2020 04:07:13 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id j35sm1804786pgi.91.2020.09.09.04.07.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Sep 2020 04:07:12 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 16:37:07 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 4/8] mmc: sdhci-msm: Unconditionally call
+ dev_pm_opp_of_remove_table()
+Message-ID: <20200909110707.jv2beta5rdr3wux3@vireshk-i7>
+References: <cover.1598594714.git.viresh.kumar@linaro.org>
+ <1d7c97524b9e1fbc60271d9c246c5461ca8a106c.1598594714.git.viresh.kumar@linaro.org>
+ <CAPDyKFpdZhzXQv3hpTzf3UkJDhFqBhgMXCqVfAfE6PejLCxvfg@mail.gmail.com>
+ <20200831104453.ux5fb5bpt57tj5am@vireshk-i7>
+ <CAPDyKFp1fCE3bBKngcia1LBKHEkQRoVzUwZYE6+Y++Hu=6aJfw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909174129.v2.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAPDyKFp1fCE3bBKngcia1LBKHEkQRoVzUwZYE6+Y++Hu=6aJfw@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 09 September 2020 17:42:01 Joseph Hwang wrote:
-> It is desirable to define the HCI packet payload sizes of
-> USB alternate settings so that they can be exposed to user
-> space.
+On 31-08-20, 12:57, Ulf Hansson wrote:
+> On Mon, 31 Aug 2020 at 12:45, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > On 28-08-20, 10:43, Ulf Hansson wrote:
+> > > On Fri, 28 Aug 2020 at 08:08, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > dev_pm_opp_of_remove_table() doesn't report any errors when it fails to
+> > > > find the OPP table with error -ENODEV (i.e. OPP table not present for
+> > > > the device). And we can call dev_pm_opp_of_remove_table()
+> > > > unconditionally here.
+> > > >
+> > > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > >
+> > > Replaced v1 with v2 on my next branch, thanks!
+> > >
+> > > Just to be sure, this patch doesn't depend on any changes for the opp
+> > > core that are queued for v5.10?
+> >
+> > The recent crashes reported by Anders and Naresh were related to a OPP
+> > core bug, for which I have just sent the fix here:
+> >
+> > https://lore.kernel.org/lkml/922ff0759a16299e24cacfc981ac07914d8f1826.1598865786.git.viresh.kumar@linaro.org/
+> >
+> > This is already tested by Naresh now and finally everything works as
+> > expected.
+> >
+> > I am going to get this fix merged in 5.9-rc4, but we do have a
+> > dependency now with that fix.
+> >
+> > What's the best way to handle this stuff now ? The easiest IMO would
+> > be for me to send these patches through the OPP tree, otherwise people
+> > need to carry this and the OPP fix (for which I can provide the
+> > branch/tag).
 > 
-> Reviewed-by: Alain Michaud <alainm@chromium.org>
-> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-> ---
+> No need for a tag/branch to be shared. Instead I am simply going to
+> defer to pick up any related changes for mmc, until I can rebase my
+> tree on an rc[n] that contains your fix.
 > 
-> Changes in v2:
-> - 1/2: Used sco_mtu instead of a new sco_pkt_len member in hdev.
-> - 1/2: Do not overwrite hdev->sco_mtu in hci_cc_read_buffer_size
->   if it has been set in the USB interface.
-> - 2/2: Used BT_SNDMTU/BT_RCVMTU instead of creating a new opt name.
-> - 2/2: Used the existing conn->mtu instead of creating a new member
->        in struct sco_pinfo.
-> - 2/2: Noted that the old SCO_OPTIONS in sco_sock_getsockopt_old()
->        would just work as it uses sco_pi(sk)->conn->mtu.
-> 
->  drivers/bluetooth/btusb.c | 43 +++++++++++++++++++++++++++++----------
->  net/bluetooth/hci_event.c |  7 ++++++-
->  2 files changed, 38 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index fe80588c7bd3a8..a710233382afff 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -459,6 +459,22 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
->  #define BTUSB_WAKEUP_DISABLE	14
->  #define BTUSB_USE_ALT1_FOR_WBS	15
->  
-> +/* Per core spec 5, vol 4, part B, table 2.1,
-> + * list the hci packet payload sizes for various ALT settings.
-> + * This is used to set the packet length for the wideband speech.
-> + * If a controller does not probe its usb alt setting, the default
-> + * value will be 0. Any clients at upper layers should interpret it
-> + * as a default value and set a proper packet length accordingly.
-> + *
-> + * To calculate the HCI packet payload length:
-> + *   for alternate settings 1 - 5:
-> + *     hci_packet_size = suggested_max_packet_size * 3 (packets) -
-> + *                       3 (HCI header octets)
-> + *   for alternate setting 6:
-> + *     hci_packet_size = suggested_max_packet_size - 3 (HCI header octets)
+> When that is possible, please re-post the mmc patches.
 
-Hello! What is value for 'suggested_max_packet_size' used in above
-calculation algorithm?
+The dependency patch got merged in 5.9-rc4. Do you still want me to
+resend this patch or you can apply it directly from here ?
 
-> + */
-> +static const int hci_packet_size_usb_alt[] = { 0, 24, 48, 72, 96, 144, 60 };
-> +
->  struct btusb_data {
->  	struct hci_dev       *hdev;
->  	struct usb_device    *udev;
-> @@ -3959,6 +3975,15 @@ static int btusb_probe(struct usb_interface *intf,
->  	hdev->notify = btusb_notify;
->  	hdev->prevent_wake = btusb_prevent_wake;
->  
-> +	if (id->driver_info & BTUSB_AMP) {
-> +		/* AMP controllers do not support SCO packets */
-> +		data->isoc = NULL;
-> +	} else {
-> +		/* Interface orders are hardcoded in the specification */
-> +		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
-> +		data->isoc_ifnum = ifnum_base + 1;
-> +	}
-> +
->  #ifdef CONFIG_PM
->  	err = btusb_config_oob_wake(hdev);
->  	if (err)
-> @@ -4022,6 +4047,10 @@ static int btusb_probe(struct usb_interface *intf,
->  		hdev->set_diag = btintel_set_diag;
->  		hdev->set_bdaddr = btintel_set_bdaddr;
->  		hdev->cmd_timeout = btusb_intel_cmd_timeout;
-> +
-> +		if (btusb_find_altsetting(data, 6))
-> +			hdev->sco_mtu = hci_packet_size_usb_alt[6];
-> +
->  		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
->  		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
->  		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
-> @@ -4063,15 +4092,6 @@ static int btusb_probe(struct usb_interface *intf,
->  		btusb_check_needs_reset_resume(intf);
->  	}
->  
-> -	if (id->driver_info & BTUSB_AMP) {
-> -		/* AMP controllers do not support SCO packets */
-> -		data->isoc = NULL;
-> -	} else {
-> -		/* Interface orders are hardcoded in the specification */
-> -		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
-> -		data->isoc_ifnum = ifnum_base + 1;
-> -	}
-> -
->  	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
->  	    (id->driver_info & BTUSB_REALTEK)) {
->  		hdev->setup = btrtl_setup_realtek;
-> @@ -4083,9 +4103,10 @@ static int btusb_probe(struct usb_interface *intf,
->  		 * (DEVICE_REMOTE_WAKEUP)
->  		 */
->  		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
-> -		if (btusb_find_altsetting(data, 1))
-> +		if (btusb_find_altsetting(data, 1)) {
->  			set_bit(BTUSB_USE_ALT1_FOR_WBS, &data->flags);
-> -		else
-> +			hdev->sco_mtu = hci_packet_size_usb_alt[1];
-> +		} else
->  			bt_dev_err(hdev, "Device does not support ALT setting 1");
->  	}
->  
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 33d8458fdd4adc..b3e9247fdbcfa1 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -730,7 +730,12 @@ static void hci_cc_read_buffer_size(struct hci_dev *hdev, struct sk_buff *skb)
->  		return;
->  
->  	hdev->acl_mtu  = __le16_to_cpu(rp->acl_mtu);
-> -	hdev->sco_mtu  = rp->sco_mtu;
-> +	/* Set sco_mtu only when not yet.
-> +	 * The sco_mtu would be set in btusb.c
-> +	 * if the host controller interface is USB.
-> +	 */
-> +	if (hdev->sco_mtu == 0)
-> +		hdev->sco_mtu  = rp->sco_mtu;
-
-Should not hdev->sco_mtu contains minimum from the rp->sco_mtu and your
-calculated value defined in hci_packet_size_usb_alt[i]?
-
-Socket MTU cannot be bigger then value rp->sco_mtu, right?
-
->  	hdev->acl_pkts = __le16_to_cpu(rp->acl_max_pkt);
->  	hdev->sco_pkts = __le16_to_cpu(rp->sco_max_pkt);
->  
-> -- 
-> 2.28.0.526.ge36021eeef-goog
-> 
+-- 
+viresh
