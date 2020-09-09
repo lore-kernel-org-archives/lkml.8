@@ -6,38 +6,42 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17CAC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61250C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E79921D7B
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCB72177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UljvDt04"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LYytBpnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgIIChS (ORCPT
+        id S1729026AbgIICit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:37:18 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41003 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgIIChR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:37:17 -0400
+        Tue, 8 Sep 2020 22:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgIICis (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 22:38:48 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0468C061573;
+        Tue,  8 Sep 2020 19:38:46 -0700 (PDT)
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmR4S3g1Vz9sTS;
-        Wed,  9 Sep 2020 12:37:12 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmR6D3gbmz9sTS;
+        Wed,  9 Sep 2020 12:38:44 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599619033;
-        bh=FL5nwqAWFyPt4AMztoRWQ0zk8xgjuSYriYFeHSMcZB8=;
+        s=201702; t=1599619124;
+        bh=2izng1FlEMeGvkzbnaHy65co67h6yPmYVNwVRf6P3i0=;
         h=Date:From:To:Cc:Subject:From;
-        b=UljvDt04Ms50mGKijhgnNZ37d2MnUoimZGJlGULAmFw68Mt+xIvosHWmJDCNmpmDa
-         R4GHWW+0ezQjOH4gaay0pIAXUQXLujLuZc8QC2zz4ty70SojrS9PWRqGljMWcPfRwO
-         Iv9Pfez18ESZ0ooZcPIY9N+LeoqE9bplGWuoJis3NxuMNOUnHb23wAyG/aCuXBUVhp
-         gzI9m1Akix4iWQtD2FJhpxfta9uGwsXq2OtxMH8ZlHm6lHev72Vk8AXsjs9Xvy8km7
-         sYcwn5RuhMwBmpNn6IXcaxUSPJ2Uy/eVxI4AdTQERljW6rBU2k2g8of2a9yOP2bE5T
-         AbIMz5WK/ePGA==
-Date:   Wed, 9 Sep 2020 12:37:10 +1000
+        b=LYytBpncR++dbiT4D3vcQ3D9GqsDhRottrmhn99d37hKi2lyNL+29pqivWPresaz+
+         LoFeRLErapUhbi1yessfmrRKePy+Bz0t97hTbr2jyw8505B6iV+vRae+PjehjWq3Sd
+         1YkWF4AHCSwjUhPhCOX4dSDIVCu9fSQOIB7xj/dgDyISjm2fFVqQGTI8cJMXhrMaaX
+         RxLP5DKXtXOCzlLY87yYe7Q1pEwacE4aE/uJ3HK0aGMI5uqlrBx49lyKJFI4xie+/a
+         cdMo8UH5j4s72N6h74yo8BFySLu0o9IKeUexxkbbMlWzROs/u3yyzHUrI61r8sGiYT
+         anO7orXivOI/A==
+Date:   Wed, 9 Sep 2020 12:38:43 +1000
 From:   Stephen Rothwell <sfr@canb.auug.org.au>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -45,16 +49,16 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Subject: linux-next: build warning after merge of the pci tree
-Message-ID: <20200909123710.50b16d37@canb.auug.org.au>
+Message-ID: <20200909123843.390cbf28@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/x_Kj6nw1HxNxyZoRhN7ikuo";
+Content-Type: multipart/signed; boundary="Sig_/AL7W2=v4vj53okQq37zom2.";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/x_Kj6nw1HxNxyZoRhN7ikuo
+--Sig_/AL7W2=v4vj53okQq37zom2.
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
@@ -63,12 +67,8 @@ Hi all,
 After merging the pci tree, today's linux-next build (arm
 multi_v7_defconfig) produced this warning:
 
-drivers/pci/controller/dwc/pci-dra7xx.c: In function 'dra7xx_pcie_establish=
-_link':
-drivers/pci/controller/dwc/pci-dra7xx.c:142:6: warning: unused variable 'ex=
-p_cap_off' [-Wunused-variable]
-  142 |  u32 exp_cap_off =3D dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-      |      ^~~~~~~~~~~
+WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT=
+_SYMBOL_GPL
 
 Introduced by commit
 
@@ -78,20 +78,20 @@ Introduced by commit
 Cheers,
 Stephen Rothwell
 
---Sig_/x_Kj6nw1HxNxyZoRhN7ikuo
+--Sig_/AL7W2=v4vj53okQq37zom2.
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YP9YACgkQAVBC80lX
-0GxYDgf9HwE0AL3bNIZ2iNsV0hHFKEXpNzlXet0XFRNM8ccvH98vD4bn1xaXAjeW
-CLTMnxPBq8GB+leO+vC+cIsJ+fHieAfDP4LlZtScaAqUVnyLj+Ck4fLG2NA/iuAb
-cSpF4Lepad7coLuM5awB8hdSxnxXas7x3qnuV51Nkgo6+ZEY8qoHEKsHP0BhX2vy
-5vqhjWKxTIWHuSLr80idXzTt3a/r6zW4ErVCegwtR9QGHVsOEi4cbeaUxVwnSpFx
-If/IM1MYxO7SI6BQ/e77VC7LoywPNNs+Y5iI8XyxX350ccPOULUJgxx3BRWigrjR
-XCyd2Ac+JeUexHtZ2pCS2WQc8msjcQ==
-=zdjR
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YQDMACgkQAVBC80lX
+0GwsNQf/aTIlF/2NlwaoLrYuHIDhfEa/XkV5yluznkda/vnaS0SRQaX1QiTArH+r
+yx2RCs5R82fYRIpxk35NMJcOXTfKXHEMwQEzEfuR8NeCRF3VZGlewwRVfMELrR6P
+BnxmABIWy1PrRrHzEtqdbSsCTNSHpLvJUkRI8NmqNs0uZxEgmsgTUKhIW5vH+QcG
+9KCmwImotFp6xnTEi06Cuds3EoTTNbJXo5j9nq2fvFFfVCiOgO5ogqJ4nVb9CPiW
+y5hF2IYm+fR5Vwyra8rWlUaudE2a92HRLq2PvObEd64pTj9vq+Plo/4q6vks3ykn
+mYLXwtQGFcfD0L82CvtaRQEaTJ3FfQ==
+=tG+m
 -----END PGP SIGNATURE-----
 
---Sig_/x_Kj6nw1HxNxyZoRhN7ikuo--
+--Sig_/AL7W2=v4vj53okQq37zom2.--
