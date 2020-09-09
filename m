@@ -2,157 +2,83 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF45C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4B0C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79A1A208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:20:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Wz131WDa"
+	by mail.kernel.org (Postfix) with ESMTP id 3DDEA21532
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599672071;
+	bh=Ucg/VGBbh9jVN1vdrF37GPG3g7nBAbka0slS9uXk/vI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CPZmt4aobKYzNX7o5uIsNZoAvxCoUD4EQfeMppcFYVFYmhqt9LJfJ64KrFqkMe0Tl
+	 Yb1mScAgd0o+vL1A/yBgEu/ocx0N+LmFi2oThtUpM3Pv4VnL8ETVLCQIMBYub/qBr9
+	 tteKyBQJ4aLzGSAko+MDtuSkn236Ce5A/ISwmQJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgIIRUz (ORCPT
+        id S1727893AbgIIPZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729941AbgIIPZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 9 Sep 2020 11:25:13 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9E2C061360
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:05:36 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d190so3273372iof.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1GNvQaJVVbJaa5hqastQ4V9UWSsrJ3TzEQOTc6YZGA0=;
-        b=Wz131WDagK/Rxky/VsKTxm9iJtyF3lZsrhvUt6kH/ULppLy487y62HkZGYeM1pXKOZ
-         DeQ8y3Q16GCVRKCyngWbLjZIjWc72QhidG0e5bcZSKpjLE09P3yHLmATe3Z+FpCFgcTQ
-         W2/C/2AzVGHUu6cHHEPWt6mkn5ZNMcG4xCvMcuGt+NA0M9fQHvWeaRORq0/VJy00UBFW
-         SVuEXZBNl1PaMP21xD5W8PtNgRJ4ghTKDdVbnJzTuhHM+YiLMWOFq46dlbALB9SQ435V
-         /wamSrkHIbLha24honWVVkDwyaCkp0a1caYMHllncnc93uHxavoJRQhw5/gkMF+A5Q2G
-         wUVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1GNvQaJVVbJaa5hqastQ4V9UWSsrJ3TzEQOTc6YZGA0=;
-        b=CnRKdAIYJ2t9qtyQFfwvikkUXYbU1JQq4jxfRQHhdh/sxKbptzLXoZcbea/OnnNLj/
-         qFlyACwjssFHvpa1IltzjyyXI9fTNeWIJuiLXmGnt4ZtwpO3yhYKgMqLZspWHlbAyVC7
-         y3MW56gbzpfYKSXnq0MvAixQ0lEy9YgDXzWzf3n276zWlkZC9z+ewHT24ximdN+hxbdN
-         ZEktDRv6fCkbz/oC2SOEbaHrnRPjpiHjCsmD1xDzybBHPdcDc8FwlCEcSfqMDqsU5pq4
-         WqkcfNDsRnpVHhBB+m3dxBB3Ltzy2x2p05PhIEHHKypv229bmLaf2J9qWJYLkXYnhaG+
-         JSZA==
-X-Gm-Message-State: AOAM5300NEKyCkuQzoIICdEySfLbXKhOXNeDy9ZIauXbJC5KByTcvhxM
-        Es8awQDViyApdAoU6k1F6hLhHQ==
-X-Google-Smtp-Source: ABdhPJxR0dWjX+LAG42vqffCSj6/FEsKntR0oewD/D0VWfxuQhn1DExXR02/p7rg4pZ6AeBZyQoUdQ==
-X-Received: by 2002:a02:cb99:: with SMTP id u25mr3965325jap.99.1599660335262;
-        Wed, 09 Sep 2020 07:05:35 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id m15sm1464546ild.8.2020.09.09.07.05.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 07:05:34 -0700 (PDT)
-Subject: Re: INFO: task hung in io_sq_thread_stop
-To:     Hillf Danton <hdanton@sina.com>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Cc:     syzbot <syzbot+3c23789ea938faaef049@syzkaller.appspotmail.com>,
-        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-References: <00000000000030a45905aedd879d@google.com>
- <20200909134317.19732-1-hdanton@sina.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4d55d988-d45e-ba36-fed7-342e0a6ab16e@kernel.dk>
-Date:   Wed, 9 Sep 2020 08:05:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgIIPYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:24:15 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A03321941;
+        Wed,  9 Sep 2020 15:22:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599664938;
+        bh=Ucg/VGBbh9jVN1vdrF37GPG3g7nBAbka0slS9uXk/vI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LiGIWoUn3rIWwcR41W9+pP3V3CcF4KmVOL+XP8KZQoiVkzIZ5XGGbniZz28510v3B
+         B3WRU3zxaFuEDN2h8/+d9LO/blRBV1zdNL8eISdUBKThQ2uHz5VYdFUaIjtG7t9+Z0
+         sexPSntTstShuAERv9SiklWxV3YDnxQ1ls5yHEFw=
+Date:   Wed, 9 Sep 2020 17:22:28 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "linux-spdx@vger.kernel.org" <linux-spdx@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] [PATCH 0/5 REBASED to v5.9-rc4] Qlogic drivers: Convert to
+ SPDX license identifiers
+Message-ID: <20200909152228.GD691964@kroah.com>
+References: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
+ <e5688d4c-f512-6705-6bb1-db832828fb35@marvell.com>
+ <DM6PR18MB305266178BB9982CBDF05319AF260@DM6PR18MB3052.namprd18.prod.outlook.com>
+ <alpine.DEB.2.21.2009091126290.5622@felia>
 MIME-Version: 1.0
-In-Reply-To: <20200909134317.19732-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2009091126290.5622@felia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 7:43 AM, Hillf Danton wrote:
+On Wed, Sep 09, 2020 at 11:36:44AM +0200, Lukas Bulwahn wrote:
 > 
-> On Wed, 9 Sep 2020 12:03:55 +0200 Stefano Garzarella wrote:
->> On Wed, Sep 09, 2020 at 01:49:22AM -0700, syzbot wrote:
->>> Hello,
->>>
->>> syzbot found the following issue on:
->>>
->>> HEAD commit:    dff9f829 Add linux-next specific files for 20200908
->>> git tree:       linux-next
->>> console output: https://syzkaller.appspot.com/x/log.txt?x=112f880d900000
->>> kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=3c23789ea938faaef049
->>> compiler:       gcc (GCC) 10.1.0-syz 20200507
->>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c082a5900000
->>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1474f5f9900000
->>>
->>> Bisection is inconclusive: the first bad commit could be any of:
->>>
->>> d730b1a2 io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
->>> 7ec3d1dd io_uring: allow disabling rings during the creation
->>
->> I'm not sure it is related, but while rebasing I forgot to update the
->> right label in the error path.
->>
->> Since the check of ring state is after the increase of ctx refcount, we
->> need to decrease it jumping to 'out' label instead of 'out_fput':
 > 
-> I think we need to fix 6a7bb9ff5744 ("io_uring: remove need for
-> sqd->ctx_lock in io_sq_thread()") because the syzbot report
-> indicates the io_sq_thread has to wake up the kworker before
-> scheduling, and in turn the kworker has the chance to unpark it.
+> On Wed, 9 Sep 2020, Nilesh Javali wrote:
 > 
-> Below is the minimum walkaround I can have because it can't
-> ensure the parker will be waken in every case.
+> > Lukas,
+> > 
+> > I have Acked for the storage drivers and opt for option B below for spdx maintainers to pick.
+> >
 > 
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -6834,6 +6834,10 @@ static int io_sq_thread(void *data)
->  			io_sq_thread_drop_mm();
->  		}
->  
-> +		if (kthread_should_park()) {
-> +			/* wake up parker before scheduling */
-> +			continue;
-> +		}
->  		if (ret & SQT_SPIN) {
->  			io_run_task_work();
->  			cond_resched();
+> Thomas, Greg,
 > 
+> We got everything straightened out with Igor and Nilesh.
+> 
+> Can you pick this patchset with Igor's and Nilesh's Acked-bys into the 
+> spdx tree and forward it to Linus?
 
-I think this should go in the slow path:
+Yes, I will do so, thanks.
 
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 652cc53432d4..1c4fa2a0fd82 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -6839,6 +6839,8 @@ static int io_sq_thread(void *data)
- 		} else if (ret == SQT_IDLE) {
- 			list_for_each_entry(ctx, &sqd->ctx_list, sqd_list)
- 				io_ring_set_wakeup_flag(ctx);
-+			if (kthread_should_park())
-+				continue;
- 			schedule();
- 			start_jiffies = jiffies;
- 		}
-
--- 
-Jens Axboe
-
+greg k-h
