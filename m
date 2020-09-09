@@ -2,178 +2,122 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F39C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84160C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894A82166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 454FD2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:49:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N+MbeIjr"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="HSIHSKvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730930AbgIIQso (ORCPT
+        id S1730951AbgIIQtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730927AbgIIQHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:07:39 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D86AC061234
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:45:42 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x23so2544355wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:45:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5VKePPT3rsU28wXCAu1Xs2KBd1A5X4Nlem8vFp45sFs=;
-        b=N+MbeIjrkaWZSL1rnQBBMQ3t8EgtJ5pPqrCari+s74htlzysCeT43xiaa6jOYcy32h
-         4CDd9PSLQ49+GE9aRevle7XYa++OWOquZVftThJ4b3J3mk7MOdGIvX/YVJ4/atzSziBT
-         QHOhNZJHMYRC2WOAByxQXcbJ/TxQLqB4Sr3+9q2HGHmYaySmzrk2sQUUz+Kpl7Ek4wAU
-         cKekwJ1cvRmuB3pCyekrgNUPB9OXHj9eOSQD19+VXVp1lZB1x9oVUJJXVhHAbiYN+eAf
-         kA4jU0llu01THgYWYLbkq9qRnuFNG/4WMZXx0YeYtEuuVct/E2BvPHB6tDgTCXe1CJoG
-         BVVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5VKePPT3rsU28wXCAu1Xs2KBd1A5X4Nlem8vFp45sFs=;
-        b=opx6Lo100TdSFAJwSEzgWKMI0qx9XQKEdQpjNKf2DjZ8a9EXsIKsU3mdWBr3dPoDQX
-         P1VXRvI03SpOq7t6VHj6jG/0zUkRcQQmKexwtJxckD07h27EsDdzng881uhSq/iFWOFl
-         x8p9bN2SqSG9wvihBTrBQr3gebRA7CPJQW4Euk+VZ0J0oCTkeL0HssP4VCEyYS05HVjn
-         aHBWoexpu30ehYe4MBGl0M7euotB1pUliesCYSWtDwSQkKyl4PQFv28Hlnx4ctAOjQUO
-         EeynOI/W2rrpGMsfEubbglBE3/PjrHa5HeyfVVkXy+aF5e0sYcf/eiLTYYHHTDvbY63E
-         CobQ==
-X-Gm-Message-State: AOAM532c14gjNP6F/Bs74WR8CE6bkraSJ/+xZbqRtdeLqfKMhzl5vzrc
-        C/0gv1jkL75hpieAO2Ug3UUGCg==
-X-Google-Smtp-Source: ABdhPJxqI/pYnfEs6qSjztlLK9/QHes6XgHB85V3brQWGlC3Taa9IcIFuEaRLZOMRfZ2rAfTnQSxVA==
-X-Received: by 2002:a1c:1904:: with SMTP id 4mr3865768wmz.119.1599662741033;
-        Wed, 09 Sep 2020 07:45:41 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v2sm4773397wrm.16.2020.09.09.07.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 07:45:39 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 15:45:37 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Alexandru Stan <amstan@chromium.org>, linux-pwm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 2/3] backlight: pwm_bl: Artificially add 0% during
- interpolation
-Message-ID: <20200909144537.daq2exfihhxm6bai@holly.lan>
-References: <20200721042522.2403410-1-amstan@chromium.org>
- <20200720212502.2.Iab4d2192e4cf50226e0a58d58df7d90ef92713ce@changeid>
- <20200904113822.xoyt4w5x7vwvh7cr@holly.lan>
- <20200907075018.GM2352366@phenom.ffwll.local>
+        Wed, 9 Sep 2020 12:49:19 -0400
+Received: from mail-eopbgr60081.outbound.protection.outlook.com ([40.107.6.81]:20520
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730877AbgIIQHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:07:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BjysOS7ratPOUxzGzvbwhWINL9b7IY9ClIrAgkipDVxH49Jjl0jzQ6hlSYVUkTigrLT2WY+zSk5jxkExFLPLm9uztlbxgxRwSMtfl9eQJbl+EK1nuAh9754zUUzqqsm2i0qTAAzRPFgOweQmW1VQzKW25++Jt+PvHpdJSFDDYvilUMQRCuKbs41RIlAua+0cwn51t586RiLpAHrIGrdxY1qBvR/5FuuU/i8qOrIexUJts9lNkGostmFHgN+66KKRQn5mU+CbHt9WB1m7chpQ023POrizO8J35fF5adFK/x/+U0ELfJB+roG8OtyEcI1p9Ef2s9JhypGs4ooGATcCtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lihQTziA7S3zqAbrzv1N1gwI19JfbbVgdO1YVjxjwP4=;
+ b=aCzVOz59LmzSZLUGtt/Sb8PAq4wpGKRak6XT1Is5JbyG+jp7B2piMmi/64xzJSOL395Vu/31WDlPb4kNyF01Ae76FsiA8wziPX/f6ShvAEzTHC6aAiG+A8gazUHnknlEnOdmsD4hmBXesHOlMhLNwZTPAt27by7mHmZpZePzRXGS/44n65n+AlflxrtXZsGAZSv1hTtJpHyGnOaJ4GJz7tQW4s86FnUvcy9uVCMcQJH3XKa8absEu2JjrOHHwq1ZTmQUMMvpxvblYMxYu50+eH9EiDagoUplqdYcHo80VAsP81nl2ezFRrV2Npdfdhx/rgfk3crHBhEo1jLWatRcwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lihQTziA7S3zqAbrzv1N1gwI19JfbbVgdO1YVjxjwP4=;
+ b=HSIHSKvtpHZQxWlIBKTh3dNxSuR7detZ8W2o5YolWP3U/Bf5A4YNiT2D/LyDcRkgY03pj7bGbBCtmKR9Fwnu5qIcPCywRENMb1okS8cdZ0/Whgb6RXVqCcThw3l/sqLO03lSIsqNuEZqhs8IIBKVwLZ6/d0fRw1k0jCnXUkrgKs=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13)
+ by VI1PR0402MB3710.eurprd04.prod.outlook.com (2603:10a6:803:25::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Wed, 9 Sep
+ 2020 13:44:57 +0000
+Received: from VE1PR04MB6702.eurprd04.prod.outlook.com
+ ([fe80::1dce:f6ac:a750:5ed0]) by VE1PR04MB6702.eurprd04.prod.outlook.com
+ ([fe80::1dce:f6ac:a750:5ed0%6]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
+ 13:44:57 +0000
+From:   Wasim Khan <wasim.khan@oss.nxp.com>
+To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, V.sethi@nxp.com
+Cc:     Wasim Khan <wasim.khan@nxp.com>
+Subject: [PATCH 0/6] arch: arm64: Add label to pcie nodes
+Date:   Wed,  9 Sep 2020 19:14:30 +0530
+Message-Id: <1599659076-28121-1-git-send-email-wasim.khan@oss.nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0095.apcprd02.prod.outlook.com
+ (2603:1096:4:90::35) To VE1PR04MB6702.eurprd04.prod.outlook.com
+ (2603:10a6:803:123::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907075018.GM2352366@phenom.ffwll.local>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv03032.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR02CA0095.apcprd02.prod.outlook.com (2603:1096:4:90::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 13:44:54 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [14.142.151.118]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 244f241b-06cb-42d2-44dc-08d854c689bd
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3710:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB371037B5C96CA68360A7BA7CD1260@VI1PR0402MB3710.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VAuT7rK9fUdZlH6A3VQCAN0lvboQianrtILTL3mBQJN2FhWVUOxxC8ludaRFICdqiQSc/jU8OdgBINdkxKugTrO8AVgS/JHTjIl3VS0VX2zzz7PXpqYlaaIbbskNfJJsK1CpSpnDBK50Fx2CitcMs4/U+c/NwzD7IIG/83/nH0zhsKZ/b6J1MSDw671MVG8eezfEtn9lrTA0W57Qsvlr0hqfdoJ+fbBHU+fLZ72dvdMFpnys7koFci9Cg1WwgIEJV1FuFuWpgiH3Fsxyy780PxKvzDdutmQLqk7OEBh7jRjLihT3sz5mQbmJUVc55r22mQzgKJHktZfxflGQTJuRi9Tulj1xUwuxVsbBIuwKs8u06aTx7vUbHDLGNNc7NmKm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6702.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(346002)(39860400002)(136003)(376002)(8936002)(5660300002)(1006002)(2616005)(16526019)(4744005)(186003)(8676002)(316002)(956004)(6486002)(44832011)(83380400001)(478600001)(66946007)(6506007)(6666004)(55236004)(52116002)(2906002)(66476007)(66556008)(4326008)(6512007)(26005)(86362001)(110426005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ubZhyrsAPh7/X9UVfOh2fW07py/N88GLliNHrIz4rjwguORYZyqme/6no7oIwhsR61Yjgaf7evILVdCj5osGw7xF6AbdXzN7puLW/wKbOqlp/tnZ33Vx8ZdYpIJNd/iRCcZGu4gUW5SrS7bQjVTsbqWCFVpIICjYVGtATvHxAiAQhacIvpIQFl7G3J6jY61ZRqLyDHxj9znZwtHwk2t1oruJElxKyk+Fyj5Sg8TRF455YmE7vIo6p1dxeKFIelEK2oV980056HeoyWEGWc1S7G/ayW++muXtFjwtnsTNF64mOpjoHI6u2a5eJpedf2BIqiumpGK8GBBMmhi5ERaftf0KQBhSdncVANklXSawd3MoWrzIVilbVBj57LVHo+V+TQH6e6AC153u5ymyGMmP4od/vLmBtpm702Www/rERLsN7Tzyvf2Wm5ckdmEWoYXdCJWCUlzGW2Lv2DtwDRow04TE1YKgVDyVdLv2vSkTEDFzl9Pt3OcNEevbD0vl8R+ffslVO4Z/dCiLCRqkRWQMkucITjZpPmv2uGnJfSfzgcm90VYhXn2rptLOK1pLgIElrlhzbzoh/BKZ0PHXKqDTzrFuiVWfeb4JpFSpCfKJnM1CdPJC9ocURCMnWmbgShcZeFXl63rhrX2Oc5Jp3DRP+w==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 244f241b-06cb-42d2-44dc-08d854c689bd
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6702.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 13:44:56.8322
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wh7z1xHVp+2kMPmtHOF5U6er00grRp/Y/eRO0wkX5+ctRLtGVvZAyn+0/vnh/RNO6Y3Gh4cLhUp5hQFUVZDkYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3710
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 09:50:18AM +0200, Daniel Vetter wrote:
-> On Fri, Sep 04, 2020 at 12:38:22PM +0100, Daniel Thompson wrote:
-> > On Mon, Jul 20, 2020 at 09:25:21PM -0700, Alexandru Stan wrote:
-> > > Some displays need the low end of the curve cropped in order to make
-> > > them happy. In that case we still want to have the 0% point, even though
-> > > anything between 0% and 5%(example) would be skipped.
-> > 
-> > For backlights it is not defined that 0 means off and, to be honest, 0
-> > means off is actually rather weird for anything except transflexive
-> > or front lit reflective displays[1]. There is a problem on several
-> > systems that when the backlight slider is reduced to zero you can't
-> > see the screen properly to turn it back up. This patch looks like it
-> > would make that problem worse by hurting systems with will written
-> > device trees.
-> > 
-> > There is some nasty legacy here: some backlight displays that are off
-> > at zero and that sucks because userspace doesn't know whether zero is
-> > off or lowest possible setting.
-> > 
-> > Nevertheless perhaps a better way to handle this case is for 0 to map to
-> > 5% power and for the userspace to turn the backlight on/off as final
-> > step in an animated backlight fade out (and one again for a fade in).
-> 
-> Afaik chromeos encodes "0 means off" somewhere in there stack. We've
-> gotten similar patches for the i915 backlight driver when we started
-> obeying the panel's lower limit in our pwm backlight driver thing that's
-> sometimes used instead of acpi.
+From: Wasim Khan <wasim.khan@nxp.com>
 
-Out of interest... were they accepted?
+This patch series adds label to pcie nodes
+so that they are easy to refer.
 
-I did took a quick look at intel_panel.c and didn't see anything
-that appeared to be special casing zero but I thought I might double
-check.
+Wasim Khan (6):
+  arm64: dts: lx2160a: Add label to pcie nodes
+  arm64: dts: ls1012a: Add label to pcie nodes
+  arm64: dts: ls1043a: Add label to pcie nodes
+  arm64: dts: ls1046a: Add label to pcie nodes
+  arm64: dts: ls1028a: Add label to pcie nodes
+  arm64: dts: ls1088a: Add label to pcie nodes
 
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts |  2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi       |  5 +++--
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi       |  6 +++---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi       | 10 +++++-----
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi       | 16 ++++++++--------
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi       |  8 ++++----
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi       | 12 ++++++------
+ 7 files changed, 30 insertions(+), 29 deletions(-)
 
-Daniel.
+-- 
+2.7.4
 
-
-> There's also the problem that with fancy panels with protocol (dsi, edp,
-> ...) shutting of the backlight completely out of the proper power sequence
-> hangs the panel (for some panels at least), so providing a backlight off
-> that doesn't go through the drm modeset sequence isn't always possible.
-> 
-> It's a bit a mess indeed :-/
-> -Daniel
-> 
-> > 
-> > 
-> > Daniel.
-> > 
-> > > 
-> > > Signed-off-by: Alexandru Stan <amstan@chromium.org>
-> > > ---
-> > > 
-> > >  drivers/video/backlight/pwm_bl.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > > 
-> > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > > index 5193a72305a2..b24711ddf504 100644
-> > > --- a/drivers/video/backlight/pwm_bl.c
-> > > +++ b/drivers/video/backlight/pwm_bl.c
-> > > @@ -349,6 +349,14 @@ static int pwm_backlight_parse_dt(struct device *dev,
-> > >  			/* Fill in the last point, since no line starts here. */
-> > >  			table[x2] = y2;
-> > >  
-> > > +			/*
-> > > +			 * If we don't start at 0 yet we're increasing, assume
-> > > +			 * the dts wanted to crop the low end of the range, so
-> > > +			 * insert a 0 to provide a display off mode.
-> > > +			 */
-> > > +			if (table[0] > 0 && table[0] < table[num_levels - 1])
-> > > +				table[0] = 0;
-> > > +
-> > >  			/*
-> > >  			 * As we use interpolation lets remove current
-> > >  			 * brightness levels table and replace for the
-> > > -- 
-> > > 2.27.0
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
