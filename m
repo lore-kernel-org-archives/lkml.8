@@ -2,151 +2,138 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2124C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B6DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F95A21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF8F21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599690845;
-	bh=qn7F9kIfrQDK9ilpICfJwnlqi88jogiZeINUWgtswHo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LRXIlUGTpQHrURbYL0hQxTRPuAi3SMhFhz8D27M9E/Acd3j5r9wGt4HMZEsVDE4qm
-	 rpH4hWMxMamwNzzvGEoTA6hTBumcuXnQfLgscReBZLiWmGYGTVZuEElquB2c3MOaQQ
-	 l0ek6x/0Bap96KhSBQ0uMXwUio33ZLTPpxIDohGA=
+	s=default; t=1599690846;
+	bh=UQbrIMRndWpCO8XQGf0QGRRyTJhPBhqUbyV2/Xk+ZFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WutNpSPujuuRVmkmByGhhw/YgyJgTM4FFffzm86o6uqZ/m1V+Zvq2edFTQtjDloiG
+	 BkfKmkVZe4FX4b5+gi6a8471/Bh13D47F6wTJJubRzYDuGLv3mN9p+eWvMprTMCU7F
+	 VHVA4GKc8YkhHPvpLfE29YOgEvF+XwcmNoBDXzvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgIIWeE (ORCPT
+        id S1729161AbgIIWeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 9 Sep 2020 18:34:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47214 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbgIIWeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 18:34:02 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728207AbgIIWeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 18:34:04 -0400
+Received: from localhost (lfbn-ncy-1-588-162.w81-51.abo.wanadoo.fr [81.51.203.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F3F21D95
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 22:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B4920C09;
+        Wed,  9 Sep 2020 22:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599690841;
-        bh=qn7F9kIfrQDK9ilpICfJwnlqi88jogiZeINUWgtswHo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iMi/HJEhuhW4pM1AwbvKOq53FSk1YcujGZPO1K9TA6pNwJS8gPW9uq4uB1TRnkz0F
-         wPnYcbHWC65NpQ2jbU0bpRveJHozE3zgQXYJLBjYDNQj9MITMfR3fnPK2/CTdHi1Az
-         C2sv9nmC8QuACfs+p4/pitJoXrx01d76ieNUkY0c=
-Received: by mail-ej1-f43.google.com with SMTP id lo4so5823190ejb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 15:34:00 -0700 (PDT)
-X-Gm-Message-State: AOAM532yAY0HWeQViLptsOiPbcFv92OfayBCRVoSZCXAC6Z4AHPeqkAJ
-        1TFJ+cUakzaTssECO2Ls2HU7CbXpwAwSbRtkTw==
-X-Google-Smtp-Source: ABdhPJziy8hMosSfpL73I0q786HLEcsVS9kNOqzP/Nfn7KJ9FugubRKZT1YW+F3eOFoLVx5h6kQovjh9Mn2m2hErytY=
-X-Received: by 2002:a17:906:a256:: with SMTP id bi22mr5766251ejb.375.1599690839500;
- Wed, 09 Sep 2020 15:33:59 -0700 (PDT)
+        s=default; t=1599690843;
+        bh=UQbrIMRndWpCO8XQGf0QGRRyTJhPBhqUbyV2/Xk+ZFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oLrryTb9IizzHDDHwyxBU3y9MV3ayJFgQ/HrRZEwKZe4cGtvxVPAOE7ZJQNOgawQv
+         ZVUtjiiqkbPkpxRDlDDcjAhw1XsWia4dYztX12BRCY8Cfkx+maH5NuYfq4gaGIxxIQ
+         bBnVO9Wq3Z+sOm2otIwve/XcDJp6yTFqlbWwZtzE=
+Date:   Thu, 10 Sep 2020 00:34:01 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Requirements to control kernel isolation/nohz_full at runtime
+Message-ID: <20200909223400.GA20541@lenoir>
+References: <20200901104640.GA13814@lenoir>
+ <20200903182359.GA1016174@fuller.cnet>
 MIME-Version: 1.0
-References: <20200826085317.681385-1-enric.balletbo@collabora.com> <20200826085317.681385-2-enric.balletbo@collabora.com>
-In-Reply-To: <20200826085317.681385-2-enric.balletbo@collabora.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Thu, 10 Sep 2020 06:33:48 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-bix-mpn9rGmU0KGuByOJhG3oQQNS7w28oGdqDr_m4LQ@mail.gmail.com>
-Message-ID: <CAAOTY_-bix-mpn9rGmU0KGuByOJhG3oQQNS7w28oGdqDr_m4LQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2 1/2] drm/mediatek: mtk_dpi: Rename bridge to next_bridge
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        boris.brezillon@collabora.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903182359.GA1016174@fuller.cnet>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andrzej & Neil:
+On Thu, Sep 03, 2020 at 03:23:59PM -0300, Marcelo Tosatti wrote:
+> On Tue, Sep 01, 2020 at 12:46:41PM +0200, Frederic Weisbecker wrote:
+> > == Unbound affinity ==
+> > 
+> > Restore kernel threads, workqueue, timers, etc... wide affinity. But take care of cpumasks that have been set through other
+> > interfaces: sysfs, procfs, etc...
+> 
+> We were looking at a userspace interface: what would be a proper
+> (unified, similar to isolcpus= interface) and its implementation:
+> 
+> The simplest idea for interface seemed to be exposing the integer list of
+> CPUs and isolation flags to userspace (probably via sysfs).
+> 
+> The scheme would allow flags to be separately enabled/disabled, 
+> with not all flags being necessary toggable (could for example
+> disallow nohz_full= toggling until it is implemented, but allow for
+> other isolation features to be toggable).
+> 
+> This would require per flag housekeeping_masks (instead of a single).
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B48=E6=9C=8826=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:53=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> This is really a cosmetic change just to make a bit more readable the
-> code after convert the driver to drm_bridge. The bridge variable name
-> will be used by the encoder drm_bridge, and the chained bridge will be
-> named next_bridge.
+Right, I think cpusets provide exactly.
 
-This is a DRM-bridge related patch, how do you think about it?
+> Back to the userspace interface, you mentioned earlier that cpusets
+> was a possibility for it. However:
+> 
+> "Cpusets provide a Linux kernel mechanism to constrain which CPUs and
+> Memory Nodes are used by a process or set of processes.
+> 
+> The Linux kernel already has a pair of mechanisms to specify on which
+> CPUs a task may be scheduled (sched_setaffinity) and on which Memory
+> Nodes it may obtain memory (mbind, set_mempolicy).
+> 
+> Cpusets extends these two mechanisms as follows:"
+> 
+> The isolation flags do not necessarily have anything to do with
+> tasks, but with CPUs: a given feature is disabled or enabled on a
+> given CPU. 
+> No?
 
-Regards,
-Chun-Kuang.
+When cpusets are set as exclusive, they become strict CPU properties.
+I think we'll need to enforce the exclusive property to set the isolated
+flags.
 
->
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->
-> Changes in v2: None
->
->  drivers/gpu/drm/mediatek/mtk_dpi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediate=
-k/mtk_dpi.c
-> index d4f0fb7ad312..f7372dbdac0e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-> @@ -64,7 +64,7 @@ enum mtk_dpi_out_color_format {
->  struct mtk_dpi {
->         struct mtk_ddp_comp ddp_comp;
->         struct drm_encoder encoder;
-> -       struct drm_bridge *bridge;
-> +       struct drm_bridge *next_bridge;
->         void __iomem *regs;
->         struct device *dev;
->         struct clk *engine_clk;
-> @@ -610,7 +610,7 @@ static int mtk_dpi_bind(struct device *dev, struct de=
-vice *master, void *data)
->         /* Currently DPI0 is fixed to be driven by OVL1 */
->         dpi->encoder.possible_crtcs =3D BIT(1);
->
-> -       ret =3D drm_bridge_attach(&dpi->encoder, dpi->bridge, NULL, 0);
-> +       ret =3D drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, =
-0);
->         if (ret) {
->                 dev_err(dev, "Failed to attach bridge: %d\n", ret);
->                 goto err_cleanup;
-> @@ -770,11 +770,11 @@ static int mtk_dpi_probe(struct platform_device *pd=
-ev)
->         }
->
->         ret =3D drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
-> -                                         NULL, &dpi->bridge);
-> +                                         NULL, &dpi->next_bridge);
->         if (ret)
->                 return ret;
->
-> -       dev_info(dev, "Found bridge node: %pOF\n", dpi->bridge->of_node);
-> +       dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_n=
-ode);
->
->         comp_id =3D mtk_ddp_comp_get_id(dev->of_node, MTK_DPI);
->         if (comp_id < 0) {
-> --
-> 2.28.0
->
+Then you're free to move the tasks you like into any isolated cpusets.
+
+> Regarding locking of the masks, since housekeeping_masks can be called
+> from hot paths (eg: get_nohz_timer_target) it seems RCU is a natural
+> fit, so userspace would:
+> 
+> 1) use interface to change cpumask for a given feature:
+> 
+> 	-> set_rcu_pointer
+> 	-> wait for grace period
+
+Yep, could be a solution.
+
+> 2) proceed to trigger actions that rely on housekeeping_cpumask, 
+> to validate the cpumask at 1) is being used.
+
+Exactly. I guess we can simply call directly to subsystems (timers,
+workqueue, kthreads, ...) from the isolation code upon cpumask update.
+This way we avoid ordering surprises that would come with a notifier.
+
+> Regarding nohz_full=, a way to get an immediate implementation 
+> (without handling the issues you mention above) would be to boot
+> with a set of CPUs as "nohz_full toggable" and others not. For 
+> the nohz_full toggable ones, you'd introduce a per-CPU tick
+> dependency that is enabled/disabled on runtime. Probably better
+> to avoid this one if possible...
+
+Right but you would still have all the overhead that comes with nohz full
+(kernel entry/exit tracking, RCU userspace extended grace period, RCU callbacks
+offloaded, vtime accounting, ...). It will become really interesting once we
+can switch all that overhead off.
+
+Thanks.
