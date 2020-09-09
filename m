@@ -2,161 +2,116 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B271C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5728C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09AC32078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7132F2065E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599666130;
+	bh=TODrVcs9lgVCPiXcAEfLvUZlnsS84ktzJrcnCMX1MKg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=REn9lwWGcL71S18R2mTLE8gOGJa84GMtBTL/HMnnVWWqfycd4m0W87o1g2PPXvkVJ
+	 iHDflkir8sw5tQJHLefsFaJXaVgOKGSiPu2B++hhYYLt/JfsrsVpyMWjsIFkm69Us7
+	 x3dqcLvw9ohKMEpeZt7JWYPCeL4QOuJdV9d0vJKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgIIPk7 (ORCPT
+        id S1730315AbgIIPls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:40:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:54861 "EHLO mga12.intel.com"
+        Wed, 9 Sep 2020 11:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729960AbgIIPik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:38:40 -0400
-IronPort-SDR: d1GsyPyiZwWl4ulR8RjseG6zBdSS6PjRyZuDHyuknB86r0CQoMEqmk0pBLDgeZQVDq6Q59/8V3
- Ryo2CoYYBR5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="137847942"
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="137847942"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 07:06:32 -0700
-IronPort-SDR: oEEFyWNbpQPRngTVKDuAJbpVTYcGsbTmtgnm2tPuu4g6/whgj+UfS89DoVGczN9funvDt7PqXc
- WIPiKHHJT1Qg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
-   d="scan'208";a="328919425"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.190]) ([10.237.72.190])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Sep 2020 07:06:29 -0700
-Subject: Re: [PATCH V2] scsi: ufs-pci: Add LTR support for Intel controllers
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Can Guo <cang@codeaurora.org>,
-        Stanley Chu <stanley.chu@mediatek.com>
-References: <20200827072030.24655-1-adrian.hunter@intel.com>
- <yq14kohexka.fsf@ca-mkp.ca.oracle.com>
- <dc615e02-18a3-334d-dbc4-8aba94e4be6b@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <a27fa387-356c-82e1-a49f-62602336589e@intel.com>
-Date:   Wed, 9 Sep 2020 17:06:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <dc615e02-18a3-334d-dbc4-8aba94e4be6b@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728442AbgIIPka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:40:30 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7681822240;
+        Wed,  9 Sep 2020 15:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599665377;
+        bh=TODrVcs9lgVCPiXcAEfLvUZlnsS84ktzJrcnCMX1MKg=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=FY4sgLDDXx1wg27+Ljvut8xHybpkWQIHYtUAsv96blD6Wh6IeNsMO5lKZ4mATR23F
+         G2JVLlILS5NoIvW+hUvsFBsE0SCBbOD4sJNMPWwIiH4P5TcKH/x0yYb7nfTfqm+lH0
+         ZCd5YGHXme1dc0s7OslYkmkiil92Mu448CHiBotA=
+Date:   Wed, 09 Sep 2020 16:28:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>, rnayak@codeaurora.org,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Qiang Yu <yuq825@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Andy Gross <agross@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        lima@lists.freedesktop.org, Nishanth Menon <nm@ti.com>,
+        linux-mmc@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <cover.1598594714.git.viresh.kumar@linaro.org>
+References: <cover.1598594714.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH V2 0/8] opp: Unconditionally call dev_pm_opp_of_remove_table()
+Message-Id: <159966533166.54485.703021491015822828.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/09/20 12:27 pm, Adrian Hunter wrote:
-> On 2/09/20 5:12 am, Martin K. Petersen wrote:
->>
->> Adrian,
->>
->>> Intel host controllers support the setting of latency tolerance.
->>> Accordingly, implement the PM QoS ->set_latency_tolerance() callback. The
->>> raw register values are also exposed via debugfs.
->>
->> Does not apply to 5.10/scsi-queue. Please rebase. Thanks!
->>
+On Fri, 28 Aug 2020 11:37:45 +0530, Viresh Kumar wrote:
+> This cleans up some of the user code around calls to
+> dev_pm_opp_of_remove_table().
 > 
-> Hi
+> All the patches can be picked by respective maintainers directly except
+> for the last patch, which needs the previous two to get merged first.
 > 
-> Thanks for processing this.
+> These are based for 5.9-rc1.
 > 
-> The 5.10/scsi-queue branch seems to be missing the following fix.  If you cherry
-> pick that, then it applies.
+> [...]
 
-Now there seem to be conflicts between 5.10/scsi-queue and v5.9-rc4.
-I am not sure what I can do?
+Applied to
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-~/git/scsi-mkp$ git branch -v --list 5.10/scsi-queue
-* 5.10/scsi-queue 2e9defc7e918 [ahead 427, behind 97] scsi: ufs: Fix a race condition between error handler and runtime PM ops
-~/git/scsi-mkp$ git rebase --onto v5.9-rc4 v5.9-rc1
-First, rewinding head to replay your work on top of it...
-Applying: scsi: ufs: Add checks before setting clk-gating states
-Applying: scsi: ufs: ufs-qcom: Fix race conditions caused by ufs_qcom_testbus_config()
-Applying: scsi: ufs-qcom: Remove testbus dump in ufs_qcom_dump_dbg_regs
-Applying: scsi: ufs: Add some debug information to ufshcd_print_host_state()
-Applying: scsi: ufs: Fix concurrency of error handler and other error recovery paths
-Applying: scsi: ufs: Recover HBA runtime PM error in error handler
-Applying: scsi: ufs: Move dumps in IRQ handler to error handler
-Applying: scsi: ufs: Fix a race condition between error handler and runtime PM ops
-Applying: scsi: ufs: Properly release resources if a task is aborted successfully
-Using index info to reconstruct a base tree...
-M       drivers/scsi/ufs/ufshcd.c
-Falling back to patching base and 3-way merge...
-Auto-merging drivers/scsi/ufs/ufshcd.c
-CONFLICT (content): Merge conflict in drivers/scsi/ufs/ufshcd.c
-error: Failed to merge in the changes.
-Patch failed at 0009 scsi: ufs: Properly release resources if a task is aborted successfully
-Use 'git am --show-current-patch' to see the failed patch
+Thanks!
 
-Resolve all conflicts manually, mark them as resolved with
-"git add/rm <conflicted_files>", then run "git rebase --continue".
-You can instead skip this commit: run "git rebase --skip".
-To abort and get back to the state before "git rebase", run "git rebase --abort".
+[1/2] spi: spi-geni-qcom: Unconditionally call dev_pm_opp_of_remove_table()
+      commit: 7d568edff5cb7968cc5f29e85da15f941b8070b8
+[2/2] spi: spi-qcom-qspi: Unconditionally call dev_pm_opp_of_remove_table()
+      commit: 062cf7fc927d2546b58ed128383e5c52f26a00a5
 
-~/git/scsi-mkp$ git diff
-diff --cc drivers/scsi/ufs/ufshcd.c
-index d9386f85c255,efb40b1b95b4..000000000000
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@@ -6640,12 -6636,8 +6640,14 @@@ static int ufshcd_abort(struct scsi_cmn
-                goto out;
-        }
-  
-++<<<<<<< HEAD
- +cleanup:
- +      scsi_dma_unmap(cmd);
- +
-++=======
-++>>>>>>> scsi: ufs: Properly release resources if a task is aborted successfully
-        spin_lock_irqsave(host->host_lock, flags);
--       ufshcd_outstanding_req_clear(hba, tag);
--       hba->lrb[tag].cmd = NULL;
-+       __ufshcd_transfer_req_compl(hba, (1UL << tag));
-        spin_unlock_irqrestore(host->host_lock, flags);
-  
-  out:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-~/git/scsi-mkp$ git am --show-current-patch | head -25
-commit 8bb2dde069d860e7ea379862a7d0e8ee01cec5e9
-Author: Can Guo <cang@codeaurora.org>
-Date:   Sun Aug 9 05:15:55 2020 -0700
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-    scsi: ufs: Properly release resources if a task is aborted successfully
-    
-    In current UFS task abort hook, namely ufshcd_abort(), if one task is
-    aborted successfully, clk_gating.active_reqs held by this task is not
-    decreased, which makes clk_gating.active_reqs stay above zero forever, thus
-    clock gating would never happen. Instead of releasing resources of one task
-    "manually", use the existing func __ufshcd_transfer_req_compl().  This
-    change also eliminates a possible race of scsi_dma_unmap() from the real
-    completion in IRQ handler path.
-    
-    Link: https://lore.kernel.org/r/1596975355-39813-10-git-send-email-cang@codeaurora.org
-    Fixes: 1ab27c9cf8b6 ("ufs: Add support for clock gating")
-    CC: Stanley Chu <stanley.chu@mediatek.com>
-    Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-    Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-    Signed-off-by: Can Guo <cang@codeaurora.org>
-    Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
