@@ -2,131 +2,117 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D04821919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISIjZ5JQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4890520C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599670614;
+	bh=EYgkON9WK+YOtTQ//Z7US9lvuUlSByEmJKos/ZeBw4w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=y34tyQ2rUDaqQ5wYqOrIUMmFXS20AF8ncA/KvY5674ztG21TtRSZ1AfwVCJ2Dhwcv
+	 OKrR8SEP+1yFinW/RmxZExJq9nwNUnsZJA3p8YDneEreYv7R7JqKa3ji3ybX4vjVRX
+	 RNT7LereDGADQb57l01bXam7wOLLzcz8bCLDnnoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgIIQ4j (ORCPT
+        id S1731097AbgIIQ4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730508AbgIIPw2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:52:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EE0C061372
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:17:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so3117989wrl.12
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YTINV8fXf0M3n9PBAJO84TZ3ZWqVa/k8IvPy7N9wgi4=;
-        b=ISIjZ5JQj4TVnnSGapFb7wbJQYYctJNyBV/BPiddD36GRemkQ2jjGJozi7ZZ/kNFgX
-         L+a9BRRcxvMgswArV5WD4NYsCit9c2oH3aiX4oPX4bd3Jz2GsnLqByOiF29v5yx3b5iD
-         uDbebTiq0Z5y1HyVnJZ+YOiaS2S0q+WjKtZ6Tef9eHw7YRu85EZSVkNInnykwrXTIC+n
-         P5rhgZr4VBrBEVyX5ti/2W5iurPZAztgCxVQu0luBxCahAI/N4dSAyW9VNbxVRuO4gwp
-         I7Snb8LSDhaMGjreOX/81es+gdR7Eb9OtmYjiXDDWcimTmOxMQjfw/bK/6V7yYEScTk0
-         wy+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YTINV8fXf0M3n9PBAJO84TZ3ZWqVa/k8IvPy7N9wgi4=;
-        b=PWFDkiv85K1UX/tznXp8gE69wD+s914QnexKMrhdQ73X+HuRxkAd8oYXTABSKDisTc
-         WSgWBloBfHbbABbRm/qqSEawJzgXLefyXRipEY5Kfsw0NiNxePyC+WdtU8jF00EDLcsT
-         ykdzy45OiOApjZ4iiWq6TrnOLGPij6pLh4minJDa3osPVxY9fqaxuZhOzRMQlFqwuvd+
-         mRK7UgbouDtmq6rOPth6tl+gIL8s1aiDiDjmiOsfnN51VX2DmaZ3ItWk1NHvsYuBSCZk
-         uHwK/BEXthavHsIQ9Kg5CJlEYS65skGwG4TqyfxMP19NllUa45hJcj7Sk0rdSFD1F+V0
-         /AUA==
-X-Gm-Message-State: AOAM531Fh+moLse1U2pM4fSIPyzlek+nh7tb/Q37/dnl57zT/8/FKI/P
-        73M2O0YYDyIC5ajTLAmuAtGcwQ==
-X-Google-Smtp-Source: ABdhPJyylZV7lGE0N2Ov626dsFCzQyMBnovybUKfA++XerEYgGcuyp66iCHpW/4W3EGC5UFcCO7ASQ==
-X-Received: by 2002:adf:82d5:: with SMTP id 79mr4682690wrc.60.1599661042100;
-        Wed, 09 Sep 2020 07:17:22 -0700 (PDT)
-Received: from dell ([91.110.221.208])
-        by smtp.gmail.com with ESMTPSA id m3sm2774942wrs.83.2020.09.09.07.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 07:17:21 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 15:17:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Subject: Re: [PATCH 01/32] wireless: marvell: mwifiex: sdio: Move 'static
- const struct's into their own header file
-Message-ID: <20200909141719.GD218742@dell>
-References: <20200821071644.109970-2-lee.jones@linaro.org>
- <20200901091541.3974FC433C6@smtp.codeaurora.org>
+        Wed, 9 Sep 2020 12:56:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730436AbgIIPvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:51:21 -0400
+Received: from mail.kernel.org (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49925221EA;
+        Wed,  9 Sep 2020 14:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599660665;
+        bh=EYgkON9WK+YOtTQ//Z7US9lvuUlSByEmJKos/ZeBw4w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QKUzWVqyHcDZO3aslNuJfH3lLVyd40A6D+hAKDtJ0XzSsyqLsDIlXj4CHHlXi4PT5
+         xpYOZgCqCyMsLqvuW9Y6jZsaG5nxDElK1e3qYvzfRum0VUcuh2YIhExg0oKuBZMbX9
+         aMQUuN2DkqlNzJQWo4JmiYD2ohCDKOXotzK2J4Sc=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kG0oR-00DUX8-Ds; Wed, 09 Sep 2020 16:11:03 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 14/30] docs: add some new files to their respective index.rst files
+Date:   Wed,  9 Sep 2020 16:10:45 +0200
+Message-Id: <9fd4d04f0d122ff38b5342a0098d99cc2f546652.1599660067.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599660067.git.mchehab+huawei@kernel.org>
+References: <cover.1599660067.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200901091541.3974FC433C6@smtp.codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 01 Sep 2020, Kalle Valo wrote:
+There were some new file additions for Kernel 5.7 and 5.8
+that weren't added at the corresponding index file.
 
-> Lee Jones <lee.jones@linaro.org> wrote:
-> 
-> > Only include these tables in the 1 source file they are used.
-> > 
-> > Fixes hundreds of W=1 warnings!
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  In file included from drivers/net/wireless/marvell/mwifiex/main.h:59,
-> >  from drivers/net/wireless/marvell/mwifiex/main.c:22:
-> >  drivers/net/wireless/marvell/mwifiex/sdio.h:705:41: warning: ‘mwifiex_sdio_sd8801’ defined but not used [-Wunused-const-variable=]
-> >  705 | static const struct mwifiex_sdio_device mwifiex_sdio_sd8801 = {
-> >  | ^~~~~~~~~~~~~~~~~~~
-> > 
-> >  NB: There were 100's of these - snipped for brevity.
-> > 
-> > Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> > Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> > Cc: Xinming Hu <huxinming820@gmail.com>
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> 
-> I don't think static const variables should be in a .h file. Wouldn't
-> sdio.c be the right place for these? At least from a quick look I got
-> that impression.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/driver-api/nvdimm/index.rst   | 1 +
+ Documentation/firmware-guide/acpi/index.rst | 1 +
+ Documentation/hwmon/index.rst               | 1 +
+ Documentation/vm/index.rst                  | 1 +
+ 4 files changed, 4 insertions(+)
 
-That's a bone of contention.  I personally do not like to see C-files
-overwhelmed by a sea of structs/tables and tend to ferry them off into
-*-tables.h header files instead.
-
-As the gate-keeper, what you say goes.  So if you insist we move these
-450 lines of tables into the source file which references them, I will
-of course do as you ask.
-
-> Patch set to Changes Requested.
-
+diff --git a/Documentation/driver-api/nvdimm/index.rst b/Documentation/driver-api/nvdimm/index.rst
+index a4f8f98aeb94..5863bd04f056 100644
+--- a/Documentation/driver-api/nvdimm/index.rst
++++ b/Documentation/driver-api/nvdimm/index.rst
+@@ -10,3 +10,4 @@ Non-Volatile Memory Device (NVDIMM)
+    nvdimm
+    btt
+    security
++   firmware-activate
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index ad3b5afdae77..f72b5f1769fb 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -26,3 +26,4 @@ ACPI Support
+    lpit
+    video_extension
+    extcon-intel-int3496
++   intel-pmc-mux
+diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+index af064a9ad42f..a926f1abaec3 100644
+--- a/Documentation/hwmon/index.rst
++++ b/Documentation/hwmon/index.rst
+@@ -159,6 +159,7 @@ Hardware Monitoring Kernel Drivers
+    smsc47b397
+    smsc47m192
+    smsc47m1
++   sparx5-temp
+    tc654
+    tc74
+    thmc50
+diff --git a/Documentation/vm/index.rst b/Documentation/vm/index.rst
+index 611140ffef7e..eff5fbd492d0 100644
+--- a/Documentation/vm/index.rst
++++ b/Documentation/vm/index.rst
+@@ -29,6 +29,7 @@ descriptions of data structures and algorithms.
+    :maxdepth: 1
+ 
+    active_mm
++   arch_pgtable_helpers
+    balance
+    cleancache
+    free_page_reporting
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.26.2
+
