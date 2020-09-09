@@ -2,188 +2,209 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A22C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8ACC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058892087C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86612087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBbs7Hui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgIIKvC (ORCPT
+        id S1729048AbgIIKyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:51:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:41582 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgIIKux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:50:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28C1A31B;
-        Wed,  9 Sep 2020 03:50:53 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.195.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DF1F3F68F;
-        Wed,  9 Sep 2020 03:50:51 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: watchdog: sp-805: Convert to Json-schema
-Date:   Wed,  9 Sep 2020 11:50:46 +0100
-Message-Id: <20200909105046.160991-1-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 9 Sep 2020 06:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgIIKww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:52:52 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA76C061573;
+        Wed,  9 Sep 2020 03:52:51 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s12so2404102wrw.11;
+        Wed, 09 Sep 2020 03:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZZyuyJezz8SHcGWFoZpWJ+xq6FPT7TkCyePzeDBOWr0=;
+        b=vBbs7HuiLAvD8E5es20v1RXv+wAAalrdyb3Rl0H37Ynte3jgtZlCKMoDAfoD9aigmu
+         ZNw3EncBPicyc7VyjrA4G7Ex6zKag02fSkP4Ewf1yY7BWDW3/B3g4CEpfmcPMUAM2peN
+         74cPifQ5HCVMfa++lejg/SnW5MKU2VP6wO8eXZtUbtc/ncrYXnVBazDOSYiyd71hr0s6
+         DlvqFKjQobgAQEfMEeCn0Gdw1av2u0LMNHN2lOlN6ptazuyuhyI/mQADIZpN+brtVuCD
+         00ub3h2T7+x3iP15OQcXj/c6NSokN3VPrLxDVmxUefH2nrxNgQMiY4OIy4h98BZfc2Bn
+         qPqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZZyuyJezz8SHcGWFoZpWJ+xq6FPT7TkCyePzeDBOWr0=;
+        b=QoG/EAuKhMAApuzikr0JJ64hlh4Nbhplch/tDcWjoJ5ceIhVVt6sD637JLWfqINdzL
+         pzM8t8RF8aHBCDUii8ZZqKOdR4jkqOvgEdS8rsc8/44cL+n/RGCSsVrccJ+PEJgfpw11
+         Eo9rFXOoP6BN7WVWYV//FxKcpXkW966ueQv0fMin9sBapnxe/q6qNJbwcXm+XPbGWlKf
+         pd41MyPh/HsY32mDupVihGgl+M61yCJNJ+9x0ctxVFMoJOABuWA4stSaygpJcbcRE7qY
+         Shk1LXD/mAP9p2SSI3+aXh/d4XrrFlPxwyLuIrk0o4xWqRddsUVoS+ybvDgvVkH56LWA
+         UFGA==
+X-Gm-Message-State: AOAM532qh5yUs5CBKC5UjVVuCRvVmt2I3EKwrEEyI3SLxmfX5Nsq+I9b
+        zqc/UGs6ljThi+D/bs9GK4U=
+X-Google-Smtp-Source: ABdhPJwU3re1YrbF1YxxXcMCtzQ2EknmMTuJq0QtTA9wLqviZ1sLi7sgSIezuhzlw3wOInbI/W8r3Q==
+X-Received: by 2002:a5d:4e8c:: with SMTP id e12mr3601916wru.180.1599648770131;
+        Wed, 09 Sep 2020 03:52:50 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2479:6801:d8fe:4132:9f23:7e8f? ([2001:a61:2479:6801:d8fe:4132:9f23:7e8f])
+        by smtp.gmail.com with ESMTPSA id o16sm3364278wrp.52.2020.09.09.03.52.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 03:52:49 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, milan.opensource@gmail.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+To:     Jan Kara <jack@suse.cz>
+References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+ <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
+ <20200908112742.GA2956@quack2.suse.cz>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <7be61144-0e77-3c31-d720-f2cbe56bc81e@gmail.com>
+Date:   Wed, 9 Sep 2020 12:52:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200908112742.GA2956@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the ARM SP-805 watchdog IP DT binding over to Json-schema.
+Hello Jan,
 
-A straight-forward conversion, but the requirement for providing two
-clocks got strengthened from "should" to "must".
+Thank you for jumping in on this thread.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
-Hi,
+On 9/8/20 1:27 PM, Jan Kara wrote:
+> Added Jeff to CC since he has written the code...
+> 
+> On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
+>> [Widening the CC to include Andrew and linux-fsdevel@]
+>> [Milan: thanks for the patch, but it's unclear to me from your commit
+>> message how/if you verified the details.]
+>>
+>> Andrew, maybe you (or someone else) can comment, since long ago your
+>>
+>>     commit f79e2abb9bd452d97295f34376dedbec9686b986
+>>     Author: Andrew Morton <akpm@osdl.org>
+>>     Date:   Fri Mar 31 02:30:42 2006 -0800
+>>
+>> included a comment that is referred to in  stackoverflow discussion
+>> about this topic (that SO discussion is in turn referred to by
+>> https://bugzilla.kernel.org/show_bug.cgi?id=194757).
+>>
+>> The essence as I understand it, is this:
+>> (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
+>> has not been synced.
+>> (2) In this case, the EIO/ENOSPC setting is cleared so that...
+>> (3) A subsequent fsync() might return success, but...
+>> (4) That doesn't mean that the data in (1) landed on the disk.
+> 
+> Correct.
 
-this is just the bindings conversion patch, updated to address Rob's
-comments:
-- Remove redundant primecell.yaml inclusion
-- Reference watchdog.yaml
-- Drop now redundant timeout-sec property
-- Add unevaluatedProperties
+Thanks for the confirmation!
 
-The DT fixes are independent and now partly already queued, so I am
-posting this separately.
+>> The proposed manual page patch below wants to document this, but I'd
+>> be happy to have an FS-knowledgeable person comment before I apply.
+> 
+> Just a small comment below:
+> 
+>> On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
+>>>
+>>> From: Milan Shah <milan.opensource@gmail.com>
+>>>
+>>> This Fix addresses Bug 194757.
+>>> Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
+>>> ---
+>>>  man2/fsync.2 | 13 +++++++++++++
+>>>  1 file changed, 13 insertions(+)
+>>>
+>>> diff --git a/man2/fsync.2 b/man2/fsync.2
+>>> index 96401cd..f38b3e4 100644
+>>> --- a/man2/fsync.2
+>>> +++ b/man2/fsync.2
+>>> @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
+>>>  or
+>>>  .BR sdparm (8)
+>>>  to guarantee safe operation.
+>>> +
+>>> +When
+>>> +.BR fsync ()
+>>> +or
+>>> +.BR fdatasync ()
+>>> +returns
+>>> +.B EIO
+>>> +or
+>>> +.B ENOSPC
+>>> +any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
+>>> +will return without error. It is
+>>> +.I not
+>>> +safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
+>>>  .SH SEE ALSO
+>>>  .BR sync (1),
+>>>  .BR bdflush (2),
+> 
+> So the error state isn't really stored "on pages in the file mapping".
+> Current implementation (since 4.14) is that error state is stored in struct
+> file (I think this tends to be called "file description" in manpages) and
+
+(Yes, "open file description" is the POSIX terminology for the thing that
+sits between the FD and the inode--struct file in kernel parlance--and I
+try to follow POSIX terminology in the manual pages where possible.
+
+> so EIO / ENOSPC is reported once for each file description of the file that
+> was open before the error happened. Not sure if we want to be so precise in
+> the manpages or if it just confuses people. 
+
+Well, people are confused now, so I think more detail would be good.
+
+> Anyway your takeway that no
+> error on subsequent fsync() does not mean data was written is correct.
+
+Thanks. (See also my rply to Jeff.)
+
+By the way, a question related to your comments above. In the 
+errors section, there is this:
+
+       EIO    An  error  occurred during synchronization.  This error may
+              relate to data written to some other file descriptor on the
+*             same  file.   Since Linux 4.13, errors from write-back will
+              be reported to all file descriptors that might have written
+              the  data  which  triggered  the  error.   Some filesystems
+              (e.g., NFS) keep close track of  which  data  came  through
+              which  file  descriptor,  and  give more precise reporting.
+              Other  filesystems  (e.g.,  most  local  filesystems)  will
+              report errors to all file descriptors that were open on the
+*             file when the error was recorded.
+
+In the marked (*) lines, we have the word "file". Is this accurate? I mean, I
+would normally take "file" in this context to mean the inode ('struct inode').
+But I wonder if really what is meant here is "open file description"
+('struct file'). In other words, is the EIO being generated for all FDs 
+connected to the same open file description, or for all FDs for all of the
+open file descriptions connected to the inode? Your thoughts?
 
 Cheers,
-Andre
 
- .../bindings/watchdog/arm,sp805.txt           | 32 ---------
- .../bindings/watchdog/arm,sp805.yaml          | 71 +++++++++++++++++++
- 2 files changed, 71 insertions(+), 32 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
+Michael
 
-diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt b/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-deleted file mode 100644
-index bee6f1f0e41b..000000000000
---- a/Documentation/devicetree/bindings/watchdog/arm,sp805.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--ARM AMBA Primecell SP805 Watchdog
--
--SP805 WDT is a ARM Primecell Peripheral and has a standard-id register that
--can be used to identify the peripheral type, vendor, and revision.
--This value can be used for driver matching.
--
--As SP805 WDT is a primecell IP, it follows the base bindings specified in
--'arm/primecell.txt'
--
--Required properties:
--- compatible:  Should be "arm,sp805" & "arm,primecell"
--- reg:         Should contain location and length for watchdog timer register
--- clocks:      Clocks driving the watchdog timer hardware. This list should be
--               2 clocks. With 2 clocks, the order is wdog_clk, apb_pclk
--               wdog_clk can be equal to or be a sub-multiple of the apb_pclk
--               frequency
--- clock-names: Shall be "wdog_clk" for first clock and "apb_pclk" for the
--               second one
--
--Optional properties:
--- interrupts:  Should specify WDT interrupt number
--- timeout-sec: Should specify default WDT timeout in seconds. If unset, the
--               default timeout is determined by the driver
--
--Example:
--	watchdog@66090000 {
--		compatible = "arm,sp805", "arm,primecell";
--		reg = <0x66090000 0x1000>;
--		interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&wdt_clk>, <&apb_pclk>;
--		clock-names = "wdog_clk", "apb_pclk";
--	};
-diff --git a/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-new file mode 100644
-index 000000000000..a69cac8ec208
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/arm,sp805.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM AMBA Primecell SP805 Watchdog
-+
-+maintainers:
-+  - Viresh Kumar <vireshk@kernel.org>
-+
-+description: |+
-+  The Arm SP805 IP implements a watchdog device, which triggers an interrupt
-+  after a configurable time period. If that interrupt has not been serviced
-+  when the next interrupt would be triggered, the reset signal is asserted.
-+
-+allOf:
-+  - $ref: /schemas/watchdog/watchdog.yaml#
-+
-+# Need a custom select here or 'arm,primecell' will match on lots of nodes
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: arm,sp805
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: arm,sp805
-+      - const: arm,primecell
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: |
-+      Clocks driving the watchdog timer hardware. The first clock is used
-+      for the actual watchdog counter. The second clock drives the register
-+      interface.
-+    minItems: 2
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: wdog_clk
-+      - const: apb_pclk
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    watchdog@66090000 {
-+        compatible = "arm,sp805", "arm,primecell";
-+        reg = <0x66090000 0x1000>;
-+        interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&wdt_clk>, <&apb_pclk>;
-+        clock-names = "wdog_clk", "apb_pclk";
-+    };
+
 -- 
-2.17.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
