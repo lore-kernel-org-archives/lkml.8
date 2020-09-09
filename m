@@ -4,126 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51077C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C65AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFC62068D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27139206C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 09:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgIIJAg (ORCPT
+        id S1729251AbgIIJBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 05:00:36 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50400 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgIIJAf (ORCPT
+        Wed, 9 Sep 2020 05:01:22 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:58385 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725877AbgIIJBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 05:00:35 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 022E91C0B8C; Wed,  9 Sep 2020 11:00:34 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 11:00:33 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Alexander Dahl <ada@thorsis.com>
-Cc:     linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Alexander Dahl <post@lespocky.de>, devicetree@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] leds: pwm: Make automatic labels work
-Message-ID: <20200909090033.GD10891@amd>
-References: <20200831210232.28052-1-post@lespocky.de>
- <a8f9068b-d78d-3ba5-6747-f79ed8e641bd@gmail.com>
- <2019500.FJf2EgCAKA@ada>
+        Wed, 9 Sep 2020 05:01:21 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="466743560"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 11:01:19 +0200
+Date:   Wed, 9 Sep 2020 11:01:18 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Cocci] [PATCH v2] scripts: coccicheck: Do not use shift command
+ when rule is specified
+In-Reply-To: <1a2ddefa-59dc-460c-59d5-5c6c1754d20b@web.de>
+Message-ID: <alpine.DEB.2.22.394.2009091059311.2651@hadrien>
+References: <1a2ddefa-59dc-460c-59d5-5c6c1754d20b@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
-Content-Disposition: inline
-In-Reply-To: <2019500.FJf2EgCAKA@ada>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/mixed; boundary="8323329-688164862-1599642079=:2651"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---BRE3mIcgqKzpedwo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--8323329-688164862-1599642079=:2651
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Hi!
 
-> > > for leds-gpio you can use the properties 'function' and 'color' in the
-> > > devicetree node and omit 'label', the label is constructed
-> > > automatically.  This is a common feature supposed to be working for a=
-ll
-> > > LED drivers.  However it did not yet work for the 'leds-pwm' driver.
-> > > This series fixes the driver and takes the opportunity to update the
-> > > dt-bindings accordingly.
-> > >=20
-> > > v1: based on v5.9-rc2, backport on v5.4.59 tested and working
-> > >=20
-> > > v2: based on v5.9-rc3, added the dt-bindings update patch
-> > >=20
-> > > Greets
-> > > Alex
-> > >=20
-> > > Alexander Dahl (2):
-> > >    leds: pwm: Allow automatic labels for DT based devices
-> > >    dt-bindings: leds: Convert pwm to yaml
-> > >  =20
-> > >   .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
-> > >   .../devicetree/bindings/leds/leds-pwm.yaml    | 85 ++++++++++++++++=
-+++
-> > >   drivers/leds/leds-pwm.c                       |  9 +-
-> > >   3 files changed, 93 insertions(+), 51 deletions(-)
-> > >   delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.=
-txt
-> > >   create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.=
-yaml
-> >=20
-> > For both patches:
-> >=20
-> > Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->=20
-> I'd like to make a v3 and change the license of the .yaml file to "(GPL-2=
-=2E0-
-> only OR BSD-2-Clause)" as suggested by checkpatch and [1].  Can I keep yo=
-ur=20
-> Acked-by for that?
->=20
-> Besides: those suggestions are obviously valid for new bindings.  What ab=
-out=20
-> old bindings (.txt), which had no explicit SPDX tag or license note befor=
-e? =20
-> What license would apply there?  Is the .yaml file technically new, when =
-it=20
-> was mostly just converted from .txt?
 
-If it is based on previous .txt binding, you have to respect previous
-author's license. That probably means GPL-2.0 only.
+On Wed, 9 Sep 2020, Markus Elfring wrote:
 
-Alternatively, you can contact original author(s) to get permission to
-relicense under (GPL-2.0-only OR BSD-2-Clause).
+> > Modify coccicheck to use the shift command only when
+> > number of shell arguments is not zero.
+>
+> I suggest to add the tag “Fixes” to the commit message.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+I don't think there is any need for that.  This is not a patch that should
+be backported.  The previous situation did not cause any problem with the
+execution of make coccicheck, only a tiresome warning message.
 
---BRE3mIcgqKzpedwo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+julia
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9YmbEACgkQMOfwapXb+vLZKgCgrKZ1RB1Ep+Opcm6Thf0u4JM2
-1xkAoK6e5DOd661jEaNbLA7SVm57YF0B
-=w6wt
------END PGP SIGNATURE-----
-
---BRE3mIcgqKzpedwo--
+>
+>
+> > Changes in V2:
+> > 	- Fix spelling errors as suggested by Markus Elfring
+>
+> Would you like to adjust the last word in the previous patch subject accordingly?
+>
+> Regards,
+> Markus
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
+--8323329-688164862-1599642079=:2651--
