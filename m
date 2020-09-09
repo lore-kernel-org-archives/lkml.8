@@ -2,179 +2,111 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C4AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC4FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEE9020757
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F7020757
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="DB0AOF0Y"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IaC/r3lT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgIIIKb (ORCPT
+        id S1729741AbgIIILF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:10:31 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:48125 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbgIIIK2 (ORCPT
+        Wed, 9 Sep 2020 04:11:05 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14026 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730077AbgIIIK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:10:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1599639029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yXL30i3WyuUF7A2QXRkz5zJReRjKthYKlquFiCBqi7E=;
-  b=DB0AOF0Y2uY+nQZjQGOKnuf1WGyy0aHUny0vvGnKStvf4nSuWfqW/sHn
-   LSsegR9H+SHa0Bn100qUpj1lwooLJ6SkjwlowGO8qBrGhTSwh2/2u7nTU
-   jX8feWhG6k2tUQXTFJ2iSwYFqddaKd8LmQVDycvbxMkL8Z7bcZ8XT98nU
-   g=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: Be6vo8VWXTZiCSjiTPzLxo6WwimGVNp2BNAvOJEjGmarx2ErHKqvjvSEtqthJVLWXte45s1pyr
- IhQyUa10GDng2hzD97ox7GKenx0nRVAQslBDsMPhzzcLQDxqfDvCSkUcfytgTXIn1s6As7GPp5
- 1gvHqYTrf/1kCsvxGMYVXdVCfatDwJGrRt9K8bX0dp+W3ODfFVuRxYijNLxPIScl2c39BhXs0G
- fFcuLycfn9Oijb5fmV9R2eX4XDI/yvk3etbe/Zt5qfarkafT0eikBdGPY/cX6f8VmO/DjaErN7
- Bgw=
-X-SBRS: 2.7
-X-MesageID: 26274962
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.76,409,1592884800"; 
-   d="scan'208";a="26274962"
-Date:   Wed, 9 Sep 2020 10:10:14 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Sebastien Boeuf" <sebastien.boeuf@intel.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200909081014.GX734@Air-de-Roger>
-References: <20200908200950.1368e71b@canb.auug.org.au>
+        Wed, 9 Sep 2020 04:10:56 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f588d880000>; Wed, 09 Sep 2020 01:08:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 09 Sep 2020 01:10:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 09 Sep 2020 01:10:55 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Sep
+ 2020 08:10:50 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 9 Sep 2020 08:10:49 +0000
+Received: from jckuo-lt.nvidia.com (Not Verified[10.19.100.126]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f588e070000>; Wed, 09 Sep 2020 01:10:49 -0700
+From:   JC Kuo <jckuo@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <robh@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>, JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH v3 02/15] clk: tegra: Don't enable PLLE HW sequencer at init
+Date:   Wed, 9 Sep 2020 16:10:28 +0800
+Message-ID: <20200909081041.3190157-3-jckuo@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200909081041.3190157-1-jckuo@nvidia.com>
+References: <20200909081041.3190157-1-jckuo@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200908200950.1368e71b@canb.auug.org.au>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- FTLPEX02CL06.citrite.net (10.13.108.179)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599638920; bh=YuKOxLECL/634zGae4BZvw33u7t46u6t6eEAszbgUK8=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=IaC/r3lTco2lCMtfpNnutLt226rzvq0Ejk1YggCfyj/KIk0x2kC17zKhXyjlxxX+C
+         yfBdqRaay7wtd4Q8Xb2XTCLggJG4M95ySVlfmdXo8LLtxX/oABLcuRj4By4tkEOnev
+         dB3G5xYaCTSBibdQ/INajZMQ+vUN/7CMwrv8tHWMP9Bwbx/qX7Nw/5Pi2VneYuWZ1V
+         AuHD9ER5yAJEh+lt2kh33HuzGhU1P73sKcCEGxjfMzQtrIptzQzWVqMiKVIQHygYia
+         qv1CeKmtvqCcFg+idRmHL0qeF1IvDzWZn4vPkFc+cXyoMxubM6jC13T9fdm5Mdq5LH
+         vXcoSxpgeXbZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 08:09:50PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the akpm-current tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> drivers/xen/unpopulated-alloc.c: In function 'fill_list':
-> drivers/xen/unpopulated-alloc.c:30:9: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->    30 |  pgmap->res.name = "Xen scratch";
->       |         ^~~
->       |         ref
-> drivers/xen/unpopulated-alloc.c:31:9: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->    31 |  pgmap->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
->       |         ^~~
->       |         ref
-> drivers/xen/unpopulated-alloc.c:33:51: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->    33 |  ret = allocate_resource(&iomem_resource, &pgmap->res,
->       |                                                   ^~~
->       |                                                   ref
-> In file included from include/asm-generic/memory_model.h:5,
->                  from arch/x86/include/asm/page.h:76,
->                  from arch/x86/include/asm/thread_info.h:12,
->                  from include/linux/thread_info.h:38,
->                  from arch/x86/include/asm/preempt.h:7,
->                  from include/linux/preempt.h:78,
->                  from include/linux/spinlock.h:51,
->                  from include/linux/mmzone.h:8,
->                  from include/linux/gfp.h:6,
->                  from drivers/xen/unpopulated-alloc.c:3:
-> drivers/xen/unpopulated-alloc.c:53:35: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->    53 |   xen_pfn_t pfn = PFN_DOWN(pgmap->res.start);
->       |                                   ^~~
-> include/linux/pfn.h:20:23: note: in definition of macro 'PFN_DOWN'
->    20 | #define PFN_DOWN(x) ((x) >> PAGE_SHIFT)
->       |                       ^
-> drivers/xen/unpopulated-alloc.c:58:30: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->    58 |     release_resource(&pgmap->res);
->       |                              ^~~
->       |                              ref
-> drivers/xen/unpopulated-alloc.c:69:28: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->    69 |   release_resource(&pgmap->res);
->       |                            ^~~
->       |                            ref
-> fs/fuse/virtio_fs.c: In function 'virtio_fs_setup_dax':
-> fs/fuse/virtio_fs.c:838:9: error: 'struct dev_pagemap' has no member named 'res'; did you mean 'ref'?
->   838 |  pgmap->res = (struct resource){
->       |         ^~~
->       |         ref
-> 
-> Caused by commit
-> 
->   b3e022c5a68c ("mm/memremap_pages: convert to 'struct range'")
-> 
-> interacting with commit
-> 
->   9e2369c06c8a ("xen: add helpers to allocate unpopulated memory")
-> 
-> from Linus' tree (in v5.9-rc4) and commit
-> 
->   7e833303db20 ("virtiofs: set up virtio_fs dax_device")
-> 
-> from the fuse tree.
-> 
-> I have added the following patch which may require more work but at
-> least makes it all build.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 8 Sep 2020 20:00:20 +1000
-> Subject: [PATCH] merge fix up for "mm/memremap_pages: convert to 'struct
->  range'"
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+PLLE hardware power sequencer references PEX/SATA UPHY PLL hardware
+power sequencers' output to enable/disable PLLE. PLLE hardware power
+sequencer has to be enabled only after PEX/SATA UPHY PLL's sequencers
+are enabled.
 
-Thanks, LGTM.
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
+---
+v3:
+   no change
 
-> ---
->  drivers/xen/unpopulated-alloc.c | 15 +++++++++------
->  fs/fuse/virtio_fs.c             |  3 +--
->  2 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/xen/unpopulated-alloc.c b/drivers/xen/unpopulated-alloc.c
-> index 3b98dc921426..9fa7ce330628 100644
-> --- a/drivers/xen/unpopulated-alloc.c
-> +++ b/drivers/xen/unpopulated-alloc.c
-> @@ -18,6 +18,7 @@ static unsigned int list_count;
->  static int fill_list(unsigned int nr_pages)
->  {
->  	struct dev_pagemap *pgmap;
-> +	struct resource res;
->  	void *vaddr;
->  	unsigned int i, alloc_pages = round_up(nr_pages, PAGES_PER_SECTION);
->  	int ret;
-> @@ -27,10 +28,10 @@ static int fill_list(unsigned int nr_pages)
->  		return -ENOMEM;
->  
->  	pgmap->type = MEMORY_DEVICE_GENERIC;
-> -	pgmap->res.name = "Xen scratch";
-> -	pgmap->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	res.name = "Xen scratch";
-> +	res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+ drivers/clk/tegra/clk-pll.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-You could init the fields at res definition time now, since it's no
-longer dynamically allocated.
+diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+index c5cc0a2dac6f..0193cebe8c5a 100644
+--- a/drivers/clk/tegra/clk-pll.c
++++ b/drivers/clk/tegra/clk-pll.c
+@@ -2515,18 +2515,6 @@ static int clk_plle_tegra210_enable(struct clk_hw *h=
+w)
+ 	pll_writel(val, PLLE_SS_CTRL, pll);
+ 	udelay(1);
+=20
+-	val =3D pll_readl_misc(pll);
+-	val &=3D ~PLLE_MISC_IDDQ_SW_CTRL;
+-	pll_writel_misc(val, pll);
+-
+-	val =3D pll_readl(pll->params->aux_reg, pll);
+-	val |=3D (PLLE_AUX_USE_LOCKDET | PLLE_AUX_SS_SEQ_INCLUDE);
+-	val &=3D ~(PLLE_AUX_ENABLE_SWCTL | PLLE_AUX_SS_SWCTL);
+-	pll_writel(val, pll->params->aux_reg, pll);
+-	udelay(1);
+-	val |=3D PLLE_AUX_SEQ_ENABLE;
+-	pll_writel(val, pll->params->aux_reg, pll);
+-
+ out:
+ 	if (pll->lock)
+ 		spin_unlock_irqrestore(pll->lock, flags);
+--=20
+2.25.1
 
-Roger.
