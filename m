@@ -2,130 +2,112 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338EEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCA0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1743215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805F1215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWj2iioF"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="CSlLrAx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgIIKGL (ORCPT
+        id S1729048AbgIIKHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:06:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53646 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgIIKGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:06:09 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2B2C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 03:06:09 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id ay8so2027228edb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 03:06:09 -0700 (PDT)
+        Wed, 9 Sep 2020 06:07:03 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:3045 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbgIIKHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:07:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=rYuQ9FT+4m9DZF/zl6tu1R42tR6bJhq4IHrczHtHxTo=;
-        b=GWj2iioFTE0yKF2+rMUo93NPAu9EfreyVb6Xkw1GODQRyL/neHXuuXOYtjxrIRldJZ
-         016K09m57fsMl6gEoBUfy2TeDR6WZyxKzKeIQS4F7NQAlEIa2lqrDznlJTQKwlokuLUA
-         isI9SfjW7/m9dpJFCaRLVmdkxqzTYWhLcMpiD8eeJZBpd7ysVoiv9qLwNzRh3PlQXRrD
-         rrPq6e+1gfSw3XN+JiWfR9O5E1at1VnnnOIyfN3D4ktWRJ/+fkiGZwiNbH4M+PzzELpd
-         Ct1OU6BxQhDmJsUyiKDOhBtOpLb1IA8x0bQxUtbelbuP4J8LlHeiZ1HRwojMMmq2kNSF
-         7ccA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=rYuQ9FT+4m9DZF/zl6tu1R42tR6bJhq4IHrczHtHxTo=;
-        b=sG+ipO/L6OsZyPkumqdjrUzFOaWtrw9FrD4/ZhuL9JUThTaVqIw4P3t2G8HgVbgsgC
-         ufuFvskZG3YUwEhQsQDxRb2qj/OT5ktdu50sSbAHPmmWvy4/ni7Az7KJzVhcRzhnylvA
-         7C7HJa1/PeCsQAhgZwsT5dkmZt2AOcm1poRDDbauqXdN7zgPBnqO8knVGxIbCVzBVLhs
-         o+YUhflUREXSXrAeCovVmVlOXKqJMLolsD7jtW07J/F/Pq0815uGKkOjMAdlI8+hFb98
-         xmUPEdB+HvjooPqcTOT7U6aGG78nLGDUHWOOOycl+H4F7huDACTmkuf40Hl6Ad+uiiun
-         H9FA==
-X-Gm-Message-State: AOAM532sgGBjMgIm1FGuph68Q7wk6fjp1Tr2L9XflL5mLqNqPgReTMZf
-        e+4VfVR6h/iyemPQMWtVogg=
-X-Google-Smtp-Source: ABdhPJwqzsZFPacwfD7vzqPUXRVINBaFATYFLDGAMQz0Vz7Fr8o3Rx1HqXczCJ/z/yfAPVlUlsk2ZA==
-X-Received: by 2002:aa7:d558:: with SMTP id u24mr3342099edr.336.1599645967911;
-        Wed, 09 Sep 2020 03:06:07 -0700 (PDT)
-Received: from felia ([2001:16b8:2d44:6000:6108:df55:7b8e:67d4])
-        by smtp.gmail.com with ESMTPSA id t4sm1593478ejj.6.2020.09.09.03.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 03:06:07 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Wed, 9 Sep 2020 12:06:06 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Ayush <ayush@disroot.org>
-cc:     Joe Perches <joe@perches.com>, apw@canonical.com,
-        lukas.bulwahn@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] checkpatch: GIT_COMMIT_ID: handle
- commit messages with multiple quotes
-In-Reply-To: <22db634e7be36f4514f0c9b3ecf0060a@disroot.org>
-Message-ID: <alpine.DEB.2.21.2009091152530.5622@felia>
-References: <beed63208cc412f122fe273602675801add08ede.camel@perches.com> <20200907151417.44453-1-ayush@disroot.org> <22db634e7be36f4514f0c9b3ecf0060a@disroot.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+  d=axis.com; l=1544; q=dns/txt; s=axis-central1;
+  t=1599646019; x=1631182019;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=IGajUZBa96i/VzPEy7tge28b46RvbWFmOz5Ue/tcm4k=;
+  b=CSlLrAx2FnSv1gOENiLBW+7a8+vlz+08AlkCubK+J/LfmXw4DxmO5nIe
+   ItFZGEwF5zfx3ScjvLA6MgRh8A8HEgkGJ/kGcjoYkKx1KGnQdrX3kQctv
+   CbYU5oFpdrH+VQYJB1mi5hx7/VkAyRjEOKMRsdsZGyEe4uUuuLasm4+c+
+   3IHilHuxwa97zvTuBp9wEIGwwcY7RxklPT6L1bCEoM46+w2KDV2N8uf+c
+   c+8BWz6ioACeqg176KSOGg9wKh1G5o/f2qmaQmJmS1Hu2UUdcVnkSn/TC
+   RAv5fs5zx0iqPBqgQoH+ae8jko0JdXlLtC+CEt9OfWI9hszbU8BXyZZ00
+   g==;
+IronPort-SDR: /6mEj/gzoUQOdYQvxHD9rdzrF/U/w0nRti7xCvCa1CGoHSfjobjC2E6ngngkG8YM7jSwtZrhvF
+ gbkQ1bBMkkIT32d4YHABLl+N28FpDJIxOwbaVUFDV+NiAimefjat8q4xjPTBgGqhkJmrqHBP4e
+ pq04iV3tqDus6jidBge+AkEfIJqB5qe4gYwmN6dJuS/rHLN9QaProaE5eUujwXdbtT/B0mMtNS
+ i013/ggzub0/hLT48WByU3EBuyvfNecGRFY7aZNBaZq0wCeQC5XyOLdzzz6SgG5vS0jpD2Lrh2
+ x6w=
+X-IronPort-AV: E=Sophos;i="5.76,409,1592863200"; 
+   d="scan'208";a="12709791"
+Subject: Re: [PATCH 1/2] ASoC: tlv320adcx140: Avoid accessing invalid
+ gpio_reset
+To:     Mark Brown <broonie@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>, Camel Guo <Camel.Guo@axis.com>,
+        "tiwai@suse.com" <tiwai@suse.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel <kernel@axis.com>
+References: <20200908083521.14105-1-camel.guo@axis.com>
+ <159958562064.16576.7853800514030717096.b4-ty@kernel.org>
+From:   Camel Guo <camelg@axis.com>
+Message-ID: <1e17f203-7b60-bf97-4515-937e722f5ef7@axis.com>
+Date:   Wed, 9 Sep 2020 12:06:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <159958562064.16576.7853800514030717096.b4-ty@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: XBOX04.axis.com (10.0.5.18) To xbox06.axis.com
+ (10.0.15.176)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Mark
 
-
-On Tue, 8 Sep 2020, Ayush wrote:
-
-> > I think all your examples are broken.
-> > 
-> > I think all should start with revert
-> > i.e.: Reverts commit <SHA-1> ("description...")
+On 9/8/20 7:20 PM, Mark Brown wrote:
+> On Tue, 8 Sep 2020 10:35:20 +0200, Camel Guo wrote:
+>> When gpio_reset is not well defined in devicetree, the
+>> adcx140->gpio_reset is an error code instead of NULL. In this case,
+>> adcx140->gpio_reset should not be used by adcx140_reset. This commit
+>> sets it NULL to avoid accessing an invalid variable.
 > 
-> Actually I am talking about those commits which referenced a revert commit.
+> Applied to
 > 
-> For example:
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+I think it is "ASoC: tlv320adcx140: Wake up codec before register 
+setting" that is applied to for next not this one.
+
 > 
-> If I want to mention a revert commit in my commit message, I will do something like.
+> Thanks!
 > 
-> This bug appeared first in commit 1234567890ab ("Revert "abc: foo bar"").
-> (Just an example)
+> [1/1] ASoC: tlv320adcx140: Wake up codec before accessing register
+>        commit: 1a5ce48fd667128e369fdc7fb87e21539aed21b5
 > 
-> Here, according to syntax, it is right but checkpatch.pl gives an error as multiple
-> quotes in commit messages are not handled in checkpatch.pl.
->
-
-As the mentor in the linux kernel community bridge program, I usually 
-inform the mentees when the review on the mentee mailing list has 
-successfully concluded to a first acceptable state and I think it is well 
-advised to reach out to the maintainers for further discussion.
-
-You did not do that, but just send some patch to the maintainers.
-That is fully up to you, but I will not support the patch acceptance in 
-any way, and it suggests that you do not see the need to be mentored.
-
-If you can land patches without mentoring support successfully, that is 
-great, but then you do not need a mentorship.
-
-Now, to the commit:
-
-Ayush, your commit message is largely incomprehensible.
-
-Your follow-up explanation that was needed should have been in the commit 
-message in the first place.
-
-Ayush, you did not sign-off with your full legal name.
-
-So, I advice NOT TO TAKE this patch.
-
-I did not even start testing and reviewing the code yet.
-
-Lukas
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
