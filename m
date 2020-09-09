@@ -2,126 +2,92 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D177C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2FAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3521621D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="kjBrjqy3";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VKQVjDcw"
+	by mail.kernel.org (Postfix) with ESMTP id EBA8621941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 12:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599655107;
+	bh=kLzIbSajdRz1W80PzG78m/ukaUR6VgdyxOemY3uuv9I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Bu9bID6jbBv2r16ur34lFZkkGCk5JUi7c4Qe0SS89keuqfOQCQipGpJqvfsCA0/3O
+	 xspCjLPC+3voJ8UD5dAl2rbtoMNBAj3y77ohxUK3/ZB0CFZN6jqL1AgApiLkoxmEvB
+	 nAOPKqZunyUS16NRTC6IwDAjDORUdrkwUO1Y2WWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgIIMeq (ORCPT
+        id S1728264AbgIIMhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 08:34:46 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38351 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729942AbgIIMXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 08:23:50 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 62B745C0115;
-        Wed,  9 Sep 2020 08:22:16 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 09 Sep 2020 08:22:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=2SOLSpPpbJ6alM6o5mTR7VtjcY7
-        hlGA+zbD8ILNxWF0=; b=kjBrjqy3FxBh+WZafGd1T+kZqsMcFGYVw1edzheqpQP
-        ahhVBONmCMZqScL6k5LYlXrhG9p3w4uV2ZaHWGGVB7l3xbO6FwZvF0CZDx7S5XpK
-        Mf4MsW7J/5pnhsj+jOw8h5gObwa9/X1eVDzQDVILBytLy4EUMyHtZEdR+fIopcxd
-        cDmVJOK95raiRhPANFLGSi0X4MKL4qucuYHRbYXbApoqlvbpGI1f6mM0UIvLRG/p
-        x86uDo3JB2cYWQ5LkZUKx4RiIXXuXZKoXVH9yzBQ/TSWQxg4gtNHZ0Q+ac9VwszA
-        8H+wAYRdVjI0MKRhWWFwR3N61qPrzj2zeLTj1fBxfrw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=2SOLSp
-        PpbJ6alM6o5mTR7VtjcY7hlGA+zbD8ILNxWF0=; b=VKQVjDcwQMybEhQiiYZBBX
-        RPe1q8SkCVGpM2Ezl5nmi0+l5HuncakjKNNxr8rRdGflRmMQL5HWB6dSdNeCDN+R
-        EU7vnXYkpPBM+GhrpKTNpviFIk9zCfP+7aImqtZ6/9XFMThcTuamxp9D1C9VnxNP
-        qSwmKZ5HSqCXJmPQUYZtCUofsnw/+TBePc/W2CXKjJ80d94s2SQNQNFDT8AZT3v0
-        ejpInU0463dcRXr0HhaaA21Er6T2tRavoKVemzrxdy4J6pvkjUXMlIdl/kDkk0r4
-        aAqKaVCcukYE85lcw+Hl7nVZtckA2meksDFIGRMVa3PFBIgYF7WRf68vOG6s9I2w
-        ==
-X-ME-Sender: <xms:98hYX8wTviGOxptQIEfqB5MGLGmxe1ZXqNUAk2FI7Mye3Xlrs_zGig>
-    <xme:98hYXwTSvZMsBqmQnsGLcLJOT1zGhRT2lIWRMCaR4MbzKbXJWsQ19dglx8Nw3fj4E
-    BMQfCe_2quspw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehhedggeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrjeegrdeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:98hYX-Vbkn2pzgxXIC2hFo9uPfGS3fxh3YXr7y9NPQ7ex8qA_JvhhQ>
-    <xmx:98hYX6hK4Id1xOuht8yew7ZjzIQ7l1Jyxku2A2863LmE0N3kiW5s3Q>
-    <xmx:98hYX-B9thw4mHijU9v-Le10sBQm58bvQwtvk7A_aTE7Sqdeqy58LA>
-    <xmx:-MhYXxNn3xnbeeR5xfteWQ7OEvnCPwhDISF_Iuo8hNVKZK-bTmgQOQ>
+        Wed, 9 Sep 2020 08:37:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730030AbgIIMae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 08:30:34 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 26A823280064;
-        Wed,  9 Sep 2020 08:22:15 -0400 (EDT)
-Date:   Wed, 9 Sep 2020 14:22:25 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jim Cromie <jim.cromie@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the char-misc.current
- tree
-Message-ID: <20200909122225.GA668220@kroah.com>
-References: <20200908094317.6dc1cb2a@canb.auug.org.au>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0D0321D93;
+        Wed,  9 Sep 2020 12:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599654591;
+        bh=kLzIbSajdRz1W80PzG78m/ukaUR6VgdyxOemY3uuv9I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XN1JLSjxX3db+1p0W9RYsRlQf4MqjgINmFg8dNg6De2EpU8/rLho7nnPFUQL3/bhs
+         HaUn5avZLdYnGTOzc/XwLBALpYkHBCOm5SDTmUg0Z/saMCr8AguCOwFjMhtiwROwir
+         F7bHFc4TnVjoLe4AO9CKYFvgTrBgp57hEi7rzq6U=
+Date:   Wed, 9 Sep 2020 14:30:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Laurent Dufour <ldufour@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org,
+        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+Message-ID: <20200909123001.GA670250@kroah.com>
+References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
+ <20200908170835.85440-1-ldufour@linux.ibm.com>
+ <20200909074011.GD7348@dhcp22.suse.cz>
+ <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+ <20200909090953.GE7348@dhcp22.suse.cz>
+ <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+ <9ad553f2-ebbf-cae5-5570-f60d2c965c41@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908094317.6dc1cb2a@canb.auug.org.au>
+In-Reply-To: <9ad553f2-ebbf-cae5-5570-f60d2c965c41@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 09:43:17AM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Wed, Sep 09, 2020 at 11:24:24AM +0200, David Hildenbrand wrote:
+> >> I am not sure an enum is going to make the existing situation less
+> >> messy. Sure we somehow have to distinguish boot init and runtime hotplug
+> >> because they have different constrains. I am arguing that a) we should
+> >> have a consistent way to check for those and b) we shouldn't blow up
+> >> easily just because sysfs infrastructure has failed to initialize.
+> > 
+> > For the point a, using the enum allows to know in register_mem_sect_under_node() 
+> > if the link operation is due to a hotplug operation or done at boot time.
+> > 
+> > For the point b, one option would be ignore the link error in the case the link 
+> > is already existing, but that BUG_ON() had the benefit to highlight the root issue.
+> > 
 > 
-> After merging the char-misc.current tree, today's linux-next build
-> (x86_64 allmodconfig) produced this warning:
-> 
-> In file included from include/linux/printk.h:7,
->                  from include/linux/kernel.h:15,
->                  from lib/dynamic_debug.c:16:
-> lib/dynamic_debug.c: In function 'ddebug_parse_query':
-> include/linux/kern_levels.h:5:18: warning: format '%s' expects a matching 'char *' argument [-Wformat=]
->     5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */
->       |                  ^~~~~~
-> include/linux/kern_levels.h:14:19: note: in expansion of macro 'KERN_SOH'
->    14 | #define KERN_INFO KERN_SOH "6" /* informational */
->       |                   ^~~~~~~~
-> include/linux/printk.h:369:9: note: in expansion of macro 'KERN_INFO'
->   369 |  printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
->       |         ^~~~~~~~~
-> lib/dynamic_debug.c:116:3: note: in expansion of macro 'pr_info'
->   116 |   pr_info(fmt, ##__VA_ARGS__);   \
->       |   ^~~~~~~
-> lib/dynamic_debug.c:119:28: note: in expansion of macro 'vnpr_info'
->   119 | #define vpr_info(fmt, ...) vnpr_info(1, fmt, ##__VA_ARGS__)
->       |                            ^~~~~~~~~
-> lib/dynamic_debug.c:388:3: note: in expansion of macro 'vpr_info'
->   388 |   vpr_info("module:%s queries:'%s'\n", modname);
->       |   ^~~~~~~~
-> 
-> Introduced by commit
-> 
->   42f07816ac0c ("dyndbg: fix problem parsing format="foo bar"")
+> WARN_ON_ONCE() would be preferred  - not crash the system but still
+> highlight the issue.
 
-Odd it doesn't show up in my builds, or in 0-day :(
+Many many systems now run with 'panic on warn' enabled, so that wouldn't
+change much :(
 
-Jim, can you send a fix for this, or is this due to some other tree's
-issues?
+If you can warn, you can properly just print an error message and
+recover from the problem.
 
 thanks,
 
