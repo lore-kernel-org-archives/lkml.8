@@ -2,105 +2,83 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C50AC2D0E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD3DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D385A20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C6D21D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgIIWLz convert rfc822-to-8bit (ORCPT
+        id S1729449AbgIIWNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 18:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgIIWLy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 18:11:54 -0400
-Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67598C061573;
-        Wed,  9 Sep 2020 15:11:54 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
-        by mail.nic.cz (Postfix) with ESMTPSA id 97B13140A5E;
-        Thu, 10 Sep 2020 00:11:52 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 00:11:52 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 0/7] PLEASE REVIEW: Add support for
- LEDs on Marvell PHYs
-Message-ID: <20200910001152.34de9a2d@nic.cz>
-In-Reply-To: <20200909214259.GL3290129@lunn.ch>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
-        <20200909214259.GL3290129@lunn.ch>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 9 Sep 2020 18:13:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48672 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgIIWNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 18:13:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B20C3ACDF;
+        Wed,  9 Sep 2020 22:14:04 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/vmscan: fix infinite loop in drop_slab_node
+To:     Matthew Wilcox <willy@infradead.org>,
+        Chris Down <chris@chrisdown.name>
+Cc:     zangchunxin@bytedance.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+References: <20200909152047.27905-1-zangchunxin@bytedance.com>
+ <16906d44-9e3c-76a1-f1a9-ced61e865467@suse.cz>
+ <20200909214724.GA1577471@chrisdown.name>
+ <20200909215209.GP6583@casper.infradead.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <4e022a8c-68da-a322-4101-926a0bb9d44b@suse.cz>
+Date:   Thu, 10 Sep 2020 00:13:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+In-Reply-To: <20200909215209.GP6583@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 23:42:59 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
-
-> On Wed, Sep 09, 2020 at 06:25:45PM +0200, Marek Behún wrote:
-> > Hello Andrew and Pavel,
-> > 
-> > please review these patches adding support for HW controlled LEDs.
-> > The main difference from previous version is that the API is now generalized
-> > and lives in drivers/leds, so that part needs to be reviewed (and maybe even
-> > applied) by Pavel.
-> > 
-> > As discussed previously between you two, I made it so that the devicename
-> > part of the LED is now in the form `ethernet-phy%i` when the LED is probed
-> > for an ethernet PHY. Userspace utility wanting to control LEDs for a specific
-> > network interface can access them via /sys/class/net/eth0/phydev/leds:
-> > 
-> >   mox ~ # ls /sys/class/net/eth0/phydev/leds  
+On 9/9/20 11:52 PM, Matthew Wilcox wrote:
+> On Wed, Sep 09, 2020 at 10:47:24PM +0100, Chris Down wrote:
+>> Vlastimil Babka writes:
+>> > - Exit also on other signals such as SIGABRT, SIGTERM? If I write to drop_caches
+>> > and think it's too long, I would prefer to kill it by ctrl-c and not just kill
+>> 
+>> Oh dear, fatal_signal_pending() doesn't consider cases with no more
+>> userspace instructions due to SIG_DFL on TERM/INT etc, that seems misleading
+>> :-( I had (naively) believed it internally checks the same set as
+>> TASK_KILLABLE.
+>> 
+>> Chuxin, Muchun, can you please make it work using TASK_KILLABLE in a similar
+>> way to how schedule_timeout_killable and friends do it instead, so that
+>> other signals will be caught?
 > 
-> It is nice they are directly in /sys/class/net/eth0/phydev. Do they
-> also appear in /sys/class/led?
+> You're mistaken.
 
-They are in /sys/class/net/eth0/phydev/leds by default, because they
-are children of the PHY device and are of `leds` class, and the PHY
-subsystem creates a symlink `phydev` when PHY is attached to the
-interface.
-They are in /sys/class/leds/ as symlinks, because AFAIK everything in
-/sys/class/<CLASS>/ is a symlink...
+Ah actually it was me who thought fatal_signal_pending() was only for SIGKILL,
+OOM and whatnot. Sorry for the noise.
 
-> Have you played with network namespaces? What happens with
+>         if (sig_fatal(p, sig) &&
+>             !(signal->flags & SIGNAL_GROUP_EXIT) &&
+>             !sigismember(&t->real_blocked, sig) &&
+>             (sig == SIGKILL || !p->ptrace)) {
+> ...
+>                                 sigaddset(&t->pending.signal, SIGKILL);
 > 
-> ip netns add ns1
+> static inline int __fatal_signal_pending(struct task_struct *p)
+> {
+>         return unlikely(sigismember(&p->pending.signal, SIGKILL));
+> }
 > 
-> ip link set eth0 netns ns1
-> 
->    Andrew
 
-If you move eth0 to other network namespace, naturally the
-/sys/class/net/eth0 symlink will disappear, as will the directory it
-pointed to.
-
-The symlink phydev does will disappear from /sys/class/net/eth0/
-directory after eth0 is moved to ns1, and is lost. It does not return
-even if eth0 is moved back to root namespace.
-
-The LED will of course stay in ns1 and also in root namespace, as will
-the phydev the LED is a child to. But they are no longer accessible via
-/sys/class/net/eth0, instead you can access the LEDs either via
-/sys/class/leds or /sys/class/mdio_bus/<MDIO_BUS>/<PHY>/leds, or
-without symlinks via /sys/devices/ tree.
-
-Marek
