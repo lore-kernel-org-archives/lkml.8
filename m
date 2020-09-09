@@ -2,90 +2,143 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B4CC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0364C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA41421D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71C3121D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="1N+0P+hF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m4KHcZLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgIILZG (ORCPT
+        id S1725772AbgIIL0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
+        Wed, 9 Sep 2020 07:26:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727893AbgIILJw (ORCPT
+        with ESMTP id S1726714AbgIILIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:09:52 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365A7C061798
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:08:26 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id u20so1896683ilk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:08:26 -0700 (PDT)
+        Wed, 9 Sep 2020 07:08:46 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13391C061786
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:08:11 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id l126so1849374pfd.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mRUOfV6+ZqYqfW6xUFOI46xmoCz/PY+Ae+dYUc7wCZk=;
-        b=1N+0P+hFuG4Uwy6+7Kh2vXTyvL4DQpoUpLsXxoam8VgSx64eayoD1rarhWhB/mTSys
-         pSy+T5Rc3zLwEwkQ+XoEIk52rQUBc7MM5wUxdipsnrslayuiDBVjm35jn1ya5T7oOSp0
-         H1YPydcuaeL4dCTtYYCKkEiX97LKU2VVDG+bJOcOWMgKmfZUP/l5U9BNQAs/00FWlmkx
-         H/ex/jf8Kgh7hllr3q+yv9obCQ6FKeWl+CMH95BtxFPfXlQmTmWjBpebAdFN3TGIPx6e
-         QeLr6cApXGfa7h1OTNFzaTnszrPGbsHOjKOwQ7QHj+5UZZw5Roh9bJWOpU4v8kuxGS3h
-         3yWg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hHbPBPqCAjeHpFptYktHnZF2Ot4j4iCHuxaSsZ+eCnQ=;
+        b=m4KHcZLZ3vphfXLl8Z6uPW+Z5xRc7prauxsfl0JLhrjWsiglWRJP4MpIyU91H/iLho
+         zrypWq/9xIvYPiotVpXou3HNQ/xOAUSdnA0p1Aeb2P6B8wsSa9RZ/k3wQsg8i79uXKFf
+         oqrgkMysLIqLInktyZ0qNeCahTkBgCR1FU+Sdh8z08fzYT7FIdiuUuOj/THP1lBYxblb
+         crk/ICcFVagGGuLu1MtvSBSpBtzUON7VuahiwpKU9qQILtWVvIRGlEVE5GFGdKpbyIDw
+         gFqItvEzQktmZxC+C5bsJupV5InVVkiOeLk+WlFuumCOeBab41igCm17UsYlleFsQ8ke
+         LG/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mRUOfV6+ZqYqfW6xUFOI46xmoCz/PY+Ae+dYUc7wCZk=;
-        b=LYXEZVU5LLQ/tRCpZE9Mebo6yNe5u+5T1WrS0TGl310QIq37DmdG6alCXq2JEgGWd0
-         GiasD4VLHi4BZynzYKK7MzF9bAJ0/RZr7yncKdYw9AsyMSD2pP651X6/1eCREFqZvF22
-         ovpuuZOuAo+0LBHgUV+Ll+OHcsLqffXBt4Aih/JhvmZRh/vBQjrJTO3mAof7Lv6aIcw+
-         aD2+8ebBCTGeQyqTUouOOFhVYzJwiEXY5oT7rWt/Tt3sQQX+6vievWat7OOdCeqJKSUt
-         ubEK3oq5PC9hc9ABwLQHLtemMqi9i+0F/sI9jBeSBg0YS2D/0Oko1vne0ZuCRPwO3mwW
-         rPAQ==
-X-Gm-Message-State: AOAM531uofBGrgSVHJpRprDFdLhbxWsBlMHw+VdxLD4L0W0dpwI6OuKk
-        FQcRPJLQqakLlWci5OSjre9E452rvw5piHsud6g00A==
-X-Google-Smtp-Source: ABdhPJxDbic+qefGx7meiMSqlNbXappfPb9WHSzF3vDvGMHVTvSzbDpYMJZnpVMw7OleL/TgNt9XkX6rsMJ03h8ERu8=
-X-Received: by 2002:a92:c8c4:: with SMTP id c4mr846645ilq.287.1599649705603;
- Wed, 09 Sep 2020 04:08:25 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hHbPBPqCAjeHpFptYktHnZF2Ot4j4iCHuxaSsZ+eCnQ=;
+        b=GGyLgEXRc4MZf+02FTjx420BDgJqHW+sZjCS3qJJpskFyTshshy1iS39Ki/K9HvAtO
+         tiBkfgYoleV0Y1utMOv41N4lpA7vtFol6GcJVcMSsheJMm091F5KIKjBGXmNIM6Ibi3w
+         zqiz58XhAn5wFuEUjAAB8hynd8/NHEt8EB/kb7soeQPa5BH9uln+YusbRG7NYL559lAy
+         DKxz7RZsf5NF6PevJ8FCxmMIZekRUbP1K6kj5NbwXu2P7O2iBF1yc09vVAq2Pqu0K+q9
+         barP2A00qVoWw0AymtI8Ej5GFHiADadIboSKMNYUesLtKRJ4Ad6w/QfINSJOMEGXu/tR
+         hjOg==
+X-Gm-Message-State: AOAM531YhfaHqaSbxqBJ240qcUfRlB4UZYT2k30eNHua+e60xJHvbA7Z
+        zqOmpwHzG9jcbX7hRp13RmIWcA==
+X-Google-Smtp-Source: ABdhPJy2EZv/VIxB9RnTfqRMANkRu2WWxpNJfCDbS9BRC+1+0r57LjDxgPFYplFTRs+2i65+o+pECA==
+X-Received: by 2002:a65:5849:: with SMTP id s9mr215399pgr.439.1599649690536;
+        Wed, 09 Sep 2020 04:08:10 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id w185sm2619035pfc.36.2020.09.09.04.08.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Sep 2020 04:08:09 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 16:38:07 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     rnayak@codeaurora.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Fabio Estevam <festevam@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Qiang Yu <yuq825@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Clark <robdclark@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Paul <sean@poorly.run>, Shawn Guo <shawnguo@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        lima@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH V2 0/8] opp: Unconditionally call
+ dev_pm_opp_of_remove_table()
+Message-ID: <20200909110807.aw3q4bqxis3ya5ci@vireshk-i7>
+References: <cover.1598594714.git.viresh.kumar@linaro.org>
+ <20200831110939.qnyugmhajkg36gzw@vireshk-i7>
 MIME-Version: 1.0
-References: <20200908130749.9948-1-brgl@bgdev.pl> <20200908134520.GY1891694@smile.fi.intel.com>
-In-Reply-To: <20200908134520.GY1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 9 Sep 2020 13:08:14 +0200
-Message-ID: <CAMRc=Mfta3PG0Ea7ABchhfL8E2hEtTo1ejBeR8ig7sTJKyZ5Ug@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: fix resource leak in error path
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831110939.qnyugmhajkg36gzw@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 3:45 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Sep 08, 2020 at 03:07:49PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > If the module init function fails after creating the debugs directory,
-> > it's never removed. Add proper cleanup calls to avoid this resource
-> > leak.
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 31-08-20, 16:39, Viresh Kumar wrote:
+> On 28-08-20, 11:37, Viresh Kumar wrote:
+> > Hello,
+> > 
+> > This cleans up some of the user code around calls to
+> > dev_pm_opp_of_remove_table().
+> > 
+> > All the patches can be picked by respective maintainers directly except
+> > for the last patch, which needs the previous two to get merged first.
+> > 
+> > These are based for 5.9-rc1.
+>  
+> > Viresh Kumar (8):
+> >   cpufreq: imx6q: Unconditionally call dev_pm_opp_of_remove_table()
+> >   drm/lima: Unconditionally call dev_pm_opp_of_remove_table()
+> >   drm/msm: Unconditionally call dev_pm_opp_of_remove_table()
+> >   mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+> >   spi: spi-geni-qcom: Unconditionally call dev_pm_opp_of_remove_table()
+> >   spi: spi-qcom-qspi: Unconditionally call dev_pm_opp_of_remove_table()
+> >   tty: serial: qcom_geni_serial: Unconditionally call
+> >     dev_pm_opp_of_remove_table()
+> >   qcom-geni-se: remove has_opp_table
+> 
+> During testing by some of the Linaro folks on linux-next, we found out
+> that there was a bug in the OPP core (which makes the kernel crash in
+> some corner cases with these patches) for which I have sent a fix
+> today which should be part of 5.9-rc4:
+> 
+> https://lore.kernel.org/lkml/922ff0759a16299e24cacfc981ac07914d8f1826.1598865786.git.viresh.kumar@linaro.org/
+> 
+> Please apply the patches over rc4 only once it comes out (I will
+> confirm by that time once the patch gets merged). Else you guys can
+> provide your Ack and I can take the patches through OPP tree.
 
-Thanks. This is uncontroversial so I queued right away for fixes.
+The fix got merged in 5.9-rc4, please apply the patches from this
+series in your trees and base them on rc4. Thanks.
 
-Bartosz
+-- 
+viresh
