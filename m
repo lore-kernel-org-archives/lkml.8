@@ -2,103 +2,103 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ED2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6C5C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4DD320C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FBE20C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="PLZPiLkU"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Q6xToLnI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgIIUjF (ORCPT
+        id S1728663AbgIIUkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:39:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38924 "EHLO
+        Wed, 9 Sep 2020 16:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbgIIUjD (ORCPT
+        with ESMTP id S1726414AbgIIUkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:39:03 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75549C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 13:39:00 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id v196so3332810pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 13:39:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pvTELsnuqawB+9CsCnyO4FXHa5jqvr6EqiJIinGYuyw=;
-        b=PLZPiLkU77f9XNFW8QrusL13z1a4SsShUnxQOOKJxFwPNbQngptnHWjyTnlNrh07Z1
-         SuqvnFhCNi6xZ/LkCG84M89gi4WieZbxofhpHM7yRfQII/7rVu80rUgab7G/+IlPoz0J
-         JoSyqkqgDva2xC4i2QaBP1cVEasVCAG3wQZconV7kVDWiV4jdOGAVWH9vRqle8i/wmO1
-         EYlHBTpm25ht0q8HDx8RZZYKF0kBclWfL0cElzSE4wFlHLJcqYpxXsNrhLKVIoOyDk8m
-         RlrCE4sT1WGbMYlovipYVFkhBxIAkVxwB1y5mBogm1g+gjJ1RAsV+LUr0FmpAA6OME5m
-         D+Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=pvTELsnuqawB+9CsCnyO4FXHa5jqvr6EqiJIinGYuyw=;
-        b=NlYVZJSApkQls16h89hTntAWZe00TmFlg+OpBIksfaT8GXgWKiqqJpYQ3Gez0mXKxn
-         zAlhsE/JE0p4fHlm2f3ncDVWY3JGKZyjDjcqAU2D8Gcd6Uon9cBsITKWo68C+38QFShB
-         Wkdao/Ha0QiAQlnft8hE1DcoFmtcaX933nWJD1gl9hnEJ1lMoKveDlZwj0drLqhUhyzG
-         BkRiiMMBG9WlTHnn65EgQ0Lkqb9sVXDQPNi3Szsv4fgXL99EFVVP1ZPrTexVuoRg65kQ
-         p78fe8g8yBaMfh472fYCF2UaCJplJh9Th9JZBdmg8F4PhlBleQXnQQB00jkVhZGDLeTp
-         m/Hw==
-X-Gm-Message-State: AOAM531ag7RE0Z1rTd/j+nRIcZ8Ze9HFKGET0tfVq/LC6JYe2Wsolgrl
-        upQO9IC4Ur6C9DeDKVfNdC4ZwA==
-X-Google-Smtp-Source: ABdhPJzrC5l7v5FTB1r/YYtUR1nC0/3uzkDrW1qiPAnWCKJr6AMnKAG1nnvmAvNG0lAHQfGXBcYCqQ==
-X-Received: by 2002:a62:ce4b:0:b029:13e:d13d:a100 with SMTP id y72-20020a62ce4b0000b029013ed13da100mr2268407pfg.28.1599683938493;
-        Wed, 09 Sep 2020 13:38:58 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id z23sm3514558pfg.220.2020.09.09.13.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 13:38:57 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 13:38:57 -0700 (PDT)
-X-Google-Original-Date: Wed, 09 Sep 2020 13:38:04 PDT (-0700)
-Subject:     Re: remove set_fs for riscv v2
-In-Reply-To: <20200909065515.GA9618@lst.de>
-CC:     viro@zeniv.linux.org.uk, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Christoph Hellwig <hch@lst.de>
-Message-ID: <mhng-e33e9c39-7441-44f4-9c77-2243bb81168b@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 9 Sep 2020 16:40:08 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34670C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 13:40:07 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id F08EC80719;
+        Thu, 10 Sep 2020 08:39:51 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599683991;
+        bh=NHjUxeEhMMCSoluiwizAPmsG3H1noXImr/miOLmn704=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=Q6xToLnINjCuZ7tW/YZdrjasaA2KbwwMUxmJmvJI/wWWR4eIZAR8OtnLGPvyYEXJu
+         xV/bW0UK9iExFVUgT/YR4lK5Z/3+RkqNdWLl8mJcPTQTJG9/RQRnenPue9tIAzoU+7
+         JjPtdlRgx3AtUPmFvvM/6djzkbL1Gk7+2N0DRZxf3vXZyUby3UQzDUIYNB/vAmdXrZ
+         E30S5RqKMjCbJc8ljOeF1v0JeGikX6BCIgIx6kNpXqU/grwebJSde+f4OSMIvOPMks
+         yM/fEPcGgJln/hkJXHawoFkNnJVkGp9xqQVX0RL/Au0umfoeUZKj9Ifnp5dKeuLo/C
+         Z9KkiiV7w87zQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f593d970000>; Thu, 10 Sep 2020 08:39:51 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Thu, 10 Sep 2020 08:39:51 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Thu, 10 Sep 2020 08:39:51 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Wolfram Sang <wsa@kernel.org>,
+        Evan Nimmo <Evan.Nimmo@alliedtelesis.co.nz>
+CC:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>,
+        "jdelvare@suse.de" <jdelvare@suse.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/1] i2c: algo-pca: Reapply i2c bus settings after
+ reset
+Thread-Topic: [PATCH v4 1/1] i2c: algo-pca: Reapply i2c bus settings after
+ reset
+Thread-Index: AQHWhh88ZbCxr7/vmEC2Fb58jxyqGqlfL6AAgADNsQA=
+Date:   Wed, 9 Sep 2020 20:39:50 +0000
+Message-ID: <5410e288-e369-0310-1b8e-061c95e46164@alliedtelesis.co.nz>
+References: <20200908203247.14374-1-evan.nimmo@alliedtelesis.co.nz>
+ <20200909082338.GC2272@ninjato>
+In-Reply-To: <20200909082338.GC2272@ninjato>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <1291A7C6A2B28C4F846F672BC47AF75D@atlnz.lc>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 08 Sep 2020 23:55:15 PDT (-0700), Christoph Hellwig wrote:
-> On Tue, Sep 08, 2020 at 09:59:29PM -0700, Palmer Dabbelt wrote:
->>>
->>> The first four patches are general improvements and enablement for all nommu
->>> ports, and might make sense to merge through the above base branch.
+
+On 9/09/20 8:23 pm, Wolfram Sang wrote:
+> On Wed, Sep 09, 2020 at 08:32:47AM +1200, Evan Nimmo wrote:
+>> If something goes wrong (such as the SCL being stuck low) then we need
+>> to reset the PCA chip. The issue with this is that on reset we lose all
+>> config settings and the chip ends up in a disabled state which results
+>> in a lock up/high CPU usage. We need to re-apply any configuration that
+>> had previously been set and re-enable the chip.
 >>
->> Seems like it to me.  These won't work without the SET_FS code so I'm OK if you
->> guys want to keep them all together.  Otherwise I think I'd need to wait until
->> the SET_FS stuff gets merged before taking any of these, which would be a bit
->> of a headache.
+>> Signed-off-by: Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+>> Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Reviewed-by: Wolfram Sang <wsa@kernel.org>
+> Applied to for-current, thanks!
 >
-> now that we've sorted out a remaining issue base.set_fs should not
-> be rebased any more, so you could pull it into the riscv tree or a topic
-> branch.
+> For the record, were you able to test both, PCA9564 and PCA9665?
 >
-> The first four patch should go into base.set_fs, though.  Arnd, can you
-> re-review the updated patches?
-
-OK, assuming the first four land through vfs I'll take the rest through my
-tree.  I wasn't sure it was OK to merge another subtree into my tree, as IIRC I
-got told not to do something like that before, but I'll go figure out a sane
-way to handle it.
-
-Thanks!
+Our hardware platforms only have PCA9665 so that's all we can test.=
