@@ -2,74 +2,100 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4F0C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C42C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB34821D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A9321582
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G2BRIMl+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgIIKtV convert rfc822-to-8bit (ORCPT
+        id S1729251AbgIIKuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:49:21 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:46941 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728631AbgIIKtH (ORCPT
+        Wed, 9 Sep 2020 06:50:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726920AbgIIKuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:49:07 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id CB5661BF213;
-        Wed,  9 Sep 2020 10:48:57 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 12:48:56 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shivamurthy Shastri <sshivamurthy@micron.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mtd: spinand: micron: add support for MT29F2G01AAAED
-Message-ID: <20200909124856.09afd61b@xps13>
-In-Reply-To: <20200909104442.22171-1-nthirumalesha7@gmail.com>
-References: <20200909104442.22171-1-nthirumalesha7@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 9 Sep 2020 06:50:00 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF48C061573;
+        Wed,  9 Sep 2020 03:49:59 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bmf0w5BfQz9sTN;
+        Wed,  9 Sep 2020 20:49:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599648593;
+        bh=EvMjLLWYG8ye+Nkj1kVAl8lm1kSDGW8sok9j5nmLSXk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=G2BRIMl+xcnrQ7PGQJb2uxdherMo+z+DbZWTx5sXyv1DI4uxVEI/8hv0d0hFOwKVX
+         DJ61SIZU7Xh9s3iDiC0xjxosQ44ic9u2MtsSdPRIHbT6Rx+6I8JjrCcMtIS7PXQu5+
+         oys4KdUM2fCCIY61hR+Sw/yDJAdL2B+pljrAcGb/tirzgrHPFGWOGdA7LuSESIWDcW
+         C8nGofv2OZkTnWhoEZrq8iGuuXxNwoakPsOod5xRQBNas/1Eqd69CL90xgYjIWhk1a
+         e1UPIgte5yIdb2OjrYKiFUzQJ66o7z8jYH+K5FoogexmQ0YPcHQK/SXzaGlkDyEMzc
+         FsrHnbMITSZ4A==
+Date:   Wed, 9 Sep 2020 20:49:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Wunderlich <frank-w@public-files.de>
+Subject: linux-next: Fixes tag needs some work in the mediatek tree
+Message-ID: <20200909204951.5d3196d0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="Sig_/T0nlLIBYi1r0k9carTJ=B3u";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thirumalesha,
+--Sig_/T0nlLIBYi1r0k9carTJ=B3u
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thirumalesha Narasimhappa <nthirumalesha7@gmail.com> wrote on Wed,  9
-Sep 2020 18:44:42 +0800:
+Hi all,
 
-> The MT29F2G01AAAED is a single die, 2Gb Micron SPI NAND Flash with 4-bit
-> ECC
-> 
-> Signed-off-by: Thirumalesha Narasimhappa <nthirumalesha7@gmail.com>
-> ---
+In commit
 
-Changelog, please?
+  845d404207f1 ("arm: dts: mt7623: move display nodes to separate mt7623n.d=
+tsi")
 
->  drivers/mtd/nand/spi/micron.c | 141 ++++++++++++++++++++++++----------
->  1 file changed, 101 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-> index 5d370cfcdaaa..fa8c20f37611 100644
-> --- a/drivers/mtd/nand/spi/micron.c
-> +++ b/drivers/mtd/nand/spi/micron.c
-> @@ -28,7 +28,7 @@
+Fixes tag
 
-Thanks,
-Miquèl
+  Fixes: 1f6ed224594 ("arm: dts: mt7623: add Mali-450 device node")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/T0nlLIBYi1r0k9carTJ=B3u
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9Ys1AACgkQAVBC80lX
+0Gz0vQf9HGqlDZ4guJsaWjozr8yoEvYivDX3R38A2SAm3r6SrfRxWSet/T4ZyCGW
+6cwAkd17sIF3+qwe8Vgj6DcnmOEw28Jv/u6aZgRYsdDvCGxPdRRJ/7maha405MXu
+o6Czhocxu9mQfTAf85dPqSkAc7+WEfpeolxcSq5AHxV3ylclVlyAzFhFzHAiX5VW
+PUrMNXSjwdY9y009AuIIhYAtc0L8dVpjId1u4aWlQP57PykfTn8raDq0WmsSRZL4
+wJzuq2P7F9QRzQBvfNEF1l67hsgGSIMGoWWl5C1CFdHng7djL9RYWcJhTxKKwkhf
+JBRlzY4qWhqNHF5cZIFMzLD4rA3vuA==
+=JWjY
+-----END PGP SIGNATURE-----
+
+--Sig_/T0nlLIBYi1r0k9carTJ=B3u--
