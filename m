@@ -2,93 +2,71 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3419FC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FBAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD7B21941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F19218AC
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 15:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbgIIPsi (ORCPT
+        id S1730449AbgIIPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 11:48:38 -0400
-Received: from mailout08.rmx.de ([94.199.90.85]:43570 "EHLO mailout08.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730460AbgIIPpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:45:36 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout08.rmx.de (Postfix) with ESMTPS id 4BmmYw5Cf1zMnC1;
-        Wed,  9 Sep 2020 17:45:24 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BmmYT72k8z2TRlN;
-        Wed,  9 Sep 2020 17:45:01 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.93) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 9 Sep
- 2020 17:45:01 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Christian Eggers <ceggers@arri.de>
-Subject: [PATCH] iio: light: as73211: Increase measurement timeout
-Date:   Wed, 9 Sep 2020 17:44:39 +0200
-Message-ID: <20200909154439.10308-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 9 Sep 2020 11:49:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11758 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730423AbgIIPqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 11:46:20 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A10404D340DED2722EB1;
+        Wed,  9 Sep 2020 21:48:02 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
+ 21:47:52 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <tglx@linutronix.de>, <john.stultz@linaro.org>, <sboyd@kernel.org>,
+        <frederic@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] timers: Remove unused inline funtion debug_timer_free()
+Date:   Wed, 9 Sep 2020 21:47:49 +0800
+Message-ID: <20200909134749.32300-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.93]
-X-RMX-ID: 20200909-174501-4BmmYT72k8z2TRlN-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We found some sensors which are much slower (20% at room temperature)
-than nominal. According to the data sheet, up to 27% is possible. Now I
-add 33% to the nominal time out, hopefully this is enough.
+There is no caller in tree, so can remove it.
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/iio/light/as73211.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ kernel/time/timer.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/iio/light/as73211.c b/drivers/iio/light/as73211.c
-index 25e5c386d678..457bf7f4b1f4 100644
---- a/drivers/iio/light/as73211.c
-+++ b/drivers/iio/light/as73211.c
-@@ -259,10 +259,9 @@ static int as73211_req_data(struct as73211_data *data)
- 	data->osr &= ~AS73211_OSR_SS;
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index a50364df1054..7da4af49d1d7 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -732,11 +732,6 @@ static inline void debug_timer_deactivate(struct timer_list *timer)
+ 	debug_object_deactivate(timer, &timer_debug_descr);
+ }
  
- 	/*
--	 * Add some extra margin for the timeout. sensor timing is not as precise
--	 * as our one ...
-+	 * Add 33% extra margin for the timeout. fclk,min = fclk,typ - 27%.
- 	 */
--	time_us += time_us / 8;
-+	time_us += time_us / 3;
- 	if (data->client->irq) {
- 		ret = wait_for_completion_timeout(&data->completion, usecs_to_jiffies(time_us));
- 		if (!ret) {
+-static inline void debug_timer_free(struct timer_list *timer)
+-{
+-	debug_object_free(timer, &timer_debug_descr);
+-}
+-
+ static inline void debug_timer_assert_init(struct timer_list *timer)
+ {
+ 	debug_object_assert_init(timer, &timer_debug_descr);
 -- 
-Christian Eggers
-Embedded software developer
+2.17.1
 
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
