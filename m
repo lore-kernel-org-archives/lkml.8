@@ -2,105 +2,134 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E893C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9EBC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF94821D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599652299;
-	bh=nwQP4ol25US11uuBHziyMYOwVPuo5gfNBjDVkj/etDI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nA2p2libJ6wxeHyd5sbB6e4Y1SPbBs9LxsvM0EzngsBM6e87uJAd2XsjQCheCgQFI
-	 hUvgtTJQ2zxAAx/1ElngS+ywl+O6WLrhU4Aa/YDNJDQxEHBL/iNGbF2iKdzvXVJ9T/
-	 18M0Se+Wfi1t6vqM1hGZyUDegPL2F6MIQvb1SURg=
+	by mail.kernel.org (Postfix) with ESMTP id A21012145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="OF8tbqD4";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IMJxS1uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729296AbgIILvH (ORCPT
+        id S1729935AbgIILwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:51:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33002 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbgIILpZ (ORCPT
+        Wed, 9 Sep 2020 07:52:09 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:59649 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729961AbgIILnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:45:25 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e11so1658418wme.0;
-        Wed, 09 Sep 2020 04:45:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WXoG8q5ed4XfWQ3Dzmu5hYVDZuDpMKCum26BXIBxJ60=;
-        b=Dxgh49/fpUtpYueRVoJ53/eHoZkjHiSdzsoIwFf6J2MLCAoBQTM8tE/keaLpaXqYNQ
-         SHzXHY7sso7M4FVK23KmUAUggnYJZxIEvIyGe1iZaE5znKgK5+6NcBlZT/kxnn6bkN+i
-         YPb7ht3We1KNPrusjcIzf0f0OCFNEsu38Sdotms7OAy0HylMjztbfx3+nEkGfEbw9jkI
-         QU81ObXohN3WoMaB3lko3t/zl4VE7W2ynAepFBuleI3iHqasnPSUnk7tnOmnKGiKvAgb
-         SxmelVs1Rf3hMb3bmdNHgz2bmn1r0pD1N6KafhUC0aFA8mqNxt5FBRmyrD00E8OoD6KH
-         u+fQ==
-X-Gm-Message-State: AOAM532zgbw4p1ea0K5acka9ETS3Vn+ieneEd5BVfuHeYzclsafgM8Rc
-        ZJjM3RVD6FtnibfcQ386D2Yi3hULWkE=
-X-Google-Smtp-Source: ABdhPJwRwoXoUtaCWApFPVRqDFMXzGia8naxYrrD7VA8gMVZpqLFW7kaX7pbsSAAErAck1wAGhUKhQ==
-X-Received: by 2002:a1c:2403:: with SMTP id k3mr3029102wmk.153.1599651480007;
-        Wed, 09 Sep 2020 04:38:00 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d3sm3720722wrr.84.2020.09.09.04.37.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 04:37:59 -0700 (PDT)
-Date:   Wed, 9 Sep 2020 11:37:58 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: hibernation: do not hang forever in
- vmbus_bus_resume()
-Message-ID: <20200909113758.7ucufasongrttxdw@liuwe-devbox-debian-v2>
-References: <20200905025555.45614-1-decui@microsoft.com>
- <MW2PR2101MB1052BE3C25E87FE1CA5BA0F8D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Wed, 9 Sep 2020 07:43:49 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 05B323E1;
+        Wed,  9 Sep 2020 07:43:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 09 Sep 2020 07:43:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=GCzCURw+lR65K
+        PqnjNXh/NlBPjWyz8UlafaQL4XINLY=; b=OF8tbqD4f0GClrrWGfCPTbIoyDlnw
+        6JGReCQJIe5qcOB78zEm1YOe11ZkqneJdxoJUOqPU54l9TL36i2qw93c3P1KrzQI
+        suEcnjLgSdG83xrR5n+Deo0hQiZzWGIQP8bKLb5DR5Q9a8LLehvm8GKQa3MlGgZr
+        r/uoBVwwaQHMVSfPQ0WYyqggRkaNMfiaWLlqmFrMrAsvQTrnu8WD6E5UhG/vFdeP
+        LJg9x1osgs1K41SvGelZ/25zo3nIok33rZv+ukebR6aPDBvsbIXeRA7hw7kFVeMY
+        Ro7MG2pggPS9QX9FZnhDrL2GSeDtQ3hkIeQCtz/gh44MrKJ7zsZSRT1LQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=GCzCURw+lR65KPqnjNXh/NlBPjWyz8UlafaQL4XINLY=; b=IMJxS1uo
+        feFxBE8oixjnRqrWd2z+BhKUpx6j3PpQ++Dc0/qvQTKWW9Ss+9vJWOlC/CoeeFZv
+        UnKZLyoTNDTcG45iqu6CGzKBEjaNQzdp8xYV9D0u9hCfX1sjEdkzmOZxY2LuQg8p
+        3uwGGfjOukxYyzUbCP8X4fi0mexGGS0x/0ScRh9KnjDavOEhL4o+w0tG0229Urfz
+        Fp3a5LPNIlDYUdRzyh0gqvdiZl3jk0ZVV0FLCMNUTbxAnTGvtULryCZgU0kh39Nq
+        fWGNi5WMznwZfuGmbboMofxiwjM4Avs8golN3Zb0xKY84gV4XWjJvyWWeKgV4+3N
+        8NPwCUASWTf2jg==
+X-ME-Sender: <xms:5L9YX3WUrAvVj0Rul-AkTbYNemC5tz-A0bKy5rkETV7xJyBhtFcldg>
+    <xme:5L9YX_lvrp88qzPHjgcqNo9ZXfaQaBmXRk_2I1PRKGD3f5lZMJ-Skz9UVzHNDO14v
+    yZZgjLjpi9QBYb3-Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehhedggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
+    jhdrihgurdgruheqnecuggftrfgrthhtvghrnhepjefgvdevheetkeevgeegleelgfelte
+    etjeffleffvdduudevieffgeetleevhfetnecukfhppedugedrvddruddtledrkeehnecu
+    vehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvg
+    ifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:5L9YXza7y9TOj4mQJ9YQTCk_vBfR3f30lESn2ycIUKLVKjwLbL2Z5Q>
+    <xmx:5L9YXyWmnFO0H4RkO8ojQRPZJTP7fe_JKBmI4qI62tyDb7Iu3FoqGg>
+    <xmx:5L9YXxnAV9N2dw-kE1yY7xjxzed9QT33PxxRMnym6QYCSKhp5KDQmA>
+    <xmx:5L9YX0tOqbFbsu8eAlxDyR2jPnYpRGw6othriM9WpTl9CP-tIBVLUw>
+Received: from localhost.localdomain (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CCCC63065C20;
+        Wed,  9 Sep 2020 07:43:29 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, joel@jms.id.au,
+        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] pinctrl: aspeed-g6: Add bias controls for 1.8V GPIO banks
+Date:   Wed,  9 Sep 2020 21:13:12 +0930
+Message-Id: <20200909114312.2863675-4-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200909114312.2863675-1-andrew@aj.id.au>
+References: <20200909114312.2863675-1-andrew@aj.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052BE3C25E87FE1CA5BA0F8D7290@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 09:05:34PM +0000, Michael Kelley wrote:
-> From: Dexuan Cui <decui@microsoft.com> Sent: Friday, September 4, 2020 7:56 PM
-> > 
-> > After we Stop and later Start a VM that uses Accelerated Networking (NIC
-> > SR-IOV), currently the VF vmbus device's Instance GUID can change, so after
-> > vmbus_bus_resume() -> vmbus_request_offers(), vmbus_onoffer() can not find
-> > the original vmbus channel of the VF, and hence we can't complete()
-> > vmbus_connection.ready_for_resume_event in check_ready_for_resume_event(),
-> > and the VM hangs in vmbus_bus_resume() forever.
-> > 
-> > Fix the issue by adding a timeout, so the resuming can still succeed, and
-> > the saved state is not lost, and according to my test, the user can disable
-> > Accelerated Networking and then will be able to SSH into the VM for
-> > further recovery. Also prevent the VM in question from suspending again.
-> > 
-> > The host will be fixed so in future the Instance GUID will stay the same
-> > across hibernation.
-> > 
-> > Fixes: d8bd2d442bb2 ("Drivers: hv: vmbus: Resume after fixing up old primary channels")
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > ---
-> >  drivers/hv/vmbus_drv.c | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> 
+These were skipped in the original patches adding pinconf support for
+the AST2600.
 
-Applied to hyperv-fixes. Thanks.
+Cc: Johnny Huang <johnny_huang@aspeedtech.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index 7efe6dbe4398..34803a6c7664 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -19,6 +19,7 @@
+ 
+ #define SCU400		0x400 /* Multi-function Pin Control #1  */
+ #define SCU404		0x404 /* Multi-function Pin Control #2  */
++#define SCU40C		0x40C /* Multi-function Pin Control #3  */
+ #define SCU410		0x410 /* Multi-function Pin Control #4  */
+ #define SCU414		0x414 /* Multi-function Pin Control #5  */
+ #define SCU418		0x418 /* Multi-function Pin Control #6  */
+@@ -2591,6 +2592,22 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
+ 	/* MAC4 */
+ 	{ PIN_CONFIG_POWER_SOURCE,   { F24, B24 }, SCU458, BIT_MASK(5)},
+ 	{ PIN_CONFIG_DRIVE_STRENGTH, { F24, B24 }, SCU458, GENMASK(3, 2)},
++
++	/* GPIO18E */
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y1, Y4, SCU40C, 4),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y1, Y4, SCU40C, 4),
++	/* GPIO18D */
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, AB4, AC5, SCU40C, 3),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   AB4, AC5, SCU40C, 3),
++	/* GPIO18C */
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E4, E1, SCU40C, 2),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E4, E1, SCU40C, 2),
++	/* GPIO18B */
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B2, D3, SCU40C, 1),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B2, D3, SCU40C, 1),
++	/* GPIO18A */
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C6, A2, SCU40C, 0),
++	ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C6, A2, SCU40C, 0),
+ };
+ 
+ /**
+-- 
+2.25.1
+
