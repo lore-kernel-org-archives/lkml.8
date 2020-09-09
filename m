@@ -2,171 +2,130 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B91C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D94CF20936
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB8320EDD
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 02:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="uR9qzCZy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dhE5EDFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgIIClT (ORCPT
+        id S1728297AbgIICng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 22:41:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29124 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbgIIClM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 22:41:12 -0400
-IronPort-SDR: vy+PemRLhu+quuvxUmUQ9gq+RiWclY4jSjcRf17VmB+Amgw8bbQgSJp6YeV0yO5avEy/k98ko/
- t4ZTKhgurZQQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155659294"
-X-IronPort-AV: E=Sophos;i="5.76,408,1592895600"; 
-   d="scan'208";a="155659294"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 19:41:12 -0700
-IronPort-SDR: ONobC3Pu7Js9+iTPkSF+6bXLZFA44kr1EuVIrpG8LDvRLzwrKNCuRibjU3fRuxeucdbCBVTQZq
- 9YpFeK3Ff8Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,408,1592895600"; 
-   d="scan'208";a="480291764"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga005.jf.intel.com with ESMTP; 08 Sep 2020 19:41:11 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 8 Sep 2020 19:41:11 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 8 Sep 2020 19:41:11 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.51) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Tue, 8 Sep 2020 19:41:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KMBOugqT4vemq9TWNz1ULROlsqmCclhhag9YG/CIX4+c2Ei7gEFOjMCpuDKyrdcgTYV5lD1gqRAJTaToVnrFdT5FdOl4gQbFhTL3/0C6LaFDhCjKmtAB8HbnEVWXFUtLKghA/iB2wd8yL+HQWCrW523S3LKC6BgUoxFxgoGR5XFMIz6Vcwisy88M+1kJqrozghJPgYnyGZu4PUFl78WZ4rELtFmP43eDxffEsJI62BxXLOoinqixRLIZyygl+cnh/lJ9L27Yv5oGqPJFDG3tcenLnUrlLU+KZYgIRXcrHnOEeGPPn4sWJemoCMQyE+fhmZoNHPCY4CojfTy1jf23bQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zh7f1YaratsRAjIA4vL1ZnYkOW1obYn+Qh9fsznHGUo=;
- b=PsEyJlN1WBVUipU2/P0nG9MSFMRHeSzypFIodL7rCzEAwE9nxcyzhxtnAUA/ftbwjciEKWznCGadGWDpL3nECzaL+INGaF4Ui1XtiySnOkU6Zbo+tRoc5C5zunEiI/pgqInE19jmLg9XQTA9z6/aOrQG1p3S+10Q5pZEuUXFQ1PNwzQe2XpNEw9Zqt09Dc+kZUR0bI4bU5ERuH6aYjhdWNSLiy1LlvuhQgWDMeeoUykwlodl75UG5kkfnAFt5Y2dqfmAoyKPkvHs4UWRurZgFo0W5llvkpElwCB0S8/5Zd6UgHxKnLKnVaIfWfQ8xUqm9JEA7OTkq9fuXr1bQTTWqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zh7f1YaratsRAjIA4vL1ZnYkOW1obYn+Qh9fsznHGUo=;
- b=uR9qzCZyBQ2lBL9nYIHj+KWv8o/mkIaosXjvsiNX5k1+pqFvs+2pvGCjgY40YcNX+K2kCwQtpV0hKWdpZ7e1WlUzoWgoKLRpdGszihvTxL7uTslkPMhHJOFg9bM7aymP8nUdUPI2m/2pRQRRoVbpnCgE2gPkJlOBvEsG8yQt/rY=
-Received: from MWHPR11MB1696.namprd11.prod.outlook.com (2603:10b6:300:23::23)
- by MWHPR1101MB2175.namprd11.prod.outlook.com (2603:10b6:301:5b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Wed, 9 Sep
- 2020 02:41:08 +0000
-Received: from MWHPR11MB1696.namprd11.prod.outlook.com
- ([fe80::ec4a:90cc:bdb4:5a5a]) by MWHPR11MB1696.namprd11.prod.outlook.com
- ([fe80::ec4a:90cc:bdb4:5a5a%9]) with mapi id 15.20.3348.019; Wed, 9 Sep 2020
- 02:41:08 +0000
-From:   "Zhao, Haifeng" <haifeng.zhao@intel.com>
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "Zhang, ShanshanX" <shanshanx.zhang@intel.com>,
-        "Jia, Pei P" <pei.p.jia@intel.com>
-Subject: RE: [PATCH] Revert "block: revert back to synchronous request_queue
- removal"
-Thread-Topic: [PATCH] Revert "block: revert back to synchronous request_queue
- removal"
-Thread-Index: AQHWhbUmn1JF/TbogUavgTta1QMeJqley0QAgADEb6CAAAm2AIAAAGQg
-Date:   Wed, 9 Sep 2020 02:41:08 +0000
-Message-ID: <MWHPR11MB16967EE0DEBE2BBE23D3748A97260@MWHPR11MB1696.namprd11.prod.outlook.com>
-References: <20200908075047.5140-1-haifeng.zhao@intel.com>
- <20200908142128.GA3463@infradead.org>
- <MWHPR11MB1696A6C649BD434390418FE797260@MWHPR11MB1696.namprd11.prod.outlook.com>
- <20200909023918.GA1473752@T590>
-In-Reply-To: <20200909023918.GA1473752@T590>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.207]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1f42aa85-4702-4e8e-f7dd-08d85469ce9c
-x-ms-traffictypediagnostic: MWHPR1101MB2175:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR1101MB2175EB418C5953B8C75862C797260@MWHPR1101MB2175.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vPATqRBAlWrq7fNWbfq54Suv7X6GSLJCgjedbkk1s7oEqMuuIqLe53BeI3MvmAKeuY2xK1P51tq1Nq2sw6jJbUcobHOIytv8xW3UsV0lKP/uUFkRzfwVDI6ifHzZhzsoj2XxuSqMGRQKETwBHL+f+AjjB8VXVYjHZPn2a2B0xuIsHMtYa2aGYXtTR/mYlOazXbzTIiBlj/iMrNXQmQRZ/aoASbXHmwwjK2rPBdRkboVuzZDAVRnpzFNY96HgeVGwLEZxrn1jntvc02pUN//J5oQ+ID7nDeot2/RgSjOolZZYPLFPCElflwyveYrpCGLDvpPLYGlzPk6D+VhAp+NHxkQX8FiVRPtbPS/Q3IZ6meS/p1SBc+UBGNZDywqf/2a+qY/iv/1xqXXb9/P3hGFZ0g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1696.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(4744005)(9686003)(53546011)(7696005)(66446008)(6506007)(64756008)(6916009)(76116006)(71200400001)(66556008)(66476007)(66946007)(86362001)(107886003)(186003)(26005)(4326008)(5660300002)(2906002)(54906003)(8676002)(316002)(52536014)(966005)(8936002)(478600001)(55016002)(33656002)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: JRqRwzoPIGBoqJYnSQqtkPi0sI7kH7knaw0AxxprAuWAjthkStvVjxtoREvuJB78y9ZTMHmMDbfnOTHgcfe9aT6Iqbsmbj6LwI9ojcR9jFzQrTFCEMf+8sPqYiOPGvq7TOp3Xng7cItibs0zcGV3QuVIx/ZnarEmHCp+WA35F2NVJ4O1MeSwhJdjTE2301/3ls64VZLNIV5huz22GrcFtDmVghJWZ0UpSEPAhKG0xRQGH0NOML/ROMyZxoaerb13RqfZ4cmdyqXn0E3hHe87OxNsLxqOdUR/2lSwxwpVM9jb6WD5c5WdDkbK9z0dbhbE3JdmfL936u4bta8jDJNO9nBFmbdIAhevfom7B1lfnvchh4+7fw/oVVe7fWEIn1ynyXHxXTzxRFoW3Tgutbonso32IKbNWUNLljYTKzAhUoWc0e8zENOkAXuzmPQwHZ5FXD/Rd200FmzAp6QAvekDRMs2lipzaUyVUS31tGiI+T9lISdRvf5QQrBZN/i8Rqc4LJpMxPMTIIe6tfa/WTVi972SVfaaSRoa75MfL23ppjvW+I7WiZfh1la5a8+50KjXmr9pkn1NALgI8xwqraW50ubOz+M6/T7AdG5niYXrTHHBons6HW323+FlMz2mPBiGpg0OPfBSejtMudUxUucUng==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 8 Sep 2020 22:43:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59104 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgIICnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 22:43:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892WDpo195897;
+        Wed, 9 Sep 2020 02:42:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=eukrwp7H2koQjeyZA6wBLLVQSjtXdS08WqjhoStToms=;
+ b=dhE5EDFsaaXmDeiHDJi/Zfj7NwjpIdn5QX+5RoKACONs4OU9k61rSUoDxA80UXOeNfVS
+ EM8YoduhExTYX/r5wcf61KqBKP0rK6Uq5XmHl7VUqfEc3oM2AQdN1IbPzgWTHuSuwnkB
+ DeMddPbQ750+uvZZUAQ0M7G5+J66QKOC8/1ZrZAz1atZOdeg4ImFSCGn25kFUQtQ7V0Q
+ +fsluw2UQ6poGwhoJbO1MJtf3nnKqeBN2PNyd0FDUJHe7hTMKqJhrCnupjCuZOV/zRaV
+ CH1MfUs+NIj0fksF8YLDCFqc7cnIomPVrSBrmdzNpNMILnDz+SiJ60BDtWcKC5WzzidT xw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33c3amxw43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 09 Sep 2020 02:42:55 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0892VbmW148878;
+        Wed, 9 Sep 2020 02:40:54 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 33dacjqvg1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 09 Sep 2020 02:40:54 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0892erJe026700;
+        Wed, 9 Sep 2020 02:40:53 GMT
+Received: from [10.74.86.35] (/10.74.86.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Sep 2020 19:40:53 -0700
+Subject: Re: [PATCH next v2 0/3] soc: ti: k3: ringacc: add am65x sr2.0 support
+To:     Suman Anna <s-anna@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200829184139.15547-1-grygorii.strashko@ti.com>
+ <b9310d10-46c5-2c63-a921-88be23363d44@oracle.com>
+ <1661043e-15a3-b8de-b16c-ef6ff88f18e5@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <39eeac89-b87b-e3ef-e061-20021e9bb0b9@oracle.com>
+Date:   Tue, 8 Sep 2020 19:40:51 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1696.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f42aa85-4702-4e8e-f7dd-08d85469ce9c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Sep 2020 02:41:08.6288
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gKwM9bsyKgiGY5hcpdHqLXUTi10SordYLi5IqFYCsZB6MnVGHKbzVMer6TMs9ufzVV2EzPT9ZNmvz+VgGMyuEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2175
-X-OriginatorOrg: intel.com
+In-Reply-To: <1661043e-15a3-b8de-b16c-ef6ff88f18e5@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 suspectscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,=20
-    Got it, will try and give you feedback. Thanks,
 
------Original Message-----
-From: Ming Lei <ming.lei@redhat.com>=20
-Sent: Wednesday, September 9, 2020 10:39 AM
-To: Zhao, Haifeng <haifeng.zhao@intel.com>
-Cc: Christoph Hellwig <hch@infradead.org>; axboe@kernel.dk; bhelgaas@google=
-.com; linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; linux-pci@=
-vger.kernel.org; mcgrof@kernel.org; Zhang, ShanshanX <shanshanx.zhang@intel=
-.com>; Jia, Pei P <pei.p.jia@intel.com>
-Subject: Re: [PATCH] Revert "block: revert back to synchronous request_queu=
-e removal"
 
-Hello Haifeng,
+On 9/8/20 3:09 PM, Suman Anna wrote:
+> Hi Santosh,
+> 
+> On 8/31/20 1:34 PM, santosh.shilimkar@oracle.com wrote:
+>> On 8/29/20 11:41 AM, Grygorii Strashko wrote:
+>>> Hi Santosh,
+>>>
+>>> I've rebased on top of  linux-next and identified merge conflict of patch 3
+>>> with commit 6da45875fa17 ("arm64: dts: k3-am65: Update the RM resource types")
+>>> in -next.
+>>>
+>>> ---
+>>> This series adds support for the TI AM65x SR2.0 SoC Ringacc which has fixed
+>>> errata i2023 "RINGACC, UDMA: RINGACC and UDMA Ring State Interoperability
+>>> Issue after Channel Teardown". This errata also fixed for J271E SoC.
+>>> The SOC bus chipinfo data is used to identify the SoC and configure
+>>> i2023 errata W/A.
+>>>
+>>> This changes made "ti,dma-ring-reset-quirk" DT property obsolete, so it's
+>>> removed.
+>>>
+>>> Changes in v2:
+>>>    - no functional changes
+>>>    - rebased on top of linux-next
+>>>    - added ask from Rob Herring
+>>>
+>> Thanks. Can you please followup DT acks for PRUSS series so that I can
+>> apply PRUSS + $subject series.
+> 
+> PRUSS dt binding is acked now, so can you pick up the PRUSS v2 series for 5.10
+> merge window.
+> 
+Yes, I saw ack from Rob. Will try to get to this over coming weekend.
 
-On Wed, Sep 09, 2020 at 02:11:20AM +0000, Zhao, Haifeng wrote:
-> Ming, Christoph,
->     Could you point out the patch aimed to fix this issue ? I would like =
-to try it.   This issue blocked my other PCI patch developing and verificat=
-ion work,=20
-> I am not a BLOCK/NVMe expert, wouldn't to be trapped into other sub-syste=
-m bugs, so just reported it for other expert's quick fix.=20
->=20
-
-Please try the following patch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3Dcafe01ef8fcb248583038e1be071383530fe355a
-
-Thanks,
-Ming
-
+Regards,
+Santosh
