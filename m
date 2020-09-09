@@ -2,92 +2,166 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B84EC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B935C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD836206F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:55:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="VNE7eGd+"
+	by mail.kernel.org (Postfix) with ESMTP id E055B208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599638174;
+	bh=JARiYueBjjGPlebhXcfjdVe1PdGZejQ1v9IQ50hAApA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kC7u+K8EwvseTL3naU4ZQV9386jPog7DxnohwlftFbQM6m192tWj5bhvM9/SC0uls
+	 J0CnsSoYNHa7N4xZckwHN3GNwo+T0Fp1Tl5r+XiLBY9RlvXcTU+4K5M8dt12JORBHH
+	 UOs6l1NFRY5U6W/c3n3nm9/nrGrawOcLNaJuupD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIIHzU (ORCPT
+        id S1729621AbgIIH4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:55:20 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:38018 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726399AbgIIHzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:55:18 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08975UI5016693;
-        Wed, 9 Sep 2020 00:55:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pfpt0220;
- bh=WMlUyTptfef2ZZMiT/FpV0KuG7I2KWn4l+YZAIuGk18=;
- b=VNE7eGd+k5mKJgUl9OrIpJ1634+sBrv9wTu50HSEy2c0LVnPhidUGo/eccy8VGFQ3jgO
- 2uMIlNpWtai1ImbmLlOz6zJjPRhXvYzcE1iwJqVb1iEPIGK+ckc8G97jTHn+dg044kJk
- V/uwlS5+9WnISe7fgJCardfgvJfZUEN2vjWDOeHhIsxhwCCs3/NEYlI7TlOB6Kk4PXWD
- nrRNItwMuj+Cd8eNWT4pJPL+jqjeMlTD4e3VmfZ8GUWvw87IRtWds1uktTGAtfBEmOk+
- N9tGjXZsJ+j6Scio/DdR3MEadjdbEgC/FHHSyhfXbh9y746jYFlaRstJL9gGn1Do1QYf xg== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 33c81pxvs5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 09 Sep 2020 00:55:15 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 9 Sep
- 2020 00:55:14 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 9 Sep 2020 00:55:14 -0700
-Received: from [10.6.200.75] (NN-LT0019.marvell.com [10.6.200.75])
-        by maili.marvell.com (Postfix) with ESMTP id 34A4F3F7044;
-        Wed,  9 Sep 2020 00:55:11 -0700 (PDT)
-Subject: Re: [EXT] [PATCH 0/5 REBASED to v5.9-rc4] Qlogic drivers: Convert to
- SPDX license identifiers
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-spdx@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Nilesh Javali <njavali@marvell.com>
-References: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
-From:   Igor Russkikh <irusskikh@marvell.com>
-Message-ID: <e5688d4c-f512-6705-6bb1-db832828fb35@marvell.com>
-Date:   Wed, 9 Sep 2020 10:55:10 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101
- Thunderbird/81.0
+        Wed, 9 Sep 2020 03:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726169AbgIIH4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:56:06 -0400
+Received: from localhost (unknown [122.179.21.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7508F2087C;
+        Wed,  9 Sep 2020 07:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599638165;
+        bh=JARiYueBjjGPlebhXcfjdVe1PdGZejQ1v9IQ50hAApA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xDYefFctxhwXQbotzFIaWwJRSkw/f/qoeiMWJ8/r6KjzfmC4qqvetpY5qNmqI6l+J
+         i4WnFSoEuohmVoItnSzX23DYn3OawZOmywupJUQN3/9nNiD9L8FkUnNMTWXesGCzF5
+         MFDGj9q6EdlJ+6MdFNJFpgWVyORi0/LIdgzO9ldM=
+Date:   Wed, 9 Sep 2020 13:25:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        gregkh@linuxfoundation.org,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] soundwire: SDCA: add helper macro to access
+ controls
+Message-ID: <20200909075555.GK77521@vkoul-mobl>
+References: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
+ <20200901162225.33343-3-pierre-louis.bossart@linux.intel.com>
+ <20200904050244.GT2639@vkoul-mobl>
+ <f35a0ae7-2779-0c69-9ef3-0d0e298888ac@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-09_03:2020-09-08,2020-09-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f35a0ae7-2779-0c69-9ef3-0d0e298888ac@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> Igor, can you please ack these patches?
+On 08-09-20, 08:33, Pierre-Louis Bossart wrote:
+> Thanks for the review Vinod,
 > 
-> Igor, please also let us know:
->   A. if you will pick them up and let them travel through your tree, or
->   B. if the spdx maintainers shall pick them up and they shall route them
->      directly to Linus.
+> > This is good, thanks for adding it in changelog. Can you also add this
+> > description to Documentation (that can come as an individual patch),
+> 
+> ok
+> 
+> > > +/*
+> > > + * v1.2 device - SDCA address mapping
+> > > + *
+> > > + * Spec definition
+> > > + *	Bits		Contents
+> > > + *	31		0 (required by addressing range)
+> > > + *	30:26		0b10000 (Control Prefix)
+> > 
+> > So this is for 30:26
+> 
+> I don't get the comment, sorry.
 
-Thanks Lukas,
+I should have added see below.
 
-Acked on ethernet driver patches. For storage drivers I believe you'll have
-ACK from Nilesh.
+> > 
+> > > + *	25		0 (Reserved)
+> > > + *	24:22		Function Number [2:0]
+> > > + *	21		Entity[6]
+> > > + *	20:19		Control Selector[5:4]
+> > > + *	18		0 (Reserved)
+> > > + *	17:15		Control Number[5:3]
+> > > + *	14		Next
+> > > + *	13		MBQ
+> > > + *	12:7		Entity[5:0]
+> > > + *	6:3		Control Selector[3:0]
+> > > + *	2:0		Control Number[2:0]
+> > > + */
+> > > +
+> > > +#define SDW_SDCA_CTL(fun, ent, ctl, ch)						\
+> > > +	(BIT(30)							|	\
+> > 
+> > Programmatically this is fine, but then since we are defining for the
+> > description above, IMO it would actually make sense for this to be defined
+> > as FIELD_PREP:
+> > 
+> >          FIELD_PREP(GENMASK(30, 26), 1)
+> > 
+> > or better
+> > 
+> >          u32_encode_bits(GENMASK(30, 26), 1)
+> > 
+> > > +	FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))	|	\
+> > 
+> > Why not use u32_encode_bits(GENMASK(24, 22), (fun)) instead for this and
+> > below?
+> 
+> Because your comment for the v1 review was to use FIELD_PREP/FIELD_GET, and
+> your other patches for bitfield access only use FIELD_PREP/FIELD_GET.
 
-We don't manage our own tree, we normally do directly on netdev list.
-Thus I think its safe to go with (B) and do this through spdx tree.
+yes and looking at this, I feel u32_encode_bits(GENMASK(24, 22), (fun))
+would look better than FIELD_PREP(GENMASK(24, 22), FIELD_GET(GENMASK(2, 0), (fun)))
 
-Regards,
-  Igor
+Do you agree?
+
+> 
+> I really don't care about which macro is used but it wouldn't hurt to have
+> some level of consistency between different parts of the code? Why not use
+> FIELD_PREP/GET everywhere?
+> 
+> > > +	FIELD_PREP(BIT(21), FIELD_GET(BIT(6), (ent)))			|	\
+> > > +	FIELD_PREP(GENMASK(20, 19), FIELD_GET(GENMASK(5, 4), (ctl)))	|	\
+> > > +	FIELD_PREP(GENMASK(17, 15), FIELD_GET(GENMASK(5, 3), (ch)))	|	\
+> > > +	FIELD_PREP(GENMASK(12, 7), FIELD_GET(GENMASK(5, 0), (ent)))	|	\
+> > > +	FIELD_PREP(GENMASK(6, 3), FIELD_GET(GENMASK(3, 0), (ctl)))	|	\
+> > > +	FIELD_PREP(GENMASK(2, 0), FIELD_GET(GENMASK(2, 0), (ch))))
+> > 
+> > Also, can we rather have a nice function for this, that would look much
+> > cleaner
+> 
+> I am not sure what would be cleaner but fine.
+
+Ok
+
+> > And while at it, consider defining masks for various fields rather than
+> > using numbers in GENMASK() above, that would look better, be more
+> > readable and people can reuse it.
+> 
+> Actually on this one I disagree. These fields are not intended to be used by
+> anyone, the goal is precisely to hide them behind regmap, and the use of raw
+> numbers makes it easier to cross-check the documentation and the code.
+> Adding a separate set of definitions would not increase readability.
+
+Which one would you prefer:
+
+        #define SDCA_FUN_MASK           GENMASK(24, 22)
+
+        foo |= u32_encode_bits(SDCA_FUN_MASK, fun)
+
+Or the one proposed...?
+
+-- 
+~Vinod
