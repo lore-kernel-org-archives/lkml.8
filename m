@@ -2,254 +2,255 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09953C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C115C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC60921D82
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="C5Fv53Hk"
+	by mail.kernel.org (Postfix) with ESMTP id 1715521D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgIIV6J (ORCPT
+        id S1729161AbgIIV60 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:58:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
+        Wed, 9 Sep 2020 17:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIIV6I (ORCPT
+        with ESMTP id S1726226AbgIIV6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:58:08 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B705AC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 14:58:07 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id r128so2250404qkc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 14:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=YzcEKzsIWMuMUeF2ey3rtqIWIvrrBYx2vMKWker9WzU=;
-        b=C5Fv53HkIMHHoez5IYzzn36hW0UQqwW9KLZC4s9j5QoptDldkoHfHK/dGAox6TwObe
-         binlTX7MkxrWT+dDuwi1/uPuq27BZAjL1xZXwx6z8eR6sakcGs866qkvuOHdXpZMHE3v
-         MIZFYe87z96xRKMxatoLjAZFYuXpFWjOZgXYXRkxZpK1pAIrdGNs3glWWx2Krl+XVYoR
-         YirWIwRKkYQMruUWz41tJVHXBYH6vZVckNxtYWqfWNgypkQ+aR33DELU/kyDB2nB5Quz
-         MFdn1w4xVNM8sZUXG/wH/M2G13dOLlVbQ/zZEbq0CRO8B3ONI0pHD1nRDsFjRCx2OrJK
-         AEJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=YzcEKzsIWMuMUeF2ey3rtqIWIvrrBYx2vMKWker9WzU=;
-        b=Ru3LrQYswt9h2JbIBFmF+zaE+lQq2qOcD2Plgzc2sTqfcRrhImEIU1mEH8Vp4DHtGw
-         BhqY1US6E8nfir18njOA0k9VRuUIKAHQnsNxZ2ON1tF1yB3lNRFulbwxvfpc0JyqlaLl
-         cfauIAnWHk6ty6LDJMdErwvpNy9mL/3CXGFHmDij7o9yTb+0CqQhQF/PpU7dhYy5qNmE
-         oMYvGc119NgTauEv8H25OkQlfeHtiNCg5DmU1X6oaIYFO2P+qIRMs7yyd7PiT67Gsch7
-         f/iS/GZ/wU5sxqtQsTKwwZmfUJzVdWlpoMZEakqP9yKJG6NEovl9URp+NqmKrAf4Y47Q
-         C4Bw==
-X-Gm-Message-State: AOAM530FE3HGdpEAuEcx/Ubk3B6w849riocLz8VHpyo613zbpQZpWYp+
-        XBbiYob3QZVNVRIW7/Axz55Cajgng6jNvA==
-X-Google-Smtp-Source: ABdhPJxvm19zrqdC866xY9yfmda+4ASjoqxlYsir81SgXnJbsx/iOLmlhqpoJSUJCSmVcVOGWC375sKSUB3pqQ==
-X-Received: from shakeelb.svl.corp.google.com ([2620:15c:2cd:202:a28c:fdff:fee8:36f0])
- (user=shakeelb job=sendgmr) by 2002:ad4:42b3:: with SMTP id
- e19mr6459498qvr.6.1599688686888; Wed, 09 Sep 2020 14:58:06 -0700 (PDT)
-Date:   Wed,  9 Sep 2020 14:57:52 -0700
-Message-Id: <20200909215752.1725525-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH] memcg: introduce per-memcg reclaim interface
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Greg Thelen <gthelen@google.com>,
-        David Rientjes <rientjes@google.com>,
-        "=?UTF-8?q?Michal=20Koutn=C3=BD?=" <mkoutny@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 9 Sep 2020 17:58:24 -0400
+X-Greylist: delayed 3047 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Sep 2020 14:58:22 PDT
+Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF0CC061573;
+        Wed,  9 Sep 2020 14:58:21 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
+        by mail.nic.cz (Postfix) with ESMTPSA id 61832140A26;
+        Wed,  9 Sep 2020 23:58:19 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 23:58:19 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next + leds v2 1/7] dt-bindings: leds: document
+ binding for HW controlled LEDs
+Message-ID: <20200909235819.0b0fe7ce@nic.cz>
+In-Reply-To: <20200909211552.GA3066273@bogus>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+        <20200909162552.11032-2-marek.behun@nic.cz>
+        <20200909211552.GA3066273@bogus>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce an memcg interface to trigger memory reclaim on a memory cgroup.
+On Wed, 9 Sep 2020 15:15:52 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Use cases:
-----------
+> On Wed, Sep 09, 2020 at 06:25:46PM +0200, Marek Behún wrote:
+> > Document binding for LEDs connected to and controlled by various chips
+> > (such as ethernet PHY chips).  
+> 
+> If they are h/w controlled, then why are they in DT?
 
-1) Per-memcg uswapd:
+The idea is that by default these LEDs are in some specific HW control
+mode (the chip default), but the chip supports various HW control
+modes, and also supports SW control.
+For example on Marvell PHYs there is a 4-bit register for each LED, so
+16 values, and some of them are:
+  0000: On - Receive
+        Off - No receive
+  0001: On - Link
+        Blink - Activity
+        Off - No Link
+  ...
+  0101: On - 100Mbps or Fiber Link
+        Off - Else
+  ...
+  1000: Force Off
+  1001: Force On
+  ...
+  1011: Force Blink
 
-Usually applications consists of combination of latency sensitive and
-latency tolerant tasks. For example, tasks serving user requests vs
-tasks doing data backup for a database application. At the moment the
-kernel does not differentiate between such tasks when the application
-hits the memcg limits. So, potentially a latency sensitive user facing
-task can get stuck in high reclaim and be throttled by the kernel.
+So writing 0x8 disables the LED, 0x9 enabled it (SW control via
+/sys/class/leds/<LED>/brightness), other values change the HW control
+mode (in this proposal /sys/class/leds/<LED>/hw_mode when trigger is
+set to dev-hw-mode).
 
-Similarly there are cases of single process applications having two set
-of thread pools where threads from one pool have high scheduling
-priority and low latency requirement. One concrete example from our
-production is the VMM which have high priority low latency thread pool
-for the VCPUs while separate thread pool for stats reporting, I/O
-emulation, health checks and other managerial operations. The kernel
-memory reclaim does not differentiate between VCPU thread or a
-non-latency sensitive thread and a VCPU thread can get stuck in high
-reclaim.
+> > 
+> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > ---
+> >  .../leds/linux,hw-controlled-leds.yaml        | 99 +++++++++++++++++++
+> >  1 file changed, 99 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml b/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
+> > new file mode 100644
+> > index 0000000000000..eaf6e5d80c5f5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
+> > @@ -0,0 +1,99 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/leds/linux,hw-controlled-leds.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: LEDs that can be controlled by hardware (eg. by an ethernet PHY chip)
+> > +
+> > +maintainers:
+> > +  - Marek Behún <marek.behun@nic.cz>
+> > +
+> > +description:
+> > +  Many an ethernet PHY (and other chips) supports various HW control modes
+> > +  for LEDs connected directly to them. With this binding such LEDs can be
+> > +  described.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: linux,hw-controlled-leds  
+> 
+> What makes this linux specific?
+> 
+> Unless you're going to make this h/w specific, then it probably should 
+> just be dropped. 
+> 
 
-One way to resolve this issue is to preemptively trigger the memory
-reclaim from a latency tolerant task (uswapd) when the application is
-near the limits. Finding 'near the limits' situation is an orthogonal
-problem.
+Will do, thanks.
 
-2) Proactive reclaim:
+> The phy schema will need:
+> 
+> leds:
+>   type: object
+>   $ref: /schemas/leds/hw-controlled-leds.yaml#
+> 
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +patternProperties:
+> > +  "^led@[0-9a-f]+$":
+> > +    type: object
+> > +    allOf:
+> > +      - $ref: common.yaml#
+> > +    description:
+> > +      This node represents a LED device connected to a chip that can control
+> > +      the LED in various HW controlled modes.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        maxItems: 1
+> > +        description:
+> > +          This property identifies the LED to the chip the LED is connected to
+> > +          (eg. an ethernet PHY chip can have multiple LEDs connected to it).
+> > +
+> > +      enable-active-high:
+> > +        description:
+> > +          Polarity of LED is active high. If missing, assumed default is active
+> > +          low.
+> > +        type: boolean
+> > +
+> > +      led-tristate:
+> > +        description:
+> > +          LED pin is tristate type. If missing, assumed false.
+> > +        type: boolean
+> > +
+> > +      linux,default-hw-mode:  
+> 
+> How is this linux specific? It sounds device specific. Your choice is 
+> make this a device specific property with device specific values or come 
+> up with generic modes.
 
-This is a similar to the previous use-case, the difference is instead of
-waiting for the application to be near its limit to trigger memory
-reclaim, continuously pressuring the memcg to reclaim a small amount of
-memory. This gives more accurate and uptodate workingset estimation as
-the LRUs are continuously sorted and can potentially provide more
-deterministic memory overcommit behavior. The memory overcommit
-controller can provide more proactive response to the changing behavior
-of the running applications instead of being reactive.
-
-Benefit of user space solution:
--------------------------------
-
-1) More flexible on who should be charged for the cpu of the memory
-reclaim. For proactive reclaim, it makes more sense to centralized the
-overhead while for uswapd, it makes more sense for the application to
-pay for the cpu of the memory reclaim.
-
-2) More flexible on dedicating the resources (like cpu). The memory
-overcommit controller can balance the cost between the cpu usage and
-the memory reclaimed.
-
-3) Provides a way to the applications to keep their LRUs sorted, so,
-under memory pressure better reclaim candidates are selected. This also
-gives more accurate and uptodate notion of working set for an
-application.
-
-Questions:
-----------
-
-1) Why memory.high is not enough?
-
-memory.high can be used to trigger reclaim in a memcg and can
-potentially be used for proactive reclaim as well as uswapd use cases.
-However there is a big negative in using memory.high. It can potentially
-introduce high reclaim stalls in the target application as the
-allocations from the processes or the threads of the application can hit
-the temporary memory.high limit.
-
-Another issue with memory.high is that it is not delegatable. To
-actually use this interface for uswapd, the application has to introduce
-another layer of cgroup on whose memory.high it has write access.
-
-2) Why uswapd safe from self induced reclaim?
-
-This is very similar to the scenario of oomd under global memory
-pressure. We can use the similar mechanisms to protect uswapd from self
-induced reclaim i.e. memory.min and mlock.
-
-Interface options:
-------------------
-
-Introducing a very simple memcg interface 'echo 10M > memory.reclaim' to
-trigger reclaim in the target memory cgroup.
-
-In future we might want to reclaim specific type of memory from a memcg,
-so, this interface can be extended to allow that. e.g.
-
-$ echo 10M [all|anon|file|kmem] > memory.reclaim
-
-However that should be when we have concrete use-cases for such
-functionality. Keep things simple for now.
-
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
----
- Documentation/admin-guide/cgroup-v2.rst |  9 ++++++
- mm/memcontrol.c                         | 37 +++++++++++++++++++++++++
- 2 files changed, 46 insertions(+)
-
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 6be43781ec7f..58d70b5989d7 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1181,6 +1181,15 @@ PAGE_SIZE multiple when read back.
- 	high limit is used and monitored properly, this limit's
- 	utility is limited to providing the final safety net.
+I was inspired by `linux,default-trigger` and `linux,keycode`
+properties...
  
-+  memory.reclaim
-+	A write-only file which exists on non-root cgroups.
-+
-+	This is a simple interface to trigger memory reclaim in the
-+	target cgroup. Write the number of bytes to reclaim to this
-+	file and the kernel will try to reclaim that much memory.
-+	Please note that the kernel can over or under reclaim from
-+	the target cgroup.
-+
-   memory.oom.group
- 	A read-write single value file which exists on non-root
- 	cgroups.  The default value is "0".
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 75cd1a1e66c8..2d006c36d7f3 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -6456,6 +6456,38 @@ static ssize_t memory_oom_group_write(struct kernfs_open_file *of,
- 	return nbytes;
- }
- 
-+static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
-+			      size_t nbytes, loff_t off)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	unsigned int nr_retries = MAX_RECLAIM_RETRIES;
-+	unsigned long nr_to_reclaim, nr_reclaimed = 0;
-+	int err;
-+
-+	buf = strstrip(buf);
-+	err = page_counter_memparse(buf, "", &nr_to_reclaim);
-+	if (err)
-+		return err;
-+
-+	while (nr_reclaimed < nr_to_reclaim) {
-+		unsigned long reclaimed;
-+
-+		if (signal_pending(current))
-+			break;
-+
-+		reclaimed = try_to_free_mem_cgroup_pages(memcg,
-+						nr_to_reclaim - nr_reclaimed,
-+						GFP_KERNEL, true);
-+
-+		if (!reclaimed && !nr_retries--)
-+			break;
-+
-+		nr_reclaimed += reclaimed;
-+	}
-+
-+	return nbytes;
-+}
-+
- static struct cftype memory_files[] = {
- 	{
- 		.name = "current",
-@@ -6508,6 +6540,11 @@ static struct cftype memory_files[] = {
- 		.seq_show = memory_oom_group_show,
- 		.write = memory_oom_group_write,
- 	},
-+	{
-+		.name = "reclaim",
-+		.flags = CFTYPE_NOT_ON_ROOT | CFTYPE_NS_DELEGATABLE,
-+		.write = memory_reclaim,
-+	},
- 	{ }	/* terminate */
- };
- 
--- 
-2.28.0.526.ge36021eeef-goog
+> Perhaps 'function' should be expanded.
+
+The thing is that `function` is now used for creating LED device name.
+I was not aware that `linux,default-trigger` is deprecated
+Perhaps this should be discussed with Pavel as well.
+But of course from the perspective that DT should be independent from
+Linux, you are right.
+I fear this will be quite a pain to resolve...
+
+> > +        description:
+> > +          This parameter, if present, specifies the default HW triggering mode
+> > +          of the LED when LED trigger is set to `dev-hw-mode`.
+> > +          Available values are specific per device the LED is connected to and
+> > +          per LED itself.
+> > +        $ref: /schemas/types.yaml#definitions/string
+> > +
+> > +    required:
+> > +      - reg
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +
+> > +    #include <dt-bindings/leds/common.h>
+> > +
+> > +    ethernet-phy@0 {
+> > +        compatible = "ethernet-phy-ieee802.3-c45";
+> > +        reg = <0>;
+> > +
+> > +        leds {
+> > +            compatible = "linux,hw-controlled-leds";
+> > +            #address-cells = <1>;
+> > +            #size-cells = <0>;
+> > +
+> > +            led@0 {
+> > +                reg = <0>;
+> > +                color = <LED_COLOR_ID_GREEN>;
+> > +                function = <LED_FUNCTION_STATUS>;  
+> 
+> Reading the description of LED_FUNCTION_STATUS doesn't align with how 
+> you are using it. Think of it as user alert/notification.
+> 
+> > +                linux,default-trigger = "dev-hw-mode";  
+> 
+> This is deprecated in favor of 'function'.
+
+As written above, this is not how the LED subsystem currently works.
+Nor is the deprecation documented.
+
+Currently `function` is used to create LED device name in the form
+`device:color:function` or `device:color:function-N` if
+`function-enumerator` is also set.
+
+> 
+> > +                linux,default-hw-mode = "1Gbps";
+> > +            };
+> > +
+> > +            led@1 {
+> > +                reg = <1>;
+> > +                color = <LED_COLOR_ID_YELLOW>;
+> > +                function = <LED_FUNCTION_ACTIVITY>;
+> > +                linux,default-trigger = "dev-hw-mode";
+> > +                linux,default-hw-mode = "activity";
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> > -- 
+> > 2.26.2
+> >   
 
