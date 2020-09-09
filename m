@@ -2,155 +2,207 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C3DC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D66DC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFBC21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAwh6s0Z"
+	by mail.kernel.org (Postfix) with ESMTP id E9DF821D7A
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 10:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbgIIKeS (ORCPT
+        id S1726399AbgIIKec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 06:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgIIK1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 06:27:23 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D88C061756;
-        Wed,  9 Sep 2020 03:27:22 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d9so1775415pfd.3;
-        Wed, 09 Sep 2020 03:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RcaJJxPUWfTCsa1mpxbpca/AYe7cJ1n1R+MIiQxItQI=;
-        b=pAwh6s0ZhX/dx2v+cRVKexmSDgypMBJCX62gSOUF/5JhnI05C+V1ksmcny+VOeg56y
-         YUOQKjFvVpzApRBarjbVtkG6g0VpeSMLwyX9yNxSzUNliX3SsvtH5c5fwVSTd3d/cqg6
-         fXiTkzRhBfFS1LbVtMuVTeG+QvfBDw72aK9y8b1n9V9ythjo3OmCtnl7A4kBiAV5nVSw
-         lWMyJGvfPOu2ISkma69nag+3kNrnz58daVNzFMkFqDbmK2MxjYPHmUYHYdtntgZAHv9r
-         63swhIuBUzq3EOEbT6qguw6Q1MLXEGA6/YyOhxkADqSqzsl1+Fij/rFvSwpyaj71xFlf
-         Q5Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RcaJJxPUWfTCsa1mpxbpca/AYe7cJ1n1R+MIiQxItQI=;
-        b=UmLWULx8jcRCQfZSLByu6yesV90ub1GrCzcigDQ+I09WVZtfvg7CiRpohScR87DTrj
-         zwvKMArooJMPrvaBcG/GaZQPNmZVzc/I//pIDlHHhpATEoh9UjusvuKyFrGx+qSM2VYA
-         FIqgAy1vDvCgopeLOG8vhwl/NP9idB3hwTIQU/hrBq1+L9yjX5yPZzFOedrv0hGlWJ/6
-         iD52DZn23ati47AJiu6uX12vVRMV3yIrh5a/RPbX+KFlrXS2fi4/i2H3n8bWXhjORlf5
-         PPMKsRr6B5HrtNK1Ah3DMWE+AXClQ5I56CDmAT3YtBEncIAvjOWoEuItPujtKCZoxcoR
-         eOhw==
-X-Gm-Message-State: AOAM532StQ0oy/CHoKBM5EQZCDoTa2JTcekNBaGdWMU2Juqokto9TUcr
-        Hn5Sa3a3sfkg42ArSuBSFWoe1Hc/9Xc=
-X-Google-Smtp-Source: ABdhPJzNphsO89O9fpmMQbpmXnh+8CJpBZEbxMrCiNZIsEJsgbZHnhqHP8UWp774hxYM3uHLfeTVQw==
-X-Received: by 2002:a62:be0b:0:b029:137:3e38:c5de with SMTP id l11-20020a62be0b0000b02901373e38c5demr323325pff.0.1599647241353;
-        Wed, 09 Sep 2020 03:27:21 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id c7sm2338168pfj.100.2020.09.09.03.27.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 03:27:20 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v8 02/20] gpiolib: cdev: replace strncpy with strscpy
-Date:   Wed,  9 Sep 2020 18:26:22 +0800
-Message-Id: <20200909102640.1657622-3-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200909102640.1657622-1-warthog618@gmail.com>
-References: <20200909102640.1657622-1-warthog618@gmail.com>
+        Wed, 9 Sep 2020 06:34:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:29695 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729413AbgIIKda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 06:33:30 -0400
+IronPort-SDR: sY0qwDgbUV11l4czCb3jlGrhPccjiAky7l9B7TyF/Ydn9lYyYXO4SEfe4+Roqs/EaMPOZwzWDH
+ JDqEjVjAQTbg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="146024023"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="146024023"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 03:33:25 -0700
+IronPort-SDR: b0fZegHHelVqHvkD6wzmTiyf3as0QAL1ZKDn4jFpHjIu2BVakLrkUBUgTzqxmTXk4qp2d603Pr
+ uEU9Erq3gGFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="333774825"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 09 Sep 2020 03:33:20 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kFxPh-00FPwG-IJ; Wed, 09 Sep 2020 13:33:17 +0300
+Date:   Wed, 9 Sep 2020 13:33:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     jdelvare@suse.com, linux@roeck-us.net, p.zabel@pengutronix.de,
+        linux-hwmon@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rtanwar@maxlinear.com
+Subject: Re: [PATCH 2/2] Add driver for Moortec MR75203 PVT controller
+Message-ID: <20200909103317.GL1891694@smile.fi.intel.com>
+References: <cover.1599634208.git.rahul.tanwar@linux.intel.com>
+ <ecb6794a8f2ef6576421e6d5fbdf4e6a91f06b91.1599634208.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecb6794a8f2ef6576421e6d5fbdf4e6a91f06b91.1599634208.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace usage of strncpy with strscpy to remove -Wstringop-truncation
-warnings.
+On Wed, Sep 09, 2020 at 02:52:05PM +0800, Rahul Tanwar wrote:
+> PVT controller (MR75203) is used to configure & control
+> Moortec embedded analog IP which contains temprature
+> sensor(TS), voltage monitor(VM) & process detector(PD)
+> modules. Add driver to support MR75203 PVT controller.
 
-The structs being populated are zeroed, to prevent stack leakage as
-they are returned to userspace, so strscpy performs the equivalent
-function without the warnings.
+...
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
+> +#include <linux/clk.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
 
-The memset in gpio_desc_to_lineinfo(), in conjunction with the strscpy,
-is necessary as strncpy zero pads the remainder of the destination.
-It also guarantees that the info cannot leak kernel stack to userspace.
-This is useful here, but is even more important for the v2 info, that
-this function is changed to generate in a subsequent patch, as that
-struct contains padding and attribute arrays that also need to be
-initialised.
 
- drivers/gpio/gpiolib-cdev.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+> +#include <linux/of.h>
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e95e3eab9867..8b012879fe3f 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -752,6 +752,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	bool ok_for_pinctrl;
- 	unsigned long flags;
- 
-+	memset(info, 0, sizeof(*info));
- 	info->line_offset = gpio_chip_hwgpio(desc);
- 	/*
- 	 * This function takes a mutex so we must check this before taking
-@@ -765,19 +766,11 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 
- 	spin_lock_irqsave(&gpio_lock, flags);
- 
--	if (desc->name) {
--		strncpy(info->name, desc->name, sizeof(info->name));
--		info->name[sizeof(info->name) - 1] = '\0';
--	} else {
--		info->name[0] = '\0';
--	}
-+	if (desc->name)
-+		strscpy(info->name, desc->name, sizeof(info->name));
- 
--	if (desc->label) {
--		strncpy(info->consumer, desc->label, sizeof(info->consumer));
--		info->consumer[sizeof(info->consumer) - 1] = '\0';
--	} else {
--		info->consumer[0] = '\0';
--	}
-+	if (desc->label)
-+		strscpy(info->consumer, desc->label, sizeof(info->consumer));
- 
- 	/*
- 	 * Userspace only need to know that the kernel is using this GPIO so
-@@ -841,12 +834,10 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 		memset(&chipinfo, 0, sizeof(chipinfo));
- 
--		strncpy(chipinfo.name, dev_name(&gdev->dev),
-+		strscpy(chipinfo.name, dev_name(&gdev->dev),
- 			sizeof(chipinfo.name));
--		chipinfo.name[sizeof(chipinfo.name)-1] = '\0';
--		strncpy(chipinfo.label, gdev->label,
-+		strscpy(chipinfo.label, gdev->label,
- 			sizeof(chipinfo.label));
--		chipinfo.label[sizeof(chipinfo.label)-1] = '\0';
- 		chipinfo.lines = gdev->ngpio;
- 		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
- 			return -EFAULT;
+I don't see anything special about OF here.
+Perhaps
+	mod_devicetable.h
+	property.h
+?
+
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+
+...
+
+> +#define PVT_POLL_TIMEOUT	20000
+
+Units?
+
+...
+
+> +	sys_freq = clk_get_rate(pvt->clk) / 1000000;
+
+HZ_PER_MHZ ?
+
+> +	while (high >= low) {
+> +		middle = DIV_ROUND_CLOSEST(low + high, 2);
+
+I'm wondering would it be better in the code like
+
+	middle = (low + high + 1) / 2;
+
+> +		key = DIV_ROUND_CLOSEST(sys_freq, middle);
+> +		if (key > 514) {
+> +			low = middle + 1;
+> +			continue;
+> +		} else if (key < 2) {
+> +			high = middle - 1;
+> +			continue;
+> +		}
+> +
+> +		break;
+> +	}
+> +
+> +	key = clamp_val(key, 2, 514) - 2;
+
+I guess above deserves a comment with formulas.
+
+...
+
+> +		regmap_write(p_map, SDIF_DISABLE, GENMASK(p_num - 1, 0));
+
+For non-constants better would be BIT(p_num) - 1.
+
+...
+
+> +		regmap_write(v_map, SDIF_SMPL_CTRL, 0x0);
+> +		regmap_write(v_map, SDIF_HALT, 0x0);
+> +		regmap_write(v_map, SDIF_DISABLE, 0);
+
+In some you have 0, in some 0x0 over the file, can it be consistent?
+
+...
+
+> +static struct regmap_config pvt_regmap_config = {
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+
+How do you use regmap's lock?
+
+> +};
+
+...
+
+> +static int pvt_get_regmap(struct platform_device *pdev, char *reg_name)
+> +{
+> +	struct device *dev = &pdev->dev;
+
+> +	struct pvt_device *pvt = platform_get_drvdata(pdev);
+
+Can it be first line in definition block?
+
+> +	struct regmap **reg_map;
+> +	void __iomem *io_base;
+> +	struct resource *res;
+> +
+> +	if (!strcmp(reg_name, "common"))
+> +		reg_map = &pvt->c_map;
+> +	else if (!strcmp(reg_name, "ts"))
+> +		reg_map = &pvt->t_map;
+> +	else if (!strcmp(reg_name, "pd"))
+> +		reg_map = &pvt->p_map;
+> +	else if (!strcmp(reg_name, "vm"))
+> +		reg_map = &pvt->v_map;
+> +	else
+> +		return -EINVAL;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, reg_name);
+> +	io_base = devm_ioremap_resource(dev, res);
+
+	io_base = devm_platform_ioremap_resource_by_name(pdev, reg_name);
+
+?
+
+> +	if (IS_ERR(io_base))
+> +		return PTR_ERR(io_base);
+> +
+> +	pvt_regmap_config.name = reg_name;
+
+Hmm... regmap API keeps it in devres. Why is there a copy?
+
+> +	*reg_map = devm_regmap_init_mmio(dev, io_base, &pvt_regmap_config);
+> +	if (IS_ERR(*reg_map)) {
+> +		dev_err(dev, "failed to init register map\n");
+> +		return PTR_ERR(*reg_map);
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +		for (i = 0; i < num; i++)
+> +			in_config[i] = HWMON_I_INPUT;
+
+memset32() ?
+
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
