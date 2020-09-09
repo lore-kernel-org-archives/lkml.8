@@ -2,186 +2,154 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58CAC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5F020897
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599651150;
-	bh=XKDmQ0bqy92t9jtJ3x9aobjKXKmgrA4CFv/XSy5GDXc=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=JSYlzCb5ZamdMyGVmZhBabnycTd0toIzsQ+wFgacHU7mVKRcM3l+W9BEC1UEBvxcG
-	 uFIHqntD7fCkYEDx6F2LCRpY1YsknAoNwOlXnrF5oOxPkJ1WiUSCnPRiNzdYkNXqE9
-	 mzp5FGyiSKi3mcfepcptLuHxFFb00tTGDd+DPs4U=
+	by mail.kernel.org (Postfix) with ESMTP id 83A5F20897
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:33:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e/ZdJatF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgIILcL (ORCPT
+        id S1725974AbgIILdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:32:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgIIL2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:28:53 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 9 Sep 2020 07:33:23 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47062 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726426AbgIIL3u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:29:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599650988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=+QS/wYinfkJEgeIeRWLD3Onp/wO9B1CGJ+gGrGLT4f8=;
+        b=e/ZdJatFIRQN5WHB2jToFqccp8xeK/dD25oGIJkdusVuzl7By+fdi/ve6+DvvAZr+vIZ94
+        nxrtenQjle4vmUld3hsMysNFRwTMAnyGBJVZ3ETGzD9fuNF5ly9jTeMpjijkhdIzrAunCB
+        ZVLXjAASgJ4hkaF0N++NiY0M5nMyHz0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-8ICRoSinOKiXfGo2vD00Sg-1; Wed, 09 Sep 2020 07:29:44 -0400
+X-MC-Unique: 8ICRoSinOKiXfGo2vD00Sg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8002921D80;
-        Wed,  9 Sep 2020 11:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599650932;
-        bh=XKDmQ0bqy92t9jtJ3x9aobjKXKmgrA4CFv/XSy5GDXc=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=GKA7u0qB0ObFtx6VQw6sxG3Rnsfp0SSXh7xS597jvH0H0SRrxT264C2/0JsrA62ng
-         1DeQnF7rkvNSM3oY13x2B/E6K/xQM9WY6nQE7/nl1rrIFg0DXRsZneJguFsqS2EdBf
-         7GI3WmdB6PA+Qb3Jv0JQ/zbNGIZ6m3N8YfqCaUSM=
-Received: by pali.im (Postfix)
-        id 3E1C87A9; Wed,  9 Sep 2020 13:28:50 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 13:28:50 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-Message-ID: <20200909112850.hbtgkvwqy2rlixst@pali>
-References: <20200716110423.xtfyb3n6tn5ixedh@pali>
- <20200814080824.dg57kmbimyf3ushe@pali>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E570D1017DC4;
+        Wed,  9 Sep 2020 11:29:42 +0000 (UTC)
+Received: from [10.36.113.90] (ovpn-113-90.ams2.redhat.com [10.36.113.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 37066838DA;
+        Wed,  9 Sep 2020 11:29:41 +0000 (UTC)
+Subject: Re: [RFC 0/5] disable pcplists during page isolation
+To:     osalvador@suse.de, Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200907163628.26495-1-vbabka@suse.cz>
+ <0ffb1c2d-1b28-23f7-53e1-63e6f0f4cd41@redhat.com>
+ <ce8d05db-b804-21c7-0d12-43e11fc232e5@suse.cz>
+ <3f4bd7b0c73f59b4cd2adaad3ccc38bf@suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <ee56072e-53be-3f3f-cd6d-d56317f15f0a@redhat.com>
+Date:   Wed, 9 Sep 2020 13:29:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <3f4bd7b0c73f59b4cd2adaad3ccc38bf@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200814080824.dg57kmbimyf3ushe@pali>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello! I'm adding more people to loop.
+On 09.09.20 13:27, osalvador@suse.de wrote:
+> On 2020-09-09 12:54, Vlastimil Babka wrote:
+>> Thanks! I expect no performance change while no isolation is in 
+>> progress, as
+>> there are no new tests added in alloc/free paths. During page isolation 
+>> there's
+>> a single drain instead of once-per-pageblock, which is a benefit. But 
+>> the
+>> pcplists are effectively disabled for the whole of online_pages(),
+>> offline_pages() or alloc_contig_range(), which will affect parallel 
+>> page
+>> allocator users. It depends on how long these operations take and how 
+>> heavy the
+>> parallel usage is, so I have no good answers. Might be similar to the 
+>> current
+>> periodic drain.
+> 
+> I have seen some systems taking quite some time when offlining sections 
+> due to the migration of
+> the respective pages not being that smooth and having do_migrate_range 
+> to do some spins.
+> But to be fair, online_pages and offline_pages are not routines that get 
+> called that often, and we would be safe to assume that memory-hotplug 
+> operations are not constantly happening, but are rather one-offs 
+> operations.
+> 
+> I am not sure about Xen and HV, IIRC Xen was using online_pages and 
+> offline_pages routines to do the ballooning?
 
-Can somebody look at these race conditions and my patch?
+No, they only add more memory blocks and online them. Memory hot(un)plug
+is an expensive operation already, I don't think that's an issue.
 
-On Friday 14 August 2020 10:08:24 Pali Rohár wrote:
-> Hello! I would like to remind this issue which I reported month ago.
-> 
-> On Thursday 16 July 2020 13:04:23 Pali Rohár wrote:
-> > Hello Bjorn!
-> > 
-> > I see following error message in dmesg which looks like a race condition:
-> > 
-> > sysfs: cannot create duplicate filename '/devices/platform/soc/d0070000.pcie/pci0000:00/0000:00:00.0/config'
-> > 
-> > I looked at it deeper and found out that in PCI subsystem code is race
-> > condition between pci_bus_add_device() and pci_sysfs_init() calls. Both
-> > of these functions calls pci_create_sysfs_dev_files() and calling this
-> > function more times for same pci device throws above error message.
-> > 
-> > There can be two different race conditions:
-> > 
-> > 1. pci_bus_add_device() called pcibios_bus_add_device() or
-> > pci_fixup_device() but have not called pci_create_sysfs_dev_files() yet.
-> > Meanwhile pci_sysfs_init() is running and pci_create_sysfs_dev_files()
-> > was called for newly registered device. In this case function
-> > pci_create_sysfs_dev_files() is called two times, ones from
-> > pci_bus_add_device() and once from pci_sysfs_init().
-> > 
-> > 2. pci_sysfs_init() is called. It first sets sysfs_initialized to 1
-> > which unblock calling pci_create_sysfs_dev_files(). Then another bus
-> > registers new PCI device and calls pci_bus_add_device() which calls
-> > pci_create_sysfs_dev_files() and registers sysfs files. Function
-> > pci_sysfs_init() continues execution and calls function
-> > pci_create_sysfs_dev_files() also for this newly registered device. So
-> > pci_create_sysfs_dev_files() is again called two times.
-> > 
-> > 
-> > I workaround both race conditions I created following hack patch. After
-> > applying it I'm not getting that 'sysfs: cannot create duplicate filename'
-> > error message anymore.
-> > 
-> > Can you look at it how to fix both race conditions in proper way?
-> 
-> Is this workaround diff enough? Or are you going to prepare something better?
-> 
-> Please let me know if I should send this diff as regular patch.
-> 
-> > 
-> > diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> > index 8e40b3e6da77..691be2258c4e 100644
-> > --- a/drivers/pci/bus.c
-> > +++ b/drivers/pci/bus.c
-> > @@ -316,7 +316,7 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >  	 */
-> >  	pcibios_bus_add_device(dev);
-> >  	pci_fixup_device(pci_fixup_final, dev);
-> > -	pci_create_sysfs_dev_files(dev);
-> > +	pci_create_sysfs_dev_files(dev, false);
-> >  	pci_proc_attach_device(dev);
-> >  	pci_bridge_d3_update(dev);
-> >  
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index 6d78df981d41..b0c4852a51dd 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -1328,13 +1328,13 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> >  	return retval;
-> >  }
-> >  
-> > -int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-> > +int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing)
-> >  {
-> >  	int retval;
-> >  	int rom_size;
-> >  	struct bin_attribute *attr;
-> >  
-> > -	if (!sysfs_initialized)
-> > +	if (!sysfs_initializing && !sysfs_initialized)
-> >  		return -EACCES;
-> >  
-> >  	if (pdev->cfg_size > PCI_CFG_SPACE_SIZE)
-> > @@ -1437,18 +1437,21 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
-> >  static int __init pci_sysfs_init(void)
-> >  {
-> >  	struct pci_dev *pdev = NULL;
-> > -	int retval;
-> > +	int retval = 0;
-> >  
-> > -	sysfs_initialized = 1;
-> >  	for_each_pci_dev(pdev) {
-> > -		retval = pci_create_sysfs_dev_files(pdev);
-> > +		if (!pci_dev_is_added(pdev))
-> > +			continue;
-> > +		retval = pci_create_sysfs_dev_files(pdev, true);
-> >  		if (retval) {
-> >  			pci_dev_put(pdev);
-> > -			return retval;
-> > +			goto out;
-> >  		}
-> >  	}
-> >  
-> > -	return 0;
-> > +out:
-> > +	sysfs_initialized = 1;
-> > +	return retval;
-> >  }
-> >  late_initcall(pci_sysfs_init);
-> >  
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 6d3f75867106..304294c7171e 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -19,7 +19,7 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-> >  
-> >  /* Functions internal to the PCI core code */
-> >  
-> > -int pci_create_sysfs_dev_files(struct pci_dev *pdev);
-> > +int pci_create_sysfs_dev_files(struct pci_dev *pdev, bool sysfs_initializing);
-> >  void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
-> >  #if !defined(CONFIG_DMI) && !defined(CONFIG_ACPI)
-> >  static inline void pci_create_firmware_label_files(struct pci_dev *pdev)
-> > 
+-- 
+Thanks,
+
+David / dhildenb
+
