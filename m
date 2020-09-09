@@ -2,162 +2,206 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FCFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC4BC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F76721D7A
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DwAeLUlX"
+	by mail.kernel.org (Postfix) with ESMTP id AFE0E21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 11:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599649712;
+	bh=yzAVVTGejCUdvUjaQabL2dAqIR8EN08fQBJMkB8pdBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2tjUsVCS+dYs8vTY6FrXIgyfMBrr9kYYScj7UviC8kmYl1KDEmFvZNcK0VN7V0Wyw
+	 c/m0DAPWWgRQ+3b3alT1X/7F3+o7KlNli/SHrkxoAOPqPt/uBWKB0OtEICboG8rMep
+	 vp0pHXoiwQuUzAG13O5oHr+ASH4S1GtlmmIdQZFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgIILFS (ORCPT
+        id S1729691AbgIILH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 07:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbgIILFI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 07:05:08 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8401C061755
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 04:05:08 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mm21so1152473pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 04:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UBdxHBpQYBlcln/luPmGk2tk/V+IRObILMuIsjRXaXA=;
-        b=DwAeLUlXbTdAcwD3GrjB6qQ5AJzGCskIANit1lHSjy0R+5B4VV2Ia4kHQRo/8pwN7c
-         m8XrbicRrznsmulq4xXwngUBImlAvOmNmW0is2ZeMc0i7+NexNWMubDqkDs7TLr7Yl41
-         RRO6ep8t0nr8dCzKbt9zxlg6q4VuLZSYnzxLpSVL+uf35zbuiS67zlBIXT/x81+4Gv8P
-         46UqxvA8qFTzUCMs6nEKlSCXdw2OnRWX1szFOSAnmkPmF/yCzzGNbtH4eFvvcUC0zY5Y
-         o00IpvePNkJzoutgDzLCFkeaOJhLkSfXhyggzz0q6eJkHratbGqcZd9LloRYt8At/8C3
-         j4WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UBdxHBpQYBlcln/luPmGk2tk/V+IRObILMuIsjRXaXA=;
-        b=snn2V6wvxqjKYkCm63qLVqkySM8Z/4YAiX6S7xNwuuqzx++l4O5QvQ6W8VIUU5saUO
-         WUmgmD4eJWXb5DOkhz0jgsS3RK6MmsEq2M4W0bRGCc+xvRnVWeUfGb1N1gf2GkPfNY2k
-         5w9nOvLIrER+70p87ljeZKJyxIcWFCm9yiGq9T3wcLW9hw9ErkEBDEahr7PpSV1TuMgr
-         LOxphsOgSC2rMnlg3qKCks3HSnjAkR9csoZIam0LundO39tnl4thjJMAVyaYUhjB/YV9
-         iyWKPFUeVafla7bD9EWAc5WkZCCwr/dfqVF3vHS4XabVuF0nZvOvSLxw2HYShuEBz9uH
-         uDLQ==
-X-Gm-Message-State: AOAM530Yic8DRi812vl/k+/tqvi7TbXa7BxCVcPdRjF5W4VIavWRx9mJ
-        yzFmViqIO0ItQw7hE7HjW4is1qQF3cNVJgo2YZqNxQ==
-X-Google-Smtp-Source: ABdhPJzEl/T/AzvOrFhWMrBReLyMImlGHIhdZRKV5IXq+qsCeOgq8D7J/ftIhsEX56H6nfGz2yJVJ97AMQZTbkWJfvw=
-X-Received: by 2002:a17:90a:d596:: with SMTP id v22mr390019pju.146.1599649508121;
- Wed, 09 Sep 2020 04:05:08 -0700 (PDT)
+        Wed, 9 Sep 2020 07:07:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727055AbgIILGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 07:06:34 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9041D207DE;
+        Wed,  9 Sep 2020 11:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599649577;
+        bh=yzAVVTGejCUdvUjaQabL2dAqIR8EN08fQBJMkB8pdBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NFcIcQ/0JBDUyaDGa+cShYbmKdhfVzFonCO0aevmzDLjjkrTYxuSOb7ZHNKK9zb7W
+         s1w+mr3agpxd3e+Mp1agfx1A93cWg8zC9JEyT/po9tCM6LXJLXVd9JDf4gLsTuowbm
+         lhnGMjiUrLYuUANxNMP33v5RA2P55UVf+7M5wJgw=
+Received: by pali.im (Postfix)
+        id 55B817A9; Wed,  9 Sep 2020 13:06:15 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 13:06:15 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Joseph Hwang <josephsih@chromium.org>
+Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        luiz.dentz@gmail.com, chromeos-bluetooth-upstreaming@chromium.org,
+        josephsih@google.com, Alain Michaud <alainm@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Bluetooth: btusb: define HCI packet sizes of USB
+ Alts
+Message-ID: <20200909110615.qbwb3m34l2mkv743@pali>
+References: <20200909094202.3863687-1-josephsih@chromium.org>
+ <20200909174129.v2.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
 MIME-Version: 1.0
-References: <20200904155025.55718-1-xypron.glpk@gmx.de> <CAMj1kXGYpMMrQPgL-SNde75EbDX8RZBDrboEuMcjJ7-cyEJUXg@mail.gmail.com>
- <CAD8XO3YGUUz6B4NDBC-f4Rfhhyya6GPwjW2oxP=GANRoNyydsQ@mail.gmail.com> <CAMj1kXGkhJqMFggO7reedKkuQh2vmNeac5pXirEcN+XvMX==gA@mail.gmail.com>
-In-Reply-To: <CAMj1kXGkhJqMFggO7reedKkuQh2vmNeac5pXirEcN+XvMX==gA@mail.gmail.com>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Wed, 9 Sep 2020 14:04:57 +0300
-Message-ID: <CAD8XO3ZuxBLsYbyDvfdMicb-91Xb_vB1-atox+12g5qnrCFmzA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        =?UTF-8?Q?Fran=C3=A7ois_Ozog?= <francois.ozog@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909174129.v2.1.I56de28ec171134cb9f97062e2c304a72822ca38b@changeid>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 at 13:47, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Wed, 9 Sep 2020 at 13:44, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
-> >
-> > On Wed, 9 Sep 2020 at 11:17, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > (+ Atish, Palmer)
-> > >
-> > > On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-> > > >
-> > > > In the memory map the regions with the lowest addresses may be of type
-> > > > EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
-> > > > rest of the memory. So for calculating the maximum loading address for the
-> > > > device tree and the initial ramdisk image these reserved areas should not
-> > > > be taken into account.
-> > > >
-> > > > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> > > > ---
-> > > >  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> > > > index c2484bf75c5d..13058ac75765 100644
-> > > > --- a/drivers/firmware/efi/libstub/efi-stub.c
-> > > > +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> > > > @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
-> > > >         map.map_end = map.map + map_size;
-> > > >
-> > > >         for_each_efi_memory_desc_in_map(&map, md) {
-> > > > -               if (md->attribute & EFI_MEMORY_WB) {
-> > > > +               if (md->attribute & EFI_MEMORY_WB &&
-> > > > +                   md->type != EFI_RESERVED_TYPE) {
-> > > >                         if (membase > md->phys_addr)
-> > > >                                 membase = md->phys_addr;
-> > > >                 }
-> > > > --
-> > > > 2.28.0
-> > > >
-> > >
-> > > This is not the right fix - on RPi2, for instance, which has some
-> > > reserved memory at the base of DRAM, this change will result in the
-> > > first 16 MB of memory to be wasted.
-> > >
-> > In the EFI memmap provided to the kernel efi stub it will be 2
-> > regions. First is EFI_RESERVED and second is EFI_CONVENTIONAL_MEMORY.
-> > Even if they follow each other.
-> > And for_each_efi_memory_desc_in_map will just return the second one.
-> > Do not see where the problem is here.
-> >
->
-> The base of DRAM will no longer start at a 16 MB aligned address on
-> RPi, and so it will round up to the next 16 MB, wasting the space in
-> between.
->
+On Wednesday 09 September 2020 17:42:01 Joseph Hwang wrote:
+> It is desirable to define the HCI packet payload sizes of
+> USB alternate settings so that they can be exposed to user
+> space.
+> 
+> Reviewed-by: Alain Michaud <alainm@chromium.org>
+> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+> ---
+> 
+> Changes in v2:
+> - 1/2: Used sco_mtu instead of a new sco_pkt_len member in hdev.
+> - 1/2: Do not overwrite hdev->sco_mtu in hci_cc_read_buffer_size
+>   if it has been set in the USB interface.
+> - 2/2: Used BT_SNDMTU/BT_RCVMTU instead of creating a new opt name.
+> - 2/2: Used the existing conn->mtu instead of creating a new member
+>        in struct sco_pinfo.
+> - 2/2: Noted that the old SCO_OPTIONS in sco_sock_getsockopt_old()
+>        would just work as it uses sco_pi(sk)->conn->mtu.
+> 
+>  drivers/bluetooth/btusb.c | 43 +++++++++++++++++++++++++++++----------
+>  net/bluetooth/hci_event.c |  7 ++++++-
+>  2 files changed, 38 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index fe80588c7bd3a8..a710233382afff 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -459,6 +459,22 @@ static const struct dmi_system_id btusb_needs_reset_resume_table[] = {
+>  #define BTUSB_WAKEUP_DISABLE	14
+>  #define BTUSB_USE_ALT1_FOR_WBS	15
+>  
+> +/* Per core spec 5, vol 4, part B, table 2.1,
+> + * list the hci packet payload sizes for various ALT settings.
+> + * This is used to set the packet length for the wideband speech.
+> + * If a controller does not probe its usb alt setting, the default
+> + * value will be 0. Any clients at upper layers should interpret it
+> + * as a default value and set a proper packet length accordingly.
+> + *
+> + * To calculate the HCI packet payload length:
+> + *   for alternate settings 1 - 5:
+> + *     hci_packet_size = suggested_max_packet_size * 3 (packets) -
+> + *                       3 (HCI header octets)
+> + *   for alternate setting 6:
+> + *     hci_packet_size = suggested_max_packet_size - 3 (HCI header octets)
 
-Ok.
+Hello! What is value for 'suggested_max_packet_size' used in above
+calculation algorithm?
 
-> > > What I would prefer to do is get rid of get_dram_base() entirely -
-> > > arm64 does not use its return value in the first place, and for ARM,
-> > > the only reason we need it is so that we can place the uncompressed
-> > > kernel image as low in memory as possible, and there are probably
-> > > better ways to do that. RISC-V just started using it too, but only
-> > > passes it from handle_kernel_image() to efi_relocate_kernel(), and
-> > > afaict, passing 0x0 there instead would not cause any problems.
-> >
-> > For prior 5.8 kernels there was limitation for maximum address to
-> > unpack the kernel. As I understand that was copy-pasted from x86 code,
-> > and now is missing in 5.9.
->
-> What code are you referring to here?
->
-to this commit:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/firmware/efi/libstub/arm32-stub.c?h=v5.9-rc4&id=d0f9ca9be11f25ef4151195eab7ea36d136084f6
+> + */
+> +static const int hci_packet_size_usb_alt[] = { 0, 24, 48, 72, 96, 144, 60 };
+> +
+>  struct btusb_data {
+>  	struct hci_dev       *hdev;
+>  	struct usb_device    *udev;
+> @@ -3959,6 +3975,15 @@ static int btusb_probe(struct usb_interface *intf,
+>  	hdev->notify = btusb_notify;
+>  	hdev->prevent_wake = btusb_prevent_wake;
+>  
+> +	if (id->driver_info & BTUSB_AMP) {
+> +		/* AMP controllers do not support SCO packets */
+> +		data->isoc = NULL;
+> +	} else {
+> +		/* Interface orders are hardcoded in the specification */
+> +		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
+> +		data->isoc_ifnum = ifnum_base + 1;
+> +	}
+> +
+>  #ifdef CONFIG_PM
+>  	err = btusb_config_oob_wake(hdev);
+>  	if (err)
+> @@ -4022,6 +4047,10 @@ static int btusb_probe(struct usb_interface *intf,
+>  		hdev->set_diag = btintel_set_diag;
+>  		hdev->set_bdaddr = btintel_set_bdaddr;
+>  		hdev->cmd_timeout = btusb_intel_cmd_timeout;
+> +
+> +		if (btusb_find_altsetting(data, 6))
+> +			hdev->sco_mtu = hci_packet_size_usb_alt[6];
+> +
+>  		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
+>  		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>  		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
+> @@ -4063,15 +4092,6 @@ static int btusb_probe(struct usb_interface *intf,
+>  		btusb_check_needs_reset_resume(intf);
+>  	}
+>  
+> -	if (id->driver_info & BTUSB_AMP) {
+> -		/* AMP controllers do not support SCO packets */
+> -		data->isoc = NULL;
+> -	} else {
+> -		/* Interface orders are hardcoded in the specification */
+> -		data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 1);
+> -		data->isoc_ifnum = ifnum_base + 1;
+> -	}
+> -
+>  	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
+>  	    (id->driver_info & BTUSB_REALTEK)) {
+>  		hdev->setup = btrtl_setup_realtek;
+> @@ -4083,9 +4103,10 @@ static int btusb_probe(struct usb_interface *intf,
+>  		 * (DEVICE_REMOTE_WAKEUP)
+>  		 */
+>  		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
+> -		if (btusb_find_altsetting(data, 1))
+> +		if (btusb_find_altsetting(data, 1)) {
+>  			set_bit(BTUSB_USE_ALT1_FOR_WBS, &data->flags);
+> -		else
+> +			hdev->sco_mtu = hci_packet_size_usb_alt[1];
+> +		} else
+>  			bt_dev_err(hdev, "Device does not support ALT setting 1");
+>  	}
+>  
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 33d8458fdd4adc..b3e9247fdbcfa1 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -730,7 +730,12 @@ static void hci_cc_read_buffer_size(struct hci_dev *hdev, struct sk_buff *skb)
+>  		return;
+>  
+>  	hdev->acl_mtu  = __le16_to_cpu(rp->acl_mtu);
+> -	hdev->sco_mtu  = rp->sco_mtu;
+> +	/* Set sco_mtu only when not yet.
+> +	 * The sco_mtu would be set in btusb.c
+> +	 * if the host controller interface is USB.
+> +	 */
+> +	if (hdev->sco_mtu == 0)
+> +		hdev->sco_mtu  = rp->sco_mtu;
 
-> > That is why the suggestion was to point
-> > dram_base to the region where it's possible to allocate. I.e. I assume
-> > that
-> > patch was created not to the latest kernel. Removing the upper
-> > allocation limit should work here.
-> >
->
-> As I pointed out, this will regress other platforms.
+Should not hdev->sco_mtu contains minimum from the rp->sco_mtu and your
+calculated value defined in hci_packet_size_usb_alt[i]?
+
+Socket MTU cannot be bigger then value rp->sco_mtu, right?
+
+>  	hdev->acl_pkts = __le16_to_cpu(rp->acl_max_pkt);
+>  	hdev->sco_pkts = __le16_to_cpu(rp->sco_max_pkt);
+>  
+> -- 
+> 2.28.0.526.ge36021eeef-goog
+> 
