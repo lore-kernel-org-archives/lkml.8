@@ -2,94 +2,221 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7240FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E3320768
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC46208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Aai15vFl"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="xwWJM2L/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgIISau (ORCPT
+        id S1728631AbgIISb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbgIISar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:30:47 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906A9C061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 11:30:47 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id z13so4238234iom.8
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 11:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=98xyvtYgbwa5J67c7RkI6GnQwliGFXe74W0JhOQBOmc=;
-        b=Aai15vFl3dYqGw9K5b3xK4POAF5zorYpaKKRyIxIZqV4MkjapQJdc5WoBCxIdDvoQe
-         7FdlRAedwzY1qpqwlJ5d+oVkEoZFtbyilOo5PeMvP4vfl//XjFD28AIWbmbRXihnb49x
-         JbVoj7qo0eWkzJVqnZ3EfR9rqCRwG9dCMJoxkLi4ToOLHhfZC3SzjOM+82YB9SjmG1R5
-         a33hxHQK4Io4do/ldHL0Nwp+Us6ESgUxv94eNJDwEE8kOAIZj98CWh42I5BQfrPOtm/D
-         GfnSrPywZHKaSWgiqluDNEtHluhP8WGr1YnzmI21OdCOYBTano9T1NdzUMKvE3YznXEE
-         +6HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=98xyvtYgbwa5J67c7RkI6GnQwliGFXe74W0JhOQBOmc=;
-        b=QAOtj/4J6Gt+ULM+QO7Ccggujti5QCKGsobs5739Ch/RNn+FNsTG2XNgqHvLoiP36E
-         9zVxTeoIvn5YxAQ6ff7TpkB8ytE+YudhkfZl5l5t4lADN+wCSSBVd510rrd4PLyXEl11
-         wAuEQwrEHavHN6VBCWrfv79IT39NekNlklfeOK0INK1HX5lWpXM/K0NxkPILG0hN9l/+
-         9l5Qn4ThRDEgzpFV1MfX0mBVZJvg1RVkzHEMb7PdLolcvGw1a10Z2wzVeBgkqj2A/sE2
-         eBAFjuQJCIYuEpZ873J8wE27yjjGGu1f8x05SfpdWCVQS/jzKb3N2S5a+QolSy++AlMU
-         ZH7A==
-X-Gm-Message-State: AOAM533W8HBTV2aaPswQk94yYNYqBYmf2/2Kengn5Nx9co0Vf7hMyhTR
-        /Rxnt4gzHWDjlklhCsO2Uf5+4A==
-X-Google-Smtp-Source: ABdhPJzDQCDM7qsjK2rY35N17lqTgsC2hAs5QECTlf9biMd54YdHkaHJRtjNBTH3FQACUVf86OCMNw==
-X-Received: by 2002:a05:6602:2f88:: with SMTP id u8mr4410307iow.175.1599676246841;
-        Wed, 09 Sep 2020 11:30:46 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u9sm1501725iow.26.2020.09.09.11.30.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 11:30:46 -0700 (PDT)
-Subject: Re: [PATCH for-next] io_uring: fix ctx refcounting in
- io_uring_enter()
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200909151900.60321-1-sgarzare@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9080c3fa-a726-b664-f634-0ea7dfda80e0@kernel.dk>
-Date:   Wed, 9 Sep 2020 12:30:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 9 Sep 2020 14:31:29 -0400
+Received: from mail.nic.cz ([217.31.204.67]:35510 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbgIISbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:31:25 -0400
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTPSA id 13A1314097F;
+        Wed,  9 Sep 2020 20:31:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1599676282; bh=MBNYhnZIH4TIaYHsF1IHyF5CYUjwTEWIE0r+GysP038=;
+        h=Date:From:To;
+        b=xwWJM2L/+RaaKPc1GBej5r1U3EY0ctyrEyBpsvaL4q2/H53Vl+CkhBLlD8IIumzt/
+         C+Gl9rieB9wDe4KLL8Y9ooHiMflqK0pS2td6pAsGxrFDTRxCFTNxggoNsYI2JhSYyL
+         rs28cfodwTmIpB/rlf9DIJmUZZlBQt6yXkt89uKI=
+Date:   Wed, 9 Sep 2020 20:31:21 +0200
+From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next + leds v2 2/7] leds: add generic API for LEDs
+ that can be controlled by hardware
+Message-ID: <20200909203121.73bfcfa1@dellmb.labs.office.nic.cz>
+In-Reply-To: <84bfc0ce-752d-9d1f-1043-fabe4cc25b15@infradead.org>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+        <20200909162552.11032-3-marek.behun@nic.cz>
+        <84bfc0ce-752d-9d1f-1043-fabe4cc25b15@infradead.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200909151900.60321-1-sgarzare@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 9:19 AM, Stefano Garzarella wrote:
-> If the ring is disabled we don't decrease the 'ctx' refcount since
-> we wrongly jump to 'out_fput' label.
-> 
-> Instead let's jump to 'out' label where we decrease the 'ctx' refcount.
+On Wed, 9 Sep 2020 11:20:00 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Applied, thanks.
+> Hi,
+>=20
+> On 9/9/20 9:25 AM, Marek Beh=C3=BAn wrote:
+> > Many an ethernet PHY (and other chips) supports various HW control
+> > modes for LEDs connected directly to them.
+> >=20
+> > This patch adds a generic API for registering such LEDs when
+> > described in device tree. This API also exposes generic way to
+> > select between these hardware control modes.
+> >=20
+> > This API registers a new private LED trigger called dev-hw-mode.
+> > When this trigger is enabled for a LED, the various HW control
+> > modes which are supported by the device for given LED can be
+> > get/set via hw_mode sysfs file.
+> >=20
+> > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> > ---
+> >  .../sysfs-class-led-trigger-dev-hw-mode       |   8 +
+> >  drivers/leds/Kconfig                          |  10 +
+> >  drivers/leds/Makefile                         |   1 +
+> >  drivers/leds/leds-hw-controlled.c             | 227
+> > ++++++++++++++++++ include/linux/leds-hw-controlled.h            |
+> > 74 ++++++ 5 files changed, 320 insertions(+)
+> >  create mode 100644
+> > Documentation/ABI/testing/sysfs-class-led-trigger-dev-hw-mode
+> > create mode 100644 drivers/leds/leds-hw-controlled.c create mode
+> > 100644 include/linux/leds-hw-controlled.h=20
+>=20
+> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> > index 1c181df24eae4..5e47ab21aafb4 100644
+> > --- a/drivers/leds/Kconfig
+> > +++ b/drivers/leds/Kconfig
+> > @@ -49,6 +49,16 @@ config LEDS_BRIGHTNESS_HW_CHANGED
+> > =20
+> >  	  See Documentation/ABI/testing/sysfs-class-led for
+> > details.=20
+> > +config LEDS_HW_CONTROLLED
+> > +	bool "API for LEDs that can be controlled by hardware"
+> > +	depends on LEDS_CLASS =20
+>=20
+> 	depends on OF || COMPILE_TEST
+> ?
+>=20
 
--- 
-Jens Axboe
+I specifically did not add OF dependency so that this can be also used
+on non-OF systems. A device driver may register such LED itself...
+That's why hw_controlled_led_brightness_set symbol is exported.
+
+Do you think I shouldn't do it?
+
+> > +	select LEDS_TRIGGERS
+> > +	help
+> > +	  This option enables support for a generic API via which
+> > other drivers
+> > +	  can register LEDs that can be put into hardware
+> > controlled mode, eg. =20
+>=20
+> 	                                                                   e.g.
+>=20
+
+This will need to be changed on multiple places, thanks.
+
+> > +	  a LED connected to an ethernet PHY can be configured to
+> > blink on =20
+>=20
+> 	  an LED
+>=20
+
+This as well
+
+> > +	  network activity.
+> > +
+> >  comment "LED drivers"
+> > =20
+> >  config LEDS_88PM860X =20
+>=20
+>=20
+> > diff --git a/include/linux/leds-hw-controlled.h
+> > b/include/linux/leds-hw-controlled.h new file mode 100644
+> > index 0000000000000..2c9b8a06def18
+> > --- /dev/null
+> > +++ b/include/linux/leds-hw-controlled.h
+> > @@ -0,0 +1,74 @@
+> > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > +/*
+> > + * Generic API for LEDs that can be controlled by hardware (eg. by
+> > an ethernet PHY chip)
+> > + *
+> > + * Copyright (C) 2020 Marek Behun <marek.behun@nic.cz>
+> > + */
+> > +#ifndef _LINUX_LEDS_HW_CONTROLLED_H_
+> > +#define _LINUX_LEDS_HW_CONTROLLED_H_
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/leds.h>
+> > +
+> > +struct hw_controlled_led {
+> > +	struct led_classdev cdev;
+> > +	const struct hw_controlled_led_ops *ops;
+> > +	struct mutex lock;
+> > +
+> > +	/* these members are filled in by OF if OF is enabled */
+> > +	int addr;
+> > +	bool active_low;
+> > +	bool tristate;
+> > +
+> > +	/* also filled in by OF, but changed by led_set_hw_mode
+> > operation */
+> > +	const char *hw_mode;
+> > +
+> > +	void *priv;
+> > +};
+> > +#define led_cdev_to_hw_controlled_led(l) container_of(l, struct
+> > hw_controlled_led, cdev) +
+> > +/* struct hw_controlled_led_ops: Operations on LEDs that can be
+> > controlled by HW
+> > + *
+> > + * All the following operations must be implemented:
+> > + * @led_init: Should initialize the LED from OF data (and sanity
+> > check whether they are correct).
+> > + *            This should also change led->cdev.max_brightness, if
+> > the value differs from default,
+> > + *            which is 1.
+> > + * @led_brightness_set: Sets brightness.
+> > + * @led_iter_hw_mode: Iterates available HW control mode names for
+> > this LED.
+> > + * @led_set_hw_mode: Sets HW control mode to value specified by
+> > given name.
+> > + * @led_get_hw_mode: Returns current HW control mode name.
+> > + */ =20
+>=20
+> Convert that struct info to kernel-doc?
+>=20
+
+Will look into this.
+Thanks.
+
+> > +struct hw_controlled_led_ops {
+> > +	int (*led_init)(struct device *dev, struct
+> > hw_controlled_led *led);
+> > +	int (*led_brightness_set)(struct device *dev, struct
+> > hw_controlled_led *led,
+> > +				  enum led_brightness brightness);
+> > +	const char *(*led_iter_hw_mode)(struct device *dev, struct
+> > hw_controlled_led *led,
+> > +					void **iter);
+> > +	int (*led_set_hw_mode)(struct device *dev, struct
+> > hw_controlled_led *led,
+> > +			       const char *mode);
+> > +	const char *(*led_get_hw_mode)(struct device *dev, struct
+> > hw_controlled_led *led); +};
+> > + =20
+>=20
+> > +
+> > +#endif /* _LINUX_LEDS_HW_CONTROLLED_H_ */ =20
+>=20
+> thanks.
 
