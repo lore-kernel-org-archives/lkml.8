@@ -2,93 +2,146 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F46C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF6CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB3C21941
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865B721941
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 03:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIIDSk (ORCPT
+        id S1728936AbgIIDT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 23:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgIIDSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 23:18:40 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE56C061573;
-        Tue,  8 Sep 2020 20:18:39 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E211D11E3E4C3;
-        Tue,  8 Sep 2020 20:01:51 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 20:18:38 -0700 (PDT)
-Message-Id: <20200908.201838.1474174755046579625.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/3] rxrpc: Allow more calls to same peer
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <159959825107.645007.502549394334535916.stgit@warthog.procyon.org.uk>
-References: <159959825107.645007.502549394334535916.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 8 Sep 2020 23:19:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11272 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726683AbgIIDT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 23:19:26 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 30D54FF0F60299D870FD;
+        Wed,  9 Sep 2020 11:19:24 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 9 Sep 2020
+ 11:19:20 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: clean up vm_map_ram() call
+To:     Daeho Jeong <daeho43@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
+CC:     Daeho Jeong <daehojeong@google.com>
+References: <20200909023634.3821423-1-daeho43@gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <4c8971ce-98b5-4675-8310-5e9af0a14bb6@huawei.com>
+Date:   Wed, 9 Sep 2020 11:19:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200909023634.3821423-1-daeho43@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 08 Sep 2020 20:01:52 -0700 (PDT)
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Tue, 08 Sep 2020 21:50:51 +0100
+On 2020/9/9 10:36, Daeho Jeong wrote:
+> From: Daeho Jeong <daehojeong@google.com>
+> 
+> Made f2fs_vmap() wrapper to handle vm_map_ram() stuff.
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
 
-> Here are some development patches for AF_RXRPC that allow more simultaneous
-> calls to be made to the same peer with the same security parameters.  The
-> current code allows a maximum of 4 simultaneous calls, which limits the afs
-> filesystem to that many simultaneous threads.  This increases the limit to
-> 16.
-> 
-> To make this work, the way client connections are limited has to be changed
-> (incoming call/connection limits are unaffected) as the current code
-> depends on queuing calls on a connection and then pushing the connection
-> through a queue.  The limit is on the number of available connections.
-> 
-> This is changed such that there's a limit[*] on the total number of calls
-> systemwide across all namespaces, but the limit on the number of client
-> connections is removed.
-> 
-> Once a call is allowed to proceed, it finds a bundle of connections and
-> tries to grab a call slot.  If there's a spare call slot, fine, otherwise
-> it will wait.  If there's already a waiter, it will try to create another
-> connection in the bundle, unless the limit of 4 is reached (4 calls per
-> connection, giving 16).
-> 
-> A number of things throttle someone trying to set up endless connections:
-> 
->  - Calls that fail immediately have their conns deleted immediately,
-> 
->  - Calls that don't fail immediately have to wait for a timeout,
-> 
->  - Connections normally get automatically reaped if they haven't been used
->    for 2m, but this is sped up to 2s if the number of connections rises
->    over 900.  This number is tunable by sysctl.
-> 
-> 
-> [*] Technically two limits - kernel sockets and userspace rxrpc sockets are
->     accounted separately.
-> 
-> The patches are tagged here:
-> 
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-> 	rxrpc-next-20200908
+LGTM,
 
-Pulled, thanks David.
+I think it should be merged into original patch. :)
+
+Maybe Jaeguek could help to do that.
+
+Thanks,
+
+> ---
+>   fs/f2fs/compress.c | 42 ++++++++++++++++++------------------------
+>   1 file changed, 18 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index 357303d8514b..7895186cc765 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -557,6 +557,20 @@ static void f2fs_compress_free_page(struct page *page)
+>   
+>   #define MAX_VMAP_RETRIES	3
+>   
+> +static void *f2fs_vmap(struct page **pages, unsigned int count)
+> +{
+> +	int i;
+> +	void *buf = NULL;
+> +
+> +	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
+> +		buf = vm_map_ram(pages, count, -1);
+> +		if (buf)
+> +			break;
+> +		vm_unmap_aliases();
+> +	}
+> +	return buf;
+> +}
+> +
+>   static int f2fs_compress_pages(struct compress_ctx *cc)
+>   {
+>   	struct f2fs_sb_info *sbi = F2FS_I_SB(cc->inode);
+> @@ -593,23 +607,13 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+>   		}
+>   	}
+>   
+> -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
+> -		cc->rbuf = vm_map_ram(cc->rpages, cc->cluster_size, -1);
+> -		if (cc->rbuf)
+> -			break;
+> -		vm_unmap_aliases();
+> -	}
+> +	cc->rbuf = f2fs_vmap(cc->rpages, cc->cluster_size);
+>   	if (!cc->rbuf) {
+>   		ret = -ENOMEM;
+>   		goto out_free_cpages;
+>   	}
+>   
+> -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
+> -		cc->cbuf = vm_map_ram(cc->cpages, cc->nr_cpages, -1);
+> -		if (cc->cbuf)
+> -			break;
+> -		vm_unmap_aliases();
+> -	}
+> +	cc->cbuf = f2fs_vmap(cc->cpages, cc->nr_cpages);
+>   	if (!cc->cbuf) {
+>   		ret = -ENOMEM;
+>   		goto out_vunmap_rbuf;
+> @@ -728,23 +732,13 @@ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity)
+>   			goto out_free_dic;
+>   	}
+>   
+> -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
+> -		dic->rbuf = vm_map_ram(dic->tpages, dic->cluster_size, -1);
+> -		if (dic->rbuf)
+> -			break;
+> -		vm_unmap_aliases();
+> -	}
+> +	dic->rbuf = f2fs_vmap(dic->tpages, dic->cluster_size);
+>   	if (!dic->rbuf) {
+>   		ret = -ENOMEM;
+>   		goto destroy_decompress_ctx;
+>   	}
+>   
+> -	for (i = 0; i < MAX_VMAP_RETRIES; i++) {
+> -		dic->cbuf = vm_map_ram(dic->cpages, dic->nr_cpages, -1);
+> -		if (dic->cbuf)
+> -			break;
+> -		vm_unmap_aliases();
+> -	}
+> +	dic->cbuf = f2fs_vmap(dic->cpages, dic->nr_cpages);
+>   	if (!dic->cbuf) {
+>   		ret = -ENOMEM;
+>   		goto out_vunmap_rbuf;
+> 
