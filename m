@@ -2,136 +2,123 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0176CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8372AC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A90A6207DE
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48167207DE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgIIQYV (ORCPT
+        id S1731017AbgIIQY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45292 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 12:24:59 -0400
+Received: from mailout06.rmx.de ([94.199.90.92]:47913 "EHLO mailout06.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731057AbgIIQX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 12:23:56 -0400
-Received: from gaia (unknown [46.69.195.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730570AbgIIQXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 12:23:12 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE68B21D40;
-        Wed,  9 Sep 2020 13:54:03 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 14:54:01 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     George Cherian <gcherian@marvell.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "guohanjun@huawei.com" <guohanjun@huawei.com>
-Subject: Re: [PATCH] arm64: PCI: fix memleak when calling pci_iomap/unmap()
-Message-ID: <20200909135400.GB13047@gaia>
-References: <20200907104546.GC26513@gaia>
- <BYAPR18MB267959E6FE4BEF38D0A4611EC5280@BYAPR18MB2679.namprd18.prod.outlook.com>
- <20200907112118.GD26513@gaia>
- <20200909113613.GB6384@e121166-lin.cambridge.arm.com>
+        by mailout06.rmx.de (Postfix) with ESMTPS id 4BmnP26wDzz9sp2;
+        Wed,  9 Sep 2020 18:22:46 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BmnNc1mPXz2TSDs;
+        Wed,  9 Sep 2020 18:22:24 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.16) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 9 Sep
+ 2020 18:22:23 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Christian Eggers <ceggers@arri.de>, <stable@vger.kernel.org>
+Subject: [PATCH] iio: trigger: Don't use RT priority
+Date:   Wed, 9 Sep 2020 18:22:16 +0200
+Message-ID: <20200909162216.13765-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909113613.GB6384@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.16]
+X-RMX-ID: 20200909-182224-4BmnNc1mPXz2TSDs-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 12:36:13PM +0100, Lorenzo Pieralisi wrote:
-> On Mon, Sep 07, 2020 at 12:21:19PM +0100, Catalin Marinas wrote:
-> > On Mon, Sep 07, 2020 at 10:51:21AM +0000, George Cherian wrote:
-> > > Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > On Sat, Sep 05, 2020 at 10:48:11AM +0800, Yang Yingliang wrote:
-> > > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c index
-> > > > > 1006ed2d7c604..ddfa1c53def48 100644
-> > > > > --- a/arch/arm64/kernel/pci.c
-> > > > > +++ b/arch/arm64/kernel/pci.c
-> > > > > @@ -217,4 +217,9 @@ void pcibios_remove_bus(struct pci_bus *bus)
-> > > > >  	acpi_pci_remove_bus(bus);
-> > > > >  }
-> > > > >
-> > > > > +void pci_iounmap(struct pci_dev *dev, void __iomem *addr) {
-> > > > > +	iounmap(addr);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(pci_iounmap);
-> > > > 
-> > > > So, what's wrong with the generic pci_iounmap() implementation?
-> > > > Shouldn't it call iounmap() already?
-> > > 
-> > > Since ARM64 selects CONFIG_GENERIC_PCI_IOMAP and not
-> > > CONFIG_GENERIC_IOMAP,  the pci_iounmap function is reduced to a NULL
-> > > function. Due to this, even the managed release variants or even the explicit
-> > > pci_iounmap calls doesn't really remove the mappings leading to leak.
-> > 
-> > Ah, I missed the fact that pci_iounmap() depends on a different
-> > config option.
-> > 
-> > > https://lkml.org/lkml/2020/8/20/28
-> > 
-> > So is this going to be fixed in the generic code? That would be my
-> > preference.
-> > 
-> > A problem with the iounmap() in the proposed patch is that the region
-> > may have been an I/O port, so we could end up unmapping the I/O space.
-> 
-> It boils down to finding a way to match a VA to a BAR resource so that
-> we can mirror on pci_iounmap() what's done in pci_iomap_range() (ie
-> check BAR resource flags to define how/if to unmap them), that would do
-> as a generic pci_iounmap() implementation.
+Triggers may raise transactions on slow busses like I2C.  Using the
+original RT priority of a threaded IRQ may prevent other important IRQ
+handlers from being run.
 
-In the !CONFIG_GENERIC_IOMAP case (arm64), for IORESOURCE_IO,
-pci_iomap_range() calls __pci_ioport_map() which, with the default
-ioport_map(), it ends up with a simple PCI_IOBASE + (port &
-IO_SPACE_LIMIT).
+In my particular case (on a RT kernel), the RT priority of the sysfstrig
+threaded IRQ handler caused (temporarily) raising the prio of a user
+space process which was holding the I2C bus mutex.
 
-pci_iounmap() could check whether the pointer is in the PCI_IOBASE -
-PCI_IOBASE+IO_SPACE_LIMIT range before calling ioremap(), unless the
-arch code re-defined ioport_map. Something like below (not even
-compiled):
+Although this process did nothing more than blocking on i2c-dev ioctl(),
+no other threaded IRQ handlers (like DMA) were switched in during this
+time.
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index dabf8cb7203b..fada420c9cd6 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -919,6 +919,11 @@ extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
- #define pci_iounmap pci_iounmap
- static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
- {
-+#ifndef ARCH_HAS_IOPORT_MAP
-+	if (p >= PCI_IOBASE && p < PCI_IOBASE + IO_SPACE_LIMIT)
-+		return;
-+	iounmap(p);
-+#endif
- }
- #endif
- #endif /* CONFIG_GENERIC_IOMAP */
-@@ -1009,7 +1014,9 @@ static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Cc: stable@vger.kernel.org
+---
+ drivers/iio/industrialio-trigger.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
+index 6f16357fd732..b74180293da2 100644
+--- a/drivers/iio/industrialio-trigger.c
++++ b/drivers/iio/industrialio-trigger.c
+@@ -9,8 +9,12 @@
+ #include <linux/err.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqdesc.h>
+ #include <linux/list.h>
++#include <linux/sched.h>
+ #include <linux/slab.h>
++#include <uapi/linux/sched/types.h>
  
- #ifdef CONFIG_HAS_IOPORT_MAP
- #ifndef CONFIG_GENERIC_IOMAP
--#ifndef ioport_map
-+#ifdef ioport_map
-+#define ARCH_HAS_IOPORT_MAP
-+#else
- #define ioport_map ioport_map
- static inline void __iomem *ioport_map(unsigned long port, unsigned int nr)
- {
-
+ #include <linux/iio/iio.h>
+ #include <linux/iio/trigger.h>
+@@ -245,6 +249,8 @@ int iio_trigger_attach_poll_func(struct iio_trigger *trig,
+ 	int ret = 0;
+ 	bool notinuse
+ 		= bitmap_empty(trig->pool, CONFIG_IIO_CONSUMERS_PER_TRIGGER);
++	struct sched_param sched_param = { .sched_priority = 0 };
++	struct irq_desc *irq_desc;
+ 
+ 	/* Prevent the module from being removed whilst attached to a trigger */
+ 	__module_get(pf->indio_dev->driver_module);
+@@ -264,6 +270,12 @@ int iio_trigger_attach_poll_func(struct iio_trigger *trig,
+ 	if (ret < 0)
+ 		goto out_put_irq;
+ 
++	/* Triggers may raise transactions on slow busses like I2C.  Using the original RT priority
++	 * of a threaded IRQ may prevent other threaded IRQ handlers from being run.
++	 */
++	irq_desc = irq_to_desc(pf->irq);
++	sched_setscheduler_nocheck(irq_desc->action->thread, SCHED_NORMAL, &sched_param);
++
+ 	/* Enable trigger in driver */
+ 	if (trig->ops && trig->ops->set_trigger_state && notinuse) {
+ 		ret = trig->ops->set_trigger_state(trig, true);
 -- 
-Catalin
+Christian Eggers
+Embedded software developer
+
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
