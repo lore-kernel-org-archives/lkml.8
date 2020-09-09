@@ -2,112 +2,124 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17531C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF56FC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0D621D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599684993;
-	bh=+PLnY7+XKB5fqUGqOZOISPY7Vt96xScqlQv6v92mEkI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tVx8dSHWCrGM+IJRoeWkiMtYmCTqTmIuG00sNrcllQExABi8CRLXrOTyEHcKK8oR4
-	 28ofj1qEXdAMhaLT6+FeCVbVUR7g/W3T+vqrjdNhWXnoSaM1HUrR/Cr5ArrzdvoJIM
-	 QsB4aySgPZYo+81uo4RrrF2NKTT63B2nZLbc000o=
+	by mail.kernel.org (Postfix) with ESMTP id 624E421D6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 20:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgIIU4c (ORCPT
+        id S1729251AbgIIU7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 16:56:32 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37228 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729941AbgIIU4c (ORCPT
+        Wed, 9 Sep 2020 16:59:01 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39914 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbgIIU67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 16:56:32 -0400
-Received: by mail-il1-f194.google.com with SMTP id b17so3692114ilh.4;
-        Wed, 09 Sep 2020 13:56:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=q00VE50B8xJP+HSBXFHIpu0Gw7Wz20ZIBGmaaL0kq8Q=;
-        b=TiApGSQFPfFnpqheg5V3m+NQgHdxWplnBYgaAkxMzJqeImPL9jCjhJRJGZHn18A2Z7
-         4BbBnZFnj0z6uQa00HKR3EQwqfgIIPzP5k1kiGA7UFRwTbOnHe8fKTqHxi7zDTEikC6x
-         ys4bEzPbGyay3g+m+FktOmhrV4N+xS2Z0uJTdZCpTqQSQXxykNnDAAjS0k6Q4SYd+6fA
-         p0PswvHnov0Rn2HVmuTRrz14CdlyxGQy4FzRN2QVRGIno+/1FBEdLbFZQBw/BiqdLYmv
-         CrZM++7e6FO7MKFqDRE99Opb1RNBxn7JPhQWQ5meVgfcfNf7am0dC73UfY3bvW+5P+7/
-         86QA==
-X-Gm-Message-State: AOAM532rquEcW7ttRQGNabDxwl57rCWDRXRVVvjNFzaPtsaeYW1Yjv5f
-        EZC9Q80ceUgumadB+FnV1w==
-X-Google-Smtp-Source: ABdhPJyRAAxofQvHmZQAc2mmsb8kK8Muc7VoHcjUpOXg21heO7buqjy9KWGWlb6HvMEpF7nA9U9rjg==
-X-Received: by 2002:a05:6e02:673:: with SMTP id l19mr5283707ilt.225.1599684989408;
-        Wed, 09 Sep 2020 13:56:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id u81sm2090317ilc.52.2020.09.09.13.56.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 13:56:28 -0700 (PDT)
-Received: (nullmailer pid 3061959 invoked by uid 1000);
-        Wed, 09 Sep 2020 20:56:15 -0000
-Date:   Wed, 9 Sep 2020 14:56:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Russell King <linux@armlinux.org.uk>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 1/7] dt-bindings: leds: document
- binding for HW controlled LEDs
-Message-ID: <20200909205615.GA3056507@bogus>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-2-marek.behun@nic.cz>
+        Wed, 9 Sep 2020 16:58:59 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0A6141C0B8C; Wed,  9 Sep 2020 22:58:56 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 22:58:55 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, Alexander Dahl <ada@thorsis.com>
+Subject: Re: [PATCH v3 1/2] leds: pwm: Allow automatic labels for DT based
+ devices
+Message-ID: <20200909205855.GC20388@amd>
+References: <20200907043459.2961-1-post@lespocky.de>
+ <20200907043459.2961-2-post@lespocky.de>
+ <20200909090736.GE10891@amd>
+ <20200909202907.3z425uujvu532qxs@falbala.internal.home.lespocky.de>
+ <9e78d793-d0d5-737c-163e-30736c1c7bdf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200909162552.11032-2-marek.behun@nic.cz>
+In-Reply-To: <9e78d793-d0d5-737c-163e-30736c1c7bdf@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 09 Sep 2020 18:25:46 +0200, Marek Behún wrote:
-> Document binding for LEDs connected to and controlled by various chips
-> (such as ethernet PHY chips).
-> 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../leds/linux,hw-controlled-leds.yaml        | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> 
 
+--YD3LsXFS42OYHhNZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Hi!
 
-Error: Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.example.dts:34.33-41 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [scripts/Makefile.lib:342: Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1366: dt_binding_check] Error 2
+> >>>  	pwm_init_state(led_data->pwm, &led_data->pwmstate);
+> >>>-	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+> >>>+	if (fwnode) {
+> >>>+		init_data.fwnode =3D fwnode;
+> >>>+		ret =3D devm_led_classdev_register_ext(dev, &led_data->cdev,
+> >>>+						     &init_data);
+> >>>+	} else {
+> >>>+		ret =3D devm_led_classdev_register(dev, &led_data->cdev);
+> >>>+	}
+> >>
+> >>Can you always use _ext version, even with null fwnode?
+> >
+> >I did not try on real hardware, but from reading the code I would say
+> >the following would happen: led_classdev_register_ext() calls
+> >led_compose_name(parent, init_data, composed_name) which itself calls
+> >led_parse_fwnode_props(dev, fwnode, &props); that returns early due to
+> >fwnode=3D=3DNULL without changing props, thus this stays as initialized
+> >with {}, so led_compose_name() would return -EINVAL which would let
+> >led_classdev_register_ext() fail, too.
+> >
+> >>If not, can you fix the core to accept that? Having that conditional
+> >>in driver is ugly.
+> >
+> >It is ugly, although the approach is inspired by the leds-gpio driver.
+> >I'll see if I can come up with a change to led-core, but I'm also open
+> >for suggestions. ;-)
+>=20
+> devm_led_classdev_register() calls devm_led_classdev_register_ext()
+> with NULL passed in place of init_data, so you could do something like
+> below to achieve the same without touching LED core:
+>=20
+> struct led_init_data init_data_impl =3D { .fwnode =3D fwnode };
+> struct led_init_data *init_data =3D NULL;
+>=20
+> if (fwnode)
+> 	init_data =3D &init_data_impl;
+>=20
+> devm_led_classdev_register_ext(dev, &led_data->cdev, init_data);
 
+Umm.. This is not too great, either. Maybe I'd really prefer the
+change to the LED core.
 
-See https://patchwork.ozlabs.org/patch/1360778
+> >fyi: Peter Ujfalusi answered and would give his Ack to the changed
+> >dual license for the yaml file.  You can expect that for v4.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Good :-).
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Best regards,
+									pavel
 
-Please check and re-submit.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--YD3LsXFS42OYHhNZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9ZQg8ACgkQMOfwapXb+vL3CQCfQDic/R/0EPuqdZppwuv6RMsq
+0BMAn2rBwwlrIBuBpn2c87MeB4P04Hsj
+=tb6i
+-----END PGP SIGNATURE-----
+
+--YD3LsXFS42OYHhNZ--
