@@ -2,193 +2,164 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5324AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8480C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04FB821D80
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F603206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:17:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEOcepWm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HddSHTwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbgIIRQM (ORCPT
+        id S1730317AbgIIRR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:16:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43387 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729908AbgIIP2Y (ORCPT
+        Wed, 9 Sep 2020 13:17:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:29148 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726714AbgIIP2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:28:24 -0400
+        Wed, 9 Sep 2020 11:28:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599665279;
+        s=mimecast20190719; t=1599665239;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=S0HGwn08RTZDvSiMKGm+kokg7Mfm7dvHTLJh8SzogJA=;
-        b=hEOcepWmMWMR2lfZvDcSlB7f0I0wvIYgE7nQsSiDl980VsNvW/O+3IPz97BRDrfLvSAsuO
-        wfv/Qf9P+1MXnvLLlL2joVzKd/T0ei+vOIxw2zT5/GJfaJwMS25Sc3KxZxU24QBOBfwIi5
-        L97lL32LTmHW7/CFnDEns/N+VQ2e2wM=
+        bh=Gs37dOVi+JtPJIOcRlbiuS4yc0tVwgOrDIKR6DvjZsg=;
+        b=HddSHTwXyEmHV3yXkb7wzdRddz5Ol0SW/odp6Uh4llzarXwlVlI9I7zkwtPQB6eXctK3tx
+        EcZheJJ6F5OVNz17+qUDOr51WKhQS6mcqNgfGt2XNuvWcnqXMiCsBNAGQDT7l8qsaOOMX0
+        D+jTLasL8eY8FjYYaVpam0Ecqzsqs5A=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-174-8uZ_4VOWNSiimj2WvWYA1w-1; Wed, 09 Sep 2020 11:25:50 -0400
-X-MC-Unique: 8uZ_4VOWNSiimj2WvWYA1w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-27-TXrChhS4M9CSP5cyc0jy3Q-1; Wed, 09 Sep 2020 11:09:06 -0400
+X-MC-Unique: TXrChhS4M9CSP5cyc0jy3Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9E011017DC3;
-        Wed,  9 Sep 2020 15:25:47 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.192.171])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 457655C1C2;
-        Wed,  9 Sep 2020 15:25:44 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 17:25:40 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Peter Maydell <Peter.Maydell@arm.com>, qemu-devel@nongnu.org,
-        Dave Martin <Dave.Martin@arm.com>,
-        Juan Quintela <quintela@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
-Message-ID: <20200909152540.ylnrljd6aelxoxrf@kamzik.brq.redhat.com>
-References: <20200904160018.29481-1-steven.price@arm.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96B2C873084;
+        Wed,  9 Sep 2020 15:09:04 +0000 (UTC)
+Received: from wsfd-advnetlab06.anl.lab.eng.bos.redhat.com (wsfd-advnetlab06.anl.lab.eng.bos.redhat.com [10.19.107.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 277E027BD2;
+        Wed,  9 Sep 2020 15:09:03 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, frederic@kernel.org,
+        mtosatti@redhat.com, sassmann@redhat.com,
+        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
+        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
+        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
+        thomas.lendacky@amd.com, jerinj@marvell.com,
+        mathias.nyman@intel.com, jiri@nvidia.com
+Subject: [RFC][Patch v1 1/3] sched/isolation: API to get num of hosekeeping CPUs
+Date:   Wed,  9 Sep 2020 11:08:16 -0400
+Message-Id: <20200909150818.313699-2-nitesh@redhat.com>
+In-Reply-To: <20200909150818.313699-1-nitesh@redhat.com>
+References: <20200909150818.313699-1-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904160018.29481-1-steven.price@arm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:00:16PM +0100, Steven Price wrote:
-> Arm's Memory Tagging Extension (MTE) adds 4 bits of tag data to every 16
-> bytes of memory in the system. This along with stashing a tag within the
-> high bit of virtual addresses allows runtime checking of memory
-> accesses.
-> 
-> These patches add support to KVM to enable MTE within a guest. They are
-> based on Catalin's v9 MTE user-space support series[1].
-> 
-> I'd welcome feedback on the proposed user-kernel ABI. Specifically this
-> series currently:
->
-   0. Feature probing
+Introduce a new API num_housekeeping_cpus(), that can be used to retrieve
+the number of housekeeping CPUs by reading an atomic variable
+__num_housekeeping_cpus. This variable is set from housekeeping_setup().
 
-Probably a KVM cap, rather than requiring userspace to attempt VCPU
-features one at a time with a scratch VCPU.
+This API is introduced for the purpose of drivers that were previously
+relying only on num_online_cpus() to determine the number of MSIX vectors
+to create. In an RT environment with large isolated but a fewer
+housekeeping CPUs this was leading to a situation where an attempt to
+move all of the vectors corresponding to isolated CPUs to housekeeping
+CPUs was failing due to per CPU vector limit.
+
+If there are no isolated CPUs specified then the API returns the number
+of all online CPUs.
+
+Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+---
+ include/linux/sched/isolation.h |  7 +++++++
+ kernel/sched/isolation.c        | 23 +++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+index cc9f393e2a70..94c25d956d8a 100644
+--- a/include/linux/sched/isolation.h
++++ b/include/linux/sched/isolation.h
+@@ -25,6 +25,7 @@ extern bool housekeeping_enabled(enum hk_flags flags);
+ extern void housekeeping_affine(struct task_struct *t, enum hk_flags flags);
+ extern bool housekeeping_test_cpu(int cpu, enum hk_flags flags);
+ extern void __init housekeeping_init(void);
++extern unsigned int num_housekeeping_cpus(void);
  
->  1. Requires the VMM to enable MTE per-VCPU.
-
-I suppose. We're collecting many features that are enabling CPU features,
-so they map nicely to VCPU features, yet they're effectively VM features
-due to a shared resource such as an irq or memory.
-
->  2. Automatically promotes (normal host) memory given to the guest to be
->     tag enabled (sets PG_mte_tagged), if any VCPU has MTE enabled. The
->     tags are cleared if the memory wasn't previously MTE enabled.
-
-Shouldn't this be up to the guest? Or, is this required in order for the
-guest to use tagging at all. Something like making the guest IPAs memtag
-capable, but if the guest doesn't enable tagging then there is no guest
-impact? In any case, shouldn't userspace be the one that adds PROT_MTE
-to the memory regions it wants the guest to be able to use tagging with,
-rather than KVM adding the attribute page by page?
-
->  3. Doesn't provide any new methods for the VMM to access the tags on
->     memory.
-> 
-> (2) and (3) are particularly interesting from the aspect of VM migration.
-> The guest is able to store/retrieve data in the tags (presumably for the
-> purpose of tag checking, but architecturally it could be used as just
-> storage). This means that when migrating a guest the data needs to be
-> transferred (or saved/restored).
-> 
-> MTE tags are controlled by the same permission model as normal pages
-> (i.e. a read-only page has read-only tags), so the normal methods of
-> detecting guest changes to pages can be used. But this would also
-> require the tags within a page to be migrated at the same time as the
-> data (since the access control for tags is the same as the normal data
-> within a page).
-> 
-> (3) may be problematic and I'd welcome input from those familiar with
-> VMMs. User space cannot access tags unless the memory is mapped with the
-> PROT_MTE flag. However enabling PROT_MTE will also enable tag checking
-> for the user space process (assuming the VMM enables tag checking for
-> the process) and since the tags in memory are controlled by the guest
-> it's unlikely the VMM would have an appropriately tagged pointer for its
-> access. This means the VMM would either need to maintain two mappings of
-> memory (one to access tags, the other to access data) or disable tag
-> checking during the accesses to data.
-
-If userspace needs to write to guest memory then it should be due to
-a device DMA or other specific hardware emulation. Those accesses can
-be done with tag checking disabled.
-
-> 
-> If it's not practical to either disable tag checking in the VMM or
-> maintain multiple mappings then the alternatives I'm aware of are:
-> 
->  * Provide a KVM-specific method to extract the tags from guest memory.
->    This might also have benefits in terms of providing an easy way to
->    read bulk tag data from guest memory (since the LDGM instruction
->    isn't available at EL0).
-
-Maybe we need a new version of KVM_GET_DIRTY_LOG that also provides
-the tags for all addresses of each dirty page.
-
->  * Provide support for user space setting the TCMA0 or TCMA1 bits in
->    TCR_EL1. These would allow the VMM to generate pointers which are not
->    tag checked.
-
-So this is necessary to allow the VMM to keep tag checking enabled for
-itself, plus map guest memory as PROT_MTE, and write to that memory when
-needed? 
-
-Thanks,
-drew
-
-> 
-> Feedback is welcome, and feel free to ask questions if anything in the
-> above doesn't make sense.
-> 
-> Changes since the previous v1 posting[2]:
-> 
->  * Rebasing clean-ups
->  * sysreg visibility is now controlled based on whether the VCPU has MTE
->    enabled or not
-> 
-> [1] https://lore.kernel.org/r/20200904103029.32083-1-catalin.marinas@arm.com
-> [2] https://lore.kernel.org/r/20200713100102.53664-1-steven.price%40arm.com
-> 
-> Steven Price (2):
->   arm64: kvm: Save/restore MTE registers
->   arm64: kvm: Introduce MTE VCPU feature
-> 
->  arch/arm64/include/asm/kvm_emulate.h       |  3 +++
->  arch/arm64/include/asm/kvm_host.h          |  9 ++++++++-
->  arch/arm64/include/asm/sysreg.h            |  3 ++-
->  arch/arm64/include/uapi/asm/kvm.h          |  1 +
->  arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h | 14 ++++++++++++++
->  arch/arm64/kvm/mmu.c                       | 15 +++++++++++++++
->  arch/arm64/kvm/reset.c                     |  8 ++++++++
->  arch/arm64/kvm/sys_regs.c                  | 20 +++++++++++++++-----
->  8 files changed, 66 insertions(+), 7 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> kvmarm mailing list
-> kvmarm@lists.cs.columbia.edu
-> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
-> 
+ #else
+ 
+@@ -46,6 +47,12 @@ static inline bool housekeeping_enabled(enum hk_flags flags)
+ static inline void housekeeping_affine(struct task_struct *t,
+ 				       enum hk_flags flags) { }
+ static inline void housekeeping_init(void) { }
++
++static unsigned int num_housekeeping_cpus(void)
++{
++	return num_online_cpus();
++}
++
+ #endif /* CONFIG_CPU_ISOLATION */
+ 
+ static inline bool housekeeping_cpu(int cpu, enum hk_flags flags)
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 5a6ea03f9882..7024298390b7 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -13,6 +13,7 @@ DEFINE_STATIC_KEY_FALSE(housekeeping_overridden);
+ EXPORT_SYMBOL_GPL(housekeeping_overridden);
+ static cpumask_var_t housekeeping_mask;
+ static unsigned int housekeeping_flags;
++static atomic_t __num_housekeeping_cpus __read_mostly;
+ 
+ bool housekeeping_enabled(enum hk_flags flags)
+ {
+@@ -20,6 +21,27 @@ bool housekeeping_enabled(enum hk_flags flags)
+ }
+ EXPORT_SYMBOL_GPL(housekeeping_enabled);
+ 
++/*
++ * num_housekeeping_cpus() - Read the number of housekeeping CPUs.
++ *
++ * This function returns the number of available housekeeping CPUs
++ * based on __num_housekeeping_cpus which is of type atomic_t
++ * and is initialized at the time of the housekeeping setup.
++ */
++unsigned int num_housekeeping_cpus(void)
++{
++	unsigned int cpus;
++
++	if (static_branch_unlikely(&housekeeping_overridden)) {
++		cpus = atomic_read(&__num_housekeeping_cpus);
++		/* We should always have at least one housekeeping CPU */
++		BUG_ON(!cpus);
++		return cpus;
++	}
++	return num_online_cpus();
++}
++EXPORT_SYMBOL_GPL(num_housekeeping_cpus);
++
+ int housekeeping_any_cpu(enum hk_flags flags)
+ {
+ 	int cpu;
+@@ -131,6 +153,7 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
+ 
+ 	housekeeping_flags |= flags;
+ 
++	atomic_set(&__num_housekeeping_cpus, cpumask_weight(housekeeping_mask));
+ 	free_bootmem_cpumask_var(non_housekeeping_mask);
+ 
+ 	return 1;
+-- 
+2.27.0
 
