@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C45C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB6CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83DE4218AC
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EF5208FE
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 08:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="daO+rZwY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="v88id4FN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgIIIDb (ORCPT
+        id S1730136AbgIIIEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 04:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34416 "EHLO
+        Wed, 9 Sep 2020 04:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgIIIC3 (ORCPT
+        with ESMTP id S1728197AbgIIICa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:02:29 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA68BC061573
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:02:28 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id dj20so870594qvb.23
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:02:28 -0700 (PDT)
+        Wed, 9 Sep 2020 04:02:30 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBFB9C061755
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 01:02:29 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id b54so1245920qtk.17
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 01:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=U3gtMTs4RaPxKkemS+hEa5GYd0PVVdeUUZrMo+S/CQA=;
-        b=daO+rZwYFEwQs44LRCfWnJJQCUNW+cwSlz3veM95Ylwi6qoaKXXBahDbvGla/5qFr1
-         vdouYzgB0skYs5WgZdC6DNjsxBlCKH5Rxx4RO4CSymZWfYIdaNmCF3MG1pIGk/Y7gnBV
-         cGY87IP096UNUg1tYEA2L0mcHtoPKqDDQ2YRaeRLSMrVSGw3gQ2m6gplhH3m0gefCfc9
-         UrmSfK4rEdxw2XHF0Ugwe0XvcTh4XL39Wk90exHPi6tsjuFgBJXcI8kf6yINouGIE2/S
-         Ck42feKhE8rl4PVufTrNCa5LKOhRvxaGt2fqleTVnqQ83rKTAjZXS/PTjE3lzFzzr0RL
-         vF8Q==
+        bh=+v/M5QTP1V7FrDLZG+2JGMmNkf6saqE/CnYjYEQaD2o=;
+        b=v88id4FNMlY5AAlexK5D7P5hkn5ivbdEs35Nkh4RlMt0y1Pwj9J/bdiPTU01pIACOi
+         TlmPMeIhJd6l5lUWOpF0ZPQPi/JA359BYnatQX3oxYaufZNAA4fsEK1jLE+rpjcZ2YFX
+         d6R1Gq+9HA6QDciXoif5Iul8NRl2WRC3rlWXK7IS1L801KkX0naHhf7fhdOCvExGsgHf
+         K2IjNJVp2F1nUHxVrvtRDAB9tt5bxOFRE9QrVu1Qqfth16Y6ZKnDcvrYHO11wA5ZY15/
+         kC1NY68ibbCFwXrXPNNEvTEiTwTejQeV/PEYjdp6PC58WroXgavw2k+CB2ifqHMaxAW9
+         GmmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=U3gtMTs4RaPxKkemS+hEa5GYd0PVVdeUUZrMo+S/CQA=;
-        b=CKo8nJgv/PhQzJ1zsmPg2ltMsOAE1WdU7mm6M7LVrKnF4l0wsQF+qaNOEQHO7uMYN1
-         CVjy/udOQUlj+4ehi9iGrBClJm9lPYDsf+i/CcT3q1YfyZvOvXvuVejLrj8BJm/UbbY6
-         tqt1ESqJ+6oE0fyrVMi1BTpjyYlsEiVtss3SlaAJMT/a49mshB4kvrWBwiFi4o6GCbyG
-         qYIx79eokzfxKyNzPdi1SSypTsI/trXPgYSchdz2/tw0PmktJ/+oqMRf+h/HbAtxX2Hp
-         qP6Wm1p6DWKs6P4PsF//A+EQ0BDZ+cL2WSChTsPlZ1MSbjXfZKof8Tn5c0CqVFjpQjrn
-         8vPw==
-X-Gm-Message-State: AOAM531g1s7AdOG7tlinRFe4eN9CALanxbkG8HzJW8RqMBh3HfmNBTR5
-        gOE5R/Ny1ZnnNYn5h9WDzH6vCcq+ubVB
-X-Google-Smtp-Source: ABdhPJxEMcFtk/tjUkTXVVu3KpcQ1kD7FVod5OGDRCLcpomjQ1rzU3Sv+GBCDMzZZHuxxiqxpkzP2jovYSpM
+        bh=+v/M5QTP1V7FrDLZG+2JGMmNkf6saqE/CnYjYEQaD2o=;
+        b=FULakEzv+dghYdqIVH7W9TRiczlemQ8G8fEkY8PsR9NH9zQ5PpVJJvxThign86T+Ie
+         BwscUenHXC4ugNYAvnVITuDUADej6OIkuL9qMDLVkLHm1Wabt/H6+k1yDmjiD5dn6lIS
+         9GcItcTbbQAEXlpvJgGq+1S7vLWV8ff8haueyrIwvCxolaeAa066lUpZnSKmVCaiBT5K
+         qzdYtrRTS12PIqQTamawE5ZviwLmqn5D4oIqSDBsvxi6T7Me5KcLOf5VIFXHYh+y8+jO
+         l8E7rH50tRfPuFhMt5oXwGAXKrwJGqCXaqSnDF4FtPWYa08Ug/6YRFKoKVAD3yjlSLTN
+         rczA==
+X-Gm-Message-State: AOAM533JE0KS5vFAfVmmszRlOUxOIifWPV1PdBlwr1221nBORBnH9q15
+        bKjNpgIQRP4hLGx4xfafMHZBceaMJvFD
+X-Google-Smtp-Source: ABdhPJymIEEr5DdCIlbnDCowSiixeJFbxHW+n13/3Ez3h3r9Tx5dyGirugnHgqGF/XimLScMqDBKPxaRrBvY
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:2:f693:9fff:fef4:4583])
- (user=irogers job=sendgmr) by 2002:a0c:a085:: with SMTP id
- c5mr2939791qva.15.1599638546860; Wed, 09 Sep 2020 01:02:26 -0700 (PDT)
-Date:   Wed,  9 Sep 2020 01:02:19 -0700
+ (user=irogers job=sendgmr) by 2002:a0c:edaa:: with SMTP id
+ h10mr2856021qvr.12.1599638548807; Wed, 09 Sep 2020 01:02:28 -0700 (PDT)
+Date:   Wed,  9 Sep 2020 01:02:20 -0700
 In-Reply-To: <20200909080220.254585-1-irogers@google.com>
-Message-Id: <20200909080220.254585-2-irogers@google.com>
+Message-Id: <20200909080220.254585-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20200909080220.254585-1-irogers@google.com>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH 2/3] perf metricgroup: Fix uncore metric expressions
+Subject: [PATCH 3/3] perf metricgroup: Fix typo in comment.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -78,91 +78,33 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         linux-kernel@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>, Jin@google.com
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A metric like DRAM_BW_Use has on SkylakeX events uncore_imc/cas_count_read/
-and uncore_imc/case_count_write/. These events open 6 events per socket
-with pmu names of uncore_imc_[0-5]. The current metric setup code in
-find_evsel_group assumes one ID will map to 1 event to be recorded in
-metric_events. For events with multiple matches, the first event is
-recorded in metric_events (avoiding matching >1 event with the same
-name) and the evlist_used updated so that duplicate events aren't
-removed when the evlist has unused events removed.
+Add missing character.
 
-Before this change:
-$ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
-
- Performance counter stats for 'system wide':
-
-             41.14 MiB  uncore_imc/cas_count_read/
-     1,002,614,251 ns   duration_time
-
-       1.002614251 seconds time elapsed
-
-After this change:
-$ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
-
- Performance counter stats for 'system wide':
-
-            157.47 MiB  uncore_imc/cas_count_read/ #     0.00 DRAM_BW_Use
-            126.97 MiB  uncore_imc/cas_count_write/
-     1,003,019,728 ns   duration_time
-
-Erroneous duplication introduced in:
-commit 2440689d62e9 ("perf metricgroup: Remove duped metric group events").
-
-Fixes: ded80bda8bc9 ("perf expr: Migrate expr ids table to a hashmap").
-Reported-by: Jin, Yao <yao.jin@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 8831b964288f..d216a161f41c 100644
+index d216a161f41c..050f3404c137 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -206,6 +206,18 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				sizeof(struct evsel *) * idnum);
- 			current_leader = ev->leader;
- 		}
-+		/*
-+		 * Check for duplicate events with the same name. For example,
-+		 * uncore_imc/cas_count_read/ will turn into 6 events per socket
-+		 * on skylakex. Only the first such event is placed in
-+		 * metric_events.
-+		 */
-+		for (i = 0; i < matched_events; i++) {
-+			if (!strcmp(metric_events[i]->name, ev->name))
-+				break;
-+		}
-+		if (i != matched_events)
-+			continue;
- 		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
- 			if (has_constraint) {
- 				/*
-@@ -248,6 +260,16 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 		ev = metric_events[i];
- 		ev->metric_leader = ev;
- 		set_bit(ev->idx, evlist_used);
-+		/*
-+		 * Mark two events with identical names in the same group as
-+		 * being in use as uncore events may be duplicated for each pmu.
-+		 */
-+		evlist__for_each_entry(perf_evlist, ev) {
-+			if (metric_events[i]->leader == ev->leader &&
-+			    !strcmp(metric_events[i]->name, ev->name)) {
-+				set_bit(ev->idx, evlist_used);
-+			}
-+		}
- 	}
+@@ -150,7 +150,7 @@ static void expr_ids__exit(struct expr_ids *ids)
+ }
  
- 	return metric_events[0];
+ /**
+- * Find a group of events in perf_evlist that correpond to those from a parsed
++ * Find a group of events in perf_evlist that correspond to those from a parsed
+  * metric expression. Note, as find_evsel_group is called in the same order as
+  * perf_evlist was constructed, metric_no_merge doesn't need to test for
+  * underfilling a group.
 -- 
 2.28.0.526.ge36021eeef-goog
 
