@@ -2,105 +2,107 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BDAC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A0CC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CDB20C09
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB9420C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EG6bdLny"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g6M/FfgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgIIWXg (ORCPT
+        id S1729717AbgIIW3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 18:23:36 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45693 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgIIWXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 18:23:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmxP83Zpvz9sTM;
-        Thu, 10 Sep 2020 08:23:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599690206;
-        bh=/LELMHd64D8Vw4FvapsmxQ+3yrnc8Bc03jaD12MveK4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EG6bdLnyFPv+CMjFMQrdRZ9MPyKy0ImM7aAnNRkfPxy1eMx+uLfgg7aQbemxy7RoC
-         hc2EiqgwA738c1J2/O/K8wFZXkb9NarqYk4BXUMeiul5dUr9LaGJT8le3+DR/SNz+v
-         XM5nZj8lL1AgyUiOdqL8Xl3NJxyH89wI8LCs02tVZDza81s+51rivwHRPBJmeQFCEq
-         xFFSReZzPEQF3535FGmh+1UVRtQM2q5OGDLCKkeBDMp1iFde/roRgg1DkVjGfHd4iB
-         Qay2TarR8b249awhR0l+hXOPhB4aUGlV1GDDYLKfrgsq9eTcPMahu/KyEF3/3rikgK
-         7jVYR/d/c3XlA==
-Date:   Thu, 10 Sep 2020 08:23:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     jim.cromie@gmail.com, Petr Mladek <pmladek@suse.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, Jason Baron <jbaron@akamai.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>
-Subject: Re: kernel BUG at /usr/src/kernel/lib/dynamic_debug.c:267!
-Message-ID: <20200910082323.59e41def@canb.auug.org.au>
-In-Reply-To: <20200909181251.GA1007128@kroah.com>
-References: <CA+G9fYvg7voMNArr3nPpv_dRn10RwYos075NW_b5rFbBLZ=-8g@mail.gmail.com>
-        <20200909144745.504c4cbfeea9bc298e3c6b9b@kernel.org>
-        <20200909080025.GC3864@alley>
-        <20200909122502.GB668220@kroah.com>
-        <CAJfuBxzNFmgY=Wbz99K8QTxkBVDaJn5+gTTxUTJTtkJe7nxfsQ@mail.gmail.com>
-        <20200909181251.GA1007128@kroah.com>
+        Wed, 9 Sep 2020 18:29:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32396 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727782AbgIIW3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 18:29:08 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089MRYK2097724;
+        Wed, 9 Sep 2020 18:29:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=IkJ80Y1POR7TpH9syCU5eT96eUJswMK1blGxXzjoJQk=;
+ b=g6M/FfgKHiaf6Fj722WB3LNtIsYbOWU+4mHHC5ZYBCoiOVx4X9uvCmX1o3zsEIfWofvv
+ re6PP5lqEgpSP6vpvPAfbiQxwlSdZFe2Xs51Xoxnws4I6Uqnsy9FoQdIvlLV5s5GA6Gp
+ 8wxwJQzb0Y5CT2F3gbZaUTv5QXpMj0qTb7/3xByZa0zKhYUHhYtZSOx92T2NRPuV1yaY
+ gReGqEN1czspBF66w5w7bMRaxFFoVh7LnZTD4lYrIxF54ed14TsMhXKQaEmVoKaMD7dN
+ HcXzORrkN3kR7KK5UGdl1Liwwq+sHRTpDozAsVYD8XAvBmKn3E1g+I1HpfcdNJ2OJKy5 FQ== 
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33f7v5810r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 18:29:00 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 089MRU5Q012722;
+        Wed, 9 Sep 2020 22:29:00 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma05wdc.us.ibm.com with ESMTP id 33c2a9arc8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 09 Sep 2020 22:28:59 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 089MStWd37028442
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Sep 2020 22:28:55 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB7EB136053;
+        Wed,  9 Sep 2020 22:28:58 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 610BB136055;
+        Wed,  9 Sep 2020 22:28:58 +0000 (GMT)
+Received: from SHADE6A.ibmuc.com (unknown [9.163.76.239])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  9 Sep 2020 22:28:58 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-spi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        joel@jms.id.au, broonie@kernel.org, bradleyb@fuzziesquirrel.com,
+        robh+dt@kernel.org, arnd@arndb.de, eajames@linux.ibm.com
+Subject: [PATCH v2 0/6] spi: Fixes for FSI-attached controller
+Date:   Wed,  9 Sep 2020 17:28:51 -0500
+Message-Id: <20200909222857.28653-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+KVPDKbrXvUrBxeMPlr_fAU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_17:2020-09-09,2020-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 mlxscore=0 suspectscore=1 mlxlogscore=764 priorityscore=1501
+ malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+KVPDKbrXvUrBxeMPlr_fAU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This series implements a number of fixes for the FSI-attached SPI
+controller driver.
 
-Hi Greg,
+Changes since v1:
+ - Switch to a new compatible string for the restricted version of the
+   SPI controller, rather than a new boolean parameter.
 
-On Wed, 9 Sep 2020 20:12:51 +0200 Greg Kroah-Hartman <gregkh@linuxfoundatio=
-n.org> wrote:
->
-> I'll go revert both patches from my tree in the morning, which should
-> clear these issues up.
+Brad Bishop (3):
+  spi: fsi: Handle 9 to 15 byte transfers lengths
+  spi: fsi: Fix clock running too fast
+  spi: fsi: Fix use of the bneq+ sequencer instruction
 
-I have reverted them from linux-next today.
+Eddie James (3):
+  dt-bindings: fsi: fsi2spi: Add compatible string for restricted
+    version
+  spi: fsi: Implement restricted size for certain controllers
+  spi: fsi: Check mux status before transfers
 
---=20
-Cheers,
-Stephen Rothwell
+ .../devicetree/bindings/fsi/ibm,fsi2spi.yaml  |   1 +
+ drivers/spi/spi-fsi.c                         | 139 ++++++++++++++----
+ 2 files changed, 109 insertions(+), 31 deletions(-)
 
---Sig_/+KVPDKbrXvUrBxeMPlr_fAU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+2.26.2
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ZVdsACgkQAVBC80lX
-0GxGRAf/Zy1vE3KdsI6KlcgGDBQvA3vUsWVPwh/atRg9acrTyzUGedKKx8dB8Q3o
-Pu0LVptygbCo7ne51xER4g0Xpo5sGpAHBHqoQV74s6kx2HgLD10q3vKTgzWKHQme
-5nBHPMWty/kwPDvhF0pMgq8hCQvPb2Vm/fV8ujwVCdoC2rXeif3diPfyQE51WQ7x
-Ijm6M5H44gQVjh3a5WxG0lo6ZgYcz9QrOS45D956RdxhOM+HM+ARM1ousOXKz+tS
-32D2w7iXrxMcAUnh1u1g97KBB0jzzPNmyGbKt00QHnP0Q5oGyXwAsKbIN43wsZp+
-HDRHyBD7QXDJ2pwr+TYVA/0y57lP8Q==
-=nc1L
------END PGP SIGNATURE-----
-
---Sig_/+KVPDKbrXvUrBxeMPlr_fAU--
