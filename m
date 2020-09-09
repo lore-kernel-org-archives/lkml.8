@@ -2,133 +2,132 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274DBC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A204FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D015E2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="azshADfV"
+	by mail.kernel.org (Postfix) with ESMTP id 61D282087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730785AbgIJCeX (ORCPT
+        id S1730797AbgIJCeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730555AbgIJCcb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:32:31 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BF80C061385
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 16:44:35 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id r184so2364115qka.21
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 16:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=1OQRbnpVQqbSHeNIDm4Hm9mK1gT2gj5RYSqpBEjn4gM=;
-        b=azshADfVoWxyDpQuXUO3to8kiY9uHNIzQ57x8KjQIX+EK/Em5xQVxYtJPoEDS0aePD
-         Y61/giUZ05cffykw283xaA3l6iWVCJg9wpB71S5nzH9EVlsB7DrwYd/1GbZ/6hqyy+aP
-         V3CsVsXVhEhkNrcI6fwNQ8MdTXYqYu3mK8JIgFfSqFMjLHbltgP4QvmvdGhsb6hEmTat
-         HpU4YccntOhHTahvRdzBbRxShPfV83u92ZPa5sdOLsdziXdRXd2FLqZ8tbj6J+BnKJxh
-         1ZzYAG/BSCC00j0EQm3RdQEmkV8TCxNK7oGMetTxZt4LkGA2j5eaVT5Dc+FDNGRbc5iD
-         dDuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=1OQRbnpVQqbSHeNIDm4Hm9mK1gT2gj5RYSqpBEjn4gM=;
-        b=KY4tNW8cvFwh5zDyUjKEr8JPn+ADqd19OdOdDrADiwZGNeVi1aj6dD6ZrokVg0rE8K
-         tkTMpfiCEzQiyw0RjIx99j0yxNJp1T9PVipSHoLYc3Fr2EJeD33kWmoJcTjSD7UYPCf7
-         unj0mWPpWzDKHu9Z+dIN7F8t8CA29djT5C4ChgDvF5pwrBkRfOmodU4LpywYe/fV1OMc
-         ohSfqSUA5B59UptM5oWgDCAhRX7HL3OOEBkH9gDvuRNxMmh9z5KgGx+wgsfGQ3PZ6MmV
-         9RZGg4NB72s70HRLkOooRsKIRlOYx2wu3DkTKHzTTbrRJCxh/7MOZ/TduscGJV6WvWNZ
-         3ctg==
-X-Gm-Message-State: AOAM5333BM2p4S/0vWbXdRsa4JnkeTi+ZVNy+K4I7MYd2itgw5D3UZdQ
-        1cyYUQR1zXnGG7hrwdjKo/JPqjPTubM=
-X-Google-Smtp-Source: ABdhPJzRLKGMJkhtGLLHYN+CRFtSzCzysN6IpaLbffgbJgz/w24BGG12zL9AWcZQDiOos9PZsag2+r5yVUI=
-X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:2d8e])
- (user=satyat job=sendgmr) by 2002:ad4:5565:: with SMTP id w5mr6354094qvy.24.1599695074759;
- Wed, 09 Sep 2020 16:44:34 -0700 (PDT)
-Date:   Wed,  9 Sep 2020 23:44:22 +0000
-In-Reply-To: <20200909234422.76194-1-satyat@google.com>
-Message-Id: <20200909234422.76194-4-satyat@google.com>
-Mime-Version: 1.0
-References: <20200909234422.76194-1-satyat@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH 3/3] dm: enable may_passthrough_inline_crypto on some targets
-From:   Satya Tangirala <satyat@google.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dm-devel@redhat.com
-Cc:     Jens Axboe <axboe@kernel.dk>, Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Satya Tangirala <satyat@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 9 Sep 2020 22:34:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15314 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730760AbgIJCWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:22:49 -0400
+IronPort-SDR: FHvfqVu/9grH6dsuyuNpnE7maoL6zq4Sn9ajX95JR47dKJZ7vN1tLWCh1qcwf0ijDJdSRkoj7N
+ ud6mbMAe8B4g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="219997824"
+X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
+   d="scan'208";a="219997824"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:46:02 -0700
+IronPort-SDR: mn+6z1txUnM20cyC1uC/43VSqPtFs7oZN20YoAzttVEqZ0/5B8qxGmJol8TF5pH4EnxDuguv/u
+ qhB2+FKWVvbA==
+X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
+   d="scan'208";a="304681357"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.243.130]) ([10.212.243.130])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:46:00 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+ <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
+ <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
+ <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
+ <20200901102758.GY6642@arm.com>
+ <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+ <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
+ <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
+ <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
+ <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
+ <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
+ <5979c58d-a6e3-d14d-df92-72cdeb97298d@intel.com>
+ <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
+ <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
+ <a881837d-c844-30e8-a614-8b92be814ef6@intel.com>
+ <cbec8861-8722-ec31-2c02-1cfed20255eb@intel.com>
+ <b3379d26-d8a7-deb7-59f1-c994bb297dcb@intel.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <fe6774f4-2554-9c0c-f1b8-110bb9398324@intel.com>
+Date:   Wed, 9 Sep 2020 16:45:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <b3379d26-d8a7-deb7-59f1-c994bb297dcb@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On 9/9/2020 4:29 PM, Dave Hansen wrote:
+> On 9/9/20 4:25 PM, Yu, Yu-cheng wrote:
+>> On 9/9/2020 4:11 PM, Dave Hansen wrote:
+>>> On 9/9/20 4:07 PM, Yu, Yu-cheng wrote:
+>>>> What if a writable mapping is passed to madvise(MADV_SHSTK)?  Should
+>>>> that be rejected?
+>>>
+>>> It doesn't matter to me.  Even if it's readable, it _stops_ being even
+>>> directly readable after it's a shadow stack, right?  I don't think
+>>> writes are special in any way.  If anything, we *want* it to be writable
+>>> because that indicates that it can be written to, and we will want to
+>>> write to it soon.
+>>>
+>> But in a PROT_WRITE mapping, all the pte's have _PAGE_BIT_RW set.  To
+>> change them to shadow stack, we need to clear that bit from the pte's.
+>> That will be like mprotect_fixup()/change_protection_range().
+> 
+> The page table hardware bits don't matter.  The user-visible protection
+> effects matter.
+> 
+> For instance, we have PROT_EXEC, which *CLEARS* a hardware NX PTE bit.
+> The PROT_ permissions are independent of the hardware.
 
-dm-linear and dm-flakey obviously can pass through inline crypto support.
+Same for shadow stack here.  We consider shadow stack "writable", but we 
+want to clear _PAGE_BIT_RW, which is set for the PTEs of the other type 
+of "writable" mapping.  To change a writable data mapping to a writable 
+shadow stack mapping, we need to call change_protection_range().
 
-dm-zero should declare that it passes through inline crypto support, since
-any reads from dm-zero should return zeroes, and blk-crypto should not
-attempt to decrypt data returned from dm-zero.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Co-developed-by: Satya Tangirala <satyat@google.com>
-Signed-off-by: Satya Tangirala <satyat@google.com>
----
- drivers/md/dm-flakey.c | 1 +
- drivers/md/dm-linear.c | 1 +
- drivers/md/dm-zero.c   | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/drivers/md/dm-flakey.c b/drivers/md/dm-flakey.c
-index a2cc9e45cbba..655286dacc35 100644
---- a/drivers/md/dm-flakey.c
-+++ b/drivers/md/dm-flakey.c
-@@ -253,6 +253,7 @@ static int flakey_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	ti->num_discard_bios = 1;
- 	ti->per_io_data_size = sizeof(struct per_bio_data);
- 	ti->private = fc;
-+	ti->may_passthrough_inline_crypto = true;
- 	return 0;
- 
- bad:
-diff --git a/drivers/md/dm-linear.c b/drivers/md/dm-linear.c
-index e1db43446327..6d81878e2ca8 100644
---- a/drivers/md/dm-linear.c
-+++ b/drivers/md/dm-linear.c
-@@ -62,6 +62,7 @@ static int linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	ti->num_secure_erase_bios = 1;
- 	ti->num_write_same_bios = 1;
- 	ti->num_write_zeroes_bios = 1;
-+	ti->may_passthrough_inline_crypto = true;
- 	ti->private = lc;
- 	return 0;
- 
-diff --git a/drivers/md/dm-zero.c b/drivers/md/dm-zero.c
-index b65ca8dcfbdc..07e02f3a9cd1 100644
---- a/drivers/md/dm-zero.c
-+++ b/drivers/md/dm-zero.c
-@@ -26,6 +26,7 @@ static int zero_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	 * Silently drop discards, avoiding -EOPNOTSUPP.
- 	 */
- 	ti->num_discard_bios = 1;
-+	ti->may_passthrough_inline_crypto = true;
- 
- 	return 0;
- }
--- 
-2.28.0.618.gf4bc123cb7-goog
-
+> 
+> I don't think the interface should be influenced at *all* by what whacko
+> PTE bit combinations we have to set to get the behavior.
+> 
