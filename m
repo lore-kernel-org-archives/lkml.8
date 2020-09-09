@@ -2,136 +2,67 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDA6C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 800AC2080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GomwRcHm"
+	by mail.kernel.org (Postfix) with ESMTP id D660E20C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 18:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgIISoE (ORCPT
+        id S1728347AbgIISoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 14:44:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgIISn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 14:43:58 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21915C061573;
-        Wed,  9 Sep 2020 11:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=EaCCaUS/GA5zKTWx+EqB8AflyC7OJgYop8KOzI5rmeE=; b=GomwRcHmRkv+TFrVR0WQdaBrR0
-        IdVlKI/PUaruAuCEPKQBmtZ7JZL4we75h3/irAUxJ5gsU6M6mTs94C2fOhTV5pfIxcT3EddDzUl3v
-        bu8NKjOCp53mKvhHgrfPPxWkyrooRmtL8rXlsAQoHv7o2YfeSyCdsDl3NgWQ472DZXJGPePZ55nSQ
-        2OKgY8UtasfDK043LRoY1nwBTIYe2u5DI6qP7K08HwvybWJBo+CFTJ2p/0tzGYKZYGX/OGo7ChH74
-        BOTNo89H1Y+r6WmkB5DnHB9RsbMya/p7/YqieedDFsC5IKr9tKeJzgWaoH852g0zCtGTfYU7xTrVI
-        PBNIWO2Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kG549-0005ns-Am; Wed, 09 Sep 2020 18:43:34 +0000
-Subject: Re: [PATCH net-next + leds v2 2/7] leds: add generic API for LEDs
- that can be controlled by hardware
-To:     =?UTF-8?Q?Marek_Beh=c3=ban?= <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-3-marek.behun@nic.cz>
- <84bfc0ce-752d-9d1f-1043-fabe4cc25b15@infradead.org>
- <20200909203121.73bfcfa1@dellmb.labs.office.nic.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <444169ca-cfd7-dcb5-3ce6-59d3bfea6190@infradead.org>
-Date:   Wed, 9 Sep 2020 11:43:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200909203121.73bfcfa1@dellmb.labs.office.nic.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 9 Sep 2020 14:44:22 -0400
+Received: from gate.crashing.org ([63.228.1.57]:58415 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbgIISoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 14:44:18 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 089Ie3mG030232;
+        Wed, 9 Sep 2020 13:40:03 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 089Ie2JN030219;
+        Wed, 9 Sep 2020 13:40:02 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 9 Sep 2020 13:40:01 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: remove the last set_fs() in common code, and remove it for x86 and powerpc v3
+Message-ID: <20200909184001.GB28786@gate.crashing.org>
+References: <20200903142242.925828-1-hch@lst.de> <20200903142803.GM1236603@ZenIV.linux.org.uk> <CAHk-=wgQNyeHxXfckd1WtiYnoDZP1Y_kD-tJKqWSksRoDZT=Aw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgQNyeHxXfckd1WtiYnoDZP1Y_kD-tJKqWSksRoDZT=Aw@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 11:31 AM, Marek Behún wrote:
-> On Wed, 9 Sep 2020 11:20:00 -0700
-> Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
->> Hi,
->>
->> On 9/9/20 9:25 AM, Marek Behún wrote:
->>> Many an ethernet PHY (and other chips) supports various HW control
->>> modes for LEDs connected directly to them.
->>>
->>> This patch adds a generic API for registering such LEDs when
->>> described in device tree. This API also exposes generic way to
->>> select between these hardware control modes.
->>>
->>> This API registers a new private LED trigger called dev-hw-mode.
->>> When this trigger is enabled for a LED, the various HW control
->>> modes which are supported by the device for given LED can be
->>> get/set via hw_mode sysfs file.
->>>
->>> Signed-off-by: Marek Behún <marek.behun@nic.cz>
->>> ---
->>>  .../sysfs-class-led-trigger-dev-hw-mode       |   8 +
->>>  drivers/leds/Kconfig                          |  10 +
->>>  drivers/leds/Makefile                         |   1 +
->>>  drivers/leds/leds-hw-controlled.c             | 227
->>> ++++++++++++++++++ include/linux/leds-hw-controlled.h            |
->>> 74 ++++++ 5 files changed, 320 insertions(+)
->>>  create mode 100644
->>> Documentation/ABI/testing/sysfs-class-led-trigger-dev-hw-mode
->>> create mode 100644 drivers/leds/leds-hw-controlled.c create mode
->>> 100644 include/linux/leds-hw-controlled.h 
->>
->>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>> index 1c181df24eae4..5e47ab21aafb4 100644
->>> --- a/drivers/leds/Kconfig
->>> +++ b/drivers/leds/Kconfig
->>> @@ -49,6 +49,16 @@ config LEDS_BRIGHTNESS_HW_CHANGED
->>>  
->>>  	  See Documentation/ABI/testing/sysfs-class-led for
->>> details. 
->>> +config LEDS_HW_CONTROLLED
->>> +	bool "API for LEDs that can be controlled by hardware"
->>> +	depends on LEDS_CLASS  
->>
->> 	depends on OF || COMPILE_TEST
->> ?
->>
-> 
-> I specifically did not add OF dependency so that this can be also used
-> on non-OF systems. A device driver may register such LED itself...
-> That's why hw_controlled_led_brightness_set symbol is exported.
-> 
-> Do you think I shouldn't do it?
+On Wed, Sep 09, 2020 at 10:31:34AM -0700, Linus Torvalds wrote:
+> And apparently there are people working on this on the gcc side too,
+> so it won't just be clang-specific. Nor kernel-specific in that Nick
+> tells me some other projects are looking at using that asm goto with
+> outputs too.
 
-I have no problem with it as it is.
+It will not work like this in GCC, no.  The LLVM people know about that.
+I do not know why they insist on pushing this, being incompatible and
+everything.
 
->>> +	select LEDS_TRIGGERS
->>> +	help
->>> +	  This option enables support for a generic API via which
->>> other drivers
->>> +	  can register LEDs that can be put into hardware
->>> controlled mode, eg.  
 
-thanks.
--- 
-~Randy
-
+Segher
