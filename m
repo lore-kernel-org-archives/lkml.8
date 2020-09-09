@@ -2,333 +2,148 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EDAC2D0A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A12C10DAA
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4912921D7D
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B572087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 17:11:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gR1qzHKQ";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VkNDQtyl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7L8weSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbgIIRLU (ORCPT
+        id S1731000AbgIIRLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 13:11:20 -0400
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:42810
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730307AbgIIPds (ORCPT
+        Wed, 9 Sep 2020 13:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730295AbgIIPdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:33:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599661184;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=WjDONsuBH7IGcBm3DuSDqu/G8Oq6gOfRjVZiH4J/Zdw=;
-        b=gR1qzHKQVGqAvDMd8Sl1M4Hf+SCteui5S9G/1NQVaUAr7GleRQnQsIs4Xt8i4j7Y
-        0Iv6Ub/sDh5ALCVnKt1KIasjozEC7yQvkdZaLA9bZi4f77wXJNNOBbK02LcULD7rL7N
-        Cz8mk8YwkhZlXWK/p5z6+m+OnPEP/JxaMcQUyldw=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599661184;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=WjDONsuBH7IGcBm3DuSDqu/G8Oq6gOfRjVZiH4J/Zdw=;
-        b=VkNDQtylz+1BehymhumYgj2veKe4Sypp/lqs5bacOb8x/ThrRB6JWjc+mY59cZGE
-        XNhVbKgv6XFiE8WhoqfcKX9TsdBBg3NyJ5Q4mecxCUwUD2XaP/pMKe70uRXFrRd9m7g
-        +exA5sSk2j5WIyLyJ0A8SBOaUkz1s9clAkjnJPMs=
+        Wed, 9 Sep 2020 11:33:37 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4340C061347;
+        Wed,  9 Sep 2020 08:32:45 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s65so1265388pgb.0;
+        Wed, 09 Sep 2020 08:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=trGJ50voisTKMXdWojN1XirpnONTHR3jS4BAJJ1oVsw=;
+        b=F7L8weSlpk8/pODYA4tNGT+KwpHzJOoFw3Bod4mveWjwavNu+4EScbFqoVsDsCaTuL
+         50rr6rAhSmYZo/Ddx9al9AO6AgcF98IjzOzN72g6mISE+8TEZLFQh8MCpcLYS5VrO0ae
+         7F6aIVGhN731HWeqWq7Ua2+l9nhrpSgblpMar32OlJmqDcBOmbspJ95FcPd0rQopRE/p
+         7GsUc/rm5hOz+cqdebk6kIGvIjuoTOq7NSrGCxvkQ2tNadNQiWpZdJXePmeeZklVO6vW
+         idszhiT37mO9NSZZmwY/wCP/vewHJ+OvBlPYaSa5h3A6v9qzD8ieKx1m0zD6Ln/jSZrK
+         BwAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=trGJ50voisTKMXdWojN1XirpnONTHR3jS4BAJJ1oVsw=;
+        b=TflGpMkSz2rVOhK8Rrc/Ryv2yvskeR4qQLczSnTPc+jJd+FSDT2+3MoT3GJ/9wNZoA
+         3/gKOAbvbudJJ36rFOpCgrbpDnA7psDw3shHqrxvncMECC7rGemWC8qY/MoTgxCI994M
+         c4t0af1km+u9F4ZBUj2DYQN1nxJmbZdlrcqAHL6K8ZAjspReqD1b3hq1487Ssl5aX9be
+         EKl0o6GC/p2MWEU+9vdujCVnFzk61IomKYmX15aUMRkIzm2ozCax5obzwiVDV3fUR2zA
+         NrIASRLDYMIrfaX0WP3qTVgLhOFw0butiUEVoFkwTbb3lfgTVWScuvAEocbVvQJBLel3
+         bJxA==
+X-Gm-Message-State: AOAM5332i22ta/lcBNgETW01kig/yiVcDCdmOvAEbixYjQY4/ffUssu2
+        WnJEViwwehFn+hgiupK6SP4=
+X-Google-Smtp-Source: ABdhPJwYsuOpqojCS7ZyITqMamrO8ggPUW2+PUpO9xFfkiZyVjwWNPOrwLPiCLxyOjWzngiJ90vx9A==
+X-Received: by 2002:a63:4822:: with SMTP id v34mr1010403pga.342.1599665565409;
+        Wed, 09 Sep 2020 08:32:45 -0700 (PDT)
+Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
+        by smtp.gmail.com with ESMTPSA id i62sm3194036pfe.140.2020.09.09.08.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 08:32:44 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 15:32:43 +0000
+From:   Hao Lee <haolee.swjtu@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: Eliminate a local variable to make the code more
+ clear
+Message-ID: <20200909153243.GA25215@haolee.github.io>
+References: <20200729151740.GA3430@haolee.github.io>
+ <20200908130656.GC22780@haolee.github.io>
+ <20200908184857.GT1236603@ZenIV.linux.org.uk>
+ <20200908231156.GA23779@haolee.github.io>
+ <87k0x39kkr.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 9 Sep 2020 14:19:44 +0000
-From:   skakit@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V4 1/4] arm64: dts: sc7180: Add wakeup support over UART
- RX
-In-Reply-To: <20200903160524.GH3419728@google.com>
-References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
- <1599145498-20707-2-git-send-email-skakit@codeaurora.org>
- <20200903160524.GH3419728@google.com>
-Message-ID: <01010174733c94d4-bf866578-b2de-4720-bc0f-bed3472a4070-000000@us-west-2.amazonses.com>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.09-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k0x39kkr.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
-
-On 2020-09-03 21:35, Matthias Kaehlcke wrote:
-> On Thu, Sep 03, 2020 at 08:34:55PM +0530, satya priya wrote:
->> Add the necessary pinctrl and interrupts to make UART wakeup capable.
->> 
->> If QUP function is selected in sleep state, UART RTS/RFR is pulled 
->> high
->> during suspend and BT SoC not able to send wakeup bytes. So, configure
->> GPIO mode in sleep state to keep it low during suspend.
->> 
->> Signed-off-by: satya priya <skakit@codeaurora.org>
->> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->> Changes in V2:
->>  - As per Matthias's comment added wakeup support for all the UARTs
->>    of SC7180.
->> 
->> Changes in V3:
->>  - No change.
->> 
->> Changes in V4:
->>  - As per Matthias's comment, added the reason for configuring GPIO
->>    mode for sleep state in commit text.
->> 
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 
->> ++++++++++++++++++++++++++++++------
->>  1 file changed, 84 insertions(+), 14 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index d46b383..855b13e 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -793,9 +793,11 @@
->>  				reg = <0 0x00880000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart0_default>;
->> -				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart0_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 37 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
->> SLAVE_QUP_CORE_0>,
->> @@ -845,9 +847,11 @@
->>  				reg = <0 0x00884000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart1_default>;
->> -				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart1_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 3 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
->> SLAVE_QUP_CORE_0>,
->> @@ -931,9 +935,11 @@
->>  				reg = <0 0x0088c000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart3_default>;
->> -				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart3_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
->> SLAVE_QUP_CORE_0>,
->> @@ -1017,9 +1023,11 @@
->>  				reg = <0 0x00894000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart5_default>;
->> -				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart5_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 28 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt 
->> SLAVE_QUP_CORE_0>,
->> @@ -1084,9 +1092,11 @@
->>  				reg = <0 0x00a80000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart6_default>;
->> -				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart6_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt 
->> SLAVE_QUP_CORE_1>,
->> @@ -1256,9 +1266,11 @@
->>  				reg = <0 0x00a90000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart10_default>;
->> -				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart10_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 89 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt 
->> SLAVE_QUP_CORE_1>,
->> @@ -1308,9 +1320,11 @@
->>  				reg = <0 0x00a94000 0 0x4000>;
->>  				clock-names = "se";
->>  				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
->> -				pinctrl-names = "default";
->> +				pinctrl-names = "default", "sleep";
->>  				pinctrl-0 = <&qup_uart11_default>;
->> -				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
->> +				pinctrl-1 = <&qup_uart11_sleep>;
->> +				interrupts-extended = <&intc GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
->> +							<&tlmm 56 IRQ_TYPE_EDGE_FALLING>;
->>  				power-domains = <&rpmhpd SC7180_CX>;
->>  				operating-points-v2 = <&qup_opp_table>;
->>  				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt 
->> SLAVE_QUP_CORE_1>,
->> @@ -1638,6 +1652,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart0_sleep: qup-uart0-sleep {
->> +				pinmux {
->> +					pins = "gpio34", "gpio35",
->> +					       "gpio36", "gpio37";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			qup_uart1_default: qup-uart1-default {
->>  				pinmux {
->>  					pins = "gpio0", "gpio1",
->> @@ -1646,6 +1668,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart1_sleep: qup-uart1-sleep {
->> +				pinmux {
->> +					pins = "gpio0", "gpio1",
->> +					       "gpio2", "gpio3";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			qup_uart2_default: qup-uart2-default {
->>  				pinmux {
->>  					pins = "gpio15", "gpio16";
->> @@ -1661,6 +1691,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart3_sleep: qup-uart3-sleep {
->> +				pinmux {
->> +					pins = "gpio38", "gpio39",
->> +					       "gpio40", "gpio41";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			qup_uart4_default: qup-uart4-default {
->>  				pinmux {
->>  					pins = "gpio115", "gpio116";
->> @@ -1676,6 +1714,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart5_sleep: qup-uart5-sleep {
->> +				pinmux {
->> +					pins = "gpio25", "gpio26",
->> +					       "gpio27", "gpio28";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			qup_uart6_default: qup-uart6-default {
->>  				pinmux {
->>  					pins = "gpio59", "gpio60",
->> @@ -1684,6 +1730,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart6_sleep: qup-uart6-sleep {
->> +				pinmux {
->> +					pins = "gpio59", "gpio60",
->> +					       "gpio61", "gpio62";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			qup_uart7_default: qup-uart7-default {
->>  				pinmux {
->>  					pins = "gpio6", "gpio7";
->> @@ -1713,6 +1767,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart10_sleep: qup-uart10-sleep {
->> +				pinmux {
->> +					pins = "gpio86", "gpio87",
->> +					       "gpio88", "gpio89";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			qup_uart11_default: qup-uart11-default {
->>  				pinmux {
->>  					pins = "gpio53", "gpio54",
->> @@ -1721,6 +1783,14 @@
->>  				};
->>  			};
->> 
->> +			qup_uart11_sleep: qup-uart11-sleep {
->> +				pinmux {
->> +					pins = "gpio53", "gpio54",
->> +					       "gpio55", "gpio56";
->> +					function = "gpio";
->> +				};
->> +			};
->> +
->>  			sdc1_on: sdc1-on {
->>  				pinconf-clk {
->>  					pins = "sdc1_clk";
+On Wed, Sep 09, 2020 at 07:54:44AM -0500, Eric W. Biederman wrote:
+> Hao Lee <haolee.swjtu@gmail.com> writes:
 > 
-> It seems only the RTS pin actually requires a pinmux change. One could
-> argue that only the muxing of this pin should be changed in sleep mode.
-> But well, changing all pins to GPIO simplifies the config, so I guess
-> it's ok as long as there are no side effects.
+> > On Tue, Sep 08, 2020 at 07:48:57PM +0100, Al Viro wrote:
+> >> On Tue, Sep 08, 2020 at 01:06:56PM +0000, Hao Lee wrote:
+> >> > ping
+> >> > 
+> >> > On Wed, Jul 29, 2020 at 03:21:28PM +0000, Hao Lee wrote:
+> >> > > The dentry local variable is introduced in 'commit 84d17192d2afd ("get
+> >> > > rid of full-hash scan on detaching vfsmounts")' to reduce the length of
+> >> > > some long statements for example
+> >> > > mutex_lock(&path->dentry->d_inode->i_mutex). We have already used
+> >> > > inode_lock(dentry->d_inode) to do the same thing now, and its length is
+> >> > > acceptable. Furthermore, it seems not concise that assign path->dentry
+> >> > > to local variable dentry in the statement before goto. So, this function
+> >> > > would be more clear if we eliminate the local variable dentry.
+> >> 
+> >> How does it make the function more clear?  More specifically, what
+> >> analysis of behaviour is simplified by that?
+> >
+> > When I first read this function, it takes me a few seconds to think
+> > about if the local variable dentry is always equal to path->dentry and
+> > want to know if it has special purpose. This local variable may confuse
+> > other people too, so I think it would be better to eliminate it.
 > 
-> I noticed you changed only the UARTs that have RTS/CTS signals. Do the
-> others not support wakeup? I understand that the pinmux change isn't
-> needed for these UARTs, since they have no RTS signal, however I'd 
-> expect
-> them to need the 'interrupts-extended' entry if they support wakeup.
+> I tend to have the opposite reaction.  I read your patch and wonder
+> why path->dentry needs to be reread what is changing path that I can not see.
+> my back.
 
-We are planning to add the wakeup related changes(interrupts-extended, 
-pin ctrls) to only uart3 in board specific file. As we understand, this 
-wakeup is an optional feature and cannot be added to all the UARTs. So, 
-now all the changes will be added in board specific files including the 
-pinmux change for sleep state.
+If I understand correctly, accessing path->dentry->d_inode needs one
+more instruction than accessing dentry->d_inode, so the original code is
+more efficient.
 
-Thanks,
-Satya Priya
+> 
+> Now for clarity it would probably help to do something like:
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index bae0e95b3713..430f3b4785e3 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -2206,7 +2206,7 @@ static struct mountpoint *lock_mount(struct path *path)
+>                 return mp;
+>         }
+>         namespace_unlock();
+> -       inode_unlock(path->dentry->d_inode);
+> +       inode_unlock(dentry->d_inode);
+>         path_put(path);
+>         path->mnt = mnt;
+>         dentry = path->dentry = dget(mnt->mnt_root);
+> 
+> 
+> So at least the inode_lock and inode_unlock are properly paired.
+> 
+> At first glance inode_unlock using path->dentry instead of dentry
+> appears to be an oversight in 84d17192d2af ("get rid of full-hash scan
+> on detaching vfsmounts").  
 
+I think I have understood why we use the local variable dentry. Thanks.
+
+Regards,
+Hao Lee
+
+> 
+> 
+> Eric
