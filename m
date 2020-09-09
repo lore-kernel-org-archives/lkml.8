@@ -2,97 +2,120 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB38AC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE59C2D0E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA8621D79
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tABLfScP"
+	by mail.kernel.org (Postfix) with ESMTP id 087D321741
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599635802;
+	bh=cgJYGU4wKTC7wfOTHrBVxW9G6PPVfCPQISOiM0CtJZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yumxaZJtlDQ4FhV5DxIsY3QQf0EjhHgrqpTR/ZCl01h6gUjhSAaaGxYFrSYl/ZYNc
+	 +FMpJk0C8+c1XOF8Lrb+GbSb2pYHK5w8RLeCBR8guogEir+KVD0sYAYuLp5H1ftX6j
+	 Wr05jhOmseigxdoA1T5ohPFm0lzTucA/ZKLLiYmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgIIHQ2 (ORCPT
+        id S1728347AbgIIHQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:16:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:32819 "EHLO ozlabs.org"
+        Wed, 9 Sep 2020 03:16:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgIIHQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:16:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725922AbgIIHQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:16:36 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BmYGb3PBQz9sSJ;
-        Wed,  9 Sep 2020 17:16:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599635783;
-        bh=kvb1VwlSZi2WG9vR7HApuQMTp0EBaflFlCw8hgJNa60=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tABLfScPEkdDVjydaDLDmRghQIjeYuCJDoMvHOeT6YzXYUOgQJOMYq/xUlF5Rcobl
-         wuG5JHI9ScRq6mEt7/k3Hsv6BzbyCDkRcPlGY/hUgARE0wTDwDe63GA2ieB5LV5Jn+
-         Ac42i5Hi7CGcLoBbinaUm69DzG+YJbkyFb5V9TNtaWe0xImOO6RjAIkAFzIJyKptdz
-         dbkM8BqIUHpC8iVz8kr1eK4/rxWt/ybnJduvW80SH70o7ialzLHOIu8sgnceK9CE4t
-         TfUBDvrboxS7ULrmRHY9GIkkIfHocgwQ+pDVxpDPD8Wkyx21zr4EKmdJGq/IFqLdok
-         LT95OY6fTbOVA==
-Date:   Wed, 9 Sep 2020 17:16:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the staging tree
-Message-ID: <20200909171621.28de7d12@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 39FD22078E;
+        Wed,  9 Sep 2020 07:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599635796;
+        bh=cgJYGU4wKTC7wfOTHrBVxW9G6PPVfCPQISOiM0CtJZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D8bzNY5AAc+ge4VsqDlHaTWvHlUxUMZNv07KBF+9mMse15ddoezVYDSzNgvpVvLOG
+         5AD54+u7x/tzwksrHF0e7jNgHCFsR6dxry9B1pk45W9CMkYBoBzMbnIYeqDF11fLlZ
+         joqMonC+NDrTtcaqkc8jCjowbXUCS/sg/mJgfxow=
+Date:   Wed, 9 Sep 2020 09:16:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org
+Subject: Re: [PATCH v2 2/7] kernel/resource: move and rename
+ IORESOURCE_MEM_DRIVER_MANAGED
+Message-ID: <20200909071646.GC435421@kroah.com>
+References: <20200908201012.44168-1-david@redhat.com>
+ <20200908201012.44168-3-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/k9zhaNKq+cE6XAvPO=FmWMo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908201012.44168-3-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k9zhaNKq+cE6XAvPO=FmWMo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Sep 08, 2020 at 10:10:07PM +0200, David Hildenbrand wrote:
+> IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
+> always set to 0 by hardware. This is far from beautiful (and confusing),
+> and the bit only applies to SYSRAM. So let's move it out of the
+> bus-specific (PnP) defined bits.
+> 
+> We'll add another SYSRAM specific bit soon. If we ever need more bits for
+> other purposes, we can steal some from "desc", or reshuffle/regroup what we
+> have.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  include/linux/ioport.h | 4 +++-
+>  kernel/kexec_file.c    | 2 +-
+>  mm/memory_hotplug.c    | 4 ++--
+>  3 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 52a91f5fa1a36..d7620d7c941a0 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -58,6 +58,9 @@ struct resource {
+>  #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
+>  #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
+>  
+> +/* IORESOURCE_SYSRAM specific bits. */
+> +#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
+> +
 
-Hi all,
+Can't you use BIT() here?
 
-After merging the staging tree, today's linux-next build (arm
-multi_v7_defconfig) produced this warning:
+thanks,
 
-drivers/iio/adc/stm32-adc-core.c: In function 'stm32_adc_core_switches_prob=
-e':
-drivers/iio/adc/stm32-adc-core.c:598:5: warning: ignoring return value of '=
-dev_err_probe' declared with attribute 'warn_unused_result' [-Wunused-resul=
-t]
-  598 |     dev_err_probe(dev, ret, "can't get booster\n");
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Introduced by commit
-
-  ce30eeb613cb ("iio: adc: stm32: Simplify with dev_err_probe()")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/k9zhaNKq+cE6XAvPO=FmWMo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9YgUUACgkQAVBC80lX
-0GzFGgf+Psuy9dmjbKNHIBx/hekS5Azod8U6SF9tWRHrTZiZa2pVYsFJYyDDN8cc
-AqhOyGMHu9kkAnWd6aVxlZfUsneL6TuBvU88HDh51Oo4Z4JrV4jurz9HPLOiAkoy
-KXCn9yrAz2MtBm/EZP5Tk09oOA1ESv2vgAQ8yvYALSBabGzuTEJDzVZYRIWf1XCI
-CQHVHbzhCNj1cCGzk5JzPaf1XIibeiDGKQgoLyqNMCXmx06tftYVW/oQkjFo3XWl
-T+cdtY5laCs/2zJ6MWONdctSX0jlJQgR6qsSxJLSJkea2QeTt4kBL3y+geSRielV
-Ejy3l3q0/ZPPhuOjKZ9eDA2wiUzTCQ==
-=xrwh
------END PGP SIGNATURE-----
-
---Sig_/k9zhaNKq+cE6XAvPO=FmWMo--
+greg k-h
