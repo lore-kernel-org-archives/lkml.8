@@ -2,120 +2,105 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C3CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0410621919
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1177C21D79
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 07:11:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iO84z27j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgIIHLN (ORCPT
+        id S1729941AbgIIHLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 03:11:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33654 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgIIHK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 03:10:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 903A4B588;
-        Wed,  9 Sep 2020 07:10:55 +0000 (UTC)
-Subject: Re: [PATCH 09/19] xsysace: simplify media change handling
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200908145347.2992670-1-hch@lst.de>
- <20200908145347.2992670-10-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <6fcc6e53-45e3-30e7-9972-e000d7155c53@suse.de>
-Date:   Wed, 9 Sep 2020 09:10:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 9 Sep 2020 03:11:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22592 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbgIIHJk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 03:09:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599635377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sbNdgPGbXHtzNZzICD+kjhviJAeGSAESo3O2fIQqjns=;
+        b=iO84z27jpCNN3zPraC61ysbcmhTtf53E1Yp5lQiJ17aCOk91qHX0Bk1WwPAyFdYtUt3jXK
+        QQxpzyYOBZS/dgKy8EFyKEFOifVQ6HKU0MLFeW0aosxam2YUxCi/Wh26TljJK4QR1N7wXn
+        VdUY6dFj9hlCAVSro41EAHGMByww/L4=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-116-LNBCfX6XPLafB6FhVoxvCg-1; Wed, 09 Sep 2020 03:09:34 -0400
+X-MC-Unique: LNBCfX6XPLafB6FhVoxvCg-1
+Received: by mail-wm1-f71.google.com with SMTP id c198so442966wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 00:09:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sbNdgPGbXHtzNZzICD+kjhviJAeGSAESo3O2fIQqjns=;
+        b=RLvR0qMSA5ELnfXwpdB78uYgTPpOGFGAgWe9AQoxXEVP2wODVOvuljrX/4gFUQAUIg
+         T40O4p4RaOuumTNQcxvWLBw8KtoFm1e+b66PZNf/VCTIJ/k8awH9qUhWpBS+bFhG1yaG
+         848R+N0703pt6+UZrzOZKcqaAYeQkMdpXqpjE2SWuBsWUZWom6PJpg6mBaXUm+jO7Uj1
+         st4gMSIiG1ozKOl+1O9eMClV9Ae1R2KN/KYTa3QckO0SaF5mBVdlKsdsVuHHkjDNTR08
+         e0h+miUCRx7RzJQz4oUuQAniMhk/+N8Xe6W1la6prj1VMqBzEzr+I55hTMXKlPx7oiCU
+         WZcg==
+X-Gm-Message-State: AOAM533KDmhZnc7BFBVZ7AeXKUwJh1cHkbgLAOSVpqplD2Fv0HL5Lv/h
+        QvmQ58qXj5Z9ZedikAcO7Vg4itX7xx8BZczkHPxmoPxtytZqmu6yN3JIK8MB8ZL0DhtQIZGLj48
+        irojrYsr31lOSTq7X8JZJG7r4
+X-Received: by 2002:a7b:c015:: with SMTP id c21mr2067387wmb.87.1599635373596;
+        Wed, 09 Sep 2020 00:09:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJLuHsYjEO/DZDcJ9fpG8m8GGKEsIJck/ZRUcpgnZH8FyK9x7ubj3A2yaHiurY8F0uZqsI3w==
+X-Received: by 2002:a7b:c015:: with SMTP id c21mr2067369wmb.87.1599635373328;
+        Wed, 09 Sep 2020 00:09:33 -0700 (PDT)
+Received: from steredhat (host-79-53-225-185.retail.telecomitalia.it. [79.53.225.185])
+        by smtp.gmail.com with ESMTPSA id t4sm2631177wrr.26.2020.09.09.00.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 00:09:32 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 09:09:30 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH for-next] io_uring: return EBADFD when ring isn't in the
+ right state
+Message-ID: <20200909070930.mdbm7aeh7z5ckwhq@steredhat>
+References: <20200908165242.124957-1-sgarzare@redhat.com>
+ <6e119be3-d9a3-06ea-1c76-4201816dde46@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-10-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e119be3-d9a3-06ea-1c76-4201816dde46@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 4:53 PM, Christoph Hellwig wrote:
-> Pass a struct ace_device to ace_revalidate_disk, move the media changed
-> check into the one caller that needs it, and give the routine a better
-> name.
+On Tue, Sep 08, 2020 at 11:02:48AM -0600, Jens Axboe wrote:
+> On 9/8/20 10:52 AM, Stefano Garzarella wrote:
+> > This patch uniforms the returned error (EBADFD) when the ring state
+> > (enabled/disabled) is not the expected one.
+> > 
+> > The changes affect io_uring_enter() and io_uring_register() syscalls.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/xsysace.c | 26 ++++++++++----------------
->  1 file changed, 10 insertions(+), 16 deletions(-)
+> I added a Fixes line:
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> Fixes: 7ec3d1dd9378 ("io_uring: allow disabling rings during the creation")
 
-Cheers,
+Oh right, I forgot!
 
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+> 
+> and applied it, thanks!
+> 
+> > https://github.com/stefano-garzarella/liburing (branch: fix-disabled-ring-error)
+> 
+> I'll check and pull that one too.
+> 
+
+Thanks,
+Stefano
+
