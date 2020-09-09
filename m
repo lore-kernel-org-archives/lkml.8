@@ -2,255 +2,312 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C115C10DAA
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1715521D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 21:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A895520C09
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 22:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fhPN17N7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIIV60 convert rfc822-to-8bit (ORCPT
+        id S1727782AbgIIWDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 17:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
+        Wed, 9 Sep 2020 18:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIIV6Y (ORCPT
+        with ESMTP id S1726440AbgIIWDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 17:58:24 -0400
-X-Greylist: delayed 3047 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Sep 2020 14:58:22 PDT
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF0CC061573;
-        Wed,  9 Sep 2020 14:58:21 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
-        by mail.nic.cz (Postfix) with ESMTPSA id 61832140A26;
-        Wed,  9 Sep 2020 23:58:19 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 23:58:19 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Rob Herring <robh@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next + leds v2 1/7] dt-bindings: leds: document
- binding for HW controlled LEDs
-Message-ID: <20200909235819.0b0fe7ce@nic.cz>
-In-Reply-To: <20200909211552.GA3066273@bogus>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
-        <20200909162552.11032-2-marek.behun@nic.cz>
-        <20200909211552.GA3066273@bogus>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 9 Sep 2020 18:03:21 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDD2C061573
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 15:03:20 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id t14so3051364pgl.10
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 15:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y29oJ2wR8B7vMMWMqGAukb+m950+dbW6OxjMlymMlBc=;
+        b=fhPN17N7/qjwdvpNEW6poJXqxItTX/BcX32e5QXRppf6eTv8TDJzy4xUtkU6HmOsWY
+         VjI8t1NJzXsCZIFXeEtlBNDKB5jQvwdTxEvA7XZgRduXh/P8Pef+NRDu42A+5T2P/bYs
+         Ga0BAjAjJ65pQVyqxq60fuMrFVCGOkdUQdlGs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y29oJ2wR8B7vMMWMqGAukb+m950+dbW6OxjMlymMlBc=;
+        b=rZ9be+hlZVO37ADIttKMPRbEuHniom8DtuJR1Wq7EaZdKHtxGwGW9hnDmNdh4MMXlJ
+         tpx+UWFuQLXtyfq1tQ/vLBWNqi7GixMgI6MKBQWZjhf0EKj1iA8333Haxv+rBAsYnsSY
+         qpUaKpisuGmOKlSnaH+Qyu6rEFiQZdyux4QZN0T/D7/QnYsyi3IdBwDgvvZKA7iN1Jbk
+         igp3eCwGoYXp53Rio/4M4RW56xzeF2HCkgaxthNNritxoFp0mTzNIkYfMg1e552k/sPD
+         YLPU4yPolWiI45I4F9pDYmTLLcnEFix5UKtK9thknyF2nWYXVcGZMt0V04e7/fQd98Vm
+         fBHA==
+X-Gm-Message-State: AOAM530Dva7q9x8BinixITltIYml3CA5JAQjaWOPAVJJfLJWYSPCew0D
+        Jf5/fu/gjIqB6aNSjkQfI2HThsnqHctoLw==
+X-Google-Smtp-Source: ABdhPJw/d5Tqf/rHCwWkJFbCgAyi1QvfIXvgAz1a19pSi6GJfrzgl7jFis+ln923AoXqFqkEyH0Ijg==
+X-Received: by 2002:a62:cf05:: with SMTP id b5mr2495603pfg.108.1599689000262;
+        Wed, 09 Sep 2020 15:03:20 -0700 (PDT)
+Received: from localhost ([2620:15c:202:201:9657:a5ff:feef:7b57])
+        by smtp.gmail.com with ESMTPSA id n2sm170854pja.41.2020.09.09.15.03.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Sep 2020 15:03:19 -0700 (PDT)
+From:   Sean O'Brien <seobrien@chromium.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Sean O'Brien <seobrien@chromium.org>
+Subject: [PATCH v3] HID: add vivaldi HID driver
+Date:   Wed,  9 Sep 2020 15:03:04 -0700
+Message-Id: <20200909150254.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 15:15:52 -0600
-Rob Herring <robh@kernel.org> wrote:
+Add vivaldi HID driver. This driver allows us to read and report the top
+row layout of keyboards which provide a vendor-defined (Google) HID
+usage.
 
-> On Wed, Sep 09, 2020 at 06:25:46PM +0200, Marek Behún wrote:
-> > Document binding for LEDs connected to and controlled by various chips
-> > (such as ethernet PHY chips).  
-> 
-> If they are h/w controlled, then why are they in DT?
+Signed-off-by: Sean O'Brien <seobrien@chromium.org>
+---
 
-The idea is that by default these LEDs are in some specific HW control
-mode (the chip default), but the chip supports various HW control
-modes, and also supports SW control.
-For example on Marvell PHYs there is a 4-bit register for each LED, so
-16 values, and some of them are:
-  0000: On - Receive
-        Off - No receive
-  0001: On - Link
-        Blink - Activity
-        Off - No Link
-  ...
-  0101: On - 100Mbps or Fiber Link
-        Off - Else
-  ...
-  1000: Force Off
-  1001: Force On
-  ...
-  1011: Force Blink
+ drivers/hid/Kconfig       |   9 +++
+ drivers/hid/Makefile      |   1 +
+ drivers/hid/hid-core.c    |   7 ++
+ drivers/hid/hid-vivaldi.c | 144 ++++++++++++++++++++++++++++++++++++++
+ include/linux/hid.h       |   2 +
+ 5 files changed, 163 insertions(+)
+ create mode 100644 drivers/hid/hid-vivaldi.c
 
-So writing 0x8 disables the LED, 0x9 enabled it (SW control via
-/sys/class/leds/<LED>/brightness), other values change the HW control
-mode (in this proposal /sys/class/leds/<LED>/hw_mode when trigger is
-set to dev-hw-mode).
-
-> > 
-> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > ---
-> >  .../leds/linux,hw-controlled-leds.yaml        | 99 +++++++++++++++++++
-> >  1 file changed, 99 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml b/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> > new file mode 100644
-> > index 0000000000000..eaf6e5d80c5f5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/linux,hw-controlled-leds.yaml
-> > @@ -0,0 +1,99 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/leds/linux,hw-controlled-leds.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: LEDs that can be controlled by hardware (eg. by an ethernet PHY chip)
-> > +
-> > +maintainers:
-> > +  - Marek Behún <marek.behun@nic.cz>
-> > +
-> > +description:
-> > +  Many an ethernet PHY (and other chips) supports various HW control modes
-> > +  for LEDs connected directly to them. With this binding such LEDs can be
-> > +  described.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: linux,hw-controlled-leds  
-> 
-> What makes this linux specific?
-> 
-> Unless you're going to make this h/w specific, then it probably should 
-> just be dropped. 
-> 
-
-Will do, thanks.
-
-> The phy schema will need:
-> 
-> leds:
->   type: object
->   $ref: /schemas/leds/hw-controlled-leds.yaml#
-> 
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +patternProperties:
-> > +  "^led@[0-9a-f]+$":
-> > +    type: object
-> > +    allOf:
-> > +      - $ref: common.yaml#
-> > +    description:
-> > +      This node represents a LED device connected to a chip that can control
-> > +      the LED in various HW controlled modes.
-> > +
-> > +    properties:
-> > +      reg:
-> > +        maxItems: 1
-> > +        description:
-> > +          This property identifies the LED to the chip the LED is connected to
-> > +          (eg. an ethernet PHY chip can have multiple LEDs connected to it).
-> > +
-> > +      enable-active-high:
-> > +        description:
-> > +          Polarity of LED is active high. If missing, assumed default is active
-> > +          low.
-> > +        type: boolean
-> > +
-> > +      led-tristate:
-> > +        description:
-> > +          LED pin is tristate type. If missing, assumed false.
-> > +        type: boolean
-> > +
-> > +      linux,default-hw-mode:  
-> 
-> How is this linux specific? It sounds device specific. Your choice is 
-> make this a device specific property with device specific values or come 
-> up with generic modes.
-
-I was inspired by `linux,default-trigger` and `linux,keycode`
-properties...
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 05315b434276..612629678c84 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -397,6 +397,15 @@ config HID_GOOGLE_HAMMER
+ 	help
+ 	Say Y here if you have a Google Hammer device.
  
-> Perhaps 'function' should be expanded.
-
-The thing is that `function` is now used for creating LED device name.
-I was not aware that `linux,default-trigger` is deprecated
-Perhaps this should be discussed with Pavel as well.
-But of course from the perspective that DT should be independent from
-Linux, you are right.
-I fear this will be quite a pain to resolve...
-
-> > +        description:
-> > +          This parameter, if present, specifies the default HW triggering mode
-> > +          of the LED when LED trigger is set to `dev-hw-mode`.
-> > +          Available values are specific per device the LED is connected to and
-> > +          per LED itself.
-> > +        $ref: /schemas/types.yaml#definitions/string
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +
-> > +    #include <dt-bindings/leds/common.h>
-> > +
-> > +    ethernet-phy@0 {
-> > +        compatible = "ethernet-phy-ieee802.3-c45";
-> > +        reg = <0>;
-> > +
-> > +        leds {
-> > +            compatible = "linux,hw-controlled-leds";
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +
-> > +            led@0 {
-> > +                reg = <0>;
-> > +                color = <LED_COLOR_ID_GREEN>;
-> > +                function = <LED_FUNCTION_STATUS>;  
-> 
-> Reading the description of LED_FUNCTION_STATUS doesn't align with how 
-> you are using it. Think of it as user alert/notification.
-> 
-> > +                linux,default-trigger = "dev-hw-mode";  
-> 
-> This is deprecated in favor of 'function'.
-
-As written above, this is not how the LED subsystem currently works.
-Nor is the deprecation documented.
-
-Currently `function` is used to create LED device name in the form
-`device:color:function` or `device:color:function-N` if
-`function-enumerator` is also set.
-
-> 
-> > +                linux,default-hw-mode = "1Gbps";
-> > +            };
-> > +
-> > +            led@1 {
-> > +                reg = <1>;
-> > +                color = <LED_COLOR_ID_YELLOW>;
-> > +                function = <LED_FUNCTION_ACTIVITY>;
-> > +                linux,default-trigger = "dev-hw-mode";
-> > +                linux,default-hw-mode = "activity";
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.26.2
-> >   
++config HID_VIVALDI
++	tristate "Vivaldi Keyboard"
++	depends on HID
++	help
++	  Say Y here if you want to enable support for Vivaldi keyboards.
++
++	  Vivaldi keyboards use a vendor-specific (Google) HID usage to report
++	  how the keys in the top row are physically ordered.
++
+ config HID_GT683R
+ 	tristate "MSI GT68xR LED support"
+ 	depends on LEDS_CLASS && USB_HID
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index d8ea4b8c95af..4acb583c92a6 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_HID_GEMBIRD)	+= hid-gembird.o
+ obj-$(CONFIG_HID_GFRM)		+= hid-gfrm.o
+ obj-$(CONFIG_HID_GLORIOUS)  += hid-glorious.o
+ obj-$(CONFIG_HID_GOOGLE_HAMMER)	+= hid-google-hammer.o
++obj-$(CONFIG_HID_VIVALDI)	+= hid-vivaldi.o
+ obj-$(CONFIG_HID_GT683R)	+= hid-gt683r.o
+ obj-$(CONFIG_HID_GYRATION)	+= hid-gyration.o
+ obj-$(CONFIG_HID_HOLTEK)	+= hid-holtek-kbd.o
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index d2ecc9c45255..6dbd09254c44 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -814,6 +814,13 @@ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
+ 
+ 	if ((parser->global.usage_page << 16) >= HID_UP_MSVENDOR)
+ 		parser->scan_flags |= HID_SCAN_FLAG_VENDOR_SPECIFIC;
++
++	if ((parser->global.usage_page << 16) == HID_UP_GOOGLEVENDOR)
++		for (i = 0; i < parser->local.usage_index; i++)
++			if (parser->local.usage[i] ==
++					(HID_UP_GOOGLEVENDOR | 0x0001))
++				parser->device->group =
++					HID_GROUP_VIVALDI;
+ }
+ 
+ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
+diff --git a/drivers/hid/hid-vivaldi.c b/drivers/hid/hid-vivaldi.c
+new file mode 100644
+index 000000000000..cd7ada48b1d9
+--- /dev/null
++++ b/drivers/hid/hid-vivaldi.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * HID support for Vivaldi Keyboard
++ *
++ * Copyright 2020 Google LLC.
++ * Author: Sean O'Brien <seobrien@chromium.org>
++ */
++
++#include <linux/hid.h>
++#include <linux/module.h>
++
++#define MIN_FN_ROW_KEY	1
++#define MAX_FN_ROW_KEY	24
++#define HID_VD_FN_ROW_PHYSMAP 0x00000001
++#define HID_USAGE_FN_ROW_PHYSMAP (HID_UP_GOOGLEVENDOR | HID_VD_FN_ROW_PHYSMAP)
++
++static struct hid_driver hid_vivaldi;
++
++struct vivaldi_data {
++	u32 function_row_physmap[MAX_FN_ROW_KEY - MIN_FN_ROW_KEY + 1];
++	int max_function_row_key;
++};
++
++static ssize_t function_row_physmap_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct hid_device *hdev = to_hid_device(dev);
++	struct vivaldi_data *drvdata = hid_get_drvdata(hdev);
++	ssize_t size = 0;
++	int i;
++
++	if (!drvdata->max_function_row_key)
++		return 0;
++
++	for (i = 0; i < drvdata->max_function_row_key; i++)
++		size += sprintf(buf + size, "%02X ",
++				drvdata->function_row_physmap[i]);
++	size += sprintf(buf + size, "\n");
++	return size;
++}
++
++DEVICE_ATTR_RO(function_row_physmap);
++static struct attribute *sysfs_attrs[] = {
++	&dev_attr_function_row_physmap.attr,
++	NULL
++};
++
++static const struct attribute_group input_attribute_group = {
++	.attrs = sysfs_attrs
++};
++
++static int vivaldi_probe(struct hid_device *hdev,
++			 const struct hid_device_id *id)
++{
++	struct vivaldi_data *drvdata;
++	int ret;
++
++	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
++	hid_set_drvdata(hdev, drvdata);
++
++	ret = hid_parse(hdev);
++	if (ret)
++		return ret;
++
++	return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++}
++
++static void vivaldi_feature_mapping(struct hid_device *hdev,
++				    struct hid_field *field,
++				    struct hid_usage *usage)
++{
++	struct vivaldi_data *drvdata = hid_get_drvdata(hdev);
++	int fn_key;
++	int ret;
++	u32 report_len;
++	u8 *buf;
++
++	if (field->logical != HID_USAGE_FN_ROW_PHYSMAP ||
++	    (usage->hid & HID_USAGE_PAGE) != HID_UP_ORDINAL)
++		return;
++
++	fn_key = (usage->hid & HID_USAGE);
++	if (fn_key < MIN_FN_ROW_KEY || fn_key > MAX_FN_ROW_KEY)
++		return;
++	if (fn_key > drvdata->max_function_row_key)
++		drvdata->max_function_row_key = fn_key;
++
++	buf = hid_alloc_report_buf(field->report, GFP_KERNEL);
++	if (!buf)
++		return;
++
++	report_len = hid_report_len(field->report);
++	ret = hid_hw_raw_request(hdev, field->report->id, buf,
++				 report_len, HID_FEATURE_REPORT,
++				 HID_REQ_GET_REPORT);
++	if (ret < 0) {
++		dev_warn(&hdev->dev, "failed to fetch feature %d\n",
++			 field->report->id);
++		goto out;
++	}
++
++	ret = hid_report_raw_event(hdev, HID_FEATURE_REPORT, buf,
++				   report_len, 0);
++	if (ret) {
++		dev_warn(&hdev->dev, "failed to report feature %d\n",
++			 field->report->id);
++		goto out;
++	}
++
++	drvdata->function_row_physmap[fn_key - MIN_FN_ROW_KEY] =
++	    field->value[usage->usage_index];
++
++out:
++	kfree(buf);
++}
++
++static int vivaldi_input_configured(struct hid_device *hdev,
++				    struct hid_input *hidinput)
++{
++	return sysfs_create_group(&hdev->dev.kobj, &input_attribute_group);
++}
++
++static const struct hid_device_id vivaldi_table[] = {
++	{ HID_DEVICE(HID_BUS_ANY, HID_GROUP_VIVALDI, HID_ANY_ID,
++		     HID_ANY_ID) },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(hid, vivaldi_table);
++
++static struct hid_driver hid_vivaldi = {
++	.name = "hid-vivaldi",
++	.id_table = vivaldi_table,
++	.probe = vivaldi_probe,
++	.feature_mapping = vivaldi_feature_mapping,
++	.input_configured = vivaldi_input_configured,
++};
++
++module_hid_driver(hid_vivaldi);
++
++MODULE_AUTHOR("Sean O'Brien");
++MODULE_DESCRIPTION("HID vivaldi driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index c7044a14200e..58684657960b 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -163,6 +163,7 @@ struct hid_item {
+ #define HID_UP_LNVENDOR		0xffa00000
+ #define HID_UP_SENSOR		0x00200000
+ #define HID_UP_ASUSVENDOR	0xff310000
++#define HID_UP_GOOGLEVENDOR	0xffd10000
+ 
+ #define HID_USAGE		0x0000ffff
+ 
+@@ -371,6 +372,7 @@ struct hid_item {
+ #define HID_GROUP_LOGITECH_DJ_DEVICE		0x0102
+ #define HID_GROUP_STEAM				0x0103
+ #define HID_GROUP_LOGITECH_27MHZ_DEVICE		0x0104
++#define HID_GROUP_VIVALDI			0x0105
+ 
+ /*
+  * HID protocol status
+-- 
+2.28.0.526.ge36021eeef-goog
 
