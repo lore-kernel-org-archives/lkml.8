@@ -2,342 +2,174 @@ Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84A9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B0BC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3AA206B5
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8DD2087C
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 16:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=puresoftware-com.20150623.gappssmtp.com header.i=@puresoftware-com.20150623.gappssmtp.com header.b="MGvNbJB3"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="on1SU9I5";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iFuObgFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbgIIQz6 (ORCPT
+        id S1730769AbgIIQ4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 12:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730541AbgIIPw2 (ORCPT
+        Wed, 9 Sep 2020 12:56:24 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:15732 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730733AbgIIQzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 11:52:28 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3A2C06136E
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 07:17:19 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id z23so3754513ejr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 07:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=puresoftware-com.20150623.gappssmtp.com; s=20150623;
-        h=return-receipt-to:from:references:in-reply-to:mime-version
-         :thread-index:disposition-notification-to:date:message-id:subject:to
-         :cc;
-        bh=T6MdcQq7UBfcu3zi/xljE+j78qjwHM+ABuBQhG098iA=;
-        b=MGvNbJB3rgkGWBzUVF9CK9k0VJ2n1kCthAEiyagZiik7wISACeCyUrHQbCoY4pOH4R
-         Q7cZH3y3NLQUll+g0a5GT5+F3F4ejpyJg5XIzC/8IfYTlaPNH7ELpgJ6bj7zgStFUmm2
-         4Put7nAdAnAekhM4SRBBMdet+GxPo6xLWJFbXld6Vr45l77UY374xXxARwCXVpTuNAqp
-         ga+knZzZ9trYT2630TwQ89pi8oi+keKuLiOBp4ElLZH2c8Ah4/rin7wHhzBv6isTL9Xx
-         fryaiZQ1P4cS9skq36MPpePw9ZJh+2aaVTQ+uGgw2cEGTFr8c9ngjjUU+Gv3pSHkk8yS
-         2mkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:return-receipt-to:from:references:in-reply-to
-         :mime-version:thread-index:disposition-notification-to:date
-         :message-id:subject:to:cc;
-        bh=T6MdcQq7UBfcu3zi/xljE+j78qjwHM+ABuBQhG098iA=;
-        b=EHMbeVgWtYlMscdFOoWzkVfhcQZlxYHk+EUB7dghnNLvbu7ANtyFpPZSbeBbGGuIHV
-         ZP0rh+YHwvblyoArV9f35CqWd6GHiflfXj6T4wdncQgl2XmbNTZbsoXnRWSMWMc3HoDR
-         7eRhacpIwp8oXsr00zaZI/2pe6yIL9149rvJCKYAA2A5awfRE0hmjWqblWwN13hbIC3n
-         gRRjpkusY5xqsDsa6H1kvJD0ACNhne7c5d0qNAiwBAKwdi2/wHd+iVO9m8brKa6JCd/m
-         dfF/0zgARVA/IeGt8Bb5LJTzVth+Z2RF447K7rMuH8HvyvK2FhpNoty3eCmmn6nYEm8I
-         2eKw==
-X-Gm-Message-State: AOAM533udfnjCLiM8JuuC4bG2XDi5NH08lMilR5G49nGZLg4Wz66ZuSW
-        PLY418PqrIJQTmjRAakdnLVC5lJUm3hTUxDVJU2y4w==
-X-Google-Smtp-Source: ABdhPJy6lMZdZ/cOve+0uzZ5AZkwS5S2bynNOM5AGX1JEk1K6IkMD+6SdNv4ZYSwqI54Dd2q2mhYXfQGDSuz5wUgOgo=
-X-Received: by 2002:a17:906:c113:: with SMTP id do19mr3759708ejc.219.1599661038012;
- Wed, 09 Sep 2020 07:17:18 -0700 (PDT)
-From:   Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>
-References: <20200908060227.299-1-kuldip.dwivedi@puresoftware.com> <HE1PR04MB3196017359FD8B44F44EE5EC95260@HE1PR04MB3196.eurprd04.prod.outlook.com>
-In-Reply-To: <HE1PR04MB3196017359FD8B44F44EE5EC95260@HE1PR04MB3196.eurprd04.prod.outlook.com>
+        Wed, 9 Sep 2020 12:55:55 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 089GtgQB006189;
+        Wed, 9 Sep 2020 09:55:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=hc+mPFEDMCdkMnnLRmsZx9vxHJRcBGZjLDFBkN63JP0=;
+ b=on1SU9I59O6kWUNJhE06Bn58keO9mUBVgTw3ShGIfI2el/KwpmjeUsQs5tN0U8W8XY6I
+ d2AQJBMjvjosqnOIK+77CDQ3YNcv/LZ9ho2/7FrENNArf+kWmoH/JTDxovl/dY+nK134
+ LPIFWvCsZVZ3YzpuNcZEk27IvcoF1i3xDWs= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 33ct69rbdw-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 09 Sep 2020 09:55:44 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 9 Sep 2020 09:55:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dS7Os3sUlPHFADeSt4eWfALcBdNCs/BU7KeAoqRqHrfVGzBkWV4WxFT0mBDhLR8J4BRrbaKEYX4fiS9CWH/yzx8CtvJZwS/+BP9Lfqkpfn7OSz68GJyAoEO6INwG3npMq0BjtyfykKPYn3d8atz9dN+LE29l6lR/8sGQlzI6ggzafyTxGPBFVs//9otMNSQDLiXmzTLwz4a7BUOsO0cursqilO3eECDU51W02QJVHW0g1A1ofXnUDz3wqNY+wJng6lmaDQMdkqj1w/wnhUnL6epoiIrsC2+tH9FPv3QALcYIhaU+kajaNECYaCF+WsNucnVC/SC5fwdEk2dAci2ZKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hc+mPFEDMCdkMnnLRmsZx9vxHJRcBGZjLDFBkN63JP0=;
+ b=WYRZraoxfsx2thl4JEDEgNcr/fB4Ouo/nm3E6XfsOhCiD++DLf5QRxuvEHZzKWk0U5aNdXsrc8jUidGVoOtoSaBkO67rEQcvDJ1vXZ/HuKJ7lArk43UdWwkX/uJPT9yOFpdSMdbF85Cq3iEs3xzSMTlpNe6rb56ILwzLjlG3DAiyP0d2J3/a/kYFp4VM7qS/u7bGzMRk6h2MCJ/DV+cEQRHiko6uSwPjrqRbJTdbI1wLsxWX3jMevOerpBse3Tk8LzqnkSy4MbKHSA2d3KXG/hWjtIWuFCChP9FD+rHBfU2wSVfgKMDkvlGK7swxtSyLnWJ7wJ0v7KeKWmE4nykm0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hc+mPFEDMCdkMnnLRmsZx9vxHJRcBGZjLDFBkN63JP0=;
+ b=iFuObgFNfkKeadTxWpAk85U10liPWsA+sZvABGYSTtP8Pkagjv05TMX8j8WVFac1T1XtRBNf2G5jSl2LL4TAPTIEH++3AIhKa61id4mHfd2H6jxmSyxMut/3WERreufTRtR10s6VTeGsfdBT2HJJT0E87N6F/lFwBgZcFv+wqcA=
+Authentication-Results: cmpxchg.org; dkim=none (message not signed)
+ header.d=none;cmpxchg.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB2439.namprd15.prod.outlook.com (2603:10b6:a02:8e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Wed, 9 Sep
+ 2020 16:55:25 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::354d:5296:6a28:f55e%6]) with mapi id 15.20.3370.016; Wed, 9 Sep 2020
+ 16:55:25 +0000
+Date:   Wed, 9 Sep 2020 09:55:20 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        =Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@kernel.org>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] mm: workingset: ignore slab memory size when calculating
+ shadows pressure
+Message-ID: <20200909165520.GA1163084@carbon.dhcp.thefacebook.com>
+References: <20200903230055.1245058-1-guro@fb.com>
+ <20200909145534.GA100698@cmpxchg.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909145534.GA100698@cmpxchg.org>
+X-ClientProxiedBy: MWHPR14CA0062.namprd14.prod.outlook.com
+ (2603:10b6:300:81::24) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQN8fgwoxWwZ35Fh/WfiJFzRBjxO6ALsz7wopfz9D+A=
-Date:   Wed, 9 Sep 2020 19:47:04 +0530
-Message-ID: <37d2af0767af627e2534bbcacffa17d2@mail.gmail.com>
-Subject: RE: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
-To:     Ashish Kumar <ashish.kumar@nxp.com>,
-        Yogesh Gaur <yogeshgaur.83@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Varun Sethi <V.Sethi@nxp.com>, Arokia Samy <arokia.samy@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:8cb5) by MWHPR14CA0062.namprd14.prod.outlook.com (2603:10b6:300:81::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Wed, 9 Sep 2020 16:55:23 +0000
+X-Originating-IP: [2620:10d:c090:400::5:8cb5]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7d03beba-d0fe-4462-2397-08d854e12581
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2439:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2439EC6EBA79E19DD092DADCBE260@BYAPR15MB2439.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 305sy+EH/4U93NfsvOG9HKo96a1FIGNevCCq5WoZc6Kpb0NUwMoepabWh+FA7gw41M1CXZ0zMDWySUdmsrkAnsh2HlVvqzytf/qq19IRnLdFQZjCZnNSfZdaaKvMEdOBAfIhagxskUxp0aAg7mT/PLFoIgj/OLGaZ/nYqZefxxZv679uQxiY6laULXs+XZqZVHy9S75hVmQrNWboZY4kRx3z2EiPQbaWtUwxPlYxt6ebNtadqsUtkeGEJN2BrJiWaGd35TIPE4azDj6t3jHrEUSmLsiomHD74YZGhCqvk/C2EHUQSbCuIYbg7YDSQU1o
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(39860400002)(376002)(366004)(136003)(346002)(6506007)(16526019)(66946007)(478600001)(2906002)(9686003)(55016002)(8936002)(52116002)(8676002)(4326008)(54906003)(316002)(7696005)(186003)(33656002)(66556008)(83380400001)(66476007)(1076003)(5660300002)(6916009)(86362001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Qrgo1vnJxmhfa9WfmbOf1Xpoz0B3X2s3uCzBSN2UnUrWRrUFaq/W//c6M7k/tYCwt/cyETUQ2Z/Zi2tSqMBet1Q3Ce0nbLYWKR+hxMcu1znPsAadesWiq7Ys6y/2zMrlpPyqhAMpSnFrRuzlpyZSdzwvCVKVKGJOzvfjL6ytqZwaSl4RV5yJNHxo1c8YxKA6BUSLJ6gR3RPQE3elasvP2dTDye7rbJN/SWAaDangK9bGxoX0wjlwyGmeszZNaDLCgO/9tCrtucV/0T68TqrLxVawuvyMgJ4i0/Ny3/J6lKJ+CDZz4jjMgGADIM/TlOVrQiPMeR36+vo2TqI4jeCtS+zCk+vNwdOjKPDg68Ao5sIdKU4qWDXPxeDGR7SCkqAmF8r4M3Sn+dvf6QplpXiq1MQoRAMzh4TzAuUy7se+TvN4k1tOHSkk84IdBpqCRYi6e3kg1RHTuWjnbgA49nfJ1xJXjmkvBrp0Q7UzeiIUMMxfOzl7AOG13oVEOD5wviiWXzL+XrWNYgP+DH1v1c2qeVlM3qE/tyk81G/20IqD/BkzB3aq13w6dklUYRuyBti483IjHrClYiXpPsJ3srAnFnkJtu9lJogy+MC+nqrHLsxlYAhVBWbMMwygXAoKiGemxy85Dz2UgO6D4p4JEBveogcuvc2wjEhtT7vkYslmB6k=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d03beba-d0fe-4462-2397-08d854e12581
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2020 16:55:24.9398
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2VL2/JJnZ8n6iaRpuvtjJ64trO5BBBqhUPN6K4CJu5l1lOVqqkr4dxbrLj0W9x8k
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2439
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-09_12:2020-09-09,2020-09-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 spamscore=0 phishscore=0 clxscore=1015
+ mlxlogscore=554 impostorscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009090151
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Ashish Kumar <ashish.kumar@nxp.com>
-> Sent: Wednesday, September 9, 2020 4:57 PM
-> To: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>; Yogesh Gaur
-> <yogeshgaur.83@gmail.com>; Mark Brown <broonie@kernel.org>; linux-
-> spi@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Varun Sethi <V.Sethi@nxp.com>; Arokia Samy <arokia.samy@nxp.com>
-> Subject: RE: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
->
-> Hi Kuldeep Dwivedi,
-Don't mind but It's Kuldip  not Kuldeep
->
-> > -----Original Message-----
-> > From: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> > Sent: Tuesday, September 8, 2020 11:32 AM
-> > To: Ashish Kumar <ashish.kumar@nxp.com>; Yogesh Gaur
-> > <yogeshgaur.83@gmail.com>; Mark Brown <broonie@kernel.org>; linux-
-> > spi@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Cc: Varun Sethi <V.Sethi@nxp.com>; Arokia Samy <arokia.samy@nxp.com>;
-> > kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> > Subject: [EXT] [PATCH v1] spi: spi-nxp-fspi: Add ACPI support
-> >
-> > Caution: EXT Email
-> >
-> > Currently NXP fspi  driver has support of DT only. Adding ACPI support
-> > to the driver so that it can be used by UEFI firmware booting in ACPI
-> > mode. This driver will be probed if any firmware will expose HID
-> > "NXP0009" in DSDT table.
-> >
-> > Signed-off-by: kuldip dwivedi <kuldip.dwivedi@puresoftware.com>
-> Does these change affects non-ACPI FSPI driver in Linux? What test case
-were run
-> to verify the same?
-I have verified on both DT and ACPI mode with below method. In this method
-we
-Used mtd utility to write some content and then read from same address.
-Address 0x3000000 has been selected to avoid any data loss of existing
-UEFI variables.
-root@localhost:/mnt# ls
-1.c  EFI  i2c_utils  mtd_debug  mtdinfo  reportfreq64
-root@localhost:/mnt# cat 1.c
-1234567890987654321
-root@localhost:/mnt#
-root@localhost:/mnt# ./mtdinfo
-Count of MTD devices:           2
-Present MTD devices:            mtd0, mtd1
-Sysfs interface supported:      yes
-root@localhost:/mnt# ./mtd_debug erase /dev/mtd1 0x3000000 0x1000
-Erased 4096 bytes from address 0x03000000 in flash
-root@localhost:/mnt# ./mtd_debug write /dev/mtd1 0x3000000 20 1.c
-Copied 20 bytes from 1.c to address 0x03000000 in flash
-root@lOcalhost:/mnt# ./mtd_debug read /dev/mtd1 0x3000000 20 2.c
-Copied 20 bytes from address 0x03000000 in flash tO 2.c
-root@localhost:/mnt# cat 2.c
-1234567890987654321
-> > ---
-> >
-> > Notes:
-> >     1. Add ACPI match table
-> >     2. Change the DT specific APIs to device property APIs
-> >        so that same API can be used in DT and ACPi mode.
-> >     3. Omit clock configuration part - in ACPI world, the firmware
-> >        is responsible for clock maintenance.
-> >     4. This patch is tested on LX2160A platform
-> >
-> >  drivers/spi/spi-nxp-fspi.c | 66
-> > +++++++++++++++++++++++++++-----------
-> >  1 file changed, 47 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-> > index 1ccda82da206..acdb186ddfb2 100644
-> > --- a/drivers/spi/spi-nxp-fspi.c
-> > +++ b/drivers/spi/spi-nxp-fspi.c
-> > @@ -3,7 +3,8 @@
-> >  /*
-> >   * NXP FlexSPI(FSPI) controller driver.
-> >   *
-> > - * Copyright 2019 NXP.
-> > + * Copyright 2019-2020 NXP
-> Why Update NXP copyright?
-This is asked by NXP only
->
-> > + * Copyright 2020 Puresoftware Ltd.
-> >   *
-> >   * FlexSPI is a flexsible SPI host controller which supports two SPI
-> >   * channels and up to 4 external devices. Each channel supports @@
-> > -30,6 +31,7 @@
-> >   *     Frieder Schrempf <frieder.schrempf@kontron.de>
-> >   */
-> >
-> > +#include <linux/acpi.h>
-> >  #include <linux/bitops.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/completion.h>
-> > @@ -563,6 +565,9 @@ static int nxp_fspi_clk_prep_enable(struct
-> > nxp_fspi
-> > *f)
-> >  {
-> >         int ret;
-> >
-> > +       if (is_acpi_node(f->dev->fwnode))
-> > +               return 0;
-> > +
-> >         ret = clk_prepare_enable(f->clk_en);
-> >         if (ret)
-> >                 return ret;
-> > @@ -576,10 +581,15 @@ static int nxp_fspi_clk_prep_enable(struct
-> > nxp_fspi *f)
-> >         return 0;
-> >  }
-> >
-> > -static void nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
-> > +static int nxp_fspi_clk_disable_unprep(struct nxp_fspi *f)
-> >  {
-> > +       if (is_acpi_node(f->dev->fwnode))
-> > +               return 0;
-> > +
-> >         clk_disable_unprepare(f->clk);
-> >         clk_disable_unprepare(f->clk_en);
-> > +
-> > +       return 0;
-> >  }
-> >
-> >  /*
-> > @@ -900,6 +910,8 @@ static int nxp_fspi_default_setup(struct nxp_fspi
-*f)
-> >                 return ret;
-> >
-> >         /* Reset the module */
-> > +       fspi_writel(f, FSPI_MCR0_SWRST, (base + FSPI_MCR0));
-> > +
-> Why is this SW reset needed now? This will alter nxp_fspi_resume()
-function as
-> well.
-I observed a kernel panic during setting up the driver in
- nxp_fspi_default_setup function in ACPI boot and this is fixed.
->
-> >         /* w1c register, wait unit clear */
-> >         ret = fspi_readl_poll_tout(f, f->iobase + FSPI_MCR0,
-> >                                    FSPI_MCR0_SWRST, 0, POLL_TOUT,
-> > false); @@ -1001,7 +1013,7 @@ static int nxp_fspi_probe(struct
-> > platform_device
-> > *pdev)
-> >
-> >         f = spi_controller_get_devdata(ctlr);
-> >         f->dev = dev;
-> > -       f->devtype_data = of_device_get_match_data(dev);
-> > +       f->devtype_data = device_get_match_data(dev);
-> >         if (!f->devtype_data) {
-> >                 ret = -ENODEV;
-> >                 goto err_put_ctrl;
-> > @@ -1011,6 +1023,8 @@ static int nxp_fspi_probe(struct platform_device
-> > *pdev)
-> >
-> >         /* find the resources - configuration register address space
-*/
-> >         res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "fspi_base");
-> > +       if (!res)
-> > +               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> Why is this needed ?, _byname() will get you fspi_base value.
-In ACPI we can not pass resource value by name  where as we have to pass
-By index. So in 0th Index there is FSPI_BASE and in 1st index FSPIMM_BASE.
-For reference Please see , Line :23 and Line:24
-https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platfor
-ms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Dsdt/FSPI.asl?h=LX2160_UEFI_
-ACPI_EAR3
->
-> >         f->iobase = devm_ioremap_resource(dev, res);
-> >         if (IS_ERR(f->iobase)) {
-> >                 ret = PTR_ERR(f->iobase); @@ -1020,8 +1034,11 @@
-> > static int nxp_fspi_probe(struct platform_device
-> > *pdev)
-> >         /* find the resources - controller memory mapped space */
-> >         res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > "fspi_mmap");
-> >         if (!res) {
-> > -               ret = -ENODEV;
-> > -               goto err_put_ctrl;
-> > +               res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> Why is this needed? _byname() will get you fspi_mmap.
-> If fspi_mmap is not present then fetch 1st IORESOURE_MEM ?
-In ACPI we can not pass resource value by name  where as we have to pass
-By index. So in 0th Index there is FSPI_BASE and in 1st index FSPIMM_BASE.
-For reference Please see , Line :23 and Line:24
-https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platfor
-ms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Dsdt/FSPI.asl?h=LX2160_UEFI_
-ACPI_EAR3
->
-> Regards
-> Ashish
-> > +               if (!res) {
-> > +                       ret = -ENODEV;
-> > +                       goto err_put_ctrl;
-> > +               }
-> >         }
-> >
-> >         /* assign memory mapped starting address and mapped size. */
-> > @@ -1029,22 +1046,24 @@ static int nxp_fspi_probe(struct
-> > platform_device
-> > *pdev)
-> >         f->memmap_phy_size = resource_size(res);
-> >
-> >         /* find the clocks */
-> > -       f->clk_en = devm_clk_get(dev, "fspi_en");
-> > -       if (IS_ERR(f->clk_en)) {
-> > -               ret = PTR_ERR(f->clk_en);
-> > -               goto err_put_ctrl;
-> > -       }
-> > +       if (dev_of_node(&pdev->dev)) {
-> > +               f->clk_en = devm_clk_get(dev, "fspi_en");
-> > +               if (IS_ERR(f->clk_en)) {
-> > +                       ret = PTR_ERR(f->clk_en);
-> > +                       goto err_put_ctrl;
-> > +               }
-> >
-> > -       f->clk = devm_clk_get(dev, "fspi");
-> > -       if (IS_ERR(f->clk)) {
-> > -               ret = PTR_ERR(f->clk);
-> > -               goto err_put_ctrl;
-> > -       }
-> > +               f->clk = devm_clk_get(dev, "fspi");
-> > +               if (IS_ERR(f->clk)) {
-> > +                       ret = PTR_ERR(f->clk);
-> > +                       goto err_put_ctrl;
-> > +               }
-> >
-> > -       ret = nxp_fspi_clk_prep_enable(f);
-> > -       if (ret) {
-> > -               dev_err(dev, "can not enable the clock\n");
-> > -               goto err_put_ctrl;
-> > +               ret = nxp_fspi_clk_prep_enable(f);
-> > +               if (ret) {
-> > +                       dev_err(dev, "can not enable the clock\n");
-> > +                       goto err_put_ctrl;
-> > +               }
-> >         }
-> >
-> >         /* find the irq */
-> > @@ -1127,6 +1146,14 @@ static const struct of_device_id
-> > nxp_fspi_dt_ids[] = {  };  MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
-> >
-> > +#ifdef CONFIG_ACPI
-> > +static const struct acpi_device_id nxp_fspi_acpi_ids[] = {
-> > +       { "NXP0009", .driver_data = (kernel_ulong_t)&lx2160a_data, },
-> > +       {}
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, nxp_fspi_acpi_ids); #endif
-> > +
-> >  static const struct dev_pm_ops nxp_fspi_pm_ops = {
-> >         .suspend        = nxp_fspi_suspend,
-> >         .resume         = nxp_fspi_resume,
-> > @@ -1136,6 +1163,7 @@ static struct platform_driver nxp_fspi_driver =
-{
-> >         .driver = {
-> >                 .name   = "nxp-fspi",
-> >                 .of_match_table = nxp_fspi_dt_ids,
-> > +               .acpi_match_table = ACPI_PTR(nxp_fspi_acpi_ids),
-> >                 .pm =   &nxp_fspi_pm_ops,
-> >         },
-> >         .probe          = nxp_fspi_probe,
-> > --
-> > 2.17.1
-Thanks,
+On Wed, Sep 09, 2020 at 10:55:34AM -0400, Johannes Weiner wrote:
+> On Thu, Sep 03, 2020 at 04:00:55PM -0700, Roman Gushchin wrote:
+> > In the memcg case count_shadow_nodes() sums the number of pages in lru
+> > lists and the amount of slab memory (reclaimable and non-reclaimable)
+> > as a baseline for the allowed number of shadow entries.
+> > 
+> > It seems to be a good analogy for the !memcg case, where
+> > node_present_pages() is used. However, it's not quite true, as there
+> > two problems:
+> > 
+> > 1) Due to slab reparenting introduced by commit fb2f2b0adb98 ("mm:
+> > memcg/slab: reparent memcg kmem_caches on cgroup removal") local
+> > per-lruvec slab counters might be inaccurate on non-leaf levels.
+> > It's the only place where local slab counters are used.
+> 
+> Hm, that sounds like a bug tbh. We're reparenting the kmem caches and
+> the individual objects on the list_lru when a cgroup is removed -
+> shouldn't we also reparent the corresponding memory counters?
+
+It's definitely an option too, the question is if the added code complexity
+is really worth it. I'd say no had we talk only about slab counters,
+but when we'll eventually start reparenting pagecache, we'll need to reparent
+other counters as well, so we'll need it anyway. So, ok, let's drop
+this patch for now.
+
+> 
+> > 2) Shadow nodes by themselves are backed by slabs. So there is a loop
+> > dependency: the more shadow entries are there, the less pressure the
+> > kernel applies to reclaim them.
+> 
+> This effect is negligible in practice.
+> 
+> The permitted shadow nodes are a tiny percentage of memory consumed by
+> the cgroup. If shadow nodes make up a significant part of the cgroup's
+> footprint, or are the only thing left, they will be pushed out fast.
+> 
+> The formula is max_nodes = total_pages >> 3, and one page can hold 28
+> nodes. So if the cgroup holds nothing but 262,144 pages (1G) of shadow
+> nodes, the shrinker target is 32,768 nodes, which is 32,768 pages
+> (128M) in the worst packing case and 1,170 pages (4M) at best.
+> 
+> However, if you don't take slab into account here, it can evict shadow
+> entries with undue aggression when they are needed the most. If, say,
+> the inode or dentry cache explode temporarily and displace the page
+> cache, it would be a big problem to drop the cache's non-resident info
+> at the same time! This is when it's at its most important.
+
+Just curious, have you seen this in the real life?
