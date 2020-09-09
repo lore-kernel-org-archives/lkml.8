@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFECEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF46C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9476922248
-	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAD72224E
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 14:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbgIIOVR (ORCPT
+        id S1730477AbgIIOXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 10:21:17 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11298 "EHLO huawei.com"
+        Wed, 9 Sep 2020 10:23:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57336 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729521AbgIINAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 09:00:40 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 24E8A3E76549727629C5;
-        Wed,  9 Sep 2020 21:00:38 +0800 (CST)
+        id S1730187AbgIINAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 09:00:39 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4D1EEFE2135306C9AB1B;
+        Wed,  9 Sep 2020 21:00:33 +0800 (CST)
 Received: from huawei.com (10.90.53.225) by DGGEMS413-HUB.china.huawei.com
  (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 9 Sep 2020
  21:00:27 +0800
@@ -32,9 +32,9 @@ To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
         <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: [PATCH -next 7/8] drm/amd/amdgpu: fix comparison pointer to bool warning in amdgpu_atpx_handler.c
-Date:   Wed, 9 Sep 2020 21:07:19 +0800
-Message-ID: <20200909130720.105234-8-zhengbin13@huawei.com>
+Subject: [PATCH -next 5/8] drm/amd/amdgpu: fix comparison pointer to bool warning in si.c
+Date:   Wed, 9 Sep 2020 21:07:17 +0800
+Message-ID: <20200909130720.105234-6-zhengbin13@huawei.com>
 X-Mailer: git-send-email 2.26.0.106.g9fadedd
 In-Reply-To: <20200909130720.105234-1-zhengbin13@huawei.com>
 References: <20200909130720.105234-1-zhengbin13@huawei.com>
@@ -50,36 +50,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes coccicheck warning:
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c:619:15-49: WARNING: Comparison to bool
-drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c:629:15-49: WARNING: Comparison to bool
+drivers/gpu/drm/amd/amdgpu/si.c:1342:5-10: WARNING: Comparison to bool
 
 Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/si.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c
-index 3e35a8f2c5e5..7abe9500c0c6 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_atpx_handler.c
-@@ -616,7 +616,7 @@ static bool amdgpu_atpx_detect(void)
- 	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev)) != NULL) {
- 		vga_count++;
+diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
+index 455d5e366c69..e5e336fd9e94 100644
+--- a/drivers/gpu/drm/amd/amdgpu/si.c
++++ b/drivers/gpu/drm/amd/amdgpu/si.c
+@@ -1339,7 +1339,7 @@ static void si_vga_set_state(struct amdgpu_device *adev, bool state)
+ 	uint32_t temp;
 
--		has_atpx |= (amdgpu_atpx_pci_probe_handle(pdev) == true);
-+		has_atpx |= amdgpu_atpx_pci_probe_handle(pdev);
-
- 		parent_pdev = pci_upstream_bridge(pdev);
- 		d3_supported |= parent_pdev && parent_pdev->bridge_d3;
-@@ -626,7 +626,7 @@ static bool amdgpu_atpx_detect(void)
- 	while ((pdev = pci_get_class(PCI_CLASS_DISPLAY_OTHER << 8, pdev)) != NULL) {
- 		vga_count++;
-
--		has_atpx |= (amdgpu_atpx_pci_probe_handle(pdev) == true);
-+		has_atpx |= amdgpu_atpx_pci_probe_handle(pdev);
-
- 		parent_pdev = pci_upstream_bridge(pdev);
- 		d3_supported |= parent_pdev && parent_pdev->bridge_d3;
+ 	temp = RREG32(CONFIG_CNTL);
+-	if (state == false) {
++	if (!state) {
+ 		temp &= ~(1<<0);
+ 		temp |= (1<<1);
+ 	} else {
 --
 2.26.0.106.g9fadedd
 
