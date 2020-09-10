@@ -2,109 +2,122 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DC0C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096A0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC802078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599721862;
-	bh=ilD/+nP6kSsOUI9r+lncUg9b7MEA/loYwqG2265oiLI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KkcYYT8FYwb8LD2UV/pWW8NqygbPLy0Ur0M27FLnhZPbYljGbYrJT3UHoSXCH2MYr
-	 qKLBwKhUDAJGOrm7iMuIt9SzEpIOQgZByTlgjECYAinXP81qSiDx+Rz6PJEtFIiCJN
-	 4XE74yItfjXS3xQwOkVzI2kOLiKI9qjn5xHWWcDQ=
+	by mail.kernel.org (Postfix) with ESMTP id B84C52075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4soKIQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbgIJHK6 (ORCPT
+        id S1730397AbgIJHLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:10:58 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44777 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730408AbgIJHIo (ORCPT
+        Thu, 10 Sep 2020 03:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730306AbgIJHAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 03:08:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id b19so6743653lji.11;
-        Thu, 10 Sep 2020 00:08:42 -0700 (PDT)
+        Thu, 10 Sep 2020 03:00:50 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71419C061366
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:55:22 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z9so4628379wmk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1sh6GJ0mJWJb3ICmo91l9UDo6bvtBy9zVj1QpKnJ7Ig=;
+        b=C4soKIQr+HtIx13rx9qA/15FRHFKVdvspCRsPnq/goUVkiQ4KZNEepatmbLTp2tc3C
+         ctqDXC+sft2sLmaCxPWFVqy1wjtwIvIBpREamtN4rJ/LVvlDdEi2MJu1cNiQSxnQD4VE
+         GgMMRYv2oCxVohRyT3aSUb5j0mD7xM2sZKmpxpCyBm8JAZaFPCCxQQ+bV8NjJKJKx9RI
+         kxwK/4ZD646Lcol5oAd8xIPIhFj1TridIQ0n8S8PuxUHc+2LskD63txFM8mBTn+CzvgY
+         j3bSz3NJOG4J2WrBJaWnu/qLYBGNnrA3NqcKKZsebBbl9Q9V9U/a9z+aLQBwA59U/hBs
+         56wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rLyVaAJAglFySSpr2MGhrCSvoIYdsTOte9p/4jLkzmo=;
-        b=ivrn1aIWEFXz+cMgUi7eGCFI6kl+Ow9i96etPX4Q1XzYqtOQ98ky6EyJd9pEX/cCUL
-         4vj0Vw20W1nBBCGrVojg/uVfHTjXFVWDqr/r5rjbn6KEw1DvR6F9wfl1NIPG8stp3+cQ
-         jVhy/b5Jwan+SGnBG9fmyHoGM0AlohDibqxnfHthsu2ZfEU9pdcsRwNHgqwJovIn2Wb8
-         Miyohu57hsdIIpxa7K1XlcdayUNfSDPLh1TpU7B27kop6S813mu/N1/TrS51COHYa7eJ
-         cN4LtsVieqT2SSyqrGWSD96EqN3k9Vwo3NDo8seMsxY4Mq5hQ1y5A2drG0FefXBaI0yR
-         Blnw==
-X-Gm-Message-State: AOAM533FM88CY1FcUR84h+obTP730R95HOmKVzR1anllSXA+kIQICPSL
-        KCPT+21HaCsVQRv7spCFMDU=
-X-Google-Smtp-Source: ABdhPJzcLGO0skLg/9MNKQOq2gGlzisRR/xiOYj/piuMfbP3jScnhymaPvFW15ZJ6AgBtqBeh2jeFA==
-X-Received: by 2002:a2e:b8d1:: with SMTP id s17mr602390ljp.222.1599721721980;
-        Thu, 10 Sep 2020 00:08:41 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id z8sm1349606ljh.19.2020.09.10.00.08.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1sh6GJ0mJWJb3ICmo91l9UDo6bvtBy9zVj1QpKnJ7Ig=;
+        b=bJTWppedzUGHZCfZNYIsjopsOmilBhUX22y5PQx9s3q8JnEDuX5oGjJgUm/l3Cc5EN
+         auziJ1EAjgnmgB3zvGKaJm3VAyKQTHJYH2+D3wbT51Lv5tySjOPnIgGOfHIOw9qYFTja
+         av2r2n7JndyaECrk35BpAdxAOcjn3oQjfnv/TFD15TgFvCdhJ5klTpd3aVIEQ0XiBq/X
+         WA150q57cyWXsTcMSPl6cit/ybf1hpGNTMuV3hxUQ5+SZjlJmvPA3VKMPDw+AXnp9rXQ
+         P4N88/ltp3li9ehxGvYALVAoRhV2hwFPrVnVM5lTzG9j99JPxy0yHcGvzS6BpcJmBlgh
+         UCzQ==
+X-Gm-Message-State: AOAM533LU09o6RPJWhrPvJXPm0Y0kglTjc8dUrvtrRIiMv8v/6ex5qI5
+        v0o0cmTXx2OSOkstHAEN1HsnnQ==
+X-Google-Smtp-Source: ABdhPJxK5TLost41t/MKr8GdTX/Kl9grFZdTUozpgRhsaRFzGojXjDqHZfOOKR5KBakgrCfLrwscfg==
+X-Received: by 2002:a7b:c5c1:: with SMTP id n1mr6617738wmk.125.1599720921171;
+        Wed, 09 Sep 2020 23:55:21 -0700 (PDT)
+Received: from dell.default ([91.110.221.246])
+        by smtp.gmail.com with ESMTPSA id m3sm2444028wme.31.2020.09.09.23.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 00:08:41 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1kGGhA-0005SA-Rw; Thu, 10 Sep 2020 09:08:37 +0200
-Date:   Thu, 10 Sep 2020 09:08:36 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] serial: core: fix port-lock initialisation
-Message-ID: <20200910070836.GB24441@localhost>
-References: <20200909143101.15389-1-johan@kernel.org>
- <20200909143101.15389-2-johan@kernel.org>
- <20200909152158.GC1891694@smile.fi.intel.com>
+        Wed, 09 Sep 2020 23:55:20 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+Subject: [PATCH 24/29] ath9k: ar9002_initvals: Remove unused array 'ar9280PciePhy_clkreq_off_L1_9280'
+Date:   Thu, 10 Sep 2020 07:54:26 +0100
+Message-Id: <20200910065431.657636-25-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200910065431.657636-1-lee.jones@linaro.org>
+References: <20200910065431.657636-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909152158.GC1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 06:21:58PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 09, 2020 at 04:31:00PM +0200, Johan Hovold wrote:
-> > Commit f743061a85f5 ("serial: core: Initialise spin lock before use in
-> > uart_configure_port()") tried to work around a breakage introduced by
-> > commit a3cb39d258ef ("serial: core: Allow detach and attach serial
-> > device for console") by adding a second initialisation of the port lock
-> > when registering the port.
-> > 
-> > As reported by the build robots [1], this doesn't really solve the
-> > regression introduced by the console-detach changes and also adds a
-> > second redundant initialisation of the lock for normal ports.
-> 
-> I thought, though doubtfully, it was a regression made by
-> 679193b7baf8 ("serial: 8250: Let serial core initialise spin lock")
-> and then I completely forgot about [1].
+Fixes the following W=1 kernel build warning(s):
 
-Yes, that driver has had an explicit early initialisation of the lock
-and it was indeed the removal of that which triggered the robot's
-report. With the initialisation again done during console setup (patch
-2/2), that should no longer be an issue (at least not for the console
-port...).
+ drivers/net/wireless/ath/ath9k/ar9002_initvals.h:900:18: warning: ‘ar9280PciePhy_clkreq_off_L1_9280’ defined but not used [-Wunused-const-variable=]
 
-> > Start cleaning up this mess by removing the redundant initialisation and
-> > making sure that the port lock is again initialised once-only for ports
-> > that aren't already in use as a console.
-> 
-> Thanks for looking into this!
-> 
-> I agree this is better place for lock initialization.
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/ath/ath9k/ar9002_initvals.h | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-Thanks for reviewing.
+diff --git a/drivers/net/wireless/ath/ath9k/ar9002_initvals.h b/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
+index 4d18c66a67903..e01b5c3728b86 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
++++ b/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
+@@ -897,20 +897,6 @@ static const u32 ar9280Modes_original_tx_gain_9280_2[][5] = {
+ 	{0x00007844, 0x92592480, 0x92592480, 0x92592480, 0x92592480},
+ };
+ 
+-static const u32 ar9280PciePhy_clkreq_off_L1_9280[][2] = {
+-	/* Addr      allmodes  */
+-	{0x00004040, 0x9248fd00},
+-	{0x00004040, 0x24924924},
+-	{0x00004040, 0xa8000019},
+-	{0x00004040, 0x13160820},
+-	{0x00004040, 0xe5980560},
+-	{0x00004040, 0xc01dcffc},
+-	{0x00004040, 0x1aaabe41},
+-	{0x00004040, 0xbe105554},
+-	{0x00004040, 0x00043007},
+-	{0x00004044, 0x00000000},
+-};
+-
+ static const u32 ar9280PciePhy_clkreq_always_on_L1_9280[][2] = {
+ 	/* Addr      allmodes  */
+ 	{0x00004040, 0x9248fd00},
+-- 
+2.25.1
 
-Johan
