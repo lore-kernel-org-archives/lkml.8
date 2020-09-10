@@ -2,130 +2,120 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB9CC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E8AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B17E20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC0D20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:18:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Puleq9oJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTdYTP6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgIJUR5 (ORCPT
+        id S1727019AbgIJUSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:17:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        Thu, 10 Sep 2020 16:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgIJUQw (ORCPT
+        with ESMTP id S1726760AbgIJUP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:16:52 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9197EC061573;
-        Thu, 10 Sep 2020 13:16:51 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id a3so7186429oib.4;
-        Thu, 10 Sep 2020 13:16:51 -0700 (PDT)
+        Thu, 10 Sep 2020 16:15:27 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC69BC061573;
+        Thu, 10 Sep 2020 13:15:26 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p13so6964046ils.3;
+        Thu, 10 Sep 2020 13:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JA2F+pX+cf8Yb+/rxjLSfe19FqfGzsimaxJ7Sn8glHk=;
-        b=Puleq9oJw3llEgroMR266Jcniocupl0HQrXmsWxnW43UUTp5VffHF6Fz3mzZCOB8sf
-         4PD1j9SsnSSrUJTQOnT3YRnIDpf0hQ81peTImL4JlsWqP9V2rVJNXk3vErWf0Plw6i9C
-         bzfOyBiZoNFJgavCV5MUpf5fkVSlL2o9x52L2J92Vx5NBQaDWKOaBsTYwAZ2OnfTrKFW
-         qMtOTDRAvoLPX9yg5NlhMMnBCaE6OiqlcyX6KzWWa01XBO1obR8dG0AY3zHAXHMbJZ/q
-         8ncZEgxV5M0ZLfKTYQlmFPCmOt9Gpj3qHl/ZKZ5M5HNoF2kyzNC6DnEMoFGPm/fmuonV
-         DETg==
+        bh=D3rZXN/M5buU4UjqwEW2O7loIxNlYUmjQb6smWkzqBg=;
+        b=VTdYTP6ksg2hPwjOXuVHwHnK/LWAy+MORKzIMxhWBuXxVfb5VJ+q7CHpHgt/xy0q5O
+         9UTprebf4ZdFm8XzykbZPqwoGRiKuzrcv3wDr7Ol7ieHJ06M5NGPxS27PoSNbrSYFNXl
+         N5kdxkS4CFcx5BLWZ1ypTKhFs4fmEjoGKOUmfFTP9MPTLMJYWQIvmDtRP0uHtiYDr3of
+         npN4t1iAmjdZcPNCXiHWP9Qkbbp24dK0saU2yHStbwahZwH/ZqnrNF6MABg4ZVAAhXTN
+         Q6qpzxHbERYO5sbYodFmQbZ5YC7tsFU2VG+YHHe4RqogiUXiEQXQbBQryPsk9jrZpNmZ
+         6UJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JA2F+pX+cf8Yb+/rxjLSfe19FqfGzsimaxJ7Sn8glHk=;
-        b=MMuOUe01mN6j7A7ve5QPmbJLLfV3pb8BUIkrwljKUXJZTiAXP//7ET/DIwKGMkRCHi
-         PnhKoh5kEtX4wTVR+u29Krdf7KSu2hIfAligYy/0xDLef0PkylOu4/uHRkqPFWl9oato
-         uPCDnathC4Y9auZIXOsn3JrbSrYFe4cMcbJ2pjxNBQcntpRSn94ndBOFPSgqI/T8jKyI
-         cRnGEeJfXIkq09odflKsg+R50eNECnZ+mSkp9Aqh7GAIfly4bXttB+sz3iPF8cIWNR51
-         syNmNKc18tPHXMRFAm8BFDZ9bEr2uyjAMp5o7bAQbyNSu8Xb/CzmHlpBZPkiP20tnmSC
-         LxJA==
-X-Gm-Message-State: AOAM532A5SfCRwW9ads3iUx2ttWWdE4U/2FuMbvupXYkoKvzHOA+xm5C
-        lROdiu8z2lTj/jUu8f++jrNJmx8flF2XnAW/a9U=
-X-Google-Smtp-Source: ABdhPJxWPUn3qHrn3wcNUUEGLzQJFnAwRfSU7Gej9E24ZTzAkIjqi+ULWfU3OSIlQq1KqwQDmyWu9XqXBk3E5939uQU=
-X-Received: by 2002:aca:c758:: with SMTP id x85mr1173120oif.102.1599769010957;
- Thu, 10 Sep 2020 13:16:50 -0700 (PDT)
+        bh=D3rZXN/M5buU4UjqwEW2O7loIxNlYUmjQb6smWkzqBg=;
+        b=ocOJBGFSMJuRdJdP+78vBkRDSq7cjJX5n4df6wkeZlgdVIdbEpSYxwpXGTZ6cHgEjN
+         qQIaCRp6zRFZv09mpXcxes3KYmUa+BBNHhTkBoh10dDpYm6yNjth4duzvq7RT2rZ7Aw1
+         wbncO87gI/uxbEwZp3xzx9VvIP2cjdbMdO+Z4zOuKgcRavlw6C3jyPvBLUFz5cYIlySj
+         wD11FSOdAUe0n5gI81pAnicNdXxGOQCCvdI2819MsMqL5qZnsKm8vnmavaXENJ6tSycT
+         MGbx7ja5YmfvdMJZEcrs99U2w6o7a0ZQjahg3/yo90m0ge3IlDEOZikf3tlebcK+EXjP
+         pQNQ==
+X-Gm-Message-State: AOAM531GbR5p87oQ2e15fQ6rpa6g6EYqXmSV/b+yqu8qRQJt5IRiu9cc
+        4ujK6QGNclraizwP5RHfGNx5SC2iM3RF7iQRIyw=
+X-Google-Smtp-Source: ABdhPJyG9S6/AXyb0iHiDrjcyJg8kg5GF9s1OA0arakOUvT09KYBD8FleKNZP3JpzdcF7SlM1ehsQYaCRMx4M47BbvM=
+X-Received: by 2002:a92:9145:: with SMTP id t66mr9259698ild.305.1599768926155;
+ Thu, 10 Sep 2020 13:15:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200910161126.30948-1-oded.gabbay@gmail.com> <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Thu, 10 Sep 2020 23:16:22 +0300
-Message-ID: <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
-Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>
+References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
+ <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
+ <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
+ <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
+ <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
+ <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
+ <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
+ <20200825032312.11776-1-hdanton@sina.com> <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
+ <20200825162329.11292-1-hdanton@sina.com> <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
+ <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
+ <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
+ <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
+ <20200827125747.5816-1-hdanton@sina.com> <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
+ <CAM_iQpV-JMURzFApp-Zhxs3QN9j=Zdf6yqwOP=E42ERDHxe6Hw@mail.gmail.com>
+ <dd73f551d1fc89e457ffabd106cbf0bf401b747b.camel@redhat.com>
+ <CAM_iQpXZMeAGkq_=rG6KEabFNykszpRU_Hnv65Qk7yesvbRDrw@mail.gmail.com> <5f51cbad3cc2_3eceb208fc@john-XPS-13-9370.notmuch>
+In-Reply-To: <5f51cbad3cc2_3eceb208fc@john-XPS-13-9370.notmuch>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Thu, 10 Sep 2020 13:15:14 -0700
+Message-ID: <CAM_iQpVqdVc5_LkhO4Qie7Ff+XXRTcpiptZsEVNh=o9E0GkcRQ@mail.gmail.com>
+Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
+To:     John Fastabend <john.fastabend@gmail.com>
+Cc:     Paolo Abeni <pabeni@redhat.com>,
+        Kehuan Feng <kehuan.feng@gmail.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
+        Jonas Bonn <jonas.bonn@netrounds.com>,
+        Michael Zhivich <mzhivich@akamai.com>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 11:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
+On Thu, Sep 3, 2020 at 10:08 PM John Fastabend <john.fastabend@gmail.com> wrote:
+> Maybe this would unlock us,
 >
-> On Thu, 10 Sep 2020 19:11:11 +0300 Oded Gabbay wrote:
-> >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
-> >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
-> >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
-> >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
-> >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
-> >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
-> >  create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 7df6c9617321..9b09429103f1 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -3749,7 +3749,7 @@ static inline int __dev_xmit_skb(struct sk_buff *skb, struct Qdisc *q,
 >
-> The relevant code needs to live under drivers/net/(ethernet/).
-> For one thing our automation won't trigger for drivers in random
-> (/misc) part of the tree.
+>         if (q->flags & TCQ_F_NOLOCK) {
+>                 rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+> -               qdisc_run(q);
+> +               __qdisc_run(q);
+>
+>                 if (unlikely(to_free))
+>                         kfree_skb_list(to_free);
+>
+>
+> Per other thread we also need the state deactivated check added
+> back.
 
-Can you please elaborate on how to do this with a single driver that
-is already in misc ?
-As I mentioned in the cover letter, we are not developing a
-stand-alone NIC. We have a deep-learning accelerator with a NIC
-interface.
-Therefore, we don't have a separate PCI physical function for the NIC
-and I can't have a second driver registering to it.
+I guess no, because pfifo_dequeue() seems to require q->seqlock,
+according to comments in qdisc_run(), so we can not just get rid of
+qdisc_run_begin()/qdisc_run_end() here.
 
-We did this design based on existing examples in the kernel
-(registering to netdev), such as (just a few examples):
-1. sgi-xp driver in drivers/misc/sgi-xp (see file xpnet.c)
-2. bnx2fc in drivers/scsi/bnx2fc
-
-Thanks,
-Oded
+Thanks.
