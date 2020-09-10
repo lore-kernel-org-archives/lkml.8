@@ -2,139 +2,114 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390FFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6D7C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEDD621582
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kAcUoD4V";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f2MgHChC"
+	by mail.kernel.org (Postfix) with ESMTP id 773C121D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgIJJ1h (ORCPT
+        id S1728443AbgIJJ1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:27:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38890 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730140AbgIJJYA (ORCPT
+        Thu, 10 Sep 2020 05:27:44 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:39571 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730400AbgIJJ1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:24:00 -0400
-Date:   Thu, 10 Sep 2020 09:22:30 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729751;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ldllKGn/fQYbCAZeuD89K28PNmawGHqEYumoUxsrlDk=;
-        b=kAcUoD4VEXZge3KABb1w0IhnCOFB2hK+3KORXstbD6ufxfe0JVs0ny92HNvxAUP17mm6c+
-        EvSb4KvxRY9yRHmfBGl6/X9U1gkTllAe9y7/gcXmvyTHacrQgv82shQKgxF4SNeXFHlfa9
-        30Hbkh3kWCGSyNrb99I045/jkcqNos/JL+v3kgtSFQvB4sp+mgUYiKL3ZuR25KRBTlerKL
-        Hbi7X+C+AigiqGpvWGzZ2ooAJao15U0Mb2mUMWhPI8nF2VcUK3cI/OCXg7d/+GjJuZxNgw
-        DHbc4sG2OjB9itNIeJ7C2zXfVmf7nW9rnFlbC0NNeLCxP+HQYEWWOWqIjE+G1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729751;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ldllKGn/fQYbCAZeuD89K28PNmawGHqEYumoUxsrlDk=;
-        b=f2MgHChCfWKPtRp3Bve0cZkliC8fMOO7/hyVkpLxqLbnMLGTcnomnPBz+vHx93/Q4byyKw
-        OXMshA4FGyacgQCQ==
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/cpufeatures: Add SEV-ES CPU feature
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-6-joro@8bytes.org>
-References: <20200907131613.12703-6-joro@8bytes.org>
+        Thu, 10 Sep 2020 05:27:34 -0400
+Received: from gandi.net (laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr [90.63.246.187])
+        (Authenticated sender: thibaut.sautereau@clip-os.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 14A87100013;
+        Thu, 10 Sep 2020 09:26:54 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 11:26:56 +0200
+From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH v8 0/3] Add support for AT_INTERPRETED (was O_MAYEXEC)
+Message-ID: <20200910092656.GA800@gandi.net>
+References: <20200908075956.1069018-1-mic@digikod.net>
+ <20200908185026.GU1236603@ZenIV.linux.org.uk>
+ <e3223b50-0d00-3b64-1e09-cfb1b9648b02@digikod.net>
+ <20200909170851.GL6583@casper.infradead.org>
 MIME-Version: 1.0
-Message-ID: <159972975068.20229.9399017352340085405.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200909170851.GL6583@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/seves branch of tip:
+On Wed, Sep 09, 2020 at 06:08:51PM +0100, Matthew Wilcox wrote:
+> On Wed, Sep 09, 2020 at 09:19:11AM +0200, Mickaël Salaün wrote:
+> > 
+> > On 08/09/2020 20:50, Al Viro wrote:
+> > > On Tue, Sep 08, 2020 at 09:59:53AM +0200, Mickaël Salaün wrote:
+> > >> Hi,
+> > >>
+> > >> This height patch series rework the previous O_MAYEXEC series by not
+> > >> adding a new flag to openat2(2) but to faccessat2(2) instead.  As
+> > >> suggested, this enables to perform the access check on a file descriptor
+> > >> instead of on a file path (while opening it).  This may require two
+> > >> checks (one on open and then with faccessat2) but it is a more generic
+> > >> approach [8].
+> > > 
+> > > Again, why is that folded into lookup/open/whatnot, rather than being
+> > > an operation applied to a file (e.g. O_PATH one)?
+> > 
+> > I don't understand your question. AT_INTERPRETED can and should be used
+> > with AT_EMPTY_PATH. The two checks I wrote about was for IMA.
+> 
+> Al is saying you should add a new syscall, not try to fold it into
+> some existing syscall.
+> 
+> I agree with him.  Add a new syscall, just like you were told to do it
+> last time.
 
-Commit-ID:     360e7c5c4ca4fd8e627781ed42f95d58bc3bb732
-Gitweb:        https://git.kernel.org/tip/360e7c5c4ca4fd8e627781ed42f95d58bc3bb732
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Mon, 07 Sep 2020 15:15:06 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 07 Sep 2020 19:45:24 +02:00
+Sure, we'll do it. In the meantime, could we at least get an explanation
+about why using faccessat2() instead of a new syscall is wrong? I could
+see the reasons for separating the exec checks from the file opening,
+but this time I don't understand. Is it because it brings too much
+complexity to do_faccessat()?
 
-x86/cpufeatures: Add SEV-ES CPU feature
-
-Add CPU feature detection for Secure Encrypted Virtualization with
-Encrypted State. This feature enhances SEV by also encrypting the
-guest register state, making it in-accessible to the hypervisor.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-6-joro@8bytes.org
----
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kernel/cpu/amd.c          | 3 ++-
- arch/x86/kernel/cpu/scattered.c    | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 83fc9d3..1205c1b 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -236,6 +236,7 @@
- #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
- #define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
- #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
-+#define X86_FEATURE_SEV_ES		( 8*32+20) /* AMD Secure Encrypted Virtualization - Encrypted State */
- 
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index dcc3d94..6062ce5 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -614,7 +614,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 	 *	      If BIOS has not enabled SME then don't advertise the
- 	 *	      SME feature (set in scattered.c).
- 	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
--	 *            SEV feature (set in scattered.c).
-+	 *            SEV and SEV_ES feature (set in scattered.c).
- 	 *
- 	 *   In all cases, since support for SME and SEV requires long mode,
- 	 *   don't advertise the feature under CONFIG_X86_32.
-@@ -645,6 +645,7 @@ clear_all:
- 		setup_clear_cpu_cap(X86_FEATURE_SME);
- clear_sev:
- 		setup_clear_cpu_cap(X86_FEATURE_SEV);
-+		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
- 	}
- }
- 
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 62b137c..30f3549 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -41,6 +41,7 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
- 	{ X86_FEATURE_SME,		CPUID_EAX,  0, 0x8000001f, 0 },
- 	{ X86_FEATURE_SEV,		CPUID_EAX,  1, 0x8000001f, 0 },
-+	{ X86_FEATURE_SEV_ES,		CPUID_EAX,  3, 0x8000001f, 0 },
- 	{ 0, 0, 0, 0, 0 }
- };
- 
+-- 
+Thibaut Sautereau
+CLIP OS developer
