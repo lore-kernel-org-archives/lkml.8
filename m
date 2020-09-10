@@ -2,251 +2,266 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257B4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D71F2C07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22E0214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599754464;
-	bh=3wOMmE3uqzwiohKm7h1zQjT61Y1wBfIG5IP0os5xHtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R/DsBtKcT0d8ziJpUQzjSTfdBQjJ+xEXpGZIvsf/iSpdj5PW4IoES3zMc/Ec/FyWe
-	 VTSxdUAmr8fYjKAwPzpITR0Gg+yV0pH+xxYEdHQN1ihf8N2x2wfx7j7aASatZi0nCx
-	 369ipjN5FUtxUEjgQNh3HUKyl4Ok6DMI1LE8CUXs=
+	by mail.kernel.org (Postfix) with ESMTP id 6120C20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXNIrZm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgIJQOU (ORCPT
+        id S1725913AbgIJQQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:14:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45743 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgIJQJJ (ORCPT
+        Thu, 10 Sep 2020 12:16:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbgIJQLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:09:09 -0400
-Received: by mail-io1-f67.google.com with SMTP id u126so7643315iod.12;
-        Thu, 10 Sep 2020 09:09:08 -0700 (PDT)
+        Thu, 10 Sep 2020 12:11:35 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FF3C061757;
+        Thu, 10 Sep 2020 09:11:33 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id n13so6840268edo.10;
+        Thu, 10 Sep 2020 09:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YxVn4Zbme0obY4xg7KEutnAEvJ86ItKrhQOb0G4NIT0=;
+        b=PXNIrZm4N4a9wacThF0t8skTVZkBcy//jIg99gs5FlLylbGtIxtmGHee7gkUuyonwh
+         rDt9yf6zjELtKDAgRzCFOAPUmlR7BrI3E/vYHO1M82lxfKbGW+ay0CxodxILA7kFexGQ
+         i9W2jUUUdO8AvogeD1qK0C1Dgw/u0TVFAwwPW3q8XeY4w6x9iEGE9C2WmZPjJum5UF++
+         GO1Xsnj9ZTI9RtxLPimMi0lRE3rsXkTGGfiIMqs8R+AVUyi5n+zSyN0rSBglpa77Lz12
+         OTFdKPdTQH+EiFNnZvxrP2v5RnJ/IXQK8YNjV89YmE6JJtmtbASZWm7MYdYVGiPTmhbf
+         QaOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zc8GA9vTTSJxVHMRNbdfsfSw3v5NMHWSVWa3ZEF82EA=;
-        b=jdZPajd90q+C4bbbPn0SIpkL3oS6b1vB7PaphENit6lKgI2vgPBFdolK+Gj+T7jc3+
-         DCUIpZq23Ys5q1XHrsYjGYAAJvBMQTSGht0GBftyC+dSknTJ4iepRwt1oYvajJbBjYN2
-         JxmTya55bM73sXNhw9v+5kfxGlZaf8oIOY4F1COcdcK/VxmZX/oAO6HhCBaq+1T0gtQJ
-         InnWvIAVh29E1Oh4kFNyFD7bZNkB77ehZcUKrN0xCFcRf7Sydd+ItHFtrpb+bup7dH2j
-         Qnw5kWD+NM5PLLLPVcbbZRe1K1AmDnu1d/9mCtQl8wAM5bef4KxIgCM/LH+qNioevVe6
-         3ilA==
-X-Gm-Message-State: AOAM531IQRBTBlzjL2QzbQbqiaSy/G7oqouu+XI4AMTCpFlYNwztnBLE
-        JXcFh01x7vxHQLPGibc3ww==
-X-Google-Smtp-Source: ABdhPJwBzF9QDhz4zxfnBRc0JUca9uTxeJNx1KXRji3nNnPQRTLRmpi0RvbR/wzoxOKSqky6i5NlkA==
-X-Received: by 2002:a6b:f301:: with SMTP id m1mr7776065ioh.162.1599754147737;
-        Thu, 10 Sep 2020 09:09:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id l2sm3269509ilk.19.2020.09.10.09.09.06
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YxVn4Zbme0obY4xg7KEutnAEvJ86ItKrhQOb0G4NIT0=;
+        b=tkPqVZ5pNCCMu/un25ZyinvfDXjjio4tsvQIqAYXpqCsb19vpJ54DqXqcz8fOBgwo8
+         qs96lUnZVBgQMEqFT6kijz/UUiKl1gDNfMYHakdU3Iad4B2RL193VftVgebEFsgJ/Z5y
+         tOntulILXNVbIvu3TCHhot1zM4+YWn1xxC5mDfd2fVdqCtit0C2xsdcAT4uWtSBFPSy7
+         lHcASJiPeeT7lHnzO6K/9WYy9xyf0zDIQMpM75aRwBNJmoQ4e9msJUXsHf8P/ojYq9pf
+         JgBbQjWPFxrGOyCubtQFnbbqPdz2FcF3yQoQjY4uG049mBMgxTB1MkVuRNX9Hew0n98l
+         fZnw==
+X-Gm-Message-State: AOAM532sceo/0JY8wmn7+fT3bK0qKTIn+VDPxf524+YPPcPDa083YUkB
+        VeMw8QKLSVwDdo3ywd9Yn1q6d1l5grE=
+X-Google-Smtp-Source: ABdhPJytt1pyCAzdvEg6IQfDRSf25DP0w7m3e7RnygYQeTF1lSbbh5GTtg3q8WHvXgTVda6eQ9zvjQ==
+X-Received: by 2002:a05:6402:44e:: with SMTP id p14mr10319607edw.1.1599754290148;
+        Thu, 10 Sep 2020 09:11:30 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id k8sm7282911ejz.60.2020.09.10.09.11.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 09:09:07 -0700 (PDT)
-Received: (nullmailer pid 455740 invoked by uid 1000);
-        Thu, 10 Sep 2020 16:09:06 -0000
-Date:   Thu, 10 Sep 2020 10:09:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 06/11] PCI: brcmstb: Add control of rescal reset
-Message-ID: <20200910160906.GA449597@bogus>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-7-james.quinlan@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824193036.6033-7-james.quinlan@broadcom.com>
+        Thu, 10 Sep 2020 09:11:28 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     SW_Drivers@habana.ai, gregkh@linuxfoundation.org,
+        davem@davemloft.net, kuba@kernel.org
+Subject: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
+Date:   Thu, 10 Sep 2020 19:11:11 +0300
+Message-Id: <20200910161126.30948-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:30:19PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Some STB chips have a special purpose reset controller named RESCAL (reset
-> calibration).  The PCIe HW can now control RESCAL to start and stop its
-> operation.  On probe(), the RESCAL is deasserted and the driver goes
-> through the sequence of setting registers and reading status in order to
-> start the internal PHY that is required for the PCIe.
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 82 ++++++++++++++++++++++++++-
->  1 file changed, 81 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index acf2239b0251..041b8d109563 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -23,6 +23,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/pci.h>
->  #include <linux/printk.h>
-> +#include <linux/reset.h>
->  #include <linux/sizes.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> @@ -158,6 +159,16 @@
->  #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
->  #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
->  
-> +/* Rescal registers */
-> +#define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS			0x3
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK		0x4
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT	0x2
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK		0x2
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT		0x1
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK		0x1
-> +#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT		0x0
-> +
->  enum {
->  	RGR1_SW_INIT_1,
->  	EXT_CFG_INDEX,
-> @@ -247,6 +258,7 @@ struct brcm_pcie {
->  	const int		*reg_offsets;
->  	const int		*reg_field_info;
->  	enum pcie_type		type;
-> +	struct reset_control	*rescal;
->  };
->  
->  /*
-> @@ -965,6 +977,47 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
->  		dev_err(pcie->dev, "failed to enter low-power link state\n");
->  }
->  
-> +static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
-> +{
-> +	static const u32 shifts[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT,};
-> +	static const u32 masks[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK,
-> +		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK,};
-> +	const int beg = start ? 0 : PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS - 1;
-> +	const int end = start ? PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS : -1;
-> +	u32 tmp, combined_mask = 0;
-> +	u32 val = !!start;
-> +	void __iomem *base = pcie->base;
-> +	int i;
-> +
-> +	for (i = beg; i != end; start ? i++ : i--) {
-> +		tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> +		tmp = (tmp & ~masks[i]) | ((val << shifts[i]) & masks[i]);
-> +		writel(tmp, base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> +		usleep_range(50, 200);
-> +		combined_mask |= masks[i];
-> +	}
-> +
-> +	tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-> +	val = start ? combined_mask : 0;
-> +
-> +	return (tmp & combined_mask) == val ? 0 : -EIO;
-> +}
-> +
-> +static inline int brcm_phy_start(struct brcm_pcie *pcie)
-> +{
-> +	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-> +}
-> +
-> +static inline int brcm_phy_stop(struct brcm_pcie *pcie)
-> +{
-> +	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-> +}
-> +
->  static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->  {
->  	void __iomem *base = pcie->base;
-> @@ -992,11 +1045,15 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
->  static int brcm_pcie_suspend(struct device *dev)
->  {
->  	struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> +	int ret;
->  
->  	brcm_pcie_turn_off(pcie);
-> +	ret = brcm_phy_stop(pcie);
-> +	if (ret)
-> +		dev_err(pcie->dev, "failed to stop phy\n");
->  	clk_disable_unprepare(pcie->clk);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int brcm_pcie_resume(struct device *dev)
-> @@ -1009,6 +1066,12 @@ static int brcm_pcie_resume(struct device *dev)
->  	base = pcie->base;
->  	clk_prepare_enable(pcie->clk);
->  
-> +	ret = brcm_phy_start(pcie);
-> +	if (ret) {
-> +		dev_err(pcie->dev, "failed to start phy\n");
-> +		return ret;
-> +	}
-> +
->  	/* Take bridge out of reset so we can access the SERDES reg */
->  	brcm_pcie_bridge_sw_init_set(pcie, 0);
->  
-> @@ -1034,6 +1097,9 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->  {
->  	brcm_msi_remove(pcie);
->  	brcm_pcie_turn_off(pcie);
-> +	if (brcm_phy_stop(pcie))
-> +		dev_err(pcie->dev, "failed to stop phy\n");
-> +	reset_control_assert(pcie->rescal);
->  	clk_disable_unprepare(pcie->clk);
->  }
->  
-> @@ -1112,6 +1178,20 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "could not enable clock\n");
->  		return ret;
->  	}
-> +	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-> +	if (IS_ERR(pcie->rescal))
-> +		return PTR_ERR(pcie->rescal);
-> +
-> +	ret = reset_control_deassert(pcie->rescal);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-> +
-> +	ret = brcm_phy_start(pcie);
-> +	if (ret) {
-> +		dev_err(pcie->dev, "failed to start phy\n");
+This patch-set adds support for initializing and using the GAUDI NIC ports,
+functioning as scale-out interconnect when doing distributed Deep Learning
+training. The training can be performed over tens of thousands of GAUDIs
+and it is done using the RDMA-over-converged-Ethernet (RoCE) v2 protocol.
 
-4 calls to brcm_phy_cntl() and 4 error prints. Move the error print to 
-brcm_phy_cntl.
+Each GAUDI exposes 10x100GbE ports that are designed to scale-out the
+inter-GAUDI communication by integrating a complete communication engine
+on-die. This native integration allows users to use the same scaling
+technology, both inside the server and rack (termed as scale-up), as well
+as for scaling across racks (scale-out). The racks can be connected
+directly between GAUDI processors, or through any number of standard
+Ethernet switches.
 
-> +		reset_control_assert(pcie->rescal);
-> +		return ret;
-> +	}
->  
->  	ret = brcm_pcie_setup(pcie);
->  	if (ret)
-> -- 
-> 2.17.1
-> 
+The driver exposes the NIC ports to the user as standard Ethernet ports by
+registering each port to the networking subsystem. This allows the user to
+manage the ports with standard tools such as ifconfig, ethtool, etc. It
+also enables us to connect to the Linux networking stack and thus support
+standard networking protocols, such as IPv4, IPv6, TCP, etc. In addition,
+we can also leverage protocols such as DCB for dynamically configuring
+priorities to avoid congestion.
+
+For each NIC port there is a matching QMAN entity. For RoCE, the user
+submits workloads to the NIC through the QMAN, same as he does for the
+compute engines. For regular Ethernet, the user sends and receives packets
+through the standard Ethernet sockets. Those sockets are used only as a
+control path. The data path that is used for AI training goes through the
+RoCE interface.
+
+It is important to note that there are some limitations and uniqueness
+in GAUDI's NIC H/W, compared to other networking adapters that enforced us
+to use a less-than-common driver design:
+
+1. The NIC functionality is NOT exposed as different PCI Physical
+   Functions. There is a single PF which is used for compute and
+   networking, as the main goal of the NIC ports is to be used as
+   intra-communication and not as standard network interfaces. This
+   implies we can't connect different drivers to handle the networking
+   ports because it is the same device, from the kernel POV, as the
+   compute. Therefore, we must integrate the networking code into the
+   main habanalabs driver.
+
+2. Although our communication engine implements RDMA, and the driver code
+   uses well-known RDMA concepts such as QP context, CQ, WQ, etc., the
+   GAUDI architecture does NOT support other basic IBverbs concepts, such
+   as MR and protection domain. Therefore, we can't connect to the standard
+   IBverb infrastructure in the user-space and kernel (rdma-core library
+   and infiniband subsystem, respectively) because the standard RDMA s/w
+   and tools won't work on our H/W. Instead, we added a new IOCTL to the
+   driver's existing IOCTL API. The new IOCTL exposes the available
+   NIC control operations to the user (e.g. Create a QP context).
+
+3. The die-on communication engine provides minimal offloading for standard
+   Ethernet and TCP/IP protocols, as those are only used for control plane.
+   E.g. the packets are copied rather than using descriptors.
+   Therefore, the Ethernet performance is quite low compared to standard
+   Ethernet adapters.
+
+4. There is no virtualization support per port.
+
+Most or all of the above limitations will hopefully be improved in future
+ASIC generations.
+
+Patch-set organization:
+
+- Patches 1 & 2 are just adding some auto-generated register header files
+  and NIC-related definitions to the interface between the driver and the
+  GAUDI firmware. 
+
+- Patch 3 adds initialization of security restrictions on the NIC engines.
+
+- Patch 4 adds initialization of the NIC QMANs. The QMANs are needed to
+  send RDMA packets through the NIC engines.
+
+- Patches 5-11 adds the NIC driver code. It contains the basic Ethernet
+  driver and H/W initialization, the NIC PHY driver code and the new NIC
+  control IOCTL operations.
+
+- Patch 12-14 adds support for debugfs, ethtool and DCB.
+
+- Patch 15 adds the implementation of the high-level init/fini functions
+  and their calls from the common code. This is the patch that actually
+  enables the NIC ports and allows the user to work with them.
+
+Thanks,
+Oded
+
+
+Omer Shpigelman (15):
+  habanalabs/gaudi: add NIC H/W and registers definitions
+  habanalabs/gaudi: add NIC firmware-related definitions
+  habanalabs/gaudi: add NIC security configuration
+  habanalabs/gaudi: add support for NIC QMANs
+  habanalabs/gaudi: add NIC Ethernet support
+  habanalabs/gaudi: add NIC PHY code
+  habanalabs/gaudi: allow user to get MAC addresses in INFO IOCTL
+  habanalabs/gaudi: add a new IOCTL for NIC control operations
+  habanalabs/gaudi: add CQ control operations
+  habanalabs/gaudi: add WQ control operations
+  habanalabs/gaudi: add QP error handling
+  habanalabs/gaudi: add debugfs entries for the NIC
+  habanalabs/gaudi: Add ethtool support using coresight
+  habanalabs/gaudi: support DCB protocol
+  habanalabs/gaudi: add NIC init/fini calls from common code
+
+ .../ABI/testing/debugfs-driver-habanalabs     |   69 +
+ drivers/misc/habanalabs/common/context.c      |    1 +
+ drivers/misc/habanalabs/common/device.c       |   24 +-
+ drivers/misc/habanalabs/common/firmware_if.c  |   44 +
+ drivers/misc/habanalabs/common/habanalabs.h   |   33 +-
+ .../misc/habanalabs/common/habanalabs_drv.c   |   11 +
+ .../misc/habanalabs/common/habanalabs_ioctl.c |  151 +-
+ drivers/misc/habanalabs/common/pci.c          |    1 +
+ drivers/misc/habanalabs/gaudi/Makefile        |    4 +
+ drivers/misc/habanalabs/gaudi/gaudi.c         |  958 +++-
+ drivers/misc/habanalabs/gaudi/gaudiP.h        |  333 +-
+ .../misc/habanalabs/gaudi/gaudi_coresight.c   |  144 +
+ drivers/misc/habanalabs/gaudi/gaudi_nic.c     | 4063 +++++++++++++++++
+ drivers/misc/habanalabs/gaudi/gaudi_nic.h     |  354 ++
+ .../misc/habanalabs/gaudi/gaudi_nic_dcbnl.c   |  108 +
+ .../misc/habanalabs/gaudi/gaudi_nic_debugfs.c |  402 ++
+ .../misc/habanalabs/gaudi/gaudi_nic_ethtool.c |  582 +++
+ drivers/misc/habanalabs/gaudi/gaudi_phy.c     | 1272 ++++++
+ .../misc/habanalabs/gaudi/gaudi_security.c    | 3973 ++++++++++++++++
+ drivers/misc/habanalabs/goya/goya.c           |   44 +
+ .../misc/habanalabs/include/common/cpucp_if.h |   34 +-
+ .../include/gaudi/asic_reg/gaudi_regs.h       |   26 +-
+ .../include/gaudi/asic_reg/nic0_qm0_masks.h   |  800 ++++
+ .../include/gaudi/asic_reg/nic0_qm0_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic0_qm1_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic0_qpc0_masks.h  |  500 ++
+ .../include/gaudi/asic_reg/nic0_qpc0_regs.h   |  710 +++
+ .../include/gaudi/asic_reg/nic0_qpc1_regs.h   |  710 +++
+ .../include/gaudi/asic_reg/nic0_rxb_regs.h    |  508 +++
+ .../include/gaudi/asic_reg/nic0_rxe0_masks.h  |  354 ++
+ .../include/gaudi/asic_reg/nic0_rxe0_regs.h   |  158 +
+ .../include/gaudi/asic_reg/nic0_rxe1_regs.h   |  158 +
+ .../include/gaudi/asic_reg/nic0_stat_regs.h   |  518 +++
+ .../include/gaudi/asic_reg/nic0_tmr_regs.h    |  184 +
+ .../include/gaudi/asic_reg/nic0_txe0_masks.h  |  336 ++
+ .../include/gaudi/asic_reg/nic0_txe0_regs.h   |  264 ++
+ .../include/gaudi/asic_reg/nic0_txe1_regs.h   |  264 ++
+ .../include/gaudi/asic_reg/nic0_txs0_masks.h  |  336 ++
+ .../include/gaudi/asic_reg/nic0_txs0_regs.h   |  214 +
+ .../include/gaudi/asic_reg/nic0_txs1_regs.h   |  214 +
+ .../include/gaudi/asic_reg/nic1_qm0_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic1_qm1_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic2_qm0_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic2_qm1_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic3_qm0_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic3_qm1_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic4_qm0_regs.h    |  834 ++++
+ .../include/gaudi/asic_reg/nic4_qm1_regs.h    |  834 ++++
+ drivers/misc/habanalabs/include/gaudi/gaudi.h |   12 +
+ .../habanalabs/include/gaudi/gaudi_fw_if.h    |   24 +
+ .../habanalabs/include/gaudi/gaudi_masks.h    |   15 +
+ .../include/hw_ip/nic/nic_general.h           |   13 +
+ include/uapi/misc/habanalabs.h                |  296 +-
+ 53 files changed, 27497 insertions(+), 62 deletions(-)
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
+ create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
+
+-- 
+2.17.1
+
