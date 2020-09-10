@@ -2,106 +2,132 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF3EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E76C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 754A5208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CAD20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgIJVo3 (ORCPT
+        id S1728434AbgIJVol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:44:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:35360 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730879AbgIJM40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:56:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF2C01063;
-        Thu, 10 Sep 2020 05:55:44 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 141203F66E;
-        Thu, 10 Sep 2020 05:55:40 -0700 (PDT)
-Subject: Re: [PATCH 04/12] dma-mapping: fix DMA_OPS dependencies
-To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20200908164758.3177341-1-hch@lst.de>
- <20200908164758.3177341-5-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1e3c7094-62da-6e8c-0a41-0bc63dd3db68@arm.com>
-Date:   Thu, 10 Sep 2020 13:55:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20200908164758.3177341-5-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Sep 2020 17:44:41 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:32804 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730553AbgIJMy7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:54:59 -0400
+Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 10 Sep 2020 05:54:58 -0700
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 10 Sep 2020 05:54:56 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 10 Sep 2020 18:24:31 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id 794584401; Thu, 10 Sep 2020 18:24:30 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        dianders@chromium.org, satya priya <skakit@codeaurora.org>
+Subject: [PATCH V5 3/4] arm64: dts: qcom: sc7180-trogdor: Add pinctrl and interrupt config for BT UART
+Date:   Thu, 10 Sep 2020 18:23:57 +0530
+Message-Id: <1599742438-16811-4-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
+References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 17:47, Christoph Hellwig wrote:
-> Driver that select DMA_OPS need to depend on HAS_DMA support to
-> work.  The vop driver was missing that dependency, so add it, and also
-> add a nother depends in DMA_OPS itself.  That won't fix the issue due
-> to how the Kconfig dependencies work, but at least produce a warning
-> about unmet dependencies.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/misc/mic/Kconfig | 1 +
->   kernel/dma/Kconfig       | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/misc/mic/Kconfig b/drivers/misc/mic/Kconfig
-> index b9bb086785db48..8a7c2c5711d5f4 100644
-> --- a/drivers/misc/mic/Kconfig
-> +++ b/drivers/misc/mic/Kconfig
-> @@ -35,6 +35,7 @@ config SCIF_BUS
->   
->   config VOP_BUS
->   	tristate "VOP Bus Driver"
-> +	depends on HAS_DMA
->   	select DMA_OPS
+Add a suitable sleep configuration for uart3 to support Bluetooth wakeup.
 
-AFAICS all three of these bus drivers are only proxying a struct 
-dma_map_ops * pointer around, so if they used the set_dma_ops() helper 
-they shouldn't even need these selects at all. Only INTEL_MIC_HOST 
-appears to have a logical dependency on DMA_OPS for actual functionality.
+If QUP function is selected in sleep state, UART RTS/RFR is pulled high
+during suspend and BT SoC not able to send wakeup bytes. So, configure
+GPIO mode in sleep state to keep it low during suspend.
 
-However, I have a vague feeling you might not be fond of those dma_ops 
-helpers, and I have no great objection to this one-liner as-is, so 
-(modulo the couple of commit message typos),
+Signed-off-by: satya priya <skakit@codeaurora.org>
+---
+Changes in V5:
+ - Newly added in V5. This patch adds wakeup support for trogdor board files.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi | 48 ++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-(of course the hunk below is unquestionably OK)
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+index a6b9beb..96b5331 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+@@ -792,6 +792,11 @@ ap_spi_fp: &spi10 {
+ #include <arm/cros-ec-sbs.dtsi>
+ 
+ &uart3 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-1 = <&qup_uart3_sleep>;
++	interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
++				<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
++
+ 	status = "okay";
+ 
+ 	bluetooth: bluetooth {
+@@ -1345,4 +1350,47 @@ ap_spi_fp: &spi10 {
+ 			drive-strength = <2>;
+ 		};
+ 	};
++
++	qup_uart3_sleep: qup-uart3-sleep {
++		pinmux {
++			pins = "gpio38", "gpio39",
++			       "gpio40", "gpio41";
++			function = "gpio";
++		};
++
++		pinconf-cts {
++			/*
++			 * Configure a pull-down on CTS to match the pull of
++			 * the Bluetooth module.
++			 */
++			pins = "gpio38";
++			bias-pull-down;
++		};
++
++		pinconf-rts {
++			/*
++			 * Configure pull-down on RTS to make sure that the BT SoC can
++			 * wake up the system by sending wakeup bytes during suspend.
++			 */
++			 pins = "gpio39";
++			 bias-pull-down;
++		};
++
++		pinconf-tx {
++			/* Configure pull-up on TX when it isn't actively driven */
++			pins = "gpio40";
++			bias-pull-up;
++		};
++
++		pinconf-rx {
++			/*
++			 * Configure a pull-up on RX. This is needed to avoid
++			 * garbage data when the TX pin of the Bluetooth module is
++			 * in tri-state (module powered off or not driving the
++			 * signal yet).
++			 */
++			pins = "gpio41";
++			bias-pull-up;
++		};
++	};
+ };
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Robin.
-
->   	help
->   	  This option is selected by any driver which registers a
-> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> index 0ddfb5510fe45f..e7b801649f6574 100644
-> --- a/kernel/dma/Kconfig
-> +++ b/kernel/dma/Kconfig
-> @@ -9,6 +9,7 @@ config HAS_DMA
->   	default y
->   
->   config DMA_OPS
-> +	depends on HAS_DMA
->   	bool
->   
->   #
-> 
