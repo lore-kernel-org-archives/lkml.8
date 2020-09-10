@@ -2,114 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DBDC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACFBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9CED21D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F0221D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:19:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cyVeSnv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgIJCTQ (ORCPT
+        id S1730795AbgIJCTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:19:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22269 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730412AbgIJCNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:13:30 -0400
-IronPort-SDR: tg7JqTb3yYaey4qBcGFO8DDf2wpoAnFGcY6tCHl65BqL3AGXEmQSTGSLvipg33+DQGiAafOpet
- uad7GWg0mXsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155833449"
-X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="155833449"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:25:20 -0700
-IronPort-SDR: 97ngTUD1zf87z1J3aBsa0H7mLbs6F9XUx1PagpQMhF0Zgnk57KKBy1hAnm4cgbBt1RMBPolWPy
- 18nZ0L9a9LoQ==
-X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="329101836"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.243.130]) ([10.212.243.130])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:25:18 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
- <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
- <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
- <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
- <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
- <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
- <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
- <5979c58d-a6e3-d14d-df92-72cdeb97298d@intel.com>
- <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
- <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
- <a881837d-c844-30e8-a614-8b92be814ef6@intel.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <cbec8861-8722-ec31-2c02-1cfed20255eb@intel.com>
-Date:   Wed, 9 Sep 2020 16:25:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Wed, 9 Sep 2020 22:19:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57100 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730108AbgIJCMo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:12:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A2ASsc101063;
+        Thu, 10 Sep 2020 02:12:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=xq8O6+Mkgoe5Tzj4VMvD/cUTVj2LNoCaJIQm11Ox3Mo=;
+ b=cyVeSnv+W7Pb7yBAVNTmNuHsztNisGUgWm/bSy4TWYjmbz5P7L33JcLUFzPVHBu4ijZT
+ Fcdk0sR5HJcw9x7eN77FnF5g5oRJbfwG5nVHxQcucpVkHCnLvDiuE7ba8ZamTXL6y4Tp
+ tX2C7Wg1meGGM6Wb1rDeu5GpDm8eU1LHNy4qkWUEUsHglaOtZfFDoLBCnYhwNfZ8oAFT
+ 0FqqOpU6CG5MDwvUQRwavvCGr1SyC+QvPV2Gp31asoJEhWaQjeRMhpbMWY4FTyoZ/oTG
+ Yee+G90aFAI1Vt96/xVX+zU72Bw4S1s8qgtv4tGqjy5/4SYsWdOLPO54QpZ5m3XDIpOF lw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33c3an548v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 02:12:30 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A2Bdd0168544;
+        Thu, 10 Sep 2020 02:12:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 33dacmdwtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 02:12:29 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08A2CRj1030256;
+        Thu, 10 Sep 2020 02:12:28 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Sep 2020 19:12:27 -0700
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nilesh Javali <njavali@marvell.com>,
+        Martin Wilck <mwilck@suse.com>, Arun Easi <aeasi@marvell.com>
+Subject: Re: [PATCH v3 0/4] qla2xxx: A couple crash fixes
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1lfhi2xdv.fsf@ca-mkp.ca.oracle.com>
+References: <20200908081516.8561-1-dwagner@suse.de>
+Date:   Wed, 09 Sep 2020 22:12:25 -0400
+In-Reply-To: <20200908081516.8561-1-dwagner@suse.de> (Daniel Wagner's message
+        of "Tue, 8 Sep 2020 10:15:12 +0200")
 MIME-Version: 1.0
-In-Reply-To: <a881837d-c844-30e8-a614-8b92be814ef6@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 suspectscore=1 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100019
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=1 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/2020 4:11 PM, Dave Hansen wrote:
-> On 9/9/20 4:07 PM, Yu, Yu-cheng wrote:
->> What if a writable mapping is passed to madvise(MADV_SHSTK)?  Should
->> that be rejected?
-> 
-> It doesn't matter to me.  Even if it's readable, it _stops_ being even
-> directly readable after it's a shadow stack, right?  I don't think
-> writes are special in any way.  If anything, we *want* it to be writable
-> because that indicates that it can be written to, and we will want to
-> write to it soon.
-> 
-But in a PROT_WRITE mapping, all the pte's have _PAGE_BIT_RW set.  To 
-change them to shadow stack, we need to clear that bit from the pte's.
-That will be like mprotect_fixup()/change_protection_range().
 
+Daniel,
+
+> The first crash we observed is due memory corruption in the srb memory
+> pool. Unforuntatly, I couldn't find the source of the problem but the
+> workaround by resetting the cleanup callbacks 'fixes' this problem
+> (patch #1). I think as intermeditate step this should be merged until
+> the real cause can be identified.
+>
+> The second crash is due a race condition(?) in the firmware. The sts
+> entries are not updated in time which leads to this crash pattern
+> which several customers have reported:
+
+Applied to 5.10/scsi-staging. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
