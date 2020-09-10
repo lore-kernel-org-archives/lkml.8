@@ -2,93 +2,127 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB0C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE11C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48834214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599771055;
-	bh=/tExeEJ8/c6egD6eYM7a6JORIf/FIWn57CX8Gi2aybg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucM1lGtzknK6uW4Xr8qiPW9foygxxXx36Iq9zRQu/wcEGsUIbO2gRH1M4cy+Z5IZp
-	 HucJrJFSJUqaYEG1X1/1odHb17UW7nP+8Dm/BBm8w8+ZF54B1tinPL3TJ4SOwW1TAC
-	 rxK/skXHDzFZhYEWmwPAEdLA+tSuZghMDYoo+IOk=
+	by mail.kernel.org (Postfix) with ESMTP id 861C820829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XlGQF9Xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgIJUux (ORCPT
+        id S1726539AbgIJUvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgIJUUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:20:55 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA31E20829;
-        Thu, 10 Sep 2020 20:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599769254;
-        bh=/tExeEJ8/c6egD6eYM7a6JORIf/FIWn57CX8Gi2aybg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=roXGE+6Xt6Mwihhx5z530lCw62JdFx6VElpEsu0GymwOH7QAweMrWprIO53dQiUnl
-         ztzutQ8zt7YIFQLZokrzRI0USsQmJKrg2EWNkRfojvE5pZFa5EdRhnQrUx+Si9gk50
-         ZJBkoBVW72eT+wolEfaKHTMi0b2HUPnQbuUOCujw=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        alexei.starovoitov@gmail.com, daniel@iogearbox.net,
-        jolsa@redhat.com, bpf@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC tip/core/rcu 1/4] rcu-tasks: Mark variables static
-Date:   Thu, 10 Sep 2020 13:20:49 -0700
-Message-Id: <20200910202052.5073-1-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200910201956.GA24190@paulmck-ThinkPad-P72>
-References: <20200910201956.GA24190@paulmck-ThinkPad-P72>
+        Thu, 10 Sep 2020 16:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730068AbgIJO6n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:58:43 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8A8C061795;
+        Thu, 10 Sep 2020 07:58:40 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k13so1044584plk.3;
+        Thu, 10 Sep 2020 07:58:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c+jIOhRgqonxn9gWi6l8ZpfFwoQ7z7WBsHFiC8anX4Q=;
+        b=XlGQF9XuctO2DJYPSPyHeW/lhATtADGhO23JHJstE97qMSAVFSOSjRevCHH7cLnmaa
+         jKTk78ZhaxVjcb8GFw6y0ZK8/pc8YFnqe4Lgfvm350Yr4zOuigj1OwYcEZBH3Fa4Hopd
+         f2JXQHcI7zIHWelYGT6BuO83OC2dMWcNELYXUx4ZjPMrYWABvYwXh5wvauERBXEA/KCj
+         zCt73zratrDhMlwwRpv+qOG+TmdiqmVO5iKLq0V6KvZD3HDG8fJW3c7nnv6bHUbecrJX
+         YSQ8qskzWdy9o9G+gn160C00yYczl8y5zKz5xQ/4lfR4AV2VL6BYF64Yo15qph5FiK4V
+         D1Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c+jIOhRgqonxn9gWi6l8ZpfFwoQ7z7WBsHFiC8anX4Q=;
+        b=k1iFeVdRvPFwGcc0KG0CviBRulCH75QjTnk6SXPF0lHxkYlyHfFA19DEGfmF+urN5h
+         H3+B6NPyJ/iuqWO8us4gURIUrpOT7I9F9bUu0mOGWQOIGSOhOgaxyPUANtKjkMB37EoC
+         h3yZDlRt9rtaJN3YFKVCTAb7k06eWGU9ue1hE+QO1x+70mWpEdqRjzCd0EgPDr4ZamVQ
+         R9HN7EsZHB21qcSFH3vjYeoUVeFRheuG6itE/Vljqetj63N5d7XgZ5VSQFCRZU60HYQG
+         4ZPCuvHpMioau1V361I9AxZgGAOXD2o/UE9CU2J9nda9cukoEIdUZjrjXGS+ZJRFWzbr
+         L6og==
+X-Gm-Message-State: AOAM530NfY/T/L/SLP+oICPO8LR/KgGsSoZpsQb8TTs8+9hkzMfSIusK
+        Paor6MEoIkLzDsdjg17/m9c=
+X-Google-Smtp-Source: ABdhPJyTyJInU3Ew5guC7S18EaBMn+CWm5koR7QxwkkRlVYQ2qn3nQcqOq07OGTmQ8ifN6WumFExOg==
+X-Received: by 2002:a17:90a:81:: with SMTP id a1mr336645pja.136.1599749920004;
+        Thu, 10 Sep 2020 07:58:40 -0700 (PDT)
+Received: from Thinkpad ([45.118.165.135])
+        by smtp.gmail.com with ESMTPSA id j2sm5424250pga.12.2020.09.10.07.58.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 07:58:39 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 20:28:31 +0530
+From:   Anmol Karn <anmol.karan123@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: Re: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer
+ dereference in hci_event_packet()
+Message-ID: <20200910145831.GA33757@Thinkpad>
+References: <20200910043424.19894-1-anmol.karan123@gmail.com>
+ <20200910104918.GF12635@kadam>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910104918.GF12635@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Thu, Sep 10, 2020 at 01:49:18PM +0300, Dan Carpenter wrote:
+> On Thu, Sep 10, 2020 at 10:04:24AM +0530, Anmol Karn wrote:
+> > Prevent hci_phy_link_complete_evt() from dereferencing 'hcon->amp_mgr'
+> > as NULL. Fix it by adding pointer check for it.
+> > 
+> > Reported-and-tested-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> > Link: https://syzkaller.appspot.com/bug?extid=0bef568258653cff272f
+> > Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> > ---
+> >  net/bluetooth/hci_event.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> > index 4b7fc430793c..871e16804433 100644
+> > --- a/net/bluetooth/hci_event.c
+> > +++ b/net/bluetooth/hci_event.c
+> > @@ -4936,6 +4936,11 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+> >  		return;
+> >  	}
+> >  
+> > +	if (IS_ERR_OR_NULL(hcon->amp_mgr)) {
+> 
+> It can't be an error pointer.  Shouldn't we call hci_conn_del() on this
+> path?  Try to find the Fixes tag to explain how this bug was introduced.
+> 
+> (Don't rush to send a v2.  The patch requires quite a bit more digging
+> and detective work before it is ready).
+> 
+> > +		hci_dev_unlock(hdev);
+> > +		return;
+> > +	}
+> > +
+> >  	if (ev->status) {
+> >  		hci_conn_del(hcon);
+> >  		hci_dev_unlock(hdev);
+> 
+> regards,
+> dan carpenter
+> 
 
-The n_heavy_reader_attempts, n_heavy_reader_updates, and
-n_heavy_reader_ofl_updates variables are not used outside of their
-translation unit, so this commit marks them static.
+Sure sir, will  work on it, thanks for your review.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/rcu/tasks.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index 05d3e13..978508e 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -745,9 +745,9 @@ static DEFINE_PER_CPU(bool, trc_ipi_to_cpu);
- 
- // The number of detections of task quiescent state relying on
- // heavyweight readers executing explicit memory barriers.
--unsigned long n_heavy_reader_attempts;
--unsigned long n_heavy_reader_updates;
--unsigned long n_heavy_reader_ofl_updates;
-+static unsigned long n_heavy_reader_attempts;
-+static unsigned long n_heavy_reader_updates;
-+static unsigned long n_heavy_reader_ofl_updates;
- 
- void call_rcu_tasks_trace(struct rcu_head *rhp, rcu_callback_t func);
- DEFINE_RCU_TASKS(rcu_tasks_trace, rcu_tasks_wait_gp, call_rcu_tasks_trace,
--- 
-2.9.5
-
+Anmol Karn
