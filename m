@@ -2,61 +2,123 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C79C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 857B021D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA3721556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599766287;
+	bh=J+36KfiCj6ZqQvGQMiAmr/24p4yD+AflrA4ni1Zap14=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wF9m1e44mA2o3BAQp6R+CGkO4A8GNcVv5oTb2lLI9Hs339YqnAfkimIZTHt1v2l2m
+	 SnLpGnAVzyYAoN/VGcqaAZ/taVM7xfZCn7kokcABrSm8MdrAYMjoVb1Iv2aODto5BY
+	 99mvItvN76chjPgRx9mkdGgDN2SZk/YqweMQTZh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgIJTbP (ORCPT
+        id S1727964AbgIJTb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgIJTar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:30:47 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABD34C061573;
-        Thu, 10 Sep 2020 12:30:43 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3D17812A2C1EC;
-        Thu, 10 Sep 2020 12:13:56 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 12:30:42 -0700 (PDT)
-Message-Id: <20200910.123042.1871577422517113304.davem@davemloft.net>
-To:     geliangtang@gmail.com
-Cc:     mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-        kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [MPTCP][PATCH net] mptcp: fix kmalloc flag in
- mptcp_pm_nl_get_local_id
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <edf5e512a6932d9169f77d9cd5c89aa198b20d31.1599620248.git.geliangtang@gmail.com>
-References: <edf5e512a6932d9169f77d9cd5c89aa198b20d31.1599620248.git.geliangtang@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 10 Sep 2020 12:13:56 -0700 (PDT)
+        Thu, 10 Sep 2020 15:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726512AbgIJT3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:29:39 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E811821D92;
+        Thu, 10 Sep 2020 19:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599766176;
+        bh=J+36KfiCj6ZqQvGQMiAmr/24p4yD+AflrA4ni1Zap14=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xPBKvVFpHggxzO23tGiSaky0KlkF4+un8LWAPbmZObck71qM/avY7UqWtG577qnY0
+         PnA5fZOLc357YA1FVO32FkV6B0h+ZvtEKxwKl3Jnz5KJxQ9pvava+qp9B+q6Tttgta
+         mqfZp2Q4IUeXW9ww6qq3T2nooXdigTyVomwfhcsc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 4/4] crypto: allwinner/sun8i - Simplify with dev_err_probe()
+Date:   Thu, 10 Sep 2020 21:29:19 +0200
+Message-Id: <20200910192919.12503-4-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910192919.12503-1-krzk@kernel.org>
+References: <20200910192919.12503-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Wed,  9 Sep 2020 11:01:24 +0800
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-> mptcp_pm_nl_get_local_id may be called in interrupt context, so we need to
-> use GFP_ATOMIC flag to allocate memory to avoid sleeping in atomic context.
- ...
-> Fixes: 01cacb00b35cb ("mptcp: add netlink-based PM")
-> Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Applied.
+---
+
+Changes since v1:
+1. None
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 9 +++------
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 9 +++------
+ 2 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+index 138759dc8190..e3c62051c595 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+@@ -573,12 +573,9 @@ static int sun8i_ce_probe(struct platform_device *pdev)
+ 		return irq;
+ 
+ 	ce->reset = devm_reset_control_get(&pdev->dev, NULL);
+-	if (IS_ERR(ce->reset)) {
+-		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
+-			return PTR_ERR(ce->reset);
+-		dev_err(&pdev->dev, "No reset control found\n");
+-		return PTR_ERR(ce->reset);
+-	}
++	if (IS_ERR(ce->reset))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ce->reset),
++				     "No reset control found\n");
+ 
+ 	mutex_init(&ce->mlock);
+ 
+diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+index 9a23515783a6..576df8c8df51 100644
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+@@ -545,12 +545,9 @@ static int sun8i_ss_probe(struct platform_device *pdev)
+ 		return irq;
+ 
+ 	ss->reset = devm_reset_control_get(&pdev->dev, NULL);
+-	if (IS_ERR(ss->reset)) {
+-		if (PTR_ERR(ss->reset) == -EPROBE_DEFER)
+-			return PTR_ERR(ss->reset);
+-		dev_err(&pdev->dev, "No reset control found\n");
+-		return PTR_ERR(ss->reset);
+-	}
++	if (IS_ERR(ss->reset))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ss->reset),
++				     "No reset control found\n");
+ 
+ 	mutex_init(&ss->mlock);
+ 
+-- 
+2.17.1
+
