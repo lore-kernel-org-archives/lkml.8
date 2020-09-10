@@ -2,217 +2,131 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6A9C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6097AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0B3421D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1048821D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="fcQ8pRBP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jm0FeBub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgIJNos (ORCPT
+        id S1730876AbgIJNrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47190 "EHLO
+        Thu, 10 Sep 2020 09:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730919AbgIJNeI (ORCPT
+        with ESMTP id S1730927AbgIJNjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:34:08 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB70AC061796
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:33:57 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id y13so7075637iow.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:33:57 -0700 (PDT)
+        Thu, 10 Sep 2020 09:39:06 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B2BC061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:34 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id c3so930063plz.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NA4xq/RvWtw1DoG4R42VuDAYvxbq5gOs0uGkp97do30=;
-        b=fcQ8pRBPaEWiThwI4IpJI/6RvrpktlhqIcuTs8ion57IfAcoLZwMinlg018HPs4g0P
-         PfERQLGzgxTimYY/S16DcluJPa3UrMAv2VeDrvrD2khzMlgcNU3uG+U66xQTcGI4k/PB
-         tyd6Y57erW7Jw7CdoQkzGYnD3z09a+1xAJWCw3ZTA9vq0DdHjCGpzxmBZebxDdyQNZ5o
-         a8n4/aQGMi16zmzKxYbuyXtVYNEIktp6No97ibi4qLI+zDV4g/TXIXD87q5g2S3KNUFg
-         wjgBbIjqjQrEef6DxEeF173z4nhe4RTeiKBDtbYrCu4PSy+IwGvrlXsJFLKINZmU1V2I
-         yoXQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=N3mgJASizexPLNkdFt4Wcjn+xRiScZKeT3febPP2GBs=;
+        b=jm0FeBubSLNdmOw7edyREhQe0fHd7uC1w3dnmUfrc1pPQA9LjHaAGbmQmlzdWirFNI
+         zATrB/jWrCY/mvh5sRgI21Jdv6tCgd4nwF67n6J0i3+akIH16jJe1P8fn5kuNIRFBBJy
+         AjVBalKDmuD35a49JkSS04+cwj4A3cjMwkzu/lrltDB2LXekFJBua8k6M3VCGUDoEmif
+         tzJICDtdTfeg2enYNGt9lQw4mewr7jRWXqMoVXMM7ehzyjjJlj4OqNeKQAk4/sxMDe0/
+         IaMfUp1ctePiLCggBZ+SFFrEL2W7R8iVMoze9fLs9WEt41HK2TMNntRYjuU6WgjbMLtT
+         c1iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NA4xq/RvWtw1DoG4R42VuDAYvxbq5gOs0uGkp97do30=;
-        b=E21Bcc6nIY2e/AQRIGCr9vN0gDn1Ik4JNGyzjtUbimz/A17K6lrFx6s0/fjSirDbsS
-         YiFDOcN8qbge8mmwMisyJN7a728I6GUiRvsjcWv55jwnyyMmsydtB8oOeZMBmKx7/cTL
-         oE72OgcWXrqJQNF1+koYu8KMSakmsS07mqKm3dsLe+hJkr0dtT2XDjG/ts9AnrIv8f6T
-         6WJ6BCd0iLJSADhhdeiyiD+QHq+12ayR79C3WEgOKf+Y5oRTmsPFOypeFK4Bq/NixxYd
-         08QgWMI881ketFdwshd2vg1HCESqZaTfop2SqhlvVM+HlHOb8O4bH+mza5ofeMWh4qXJ
-         c0Og==
-X-Gm-Message-State: AOAM533sjPzS+FA2rI6KzTEbi7C1WZDPbMxu+GwzypZPfCaSnLSriyw2
-        /4eUKGP5nrTN97CPDgu3S5b+fJJzZ7CNp1LJu7JIDQ==
-X-Google-Smtp-Source: ABdhPJzlID7Qr9FJiMTGq9orpwBT55dMvomyRpqx73nK5lHz5vZjsdxpDDRxLur0/nChDVSeWcISfULGX7CKyavrOhU=
-X-Received: by 2002:a02:834a:: with SMTP id w10mr8873252jag.63.1599744834395;
- Thu, 10 Sep 2020 06:33:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org> <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com> <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com> <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
- <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com> <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
- <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com> <b27cae1f-07ff-bef2-f125-a5f0d968016d@linux.intel.com>
- <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
- <7106602a-9964-851e-9c4e-d8acf4033b89@linux.intel.com> <ea24e077-5aa6-dd8e-69a7-d186b606703f@linux.intel.com>
-In-Reply-To: <ea24e077-5aa6-dd8e-69a7-d186b606703f@linux.intel.com>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Thu, 10 Sep 2020 14:33:43 +0100
-Message-ID: <CALQxJus4prs0T6G9Z4bw5BDgwmkaiynBcoknLsYEY45SNZ6Ukg@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
- dma-iommu api
-To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc:     kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=N3mgJASizexPLNkdFt4Wcjn+xRiScZKeT3febPP2GBs=;
+        b=cfw3RFczeiV0vPFOcN2eS7aIOLf0MOtvOXTYbRfe8gpx39wXPp9n1Fiye3KOy74Ql3
+         T7p6b2SKL31RSiLnBrnNYOHdVPEwlj0ls8mAwPU28bfCceQhWdulciMZ28T59H9gkofm
+         pGR+6xHytY9T/7VQS3rsEo8PTBwkrAh1AsM27VDMSXfk0PN72kQl/49HPyvLSfb4Hm5+
+         VKjwd0KCu4bLpJQHb9MQZ4BDximqOMOFm0UuRvASzexG+aeequEkxjYXlKxNDNcBzXaL
+         CQ7Rh3p3rlS+ij3xTdwHdwxnLMDPZqXdnixWx+O42Rl59RB3cv4N12CZAwTCfSU6/nsq
+         cxLw==
+X-Gm-Message-State: AOAM533lzT4MP6FCODmqbRzeU60bDq4G42Y/MaqAkQ4uwwchw6g8iJa9
+        d8iYcmqf8JEFyz6C2L9IgL/Q
+X-Google-Smtp-Source: ABdhPJxRELGnMm3DJ89Rir5TtGhJ47XLeP1KTjwsnp7EbUrctdExJ5hMzEP2U6K/qP0+ei6wNUSEag==
+X-Received: by 2002:a17:902:8f98:b029:d1:870b:469e with SMTP id z24-20020a1709028f98b02900d1870b469emr5877515plo.3.1599745102152;
+        Thu, 10 Sep 2020 06:38:22 -0700 (PDT)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id o30sm5603801pgc.45.2020.09.10.06.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 06:38:21 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev.kurt@vandijck-laurijssen.be,
+        o.rempel@pengutronix.de,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 1/6] can: rx-offload: can_rx_offload_add_manual(): add new initialization function
+Date:   Thu, 10 Sep 2020 19:08:01 +0530
+Message-Id: <20200910133806.25077-2-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
+References: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 at 13:56, Tvrtko Ursulin
-<tvrtko.ursulin@linux.intel.com> wrote:
->
->
-> On 09/09/2020 10:16, Tvrtko Ursulin wrote:
-> > On 08/09/2020 23:43, Tom Murphy wrote:
-> >> On Tue, 8 Sep 2020 at 16:56, Tvrtko Ursulin
-> >> <tvrtko.ursulin@linux.intel.com> wrote:
-> >>> On 08/09/2020 16:44, Logan Gunthorpe wrote:
-> >>>> On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
-> >>>>>>
-> >>>>>> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
-> >>>>>> b/drivers/gpu/drm/i915/i915
-> >>>>>> index b7b59328cb76..9367ac801f0c 100644
-> >>>>>> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
-> >>>>>> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-> >>>>>> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
-> >>>>>>     } __sgt_iter(struct scatterlist *sgl, bool dma) {
-> >>>>>>            struct sgt_iter s = { .sgp = sgl };
-> >>>>>>
-> >>>>>> +       if (sgl && !sg_dma_len(s.sgp))
-> >>>>>
-> >>>>> I'd extend the condition to be, just to be safe:
-> >>>>>       if (dma && sgl && !sg_dma_len(s.sgp))
-> >>>>>
-> >>>>
-> >>>> Right, good catch, that's definitely necessary.
-> >>>>
-> >>>>>> +               s.sgp = NULL;
-> >>>>>> +
-> >>>>>>            if (s.sgp) {
-> >>>>>>                    s.max = s.curr = s.sgp->offset;
-> >>>>>> -               s.max += s.sgp->length;
-> >>>>>> -               if (dma)
-> >>>>>> +
-> >>>>>> +               if (dma) {
-> >>>>>> +                       s.max += sg_dma_len(s.sgp);
-> >>>>>>                            s.dma = sg_dma_address(s.sgp);
-> >>>>>> -               else
-> >>>>>> +               } else {
-> >>>>>> +                       s.max += s.sgp->length;
-> >>>>>>                            s.pfn = page_to_pfn(sg_page(s.sgp));
-> >>>>>> +               }
-> >>>>>
-> >>>>> Otherwise has this been tested or alternatively how to test it?
-> >>>>> (How to
-> >>>>> repro the issue.)
-> >>>>
-> >>>> It has not been tested. To test it, you need Tom's patch set without
-> >>>> the
-> >>>> last "DO NOT MERGE" patch:
-> >>>>
-> >>>> https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
-> >>>
-> >>> Tom, do you have a branch somewhere I could pull from? (Just being lazy
-> >>> about downloading a bunch of messages from the archives.)
-> >>
-> >> I don't unfortunately. I'm working locally with poor internet.
-> >>
-> >>>
-> >>> What GPU is in your Lenovo x1 carbon 5th generation and what
-> >>> graphical/desktop setup I need to repro?
-> >>
-> >>
-> >> Is this enough info?:
-> >>
-> >> $ lspci -vnn | grep VGA -A 12
-> >> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD
-> >> Graphics 620 [8086:5916] (rev 02) (prog-if 00 [VGA controller])
-> >>      Subsystem: Lenovo ThinkPad X1 Carbon 5th Gen [17aa:224f]
-> >>      Flags: bus master, fast devsel, latency 0, IRQ 148
-> >>      Memory at eb000000 (64-bit, non-prefetchable) [size=16M]
-> >>      Memory at 60000000 (64-bit, prefetchable) [size=256M]
-> >>      I/O ports at e000 [size=64]
-> >>      [virtual] Expansion ROM at 000c0000 [disabled] [size=128K]
-> >>      Capabilities: [40] Vendor Specific Information: Len=0c <?>
-> >>      Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
-> >>      Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-> >>      Capabilities: [d0] Power Management version 2
-> >>      Capabilities: [100] Process Address Space ID (PASID)
-> >>      Capabilities: [200] Address Translation Service (ATS)
-> >
-> > Works for a start. What about the steps to repro? Any desktop
-> > environment and it is just visual corruption, no hangs/stalls or such?
-> >
-> > I've submitted a series consisting of what I understood are the patches
-> > needed to repro the issue to our automated CI here:
-> >
-> > https://patchwork.freedesktop.org/series/81489/
-> >
-> > So will see if it will catch something, or more targeted testing will be
-> > required. Hopefully it does trip over in which case I can add the patch
-> > suggested by Logan on top and see if that fixes it. Or I'll need to
-> > write a new test case.
-> >
-> > If you could glance over my series to check I identified the patches
-> > correctly it would be appreciated.
->
-> Our CI was more than capable at catching the breakage so I've copied you
-> on a patch (https://patchwork.freedesktop.org/series/81497/) which has a
-> good potential to fix this. (Or improve the robustness of our sg walks,
-> depends how you look at it.)
->
-> Would you be able to test it in your environment by any chance? If it
-> works I understand it unblocks your IOMMU work, right?
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 
-I tested your latest patch set ([PATCH 1/2] drm/i915: Fix DMA mapped
-scatterlist walks) and it fixes the issue. great work!
+This patch adds a new initialization function:
+can_rx_offload_add_manual()
 
->
-> Regards,
->
-> Tvrtko
+It should be used to add support rx-offload to a driver, if the callback
+mechanism should not be used. Use e.g. can_rx_offload_queue_sorted() to queue
+skbs into rx-offload.
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/net/can/rx-offload.c   | 11 +++++++++++
+ include/linux/can/rx-offload.h |  3 +++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/drivers/net/can/rx-offload.c b/drivers/net/can/rx-offload.c
+index e8328910a234..3b180269a92d 100644
+--- a/drivers/net/can/rx-offload.c
++++ b/drivers/net/can/rx-offload.c
+@@ -351,6 +351,17 @@ int can_rx_offload_add_fifo(struct net_device *dev,
+ }
+ EXPORT_SYMBOL_GPL(can_rx_offload_add_fifo);
+ 
++int can_rx_offload_add_manual(struct net_device *dev,
++			      struct can_rx_offload *offload,
++			      unsigned int weight)
++{
++	if (offload->mailbox_read)
++		return -EINVAL;
++
++	return can_rx_offload_init_queue(dev, offload, weight);
++}
++EXPORT_SYMBOL_GPL(can_rx_offload_add_manual);
++
+ void can_rx_offload_enable(struct can_rx_offload *offload)
+ {
+ 	napi_enable(&offload->napi);
+diff --git a/include/linux/can/rx-offload.h b/include/linux/can/rx-offload.h
+index 1b78a0cfb615..f1b38088b765 100644
+--- a/include/linux/can/rx-offload.h
++++ b/include/linux/can/rx-offload.h
+@@ -35,6 +35,9 @@ int can_rx_offload_add_timestamp(struct net_device *dev,
+ int can_rx_offload_add_fifo(struct net_device *dev,
+ 			    struct can_rx_offload *offload,
+ 			    unsigned int weight);
++int can_rx_offload_add_manual(struct net_device *dev,
++			      struct can_rx_offload *offload,
++			      unsigned int weight);
+ int can_rx_offload_irq_offload_timestamp(struct can_rx_offload *offload,
+ 					 u64 reg);
+ int can_rx_offload_irq_offload_fifo(struct can_rx_offload *offload);
+-- 
+2.17.1
+
