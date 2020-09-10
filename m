@@ -2,71 +2,121 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BE1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544D7C2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16B221D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB92221D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rabPDSXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgIJDO3 (ORCPT
+        id S1728207AbgIJDRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 23:14:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58844 "EHLO huawei.com"
+        Wed, 9 Sep 2020 23:17:06 -0400
+Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:43087
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726976AbgIJDOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 23:14:22 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6E1C1469BF9A48FFFFD1;
-        Thu, 10 Sep 2020 11:14:07 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
- 11:14:00 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <mikita.lipski@amd.com>,
-        <eryk.brol@amd.com>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] drm/amd/display: Create trigger_hotplug entry
-Date:   Thu, 10 Sep 2020 11:13:52 +0800
-Message-ID: <20200910031352.39992-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1725772AbgIJDQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 23:16:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XjIMWoJmcidzo0sSvB0kXn7zlCI20J/JRyHFPSacY5iM+IQAmhDVck6nrrcFd1Uj5lzZopHJWYQluSGoaDQN83KNTDkIca/T0EeEb5bp/d8dgIYA1M/GiTC2dYjSbUInsV7VUWXZ7sTouKTJieNJdtogbWImaI8FvxzJdBDujgt4Taj77b8LWNoBEROhLdNXo9BUTdmf+ldJSDd9MS7p6ENBaYLt2FHNfweh+1O9ueDxTZiDIgzpBPYSwjUZda9FZ6qe+G0rwCA/ZT0jkhTuErZYD66aQ4hVNhbk2RNBrtPMGJhbX3sDoYHcQd29tKPsqJl8BWzsoAgkZgTkMFKW9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RzMB1RtRmHT2LEurca5owpJhNXNKz3fch28kMHBq8E4=;
+ b=Nb6fA1K2bN4c/tXuDBg0HYZoota5lJWNFV91uWinPefceDmSjlYVJVp7leMrDjt+uhNICx2fuNs3pKoNWFd4X3OkkRX4+TcG1vGxJKEdxYUsdExJOyR0vufcgJXBHNY4Ne6XDXrX0dBVy1aLLRKnMrTDGn47d3CbnfDfO1K3M1Jm9S4B09xM4hBKKA5xtpQgoT5pZ/dFKQlTw3xToNbDDH6FC6k2ODZyKSV0Rs9laWJ9bvHQRn8D3x6YVcLIbZpBGNxmhLfDnJiy3n9lMOEE2U1DxEoWrDQ1TgqpCWtwInh52gAvgRBdfgCyCWEVOfeaY+I4L31gr4EO7rYcoAtI3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RzMB1RtRmHT2LEurca5owpJhNXNKz3fch28kMHBq8E4=;
+ b=rabPDSXyH5kTj+V9xYm5Wwtyv07ilf85Jbth0q74VvVkfbrb2oqhHGqfMR6a0uBlJveW5D7k1Bop8g9ES3d5QEi6IokUZDDnB9f3Wyv8RQppZQWDdcJODaWMG3SohcWP8oxTvf1WaYK9Xu3D+rKvqUYg4H9SvsXjt5cwmPENQBM=
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (2603:10a6:803:129::26)
+ by VI1PR04MB4861.eurprd04.prod.outlook.com (2603:10a6:803:5e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Thu, 10 Sep
+ 2020 03:16:54 +0000
+Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::f16e:a79:2203:5d35]) by VE1PR04MB6768.eurprd04.prod.outlook.com
+ ([fe80::f16e:a79:2203:5d35%6]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 03:16:54 +0000
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] dt-bindings: rtc-2127: Add bindings for
+ nxp,rtc-2127.txt
+Thread-Topic: [PATCH 1/3] dt-bindings: rtc-2127: Add bindings for
+ nxp,rtc-2127.txt
+Thread-Index: AQHWfFOV2mqT9X+P3UaXnJvGvvBfp6lg1ekAgAByYLA=
+Date:   Thu, 10 Sep 2020 03:16:54 +0000
+Message-ID: <VE1PR04MB676899EEA79D59061FE91BF691270@VE1PR04MB6768.eurprd04.prod.outlook.com>
+References: <20200827091441.12972-1-qiang.zhao@nxp.com>
+ <20200909202456.GA3019412@bogus>
+In-Reply-To: <20200909202456.GA3019412@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b0e7f88f-3c85-47e4-ebab-08d85537f828
+x-ms-traffictypediagnostic: VI1PR04MB4861:
+x-microsoft-antispam-prvs: <VI1PR04MB4861D6E3BDE1683423A1A0ED91270@VI1PR04MB4861.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 56gMhD2cqRpybUVu9y77JginETd/AsUHMLhPjEoYOWEPdgVG6xe+y+RTmkzGQhSccaIi/R+r3lExzIT2KoQoWQTmomf1Ma6x1jSLrhXQf9Gh7TSQWBFbCMpE1/dGzj7mGtKk8ANoJIU3IV/dv4wFEQrN6aBx9y9DjDnHwV4X+W2l0uT01ZKbxVhkixbQyNZaegzli6s9UApjMhlKTPaGBhr4aPfhDBcBUutsCg3dxF8hDDTc/yoijlS/pB3kosTTZPa6Jokvxfb57dNUkoDUKdx1v59wYkzIxq2Dy7SlCOtci1gDYABgJJddG5jrDM0643jWm1eq+3kcd8HJ9iYpk7oQ5CwzvJWIjOsS24fBKgObrHlMFfwqt+kl04cQUI0R
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6768.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(346002)(366004)(376002)(136003)(86362001)(316002)(66476007)(64756008)(2906002)(83380400001)(52536014)(54906003)(6916009)(44832011)(26005)(4744005)(186003)(66446008)(4326008)(478600001)(7696005)(33656002)(71200400001)(5660300002)(66556008)(66946007)(8936002)(8676002)(55016002)(53546011)(76116006)(9686003)(6506007)(142933001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: d7/60eH/M1D26icCGQB8gp5zF9WIv/cLluhFT7kwko2Qh5D2H1824Q3jr4Kj11IFkiuh2G/FWVhSiGS7XeeBCQMV+AMLTnLUiZPWtGsbd31IxmCY1DoF8KHtyP/pbZgwhhHLe+JkG+gNp7UkJn7uXqet7/JaE69Ng3RNJeTJrX8t07MgpPjGme2gZCMYGwNTYImQaAjU5oQnxCrL3zf0Oz8654OJJNoJWuM9Gvxtb1c8kIjTK2TmzHFjTXWADCAIrSw+2ecTeEcCfUTo6ePMmyP8pXcbelREPBHCbLDA1fcGdQ/tmONXWBNuwsE8yy0d91u8roonpO7SaGpbtrLjRghXXXcUmKdkbuAljZTeZQU34onZjsmSHpteT5/Hd+0GKX7PSIo3NMejJJP2xejINo8s7uFMhWm+ixOXNHcscYZcPBfShRSl5wiFhoIy+xsZWvBhh8Ix3imQ95ARofYqygH0qdJ7E2QN2LKmYlzKxSNBan6tp4NKikBJd7YkeYxkAxEeUDLCrTWfZ2xmpRUEWkdX4Yf3lFveRkwOAgWNuUOBYunfCL63S+SoEZ/OfaJuRWz/kFdb++Ll2oTJVWLa8TjeE/TITjdsvhv9tvcDi/TO+86DDx8TF1C6+c3J1HwZmyGib1aHbXS1ZprMRqiJew==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6768.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0e7f88f-3c85-47e4-ebab-08d85537f828
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 03:16:54.6159
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zTJe9tzM06lC2xnty/uILwIb8RtWXiQ4OdYhyeZkDZ3O2IdPYgG4SfFe+tGNWnb+IHf1iICZL2WZnXzQIDiiZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4861
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add trigger_hotplug debugfs entry.
-
-Fixes: 6f77b2ac6280 ("drm/amd/display: Add connector HPD trigger debugfs entry")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
-index 94fcb086154c..83da24aced45 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c
-@@ -2098,6 +2098,7 @@ static const struct {
- 	const struct file_operations *fops;
- } dp_debugfs_entries[] = {
- 		{"link_settings", &dp_link_settings_debugfs_fops},
-+		{"trigger_hotplug", &dp_trigger_hotplug_debugfs_fops},
- 		{"phy_settings", &dp_phy_settings_debugfs_fop},
- 		{"test_pattern", &dp_phy_test_pattern_fops},
- #ifdef CONFIG_DRM_AMD_DC_HDCP
--- 
-2.17.1
-
-
+T24gVGh1LCBTZXAgMTAsIDIwMjAgYXQgMDQ6MjVBTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
+Lm9yZz4gd3JvdGU6DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjDE6jnUwjEwyNUgNDoyNQ0KPiBU
+bzogUWlhbmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPg0KPiBDYzogYS56dW1tb0B0b3dlcnRl
+Y2guaXQ7IGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tOw0KPiBsaW51eC1ydGNAdmdlci5r
+ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gZHQtYmluZGluZ3M6IHJ0
+Yy0yMTI3OiBBZGQgYmluZGluZ3MgZm9yDQo+IG54cCxydGMtMjEyNy50eHQNCj4gDQo+IE9uIFRo
+dSwgQXVnIDI3LCAyMDIwIGF0IDA1OjE0OjM5UE0gKzA4MDAsIFFpYW5nIFpoYW8gd3JvdGU6DQo+
+ID4gRnJvbTogWmhhbyBRaWFuZyA8cWlhbmcuemhhb0BueHAuY29tPg0KPiA+DQo+ID4gQWRkIGJp
+bmRpbmdzIGZvciBueHAscnRjLTIxMjcNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW8gUWlh
+bmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3J0Yy9ueHAscnRjLTIxMjcudHh0IHwgMTgNCj4gKysrKysrKysrKysr
+KysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL254
+cCxydGMtMjEyNy50eHQNCj4gDQo+IEJpbmRpbmdzIHNob3VsZCBiZSBpbiBEVCBzY2hlbWEgZm9y
+bWF0IG5vdy4NCg0KSXMgdGhlcmUgYW55IGRvYyBkZXNjcmlwdGlvbiBmb3IgRFQgc2NoZW1hIGZv
+cm1hdCBvciBleGFtcGxlIA0KU28gdGhhdCBJIGNhbiB0YWtlIGFzIGEgcmVmZXJlbmNlLiBUaGFu
+ayB5b3UhDQoNCkJlc3QgUmVnYXJkcw0KUWlhbmcgWmhhbw0K
