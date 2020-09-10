@@ -2,98 +2,63 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E00C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E66C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC0E0214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:42:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+WxcfKU"
+	by mail.kernel.org (Postfix) with ESMTP id E4F36214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgIJQmV (ORCPT
+        id S1727070AbgIJQnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgIJQi4 (ORCPT
+        Thu, 10 Sep 2020 12:43:42 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:52470 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgIJQjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:38:56 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D61C06179B;
-        Thu, 10 Sep 2020 09:31:13 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id c10so5833649otm.13;
-        Thu, 10 Sep 2020 09:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=ZLflO+6y2CV3/36DCXEjAkXxKljpWSRITCgyl2EiC0E=;
-        b=h+WxcfKUGurTr1Vg8vZwYENOYIbO1DOxXVl8Xda6agOKRjwLTrSyAgxMznXVpYX8Mi
-         CccsFN7kQjAUeB5YIr7unKtqjkw5h/ArbKznGmFNlJ8hYiCeCwClYWFh+EUHv0ATdSzW
-         O7vxYexA0wV+sXea809M/UT2QghMMY5dhB1GvjHZZJwltFyCUuY2DfvjvhoQemxhs+sX
-         OMeI5MGuF++hiKL0OY1eC0pcr6WxkV4EY78J6f8GlXUJrFUJry1PvY7SkVBz7vdytA3O
-         iW6gDpqS/OtQU2NURMBg9xiXuuUnKid1k/x48K1c3Zc3EcfuPuYXUQBWA0IFBTkWGJDv
-         mKaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=ZLflO+6y2CV3/36DCXEjAkXxKljpWSRITCgyl2EiC0E=;
-        b=a5P/vTLY7X6wFJIpDHCtjxc4cFBNiTl2guTLLSu5iNi/XJmyKXpBDfFE0ExWf+hRMv
-         1kLlNXZ92Jum3Lfv9HmYRSf5Kn3Fv8TKFdumDDzZooeQ3ro20DZic5jUWCnGni2hYrg/
-         pO/zLXh66kY+6GN0Zlut1J3Bus37HQ5C5jri/WfnshcqUhQvtCNGAhKpWzHG3SXvHUYt
-         aw2SVQHnzL58l+rlR6HNP18rRN36kc0kXpiV2E83PogdOxbyjH74WzYlmYkDCXOa9yk0
-         OLo7ctioGyz53/wiFVtlNgNWLOgPuwBmuIDONEFx4iNE4J0SAHlNs3rcnBzrM9FcSMjJ
-         ljew==
-X-Gm-Message-State: AOAM531E1HkjbMMRis7m6lB/Ixmzu+YHsvtz5opqJd/Y3Emv5Hcj5XBA
-        EhZwE5OJBBc17DrHexS8NIyh8kBpJpM=
-X-Google-Smtp-Source: ABdhPJzhynudBwKeLwB1Aj9BrSLpIfKd4RBlv+9wHJEWtWQ/FAL6Libb8a9POXIeNWNMewacJ82phQ==
-X-Received: by 2002:a05:6830:1e8a:: with SMTP id n10mr4610427otr.371.1599755472414;
-        Thu, 10 Sep 2020 09:31:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d83sm965480oib.43.2020.09.10.09.31.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Sep 2020 09:31:11 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH 1/2] watchdog: sp5100: Fix definition of EFCH_PM_DECODEEN3
-Date:   Thu, 10 Sep 2020 09:31:08 -0700
-Message-Id: <20200910163109.235136-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Thu, 10 Sep 2020 12:39:52 -0400
+Date:   Thu, 10 Sep 2020 12:39:50 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-api@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: add fchmodat2 syscall
+Message-ID: <20200910163949.GJ3265@brightrain.aerifal.cx>
+References: <20200910142335.GG3265@brightrain.aerifal.cx>
+ <20200910162059.GA18228@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910162059.GA18228@infradead.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EFCH_PM_DECODEEN3 is supposed to access DECODEEN register bits 24..31,
-in other words the register at byte offset 3.
+On Thu, Sep 10, 2020 at 05:20:59PM +0100, Christoph Hellwig wrote:
+> On Thu, Sep 10, 2020 at 10:23:37AM -0400, Rich Felker wrote:
+> > userspace emulation done in libc implementations. No change is made to
+> > the underlying chmod_common(), so it's still possible to attempt
+> > changes via procfs, if desired.
+> 
+> And that is the goddamn problem.  We need to fix that _first_.
 
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Fixes: 887d2ec51e34b ("watchdog: sp5100_tco: Add support for recent FCH versions")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/watchdog/sp5100_tco.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Can you clarify exactly what that is? Do you mean fixing the
+underlying fs backends, or just ensuring that the chmod for symlinks
+doesn't reach them by putting the check in chmod_common? I'm ok with
+any of these.
 
-diff --git a/drivers/watchdog/sp5100_tco.h b/drivers/watchdog/sp5100_tco.h
-index 87eaf357ae01..adf015aa4126 100644
---- a/drivers/watchdog/sp5100_tco.h
-+++ b/drivers/watchdog/sp5100_tco.h
-@@ -70,7 +70,7 @@
- #define EFCH_PM_DECODEEN_WDT_TMREN	BIT(7)
- 
- 
--#define EFCH_PM_DECODEEN3		0x00
-+#define EFCH_PM_DECODEEN3		0x03
- #define EFCH_PM_DECODEEN_SECOND_RES	GENMASK(1, 0)
- #define EFCH_PM_WATCHDOG_DISABLE	((u8)GENMASK(3, 2))
- 
--- 
-2.17.1
+> After that we can add sugarcoating using new syscalls if needed.
 
+The new syscall is _not_ about this problem. It's about the missing
+flags argument and inability to implement fchmodat() without access to
+procfs. The above problem is just something you encounter and have to
+make a decision about in order to fix the missing flags problem and
+make a working AT_SYMLINK_NOFOLLOW.
+
+Rich
