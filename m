@@ -2,100 +2,164 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACFBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A7BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F0221D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B807206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:20:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cyVeSnv+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfQUYc+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgIJCTI (ORCPT
+        id S1730463AbgIJCUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:19:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57100 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730108AbgIJCMo (ORCPT
+        Wed, 9 Sep 2020 22:20:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41403 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730154AbgIJCRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:12:44 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A2ASsc101063;
-        Thu, 10 Sep 2020 02:12:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : mime-version :
- content-type; s=corp-2020-01-29;
- bh=xq8O6+Mkgoe5Tzj4VMvD/cUTVj2LNoCaJIQm11Ox3Mo=;
- b=cyVeSnv+W7Pb7yBAVNTmNuHsztNisGUgWm/bSy4TWYjmbz5P7L33JcLUFzPVHBu4ijZT
- Fcdk0sR5HJcw9x7eN77FnF5g5oRJbfwG5nVHxQcucpVkHCnLvDiuE7ba8ZamTXL6y4Tp
- tX2C7Wg1meGGM6Wb1rDeu5GpDm8eU1LHNy4qkWUEUsHglaOtZfFDoLBCnYhwNfZ8oAFT
- 0FqqOpU6CG5MDwvUQRwavvCGr1SyC+QvPV2Gp31asoJEhWaQjeRMhpbMWY4FTyoZ/oTG
- Yee+G90aFAI1Vt96/xVX+zU72Bw4S1s8qgtv4tGqjy5/4SYsWdOLPO54QpZ5m3XDIpOF lw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 33c3an548v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 02:12:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A2Bdd0168544;
-        Thu, 10 Sep 2020 02:12:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 33dacmdwtp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 02:12:29 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08A2CRj1030256;
-        Thu, 10 Sep 2020 02:12:28 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Sep 2020 19:12:27 -0700
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nilesh Javali <njavali@marvell.com>,
-        Martin Wilck <mwilck@suse.com>, Arun Easi <aeasi@marvell.com>
-Subject: Re: [PATCH v3 0/4] qla2xxx: A couple crash fixes
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1lfhi2xdv.fsf@ca-mkp.ca.oracle.com>
-References: <20200908081516.8561-1-dwagner@suse.de>
-Date:   Wed, 09 Sep 2020 22:12:25 -0400
-In-Reply-To: <20200908081516.8561-1-dwagner@suse.de> (Daniel Wagner's message
-        of "Tue, 8 Sep 2020 10:15:12 +0200")
+        Wed, 9 Sep 2020 22:17:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599704262;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0hRuaCM4UO0QYlTpMIEqBgJQxJgieRpUxJTH6YhefOQ=;
+        b=PfQUYc+5peHE5ZERC1xZTp5LKs4GtqKU32MQdHcdbAAKm/LgXUEexm9UpfPpjhAnX3MsVY
+        mMxn1xYrqCQM10lDl2WwxEc1CMRkcZCkhTMkGnXmABYIwpUSPu5XdH9RwJhai11v7W9ADz
+        9pYk58obg5zbmFOZwZDguMuKRG6La4s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-levCQ31sNTGtP_svl2bqAA-1; Wed, 09 Sep 2020 22:17:38 -0400
+X-MC-Unique: levCQ31sNTGtP_svl2bqAA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8D7E1882FB0;
+        Thu, 10 Sep 2020 02:17:36 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC6151002393;
+        Thu, 10 Sep 2020 02:17:36 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 953A018095FF;
+        Thu, 10 Sep 2020 02:17:36 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 22:17:35 -0400 (EDT)
+From:   Jason Wang <jasowang@redhat.com>
+To:     Ashok Raj <ashok.raj@intel.com>
+Cc:     dwmw2@infradead.org, baolu lu <baolu.lu@linux.intel.com>,
+        joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, eperezma@redhat.com,
+        peterx@redhat.com, mst@redhat.com, stable@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <491540137.16465450.1599704255365.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200909171056.GF104641@otc-nc-03>
+References: <20200909083432.9464-1-jasowang@redhat.com> <20200909171056.GF104641@otc-nc-03>
+Subject: Re: [PATCH] intel-iommu: don't disable ATS for device without page
+ aligned request
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 suspectscore=1 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100019
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
- clxscore=1011 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=1 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100018
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.68.5.20, 10.4.195.24]
+Thread-Topic: intel-iommu: don't disable ATS for device without page aligned request
+Thread-Index: OZU0O/7OadpZCvrZzmt7QzTbbYaicg==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Daniel,
 
-> The first crash we observed is due memory corruption in the srb memory
-> pool. Unforuntatly, I couldn't find the source of the problem but the
-> workaround by resetting the cleanup callbacks 'fixes' this problem
-> (patch #1). I think as intermeditate step this should be merged until
-> the real cause can be identified.
->
-> The second crash is due a race condition(?) in the firmware. The sts
-> entries are not updated in time which leads to this crash pattern
-> which several customers have reported:
+----- Original Message -----
+> Hi Jason
+> 
+> On Wed, Sep 09, 2020 at 04:34:32PM +0800, Jason Wang wrote:
+> > Commit 61363c1474b1 ("iommu/vt-d: Enable ATS only if the device uses
+> > page aligned address.") disables ATS for device that can do unaligned
+> > page request.
+> 
+> Did you take a look at the PCI specification?
+> Page Aligned Request is in the ATS capability Register.
+> 
+> ATS Capability Register (Offset 0x04h)
+> 
+> bit (5):
+> Page Aligned Request - If Set, indicates the Untranslated address is always
+> aligned to 4096 byte boundary. Setting this field is recommended. This
+> field permits software to distinguish between implemntations compatible
+> with this specification and those compatible with an earlier version of
+> this specification in which a Requester was permitted to supply anything in
+> bits [11:2].
 
-Applied to 5.10/scsi-staging. Thanks!
+Yes, my understanding is that this is optional not mandatory.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> 
+> > 
+> > This looks wrong, since the commit log said it's because the page
+> > request descriptor doesn't support reporting unaligned request.
+> 
+> I don't think you can change the definition from ATS to PRI. Both are
+> orthogonal feature.
+
+I may miss something, here's my understanding is that:
+
+- page request descriptor will only be used when PRS is enabled
+- ATS spec allows unaligned request
+
+So any reason for disabling ATS for unaligned request even if PRS is
+not enabled?
+
+> 
+> > 
+> > A victim is Qemu's virtio-pci which doesn't advertise the page aligned
+> > address. Fixing by disable PRI instead of ATS if device doesn't have
+> > page aligned request.
+> 
+> This is a requirement for the Intel IOMMU's.
+> 
+> You say virtio, so is it all emulated device or you talking about some
+> hardware that implemented virtio-pci compliant hw? If you are sure the
+> device actually does comply with the requirement, but just not enumerating
+> the capability, you can maybe work a quirk to overcome that?
+
+So far only emulated devices. But we are helping some vendor to
+implement virtio hardware so  we need to understand the connection
+between ATS alignment and page request descriptor.
+
+> 
+> Now PRI also has an alignment requirement, and Intel IOMMU's requires that
+> as well. If your device supports SRIOV as well, PASID and PRI are
+> enumerated just on the PF and not the VF. You might want to pay attension
+> to that. We are still working on a solution for that problem.
+
+Thanks for the reminding, but it looks to me according to the ATS
+spec, all PRI message is 4096 byte aligned? E.g lower bites were used
+for group index etc.
+
+Thanks
+
+> 
+> I don't think this is the right fix for your problem.
+> 
+> > 
+> > Cc: stable@vger.kernel.org
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  drivers/iommu/intel/iommu.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> 
+> 
+
