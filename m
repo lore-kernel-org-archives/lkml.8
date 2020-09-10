@@ -2,175 +2,257 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D37DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16254C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80212078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1BF2078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="YekgucFw"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jozX8HK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgIJKV4 (ORCPT
+        id S1730622AbgIJKWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:21:56 -0400
-Received: from mail-vi1eur05on2065.outbound.protection.outlook.com ([40.107.21.65]:44256
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725971AbgIJKVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:21:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxY+/AhqgNvvk4wgIJW18yfMJR1GNO5B5FmayRjW1WEBpKw1n7qwEw5m5u4PFqczFVz5K7Cg0oTm7hRSnZEkAqgj3xbYpZnNQocyTYi0F9uECCoKpi2NIVJmbmYTJ0NqUbpgRbCWwQAwzFHmxqlaiAjgoBu9BukCmLI0Kn7WhphVB1tGdKqukviLkJn0nrklQCBBDFWhaezO9OALRkY17HcHLm0TJVT4nZrAsojo9oGM9LA+0Ep8dgqTaRJb1CENJyqwYhwaNTGdo4x7WEwBizQj8njC7b039RK3xpwSZwfioI6QkM7CNO9v6Utclp7hwiVWqx9ewb+ffUAjPAp5fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T/bgZNIfzM8XidVQcHdYIlaIF1j85ESv8HN8yVdGBqE=;
- b=oWCMr2F5OIwxAy/FCDu4e+mm5A4URO4uaeM98/U4tkClclF+mE3s+8MmbXUF5klhUmLb8g+JvRu5hS79ZABhFelMsPAgrfyJtUf7F/zeP+d7sKmmDE/lCfYboLs7r7lXBX2MdCi1KW/AaNUbjWCTubbJs5NLzA+e2ITEiaApbxrd6OY0vXDG4TNP8PfY8VrJH++vvsw6NYi9ZMIjTIYv8jL4jrLlpxj7bbZ0DbmkkPofEuUDhfbNhllCCdhtR687DddyXW4nm8YTF5bwQd3NshIe8DcqIFtqqAjCgMSgHd5F6R60GQPoNNp2RniOjaGwEInqya4EKh9NXirxx24zwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T/bgZNIfzM8XidVQcHdYIlaIF1j85ESv8HN8yVdGBqE=;
- b=YekgucFwGRAyqMtJHAzeyaSWSt6PtjQBhGmcvLpKiPl+Dw8KocV/COReyIbm1KgLzmNVY+7J2+susRuLb9AzjS/LYs7hZryBggQp71IhVCZ6b1DFAOIteYEcZU6prQmuoHOSY2PsPD+v66ALsocb/V2eG1r9LJSUQgbqdnyiD6c=
-Authentication-Results: ffwll.ch; dkim=none (message not signed)
- header.d=none;ffwll.ch; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR0401MB2638.eurprd04.prod.outlook.com
- (2603:10a6:800:56::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
- 2020 10:21:32 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::5d66:84a7:26de:67c3]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::5d66:84a7:26de:67c3%6]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
- 10:21:32 +0000
-Date:   Thu, 10 Sep 2020 13:21:28 +0300
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/imx/dcss: fix compilation issue on 32bit
-Message-ID: <20200910102128.5agk4vxf2jeonw3q@fsr-ub1864-141>
-References: <20200910095250.7663-1-laurentiu.palcu@oss.nxp.com>
- <CAKMK7uGsJcg81a_cGebBgk3pwxj4VPrFfmV5AF+5fRyK3_Pigw@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGsJcg81a_cGebBgk3pwxj4VPrFfmV5AF+5fRyK3_Pigw@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-ClientProxiedBy: AM0PR02CA0088.eurprd02.prod.outlook.com
- (2603:10a6:208:154::29) To VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27)
+        Thu, 10 Sep 2020 06:22:37 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:48625 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbgIJKWf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:22:35 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id GJimkZGk2PTBMGJinkQoUD; Thu, 10 Sep 2020 12:22:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599733351; bh=LDYwQREKIyP+fC1mTmdEZ1algK9y376YR+lsZdvZzJg=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=jozX8HK1R7t7Nd3fVcZF7ns/5gsUqXbX39besg8kGO1OjY7FpP7AWb374QEdjZNas
+         Pd2KKSbqiw3367hHx5vwd7TMY6T5FIL7U+PBU2bd2PpEnSzEy6BE9MGeDAnj2NrbBD
+         OVJFuEGPyI9Veqv427RerI+p6OGo4YDlMNevIUaazaaXhb7SpEH9ZfSmDw647taMX6
+         iGmYNV4+BSFaSPUI/v+KEuiHUYRq02+fbKI3NsMSjY8DIorLaMyFVhD+l0TnjG6dlL
+         DxH4lScZRyuFEF/KmOUeY1F2GAai4SPpeW0NKFVufHS0jaj5m9+74XtnMP6VTQ/sy0
+         J9S9BiLka+AcA==
+Subject: Re: [PATCH v3 3/3] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
+ Subsystem driver
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vishal Sagar <vsagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joe@perches.com" <joe@perches.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Dinesh Kumar <dineshk@xilinx.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-4-vishal.sagar@xilinx.com>
+ <50cc4f4b-e788-c5ad-cd6a-b428b96d5377@xs4all.nl>
+ <20200715213315.GF6144@pendragon.ideasonboard.com>
+ <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
+ <20200819165641.GS6049@pendragon.ideasonboard.com>
+ <ae3814b877ea264b0231321d12d946761941e004.camel@ndufresne.ca>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f88cc98f-7e0d-cedc-6b27-a7a5fd801ebe@xs4all.nl>
+Date:   Thu, 10 Sep 2020 12:22:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141 (83.217.231.2) by AM0PR02CA0088.eurprd02.prod.outlook.com (2603:10a6:208:154::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 10:21:31 +0000
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4dd0c990-e6e6-4c6f-91d9-08d8557349fa
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2638:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB26389591980F084AFDECEED3BE270@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4B81SCkh1DVW3i2BRcYRCc3erNDp49p5QRXjWF3ie7v7iGcUwE0JSwJc2PonPDf6UZ4A0nvAEukhkciDrsIkGR5QA9mA+PcpFMcZCHZzUmT01FPHqk7wIn+AzP3jt7nmswHC0xUch2nf4LWEe0XW9l1Gp2v73dTS4c5AHOGQw5qw41JkQwQJZDfcjMmaiMeeVFBqnIq/GQg5LrRWoYWC41lNG/MvPBLWcPSBVbi/LMiEtYsR7XxgVsBQQTHx3Pl0kSmt0m4PhIvwYp/L6y7dtiLiM15dnkfrXxbYnvTct/Q+5Ybc6iqhbDsOc5CS5TpP6VB4RK4SOsD0l8sunvIRHBhZgtBFaxGaMzH1D0G5M5+vx/Ab+o3gi/I2gWwmha3juev98zCc32dUTvFJo7fD6w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(44832011)(53546011)(83380400001)(54906003)(83080400001)(2906002)(956004)(26005)(6666004)(8676002)(1076003)(86362001)(5660300002)(9686003)(6916009)(66476007)(6496006)(66946007)(52116002)(966005)(8936002)(478600001)(16526019)(316002)(4326008)(7416002)(66556008)(186003)(33716001)(55016002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: +747ObDmVWqVi02sMZlIwwGU54RjGj1szCazEvwXo2Whz5PhOTZVQs7XFc5eIhxIDqbv/Vk9ajrrFZg3Cz5JUfDsCTcppLv6mdE3N8yUbXS+ejj3KnvMMcfsC7RTZybsFObIirSpARqzED7/IP8Gf2c9YZPJg51TnS/THH/pz4yJPjYo9I9XFpjWJj5KL74gNErdW/8Hp+AbAEddTNB3MaakRE69zN6ZVJ7UGPUD2KUJMaaOckis1sUk5mYdXzBvLdQM1IZk3Pvr/oPrFDLgdFc3sO0+qc20rmJK8n3gCxFxCEvzRGrHpWB3VBu+O1hfLDoRGl7/TJFiBKlkdHnLuyKcqS/t8OaYkFr5DKaZao2ukHORAQ64r25pEWQxk3lQQmXibqK6yFZmvn45sXWCMGakB/P0/muPnSr0fDcXPsar0gXC7eyedg4/iy7G6LkOY1HWRTGCnl3PxzBHOQ2pEI/x9RtvY5gU9BcEGX/2hIVzP8DIUfwcc4miDhldEJxV+084+T4mA0W0huTesSDjPqqlG4+FyxwaB468RCYX2mQ0p5ziOyoy8FBYEZzmogs+KyENWJWVEbw32uC4d2YU6W9ipmTqfD6ebYAAMV99uXVGkDTng9uZGQwta924kz9lDCO7YBegTWlPEBasOkga+A==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dd0c990-e6e6-4c6f-91d9-08d8557349fa
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 10:21:32.7271
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VMhq3uFOE456+42IwxOCZsm52911s5J5UBv2O8gMbUgW0UVfL87EPl6GwPWJ4yppJ/h5RzAg7YVIpU3E6OAGsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2638
+In-Reply-To: <ae3814b877ea264b0231321d12d946761941e004.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCBeF1sLUp1ZjeFxLDXvfC59chaRZP7VNt4zdmlx2vHaBZ44MLrFHAIiSVJaAGUWx092ARpSoUQWM7/eT0Vw+zOM8ZGCKl31lJ51poV6oV6+OadenTw+
+ FFZtEwdEjASw/E2ObTESiObHWRRRvawAIzrwgLZHwDUfsI1eXv4HIgMwwlUNxWxM8T7BpAdVOJYF4fyqsgXyo5eDGMpRomSD81Yi2Gorod7lJZWZ9xYChJrK
+ gBvmYJkeNAfPZwJmKVGa5/Z2HhNqcub5zl6FZM5x1wNjmx90zW/Zii3VjqsQbiRoUshwFNJpcn6XlDwZd0LRpnqJAKlQb/OHvsWcVbhLrdfqtcVuajFi86F1
+ BtkLq6LKGSHmUyOAYFH2AEAOCAEb7qgZf2BY3Ovwv7jFjYp3xlQhE9uH+iGUmaPw4azeY6PwA3oUfQpoXCv/mU3RwRG+29NKsHTHMNpFBtrWsVn6YYqMcQaE
+ vOkdz0lUgNIuHP4FNIMIv6k9QCuNJTQ8fC1+KDGac9V0gK90KYtq0VMzVyUtM4w4E/NyOr24WrzBQ1E15YVH9BCCnweXUDnxtJYN4djG2n9+jdONh7iyBJxp
+ 7m6knQ21NiLiW9pbywyugYvuFd5ib5NJcFXi4v/4KzRw8d5iRBJ+So2GXyGNksBFIFrjf0gIT5+IK84Qyy6SNy+fzhBQjkqD/Xf7lpShTXAxubDZi3JaA/tr
+ uO7+95ESacioABjLQz83eaF0BvXfYoQL/m559NoeaA7C6c4zr80J4g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 11:57:10AM +0200, Daniel Vetter wrote:
-> On Thu, Sep 10, 2020 at 11:53 AM Laurentiu Palcu
-> <laurentiu.palcu@oss.nxp.com> wrote:
-> >
-> > When compiling for 32bit platforms, the compilation fails with:
-> >
-> > ERROR: modpost: "__aeabi_ldivmod"
-> > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
-> > ERROR: modpost: "__aeabi_uldivmod"
-> > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
-> >
-> > This patch adds a dependency on ARM64 since no 32bit SoCs have DCSS, so far.
-> 
-> Usual way to fix this correctly is using the right division macros,
-> not limiting the driver to 64bit. But this works for now, would be
-> good to fix this properly for compile-testing and all that.
+On 26/08/2020 16:10, Nicolas Dufresne wrote:
+> Le mercredi 19 août 2020 à 19:56 +0300, Laurent Pinchart a écrit :
+>> Hi Vishal,
+>>
+>> (Hans, there's a question for you below)
+>>
+>> On Wed, Aug 19, 2020 at 01:47:49PM +0000, Vishal Sagar wrote:
+>>> On Thursday, July 16, 2020 3:03 AM Laurent Pinchart wrote:
+>>>> On Thu, Jun 25, 2020 at 11:43:01AM +0200, Hans Verkuil wrote:
+>>>>> On 18/06/2020 07:33, Vishal Sagar wrote:
+>>>>>> The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
+>>>>>> streams from SDI sources like SDI broadcast equipment like cameras and
+>>>>>> mixers. This block outputs either native SDI, native video or
+>>>>>> AXI4-Stream compliant data stream for further processing. Please refer
+>>>>>> to PG290 for details.
+>>>>>>
+>>>>>> The driver is used to configure the IP to add framer, search for
+>>>>>> specific modes, get the detected mode, stream parameters, errors, etc.
+>>>>>> It also generates events for video lock/unlock, bridge over/under flow.
+>>>>>>
+>>>>>> The driver supports 10/12 bpc YUV 422 media bus format currently. It
+>>>>>> also decodes the stream parameters based on the ST352 packet embedded in the
+>>>>>> stream. In case the ST352 packet isn't present in the stream, the core's
+>>>>>> detected properties are used to set stream properties.
+>>>>>>
+>>>>>> The driver currently supports only the AXI4-Stream IP configuration.
+>>>>>>
+>>>>>> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+>>>>>> ---
+>>>>>> v3
+>>>>>> - fixed KConfig with better description
+>>>>>> - removed unnecessary header files
+>>>>>> - converted uppercase to lowercase for all hex values
+>>>>>> - merged core struct to state struct
+>>>>>> - removed most one line functions and replaced with direct reg
+>>>>>>   read/write or macros
+>>>>>> - dt property bpp to bpc. default 10. not mandatory.
+>>>>>> - fixed subscribe events, log_status, s_stream
+>>>>>> - merged overflow/underflow to one event
+>>>>>> - moved all controls to xilinx-sdirxss.h
+>>>>>> - max events from 128 to 8
+>>>>>> - used FIELD_GET() instead of custom macro
+>>>>>> - updated the controls documentation
+>>>>>> - added spinlock
+>>>>>> - removed 3GB control and added mode to detect bitmask
+>>>>>> - fixed format for (width, height, colorspace, xfer func, etc)
+>>>>>> - added dv_timings_cap, s/g_dv_timings
+>>>>>> - fixed set/get_format
+>>>>>> - fix v4l control registrations
+>>>>>> - fix order of registration / deregistration in probe() remove()
+>>>>>> - fixed other comments from Hyun, Laurent and Hans
+>>>>>> - things yet to close
+>>>>>>   - adding source port for connector (Laurent's suggestion)
+>>>>>>   - adding new FIELD type for Transport Stream V4L2_FIELD_ALTERNATE_PROG (Han's suggestion)
+>>>>>>   - Update / remove EDH or CRC related controls
+>>>>>>
+>>>>>> v2
+>>>>>> - Added DV timing support based on Hans Verkuilś feedback
+>>>>>> - More documentation to custom v4l controls and events
+>>>>>> - Fixed Hyunś comments
+>>>>>> - Added macro for masking and shifting as per Joe Perches comments
+>>>>>> - Updated to latest as per Xilinx github repo driver like
+>>>>>>   adding new DV timings not in mainline yet uptill 03/21/20
+>>>>>>
+>>>>>>  drivers/media/platform/xilinx/Kconfig         |   11 +
+>>>>>>  drivers/media/platform/xilinx/Makefile        |    1 +
+>>>>>>  .../media/platform/xilinx/xilinx-sdirxss.c    | 2121 +++++++++++++++++
+>>>>>>  include/uapi/linux/v4l2-controls.h            |    6 +
+>>>>>>  include/uapi/linux/xilinx-sdirxss.h           |  283 +++
+>>>>>>  5 files changed, 2422 insertions(+)
+>>>>>>  create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
+>>>>>>  create mode 100644 include/uapi/linux/xilinx-sdirxss.h
+>>
+>> [snip]
+>>
+>>>>>> diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..e39aab7c656a
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+>>>>>> @@ -0,0 +1,2121 @@
+>>
+>> [snip]
+>>
+>>>>>> +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
+>>>>>> +		ctrl->val = xsdirxss->ts_is_interlaced;
+>>>>>> +		break;
+>>>>>
+>>>>> I assume this control will disappear once you added support for
+>>>>> FIELD_ALTERNATE_PROG?
+>>>>
+>>>> I'm not sure FIELD_ALTERNATE_PROG is a good idea. The v4l2_field
+>>>> specifies today how frames are split into multiple buffers. There's an
+>>>> implicit assumption that a frame split into two buffers is captured with
+>>>> interlacing. In the SDI case, the two concepts get decoupled, a
+>>>> progressive frame can be transmitted (and captured) in two separate
+>>>> parts. If we add a *_PROG field, we'll need to duplicate most of the
+>>>> v4l2_field values with a _PROG suffix, as the progressive frame can be
+>>>> captured in alternate buffers on a video node, but also in separate odd
+>>>> and even buffers on two video nodes. Tt the hardware level, data is
+>>>> transmitted with odd lines on one link, and even lines on a second link.
+>>>> There are then two instances of this IP core, one for each link. One
+>>>> instance would receive and process the even lines, the other instance
+>>>> the odd lines. The output of the two instances can then be connected to
+>>>> two separate DMA engines, or combined in the FPGA fabric, depending on
+>>>> how the user designs the system.
+>>>
+>>> My apologies to give incorrect info regarding this.
+>>> In the progressive segmented frame, a progressive captured frame is sent
+>>> across to receiver over an interlaced transport. The 2 fields received
+>>> are similar to how V4L2_FIELD_ALTERNATE is except that the fields weren't
+>>> captured at 2 different times.
+>>
+>> I've now read more about progressive segmented frames, and I was indeed
+>> wrong about the fact that the two segments are transported over
+>> different links.
+>>
+>> I still wonder, however, if a _PROG suffix is the best option. Wouldn't
+>> we need to also add V4L2_FIELD_TOP_PROG, V4L2_FIELD_BOTTOM_PROG,
+>> V4L2_FIELD_SEQ_TB_PROG and V4L2_FIELD_SEQ_BT_PROG, not necessarily for
+>> this driver, but for other devices that would support capturing the
+>> odd/even segments only, or support capturing both segments in a single
+>> buffer, one after the other ?
+>>
+>> Maybe that's unavoidable, as enum v4l2_field combines both the buffer
+>> layout and the fact that the frame is interlaced or progressive. If we
+>> had to redesign it we could do better, but having to keep backward
+>> compatibility, duplicating most values with a _PROG suffix may be the
+>> best option.
+>>
+>> Hans, any opinion ?
 
-I didn't see the point in using the macros since this is running only on
-64bit. Though I will probably revisit it and fix it properly in a
-subsequent patch.
+I don't believe there is any need to create those other V4L2_FIELD_ variants.
+With V4L2_FIELD_ALTERNATE_PROG each buffer will be set to V4L2_FIELD_TOP (i.e.
+odd lines) or V4L2_FIELD_BOTTOM (i.e. even lines).
+
+There is nothing else you need here.
+
+A V4L2_FIELD_SEQ_TB_PROG might be needed if we get HW that does something
+so strange.
 
 > 
-> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-> > Reported-by: Daniel Vetter <daniel@ffwll.ch>
-> 
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> Please push to drm-misc-next.
+> Can't your receiver store these two fragment directly into a
+> progressive buffer instead of leaking this HW specific thing into uAPI
+> ? All you'd need is support for stride (bytesperline) at the HW
+> writeback level, and then you can hide this complexicuty to userspace
+> by filling the top/bottom line only. You simply multiply the stride by
+> two in this context.
 
-About that, I may need some help pushing it. Apparently, my request for
-a legacy SSH account for contributing to drm-misc got stalled:
+Vishal, this is a good question from Nicolas.
 
-https://gitlab.freedesktop.org/freedesktop/freedesktop/-/issues/289
+An alternative solution might be to DMA the odd and even lines to the
+same buffer, but consecutive. I.e., instead of having to create a
+V4L2_FIELD_ALTERNATE_PROG, you'd create a V4L2_FIELD_SEQ_TB_PROG, which
+is identical to V4L2_FIELD_SEQ_TB, except that it is for a progressive
+frame.
 
-Thanks,
-laurentiu
+If you can avoid V4L2_FIELD_ALTERNATE_PROG somehow and just return a
+single buffer per frame, then that would be much better. One field per
+buffer is a big pain for userspace.
 
-> -Daniel
+Regards,
+
+	Hans
+
 > 
+>>
+>>> So I will add the V4L2_FIELD_ALTERNATE_PROG in next patch version.
+>>
+>> [snip]
+>>
 > 
-> 
-> ---
-> >  drivers/gpu/drm/imx/dcss/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-> > index 69860de8861f..2b17a964ff05 100644
-> > --- a/drivers/gpu/drm/imx/dcss/Kconfig
-> > +++ b/drivers/gpu/drm/imx/dcss/Kconfig
-> > @@ -3,7 +3,7 @@ config DRM_IMX_DCSS
-> >         select IMX_IRQSTEER
-> >         select DRM_KMS_CMA_HELPER
-> >         select VIDEOMODE_HELPERS
-> > -       depends on DRM && ARCH_MXC
-> > +       depends on DRM && ARCH_MXC && ARM64
-> >         help
-> >           Choose this if you have a NXP i.MX8MQ based system and want to use the
-> >           Display Controller Subsystem. This option enables DCSS support.
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+
