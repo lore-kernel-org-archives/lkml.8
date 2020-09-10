@@ -2,131 +2,128 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A90C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02293C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7DD92076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD51D2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFEjsz6d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="TxixLvjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgIJRGj (ORCPT
+        id S1726957AbgIJRHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
+        Thu, 10 Sep 2020 13:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgIJRFw (ORCPT
+        with ESMTP id S1727088AbgIJRGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:05:52 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C793C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:05:52 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id w12so6803432qki.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:05:52 -0700 (PDT)
+        Thu, 10 Sep 2020 13:06:45 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18566C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:06:45 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id l39so2313620ybe.14
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kX63D1UHED1kS8hbCxUzu+mEWg7ZHS1VFvzltaxjL10=;
-        b=KFEjsz6dsif7THN645xuBX/Te4+yd6MQ/TqEo10SYpgYzr6PqmPiUvOnofhZTm8pLJ
-         i1MSGyiUENF2fRYa4g7GQyXxK3QGxk0ORzFvLkYrquAF92ONVfZSpirXIun2NYHPJjA/
-         SklQ2A5KYMnTEbIBXPvILYPo87Bh4Mtyif+RUApWr4mGX9fMK0BgMEh72V8C35BkVVhZ
-         k6gq97Fv/tAkKyUTFXItuHq5Xp4FrAITe3pZgmcixtymxAzJAZFpbtyXIUMfeWKHaCmU
-         GUojq/Qd0HEpx0bdDj14qXy97BfhZsdn85u6NEhuJddW8wrCVxfshFetMeUfhMjEgqlG
-         43Tg==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to;
+        bh=adI7wIapGHyMuBg8Kx00Pr23ARAsrS6b/e9orFM8JOA=;
+        b=TxixLvjFpgGmwKdMeWaIR8kRBrFRRk06I6hOZ9AnaRZjohco0VkPVEq1D45uXsls+1
+         bXKkgPTkNAYkdNwC63x96d4F9C+deAvT6NOcfjza5Ista3qCP4u231q7B5emR4cawDf7
+         5TDSdzCNod5MEmQIsw7kq4ZBGbGR+XUXidwXtrHWD63lggQgGXd1Zok+9ldBzpH15208
+         Skljw+OPWZmt72AjmO+/jaiJZ1/T3c/1GL0+m4GkAtshks0hRWJMRtILLGhSb48mNiCL
+         zbpmVmsm58N5BnPMtjoj797wJVSBQG1KQwI0eqgFb0XRYuPeAgnnNDksnZLT+mdpcMVi
+         LJ2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kX63D1UHED1kS8hbCxUzu+mEWg7ZHS1VFvzltaxjL10=;
-        b=UV9sEMZPWjcV0k0OAh1vW4A6EOHJcH8hQmqfqukBpbrOJ+XK/H6f/ml5YcosuNihtb
-         hTTLo0rfB5VzzYVoewhPoZEjnvFV6hKkECiYAbqP22oNoYPxZny0Rlgh+EJtOHaOKeHp
-         CNIK68uSRrfftXpO/yYaH51ZDR0vVX33kG+CX8mKHqq9pLvurNbH206xuRSQ7RWipB+3
-         UQlbwmtOgQJm33sRhTcSpykuSkEciRYTslQe3/ibi0NrZpEuF/ytD5s4kmaG3Ikwyrn8
-         OWnzSgtclJRdaHZKw53AkKlNV7IMN2+5cTBt6lfpdloggIw/V1b+t28j0wQ5RmrRN7dS
-         R9Tg==
-X-Gm-Message-State: AOAM5315UxRe50XZK9/tgRPnsvWJAoFzUaYDmS2iaYWBTOOo7QUWtWqi
-        ymsAZF/dbIRFjmn+Xowuz3k=
-X-Google-Smtp-Source: ABdhPJzfkyubjrBmIlbp6+8/VJ+krP7Kmjd4yU/hWgCJgzQjIQ0+RGK4MS0ntgOg5NX5QZvDFILGMQ==
-X-Received: by 2002:a05:620a:8c8:: with SMTP id z8mr8748406qkz.63.1599757551410;
-        Thu, 10 Sep 2020 10:05:51 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id j11sm6924193qko.111.2020.09.10.10.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 10:05:50 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/vc4: Update type of reg parameter in vc4_hdmi_{read,write}
-Date:   Thu, 10 Sep 2020 10:04:02 -0700
-Message-Id: <20200910170401.3857250-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to;
+        bh=adI7wIapGHyMuBg8Kx00Pr23ARAsrS6b/e9orFM8JOA=;
+        b=Mvy57Bpvg9QEh05UhssV2E5y0Q09qmYF6rFEgvhnNAZ1xRwqMox96nn07sPrJ4x1Ef
+         hFmX9e/sitY/fScOtZ6RzBams7iCR8onwdiRLYFSeSbH5LVWPwUfpbdKk3LgXuATJTYx
+         NgbD6+Fs8o2aNtC2Ewz/ADz+S1h9XXIq/3WbcEAFmkIy08PyMfEZGG8O1Mv5PVkGFgd7
+         lGFBY9yzhV2t2z2YCGchiKhaYTdz29elLspDgXzrh2PTjQIt6e+kKMd2ovxEpZctIhoT
+         nYaOJ9ttoEMkAbLkjdTxzkhfxtXT2K8rcZ0+w5Vndv/7MmRLxzMwC1jqWDGY1iGXacvX
+         S91g==
+X-Gm-Message-State: AOAM5310RMWBCepXlBucOh+L3qR25fEFI1LFElVAyWqexHrQ3qXx7iwN
+        5C/+Dku6aj8qFu7JxvmHD770Q7yNQ0LUm36U
+X-Google-Smtp-Source: ABdhPJyTReOFIEOH4u3OH8hr4+z1tGzkBXnTI1Wp04EnSFLUMzrekUKJ7atrss2kzIi0XvJ8DrKoGoqZaudODrpE
+X-Received: from chu-dev.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:3cfb])
+ (user=linchuyuan job=sendgmr) by 2002:a25:61c2:: with SMTP id
+ v185mr14987007ybb.314.1599757604064; Thu, 10 Sep 2020 10:06:44 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 17:06:38 +0000
+Message-Id: <20200910170638.1985729-1-linchuyuan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH] dt-bindings: hwmon: max20730: adding device tree doc for max20730
+From:   Chu Lin <linchuyuan@google.com>
+To:     linchuyuan@google.com, jdelvare@suse.com, linux@roeck-us.net,
+        robh+dt@kernel.org, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qiongwang@google.com, zhongqil@google.com, jasonling@google.com,
+        belgaied@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns 100+ times in the vc4 driver along the lines of:
+Testing:
+make dt_binding_check
 
-drivers/gpu/drm/vc4/vc4_hdmi_phy.c:518:13: warning: implicit conversion
-from enumeration type 'enum vc4_hdmi_field' to different enumeration
-type 'enum vc4_hdmi_regs' [-Wenum-conversion]
-        HDMI_WRITE(HDMI_TX_PHY_POWERDOWN_CTL,
-        ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The HDMI_READ and HDMI_WRITE macros pass in enumerators of type
-vc4_hdmi_field but vc4_hdmi_write and vc4_hdmi_read expect a enumerator
-of type vc4_hdmi_regs, causing a warning for every instance of this.
-Update the parameter type so there is no more mismatch.
-
-Fixes: 311e305fdb4e ("drm/vc4: hdmi: Implement a register layout abstraction")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1149
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Chu Lin <linchuyuan@google.com>
 ---
+ .../devicetree/bindings/hwmon/max20730.txt    | 23 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/max20730.txt
 
-Note, the variable names in these functions do not really make much
-sense after this patch but attempting to flip the variable names made
-everything feel even weirder. Feel free to rewrite this in whatever way
-you prefer, I just don't want my builds to be chalk full of warnings :)
-
- drivers/gpu/drm/vc4/vc4_hdmi_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi_regs.h b/drivers/gpu/drm/vc4/vc4_hdmi_regs.h
-index 47364bd3960d..7c6b4818f245 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi_regs.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi_regs.h
-@@ -392,7 +392,7 @@ void __iomem *__vc4_hdmi_get_field_base(struct vc4_hdmi *hdmi,
- }
- 
- static inline u32 vc4_hdmi_read(struct vc4_hdmi *hdmi,
--				enum vc4_hdmi_regs reg)
-+				enum vc4_hdmi_field reg)
- {
- 	const struct vc4_hdmi_register *field;
- 	const struct vc4_hdmi_variant *variant = hdmi->variant;
-@@ -417,7 +417,7 @@ static inline u32 vc4_hdmi_read(struct vc4_hdmi *hdmi,
- #define HDMI_READ(reg)		vc4_hdmi_read(vc4_hdmi, reg)
- 
- static inline void vc4_hdmi_write(struct vc4_hdmi *hdmi,
--				  enum vc4_hdmi_regs reg,
-+				  enum vc4_hdmi_field reg,
- 				  u32 value)
- {
- 	const struct vc4_hdmi_register *field;
-
-base-commit: 8c3c818c23a5bbce6ff180dd2ee04415241df77c
+diff --git a/Documentation/devicetree/bindings/hwmon/max20730.txt b/Documentation/devicetree/bindings/hwmon/max20730.txt
+new file mode 100644
+index 000000000000..3afb42b04567
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/max20730.txt
+@@ -0,0 +1,23 @@
++max20730 properties
++
++Required properties:
++- compatible: Must be one of the supported compatible strings:
++	"maxim,max20730" for max20730
++	"maxim,max20734" for max20734
++	"maxim,max20743" for max20743
++- reg: I2C address
++
++Optional properties:
++
++- vout-voltage-divider
++	Resistance of the vout voltage divider.
++	Two numbers, the first number is the output resistor,
++	the second number is the total resistance.
++
++Example:
++
++max20730@10 {
++	compatible = "maxim,max20730";
++	reg = <0x10>;
++	vout-voltage-divider = <1000 2000>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0a6ac3f00ed5..a04bf34a65b8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12371,6 +12371,7 @@ W:	http://www.roeck-us.net/linux/drivers/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
++F:	Documentation/devicetree/bindings/hwmon/max20730.txt
+ F:	Documentation/devicetree/bindings/hwmon/max31785.txt
+ F:	Documentation/devicetree/bindings/hwmon/ltc2978.txt
+ F:	Documentation/hwmon/adm1275
 -- 
-2.28.0
+2.28.0.526.ge36021eeef-goog
 
