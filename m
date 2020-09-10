@@ -2,227 +2,220 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F5FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AB1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDC120731
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="aigCwqBM"
+	by mail.kernel.org (Postfix) with ESMTP id B05F520731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgIJIIG (ORCPT
+        id S1729988AbgIJIIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgIJIIE (ORCPT
+        Thu, 10 Sep 2020 04:08:47 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40183 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgIJIIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:08:04 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39B78C061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:08:03 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r24so7019821ljm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BCExV+pLFjxKR6gVOXlN90xRdWBQ6fIH9OgibgmHl1c=;
-        b=aigCwqBMFP+lgjy879FHent4heiyeE9B89hJHSMDMMtZ2kX8tuvDXp0MKRaefv2/IK
-         k0/LMkwbF+6b0DYB5RZO3j7whtaSFKbEPvD4r9tnzIvECA5CtYXWqUHXImCHgGhGGZjw
-         8nq2sC5xq26MNCTDGTmaljInjGDO5tI3cnYBXIfofV+YUqtYpaPeELrSTa0hkwbJMbA+
-         GDwqJQrrzx8PbUJs+HbDFhjOdvn5Xqj4NYYze3KiYruA49n088PPzQhR5RZi9FaZIikv
-         xi+OoB8SQ6XdX8RZTkRcMPv2j4xcy/VNZa6SBsB/w3c71UawPFOehdR3e0bWIlH9zv57
-         Iz/A==
+        Thu, 10 Sep 2020 04:08:38 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e23so4625101otk.7;
+        Thu, 10 Sep 2020 01:08:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BCExV+pLFjxKR6gVOXlN90xRdWBQ6fIH9OgibgmHl1c=;
-        b=M0MQnyTQdbhG/l9nmppz3Xka6F7dm5PIB/6L+qZbJhhXWuUZuljYMOk9SUMDx3YSzR
-         rGSkekILPWB/gyn6VrTPaRlMoCeFIU6umiXLbZDR1HsUw1NUGx5zqOx2Lh6Wk6x3jW2G
-         6Pqrs91HHlC6Uy2x9+HoofpCBNL3LX2bTO8V606uEXXVrNQz5N6T6v9DjPX7GE5bW/Ak
-         GLCuQMgtC7ugkudhsekzbUY1VCOpBvnM12heMTQS3YA3LxgbeJts70BOm6QqAUsujio8
-         K+dElNRT6rxxj1Ymx/C0ZOtpBz6aVV8NhhuQ1YE85ynxrT35oWVIz0eSMUyLGgcUk2a7
-         hkOw==
-X-Gm-Message-State: AOAM531zoDNoccntrh04MADq/3IMuOOjeQd0UiOIWexgmbCCKaHjF9sJ
-        PT1CHHCk1D3M/GvIAIKJdh2YXvYvvNDEX3mxrFg/Mg==
-X-Google-Smtp-Source: ABdhPJzeRnvxf5oUsDhQuPY7mbdXpx3RiZNRz07lh+yjt6nMWzjQHGcEtC6qpnoNrraTp8k4NQAcYAsyjc7qXPjfr00=
-X-Received: by 2002:a2e:b5d0:: with SMTP id g16mr3831596ljn.402.1599725280446;
- Thu, 10 Sep 2020 01:08:00 -0700 (PDT)
+        bh=Bt5LO1EogaCcdNjbtyzVvLp7HFZ0ciiAb2j+FbURuDQ=;
+        b=QDmoo+0+Wi6zYSZZXQu2211/gLn0zY/9n4e+eaMK3RENJhRq+/o2mgQWr70ba+yFtL
+         PcpTcUxGbb5T37bVFMwF4bC5CHR4BL+nt3+YsTU4GERIsEpuatKYe6ZZEYDZYSNOQgXz
+         kGFJLhQiHkHxFHC1EFYdJxEXD8R8PjGPb0UwHeoFeVGXetLvrvQrL9kYnoYwZSsoNxR4
+         AMMVG0+JU3U56EemL8i6kjUm4lCujBxvoftkLs26PQWGUB7v9lbj6Csrtl/BouzSRZTR
+         usA2rThxlK5XPzOtsKDUqfs9vGA9pLR2jR8Hz+WCjSOz/t0Q0kt9Qtx1Vgpmqxx6AVfj
+         9X6A==
+X-Gm-Message-State: AOAM5331BcViNK1t6Xc8z7P+I1XYuc2ZcozQPEJ4vI6cq38Ynt93L/My
+        Y8yCUTDMpYlIAaug4SKRgy9eOjAsfXG4bOREnwrjB2vA1nQ=
+X-Google-Smtp-Source: ABdhPJyw1Ib9bF9PwZcGwHsZ517qb+BqDY53tDy9UiJEF+bO37XZTlWipkneILVplI+n2h+fHEZT4R+CNijEse9UsDE=
+X-Received: by 2002:a9d:3b76:: with SMTP id z109mr3261016otb.250.1599725317190;
+ Thu, 10 Sep 2020 01:08:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000059b7205aa7f906f@google.com> <00000000000026751605aa857914@google.com>
- <CACT4Y+bUK4icp1TMfhWOj=vEXULbiUQ84RXYaKnB=3J_N3wZCQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+bUK4icp1TMfhWOj=vEXULbiUQ84RXYaKnB=3J_N3wZCQ@mail.gmail.com>
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-Date:   Thu, 10 Sep 2020 13:37:49 +0530
-Message-ID: <CAAhDqq0qcnMKdaoRnaGM6G8H1U7SAmTvX=hgEoor1=_eJff-Vw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in __xfrm6_tunnel_spi_lookup
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com>,
-        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+References: <20200907145516.12803-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200907145516.12803-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Sep 2020 10:08:26 +0200
+Message-ID: <CAMuHMdXehR_wBgYtzyuqLUQuydRaFS9_4cUtJ2eDay7m4dy7FA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sh-pfc: r8a7790: Add VIN pins used by
+ iwg21d-q7-dbcm-ca board
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 1:32 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Thu, Sep 10, 2020 at 9:20 AM Anant Thazhemadam
-> <anant.thazhemadam@gmail.com> wrote:
-> > Looks like this bug is no longer valid. I'm not sure which commit seems to have fixed it. Can this be marked as invalid or closed yet?
->
-> You can see on the dashboard (or in mailing list archives) that B K
-> Karthik tested a patch for this bug in July:
-> https://syzkaller.appspot.com/bug?extid=72ff2fa98097767b5a27
->
-> So perhaps that patch fixes it? Karthik, did you send it? Was it
-> merged? Did the commit include the syzbot Reported-by tag?
->
+Hi Prabhakar,
 
-I did send it. I was taking a u32 spi value and casting it to a
-pointer to an IP address. Steffen Klassert
-<steffen.klassert@secunet.com> pointed out to me that the approach i
-was looking at was completely wrong.
-https://lkml.org/lkml/2020/7/27/361 is the conversation. hope this
-helps.
-
-thanks,
-
-karthik
+On Mon, Sep 7, 2020 at 4:55 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add vin[1,2] data8 and vin1_clk_b pins used by iwg21d-q7-dbcm-ca board
+> which is based on R8A7742 SoC.
 >
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> @@ -3866,6 +3866,18 @@ static const unsigned int vin1_data18_mux[] = {
+>         VI1_R4_MARK, VI1_R5_MARK,
+>         VI1_R6_MARK, VI1_R7_MARK,
+>  };
+> +static const unsigned int vin1_data8_b_pins[] = {
+> +       RCAR_GP_PIN(3, 0), RCAR_GP_PIN(3, 1),
+> +       RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
+> +       RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
+> +       RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
+> +};
+> +static const unsigned int vin1_data8_b_mux[] = {
+> +       VI1_DATA0_VI1_B0_B_MARK, VI1_DATA1_VI1_B1_B_MARK,
+> +       VI1_DATA2_VI1_B2_B_MARK, VI1_DATA3_VI1_B3_B_MARK,
+> +       VI1_DATA4_VI1_B4_B_MARK, VI1_DATA5_VI1_B5_B_MARK,
+> +       VI1_DATA6_VI1_B6_B_MARK, VI1_DATA7_VI1_B7_B_MARK,
+> +};
+
+I don't think "vin1_data8_b" is a good name for this subset, as it would
+conflict with the name for the first 8 pins of the full 24-bit VIN1 "B"
+pin set, to be declared with
+
+    static const union vin_data vin1_data_b_pins[] = { ... };
+
+and VIN_DATA_PIN_GROUP(vin1_data, 8, _b) macro.
+
+This would be easier to see if you would add the complete VIN1 "B" pin
+set (which I prefer), and not just the parts you need for your camera
+board.
+
+>  static const unsigned int vin1_sync_pins[] = {
+>         RCAR_GP_PIN(1, 24), /* HSYNC */
+>         RCAR_GP_PIN(1, 25), /* VSYNC */
+> @@ -3886,6 +3898,12 @@ static const unsigned int vin1_clkenb_pins[] = {
+>  static const unsigned int vin1_clkenb_mux[] = {
+>         VI1_CLKENB_MARK,
+>  };
+
+Please add vin1_sync_b and vin1_field_b while at it.
+
+> +static const unsigned int vin1_clk_b_pins[] = {
+> +       RCAR_GP_PIN(3, 15),
+> +};
+> +static const unsigned int vin1_clk_b_mux[] = {
+> +       VI1_CLK_B_MARK,
+> +};
+
+Please insert "vin1_clk_b" below "vin1_clk".
+
+>  static const unsigned int vin1_clk_pins[] = {
+>         RCAR_GP_PIN(2, 9),
+>  };
+> @@ -3959,6 +3977,18 @@ static const unsigned int vin2_data18_mux[] = {
+>         VI2_R4_MARK, VI2_R5_MARK,
+>         VI2_R6_MARK, VI2_R7_MARK,
+>  };
+> +static const unsigned int vin2_data8_g_pins[] = {
+> +       RCAR_GP_PIN(0, 27), RCAR_GP_PIN(0, 28),
+> +       RCAR_GP_PIN(0, 29), RCAR_GP_PIN(1, 10),
+> +       RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
+> +       RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
+> +};
+> +static const unsigned int vin2_data8_g_mux[] = {
+> +       VI2_G0_MARK, VI2_G1_MARK,
+> +       VI2_G2_MARK, VI2_G3_MARK,
+> +       VI2_G4_MARK, VI2_G5_MARK,
+> +       VI2_G6_MARK, VI2_G7_MARK,
+> +};
+
+I think "vin2_data8_g" is also a bad name, as the "g" suffix means the
+green subchannel of the "vin2_data" pin group, while the "b" suffix in
+"vin1_data8_b" means the "b" alternative pin group.
+
+Perhaps "vin2_data8g"?
+
+Niklas, Laurent: do you have any comments?
+
+>  static const unsigned int vin2_sync_pins[] = {
+>         RCAR_GP_PIN(1, 16), /* HSYNC */
+>         RCAR_GP_PIN(1, 21), /* VSYNC */
+> @@ -4026,7 +4056,7 @@ static const unsigned int vin3_clk_mux[] = {
+>  };
 >
-> On Thu, Jul 16, 2020 at 4:05 AM syzbot
-> <syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has found a reproducer for the following issue on:
-> >
-> > HEAD commit:    ca0e494a Add linux-next specific files for 20200715
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=175099bf100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=72ff2fa98097767b5a27
-> > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=112e8dbf100000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109429bf100000
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com
-> >
-> > netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 family 0 port 6081 - 0
-> > netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 family 0 port 6081 - 0
-> > netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 family 0 port 6081 - 0
-> > ==================================================================
-> > BUG: KASAN: use-after-free in __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
-> > Read of size 8 at addr ffff8880934578a8 by task syz-executor437/6811
-> > CPU: 0 PID: 6811 Comm: syz-executor437 Not tainted 5.8.0-rc5-next-20200715-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
-> >  print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
-> >  __kasan_report mm/kasan/report.c:513 [inline]
-> >  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
-> >  __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
-> >  xfrm6_tunnel_spi_lookup+0x8a/0x1d0 net/ipv6/xfrm6_tunnel.c:95
-> >  xfrmi6_rcv_tunnel+0xb9/0x100 net/xfrm/xfrm_interface.c:824
-> >  tunnel6_rcv+0xef/0x2b0 net/ipv6/tunnel6.c:148
-> >  ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
-> >  ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
-> >  NF_HOOK include/linux/netfilter.h:307 [inline]
-> >  NF_HOOK include/linux/netfilter.h:301 [inline]
-> >  ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
-> >  dst_input include/net/dst.h:449 [inline]
-> >  ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
-> >  NF_HOOK include/linux/netfilter.h:307 [inline]
-> >  NF_HOOK include/linux/netfilter.h:301 [inline]
-> >  ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
-> >  __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5287
-> >  __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5401
-> >  netif_receive_skb_internal net/core/dev.c:5503 [inline]
-> >  netif_receive_skb+0x159/0x990 net/core/dev.c:5562
-> >  tun_rx_batched.isra.0+0x460/0x720 drivers/net/tun.c:1518
-> >  tun_get_user+0x23b2/0x35b0 drivers/net/tun.c:1972
-> >  tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:2001
-> >  call_write_iter include/linux/fs.h:1879 [inline]
-> >  new_sync_write+0x422/0x650 fs/read_write.c:515
-> >  vfs_write+0x59d/0x6b0 fs/read_write.c:595
-> >  ksys_write+0x12d/0x250 fs/read_write.c:648
-> >  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > RIP: 0033:0x403d50
-> > Code: Bad RIP value.
-> > RSP: 002b:00007ffe8fe93368 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000403d50
-> > RDX: 000000000000005e RSI: 00000000200007c0 RDI: 00000000000000f0
-> > RBP: 00007ffe8fe93390 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe8fe93380
-> > R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> > Allocated by task 6811:
-> >  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >  kasan_set_track mm/kasan/common.c:56 [inline]
-> >  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
-> >  __do_kmalloc mm/slab.c:3655 [inline]
-> >  __kmalloc+0x1a8/0x320 mm/slab.c:3664
-> >  kmalloc include/linux/slab.h:559 [inline]
-> >  kzalloc include/linux/slab.h:666 [inline]
-> >  tomoyo_init_log+0x1335/0x1e50 security/tomoyo/audit.c:275
-> >  tomoyo_supervisor+0x32f/0xeb0 security/tomoyo/common.c:2097
-> >  tomoyo_audit_path_number_log security/tomoyo/file.c:235 [inline]
-> >  tomoyo_path_number_perm+0x3ed/0x4d0 security/tomoyo/file.c:734
-> >  security_file_ioctl+0x50/0xb0 security/security.c:1489
-> >  ksys_ioctl+0x50/0x180 fs/ioctl.c:747
-> >  __do_sys_ioctl fs/ioctl.c:762 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:760 [inline]
-> >  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
-> >  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > Freed by task 6811:
-> >  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
-> >  kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
-> >  kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
-> >  __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
-> >  __cache_free mm/slab.c:3418 [inline]
-> >  kfree+0x103/0x2c0 mm/slab.c:3756
-> >  tomoyo_supervisor+0x350/0xeb0 security/tomoyo/common.c:2149
-> >  tomoyo_audit_path_number_log security/tomoyo/file.c:235 [inline]
-> >  tomoyo_path_number_perm+0x3ed/0x4d0 security/tomoyo/file.c:734
-> >  security_file_ioctl+0x50/0xb0 security/security.c:1489
-> >  ksys_ioctl+0x50/0x180 fs/ioctl.c:747
-> >  __do_sys_ioctl fs/ioctl.c:762 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:760 [inline]
-> >  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
-> >  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > The buggy address belongs to the object at ffff888093457800
-> >  which belongs to the cache kmalloc-512 of size 512
-> > The buggy address is located 168 bytes inside of
-> >  512-byte region [ffff888093457800, ffff888093457a00)
-> > The buggy address belongs to the page:
-> > page:000000005c2b5911 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x93457
-> > flags: 0xfffe0000000200(slab)
-> > raw: 00fffe0000000200 ffffea00028d4308 ffffea0002834c88 ffff8880aa000600
-> > raw: 0000000000000000 ffff888093457000 0000000100000004 0000000000000000
-> > page dumped because: kasan: bad access detected
-> > Memory state around the buggy address:
-> >  ffff888093457780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >  ffff888093457800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > >ffff888093457880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                                   ^
-> >  ffff888093457900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >  ffff888093457980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
+>  static const struct {
+> -       struct sh_pfc_pin_group common[298];
+> +       struct sh_pfc_pin_group common[301];
+>         struct sh_pfc_pin_group automotive[1];
+>  } pinmux_groups = {
+>         .common = {
+> @@ -4310,15 +4340,18 @@ static const struct {
+>                 VIN_DATA_PIN_GROUP(vin1_data, 10),
+>                 VIN_DATA_PIN_GROUP(vin1_data, 8),
+>                 VIN_DATA_PIN_GROUP(vin1_data, 4),
+> +               SH_PFC_PIN_GROUP(vin1_data8_b),
+>                 SH_PFC_PIN_GROUP(vin1_sync),
+>                 SH_PFC_PIN_GROUP(vin1_field),
+>                 SH_PFC_PIN_GROUP(vin1_clkenb),
+> +               SH_PFC_PIN_GROUP(vin1_clk_b),
+
+Please insert "vin1_clk_b" below "vin1_clk".
+
+>                 SH_PFC_PIN_GROUP(vin1_clk),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 24),
+>                 SH_PFC_PIN_GROUP(vin2_data18),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 16),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 8),
+>                 VIN_DATA_PIN_GROUP(vin2_data, 4),
+> +               SH_PFC_PIN_GROUP(vin2_data8_g),
+>                 SH_PFC_PIN_GROUP(vin2_sync),
+>                 SH_PFC_PIN_GROUP(vin2_field),
+>                 SH_PFC_PIN_GROUP(vin2_clkenb),
+> @@ -4784,9 +4817,11 @@ static const char * const vin1_groups[] = {
+>         "vin1_data10",
+>         "vin1_data8",
+>         "vin1_data4",
+> +       "vin1_data8_b",
+>         "vin1_sync",
+>         "vin1_field",
+>         "vin1_clkenb",
+> +       "vin1_clk_b",
+
+Please insert "vin1_clk_b" below "vin1_clk".
+
+>         "vin1_clk",
+>  };
+>
+> @@ -4796,6 +4831,7 @@ static const char * const vin2_groups[] = {
+>         "vin2_data16",
+>         "vin2_data8",
+>         "vin2_data4",
+> +       "vin2_data8_g",
+>         "vin2_sync",
+>         "vin2_field",
+>         "vin2_clkenb",
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
