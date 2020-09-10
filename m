@@ -2,224 +2,218 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E495C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7948EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48C20208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C0B2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="lhBBTM+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgIJRIi (ORCPT
+        id S1726919AbgIJRJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:08:38 -0400
-Received: from smtp-190c.mail.infomaniak.ch ([185.125.25.12]:46347 "EHLO
-        smtp-190c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725833AbgIJQy0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:54:26 -0400
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BnPst0XCMzlhPqw;
-        Thu, 10 Sep 2020 18:46:26 +0200 (CEST)
-Received: from localhost (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BnPsr3F4Wzlh8T3;
-        Thu, 10 Sep 2020 18:46:24 +0200 (CEST)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?q?Philippe=20Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
-Date:   Thu, 10 Sep 2020 18:46:09 +0200
-Message-Id: <20200910164612.114215-1-mic@digikod.net>
-X-Mailer: git-send-email 2.28.0
+        Thu, 10 Sep 2020 13:09:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6716 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727025AbgIJQxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:53:09 -0400
+IronPort-SDR: KOhw8S+7kFEnJhg+e08zHLLGmUJKY/uV5kZAv0hM38EpJm3ZlIw1l8g0azSZEYkSdExnwC3ac0
+ 0MGkkMj/dA9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="243403078"
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="243403078"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 09:52:50 -0700
+IronPort-SDR: pAEPlXHx0J9Ojxd2huzRur81oXMV+9rzxu43DswPATT3urzvIZ3iemK3xawRX6VHfv6Yq8MBxG
+ Lk6uo1p1/1cA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="329402903"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Sep 2020 09:52:50 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 10 Sep 2020 09:52:49 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 10 Sep 2020 09:52:49 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.106)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Thu, 10 Sep 2020 09:52:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KS/pOE4PLPtZDPR5diwSDCIBu7m6SyXrv5jj/dUsCt7yKDQziR1jdWtRdw+XxpxBorksK86t3C2xDINMC4Ofq85QuUpEKwgkWbJ8zacPpA7maiWqVaEFwp3hOsxD8MfXJtl+3DaIgAflFXv3JiDWOGlP7VIKQcyvL/AYyHpLG5d3qjLUc61LWzbqK8hDqs1yhnHW5pmxLanyu6sG+NXFxZGmA0xZ6aAXssFTSCz2xoX67CmwvJXH/vbmnA+9HS5VnLgVmQVMakiOfmlTQ6WcCu4yGExLQ096/1DiYmO8Go+VUlyj4GjIhb51Axug9HL7z9rLDcaHU5iuO5B5u4+kBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P+uLZ7H9Z4tkZ74Gq5+MhqjW51X44V5L/zzsJrDHlAk=;
+ b=D7k6+SVzeCOq0/TrWM1s2U5rpab9s5FGXHzfG9Ds4g1erR903ufhXd3eBVNXyhqdghLbdlzD0GBGd20Es2gP43BY92P4X2H/+KlaZJsbqZevFHR0fuTpc6iFtiX03Gxiof5ASAOWAwcg1kF+sOV44SG39+FDVpp0A0rEXnCJm1A6IFwNe307aDZ56AjWVwIEdh0aHwB9DXNfxmAT23fhp/n0rPIqM8cDKlnmR2zytoyz5IQadIiuoo0oh2/WW+VUlHGT9oE+IsLxXzIYVetJPHceF/KUcVWj0OlS3cD8yytDP2c4YO0tYPL1j5Df9Xd4EJV7Ph1Y1n9aV1GhhPlpPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P+uLZ7H9Z4tkZ74Gq5+MhqjW51X44V5L/zzsJrDHlAk=;
+ b=lhBBTM+Fy9iT3LHkVHbW4f6CDZuDEEUnRszG+4THn1igVsaJ01L0mcMQo59xYeNS/A7p/AHE7y+/IWfD5qKmWE1CqDpV8oasBfKRi2VuuhNbVVeHrtZgV6oIMakZ21B5yw8/Go0o2Id84j4Zdd7b7rrkjCpLOXvP2HD0dlOWpyc=
+Received: from SN6PR11MB2574.namprd11.prod.outlook.com (2603:10b6:805:59::14)
+ by SN6PR11MB3104.namprd11.prod.outlook.com (2603:10b6:805:cc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 16:52:38 +0000
+Received: from SN6PR11MB2574.namprd11.prod.outlook.com
+ ([fe80::54:b143:c75e:41bd]) by SN6PR11MB2574.namprd11.prod.outlook.com
+ ([fe80::54:b143:c75e:41bd%7]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 16:52:38 +0000
+From:   "Eads, Gage" <gage.eads@intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        "Topel, Bjorn" <bjorn.topel@intel.com>
+Subject: RE: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
+Thread-Topic: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
+Thread-Index: AQHWhRcMCBS5jrzbZkavfoY9EXJ14aliEEMQgAAFaACAAAClMA==
+Date:   Thu, 10 Sep 2020 16:52:37 +0000
+Message-ID: <SN6PR11MB257475DF5F45FED24F4D4968F6270@SN6PR11MB2574.namprd11.prod.outlook.com>
+References: <20200901191548.31646-1-gage.eads@intel.com>
+ <20200901191548.31646-2-gage.eads@intel.com>
+ <20200907130150.GE2371705@kroah.com>
+ <SN6PR11MB2574DA2AA215E9566BA4F410F6270@SN6PR11MB2574.namprd11.prod.outlook.com>
+ <20200910163208.GA1321670@kroah.com>
+In-Reply-To: <20200910163208.GA1321670@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=intel.com;
+x-originating-ip: [68.203.30.51]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ecb89772-f0a1-4b4b-aec4-08d855a9eca5
+x-ms-traffictypediagnostic: SN6PR11MB3104:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR11MB31041E35BD530754B0FAF2B3F6270@SN6PR11MB3104.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bIKTeZZE7RhRIPblnjU3W1a8ISb0cHAnmj8KsNaSXGHEquwvCJvbQA4qeMr2PW4zGLsQnXEe/xRlioX5s/jZ3LbYc2DzRCSIV9+v1dpZY5gR13mICy9aleadDJ3Z2jjkBdhjtzvDWxgvKi6wGjCtfJlG1sVQDmtoHvH+jJLyN/2kFN1fCJE3lVIcVgZXAiX/tEMoEMFCUeU+hfoo8Fo7r2nHjhgArWPhZPJKnYTJ8Vp+bF0NAsXUp20lYKptC/lNLZesGduC4giNgUBRuxp2SrZY1+wLA/DQ5lPwGgqiIhm2Qr6Guhp9ReOXYW55VzynIbGIq5kSLAvtYczrn8JimQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2574.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(136003)(376002)(366004)(39860400002)(107886003)(26005)(8676002)(478600001)(186003)(4326008)(2906002)(8936002)(52536014)(86362001)(53546011)(6506007)(71200400001)(83380400001)(54906003)(66946007)(6916009)(76116006)(55016002)(5660300002)(64756008)(66556008)(66476007)(66446008)(9686003)(7696005)(316002)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: MtW4pbzUlYb5Aqg3oj0DEF5xnkMKlZThJdalpxY36cwwudfxL6+Qi1DKjHNbMUwbwu6qJwRCsGisndT6bJlZ4XFUaC5J/DrqTfbqV9p07BeprE4+Clfa88MHnpNwnj3EaiDowKCUrpk2hM9x1DJaUtEa/NFhxshtVj4IF1Kpbx+MuG1coPn8+zD88WYQsJ+/VlvljUlsYAiTL6/wxAElOi83lv2W2rG/zek+7nobZMsIYxgA8Td3kfJTTrHLQoArdq3OFKyyXiF9KWJxRfYNcha/n2btDZLwHkl9RL9SYEXExtCQJ2lZf4hzjLAdtDCyhBEhdC6Ehl+EDuoyMq7ZIJjw2DTRkgCM5mAPfB9IbyMpPdaX5PkEIqx2i3r7SZyAtdiw8WEATo8pb67ZZdQTf5QsYaTqy3+xYsV1HNILwSoqgOjsyVPQOPM3h2EhRVX6R4ocLrKD0WqkKlHbhj1z+k3jFL58FIb2B4Zc4tqRyUzZfR8hFrJQDCsDEry7BkEXIV5QXMoy2mVsgUXAY4bS4S4n5QEvUZe4fTw3ULd7glar/QDtKsd7TFq1nnHTe2X+03Rj2XV6i5kmTTkXAVyPp3gIT+SideRyTwpxoFtLuaQ5y5fpQYtAjDIzTsxeyo/TJnwEhtSeMPCry7TNaYT0Gg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2574.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecb89772-f0a1-4b4b-aec4-08d855a9eca5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 16:52:37.9831
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Deqq4aNpmQA1S14Ct6hSby624oFKgM7eY3vA779b2OYKNczzu5QpNUMfqLDFSZ4sszxFgFSgqjhQudeIo5yKeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3104
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-This ninth patch series rework the previous AT_INTERPRETED and O_MAYEXEC
-series with a new syscall: introspect_access(2) .  Access check are now
-only possible on a file descriptor, which enable to avoid possible race
-conditions in user space.
 
-For now, the only LSM hook triggered by introspect_access(2) is
-inode_permission() which takes a struct inode as argument.  However,
-struct path is still available in this syscall, which enables to add a
-new hook to fit the needs of IMA and other path-based LSMs.
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Thursday, September 10, 2020 11:32 AM
+> To: Eads, Gage <gage.eads@intel.com>
+> Cc: linux-kernel@vger.kernel.org; arnd@arndb.de; Karlsson, Magnus
+> <magnus.karlsson@intel.com>; Topel, Bjorn <bjorn.topel@intel.com>
+> Subject: Re: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
+>=20
+> On Thu, Sep 10, 2020 at 04:24:31PM +0000, Eads, Gage wrote:
+> >
+> >
+> > > -----Original Message-----
+> > > From: Greg KH <gregkh@linuxfoundation.org>
+> > > Sent: Monday, September 7, 2020 8:02 AM
+> > > To: Eads, Gage <gage.eads@intel.com>
+> > > Cc: linux-kernel@vger.kernel.org; arnd@arndb.de; Karlsson, Magnus
+> > > <magnus.karlsson@intel.com>; Topel, Bjorn <bjorn.topel@intel.com>
+> > > Subject: Re: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
+> > >
+> > > On Tue, Sep 01, 2020 at 02:15:30PM -0500, Gage Eads wrote:
+> > > > --- /dev/null
+> > > > +++ b/drivers/misc/dlb2/dlb2_main.c
+> > > > @@ -0,0 +1,208 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > +/* Copyright(c) 2018-2020 Intel Corporation */
+> > > > +
+> > > > +#include <linux/aer.h>
+> > > > +#include <linux/cdev.h>
+> > > > +#include <linux/delay.h>
+> > > > +#include <linux/fs.h>
+> > > > +#include <linux/init.h>
+> > > > +#include <linux/list.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/pci.h>
+> > > > +#include <linux/uaccess.h>
+> > > > +
+> > > > +#include "dlb2_main.h"
+> > > > +
+> > > > +static const char
+> > > > +dlb2_driver_copyright[] =3D "Copyright(c) 2018-2020 Intel Corporat=
+ion";
+> > >
+> > > Why have this in a string and then:
+> > >
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > +MODULE_AUTHOR("Copyright(c) 2018-2020 Intel Corporation");
+> > >
+> > > Not use it?
+> > >
+> > > It's probably not needed at all, right?
+> > >
+> > > Don't you get a build warning about this when applying and building t=
+his
+> > > patch?
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > dlb2_driver_copyright was used in a pr_info() in the v1 patchset that w=
+as
+> > removed at Arnd's recommendation, and I forgot to remove the string.
+> Will fix.
+> > The unused warning variable was likely missed in the deluge of warnings
+> from
+> > included kernel headers.
+>=20
+> You should not have any build warnings.  If you do, then something is
+> really wrong, the kernel builds cleanly today.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-Goal of introspect_access(2)
-============================
+Sorry, I worded that ambiguously. The driver builds without any warnings wi=
+th
+my GCC (7.3.1) by default. The deluge from kernel headers only occurs after
+adding EXTRA_CFLAGS=3D-W. There shouldn't be any dlb2 warnings with -W enab=
+led,
+but I'll double check.
 
-The goal of this patch series is to enable to control script execution
-with interpreters help.  A new introspect_access() system call is added
-to enable user space script interpreters to delegate to the kernel (and
-thus the system security policy) the permission to interpret/execute
-scripts or other files containing what can be seen as commands.
-
-A simple system-wide security policy can be enforced by the system
-administrator through a sysctl configuration consistent with the mount
-points or the file access rights.  The documentation patch explains the
-prerequisites.
-
-Furthermore, the security policy can also be delegated to an LSM, either
-a MAC system or an integrity system.  For instance, the new kernel
-MAY_INTROSPECTION_EXEC flag is required to close a major IMA
-measurement/appraisal interpreter integrity gap by bringing the ability
-to check the use of scripts [1].  Other uses are expected, such as for
-magic-links [2], SGX integration [3], bpffs [4] or IPE [5].
-
-Possible extended usage
-=======================
-
-For now, only the X_OK mode is compatible with introspect_access(2).
-This enables to restrict the addition of new control flows in a process.
-Using R_OK or W_OK with introspect_access(2) returns -EINVAL.
-
-Possible future use-cases for R_OK with introspect_access(2) may be to
-check configuration files that may impact the behavior of applications
-(i.e.  influence critical part of the current control flow).  Those
-should then be trusted as well.  The W_OK with introspect_access(2)
-could be used to check that a file descriptor is allowed to receive
-sensitive data such as debug logs.
-
-Prerequisite of its use
-=======================
-
-User space needs to adapt to take advantage of this new feature.  For
-example, the PEP 578 [6] (Runtime Audit Hooks) enables Python 3.8 to be
-extended with policy enforcement points related to code interpretation,
-which can be used to align with the PowerShell audit features.
-Additional Python security improvements (e.g. a limited interpreter
-without -c, stdin piping of code) are on their way [7].
-
-Examples
-========
-
-The initial idea comes from CLIP OS 4 and the original implementation
-has been used for more than 12 years:
-https://github.com/clipos-archive/clipos4_doc
-Chrome OS has a similar approach:
-https://chromium.googlesource.com/chromiumos/docs/+/master/security/noexec_shell_scripts.md
-
-Userland patches can be found here:
-https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
-Actually, there is more than the O_MAYEXEC changes (which matches this search)
-e.g., to prevent Python interactive execution. There are patches for
-Bash, Wine, Java (Icedtea), Busybox's ash, Perl and Python. There are
-also some related patches which do not directly rely on O_MAYEXEC but
-which restrict the use of browser plugins and extensions, which may be
-seen as scripts too:
-https://github.com/clipos-archive/clipos4_portage-overlay/tree/master/www-client
-
-An introduction to O_MAYEXEC was given at the Linux Security Summit
-Europe 2018 - Linux Kernel Security Contributions by ANSSI:
-https://www.youtube.com/watch?v=chNjCRtPKQY&t=17m15s
-The "write xor execute" principle was explained at Kernel Recipes 2018 -
-CLIP OS: a defense-in-depth OS:
-https://www.youtube.com/watch?v=PjRE0uBtkHU&t=11m14s
-See also an overview article: https://lwn.net/Articles/820000/
-
-This patch series can be applied on top of v5.9-rc4 .  This can be tested
-with CONFIG_SYSCTL.  I would really appreciate constructive comments on
-this patch series.
-
-Previous version:
-https://lore.kernel.org/lkml/20200908075956.1069018-1-mic@digikod.net/
-
-[1] https://lore.kernel.org/lkml/1544647356.4028.105.camel@linux.ibm.com/
-[2] https://lore.kernel.org/lkml/20190904201933.10736-6-cyphar@cyphar.com/
-[3] https://lore.kernel.org/lkml/CALCETrVovr8XNZSroey7pHF46O=kj_c5D9K8h=z2T_cNrpvMig@mail.gmail.com/
-[4] https://lore.kernel.org/lkml/CALCETrVeZ0eufFXwfhtaG_j+AdvbzEWE0M3wjXMWVEO7pj+xkw@mail.gmail.com/
-[5] https://lore.kernel.org/lkml/20200406221439.1469862-12-deven.desai@linux.microsoft.com/
-[6] https://www.python.org/dev/peps/pep-0578/
-[7] https://lore.kernel.org/lkml/0c70debd-e79e-d514-06c6-4cd1e021fa8b@python.org/
-
-Regards,
-
-Mickaël Salaün (3):
-  fs: Add introspect_access(2) syscall implementation and related sysctl
-  arch: Wire up introspect_access(2)
-  selftest/interpreter: Add tests for introspect_access(2) policies
-
- Documentation/admin-guide/sysctl/fs.rst       |  50 +++
- arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
- arch/arm/tools/syscall.tbl                    |   1 +
- arch/arm64/include/asm/unistd.h               |   2 +-
- arch/arm64/include/asm/unistd32.h             |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
- arch/s390/kernel/syscalls/syscall.tbl         |   1 +
- arch/sh/kernel/syscalls/syscall.tbl           |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
- fs/open.c                                     |  79 ++++
- include/linux/fs.h                            |   3 +
- include/linux/syscalls.h                      |   1 +
- include/uapi/asm-generic/unistd.h             |   4 +-
- kernel/sysctl.c                               |  12 +-
- .../testing/selftests/interpreter/.gitignore  |   2 +
- tools/testing/selftests/interpreter/Makefile  |  18 +
- tools/testing/selftests/interpreter/config    |   1 +
- .../interpreter/introspection_policy_test.c   | 361 ++++++++++++++++++
- 28 files changed, 547 insertions(+), 4 deletions(-)
- create mode 100644 tools/testing/selftests/interpreter/.gitignore
- create mode 100644 tools/testing/selftests/interpreter/Makefile
- create mode 100644 tools/testing/selftests/interpreter/config
- create mode 100644 tools/testing/selftests/interpreter/introspection_policy_test.c
-
--- 
-2.28.0
-
+Thanks,
+Gage
