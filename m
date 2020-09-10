@@ -2,126 +2,137 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1526CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:12 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B23A120BED
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F0DC433E2
 	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="PGu7s7Hl";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="PXUC++uQ"
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 8D37A20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgIJIaF (ORCPT
+        id S1730319AbgIJI3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:30:05 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:64702 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730375AbgIJI16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:27:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1599726477; x=1631262477;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
-  b=PGu7s7HlxPhC9eGdlHaVcnlRYfaVHGqnURqR5/8+uUMDdN9grSIVsZlu
-   jcHg3uyVL5exl80Thpj/HHosVNy611DyrfXcxForLJ8zOy0LPakSiyweI
-   W2SS10QCFHYtRXVBSC/rtoM4GQ5Xq5RSQpHHn1CFFWe0b3ukJRw6Fep/N
-   0ZTBzB09nSgxVHvoffWuout28AzjL67pGLmiilWvk6iu/VCsZydDLPUHQ
-   BZKAoEYiCN2Zg60f4rsRtxJW+rhe2Q1soxm5gxi7I6OoiDeP4cIPAi/Yd
-   pjqgq+wpvDJSM88TYJ67g1wGWbjRfShyrI0D/53QZvmmhO/tyN2hMi9jp
-   w==;
-IronPort-SDR: wdbqx+I+h4Rwe8fNvKmszzcuso4ofR0DdEsQThoE4CXip6nixitmwetmnuPwX8BFpOWEvPPwJN
- hI9a1NlROyap87+q416sN69HQRIvHvYTruDtt9Kp3AJ6py93tKheNT0Mreq6chXA6v/YhOrNZ+
- 9J5LTTIYoriXn4kOQEz/cbY+y4KS62Aw9pU9RGLICMPFeFG/d6wbX4YjTXIiVria0O9oNan2td
- qrWI7MXe72vqlsaYhNJpVS+sFHRKd5zen9xPJHDqjEFJBbf5PpTpBLr8dbsryiPDYQkFislrQM
- e0I=
-X-IronPort-AV: E=Sophos;i="5.76,412,1592841600"; 
-   d="scan'208";a="148235271"
-Received: from mail-co1nam04lp2057.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.57])
-  by ob1.hgst.iphmx.com with ESMTP; 10 Sep 2020 16:27:54 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iiic58NV6PJmFg2NsOowv0hyizNHb1Cb+aDqX80iQV2MNDJo1K5ltSk6fcJ5QGD4bbpbRSdULsEx7jg/xk01pDjkkhNAZhhK8VheMMMb/PR8zOl+QiS8LY9uKYZzOPMYOS3DlKZ0I7QbqjucS6t60aNwcqVNjjJ0HtighM26TwKUr0FnpBrmPz525NHD17wFHmfAqtY05NHBMO3UehiT3B7mh+NMKPN+KFxpErH2O3zxDeR6+1IszsOcZeFChvbSlehGaDyKydh088F7/Jgu7NWQ9LBwCOA/DL3U/eHqAaepYmeB1d+LHWwlT37B+YTBPiVEw1VjQCJps1gQ3bnlPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=g7yYpwFewuUljJnkX03SNhIue/VIJCX95F9EHOllSmlMEYgTQiJwrfT5Qse30nrMaOfECVEQSWE794+hvFDMbPgN53eibHOdG28zn4D2rBqDwuS0gBOSv3TgpM/l/MhoV2wtjvUIoKsL17RdFBnvtxO0cq8X7IOzl7w+sGE1oT7xqgBKHjC7F3fG/FApRB37IKAemu3WxsbKpCBuWEfADdZ9RjUXq0h6HsTS3ie5F79bgVTuabU+s5YgCyS/gVNLmDltbMNwfgSsIg1wJ4QDUk+HogNDE08AtbI4DgkOUHISEo4fsgrqy2nZXrDBHqGHmK6krnHJz0i39Gd7jQJmWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
- b=PXUC++uQAyEU/x/w5gzNFRER7WHocPLTrFWXZesRlhi0PYyP/OlV3GdZX3uwTrZC3fnzhIKwDI2TG2o9lSWW/Y88db3HONexKfmHEw7RQLjD7mSP/CrIcjmhCqmeZDv16aedxxWRaMyhPx7sySU8d50Am99pEVl80eNjH+38GQY=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4045.namprd04.prod.outlook.com
- (2603:10b6:805:47::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Thu, 10 Sep
- 2020 08:27:53 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3348.019; Thu, 10 Sep 2020
- 08:27:53 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     YueHaibing <yuehaibing@huawei.com>, "clm@fb.com" <clm@fb.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "dsterba@suse.com" <dsterba@suse.com>,
-        "nborisov@suse.com" <nborisov@suse.com>
-CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] btrfs: Remove unused function
- calc_global_rsv_need_space()
-Thread-Topic: [PATCH -next] btrfs: Remove unused function
- calc_global_rsv_need_space()
-Thread-Index: AQHWhsDhxv21KuizVE6Qrv0Uy/DrGQ==
-Date:   Thu, 10 Sep 2020 08:27:53 +0000
-Message-ID: <SN4PR0401MB3598643129987ED456C0B63A9B270@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200909135142.27352-1-yuehaibing@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:142d:5701:2cf6:d0e8:5d46:4118]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fc9ecfeb-9ff3-4c48-654f-08d855636982
-x-ms-traffictypediagnostic: SN6PR04MB4045:
-x-microsoft-antispam-prvs: <SN6PR04MB4045362D3B9E5DDED92154F59B270@SN6PR04MB4045.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SMQ7tHbE58uNlJLLgBFeOBsLx4BJ7dbGRAhGBBVoVAocyUhA4PP7hZkzBxeZw0RfZiXSAqbl+yQP2oPCu70pfTWzRhBuSeYH4hSQx+YdNpf+0NR5Gv4UBc10H3z9OGq9Cm9Rsoc32HUKKRMtaS2vg+Ym06sL1pSi/bzXKkxvEUYyEQFYBPq6CYkBdlDVSIC+FZvVJvdpP++1v0lMVE1oTYb9K7NwWJZ19h6PoOYq1EHS1fsxfDH1KuqvLICeUcP+09Ie9Bg/+pRP+q4/y34HCc20XjBBGVffZkGVaj4nVm84yGetX06/V84QrBom6aBbEYHSzFsjlpcVqob+KPd1bg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(8936002)(316002)(110136005)(54906003)(2906002)(8676002)(55016002)(19618925003)(186003)(66476007)(64756008)(7696005)(71200400001)(4326008)(4270600006)(9686003)(478600001)(558084003)(5660300002)(76116006)(33656002)(66446008)(6506007)(91956017)(86362001)(66556008)(66946007)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: krQ3ctV7dDiJkhf9SV09p15ueHSrrFiGNVWKWgF/d9ZmdVnlhXSvRp684whiY57jp7ZXMY5VFgggYzfh9/3GExfe0wGG/O0+dF21/8oj88QTTPb9LywRmiCbxtrXESnWOfExbVHqXf57yV/wuh5pnyKyFYmEQdvti9cUGjByKI/tDGYk7ob0kLDeUbz3yQQZh1AANCH5tnL1b43Euit2l1ZiK7J2SN/0wQk0K93Bpb+4gx62xdC2pj65gdricALkMtJNBnGRFA4wkRbjd0LWrYRvTfOhd7hnOa0nKe9HlgoqI0VTiqJxs/TAsdNJMq+Rr/i/8ehgDuDtXo6ZO+0YCuc3WVqrvfsLsYsnmD8eNqY+BP6Y1irNNfLgjVwLIV2AlO65rdn7DkvcoLe2EYrr41UaWKMhJFL7/p8VNAWgbIPYAmQ+7VPbjdyRQMFO5ueX8FHjZ4iF7VNE42HL40BBtTH4ThxSuXVKdfxa/Gz3OC3lhpXHVgGT0VemriSd9zokbBkNPBLMWQS0eNJ2ZCm0rEEdCb74GfapzpMVo/3nP0rWBKefBh5W1NjgIGXVTLNPz3xutyGTVxM40J4NhanHFb1XNfyhmGSAOS8Xvh7M62rTd7M+wBYFhTPXgFPzyM8emjEVjBIjVo+CrR9lOSvycEiVv3qrDRyGnsMPVGYJieh2SJhd+4Q/huO7xQRgK4g5gCtQPMoyG0cEczzyPGP0+Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Sep 2020 04:29:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:57412 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730338AbgIJI15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:27:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A531E101E;
+        Thu, 10 Sep 2020 01:27:53 -0700 (PDT)
+Received: from [192.168.1.179] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EC993F68F;
+        Thu, 10 Sep 2020 01:27:52 -0700 (PDT)
+Subject: Re: [PATCH] arm64/mm: add fallback option to allocate virtually
+ contiguous memory
+To:     Sudarshan Rajagopalan <sudaraja@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <01010174769e2b68-a6f3768e-aef8-43c7-b357-a8cb1e17d3eb-000000@us-west-2.amazonses.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <b8c6e11f-00f3-a89c-6ebc-eef55f92298b@arm.com>
+Date:   Thu, 10 Sep 2020 09:27:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc9ecfeb-9ff3-4c48-654f-08d855636982
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 08:27:53.2312
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2okw9WZ4o1T46KXpd9diLw55xy8w0zWaTtYjlnjMag/wGq35EDk0N71VxLRa35JcA0UC1P/8xjXptt3y6sTYVGgs9qNGR2a7zMdJJm3V7VY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4045
+In-Reply-To: <01010174769e2b68-a6f3768e-aef8-43c7-b357-a8cb1e17d3eb-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+On 10/09/2020 07:05, Sudarshan Rajagopalan wrote:
+> When section mappings are enabled, we allocate vmemmap pages from physically
+> continuous memory of size PMD_SZIE using vmemmap_alloc_block_buf(). Section
+> mappings are good to reduce TLB pressure. But when system is highly fragmented
+> and memory blocks are being hot-added at runtime, its possible that such
+> physically continuous memory allocations can fail. Rather than failing the
+> memory hot-add procedure, add a fallback option to allocate vmemmap pages from
+> discontinuous pages using vmemmap_populate_basepages().
+> 
+> Signed-off-by: Sudarshan Rajagopalan <sudaraja@codeaurora.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/mm/mmu.c | 15 ++++++++++++---
+>   1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 75df62f..a46c7d4 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1100,6 +1100,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   	p4d_t *p4dp;
+>   	pud_t *pudp;
+>   	pmd_t *pmdp;
+> +	int ret = 0;
+>   
+>   	do {
+>   		next = pmd_addr_end(addr, end);
+> @@ -1121,15 +1122,23 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+>   			void *p = NULL;
+>   
+>   			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
+> -			if (!p)
+> -				return -ENOMEM;
+> +			if (!p) {
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +				vmemmap_free(start, end, altmap);
+> +#endif
+> +				ret = -ENOMEM;
+> +				break;
+> +			}
+>   
+>   			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
+>   		} else
+>   			vmemmap_verify((pte_t *)pmdp, node, addr, next);
+>   	} while (addr = next, addr != end);
+>   
+> -	return 0;
+> +	if (ret)
+> +		return vmemmap_populate_basepages(start, end, node, altmap);
+> +	else
+> +		return ret;
+
+Style comment: I find this usage of 'ret' confusing. When we assign 
+-ENOMEM above that is never actually the return value of the function 
+(in that case vmemmap_populate_basepages() provides the actual return 
+value).
+
+Also the "return ret" is misleading since we know by that point that 
+ret==0 (and the 'else' is redundant).
+
+Can you not just move the call to vmemmap_populate_basepages() up to 
+just after the (possible) vmemmap_free() call and remove the 'ret' variable?
+
+AFAICT the call to vmemmap_free() also doesn't need the #ifdef as the 
+function is a no-op if CONFIG_MEMORY_HOTPLUG isn't set. I also feel you 
+need at least a comment to explain Anshuman's point that it looks like 
+you're freeing an unmapped area. Although if I'm reading the code 
+correctly it seems like the unmapped area will just be skipped.
+
+Steve
+
+>   }
+>   #endif	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
+>   void vmemmap_free(unsigned long start, unsigned long end,
+> 
+
