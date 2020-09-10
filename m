@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0E7C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C8421941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A5F21941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fYGRSAMR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j8miQl2q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i/8MQUdj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2R9sIrJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgIJJit (ORCPT
+        id S1730940AbgIJJi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36176 "EHLO
+        Thu, 10 Sep 2020 05:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730261AbgIJJWS (ORCPT
+        with ESMTP id S1730287AbgIJJWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 05:22:18 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D69C061757;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0DC1C0613ED;
         Thu, 10 Sep 2020 02:22:14 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 09:22:04 -0000
+Date:   Thu, 10 Sep 2020 09:22:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729725;
+        s=2020; t=1599729726;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JoPNXNLBsyEhUtHUT6JCTfcPaPR55B+KvWTtgjELRNo=;
-        b=fYGRSAMRecM89JjXnxIlHEoYQAm+ry93aGFj4kuBzxKq8UBr1W/mWM2h8PeUiNeafO9H/7
-        4YICcNqsmvn2iNUHUEfrMcXfh1sp1sUe2QEU9SBQxOOn9eu2wFwnDACEMg6BAbjf3tNWGW
-        lNwjBcBXVgzdf6NAYQCwH+DUsCLxfDh8WrNN8N7uSCuL9AH7OLyg91RyyYHtfFjaiCaGin
-        BQYrDJJ6XALz6mxcf/HuysBBCI5Avg73e3q/4GjXNNj9tg/uJu/5mjXQk9HXMUn4ldYK6X
-        ZxB4YuAxCRIz454qC8QxkrDcxmW0lQvKx1tmoy0Ih1GSETD8VwyT/QhYwJn0FQ==
+        bh=nrY8M1+Z4n3RPHHGsPnEuPD5IhvzZjRmFIn2Iz8CVmc=;
+        b=i/8MQUdjPREBFEKGGTw5SmOILdz932P4ZgvARUzp0zWMe23caB4CRBXnlJyVlG1N0n8VJF
+        XiAvINuOzcjED0yaIJR+XGUXemWxVykTVi+3z+YffiFW0j5Nmi76mf5RCkIFp7ZOAkuRsH
+        cX+kRimkBYDTaiEv2Yfz5vsdgUh7xz7MMI/9mQQU1Yf3LIvBAGo1L8+3Jr6s3Y9/Hq2Nb2
+        EcmqR06L4dwpqG0J/emKs61NV1OPRA8SXEwtG65Nuou9nR9egdnm/X4Qrsum7CHlhfBxNn
+        rGECzrwEeJtnL6VyhnNU9Lex2Lao1pLU9hiEzM4JCdYBXGd8vmK5wEcdf30D/w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729725;
+        s=2020e; t=1599729726;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JoPNXNLBsyEhUtHUT6JCTfcPaPR55B+KvWTtgjELRNo=;
-        b=j8miQl2qX4Sj+Xbb7olJPd/fGrzHNTBbXUHKG92iz3DxwYN1kfJwZA+7tJZsxop7jA0xcb
-        UhCEwjCa5LA/TuAA==
-From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
+        bh=nrY8M1+Z4n3RPHHGsPnEuPD5IhvzZjRmFIn2Iz8CVmc=;
+        b=2R9sIrJjeXE00AJ5tvYp2Ol+GpIL1/nFZk4Y9nIh7Mezq1rv9FZ7v4l3D69uWR/1PEOt8W
+        bEwgFGwe9v7AXADQ==
+From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/smpboot: Load TSS and getcpu GDT entry before
- loading IDT
-Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+Subject: [tip: x86/seves] x86/kvm: Add KVM-specific VMMCALL handling under SEV-ES
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-68-joro@8bytes.org>
-References: <20200907131613.12703-68-joro@8bytes.org>
+In-Reply-To: <20200907131613.12703-64-joro@8bytes.org>
+References: <20200907131613.12703-64-joro@8bytes.org>
 MIME-Version: 1.0
-Message-ID: <159972972435.20229.954025378215732104.tip-bot2@tip-bot2>
+Message-ID: <159972972598.20229.12880317872521101289.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,84 +73,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/seves branch of tip:
 
-Commit-ID:     520d030852b4c9babfce9a79d8b5320b6b5545e6
-Gitweb:        https://git.kernel.org/tip/520d030852b4c9babfce9a79d8b5320b6b5545e6
-Author:        Joerg Roedel <jroedel@suse.de>
-AuthorDate:    Mon, 07 Sep 2020 15:16:08 +02:00
+Commit-ID:     99419b251e5427b89dbfae103d8a2f469efaa4b2
+Gitweb:        https://git.kernel.org/tip/99419b251e5427b89dbfae103d8a2f469efaa4b2
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Mon, 07 Sep 2020 15:16:04 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
 CommitterDate: Wed, 09 Sep 2020 11:33:20 +02:00
 
-x86/smpboot: Load TSS and getcpu GDT entry before loading IDT
+x86/kvm: Add KVM-specific VMMCALL handling under SEV-ES
 
-The IDT on 64-bit contains vectors which use paranoid_entry() and/or IST
-stacks. To make these vectors work, the TSS and the getcpu GDT entry need
-to be set up before the IDT is loaded.
+Implement the callbacks to copy the processor state required by KVM to
+the GHCB.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Split out of a larger patch
+                   - Adapt to different callback functions ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-68-joro@8bytes.org
+Link: https://lkml.kernel.org/r/20200907131613.12703-64-joro@8bytes.org
 ---
- arch/x86/include/asm/processor.h |  1 +
- arch/x86/kernel/cpu/common.c     | 23 +++++++++++++++++++++++
- arch/x86/kernel/smpboot.c        |  2 +-
- 3 files changed, 25 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kvm.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 97143d8..615dd44 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -696,6 +696,7 @@ extern void load_direct_gdt(int);
- extern void load_fixmap_gdt(int);
- extern void load_percpu_segment(int);
- extern void cpu_init(void);
-+extern void cpu_init_exception_handling(void);
- extern void cr4_init(void);
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 08320b0..0f95972 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -36,6 +36,8 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/ptrace.h>
++#include <asm/svm.h>
  
- static inline unsigned long get_debugctlmsr(void)
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 81fba4d..beffea2 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1863,6 +1863,29 @@ static inline void tss_setup_io_bitmap(struct tss_struct *tss)
+ DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
+ 
+@@ -746,13 +748,34 @@ static void __init kvm_init_platform(void)
+ 	x86_platform.apic_post_init = kvm_apic_init;
  }
  
- /*
-+ * Setup everything needed to handle exceptions from the IDT, including the IST
-+ * exceptions which use paranoid_entry().
-+ */
-+void cpu_init_exception_handling(void)
++#if defined(CONFIG_AMD_MEM_ENCRYPT)
++static void kvm_sev_es_hcall_prepare(struct ghcb *ghcb, struct pt_regs *regs)
 +{
-+	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
-+	int cpu = raw_smp_processor_id();
-+
-+	/* paranoid_entry() gets the CPU number from the GDT */
-+	setup_getcpu(cpu);
-+
-+	/* IST vectors need TSS to be set up. */
-+	tss_setup_ist(tss);
-+	tss_setup_io_bitmap(tss);
-+	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
-+
-+	load_TR_desc();
-+
-+	/* Finally load the IDT */
-+	load_current_idt();
++	/* RAX and CPL are already in the GHCB */
++	ghcb_set_rbx(ghcb, regs->bx);
++	ghcb_set_rcx(ghcb, regs->cx);
++	ghcb_set_rdx(ghcb, regs->dx);
++	ghcb_set_rsi(ghcb, regs->si);
 +}
 +
-+/*
-  * cpu_init() initializes state that is per-CPU. Some data is already
-  * initialized (naturally) in the bootstrap process, such as the GDT
-  * and IDT. We reload them nevertheless, this function acts as a
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index f5ef689..de776b2 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -227,7 +227,7 @@ static void notrace start_secondary(void *unused)
- 	load_cr3(swapper_pg_dir);
- 	__flush_tlb_all();
- #endif
--	load_current_idt();
-+	cpu_init_exception_handling();
- 	cpu_init();
- 	x86_cpuinit.early_percpu_clock_init();
- 	preempt_disable();
++static bool kvm_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
++{
++	/* No checking of the return state needed */
++	return true;
++}
++#endif
++
+ const __initconst struct hypervisor_x86 x86_hyper_kvm = {
+-	.name			= "KVM",
+-	.detect			= kvm_detect,
+-	.type			= X86_HYPER_KVM,
+-	.init.guest_late_init	= kvm_guest_init,
+-	.init.x2apic_available	= kvm_para_available,
+-	.init.init_platform	= kvm_init_platform,
++	.name				= "KVM",
++	.detect				= kvm_detect,
++	.type				= X86_HYPER_KVM,
++	.init.guest_late_init		= kvm_guest_init,
++	.init.x2apic_available		= kvm_para_available,
++	.init.init_platform		= kvm_init_platform,
++#if defined(CONFIG_AMD_MEM_ENCRYPT)
++	.runtime.sev_es_hcall_prepare	= kvm_sev_es_hcall_prepare,
++	.runtime.sev_es_hcall_finish	= kvm_sev_es_hcall_finish,
++#endif
+ };
+ 
+ static __init int activate_jump_labels(void)
