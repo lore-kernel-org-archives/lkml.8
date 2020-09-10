@@ -2,118 +2,119 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155DEC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F345C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D7A208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599777676;
-	bh=7vOGvZR/YLfARcXz6Z2coM5EtpzEOD+Vp38+MDRRuBk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2bWkkXpwZ4MJtbtMypR8qNPAexMLA9lygeM1vi65ddPMWwKM/pn+MdO4ZejOKKJso
-	 VxA9Vp2Ts8/gpNGK90PjZfePKCvuH45DlXM06/0s04AcuB5CmYgCobTQusD84veFM6
-	 rfLDB+jM7ecXn4ZLBM3zz2Z1gkHRAEpM3UoBtkFY=
+	by mail.kernel.org (Postfix) with ESMTP id 0B80121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:41:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yM5N1/J5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725379AbgIJWlP (ORCPT
+        id S1725554AbgIJWlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725274AbgIJWlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:41:14 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A2A208CA;
-        Thu, 10 Sep 2020 22:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599777674;
-        bh=7vOGvZR/YLfARcXz6Z2coM5EtpzEOD+Vp38+MDRRuBk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RQUtgJbLFZrTuC75zsxYj43MXXasjfhvyn9qe4Tvg1x5vwcAWXtPUN6rRno+UzqNx
-         U4oZN3vK5OWypDVPYK8xLvcs0SwXc5Zevx7FxMNOn0ChyfZ+QDeNIhY03nyJklzo4S
-         aycpHm8sEong+di3IKQ1oL/FWEE73jftri0VB9wg=
-Date:   Fri, 11 Sep 2020 07:41:10 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v3 3/8] Documentation: tracing: Add tracing_on option to
- boot-time tracer
-Message-Id: <20200911074110.fa9d19c152f3c35947199360@kernel.org>
-In-Reply-To: <CY4PR13MB1175F981AB2931C228EBF42FFD270@CY4PR13MB1175.namprd13.prod.outlook.com>
-References: <159972809455.428528.4737752126800169128.stgit@devnote2>
-        <159972812521.428528.4047280962991773996.stgit@devnote2>
-        <CY4PR13MB1175F981AB2931C228EBF42FFD270@CY4PR13MB1175.namprd13.prod.outlook.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 10 Sep 2020 18:41:20 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:56116 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725274AbgIJWlR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 18:41:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AMeAnq158188;
+        Thu, 10 Sep 2020 22:41:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=BYAf4AQrHYdjFsNM20uZvb1ii4hwHzWLj/pZXbS8seo=;
+ b=yM5N1/J5ypSXRnjSs5ix8I6y0bfkt06pYNszFkkTWle14zWdSHFsyhMDjxcZUd5tV/r9
+ a8+NKO5beItgjRDjDuwziFsNEVsR/9arCllDfW5Xn/EiirbSdBik6kzbblFTXY/NHbef
+ K8zdpDJZq2YNieLS2AodJl+d9MS1a4LXvERYU3UAXY+ZZ6RqHMNe1ll7shKzf7aDVZN+
+ x+E2ZMq+L3R1tOAfah7N19+DJV2Il+rSJsXUCefct4e/ld/VlM1mORShxsOIEkyet/mt
+ fgeGVXPOoFwbSr1Wdxb7sC/D8jC9sZ7hIK25IufEe6fsqxBc4s4xZSAFrlPYlid6SaRu 0w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33c3anawkf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 22:41:12 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AMZ9s1119344;
+        Thu, 10 Sep 2020 22:41:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 33cmkay96t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 22:41:11 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08AMfARM012484;
+        Thu, 10 Sep 2020 22:41:10 GMT
+Received: from [10.98.138.194] (/10.98.138.194)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Sep 2020 15:41:10 -0700
+Subject: Re: [PATCH 0/3] clk: keystone: some minor fixes
+To:     Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, ssantosh@kernel.org
+References: <20200907085740.1083-1-t-kristo@ti.com>
+ <8a594a9d-8e10-6e01-908c-8e59da1d7fbe@oracle.com>
+ <159977335346.2295844.11165311759086345858@swboyd.mtv.corp.google.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <a017be90-4538-ecbd-64dd-a988ec8f80ce@oracle.com>
+Date:   Thu, 10 Sep 2020 15:41:08 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <159977335346.2295844.11165311759086345858@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009100197
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
 
-On Thu, 10 Sep 2020 13:26:05 +0000
-"Bird, Tim" <Tim.Bird@sony.com> wrote:
 
+On 9/10/20 2:29 PM, Stephen Boyd wrote:
+> Quoting santosh.shilimkar@oracle.com (2020-09-08 10:19:32)
+>>
+>>
+>> On 9/7/20 1:57 AM, Tero Kristo wrote:
+>>> Hi Santosh,
+>>>
+>>> This series contains a few fixes for the TI SCI clock driver.
+>>> - Patch #1 is a clear bug fix, where we missed to parse assigned-clock
+>>>     data properly to detect which clocks are in use on the SoC.
+>>> - Patch #2 is a performance improvement patch which avoids some
+>>>     unnecessary round trips to firmware side while setting clock
+>>>     frequency.
+>>> - Patch #3 fixes some issues with set_rate passed to firmware, where the
+>>>     parameters are too strict; namely, firmware fails to handle some cases
+>>>     properly if min,tgt,max values for a clock rate are exactly the same
+>>>     value. Yeah, the firmware is quite weird here but nothing much else we
+>>>     can do from kernel side other than this....
+>>>
+>> Looks fine to me Tero.
+>>
+>> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+>>
+>>
+>> Hi Stephen, Mike,
+>> Can you please pick these fixes via clk tree ?
 > 
+> Sure. I assume this is -next material and not critical fixes.
 > 
-> > -----Original Message-----
-> > From: Masami Hiramatsu
->  > 
-> > Add tracing_on option description to the boot-time tracer.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  Documentation/trace/boottime-trace.rst |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-> > index dcb390075ca1..1341b449acaa 100644
-> > --- a/Documentation/trace/boottime-trace.rst
-> > +++ b/Documentation/trace/boottime-trace.rst
-> > @@ -61,6 +61,10 @@ These options can be used for each instance including global ftrace node.
-> >  ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[...]]
-> >     Enable given ftrace options.
-> > 
-> > +ftrace.[instance.INSTANCE.]tracing_on = 0|1
-> > +   Enable/Disable tracing on this instance when boot.
-> 
-> when boot. -> when booting.
-> (or when boot. -> on boot.)
-
-Thanks! "when booting" or maybe "when starting boot-time tracing"
-will be more accurate, since if user sets the "ftrace=function"
-in the kernel command line, it will start tracing function calls
-until the boot-time tracing stops it by this option.
-
-Thank you,
-
-
->  -- Tim
-> 
-> > +   (you can enable it by the "traceon" event trigger action)
-> > +
-> >  ftrace.[instance.INSTANCE.]trace_clock = CLOCK
-> >     Set given CLOCK to ftrace's trace_clock.
-> > 
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Yep.
