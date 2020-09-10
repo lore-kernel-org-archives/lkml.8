@@ -2,73 +2,117 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0760EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CB6C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40B9206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1F120732
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b0zJlrJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730181AbgIJCCz (ORCPT
+        id S1730567AbgIJCDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:02:55 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:55814 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgIJBk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:40:56 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kGAXf-00005a-C3; Thu, 10 Sep 2020 10:34:24 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 10 Sep 2020 10:34:23 +1000
-Date:   Thu, 10 Sep 2020 10:34:23 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Wed, 9 Sep 2020 22:03:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729507AbgIJBk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 21:40:58 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B46C061342
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 18:40:57 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s65so2300473pgb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 18:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gTez5zBL4O/mFCX1yAYIY6uoJGixvvecrhH5yeefCRU=;
+        b=b0zJlrJ3/FxkSGhXn87cvP+RTMUhelRrCM1riW4kT7+txcP800FsUvP6kSl1Tx+BQ9
+         nlnSbaIdcJf/ctfzMo8lklWjGAlMfBcz670pLHXNIAzEyKNqQRUVeGBFLUGnDrDQvmmo
+         LiL1peql9jifg/8mL5CDMgP9HFRyzTX8uyAco=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gTez5zBL4O/mFCX1yAYIY6uoJGixvvecrhH5yeefCRU=;
+        b=AZi8rafTABa/JTVIjxuffU9/ZGTYjkrycu47HfvE56mV4lXSOQCTNExsJ6dnucuFf5
+         G4ZZYpOaHTT3VaVNPX+INos2uT1hTQKxY3z/3EbdtlLAo+lNktJtGJ23Ilwy3oWit1Pi
+         2pmSH1ICq9lCGHus21IShlkCu1Up5rA6zIQtOxocyY5DgOM7uS8CUQqAXGVEERuGrVtU
+         FTIRHqECb0wWD5zfRrTzC7mjoS9EDm7KG+zRsOOHkrpuSU6VG2TtJLqA0/+bxhqVpX0r
+         rewHbMm9/7UaVNCEBO83WQX6IOMAW7f0s9FBgi42Ixmo6g77IdsFmFZI0a9N2l9dhRmU
+         Unfg==
+X-Gm-Message-State: AOAM533jfd/CZuhUkqWVtOFuKlOX6PoNySNMzIjov47UPuiGpBdYlc4k
+        xk+RuJweeJkJ2xfbNBCwOszaOQ==
+X-Google-Smtp-Source: ABdhPJzBPsq3OhqI1wKePrmNY399SC3c/Mj0s1LcqZge53ktq1ymQHWKSBttbMamebJGRQYDAMFBPA==
+X-Received: by 2002:a63:d25:: with SMTP id c37mr2501235pgl.403.1599702057352;
+        Wed, 09 Sep 2020 18:40:57 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
+        by smtp.gmail.com with ESMTPSA id j19sm3885366pfi.51.2020.09.09.18.40.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 18:40:56 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     linux-bluetooth@vger.kernel.org
+Cc:     marcel@holtmann.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.9
-Message-ID: <20200910003423.GA28062@gondor.apana.org.au>
-References: <20200803044024.GA6429@gondor.apana.org.au>
- <20200830223304.GA16882@gondor.apana.org.au>
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH] Bluetooth: Re-order clearing suspend tasks
+Date:   Wed,  9 Sep 2020 18:40:06 -0700
+Message-Id: <20200909183952.1.Ie55bb8dde9847e8005f24402f3f2d66ea09cd7b2@changeid>
+X-Mailer: git-send-email 2.28.0.618.gf4bc123cb7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200830223304.GA16882@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+Unregister_pm_notifier is a blocking call so suspend tasks should be
+cleared beforehand. Otherwise, the notifier will wait for completion
+before returning (and we encounter a 2s timeout on resume).
 
-This push fixes a regression in padata.
+Fixes: 0e9952804ec9c8 (Bluetooth: Clear suspend tasks on unregister)
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+Should have caught that unregister_pm_notifier was blocking last time
+but when testing the earlier patch, I got unlucky and saw that the error
+message was never hit (the suspend timeout).
 
-The following changes since commit c195d66a8a75c60515819b101975f38b7ec6577f:
+When re-testing this patch on the same device, I was able to reproduce
+the problem on an older build with the 0e9952804ec9c8 but not on a newer
+build with the same patch. Changing the order correctly fixes it
+everywhere. Confirmed this by adding debug logs in btusb_disconnect and
+hci_suspend_notifier to confirm what order things were getting called.
 
-  crypto: af_alg - Work around empty control messages without MSG_MORE (2020-08-27 23:20:36 +1000)
+Sorry about the churn. Next I'm going try to do something about the palm
+shaped indentation on my forehead...
 
-are available in the Git repository at:
+ net/bluetooth/hci_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
-
-for you to fetch changes up to 1b0df11fde0f14a269a181b3b7f5122415bc5ed7:
-
-  padata: fix possible padata_works_lock deadlock (2020-09-04 17:51:55 +1000)
-
-----------------------------------------------------------------
-Daniel Jordan (1):
-      padata: fix possible padata_works_lock deadlock
-
- kernel/padata.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-Thanks,
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index efc0fe2b47dac2..be9cdf5dabe5dc 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3794,8 +3794,8 @@ void hci_unregister_dev(struct hci_dev *hdev)
+ 
+ 	cancel_work_sync(&hdev->power_on);
+ 
+-	unregister_pm_notifier(&hdev->suspend_notifier);
+ 	hci_suspend_clear_tasks(hdev);
++	unregister_pm_notifier(&hdev->suspend_notifier);
+ 	cancel_work_sync(&hdev->suspend_prepare);
+ 
+ 	hci_dev_do_close(hdev);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.28.0.618.gf4bc123cb7-goog
+
