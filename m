@@ -2,236 +2,143 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E87CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61018C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052F920795
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SQXd37fk"
+	by mail.kernel.org (Postfix) with ESMTP id 2D5EC20795
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgIJGJL (ORCPT
+        id S1726760AbgIJGJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:09:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54292 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgIJGJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:09:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A65LZx078701;
-        Thu, 10 Sep 2020 06:08:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=BZKbxxW9fRj1O1NrXCl2qK3IkQQc10VGvhE4jGAfas0=;
- b=SQXd37fk/BtuTbYp748oOSVO53w3aOoQNP/3F8naKXGJyn/Emxpln0uo/FP1QQV+SwMa
- RBhwXY0N1ICtDL0IyNhtKdYr/x1cuW3XL2cBm+0sWFG56khgarmwH2MCGdaN4EccRrPE
- MUQt2bNNa1U79RvqRBkOb7IBAzP/e2K57RAWoWPvO1kLLlv1H1ezz2s3vRIai/o0y3Tq
- NTjth5D+U0sr3oEGQ75nz9VilMpJtKHxtUzNuXqujU6uXz7W1agd0/zYZ8BzSWeLM9VD
- um2WB6SFr+wXVxYgW/iOatGGl2OXv3/a97+AzwUvQesXQ8j7totADeGAJNYINuUP9SpS kg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 33c23r5yje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 06:08:36 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A66Pc7133170;
-        Thu, 10 Sep 2020 06:06:36 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 33cmm0c2ea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 06:06:36 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08A66TSK001564;
-        Thu, 10 Sep 2020 06:06:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Sep 2020 23:06:28 -0700
-Date:   Wed, 9 Sep 2020 23:06:26 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
-        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH 2/2] xfs: don't update mtime on COW faults
-Message-ID: <20200910060626.GA7964@magnolia>
-References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009050805250.12419@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com>
- <20200905153652.GA7955@magnolia>
- <alpine.LRH.2.02.2009051229180.542@file01.intranet.prod.int.rdu2.redhat.com>
+        Thu, 10 Sep 2020 02:09:32 -0400
+Received: from thoth.sbs.de ([192.35.17.2]:47371 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbgIJGJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:09:30 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 08A698gW015304
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 08:09:08 +0200
+Received: from [167.87.23.29] ([167.87.23.29])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 08A6978D012373;
+        Thu, 10 Sep 2020 08:09:07 +0200
+Subject: Re: watchdog: sp5100_tco support for AMD V/R/E series
+To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org,
+        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
+        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
+        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
+References: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
+ <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
+ <9e270546-7962-932b-2e4c-3c833b7d4b30@siemens.com>
+ <a70578a9-4e55-602b-68fe-56a01805965e@roeck-us.net>
+ <39327ba6-0eff-3555-124c-64f3f105c9fe@roeck-us.net>
+ <cfa0b445-d4c7-94e3-9585-579f0103a7eb@roeck-us.net>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <bbb50d5f-869d-3a18-e568-ba541c9a2569@siemens.com>
+Date:   Thu, 10 Sep 2020 08:09:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2009051229180.542@file01.intranet.prod.int.rdu2.redhat.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=1
- spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009100056
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=1 spamscore=0
- malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100056
+In-Reply-To: <cfa0b445-d4c7-94e3-9585-579f0103a7eb@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 01:02:33PM -0400, Mikulas Patocka wrote:
-> 
-> 
-> On Sat, 5 Sep 2020, Darrick J. Wong wrote:
-> 
-> > On Sat, Sep 05, 2020 at 08:13:02AM -0400, Mikulas Patocka wrote:
-> > > When running in a dax mode, if the user maps a page with MAP_PRIVATE and
-> > > PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
-> > > when the user hits a COW fault.
-> > > 
-> > > This breaks building of the Linux kernel.
-> > > How to reproduce:
-> > > 1. extract the Linux kernel tree on dax-mounted xfs filesystem
-> > > 2. run make clean
-> > > 3. run make -j12
-> > > 4. run make -j12
-> > > - at step 4, make would incorrectly rebuild the whole kernel (although it
-> > >   was already built in step 3).
-> > > 
-> > > The reason for the breakage is that almost all object files depend on
-> > > objtool. When we run objtool, it takes COW page fault on its .data
-> > > section, and these faults will incorrectly update the timestamp of the
-> > > objtool binary. The updated timestamp causes make to rebuild the whole
-> > > tree.
-> > > 
-> > > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-> > > Cc: stable@vger.kernel.org
-> > > 
-> > > ---
-> > >  fs/xfs/xfs_file.c |   11 +++++++++--
-> > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > > 
-> > > Index: linux-2.6/fs/xfs/xfs_file.c
-> > > ===================================================================
-> > > --- linux-2.6.orig/fs/xfs/xfs_file.c	2020-09-05 10:01:42.000000000 +0200
-> > > +++ linux-2.6/fs/xfs/xfs_file.c	2020-09-05 13:59:12.000000000 +0200
-> > > @@ -1223,6 +1223,13 @@ __xfs_filemap_fault(
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static bool
-> > > +xfs_is_write_fault(
-> > 
-> > Call this xfs_is_shared_dax_write_fault, and throw in the IS_DAX() test?
-> > 
-> > You might as well make it a static inline.
-> 
-> Yes, it is possible. I'll send a second version.
-> 
-> > > +	struct vm_fault		*vmf)
-> > > +{
-> > > +	return vmf->flags & FAULT_FLAG_WRITE && vmf->vma->vm_flags & VM_SHARED;
-> > 
-> > Also, is "shortcutting the normal fault path" the reason for ext2 and
-> > xfs both being broken?
-> > 
-> > /me puzzles over why write_fault is always true for page_mkwrite and
-> > pfn_mkwrite, but not for fault and huge_fault...
-> > 
-> > Also: Can you please turn this (checking for timestamp update behavior
-> > wrt shared and private mapping write faults) into an fstest so we don't
-> > mess this up again?
-> 
-> I've written this program that tests it - you can integrate it into your 
-> testsuite.
+On 09.09.20 18:04, Guenter Roeck wrote:
+> On 9/7/20 1:45 PM, Guenter Roeck wrote:
+>> On 9/7/20 12:18 PM, Guenter Roeck wrote:
+>>> On 9/7/20 8:46 AM, Jan Kiszka wrote:
+>>>> On 07.09.20 17:31, Guenter Roeck wrote:
+>>>>> On 9/7/20 4:20 AM, Jan Kiszka wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> Arsalan reported that the upstream driver for sp5100_tco does not work
+>>>>>> for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
+>>>>>>
+>>>>>> [   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
+>>>>>> [   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
+>>>>>> [   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
+>>>>>>
+>>>>>> ..and fix it:
+>>>>>>
+>>>>>> diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
+>>>>>> index 85e9664318c9..5482154fde42 100644
+>>>>>> --- a/drivers/watchdog/sp5100_tco.c
+>>>>>> +++ b/drivers/watchdog/sp5100_tco.c
+>>>>>> @@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
+>>>>>>  		/* Set the Watchdog timer resolution to 1 sec and enable */
+>>>>>>  		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
+>>>>>>  					  ~EFCH_PM_WATCHDOG_DISABLE,
+>>>>>> -					  EFCH_PM_DECODEEN_SECOND_RES);
+>>>>>> +					  EFCH_PM_DECODEEN_SECOND_RES |
+>>>>>> +					  EFCH_PM_DECODEEN_WDT_TMREN);
+>>>>>
+>>>>> Confusing. The register in question is a 32-bit register, but only a byte
+>>>>> is written into it. Bit 24-25 are supposed to be the resolution, bit 25-26
+>>>>> set to 0 enable the watchdog. Bit 7 is supposed to enable MMIO decoding.
+>>>>> This is from AMD Publication 52740. So something in the existing code
+>>>>> is (or seems to be) wrong, but either case I don't see how setting bit 7
+>>>>> (or 31 ?) would enable the watchdog hardware.
+>>>>>
+>>>>> Hmm, I wrote that code. Guess I'll need to to spend some time figuring out
+>>>>> what is going on.
+>>>>
+>>>> The logic came from [1] which inspired [2] - that's where I pointed out
+>>>> the large overlap with the existing upstream driver. I would love to see
+>>>> all that consolidated.
+>>>>
+>>>> BTW, the R1505G is family 0x17. Maybe something changed there, and that
+>>>> bit 7 was just reserved/ignored so far. ENOSPECS
+>>>>
+>>>
+>>> Thanks for the pointers.
+>>>
+>>> I think you are talking about bit 31. Bit 7 is and was WatchdogTmrEn, but that
+>>> supposedly only enables watchdog timer memory access at 0xfeb00000. From what
+>>> I glance from the other drivers, the existing code is wrong. It should set
+>>> the disable and resolution bits in register offset 3 (bit 24..27), not 0.
+>>> In other words, EFCH_PM_DECODEEN3 should be defined as 0x03, not as 0x00.
+>>> Which actually makes sense from the name.
+>>>
+>>> Playing with my hardware, turns out that setting bit 7 in EFCH_PM_DECODEEN
+>>> (register offset 0) does indeed enable the watchdog. I'll need to check
+>>> if it actually works. Either case, -ENOSPECS is really a problem here.
+>>>
+>>
+>> ... and it does work. After playing with it, it seems that on Family 17h
+>> CPUs EFCH_PM_DECODEEN_WDT_TMREN not only enables watchdog timer memory
+>> access at 0xfeb0000, but also enables the watchdog itself.
+>>
+>> Also, turns out the documentation is now public, at least for some of the
+>> Family 17h CPUs (though oddly enough not for all of them). See processor
+>> reference manuals at https://www.amd.com/en/support/tech-docs. The documents
+>> for model 18h and model 20h include a note stating that bit 7 of
+>> EFCH_PM_DECODEEN enables both memory access and the watchdog hardware.
+>>
+>> So we'll need two patches - one to fix the value of EFCH_PM_DECODEEN3,
+>> and one to enable the watchdog bit setting bit 7 of EFCH_PM_DECODEEN
+>> for Family 17h CPUs.
+>>
+> Jan - any chance you can submit those patches ? Or do you want me to do it ?
 
-I don't get it.  You're a filesystem maintainer too, which means you're
-a regular contributor.  Do you:
+Oh, I was reading your reply as if you were writing the patches. The
+first one is definitely your finding, and while I can also see now what
+is wrong and needed on 17h, I'm unsure about the rest. If you have a
+better picture, please go ahead.
 
-(a) not use fstests?  If you don't, I really hope you use something else
-to QA hpfs.
+Jan
 
-(b) really think that it's my problem to integrate and submit your
-regression tests for you?
-
-> Mikulas
-> 
-> 
-> #include <stdio.h>
-
-and (c) what do you want me to do with a piece of code that has no
-signoff tag, no copyright, and no license?  This is your patch, and
-therefore your responsibility to develop enough of an appropriate
-regression test in a proper form that the rest of us can easily
-determine we have the rights to contribute to it.
-
-I don't have a problem with helping to tweak a properly licensed and
-tagged test program into fstests, but this is a non-starter.
-
---D
-
-> #include <stdlib.h>
-> #include <unistd.h>
-> #include <fcntl.h>
-> #include <string.h>
-> #include <sys/mman.h>
-> #include <sys/stat.h>
-> 
-> #define FILE_NAME	"test.txt"
-> 
-> static struct stat st1, st2;
-> 
-> int main(void)
-> {
-> 	int h, r;
-> 	char *map;
-> 	unlink(FILE_NAME);
-> 	h = creat(FILE_NAME, 0600);
-> 	if (h == -1) perror("creat"), exit(1);
-> 	r = write(h, "x", 1);
-> 	if (r != 1) perror("write"), exit(1);
-> 	if (close(h)) perror("close"), exit(1);
-> 	h = open(FILE_NAME, O_RDWR);
-> 	if (h == -1) perror("open"), exit(1);
-> 
-> 	map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE, h, 0);
-> 	if (map == MAP_FAILED) perror("mmap"), exit(1);
-> 	if (fstat(h, &st1)) perror("fstat"), exit(1);
-> 	sleep(2);
-> 	*map = 'y';
-> 	if (fstat(h, &st2)) perror("fstat"), exit(1);
-> 	if (memcmp(&st1, &st2, sizeof(struct stat))) fprintf(stderr, "BUG: COW fault changed time!\n"), exit(1);
-> 	if (munmap(map, 4096)) perror("munmap"), exit(1);
-> 
-> 	map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, h, 0);
-> 	if (map == MAP_FAILED) perror("mmap"), exit(1);
-> 	if (fstat(h, &st1)) perror("fstat"), exit(1);
-> 	sleep(2);
-> 	*map = 'z';
-> 	if (fstat(h, &st2)) perror("fstat"), exit(1);
-> 	if (st1.st_mtime == st2.st_mtime) fprintf(stderr, "BUG: Shared fault did not change mtime!\n"), exit(1);
-> 	if (st1.st_ctime == st2.st_ctime) fprintf(stderr, "BUG: Shared fault did not change ctime!\n"), exit(1);
-> 	if (munmap(map, 4096)) perror("munmap"), exit(1);
-> 
-> 	if (close(h)) perror("close"), exit(1);
-> 	if (unlink(FILE_NAME)) perror("unlink"), exit(1);
-> 	return 0;
-> }
-> 
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
