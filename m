@@ -2,178 +2,150 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CAFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2C6C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 042AB2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B344A207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HLvuaRMW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Jo9IhtiG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725372AbgIJSY6 (ORCPT
+        id S1726812AbgIJS0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726812AbgIJSSx (ORCPT
+        Thu, 10 Sep 2020 14:26:02 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5565 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgIJSTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:18:53 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF057C061799
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:18:52 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id f18so5099733pfa.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:18:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NNmcHwO+Iwg+rMeH3STh9feD6/hRsrC6t3t7wQ2j07g=;
-        b=HLvuaRMWnIdqkY/j252Zk2tw3F2MY+FcibjdL/KozWLivJNfEdTrKZ7CqbgRS7PlOp
-         JYDi+SPDHVcl/yQBRgsBfinBkUhTC2Vg4LOpBjFc6XUoK73NwgnL9x33VlwMsXmy4U//
-         L1KOhxbAqZ23ZfVN8lGVbKftKzpOrRTb+F6EQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NNmcHwO+Iwg+rMeH3STh9feD6/hRsrC6t3t7wQ2j07g=;
-        b=cf5gRvcN7lUgiss6MlpKhuESZbQI2OJql94zj0549wL9QJDHEHrQQgdnU4d7Gtl4GQ
-         Aw08IUapdRBQpSvA0/asExnXwsA9Hj5vMw9+gZ0dC9C2MH8dUQymVoJrI9p0779TfYI6
-         h/jw75EMpXJDm9VOe9NxMRutIfUJRJUB5tJFCCnuCb+5T9VYV5Zk8awFzCKHRoZV20SM
-         2LuN86SXXii4PtwS61snTJhhjiZ5ofz9J3jVJfvrA4kK0lcGqbZHBb5vxpCmO3ATFfQk
-         yN/j2T+qaR16sWOJBgnTr+wjcHLfQZQiLPDqdjqAyWnkdvRLpQ1ic28wV8NVLbSs1ZX+
-         RDlQ==
-X-Gm-Message-State: AOAM531ykKjs2WUfN/SLO8WvUJqprDhIFL3ZyVtzDcXbEjse0naIlobH
-        BeUnBACqTeNbiKkMIt582J0tuPm1YzArA8O+
-X-Google-Smtp-Source: ABdhPJw/4pL1OYUwp6z4yw3Dzx5FlBwoM08u2lDH1WyZ3QTjZmpweja7YeY9sCB7pjDSgbG18rK2lA==
-X-Received: by 2002:a63:6cc4:: with SMTP id h187mr5452054pgc.129.1599761932269;
-        Thu, 10 Sep 2020 11:18:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k3sm6784065pfp.41.2020.09.10.11.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:18:51 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 11:18:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
-Message-ID: <202009101057.1CCEB434@keescook>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <CAK7LNASDUkyJMDD0a5K_HT=1q5NEc6dcN4=FUb330yK0BCKcTw@mail.gmail.com>
- <20200908234643.GF1060586@google.com>
- <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
+        Thu, 10 Sep 2020 14:19:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5a6dfb0002>; Thu, 10 Sep 2020 11:18:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 10 Sep 2020 11:19:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 10 Sep 2020 11:19:19 -0700
+Received: from [10.26.73.219] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
+ 2020 18:19:17 +0000
+Subject: Re: [PATCH 1/5] misc: eeprom: at24: Initialise AT24 NVMEM ID field
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>
+References: <20200910134239.192030-1-jonathanh@nvidia.com>
+ <20200910134239.192030-2-jonathanh@nvidia.com>
+ <CAMpxmJXbhrmJJn4f3zk4=Y2tCwLzpFc+c6NbxcqVe8eaLSRvtw@mail.gmail.com>
+ <88021f57-b8cf-d3d6-0e9c-19ed0bccb729@nvidia.com>
+Message-ID: <5afe9537-dc50-16ff-028e-b4539c6f924a@nvidia.com>
+Date:   Thu, 10 Sep 2020 19:19:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAR9zzP0ZU3b__PZv8gRtKrwz6-8GE1zG5UyFx1wDpOBzQ@mail.gmail.com>
+In-Reply-To: <88021f57-b8cf-d3d6-0e9c-19ed0bccb729@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599761915; bh=relp5/wSsIqsD906iDWJJiEpu85XdzNneJxGcqDM//I=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Jo9IhtiG2ASEAijTpfHP3ape8NSkNjtJFTKB89QW/beXoFkgNO3YlurRMYmx0CuEZ
+         JHywXBJWEL2iZ+QzhUzpd+4fM1Om8KvAM4Jo4WSn2hsoorflJw3nrDG5NxU4jKZmmK
+         LLmNsHWigUG86i8o7OaAGOU54pp3cAU0qCARt5PEneC8IohtoUJDoaphjP5Ml3ToMb
+         u7XYNbYTED0Aa/AjcNENZ0eIO70MBT58lp9cTdInRqwlraUdn6Nc5vrxLLGLt4h/B2
+         X3Zk3+QUQbwGQQJADaJxlAT4cmYDJwRm60sPFmGvpCbH4QAX2egFnpMYZD8Vu0su8P
+         XfzBYBK8OGZ/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:18:05AM +0900, Masahiro Yamada wrote:
-> On Wed, Sep 9, 2020 at 8:46 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > On Sun, Sep 06, 2020 at 09:24:38AM +0900, Masahiro Yamada wrote:
-> > > On Fri, Sep 4, 2020 at 5:30 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > > >
-> > > > This patch series adds support for building x86_64 and arm64 kernels
-> > > > with Clang's Link Time Optimization (LTO).
-> > > [...]
-> > > One more thing, could you teach me
-> > > how Clang LTO optimizes the code against
-> > > relocatable objects?
-> > >
-> > > When I learned Clang LTO first, I read this document:
-> > > https://llvm.org/docs/LinkTimeOptimization.html
-> > >
-> > > It is easy to confirm the final executable
-> > > does not contain foo2, foo3...
-> > >
-> > > In contrast to userspace programs,
-> > > kernel modules are basically relocatable objects.
-> > >
-> > > Does Clang drop unused symbols from relocatable objects?
-> > > If so, how?
-> >
-> > I don't think the compiler can legally drop global symbols from
-> > relocatable objects, but it can rename and possibly even drop static
-> > functions.
+
+On 10/09/2020 19:15, Jon Hunter wrote:
 > 
-> Compilers can drop static functions without LTO.
-> Rather, it is a compiler warning
-> (-Wunused-function), so the code should be cleaned up.
-
-Right -- I think you're both saying the same thing. Unused static
-functions can be dropped (modulo a warning) in both regular and LTO
-builds.
-
-> At first, I thought the motivation of LTO
-> was to remove unused global symbols, and
-> to perform further optimization.
-
-One of LTO's benefits is the performance optimizations, but that's not
-the driving motivation for it here. The performance optimizations are
-possible because LTO provides the compiler with a view of the entire
-built-in portion of the kernel (i.e. not shared objects). That "visible
-all at once" state is the central concern because CFI (Control Flow
-Integrity, the driving motivation for this series) needs it in the same
-way that the performance optimization passes need it.
-
-i.e. to gain CFI coverage, LTO is required. Since LTO is a distinct
-first step independent of CFI, it was split out to be upstreamed while
-fixes for CFI continued to land independently[1]. Once LTO is landed,
-CFI comes next.
-
-> In contrast, this patch set produces a bigger kernel
-> because LTO cannot remove any unused symbol.
+> On 10/09/2020 16:35, Bartosz Golaszewski wrote:
+>> On Thu, Sep 10, 2020 at 3:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>>
+>>> The AT24 EEPROM driver does not initialise the 'id' field of the
+>>> nvmem_config structure and because the entire structure is not
+>>> initialised, it ends up with a random value. This causes the NVMEM
+>>> driver to append the device 'devid' value to name of the NVMEM
+>>> device. Although this is not a problem per-se, for I2C devices such as
+>>> the AT24, that already have a device unique name, there does not seem
+>>> much value in appending an additional 0 to the I2C name. For example,
+>>> appending a 0 to an I2C device name such as 1-0050 does not seem
+>>> necessary and maybe even a bit confusing. Therefore, fix this by
+>>> setting the NVMEM config.id to NVMEM_DEVID_NONE for AT24 EEPROMs.
+>>>
+>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>>> ---
+>>>  drivers/misc/eeprom/at24.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+>>> index e9df1ca251df..3f7a3bb6a36c 100644
+>>> --- a/drivers/misc/eeprom/at24.c
+>>> +++ b/drivers/misc/eeprom/at24.c
+>>> @@ -715,6 +715,7 @@ static int at24_probe(struct i2c_client *client)
+>>>
+>>>         nvmem_config.name = dev_name(dev);
+>>>         nvmem_config.dev = dev;
+>>> +       nvmem_config.id = NVMEM_DEVID_NONE;
+>>>         nvmem_config.read_only = !writable;
+>>>         nvmem_config.root_only = !(flags & AT24_FLAG_IRUGO);
+>>>         nvmem_config.owner = THIS_MODULE;
+>>> --
+>>> 2.25.1
+>>>
+>>
+>> This patch is correct and thanks for catching it. I vaguely recall
+>> wondering at some point why the appended 0 in the nvmem name for at24.
+>> Unfortunately this change would affect how the device is visible in
+>> user-space in /sys/bus/nvmem/devices/ and this could break existing
+>> users. Also: there are many in-kernel users that would need to be
+>> updated. I'm afraid we'll need some sort of backward compatibility.
 > 
-> So, I do not understand what the benefit is.
 > 
-> Is inlining beneficial?
-> I am not sure.
-
-This is just a side-effect of LTO. As Sami mentions, it's entirely
-tunable, and that tuning was chosen based on measurements made for the
-kernel being built with LTO[2].
-
-> As a whole, I still do not understand
-> the motivation of this patch set.
-
-It is a prerequisite for CFI, and CFI has been protecting *mumble*billion
-Android device kernels against code-reuse attacks for the last 2ish
-years[3]. I want this available for the entire Linux ecosystem, not just
-Android; it is a strong security flaw mitigation technique.
-
-I hope that helps explain it!
-
--Kees
+> Thanks, yes that is a problem. I guess for now we could explicitly init
+> to NVMEM_DEVID_AUTO or maybe just 0 so that it defaults to the same path
+> in the NVMEM driver. However, I am not sure how we can make allow some
+> devices to use NVMEM_DEVID_NONE and others use something else. This is
+> not really something that we can describe in DT because it has nothing
+> to do with h/w.
 
 
-[1] for example, these are some:
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=Control+Flow+Integrity
+Unless we make the configuration of the 'id' dependent on the 'label'
+property so something like ...
 
-[2] https://lore.kernel.org/lkml/20200624203200.78870-1-samitolvanen@google.com/T/#m6b576c3af79bdacada10f21651a2b02d33a4e32e
+	if (device_property_present(dev, "label")) {
+                nvmem_config.id = NVMEM_DEVID_NONE;
+		err = device_property_read_string(dev, "label",
+						  &nvmem_config.name);
+		if (err)
+			return err;
+	} else {
+                nvmem_config.id = NVMEM_DEVID_AUTO;
+		nvmem_config.name = dev_name(dev);
+	}
 
-[3] https://android-developers.googleblog.com/2018/10/control-flow-integrity-in-android-kernel.html
+Cheers
+Jon
 
 -- 
-Kees Cook
+nvpublic
