@@ -2,139 +2,96 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1395DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E3CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C517420BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84280208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 15:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PH7Eqfcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgIJPe3 convert rfc822-to-8bit (ORCPT
+        id S1730876AbgIJPev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 11:34:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:40132 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730077AbgIJPcP (ORCPT
+        Thu, 10 Sep 2020 11:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731028AbgIJPcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:32:15 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-276-Rr3yeOHPPMud0l-oIQnsyA-1; Thu, 10 Sep 2020 16:31:54 +0100
-X-MC-Unique: Rr3yeOHPPMud0l-oIQnsyA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 10 Sep 2020 16:31:53 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 10 Sep 2020 16:31:53 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Segher Boessenkool' <segher@kernel.crashing.org>
-CC:     'Christophe Leroy' <christophe.leroy@csgroup.eu>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Luis Chamberlain" <mcgrof@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: RE: remove the last set_fs() in common code, and remove it for x86
- and powerpc v3
-Thread-Topic: remove the last set_fs() in common code, and remove it for x86
- and powerpc v3
-Thread-Index: AQHWhvDyD2c/lZfV3kC0Ftay5UVebqlhgjnw///zuACAABnIEIAAOoMggAAi9ACAABJI8A==
-Date:   Thu, 10 Sep 2020 15:31:53 +0000
-Message-ID: <18fdbaeacba349a0a8bf7568f709e991@AcuMS.aculab.com>
-References: <20200903142242.925828-1-hch@lst.de>
- <20200903142803.GM1236603@ZenIV.linux.org.uk>
- <CAHk-=wgQNyeHxXfckd1WtiYnoDZP1Y_kD-tJKqWSksRoDZT=Aw@mail.gmail.com>
- <20200909184001.GB28786@gate.crashing.org>
- <CAHk-=whu19Du_rZ-zBtGsXAB-Qo7NtoJjQjd-Sa9OB5u1Cq_Zw@mail.gmail.com>
- <3beb8b019e4a4f7b81fdb1bc68bd1e2d@AcuMS.aculab.com>
- <186a62fc-042c-d6ab-e7dc-e61b18945498@csgroup.eu>
- <59a64e9a210847b59f70f9bd2d02b5c3@AcuMS.aculab.com>
- <5050b43687c84515a49b345174a98822@AcuMS.aculab.com>
- <20200910152030.GJ28786@gate.crashing.org>
-In-Reply-To: <20200910152030.GJ28786@gate.crashing.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
+        Thu, 10 Sep 2020 11:32:39 -0400
+Received: from mail-oi1-x263.google.com (mail-oi1-x263.google.com [IPv6:2607:f8b0:4864:20::263])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072B9C06136A
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:26:05 -0700 (PDT)
+Received: by mail-oi1-x263.google.com with SMTP id i17so6267469oig.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=N9KMfAmv5gz9m6lApSf8P0rQ6LhDYejBww8cNrHpQok=;
+        b=PH7EqfcrI9gbwFUc67/qdfVoPVX/x4PJuxUjvJeXseMzxwVdhBcsyHdWLOP5cGyfx5
+         7ZSBopRHdt6dSl26MJHlVEZbcs2PNDaWG3QYJWdgHtTwLu6T/ib8f2QzZMy+M/cSbnFa
+         5MjLhstOsdMcqMcTFdZvluz11qF37cAKikXTk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=N9KMfAmv5gz9m6lApSf8P0rQ6LhDYejBww8cNrHpQok=;
+        b=JhWfJEC1HrLWKQwkRZSbNr/T7J/RKYVZt0og1aQxlRRoEsExjcbymOC9Ep6MjKz53Q
+         2aibbNbg9hLKrMLHkmCixrzi9klEhcKSJDjWIQnswZKP3oPWLeISLLUw16Yk82yVtSSY
+         /8RwmQ+qn3O2nHvTDHYdQWAmOGoWedaLzd4JWylT8/ZRf+77iDD9rVfitFrYdegecD52
+         bgzRiHHVJQUps0I9P/9sZl2wUwVV3TKIZOathPqrgmufSDChFVYrPGl07x2zRuO6T1e4
+         ekTTFkRRlCt3DGCp6yCVmlF+YcZWBK20WS64kJ5aqlAX2d1vz82SsuX255hmlUaJpIKG
+         E3jg==
+X-Gm-Message-State: AOAM530XcriX9b43rE9UgK/DQnMwV1FLPgTcqMcXaW0h9Hf892GpZQa9
+        YeTfl7X9+jg3890WgPBaCA2ordFLzo6e8Y4iTOQhN5icvImU
+X-Google-Smtp-Source: ABdhPJxW+wUZjy6K9BKtFZv7NGBFSRSsF5MWXPbl2+IX73/JOQCBJl9BEXktjrUDKBXePb25dMK3bpyfrhPr
+X-Received: by 2002:aca:b454:: with SMTP id d81mr350910oif.150.1599751563367;
+        Thu, 10 Sep 2020 08:26:03 -0700 (PDT)
+Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
+        by smtp-relay.gmail.com with ESMTPS id h4sm943004oom.19.2020.09.10.08.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 08:26:03 -0700 (PDT)
+X-Relaying-Domain: broadcom.com
+From:   Ray Jui <ray.jui@broadcom.com>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Ray Jui <ray.jui@broadcom.com>
+Subject: [PATCH 1/4] dt-bindings: spi: Add compatible string for brcmstb SoCs
+Date:   Thu, 10 Sep 2020 08:25:36 -0700
+Message-Id: <20200910152539.45584-1-ray.jui@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add compatible string for brcmstb 7445 SoCs.
 
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+---
+ Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> -----Original Message-----
-> From: Segher Boessenkool <segher@kernel.crashing.org>
-> Sent: 10 September 2020 16:21
-> To: David Laight <David.Laight@ACULAB.COM>
-> Cc: 'Christophe Leroy' <christophe.leroy@csgroup.eu>; 'Linus Torvalds' <torvalds@linux-
-> foundation.org>; linux-arch <linux-arch@vger.kernel.org>; Kees Cook <keescook@chromium.org>; the
-> arch/x86 maintainers <x86@kernel.org>; Nick Desaulniers <ndesaulniers@google.com>; Linux Kernel
-> Mailing List <linux-kernel@vger.kernel.org>; Alexey Dobriyan <adobriyan@gmail.com>; Luis Chamberlain
-> <mcgrof@kernel.org>; Al Viro <viro@zeniv.linux.org.uk>; linux-fsdevel <linux-fsdevel@vger.kernel.org>;
-> linuxppc-dev <linuxppc-dev@lists.ozlabs.org>; Christoph Hellwig <hch@lst.de>
-> Subject: Re: remove the last set_fs() in common code, and remove it for x86 and powerpc v3
-> 
-> On Thu, Sep 10, 2020 at 12:26:53PM +0000, David Laight wrote:
-> > Actually this is pretty sound:
-> > 	__label__ label;
-> > 	register int eax asm ("eax");
-> > 	// Ensure eax can't be reloaded from anywhere
-> > 	// In particular it can't be reloaded after the asm goto line
-> > 	asm volatile ("" : "=r" (eax));
-> 
-> This asm is fine.  It says it writes the "eax" variable, which lives in
-> the eax register *in that asm* (so *not* guaranteed after it!).
-> 
-> > 	// Provided gcc doesn't save eax here...
-> > 	asm volatile goto ("xxxxx" ::: "eax" : label);
-> 
-> So this is incorrect.
-
-From the other email:
-
-> It is neither input nor output operand here!  Only *then* is a local
-> register asm guaranteed to be in the given reg: as input or output to an
-> inline asm.
-
-Ok, so adding '"r" (eax)' to the input section helps a bit.
-
-> > 	// ... and reload the saved value here.
-> > 	// The input value here will be that modified by the 'asm goto'.
-> > 	// Since this modifies eax it can't be moved before the 'asm goto'.
-> > 	asm volatile ("" : "+r" (eax));
-> > 	// So here eax must contain the value set by the "xxxxx" instructions.
-> 
-> No, the register eax will contain the value of the eax variable.  In the
-> asm; it might well be there before or after the asm as well, but none of
-> that is guaranteed.
-
-Perhaps not 'guaranteed', but very unlikely to be wrong.
-It doesn't give gcc much scope for not generating the desired code.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt b/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt
+index f5e518d099f2..9d4d5d866fa0 100644
+--- a/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/brcm,spi-bcm-qspi.txt
+@@ -32,6 +32,8 @@ Required properties:
+     			     			  			    BRCMSTB  SoCs
+     "brcm,spi-bcm7435-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
+     			     			  			    BRCMSTB  SoCs
++    "brcm,spi-bcm7445-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
++                                                                            BRCMSTB  SoCs
+     "brcm,spi-bcm7216-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
+     			     			  			    BRCMSTB  SoCs
+     "brcm,spi-bcm7278-qspi", "brcm,spi-bcm-qspi", "brcm,spi-brcmstb-mspi" : Second Instance of MSPI
+-- 
+2.17.1
 
