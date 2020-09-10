@@ -2,157 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7718C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CDD20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C0B20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ojaen4RD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F9u6+z1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbgIJWWx (ORCPT
+        id S1725833AbgIJWZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgIJWWr (ORCPT
+        Thu, 10 Sep 2020 18:25:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41410 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgIJWZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:22:47 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B8DC061573;
-        Thu, 10 Sep 2020 15:22:47 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a17so9091810wrn.6;
-        Thu, 10 Sep 2020 15:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QJdryBOClKOA56RF0lno73w+2jIzy3qa74iAnOwAYJM=;
-        b=Ojaen4RDlczPCynflQ2X+Woxi0hEuMMYDJ68edSPXfpPvF+u0vKCVW4FCO2vw1K7VV
-         kXvV0Z/jsR6035H1U+auwdtoW07iSD+BUF8c4uQSmHrycBsPxQdUqxWBlWBywXApxT3h
-         k239KmY1XHQo3ddTeDrWbl1rzFIpQDdMIBEzFl1g3IfIE+kHQBJu45Y3chtYK/roJoZJ
-         Q4cQzN22p3gSjfkrxtS5xjfdXLrnEbCcf5Aw7Sez8H47t1Y2z90YYG+HfBUpIhJMrtaS
-         4F1yYEcA5wA5YvZROcJkH/glNVkStXIZlDG4f+SklpgJ6emzPwNoFKU3q2bd2/pEgjC/
-         XZng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QJdryBOClKOA56RF0lno73w+2jIzy3qa74iAnOwAYJM=;
-        b=bMktxDt4QcdY4YqBBkpVnVbQzOtFE8Z4RYPPJ/thhkR79Ukg+5txYffrs3UdvcaxJP
-         aeGcOcXOmNscnc+vIXRWcwVEJgzHCmm+bQmh6GcaqSGUheFg/LqHMjIXNok32xE9nMte
-         0nbQ01wofOMPo7sP575EY4kYI9seUHNaroNU0/MIenJmdtMlwoiaCj5zN8feG3t55PJ3
-         /vSD0LSanb8xMp/7EYpunoHtjSn6646K+nqMt2jj+tXy5lu3TN+lunylVDPbAWmGg7dp
-         l2N+pDgYRrvkONaklDV4sEodyepb4pON+skmYJJ3xRd2Hy/AsZSkuLUMsJz/8G7jdT4i
-         mAwA==
-X-Gm-Message-State: AOAM532Ra3lesVnKHzTRtGOh+8R9pip0Rq3fPeCpVDAUvlppUQcfJeog
-        dLGPQ/Mv97dxfiRAhicvUWE02GRBTM8O+GkTv3Y=
-X-Google-Smtp-Source: ABdhPJw1y+dDHeLHjy/0iRFHZOUDlGfXVKBifM7P89aTJ9bB6XIMhdV8RFZwEBJY8C362hS+59YnVjan715cn1kHtd0=
-X-Received: by 2002:adf:f984:: with SMTP id f4mr11205365wrr.102.1599776565758;
- Thu, 10 Sep 2020 15:22:45 -0700 (PDT)
+        Thu, 10 Sep 2020 18:25:22 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AMPIU0090114;
+        Thu, 10 Sep 2020 17:25:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599776718;
+        bh=GjMJP+nWCUtiQwNsarcqurRBqCFISUNVgzR2BTmparY=;
+        h=From:To:CC:Subject:Date;
+        b=F9u6+z1H7wqbOHBaHNRVjb/2Hki0eCW4Q0WDeb408kQoysmWoS3AhGan7yP7la6MU
+         JEsf8QG/bnkZS2YuOwN6PAFk+IjbbeWMlFWi6m6KoYPv2xZ6zaQlxpikTUV705pAnX
+         zJRPEfTaB3rTKZNg3FUtko1+az/kjSNK86MWY25k=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AMPIhe091776
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 17:25:18 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 17:25:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 17:25:17 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AMPGr5017546;
+        Thu, 10 Sep 2020 17:25:17 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH next 0/3] ARM: dts: am437x: switch to new cpsw switch drv
+Date:   Fri, 11 Sep 2020 01:25:05 +0300
+Message-ID: <20200910222508.32417-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz> <CACRpkdaHNuuS-2zMwWf-2--8FFV_4aQuAjYx8pLu66h4adQcwQ@mail.gmail.com>
-In-Reply-To: <CACRpkdaHNuuS-2zMwWf-2--8FFV_4aQuAjYx8pLu66h4adQcwQ@mail.gmail.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 10 Sep 2020 15:22:34 -0700
-Message-ID: <CAHQ1cqGF3PsaWc0b0_1Mk8=4f36tO+WKwK0D6tRRxbFYtkTcpQ@mail.gmail.com>
-Subject: Re: pinctrl: sx150x bug
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Martin DEVERA <devik@eaxlabs.cz>, Peter Rosin <peda@axentia.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 6, 2020 at 2:41 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Hi Martin,
->
-> thanks for your report, let's check with Peter, Neil and Andrey who also
-> use this expander if they also see this problem (CC).
->
+Hi Tony,
 
-Looks reasonable. I haven't used that HW in a while, so I added Chris
-Healy to this thread, since he might be in a better position to
-comment on this and maybe even provide a Tested-by
+Since Kernel v5.5 commits:
+ 111cf1ab4da3 ("net: ethernet: ti: introduce cpsw switchdev based driver part 2 - switch")
+ ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+the new CPSW driver with switchdev support has been introduced and one
+am571x-idk board was converted to use it. And since that time (Nov 2019) no
+significant issues were reported for the new CPSW driver.
 
-> On Wed, Aug 5, 2020 at 11:28 AM Martin DEVERA <devik@eaxlabs.cz> wrote:
->
-> > I encountered bug in SX1502 expander driver in 5.7.7. Here is relevant
-> > DTS part:
-> >
-> > compatible = "semtech,sx1502q";
-> > gpio4_cfg_pins: gpio2-cfg {
-> >                          pins = "gpio5";
-> >                          output-high;
-> >      };
-> >
-> > And part of OOPS:
-> >
-> > [    0.673996] [<c023cfa6>] (gpiochip_get_data) from [<c023b235>]
-> > (sx150x_gpio_direction_output+0xd)
-> > [    0.683259] [<c023b235>] (sx150x_gpio_direction_output) from
-> > [<c023b363>] (sx150x_pinconf_set+0x)
-> > [    0.692796] [<c023b363>] (sx150x_pinconf_set) from [<c0238fef>]
-> > (pinconf_apply_setting+0x39/0x7e)
-> > [    0.701635] [<c0238fef>] (pinconf_apply_setting) from [<c0236c77>]
-> > (pinctrl_commit_state+0xa5/0x)
-> > [    0.710648] [<c0236c77>] (pinctrl_commit_state) from [<c0237e03>]
-> > (pinctrl_enable+0xff/0x1d4)
-> > [    0.719139] [<c0237e03>] (pinctrl_enable) from [<c023b791>]
-> > (sx150x_probe+0x1a3/0x358)
-> > [    0.727027] [<c023b791>] (sx150x_probe) from [<c02c38bf>]
-> > (i2c_device_probe+0x1bb/0x1dc)
-> >
-> > The problem is that sx150x_pinconf_set uses sx150x_gpio_direction_output
-> > but gpio is not
-> > setup yet. Patch below fixes it but I'm not sure whether is it correct:
-> >
-> > diff --git a/drivers/pinctrl/pinctrl-sx150x.c
-> > b/drivers/pinctrl/pinctrl-sx150x.c
-> > index 6e74bd87d959..3f5651edd336 100644
-> > --- a/drivers/pinctrl/pinctrl-sx150x.c
-> > +++ b/drivers/pinctrl/pinctrl-sx150x.c
-> > @@ -1154,12 +1154,6 @@ static int sx150x_probe(struct i2c_client *client,
-> >                  return ret;
-> >          }
-> >
-> > -       ret = pinctrl_enable(pctl->pctldev);
-> > -       if (ret) {
-> > -               dev_err(dev, "Failed to enable pinctrl device\n");
-> > -               return ret;
-> > -       }
-> > -
-> >          /* Register GPIO controller */
-> >          pctl->gpio.base = -1;
-> >          pctl->gpio.ngpio = pctl->data->npins;
-> > @@ -1191,6 +1185,12 @@ static int sx150x_probe(struct i2c_client *client,
-> >          if (ret)
-> >                  return ret;
-> >
-> > +       ret = pinctrl_enable(pctl->pctldev);
-> > +       if (ret) {
-> > +               dev_err(dev, "Failed to enable pinctrl device\n");
-> > +               return ret;
-> > +       }
-> > +
-> >          ret = gpiochip_add_pin_range(&pctl->gpio, dev_name(dev),
-> >                                       0, 0, pctl->data->npins);
-> >          if (ret)
->
-> I don't see any problem with the patch, can you send a proper patch
-> with git-send-email so we can test it and apply it if it works for the
-> other users? Include the mentioned people on CC.
->
-> Yours,
-> Linus Walleij
+Therefore it's time to switch all am437x boards to use new cpsw switch
+driver. Those boards have 1 or 2 Ext. ports wired and configured in dual_mac mode
+by default. The dual_mac mode has been preserved the same way between
+legacy and new driver, and one port devices works the same as 1 dual_mac port,
+so it's safe to switch drivers.
+
+Grygorii Strashko (3):
+  ARM: dts: am437x-l4: add dt node for new cpsw switchdev driver
+  ARM: dts: am437x: switch to new cpsw switch drv
+  ARM: dts: am437x-l4: drop legacy cpsw dt node
+
+ arch/arm/boot/dts/am4372.dtsi        |  4 +-
+ arch/arm/boot/dts/am437x-cm-t43.dts  | 14 +++--
+ arch/arm/boot/dts/am437x-gp-evm.dts  | 13 +++--
+ arch/arm/boot/dts/am437x-idk-evm.dts | 13 +++--
+ arch/arm/boot/dts/am437x-l4.dtsi     | 77 +++++++++++++++-------------
+ arch/arm/boot/dts/am437x-sk-evm.dts  | 14 +++--
+ arch/arm/boot/dts/am43x-epos-evm.dts | 13 +++--
+ 7 files changed, 78 insertions(+), 70 deletions(-)
+
+-- 
+2.17.1
+
