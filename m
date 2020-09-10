@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37557C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DFFC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC1020770
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E52321556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599728305;
-	bh=0PJbxvzO5I5gMwLMCGZyMr4dYyj6eWzJKi8tvIfw5go=;
+	s=default; t=1599728310;
+	bh=Usei1xLmvGf2Y8buCZXpy+oUTxiyFNSfzZeT9ewnigs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qmWR+WDLVCO6j/B7eI2fzDCPGxEz+Fufb6KFHAmnyFIGZZ2fbmOMk79uohqOyqnWw
-	 fKzlTQPpXtGUtLzLePoCQNHKIdr+GTc8szaqOtHl7sYGPijm0oNbnkv2RBXqqG4TKo
-	 SfyQUCL1OgFVIxk0uqB/ZQG1XAugX1VK9u9EMTnQ=
+	b=2MH+PujEjezPNnPzSr984dbY4gIh+r6NH22/JfcadFiCHuY8qgx5/RuCz1p4w5bT1
+	 YrcKTla4z6Rw/qtkymY+ATI43u83u/sntmW8cpHzg0oBzZA7wmutaVvPjyURKKwI3S
+	 mk9cUMSUvwpwFoBHBjyzkilxMm/RBassycG6vjLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbgIJI6Y (ORCPT
+        id S1730424AbgIJI6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 04:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730437AbgIJI40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:56:26 -0400
+        id S1730268AbgIJIzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:55:51 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4C6920C09;
-        Thu, 10 Sep 2020 08:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41522078B;
+        Thu, 10 Sep 2020 08:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599728180;
-        bh=0PJbxvzO5I5gMwLMCGZyMr4dYyj6eWzJKi8tvIfw5go=;
+        s=default; t=1599728150;
+        bh=Usei1xLmvGf2Y8buCZXpy+oUTxiyFNSfzZeT9ewnigs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M15lyRNu+GUJ399GEB6RWtOfd2Huf3GoD7Y4J6wNiX2mVL8R2UaJR4CqkplFi01Op
-         b5MtW+7sNCMFtZA4N8jYufN5ROy2atU09kOCsaG7+nYogQgRWRMMhpm++Y/9JPfwaL
-         p/AXm+Z45K/Hv+r7kVizMjmJBqMy9s4fvleql/BA=
+        b=zgr7WfK9sDVeejvY78RJ+pkCDQOwSqegfMelvnN8fNrZSf6ipnffv0ANSDHqOxXsx
+         Pdz2qRQMHMOM4t3Zg5CpBQjuYTw9VUhBVy6WgtNYLSd/tsVHVU/PHmbWURNMIOmqw3
+         CoYroNdbbR2ZmyBRbbnOoToIW/NjvFY2wzLaJakQ=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -46,9 +46,9 @@ To:     Steven Rostedt <rostedt@goodmis.org>,
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 8/8] selftests/ftrace: Add %return suffix tests
-Date:   Thu, 10 Sep 2020 17:56:16 +0900
-Message-Id: <159972817653.428528.9180599115849301184.stgit@devnote2>
+Subject: [PATCH v3 5/8] tracing/uprobes: Support perf-style return probe
+Date:   Thu, 10 Sep 2020 17:55:46 +0900
+Message-Id: <159972814601.428528.7641183316212425445.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <159972809455.428528.4737752126800169128.stgit@devnote2>
 References: <159972809455.428528.4737752126800169128.stgit@devnote2>
@@ -61,72 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add kprobe %return suffix testcase and syntax error tests
-for %return suffix.
+Support perf-style return probe ("SYMBOL%return") for uprobe events
+as same as kprobe events does.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    6 ++++++
- .../test.d/kprobe/kretprobe_return_suffix.tc       |   21 ++++++++++++++++++++
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    6 ++++++
- 3 files changed, 33 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_return_suffix.tc
+ kernel/trace/trace.c        |    2 +-
+ kernel/trace/trace_uprobe.c |   15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index b4d834675e59..56b3f36c722b 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -97,4 +97,10 @@ check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
- check_error '^p:kprobes/testevent _do_fork abcd=\1'	# SAME_PROBE
- fi
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2c8c8f7ddef7..faf55f5dd99d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5125,7 +5125,7 @@ static const char readme_msg[] =
+   "place (kretprobe): [<module>:]<symbol>[+<offset>]%return|<memaddr>\n"
+ #endif
+ #ifdef CONFIG_UPROBE_EVENTS
+-  "   place (uprobe): <path>:<offset>[(ref_ctr_offset)]\n"
++  "   place (uprobe): <path>:<offset>[%return][(ref_ctr_offset)]\n"
+ #endif
+ 	"\t     args: <name>=fetcharg[:type]\n"
+ 	"\t fetcharg: %<register>, @<address>, @<symbol>[+|-<offset>],\n"
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index f4286c9bdeb4..fb5ec4e55484 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -528,7 +528,7 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
  
-+# %return suffix errors
-+if grep -q "place (kretprobe): .*%return.*" README; then
-+check_error 'p vfs_read^%hoge'		# BAD_ADDR_SUFFIX
-+check_error 'p ^vfs_read+10%return'	# BAD_RETPROBE
-+fi
-+
- exit 0
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_return_suffix.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_return_suffix.tc
-new file mode 100644
-index 000000000000..f07bd15cc033
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_return_suffix.tc
-@@ -0,0 +1,21 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Kretprobe %%return suffix test
-+# requires: kprobe_events '<symbol>[+<offset>]%return':README
-+
-+# Test for kretprobe by "r"
-+echo 'r:myprobeaccept vfs_read' > kprobe_events
-+RESULT1=`cat kprobe_events`
-+
-+# Test for kretprobe by "%return"
-+echo 'p:myprobeaccept vfs_read%return' > kprobe_events
-+RESULT2=`cat kprobe_events`
-+
-+if [ "$RESULT1" != "$RESULT2" ]; then
-+	echo "Error: %return suffix didn't make a return probe."
-+	echo "r-command: $RESULT1"
-+	echo "%return: $RESULT2"
-+	exit_fail
-+fi
-+
-+echo > kprobe_events
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-index 7b5b60c3c5a2..f5e3f9e4a01f 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
-@@ -17,4 +17,10 @@ check_error 'p /bin/sh:10(10)^a'	# BAD_REFCNT_SUFFIX
- check_error 'p /bin/sh:10 ^@+ab'	# BAD_FILE_OFFS
- check_error 'p /bin/sh:10 ^@symbol'	# SYM_ON_UPROBE
+ /*
+  * Argument syntax:
+- *  - Add uprobe: p|r[:[GRP/]EVENT] PATH:OFFSET [FETCHARGS]
++ *  - Add uprobe: p|r[:[GRP/]EVENT] PATH:OFFSET[%return][(REF)] [FETCHARGS]
+  */
+ static int trace_uprobe_create(int argc, const char **argv)
+ {
+@@ -617,6 +617,19 @@ static int trace_uprobe_create(int argc, const char **argv)
+ 		}
+ 	}
  
-+# %return suffix error
-+if grep -q "place (uprobe): .*%return.*" README; then
-+check_error 'p /bin/sh:10^%hoge'	# BAD_ADDR_SUFFIX
-+check_error 'p /bin/sh:10(10)^%return'	# BAD_REFCNT_SUFFIX
-+fi
++	/* Check if there is %return suffix */
++	tmp = strchr(arg, '%');
++	if (tmp) {
++		if (!strcmp(tmp, "%return")) {
++			*tmp = '\0';
++			is_return = true;
++		} else {
++			trace_probe_log_err(tmp - filename, BAD_ADDR_SUFFIX);
++			ret = -EINVAL;
++			goto fail_address_parse;
++		}
++	}
 +
- exit 0
+ 	/* Parse uprobe offset. */
+ 	ret = kstrtoul(arg, 0, &offset);
+ 	if (ret) {
 
