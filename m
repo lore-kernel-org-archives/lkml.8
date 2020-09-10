@@ -2,95 +2,212 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAED9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFACAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8484F221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599773829;
-	bh=V1wKpfnBNnmhv6G3q9IsWvZn9GlN18uZFdJxqnq2jxk=;
-	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
-	b=ef3JFnJ11fxc3g9Uhi/ne6s+zKn8tyx2716hSW2yz0xxAzqzySAp5XVa5wYFMq/Rl
-	 vHyHWZ+m3IoFWBwHEDwkVzNHTUt8nLQkULpDxJoF8VIjn7O49PMlT1IBSvvKkjVwnl
-	 U5tPYE0ZY6YgbBqY6r7WIupK+nMuR04RM/tmmJY0=
+	by mail.kernel.org (Postfix) with ESMTP id 9CF42208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgIJVhD (ORCPT
+        id S1726926AbgIJVhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:37:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 17:37:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:36190 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730893AbgIJNft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:35:49 -0400
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D3820C09;
-        Thu, 10 Sep 2020 13:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599744948;
-        bh=V1wKpfnBNnmhv6G3q9IsWvZn9GlN18uZFdJxqnq2jxk=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=Iu/QQeP8BdkkjmC//fxdEnzC5MvdHm2RGo1WAcNBcr9EVzPC8+MLBZHSXIf7rWBF2
-         6D9BONK2qf/U6VezTnMLux6qXZPOwqeNdD92RjA6BNJVqI/TkLyqvz2cckdmfoQW66
-         Vq3lhpyM3TycBna9MohQUjs1xHctxsM4+qg8bjx8=
-Received: by mail-ej1-f46.google.com with SMTP id i26so8707663ejb.12;
-        Thu, 10 Sep 2020 06:35:47 -0700 (PDT)
-X-Gm-Message-State: AOAM531UjY0Sa1EcdyjuLmI8tZcHa0SK6ZafU30/tzZksHhQ+8x8KRJY
-        +iyhr2h7wZqKhdwleuhYs0eSY0aagglUl+wPI3Y=
-X-Google-Smtp-Source: ABdhPJwINmV5bI33FlqWtuSmo9zSXfn21SyT8mGvBNJyprgovPHUzJONmLEebsWy015sjIsWUjJzxmOGWX+E8h1VP8s=
-X-Received: by 2002:a17:906:82d1:: with SMTP id a17mr8613075ejy.385.1599744946434;
- Thu, 10 Sep 2020 06:35:46 -0700 (PDT)
+        id S1728442AbgIJNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:34:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D844106F;
+        Thu, 10 Sep 2020 06:34:21 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69B3C3F66E;
+        Thu, 10 Sep 2020 06:34:19 -0700 (PDT)
+Subject: Re: [PATCH 11/12] dma-mapping: move dma_common_{mmap,get_sgtable} out
+ of mapping.c
+To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        iommu@lists.linux-foundation.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org
+References: <20200908164758.3177341-1-hch@lst.de>
+ <20200908164758.3177341-12-hch@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <88bae26e-d5f4-7a00-a88a-b69194d519a4@arm.com>
+Date:   Thu, 10 Sep 2020 14:34:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <1599730349-2160-1-git-send-email-alain.volmat@st.com>
- <20200910100607.GJ1031@ninjato> <20200910122739.GA5093@gnbcxd0016.gnb.st.com>
-In-Reply-To: <20200910122739.GA5093@gnbcxd0016.gnb.st.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 10 Sep 2020 15:35:34 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPcx1tL93KJAvVT3rAgHX-r3bxri9GwHMSgDSAhALi2aFA@mail.gmail.com>
-Message-ID: <CAJKOXPcx1tL93KJAvVT3rAgHX-r3bxri9GwHMSgDSAhALi2aFA@mail.gmail.com>
-Subject: Re: [PATCH] i2c: stm32: do not display error when DMA is not requested
-To:     Wolfram Sang <wsa@kernel.org>, pierre-yves.mordret@st.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        fabrice.gasnier@st.com, Krzysztof Kozlowski <krzk@kernel.org>,
-        Holger Assmann <h.assmann@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200908164758.3177341-12-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 at 14:27, Alain Volmat <alain.volmat@st.com> wrote:
->
-> On Thu, Sep 10, 2020 at 12:06:07PM +0200, Wolfram Sang wrote:
-> > On Thu, Sep 10, 2020 at 11:32:29AM +0200, Alain Volmat wrote:
-> > > DMA usage is optional for the I2C driver. check for the -ENODEV
-> > > error in order to avoid displaying an error when no DMA
-> > > has been requested.
-> > >
-> > > Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> > > ---
-> > > This patch should be applied on top of the patch [i2c: stm32: Simplify with dev_err_probe()]
-> >
-> > We can do it in this order, it just makes backporting to stable kernels
-> > (if that is desired) a bit harder than a self-contained patch. I am fine
-> > with both approaches, but just wanted to point it out.
->
-> Indeed, that's a good point. I'll rework it then, to avoid the dependency
-> on dev_err_probe change. If that is ok, I propose to push a two patches serie
-> with both this fix (updated) followed by a rebased version of the
-> dev_err_probe patch from Krzysztof for dev_err_probe change.
+On 2020-09-08 17:47, Christoph Hellwig wrote:
+> Add a new file that contains helpera for misc DMA ops, which is only
 
-I can rebase mine on top of yours. Indeed such cleanups as mine should
-be rather later in the queue.
+The Latin plural of the singular "helperum", I guess? :P
 
-Best regards,
-Krzysztof
+> built when CONFIG_DMA_OPS is set.
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   kernel/dma/Makefile      |  1 +
+>   kernel/dma/mapping.c     | 47 +-----------------------------------
+>   kernel/dma/ops_helpers.c | 51 ++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 53 insertions(+), 46 deletions(-)
+>   create mode 100644 kernel/dma/ops_helpers.c
+> 
+> diff --git a/kernel/dma/Makefile b/kernel/dma/Makefile
+> index 32c7c1942bbd6c..dc755ab68aabf9 100644
+> --- a/kernel/dma/Makefile
+> +++ b/kernel/dma/Makefile
+> @@ -1,6 +1,7 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   
+>   obj-$(CONFIG_HAS_DMA)			+= mapping.o direct.o
+> +obj-$(CONFIG_DMA_OPS)			+= ops_helpers.o
+>   obj-$(CONFIG_DMA_OPS)			+= dummy.o
+>   obj-$(CONFIG_DMA_CMA)			+= contiguous.o
+>   obj-$(CONFIG_DMA_DECLARE_COHERENT)	+= coherent.o
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index 0d129421e75fc8..848c95c27d79ff 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -8,7 +8,7 @@
+>   #include <linux/memblock.h> /* for max_pfn */
+>   #include <linux/acpi.h>
+>   #include <linux/dma-direct.h>
+> -#include <linux/dma-noncoherent.h>
+> +#include <linux/dma-mapping.h>
+>   #include <linux/export.h>
+>   #include <linux/gfp.h>
+>   #include <linux/of_device.h>
+> @@ -295,22 +295,6 @@ void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
+>   }
+>   EXPORT_SYMBOL(dma_sync_sg_for_device);
+>   
+> -/*
+> - * Create scatter-list for the already allocated DMA buffer.
+> - */
+> -int dma_common_get_sgtable(struct device *dev, struct sg_table *sgt,
+> -		 void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> -		 unsigned long attrs)
+> -{
+> -	struct page *page = virt_to_page(cpu_addr);
+> -	int ret;
+> -
+> -	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+> -	if (!ret)
+> -		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
+> -	return ret;
+> -}
+> -
+>   /*
+>    * The whole dma_get_sgtable() idea is fundamentally unsafe - it seems
+>    * that the intention is to allow exporting memory allocated via the
+> @@ -358,35 +342,6 @@ pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+>   }
+>   #endif /* CONFIG_MMU */
+>   
+> -/*
+> - * Create userspace mapping for the DMA-coherent memory.
+> - */
+> -int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+> -		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> -		unsigned long attrs)
+> -{
+> -#ifdef CONFIG_MMU
+> -	unsigned long user_count = vma_pages(vma);
+> -	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> -	unsigned long off = vma->vm_pgoff;
+> -	int ret = -ENXIO;
+> -
+> -	vma->vm_page_prot = dma_pgprot(dev, vma->vm_page_prot, attrs);
+> -
+> -	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+> -		return ret;
+> -
+> -	if (off >= count || user_count > count - off)
+> -		return -ENXIO;
+> -
+> -	return remap_pfn_range(vma, vma->vm_start,
+> -			page_to_pfn(virt_to_page(cpu_addr)) + vma->vm_pgoff,
+> -			user_count << PAGE_SHIFT, vma->vm_page_prot);
+> -#else
+> -	return -ENXIO;
+> -#endif /* CONFIG_MMU */
+> -}
+> -
+>   /**
+>    * dma_can_mmap - check if a given device supports dma_mmap_*
+>    * @dev: device to check
+> diff --git a/kernel/dma/ops_helpers.c b/kernel/dma/ops_helpers.c
+> new file mode 100644
+> index 00000000000000..e443c69be4299f
+> --- /dev/null
+> +++ b/kernel/dma/ops_helpers.c
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Helpers for DMA ops implementations.  These generally rely on the fact that
+> + * the allocated memory contains normal pages in the direct kernel mapping.
+> + */
+> +#include <linux/dma-noncoherent.h>
+> +
+> +/*
+> + * Create scatter-list for the already allocated DMA buffer.
+> + */
+> +int dma_common_get_sgtable(struct device *dev, struct sg_table *sgt,
+> +		 void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> +		 unsigned long attrs)
+> +{
+> +	struct page *page = virt_to_page(cpu_addr);
+> +	int ret;
+> +
+> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+> +	if (!ret)
+> +		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Create userspace mapping for the DMA-coherent memory.
+> + */
+> +int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+> +		void *cpu_addr, dma_addr_t dma_addr, size_t size,
+> +		unsigned long attrs)
+> +{
+> +#ifdef CONFIG_MMU
+> +	unsigned long user_count = vma_pages(vma);
+> +	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+> +	unsigned long off = vma->vm_pgoff;
+> +	int ret = -ENXIO;
+> +
+> +	vma->vm_page_prot = dma_pgprot(dev, vma->vm_page_prot, attrs);
+> +
+> +	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+> +		return ret;
+> +
+> +	if (off >= count || user_count > count - off)
+> +		return -ENXIO;
+> +
+> +	return remap_pfn_range(vma, vma->vm_start,
+> +			page_to_pfn(virt_to_page(cpu_addr)) + vma->vm_pgoff,
+> +			user_count << PAGE_SHIFT, vma->vm_page_prot);
+> +#else
+> +	return -ENXIO;
+> +#endif /* CONFIG_MMU */
+> +}
+> 
