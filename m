@@ -2,90 +2,121 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08F4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88E372080A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A763B21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:46:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eC6xHFZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgIJTqJ (ORCPT
+        id S1727035AbgIJTqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:46:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11803 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731314AbgIJPaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:30:46 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AACB954E49DA2BF4E598;
-        Thu, 10 Sep 2020 23:14:41 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
- 23:14:36 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <intel-wired-lan@lists.osuosl.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] igb: Fix some kernel-doc warnings in e1000_82575.c
-Date:   Thu, 10 Sep 2020 23:11:55 +0800
-Message-ID: <20200910151155.35995-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 10 Sep 2020 15:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726966AbgIJTpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:45:47 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250CCC0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:45:47 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v196so5435292pfc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kT3st5L2W/yGrskNA7hV4WTKcp+VzTZ5Pgaqe30vqT8=;
+        b=eC6xHFZebGzDOu2iJFlC4sYhGBsPBPtk9a7oklICzLNlEMzSAdGnasLCc1rhvVduzw
+         WWGkAB927UqclP1++HPY0zndFIqCAsSEoCB33GsJW1zgx9zdnqi9fNwkG+wGtFEr+T3z
+         bUYjH1Oc2jBMRnj0f0FQ3tH0tHQIOzzYF+914=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kT3st5L2W/yGrskNA7hV4WTKcp+VzTZ5Pgaqe30vqT8=;
+        b=ZG4tp+t71CqLf458mTUuC2iYKl38mD407TkRDBbMwpg1rP/cLxZnel3nZJD24CSXWD
+         ocsUx2oE+pcRJ0RtAseW9f2Fix6WanLSAMRxB1aOOt9AWAHNuml5vpQoaGQrClISumWB
+         BHJLVuIVd7gWwMSJ/Rh3i2COLdLdMN6A8TPZqmMySqqLQqYsmknBoWla9Uxt7zg3l8vg
+         YPT9BcCjv5ve3EE739kAMGORrrVCTPF/pyPtLlh17rxKzJWLcRnH+Rp+O+F7Y1vRV05K
+         3dzDVJ8H+uo0oLG1Jhroo/+WaTSkwEE/sREe49Zel7J1i+C06QmRs7Qa2cVswmFR5a9r
+         ET2Q==
+X-Gm-Message-State: AOAM530cO+IW6pGMkULtT/XdZ1ofQ3X/hSdFWFpuD6OyBfMqCTe5OVcj
+        ExQEhoL6GgCWdHzpCCKsQ/apXw==
+X-Google-Smtp-Source: ABdhPJwWpKs77i2Pw4YhFhAT5cZe6s0qx17kIVE+as0BWVJNc55TKLnEBagdP5cQWEjWPugWxrbACw==
+X-Received: by 2002:aa7:858e:: with SMTP id w14mr2753410pfn.95.1599767146631;
+        Thu, 10 Sep 2020 12:45:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l79sm2905776pfd.210.2020.09.10.12.45.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 12:45:45 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 12:45:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-ia64@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-arch@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-um@lists.infradead.org,
+        linux-m68k@lists.linux-m68k.org, Tony Luck <tony.luck@intel.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] kbuild: preprocess module linker script
+Message-ID: <202009101245.493610D05@keescook>
+References: <20200904133122.133071-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904133122.133071-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On Fri, Sep 04, 2020 at 10:31:21PM +0900, Masahiro Yamada wrote:
+> There was a request to preprocess the module linker script like we do
+> for the vmlinux one (https://lkml.org/lkml/2020/8/21/512).
+> 
+> The difference between vmlinux.lds and module.lds is that the latter
+> is needed for external module builds, thus must be cleaned up by
+> 'make mrproper' instead of 'make clean' (also, it must be created by
+> 'make modules_prepare').
+> 
+> You cannot put it in arch/*/kernel/ because 'make clean' descends into
+> it. I moved arch/*/kernel/module.lds to arch/*/include/asm/module.lds.h,
+> which is included from scripts/module.lds.S.
+> 
+> scripts/module.lds is fine because 'make clean' keeps all the build
+> artifacts under scripts/.
+> 
+> You can add arch-specific sections in <asm/module.lds.h>.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-drivers/net/ethernet/intel/igb/e1000_82575.c:2563: warning: Excess function parameter 'addr' description in '__igb_access_emi_reg'
-drivers/net/ethernet/intel/igb/e1000_82575.c:2599: warning: Excess function parameter 'adv100m' description in 'igb_set_eee_i350'
-drivers/net/ethernet/intel/igb/e1000_82575.c:2655: warning: Excess function parameter 'adv100m' description in 'igb_set_eee_i354'
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/ethernet/intel/igb/e1000_82575.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
-index a32391e82762..50863fd87d53 100644
---- a/drivers/net/ethernet/intel/igb/e1000_82575.c
-+++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
-@@ -2554,7 +2554,7 @@ static s32 igb_update_nvm_checksum_i350(struct e1000_hw *hw)
- /**
-  *  __igb_access_emi_reg - Read/write EMI register
-  *  @hw: pointer to the HW structure
-- *  @addr: EMI address to program
-+ *  @address: EMI address to program
-  *  @data: pointer to value to read/write from/to the EMI address
-  *  @read: boolean flag to indicate read or write
-  **/
-@@ -2590,7 +2590,7 @@ s32 igb_read_emi_reg(struct e1000_hw *hw, u16 addr, u16 *data)
-  *  igb_set_eee_i350 - Enable/disable EEE support
-  *  @hw: pointer to the HW structure
-  *  @adv1G: boolean flag enabling 1G EEE advertisement
-- *  @adv100m: boolean flag enabling 100M EEE advertisement
-+ *  @adv100M: boolean flag enabling 100M EEE advertisement
-  *
-  *  Enable/disable EEE based on setting in dev_spec structure.
-  *
-@@ -2646,7 +2646,7 @@ s32 igb_set_eee_i350(struct e1000_hw *hw, bool adv1G, bool adv100M)
-  *  igb_set_eee_i354 - Enable/disable EEE support
-  *  @hw: pointer to the HW structure
-  *  @adv1G: boolean flag enabling 1G EEE advertisement
-- *  @adv100m: boolean flag enabling 100M EEE advertisement
-+ *  @adv100M: boolean flag enabling 100M EEE advertisement
-  *
-  *  Enable/disable EEE legacy mode based on setting in dev_spec structure.
-  *
 -- 
-2.17.1
-
+Kees Cook
