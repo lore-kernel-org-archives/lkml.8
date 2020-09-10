@@ -2,224 +2,267 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC7BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8250C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72582221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AVDgGo0/"
+	by mail.kernel.org (Postfix) with ESMTP id A8066208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgIJVen (ORCPT
+        id S1728356AbgIJVfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730889AbgIJNt4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:49:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962A0C061796;
-        Thu, 10 Sep 2020 06:49:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8HnaJsrywNAsTbyAgR0uDLUkI/076f0nl1xcx0f5Xko=; b=AVDgGo0/6/PB8I5DLtMJL2binO
-        pmOQFwK5wVGNZiNAEaWwYcL8vS/eMnTaPIZAY7mbv6nStP3R2yb3GXKw3Qof4jcmSlWeoHU+/82Bd
-        0TBjzvJIvJc9SWg49AWb+7o7JjGt5K7abOf0Il9pg05LbGq1YrgXcbg2ZOL7iK1OafUcqQA5Oej0N
-        Rzb00lRrkyeX+N9QqRfbzHBkWInN0t2a18twu+JQOaR6naObkQH/wPwnpfeKDHczznhDDNSnbqA1I
-        Hp3PxF293vyIQQgKuyBlP0/cCZMpvlMZkU473U0yNovX0yMS07kGlvLPybyBzlNDYEBoRKOPENnzX
-        TSCNEaRg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGMx1-0003DF-8H; Thu, 10 Sep 2020 13:49:23 +0000
-Date:   Thu, 10 Sep 2020 14:49:23 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
-        shy828301@gmail.com, Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v18 06/32] mm/thp: narrow lru locking
-Message-ID: <20200910134923.GR6583@casper.infradead.org>
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <1598273705-69124-7-git-send-email-alex.shi@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598273705-69124-7-git-send-email-alex.shi@linux.alibaba.com>
+        Thu, 10 Sep 2020 17:35:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:36678 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730684AbgIJNtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:49:45 -0400
+IronPort-SDR: frqBtvOmunPIHcp1EguglE5KgQk7rF5LOew8jdvSBZ3P1dZUthBRVrHzIfI6KtOGrfIyir9Nj4
+ LzpvlF9dE/fQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="138048791"
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="138048791"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 06:48:40 -0700
+IronPort-SDR: 5me4/pk7ERgAtI+5xYHyCxd56QWCM/wVxFhBWOaD/G94rA2ePtZRaZ6/LSqW5yi144PMxfYG1/
+ /2XeBU2IYuew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="300557767"
+Received: from ssp-icl-u-210.jf.intel.com ([10.54.55.52])
+  by orsmga003.jf.intel.com with ESMTP; 10 Sep 2020 06:48:40 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 1/4] perf tools: Rename group to topdown
+Date:   Thu, 10 Sep 2020 06:44:58 -0700
+Message-Id: <20200910134501.11352-2-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910134501.11352-1-kan.liang@linux.intel.com>
+References: <20200910134501.11352-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:54:39PM +0800, Alex Shi wrote:
-> lru_lock and page cache xa_lock have no reason with current sequence,
-> put them together isn't necessary. let's narrow the lru locking, but
-> left the local_irq_disable to block interrupt re-entry and statistic update.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-What stats are you talking about here?
+The group.h/c only include TopDown group related functions. The name
+"group" is too generic and inaccurate. Use the name "topdown" to
+replace it.
 
-> +++ b/mm/huge_memory.c
-> @@ -2397,7 +2397,7 @@ static void __split_huge_page_tail(struct page *head, int tail,
->  }
->  
->  static void __split_huge_page(struct page *page, struct list_head *list,
-> -		pgoff_t end, unsigned long flags)
-> +			      pgoff_t end)
+Move topdown related functions to a dedicated file, topdown.c.
 
-Please don't change this whitespace.  It's really annoying having to
-adjust the whitespace when renaming a function.  Just two tabs indentation
-to give a clear separation of arguments from code is fine.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/arch/x86/util/Build                |  2 +-
+ .../perf/arch/x86/util/{group.c => topdown.c} |  2 +-
+ tools/perf/builtin-stat.c                     | 51 +-----------------
+ tools/perf/util/Build                         |  1 +
+ tools/perf/util/topdown.c                     | 53 +++++++++++++++++++
+ tools/perf/util/{group.h => topdown.h}        |  6 ++-
+ 6 files changed, 61 insertions(+), 54 deletions(-)
+ rename tools/perf/arch/x86/util/{group.c => topdown.c} (95%)
+ create mode 100644 tools/perf/util/topdown.c
+ rename tools/perf/util/{group.h => topdown.h} (52%)
 
-
-How about this patch instead?  It occurred to me we already have
-perfectly good infrastructure to track whether or not interrupts are
-already disabled, and so we should use that instead of ensuring that
-interrupts are disabled, or tracking that ourselves.
-
-But I may have missed something else that's relying on having
-interrupts disabled.  Please check carefully.
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 2ccff8472cd4..74cae6c032f9 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2376,17 +2376,16 @@ static void __split_huge_page_tail(struct page *head, int tail,
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 47f9c56e744f..347c39b960eb 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -3,7 +3,7 @@ perf-y += tsc.o
+ perf-y += pmu.o
+ perf-y += kvm-stat.o
+ perf-y += perf_regs.o
+-perf-y += group.o
++perf-y += topdown.o
+ perf-y += machine.o
+ perf-y += event.o
+ 
+diff --git a/tools/perf/arch/x86/util/group.c b/tools/perf/arch/x86/util/topdown.c
+similarity index 95%
+rename from tools/perf/arch/x86/util/group.c
+rename to tools/perf/arch/x86/util/topdown.c
+index e2f8034b8973..597e963fb3e7 100644
+--- a/tools/perf/arch/x86/util/group.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <stdio.h>
+ #include "api/fs/fs.h"
+-#include "util/group.h"
++#include "util/topdown.h"
+ 
+ /*
+  * Check whether we can use a group for top down.
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 483a28ef4ec4..5583e22ca808 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -56,7 +56,7 @@
+ #include "util/cpumap.h"
+ #include "util/thread_map.h"
+ #include "util/counts.h"
+-#include "util/group.h"
++#include "util/topdown.h"
+ #include "util/session.h"
+ #include "util/tool.h"
+ #include "util/string2.h"
+@@ -1495,55 +1495,6 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+ 	return 0;
  }
  
- static void __split_huge_page(struct page *page, struct list_head *list,
--		pgoff_t end, unsigned long flags)
-+		pgoff_t end)
- {
- 	struct page *head = compound_head(page);
- 	pg_data_t *pgdat = page_pgdat(head);
- 	struct lruvec *lruvec;
- 	struct address_space *swap_cache = NULL;
- 	unsigned long offset = 0;
-+	unsigned long flags;
- 	int i;
- 
--	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+-static int topdown_filter_events(const char **attr, char **str, bool use_group)
+-{
+-	int off = 0;
+-	int i;
+-	int len = 0;
+-	char *s;
 -
- 	/* complete memcg works before add pages to LRU */
- 	mem_cgroup_split_huge_fixup(head);
- 
-@@ -2395,9 +2394,13 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 
- 		offset = swp_offset(entry);
- 		swap_cache = swap_address_space(entry);
--		xa_lock(&swap_cache->i_pages);
-+		xa_lock_irq(&swap_cache->i_pages);
- 	}
- 
-+	/* prevent PageLRU to go away from under us, and freeze lru stats */
-+	spin_lock_irqsave(&pgdat->lru_lock, flags);
-+	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+-	for (i = 0; attr[i]; i++) {
+-		if (pmu_have_event("cpu", attr[i])) {
+-			len += strlen(attr[i]) + 1;
+-			attr[i - off] = attr[i];
+-		} else
+-			off++;
+-	}
+-	attr[i - off] = NULL;
+-
+-	*str = malloc(len + 1 + 2);
+-	if (!*str)
+-		return -1;
+-	s = *str;
+-	if (i - off == 0) {
+-		*s = 0;
+-		return 0;
+-	}
+-	if (use_group)
+-		*s++ = '{';
+-	for (i = 0; attr[i]; i++) {
+-		strcpy(s, attr[i]);
+-		s += strlen(s);
+-		*s++ = ',';
+-	}
+-	if (use_group) {
+-		s[-1] = '}';
+-		*s = 0;
+-	} else
+-		s[-1] = 0;
+-	return 0;
+-}
+-
+-__weak bool arch_topdown_check_group(bool *warn)
+-{
+-	*warn = false;
+-	return false;
+-}
+-
+-__weak void arch_topdown_group_warn(void)
+-{
+-}
+-
+ /*
+  * Add default attributes, if there were no attributes specified or
+  * if -d/--detailed, -d -d or -d -d -d is used:
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index cd5e41960e64..eebbd5223cae 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -101,6 +101,7 @@ perf-y += call-path.o
+ perf-y += rwsem.o
+ perf-y += thread-stack.o
+ perf-y += spark.o
++perf-y += topdown.o
+ perf-$(CONFIG_AUXTRACE) += auxtrace.o
+ perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
+ perf-$(CONFIG_AUXTRACE) += intel-pt.o
+diff --git a/tools/perf/util/topdown.c b/tools/perf/util/topdown.c
+new file mode 100644
+index 000000000000..a085b3c77c27
+--- /dev/null
++++ b/tools/perf/util/topdown.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include "pmu.h"
++#include "topdown.h"
 +
- 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
- 		__split_huge_page_tail(head, i, lruvec, list);
- 		/* Some pages can be beyond i_size: drop them from page cache */
-@@ -2417,6 +2420,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 	}
++int topdown_filter_events(const char **attr, char **str, bool use_group)
++{
++	int off = 0;
++	int i;
++	int len = 0;
++	char *s;
++
++	for (i = 0; attr[i]; i++) {
++		if (pmu_have_event("cpu", attr[i])) {
++			len += strlen(attr[i]) + 1;
++			attr[i - off] = attr[i];
++		} else
++			off++;
++	}
++	attr[i - off] = NULL;
++
++	*str = malloc(len + 1 + 2);
++	if (!*str)
++		return -1;
++	s = *str;
++	if (i - off == 0) {
++		*s = 0;
++		return 0;
++	}
++	if (use_group)
++		*s++ = '{';
++	for (i = 0; attr[i]; i++) {
++		strcpy(s, attr[i]);
++		s += strlen(s);
++		*s++ = ',';
++	}
++	if (use_group) {
++		s[-1] = '}';
++		*s = 0;
++	} else
++		s[-1] = 0;
++	return 0;
++}
++
++__weak bool arch_topdown_check_group(bool *warn)
++{
++	*warn = false;
++	return false;
++}
++
++__weak void arch_topdown_group_warn(void)
++{
++}
+diff --git a/tools/perf/util/group.h b/tools/perf/util/topdown.h
+similarity index 52%
+rename from tools/perf/util/group.h
+rename to tools/perf/util/topdown.h
+index f36c7e31780a..e3d70e95f4f1 100644
+--- a/tools/perf/util/group.h
++++ b/tools/perf/util/topdown.h
+@@ -1,8 +1,10 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef GROUP_H
+-#define GROUP_H 1
++#ifndef TOPDOWN_H
++#define TOPDOWN_H 1
  
- 	ClearPageCompound(head);
-+	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+ bool arch_topdown_check_group(bool *warn);
+ void arch_topdown_group_warn(void);
  
- 	split_page_owner(head, HPAGE_PMD_ORDER);
- 
-@@ -2425,18 +2429,16 @@ static void __split_huge_page(struct page *page, struct list_head *list,
- 		/* Additional pin to swap cache */
- 		if (PageSwapCache(head)) {
- 			page_ref_add(head, 2);
--			xa_unlock(&swap_cache->i_pages);
-+			xa_unlock_irq(&swap_cache->i_pages);
- 		} else {
- 			page_ref_inc(head);
- 		}
- 	} else {
- 		/* Additional pin to page cache */
- 		page_ref_add(head, 2);
--		xa_unlock(&head->mapping->i_pages);
-+		xa_unlock_irq(&head->mapping->i_pages);
- 	}
- 
--	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
--
- 	remap_page(head);
- 
- 	for (i = 0; i < HPAGE_PMD_NR; i++) {
-@@ -2574,7 +2576,6 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
- int split_huge_page_to_list(struct page *page, struct list_head *list)
- {
- 	struct page *head = compound_head(page);
--	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
- 	struct deferred_split *ds_queue = get_deferred_split_queue(head);
- 	struct anon_vma *anon_vma = NULL;
- 	struct address_space *mapping = NULL;
-@@ -2640,9 +2641,6 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 	unmap_page(head);
- 	VM_BUG_ON_PAGE(compound_mapcount(head), head);
- 
--	/* prevent PageLRU to go away from under us, and freeze lru stats */
--	spin_lock_irqsave(&pgdata->lru_lock, flags);
--
- 	if (mapping) {
- 		XA_STATE(xas, &mapping->i_pages, page_index(head));
- 
-@@ -2650,13 +2648,13 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 		 * Check if the head page is present in page cache.
- 		 * We assume all tail are present too, if head is there.
- 		 */
--		xa_lock(&mapping->i_pages);
-+		xa_lock_irq(&mapping->i_pages);
- 		if (xas_load(&xas) != head)
- 			goto fail;
- 	}
- 
- 	/* Prevent deferred_split_scan() touching ->_refcount */
--	spin_lock(&ds_queue->split_queue_lock);
-+	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
- 	count = page_count(head);
- 	mapcount = total_mapcount(head);
- 	if (!mapcount && page_ref_freeze(head, 1 + extra_pins)) {
-@@ -2664,7 +2662,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 			ds_queue->split_queue_len--;
- 			list_del(page_deferred_list(head));
- 		}
--		spin_unlock(&ds_queue->split_queue_lock);
-+		spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
- 		if (mapping) {
- 			if (PageSwapBacked(head))
- 				__dec_node_page_state(head, NR_SHMEM_THPS);
-@@ -2672,7 +2670,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 				__dec_node_page_state(head, NR_FILE_THPS);
- 		}
- 
--		__split_huge_page(page, list, end, flags);
-+		__split_huge_page(page, list, end);
- 		if (PageSwapCache(head)) {
- 			swp_entry_t entry = { .val = page_private(head) };
- 
-@@ -2688,10 +2686,9 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 			dump_page(page, "total_mapcount(head) > 0");
- 			BUG();
- 		}
--		spin_unlock(&ds_queue->split_queue_lock);
-+		spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
- fail:		if (mapping)
--			xa_unlock(&mapping->i_pages);
--		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
-+			xa_unlock_irq(&mapping->i_pages);
- 		remap_page(head);
- 		ret = -EBUSY;
- 	}
++int topdown_filter_events(const char **attr, char **str, bool use_group);
++
+ #endif
+-- 
+2.17.1
+
