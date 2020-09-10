@@ -2,91 +2,135 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436C3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCD7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E351B206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599732933;
-	bh=AcUbWjUNABtsxL784pj65r84bPoExG1gWe7wAJecyfQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ep7e5YG5HReudZ7UFfU+MVZRwfXR3mBFIjt3QFyfHsrtZWtsZsCihQdz/JLXHkN86
-	 ecfAnDVDMD7RkSg5uEL3THJAugaBZmCZAR8WTo53Ffc6mrt7Gw232sc/HJKdu911EB
-	 R7sn9/hjDwdlOP/3XFpAzGCeX03J1DHQaJqAseKI=
+	by mail.kernel.org (Postfix) with ESMTP id 2E5A620756
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fMXOIPyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgIJKPV (ORCPT
+        id S1730735AbgIJKPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730634AbgIJKOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:14:52 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        Thu, 10 Sep 2020 06:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730637AbgIJKOx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:14:53 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5675CC061573;
+        Thu, 10 Sep 2020 03:14:52 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f133200fd9e4f04ab274470.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:3200:fd9e:4f04:ab27:4470])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD94321556;
-        Thu, 10 Sep 2020 10:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599732891;
-        bh=AcUbWjUNABtsxL784pj65r84bPoExG1gWe7wAJecyfQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qVf8Rc8AqGxyxVKw4/gDV9LstyBxSyBmcuGudVr7FlLI/lyuwQOLYen1OarGXTy6O
-         S2J5ptH/XTuXwqPaNYGmTjAhonpEwLAHD0Xok6FNUA+cqRtCTTGHF9jMdvMr9NYRBy
-         9XqcLvm2eqp5zVZqKKlIT0MKhMUc20/LehslBQGc=
-Date:   Thu, 10 Sep 2020 05:21:20 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@intel.com>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] drm/i915: Fix inconsistent IS_ERR and PTR_ERR
-Message-ID: <20200910102120.GA9481@embeddedor>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 916231EC04C0;
+        Thu, 10 Sep 2020 12:14:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599732889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Nfhs/ikKxjcFj07w0NPIX+lSHCHW+iotJoF44hLqXtw=;
+        b=fMXOIPyyo3Zl9Mgw9810U7+J+m05FzCk+T+0bGVIb4xXLlFOcqwpKRGcqHO5lzpSPB3LqM
+        I4mjeZzIUrxVNJgIGC4bxDJt4h4Mpwyo/4TaudJz7lXhE/8PoNeCaYXoyDT6GGyTOuuQ6D
+        sY7sJkc0hDVu4VFpzJ+IP7muMPw1t+c=
+Date:   Thu, 10 Sep 2020 12:14:43 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yazen Ghannam <yazen.ghannam@amd.com>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tony.luck@intel.com, x86@kernel.org,
+        Smita.KoralahalliChannabasappa@amd.com
+Subject: Re: [PATCH v2 1/8] x86/CPU/AMD: Save NodeId on AMD-based systems
+Message-ID: <20200910101443.GC8357@zn.tnic>
+References: <20200903200144.310991-1-Yazen.Ghannam@amd.com>
+ <20200903200144.310991-2-Yazen.Ghannam@amd.com>
+ <20200909180647.GF12237@zn.tnic>
+ <20200909201755.GB3014671@yaz-nikka.amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200909201755.GB3014671@yaz-nikka.amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix inconsistent IS_ERR and PTR_ERR in i915_gem_object_copy_blt().
+On Wed, Sep 09, 2020 at 03:17:55PM -0500, Yazen Ghannam wrote:
+> We need to access specific instances of hardware registers in the
+> Northbridge or Data Fabric. The code in arch/x86/kernel/amd_nb.c does
+> this.
 
-The proper pointer to be passed as argument to PTR_ERR() is vma[1].
+So you don't need the node_id - you need the northbridge/data fabric ID?
+I'm guessing NB == DF, i.e., it was NB before Zen and it is DF now.
 
-This bug was detected with the help of Coccinelle.
+Yes?
 
-Fixes: 6b05030496f7 ("drm/i915: Convert i915_gem_object/client_blt.c to use ww locking as well, v2.")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/i915/gem/i915_gem_object_blt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Package = Socket, i.e. a field replaceable unit. Socket may not be
+> useful for software, but I think it helps users identify the hardware.
+> 
+> I think the following could be changed in the documentation:
+> 
+> "In the past a socket always contained a single package (see below), but
+> with the advent of Multi Chip Modules (MCM) a socket can hold more than one
+> package."
+> 
+> Replace "package" with "die".
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_object_blt.c b/drivers/gpu/drm/i915/gem/i915_gem_object_blt.c
-index d93eb36160c9..aee7ad3cc3c6 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_object_blt.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_object_blt.c
-@@ -364,7 +364,7 @@ int i915_gem_object_copy_blt(struct drm_i915_gem_object *src,
- 
- 	vma[1] = i915_vma_instance(dst, vm, NULL);
- 	if (IS_ERR(vma[1]))
--		return PTR_ERR(vma);
-+		return PTR_ERR(vma[1]);
- 
- 	i915_gem_ww_ctx_init(&ww, true);
- 	intel_engine_pm_get(ce->engine);
+So first of all, we have:
+
+"AMD nomenclature for package is 'Node'."
+
+so we either change that because as you explain, node != package on AMD.
+
+What you need is the ID of that northbridge or data fabric instance,
+AFAIU.
+
+> You take multiple dies from the foundry and you "package" them together
+> into a single unit.
+
+I think you're overloading the word "package" here and that leads to
+more confusion. Package in our definition - Linux' - is:
+
+"Packages contain a number of cores plus shared resources, e.g. DRAM
+controller, shared caches etc." If you glue several packages together,
+you get an MCM.
+
+> They could be equal depending on the system. The values are different on
+> MCM systems like Bulldozer and Naples though.
+> 
+> The functions and structures in amd_nb.c are indexed by the node_id.
+> This is done implicitly right now by using amd_get_nb_id()/cpu_llc_id.
+> But the LLC isn't always equal to the Node/Die like in Naples. So the
+> patches in this set save and explicitly use the node_id when needed.
+> 
+> What do you think?
+
+Sounds to me that you want to ID that data fabric instance which
+logically belongs to one or multiple packages. Or can a DF a single
+package?
+
+So let's start simple: how does a DF instance map to a logical NUMA
+node or package? Can a DF serve multiple packages?
+
+You could use the examples at the end of Documentation/x86/topology.rst
+to explain how those things play together. And remember to not think
+about the physical aspect of the hardware structure because it doesn't
+mean anything to software. All you wanna do is address the proper DF
+instance so this needs to be enumerable and properly represented by sw.
+
+Confused?
+
+I am.
+
+:-)
+
 -- 
-2.27.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
