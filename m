@@ -7,99 +7,105 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A3EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DA7C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A79206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34912080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Gtp1ylcY";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="hAdnamzq"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="eY/LjwZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbgIJCFa (ORCPT
+        id S1730544AbgIJCFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:05:30 -0400
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:47372
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730085AbgIJBu7 (ORCPT
+        Wed, 9 Sep 2020 22:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729663AbgIJBwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:50:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599701327;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=hq2qlkdV42iGEc13LOvCdrQppZ9s1QRk5yIifv+RCMM=;
-        b=Gtp1ylcYQEVffdmQtrBdvWH6cosDN3shEHQfkw+bgx6Ro5QhyXrBcKyC6pfcTNz7
-        rbWuLo5VnItBdXEcxunj6/g5YpDAfomy7BtiaoKPUz9DvOi2xjgHYocsnW22TrXjhHr
-        dSvdRA2fjmc/VHb4sFdWZQDwPKZKZz0Q5UUVslmY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599701327;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=hq2qlkdV42iGEc13LOvCdrQppZ9s1QRk5yIifv+RCMM=;
-        b=hAdnamzqH6Sz+WfF7VgwmYHYvbw8SovftoShQbKOecaXxjmJ86e9F/RKtxRZwU1P
-        NW+MtO0G19y10UU3IsUpdE/08HbqIAC/ylBbSphW09uXjZ84qij0WM3BkyYQiqcJZHg
-        ckryzDCljEw96cyUVjwPAfgjKCHaoXzzid3Oqzps=
+        Wed, 9 Sep 2020 21:52:18 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DD3C061342;
+        Wed,  9 Sep 2020 18:52:17 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id i22so6337017eja.5;
+        Wed, 09 Sep 2020 18:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ANFj5tNe+lX75IxFcz7eloVwZ6bcS0GGRGo9xs5qe80=;
+        b=eY/LjwZiqAFgu2Bw+bKjgsL4dHaWSO+afec/4IFa+vrNiuMztpznLUltZ/Wl9vUCja
+         1acXY3/TubX6dHKDPPvCbx8YITTKM9cJ8pwLe8grJkSE70P7HJiHb2lFt5NBgjipFLen
+         sOF+sNTAqF3DuLyHiT1ZKbMlgEOwcHgvWqh68=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ANFj5tNe+lX75IxFcz7eloVwZ6bcS0GGRGo9xs5qe80=;
+        b=pm/nao6krndQEEipAtlZE6EYAiJcqC8aylI1s0n5H/L2V2Khu6HlEm7U6vPB6WF/nr
+         LxXI2LbKN2ZPxS06GfzO58rEu+k6Sm9BGVgjjrB6EhyIt3InRcRFsBqwX/Hu5NfrSrHY
+         5zWtLwmOIJvp7pzsXb3fXagDnexUlsgrItPeqi57S9wcFN3N6LzwZoLbYPAWKXp5l6ri
+         CTn2EYTd5ZkfWeUuVHfMLR7eAc76vGbPnhD2mlMGwIPrlbpCg4ekp8rH/MF5TvFPfhuA
+         rtbCohw7O/d+s7Dv0N1YG/Yrn19Cz5BZ7cnxX0VKKs55D4X+yikNd1AH8B8cuRW6THd6
+         KU0A==
+X-Gm-Message-State: AOAM530RU4Vscmyfnjrmm0mVY0aSqx6DJ0g4xG5KMJs6fH+7YzTI4VsG
+        UK6puiA2QZOdns6yYQzG7olHJpTX84D33c+AhOamnZGg
+X-Google-Smtp-Source: ABdhPJymYXgKXZhXuS4fxzTpM1mvEDSS4tHQKzZ/RE+4BnTasu7Ht25VWClSxo4tpoAl7IAuWPBMYKW8xN97aQwJFMk=
+X-Received: by 2002:a17:906:7cc6:: with SMTP id h6mr6478279ejp.266.1599702736442;
+ Wed, 09 Sep 2020 18:52:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 10 Sep 2020 01:28:47 +0000
-From:   nguyenb@codeaurora.org
-To:     cang@codeaurora.org, asutoshd@codeaurora.org,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] scsi: ufshcd: Properly set the device Icc Level
-In-Reply-To: <5c9d6f76303bbe5188bf839b2ea5e5bf530e7281.1598923023.git.nguyenb@codeaurora.org>
-References: <5c9d6f76303bbe5188bf839b2ea5e5bf530e7281.1598923023.git.nguyenb@codeaurora.org>
-Message-ID: <0101017475a11c06-5e39bfe2-d5ca-4eba-957e-339f317f8b55-000000@us-west-2.amazonses.com>
-X-Sender: nguyenb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.10-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <20200909114312.2863675-1-andrew@aj.id.au> <20200909114312.2863675-2-andrew@aj.id.au>
+In-Reply-To: <20200909114312.2863675-2-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 10 Sep 2020 01:52:04 +0000
+Message-ID: <CACPK8XeOf1H2Cdo434DsAjDNGrohip_MZTSMMOh1nhspz2y7dA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: aspeed: Format pinconf debug consistent with pinmux
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        johnny_huang@aspeedtech.com,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-31 18:19, Bao D. Nguyen wrote:
-> UFS version 3.0 and later devices require Vcc and Vccq power supplies
-> with Vccq2 being optional. While earlier UFS version 2.0 and 2.1
-> devices, the Vcc and Vccq2 are required with Vccq being optional.
-> Check the required power supplies used by the device
-> and set the device's supported Icc level properly.
-> 
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
+On Wed, 9 Sep 2020 at 11:43, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> When displaying which pinconf register and field is being touched, format the
+> field mask so that it's consistent with the way the pinmux portion
+> formats the mask.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  drivers/scsi/ufs/ufshcd.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 06e2439..fdd1d3e 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6845,8 +6845,9 @@ static u32
-> ufshcd_find_max_sup_active_icc_level(struct ufs_hba *hba,
->  {
->  	u32 icc_level = 0;
-> 
-> -	if (!hba->vreg_info.vcc || !hba->vreg_info.vccq ||
-> -						!hba->vreg_info.vccq2) {
-> +	if (!hba->vreg_info.vcc ||
-> +		(!hba->vreg_info.vccq && hba->dev_info.wspecversion >= 0x300) ||
-> +		(!hba->vreg_info.vccq2 && hba->dev_info.wspecversion < 0x300)) {
->  		dev_err(hba->dev,
->  			"%s: Regulator capability was not set, actvIccLevel=%d",
->  							__func__, icc_level);
+>  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> index 53f3f8aec695..d8972911d505 100644
+> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> @@ -539,9 +539,9 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
+>                 if (rc < 0)
+>                         return rc;
+>
+> -               pr_debug("%s: Set SCU%02X[%lu]=%d for param %d(=%d) on pin %d\n",
+> -                               __func__, pconf->reg, __ffs(pconf->mask),
+> -                               pmap->val, param, arg, offset);
+> +               pr_debug("%s: Set SCU%02X[0x%08X]=%d for param %d(=%d) on pin %d\n",
 
-Hello, please help review the change and comment if any.
 
-Thanks!
-Bao
+The pr_debug in pinmux-aspeed.c prints val as 0x%X. Did you want to do
+that here?
+
+> +                               __func__, pconf->reg, pconf->mask,
+> +                               val, param, arg, offset);
+>         }
+>
+>         return 0;
+> --
+> 2.25.1
+>
