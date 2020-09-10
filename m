@@ -2,133 +2,160 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75E4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53B2C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B11B2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599775179;
-	bh=n7fko+K24EPbXR431Tv5ZgLjx98hbWABFxYSBLUpKws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ug72yZNshdV/d+GjRyMEJPWhHJ7dRkPgqBiwF5YJFQ9p81R5yev4VJ7S2v4h4Jqg+
-	 qeHKbIfMIa5Py4TmJYTy+S7cLbtXqcoLP/VTrge4H7hVLeg/wABWh7wCR+4YSMcJxz
-	 X09b5RlGihtA4/Ngk8GDeph//wAaLaAiyQsxiOk0=
+	by mail.kernel.org (Postfix) with ESMTP id 58F2A2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XGa+1wti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725290AbgIJV7g (ORCPT
+        id S1725885AbgIJV7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730518AbgIJLKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:10:35 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB4B621556;
-        Thu, 10 Sep 2020 11:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599736223;
-        bh=n7fko+K24EPbXR431Tv5ZgLjx98hbWABFxYSBLUpKws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jbc6qqCieYpi405/MUUIN69qEpUHLQ9tvNwfAcZHqz1p0Qa7gTdQeldC50pB+Sruy
-         zGXbzZDsMsIvYrX9Cka1lOYuNk1YecakhwfgEVpZJQSN5D+7qaSl22txo6jxtWedR7
-         SnfcYWMTV1s2CoKH6zv6DEyb7hHPkwvZb0Z+Ie58=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1C8540D3D; Thu, 10 Sep 2020 08:10:20 -0300 (-03)
-Date:   Thu, 10 Sep 2020 08:10:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
+        Thu, 10 Sep 2020 17:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgIJV7Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 17:59:24 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6D9C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:59:24 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g72so7736837qke.8
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RBvq+OOZpOHz7JVY1b9A66StBw0lh3lNMqv01GrhYLE=;
+        b=XGa+1wtiJPkykbDWCfESpB/MvI1RBtyH5dvDVcm14/sCZlt15vU51OB/uvdf8x4ZQa
+         kQYpCVOD4ExSpYHPDOteT1PnQSYpcVDio5gc9zCACzdojqAlh6SwMKMRY4M2jHdso8pC
+         o1SCOD1e7CU5P94+lNcRXuJe4cmvhxIpYDyRzl6AlKYd1iDVs+vkgkgFbjeoHTVRj1ST
+         1yBIDBY0FM4tBgJQZxvv5cNNGM4bu8ROu2teyjXMmbtUrBhHsMF7QLWMp1o0b0abexEB
+         POsgnb1rV2g2SN+GvDFk4nRwxlB7GR1NoIs/6jzxofpKRolvj4glG/Y8VK7FoDyzwgcR
+         PZcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RBvq+OOZpOHz7JVY1b9A66StBw0lh3lNMqv01GrhYLE=;
+        b=WRZ3/7FSHSkKJ6meo6FE2lNIhqRVXCKI78jY1x2Zoj6Zdo2OuMFWbE2cfmhxWGb8cA
+         xGhdOi/T2uSKyWJJ95Z1iLi9ZBEYps9Je/tGHQxdP+XcpnUESOnXOrbQadnJ3x/YHPOC
+         CPFgyjoMQJoUY1hHPt9WnqyR/MjDvquiH25QXO6yFS/fRb9GI3aikBGIIxB0Twi7kq78
+         RHuMFoM8fwQXCRJTDNjcHl/zI9IlGFhs3bYucLmFkfR52KfK92AafFMS6K4MWzkNc5ZB
+         KAApE6uhv8zlpJNNu18WXlsf7ba4JNX4CceLaZx8yllFLfcn/PfXecpBlsNI6Au5UZxi
+         bsNg==
+X-Gm-Message-State: AOAM530+xlfSauh1dTMwkC069cAXPay5LKaEhIA6HrC8VaZymgnILvIf
+        rAk8DsgH5mFDHtFP9qNNeIaFqw==
+X-Google-Smtp-Source: ABdhPJzg7+n4mPFpbsKeMom2f+wjc9snf2MnK4gNUYWrTQr71TGF5AizTC8kCaHgs9VlFTOngDCTww==
+X-Received: by 2002:ae9:c015:: with SMTP id u21mr10626371qkk.268.1599775163249;
+        Thu, 10 Sep 2020 14:59:23 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id j88sm32038qte.96.2020.09.10.14.59.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 14:59:22 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kGUbB-004RUb-H7; Thu, 10 Sep 2020 18:59:21 -0300
+Date:   Thu, 10 Sep 2020 18:59:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCHSET 0/4] perf stat: Add --multiply-cgroup option
-Message-ID: <20200910111020.GA4018363@kernel.org>
-References: <20200908044228.61197-1-namhyung@kernel.org>
- <20200910091542.GD1627030@krava>
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200910215921.GP87483@ziepe.ca>
+References: <20200909142904.00b72921@thinkpad>
+ <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+ <20200909192534.442f8984@thinkpad>
+ <20200909180324.GI87483@ziepe.ca>
+ <20200910093925.GB29166@oc3871087118.ibm.com>
+ <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+ <20200910181319.GO87483@ziepe.ca>
+ <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
+ <20200910211010.46d064a7@thinkpad>
+ <CAHk-=wg3ggXU98Mnv-ss-hEcvUNc9vCtgSRc7GpcGfvyOw_h3g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910091542.GD1627030@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAHk-=wg3ggXU98Mnv-ss-hEcvUNc9vCtgSRc7GpcGfvyOw_h3g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Sep 10, 2020 at 11:15:42AM +0200, Jiri Olsa escreveu:
-> On Tue, Sep 08, 2020 at 01:42:24PM +0900, Namhyung Kim wrote:
-> > When we profile cgroup events with perf stat, it's very annoying to
-> > specify events and cgroups on the command line as it requires the
-> > mapping between events and cgroups.  (Note that perf record can use
-> > cgroup sampling but it's not usable for perf stat).
+On Thu, Sep 10, 2020 at 12:32:05PM -0700, Linus Torvalds wrote:
+> Yeah, I get hung up on naming sometimes. I don't tend to care much
+> about private local variables ("i" is a perfectly fine variable name),
+> but these kinds of somewhat subtle cross-architecture definitions I
+> feel matter.
 
-> > I guess most cases we just want to use a same set of events (N) for
-> > all cgroups (M), but we need to specify NxM events and NxM cgroups.
-> > This is not good especially when profiling large number of cgroups:
-> > say M=200.
+One of the first replys to this patch was to ask "when would I use
+_orig vs normal", so you are not alone. The name should convey it..
 
-> > So I added --multiply-cgroup option to make it easy for that case.  It
-> > will create NxM events from N events and M cgroups.  One more upside
-> > is that it can handle metrics too.
+So, I suggest pXX_offset_unlocked()
 
-> agreed that it's PITA to use -G option ;-)
+Since it is safe to call without the page table lock, while pXX_offset()
+requires the page table lock to be held as the internal *pXX is a data
+race otherwise.
 
-yeah, its great that someone is looking at cgroups improvements, thanks
-Namyung, its great to have you working on this!
+Patch 1 might be OK for a stable backport, but to get to a clear
+pXX_offset_unlocked() all the arches would want to be changed to
+implement that API and the generic code would provide the wrapper:
 
-More below.
- 
-> > For example, the following example measures IPC metric for 3 cgroups
+#define pXX_offset(pXXp, address) pXX_offset_unlocked(pXXp, *(pXXp), address)
 
-> >   $ cat perf-multi-cgrp.sh
-> >   #!/bin/sh
+Arches would not have a *pXX inside their code.
 
-> >   METRIC=${1:-IPC}
-> >   CGROUP_DIR=/sys/fs/cgroup/perf_event
+Then we can talk about auditing call sites of pXX_offset and think
+about using the _unlocked version in places where the page table lock
+is not held.
 
-> >   sudo mkdir $CGROUP_DIR/A $CGROUP_DIR/B $CGROUP_DIR/C
+For instance mm/pagewalk.c should be changed. So should
+huge_pte_offset() and probably other places. These places might
+already be exsting data-race bugs.
 
-> >   # add backgroupd workload for each cgroup
-> >   echo $$ | sudo tee $CGROUP_DIR/A/cgroup.procs > /dev/null
-> >   yes > /dev/null &
-> >   echo $$ | sudo tee $CGROUP_DIR/B/cgroup.procs > /dev/null
-> >   yes > /dev/null &
-> >   echo $$ | sudo tee $CGROUP_DIR/C/cgroup.procs > /dev/null
-> >   yes > /dev/null &
+It is code-as-documentation indicating an unlocked page table walk.
 
-> >   # run 'perf stat' in the root cgroup
-> >   echo $$ | sudo tee $CGROUP_DIR/cgroup.procs > /dev/null
-> >   perf stat -a -M $METRIC --multiply-cgroup -G A,B,C sleep 1
-> 
-> would it be easier to have new option for this? like:
-> 
->   perf stat -a -M $METRIC --for-cgroup A,B,C
->   perf stat -a -M $METRIC --for-each-cgroup A,B,C
->   perf stat -a -M $METRIC --attach-cgroup A,B,C
->   perf stat -a -M $METRIC --attach-to-cgroup A,B,C
-> 
-> I'm still not sure how the --multiply-cgroup deals with empty
-> cgroup A,,C but looks like we don't need this behaviour now?
+Now it is not just a S390 story but a change that makes the data
+concurrency much clearer, so I think I prefer this version to the
+addr_end one too.
 
-Yeah, I also didn't like the --multiply-cgroup thing, perhaps we can use
-a per-event term? or per group, for example:
-
-  perf stat -a -M $METRIC/cgroups=A,B,C/
-  perf stat -a -e '{cycles,instructions,cache-misses}/cgroups=A,B,C/'
-
-Allowing wildcards or regexps would help with some use cases.
-
-We already have several terms that allows us to control per event knobs,
-this would be one more.
-
-- Arnaldo
+Regards,
+Jason
