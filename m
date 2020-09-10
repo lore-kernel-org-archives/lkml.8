@@ -2,187 +2,166 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D17BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EAEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC152087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2D02087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599763637;
-	bh=PjP3S+TQBC2ivVaHesCYdSbG5mKpWoLG5Xapj5DDZIM=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xq0SpAh/K3NGnA4HjCO7MDYyxusOaIin8yZVLZsJfYEZ+et9PRq9/Djm3awRI5Hyx
-	 Jk1v43FVE/f7DJY/qNDfGjHPKQjwFw5IE6vJUsp81MFUAgFVKTJftkXQ38uYkk+vbh
-	 JqI29qIxh6B8Hr6TlIe8nLw3IK7r6kskHjYJSsCw=
+	s=default; t=1599763647;
+	bh=QTmKODHpSxd1w6L2B8OTcSIquNN9NgWDbu2etqTLGqI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=iQUJN1SKUPPAUVSIfOkgU+D2Aue42nRQFaK4VgiEPGpvX9mPYZFmiZGLdu3K8wrta
+	 I+IIwNtZfHCJRICHh/5RrtxI6NB+dwpPSZMLu0ofSU8OLMiTp+j7d3QA1Lv7pY6o6x
+	 qreykHhQKzqrB//kIAgiFTXDbEhcloGl02vrgjgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgIJSrO (ORCPT
+        id S1727847AbgIJSrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:47:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 14:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbgIJQNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:13:15 -0400
-Received: from localhost.localdomain (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727776AbgIJSqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:46:30 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E5AF21D81;
-        Thu, 10 Sep 2020 16:12:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F7E20855;
+        Thu, 10 Sep 2020 18:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599754354;
-        bh=PjP3S+TQBC2ivVaHesCYdSbG5mKpWoLG5Xapj5DDZIM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=I0sHF6WBSg6/5bE6EIceqBtkVPAWGUm5KHV5q5btsc15pDCax+y5pR3MQEpHOEVXT
-         hC8+j3IrMmCf5idoSFaA+PQt1AR31qLXWV3zHc64eoaigQxn74pILEkxIsxxjuhE0B
-         56u3BCFDnQKVFzYfKQTFxHHNhOh3QWh9aBla75i0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Krzysztof Opasiak <k.opasiak@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v3 1/8] dt-bindings: net: nfc: s3fwrn5: Convert to dtschema
-Date:   Thu, 10 Sep 2020 18:12:12 +0200
-Message-Id: <20200910161219.6237-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910161219.6237-1-krzk@kernel.org>
-References: <20200910161219.6237-1-krzk@kernel.org>
+        s=default; t=1599763589;
+        bh=QTmKODHpSxd1w6L2B8OTcSIquNN9NgWDbu2etqTLGqI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ffqBtVelkI2tCPaUzIc0G4cqiDiK3G2mcNf7CoNfmP8xKoq0gvQy4kTvTXeM0L79/
+         xLt/jBcmvjwt4VBsDAgq69zzWGNInteuJX983OCeJaE/FfvbH0XPgKnBMIFM/CTt/v
+         0oNDUAB8ui/MQulryQHq6wbQFsmNRZLepDuI/VKo=
+Date:   Thu, 10 Sep 2020 13:46:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+Message-ID: <20200910184627.GA804924@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKVn+e-eX+=kkSXxdwAmJUahrTdhuBKfVCXVZ8bQJ5MUw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Samsung S3FWRN5 NCI NFC controller bindings to dtschema.
-This is conversion only so it includes properties with invalid prefixes
-(s3fwrn5,en-gpios) which should be addressed later.
+On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+> On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Mark, Florian, Rob, Scott]
+> >
+> > On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> > > Do not use printk in raw_spinlocks,
+> > > it will cause BUG: Invalid wait context.
+> > >
+> > > The trace reported by lockdep follows.
+> > >
+> > > [    2.986113] =============================
+> > > [    2.986115] [ BUG: Invalid wait context ]
+> > > [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> > > [    2.986118] -----------------------------
+> > > [    2.986120] swapper/0/1 is trying to lock:
+> > > [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> > > [    2.986130] other info that might help us debug this:
+> > > [    2.986132] context-{5:5}
+> > > [    2.986134] 3 locks held by swapper/0/1:
+> > > [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> > > [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> > > [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> > > [    2.986161] stack backtrace:
+> > > [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> > > [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> > > [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> > > [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> > > [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> > > [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> > > [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> > > [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> > > [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> > > [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> > > [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> > > [    2.986245]         ...
+> > > [    2.986250] Call Trace:
+> > > [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> > > [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> > > [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> > > [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> > > [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> > > [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> > > [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> > > [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> > > [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> > > [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> > > [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> > > [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> > > [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> > > [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> > > [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> > > [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> > > [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> > > [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> > > [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> > > [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> > > [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> > > [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> > > [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> > > [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> > > [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> > > [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> > > [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> > > [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> > > [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> > >
+> > > Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+> > > ---
+> > >  drivers/pci/access.c | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > index 79c4a2e..b3fc164 100644
+> > > --- a/drivers/pci/access.c
+> > > +++ b/drivers/pci/access.c
+> > > @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+> > >        * write happen to have any RW1C (write-one-to-clear) bits set, we
+> > >        * just inadvertently cleared something we shouldn't have.
+> > >        */
+> > > -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> > > -                          size, pci_domain_nr(bus), bus->number,
+> > > -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> >
+> > We just changed this printk (see [1]), but I think we still have this
+> > lockdep problem even after Mark's change.  So I guess we need another
+> > think about this.
+> >
+> > Maybe we can print something when registering pci_ops that use
+> > pci_generic_config_write32()?
+> 
+> That was my suggestion, but as Mark pointed out that doesn't work if
+> pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+> 
+> Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+> writes to a bridge going to cause problems? For xgene, interestingly,
+> with DT _write32 is needed, but for ACPI it is not (only _read32). I
+> think xgene is practically dead though a few people still have
+> systems, but likely xgene with DT is really dead. The ECAM case was
+> for QCom server which is also pretty much dead. SA1100 nano-engine is
+> really old and something only a few people have at most (Russell
+> King). So ignoring all those, we're left with just loongson and iproc.
+> Maybe just remove the warning?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../devicetree/bindings/net/nfc/s3fwrn5.txt   | 25 --------
- .../bindings/net/nfc/samsung,s3fwrn5.yaml     | 61 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 3 files changed, 62 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
- create mode 100644 Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
-
-diff --git a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
-deleted file mode 100644
-index f02f6fb7f81c..000000000000
---- a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* Samsung S3FWRN5 NCI NFC Controller
--
--Required properties:
--- compatible: Should be "samsung,s3fwrn5-i2c".
--- reg: address on the bus
--- interrupts: GPIO interrupt to which the chip is connected
--- s3fwrn5,en-gpios: Output GPIO pin used for enabling/disabling the chip
--- s3fwrn5,fw-gpios: Output GPIO pin used to enter firmware mode and
--  sleep/wakeup control
--
--Example:
--
--&hsi2c_4 {
--	s3fwrn5@27 {
--		compatible = "samsung,s3fwrn5-i2c";
--
--		reg = <0x27>;
--
--		interrupt-parent = <&gpa1>;
--		interrupts = <3 0 0>;
--
--		s3fwrn5,en-gpios = <&gpf1 4 0>;
--		s3fwrn5,fw-gpios = <&gpj0 2 0>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml b/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
-new file mode 100644
-index 000000000000..f43d31a2d94b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/nfc/samsung,s3fwrn5.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung S3FWRN5 NCI NFC Controller
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Krzysztof Opasiak <k.opasiak@samsung.com>
-+
-+properties:
-+  compatible:
-+    const: samsung,s3fwrn5-i2c
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  s3fwrn5,en-gpios:
-+    maxItems: 1
-+    description:
-+      Output GPIO pin used for enabling/disabling the chip
-+
-+  s3fwrn5,fw-gpios:
-+    maxItems: 1
-+    description:
-+      Output GPIO pin used to enter firmware mode and sleep/wakeup control
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - reg
-+  - s3fwrn5,en-gpios
-+  - s3fwrn5,fw-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c4 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        s3fwrn5@27 {
-+            compatible = "samsung,s3fwrn5-i2c";
-+            reg = <0x27>;
-+
-+            interrupt-parent = <&gpa1>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+
-+            s3fwrn5,en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
-+            s3fwrn5,fw-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ac79fdbdf8d0..ec4f1d9cb3dc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15273,6 +15273,7 @@ M:	Robert Baldyga <r.baldyga@samsung.com>
- M:	Krzysztof Opasiak <k.opasiak@samsung.com>
- L:	linux-nfc@lists.01.org (moderated for non-subscribers)
- S:	Supported
-+F:	Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
- F:	drivers/nfc/s3fwrn5
- 
- SAMSUNG S5C73M3 CAMERA DRIVER
--- 
-2.17.1
-
+Sigh, removing it sounds like the best option.
