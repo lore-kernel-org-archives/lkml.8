@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49851C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B7CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B5421D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68EC221D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTnPp5lj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmD4Hkro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgIJThm (ORCPT
+        id S1727962AbgIJTiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39258 "EHLO
+        Thu, 10 Sep 2020 15:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731374AbgIJPnX (ORCPT
+        with ESMTP id S1731366AbgIJPnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:43:23 -0400
+        Thu, 10 Sep 2020 11:43:13 -0400
 Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200A8C061795
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:04:04 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id i22so9215367eja.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:04:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90907C0617A4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:04:08 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id i22so9215788eja.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FmRNviOqVjipr1RSFbFj9F4fck0imv/S9yq0q4MvYNw=;
-        b=GTnPp5ljdDb5aUZt6e19qPfUe8HHqKdUgfyZE7+XJeRZLyt/e9ZXRsQ9JxraALU/Rv
-         pbYIbrLGV/4IGDwp2pOUd3XslQ0vH8tOHUjOYgHrdvJ3aOIUkCN6jyQgTbVA9Ds8nlc5
-         eK6JDbPRMvMJB8ENkZGxv8uFC+Ef0mNUSRBWZTHkL3ulBJGR8v9x0I4xstotdaGP7176
-         5tf3mDNe73llRFtUYPLl6Gr0VZu+WnFYE2SaynYiUzeyn7d60ltrupU5ABtbtJPw2khn
-         7JDX+dr6SD2TvSXa0FDAOSnOz6zowW6TQ78PH5DxeWWY32T+4QuQ4vYY8BgfcqxpuNIg
-         OvPg==
+        bh=wptBGDLLzX2MKQextGuJpdWgYcfBlbPlr/5rrFvg6GU=;
+        b=MmD4HkroiuEhAhtAeaiL4zCyV5VY+NMH/tOatBEguUwjtbeVbd/laIlXAHgbwXN0O8
+         g3aWok4N64jepEZpeOvS0PCPh29X3+UoukiM1KyxAwu6odwXIQH00L75nPdCtpkTcEcx
+         cZ2inNPdPT1mHOydcVjB3LJtcbkSGh/KO/egGj5RSnwNNnC5lcG8YQdndLurUp5reEyw
+         AeyJKRGzhVWKje5aFQrfRm/igOYAMvg1ghmKw7MjTLNn5omPyFDY5nH2d9EN2fc7Gd0l
+         5MloU4zqyAhJEaPtHA9hpNG3so0Uq7jskNZeI8b9OKT558KVr8/TmNV+5kuXJg7NXZOE
+         flug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FmRNviOqVjipr1RSFbFj9F4fck0imv/S9yq0q4MvYNw=;
-        b=oui412Oh1c2SBBxvUJKKr0ImWTXEfSBaU4fmBVlfMgE8OuhnontfH4CkaUgkWcVUkF
-         nay4MIUqYGQVP5r47zJsXr4JlH3ETBOZHA/jheLv+hdELylWeSrcc196mX/UmYVQUT3H
-         Efh2j3a8rnu1WgyHjvVdrkgutQWHq6PhQUAwSO9P8nsTCJkUP2YRKPPBU90TMUy2SsSX
-         ZoNKzvsHkwPIeL9LvLMv+two/ejcg/ByU/ro7U8gIiu9sd0/iRI+EYypI5fy2+KyUmR/
-         BlhDljtRltaTFdXfWBwZndBh17wzKmIU+D7BYndIbbBQBejZ7GmSO0km/a9keKz5+AHT
-         lcfw==
-X-Gm-Message-State: AOAM533tyfx92nhe/SbBndrjJGYUJB3JB7sv66Mb3V0delcUtA4Sfy/v
-        Ue9paOAeEUY/PIC9IvuIN1A2HYmB+X0=
-X-Google-Smtp-Source: ABdhPJx0s4CcgQjdlBH4avi+dCO2BCvGZC0vmPSaxoV53TtzMibl+Wu+qhLIXtuStqqia+V6TLEdyw==
-X-Received: by 2002:a17:906:3495:: with SMTP id g21mr8908071ejb.121.1599750241905;
-        Thu, 10 Sep 2020 08:04:01 -0700 (PDT)
+        bh=wptBGDLLzX2MKQextGuJpdWgYcfBlbPlr/5rrFvg6GU=;
+        b=rbL5SAmksLEma1YlBVC4i9FDjONDjL6+ggEudYsqaTMb3LENee6HUYkPD+y/oqAtts
+         6MwuQquexs+qXcwlfjg7qIsbqbUwjaV3ElZLYCiwKf4Dwba63f5WJDy9oTRPzI3Hy/6m
+         Ge+/iE2xv8OdWerEihOszpp/bo1x2HsaEslz1RHJ1o1VFP9Ny05NYdkLOQ8D5ygzYKTN
+         dUy8/3JnhugsMBetR6Tg+RPdN/hH6sEMxxUogu4UMNVy+LhccS//w+Q32lqSwUJvIVe1
+         DLEpPb1PUyrP3ix97Cxh4N5X69+HR0BP7FHGTa8Y9ecjjs8ZRg1vLx4QnLCldMAK92tb
+         ef8w==
+X-Gm-Message-State: AOAM5314ZrGLPLa0I8nNodM5lNRPYx2r5qWxeJpOVTdvaUNA6L5FljR4
+        VN5imuIx7XaA/MdA4BSAFjlbxAb73dU=
+X-Google-Smtp-Source: ABdhPJxswCL9H4fJTSdm8Cdd3PSGRaoIM7j/FDNpjmF5i1LM0CMT+yrHuXnKGwXd+miLTAOYDMNLZg==
+X-Received: by 2002:a17:906:b317:: with SMTP id n23mr9126523ejz.6.1599750246285;
+        Thu, 10 Sep 2020 08:04:06 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id o3sm7443925edt.79.2020.09.10.08.03.58
+        by smtp.gmail.com with ESMTPSA id o3sm7443925edt.79.2020.09.10.08.04.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 08:03:59 -0700 (PDT)
+        Thu, 10 Sep 2020 08:04:05 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
 Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 10/15] habanalabs/gaudi: add WQ control operations
-Date:   Thu, 10 Sep 2020 18:03:23 +0300
-Message-Id: <20200910150328.20545-11-oded.gabbay@gmail.com>
+Subject: [PATCH 12/15] habanalabs/gaudi: add debugfs entries for the NIC
+Date:   Thu, 10 Sep 2020 18:03:25 +0300
+Message-Id: <20200910150328.20545-13-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200910150328.20545-1-oded.gabbay@gmail.com>
 References: <20200910150328.20545-1-oded.gabbay@gmail.com>
@@ -75,350 +75,543 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Omer Shpigelman <oshpigelman@habana.ai>
 
-Add Work Queue (WQ) opcodes to NIC ioctl. A WQ contains entries (WQEs)
-where each WQE represents a packet that should be sent or received.
+Add several debugfs entries to help us debug the NIC engines and ports and
+also the communication layer of the DL training application that use them.
 
-Each WQ has two types: requester (sender) and responder (receiver).
+There are eight new entries. Detailed description is in the documentation
+file but here is a summary:
 
-The added opcodes are:
-- Set WQ: set the WQ configuration in the HW. The user should provide the
-          device virtual address of the WQ.
-- Unset WQ: reset the WQ configuration in the HW.
+- nic_mac_loopback: enable mac loopback mode per port
+- nic_ports_status: print physical connection status per port
+- nic_pcs_fail_time_frame: configure windows size for measuring pcs
+                           failures
+- nic_pcs_fail_threshold: configure pcs failures threshold for
+                          reconfiguring the link
+- nic_pam4_tx_taps: configure PAM4 TX taps
+- nic_polarity: configure polarity for NIC port lanes
+- nic_check_link: configure whether to check the PCS link periodically
+- nic_phy_auto_neg_lpbk: enable PHY auto-negotiation loopback
 
 Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- .../misc/habanalabs/common/habanalabs_ioctl.c |  10 +-
- drivers/misc/habanalabs/gaudi/gaudi_nic.c     | 184 ++++++++++++++++++
- include/uapi/misc/habanalabs.h                |  33 ++++
- 3 files changed, 225 insertions(+), 2 deletions(-)
+ .../ABI/testing/debugfs-driver-habanalabs     |  69 +++
+ drivers/misc/habanalabs/gaudi/Makefile        |   3 +-
+ drivers/misc/habanalabs/gaudi/gaudi_nic.c     |   2 +
+ .../misc/habanalabs/gaudi/gaudi_nic_debugfs.c | 402 ++++++++++++++++++
+ 4 files changed, 475 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
 
-diff --git a/drivers/misc/habanalabs/common/habanalabs_ioctl.c b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-index 6947ef519872..ad6dab5344f9 100644
---- a/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-@@ -24,7 +24,7 @@ static u32 hl_debug_struct_size[HL_DEBUG_OP_TIMESTAMP + 1] = {
+diff --git a/Documentation/ABI/testing/debugfs-driver-habanalabs b/Documentation/ABI/testing/debugfs-driver-habanalabs
+index 2e9ae311e02d..8fca02b92a80 100644
+--- a/Documentation/ABI/testing/debugfs-driver-habanalabs
++++ b/Documentation/ABI/testing/debugfs-driver-habanalabs
+@@ -176,3 +176,72 @@ KernelVersion:  5.6
+ Contact:        oded.gabbay@gmail.com
+ Description:    Sets the stop-on_error option for the device engines. Value of
+                 "0" is for disable, otherwise enable.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_mac_loopback
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Allows the root user to disable/enable MAC loopback for Gaudi
++                NIC ports. The ports will function as if a physical loopback
++                transceiver was connected. A bitmask should be provided where
++                each bit represents a port, up to 20 bits.
++                Known issues for this mode:
++                1. Odd ports PHY is not stopped so the peer's odd ports will get
++                PCS link.
++                2. Might cause an interrupt storm due to high B/W.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_ports_status
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Displays a summary the PC link state of all Gaudi NIC ports.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_pcs_fail_time_frame
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Allows the root user to set the used time frame in seconds for
++                detecting a loose PCS link of a Gaudi NIC port. We count how
++                many PCS link failures occurred in a time frame up to a
++                threshold which will cause PHY reconfiguration for getting a new
++                PCS link.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_pcs_fail_threshold
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Allows the root user to set the used threshold for detecting a
++                loose PCS link of a Gaudi NIC port. We count how many PCS link
++                failures occurred in a time frame up to the threshold which will
++                cause PHY reconfiguration for getting a new PCS link.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_pam4_tx_taps
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Allows the root user to set the PAM4 Tx taps for Gaudi NIC port
++                lanes. The lanes indices are 0-39.
++                Acceptable input string form:
++                <lane> <tx_pre2> <tx_pre1> <tx_main> <tx_post1> <tx_post2>.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_polarity
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Allows the root user to set the polarity for Gaudi NIC port
++                lanes. The lanes indices are 0-39.
++                Acceptable input string form: <lane> <pol_tx> <pol_rx>.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_check_link
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Sets the PCS link periodic check for all Gaudi NIC ports. Value
++                of "0" is for disable, otherwise enable.
++
++What:           /sys/kernel/debug/habanalabs/hl<n>/nic_phy_auto_neg_lpbk
++Date:           Nov 2020
++KernelVersion:  5.10
++Contact:        oshpigelman@habana.ai
++Description:    Sets the PHY Autoneg loopback support for all Gaudi NIC ports.
++                Value of "0" is for disable, otherwise enable.
+diff --git a/drivers/misc/habanalabs/gaudi/Makefile b/drivers/misc/habanalabs/gaudi/Makefile
+index c5143cf6f025..437b21e54c95 100644
+--- a/drivers/misc/habanalabs/gaudi/Makefile
++++ b/drivers/misc/habanalabs/gaudi/Makefile
+@@ -2,4 +2,5 @@
+ HL_GAUDI_FILES := gaudi/gaudi.o gaudi/gaudi_hwmgr.o gaudi/gaudi_security.o \
+ 	gaudi/gaudi_coresight.o
  
- };
- 
--static u32 hl_nic_input_size[HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES + 1] = {
-+static u32 hl_nic_input_size[HL_NIC_OP_USER_WQ_UNSET + 1] = {
- 	[HL_NIC_OP_ALLOC_CONN] = sizeof(struct hl_nic_alloc_conn_in),
- 	[HL_NIC_OP_SET_REQ_CONN_CTX] = sizeof(struct hl_nic_req_conn_ctx_in),
- 	[HL_NIC_OP_SET_RES_CONN_CTX] = sizeof(struct hl_nic_res_conn_ctx_in),
-@@ -35,9 +35,11 @@ static u32 hl_nic_input_size[HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES + 1] = {
- 	[HL_NIC_OP_CQ_POLL] = sizeof(struct hl_nic_cq_poll_wait_in),
- 	[HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES] =
- 			sizeof(struct hl_nic_cq_update_consumed_cqes_in),
-+	[HL_NIC_OP_USER_WQ_SET] = sizeof(struct hl_nic_user_wq_arr_set_in),
-+	[HL_NIC_OP_USER_WQ_UNSET] = sizeof(struct hl_nic_user_wq_arr_unset_in)
- };
- 
--static u32 hl_nic_output_size[HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES + 1] = {
-+static u32 hl_nic_output_size[HL_NIC_OP_USER_WQ_UNSET + 1] = {
- 	[HL_NIC_OP_ALLOC_CONN] = sizeof(struct hl_nic_alloc_conn_out),
- 	[HL_NIC_OP_SET_REQ_CONN_CTX] = 0,
- 	[HL_NIC_OP_SET_RES_CONN_CTX] = 0,
-@@ -47,6 +49,8 @@ static u32 hl_nic_output_size[HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES + 1] = {
- 	[HL_NIC_OP_CQ_WAIT] = sizeof(struct hl_nic_cq_poll_wait_out),
- 	[HL_NIC_OP_CQ_POLL] = sizeof(struct hl_nic_cq_poll_wait_out),
- 	[HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES] = 0,
-+	[HL_NIC_OP_USER_WQ_SET] = 0,
-+	[HL_NIC_OP_USER_WQ_UNSET] = 0
- };
- 
- static int device_status_info(struct hl_device *hdev, struct hl_info_args *args)
-@@ -641,6 +645,8 @@ static int hl_nic_ioctl(struct hl_fpriv *hpriv, void *data)
- 	case HL_NIC_OP_CQ_WAIT:
- 	case HL_NIC_OP_CQ_POLL:
- 	case HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES:
-+	case HL_NIC_OP_USER_WQ_SET:
-+	case HL_NIC_OP_USER_WQ_UNSET:
- 		args->input_size =
- 			min(args->input_size, hl_nic_input_size[args->op]);
- 		args->output_size =
+-HL_GAUDI_FILES += gaudi/gaudi_nic.o gaudi/gaudi_phy.o
++HL_GAUDI_FILES += gaudi/gaudi_nic.o gaudi/gaudi_phy.o \
++	gaudi/gaudi_nic_debugfs.o
 diff --git a/drivers/misc/habanalabs/gaudi/gaudi_nic.c b/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-index 0583b34a728f..8f6585c700cf 100644
+index 41789f7ed32e..a73635a4c44b 100644
 --- a/drivers/misc/habanalabs/gaudi/gaudi_nic.c
 +++ b/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-@@ -3268,6 +3268,170 @@ int gaudi_nic_get_mac_addr(struct hl_device *hdev,
+@@ -3025,6 +3025,8 @@ int gaudi_nic_ports_init(struct hl_device *hdev)
+ 			}
+ 		}
+ 
++	gaudi_nic_debugfs_init(hdev);
++
+ 	gaudi->hw_cap_initialized |= HW_CAP_NIC_DRV;
+ 
  	return 0;
- }
- 
-+static int wq_port_check(struct hl_device *hdev, u32 port)
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c b/drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
+new file mode 100644
+index 000000000000..2e99d2683512
+--- /dev/null
++++ b/drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
+@@ -0,0 +1,402 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright 2018-2020 HabanaLabs, Ltd.
++ * All Rights Reserved.
++ */
++
++#include "gaudi_nic.h"
++#include <linux/debugfs.h>
++#include <linux/nospec.h>
++
++#ifdef CONFIG_DEBUG_FS
++
++#define POLARITY_KBUF_SIZE	8
++#define TX_TAPS_KBUF_SIZE	25
++
++static ssize_t debugfs_pam4_tx_taps_write(struct file *f,
++						const char __user *buf,
++						size_t count, loff_t *ppos)
 +{
-+	if (port >= NIC_NUMBER_OF_ENGINES) {
-+		dev_err(hdev->dev, "Invalid port %d\n", port);
-+		return -EINVAL;
-+	}
-+
-+	if (!(hdev->nic_ports_mask & BIT(port))) {
-+		dev_err(hdev->dev, "Port %d is disabled\n", port);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static int user_wq_arr_set(struct hl_device *hdev,
-+				struct hl_nic_user_wq_arr_set_in *in)
-+{
++	struct hl_device *hdev = file_inode(f)->i_private;
 +	struct gaudi_device *gaudi = hdev->asic_specific;
-+	struct gaudi_nic_device *gaudi_nic;
-+	u64 wq_base_addr, num_of_wq_entries_log;
-+	u32 port, type;
-+	int rc;
++	char kbuf[TX_TAPS_KBUF_SIZE];
++	char *c1, *c2;
++	ssize_t rc;
++	u32 lane;
++	s32 tx_pre2, tx_pre1, tx_main, tx_post1, tx_post2;
++	s32 *taps;
 +
-+	if (!in) {
-+		dev_err(hdev->dev, "missing parameters, can't set user WQ\n");
-+		return -EINVAL;
-+	}
++	if (count > sizeof(kbuf) - 1)
++		goto err;
++	if (copy_from_user(kbuf, buf, count))
++		goto err;
++	kbuf[count] = '\0';
 +
-+	type = in->type;
-+	if (type != HL_NIC_USER_WQ_SEND && type != HL_NIC_USER_WQ_RECV) {
-+		dev_err(hdev->dev, "invalid type %d, can't set user WQ\n",
-+			type);
-+		return -EINVAL;
-+	}
++	c1 = kbuf;
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
 +
-+	port = in->port;
-+
-+	rc = wq_port_check(hdev, port);
++	rc = kstrtou32(c1, 10, &lane);
 +	if (rc)
-+		return rc;
++		goto err;
 +
-+	gaudi_nic = &gaudi->nic_devices[port];
-+
-+	if (in->num_of_wqs == 0) {
-+		dev_err(hdev->dev,
-+			"number of WQs must be bigger than zero, port: %d\n",
-+			port);
++	if (lane >= NIC_MAX_NUM_OF_LANES) {
++		dev_err(hdev->dev, "lane max value is %d\n",
++			NIC_MAX_NUM_OF_LANES - 1);
 +		return -EINVAL;
 +	}
 +
-+	/* H/W limitation */
-+	if (in->num_of_wqs > NIC_HW_MAX_QP_NUM) {
-+		dev_err(hdev->dev,
-+			"number of WQs (0x%x) can't be bigger than 0x%x, port: %d\n",
-+			in->num_of_wqs, NIC_HW_MAX_QP_NUM, port);
-+		return -EINVAL;
-+	}
++	/* Turn off speculation due to Spectre vulnerability */
++	lane = array_index_nospec(lane, NIC_MAX_NUM_OF_LANES);
 +
-+	if (!is_power_of_2(in->num_of_wq_entries)) {
-+		dev_err(hdev->dev,
-+			"number of entries (0x%x) must be a power of 2, port: %d\n",
-+			in->num_of_wq_entries, port);
-+		return -EINVAL;
-+	}
++	c1 = c2 + 1;
 +
-+	/* H/W cache line constraint */
-+	if (in->num_of_wq_entries < 4) {
-+		dev_err(hdev->dev,
-+			"number of entries (0x%x) must be at least 4, port: %d\n",
-+			in->num_of_wq_entries, port);
-+		return -EINVAL;
-+	}
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
 +
-+	/* H/W limitation */
-+	if (in->num_of_wq_entries > USER_WQES_MAX_NUM) {
-+		dev_err(hdev->dev,
-+			"number of entries (0x%x) can't be bigger than 0x%x, port: %d\n",
-+			in->num_of_wq_entries, USER_WQES_MAX_NUM, port);
-+		return -EINVAL;
-+	}
-+
-+	if (!IS_ALIGNED(in->addr, DEVICE_CACHE_LINE_SIZE)) {
-+		dev_err(hdev->dev,
-+			"WQ VA (0x%llx) must be aligned to cache line size (0x%x), port: %d\n",
-+			in->addr, DEVICE_CACHE_LINE_SIZE, port);
-+		return -EINVAL;
-+	}
-+
-+	wq_base_addr = in->addr;
-+	num_of_wq_entries_log = ilog2(in->num_of_wq_entries);
-+
-+	mutex_lock(&gaudi_nic->user_wq_lock);
-+
-+	if (type == HL_NIC_USER_WQ_SEND) {
-+		NIC_WREG32(mmNIC0_TXE0_SQ_BASE_ADDRESS_49_32_0,
-+				(wq_base_addr >> 32) & 0x3FFFFF);
-+		NIC_WREG32(mmNIC0_TXE0_SQ_BASE_ADDRESS_31_0_0,
-+				wq_base_addr & 0xFFFFFFFF);
-+		NIC_WREG32(mmNIC0_TXE0_LOG_MAX_WQ_SIZE_0,
-+				num_of_wq_entries_log - 2);
-+	} else {
-+		NIC_WREG32(mmNIC0_RXE0_WIN0_WQ_BASE_LO,
-+				wq_base_addr & 0xFFFFFFFF);
-+		NIC_WREG32(mmNIC0_RXE0_WIN0_WQ_BASE_HI,
-+			((wq_base_addr >> 32) & 0xFFFFFFFF) |
-+			((num_of_wq_entries_log - 4) << 24));
-+	}
-+
-+	mutex_unlock(&gaudi_nic->user_wq_lock);
-+
-+	return 0;
-+}
-+
-+static void _user_wq_arr_unset(struct hl_device *hdev, u32 port, u32 type)
-+{
-+	struct gaudi_device *gaudi = hdev->asic_specific;
-+	struct gaudi_nic_device *gaudi_nic;
-+
-+	gaudi_nic = &gaudi->nic_devices[port];
-+
-+	mutex_lock(&gaudi_nic->user_wq_lock);
-+
-+	if (type == HL_NIC_USER_WQ_SEND) {
-+		NIC_WREG32(mmNIC0_TXE0_SQ_BASE_ADDRESS_49_32_0, 0);
-+		NIC_WREG32(mmNIC0_TXE0_SQ_BASE_ADDRESS_31_0_0, 0);
-+		NIC_WREG32(mmNIC0_TXE0_LOG_MAX_WQ_SIZE_0, 0);
-+	} else {
-+		NIC_WREG32(mmNIC0_RXE0_WIN0_WQ_BASE_LO, 0);
-+		NIC_WREG32(mmNIC0_RXE0_WIN0_WQ_BASE_HI, 0);
-+	}
-+
-+	mutex_unlock(&gaudi_nic->user_wq_lock);
-+}
-+
-+static int user_wq_arr_unset(struct hl_device *hdev,
-+				struct hl_nic_user_wq_arr_unset_in *in)
-+{
-+	u32 port, type;
-+	int rc;
-+
-+	if (!in) {
-+		dev_err(hdev->dev, "missing parameters, can't unset user WQ\n");
-+		return -EINVAL;
-+	}
-+
-+	type = in->type;
-+	if (type != HL_NIC_USER_WQ_SEND && type != HL_NIC_USER_WQ_RECV) {
-+		dev_err(hdev->dev, "invalid type %d, can't unset user WQ\n",
-+			type);
-+		return -EINVAL;
-+	}
-+
-+	port = in->port;
-+
-+	rc = wq_port_check(hdev, port);
++	rc = kstrtos32(c1, 10, &tx_pre2);
 +	if (rc)
-+		return rc;
++		goto err;
 +
-+	_user_wq_arr_unset(hdev, port, type);
++	c1 = c2 + 1;
 +
-+	return 0;
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
++
++	rc = kstrtos32(c1, 10, &tx_pre1);
++	if (rc)
++		goto err;
++
++	c1 = c2 + 1;
++
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
++
++	rc = kstrtos32(c1, 10, &tx_main);
++	if (rc)
++		goto err;
++
++	c1 = c2 + 1;
++
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
++
++	rc = kstrtos32(c1, 10, &tx_post1);
++	if (rc)
++		goto err;
++
++	c1 = c2 + 1;
++
++	rc = kstrtos32(c1, 10, &tx_post2);
++	if (rc)
++		goto err;
++
++	taps = gaudi->nic_pam4_tx_taps[lane].taps;
++	taps[0] = tx_pre2;
++	taps[1] = tx_pre1;
++	taps[2] = tx_main;
++	taps[3] = tx_post1;
++	taps[4] = tx_post2;
++
++	return count;
++err:
++	dev_err(hdev->dev,
++		"usage: echo <lane> <tx_pre2> <tx_pre1> <tx_main> <tx_post1> <tx_post2> > nic_pam4_tx_taps\n");
++
++	return -EINVAL;
 +}
 +
- static struct hl_qp *qp_get(struct hl_device *hdev,
- 			struct gaudi_nic_device *gaudi_nic, u32 conn_id)
- {
-@@ -3640,6 +3804,12 @@ int gaudi_nic_control(struct hl_device *hdev, u32 op, void *input, void *output)
- 	case HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES:
- 		rc = cq_update_consumed_cqes(hdev, input);
- 		break;
-+	case HL_NIC_OP_USER_WQ_SET:
-+		rc = user_wq_arr_set(hdev, input);
-+		break;
-+	case HL_NIC_OP_USER_WQ_UNSET:
-+		rc = user_wq_arr_unset(hdev, input);
-+		break;
- 	default:
- 		dev_err(hdev->dev, "Invalid NIC control request %d\n", op);
- 		return -ENOTTY;
-@@ -3679,6 +3849,19 @@ static void qps_destroy(struct hl_device *hdev)
- 	}
- }
- 
-+static void wq_arrs_destroy(struct hl_device *hdev)
-+{
-+	int i;
-+
-+	for (i = 0 ; i < NIC_NUMBER_OF_PORTS ; i++) {
-+		if (!(hdev->nic_ports_mask & BIT(i)))
-+			continue;
-+
-+		_user_wq_arr_unset(hdev, i, HL_NIC_USER_WQ_SEND);
-+		_user_wq_arr_unset(hdev, i, HL_NIC_USER_WQ_RECV);
-+	}
-+}
-+
- void gaudi_nic_ctx_fini(struct hl_ctx *ctx)
- {
- 	struct hl_device *hdev = ctx->hdev;
-@@ -3691,6 +3874,7 @@ void gaudi_nic_ctx_fini(struct hl_ctx *ctx)
- 	/* wait for the NIC to digest the invalid QPs */
- 	msleep(20);
- 	cq_destroy(hdev);
-+	wq_arrs_destroy(hdev);
- }
- 
- static void nic_cq_vm_close(struct vm_area_struct *vma)
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index 840f31a18209..5678fda2fddc 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -1021,6 +1021,31 @@ struct hl_nic_cq_poll_wait_out {
- 	__u32 pad;
- };
- 
-+/* Send user WQ array type */
-+#define HL_NIC_USER_WQ_SEND	0
-+/* Receive user WQ array type */
-+#define HL_NIC_USER_WQ_RECV	1
-+
-+struct hl_nic_user_wq_arr_set_in {
-+	/* WQ array address */
-+	__u64 addr;
-+	/* NIC port ID */
-+	__u32 port;
-+	/* Number of user WQs */
-+	__u32 num_of_wqs;
-+	/* Number of entries per user WQ */
-+	__u32 num_of_wq_entries;
-+	/* Type of user WQ array */
-+	__u32 type;
++static const struct file_operations debugfs_pam4_tx_taps_fops = {
++	.owner = THIS_MODULE,
++	.write = debugfs_pam4_tx_taps_write,
 +};
 +
-+struct hl_nic_user_wq_arr_unset_in {
-+	/* NIC port ID */
-+	__u32 port;
-+	/* Type of user WQ array */
-+	__u32 type;
++static ssize_t debugfs_polarity_write(struct file *f, const char __user *buf,
++					size_t count, loff_t *ppos)
++{
++	struct hl_device *hdev = file_inode(f)->i_private;
++	struct gaudi_device *gaudi = hdev->asic_specific;
++	struct cpucp_nic_info *nic_info = &hdev->asic_prop.cpucp_nic_info;
++	char kbuf[POLARITY_KBUF_SIZE];
++	char *c1, *c2;
++	ssize_t rc;
++	u64 val;
++	u32 lane;
++	u8 pol_tx, pol_rx;
++
++	if (count > sizeof(kbuf) - 1)
++		goto err;
++	if (copy_from_user(kbuf, buf, count))
++		goto err;
++	kbuf[count] = '\0';
++
++	c1 = kbuf;
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
++
++	rc = kstrtou32(c1, 10, &lane);
++	if (rc)
++		goto err;
++
++	if (lane >= NIC_MAX_NUM_OF_LANES) {
++		dev_err(hdev->dev, "lane max value is %d\n",
++			NIC_MAX_NUM_OF_LANES - 1);
++		return -EINVAL;
++	}
++
++	c1 = c2 + 1;
++
++	c2 = strchr(c1, ' ');
++	if (!c2)
++		goto err;
++	*c2 = '\0';
++
++	rc = kstrtou8(c1, 10, &pol_tx);
++	if (rc)
++		goto err;
++
++	c1 = c2 + 1;
++
++	rc = kstrtou8(c1, 10, &pol_rx);
++	if (rc)
++		goto err;
++
++	if ((pol_tx & ~1) || (pol_rx & ~1)) {
++		dev_err(hdev->dev, "pol_tx and pol_rx should be 0 or 1\n");
++		goto err;
++	}
++
++	val = le64_to_cpu(nic_info->pol_tx_mask[0]);
++	val &= ~BIT_ULL(lane);
++	val |= ((u64) pol_tx) << lane;
++	nic_info->pol_tx_mask[0] = cpu_to_le64(val);
++
++	val = le64_to_cpu(nic_info->pol_rx_mask[0]);
++	val &= ~BIT_ULL(lane);
++	val |= ((u64) pol_rx) << lane;
++	nic_info->pol_rx_mask[0] = cpu_to_le64(val);
++
++	gaudi->nic_use_fw_polarity = true;
++
++	return count;
++err:
++	dev_err(hdev->dev,
++		"usage: echo <lane> <pol_tx> <pol_rx> > nic_polarity\n");
++
++	return -EINVAL;
++}
++
++static const struct file_operations debugfs_polarity_fops = {
++	.owner = THIS_MODULE,
++	.write = debugfs_polarity_write,
 +};
 +
- /* Opcode to allocate connection ID */
- #define HL_NIC_OP_ALLOC_CONN			0
- /* Opcode to set up a requester connection context */
-@@ -1039,6 +1064,10 @@ struct hl_nic_cq_poll_wait_out {
- #define HL_NIC_OP_CQ_POLL			7
- /* Opcode to update the number of consumed CQ entries */
- #define HL_NIC_OP_CQ_UPDATE_CONSUMED_CQES	8
-+/* Opcode to set a user WQ array */
-+#define HL_NIC_OP_USER_WQ_SET			9
-+/* Opcode to unset a user WQ array */
-+#define HL_NIC_OP_USER_WQ_UNSET			10
- 
- struct hl_nic_args {
- 	/* Pointer to user input structure (relevant to specific opcodes) */
-@@ -1225,6 +1254,8 @@ struct hl_nic_args {
-  * - Wait on completion queue
-  * - Poll a completion queue
-  * - Update consumed completion queue entries
-+ * - Set a work queue
-+ * - Unset a work queue
-  *
-  * For all operations, the user should provide a pointer to an input structure
-  * with the context parameters. Some of the operations also require a pointer to
-@@ -1238,6 +1269,8 @@ struct hl_nic_args {
-  * driver regarding how many of the available CQEs were actually
-  * processed/consumed. Only then the driver will override them with newer
-  * entries.
-+ * The set WQ operation should provide the device virtual address of the WQ with
-+ * a matching size for the number of WQs and entries per WQ.
-  *
-  */
- #define HL_IOCTL_NIC	_IOWR('H', 0x07, struct hl_nic_args)
++static ssize_t debugfs_ports_status_read(struct file *f, char __user *buf,
++					size_t count, loff_t *ppos)
++{
++	struct hl_device *hdev = file_inode(f)->i_private;
++	struct gaudi_device *gaudi = hdev->asic_specific;
++	char tmp_buf[512] = {0};
++	ssize_t rc;
++	int i, up_cnt = 0, down_cnt = 0;
++
++	if (*ppos)
++		return 0;
++
++	for (i = 0 ; i < NIC_NUMBER_OF_PORTS ; i++)
++		if ((hdev->nic_ports_mask & BIT(i))) {
++			if (gaudi->nic_devices[i].active)
++				up_cnt++;
++			else
++				down_cnt++;
++		}
++
++	if (up_cnt) {
++		sprintf(tmp_buf, "%d ports up (", up_cnt);
++
++		for (i = 0 ; i < NIC_NUMBER_OF_PORTS ; i++)
++			if ((hdev->nic_ports_mask & BIT(i)) &&
++				gaudi->nic_devices[i].active)
++				sprintf(tmp_buf + strlen(tmp_buf), "%d, ", i);
++
++		sprintf(tmp_buf + strlen(tmp_buf) - 2, ")");
++	}
++
++	if (down_cnt) {
++		if (up_cnt)
++			sprintf(tmp_buf + strlen(tmp_buf), "\n");
++
++		sprintf(tmp_buf + strlen(tmp_buf), "%d ports down (", down_cnt);
++
++		for (i = 0 ; i < NIC_NUMBER_OF_PORTS ; i++)
++			if ((hdev->nic_ports_mask & BIT(i)) &&
++				!gaudi->nic_devices[i].active)
++				sprintf(tmp_buf + strlen(tmp_buf), "%d, ", i);
++
++		sprintf(tmp_buf + strlen(tmp_buf) - 2, ")");
++	}
++
++	sprintf(tmp_buf + strlen(tmp_buf), "\n");
++
++	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
++					strlen(tmp_buf) + 1);
++
++	return rc;
++}
++
++static const struct file_operations debugfs_ports_status_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_ports_status_read,
++};
++
++#define NIC_DEBUGFS(X, fmt, do_reset) \
++static ssize_t debugfs_##X##_read(struct file *f, \
++					char __user *buf, \
++					size_t count, \
++					loff_t *ppos) \
++{ \
++	struct hl_device *hdev = file_inode(f)->i_private; \
++	struct gaudi_device *gaudi = hdev->asic_specific; \
++	char tmp_buf[32]; \
++	ssize_t rc; \
++\
++	if (*ppos) \
++		return 0; \
++\
++	sprintf(tmp_buf, fmt "\n", gaudi->nic_##X); \
++	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf, \
++			strlen(tmp_buf) + 1); \
++\
++	return rc; \
++} \
++\
++static ssize_t debugfs_##X##_write(struct file *f, \
++					const char __user *buf, \
++					size_t count, \
++					loff_t *ppos) \
++{ \
++	struct hl_device *hdev = file_inode(f)->i_private; \
++	struct gaudi_device *gaudi = hdev->asic_specific; \
++	u64 val, base; \
++	ssize_t rc; \
++\
++	if (!strcmp(fmt, "%d")) \
++		base = 10; \
++	else \
++		base = 16; \
++\
++	rc = kstrtoull_from_user(buf, count, base, &val); \
++	if (rc) \
++		return rc; \
++\
++	if (val == gaudi->nic_##X) \
++		return count; \
++\
++	if (do_reset && gaudi->nic_debugfs_reset) { \
++		gaudi->nic_##X = val; \
++		hl_device_reset(hdev, true, false); \
++		ssleep(HL_PENDING_RESET_PER_SEC); \
++		return count; \
++	} \
++\
++	dev_info(hdev->dev, "NIC reset for %s started\n", __stringify(X)); \
++\
++	rc = gaudi_nic_hard_reset_prepare(hdev); \
++	if (rc) \
++		return rc; \
++\
++	gaudi_nic_stop(hdev); \
++\
++	/* must do this so the ports will be reopened */ \
++	gaudi->hw_cap_initialized &= ~HW_CAP_NIC_DRV; \
++\
++	gaudi->nic_##X = val; \
++\
++	gaudi_nic_ports_reopen(hdev); \
++\
++	dev_info(hdev->dev, "NIC reset for %s finished\n", __stringify(X)); \
++\
++	return count; \
++} \
++\
++static const struct file_operations debugfs_##X##_fops = { \
++	.owner = THIS_MODULE, \
++	.read = debugfs_##X##_read, \
++	.write = debugfs_##X##_write, \
++}
++
++NIC_DEBUGFS(mac_loopback, "0x%llx", true);
++NIC_DEBUGFS(pcs_fail_time_frame, "%d", false);
++NIC_DEBUGFS(pcs_fail_threshold, "%d", false);
++
++void gaudi_nic_debugfs_init(struct hl_device *hdev)
++{
++	struct gaudi_device *gaudi = hdev->asic_specific;
++
++	debugfs_create_file("nic_mac_loopback",
++				0644,
++				hdev->hl_debugfs.root,
++				hdev,
++				&debugfs_mac_loopback_fops);
++
++	debugfs_create_file("nic_ports_status",
++				0444,
++				hdev->hl_debugfs.root,
++				hdev,
++				&debugfs_ports_status_fops);
++
++	debugfs_create_file("nic_pcs_fail_time_frame",
++				0644,
++				hdev->hl_debugfs.root,
++				hdev,
++				&debugfs_pcs_fail_time_frame_fops);
++
++	debugfs_create_file("nic_pcs_fail_threshold",
++				0644,
++				hdev->hl_debugfs.root,
++				hdev,
++				&debugfs_pcs_fail_threshold_fops);
++
++	debugfs_create_file("nic_pam4_tx_taps",
++				0444,
++				hdev->hl_debugfs.root,
++				hdev,
++				&debugfs_pam4_tx_taps_fops);
++
++	debugfs_create_file("nic_polarity",
++				0444,
++				hdev->hl_debugfs.root,
++				hdev,
++				&debugfs_polarity_fops);
++
++	debugfs_create_u8("nic_check_link",
++				0644,
++				hdev->hl_debugfs.root,
++				&gaudi->nic_check_link);
++
++	debugfs_create_u8("nic_phy_auto_neg_lpbk",
++				0644,
++				hdev->hl_debugfs.root,
++				&gaudi->nic_phy_auto_neg_lpbk);
++}
++
++#else
++
++void gaudi_nic_debugfs_init(struct hl_device *hdev)
++{
++}
++
++#endif /* CONFIG_DEBUG_FS */
 -- 
 2.17.1
 
