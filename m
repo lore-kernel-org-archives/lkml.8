@@ -2,113 +2,151 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03F1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41345C2D0E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 736DB207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D6720809
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgIJJM4 (ORCPT
+        id S1730278AbgIJJOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:12:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:32976 "EHLO mga11.intel.com"
+        Thu, 10 Sep 2020 05:14:50 -0400
+Received: from verein.lst.de ([213.95.11.211]:60117 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbgIJJMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:12:23 -0400
-IronPort-SDR: R+hbwZWSWxT419Ayjfrwxq0DPboX6tW2OieS87kchHi7Q2hgQ6LiWnVMEmLIFMrYXt321eqKIZ
- Y8ExM/BXttjw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="155957847"
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="155957847"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 02:12:23 -0700
-IronPort-SDR: 9YX5pnQv+WO3E0ckxuRb/tHg1KSHKHbwJ64i9ZI6LJipe4tqLHaKYR6uFRhKxpLZUFhmD0bAZu
- JxSstQynzFlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="304822090"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga006.jf.intel.com with ESMTP; 10 Sep 2020 02:12:21 -0700
-Date:   Thu, 10 Sep 2020 17:08:05 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     mdf@kernel.org, alex.williamson@redhat.com, kwankhede@nvidia.com,
-        linux-fpga@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgoncalv@redhat.com
-Subject: Re: [PATCH 0/3] add VFIO mdev support for DFL devices
-Message-ID: <20200910090805.GE16318@yilunxu-OptiPlex-7050>
-References: <1599549212-24253-1-git-send-email-yilun.xu@intel.com>
- <93200a4f-55a3-0798-3ef2-e0467288d5ba@redhat.com>
+        id S1727090AbgIJJOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:14:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7F59E6736F; Thu, 10 Sep 2020 11:13:51 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 11:13:51 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg KH <greg@kroah.com>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/3] dma-mapping: introduce DMA range map, supplanting
+ dma_pfn_offset
+Message-ID: <20200910091351.GA25883@lst.de>
+References: <20200910054038.324517-1-hch@lst.de> <20200910054038.324517-4-hch@lst.de> <20200910075351.GA1092435@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <93200a4f-55a3-0798-3ef2-e0467288d5ba@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200910075351.GA1092435@kroah.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi tom:
+On Thu, Sep 10, 2020 at 09:53:51AM +0200, Greg KH wrote:
+> >  		/*
+> >  		 * Please refer to usb_alloc_dev() to see why we set
+> > -		 * dma_mask and dma_pfn_offset.
+> > +		 * dma_mask and dma_range_map.
+> >  		 */
+> >  		intf->dev.dma_mask = dev->dev.dma_mask;
+> > -		intf->dev.dma_pfn_offset = dev->dev.dma_pfn_offset;
+> > +		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
+> > +			dev_err(&dev->dev, "failed to copy DMA map\n");
+> 
+> We tell the user, but then just keep on running?  Is there anything that
+> we can do here?
+> 
+> If not, why not have dma_direct_copy_range_map() print out the error?
 
-The generic workflow of mdev is described in
-Documentation/driver-api/vfio-mediated-device.rst, I could also share
-some code offline.
+At least for USB I'm pretty sure this isn't required at all.  I've been
+running with the patch below on my desktop for two days now trying all
+the usb toys I have (in addition to grepping for obvious abuses in
+the drivers).  remoteproc is a different story, but the DMA handling
+seems there is sketchy to start with..
 
-But now I got the comments from Alex that it may not suitable we
-implement the mdev for dfl devices. I think we need to first of all
-reconsider the design.
+---
+From 8bae3e6833f2ca431dcfcbc8f9cced7d5e972a01 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Wed, 9 Sep 2020 08:28:59 +0200
+Subject: usb: don't inherity DMA properties for USB devices
 
-Thanks,
-Yilun 
+As the comment in usb_alloc_dev correctly states, drivers can't use
+the DMA API on usb device, and at least calling dma_set_mask on them
+is highly dangerous.  Unlike what the comment states upper level drivers
+also can't really use the presence of a dma mask to check for DMA
+support, as the dma_mask is set by default for most busses.
 
-On Wed, Sep 09, 2020 at 02:13:59PM -0700, Tom Rix wrote:
-> This is a new interface, the documentation needs to go
-> 
-> into greater detail. I am particularly interested in the user workflow.
-> 
-> This seems like it would work only for kernel modules. 
-> 
-> Please describe both in the documentation.
-> 
-> A sample of a user mode driver would be helpful.
-> 
-> Is putting driver_override using sysfs for each device scalable ? would a list sets of {feature id,files}'s the vfio driver respond to better ? 
-> 
-> To be consistent the mdev driver file name should be dfl-vfio-mdev.c
-> 
-> There should be an opt-in flag for drivers being overridden instead of blanket approval of all drivers.
-> 
-> Tom
-> 
-> On 9/8/20 12:13 AM, Xu Yilun wrote:
-> > These patches depend on the patchset: "Modularization of DFL private
-> > feature drivers" & "add dfl bus support to MODULE_DEVICE_TABLE()"
-> >
-> > https://lore.kernel.org/linux-fpga/1599488581-16386-1-git-send-email-yilun.xu@intel.com/
-> >
-> > This patchset provides an VFIO Mdev driver for dfl devices. It makes
-> > possible for dfl devices be direct accessed from userspace.
-> >
-> > Xu Yilun (3):
-> >   fpga: dfl: add driver_override support
-> >   fpga: dfl: VFIO mdev support for DFL devices
-> >   Documentation: fpga: dfl: Add description for VFIO Mdev support
-> >
-> >  Documentation/ABI/testing/sysfs-bus-dfl |  20 ++
-> >  Documentation/fpga/dfl.rst              |  20 ++
-> >  drivers/fpga/Kconfig                    |   9 +
-> >  drivers/fpga/Makefile                   |   1 +
-> >  drivers/fpga/dfl.c                      |  54 ++++-
-> >  drivers/fpga/vfio-mdev-dfl.c            | 391 ++++++++++++++++++++++++++++++++
-> >  include/linux/fpga/dfl-bus.h            |   2 +
-> >  7 files changed, 496 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/fpga/vfio-mdev-dfl.c
-> >
+Remove the copying over of DMA information, and remove the now unused
+dma_direct_copy_range_map export.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/usb/core/message.c |  7 -------
+ drivers/usb/core/usb.c     | 13 -------------
+ kernel/dma/direct.c        |  1 -
+ 3 files changed, 21 deletions(-)
+
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index 935ee98e049f65..9e45732dc1d1d1 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1954,13 +1954,6 @@ int usb_set_configuration(struct usb_device *dev, int configuration)
+ 		intf->dev.bus = &usb_bus_type;
+ 		intf->dev.type = &usb_if_device_type;
+ 		intf->dev.groups = usb_interface_groups;
+-		/*
+-		 * Please refer to usb_alloc_dev() to see why we set
+-		 * dma_mask and dma_range_map.
+-		 */
+-		intf->dev.dma_mask = dev->dev.dma_mask;
+-		if (dma_direct_copy_range_map(&intf->dev, &dev->dev))
+-			dev_err(&dev->dev, "failed to copy DMA map\n");
+ 		INIT_WORK(&intf->reset_ws, __usb_queue_reset_device);
+ 		intf->minor = -1;
+ 		device_initialize(&intf->dev);
+diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
+index 23d451f6894d70..9b4ac4415f1a47 100644
+--- a/drivers/usb/core/usb.c
++++ b/drivers/usb/core/usb.c
+@@ -599,19 +599,6 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
+ 	dev->dev.bus = &usb_bus_type;
+ 	dev->dev.type = &usb_device_type;
+ 	dev->dev.groups = usb_device_groups;
+-	/*
+-	 * Fake a dma_mask/offset for the USB device:
+-	 * We cannot really use the dma-mapping API (dma_alloc_* and
+-	 * dma_map_*) for USB devices but instead need to use
+-	 * usb_alloc_coherent and pass data in 'urb's, but some subsystems
+-	 * manually look into the mask/offset pair to determine whether
+-	 * they need bounce buffers.
+-	 * Note: calling dma_set_mask() on a USB device would set the
+-	 * mask for the entire HCD, so don't do that.
+-	 */
+-	dev->dev.dma_mask = bus->sysdev->dma_mask;
+-	if (dma_direct_copy_range_map(&dev->dev, bus->sysdev))
+-		dev_err(&dev->dev, "failed to copy DMA map\n");
+ 	set_dev_node(&dev->dev, dev_to_node(bus->sysdev));
+ 	dev->state = USB_STATE_ATTACHED;
+ 	dev->lpm_disable_count = 1;
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index fc815f7375e282..3af257571a3b42 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -552,4 +552,3 @@ int dma_direct_copy_range_map(struct device *to, struct device *from)
+ 	to->dma_range_map = new_map;
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(dma_direct_copy_range_map);
+-- 
+2.28.0
+
