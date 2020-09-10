@@ -2,152 +2,156 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005A9C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E16AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CE1208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5777A20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="AiUoZAkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgIJVlm (ORCPT
+        id S1728480AbgIJVlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:41:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:17242 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730808AbgIJNFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:05:05 -0400
-IronPort-SDR: 6aSjMggW1OAdqqI7zneioWS8/Xf7xKxUf0QJAugfdwcz+I7JsVZJtiDbEuQh12xcPeywQOckfi
- lbfnaEgV6Fow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="159475727"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="159475727"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 06:04:00 -0700
-IronPort-SDR: KgbJY80cLw6sf4uRD0fDKIrG2SMUf9VIjFwG8qqVPU33W5i+sT9V3YPssiH8kH4hFz+B4rzSME
- 4ADWV6S+CiCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="329325728"
-Received: from glass.png.intel.com ([172.30.181.92])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Sep 2020 06:03:56 -0700
-From:   Wong Vee Khee <vee.khee.wong@intel.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Wei Feng <weifeng.voon@intel.com>,
-        Wong Vee Khee <vee.khee.wong@intel.com>
-Subject: [PATCH net-next 3/3] net: stmmac: use netif_tx_start|stop_all_queues() function
-Date:   Thu, 10 Sep 2020 21:05:40 +0800
-Message-Id: <20200910130540.19171-1-vee.khee.wong@intel.com>
-X-Mailer: git-send-email 2.17.0
+        Thu, 10 Sep 2020 17:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgIJNFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:05:04 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB32C061786
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:01 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z4so6641313wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4PF6iUUI6SI+SJ6z3aC7j/JhZxFAycexdCgWf22To5o=;
+        b=AiUoZAkXZa6DzILy730HrrK0W+sMBIXOXnSJSj1YNkV18zd+woSsRLc5tQyiO9hyua
+         OyDDAJU+rJFIru3zGYePqcVsmV088eF+dGOIbk43G5PSkObyu8ASTHkMQT3xBge/EFRG
+         cjJ1oaFDFU9abjWWG2+dYoIAVs8OWXZ+Jo7AoOIZjVigXgJ3pCTa8zpuiemS4JGAGd6R
+         arybGGlLq67U2ijjr400/z0o15sKbpvr8fd+4v9T922e5K6Hg+I16ba6a70pnbFeFb//
+         AhiCi58BSROJcZ8JaCUqhjVTIod55onVCYGreqGVJTDaAFOiv3fhCdhippfoD+xMwE7O
+         r5rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4PF6iUUI6SI+SJ6z3aC7j/JhZxFAycexdCgWf22To5o=;
+        b=p7/sHUIlsRnAr9EC54kXcqmlHFNVJIScXOmWITavJMMgL4on5JI9WGSfFhXyj8glwv
+         lgdbDpG4N9VCsLPmIt2bfNo4skSHs/lTRs1cNXcvX6UG79uf/OHCa1nZ5pjzvXLrmZxw
+         /Nb/8pWq6hrcc8MY+wTi7bp4cCMatWJa16ajW3S1cMzlD3MTLwn2Pu1XzcUBoHIjeHR+
+         Hrmq7F5xKWBRepgfsbtT1wiQE9559eN3VvVeYjgaZPEQewYkkK9G/WsF9/Ts0lgkZruT
+         cGM+f/4KyybbQKOVpyqGwUujdPC9UoXjS1NQLjFU7DKUgOHya7WlhSFFStdbOqHAotdZ
+         2JFw==
+X-Gm-Message-State: AOAM5329uXWUjJOTrn3X9nc9gQOMzokAbLsH2mBiW57YomEzZNsAaZFm
+        OkhchnifopDnwP6Ta8xd+z7zDg==
+X-Google-Smtp-Source: ABdhPJy2+TmxrCBV+QcXYzez3I3qTcnaBkMR3Gj258SX0dnjEo2hibzzWJ3Y3Pcwno+Pp1lquCnj2g==
+X-Received: by 2002:a5d:4e02:: with SMTP id p2mr9850115wrt.276.1599743099638;
+        Thu, 10 Sep 2020 06:04:59 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id p16sm9321988wro.71.2020.09.10.06.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 06:04:59 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 02/11] rtc: rx8010: consolidate local variables of the same type
+Date:   Thu, 10 Sep 2020 15:04:37 +0200
+Message-Id: <20200910130446.5689-3-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200910130446.5689-1-brgl@bgdev.pl>
+References: <20200910130446.5689-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ong Boon Leong <boon.leong.ong@intel.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The current implementation of stmmac_stop_all_queues() and
-stmmac_start_all_queues() will not work correctly when the value of
-tx_queues_to_use is changed through ethtool -L DEVNAME rx N tx M command.
+Move local variables of the same type into a single line for better
+readability.
 
-Also, netif_tx_start|stop_all_queues() are only needed in driver open()
-and close() only.
-
-Fixes: c22a3f48 net: stmmac: adding multiple napi mechanism
-
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 33 +------------------
- 1 file changed, 1 insertion(+), 32 deletions(-)
+ drivers/rtc/rtc-rx8010.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index fea3b77892ab..90c1c37b64e0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -176,32 +176,6 @@ static void stmmac_enable_all_queues(struct stmmac_priv *priv)
- 	}
- }
- 
--/**
-- * stmmac_stop_all_queues - Stop all queues
-- * @priv: driver private structure
-- */
--static void stmmac_stop_all_queues(struct stmmac_priv *priv)
--{
--	u32 tx_queues_cnt = priv->plat->tx_queues_to_use;
--	u32 queue;
--
--	for (queue = 0; queue < tx_queues_cnt; queue++)
--		netif_tx_stop_queue(netdev_get_tx_queue(priv->dev, queue));
--}
--
--/**
-- * stmmac_start_all_queues - Start all queues
-- * @priv: driver private structure
-- */
--static void stmmac_start_all_queues(struct stmmac_priv *priv)
--{
--	u32 tx_queues_cnt = priv->plat->tx_queues_to_use;
--	u32 queue;
--
--	for (queue = 0; queue < tx_queues_cnt; queue++)
--		netif_tx_start_queue(netdev_get_tx_queue(priv->dev, queue));
--}
--
- static void stmmac_service_event_schedule(struct stmmac_priv *priv)
+diff --git a/drivers/rtc/rtc-rx8010.c b/drivers/rtc/rtc-rx8010.c
+index 2faf5357a3a5..4c790d33f589 100644
+--- a/drivers/rtc/rtc-rx8010.c
++++ b/drivers/rtc/rtc-rx8010.c
+@@ -109,8 +109,7 @@ static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
  {
- 	if (!test_bit(STMMAC_DOWN, &priv->state) &&
-@@ -2865,7 +2839,7 @@ static int stmmac_open(struct net_device *dev)
- 	}
+ 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
+ 	u8 date[7];
+-	int flagreg;
+-	int err;
++	int flagreg, err;
  
- 	stmmac_enable_all_queues(priv);
--	stmmac_start_all_queues(priv);
-+	netif_tx_start_all_queues(priv->dev);
+ 	flagreg = i2c_smbus_read_byte_data(rx8010->client, RX8010_FLAG);
+ 	if (flagreg < 0)
+@@ -141,8 +140,7 @@ static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
+ {
+ 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
+ 	u8 date[7];
+-	int ctrl, flagreg;
+-	int ret;
++	int ctrl, flagreg, ret;
  
- 	return 0;
+ 	if ((dt->tm_year < 100) || (dt->tm_year > 199))
+ 		return -EINVAL;
+@@ -250,8 +248,7 @@ static int rx8010_read_alarm(struct device *dev, struct rtc_wkalrm *t)
+ 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
+ 	struct i2c_client *client = rx8010->client;
+ 	u8 alarmvals[3];
+-	int flagreg;
+-	int err;
++	int flagreg, err;
  
-@@ -2908,8 +2882,6 @@ static int stmmac_release(struct net_device *dev)
- 	phylink_stop(priv->phylink);
- 	phylink_disconnect_phy(priv->phylink);
+ 	err = i2c_smbus_read_i2c_block_data(client, RX8010_ALMIN, 3, alarmvals);
+ 	if (err != 3)
+@@ -279,8 +276,7 @@ static int rx8010_set_alarm(struct device *dev, struct rtc_wkalrm *t)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
+ 	u8 alarmvals[3];
+-	int extreg, flagreg;
+-	int err;
++	int extreg, flagreg, err;
  
--	stmmac_stop_all_queues(priv);
--
- 	stmmac_disable_all_queues(priv);
+ 	flagreg = i2c_smbus_read_byte_data(client, RX8010_FLAG);
+ 	if (flagreg < 0)
+@@ -346,9 +342,8 @@ static int rx8010_alarm_irq_enable(struct device *dev,
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
+-	int flagreg;
++	int flagreg, err;
+ 	u8 ctrl;
+-	int err;
  
- 	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
-@@ -5117,7 +5089,6 @@ int stmmac_suspend(struct device *dev)
- 	mutex_lock(&priv->lock);
+ 	ctrl = rx8010->ctrlreg;
  
- 	netif_device_detach(ndev);
--	stmmac_stop_all_queues(priv);
+@@ -387,8 +382,7 @@ static int rx8010_alarm_irq_enable(struct device *dev,
+ static int rx8010_ioctl(struct device *dev, unsigned int cmd, unsigned long arg)
+ {
+ 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
+-	int tmp;
+-	int flagreg;
++	int tmp, flagreg;
  
- 	stmmac_disable_all_queues(priv);
- 
-@@ -5244,8 +5215,6 @@ int stmmac_resume(struct device *dev)
- 
- 	stmmac_enable_all_queues(priv);
- 
--	stmmac_start_all_queues(priv);
--
- 	mutex_unlock(&priv->lock);
- 
- 	if (!device_may_wakeup(priv->device) || !priv->plat->pmt) {
+ 	switch (cmd) {
+ 	case RTC_VL_READ:
 -- 
-2.17.0
+2.26.1
 
