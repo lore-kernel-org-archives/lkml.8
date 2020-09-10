@@ -2,125 +2,109 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ABEC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E737BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF85F2074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:25:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="gFxw0O2i"
+	by mail.kernel.org (Postfix) with ESMTP id A27DE2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgIJIZi (ORCPT
+        id S1730423AbgIJIZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730077AbgIJIOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:14:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023B1C0617A3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:13:21 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id c3so540566plz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WcdZYdMEIHKAJf7V6BNJ8N7QqP1cj59N2jvisfvLOK4=;
-        b=gFxw0O2iyGtEjTc+9vvle+GWK8/rBNO9iGBU3yKPmjiPdrqufT2gnaJRq4oZm/lkEm
-         +6apTQDPsbANW06VDwmJhuHosOE+pvEIwBCAE/JP7aseIrCBlV/nYsxBaMjvKjrY6o0D
-         Kx1sqytMU01sbHmiNizSeDM0UVbAPNpm+8hegfub/N48P8g4aUTZNW7Xya1fWsexfhui
-         CDoGZYyepKxkKIuRc89Zh5dL/ZEj4KaO6RfYdLm6ZC4LgTUdME6v9Oh5YhChKWEN+uUQ
-         YPVRzuedyo4meFqusFzwrf0VwAlebw1osL9j5OAKnddoZZfqGLKpVBQk7Kq+7IGALsv4
-         Oa2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WcdZYdMEIHKAJf7V6BNJ8N7QqP1cj59N2jvisfvLOK4=;
-        b=H2RKv3FtM9Dd616jab9FE94Gh65u8vLP6lZy/4G0+goLU+VkOFaNHXq2GxW4D+XATY
-         IxGdq6E8cr2s/wNu3tzYnxpHhm+i/fTdPcgTKJJyl/l8ocEpZKU02kJ3DYMG/EAFawNc
-         0uV/AobjZdqtbl44AD0meHaPx+DAKSAicRNBVlZasdigAj9vBNiiLXjG2ILR1/mg5ZBy
-         u0MPfJnJVbf0bL5YYeXo63wdXQRjueXOASFEuIHVtPtbIpvW8HDwZkHKJP19ntZnx461
-         IBSGCJZFvqbOb0LMzFm5KcxXFJS2TL8Lb+sXhDVnOmlt4xiISA2EBcLJFwIZwg7BA6Uu
-         jAnQ==
-X-Gm-Message-State: AOAM532RSSIi39Gx90dHML57wdMyiG8ZQ+7vcJBGU0ceBZqoCioVdwLe
-        PsWjgGo0O6RqFGDLtagZKexlng==
-X-Google-Smtp-Source: ABdhPJyl9mhInSAGTEcKRk8ImSnnn8MjUxLE01XUnaBOgRsFK19fKG9dgkD37JtwLKBEt0MAbI48Jg==
-X-Received: by 2002:a17:902:aa85:b029:d0:cbe1:e70d with SMTP id d5-20020a170902aa85b02900d0cbe1e70dmr4616487plr.27.1599725600536;
-        Thu, 10 Sep 2020 01:13:20 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id e1sm2196056pfl.162.2020.09.10.01.13.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 01:13:20 -0700 (PDT)
-From:   Greentime Hu <greentime.hu@sifive.com>
-To:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        palmer@dabbelt.com, paul.walmsley@sifive.com
-Cc:     Andrew Waterman <andrew@sifive.com>
-Subject: [RFC PATCH v7 21/21] riscv: Optimize task switch codes of vector
-Date:   Thu, 10 Sep 2020 16:12:16 +0800
-Message-Id: <50eb3d9d0a92d6faa39e9fedb941863426daca76.1599719352.git.greentime.hu@sifive.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1599719352.git.greentime.hu@sifive.com>
-References: <cover.1599719352.git.greentime.hu@sifive.com>
+        Thu, 10 Sep 2020 04:25:50 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46071 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729779AbgIJION (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:14:13 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BnBVJ36t0z9txjs;
+        Thu, 10 Sep 2020 10:13:44 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id mLdPjtz4MI3T; Thu, 10 Sep 2020 10:13:44 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BnBVJ24wQz9txjr;
+        Thu, 10 Sep 2020 10:13:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5C4A28B820;
+        Thu, 10 Sep 2020 10:13:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yqpTmoCr2JC9; Thu, 10 Sep 2020 10:13:45 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 71AD28B81D;
+        Thu, 10 Sep 2020 10:13:43 +0200 (CEST)
+Subject: Re: remove the last set_fs() in common code, and remove it for x86
+ and powerpc v3
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+References: <20200903142242.925828-1-hch@lst.de>
+ <20200903142803.GM1236603@ZenIV.linux.org.uk>
+ <CAHk-=wgQNyeHxXfckd1WtiYnoDZP1Y_kD-tJKqWSksRoDZT=Aw@mail.gmail.com>
+ <20200909184001.GB28786@gate.crashing.org>
+ <CAHk-=whu19Du_rZ-zBtGsXAB-Qo7NtoJjQjd-Sa9OB5u1Cq_Zw@mail.gmail.com>
+ <3beb8b019e4a4f7b81fdb1bc68bd1e2d@AcuMS.aculab.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <186a62fc-042c-d6ab-e7dc-e61b18945498@csgroup.eu>
+Date:   Thu, 10 Sep 2020 10:13:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <3beb8b019e4a4f7b81fdb1bc68bd1e2d@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch replacees 2 instructions with 1 instruction to do the same thing
-. rs1=x0 with rd != x0 is a special form of the instruction that sets vl to
-MAXVL.
 
-Suggested-by: Andrew Waterman <andrew@sifive.com>
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
----
- arch/riscv/kernel/vector.S | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/kernel/vector.S b/arch/riscv/kernel/vector.S
-index 4f0c5a166e4e..f7223c81b11a 100644
---- a/arch/riscv/kernel/vector.S
-+++ b/arch/riscv/kernel/vector.S
-@@ -27,8 +27,7 @@
- #define x_vl     t2
- #define x_vcsr   t3
- #define incr     t4
--#define m_one    t5
--#define status   t6
-+#define status   t5
- 
- ENTRY(__vstate_save)
- 	li      status, SR_VS
-@@ -38,8 +37,7 @@ ENTRY(__vstate_save)
- 	csrr    x_vtype, CSR_VTYPE
- 	csrr    x_vl, CSR_VL
- 	csrr    x_vcsr, CSR_VCSR
--	li      m_one, -1
--	vsetvli incr, m_one, e8, m8
-+	vsetvli incr, x0, e8, m8
- 	vse8.v   v0, (datap)
- 	add     datap, datap, incr
- 	vse8.v   v8, (datap)
-@@ -61,8 +59,7 @@ ENTRY(__vstate_restore)
- 	li      status, SR_VS
- 	csrs    CSR_STATUS, status
- 
--	li      m_one, -1
--	vsetvli incr, m_one, e8, m8
-+	vsetvli incr, x0, e8, m8
- 	vle8.v   v0, (datap)
- 	add     datap, datap, incr
- 	vle8.v   v8, (datap)
--- 
-2.28.0
+Le 10/09/2020 à 10:04, David Laight a écrit :
+> From: Linus Torvalds
+>> Sent: 09 September 2020 22:34
+>> On Wed, Sep 9, 2020 at 11:42 AM Segher Boessenkool
+>> <segher@kernel.crashing.org> wrote:
+>>>
+>>> It will not work like this in GCC, no.  The LLVM people know about that.
+>>> I do not know why they insist on pushing this, being incompatible and
+>>> everything.
+>>
+>> Umm. Since they'd be the ones supporting this, *gcc* would be the
+>> incompatible one, not clang.
+> 
+> I had an 'interesting' idea.
+> 
+> Can you use a local asm register variable as an input and output to
+> an 'asm volatile goto' statement?
+> 
+> Well you can - but is it guaranteed to work :-)
+> 
 
+With gcc at least it should work according to 
+https://gcc.gnu.org/onlinedocs/gcc/Local-Register-Variables.html
+
+They even explicitely tell: "The only supported use for this feature is 
+to specify registers for input and output operands when calling Extended 
+asm "
+
+Christophe
