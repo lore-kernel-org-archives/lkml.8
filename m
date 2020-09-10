@@ -2,246 +2,180 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB4DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1810FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D18F21941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:08:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="eHEq6C4e"
+	by mail.kernel.org (Postfix) with ESMTP id ADE63207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599761389;
+	bh=761zDxdXKDgTK0JSlpGwt9ghMs+g4BFzNJFURh3ro3I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1zBgXnB+UT6ZbhW3Ok39OrpVlztOWhSamWd/WrRKZ35e9Kbrog7lXgsTvGCqIj6bG
+	 UYVuM0KDL8l679ix2DZHV1fvF2Rx+JrWVv+NTmSePLRR2lgk9ZFuVTaze6boe6tBWp
+	 pHnG+yXwxHP/rxJp9HVQIuAp2A0J0joBF2vT/JK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgIJSI0 (ORCPT
+        id S1726440AbgIJSJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgIJSCq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:02:46 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CCCC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:02:35 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id l186so6198923ybf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=6XEeeB5/U/sRKk9s3VgQBr26xp7sU48GNLcGd5eOC+I=;
-        b=eHEq6C4empFsuJtM1ELLwJVOD0XHhxgDKg0cORsFd70FuiNlUFOG96V3gZ1Rt0pHHg
-         zld9R+q8VHoDvUbAtVcOSl0pyhL6ZLJiGtsdiBxIEPTOe0N4bxMHb0Pu6NEaIknVLUwx
-         ucvQJxvCAXciA8j0y2EcGKkNO9FXBcont7lIPA+UgefMxGii7E4u3MpTQL8OY+nmy3P5
-         0vlJvSQTkHk8LQsaQ3DQlw76gPbDpLeO8qQH4vKyUb3OjCdicwolR/8Rg9Z+lx/Tpb8b
-         E21pGloKSYI92UlSYRNcyYaWUXd7aZ4i9V5pD9/qrurrAj98JZpryACcjL160VPmgkkk
-         9BbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=6XEeeB5/U/sRKk9s3VgQBr26xp7sU48GNLcGd5eOC+I=;
-        b=Cd3w6yzrde2swbIldPf6rwC2WfgKaYFIhBZiyEkLKC+TTBSVEW/EBTMs7naXzSWJDm
-         s8tT3IazM6z/DdUXhZvkiRmECboBTv6RgBRrhwo4qaFcfazhaVMhCmiIySIUGsm2daQb
-         Io16f8P4A/Od85mUEU8QF78n53Mtdv4ox7dN2PqanWI7AC5yzNQPErkqMkpcloQZcju7
-         erTgWoKeYGT6fyF2DXoqrokW/BKnJWxirHP4HqObhT360dli7KeTWxU5iU7V9p/Eatio
-         +1L25xfIo+xGR1fv+ZvQItSfHNY/xTaJVY5z9eXbjblQnZ6P4Rtu4MjjuAVYDJYT6Fpj
-         CS/Q==
-X-Gm-Message-State: AOAM532XLiULo+I/+BGPHdKmgYfcUIrrtSnn83Tzd4HbGQ2c34+fCoeS
-        nEXDvzohuhrvTXvFnqSD58C+4IGTjZjo
-X-Google-Smtp-Source: ABdhPJzXHHJkq0v6387/I4zMMXNG0u1dN+76XDUthmoWZthMcsnNvlbF4wvEZH3emqTLbi31HunBuun85YEV
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:2:f693:9fff:fef4:4583])
- (user=irogers job=sendgmr) by 2002:a25:fc0d:: with SMTP id
- v13mr14256346ybd.272.1599760955035; Thu, 10 Sep 2020 11:02:35 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 11:02:31 -0700
-Message-Id: <20200910180231.786751-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH v3] perf metricgroup: Fix uncore metric expressions
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 10 Sep 2020 14:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbgIJR72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:59:28 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41D6F21D79;
+        Thu, 10 Sep 2020 17:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599760767;
+        bh=761zDxdXKDgTK0JSlpGwt9ghMs+g4BFzNJFURh3ro3I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zRkjmdTa7gbAktlFYrjxcRUY4d6ZSLoFPt8I76S3yJlVe+pMlLO1yZvq1GKw6nrgA
+         GNuYvkQYqzVYORH3bBDutC9k9PT1TLS8dPJhHwlLygQFq2P/RjLxKjbe4HkVBCuMB+
+         sk2SwkNwVK9r3XwdVkXWd978CKbND1N9TP4N7HAU=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 14/15] ARM: dts: armada: align GPIO hog names with dtschema
+Date:   Thu, 10 Sep 2020 19:57:32 +0200
+Message-Id: <20200910175733.11046-15-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910175733.11046-1-krzk@kernel.org>
+References: <20200910175733.11046-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A metric like DRAM_BW_Use has on SkylakeX events uncore_imc/cas_count_read/
-and uncore_imc/case_count_write/. These events open 6 events per socket
-with pmu names of uncore_imc_[0-5]. The current metric setup code in
-find_evsel_group assumes one ID will map to 1 event to be recorded in
-metric_events. For events with multiple matches, the first event is
-recorded in metric_events (avoiding matching >1 event with the same
-name) and the evlist_used updated so that duplicate events aren't
-removed when the evlist has unused events removed.
+The convention for node names is to use hyphens, not underscores.
+dtschema for pca95xx requires GPIO hogs to end with 'hog' prefix.
 
-Before this change:
-$ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
-
- Performance counter stats for 'system wide':
-
-             41.14 MiB  uncore_imc/cas_count_read/
-     1,002,614,251 ns   duration_time
-
-       1.002614251 seconds time elapsed
-
-After this change:
-$ /tmp/perf/perf stat -M DRAM_BW_Use -a -- sleep 1
-
- Performance counter stats for 'system wide':
-
-            157.47 MiB  uncore_imc/cas_count_read/ #     0.00 DRAM_BW_Use
-            126.97 MiB  uncore_imc/cas_count_write/
-     1,003,019,728 ns   duration_time
-
-v3. cleans up searching for the same event within metric_events to use a
-    helper and avoids a redundant search. It uses a continue loop to
-    make the search for similarly named events shorter.
-v2. avoids iterating over the whole evlist as suggested by
-    namhyung@kernel.org. It also fixes the metric_leader computation
-    that was broken in the same commits.
-
-Erroneous duplication introduced in:
-commit 2440689d62e9 ("perf metricgroup: Remove duped metric group events").
-
-Fixes: ded80bda8bc9 ("perf expr: Migrate expr ids table to a hashmap").
-Reported-by: Jin Yao <yao.jin@linux.intel.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- tools/perf/util/metricgroup.c | 75 ++++++++++++++++++++++++++---------
- 1 file changed, 56 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/armada-388-clearfog.dts  |  4 ++--
+ arch/arm/boot/dts/armada-388-clearfog.dtsi | 10 +++++-----
+ arch/arm/boot/dts/armada-388-helios4.dts   |  6 +++---
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 662f4e8777d5..7b66452cb9f9 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -149,6 +149,18 @@ static void expr_ids__exit(struct expr_ids *ids)
- 		free(ids->id[i].id);
- }
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dts b/arch/arm/boot/dts/armada-388-clearfog.dts
+index 20f8d4667753..4140a5303b48 100644
+--- a/arch/arm/boot/dts/armada-388-clearfog.dts
++++ b/arch/arm/boot/dts/armada-388-clearfog.dts
+@@ -73,13 +73,13 @@
+ 	 * 14-SFP_TX_DISABLE
+ 	 * 15-SFP_MOD_DEF0
+ 	 */
+-	pcie2_0_clkreq {
++	pcie2-0-clkreq-hog {
+ 		gpio-hog;
+ 		gpios = <4 GPIO_ACTIVE_LOW>;
+ 		input;
+ 		line-name = "pcie2.0-clkreq";
+ 	};
+-	pcie2_0_w_disable {
++	pcie2-0-w-disable-hog {
+ 		gpio-hog;
+ 		gpios = <7 GPIO_ACTIVE_LOW>;
+ 		output-low;
+diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+index a0aa1d188f0c..f8a06ae4a3c9 100644
+--- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
++++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+@@ -141,31 +141,31 @@
+ 		#gpio-cells = <2>;
+ 		reg = <0x20>;
  
-+static bool contains_event(struct evsel **metric_events, int num_events,
-+			const char *event_name)
-+{
-+	int i;
-+
-+	for (i = 0; i < num_events; i++) {
-+		if (!strcmp(metric_events[i]->name, event_name))
-+			return true;
-+	}
-+	return false;
-+}
-+
- /**
-  * Find a group of events in perf_evlist that correspond to those from a parsed
-  * metric expression. Note, as find_evsel_group is called in the same order as
-@@ -179,7 +191,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 	int i = 0, matched_events = 0, events_to_match;
- 	const int idnum = (int)hashmap__size(&pctx->ids);
+-		pcie1_0_clkreq {
++		pcie1-0-clkreq-hog {
+ 			gpio-hog;
+ 			gpios = <0 GPIO_ACTIVE_LOW>;
+ 			input;
+ 			line-name = "pcie1.0-clkreq";
+ 		};
+-		pcie1_0_w_disable {
++		pcie1-0-w-disable-hog {
+ 			gpio-hog;
+ 			gpios = <3 GPIO_ACTIVE_LOW>;
+ 			output-low;
+ 			line-name = "pcie1.0-w-disable";
+ 		};
+-		usb3_ilimit {
++		usb3-ilimit-hog {
+ 			gpio-hog;
+ 			gpios = <5 GPIO_ACTIVE_LOW>;
+ 			input;
+ 			line-name = "usb3-current-limit";
+ 		};
+-		usb3_power {
++		usb3-power-hog {
+ 			gpio-hog;
+ 			gpios = <6 GPIO_ACTIVE_HIGH>;
+ 			output-high;
+ 			line-name = "usb3-power";
+ 		};
+-		m2_devslp {
++		m2-devslp-hog {
+ 			gpio-hog;
+ 			gpios = <11 GPIO_ACTIVE_HIGH>;
+ 			output-low;
+diff --git a/arch/arm/boot/dts/armada-388-helios4.dts b/arch/arm/boot/dts/armada-388-helios4.dts
+index fb49df2a3bce..b3728de3bd3f 100644
+--- a/arch/arm/boot/dts/armada-388-helios4.dts
++++ b/arch/arm/boot/dts/armada-388-helios4.dts
+@@ -166,19 +166,19 @@
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
  
--	/* duration_time is grouped separately. */
-+	/*
-+	 * duration_time is always grouped separately, when events are grouped
-+	 * (ie has_constraint is false) then ignore it in the matching loop and
-+	 * add it to metric_events at the end.
-+	 */
- 	if (!has_constraint &&
- 	    hashmap__find(&pctx->ids, "duration_time", (void **)&val_ptr))
- 		events_to_match = idnum - 1;
-@@ -206,23 +222,20 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				sizeof(struct evsel *) * idnum);
- 			current_leader = ev->leader;
- 		}
--		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
--			if (has_constraint) {
--				/*
--				 * Events aren't grouped, ensure the same event
--				 * isn't matched from two groups.
--				 */
--				for (i = 0; i < matched_events; i++) {
--					if (!strcmp(ev->name,
--						    metric_events[i]->name)) {
--						break;
--					}
--				}
--				if (i != matched_events)
--					continue;
--			}
-+		/*
-+		 * Check for duplicate events with the same name. For example,
-+		 * uncore_imc/cas_count_read/ will turn into 6 events per socket
-+		 * on skylakex. Only the first such event is placed in
-+		 * metric_events. If events aren't grouped then this also
-+		 * ensures that the same event in different sibling groups
-+		 * aren't both added to metric_events.
-+		 */
-+		if (contains_event(metric_events, matched_events, ev->name))
-+			continue;
-+		/* Does this event belong to the parse context? */
-+		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr))
- 			metric_events[matched_events++] = ev;
--		}
-+
- 		if (matched_events == events_to_match)
- 			break;
- 	}
-@@ -238,7 +251,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 	}
- 
- 	if (matched_events != idnum) {
--		/* Not whole match */
-+		/* Not a whole match */
- 		return NULL;
- 	}
- 
-@@ -246,8 +259,32 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 
- 	for (i = 0; i < idnum; i++) {
- 		ev = metric_events[i];
--		ev->metric_leader = ev;
-+		/* Don't free the used events. */
- 		set_bit(ev->idx, evlist_used);
-+		/*
-+		 * The metric leader points to the identically named event in
-+		 * metric_events.
-+		 */
-+		ev->metric_leader = ev;
-+		/*
-+		 * Mark two events with identical names in the same group (or
-+		 * globally) as being in use as uncore events may be duplicated
-+		 * for each pmu. Set the metric leader of such events to be the
-+		 * event that appears in metric_events.
-+		 */
-+		evlist__for_each_entry_continue(perf_evlist, ev) {
-+			/*
-+			 * If events are grouped then the search can terminate
-+			 * when then group is left.
-+			 */
-+			if (!has_constraint &&
-+			    ev->leader != metric_events[i]->leader)
-+				break;
-+			if (!strcmp(metric_events[i]->name, ev->name)) {
-+				set_bit(ev->idx, evlist_used);
-+				ev->metric_leader = metric_events[i];
-+			}
-+		}
- 	}
- 
- 	return metric_events[0];
+-					board_rev_bit_0 {
++					board-rev-bit-0-hog {
+ 						gpio-hog;
+ 						gpios = <0 GPIO_ACTIVE_LOW>;
+ 						input;
+ 						line-name = "board-rev-0";
+ 					};
+-					board_rev_bit_1 {
++					board-rev-bit-1-hog {
+ 						gpio-hog;
+ 						gpios = <1 GPIO_ACTIVE_LOW>;
+ 						input;
+ 						line-name = "board-rev-1";
+ 					};
+-					usb3_ilimit {
++					usb3-ilimit-hog {
+ 						gpio-hog;
+ 						gpios = <5 GPIO_ACTIVE_HIGH>;
+ 						input;
 -- 
-2.28.0.526.ge36021eeef-goog
+2.17.1
 
