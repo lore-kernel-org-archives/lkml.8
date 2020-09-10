@@ -2,80 +2,146 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68082C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536AB207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146FE207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NxfYxLCx";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UuYYvFIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgIJNIi (ORCPT
+        id S1730736AbgIJNMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:08:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:35522 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730637AbgIJNFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:05:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AA5113D5;
-        Thu, 10 Sep 2020 06:03:20 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C6D53F66E;
-        Thu, 10 Sep 2020 06:03:17 -0700 (PDT)
-Subject: Re: [PATCH 08/12] dma-direct: use phys_to_dma_direct in
- dma_direct_alloc
-To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20200908164758.3177341-1-hch@lst.de>
- <20200908164758.3177341-9-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <84dfb537-c028-e6d1-88d3-b3d48fc7df3a@arm.com>
-Date:   Thu, 10 Sep 2020 14:03:14 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 09:12:34 -0400
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:54554
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730368AbgIJNHb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:07:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599742237;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=A9Lh+vWkVNILygqWZqjls4YC1TZDnQLkSvqL2XZ3eIY=;
+        b=NxfYxLCx5rlXYYDTuelbyMbjN32D2KSdTUxQIaitStu/OcDhhTxt/k7a9bInokxb
+        uH059kXmlQ8+vw8HB/aAWx/xHGdk1dOq3a9kO/LUw0Fio1z6JGWpjP1SfAg6Tq7zwLA
+        OqySPARGPcA5wO4eciHZAgAsjbsmOGOZY77+OWMk=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599742237;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=A9Lh+vWkVNILygqWZqjls4YC1TZDnQLkSvqL2XZ3eIY=;
+        b=UuYYvFIzIIrkH4W7FFzYBwgGZdTyMev1iIAKnKd2rW1t9IfsVCf9gdEPUKQvP4th
+        2RZ6X8kf3kZx+lsieWBY3qoHDy5LgQK0fdruwR8CRSVTuUjoMIXNFAmGSixWJVAUUWT
+        C5le0DXzBGAr8bN3rCn/b1n/ttvmL6+2q52GAt3g=
 MIME-Version: 1.0
-In-Reply-To: <20200908164758.3177341-9-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 10 Sep 2020 12:50:36 +0000
+From:   skakit@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Roja Rani Yarubandi <rojay@codeaurora.org>,
+        msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V4 3/4] arm64: dts: qcom: sc7180: Add sleep state for BT
+ UART
+In-Reply-To: <CAD=FV=VyRU3+BLx_6YPrOsaA6E05cJn_OpBR1y3Dt0LA0X5REA@mail.gmail.com>
+References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
+ <1599145498-20707-4-git-send-email-skakit@codeaurora.org>
+ <CAD=FV=VyRU3+BLx_6YPrOsaA6E05cJn_OpBR1y3Dt0LA0X5REA@mail.gmail.com>
+Message-ID: <010101747811583e-172b27b5-ea28-4660-a64b-407b13bb6fd1-000000@us-west-2.amazonses.com>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.10-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 17:47, Christoph Hellwig wrote:
-> Replace the currently open code copy.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   kernel/dma/direct.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
+On 2020-09-10 02:59, Doug Anderson wrote:
+> Hi,
 > 
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 12e9f5f75dfe4b..57a6e7d7cf8f16 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -240,10 +240,7 @@ void *dma_direct_alloc(struct device *dev, size_t size,
->   			goto out_encrypt_pages;
->   	}
->   done:
-> -	if (force_dma_unencrypted(dev))
-> -		*dma_handle = __phys_to_dma(dev, page_to_phys(page));
-> -	else
-> -		*dma_handle = phys_to_dma(dev, page_to_phys(page));
-> +	*dma_handle = phys_to_dma_direct(dev, page_to_phys(page));
->   	return ret;
->   
->   out_encrypt_pages:
+> On Thu, Sep 3, 2020 at 8:08 AM satya priya <skakit@codeaurora.org> 
+> wrote:
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
+>> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> index cecac3e..77e3523 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> @@ -507,6 +507,43 @@
+>>         };
+>>  };
+>> 
+>> +&qup_uart3_sleep {
+>> +       pinconf-cts {
+>> +               /*
+>> +                * Configure no-pull on CTS. As this is driven by BT, 
+>> do not
+>> +                * specify any pull in order to not conflict with BT 
+>> pulls.
+>> +                */
+>> +               pins = "gpio38";
+>> +               bias-disable;
 > 
+> Same comment as in the previous patch that I'm not convinced removing
+> the bias here is correct.
+> 
+
+Okay.
+
+> 
+>> +       };
+>> +
+>> +       pinconf-rts {
+>> +               /*
+>> +                * Configure pull-down on RTS to make sure that the BT 
+>> SoC can
+>> +                * wake up the system by sending wakeup bytes during 
+>> suspend.
+>> +                */
+>> +               pins = "gpio39";
+>> +               bias-pull-down;
+>> +       };
+>> +
+>> +       pinconf-tx {
+>> +               /* Configure pull-up on TX when it isn't actively 
+>> driven */
+>> +               pins = "gpio40";
+>> +               bias-pull-up;
+>> +       };
+>> +
+>> +       pinconf-rx {
+>> +               /*
+>> +                * Configure a pull-up on RX. This is needed to avoid
+>> +                * garbage data when the TX pin of the Bluetooth 
+>> module is
+>> +                * in tri-state (module powered off or not driving the
+>> +                * signal yet).
+>> +                */
+>> +               pins = "gpio41";
+>> +               bias-pull-up;
+>> +       };
+>> +};
+>> +
+>>  &qup_uart8_default {
+> 
+> Slight nit that "default" starts with a "d" which sorts before "sleep"
+> which starts with an "s".  Thus "qup_uart8_default" should be above
+> "qup_uart3_sleep", not below.
+
+Okay.
