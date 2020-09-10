@@ -2,465 +2,213 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C71C07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B6DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E72A21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D513E20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSHPR5zh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIJTYY (ORCPT
+        id S1727070AbgIJTYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731440AbgIJPtw (ORCPT
+        Thu, 10 Sep 2020 15:24:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45352 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731435AbgIJPte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:49:52 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34547C06179A
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:49:47 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 6CA1829B102
-Subject: Re: [PATCH v2] platform/chrome: Don't populate lightbar device if it
- isn't there
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>
-References: <20200909224226.2177401-1-swboyd@chromium.org>
- <CABXOdTeWfuZHLywMU1d+No-NSZ4uusAgkhs=2hNZGFM-uYz2wA@mail.gmail.com>
- <c3ba5d92-8bfe-30d7-44f0-c8a3e40d1906@collabora.com>
- <CABXOdTdsVyae9oHKEMSbXOsi5VWUZhLbKVxeNVedc4redZineQ@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <6b546379-d5ce-f0bd-7907-be36f90c15ed@collabora.com>
-Date:   Thu, 10 Sep 2020 17:49:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 11:49:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599752954;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rA8BS9/0jZ+l2MQA+dZBWWcPqUsG5Wsdp/FCuxiOFaM=;
+        b=NSHPR5zhzsl5t/mbc63Ra8rric8q5IZj4jc6f/+ycvun5bWKz6E+Gx5ysHYXhxQ7asp0mf
+        7JCF3bzUlZeDYwkreKrpqqeRvzd5nvJDvZPD8Q18hzs+dWY5shPT3h4rKwOSDe0dvzLdLF
+        yHZn6ky+zR7oCt2j4+QQCJzZLIqvjIY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-411-Lu5N34tZPGKIAJMthXwWzA-1; Thu, 10 Sep 2020 11:49:11 -0400
+X-MC-Unique: Lu5N34tZPGKIAJMthXwWzA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 087AA84E246;
+        Thu, 10 Sep 2020 15:49:05 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 43B6319C71;
+        Thu, 10 Sep 2020 15:49:04 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 09:49:03 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, kwankhede@nvidia.com, linux-fpga@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
+        lgoncalv@redhat.com,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH 3/3] Documentation: fpga: dfl: Add description for VFIO
+  Mdev support
+Message-ID: <20200910094903.51deb038@x1.home>
+In-Reply-To: <20200910083230.GA16318@yilunxu-OptiPlex-7050>
+References: <1599549212-24253-1-git-send-email-yilun.xu@intel.com>
+        <1599549212-24253-4-git-send-email-yilun.xu@intel.com>
+        <20200908151002.553ed7ae@w520.home>
+        <20200910083230.GA16318@yilunxu-OptiPlex-7050>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <CABXOdTdsVyae9oHKEMSbXOsi5VWUZhLbKVxeNVedc4redZineQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 10 Sep 2020 16:32:30 +0800
+Xu Yilun <yilun.xu@intel.com> wrote:
 
-On 10/9/20 16:52, Guenter Roeck wrote:
-> On Thu, Sep 10, 2020 at 7:32 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
->>
->> Hi,
->>
->> On 10/9/20 16:18, Guenter Roeck wrote:
->>> On Wed, Sep 9, 2020 at 3:42 PM Stephen Boyd <swboyd@chromium.org> wrote:
->>>>
->>>> The cros ec lightbar driver has a check in probe to fail early if the ec
->>>> device isn't the cros_ec one or if it can't read the lightbar version
->>>> from the EC. Let's move this check to the place where the lightbar
->>>> device is registered. This way we don't expose devices that aren't
->>>> actually there on devices that don't have a lightbar.
->>>>
->>>> This should improve memory and possibly performance too because struct
->>>> devices don't exactly have a small memory footprint and they contribute
->>>> to suspend/resume regardless of driver attachment.
->>>>
->>>> Cc: Gwendal Grignou <gwendal@chromium.org>
->>>> Cc: Guenter Roeck <groeck@chromium.org>
->>>> Cc: Lee Jones <lee.jones@linaro.org>
->>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->>>> ---
->>>>
->>>> Changes from v1:
->>>>  * Rebased on linux-next patches to this file
->>>>
->>>>  drivers/mfd/cros_ec_dev.c                   |  16 ++-
->>>>  drivers/platform/chrome/cros_ec_lightbar.c  | 102 ++------------------
->>>>  drivers/platform/chrome/cros_ec_proto.c     |  84 ++++++++++++++++
->>>>  include/linux/platform_data/cros_ec_proto.h |   4 +
->>>>  4 files changed, 111 insertions(+), 95 deletions(-)
->>>>
->>>> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
->>>> index d07b43d7c761..9e98b2ec5d92 100644
->>>> --- a/drivers/mfd/cros_ec_dev.c
->>>> +++ b/drivers/mfd/cros_ec_dev.c
->>>> @@ -74,6 +74,10 @@ static const struct mfd_cell cros_ec_cec_cells[] = {
->>>>         { .name = "cros-ec-cec", },
->>>>  };
->>>>
->>>> +static const struct mfd_cell cros_ec_lightbar_cells[] = {
->>>> +       { .name = "cros-ec-lightbar", },
->>>> +};
->>>> +
->>>>  static const struct mfd_cell cros_ec_rtc_cells[] = {
->>>>         { .name = "cros-ec-rtc", },
->>>>  };
->>>> @@ -112,7 +116,6 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
->>>>  static const struct mfd_cell cros_ec_platform_cells[] = {
->>>>         { .name = "cros-ec-chardev", },
->>>>         { .name = "cros-ec-debugfs", },
->>>> -       { .name = "cros-ec-lightbar", },
->>>>         { .name = "cros-ec-sysfs", },
->>>>  };
->>>>
->>>> @@ -206,6 +209,17 @@ static int ec_device_probe(struct platform_device *pdev)
->>>>                 }
->>>>         }
->>>>
->>>> +       if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
->>>> +           !cros_ec_get_lightbar_version(ec, NULL, NULL)) {
->>>
->>> Any idea why the lightbar code doesn't use cros_ec_check_features() ?
->>> There is a definition for EC_FEATURE_LIGHTBAR, but it doesn't seem to
->>> be used. It would be much more convenient if that feature check could
->>> be used instead of moving the get_lightbar_version command and its
->>> helper function around.
->>>
->>
->> IIRC it was to support a very old device, the Pixel Chromebook (Link). This flag
->> is not set in this device but has a lightbar, hence we had this 'weird' way to
->> detect the lightbar.
->>
+> Hi Alex:
 > 
-> If that is the only reason, wouldn't it be better to use something
-> else (eg dmi_match) to determine if the system in question is a  Pixel
-> Chromebook (Link) ?
+> Thanks for your quick response and is helpful to me. I did some more
+> investigation and some comments inline.
 > 
->              if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
->                  (cros_ec_check_features(ec, EC_FEATURE_LIGHTBAR) ||
->                   dmi_match(DMI_PRODUCT_NAME, "Link")) {
+> On Tue, Sep 08, 2020 at 03:10:02PM -0600, Alex Williamson wrote:
+> > On Tue,  8 Sep 2020 15:13:32 +0800
+> > Xu Yilun <yilun.xu@intel.com> wrote:
+> >   
+> > > This patch adds description for VFIO Mdev support for dfl devices on
+> > > dfl bus.
+> > > 
+> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > ---
+> > >  Documentation/fpga/dfl.rst | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > > 
+> > > diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+> > > index 0404fe6..f077754 100644
+> > > --- a/Documentation/fpga/dfl.rst
+> > > +++ b/Documentation/fpga/dfl.rst
+> > > @@ -502,6 +502,26 @@ FME Partial Reconfiguration Sub Feature driver (see drivers/fpga/dfl-fme-pr.c)
+> > >  could be a reference.
+> > >  
+> > >  
+> > > +VFIO Mdev support for DFL devices
+> > > +=================================
+> > > +As we introduced a dfl bus for private features, they could be added to dfl bus
+> > > +as independent dfl devices. There is a requirement to handle these devices
+> > > +either by kernel drivers or by direct access from userspace. Usually we bind
+> > > +the kernel drivers to devices which provide board management functions, and
+> > > +gives user direct access to devices which cooperate closely with user
+> > > +controlled Accelerated Function Unit (AFU). We realize this with a VFIO Mdev
+> > > +implementation. When we bind the vfio-mdev-dfl driver to a dfl device, it
+> > > +realizes a group of callbacks and registers to the Mdev framework as a
+> > > +parent (physical) device. It could then create one (available_instances == 1)
+> > > +mdev device.
+> > > +Since dfl devices are sub devices of FPGA DFL physical devices (e.g. PCIE
+> > > +device), which provide no DMA isolation for each sub device, this may leads to
+> > > +DMA isolation problem if a private feature is designed to be capable of DMA.
+> > > +The AFU user could potentially access the whole device addressing space and
+> > > +impact the private feature. So now the general HW design rule is, no DMA
+> > > +capability for private features. It eliminates the DMA isolation problem.  
+> > 
+> > What's the advantage of entangling mdev/vfio in this approach versus
+> > simply exposing the MMIO region of the device via sysfs (similar to a
+> > resource file in pci-sysfs)?  This implementation doesn't support
+> > interrupts, it doesn't support multiplexing of a device, it doesn't
+> > perform any degree of mediation, it seems to simply say "please don't
+> > do DMA".  I don't think that's acceptable for an mdev driver.  If you
+> > want to play loose with isolation, do it somewhere else.  Thanks,  
 > 
+> The intention of the patchset is to enable the userspace drivers for dfl
+> devices. The dfl devices are actually different IP blocks integrated in
+> FPGA to support different board functionalities. They are sub devices of
+> the FPGA PCIe device. Their mmio blocks are in PCIE bar regions. And we
+> want some of the dfl devices handled by the userspace drivers.
+> 
+> Some dfl devices are capable of interrupt. I didn't add interrupt code
+> in this patch cause now the IRQ capable dfl devices are all handled by
+> kernel drivers. But as a generic FPGA platform, IRQ handling for userspace
+> drivers should be supported.
+> 
+> And I can see there are several ways to enable the userspace driver.
+> 
+> 1. Some specific sysfs like pci do. But seems it is not the common way for
+> userspace driver. It does't support interrupt. And potentially users
+> operate on the same mmio region together with kernel driver at the same
+> time.
+> 
+> 2. VFIO driver with NOIOMMU enabled. I think it meets our needs. Do you
+> think it is good we implement an VFIO driver for dfl devices?
+> 
+> 3. VFIO mdev. I implemented it because it will not block us from lacking
+> of valid iommu group. And since the driver didn't perform any mediation,
+> I should give up.
+> 
+> 4. UIO driver. It should work. I'm wondering if option 2 covers the
+> functionalities of UIO and has more enhancement. So option 2 may be
+> better?
+> 
+> Thanks again for your time, and I really appreciate you would give some
+> guide on it.
 
-That looks a better solution, indeed. And definetely I'd prefer use the check
-features way.
 
-Gwendal, can you confirm that the Pixel Chromebook (Link) is the _only_ one
-affected? This one is the only that comes to my mind but I might miss others.
+VFIO no-iommu was intended as a transition helper for platforms that do
+not support an IOMMU, particularly running within a VM where we use
+regular, IOMMU protected devices within the host, but allow no-iommu
+within the guest such that the host is still protected from the guest
+sandbox.  There should be no new use cases of no-iommu, it's unsafe, it
+taints the kernel where it's used (guest in the above intended use
+case).  If you intend long term distribution support of a solution,
+VFIO no-iommu should not be considered an option.
 
-I think that Samus has this flag (I can double check) and this was discussed
-with you (long, long time ago :-) )
+VFIO mdev requires that the mdev vendor driver mediates access to the
+device in order to provide isolation.  In the initial vGPU use cases,
+we expect that isolation to be provided via devices specific means, ex.
+GPU GART, but we've since included system level components like IOMMU
+backing devices and auxiliary domains, the latter to make use of IOMMU
+PASID support.
 
+As implemented in this proposal, mdev is being used only to subvert the
+IOMMU grouping requirements of VFIO in order to order to expose a
+device that is potentially fully capable of DMA to userspace with no
+isolation whatsoever.  If not for the IOMMU grouping, this driver could
+simply be a VFIO bus driver making use of the vfio-platform interface.
+Either way, without isolation, this does not belong in the realm of
+VFIO.
+
+Given your architecture, the only potentially valid mdev use case I can
+see would be if the mdev vendor driver binds to the PCIe device,
+allowing multiplexing of the parent device by carving out fpga
+functional blocks from MMIO BAR space, and providing isolation by
+enforcing that the parent device never enables bus master, assuming
+that would prevent any of the fpga sub-components from performing DMA.
+
+Are there worthwhile use cases of these fpga devices without DMA?
+
+If you need DMA (or the device is potentially capable of DMA and
+cannot be audited to prevent it) and cannot provide isolation then
+please don't use VFIO or mdev, doing so would violate the notion of
+secure userspace device access that we've worked to achieve in this
+ecosystem.
+
+If you choose another route, pci-sysfs already provides full BAR access
+via the resource files in sysfs, but you could also expose individual
+sysfs files with the same capabilities per fpga functional unit to
+resolve the conflict between kernel and userspace "ownership".  UIO
+might also be a solution.  This proposal to restrict userspace usage to
+devices that don't perform DMA is akin to uio_pci_generic, where the
+user is not expected to enable bus master, but nothing prevents them
+from doing so and as a result it's a gateway for all sorts of
+unsupportable drivers.  mdev should not be used to follow that example.
 Thanks,
- Enric
 
+Alex
 
-> Thanks,
-> Guenter
-> 
->>> Thanks,
->>> Guenter
->>>
->>>> +               retval = mfd_add_hotplug_devices(ec->dev,
->>>> +                               cros_ec_lightbar_cells,
->>>> +                               ARRAY_SIZE(cros_ec_lightbar_cells));
->>>> +               if (retval)
->>>> +                       dev_err(ec->dev,
->>>> +                               "failed to add lightbar device: %d\n",
->>>> +                               retval);
->>>> +       }
->>>> +
->>>>         /*
->>>>          * The PD notifier driver cell is separate since it only needs to be
->>>>          * explicitly added on platforms that don't have the PD notifier ACPI
->>>> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
->>>> index de8dfb12e486..a7cfde90c8e5 100644
->>>> --- a/drivers/platform/chrome/cros_ec_lightbar.c
->>>> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
->>>> @@ -82,77 +82,6 @@ static int lb_throttle(void)
->>>>         return ret;
->>>>  }
->>>>
->>>> -static struct cros_ec_command *alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
->>>> -{
->>>> -       struct cros_ec_command *msg;
->>>> -       int len;
->>>> -
->>>> -       len = max(sizeof(struct ec_params_lightbar),
->>>> -                 sizeof(struct ec_response_lightbar));
->>>> -
->>>> -       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
->>>> -       if (!msg)
->>>> -               return NULL;
->>>> -
->>>> -       msg->version = 0;
->>>> -       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
->>>> -       msg->outsize = sizeof(struct ec_params_lightbar);
->>>> -       msg->insize = sizeof(struct ec_response_lightbar);
->>>> -
->>>> -       return msg;
->>>> -}
->>>> -
->>>> -static int get_lightbar_version(struct cros_ec_dev *ec,
->>>> -                               uint32_t *ver_ptr, uint32_t *flg_ptr)
->>>> -{
->>>> -       struct ec_params_lightbar *param;
->>>> -       struct ec_response_lightbar *resp;
->>>> -       struct cros_ec_command *msg;
->>>> -       int ret;
->>>> -
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> -       if (!msg)
->>>> -               return 0;
->>>> -
->>>> -       param = (struct ec_params_lightbar *)msg->data;
->>>> -       param->cmd = LIGHTBAR_CMD_VERSION;
->>>> -       msg->outsize = sizeof(param->cmd);
->>>> -       msg->result = sizeof(resp->version);
->>>> -       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
->>>> -       if (ret < 0 && ret != -EINVAL) {
->>>> -               ret = 0;
->>>> -               goto exit;
->>>> -       }
->>>> -
->>>> -       switch (msg->result) {
->>>> -       case EC_RES_INVALID_PARAM:
->>>> -               /* Pixel had no version command. */
->>>> -               if (ver_ptr)
->>>> -                       *ver_ptr = 0;
->>>> -               if (flg_ptr)
->>>> -                       *flg_ptr = 0;
->>>> -               ret = 1;
->>>> -               goto exit;
->>>> -
->>>> -       case EC_RES_SUCCESS:
->>>> -               resp = (struct ec_response_lightbar *)msg->data;
->>>> -
->>>> -               /* Future devices w/lightbars should implement this command */
->>>> -               if (ver_ptr)
->>>> -                       *ver_ptr = resp->version.num;
->>>> -               if (flg_ptr)
->>>> -                       *flg_ptr = resp->version.flags;
->>>> -               ret = 1;
->>>> -               goto exit;
->>>> -       }
->>>> -
->>>> -       /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
->>>> -       ret = 0;
->>>> -exit:
->>>> -       kfree(msg);
->>>> -       return ret;
->>>> -}
->>>> -
->>>>  static ssize_t version_show(struct device *dev,
->>>>                             struct device_attribute *attr, char *buf)
->>>>  {
->>>> @@ -165,7 +94,7 @@ static ssize_t version_show(struct device *dev,
->>>>                 return ret;
->>>>
->>>>         /* This should always succeed, because we check during init. */
->>>> -       if (!get_lightbar_version(ec, &version, &flags))
->>>> +       if (cros_ec_get_lightbar_version(ec, &version, &flags))
->>>>                 return -EIO;
->>>>
->>>>         return scnprintf(buf, PAGE_SIZE, "%d %d\n", version, flags);
->>>> @@ -184,7 +113,7 @@ static ssize_t brightness_store(struct device *dev,
->>>>         if (kstrtouint(buf, 0, &val))
->>>>                 return -EINVAL;
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -222,7 +151,7 @@ static ssize_t led_rgb_store(struct device *dev, struct device_attribute *attr,
->>>>         unsigned int val[4];
->>>>         int ret, i = 0, j = 0, ok = 0;
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -289,7 +218,7 @@ static ssize_t sequence_show(struct device *dev,
->>>>         int ret;
->>>>         struct cros_ec_dev *ec = to_cros_ec_dev(dev);
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -324,7 +253,7 @@ static int lb_send_empty_cmd(struct cros_ec_dev *ec, uint8_t cmd)
->>>>         struct cros_ec_command *msg;
->>>>         int ret;
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -352,7 +281,7 @@ static int lb_manual_suspend_ctrl(struct cros_ec_dev *ec, uint8_t enable)
->>>>         struct cros_ec_command *msg;
->>>>         int ret;
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -399,7 +328,7 @@ static ssize_t sequence_store(struct device *dev, struct device_attribute *attr,
->>>>                         return ret;
->>>>         }
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -444,7 +373,7 @@ static ssize_t program_store(struct device *dev, struct device_attribute *attr,
->>>>                 return -EINVAL;
->>>>         }
->>>>
->>>> -       msg = alloc_lightbar_cmd_msg(ec);
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>>         if (!msg)
->>>>                 return -ENOMEM;
->>>>
->>>> @@ -531,24 +460,9 @@ static struct attribute_group cros_ec_lightbar_attr_group = {
->>>>  static int cros_ec_lightbar_probe(struct platform_device *pd)
->>>>  {
->>>>         struct cros_ec_dev *ec_dev = dev_get_drvdata(pd->dev.parent);
->>>> -       struct cros_ec_platform *pdata = dev_get_platdata(ec_dev->dev);
->>>>         struct device *dev = &pd->dev;
->>>>         int ret;
->>>>
->>>> -       /*
->>>> -        * Only instantiate the lightbar if the EC name is 'cros_ec'. Other EC
->>>> -        * devices like 'cros_pd' doesn't have a lightbar.
->>>> -        */
->>>> -       if (strcmp(pdata->ec_name, CROS_EC_DEV_NAME) != 0)
->>>> -               return -ENODEV;
->>>> -
->>>> -       /*
->>>> -        * Ask then for the lightbar version, if it's 0 then the 'cros_ec'
->>>> -        * doesn't have a lightbar.
->>>> -        */
->>>> -       if (!get_lightbar_version(ec_dev, NULL, NULL))
->>>> -               return -ENODEV;
->>>> -
->>>>         /* Take control of the lightbar from the EC. */
->>>>         lb_manual_suspend_ctrl(ec_dev, 1);
->>>>
->>>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
->>>> index dda182132a6a..a08747eec36a 100644
->>>> --- a/drivers/platform/chrome/cros_ec_proto.c
->>>> +++ b/drivers/platform/chrome/cros_ec_proto.c
->>>> @@ -922,3 +922,87 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
->>>>         return sensor_count;
->>>>  }
->>>>  EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
->>>> +
->>>> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
->>>> +{
->>>> +       struct cros_ec_command *msg;
->>>> +       int len;
->>>> +
->>>> +       len = max(sizeof(struct ec_params_lightbar),
->>>> +                 sizeof(struct ec_response_lightbar));
->>>> +
->>>> +       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
->>>> +       if (!msg)
->>>> +               return NULL;
->>>> +
->>>> +       msg->version = 0;
->>>> +       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
->>>> +       msg->outsize = sizeof(struct ec_params_lightbar);
->>>> +       msg->insize = sizeof(struct ec_response_lightbar);
->>>> +
->>>> +       return msg;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(cros_ec_alloc_lightbar_cmd_msg);
->>>> +
->>>> +/**
->>>> + * cros_ec_get_lightbar_version() - Get the EC lightbar version
->>>> + *
->>>> + * @ec: EC device, does not have to be connected directly to the AP,
->>>> + *      can be daisy chained through another device.
->>>> + * @ver_ptr: Detected lightbar version number
->>>> + * @flag_ptr: Detected lightbar flags
->>>> + *
->>>> + * Call this function to determine the EC's lightbar version and flags
->>>> + * information. If it doesn't exist then this function returns a negative
->>>> + * error value.
->>>> + *
->>>> + * Return: 0 on success, negative errno on failure to detect a lightbar.
->>>> + */
->>>> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
->>>> +                                uint32_t *flg_ptr)
->>>> +{
->>>> +       struct ec_params_lightbar *param;
->>>> +       struct ec_response_lightbar *resp;
->>>> +       struct cros_ec_command *msg;
->>>> +       int ret;
->>>> +
->>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
->>>> +       if (!msg)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       param = (struct ec_params_lightbar *)msg->data;
->>>> +       param->cmd = LIGHTBAR_CMD_VERSION;
->>>> +       msg->outsize = sizeof(param->cmd);
->>>> +       msg->result = sizeof(resp->version);
->>>> +       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
->>>> +       if (ret < 0 && ret != -EINVAL)
->>>> +               goto exit;
->>>> +
->>>> +       switch (msg->result) {
->>>> +       case EC_RES_INVALID_PARAM:
->>>> +               /* Pixel had no version command. */
->>>> +               if (ver_ptr)
->>>> +                       *ver_ptr = 0;
->>>> +               if (flg_ptr)
->>>> +                       *flg_ptr = 0;
->>>> +               ret = 0;
->>>> +               break;
->>>> +       case EC_RES_SUCCESS:
->>>> +               resp = (struct ec_response_lightbar *)msg->data;
->>>> +
->>>> +               /* Future devices w/lightbars should implement this command */
->>>> +               if (ver_ptr)
->>>> +                       *ver_ptr = resp->version.num;
->>>> +               if (flg_ptr)
->>>> +                       *flg_ptr = resp->version.flags;
->>>> +               ret = 0;
->>>> +               break;
->>>> +       default:
->>>> +               /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
->>>> +               ret = -ENODEV;
->>>> +       }
->>>> +exit:
->>>> +       kfree(msg);
->>>> +       return ret;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(cros_ec_get_lightbar_version);
->>>> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
->>>> index 4a415ae851ef..50221254956c 100644
->>>> --- a/include/linux/platform_data/cros_ec_proto.h
->>>> +++ b/include/linux/platform_data/cros_ec_proto.h
->>>> @@ -229,6 +229,10 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
->>>>
->>>>  int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
->>>>
->>>> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec);
->>>> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
->>>> +                                uint32_t *flg_ptr);
->>>> +
->>>>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
->>>>
->>>>  /**
->>>>
->>>> base-commit: 1e7913ff5f9f1b73146ad8522958bd266f22a510
->>>> --
->>>> Sent by a computer, using git, on the internet
->>>>
