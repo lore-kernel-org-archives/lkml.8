@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6329C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA3721556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F39321D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599766287;
-	bh=J+36KfiCj6ZqQvGQMiAmr/24p4yD+AflrA4ni1Zap14=;
+	s=default; t=1599766323;
+	bh=EfUI1dyzt3SWILGjbm4xkkgdUT1vq2/kiW2omjKTGf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wF9m1e44mA2o3BAQp6R+CGkO4A8GNcVv5oTb2lLI9Hs339YqnAfkimIZTHt1v2l2m
-	 SnLpGnAVzyYAoN/VGcqaAZ/taVM7xfZCn7kokcABrSm8MdrAYMjoVb1Iv2aODto5BY
-	 99mvItvN76chjPgRx9mkdGgDN2SZk/YqweMQTZh0=
+	b=rxgwXF5Kgw64CJlIRtWYBVGK0y50/MPsq4s/vBlUN0PXPBDVoPtp3W7aJxPPYrvy2
+	 HGJqgV8Bqm7T/oy4jbvkgZED6UMmeRQfnBREV9WPV4kgojgF8hwd1PlSXORYAb7iIF
+	 ZJ7HJVXFA5uNN/VM9MCTL4stqveFz2Hz8wNiPcgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgIJTb0 (ORCPT
+        id S1727996AbgIJTbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 15:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbgIJT3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:29:39 -0400
+        id S1727792AbgIJT3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:29:33 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E811821D92;
-        Thu, 10 Sep 2020 19:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E329221E3;
+        Thu, 10 Sep 2020 19:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599766176;
-        bh=J+36KfiCj6ZqQvGQMiAmr/24p4yD+AflrA4ni1Zap14=;
+        s=default; t=1599766173;
+        bh=EfUI1dyzt3SWILGjbm4xkkgdUT1vq2/kiW2omjKTGf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPBKvVFpHggxzO23tGiSaky0KlkF4+un8LWAPbmZObck71qM/avY7UqWtG577qnY0
-         PnA5fZOLc357YA1FVO32FkV6B0h+ZvtEKxwKl3Jnz5KJxQ9pvava+qp9B+q6Tttgta
-         mqfZp2Q4IUeXW9ww6qq3T2nooXdigTyVomwfhcsc=
+        b=OSCBpD756N1pMGFV1zwLMRNM19gRS8a2dhOg90mvNF7mb+Ar1IgS2igUxh3Bo2Weq
+         ESCmBWUVBP2inW2aO8MjkGBUVRmj/A+FiXF6LGNzv9ryvdxBQJZw5U0AbFk1DOJwNp
+         S4UkmbMXjHDszVqNzkujQJ/hVuLqH1mvXIH0NG4Y=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -54,9 +54,9 @@ To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com
 Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 4/4] crypto: allwinner/sun8i - Simplify with dev_err_probe()
-Date:   Thu, 10 Sep 2020 21:29:19 +0200
-Message-Id: <20200910192919.12503-4-krzk@kernel.org>
+Subject: [PATCH v2 3/4] crypto: stm32-hash - Simplify with dev_err_probe()
+Date:   Thu, 10 Sep 2020 21:29:18 +0200
+Message-Id: <20200910192919.12503-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200910192919.12503-1-krzk@kernel.org>
 References: <20200910192919.12503-1-krzk@kernel.org>
@@ -75,50 +75,31 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. None
 ---
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 9 +++------
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 9 +++------
- 2 files changed, 6 insertions(+), 12 deletions(-)
+ drivers/crypto/stm32/stm32-hash.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 138759dc8190..e3c62051c595 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -573,12 +573,9 @@ static int sun8i_ce_probe(struct platform_device *pdev)
- 		return irq;
+diff --git a/drivers/crypto/stm32/stm32-hash.c b/drivers/crypto/stm32/stm32-hash.c
+index e84330f247d9..e3e25278a970 100644
+--- a/drivers/crypto/stm32/stm32-hash.c
++++ b/drivers/crypto/stm32/stm32-hash.c
+@@ -1464,14 +1464,9 @@ static int stm32_hash_probe(struct platform_device *pdev)
+ 	}
  
- 	ce->reset = devm_reset_control_get(&pdev->dev, NULL);
--	if (IS_ERR(ce->reset)) {
--		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
--			return PTR_ERR(ce->reset);
--		dev_err(&pdev->dev, "No reset control found\n");
--		return PTR_ERR(ce->reset);
+ 	hdev->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(hdev->clk)) {
+-		if (PTR_ERR(hdev->clk) != -EPROBE_DEFER) {
+-			dev_err(dev, "failed to get clock for hash (%lu)\n",
+-				PTR_ERR(hdev->clk));
+-		}
+-
+-		return PTR_ERR(hdev->clk);
 -	}
-+	if (IS_ERR(ce->reset))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ce->reset),
-+				     "No reset control found\n");
++	if (IS_ERR(hdev->clk))
++		return dev_err_probe(dev, PTR_ERR(hdev->clk),
++				     "failed to get clock for hash\n");
  
- 	mutex_init(&ce->mlock);
- 
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-index 9a23515783a6..576df8c8df51 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-@@ -545,12 +545,9 @@ static int sun8i_ss_probe(struct platform_device *pdev)
- 		return irq;
- 
- 	ss->reset = devm_reset_control_get(&pdev->dev, NULL);
--	if (IS_ERR(ss->reset)) {
--		if (PTR_ERR(ss->reset) == -EPROBE_DEFER)
--			return PTR_ERR(ss->reset);
--		dev_err(&pdev->dev, "No reset control found\n");
--		return PTR_ERR(ss->reset);
--	}
-+	if (IS_ERR(ss->reset))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ss->reset),
-+				     "No reset control found\n");
- 
- 	mutex_init(&ss->mlock);
- 
+ 	ret = clk_prepare_enable(hdev->clk);
+ 	if (ret) {
 -- 
 2.17.1
 
