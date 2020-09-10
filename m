@@ -2,197 +2,145 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF67C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7ABC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D80A21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 298822223E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:22:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Z8eNIqrx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K4W1p+TA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AhXQmcFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgIJJVt (ORCPT
+        id S1730339AbgIJJWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:21:49 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:33055 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726847AbgIJJVm (ORCPT
+        Thu, 10 Sep 2020 05:22:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38612 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbgIJJWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:21:42 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id GIltkYuMnPTBMGIlukQbGe; Thu, 10 Sep 2020 11:21:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1599729699; bh=sUGEW/U5E0cvzvWuMOTakAeSmgZz++wx9LaBD4cbHO4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Z8eNIqrxHQeJbgvslk+iSbo8GaNpRZdwPvTEVQtfomRv2SEx7BakMAHfSvWl/IYMx
-         HSVxiQeRpAGhD5+E4oTRDkIkeUQ3DETJCru1z+GcCTa6MwoNfrj2LxgrqX0aTw+LrP
-         3LzDBLX4AJh4+ka9w2vyqXig764FUDCYBnKOJU7Zl5tvtFVLEYB5qLDDNiChkwqEcR
-         kTRM55BoFwvdw37vVDZFPCROTWy+Fngv4h96C80AlHmzcpeKis2xCcW8Ohdo9FzQOO
-         iFYeV0PwC+vx79lAk4V9Ta8VVBvLDB50eqMKFJc7fQ0YpCRub5/xO8MEkho+j3LcY4
-         3RQAoBZRyvOnA==
-Subject: Re: [PATCH v10 29/30] media: pci: fix common ALSA DMA-mapping related
- codes
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-References: <20200904131711.12950-1-m.szyprowski@samsung.com>
- <CGME20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68@eucas1p2.samsung.com>
- <20200904131711.12950-30-m.szyprowski@samsung.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1215926b-d9d9-4dbe-4621-717151c41a45@xs4all.nl>
-Date:   Thu, 10 Sep 2020 11:21:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 05:22:07 -0400
+Date:   Thu, 10 Sep 2020 09:22:03 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599729724;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8F8RsEAnqXhYOjc6K9L2LBThuNep3ImEcdQps4cvtS8=;
+        b=K4W1p+TAKxLnz/hiE6T6VokLZbcqEw6y/taNp7ItoCa43XBbbwBILXNjmPIFyvClVS+NZV
+        Yx4EpOy33xEbN2m3Z+fGTMvonz+aI+ZcPaMv0h0pQpyJCvZtudQiiF4/tuulj3iaXmSeld
+        0r61ic9eMgGk8x8mVuM8fepVPuidHUsZWlDjhkdk5gCN10UfYMLPysEvFjTREBBtGipB4a
+        ASvciOr78v1qqcb/LYikg7jKe9a91K6drKhVAfnaKRHie3kUNQb/tPDet5sDTYqeuPcx5/
+        kzFA2dOzRu2g3pdxNvPs7NtBN1f18ebDEVhSLFaJsRAhijCpvAtV6lCcP5Xbdw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599729724;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8F8RsEAnqXhYOjc6K9L2LBThuNep3ImEcdQps4cvtS8=;
+        b=AhXQmcFJktdHJ0AIekXMwGTJLpaUaqo8U75ba5Agmbbch1WeqnQJFoGw53Tj9iwJfuanxb
+        o3M+Fzdu6Q8JszAw==
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/seves] x86/head/64: Don't call verify_cpu() on starting APs
+Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200907131613.12703-69-joro@8bytes.org>
+References: <20200907131613.12703-69-joro@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200904131711.12950-30-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <159972972396.20229.10379511221993111999.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfG1kHPDqJjfReFCfxwg6VMaCSTVPGKLwVybyvVlhVzmrDjjVt+DkArAkO5encqdPow6Q0qfjZXmaTDKmUSKeGHv9Ejtdby7M2U4X4ifsI+PI/AHAXyHl
- SNPw3umupvyD3Y343QC2Syt5RRFMAQDuoZezMEPEANfS7jIX03Wc6Behr1MaQvwOH95z78xqkPU9cemwgEUXgASyvIs3OBlhUXmq2lMOX6VvE2CH8UAO+vrd
- 1OaSQqw3lL9fmD4r4XyD4H5vitHINwbqctQYgPdpDFHXzs1zlTXnC58neuBm+3zoE9cpvZrhgAof0ztBZWVog7BgLXrxdV4C4UF+yLTpH3xMgh+ovVGyClH8
- 0o7TK81EQZ842FXZWCwd/j6nCjx4zw46MKNFvd22IBx/2+AbskZvUJ4YkCqOnDaap9UmHG+PsJRjESghHBMzQxAMdJur195qs8tnZkuJm0kc2hgPsIIpbKJk
- v1U/xdSWzxKqy8xll0s8d2lOhwXvkrPZLfxubDI9ACooGPNhTt0pM2jjzs3DNBjKtlubO5R+9V6G92pT8WgZ1AWfMYWI+ptU2O9aJwejyGCLYuYzU/uQHx0X
- TWBzDPqB8A8SmaeMfGOXLKUVbvJBc0fgqEkXOB5vFo/STWKM1+QfB8Wiqp1h/Er0bjpTpRbjYuvdY2E/24LOVC5i9YSJAcKQl/z2lb0w4KJpbIXeXSHlGtC8
- N6LTmbX5h4Q=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2020 15:17, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
-> numer of the created entries in the DMA address space. However the
+The following commit has been merged into the x86/seves branch of tip:
 
-numer -> number
+Commit-ID:     3ecacdbd23956a549d93023f86adc87b4a9d6520
+Gitweb:        https://git.kernel.org/tip/3ecacdbd23956a549d93023f86adc87b4a9d6520
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Mon, 07 Sep 2020 15:16:09 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 09 Sep 2020 11:33:20 +02:00
 
-> subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
-> called with the original number of entries passed to dma_map_sg. The
-> sg_table->nents in turn holds the result of the dma_map_sg call as stated
-> in include/linux/scatterlist.h. Adapt the code to obey those rules.
-> 
-> While touching this code, update it to use the modern DMA_FROM_DEVICE
-> definitions.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+x86/head/64: Don't call verify_cpu() on starting APs
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+The APs are not ready to handle exceptions when verify_cpu() is called
+in secondary_startup_64().
 
-Thanks!
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20200907131613.12703-69-joro@8bytes.org
+---
+ arch/x86/include/asm/realmode.h |  1 +
+ arch/x86/kernel/head_64.S       | 12 ++++++++++++
+ arch/x86/realmode/init.c        |  6 ++++++
+ 3 files changed, 19 insertions(+)
 
-	Hans
-
-> ---
->  drivers/media/pci/cx23885/cx23885-alsa.c | 4 ++--
->  drivers/media/pci/cx25821/cx25821-alsa.c | 4 ++--
->  drivers/media/pci/cx88/cx88-alsa.c       | 6 +++---
->  drivers/media/pci/saa7134/saa7134-alsa.c | 4 ++--
->  4 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/pci/cx23885/cx23885-alsa.c b/drivers/media/pci/cx23885/cx23885-alsa.c
-> index df44ed7393a0..c797bff6eebb 100644
-> --- a/drivers/media/pci/cx23885/cx23885-alsa.c
-> +++ b/drivers/media/pci/cx23885/cx23885-alsa.c
-> @@ -113,7 +113,7 @@ static int cx23885_alsa_dma_map(struct cx23885_audio_dev *dev)
->  	struct cx23885_audio_buffer *buf = dev->buf;
->  
->  	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
-> -			buf->nr_pages, PCI_DMA_FROMDEVICE);
-> +			buf->nr_pages, DMA_FROM_DEVICE);
->  
->  	if (0 == buf->sglen) {
->  		pr_warn("%s: cx23885_alsa_map_sg failed\n", __func__);
-> @@ -129,7 +129,7 @@ static int cx23885_alsa_dma_unmap(struct cx23885_audio_dev *dev)
->  	if (!buf->sglen)
->  		return 0;
->  
-> -	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
-> +	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
->  	buf->sglen = 0;
->  	return 0;
->  }
-> diff --git a/drivers/media/pci/cx25821/cx25821-alsa.c b/drivers/media/pci/cx25821/cx25821-alsa.c
-> index 301616426d8a..8da31c953b02 100644
-> --- a/drivers/media/pci/cx25821/cx25821-alsa.c
-> +++ b/drivers/media/pci/cx25821/cx25821-alsa.c
-> @@ -177,7 +177,7 @@ static int cx25821_alsa_dma_map(struct cx25821_audio_dev *dev)
->  	struct cx25821_audio_buffer *buf = dev->buf;
->  
->  	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
-> -			buf->nr_pages, PCI_DMA_FROMDEVICE);
-> +			buf->nr_pages, DMA_FROM_DEVICE);
->  
->  	if (0 == buf->sglen) {
->  		pr_warn("%s: cx25821_alsa_map_sg failed\n", __func__);
-> @@ -193,7 +193,7 @@ static int cx25821_alsa_dma_unmap(struct cx25821_audio_dev *dev)
->  	if (!buf->sglen)
->  		return 0;
->  
-> -	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
-> +	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
->  	buf->sglen = 0;
->  	return 0;
->  }
-> diff --git a/drivers/media/pci/cx88/cx88-alsa.c b/drivers/media/pci/cx88/cx88-alsa.c
-> index 7d7aceecc985..d38633bc1330 100644
-> --- a/drivers/media/pci/cx88/cx88-alsa.c
-> +++ b/drivers/media/pci/cx88/cx88-alsa.c
-> @@ -316,7 +316,7 @@ static int cx88_alsa_dma_map(struct cx88_audio_dev *dev)
->  	struct cx88_audio_buffer *buf = dev->buf;
->  
->  	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
-> -			buf->nr_pages, PCI_DMA_FROMDEVICE);
-> +			buf->nr_pages, DMA_FROM_DEVICE);
->  
->  	if (buf->sglen == 0) {
->  		pr_warn("%s: cx88_alsa_map_sg failed\n", __func__);
-> @@ -332,8 +332,8 @@ static int cx88_alsa_dma_unmap(struct cx88_audio_dev *dev)
->  	if (!buf->sglen)
->  		return 0;
->  
-> -	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen,
-> -		     PCI_DMA_FROMDEVICE);
-> +	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages,
-> +		     DMA_FROM_DEVICE);
->  	buf->sglen = 0;
->  	return 0;
->  }
-> diff --git a/drivers/media/pci/saa7134/saa7134-alsa.c b/drivers/media/pci/saa7134/saa7134-alsa.c
-> index 544ca57eee75..707ca77221dc 100644
-> --- a/drivers/media/pci/saa7134/saa7134-alsa.c
-> +++ b/drivers/media/pci/saa7134/saa7134-alsa.c
-> @@ -297,7 +297,7 @@ static int saa7134_alsa_dma_map(struct saa7134_dev *dev)
->  	struct saa7134_dmasound *dma = &dev->dmasound;
->  
->  	dma->sglen = dma_map_sg(&dev->pci->dev, dma->sglist,
-> -			dma->nr_pages, PCI_DMA_FROMDEVICE);
-> +			dma->nr_pages, DMA_FROM_DEVICE);
->  
->  	if (0 == dma->sglen) {
->  		pr_warn("%s: saa7134_alsa_map_sg failed\n", __func__);
-> @@ -313,7 +313,7 @@ static int saa7134_alsa_dma_unmap(struct saa7134_dev *dev)
->  	if (!dma->sglen)
->  		return 0;
->  
-> -	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->sglen, PCI_DMA_FROMDEVICE);
-> +	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->nr_pages, DMA_FROM_DEVICE);
->  	dma->sglen = 0;
->  	return 0;
->  }
-> 
-
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 4d4d853..5db5d08 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -72,6 +72,7 @@ extern unsigned char startup_32_smp[];
+ extern unsigned char boot_gdt[];
+ #else
+ extern unsigned char secondary_startup_64[];
++extern unsigned char secondary_startup_64_no_verify[];
+ #endif
+ 
+ static inline size_t real_mode_size_needed(void)
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 1a71d0d..7eb2a1c 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -126,6 +126,18 @@ SYM_CODE_START(secondary_startup_64)
+ 	call verify_cpu
+ 
+ 	/*
++	 * The secondary_startup_64_no_verify entry point is only used by
++	 * SEV-ES guests. In those guests the call to verify_cpu() would cause
++	 * #VC exceptions which can not be handled at this stage of secondary
++	 * CPU bringup.
++	 *
++	 * All non SEV-ES systems, especially Intel systems, need to execute
++	 * verify_cpu() above to make sure NX is enabled.
++	 */
++SYM_INNER_LABEL(secondary_startup_64_no_verify, SYM_L_GLOBAL)
++	UNWIND_HINT_EMPTY
++
++	/*
+ 	 * Retrieve the modifier (SME encryption mask if SME is active) to be
+ 	 * added to the initial pgdir entry that will be programmed into CR3.
+ 	 */
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 3fb9b60..22fda7d 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -46,6 +46,12 @@ static void sme_sev_setup_real_mode(struct trampoline_header *th)
+ 		th->flags |= TH_FLAGS_SME_ACTIVE;
+ 
+ 	if (sev_es_active()) {
++		/*
++		 * Skip the call to verify_cpu() in secondary_startup_64 as it
++		 * will cause #VC exceptions when the AP can't handle them yet.
++		 */
++		th->start = (u64) secondary_startup_64_no_verify;
++
+ 		if (sev_es_setup_ap_jump_table(real_mode_header))
+ 			panic("Failed to get/update SEV-ES AP Jump Table");
+ 	}
