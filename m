@@ -2,212 +2,179 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFACAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E247C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF42208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244E4208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DrAKXqiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgIJVhQ (ORCPT
+        id S1727822AbgIJVh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:37:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:36190 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbgIJNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:34:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D844106F;
-        Thu, 10 Sep 2020 06:34:21 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 69B3C3F66E;
-        Thu, 10 Sep 2020 06:34:19 -0700 (PDT)
-Subject: Re: [PATCH 11/12] dma-mapping: move dma_common_{mmap,get_sgtable} out
- of mapping.c
-To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20200908164758.3177341-1-hch@lst.de>
- <20200908164758.3177341-12-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <88bae26e-d5f4-7a00-a88a-b69194d519a4@arm.com>
-Date:   Thu, 10 Sep 2020 14:34:18 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 17:37:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31877 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730821AbgIJNdZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:33:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599744760;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F4qA3qviw6m2U5bouThH9BshQDOJ+dWQbRHt8FhhG/I=;
+        b=DrAKXqivoB7+qssZLRActQm7l92dVHgi6WrJbyaIt0048wZlnGN9oZTA/6uH7pbhJfM4tb
+        EWxO7WjlGDn2DMURKYt9EDfLFXxjgiyp4g48vDLYl4ntXZytMJzkIPicKM8ePc8RstujBA
+        XZSra5i/JtCYwwNpR17gXucc3ghkWOQ=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-NL2UZqZVOWCwqTe4R3y8BQ-1; Thu, 10 Sep 2020 09:32:38 -0400
+X-MC-Unique: NL2UZqZVOWCwqTe4R3y8BQ-1
+Received: by mail-qk1-f200.google.com with SMTP id w64so3581145qkc.14
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:32:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=F4qA3qviw6m2U5bouThH9BshQDOJ+dWQbRHt8FhhG/I=;
+        b=WNPi6AOkUnBKCyZRjN+XT5bBD5DqMxg4xWs1SsUEGku2iRj3/mg9AsG5GqrQ9iF2R3
+         uFh7rEw3BlURDDQlpDEPMcp09/99MURXH8ZGVYSWk5xqakR9+usykSFIxgSPloWtxJYc
+         BmXeUBmJ1G84YUbI7DltKcoUyUiPnZz0TgKsz3+u4sw3Yi51Gb9kkZcXQiS3bXgmpTZ5
+         W2WLRtG9s5Nh7SoNOeT77Q8SQbCCzcC2xvJeuebfx9zJ8sBv9b/QT66rkJhEHeJPdVu7
+         GF1KoFhguvgU+Anp7agDHzYH8yXhuawugf667f/NA2guJNwZz9/1XoV2ogyOtST/DJem
+         Vdog==
+X-Gm-Message-State: AOAM530fgPBze5Bnjh1nipvs8O9ZudUxB35WwW1HCd5gaINKUcfVRH4d
+        peYf4PRgx6T2Urwihb0ab+Ttv80Z4REYXqcE1RrizSkmeqUJodHw0NzN2wdr40a1Kl1nFWg0KVJ
+        UUqDbM38VlYaH0KnCv/WF8iK2
+X-Received: by 2002:a05:620a:211c:: with SMTP id l28mr7583806qkl.395.1599744758388;
+        Thu, 10 Sep 2020 06:32:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxBV7Ulx+mj0dlREn3NNIDAGe2qZipF1FAEAN8uT1JX7RkZ6JX1bJbKzHE5pqTU+xaACTCxoQ==
+X-Received: by 2002:a05:620a:211c:: with SMTP id l28mr7583779qkl.395.1599744758095;
+        Thu, 10 Sep 2020 06:32:38 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b199sm6426926qkg.116.2020.09.10.06.32.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 06:32:37 -0700 (PDT)
+Subject: Re: [PATCH 1/3] fpga: dfl: move dfl_device_id to mod_devicetable.h
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
+        lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+References: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
+ <1599544129-17594-2-git-send-email-yilun.xu@intel.com>
+ <aaa2d9a5-f5ae-d026-91c9-730403f04050@redhat.com>
+ <20200910084106.GB16318@yilunxu-OptiPlex-7050>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <ad9ba1cf-e02f-c09e-f639-2df60f080e5f@redhat.com>
+Date:   Thu, 10 Sep 2020 06:32:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200908164758.3177341-12-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200910084106.GB16318@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 17:47, Christoph Hellwig wrote:
-> Add a new file that contains helpera for misc DMA ops, which is only
 
-The Latin plural of the singular "helperum", I guess? :P
+On 9/10/20 1:41 AM, Xu Yilun wrote:
+> On Wed, Sep 09, 2020 at 05:55:33AM -0700, Tom Rix wrote:
+>> On 9/7/20 10:48 PM, Xu Yilun wrote:
+>>> In order to support MODULE_DEVICE_TABLE() for dfl device driver, this
+>>> patch moves struct dfl_device_id to mod_devicetable.h
+>>>
+>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+>>> Signed-off-by: Wu Hao <hao.wu@intel.com>
+>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+>>> ---
+>>>  drivers/fpga/dfl.h              | 13 +------------
+>>>  include/linux/mod_devicetable.h | 12 ++++++++++++
+>>>  2 files changed, 13 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+>>> index 5dc758f..d5b0760 100644
+>>> --- a/drivers/fpga/dfl.h
+>>> +++ b/drivers/fpga/dfl.h
+>>> @@ -26,6 +26,7 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/uuid.h>
+>>>  #include <linux/fpga/fpga-region.h>
+>>> +#include <linux/mod_devicetable.h>
+>>>  
+>>>  /* maximum supported number of ports */
+>>>  #define MAX_DFL_FPGA_PORT_NUM 4
+>>> @@ -526,18 +527,6 @@ enum dfl_id_type {
+>>>  };
+>>>  
+>>>  /**
+>>> - * struct dfl_device_id -  dfl device identifier
+>>> - * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
+>>> - * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
+>>> - * @driver_data: driver specific data.
+>>> - */
+>>> -struct dfl_device_id {
+>>> -	u8 type;
+>>> -	u16 feature_id;
+>>> -	unsigned long driver_data;
+>>> -};
+>>> -
+>>> -/**
+>>>   * struct dfl_device - represent an dfl device on dfl bus
+>>>   *
+>>>   * @dev: generic device interface.
+>>> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+>>> index 5b08a47..407d8dc 100644
+>>> --- a/include/linux/mod_devicetable.h
+>>> +++ b/include/linux/mod_devicetable.h
+>>> @@ -838,4 +838,16 @@ struct mhi_device_id {
+>>>  	kernel_ulong_t driver_data;
+>>>  };
+>>>  
+>>> +/**
+>>> + * struct dfl_device_id -  dfl device identifier
+>>> + * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
+>>> + * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
+>>> + * @driver_data: driver specific data.
+>>> + */
+>>> +struct dfl_device_id {
+>>> +	__u8 type;
+>>> +	__u16 feature_id;
+>> I thought i saw feature id's going to 64 bit, does this type need to expand ?
+> Feature id is a 12bit field in DFL spec. Previously we define it u64
+> cause we are considering it may expand sometime. But now seems GUID will
+> be used in future design.
+>
+> And the header file will be used by modpost, which is not supporting u64
+> now. So it is not necessary we use u64 for extra work. A patch is
+> already applied for this change - "change data type of feature id to u16"
+>
+> Thanks,
+> Yilun
 
-> built when CONFIG_DMA_OPS is set.
+Thanks for the explanation.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Tom Rix <trix@redhat.com>
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   kernel/dma/Makefile      |  1 +
->   kernel/dma/mapping.c     | 47 +-----------------------------------
->   kernel/dma/ops_helpers.c | 51 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 53 insertions(+), 46 deletions(-)
->   create mode 100644 kernel/dma/ops_helpers.c
-> 
-> diff --git a/kernel/dma/Makefile b/kernel/dma/Makefile
-> index 32c7c1942bbd6c..dc755ab68aabf9 100644
-> --- a/kernel/dma/Makefile
-> +++ b/kernel/dma/Makefile
-> @@ -1,6 +1,7 @@
->   # SPDX-License-Identifier: GPL-2.0
->   
->   obj-$(CONFIG_HAS_DMA)			+= mapping.o direct.o
-> +obj-$(CONFIG_DMA_OPS)			+= ops_helpers.o
->   obj-$(CONFIG_DMA_OPS)			+= dummy.o
->   obj-$(CONFIG_DMA_CMA)			+= contiguous.o
->   obj-$(CONFIG_DMA_DECLARE_COHERENT)	+= coherent.o
-> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-> index 0d129421e75fc8..848c95c27d79ff 100644
-> --- a/kernel/dma/mapping.c
-> +++ b/kernel/dma/mapping.c
-> @@ -8,7 +8,7 @@
->   #include <linux/memblock.h> /* for max_pfn */
->   #include <linux/acpi.h>
->   #include <linux/dma-direct.h>
-> -#include <linux/dma-noncoherent.h>
-> +#include <linux/dma-mapping.h>
->   #include <linux/export.h>
->   #include <linux/gfp.h>
->   #include <linux/of_device.h>
-> @@ -295,22 +295,6 @@ void dma_sync_sg_for_device(struct device *dev, struct scatterlist *sg,
->   }
->   EXPORT_SYMBOL(dma_sync_sg_for_device);
->   
-> -/*
-> - * Create scatter-list for the already allocated DMA buffer.
-> - */
-> -int dma_common_get_sgtable(struct device *dev, struct sg_table *sgt,
-> -		 void *cpu_addr, dma_addr_t dma_addr, size_t size,
-> -		 unsigned long attrs)
-> -{
-> -	struct page *page = virt_to_page(cpu_addr);
-> -	int ret;
-> -
-> -	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> -	if (!ret)
-> -		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
-> -	return ret;
-> -}
-> -
->   /*
->    * The whole dma_get_sgtable() idea is fundamentally unsafe - it seems
->    * that the intention is to allow exporting memory allocated via the
-> @@ -358,35 +342,6 @@ pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
->   }
->   #endif /* CONFIG_MMU */
->   
-> -/*
-> - * Create userspace mapping for the DMA-coherent memory.
-> - */
-> -int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
-> -		void *cpu_addr, dma_addr_t dma_addr, size_t size,
-> -		unsigned long attrs)
-> -{
-> -#ifdef CONFIG_MMU
-> -	unsigned long user_count = vma_pages(vma);
-> -	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> -	unsigned long off = vma->vm_pgoff;
-> -	int ret = -ENXIO;
-> -
-> -	vma->vm_page_prot = dma_pgprot(dev, vma->vm_page_prot, attrs);
-> -
-> -	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
-> -		return ret;
-> -
-> -	if (off >= count || user_count > count - off)
-> -		return -ENXIO;
-> -
-> -	return remap_pfn_range(vma, vma->vm_start,
-> -			page_to_pfn(virt_to_page(cpu_addr)) + vma->vm_pgoff,
-> -			user_count << PAGE_SHIFT, vma->vm_page_prot);
-> -#else
-> -	return -ENXIO;
-> -#endif /* CONFIG_MMU */
-> -}
-> -
->   /**
->    * dma_can_mmap - check if a given device supports dma_mmap_*
->    * @dev: device to check
-> diff --git a/kernel/dma/ops_helpers.c b/kernel/dma/ops_helpers.c
-> new file mode 100644
-> index 00000000000000..e443c69be4299f
-> --- /dev/null
-> +++ b/kernel/dma/ops_helpers.c
-> @@ -0,0 +1,51 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Helpers for DMA ops implementations.  These generally rely on the fact that
-> + * the allocated memory contains normal pages in the direct kernel mapping.
-> + */
-> +#include <linux/dma-noncoherent.h>
-> +
-> +/*
-> + * Create scatter-list for the already allocated DMA buffer.
-> + */
-> +int dma_common_get_sgtable(struct device *dev, struct sg_table *sgt,
-> +		 void *cpu_addr, dma_addr_t dma_addr, size_t size,
-> +		 unsigned long attrs)
-> +{
-> +	struct page *page = virt_to_page(cpu_addr);
-> +	int ret;
-> +
-> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> +	if (!ret)
-> +		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Create userspace mapping for the DMA-coherent memory.
-> + */
-> +int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
-> +		void *cpu_addr, dma_addr_t dma_addr, size_t size,
-> +		unsigned long attrs)
-> +{
-> +#ifdef CONFIG_MMU
-> +	unsigned long user_count = vma_pages(vma);
-> +	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> +	unsigned long off = vma->vm_pgoff;
-> +	int ret = -ENXIO;
-> +
-> +	vma->vm_page_prot = dma_pgprot(dev, vma->vm_page_prot, attrs);
-> +
-> +	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
-> +		return ret;
-> +
-> +	if (off >= count || user_count > count - off)
-> +		return -ENXIO;
-> +
-> +	return remap_pfn_range(vma, vma->vm_start,
-> +			page_to_pfn(virt_to_page(cpu_addr)) + vma->vm_pgoff,
-> +			user_count << PAGE_SHIFT, vma->vm_page_prot);
-> +#else
-> +	return -ENXIO;
-> +#endif /* CONFIG_MMU */
-> +}
-> 
+>
+>> TomÃ‚Â 
+>>
+>>> +	kernel_ulong_t driver_data;
+>>> +};
+>>> +
+>>>  #endif /* LINUX_MOD_DEVICETABLE_H */
+
