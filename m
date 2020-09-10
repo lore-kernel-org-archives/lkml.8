@@ -2,147 +2,465 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB2EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C71C07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A3221556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="b5XeNNvD"
+	by mail.kernel.org (Postfix) with ESMTP id 0E72A21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgIJTXn (ORCPT
+        id S1726942AbgIJTYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:23:43 -0400
-Received: from mout.gmx.net ([212.227.17.20]:46917 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgIJTWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:22:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599765697;
-        bh=kDCS9dN7hqNGMC055GQUbyi4MlM92SA6KMWryr8hAJs=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=b5XeNNvDCXlPPb+K9G5hSueCN5zQJ5Zm/04uYQASm3zmYki2QphpNis7IWd1b2mjZ
-         uUERKqA9LQ9GwI57Ynl9qoOKMFa+dQrWQ4uICZdTlpN+iiNysA3rSuY9VLqG1EzWb9
-         qQjasbRmg/58oq/efQ8IL5kTkm6HbaGQryhIgkHw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26r3-1kEWKW0cxd-002Wa6; Thu, 10
- Sep 2020 21:21:37 +0200
-Date:   Thu, 10 Sep 2020 21:21:24 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: Re: [PATCH v2 07/10] rtc: Introduce RTC_TIMESTAMP_END_2255
-Message-ID: <20200910192124.GD3306@latitude>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
- <20200905133230.1014581-8-j.neuschaefer@gmx.net>
- <20200908093946.GQ230586@piout.net>
+        Thu, 10 Sep 2020 15:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731440AbgIJPtw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 11:49:52 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34547C06179A
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:49:47 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6CA1829B102
+Subject: Re: [PATCH v2] platform/chrome: Don't populate lightbar device if it
+ isn't there
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+References: <20200909224226.2177401-1-swboyd@chromium.org>
+ <CABXOdTeWfuZHLywMU1d+No-NSZ4uusAgkhs=2hNZGFM-uYz2wA@mail.gmail.com>
+ <c3ba5d92-8bfe-30d7-44f0-c8a3e40d1906@collabora.com>
+ <CABXOdTdsVyae9oHKEMSbXOsi5VWUZhLbKVxeNVedc4redZineQ@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <6b546379-d5ce-f0bd-7907-be36f90c15ed@collabora.com>
+Date:   Thu, 10 Sep 2020 17:49:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9UV9rz0O2dU/yYYn"
-Content-Disposition: inline
-In-Reply-To: <20200908093946.GQ230586@piout.net>
-X-Provags-ID: V03:K1:E21EYSXgKsjD3uQMAQCJ/0uwFmX9uxR62kFo4Q7nePnG3YxtxG6
- nzcUlvqNHdjM0/OT5wL1hOajMmonor+UaNtyZ6AnmhFwDb4oxQmU14eO8zcBVMGi779txLV
- gAK24vGk4z1tAlqRCFXqqdSKC7IQg7Zp31MSdPUUqgipotsboY0FZRqxOZNLL+LF2J1RN1s
- g4uekZKWU6jtpOD9VtGSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sK50RuEuY6o=:W4Civog64LEYTCU7ztKXIm
- mNhnFDzQesMJ1YoqPZScxAz2RzsAcpC5AACK2AeKPzKvQqYpsb1S7tdb7CcoveLwEDqU6uRcZ
- 8V+lkzrJVWdYMS1Uw+xDChlW85tHWbVGUftWS3SC33gPLm2H1DAczkWTPyShwQPFIejwNnBz3
- e/DnK6gb0WLi2InFw0nQBBbtK2Uhv9+Da69am8VQ0h+0Y3gQALjjYFf+IdO26fgoQ1rJJiTjs
- 1Wx1HaeH/nC/6n1/jnLcng8BfVRqy1fsNG1h3TOys+4fQIUmj9p1L9wbnymvfg1K+IQetheOr
- wi0FM7cecNzuB/xA7j2ownKcY2yR9fh7wYxhREw/5UfS8RYjmGhllvUmFpQFCWpyi0dVVxsmC
- 6tTB2gYjr+5+xrUbGoVlI2b9MYVDC7v25HG9mJsv3Qb4Ypb49fVl4/RGK/OWaLNVcRvQlpecR
- Pu101jLxu4joxNv7gfFGcBp9YaYdyCLkw3JAyr4t0Ef/uiGfann3n8/wMbNOKBkzQHffbx9iX
- D1wOREBYa2Y6WGZn6G98cxBaG+Dvepv1vbKu8t9tsuahuTF6NEvkomb2fQCnw0XVZSdi655bi
- uUwEik1WCqJJLzfgH8tPgDW/r6Kjz1npU27Nvy29YMdRuAqoDhy64IBdMgiAQmKBZlZcPpQRJ
- JKCQEu/bXBmTq3AmrOlLGGTxiXfPa9CjiN2pz177G6e0908/dcmDjP4GsPLZKNhS2zK1hq6Yb
- H/h0uS0zAwWfcQLQ4bDU34J7EQX+rCFZpg/fWcJ/erklTGB1pmTp/omIHjpaqR5tOe2n1QSVL
- tjCqOG5+0Xexnaax7n13wL2vL6p0T/tPUoM7q/SsMzzJjs8EJlZEsHqfRJ7XSNHwn1Q91WLcn
- c1wMgFEzGYrFZqqil5de0PocdwVMBhf7xyA3QC/GH5NLHG7bAwu1nFtbjAi+lsiw1AoCLAuyg
- rnxKNncRLoFhoVk/UV5EBaI0h4zO1r71CBqUtkIkf7xgJJ9qBgVVVbgBXPIz94oMyjdnkscc3
- tbI53j9XbhNYhmD8u8YpDz/pw71ozabCFHcitrdAB7u6PZUBt8dRfZgr/iIEy1UUMzGYzl7UT
- jocHlFyu3ikaGTHm7x9gW9yCvNisUXWVgK6nLDfcqrtMZw0anDj1XNOMRfNsRtmKo3Ir2dEVk
- jSzjO0u6/qGBv4yHDZN90LDkpi9SatruX9EOsSwmp8lxvaIYlH+3TvZVjih3d/4LB2ULHTudE
- e+0/KF5QLIkPT92UuHvQ4aMQBOGJ+rB1ggszo/A==
+In-Reply-To: <CABXOdTdsVyae9oHKEMSbXOsi5VWUZhLbKVxeNVedc4redZineQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---9UV9rz0O2dU/yYYn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/9/20 16:52, Guenter Roeck wrote:
+> On Thu, Sep 10, 2020 at 7:32 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+>>
+>> Hi,
+>>
+>> On 10/9/20 16:18, Guenter Roeck wrote:
+>>> On Wed, Sep 9, 2020 at 3:42 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>>>>
+>>>> The cros ec lightbar driver has a check in probe to fail early if the ec
+>>>> device isn't the cros_ec one or if it can't read the lightbar version
+>>>> from the EC. Let's move this check to the place where the lightbar
+>>>> device is registered. This way we don't expose devices that aren't
+>>>> actually there on devices that don't have a lightbar.
+>>>>
+>>>> This should improve memory and possibly performance too because struct
+>>>> devices don't exactly have a small memory footprint and they contribute
+>>>> to suspend/resume regardless of driver attachment.
+>>>>
+>>>> Cc: Gwendal Grignou <gwendal@chromium.org>
+>>>> Cc: Guenter Roeck <groeck@chromium.org>
+>>>> Cc: Lee Jones <lee.jones@linaro.org>
+>>>> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>>>> ---
+>>>>
+>>>> Changes from v1:
+>>>>  * Rebased on linux-next patches to this file
+>>>>
+>>>>  drivers/mfd/cros_ec_dev.c                   |  16 ++-
+>>>>  drivers/platform/chrome/cros_ec_lightbar.c  | 102 ++------------------
+>>>>  drivers/platform/chrome/cros_ec_proto.c     |  84 ++++++++++++++++
+>>>>  include/linux/platform_data/cros_ec_proto.h |   4 +
+>>>>  4 files changed, 111 insertions(+), 95 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+>>>> index d07b43d7c761..9e98b2ec5d92 100644
+>>>> --- a/drivers/mfd/cros_ec_dev.c
+>>>> +++ b/drivers/mfd/cros_ec_dev.c
+>>>> @@ -74,6 +74,10 @@ static const struct mfd_cell cros_ec_cec_cells[] = {
+>>>>         { .name = "cros-ec-cec", },
+>>>>  };
+>>>>
+>>>> +static const struct mfd_cell cros_ec_lightbar_cells[] = {
+>>>> +       { .name = "cros-ec-lightbar", },
+>>>> +};
+>>>> +
+>>>>  static const struct mfd_cell cros_ec_rtc_cells[] = {
+>>>>         { .name = "cros-ec-rtc", },
+>>>>  };
+>>>> @@ -112,7 +116,6 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
+>>>>  static const struct mfd_cell cros_ec_platform_cells[] = {
+>>>>         { .name = "cros-ec-chardev", },
+>>>>         { .name = "cros-ec-debugfs", },
+>>>> -       { .name = "cros-ec-lightbar", },
+>>>>         { .name = "cros-ec-sysfs", },
+>>>>  };
+>>>>
+>>>> @@ -206,6 +209,17 @@ static int ec_device_probe(struct platform_device *pdev)
+>>>>                 }
+>>>>         }
+>>>>
+>>>> +       if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
+>>>> +           !cros_ec_get_lightbar_version(ec, NULL, NULL)) {
+>>>
+>>> Any idea why the lightbar code doesn't use cros_ec_check_features() ?
+>>> There is a definition for EC_FEATURE_LIGHTBAR, but it doesn't seem to
+>>> be used. It would be much more convenient if that feature check could
+>>> be used instead of moving the get_lightbar_version command and its
+>>> helper function around.
+>>>
+>>
+>> IIRC it was to support a very old device, the Pixel Chromebook (Link). This flag
+>> is not set in this device but has a lightbar, hence we had this 'weird' way to
+>> detect the lightbar.
+>>
+> 
+> If that is the only reason, wouldn't it be better to use something
+> else (eg dmi_match) to determine if the system in question is a  Pixel
+> Chromebook (Link) ?
+> 
+>              if (!strcmp(ec_platform->ec_name, CROS_EC_DEV_NAME) &&
+>                  (cros_ec_check_features(ec, EC_FEATURE_LIGHTBAR) ||
+>                   dmi_match(DMI_PRODUCT_NAME, "Link")) {
+> 
 
-On Tue, Sep 08, 2020 at 11:39:46AM +0200, Alexandre Belloni wrote:
-> On 05/09/2020 15:32:27+0200, Jonathan Neusch=C3=A4fer wrote:
-[...]
-> >  #define RTC_TIMESTAMP_END_2079		3471292799LL /* 2079-12-31 23:59:59 */
-> >  #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
-> >  #define RTC_TIMESTAMP_END_2199		7258118399LL /* 2199-12-31 23:59:59 */
-> > +#define RTC_TIMESTAMP_END_2255		9025257599LL /* 2255-12-31 23:59:59 */
->=20
-> Honestly, I wouldn't bother adding that one unless you have examples of
-> other RTCs endng at the same date, I'm fine having the value and comment
-> directly in the probe function.
+That looks a better solution, indeed. And definetely I'd prefer use the check
+features way.
 
-Indeed, it's the only RTC I know with this end date. I'll fold it into
-the driver.
+Gwendal, can you confirm that the Pixel Chromebook (Link) is the _only_ one
+affected? This one is the only that comes to my mind but I might miss others.
 
+I think that Samus has this flag (I can double check) and this was discussed
+with you (long, long time ago :-) )
 
 Thanks,
-Jonathan Neusch=C3=A4fer
+ Enric
 
---9UV9rz0O2dU/yYYn
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9afLQACgkQCDBEmo7z
-X9vFEg//WZbPqecNb6hQ+RFL7wU4xLDRzNy4eCVqc6qH7tkAnJwUJ+j37Vf0J/0n
-+sZ9KmrTvdYLstgd8ixk42+eZ81cq2mgShUmf3/NedAVnKR87K/DIytOQkFAWzF4
-N4LGV0sBdYzvRpKXab6M5UfXJueNvejvbxVMyA0T3IUyVY7LcfkPpn833cdRfc6h
-K4XPpdE+TOTO297ZeIarFSaigdj7GMU28pPrXnfooUo6Q3BpnsvHMceKS8n35O/P
-98JJazxQ3jxxEP3qzHR5DG4Rt1FdGZy44PunvmwryhzM+cCUvyyFxtkVz1Haa2IU
-eMmDWsOPeSWkZvDsBcsr+1RwINtU9FaQFyTMcCaS40G4+BdPpdPCCt3CT6nDApkV
-XYCLChLlDcgaovuahRkWV4up9TtpqYSG8dOtUTWRLRKH0N605lsfFxs7e8vGaMgV
-zDKPc0H+lgp3E0pK3r2D12Sw2iiU3jsVIV0uXEZOx8n4UZSnwuKC2yKlumKDNtU/
-eQy+6NMNmXfpBo6maK53nOlwXp9+lwNPguALLW7XLnit9qD/B/ENXYAy1htqZyt7
-jHR6386FzpBIrca4Z79oUailzCORGj6WAV+IcWjhks/k1YPLFw2Skrs2FBEhO1V1
-B9uYKI+6LsuF7wj8odaxhNwCqPQJbhXCx86V9BuabnZJLtO3py4=
-=ZcyE
------END PGP SIGNATURE-----
-
---9UV9rz0O2dU/yYYn--
+> Thanks,
+> Guenter
+> 
+>>> Thanks,
+>>> Guenter
+>>>
+>>>> +               retval = mfd_add_hotplug_devices(ec->dev,
+>>>> +                               cros_ec_lightbar_cells,
+>>>> +                               ARRAY_SIZE(cros_ec_lightbar_cells));
+>>>> +               if (retval)
+>>>> +                       dev_err(ec->dev,
+>>>> +                               "failed to add lightbar device: %d\n",
+>>>> +                               retval);
+>>>> +       }
+>>>> +
+>>>>         /*
+>>>>          * The PD notifier driver cell is separate since it only needs to be
+>>>>          * explicitly added on platforms that don't have the PD notifier ACPI
+>>>> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+>>>> index de8dfb12e486..a7cfde90c8e5 100644
+>>>> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+>>>> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+>>>> @@ -82,77 +82,6 @@ static int lb_throttle(void)
+>>>>         return ret;
+>>>>  }
+>>>>
+>>>> -static struct cros_ec_command *alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
+>>>> -{
+>>>> -       struct cros_ec_command *msg;
+>>>> -       int len;
+>>>> -
+>>>> -       len = max(sizeof(struct ec_params_lightbar),
+>>>> -                 sizeof(struct ec_response_lightbar));
+>>>> -
+>>>> -       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
+>>>> -       if (!msg)
+>>>> -               return NULL;
+>>>> -
+>>>> -       msg->version = 0;
+>>>> -       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
+>>>> -       msg->outsize = sizeof(struct ec_params_lightbar);
+>>>> -       msg->insize = sizeof(struct ec_response_lightbar);
+>>>> -
+>>>> -       return msg;
+>>>> -}
+>>>> -
+>>>> -static int get_lightbar_version(struct cros_ec_dev *ec,
+>>>> -                               uint32_t *ver_ptr, uint32_t *flg_ptr)
+>>>> -{
+>>>> -       struct ec_params_lightbar *param;
+>>>> -       struct ec_response_lightbar *resp;
+>>>> -       struct cros_ec_command *msg;
+>>>> -       int ret;
+>>>> -
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> -       if (!msg)
+>>>> -               return 0;
+>>>> -
+>>>> -       param = (struct ec_params_lightbar *)msg->data;
+>>>> -       param->cmd = LIGHTBAR_CMD_VERSION;
+>>>> -       msg->outsize = sizeof(param->cmd);
+>>>> -       msg->result = sizeof(resp->version);
+>>>> -       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+>>>> -       if (ret < 0 && ret != -EINVAL) {
+>>>> -               ret = 0;
+>>>> -               goto exit;
+>>>> -       }
+>>>> -
+>>>> -       switch (msg->result) {
+>>>> -       case EC_RES_INVALID_PARAM:
+>>>> -               /* Pixel had no version command. */
+>>>> -               if (ver_ptr)
+>>>> -                       *ver_ptr = 0;
+>>>> -               if (flg_ptr)
+>>>> -                       *flg_ptr = 0;
+>>>> -               ret = 1;
+>>>> -               goto exit;
+>>>> -
+>>>> -       case EC_RES_SUCCESS:
+>>>> -               resp = (struct ec_response_lightbar *)msg->data;
+>>>> -
+>>>> -               /* Future devices w/lightbars should implement this command */
+>>>> -               if (ver_ptr)
+>>>> -                       *ver_ptr = resp->version.num;
+>>>> -               if (flg_ptr)
+>>>> -                       *flg_ptr = resp->version.flags;
+>>>> -               ret = 1;
+>>>> -               goto exit;
+>>>> -       }
+>>>> -
+>>>> -       /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
+>>>> -       ret = 0;
+>>>> -exit:
+>>>> -       kfree(msg);
+>>>> -       return ret;
+>>>> -}
+>>>> -
+>>>>  static ssize_t version_show(struct device *dev,
+>>>>                             struct device_attribute *attr, char *buf)
+>>>>  {
+>>>> @@ -165,7 +94,7 @@ static ssize_t version_show(struct device *dev,
+>>>>                 return ret;
+>>>>
+>>>>         /* This should always succeed, because we check during init. */
+>>>> -       if (!get_lightbar_version(ec, &version, &flags))
+>>>> +       if (cros_ec_get_lightbar_version(ec, &version, &flags))
+>>>>                 return -EIO;
+>>>>
+>>>>         return scnprintf(buf, PAGE_SIZE, "%d %d\n", version, flags);
+>>>> @@ -184,7 +113,7 @@ static ssize_t brightness_store(struct device *dev,
+>>>>         if (kstrtouint(buf, 0, &val))
+>>>>                 return -EINVAL;
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -222,7 +151,7 @@ static ssize_t led_rgb_store(struct device *dev, struct device_attribute *attr,
+>>>>         unsigned int val[4];
+>>>>         int ret, i = 0, j = 0, ok = 0;
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -289,7 +218,7 @@ static ssize_t sequence_show(struct device *dev,
+>>>>         int ret;
+>>>>         struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -324,7 +253,7 @@ static int lb_send_empty_cmd(struct cros_ec_dev *ec, uint8_t cmd)
+>>>>         struct cros_ec_command *msg;
+>>>>         int ret;
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -352,7 +281,7 @@ static int lb_manual_suspend_ctrl(struct cros_ec_dev *ec, uint8_t enable)
+>>>>         struct cros_ec_command *msg;
+>>>>         int ret;
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -399,7 +328,7 @@ static ssize_t sequence_store(struct device *dev, struct device_attribute *attr,
+>>>>                         return ret;
+>>>>         }
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -444,7 +373,7 @@ static ssize_t program_store(struct device *dev, struct device_attribute *attr,
+>>>>                 return -EINVAL;
+>>>>         }
+>>>>
+>>>> -       msg = alloc_lightbar_cmd_msg(ec);
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>>         if (!msg)
+>>>>                 return -ENOMEM;
+>>>>
+>>>> @@ -531,24 +460,9 @@ static struct attribute_group cros_ec_lightbar_attr_group = {
+>>>>  static int cros_ec_lightbar_probe(struct platform_device *pd)
+>>>>  {
+>>>>         struct cros_ec_dev *ec_dev = dev_get_drvdata(pd->dev.parent);
+>>>> -       struct cros_ec_platform *pdata = dev_get_platdata(ec_dev->dev);
+>>>>         struct device *dev = &pd->dev;
+>>>>         int ret;
+>>>>
+>>>> -       /*
+>>>> -        * Only instantiate the lightbar if the EC name is 'cros_ec'. Other EC
+>>>> -        * devices like 'cros_pd' doesn't have a lightbar.
+>>>> -        */
+>>>> -       if (strcmp(pdata->ec_name, CROS_EC_DEV_NAME) != 0)
+>>>> -               return -ENODEV;
+>>>> -
+>>>> -       /*
+>>>> -        * Ask then for the lightbar version, if it's 0 then the 'cros_ec'
+>>>> -        * doesn't have a lightbar.
+>>>> -        */
+>>>> -       if (!get_lightbar_version(ec_dev, NULL, NULL))
+>>>> -               return -ENODEV;
+>>>> -
+>>>>         /* Take control of the lightbar from the EC. */
+>>>>         lb_manual_suspend_ctrl(ec_dev, 1);
+>>>>
+>>>> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+>>>> index dda182132a6a..a08747eec36a 100644
+>>>> --- a/drivers/platform/chrome/cros_ec_proto.c
+>>>> +++ b/drivers/platform/chrome/cros_ec_proto.c
+>>>> @@ -922,3 +922,87 @@ int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+>>>>         return sensor_count;
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
+>>>> +
+>>>> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec)
+>>>> +{
+>>>> +       struct cros_ec_command *msg;
+>>>> +       int len;
+>>>> +
+>>>> +       len = max(sizeof(struct ec_params_lightbar),
+>>>> +                 sizeof(struct ec_response_lightbar));
+>>>> +
+>>>> +       msg = kmalloc(sizeof(*msg) + len, GFP_KERNEL);
+>>>> +       if (!msg)
+>>>> +               return NULL;
+>>>> +
+>>>> +       msg->version = 0;
+>>>> +       msg->command = EC_CMD_LIGHTBAR_CMD + ec->cmd_offset;
+>>>> +       msg->outsize = sizeof(struct ec_params_lightbar);
+>>>> +       msg->insize = sizeof(struct ec_response_lightbar);
+>>>> +
+>>>> +       return msg;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(cros_ec_alloc_lightbar_cmd_msg);
+>>>> +
+>>>> +/**
+>>>> + * cros_ec_get_lightbar_version() - Get the EC lightbar version
+>>>> + *
+>>>> + * @ec: EC device, does not have to be connected directly to the AP,
+>>>> + *      can be daisy chained through another device.
+>>>> + * @ver_ptr: Detected lightbar version number
+>>>> + * @flag_ptr: Detected lightbar flags
+>>>> + *
+>>>> + * Call this function to determine the EC's lightbar version and flags
+>>>> + * information. If it doesn't exist then this function returns a negative
+>>>> + * error value.
+>>>> + *
+>>>> + * Return: 0 on success, negative errno on failure to detect a lightbar.
+>>>> + */
+>>>> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
+>>>> +                                uint32_t *flg_ptr)
+>>>> +{
+>>>> +       struct ec_params_lightbar *param;
+>>>> +       struct ec_response_lightbar *resp;
+>>>> +       struct cros_ec_command *msg;
+>>>> +       int ret;
+>>>> +
+>>>> +       msg = cros_ec_alloc_lightbar_cmd_msg(ec);
+>>>> +       if (!msg)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       param = (struct ec_params_lightbar *)msg->data;
+>>>> +       param->cmd = LIGHTBAR_CMD_VERSION;
+>>>> +       msg->outsize = sizeof(param->cmd);
+>>>> +       msg->result = sizeof(resp->version);
+>>>> +       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+>>>> +       if (ret < 0 && ret != -EINVAL)
+>>>> +               goto exit;
+>>>> +
+>>>> +       switch (msg->result) {
+>>>> +       case EC_RES_INVALID_PARAM:
+>>>> +               /* Pixel had no version command. */
+>>>> +               if (ver_ptr)
+>>>> +                       *ver_ptr = 0;
+>>>> +               if (flg_ptr)
+>>>> +                       *flg_ptr = 0;
+>>>> +               ret = 0;
+>>>> +               break;
+>>>> +       case EC_RES_SUCCESS:
+>>>> +               resp = (struct ec_response_lightbar *)msg->data;
+>>>> +
+>>>> +               /* Future devices w/lightbars should implement this command */
+>>>> +               if (ver_ptr)
+>>>> +                       *ver_ptr = resp->version.num;
+>>>> +               if (flg_ptr)
+>>>> +                       *flg_ptr = resp->version.flags;
+>>>> +               ret = 0;
+>>>> +               break;
+>>>> +       default:
+>>>> +               /* Anything else (ie, EC_RES_INVALID_COMMAND) - no lightbar */
+>>>> +               ret = -ENODEV;
+>>>> +       }
+>>>> +exit:
+>>>> +       kfree(msg);
+>>>> +       return ret;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(cros_ec_get_lightbar_version);
+>>>> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+>>>> index 4a415ae851ef..50221254956c 100644
+>>>> --- a/include/linux/platform_data/cros_ec_proto.h
+>>>> +++ b/include/linux/platform_data/cros_ec_proto.h
+>>>> @@ -229,6 +229,10 @@ u32 cros_ec_get_host_event(struct cros_ec_device *ec_dev);
+>>>>
+>>>>  int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+>>>>
+>>>> +struct cros_ec_command *cros_ec_alloc_lightbar_cmd_msg(struct cros_ec_dev *ec);
+>>>> +int cros_ec_get_lightbar_version(struct cros_ec_dev *ec, uint32_t *ver_ptr,
+>>>> +                                uint32_t *flg_ptr);
+>>>> +
+>>>>  int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+>>>>
+>>>>  /**
+>>>>
+>>>> base-commit: 1e7913ff5f9f1b73146ad8522958bd266f22a510
+>>>> --
+>>>> Sent by a computer, using git, on the internet
+>>>>
