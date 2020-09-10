@@ -2,63 +2,121 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E66C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C264AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4F36214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918F6214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxUYh5St"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgIJQnm (ORCPT
+        id S1725372AbgIJQoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:43:42 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:52470 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgIJQjw (ORCPT
+        Thu, 10 Sep 2020 12:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48626 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgIJQmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:39:52 -0400
-Date:   Thu, 10 Sep 2020 12:39:50 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-api@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfs: add fchmodat2 syscall
-Message-ID: <20200910163949.GJ3265@brightrain.aerifal.cx>
-References: <20200910142335.GG3265@brightrain.aerifal.cx>
- <20200910162059.GA18228@infradead.org>
+        Thu, 10 Sep 2020 12:42:37 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B69C0617A9;
+        Thu, 10 Sep 2020 09:33:16 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id f11so3655382qvw.3;
+        Thu, 10 Sep 2020 09:33:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5drfFo8OrkBQsxieqqPtS/rD8KeOpzSM9Ivh40hvsKo=;
+        b=lxUYh5StibOI5Wthhlt8onSp3iQb+ijRbirG/WudOb3SxD+8OzuvRMg2WV0VbAKqzg
+         NW37Mm+qmEwjTkP/BHaOf0lkHVbbVjRtdwZgmwT8tNowpqHOE0+nAMKYwLt/mlub3v+t
+         1q+q0cQIFTlozTAol+QIsI1PrSyG7925PH2TDrGZu5W8nFGrIsm1XMAsRUj57wnS41WY
+         o8xJwnrYzNYymErHtnFSVR6a0vuKJ4Yq90jeI5/DzD2Asv92rzzsnQJ6P0LhR+bXWK3J
+         2EDQIeZjn6Ok1zPDDcEarH/7K4XlO3FPmItNhsdH4/NYPe907vN9l9LJhQm7NxfzEUhJ
+         lEFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5drfFo8OrkBQsxieqqPtS/rD8KeOpzSM9Ivh40hvsKo=;
+        b=Mjj6UxM80czZCF9VUawyc26wWux17mI1ftEeYzX7fv9GtSqsn0pnL1f8AM47v9fLPM
+         /eWSHnvrc4RdZ/X70LZXKwPPAwGxC3A+F/7KnrZEQnNsW93PO+WSU1D7aynqvz51Klb4
+         X2Sh9mk8dUdNhCOlnvxyUnh7KYb4/Za1jUF/CcynsdNddeIvZ6iu1fC+i6BrdekdqBxj
+         Qbnq4FixSl024enKARpQuigCPBm80Qh1UtNaAznCGvkQHd4x7jujIZGbZmhSsvFlG47K
+         76gYBUt5pd3qCc4KTExAq7O0hjXldg3KMDNQAVovGg+XvZg/MxaH8M8pVdQ4vMBTJ/MJ
+         Nt2Q==
+X-Gm-Message-State: AOAM531+ewlPdDHLPaS2l0yqQ3JwWHaKJXT12RX2vFhZDg81ijFdhGE7
+        bXUyN5XkFy1jl0OAMxQF1xc=
+X-Google-Smtp-Source: ABdhPJwCv5l1XZsU8An1+ZJmMH+zZxgFOCji1SsQ/G71VTT5iI4o7ua6rzn8tLgCcwJa3xzJCG3igw==
+X-Received: by 2002:a05:6214:a8c:: with SMTP id ev12mr9114527qvb.95.1599755593799;
+        Thu, 10 Sep 2020 09:33:13 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id e90sm7364097qtd.4.2020.09.10.09.33.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 09:33:13 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 09:33:11 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] kbuild: remove cc-option test of
+ -fno-merge-all-constants
+Message-ID: <20200910163311.GB3119896@ubuntu-n2-xlarge-x86>
+References: <20200910135120.3527468-1-masahiroy@kernel.org>
+ <20200910135120.3527468-2-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910162059.GA18228@infradead.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200910135120.3527468-2-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 05:20:59PM +0100, Christoph Hellwig wrote:
-> On Thu, Sep 10, 2020 at 10:23:37AM -0400, Rich Felker wrote:
-> > userspace emulation done in libc implementations. No change is made to
-> > the underlying chmod_common(), so it's still possible to attempt
-> > changes via procfs, if desired.
+On Thu, Sep 10, 2020 at 10:51:18PM +0900, Masahiro Yamada wrote:
+> The minimal compiler versions, GCC 4.9 and Clang 10 support this flag.
 > 
-> And that is the goddamn problem.  We need to fix that _first_.
+> Here is the godbolt:
+> https://godbolt.org/z/8T4177
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Can you clarify exactly what that is? Do you mean fixing the
-underlying fs backends, or just ensuring that the chmod for symlinks
-doesn't reach them by putting the check in chmod_common? I'm ok with
-any of these.
+For what it's worth, the commit that introduced this block is going to
+be reverted:
 
-> After that we can add sugarcoating using new syscalls if needed.
+https://lore.kernel.org/mm-commits/20200903201518.JKrRS%25akpm@linux-foundation.org/
 
-The new syscall is _not_ about this problem. It's about the missing
-flags argument and inability to implement fchmodat() without access to
-procfs. The above problem is just something you encounter and have to
-make a decision about in order to fix the missing flags problem and
-make a working AT_SYMLINK_NOFOLLOW.
+Regardless, it was introduced in LLVM 2.7.0 in commit
+f9d41df0930986c52e198292cf875eb5d1761ece.
 
-Rich
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+> 
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 059b36f2ea53..1b6abecc5cab 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -927,7 +927,7 @@ KBUILD_CFLAGS	+= -fno-strict-overflow
+>  # clang sets -fmerge-all-constants by default as optimization, but this
+>  # is non-conforming behavior for C and in fact breaks the kernel, so we
+>  # need to disable it here generally.
+> -KBUILD_CFLAGS	+= $(call cc-option,-fno-merge-all-constants)
+> +KBUILD_CFLAGS	+= -fno-merge-all-constants
+>  
+>  # for gcc -fno-merge-all-constants disables everything, but it is fine
+>  # to have actual conforming behavior enabled.
+> -- 
+> 2.25.1
+> 
