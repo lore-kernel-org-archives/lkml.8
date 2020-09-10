@@ -2,113 +2,170 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B037C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B545C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A46B2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4962E20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wNMmsQ+F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnyeY9UG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgIJHPN (ORCPT
+        id S1730177AbgIJHQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:15:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41626 "EHLO
+        Thu, 10 Sep 2020 03:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730207AbgIJG55 (ORCPT
+        with ESMTP id S1730172AbgIJHPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:57:57 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CDE3C06134C
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:55:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a9so4639182wmm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:55:14 -0700 (PDT)
+        Thu, 10 Sep 2020 03:15:37 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4B7C061756;
+        Thu, 10 Sep 2020 00:15:30 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a12so5179552eds.13;
+        Thu, 10 Sep 2020 00:15:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=F4SNZL7u3gsccSrH9enIbNris8FkjNdKg3vRM/mztQ8=;
-        b=wNMmsQ+FjmUb41jHniIimRBXAYxYZBPfjc0OAmv7yy+rkAU2vQpWyUCSWHpnSZHZQ3
-         6FLbR7fHF7QSrGLvpYbjAhMw9XV+hNCuIoWer16Vy8D+AUdryZJUxluxkBASciRrGGkP
-         rMVDSILqO4wp+sZ6aDEJyhRKuE0v6eEv7Wo3B5cdwMfv4TNC5+nS3Yg6TXIWhdy5+BOv
-         LOdncogF6/wEjTM14GC6RdfkZ5bmzHvGmdYP/XqijNoIxk0I0Z4+vKnu25X16fG41Bvv
-         gUDs9LUYkfBHbXLuVP/XzJ+JJ/2EPoxjGZyXfWcEW7twMAJHz4ILUcszEEvf2/mOQJrh
-         NYVA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PYvTFQ+A4YAM71gMLAYrqttsL6XopiHaMQSLIkfSeg4=;
+        b=DnyeY9UGXLvPTKeSDifoA6oF4MNddPwFaNFMl0e2Ho/3E4mF4P0PqXha3/a9y9Pk72
+         0kDqwVGY/CDlIiX9UNGldYk7910AlO6hO+/cdqc/W8RXpNbKLYFE5HKz5Ymb3ITUE1Ri
+         p3Ai5slTSnrHin5AcVLAh/0DOus3oFfeDyJ8TJhLGHDfi0DuOkd5Xk32oHZwCXHPeYS/
+         PTS/DoYjFfBzXuJ+fl8/LFgBl5Tq/aAsZdpIRjUWWrCBB2foObtGFC1Av2FViywtPenn
+         sMYekFGtMuUwNIKVDRM52g/4lhxuLAv+qVLbZnkTw829F+FaIXawvkPYV1IHpMICnyN0
+         d+Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=F4SNZL7u3gsccSrH9enIbNris8FkjNdKg3vRM/mztQ8=;
-        b=kSZUlRSJLYN+NrkVsG4xXsl1lGg4E5qxt1uEap99EURlxA8yj4cUlXcxDyu7/VUK8B
-         CQpbB6R3KEHfd7I718CpIz2pakCnu5YONUCJhhJaQ94msjkhEnzCbHpGPlAHQUyfFdKR
-         aVZXOfK2h3bkn30+Mrd0QEfpvIJiJIGF22Xs1O5Ix4Cie4O98giekBJgm87Z0b5Ftfes
-         4LImzn0+UzYiS4aoWDQ68dt2ZwVLqBPExG8ZXpjuq7igzhkxkLKxTwc2xT+/ZLtpin5N
-         hr5x0lSgTzZLC/u12GAWAfqgYT0AQ/yIMkSXdSf0oyPDlHcj7h7skFnBAWhc+8SSbwU/
-         EFLw==
-X-Gm-Message-State: AOAM531xZ57uthnC0BRTgpkqFvUhSgRRqLtE0QzxsyqZ3NN3kk0PuDtV
-        fV87mFtRzWxbsHxBe8stUC4+4w==
-X-Google-Smtp-Source: ABdhPJyBUpBG+GQkJDKxyPXTXiLBDXsl5P46HlfF3R5neNBtG77N89AG8+GWMAblL6p2AxmzYiI29A==
-X-Received: by 2002:a1c:2742:: with SMTP id n63mr6799933wmn.24.1599720913070;
-        Wed, 09 Sep 2020 23:55:13 -0700 (PDT)
-Received: from dell.default ([91.110.221.246])
-        by smtp.gmail.com with ESMTPSA id m3sm2444028wme.31.2020.09.09.23.55.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 23:55:12 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
-Subject: [PATCH 17/29] wil6210: interrupt: Demote comment header which is clearly not kernel-doc
-Date:   Thu, 10 Sep 2020 07:54:19 +0100
-Message-Id: <20200910065431.657636-18-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200910065431.657636-1-lee.jones@linaro.org>
-References: <20200910065431.657636-1-lee.jones@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PYvTFQ+A4YAM71gMLAYrqttsL6XopiHaMQSLIkfSeg4=;
+        b=hfg9kDjKJHozJjEokwsxja91bDj1AeqmncII/2TYhKmMnH0/iVefNWEPQsnhWR6ghB
+         lvK8C6IIekXNPkVOhTpLzwi4DKAHtXtNOHAiIA4SYFzby7dQhLu0UVZMYIiM/L76flXD
+         3Ug4mfkm2GJ3CHXWsZgzKcx02TRNtaxPAAqcGSRuX8vYWSLXSw4obrD1nyPo6pByLV+y
+         lSC2Cs6VlbHEGM1CrIpUSy91z3dNZx+vuVhIcGKONxEaEVvh6IHreEEFRlQQEmQXkq/s
+         VEX1KbJieZ3wmMAzsldJ9GvE4nbGStL8lIXvQO4oiDcgwi8IqKLNmtyP8p7NGi/ifRda
+         yxBA==
+X-Gm-Message-State: AOAM531YjpZ6hhlIDGxu8naeDV5X8dOR+7FmxdzF+aoayQwbAY/NHWRN
+        QUpfpx6lSR6C35JsxC8EcSs=
+X-Google-Smtp-Source: ABdhPJwbvDZtK8W1otGDzENhdSL1h60FEZD2dOhpsPJUh1cDSFU2HIklW10wnGEZT9gHtEHoBXI1oQ==
+X-Received: by 2002:a50:f28b:: with SMTP id f11mr7718109edm.44.1599722129674;
+        Thu, 10 Sep 2020 00:15:29 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id q27sm5507955ejd.74.2020.09.10.00.15.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Sep 2020 00:15:28 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 65CF727C0054;
+        Thu, 10 Sep 2020 03:15:26 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 03:15:26 -0400
+X-ME-Sender: <xms:jdJZX989laUuIhoIK8JFdPxLc4Pt4b-MGHDcqK02BU9qoI4Wn4W-dQ>
+    <xme:jdJZXxvOq0mAhVVZAnqiZ7yJpP6hvKJtGxRdZvkrm3sYxJXwRsYZqHC1elO7MZ1Jo
+    Knf7ICx5GqzkLwuXA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedgudduiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeegueetveeigefhgedvleeutdejjeefhfelfeeuteeigefhgeegteeuieev
+    gfeuffenucffohhmrghinheprghpphhsphhothdrtghomhdpghhoohdrghhlnecukfhppe
+    ehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlih
+    hthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhm
+    rghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:jdJZX7BblxuUq5gBnJWjAoPc1tjJ3UZkRyXzjURwHuRZf1bSdom1lQ>
+    <xmx:jdJZXxeW9SZXFh35If40IHA_yX-P4zAP9rjNEGNdyKmFRl5WoBtpQA>
+    <xmx:jdJZXyNW4cYOm9aPugjoYjLz7dUmy-hFwonK2RALde0M7M3lWAMYpw>
+    <xmx:jtJZXziQlPPHsb_CB6xlbDtjuKsZWmaC1DFzSnH5SklBdCr5kON650mDiZE>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 520973064683;
+        Thu, 10 Sep 2020 03:15:25 -0400 (EDT)
+Date:   Thu, 10 Sep 2020 15:15:23 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     syzbot <syzbot+22e87cdf94021b984aa6@syzkaller.appspotmail.com>
+Cc:     bfields@fieldses.org, jlayton@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        will@kernel.org
+Subject: Re: WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected (2)
+Message-ID: <20200910071523.GF7922@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <0000000000002cdf7305aedd838d@google.com>
+ <000000000000d7136005aee14bf9@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000d7136005aee14bf9@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+Thanks!
 
- drivers/net/wireless/ath/wil6210/interrupt.c:652: warning: Function parameter or member 'irq' not described in 'wil6210_thread_irq'
- drivers/net/wireless/ath/wil6210/interrupt.c:652: warning: Function parameter or member 'cookie' not described in 'wil6210_thread_irq'
+On Wed, Sep 09, 2020 at 06:19:06AM -0700, syzbot wrote:
+> syzbot has bisected this issue to:
+> 
+> commit f08e3888574d490b31481eef6d84c61bedba7a47
+> Author: Boqun Feng <boqun.feng@gmail.com>
+> Date:   Fri Aug 7 07:42:30 2020 +0000
+> 
+>     lockdep: Fix recursive read lock related safe->unsafe detection
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13034be1900000
+> start commit:   dff9f829 Add linux-next specific files for 20200908
+> git tree:       linux-next
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=10834be1900000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17034be1900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=37b3426c77bda44c
+> dashboard link: https://syzkaller.appspot.com/bug?extid=22e87cdf94021b984aa6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108b740d900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12daa9ed900000
+> 
+> Reported-by: syzbot+22e87cdf94021b984aa6@syzkaller.appspotmail.com
+> Fixes: f08e3888574d ("lockdep: Fix recursive read lock related safe->unsafe detection")
+> 
 
-Cc: Maya Erez <merez@codeaurora.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: wil6210@qti.qualcomm.com
-Cc: netdev@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/net/wireless/ath/wil6210/interrupt.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This is another deadlock possibility detected by lockdep's new detection
+algorithm.
 
-diff --git a/drivers/net/wireless/ath/wil6210/interrupt.c b/drivers/net/wireless/ath/wil6210/interrupt.c
-index b1480b41cd3a0..d13d081fdcc6f 100644
---- a/drivers/net/wireless/ath/wil6210/interrupt.c
-+++ b/drivers/net/wireless/ath/wil6210/interrupt.c
-@@ -645,9 +645,7 @@ static irqreturn_t wil6210_irq_misc_thread(int irq, void *cookie)
- 	return IRQ_HANDLED;
- }
- 
--/**
-- * thread IRQ handler
-- */
-+/* thread IRQ handler */
- static irqreturn_t wil6210_thread_irq(int irq, void *cookie)
- {
- 	struct wil6210_priv *wil = cookie;
--- 
-2.25.1
+The deadlock happens as follow:
 
+	CPU 0				CPU 1			CPU 2
+	read_lock(&fown->lock);
+					spin_lock_irqsave(&dev->event_lock, ...)
+								write_lock_irq(&filp->f_owner.lock); // wait for the lock
+					read_lock(&fown-lock); // have to wait until the writer release
+							       // due to the fairness
+	<interrupted>
+	spin_lock_irqsave(&dev->event_lock); // wait for the lock
+
+The lock dependency on CPU 1 happens if there exists a call sequence:
+
+	input_inject_event():
+	  spin_lock_irqsave(&dev->event_lock,...);
+	  input_handle_event():
+	    input_pass_values():
+	      input_to_handler():
+	        handler->event(): // evdev_event()
+	          evdev_pass_values():
+	            spin_lock(&client->buffer_lock);
+	            __pass_event():
+	              kill_fasync():
+	                kill_fasync_rcu():
+	                  read_lock(&fa->fa_lock);
+	                  send_sigio():
+	                    read_lock(&fown->lock);
+
+A possible fix would be replacing the read_lock() with read_lock_irq()
+or read_lock_irqsave().
+
+Regards,
+Boqun
+
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
