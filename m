@@ -2,109 +2,135 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C07FC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAA12076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D232076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rUsfX3hY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730576AbgIJIce (ORCPT
+        id S1730512AbgIJIcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:32:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39996 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbgIJIb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:31:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 66B26AF43;
-        Thu, 10 Sep 2020 08:31:42 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 10:31:20 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        David Hildenbrand <david@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [RFC 1/5] mm, page_alloc: clean up pageset high and batch update
-Message-ID: <20200910083116.GA2285@linux>
-References: <20200907163628.26495-1-vbabka@suse.cz>
- <20200907163628.26495-2-vbabka@suse.cz>
+        Thu, 10 Sep 2020 04:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730287AbgIJIcr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:32:47 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF917C061573;
+        Thu, 10 Sep 2020 01:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=G3nNqf5JBiDJaw2zC0YQ7yH7mIdITSgiMb8ebwlBBr8=; b=rUsfX3hYLhfcfajSqh1YoOUQJm
+        lvXH0WoX3lNO33iU0NeSkXptod9s+vcx27Eqa1KCHBRZt57G4pkxNGmX5D4i97HfJYgMcI//yilvM
+        FFOVK34ocrYKszzfKlukkRmLXtoTsfXdI+OYqKJJSdwdzidGE4x0LyULaacQHcZHSQf4QV4R8WcmQ
+        1N/Lyyx3spy22oxzEi4QLuMtbBJrhJe+rF4jJdG8wbiF18JYpV6hNWxQflbmnUbXeguqu9R9xfQMu
+        uWk3/XdwEa3XUOv0qjo+gyuebDctyP/XWu73MuTQ7WDbtf9G0tQzuQWf05HEDHRSZvhkLEqoVyfwA
+        UpnoJC1g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGI0L-000566-SJ; Thu, 10 Sep 2020 08:32:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 545D23050F0;
+        Thu, 10 Sep 2020 10:32:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A8A1726512445; Thu, 10 Sep 2020 10:32:23 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 10:32:23 +0200
+From:   peterz@infradead.org
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        Stephane Eranian <stephane.eranian@google.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] arch/x86/amd/ibs: Fix re-arming IBS Fetch
+Message-ID: <20200910083223.GY1362448@hirez.programming.kicks-ass.net>
+References: <20200908214740.18097-1-kim.phillips@amd.com>
+ <20200908214740.18097-4-kim.phillips@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200907163628.26495-2-vbabka@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200908214740.18097-4-kim.phillips@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 06:36:24PM +0200, Vlastimil Babka wrote:
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+On Tue, Sep 08, 2020 at 04:47:36PM -0500, Kim Phillips wrote:
+> Stephane Eranian found a bug in that IBS' current Fetch counter was not
+> being reset when the driver would write the new value to clear it along
+> with the enable bit set, and found that adding an MSR write that would
+> first disable IBS Fetch would make IBS Fetch reset its current count.
+> 
+> Indeed, the PPR for AMD Family 17h Model 31h B0 55803 Rev 0.54 - Sep 12,
+> 2019 states "The periodic fetch counter is set to IbsFetchCnt [...] when
+> IbsFetchEn is changed from 0 to 1."
+> 
+> Explicitly set IbsFetchEn to 0 and then to 1 when re-enabling IBS Fetch,
+> so the driver properly resets the internal counter to 0 and IBS
+> Fetch starts counting again.
+> 
+> A family 15h machine tested does not have this problem, and the extra
+> wrmsr is also not needed on Family 19h, so only do the extra wrmsr on
+> families 16h through 18h.
 
->  	for_each_possible_cpu(cpu)
-> -		setup_pageset(&per_cpu(boot_pageset, cpu), 0);
-> +		setup_pageset(&per_cpu(boot_pageset, cpu));
+*groan*...
 
-This is not really anything important but I realized we have like 7 functions
-messing with pcp lists, and everytime I try to follow them my head spins.
-
-Since setup_pageset is only being called here, could we replace it by the
-pageset_init and pageset_update?
-
-(As I said, not important and probably a matter of taste. I just think that
-having so many mini functions around is not always cool,
-e.g: setup_zone_pageset->zone_pageset_init)
-
-> -/*
-> - * pageset_set_high() sets the high water mark for hot per_cpu_pagelist
-> - * to the value high for the pageset p.
-> - */
-> -static void pageset_set_high(struct per_cpu_pageset *p,
-> -				unsigned long high)
-> -{
-> -	unsigned long batch = max(1UL, high / 4);
-> -	if ((high / 4) > (PAGE_SHIFT * 8))
-> -		batch = PAGE_SHIFT * 8;
-> -
-> -	pageset_update(&p->pcp, high, batch);
-> +	pageset_update(&p->pcp, 0, 1);
->  }
-
-Could we restore the comment we had in pageset_set_high, and maybe
-update it to match this new function? I think it would be useful.
->  
->  static void pageset_set_high_and_batch(struct zone *zone,
-> -				       struct per_cpu_pageset *pcp)
-> +				       struct per_cpu_pageset *p)
+> ---
+>  arch/x86/events/amd/ibs.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index 26c36357c4c9..3eb9a55e998c 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+> @@ -363,7 +363,14 @@ perf_ibs_event_update(struct perf_ibs *perf_ibs, struct perf_event *event,
+>  static inline void perf_ibs_enable_event(struct perf_ibs *perf_ibs,
+>  					 struct hw_perf_event *hwc, u64 config)
 >  {
-> -	if (percpu_pagelist_fraction)
-> -		pageset_set_high(pcp,
-> -			(zone_managed_pages(zone) /
-> -				percpu_pagelist_fraction));
-> -	else
-> -		pageset_set_batch(pcp, zone_batchsize(zone));
-> +	unsigned long new_high;
-> +	unsigned long new_batch;
-> +	int fraction = READ_ONCE(percpu_pagelist_fraction);
+> -	wrmsrl(hwc->config_base, hwc->config | config | perf_ibs->enable_mask);
+> +	u64 _config = (hwc->config | config) & ~perf_ibs->enable_mask;
+> +
+> +	/* On Fam17h, the periodic fetch counter is set when IbsFetchEn is changed from 0 to 1 */
+> +	if (perf_ibs == &perf_ibs_fetch && boot_cpu_data.x86 >= 0x16 && boot_cpu_data.x86 <= 0x18)
+> +		wrmsrl(hwc->config_base, _config);
 
-Why the READ_ONCE? In case there is a parallel update so things to get
-messed up?
+That's an anti-patttern (and for some reason this is the second time in
+a week I've seen it). This is a fairly hot path and you're adding a
+whole bunch of loads and branches.
 
-as I said, I'd appreciate a comment in pageset_set_high_and_batch to be
-restored and updated, otherwise:
+Granted, in case you need the extra wrmsr that's probably noise, but
+supposedly you're going to be fixing this in hardware eventually, and
+you'll be getting rid of the second wrmsr again. But then you're stuck
+with the loads and branches.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de> 
+A better option would be to use hwc->flags, you're loading from that
+line already, so it's guaranteed hot and then you only have a single
+branch. Or stick it in perf_ibs near enable_mask, same difference.
 
-Thanks
-
--- 
-Oscar Salvador
-SUSE L3
+> + 	_config |= perf_ibs->enable_mask;
+> +	wrmsrl(hwc->config_base, _config);
+>  }
+>  
+>  /*
+> -- 
+> 2.27.0
+> 
