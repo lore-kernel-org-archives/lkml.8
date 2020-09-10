@@ -2,257 +2,363 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F743C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0060C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BABFA20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D8420809
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:50:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u8DEnU6p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAA6Pu27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgIJJtt (ORCPT
+        id S1730450AbgIJJt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40408 "EHLO
+        Thu, 10 Sep 2020 05:49:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbgIJJtY (ORCPT
+        with ESMTP id S1730269AbgIJJt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:49:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BD1C061573;
-        Thu, 10 Sep 2020 02:49:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l191so3962083pgd.5;
-        Thu, 10 Sep 2020 02:49:24 -0700 (PDT)
+        Thu, 10 Sep 2020 05:49:28 -0400
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D338C061756;
+        Thu, 10 Sep 2020 02:49:28 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id c10so4798278otm.13;
+        Thu, 10 Sep 2020 02:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0NQ+a9KQEbzMM5sdoMMRb5gXhwNV9GMKx6J1Y6SP+Gw=;
-        b=u8DEnU6pW1TMzldKTa3l0quR+RG3X0/tl5bmWZI2ZK3U6O97hRTDdQuxbJHViTr5fD
-         pe97hLFffwUU6ygySd/kGPTpE3xsVqOWm+AweNf/Ovz/ua/rQe3/qZxkUMw345Qzbo9L
-         ELhWVlKjGrqaoEgNHYjq+jIDsnxzFDW8Xzlk2KxXWZjU1XRS67XMDJPyfujvsAlETD6Z
-         nUM1a6+W+NlA4f2ZJKqTzKcqaC3jMQT3kDptLYKYipvIRy5Lo8gfGDtW3tguMSUdSjzw
-         g3srjyMtwlWAzuZLm58dD7IDb8i3t0IXD7UMzHTqN/i94E0X71uhibruOH8Wg89QLmGL
-         qgyg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=uXg/iJJ4ccPNr9MQRtCOvct8uIrO7djqC5BnlM/ckNg=;
+        b=NAA6Pu278YXbfj8K1thQgWscHENF/1Mi1HyksWw3h3HrFaUtSvXQQvInRmj96jQUW7
+         hL/ATac3qDWoOiJjvVklmcfBHYS+tfHlZAD+Gy9Cat1zWqPFuD6VUtv/KvY0U5ZPrBGq
+         7nc97Yk+xD6BfNl74FmZ1oTkQO0jxlLtPu1JQMMH6o//YA9P1edtC4d5cQG3/O+r3xXp
+         e/26hsd0tf3mjAYT7YZhyVAlEpOZqBOzFFzyu4oL5iqKMqxxf5G7IH8RiTO0uXobtrjg
+         P/B1XCgx2eANbB1kUGB9sJz0EZ553Z6peRYoqFS9wSbEYTD839oIM2i4iWEhnLgDu12C
+         zRJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0NQ+a9KQEbzMM5sdoMMRb5gXhwNV9GMKx6J1Y6SP+Gw=;
-        b=Ry6CcEhi741DQAMxeaErC/CB9pniHV9p7apH39/ZsYzbZHyGKXgxuaV5otIHF1sqOm
-         ofhtuJpAouXFMHY3NN2LCmPz9qKQ373Tx/4i+jp4Xm8mqBvnE4JL6wQ22tgQBBRzDVIZ
-         LAKMhhX+7tl2DnlQm7XD+1ZCGX1A2j1cofD7khWlnC0BEeH3HB6rYpmD053bFj6b8PH2
-         QvmW2Ya8J7boG2hbocAbByfScjiMtnZDb1hM8E2q3Acbj8mFRnsGzjpo8IP/2P3tI9vG
-         qnD+Evd9Br2rdI+BcKAA8wgIN9CTQBlMrhb/ij+y6d5zaLdkF+n21M8Vh30t2q5fvl6y
-         yK5g==
-X-Gm-Message-State: AOAM532jO08ZUBXwkqcdpx/V0e9bdL1V3+hKDl7x8xQZX+9kVIepQehb
-        oHHEl+pgACeZhdwtnG1qcIw=
-X-Google-Smtp-Source: ABdhPJzrTY6CsfC7FjDtfHA9mZgjKmywAlg84YDwyRcm+jYhVS0KtWmtdyaA3rJT7yo7gLY3SRKK9Q==
-X-Received: by 2002:aa7:9edb:0:b029:13e:d13d:a059 with SMTP id r27-20020aa79edb0000b029013ed13da059mr4786303pfq.31.1599731363604;
-        Thu, 10 Sep 2020 02:49:23 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:a6ae:11ff:fe11:4b46])
-        by smtp.gmail.com with ESMTPSA id j14sm4555941pgf.76.2020.09.10.02.49.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 02:49:22 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 18:49:21 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
-Message-ID: <20200910094921.GB97481@google.com>
-References: <20200819135454.GA17098@lst.de>
- <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
- <20200820044347.GA4533@lst.de>
- <20200820052004.GA5305@lst.de>
- <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
- <20200820165407.GD12693@lst.de>
- <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
- <20200901110617.GA13232@lst.de>
- <CAAFQd5CmPVSxmZJVn7HnNUn8srZbAbnfzpNMYw3KcDzn7xD2cg@mail.gmail.com>
- <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=uXg/iJJ4ccPNr9MQRtCOvct8uIrO7djqC5BnlM/ckNg=;
+        b=GKqXTZFTup87Dc5NdZA+uLAJyaLcGXf6sIAIqK+a5NOobS9WnzKFOFMVF4j51CMYJ+
+         fVBP0rP2ngNqMao0R6dfAEXYl2nt056+F457x0jz7n/kHZSo9FA8hpjj1EG7P7puDn2m
+         vvUwrjsUZDPMt+J+ESWKHaq5DHPgywVPJTdhgo4AAMl9JtG3Gi53kmQXdFj6eVTtvoax
+         KJbDMeIMbUomHs16MRCsrpK52qU9DSYV4NX7a5LT1lkQR3M296016iIXEGy8SFVSFVxY
+         KrorcQCfHbleaU1Ev7jAYFvOyKPmz72Hm2iR1uzo7oHefL8nOYmyGPudMk65pLJNMVLE
+         8RuA==
+X-Gm-Message-State: AOAM533vZMy0ay/6yh1RztBShcP76tQjdv5HCXl9a1jsbG9cwBGxUdZX
+        YSfGpO2kI0QxWxCq41IngWaFWygDnjRs4JKYzLU=
+X-Google-Smtp-Source: ABdhPJy/X2sYCS8VdE2Lw0h3Uwudoe7u5V1s70HK3HMj4FgMUUVCzNo4sJEnDVHNsmGfhUPqwilqlFy3NisGn2AUxO0=
+X-Received: by 2002:a9d:908:: with SMTP id 8mr3465011otp.356.1599731367438;
+ Thu, 10 Sep 2020 02:49:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
+References: <20200603054438.5541-1-Andrea.Ho@advantech.com.tw>
+In-Reply-To: <20200603054438.5541-1-Andrea.Ho@advantech.com.tw>
+From:   Andrea Ho <voyandrea@gmail.com>
+Date:   Thu, 10 Sep 2020 17:49:01 +0800
+Message-ID: <CAGBRx8PniAyjoY8MSMf3A6VZPrLdoSu-U7rP793No1386BiRBg@mail.gmail.com>
+Subject: [V4,1/1] Input/misc: add support for Advantech software defined button
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jeff LaBundy <jeff@labundy.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
 
-On (20/09/08 23:58), Tomasz Figa wrote:
-> 
-> Given the above, we would like to make changes that affect the UAPI.
-> Would you still be able to revert this series?
->
+Advantech sw_button is a ACPI event trigger button.
 
-If we want to apply only "media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT"
-patch and keep the rest of the buffer cache hints series in the kernel, then
-I'd add one or two more patches. We don't need ->flags argument in
-create_bufs() and reqbufs() functions, that argument was introduced in order
-to pass in the requested coherency flag.
+With this driver, we can report KEY_EVENT on the
+Advantech Tabletop Network Appliances products and it has been
+tested in FWA1112VC.
 
+Add the software define button support to report EV_REP key_event
+(BTN_TRIGGER_HAPPY) by pressing button that cloud be get on user
+interface and trigger the customized actions.
 
-Now.
+Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
 
-Then we have a question - do we need flags member in struct
-v4l2_requestbuffers and v4l2_create_buffers or shall we just
-return back those 4 bytes to reserved[]? We pass BUF_FLAG_NO_CACHE_INVALIDATE
-and V4L2_BUF_FLAG_NO_CACHE_SYNC in struct v4l2_buffer.flags.
-
-If we decide to remove v4l2_requestbuffers and v4l2_create_buffers ->flags,
-then we also need to rollback documentation changes.
-
-Then we need to change CLEAR_AFTER_FIELD(foo, capabilities) in
-v4l2-ioctl to zero out reserved[] areas in v4l2_requestbuffers
-and v4l2_create_buffers. I think v4l2_create_buffers is fine,
-but requstbuffers has flags and reversed[1] in the union so for
-requestbuffers we simply removed the CLEAR_AFTER_FIELD() and
-hence dropped the corresponding check from v4l-compliance.
-
-So, do we plan on using .flags in v4l2_requestbuffers and
-v4l2_create_buffers?
-
-
-- create_bufs()/reqbufs() flags argument removal patch
-(no struct-s/documentation cleanup yet).
-
-====8<====
-Subject: [PATCH] remove redundant flags argument
-
+v2:
+        - remove fix-patch in patch
+        - fix build WARNING on format string.
+        - using linux kernel sort function
+v3:
+        - remove X86 dependency
+        - License only for GPL 2.0 and remove redundancy paragraphs
+        - remove version and prefix
+        - remove printk message
+        - remove double click and long press event check
+        - remove MODULE_PARAM
+v4:
+        - match MODULE_LICENSE and SPDX header
+        - rename the device name
+        - move driver name and class as macros to open-code
+        - remove the forward declarations of the functions
+        - replace fucntions acpi_button_init() and
+          acpi_button_exit() by module_acpi_driver()
+        - replace kzalloc() by devm_kzalloc()
+        - replace input_allocate_device() by devm_input_allocate_device()
 ---
- drivers/media/common/videobuf2/videobuf2-core.c | 10 +++++-----
- drivers/media/common/videobuf2/videobuf2-v4l2.c |  6 ++----
- include/media/videobuf2-core.h                  |  6 ++----
- 3 files changed, 9 insertions(+), 13 deletions(-)
+ MAINTAINERS                       |   5 +
+ drivers/input/misc/Kconfig        |  11 ++
+ drivers/input/misc/Makefile       |   2 +-
+ drivers/input/misc/adv_swbutton.c | 190 ++++++++++++++++++++++++++++++
+ 4 files changed, 207 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/input/misc/adv_swbutton.c
 
-diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-index 66a41cef33c1..4eab6d81cce1 100644
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -722,7 +722,7 @@ int vb2_verify_memory_type(struct vb2_queue *q,
- EXPORT_SYMBOL(vb2_verify_memory_type);
- 
- int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
--		     unsigned int flags, unsigned int *count)
-+		     unsigned int *count)
- {
- 	unsigned int num_buffers, allocated_buffers, num_planes = 0;
- 	unsigned plane_sizes[VB2_MAX_PLANES] = { };
-@@ -861,7 +861,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
- EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
- 
- int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
--			 unsigned int flags, unsigned int *count,
-+			 unsigned int *count,
- 			 unsigned int requested_planes,
- 			 const unsigned int requested_sizes[])
- {
-@@ -2547,7 +2547,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
- 	fileio->memory = VB2_MEMORY_MMAP;
- 	fileio->type = q->type;
- 	q->fileio = fileio;
--	ret = vb2_core_reqbufs(q, fileio->memory, 0, &fileio->count);
-+	ret = vb2_core_reqbufs(q, fileio->memory, &fileio->count);
- 	if (ret)
- 		goto err_kfree;
- 
-@@ -2604,7 +2604,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
- 
- err_reqbufs:
- 	fileio->count = 0;
--	vb2_core_reqbufs(q, fileio->memory, 0, &fileio->count);
-+	vb2_core_reqbufs(q, fileio->memory, &fileio->count);
- 
- err_kfree:
- 	q->fileio = NULL;
-@@ -2624,7 +2624,7 @@ static int __vb2_cleanup_fileio(struct vb2_queue *q)
- 		vb2_core_streamoff(q, q->type);
- 		q->fileio = NULL;
- 		fileio->count = 0;
--		vb2_core_reqbufs(q, fileio->memory, 0, &fileio->count);
-+		vb2_core_reqbufs(q, fileio->memory, &fileio->count);
- 		kfree(fileio);
- 		dprintk(q, 3, "file io emulator closed\n");
- 	}
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index d2879f53455b..96d3b2b2aa31 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -728,8 +728,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
- 	int ret = vb2_verify_memory_type(q, req->memory, req->type);
- 
- 	fill_buf_caps(q, &req->capabilities);
--	return ret ? ret : vb2_core_reqbufs(q, req->memory,
--					    req->flags, &req->count);
-+	return ret ? ret : vb2_core_reqbufs(q, req->memory, &req->count);
- }
- EXPORT_SYMBOL_GPL(vb2_reqbufs);
- 
-@@ -804,7 +803,6 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
- 		if (requested_sizes[i] == 0)
- 			return -EINVAL;
- 	return ret ? ret : vb2_core_create_bufs(q, create->memory,
--						create->flags,
- 						&create->count,
- 						requested_planes,
- 						requested_sizes);
-@@ -993,7 +991,7 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
- 		return res;
- 	if (vb2_queue_is_busy(vdev, file))
- 		return -EBUSY;
--	res = vb2_core_reqbufs(vdev->queue, p->memory, p->flags, &p->count);
-+	res = vb2_core_reqbufs(vdev->queue, p->memory, &p->count);
- 	/* If count == 0, then the owner has released all buffers and he
- 	   is no longer owner of the queue. Otherwise we have a new owner. */
- 	if (res == 0)
-diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-index 4c7f25b07e93..bbb3f26fbde9 100644
---- a/include/media/videobuf2-core.h
-+++ b/include/media/videobuf2-core.h
-@@ -744,7 +744,6 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
-  * vb2_core_reqbufs() - Initiate streaming.
-  * @q:		pointer to &struct vb2_queue with videobuf2 queue.
-  * @memory:	memory type, as defined by &enum vb2_memory.
-- * @flags:	auxiliary queue/buffer management flags.
-  * @count:	requested buffer count.
-  *
-  * Videobuf2 core helper to implement VIDIOC_REQBUF() operation. It is called
-@@ -769,13 +768,12 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
-  * Return: returns zero on success; an error code otherwise.
-  */
- int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
--		    unsigned int flags, unsigned int *count);
-+		    unsigned int *count);
- 
- /**
-  * vb2_core_create_bufs() - Allocate buffers and any required auxiliary structs
-  * @q: pointer to &struct vb2_queue with videobuf2 queue.
-  * @memory: memory type, as defined by &enum vb2_memory.
-- * @flags: auxiliary queue/buffer management flags.
-  * @count: requested buffer count.
-  * @requested_planes: number of planes requested.
-  * @requested_sizes: array with the size of the planes.
-@@ -793,7 +791,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-  * Return: returns zero on success; an error code otherwise.
-  */
- int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
--			 unsigned int flags, unsigned int *count,
-+			 unsigned int *count,
- 			 unsigned int requested_planes,
- 			 const unsigned int requested_sizes[]);
- 
--- 
-2.28.0.526.ge36021eeef-goog
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d7e3eab852d3..02c818161aab 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -561,6 +561,11 @@ S: Maintained
+ F:     Documentation/scsi/advansys.rst
+ F:     drivers/scsi/advansys.c
 
++ADVANTECH SWBTN DRIVER
++M:     Andrea Ho <Andrea.Ho@advantech.com.tw>
++S:     Maintained
++F:     drivers/input/misc/adv_swbutton.c
++
+ ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
+ M:     Michael Hennerich <michael.hennerich@analog.com>
+ S:     Supported
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 362e8a01980c..f88d1490ae40 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -869,4 +869,15 @@ config INPUT_STPMIC1_ONKEY
+          To compile this driver as a module, choose M here: the
+          module will be called stpmic1_onkey.
+
++config INPUT_ADV_SWBUTTON
++        tristate "Advantech ACPI Software button Driver"
++        depends on ACPI
++        help
++          Say Y here to enable support for Advantech software defined
++          button feature. More information can be fount at
++          <http://www.advantech.com.tw/products/>
++
++          To compile this driver as a module, choose M here. The module will
++          be called adv_swbutton.
++
+ endif
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index a48e5f2d859d..a03430f5ee9d 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -84,4 +84,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)         += wm831x-on.o
+ obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)        += xen-kbdfront.o
+ obj-$(CONFIG_INPUT_YEALINK)            += yealink.o
+ obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)   += ideapad_slidebar.o
+-
++obj-$(CONFIG_INPUT_ADV_SWBUTTON)    += adv_swbutton.o
+diff --git a/drivers/input/misc/adv_swbutton.c
+b/drivers/input/misc/adv_swbutton.c
+new file mode 100644
+index 000000000000..09e5a83c61a9
+--- /dev/null
++++ b/drivers/input/misc/adv_swbutton.c
+@@ -0,0 +1,190 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  adv_swbutton.c - Software Button Interface Driver.
++ *
++ *  (C) Copyright 2020 Advantech Corporation, Inc
++ *
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/version.h>
++#include <linux/types.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++#include <linux/input.h>
++#include <linux/slab.h>
++#include <linux/acpi.h>
++#include <linux/ktime.h>
++#include <linux/moduleparam.h>
++#include <acpi/button.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
++
++#define ACPI_SWBTN_NAME                     "Software Button"
++#define ACPI_BUTTON_CLASS                   "button"
++
++#define ACPI_BUTTON_SUBCLASS_SOFTWARE       "software"
++#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
++#define ACPI_BUTTON_TYPE_SOFTWARE           0x07
++
++#define ACPI_BUTTON_FILE_INFO               "info"
++#define ACPI_BUTTON_FILE_STATE              "state"
++#define ACPI_BUTTON_TYPE_UNKNOWN            0x00
++
++#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
++#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
++
++#define SOFTWARE_BUTTON                     BTN_TRIGGER_HAPPY
++
++#define _COMPONENT                          ACPI_BUTTON_COMPONENT
++
++struct acpi_button {
++       unsigned int type;
++       struct input_dev *input;
++       char phys[32];
++       bool pressed;
++};
++
++/*-------------------------------------------------------------------------
++ *                               Driver Interface
++ *--------------------------------------------------------------------------
++ */
++static void acpi_button_notify(struct acpi_device *device, u32 event)
++{
++       struct acpi_button *button = acpi_driver_data(device);
++       struct input_dev *input;
++
++       int keycode, BTN_KEYCODE = SOFTWARE_BUTTON;
++
++       switch (event) {
++       case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
++               input = button->input;
++
++               if (!button->pressed)
++                       return;
++
++               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
++                               BTN_KEYCODE : KEY_UNKNOWN;
++
++               button->pressed = false;
++
++               input_report_key(input, keycode, 0);
++               input_sync(input);
++       break;
++       case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
++               input = button->input;
++               button->pressed = true;
++
++               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
++                           BTN_KEYCODE : KEY_UNKNOWN;
++
++               input_report_key(input, keycode, 1);
++               input_sync(input);
++       break;
++       default:
++               ACPI_DEBUG_PRINT((ACPI_DB_INFO,
++                                 "Unsupported event [0x%x]\n", event));
++       break;
++       }
++}
++
++static int acpi_button_add(struct acpi_device *device)
++{
++       struct acpi_button *button;
++       struct input_dev *input;
++       const char *hid = acpi_device_hid(device);
++       char *name, *class;
++       int error;
++
++       button = devm_kzalloc(&device->dev, sizeof(*button), GFP_KERNEL);
++       if (!button)
++               return -ENOMEM;
++
++       device->driver_data = button;
++       input = devm_input_allocate_device(&device->dev);
++       if (!input) {
++               error =  -ENOMEM;
++               goto err_free_mem;
++       }
++
++       button->input = input;
++
++       name = acpi_device_name(device);
++       class = acpi_device_class(device);
++
++       if (!strcmp(hid, ACPI_BUTTON_HID_SWBTN)) {
++               button->type = ACPI_BUTTON_TYPE_SOFTWARE;
++               button->pressed = false;
++               strcpy(name, ACPI_SWBTN_NAME);
++               sprintf(class, "%s/%s", ACPI_BUTTON_CLASS,
++                       ACPI_BUTTON_SUBCLASS_SOFTWARE);
++       } else {
++               return -ENODEV;
++       }
++
++       snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
++
++       input->name = name;
++       input->phys = button->phys;
++       input->id.bustype = BUS_HOST;
++       input->id.product = button->type;
++       input->dev.parent = &device->dev;
++
++       switch (button->type) {
++       case ACPI_BUTTON_TYPE_SOFTWARE:
++               set_bit(EV_KEY, input->evbit);
++               set_bit(EV_REP, input->evbit);
++
++               input_set_capability(input, EV_KEY, SOFTWARE_BUTTON);
++       break;
++       }
++
++       input_set_drvdata(input, device);
++       error = input_register_device(input);
++       if (error)
++               return error;
++
++       device_init_wakeup(&device->dev, true);
++
++       return 0;
++
++err_free_mem:
++       devm_kfree(&device->dev, button);
++       return error;
++}
++
++static int acpi_button_remove(struct acpi_device *device)
++{
++       struct acpi_button *button = acpi_driver_data(device);
++
++       input_unregister_device(button->input);
++       devm_kfree(&device->dev, button);
++       return 0;
++}
++
++static const struct acpi_device_id button_device_ids[] = {
++       {ACPI_BUTTON_HID_SWBTN, 0},
++       {"", 0},
++};
++MODULE_DEVICE_TABLE(acpi, button_device_ids);
++
++static struct acpi_driver acpi_button_driver = {
++       .name = ACPI_SWBTN_NAME,
++       .class = ACPI_BUTTON_CLASS,
++       .owner = THIS_MODULE,
++       .ids = button_device_ids,
++       .ops = {
++               .add = acpi_button_add,
++               .remove = acpi_button_remove,
++               .notify = acpi_button_notify,
++       },
++};
++
++module_acpi_driver(acpi_button_driver);
++
++ACPI_MODULE_NAME("swbutton");
++
++MODULE_AUTHOR("Andrea Ho");
++MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
++MODULE_LICENSE("GPL v2");
+--
+2.17.1
