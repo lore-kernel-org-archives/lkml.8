@@ -2,227 +2,216 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E20C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B7EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D42821556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B967321941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mp48Y5o3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Edlxp9JS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbgIJJ6I (ORCPT
+        id S1730690AbgIJJ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
+        Thu, 10 Sep 2020 05:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730552AbgIJJzB (ORCPT
+        with ESMTP id S1730764AbgIJJzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:55:01 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC61C061798
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:55:00 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k18so5145054wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:55:00 -0700 (PDT)
+        Thu, 10 Sep 2020 05:55:48 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38229C06179F
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:55:48 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id s2so2779184pjr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kBmlII5Vo//A9yPEJvnx3pKLF3xO4ua5qFTJHSq3g7w=;
-        b=Mp48Y5o3UTjqc7GRbcTi2cjvv51nFGNvyAA5DE1UfeTL1TMGbjAHc4RUbolyjBcq78
-         jLfYRxESN0S1R7j1vveSLWJeMYK+nJX28JhMyTmyicQtPHsq5swlYfpyW+55u5AoImfZ
-         oBxeH5Lbwxs2v/dztAijetFrho1Wx6bVj+Oc/dkvUXrE5TyUZWh0epgiUpxiOto85MsG
-         hTEOT+NcLacuqmR7JmXxY+IDVmr5voQ/ECTLxZvFSYbuWjRg4MsOVEUUgTnqbsR0HMQb
-         V0et67mMhX/LXsQcKVGVYQwUkRusWYFa/RLbGrMSils0/fDIHW0nT7CA22W1u9F3htI4
-         NkqQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IaGTFnDJBMBefRV/KyfCTUkPl/xUCziFjmJJ4w4CjXw=;
+        b=Edlxp9JSKyIwQ3d/65GRMff66HrC1LW3hK1xF7+fYi4S6Ae7V+W1mIakpvOTcZon4U
+         uKl4ve/gMbyjqYC5YhLJXnXlJlPCtCu7YZDE0yKdmiBUnG/ZlxdUXJkg596ZDVjZwwhe
+         bh1seKT7/YWFj3gVY1RAzKdf1BvZPtlp5fuylziTmuSW7fJ0uqXqO0Hl9rYrYZhzt6vK
+         lAnwIFGqCsHGlHUHQSWZ++lQAX0n7wKlwA5octgAgeiMFwjkAnfwvmLXDjpsLbFj6YQb
+         BHICuApDFIBstBzxunt/ssewC+a8+qyGh0mam78c+TCYgHB+iRq57dCkJAQL2qOzYCLR
+         FlzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kBmlII5Vo//A9yPEJvnx3pKLF3xO4ua5qFTJHSq3g7w=;
-        b=klT+HSWJLb6EGpLYR+lx+ZY4wJC+ovGzPEyoJYQkaNq/pNlITXyJ3jl4EivUfked7P
-         R1XZBu4JC/0ZIaPHFfpTRt2uXPbfqLvu2T9E0h0Qk2LYO1c1+9pgq6DYw/yoGBbuLKQN
-         rn404CO/ONfwS8YWB3SyFowDO/tkKTFi9qL4VYq+xl0S0TXJhNRVJqpJBvGzZYEihkWA
-         8cUVj3XWW2UVss87QHTmNWwCeH9pmrXoC5wWZxy8UrpV43M1oWETs9wFVOJS4q6gDW8+
-         +U13pcNvbEK/89EiNouy4N8KaSInMWIvdfkkBA0wPo0IKGookz8SlIzXxI75UV/gcCr0
-         qZIg==
-X-Gm-Message-State: AOAM5314CCjStuO4jggLN2/gXZ5fWFWVBdxkyX8G0u5XJYCvKjP1PwMs
-        XwfDJYZ4Hac588tc6sS6H9/cPg==
-X-Google-Smtp-Source: ABdhPJxw2J4g1tLxlXhkthydaDC7Hl8eCBStOVqNL7T4xvp4Dg/q8If7FlfLMGbTnCUpJcon0gm14g==
-X-Received: by 2002:a7b:c14d:: with SMTP id z13mr7474778wmi.19.1599731699416;
-        Thu, 10 Sep 2020 02:54:59 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:109:4a0f:cfff:fe4a:6363])
-        by smtp.gmail.com with ESMTPSA id b76sm2975511wme.45.2020.09.10.02.54.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 02:54:58 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 10:54:54 +0100
-From:   Andrew Scull <ascull@google.com>
-To:     David Brazdil <dbrazdil@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Dennis Zhou <dennis@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IaGTFnDJBMBefRV/KyfCTUkPl/xUCziFjmJJ4w4CjXw=;
+        b=sFVaMSkRRoKKP2VV0u7FeNW5koM94oS/T1xw/PKs4w9mWUwdq3mS0oUbSMUhuIO66L
+         v+kyzamKy7yVvDCV6M17PlXnsrEGwuwRUAOQiMJUYKuz5QxTNAMRloNvCiDKF2HV49rD
+         zxEja9nyOgKoHZpz+zKh6jZHHPqfO4+vyqqQkq1QWDZVQZfsZxLOElrTsqyDBnbpWlR/
+         r6HZegwN2ZXx2ST/ufyHEKMbUh2ekUfeZbTiKkF8ioxT61cChtbJ4iprDq1EF+amivwj
+         n4+CaDZ5fXOzCT/1sCYVEJo/rwKUm67/39Pv0hsYWwZRQmDws14s5T5Xsc7C0QuAnhOV
+         dnDQ==
+X-Gm-Message-State: AOAM5327t/sVgRr/LoPvXFvSCWI5Y7/kIk+MONL6roGIJLi5fvkxvyGR
+        4HGLoelq8HJuHVZFgTwY7I//rg==
+X-Google-Smtp-Source: ABdhPJygFUaL7C711MVvp4VE0w8Sln3tVyFCklbJMeZp+qTd1iK1V5+XL+JPHZwQC6VD2MqmYq4ewQ==
+X-Received: by 2002:a17:90b:3105:: with SMTP id gc5mr4616714pjb.225.1599731746660;
+        Thu, 10 Sep 2020 02:55:46 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id s3sm5385018pfe.116.2020.09.10.02.55.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Sep 2020 02:55:46 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 02/10] kvm: arm64: Partially link nVHE hyp code,
- simplify HYPCOPY
-Message-ID: <20200910095454.GB93664@google.com>
-References: <20200903091712.46456-1-dbrazdil@google.com>
- <20200903091712.46456-3-dbrazdil@google.com>
+        Frank Rowand <frowand.list@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3 2/2] dt-bindings: mailbox: add doorbell support to ARM MHU
+Date:   Thu, 10 Sep 2020 15:25:19 +0530
+Message-Id: <5d448f579a41345130ae25d01bb94a6e293a6460.1599731645.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+In-Reply-To: <7f50b23d157a97242c79bd8f2ab649a9272b9b59.1599731645.git.viresh.kumar@linaro.org>
+References: <7f50b23d157a97242c79bd8f2ab649a9272b9b59.1599731645.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903091712.46456-3-dbrazdil@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 11:17:04AM +0200, 'David Brazdil' via kernel-team wrote:
-> Previous series introduced custom build rules for nVHE hyp code, using
-> objcopy to prefix ELF section and symbol names to separate nVHE code
-> into its own "namespace". This approach was limited by the expressiveness
-> of objcopy's command line interface, eg. missing support for wildcards.
-> 
-> Improve the build rules by partially linking all '.hyp.o' files and
-> prefixing their ELF section names using a linker script. Continue using
-> objcopy for prefixing ELF symbol names.
-> 
-> One immediate advantage of this approach is that all subsections
-> matching a pattern can be merged into a single prefixed section, eg.
-> .text and .text.* can be linked into a single '.hyp.text'. This removes
-> the need for -fno-reorder-functions on GCC and will be useful in the
-> future too: LTO builds use .text subsections, compilers routinely
-> generate .rodata subsections, etc.
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-This certaintly feels like a more robust and controlled approach to the
-sections now that we have an explicit list of those that are allowed.
+The ARM MHU's reference manual states following:
 
-> Partially linking all hyp code into a single object file also makes it
-> easier to analyze.
-> 
-> Signed-off-by: David Brazdil <dbrazdil@google.com>
-> ---
->  arch/arm64/kvm/hyp/nvhe/Makefile  | 56 ++++++++++++++++---------------
->  arch/arm64/kvm/hyp/nvhe/hyp.lds.S | 14 ++++++++
->  2 files changed, 43 insertions(+), 27 deletions(-)
->  create mode 100644 arch/arm64/kvm/hyp/nvhe/hyp.lds.S
-> 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
-> index aef76487edc2..1b2fbb19f3e8 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/Makefile
-> +++ b/arch/arm64/kvm/hyp/nvhe/Makefile
-> @@ -10,40 +10,42 @@ obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o hyp-init.o
->  obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
->  	 ../fpsimd.o ../hyp-entry.o
->  
-> -obj-y := $(patsubst %.o,%.hyp.o,$(obj-y))
-> -extra-y := $(patsubst %.hyp.o,%.hyp.tmp.o,$(obj-y))
-> +##
-> +## Build rules for compiling nVHE hyp code
-> +## Output of this folder is `hyp.o`, a partially linked object file containing
-> +## all nVHE hyp code and data.
-> +##
->  
-> -$(obj)/%.hyp.tmp.o: $(src)/%.c FORCE
-> +hyp-obj := $(patsubst %.o,%.hyp.o,$(obj-y))
-> +obj-y := hyp.o
-> +extra-y := $(hyp-obj) hyp.tmp.o hyp.lds
-> +
-> +# 1) Compile all source files to `.hyp.o` object files. The file extension
-> +#    avoids file name clashes for files shared with VHE.
+"The MHU drives the signal using a 32-bit register, with all 32 bits
+logically ORed together. The MHU provides a set of registers to enable
+software to set, clear, and check the status of each of the bits of this
+register independently.  The use of 32 bits for each interrupt line
+enables software to provide more information about the source of the
+interrupt. For example, each bit of the register can be associated with
+a type of event that can contribute to raising the interrupt."
 
-Very much a nit, but possibly .nvhe.o or .kvm_nvhe.o would make the
-intended distinction more obvious and line up with the prefix being
-applied to the symbols.
+This patch thus extends the MHU controller's DT binding to add support
+for doorbell mode.
 
-> +$(obj)/%.hyp.o: $(src)/%.c FORCE
->  	$(call if_changed_rule,cc_o_c)
-> -$(obj)/%.hyp.tmp.o: $(src)/%.S FORCE
-> +$(obj)/%.hyp.o: $(src)/%.S FORCE
->  	$(call if_changed_rule,as_o_S)
-> -$(obj)/%.hyp.o: $(obj)/%.hyp.tmp.o FORCE
-> -	$(call if_changed,hypcopy)
->  
-> -# Disable reordering functions by GCC (enabled at -O2).
-> -# This pass puts functions into '.text.*' sections to aid the linker
-> -# in optimizing ELF layout. See HYPCOPY comment below for more info.
-> -ccflags-y += $(call cc-option,-fno-reorder-functions)
-> +# 2) Compile linker script.
-> +$(obj)/hyp.lds: $(src)/hyp.lds.S FORCE
-> +	$(call if_changed_dep,cpp_lds_S)
-> +
-> +# 3) Partially link all '.hyp.o' files and apply the linker script.
-> +#    Prefixes names of ELF sections with '.hyp', eg. '.hyp.text'.
-> +LDFLAGS_hyp.tmp.o := -r -T $(obj)/hyp.lds
-> +$(obj)/hyp.tmp.o: $(addprefix $(obj)/,$(hyp-obj)) $(obj)/hyp.lds FORCE
-> +	$(call if_changed,ld)
-> +
-> +# 4) Produce the final 'hyp.o', ready to be linked into 'vmlinux'.
-> +#    Prefixes names of ELF symbols with '__kvm_nvhe_'.
-> +$(obj)/hyp.o: $(obj)/hyp.tmp.o FORCE
-> +	$(call if_changed,hypcopy)
->  
->  # The HYPCOPY command uses `objcopy` to prefix all ELF symbol names
-> -# and relevant ELF section names to avoid clashes with VHE code/data.
-> -#
-> -# Hyp code is assumed to be in the '.text' section of the input object
-> -# files (with the exception of specialized sections such as
-> -# '.hyp.idmap.text'). This assumption may be broken by a compiler that
-> -# divides code into sections like '.text.unlikely' so as to optimize
-> -# ELF layout. HYPCOPY checks that no such sections exist in the input
-> -# using `objdump`, otherwise they would be linked together with other
-> -# kernel code and not memory-mapped correctly at runtime.
-> +# to avoid clashes with VHE code/data.
->  quiet_cmd_hypcopy = HYPCOPY $@
-> -      cmd_hypcopy =							\
-> -	if $(OBJDUMP) -h $< | grep -F '.text.'; then			\
-> -		echo "$@: function reordering not supported in nVHE hyp code" >&2; \
-> -		/bin/false;						\
-> -	fi;								\
-> -	$(OBJCOPY) --prefix-symbols=__kvm_nvhe_				\
-> -		   --rename-section=.text=.hyp.text			\
-> -		   $< $@
-> +      cmd_hypcopy = $(OBJCOPY) --prefix-symbols=__kvm_nvhe_ $< $@
->  
->  # Remove ftrace and Shadow Call Stack CFLAGS.
->  # This is equivalent to the 'notrace' and '__noscs' annotations.
-> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp.lds.S b/arch/arm64/kvm/hyp/nvhe/hyp.lds.S
-> new file mode 100644
-> index 000000000000..aaa0ce133a32
-> --- /dev/null
-> +++ b/arch/arm64/kvm/hyp/nvhe/hyp.lds.S
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Linker script used during partial linking of nVHE EL2 object files.
-> + * Written by David Brazdil <dbrazdil@google.com>
-> + */
+Though the same MHU hardware controller is used in the two modes, A new
+compatible string is added here to represent the combination of the MHU
+hardware and the firmware sitting on the other side (which expects each
+bit to represent a different signal now).
 
-Should this file have the standard copyright line?
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Co-developed-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V3: Update the json schema and fix number of interrupt lines.
 
-> +
-> +/*
-> + * Defines an ELF hyp section from input section @NAME and its subsections.
-> + */
-> +#define HYP_SECTION(NAME) .hyp##NAME : { *(NAME NAME##.[0-9a-zA-Z_]*) }
-> +
-> +SECTIONS {
-> +	HYP_SECTION(.text)
-> +}
-> -- 
-> 2.28.0.402.g5ffc5be6b7-goog
-> 
-> -- 
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> 
+ .../devicetree/bindings/mailbox/arm,mhu.yaml  | 60 +++++++++++++++++--
+ 1 file changed, 54 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml b/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml
+index 4e840cedb2e4..88980ba005a4 100644
+--- a/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml
++++ b/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml
+@@ -18,20 +18,40 @@ description: |
+   remote clears it after having read the data.  The last channel is specified to
+   be a 'Secure' resource, hence can't be used by Linux running NS.
+ 
++  The MHU hardware also allows operations in doorbell mode. The MHU drives the
++  interrupt signal using a 32-bit register, with all 32-bits logically ORed
++  together. It provides a set of registers to enable software to set, clear and
++  check the status of each of the bits of this register independently. The use
++  of 32 bits per interrupt line enables software to provide more information
++  about the source of the interrupt. For example, each bit of the register can
++  be associated with a type of event that can contribute to raising the
++  interrupt. Each of the 32-bits can be used as "doorbell" to alert the remote
++  processor.
++
+ # We need a select here so we don't match all nodes with 'arm,primecell'
+ select:
+   properties:
+     compatible:
+       contains:
+-        const: arm,mhu
++        enum:
++          - arm,mhu
++          - arm,mhu-doorbell
+   required:
+     - compatible
+ 
+ properties:
+   compatible:
+-    items:
+-      - const: arm,mhu
+-      - const: arm,primecell
++    oneOf:
++      - description: Data transfer mode
++        items:
++          - const: arm,mhu
++          - const: arm,primecell
++
++      - description: Doorbell mode
++        items:
++          - const: arm,mhu-doorbell
++          - const: arm,primecell
++
+ 
+   reg:
+     maxItems: 1
+@@ -50,8 +70,11 @@ description: |
+       - const: apb_pclk
+ 
+   '#mbox-cells':
+-    description: Index of the channel.
+-    const: 1
++    description: |
++      Set to 1 in data transfer mode and represents index of the channel.
++      Set to 2 in doorbell mode and represents index of the channel and doorbell
++      number.
++    enum: [ 1, 2 ]
+ 
+ required:
+   - compatible
+@@ -62,6 +85,7 @@ description: |
+ additionalProperties: false
+ 
+ examples:
++  # Data transfer mode.
+   - |
+     soc {
+         #address-cells = <2>;
+@@ -84,3 +108,27 @@ additionalProperties: false
+             mboxes = <&mhuA 1>; /* HP-NonSecure */
+         };
+     };
++
++  # Doorbell mode.
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        mhuB: mailbox@2b2f0000 {
++            #mbox-cells = <2>;
++            compatible = "arm,mhu-doorbell", "arm,primecell";
++            reg = <0 0x2b2f0000 0 0x1000>;
++            interrupts = <0 36 4>, /* LP-NonSecure */
++                         <0 35 4>, /* HP-NonSecure */
++                         <0 37 4>; /* Secure */
++            clocks = <&clock 0 2 1>;
++            clock-names = "apb_pclk";
++        };
++
++        mhu_client_scpi: scpi@2f000000 {
++            compatible = "arm,scpi";
++            reg = <0 0x2f000000 0 0x200>;
++            mboxes = <&mhuB 1 4>; /* HP-NonSecure, 5th doorbell */
++        };
++    };
+-- 
+2.25.0.rc1.19.g042ed3e048af
+
