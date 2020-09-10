@@ -2,174 +2,189 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CDAC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC9EC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D849A21941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="m+S0uISl"
+	by mail.kernel.org (Postfix) with ESMTP id E7313207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgIJJTg (ORCPT
+        id S1729779AbgIJJVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:19:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34946 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730093AbgIJJTZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:19:25 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08A92VZj043273;
-        Thu, 10 Sep 2020 05:18:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=lbijph5Taiyv+LvsJ/sM7F9hRJYgXJ1/OeIBGv1V4zI=;
- b=m+S0uISl4zEUpQGOdqBmign+zGpGsKWZr0M8gyz4QB85tpAWWy9P9TsdEALPMOQc3bzS
- HTmLUO+a8FzA6nkFFUM33SJxJVALimBUdqlyOa2QZAPtF+c5k3tdLE9Ja5lY/NITAiC6
- 7HCRwKAifhDAW7efbtBkvvOJ9noreWSpBIsRvblR2Hd6QlL3Ql+0LiOJ/5ZV1/0dyGOl
- ERG9aDbHT//+EVNVz7T31D+HrD6qNbB+7sB3Bj+uKnN/s2x03LNnlPZVOOElWWQIxfaC
- VUv4NZ3PEML96IaUY9CGtxDOOL3o1HTtA4I8YY6eO/McXjX1bfFSSUd+pDdF2Re/VmW7 tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fh5s0eur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 05:18:39 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08A92b39043665;
-        Thu, 10 Sep 2020 05:18:37 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fh5s0etk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 05:18:37 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08A9DDHx028675;
-        Thu, 10 Sep 2020 09:18:34 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 33c2a8bckn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 09:18:34 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08A9GxlP65470906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 09:16:59 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C217AE055;
-        Thu, 10 Sep 2020 09:18:32 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 299C6AE04D;
-        Thu, 10 Sep 2020 09:18:30 +0000 (GMT)
-Received: from oc4120165700.ibm.com (unknown [9.145.14.177])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 09:18:30 +0000 (GMT)
-From:   Steffen Maier <maier@linux.ibm.com>
-Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
- break;
-To:     Joe Perches <joe@perches.com>, LKML <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Benjamin Block <bblock@linux.ibm.com>
-Cc:     Kees Cook <kees.cook@canonical.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
-        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
-        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        storagedev@microchip.com, sparclinux@vger.kernel.org,
-        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
-        alsa-devel <alsa-devel@alsa-project.org>
-References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
-Message-ID: <0c66fbe5-c48b-7dc1-f7fe-1498da9cc1a3@linux.ibm.com>
-Date:   Thu, 10 Sep 2020 11:18:29 +0200
+        Thu, 10 Sep 2020 05:21:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:58688 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgIJJVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:21:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4410101E;
+        Thu, 10 Sep 2020 02:21:11 -0700 (PDT)
+Received: from [192.168.1.79] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E12263F68F;
+        Thu, 10 Sep 2020 02:21:09 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     Peter Maydell <Peter.Maydell@arm.com>,
+        Juan Quintela <quintela@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        qemu-devel@nongnu.org,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org
+References: <20200904160018.29481-1-steven.price@arm.com>
+ <20200909152540.ylnrljd6aelxoxrf@kamzik.brq.redhat.com>
+ <857566df-1b98-84f7-9268-d092722dc749@arm.com>
+ <20200910062958.o55apuvdxmf3uiqb@kamzik.brq.redhat.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <37663bb6-d3a7-6f53-d0cd-88777633a2b2@arm.com>
+Date:   Thu, 10 Sep 2020 10:21:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+In-Reply-To: <20200910062958.o55apuvdxmf3uiqb@kamzik.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 impostorscore=0 priorityscore=1501 spamscore=0
- mlxlogscore=940 adultscore=0 bulkscore=0 clxscore=1011 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 10:06 PM, Joe Perches wrote:
-> fallthrough to a separate case/default label break; isn't very readable.
+On 10/09/2020 07:29, Andrew Jones wrote:
+> On Wed, Sep 09, 2020 at 05:04:15PM +0100, Steven Price wrote:
+>> On 09/09/2020 16:25, Andrew Jones wrote:
+>>> On Fri, Sep 04, 2020 at 05:00:16PM +0100, Steven Price wrote:
+>>>>    2. Automatically promotes (normal host) memory given to the guest to be
+>>>>       tag enabled (sets PG_mte_tagged), if any VCPU has MTE enabled. The
+>>>>       tags are cleared if the memory wasn't previously MTE enabled.
+>>>
+>>> Shouldn't this be up to the guest? Or, is this required in order for the
+>>> guest to use tagging at all. Something like making the guest IPAs memtag
+>>> capable, but if the guest doesn't enable tagging then there is no guest
+>>> impact? In any case, shouldn't userspace be the one that adds PROT_MTE
+>>> to the memory regions it wants the guest to be able to use tagging with,
+>>> rather than KVM adding the attribute page by page?
+>>
+>> I think I've probably explained this badly.
+>>
+>> The guest can choose how to populate the stage 1 mapping - so can choose
+>> which parts of memory are accessed tagged or not. However, the hypervisor
+>> cannot restrict this in stage 2 (except by e.g. making the memory uncached
+>> but that's obviously not great - however devices forward to the guest can be
+>> handled like this).
+>>
+>> Because the hypervisor cannot restrict the guest's access to the tags, the
+>> hypervisor must assume that all memory given to the guest could have the
+>> tags accessed. So it must (a) clear any stale data from the tags, and (b)
+>> ensure that the tags are preserved (e.g. when swapping pages out).
+>>
 > 
-> Convert pseudo-keyword fallthrough; statements to a simple break; when
-> the next label is case or default and the only statement in the next
-> label block is break;
+> Yes, this is how I understood it.
+
+Ok, I've obviously misunderstood your comment instead ;)
+
+>> Because of the above the current series automatically sets PG_mte_tagged on
+>> the pages. Note that this doesn't change the mappings that the VMM has (a
+>> non-PROT_MTE mapping will still not have access to the tags).
 > 
-> Found using:
+> But if userspace created the memslots with memory already set with
+> PROT_MTE, then this wouldn't be necessary, right? And, as long as
+> there's still a way to access the memory with tag checking disabled,
+> then it shouldn't be a problem.
+
+Yes, so one option would be to attempt to validate that the VMM has 
+provided memory pages with the PG_mte_tagged bit set (e.g. by mapping 
+with PROT_MTE). The tricky part here is that we support KVM_CAP_SYNC_MMU 
+which means that the VMM can change the memory backing at any time - so 
+we could end up in user_mem_abort() discovering that a page doesn't have 
+PG_mte_tagged set - at that point there's no nice way of handling it 
+(other than silently upgrading the page) so the VM is dead.
+
+So since enforcing that PG_mte_tagged is set isn't easy and provides a 
+hard-to-debug foot gun to the VMM I decided the better option was to let 
+the kernel set the bit automatically.
+
+>>>
+>>> If userspace needs to write to guest memory then it should be due to
+>>> a device DMA or other specific hardware emulation. Those accesses can
+>>> be done with tag checking disabled.
+>>
+>> Yes, the question is can the VMM (sensibly) wrap the accesses with a
+>> disable/renable tag checking for the process sequence. The alternative at
+>> the moment is to maintain a separate (untagged) mapping for the purpose
+>> which might present it's own problems.
 > 
-> $ grep-2.5.4 -rP --include=*.[ch] -n "fallthrough;(\s*(case\s+\w+|default)\s*:\s*){1,7}break;" *
+> Hmm, so there's no easy way to disable tag checking when necessary? If we
+> don't map the guest ram with PROT_MTE and continue setting the attribute
+> in KVM, as this series does, then we don't need to worry about it tag
+> checking when accessing the memory, but then we can't access the tags for
+> migration.
+
+There's a "TCO" (Tag Check Override) bit in PSTATE which allows 
+disabling tag checking, so if it's reasonable to wrap accesses to the 
+memory you can simply set the TCO bit, perform the memory access and 
+then unset TCO. That would mean a single mapping with MTE enabled would 
+work fine. What I don't have a clue about is whether it's practical in 
+the VMM to wrap guest accesses like this.
+
+>>
+>>>>
+>>>> If it's not practical to either disable tag checking in the VMM or
+>>>> maintain multiple mappings then the alternatives I'm aware of are:
+>>>>
+>>>>    * Provide a KVM-specific method to extract the tags from guest memory.
+>>>>      This might also have benefits in terms of providing an easy way to
+>>>>      read bulk tag data from guest memory (since the LDGM instruction
+>>>>      isn't available at EL0).
+>>>
+>>> Maybe we need a new version of KVM_GET_DIRTY_LOG that also provides
+>>> the tags for all addresses of each dirty page.
+>>
+>> Certainly possible, although it seems to conflate two operations: "get list
+>> of dirty pages", "get tags from page". It would also require a lot of return
+>> space (size of slot/32).
+>>
 > 
-> Miscellanea:
+> It would require num-set-bits * host-page-size / 16 / 2, right?
+
+Yes, where the worst case is all bits set which is size/32. Since you 
+don't know at the time of the call how many bits are going to be set I'm 
+not sure how you would design the API which doesn't require 
+preallocating the worst case.
+
+>>>>    * Provide support for user space setting the TCMA0 or TCMA1 bits in
+>>>>      TCR_EL1. These would allow the VMM to generate pointers which are not
+>>>>      tag checked.
+>>>
+>>> So this is necessary to allow the VMM to keep tag checking enabled for
+>>> itself, plus map guest memory as PROT_MTE, and write to that memory when
+>>> needed?
+>>
+>> This is certainly one option. The architecture provides two "magic" values
+>> (all-0s and all-1s) which can be configured using TCMAx to be treated
+>> differently. The VMM could therefore construct pointers to otherwise tagged
+>> memory which would be treated as untagged.
+>>
+>> However, Catalin's user space series doesn't at the moment expose this
+>> functionality.
+>>
 > 
-> o Move or coalesce a couple label blocks above a default: block.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
-> 
-> Compiled allyesconfig x86-64 only.
-> A few files for other arches were not compiled.
+> So if I understand correctly this would allow us to map the guest memory
+> with PAGE_MTE and still access the memory when needed. If so, then this
+> sounds interesting.
 
->   drivers/s390/scsi/zfcp_fsf.c                              |  2 +-
+Yes - you could derive a pointer which didn't perform tag checking. Note 
+that this also requires the rest of user space to play along (i.e. 
+understand that the tag value is reserved). I believe for user space we 
+have to use the all-0s value which means that a standard pointer 
+(top-byte is 0) would be unchecked.
 
->   82 files changed, 109 insertions(+), 112 deletions(-)
-
-> diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-> index 140186fe1d1e..2741a07df692 100644
-> --- a/drivers/s390/scsi/zfcp_fsf.c
-> +++ b/drivers/s390/scsi/zfcp_fsf.c
-> @@ -2105,7 +2105,7 @@ static void zfcp_fsf_open_lun_handler(struct zfcp_fsf_req *req)
->   
->   	case FSF_PORT_HANDLE_NOT_VALID:
->   		zfcp_erp_adapter_reopen(adapter, 0, "fsouh_1");
-> -		fallthrough;
-> +		break;
->   	case FSF_LUN_ALREADY_OPEN:
->   		break;
->   	case FSF_PORT_BOXED:
-
-Acked-by: Steffen Maier <maier@linux.ibm.com> # for zfcp
-
-
--- 
-Mit freundlichen Gruessen / Kind regards
-Steffen Maier
-
-Linux on IBM Z Development
-
-https://www.ibm.com/privacy/us/en/
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschaeftsfuehrung: Dirk Wittkopp
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
+Steve
