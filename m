@@ -2,118 +2,113 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3336FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE9EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2CFF206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE7320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgIJIfo (ORCPT
+        id S1730381AbgIJIg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:35:44 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:41855 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730346AbgIJIf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:35:28 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MQNAv-1jtxoT3fNp-00MJBv for <linux-kernel@vger.kernel.org>; Thu, 10 Sep
- 2020 10:35:25 +0200
-Received: by mail-qk1-f182.google.com with SMTP id w16so5282053qkj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:35:24 -0700 (PDT)
-X-Gm-Message-State: AOAM5319IjGsy03KVQRBzq5pp13nubRR3sNohpfWotIHAQxqQWOB3Q3n
-        5RR6SwXG4sR/MluJI467+V5/M/cUh09vbT9XreM=
-X-Google-Smtp-Source: ABdhPJw/yNZ9NaNx5KQrnGGIOIdxCSqfigrMiTuRCRZadb6BT/I+4BcdjHkG1/zWNq9enZdOOffqeeKrY0JZOJ/FA5M=
-X-Received: by 2002:a05:620a:15a7:: with SMTP id f7mr6388590qkk.3.1599726923765;
- Thu, 10 Sep 2020 01:35:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <1599693000-25641-1-git-send-email-amit.sunil.dhamne@xilinx.com> <ac2ab6d1-69c9-34aa-6c25-588bacc78002@xilinx.com>
-In-Reply-To: <ac2ab6d1-69c9-34aa-6c25-588bacc78002@xilinx.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 10 Sep 2020 10:35:07 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1aaS85m5nv0hmmxgEVss-hNGL7Qg8iosSFDjDdzzP87Q@mail.gmail.com>
-Message-ID: <CAK8P3a1aaS85m5nv0hmmxgEVss-hNGL7Qg8iosSFDjDdzzP87Q@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers: soc: xilinx: Call InitFinalize from
- late_initcall_sync instead of probe
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>, rajanv@xilinx.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        tejasp@xilinx.com, Jolly Shah <jollys@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HQSXYbpozuiwc4y7A8dQIjQ87atIhHebv8bWPUI2/elY3E6fLgz
- /CSH62Tbgdi1Oyd35PxCNk2dxEe0xnTSvErBvHS5mNNn8VMrthrXvTaRDfXHNVCckWDxJc5
- mApdd8pq9oDgYYcjRSJzDh4TLTFSY6V+HSctudeiatU38V/JxhB+4a2zBRX03VMFmHcMu7Y
- D6/z1e1uZXNRc2XBQenWw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:N+f+AmU+nPc=:duuEJUjCczVWwB6ccgW3SG
- n/SNe8WZ+1Z/6wT9xdNg/RMGoPjraA7exI8fvcI+5/Bho58pxVjTpSUilRNuGlB8pcB0UZu3A
- 3FtdLgQxgoMlVm+i0ctR2VRBNp5qD1ZsTqMZwXDdthpyeDQEQA3E746zfVI000cqv4CSpyS+g
- To0+GljcakWFDbDaqp0+iQbMWjdJQW6hpcFJb+0bamDRbMEuaaYtjw2TXvNIyRjV9AAf2rKsN
- MDxgpM2YChPIzdSrOU113Q56fT64Oednl4uc3ha9qRQYsgoRg9Gid4aRnL2I5nesmvjbB8lww
- JHeW86pobe1tCd6KdTEZpqf8YOPnHvBvCO7LsltktATDjjBrVJEI8iv/ABvJVlCzP2kMrzSer
- g1voimqk8gRkA/0DUn04OVCbctI3K3HrYkeg33IwRzFoX8G3osZARwEFw3VJImBE1w2yOgP6S
- 7cw9ukzIXgax4NVFEHm2rmH1U9F8AU0B12qgGGik5R2vo12BmTpwlGhfnLr2/J+IOAADLhL1b
- J7OSpM9IXTB8gjsOTVvUsLx0vlYnORWBIigsWDIlTE8y4YX2LV4gcUmSFuf5XzwrC8guI5fDa
- CHttPHg7gnCGGMxCAbuzS2twVJ96Oy9ymE7YLdcKfn6FQoZJ90KlQBkPawztMxRT6gOO38MRt
- 8ogFkWoJeujopQQEjergZ27fJrTCRTzhRTJwH3KdKJRVt+sdZqiePWepjBXwQhCbDvrrgrm2I
- QezK6txDoxxVdwfZHznwySMWSa1tWjap2PmS5i25emo2fE3Ag8WgO7DVVMR0VPOXkIIZNoFmB
- XZVYZX0XptTVG2M0iaBuCrMwvqocqDDaak/QzFs4Nn29ks7llUDE5tC9OJshbhZCXzbeQ/g5l
- yPEcaJtlIZJYveW8oAkZMD7uHZtj0CoqmGFZp+L8RkMteSNiGQXbchbwkf9MNBC/uvnWN6CZ2
- voarbElWiH6dFaBC0Aft9mjxcYpAXHLWEVTCb+15fodd5dDcORrIC
+        Thu, 10 Sep 2020 04:36:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48998 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730346AbgIJIfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:35:46 -0400
+IronPort-SDR: oKWDyBjojvbgK3SNWUf6HyewwVHFW60J/EJcQQk4sRLzRYLO7PgvJLm0NTRnoYVm0Yk4qxqI/d
+ kWVMWKsmm0Bg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="222691425"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="222691425"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 01:35:43 -0700
+IronPort-SDR: BTIMnXWE+znZbEUeoD4BA2CV+WEJFdC4OUy+ocjqMKI4jNZqnmA2BNleP0I/YjZWV8w5bD7Cg2
+ vf5HoTnDUupg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="329255926"
+Received: from chenyi-pc.sh.intel.com ([10.239.159.72])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Sep 2020 01:35:41 -0700
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC v3 0/2] add bus lock VM exit support
+Date:   Thu, 10 Sep 2020 16:37:49 +0800
+Message-Id: <20200910083751.26686-1-chenyi.qiang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 8:50 AM Michal Simek <michal.simek@xilinx.com> wrote:
-> > @@ -246,6 +245,23 @@ static int zynqmp_pm_remove(struct platform_device *pdev)
-> >       return 0;
-> >  }
-> >
-> > +static int __init do_init_finalize(void)
-> > +{
-> > +     struct device_node *np;
-> > +
-> > +     np = of_find_compatible_node(NULL, NULL, "xlnx,zynqmp");
-> > +     if (!np) {
-> > +             np = of_find_compatible_node(NULL, NULL, "xlnx,versal");
-> > +             if (!np)
-> > +                     return 0;
-> > +     }
-> > +     of_node_put(np);
-> > +
-> > +     return zynqmp_pm_init_finalize();
-> > +}
-> > +
-> > +late_initcall_sync(do_init_finalize);
-> > +
-> >  static const struct of_device_id pm_of_match[] = {
-> >       { .compatible = "xlnx,zynqmp-power", },
-> >       { /* end of table */ },
-> >
->
-> Arnd: are you fine with this way how to check that it runs on zynqmp or
-> versal?
+v2->v3 changelogs:
+- use a bitmap to get/set the capability of bus lock detection. we support
+  exit and off mode currently.
+- put the handle of exiting to userspace in vmx.c, thus no need to
+  define a shadow to track vmx->exit_reason.bus_lock_detected.
+- remove the vcpu->stats.bus_locks since every bus lock exits to userspace.
 
-I might be missing something, but this sounds like the wrong way to do it.
-There is already a platform driver probed in the presence of the
-"xlnx,zynqmp-power" node in the same file. Wouldn't it be better to
-either check for the same node instead of an arbitrarily different set
-of SoC names, or to make the platform driver itself get registered
-form the late initcall?
+---
 
-       Arnd
+Add the support for bus lock VM exit in KVM. It is a sub-feature of bus
+lock detection and the detailed info can be found in the patch 2/2.
+
+In this patch series, the first patch applies Sean's refactor to
+vcpu_vmx.exit_reason available at
+https://patchwork.kernel.org/patch/11500659.
+It is necessary as bus lock VM exit adds a new modifier bit(bit 26) in
+exit_reason field in VMCS.
+
+The second patch is the enabling work for bus lock VM exit. Add the
+support to set the capability to enable bus lock vm exit. The current
+implementation just exit to user space when handling the bus lock
+detected in guest.
+
+The concrete throttling policy in user space still needs to be
+discussed. We can enforce ratelimit on bus lock in guest, just inject
+some sleep time, or maybe other ideas.
+
+Document for Bus Lock Detection is now available at the latest "Intel
+Architecture Instruction Set Extensions Programming Reference" (see
+below). Note that the section 9.1 for Bus Lock Debug Exception requires
+modification due to the feedback from kernel community:
+https://lore.kernel.org/lkml/87r1stmi1x.fsf@nanos.tec.linutronix.de/
+
+Document Link:
+https://software.intel.com/content/www/us/en/develop/download/intel-architecture-instruction-set-extensions-programming-reference.html
+
+Chenyi Qiang (1):
+  KVM: VMX: Enable bus lock VM exit
+
+Sean Christopherson (1):
+  KVM: VMX: Convert vcpu_vmx.exit_reason to a union
+
+ arch/x86/include/asm/kvm_host.h    |   5 ++
+ arch/x86/include/asm/vmx.h         |   1 +
+ arch/x86/include/asm/vmxfeatures.h |   1 +
+ arch/x86/include/uapi/asm/kvm.h    |   1 +
+ arch/x86/include/uapi/asm/vmx.h    |   4 +-
+ arch/x86/kvm/vmx/capabilities.h    |   6 ++
+ arch/x86/kvm/vmx/nested.c          |  42 ++++++++----
+ arch/x86/kvm/vmx/vmx.c             | 106 ++++++++++++++++++++---------
+ arch/x86/kvm/vmx/vmx.h             |  25 ++++++-
+ arch/x86/kvm/x86.c                 |  27 +++++++-
+ arch/x86/kvm/x86.h                 |   5 ++
+ include/uapi/linux/kvm.h           |   7 ++
+ 12 files changed, 179 insertions(+), 51 deletions(-)
+
+-- 
+2.17.1
+
