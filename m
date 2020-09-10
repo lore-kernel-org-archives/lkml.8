@@ -2,131 +2,163 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEFFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C9C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC212087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7392080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UCp+FppW"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="U2FPsfoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgIJSb2 (ORCPT
+        id S1726979AbgIJScA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgIJS3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:32:00 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:44318 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbgIJS3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 14:29:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CB0C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gf14so432572pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wjAWuNbVBoEPyXn+QBzLMnCnG3b1YEYkoDZS6EgQpPI=;
-        b=UCp+FppW+25RCEWuidrdmD2H7oNwJWAPscXMA2ljdT7Hwfc6emJQQRXJKlonqRXwCr
-         ZNZwT1diexj1oIPFx0vZRCKp8ePiBMfI0fNJK+PDlwitnt2/pXVXXfcmv7xMHDx85MGD
-         jjgpGgVOnGdOdetQ71hUdu1jBGb560fU84u+I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wjAWuNbVBoEPyXn+QBzLMnCnG3b1YEYkoDZS6EgQpPI=;
-        b=A1xCMsoyMIZDYKONvubkV9iiiLUdSo1Uro9A7p/iQ3+3k479Cwf+/xTX9aNim2T5Cn
-         0e2A+0fUGvWwrqgwMhFkkMeCYUonfW1E19v6CFdmLdix9HASQHlenq4jl0MXsmBzwrdQ
-         JETSUeCHTrjVXyxmxp5Dd/G2epZxKxXU7zSKreRt1EkJNf2HgHlolID5DHM6m3eZnnEg
-         L5XYtpxy/UVYTNqW1UNHqGHyInzA8Rv2ZbAcsChbtPvsjOv4uFh3M/kuLmwRhlOZSHEw
-         DFIRn9A+HczcZVHZuMou7V6VioGhRFGEEmS4y2E/Ku7gt1yZlY+NfDESXxUGxeG4Yy95
-         3IBg==
-X-Gm-Message-State: AOAM532v4xfTok9d6QlEzJos4QIFhIhcLwNlZSvdV0c5iDppk1K6UB1S
-        v4HPIksTepGYTkx1KfwZC3LN3Q==
-X-Google-Smtp-Source: ABdhPJwQHia5IxoItB0v8TFyFBQYaMjt9d9oEodKfnuR8Fqxq3O6+WSooIjqvBiG9AzcqTroMIMGDQ==
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr1229702pjb.42.1599762580221;
-        Thu, 10 Sep 2020 11:29:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z9sm6606733pfk.118.2020.09.10.11.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:29:39 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 11:29:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>, peterz@infradead.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v2 05/28] objtool: Add a pass for generating __mcount_loc
-Message-ID: <202009101127.28B4414D2A@keescook>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-6-samitolvanen@google.com>
- <202009031450.31C71DB@keescook>
- <CABCJKueF1RbpOKHsA8yS_yMujzHi8dzAVz8APwpMJyMTTGhmDA@mail.gmail.com>
- <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
+Received: from zn.tnic (p200300ec2f133200806c26bf29ee8a02.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:3200:806c:26bf:29ee:8a02])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EDF451EC04BF;
+        Thu, 10 Sep 2020 20:29:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599762565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dP+ni+LBnDs0GlONwuOwUFaMin5FUp6zlUoLp1NNoUI=;
+        b=U2FPsfoHA+MROxLjG1jMjjpce4IjRdNETxUd5vCInGD8VSN0He8yoto5N0XdsgDuaqP3ek
+        P6jz1+LO0K3eGozqlXqylziw6uEL/AwNBu+0N5wvP91T54n20lttO1e9HDCHyoCKmrkzyi
+        A1TH16o+NvWGuKTGuZLyAj7fHulN3ZI=
+Date:   Thu, 10 Sep 2020 20:29:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
+Message-ID: <20200910182901.GK8357@zn.tnic>
+References: <20200906212130.GA28456@zn.tnic>
+ <20200907200622.GA28517@agluck-desk2.amr.corp.intel.com>
+ <20200908094650.GA25236@zn.tnic>
+ <20200908100837.GC25236@zn.tnic>
+ <c845adaad2414e5ba0bc74a51a1d0134@intel.com>
+ <20200908152539.GE25236@zn.tnic>
+ <20200909113022.GA12237@zn.tnic>
+ <20200909182051.GA31883@agluck-desk2.amr.corp.intel.com>
+ <20200909200321.GG12237@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200904093104.GH1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200909200321.GG12237@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 11:31:04AM +0200, peterz@infradead.org wrote:
-> On Thu, Sep 03, 2020 at 03:03:30PM -0700, Sami Tolvanen wrote:
-> > On Thu, Sep 3, 2020 at 2:51 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Thu, Sep 03, 2020 at 01:30:30PM -0700, Sami Tolvanen wrote:
-> > > > From: Peter Zijlstra <peterz@infradead.org>
-> > > >
-> > > > Add the --mcount option for generating __mcount_loc sections
-> > > > needed for dynamic ftrace. Using this pass requires the kernel to
-> > > > be compiled with -mfentry and CC_USING_NOP_MCOUNT to be defined
-> > > > in Makefile.
-> > > >
-> > > > Link: https://lore.kernel.org/lkml/20200625200235.GQ4781@hirez.programming.kicks-ass.net/
-> > > > Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-> > >
-> > > Hmm, I'm not sure why this hasn't gotten picked up yet. Is this expected
-> > > to go through -tip or something else?
-> > 
-> > Note that I picked up this patch from Peter's original email, to which
-> > I included a link in the commit message, but it wasn't officially
-> > submitted as a patch. However, the previous discussion seems to have
-> > died, so I included the patch in this series, as it cleanly solves the
-> > problem of whitelisting non-call references to __fentry__. I was
-> > hoping for Peter and Steven to comment on how they prefer to proceed
-> > here.
-> 
-> Right; so I'm obviously fine with this patch and I suppose I can pick it
-> (and the next) into tip/objtool/core, provided Steve is okay with this
-> approach.
+Ok, with all those changes, I don't think the following nice and juicy
+message can be overlooked:
 
-Hello Steven-of-the-future-after-4000-emails![1] ;)
-
-Getting your Ack on this would be very welcome, and would unblock a
-portion of this series.
-
-Thanks! :)
-
-[1] https://twitter.com/srostedt/status/1303697650592755712
+[   32.267830] mce: MSR access error: RDMSR from 0x1234 at rIP: 0xffffffff8102ed62 (mce_rdmsrl+0x12/0x50)
+[   32.267838] Call Trace:
+[   32.267838]  <#MC>
+[   32.267838]  do_machine_check+0xbd/0x9f0
+[   32.267839]  ? trigger_mce+0x7/0x10
+[   32.267839]  exc_machine_check+0x77/0xd0
+[   32.267840]  asm_exc_machine_check+0x19/0x30
+[   32.267840] RIP: 0010:trigger_mce+0x7/0x10
+[   32.267841] Code: c0 c3 90 0f 1f 44 00 00 48 8b 47 58 48 89 06 31 c0 c3 90 0f 1f 44 00 00 8b 47 44 48 89 06 31 c0 c3 66 90 0f 1f 44 00 00 cd 12 <c3> 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 cd f4 c3 0f 1f 84 00 00
+[   32.267841] RSP: 0018:ffffc90000003fc0 EFLAGS: 00000002
+[   32.267842] RAX: ffffffff81032940 RBX: 0000000000000000 RCX: ffff88807dce9e80
+[   32.267843] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+[   32.267843] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[   32.267844] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[   32.267844] R13: ffff88807dce9e80 R14: 0000000000000000 R15: 0000000000000000
+[   32.267845]  ? inj_extcpu_get+0x10/0x10
+[   32.267845]  </#MC>
+[   32.267845]  <IRQ>
+[   32.267846]  flush_smp_call_function_queue+0xce/0x1b0
+[   32.267846]  __sysvec_call_function_single+0x2c/0xd0
+[   32.267846]  asm_call_on_stack+0x12/0x20
+[   32.267847]  </IRQ>
+[   32.267847]  sysvec_call_function_single+0x6e/0x80
+[   32.267847]  asm_sysvec_call_function_single+0x12/0x20
+[   32.267848] RIP: 0010:default_idle+0x13/0x20
+[   32.267849] Code: 0f ae 38 0f ae f0 eb b9 fb eb e3 66 66 2e 0f 1f 84 00 00 00 00 00 90 0f 1f 44 00 00 e9 07 00 00 00 0f 00 2d c1 9c 5e 00 fb f4 <c3> cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 65 8b 15 04
+[   32.267849] RSP: 0018:ffffffff82203ec0 EFLAGS: 00000212
+[   32.267850] RAX: ffffffff81819730 RBX: 0000000000000000 RCX: 0000000000029d00
+[   32.267851] RDX: 000000000007de7e RSI: 7ffffff880b4b40b RDI: ffffffff8220f880
+[   32.267851] RBP: ffffffff8220f880 R08: 0000000473333333 R09: 00000049ae089af4
+[   32.267852] R10: 000000000006fecd R11: 0000000000006f96 R12: ffffffff8220f880
+[   32.267852] R13: ffffffff8220f880 R14: 0000000000000000 R15: 0000000000000000
+[   32.267852]  ? mwait_idle+0x80/0x80
+[   32.267853]  default_idle_call+0x34/0xf0
+[   32.267853]  do_idle+0x1ba/0x210
+[   32.267853]  cpu_startup_entry+0x19/0x20
+[   32.267854]  start_kernel+0x4f5/0x502
+[   32.267854]  secondary_startup_64+0xa4/0xb0
+[   32.267855] Kernel panic - not syncing: MCA architectural violation!
+[   32.267855] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc4+ #4
+[   32.267856] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+[   32.267856] Call Trace:
+[   32.267856]  <#MC>
+[   32.267856]  dump_stack+0x57/0x6a
+[   32.267857]  panic+0xf2/0x2c2
+[   32.267857]  ? secondary_startup_64+0xa3/0xb0
+[   32.267857]  ex_handler_rdmsr_fault+0x36/0x36
+[   32.267858]  fixup_exception+0x56/0x80
+[   32.267858]  exc_general_protection+0xb6/0x2d0
+[   32.267858]  asm_exc_general_protection+0x1e/0x30
+[   32.267859] RIP: 0010:mce_rdmsrl+0x12/0x50
+[   32.267860] Code: 54 b9 15 82 48 c7 c1 20 e4 02 81 48 c7 c2 00 e4 02 81 e9 01 17 20 00 90 0f 1f 44 00 00 65 8a 05 07 81 fe 7e 84 c0 75 10 89 f9 <0f> 32 48 89 d7 48 c1 e7 20 48 09 f8 f3 c3 e8 7b f5 ff ff 48 63 d0
+[   32.267860] RSP: 0018:fffffe000000fe30 EFLAGS: 00010046
+[   32.267861] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000001234
+[   32.267861] RDX: 0000001d39aa4ebc RSI: fffffe000000ff08 RDI: 0000000000001234
+[   32.267862] RBP: fffffe000000fe88 R08: 0000000000000000 R09: 0000000000000000
+[   32.267862] R10: 0000000000000000 R11: 0000000000000000 R12: fffffe000000ff58
+[   32.267863] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[   32.267863]  do_machine_check+0xbd/0x9f0
+[   32.267864]  ? trigger_mce+0x7/0x10
+[   32.267864]  exc_machine_check+0x77/0xd0
+[   32.267864]  asm_exc_machine_check+0x19/0x30
+[   32.267865] RIP: 0010:trigger_mce+0x7/0x10
+[   32.267866] Code: c0 c3 90 0f 1f 44 00 00 48 8b 47 58 48 89 06 31 c0 c3 90 0f 1f 44 00 00 8b 47 44 48 89 06 31 c0 c3 66 90 0f 1f 44 00 00 cd 12 <c3> 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 cd f4 c3 0f 1f 84 00 00
+[   32.267866] RSP: 0018:ffffc90000003fc0 EFLAGS: 00000002
+[   32.267867] RAX: ffffffff81032940 RBX: 0000000000000000 RCX: ffff88807dce9e80
+[   32.267867] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+[   32.267868] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+[   32.267868] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+[   32.267869] R13: ffff88807dce9e80 R14: 0000000000000000 R15: 0000000000000000
+[   32.267869]  ? inj_extcpu_get+0x10/0x10
+[   32.267869]  </#MC>
+[   32.267870]  <IRQ>
+[   32.267870]  flush_smp_call_function_queue+0xce/0x1b0
+[   32.267870]  __sysvec_call_function_single+0x2c/0xd0
+[   32.267871]  asm_call_on_stack+0x12/0x20
+[   32.267871]  </IRQ>
+[   32.267871]  sysvec_call_function_single+0x6e/0x80
+[   32.267872]  asm_sysvec_call_function_single+0x12/0x20
+[   32.267872] RIP: 0010:default_idle+0x13/0x20
+[   32.267873] Code: 0f ae 38 0f ae f0 eb b9 fb eb e3 66 66 2e 0f 1f 84 00 00 00 00 00 90 0f 1f 44 00 00 e9 07 00 00 00 0f 00 2d c1 9c 5e 00 fb f4 <c3> cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 65 8b 15 04
+[   32.267874] RSP: 0018:ffffffff82203ec0 EFLAGS: 00000212
+[   32.267874] RAX: ffffffff81819730 RBX: 0000000000000000 RCX: 0000000000029d00
+[   32.267875] RDX: 000000000007de7e RSI: 7ffffff880b4b40b RDI: ffffffff8220f880
+[   32.267875] RBP: ffffffff8220f880 R08: 0000000473333333 R09: 00000049ae089af4
+[   32.267876] R10: 000000000006fecd R11: 0000000000006f96 R12: ffffffff8220f880
+[   32.267876] R13: ffffffff8220f880 R14: 0000000000000000 R15: 0000000000000000
+[   32.267877]  ? mwait_idle+0x80/0x80
+[   32.267877]  default_idle_call+0x34/0xf0
+[   32.267877]  do_idle+0x1ba/0x210
+[   32.267878]  cpu_startup_entry+0x19/0x20
+[   32.267878]  start_kernel+0x4f5/0x502
+[   32.267878]  secondary_startup_64+0xa4/0xb0
+[   32.268204] Kernel Offset: disabled
 
 -- 
-Kees Cook
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
