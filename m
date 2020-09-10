@@ -2,170 +2,111 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170C7C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC248C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6C3F2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD902087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599764074;
-	bh=siiRw7n02QPHZqLsAI1o12gJA+B9z/i5S2t9am34BFI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=2mmloqirwz6dF5ZwAqqYhItMzJOaEiMCsySD6hswX/sZSgunUfduilWfJb888OaJ/
-	 vZyliku/hxaCLdgB8vxFenpiud5I/hpRLNjy3AWveGMzUgu4zno7GydAeU+gvnl00k
-	 EuoSdlhUQ60+MiYpNnJ2Sawg+T08OWt1UL3Mv2WI=
+	s=default; t=1599764120;
+	bh=XhMR0se3B2M3cCm4dG7gM2H1njurlMTbkC88FGhIKJs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Wy5YlUI14ZVWKLKsBJi5AU3smQroiKre1PTwx4R6xJKxtzVe0SwBr9AloPLDRg56s
+	 ghDImfHswWrY/hwe7YWlNp8kav4R8m/FM2asYLAsesbj5N5BieBfDUAgmlD4+uSxuS
+	 wtTEzey1b1Pu+Nq3L1jF9gODBYJPXgB+tAaIw3IU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgIJSyQ (ORCPT
+        id S1727102AbgIJSzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:54:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 14:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbgIJSxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:53:54 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726539AbgIJSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:54:09 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7E15214F1;
-        Thu, 10 Sep 2020 18:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA8921D92;
+        Thu, 10 Sep 2020 18:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599764033;
-        bh=siiRw7n02QPHZqLsAI1o12gJA+B9z/i5S2t9am34BFI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=r9t9cTNDWy4a4WVYDUDu4fn2k6wzRCikshOkIcbGiPfZjhiy6ibJrypAPzf6sQOkA
-         93/XddU3b4RL4EwCz1kXStmecK+FvwEPcAGqF+PSXFIExOJlXIQgGk+omsVrcy5XJP
-         lyW42wxHoKkvczrKGLhejlv2k4zdbC7YiTBthcEc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 768903523080; Thu, 10 Sep 2020 11:53:53 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 11:53:53 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     rcu@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH kernel] srcu: Fix static initialization
-Message-ID: <20200910185353.GS29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200908144306.33355-1-aik@ozlabs.ru>
- <cc25257d-804e-8cf7-150b-e6bdbaf184be@ozlabs.ru>
- <20200909115010.GG29330@paulmck-ThinkPad-P72>
- <37f76aac-d8e3-8ab1-24e9-c417b719e2a6@ozlabs.ru>
+        s=default; t=1599764045;
+        bh=XhMR0se3B2M3cCm4dG7gM2H1njurlMTbkC88FGhIKJs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NWf2TTe71JDTV5fTFH3pnw3HOYxZ5ivZJJsDunUt35gp25A4mNzl407I2iacg6Psi
+         Budl9qFpHKWvZJLdEln1WkpXuBpI3tCHQdwvnqxK5EHBixzH8JD2FeS50pKl/BJZ9Q
+         oW6NJfp9FaoUigAD/y/1aDn9KN/rWfhNcmsuNGLQ=
+Received: by mail-ed1-f42.google.com with SMTP id ay8so7391618edb.8;
+        Thu, 10 Sep 2020 11:54:05 -0700 (PDT)
+X-Gm-Message-State: AOAM530PpEiF4gd8hIQjezXCsXKEU4jDKO+O2s24KIZK0hCqdcKi6WP6
+        lRd0yze+KWFNX6QGZfOtGdAIUkCUMP64yFo52DA=
+X-Google-Smtp-Source: ABdhPJzxOkwjKIRJe1J7RhPZI8K0aJEHMtzOqR5F+V93515rBHAjgLIuO18iiQn+8UTlJNwgheXSwAxcmyXoMHMFYBk=
+X-Received: by 2002:a05:6402:180a:: with SMTP id g10mr10672940edy.18.1599764043844;
+ Thu, 10 Sep 2020 11:54:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <37f76aac-d8e3-8ab1-24e9-c417b719e2a6@ozlabs.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200910175733.11046-1-krzk@kernel.org> <20200910175733.11046-2-krzk@kernel.org>
+ <20200910182814.veviax3n377undkv@akan>
+In-Reply-To: <20200910182814.veviax3n377undkv@akan>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 10 Sep 2020 20:53:52 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdQJz7aLu4sjds46SiZwxvB-VMBR=stjpUme+8iEo+d-w@mail.gmail.com>
+Message-ID: <CAJKOXPdQJz7aLu4sjds46SiZwxvB-VMBR=stjpUme+8iEo+d-w@mail.gmail.com>
+Subject: Re: [PATCH v2 01/15] dt-bindings: gpio: convert bindings for NXP
+ PCA953x family to dtschema
+To:     Nishanth Menon <nm@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 10:31:03PM +1000, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 09/09/2020 21:50, Paul E. McKenney wrote:
-> > On Wed, Sep 09, 2020 at 07:24:11PM +1000, Alexey Kardashevskiy wrote:
-> >>
-> >>
-> >> On 09/09/2020 00:43, Alexey Kardashevskiy wrote:
-> >>> init_srcu_struct_nodes() is called with is_static==true only internally
-> >>> and when this happens, the srcu->sda is not initialized in
-> >>> init_srcu_struct_fields() and we crash on dereferencing @sdp.
-> >>>
-> >>> This fixes the crash by moving "if (is_static)" out of the loop which
-> >>> only does useful work for is_static=false case anyway.
-> >>>
-> >>> Found by syzkaller.
-> >>>
-> >>> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> >>> ---
-> >>>  kernel/rcu/srcutree.c | 5 +++--
-> >>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-> >>> index c100acf332ed..49b54a50bde8 100644
-> >>> --- a/kernel/rcu/srcutree.c
-> >>> +++ b/kernel/rcu/srcutree.c
-> >>> @@ -135,6 +135,9 @@ static void init_srcu_struct_nodes(struct srcu_struct *ssp, bool is_static)
-> >>>  				   levelspread[level - 1];
-> >>>  	}
-> >>>  
-> >>> +	if (is_static)
-> >>> +		return;
-> >>
-> >> Actually, this is needed here too:
-> >>
-> >>  if (!ssp->sda)
-> >>          return;
-> >>
-> >> as
-> >> ssp->sda = alloc_percpu(struct srcu_data)
-> >>
-> >> can fail if the process is killed too soon - it is quite easy to get
-> >> this situation with syzkaller (syscalls fuzzer)
-> >>
-> >> Makes sense?
-> > 
-> > Just to make sure that I understand, these failures occur when the task
-> > running init_srcu_struct_nodes() is killed, correct?
-> 
-> There are multiple user tasks (8) which open /dev/kvm, do 1 ioctl -
-> KVM_CREATE_VM - and terminate, running on 8 vcpus, 8 VMs, crashes every
-> 20min or so, less tasks or vcpus - and the problem does not appear.
-> 
-> 
-> > 
-> > Or has someone managed to invoke (say) synchronize_srcu() on a
-> > dynamically allocated srcu_struct before invoking init_srcu_struct() on
-> > that srcu_struct?  
-> 
-> Nah, none of that :)
-> 
-> init_srcu_struct_nodes() assumes ssp->sda!=NULL but alloc_percpu() fails
-> here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/percpu.c#n1734
-> ===
-> 	} else if (mutex_lock_killable(&pcpu_alloc_mutex)) {
-> 			pcpu_memcg_post_alloc_hook(objcg, NULL, 0, size);
-> 			return NULL;
-> ===
-> 
-> I am still up to reading that osr-rcuusage.pdf to provide better
-> analysis :) Thanks,
+On Thu, 10 Sep 2020 at 20:28, Nishanth Menon <nm@ti.com> wrote:
+>
+> On 19:57-20200910, Krzysztof Kozlowski wrote:
+> [...]
+> > +  wakeup-source:
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+> > +
+> > +patternProperties:
+> > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+>
+> I wonder if "hog" is too generic and might clash with "something-hog" in
+> the future?
 
-Ah, got it!  Does the following patch help?
+This pattern is already used in
+Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml. It will
+match only children and so far it did not find any other nodes in ARM
+and ARM64 dts. I don't expect clashes. Also the question is then - if
+one adds a child of GPIO expander named "foobar-hog" and it is not a
+GPIO hog, then what is it?
 
-There will likely also need to be changes to cleanup_srcu_struct(),
-but first let's see if I understand the problem.  ;-)
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index c13348e..6f7880a 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -177,11 +177,13 @@ static int init_srcu_struct_fields(struct srcu_struct *ssp, bool is_static)
- 	INIT_DELAYED_WORK(&ssp->work, process_srcu);
- 	if (!is_static)
- 		ssp->sda = alloc_percpu(struct srcu_data);
-+	if (!ssp->sda)
-+		return -ENOMEM;
- 	init_srcu_struct_nodes(ssp, is_static);
- 	ssp->srcu_gp_seq_needed_exp = 0;
- 	ssp->srcu_last_gp_end = ktime_get_mono_fast_ns();
- 	smp_store_release(&ssp->srcu_gp_seq_needed, 0); /* Init done. */
--	return ssp->sda ? 0 : -ENOMEM;
-+	return 0;
- }
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
+Best regards,
+Krzysztof
