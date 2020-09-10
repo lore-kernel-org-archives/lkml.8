@@ -2,235 +2,143 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F0DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A04AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F22920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83ED20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:48:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="CY1LskH9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DJxGtKQq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730341AbgIJKrx (ORCPT
+        id S1730269AbgIJKsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:47:53 -0400
-Received: from mail-bn8nam11on2059.outbound.protection.outlook.com ([40.107.236.59]:50081
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730349AbgIJKpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:45:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W5kPT2MoEfqw+CLLdyffSygM4w8CtBx/6lhHbFeqMxUTcu+eCL4TuEAJFXEowqDlLJEmAcrcnPQWwqQ71rVkTNKL8FolKWmKaWQv/NY6w+sXg8B3CWaLWrbEzHYiqWLRJD2ZPliund16/gpRRPWYW/+iiJ61ilN1hTBrtghR1j7MgYZKJhv5DSJlTBqWw5xCQmCMzDoVgzRHsudSfHZ91JvBEwTei7TtjWA+JVk019WDCygc4q0xh9xn2tJhqdoRBzQ7a1gx25wQJi6SXdS6BhJoKkJH7MTyqwR/bX4AR88Jbg3CN8rR4iXvhvplsVgDsHWepDrPtgcwT85DQ+gwpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LDCNfmA2VpqnqjSQXmP74QoaUphwEGVSFL9m2GB7xF0=;
- b=EmAVWC9UqohJDTbKCuL40+6O1j6gOogCFFa1ryT8XOtI/KCq+Ujfu7xLIU4bS/rqOHKE5GHcjK65YR/x9MAculzxhPqSgNVREHeaQPkZxRD9SFiSdiuVeXAR2cA9kU4iabrG0a6XdbL6QzULAkHj4dPT4i7V0ef0FLZK5F0AHNnOMp3kFdIyFXkADGmn+VT1mjrKwTDFwpFW5+8m8+nLDcmAZUYgRdBGO9nRU6xpz+lnS2aa8GWk8T46B+ni0hEHK1v/9Puq4suDYgFRzW2JlQLCDnyiomI4xyKq6KkpiKNNagHOxMlz4jNp5c6Y4qiFJ90taDZhEebnuApqrJkMnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=openfive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LDCNfmA2VpqnqjSQXmP74QoaUphwEGVSFL9m2GB7xF0=;
- b=CY1LskH9AxVcNelSCZLw34SfGKN/U/+ljmgNNq9obKqWtubAzMMfFPll6Zh913LPyiwFgDZ2lISsrC/F20m6KdUAmqe9+ibkkIjprG+qd0wQDf0VaToy4B0vxV4Jx5LHPm38W9U1qwm0S2n5q+yuyRFOH5yMJ1AFdf8KFLWB2Gc=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
-Received: from DM6PR13MB3451.namprd13.prod.outlook.com (2603:10b6:5:1c3::10)
- by DM6PR13MB4330.namprd13.prod.outlook.com (2603:10b6:5:163::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.5; Thu, 10 Sep
- 2020 10:44:46 +0000
-Received: from DM6PR13MB3451.namprd13.prod.outlook.com
- ([fe80::a48a:1f7c:267c:876]) by DM6PR13MB3451.namprd13.prod.outlook.com
- ([fe80::a48a:1f7c:267c:876%7]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
- 10:44:46 +0000
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-To:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        aou@eecs.berkeley.edu, yash.shah@sifive.com,
-        Sagar Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v1 3/3] dt-bindings: riscv: convert pwm bindings to json-schema
-Date:   Thu, 10 Sep 2020 16:14:04 +0530
-Message-Id: <1599734644-4791-4-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
-References: <1599734644-4791-1-git-send-email-sagar.kadam@sifive.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BMXPR01CA0087.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:54::27) To DM6PR13MB3451.namprd13.prod.outlook.com
- (2603:10b6:5:1c3::10)
+        Thu, 10 Sep 2020 06:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729455AbgIJKqq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:46:46 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE69C0617A0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:45:12 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id a12so5776859eds.13
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l79SfYkBrB8eBkLTxTm30QFDMV6D/aEjgGf7kz6GKH8=;
+        b=DJxGtKQq3fNqzbw0NV15QU2g+lXd31Rj8IJvgRkmxSITdEZjWipc09xOc3NSbzlnqS
+         LSWzMMePsttylmJYWDnCSaRWKb1BYhCdX7DUHwmW8C64BFBOOtybEiKeNpWtlPUualiy
+         9nhq5tFslI0ABxnJmKxf47Qt/oRWwgsEcvLfJkoiQ/mcBOPLdXTxj77V1xZKt/Jv6KNx
+         WA1MGxYBceEanw4cq8b4bqV/K34C0NkTNfaxjw7nHmvTtZDCulOx+OE8uiQukw5GHNe2
+         9H8f2YIbQFfcfqQbpj3AiCW8R+QLENQTIBzSErnivxE0WcjL9tyGzxCgH0aREro/gI6W
+         37yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l79SfYkBrB8eBkLTxTm30QFDMV6D/aEjgGf7kz6GKH8=;
+        b=oUywZ0Kx4kyM5qLgc0oy9SxiRADi09qOy4khkmrooEccvcUiJT1X0Rxy54jwddiJDk
+         Oi2A9E8UYxNUnlPuMFGyA5Aafr6PLRubSQgLcIyGmzU1x8tuJsBg6oPhvA0Tksf82BSJ
+         +LafGLtFvipOnjY/CygF18jMNi2xRc+JO/wACdUAArBHdiJ+wvahXw//rC89F4gAzuVz
+         g7s+mGqxm/+PB/ZUsSe0BSZe6+8kNjxjbPTgG6KV2dvry7EWuoYyXneWo9Euk6HbtFqE
+         NQww5yodM0y6FkeBevidjgM6Rq9eK/KqIisgEtQ3oYcQMBwRAyD6Mh7QfUan3MUDlliP
+         N12w==
+X-Gm-Message-State: AOAM532TUaJkY+J832FTAHuvbQPNURUhXD3LP3YTEjA5VWH5Go87FTBI
+        AzeO/RTsgtNUzvwrQhHCENng4ZNCgQQyBAlg
+X-Google-Smtp-Source: ABdhPJxLPpOYGdfGam7C5qx7e4pq7eM8ctQGw5CrrVjQtFNkfIXN7oOEb+gcnV3V6HeJNWuS3cornA==
+X-Received: by 2002:aa7:dc05:: with SMTP id b5mr8908207edu.137.1599734710690;
+        Thu, 10 Sep 2020 03:45:10 -0700 (PDT)
+Received: from [192.168.1.8] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id f13sm6324424ejb.81.2020.09.10.03.45.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 03:45:10 -0700 (PDT)
+Subject: Re: [PATCH 06/38] media: venus: place extern venus_fw_debug on a
+ header file
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1599062230.git.mchehab+huawei@kernel.org>
+ <64a99ecb3e7cfae697a16c6b6ca05034f73ad985.1599062230.git.mchehab+huawei@kernel.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <8886c59a-02e3-1762-23ad-fdc6960309c8@linaro.org>
+Date:   Thu, 10 Sep 2020 13:45:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from osubuntu003.open-silicon.com (159.117.144.156) by BMXPR01CA0087.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:54::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3326.19 via Frontend Transport; Thu, 10 Sep 2020 10:44:41 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [159.117.144.156]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 152f3faf-a43f-43a4-59ec-08d85576890f
-X-MS-TrafficTypeDiagnostic: DM6PR13MB4330:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR13MB4330597D39EA193D4E98743697270@DM6PR13MB4330.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8xTg06r18EcHvaSl2GS1ZKR0ut+Q8cFjcCcoaeW/uGfpMRxT9ZVHHXFw7sF/h3ALK+4XT86eFDz7t5inwb6YM0JV8STwRPBrNk8uTPm3+P8qp0mPCXLOc/iTc/Z2VFKzVIHM2g5USdWnOcrD6onCyElhfzG/vB6RYgPPqv5fcxWafcMCaDR3gCpXdrPuQrWKyo4lo7sUHkIy+7k5IJ8cnaSJ4S7+kON22kWEjzuaukhL0hj+1Do1otYOjE8NdPGVMpeJABq9JbN4ZaP3nIgvjAavp3L3Iv3Kx+28HpJr4xund7YW6vNGvhK9Uf2YD0oqvW5mnjuw20jssmnyYkFqQTsWekXOPR5hil0W6f2bNYuhOiX33k/S0CVIoteIWsa6ui186KFES5w+1Y7JBWu2Rw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR13MB3451.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(136003)(396003)(39850400004)(346002)(66946007)(83380400001)(6486002)(6506007)(83170400001)(6512007)(52116002)(316002)(66556008)(66476007)(42882007)(5660300002)(36756003)(107886003)(8676002)(26005)(6666004)(44832011)(2906002)(7416002)(4326008)(16526019)(966005)(8936002)(478600001)(2616005)(956004)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: i/qrLlDPQDrLz/F1WDR1fk6ujykA/4vESuKqv/TL4yDDRvd45MZPjQD6kGCIONxlRmfzsRuqWG421sxK5gXRSq2FWdQikHzA5f9T1qaKYJ4iDr3fa8ypSa+HfW2jx8Wo1E4S6is8tSXRYGdwqbCm1pdifOD97WH2nO1Hv9R8Eypca0iIJ0avsi/kCX4lX7MKDkL9s08OqdCej/1hBzjNfumzFEj6EfYR53Qsp6ryf+1fziDi2+zd9yU1J9RGNdKp0gI5ANrLLgqfMci4hOV7Igy4KfR35rDCBBKdVaZcUaZz9FjJgmi/hKv7zBgWTthAdWEMbk6R4U0PAK9pqazPXZeQhIGB5LZzorHLUb1Lqc+ry2yISiTWS6vxBjHliZDZpXc1TjGM1zTiFUQnxILSVBj9XhSXuGcxEgEkjykgCpQQg7vlM21GVXrGYN8cl1dxFC0HqoujpfSjTifmKNT7sfpBo/Ockw4igMlYpOqdhSgGfsJMbe/Izp5O3JezRqpzUglgxDNXaVBS21rsNx2H8Yxm/72hull6f6aVgnIRS1HN8J8uRhNgKR6foWwQg3bbqRTVLP3IrYCffi0tGqskmHdbNJTxQv58I1Otlyr2xOlDktkb6NRLYoQ1JclRy62XU3wMtzqJzZPsuPDmucAFSA==
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 152f3faf-a43f-43a4-59ec-08d85576890f
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR13MB3451.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 10:44:46.8760
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cz5Ap5IhNvqdhl8Cfr4iXjWoT0LEo8Ygp19D1ryqoqQqvO28VXQ2fXCVlkMzpoNDhcpBJCk7dAYsQ9qOrOjkmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB4330
+In-Reply-To: <64a99ecb3e7cfae697a16c6b6ca05034f73ad985.1599062230.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert device tree bindings for SiFive's PWM controller to YAML
-format.
+Hi Mauro,
 
-Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
----
- .../devicetree/bindings/pwm/pwm-sifive.txt         | 33 ----------
- .../devicetree/bindings/pwm/pwm-sifive.yaml        | 72 ++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+Thanks for the fix!
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-deleted file mode 100644
-index 3d1dd7b0..0000000
---- a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--SiFive PWM controller
--
--Unlike most other PWM controllers, the SiFive PWM controller currently only
--supports one period for all channels in the PWM. All PWMs need to run at
--the same period. The period also has significant restrictions on the values
--it can achieve, which the driver rounds to the nearest achievable period.
--PWM RTL that corresponds to the IP block version numbers can be found
--here:
--
--https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
--
--Required properties:
--- compatible: Should be "sifive,<chip>-pwm" and "sifive,pwm<version>".
--  Supported compatible strings are: "sifive,fu540-c000-pwm" for the SiFive
--  PWM v0 as integrated onto the SiFive FU540 chip, and "sifive,pwm0" for the
--  SiFive PWM v0 IP block with no chip integration tweaks.
--  Please refer to sifive-blocks-ip-versioning.txt for details.
--- reg: physical base address and length of the controller's registers
--- clocks: Should contain a clock identifier for the PWM's parent clock.
--- #pwm-cells: Should be 3. See pwm.yaml in this directory
--  for a description of the cell format.
--- interrupts: one interrupt per PWM channel
--
--Examples:
--
--pwm:  pwm@10020000 {
--	compatible = "sifive,fu540-c000-pwm", "sifive,pwm0";
--	reg = <0x0 0x10020000 0x0 0x1000>;
--	clocks = <&tlclk>;
--	interrupt-parent = <&plic>;
--	interrupts = <42 43 44 45>;
--	#pwm-cells = <3>;
--};
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-new file mode 100644
-index 0000000..415d053
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 SiFive, Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-sifive.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SiFive PWM controller
-+
-+maintainers:
-+  - Yash Shah <yash.shah@sifive.com>
-+  - Sagar Kadam <sagar.kadam@sifive.com>
-+  - Paul Walmsley <paul.walmsley@sifive.com>
-+
-+description:
-+  Unlike most other PWM controllers, the SiFive PWM controller currently
-+  only supports one period for all channels in the PWM. All PWMs need to
-+  run at the same period. The period also has significant restrictions on
-+  the values it can achieve, which the driver rounds to the nearest
-+  achievable period. PWM RTL that corresponds to the IP block version
-+  numbers can be found here -
-+
-+  https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: sifive,fu540-c000-pwm
-+      - const: sifive,pwm0
-+    description:
-+      Should be "sifive,<chip>-pwm" and "sifive,pwm<version>". Supported
-+      compatible strings are "sifive,fu540-c000-pwm" for the SiFive PWM v0
-+      as integrated onto the SiFive FU540 chip, and "sifive,pwm0" for the
-+      SiFive PWM v0 IP block with no chip integration tweaks.
-+      Please refer to sifive-blocks-ip-versioning.txt for details.
-+
-+  reg:
-+    maxItems: 1
-+    description: Physical base address and length of the controller's registers
-+
-+  clocks:
-+    description: Should contain a clock identifier for the PWM's parent clock.
-+
-+  "#pwm-cells":
-+    const: 3
-+    description:
-+      Should be 3. See pwm.yaml in this directory for a description of the
-+      cell format.
-+
-+  interrupts:
-+    maxItems: 1
-+    description: One interrupt per PWM channel.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#pwm-cells"
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm:  pwm@10020000 {
-+      compatible = "sifive,fu540-c000-pwm", "sifive,pwm0";
-+      reg = <0x10020000 0x1000>;
-+      clocks = <&tlclk>;
-+      interrupt-parent = <&plic>;
-+      interrupts = <42 43 44 45>;
-+      #pwm-cells = <3>;
-+    };
+On 9/2/20 7:10 PM, Mauro Carvalho Chehab wrote:
+> Sparse warns about this symbol:
+> 
+> 	drivers/media/platform/qcom/venus/hfi_venus.c:133:5:  warning: symbol 'venus_fw_debug' was not declared. Should it be static?
+> 
+> Because hfi_venus.c doesn't include a header file with the
+> extern. So, move it to core.h, with is included by both
+> hfi_venus.c and dbgfs.c.
+> 
+> This way, if something changes with it, warnings or errors
+> will be produced.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.h  | 2 ++
+>  drivers/media/platform/qcom/venus/dbgfs.c | 2 --
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 8e75a199f9f7..1a7aee7ee628 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -24,6 +24,8 @@
+>  #define VIDC_VCODEC_CLKS_NUM_MAX	2
+>  #define VIDC_PMDOMAINS_NUM_MAX		3
+>  
+> +extern int venus_fw_debug;
+> +
+>  struct freq_tbl {
+>  	unsigned int load;
+>  	unsigned long freq;
+> diff --git a/drivers/media/platform/qcom/venus/dbgfs.c b/drivers/media/platform/qcom/venus/dbgfs.c
+> index 782d54ac1b8f..52de47f2ca88 100644
+> --- a/drivers/media/platform/qcom/venus/dbgfs.c
+> +++ b/drivers/media/platform/qcom/venus/dbgfs.c
+> @@ -7,8 +7,6 @@
+>  
+>  #include "core.h"
+>  
+> -extern int venus_fw_debug;
+> -
+>  void venus_dbgfs_init(struct venus_core *core)
+>  {
+>  	core->root = debugfs_create_dir("venus", NULL);
+> 
+
 -- 
-2.7.4
-
+regards,
+Stan
