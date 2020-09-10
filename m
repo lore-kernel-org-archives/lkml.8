@@ -2,92 +2,155 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F30EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118BDC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E66D21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EA421D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:51:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WRgfEzll"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Us/bEkXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgIJCuz (ORCPT
+        id S1729779AbgIJCvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:50:55 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:44830 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730483AbgIJCsR (ORCPT
+        Wed, 9 Sep 2020 22:51:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44595 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730068AbgIJCuj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:48:17 -0400
-X-UUID: 448029e51310475492f2cf0a0116796d-20200910
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=TGqc1+zgYwYtjPwGXOLfmyB55si+JzeFkKZj3cqjM3o=;
-        b=WRgfEzllMtgZPJpNyqVGY44Xle8BOAZIdAgVyxdRr3vsVhd2LN4ln6Wq0gZqGyaGQ3fY5sgKRwYnoonllfA1uJmDT5Or6m5tud5KHgF4UhNU1hVxB2Ck6iBf/cwLkBf0dWXVRWx+6p2+hu+l5gV1NNIhHeRi1Nxyc+bAYZRiOgc=;
-X-UUID: 448029e51310475492f2cf0a0116796d-20200910
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1663720026; Thu, 10 Sep 2020 10:48:08 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 10 Sep 2020 10:48:00 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 10 Sep 2020 10:48:00 +0800
-Message-ID: <1599706080.10649.30.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/2] scsi: ufs: Abort tasks before clear them from
- doorbell
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     Can Guo <cang@codeaurora.org>, <asutoshd@codeaurora.org>,
-        <nguyenb@codeaurora.org>, <hongwus@codeaurora.org>,
-        <ziqichen@codeaurora.org>, <rnayak@codeaurora.org>,
-        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
-        <saravanak@google.com>, <salyzyn@google.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 10 Sep 2020 10:48:00 +0800
-In-Reply-To: <yq14ko62wn5.fsf@ca-mkp.ca.oracle.com>
-References: <1599099873-32579-1-git-send-email-cang@codeaurora.org>
-         <1599099873-32579-2-git-send-email-cang@codeaurora.org>
-         <1599627906.10803.65.camel@linux.ibm.com>
-         <yq14ko62wn5.fsf@ca-mkp.ca.oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 9 Sep 2020 22:50:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599706234;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QJQOTeTVHeQk2Lc8CRwNu9NdRVyDZ7qS/l1V2jelAI8=;
+        b=Us/bEkXqNKvmHsSj7u57ZoxJyLU6clnWgPZx6BCPjyUHA2c+kW5YLf/au4NpxwEcfans3+
+        ofqkPkFyLTHf35LpxQUvRYa1R5G4jlZMOiZZuwBvwet4Yvu1XXH0yhpIsUTWZrA1cjzujJ
+        dQk2l0heUpOdNRPuG4DtCL/wMUjDxUY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-IKKAOBSFMvKLG1cL0f7GMw-1; Wed, 09 Sep 2020 22:50:30 -0400
+X-MC-Unique: IKKAOBSFMvKLG1cL0f7GMw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80EAD1007464;
+        Thu, 10 Sep 2020 02:50:29 +0000 (UTC)
+Received: from llong.remote.csb (unknown [10.10.115.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D7797E175;
+        Thu, 10 Sep 2020 02:50:28 +0000 (UTC)
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIIHYzXSBkZWJ1Z29iamVjdHM6IGluc3Rh?=
+ =?UTF-8?Q?ll_CPU_hotplug_callback?=
+To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "elver@google.com" <elver@google.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200908062709.11441-1-qiang.zhang@windriver.com>
+ <3bcdacd0-10c4-78c0-6e63-a73811a0ced6@redhat.com>
+ <BYAPR11MB26324FE54B890DD73417F6B8FF270@BYAPR11MB2632.namprd11.prod.outlook.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <fc7702c8-6d85-66ee-3220-8c1a3e9acf0b@redhat.com>
+Date:   Wed, 9 Sep 2020 22:50:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C95A5FF5A81532B7594C3EEBC793AF7F2BFEA205FC1420AA08019861A81DF8022000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <BYAPR11MB26324FE54B890DD73417F6B8FF270@BYAPR11MB2632.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFydGluLCBDYW4sDQoNCk9uIFdlZCwgMjAyMC0wOS0wOSBhdCAyMjozMiAtMDQwMCwgTWFy
-dGluIEsuIFBldGVyc2VuIHdyb3RlOg0KPiBDYW4gYW5kIFN0YW5sZXksDQo+IA0KPiA+IEkgY2Fu
-J3QgcmVjb25jaWxlIHRoaXMgaHVuazoNCj4gDQo+IFBsZWFzZSBwcm92aWRlIGEgcmVzb2x1dGlv
-biBmb3IgdGhlc2UgY29uZmxpY3RpbmcgY29tbWl0cyBpbiBmaXhlcyBhbmQNCj4gcXVldWU6DQo+
-IA0KPiAzMDczNDhmNmFiMTQgc2NzaTogdWZzOiBBYm9ydCB0YXNrcyBiZWZvcmUgY2xlYXJpbmcg
-dGhlbSBmcm9tIGRvb3JiZWxsDQo+IA0KPiBiMTAxNzhlZTdmYTggc2NzaTogdWZzOiBDbGVhbiB1
-cCBjb21wbGV0ZWQgcmVxdWVzdCB3aXRob3V0IGludGVycnVwdA0KPiBub3RpZmljYXRpb24NCj4g
-DQoNCkNhbidzIHBhdGNoIGhhcyBjb25zaWRlcmVkIG15IGZpeCBpbiB0aGUgbmV3IGZsb3cuDQoN
-ClRvIGJlIG1vcmUgY2xlYXIsIGZvciB0aGUgZml4aW5nIGNhc2UgaW4gbXkgcGF0Y2gsDQp1ZnNo
-Y2RfdHJ5X3RvX2Fib3J0X3Rhc2soKSB3aWxsIHJldHVybiAwIChlcnIgPSAwKSBhbmQgZmluYWxs
-eSB0aGUNCnRhcmdldCB0YWcgY2FuIGJlIGNvbXBsZXRlZCBhbmQgY2xlYXJlZCBieSBfX3Vmc2hj
-ZF90cmFuc2Zlcl9yZXFfY29tcGwoKQ0KaW4gQ2FuJ3MgbmV3IGZsb3cuDQoNClRodXMgSSB0aGlu
-ayB0aGUgcmVzb2x1dGlvbiBjYW4ganVzdCB1c2luZyB0aGUgY29kZSBpbiBDYW4ncyBwYXRjaC4N
-Cg0KQ2FuLCBwbGVhc2UgY29ycmVjdCBtZSBpZiBJIHdhcyB3cm9uZy4NCg0KVGhhbmtzLA0KU3Rh
-bmxleSBDaHUNCg0KDQo+IFRoYW5rcyENCj4gDQoNCg==
+On 9/9/20 9:48 PM, Zhang, Qiang wrote:
+>
+> ________________________________________
+> 发件人: Waiman Long <longman@redhat.com>
+> 发送时间: 2020年9月9日 2:23
+> 收件人: Zhang, Qiang; tglx@linutronix.de; mingo@kernel.org; elver@google.com
+> 抄送: linux-kernel@vger.kernel.org
+> 主题: Re: [PATCH v3] debugobjects: install CPU hotplug callback
+>
+> On 9/8/20 2:27 AM, qiang.zhang@windriver.com wrote:
+>> From: Zqiang <qiang.zhang@windriver.com>
+>>
+>> Due to CPU hotplug, it may never be online after it's offline,
+>> some objects in percpu pool is never free. in order to avoid
+>> this happening, install CPU hotplug callback, call this callback
+>> func to free objects in percpu pool when CPU going offline.
+>>
+>> Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+>> ---
+>>    v1->v2:
+>>    Modify submission information.
+>>
+>>    v2->v3:
+>>    In CPU hotplug callback func, add clear percpu pool "obj_free" operation.
+>>    capitalize 'CPU', and use shorter preprocessor sequence.
+>>
+>>    include/linux/cpuhotplug.h |  1 +
+>>    lib/debugobjects.c         | 24 ++++++++++++++++++++++++
+>>    2 files changed, 25 insertions(+)
+>>
+>> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+>> index 3215023d4852..0c39d57e5342 100644
+>> --- a/include/linux/cpuhotplug.h
+>> +++ b/include/linux/cpuhotplug.h
+>> @@ -36,6 +36,7 @@ enum cpuhp_state {
+>>        CPUHP_X86_MCE_DEAD,
+>>        CPUHP_VIRT_NET_DEAD,
+>>        CPUHP_SLUB_DEAD,
+>> +     CPUHP_DEBUG_OBJ_DEAD,
+>>        CPUHP_MM_WRITEBACK_DEAD,
+>>        CPUHP_MM_VMSTAT_DEAD,
+>>        CPUHP_SOFTIRQ_DEAD,
+>> diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+>> index fe4557955d97..bb69a02c3e7b 100644
+>> --- a/lib/debugobjects.c
+>> +++ b/lib/debugobjects.c
+>> @@ -19,6 +19,7 @@
+>>    #include <linux/slab.h>
+>>    #include <linux/hash.h>
+>>    #include <linux/kmemleak.h>
+>> +#include <linux/cpu.h>
+>>
+>>    #define ODEBUG_HASH_BITS    14
+>>    #define ODEBUG_HASH_SIZE    (1 << ODEBUG_HASH_BITS)
+>> @@ -433,6 +434,24 @@ static void free_object(struct debug_obj *obj)
+>>        }
+>>    }
+>>
+>> +#ifdef CONFIG_HOTPLUG_CPU
+>> +static int object_cpu_offline(unsigned int cpu)
+>> +{
+>> +     struct debug_percpu_free *percpu_pool;
+>> +     struct hlist_node *tmp;
+>> +     struct debug_obj *obj;
+>> +
+>> +     percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
+>> +     hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
+>> +             hlist_del(&obj->node);
+>> +             kmem_cache_free(obj_cache, obj);
+>> +     }
+>> +     percpu_pool->obj_free = 0;
+>>> For pointer, it is better to use NULL for clarity.
+>>> Cheers,
+>>> Longman
+> Do you mean "->obj_free" variable ?   this represents the number of free objects in  percpu_pool .
+>
+You are right. I got confused. Sorry for the noise.
+
+Cheers,
+Longman
 
