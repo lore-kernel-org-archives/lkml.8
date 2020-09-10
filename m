@@ -2,114 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DEC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AFCC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA3A21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599765563;
-	bh=TSKwsi8B2WtCjIB+WVC7Mp9PvIBMFdLC+XMZ086OmBk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xhTlGMtDoia5EycwcwB9pomienL3RVF626MjV/G79GHg9c6bj4fBdvvlrAIryDGPY
-	 gQVWVpnF7b+MgQqS8XrcnA3yoDBn/T4JCeWetcARRZdH0tOKO6hsUE/UWllFFS4Ynm
-	 vGzqXNZYlK5ln14LHVMMzE4zHpWAiKPcNoIxdAgA=
+	by mail.kernel.org (Postfix) with ESMTP id D5FCE21D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:20:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nZV1c6Sy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgIJTTV (ORCPT
+        id S1726805AbgIJTTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:19:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgIJTS5 (ORCPT
+        Thu, 10 Sep 2020 15:19:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7020 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731368AbgIJPy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:18:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85C2FC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:18:56 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k25so9684439ljk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=etC4N6qn30eFLor95FeZmB4oX9yZOoS1Dpapxtt3pvQ=;
-        b=N/0WNm5/4giWTWDefLeUsfFNKp1JHAG/ai3snfAZ5vptNE0pWqEgGwtfAppqq8TfH9
-         MG28lGOFhMEd1bq0igXIr6UmZhklDeAiosJfg12oK9l6jqBBqlDvssJ4sgJu/R0TZT+Y
-         UvVlc43GfFu4XHK+zLnDLQGRhZYMLvnz5gDVs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=etC4N6qn30eFLor95FeZmB4oX9yZOoS1Dpapxtt3pvQ=;
-        b=RlFlskMOde1kFnShxlZx29+ioOXfi4Ft4AR68mYbN7lhqlVvLDFjtSzr7I6u4fCcq6
-         pbNWCnoe0maYb93aMjm/PHrPnfTIoIIw/heicXUaNU8sLR05xrGCKllSmuThaRv03QE+
-         2B+2/RkXw3y6TucVl7rBbJV4osZHhHhqcC1ZoYje8qGMgYs2GOFwvaoB6Bk+NZOkHLKJ
-         A+KwcKghLWLGk3U43huM3YOmwOvZq01kidsiUSIF1UD3ynYD9C9cHJQ0Oij0zbqFNRVy
-         HE2kMUVfop06ai3GkzPUPiPKoIiz0j9tx4lMNQO+CinwzfmU7mH5qBJqgwl7ofnACeVN
-         lkVg==
-X-Gm-Message-State: AOAM5306ZNsEivXN1TY0cAov4BdKtmZdWBkeNbwJUA2QuKUEFqlX9Lx8
-        Y6VDGK9QCmR1cievq0yvQREmEzpXYonxgw==
-X-Google-Smtp-Source: ABdhPJzEtHv31bLu/psmcqLWvxKFKrfLl5l3shX7gknyeDM47UJR8joFClx87sX3EaiuSAtZqNhGEg==
-X-Received: by 2002:a2e:a16e:: with SMTP id u14mr5765116ljl.464.1599765534553;
-        Thu, 10 Sep 2020 12:18:54 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id l82sm1551474lfd.58.2020.09.10.12.18.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 12:18:53 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id r24so9699309ljm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:18:53 -0700 (PDT)
-X-Received: by 2002:a2e:2e04:: with SMTP id u4mr5057221lju.102.1599765533101;
- Thu, 10 Sep 2020 12:18:53 -0700 (PDT)
+        Thu, 10 Sep 2020 11:54:29 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AF2tjt169967;
+        Thu, 10 Sep 2020 11:18:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=8Mlftey53B/H6IK5E2iIO4KQDXor/nn1hnefl9i/DEI=;
+ b=nZV1c6SyU/XJM+SmfzYYQR45GhzOfmVxod/LNdlKa+UEedZzQp/XQHjkAKYw7IYLtcaC
+ XN8wgVcRxkiOOCHEOJUdbof1ywbgr6RR9gXlK7ST7JIZ9wh27Fev1XpyzykkqmNNx6EH
+ jKT43RXBgitOfZhzugXp9mYslQ3ww7H9OaU1x7Mph3GQeLTYadxWarB4SZhbTiMI3yfP
+ WKUUkMrnPsfYEpxaNhTE3XeOZ6Dfodum+2hzPN3HY7GCK1TK5C8dZLfIwDPuXdV8xQJ+
+ BmvLJPjBCI6xj7G1JauBrmYGBuPMDdCmcJGEXshrDeC6+jb8hCFTD3R4YnH+151rWzjF jw== 
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fms8vt4y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:18:43 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AFBvXo012745;
+        Thu, 10 Sep 2020 15:18:42 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 33d46n59xc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:18:42 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AFIfSB61407558
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 15:18:41 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1C6A6E04C;
+        Thu, 10 Sep 2020 15:18:41 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D9F36E04E;
+        Thu, 10 Sep 2020 15:18:40 +0000 (GMT)
+Received: from SHADE6A.ibmuc.com (unknown [9.211.140.115])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 15:18:40 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-fsi@lists.ozlabs.org,
+        andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, alistair@popple.id.au,
+        jk@ozlabs.org
+Subject: [PATCH 0/4] clk: AST2600 and FSI: Add APLL to control FSI bus frequency
+Date:   Thu, 10 Sep 2020 10:18:36 -0500
+Message-Id: <20200910151840.25333-1-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200904155808.4997-1-leon@kernel.org> <6fac3754-f8db-85f5-bdb1-b4c8e7ccc046@linux.ibm.com>
-In-Reply-To: <6fac3754-f8db-85f5-bdb1-b4c8e7ccc046@linux.ibm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 10 Sep 2020 12:18:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg6R-yQwZBBWB8EqQ1QWJGQe5njuGwax-HJtTUGsc5LxQ@mail.gmail.com>
-Message-ID: <CAHk-=wg6R-yQwZBBWB8EqQ1QWJGQe5njuGwax-HJtTUGsc5LxQ@mail.gmail.com>
-Subject: Re: [PATCH -rc v1] gcov: Disable gcov build with GCC 10
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_04:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ clxscore=1011 malwarescore=0 impostorscore=0 mlxlogscore=754
+ suspectscore=1 mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2009100135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 5:52 AM Peter Oberparleiter
-<oberpar@linux.ibm.com> wrote:
->
-> Fix this by updating the in-kernel GCOV_COUNTERS value. Also re-enable
-> config GCOV_KERNEL for use with GCC 10.
+Add functionality to control the APLL clock on the AST2600. The APLL provides
+the clock for the FSI master on the AST2600. Then add a devicetree property to
+set the AST2600 FSI master bus frequency.
 
-Lovely.
+Eddie James (4):
+  dt-bindings: clock: Add AST2600 APLLdivN definition
+  clk: ast2600: Add functionality to the APLL clock
+  dt-bindings: fsi: Aspeed master: Add bus-frequency property
+  fsi: Aspeed master: Set bus frequency from devicetree
 
-Is there some way we could see this value automatically, or at least
-have a check for it? Right now it's that _very_ magical number that
-depends on a gcc version in odd and undocumented ways..
+ .../bindings/fsi/fsi-master-aspeed.txt        |   1 +
+ drivers/clk/clk-ast2600.c                     | 177 ++++++++++++++++--
+ drivers/fsi/fsi-master-aspeed.c               |   5 +
+ include/dt-bindings/clock/ast2600-clock.h     |   1 +
+ 4 files changed, 172 insertions(+), 12 deletions(-)
 
-IOW - I'm assuming user space gcov infrastructure finds this number
-some way, and wondering if we couldn't do the same?
+-- 
+2.26.2
 
-Or is the gcov tool itself just doing the same kind of thing, and
-having magic numbers?
-
-I get the feeling that somebody who knows gcov would go "You are just
-doing this all completely incorrectly, you should do XYZ" when they
-see that GCOV_COUNTERS thing.
-
-Maybe just a script that finds the right header file in the gcc
-installation and extracts it from there, if only to verify the magic
-number that we have?
-
-               Linus
