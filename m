@@ -2,113 +2,109 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DB5C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE7320872
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1232078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgIJIg4 (ORCPT
+        id S1730212AbgIJIhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:36:56 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48998 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730346AbgIJIfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:35:46 -0400
-IronPort-SDR: oKWDyBjojvbgK3SNWUf6HyewwVHFW60J/EJcQQk4sRLzRYLO7PgvJLm0NTRnoYVm0Yk4qxqI/d
- kWVMWKsmm0Bg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="222691425"
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="222691425"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 01:35:43 -0700
-IronPort-SDR: BTIMnXWE+znZbEUeoD4BA2CV+WEJFdC4OUy+ocjqMKI4jNZqnmA2BNleP0I/YjZWV8w5bD7Cg2
- vf5HoTnDUupg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="329255926"
-Received: from chenyi-pc.sh.intel.com ([10.239.159.72])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Sep 2020 01:35:41 -0700
-From:   Chenyi Qiang <chenyi.qiang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC v3 0/2] add bus lock VM exit support
-Date:   Thu, 10 Sep 2020 16:37:49 +0800
-Message-Id: <20200910083751.26686-1-chenyi.qiang@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 10 Sep 2020 04:37:39 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2803 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730172AbgIJIfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:35:53 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id DE293607B043E8409500;
+        Thu, 10 Sep 2020 09:35:50 +0100 (IST)
+Received: from [127.0.0.1] (10.47.1.235) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 10 Sep
+ 2020 09:35:49 +0100
+Subject: Re: [PATCH v8 13/18] scsi: core: Show nr_hw_queues in sysfs
+To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
+        <kashyap.desai@broadcom.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <dgilbert@interlog.com>,
+        <paolo.valente@linaro.org>, <hare@suse.de>, <hch@lst.de>
+CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
+        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>
+References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+ <1597850436-116171-14-git-send-email-john.garry@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <7b9a1f0e-04c4-e473-0ff8-4843e0f1af34@huawei.com>
+Date:   Thu, 10 Sep 2020 09:33:07 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <1597850436-116171-14-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.1.235]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2->v3 changelogs:
-- use a bitmap to get/set the capability of bus lock detection. we support
-  exit and off mode currently.
-- put the handle of exiting to userspace in vmx.c, thus no need to
-  define a shadow to track vmx->exit_reason.bus_lock_detected.
-- remove the vcpu->stats.bus_locks since every bus lock exits to userspace.
+On 19/08/2020 16:20, John Garry wrote:
+> So that we don't use a value of 0 for when Scsi_Host.nr_hw_queues is unset,
+> use the tag_set->nr_hw_queues (which holds 1 for this case).
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
 
----
+Note that there has been no review on this patch yet.
 
-Add the support for bus lock VM exit in KVM. It is a sub-feature of bus
-lock detection and the detailed info can be found in the patch 2/2.
+It's not strictly necessary, but I see it as useful. The same info can 
+be derived indirectly from block debugfs, but that's not always 
+available (debugfs, that is).
 
-In this patch series, the first patch applies Sean's refactor to
-vcpu_vmx.exit_reason available at
-https://patchwork.kernel.org/patch/11500659.
-It is necessary as bus lock VM exit adds a new modifier bit(bit 26) in
-exit_reason field in VMCS.
+Thanks,
+john
 
-The second patch is the enabling work for bus lock VM exit. Add the
-support to set the capability to enable bus lock vm exit. The current
-implementation just exit to user space when handling the bus lock
-detected in guest.
-
-The concrete throttling policy in user space still needs to be
-discussed. We can enforce ratelimit on bus lock in guest, just inject
-some sleep time, or maybe other ideas.
-
-Document for Bus Lock Detection is now available at the latest "Intel
-Architecture Instruction Set Extensions Programming Reference" (see
-below). Note that the section 9.1 for Bus Lock Debug Exception requires
-modification due to the feedback from kernel community:
-https://lore.kernel.org/lkml/87r1stmi1x.fsf@nanos.tec.linutronix.de/
-
-Document Link:
-https://software.intel.com/content/www/us/en/develop/download/intel-architecture-instruction-set-extensions-programming-reference.html
-
-Chenyi Qiang (1):
-  KVM: VMX: Enable bus lock VM exit
-
-Sean Christopherson (1):
-  KVM: VMX: Convert vcpu_vmx.exit_reason to a union
-
- arch/x86/include/asm/kvm_host.h    |   5 ++
- arch/x86/include/asm/vmx.h         |   1 +
- arch/x86/include/asm/vmxfeatures.h |   1 +
- arch/x86/include/uapi/asm/kvm.h    |   1 +
- arch/x86/include/uapi/asm/vmx.h    |   4 +-
- arch/x86/kvm/vmx/capabilities.h    |   6 ++
- arch/x86/kvm/vmx/nested.c          |  42 ++++++++----
- arch/x86/kvm/vmx/vmx.c             | 106 ++++++++++++++++++++---------
- arch/x86/kvm/vmx/vmx.h             |  25 ++++++-
- arch/x86/kvm/x86.c                 |  27 +++++++-
- arch/x86/kvm/x86.h                 |   5 ++
- include/uapi/linux/kvm.h           |   7 ++
- 12 files changed, 179 insertions(+), 51 deletions(-)
-
--- 
-2.17.1
+> ---
+>   drivers/scsi/scsi_sysfs.c | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
+> index 163dbcb741c1..d6e344fa33ad 100644
+> --- a/drivers/scsi/scsi_sysfs.c
+> +++ b/drivers/scsi/scsi_sysfs.c
+> @@ -393,6 +393,16 @@ show_use_blk_mq(struct device *dev, struct device_attribute *attr, char *buf)
+>   }
+>   static DEVICE_ATTR(use_blk_mq, S_IRUGO, show_use_blk_mq, NULL);
+>   
+> +static ssize_t
+> +show_nr_hw_queues(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	struct Scsi_Host *shost = class_to_shost(dev);
+> +	struct blk_mq_tag_set *tag_set = &shost->tag_set;
+> +
+> +	return snprintf(buf, 20, "%d\n", tag_set->nr_hw_queues);
+> +}
+> +static DEVICE_ATTR(nr_hw_queues, S_IRUGO, show_nr_hw_queues, NULL);
+> +
+>   static struct attribute *scsi_sysfs_shost_attrs[] = {
+>   	&dev_attr_use_blk_mq.attr,
+>   	&dev_attr_unique_id.attr,
+> @@ -411,6 +421,7 @@ static struct attribute *scsi_sysfs_shost_attrs[] = {
+>   	&dev_attr_prot_guard_type.attr,
+>   	&dev_attr_host_reset.attr,
+>   	&dev_attr_eh_deadline.attr,
+> +	&dev_attr_nr_hw_queues.attr,
+>   	NULL
+>   };
+>   
+> 
 
