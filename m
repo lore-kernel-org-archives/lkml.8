@@ -2,114 +2,112 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FCDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCE120719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3158C207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNQ6YQYl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CAEWlx6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgIJFei (ORCPT
+        id S1726893AbgIJFem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 01:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        Thu, 10 Sep 2020 01:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgIJFeF (ORCPT
+        with ESMTP id S1726079AbgIJFeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 01:34:05 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3759CC061573;
-        Wed,  9 Sep 2020 22:34:01 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id o16so2464769pjr.2;
-        Wed, 09 Sep 2020 22:34:01 -0700 (PDT)
+        Thu, 10 Sep 2020 01:34:19 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F53C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 22:34:19 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mm21so2457767pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 22:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uGUkLkekDDrHHyjl9V1yaazxeNg3zJrmb/AGpekFVEU=;
-        b=LNQ6YQYlGzUoEEn59bhxCAzN0bbl0RH3ljxUlRnh8MvIkfpOCRQN5XEMH/xRYA+JQI
-         MbwO0s/RiAvGlJAmzsU1/Gjve4jRbyiPhjQAWj9i4i/+Tvvx5X/w8AlSz7PInXV10Tp6
-         RIBT1pgKtAf+7vUT/N9a5+AEeTfUQA4RlqbAwwPX3tTWSDo7nEsF3KpKEhrY/zd7QXmm
-         uvFkOh3Ej6tRjlIsLSbuGw+chSIIhXReaHOszaTXvv2CoRZZR/Tjn5oK4qThg9++DAeG
-         0ahQ5J9HSH/14/4AARusqV25omLbV4GjHBlX7ZAPXnquQn3XpSSmRF/xrx7O1YvKiJyA
-         VLlA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5lEi/XoDUJ11Wa7F5s06RrCLa2hPWxpKnO1zR9YxyoY=;
+        b=CAEWlx6IuBLlkVsW+lOwMOeCTijAw1MpiQ3Ubb2OiqpnJtMewM1XNtUAhSIg1ikgvE
+         JpQ79qJ6W+TpKYmuBH7/eBcz5WKzj9GaDsUqhxos2YpwlQsr8aEn9N36PdsFS0hDWe6y
+         cNhiV778PgC5as9xtK6R0NroTicROjr76SN0u0Pi4chuP8X3ibTcn/DO0e02C6/yTFtK
+         q0uHIk25Jr73tNAPDUqN0E/KWZ2FKnNQcJBseJJm25c6Sm0RT8fYscQXhoYRyGZbGG83
+         SI6aRY5TTQMwlVObPlooDffFy48lbHaXcaYOfHW0nENuCCHAJsdeecPwwCjiEoRllUoh
+         P+xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uGUkLkekDDrHHyjl9V1yaazxeNg3zJrmb/AGpekFVEU=;
-        b=Zba0qlF5d6EEdeMb9e0Mo5fU1uxCzyfDPWbQ+o9kszE7+y1AKyoldQmj6rDSVoAAcs
-         eYyGHP2tFuog/lmhCKE9e++NXtD1ZwWSYGeDXRkEjXQyL1dBKSblmXgPxwpo6e3yRPcE
-         C/zp4Uq/KV0lHkehyvKlw3kOiBW3ywQtJZIrePi/zWn5Qv0O253c8VUtq8JfFTSeDcV9
-         ivEjjjcL7dzLH6xYXY/SaBkVS9ZH432S2Z9qALhlhZN9qLFj6gHLoOZCnQcn7teaZRJL
-         huPy5k11qM6ys0K9D7k+EuY2dXNGWdHfNkLVdTe7rQZXsqdR8Ylc77QHuKAHZYaE1jqo
-         azBQ==
-X-Gm-Message-State: AOAM532nyBz+iuBYR7rduvB2ipnNkmf8N5zSmXYJHJbCgpV90NOUzyFZ
-        4qDah40n2LZRORpcF1VIM3Q=
-X-Google-Smtp-Source: ABdhPJyA4kPg48qb2udCMYHl4sXWhpEBoJK9wBIXp40zG7zp6AGgM9d0QvaM0WisgbU+c02gkQNkMg==
-X-Received: by 2002:a17:902:bc81:: with SMTP id bb1mr4107803plb.105.1599716040593;
-        Wed, 09 Sep 2020 22:34:00 -0700 (PDT)
-Received: from [192.168.1.5] ([61.7.133.45])
-        by smtp.googlemail.com with ESMTPSA id j26sm4453002pfa.160.2020.09.09.22.33.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Sep 2020 22:34:00 -0700 (PDT)
-Subject: Re: [PATCH v2] usb: serial: Repair FTDI FT232R bricked eeprom
-To:     Oliver Neukum <oneukum@suse.de>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        linux-usb@vger.kernel.org
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Russ Dill <Russ.Dill@gmail.com>,
-        Hector Martin <hector@marcansoft.com>
-References: <20200909193419.2006744-1-james.hilliard1@gmail.com>
- <1599706954.10822.3.camel@suse.de>
-From:   Lars Melin <larsm17@gmail.com>
-Message-ID: <a1161f77-5b37-39ea-eb91-7b0b59278960@gmail.com>
-Date:   Thu, 10 Sep 2020 12:33:55 +0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5lEi/XoDUJ11Wa7F5s06RrCLa2hPWxpKnO1zR9YxyoY=;
+        b=O1JMN80lcXw2aqVOoPtSjkt2x76/jQgzVuOTwU01SB38OKgs+mSnb0Eqqn3Rz07vXw
+         fHuAdgRHNsYCTaIefCnH+E3QE9CDXTrj4ymFRxi2Lx7krIK/SLf6CF8XDqXM0u+tHMSl
+         1vNdxasZFfm1E/JTDWEJyOzt4OU5Sy5b6a84F0CJVAtPSirdfFVobfA3M7Bf5ek5NDBj
+         nzph5zeuLzQ/3//FHM5d2XIR4PSLavT65yRNbcUkTaV/o/Y8jXk1y2vV6eAqQzTjEi3k
+         b0VkiTGps4nCpW/JG2yUJu3WbqN4PPGZMqVywUHceDUExBVdXC6QWreVVgVHf2qW6+vp
+         aHoA==
+X-Gm-Message-State: AOAM532gynulteWNq+nRgwuDoCxQmgcSTw3xlJDWI3PuGcfA07mHgxct
+        YCWjxeOLEY9vvl0gjT0cAz072Q==
+X-Google-Smtp-Source: ABdhPJz3EgNE/dzdl1waBSoWGoWNzDHErjWDYYygsBmeO19Q5FRz5rTWYfVjdhPhDSbWLy3fyrzRsA==
+X-Received: by 2002:a17:90a:d315:: with SMTP id p21mr3945874pju.88.1599716059106;
+        Wed, 09 Sep 2020 22:34:19 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id w203sm4575162pff.0.2020.09.09.22.34.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Sep 2020 22:34:18 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 11:04:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Hector Yuan <hector.yuan@mediatek.com>
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com
+Subject: Re: [PATCH v7] cpufreq: mediatek-hw: Add support for Mediatek
+ cpufreq HW driver
+Message-ID: <20200910053406.t37rgioykzvk3oem@vireshk-i7>
+References: <1599712262-8819-1-git-send-email-hector.yuan@mediatek.com>
+ <20200910050341.pgyieq3q7ijitosn@vireshk-i7>
+ <1599715851.7042.9.camel@mtkswgap22>
 MIME-Version: 1.0
-In-Reply-To: <1599706954.10822.3.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599715851.7042.9.camel@mtkswgap22>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/2020 10:02, Oliver Neukum wrote:
-> Am Mittwoch, den 09.09.2020, 13:34 -0600 schrieb James Hilliard:
->> This patch detects and reverses the effects of the malicious FTDI
->> Windows driver version 2.12.00(FTDIgate).
+On 10-09-20, 13:30, Hector Yuan wrote:
+> On Thu, 2020-09-10 at 10:33 +0530, Viresh Kumar wrote:
+> > On 10-09-20, 12:31, Hector Yuan wrote:
+> > > The CPUfreq HW present in some Mediatek chipsets offloads the steps necessary for changing the frequency of CPUs. 
+> > > The driver implements the cpufreq driver interface for this hardware engine. 
+> > > 
+> > > This patch depends on the MT6779 DTS patch submitted by Hanks Chen
+> > >  https://lkml.org/lkml/2020/8/4/1094
+> > 
+> > Thanks for hanging there. Looks good to me. I will apply it once Rob
+> > Ack's the binding patch.
+> > 
 > 
-> Hi,
-> 
-> this raises questions.
-> Should we do this unconditionally without asking?
-> Does this belong into kernel space?
-> 
+> Many thanks for your help. May I know if you can add Reviewed-by tag to
+> this patch set.
 
-My answer to both of those question is a strong NO.
+Since this patchset is going to get merged via my tree (ARM cpufreq
+tree), a reviewed-by isn't required here. I will queue it up for
+5.10-rc1 after I receive an Ack from Rob.
 
-The patch author tries to justify the patch with egoistical arguments 
-(easier for him and his customers) without thinking of all other users 
-of memory constrained embedded hardware that doesn't need the patch code 
-but have to carry it.
+> I would like to prepare some patches for more features
+> based on this. Is that okay to you? Thanks again.
 
-The bricked PID is btw already supported by the linux ftdi driver so 
-there is no functionality gain in the patch.
+That should be fine.
 
-br
-Lars
-
-
-
+-- 
+viresh
