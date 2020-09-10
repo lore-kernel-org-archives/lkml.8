@@ -2,91 +2,106 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EABC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9C3221E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3A0208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmBsgwIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgIJVcL (ORCPT
+        id S1728019AbgIJVc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:32:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37988 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730916AbgIJNvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:51:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BA407B04F;
-        Thu, 10 Sep 2020 13:51:22 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 15:51:06 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Laurent Dufour <ldufour@linux.ibm.com>, akpm@linux-foundation.org,
-        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200910135106.GI28354@dhcp22.suse.cz>
-References: <20200909105914.GF7348@dhcp22.suse.cz>
- <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
- <20200910072331.GB28354@dhcp22.suse.cz>
- <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
- <20200910111246.GE28354@dhcp22.suse.cz>
- <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
- <20200910120343.GA6635@linux>
- <20200910124755.GG28354@dhcp22.suse.cz>
- <20200910124847.GH28354@dhcp22.suse.cz>
- <20200910133854.GA8713@linux>
+        Thu, 10 Sep 2020 17:32:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730866AbgIJNvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:51:41 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53E5AC061798;
+        Thu, 10 Sep 2020 06:51:21 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id e4so949739pln.10;
+        Thu, 10 Sep 2020 06:51:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YQY/BzwLp0IYbpZYHdzw7uNAsxXrI8se2a0WI3eUKs4=;
+        b=NmBsgwIw4NTs2k+hvdPiqm8JGBLqwAqXao6+P4OHfTM0PjZZwciA1Yt/NFtxg7CfIq
+         OJF2fSZ4uKRs1xO6SM3lLJAeZSwhDODoMDsh0HaDfhsGD5RduZqqKEEOl4tblpoa4bYC
+         1uthytF1R8ZI/ijiTDOFr8WlfasjjsHzrYd4/aH11YZy9mkwzjTGn727OvgVaZS1LvgK
+         2YV5pMbyFJugUvf3j9J+N7xRrmYL2Yj6Uzvrvz3zzbh2yBzhF3F34D7LAK2OMcxI74WE
+         xUgaVaq4B30QLpRlHkulK2N1Pe2/uQZ52uXIBxMNMDXERZExLtPI/vDGH3zr6zQItGzs
+         pdQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YQY/BzwLp0IYbpZYHdzw7uNAsxXrI8se2a0WI3eUKs4=;
+        b=R8u6AdrPydOQvlSiq99Ra4quQ+B/jGu8yZj3j6febDWZKcsMwjL7f23/YttAv3Mnux
+         qpVZTmoWwcVXy3lgq1yM7Ma2rF/TCk1FtqrA4imNSJYNg0c+AhsxlaRj71/jF7KHq5I9
+         bS6DXCBuWja5mVaf3fFtAJmCKIEyowcu39OflraaNsicYKiKHqIFHSeq5bCnI7vqTjwV
+         5qbgRyb6Sl9HORTOgxj6JN8CWL1OJqmKDoVBgaxmWg2epk69zE1ZpcIOvRpTwHECkZ5i
+         Q2FdwwtnhUCmnFLvN7Hl5LYT/6oUp0ZzUoOMVIcoCQCgiX17MQwp4KjBpHzOoN5vFN6Y
+         R8sg==
+X-Gm-Message-State: AOAM533qkfRFRtiPBFJcA7ip5RU8oZBIZ5vhzN2pQd5aDenQqWhsGsTx
+        XYo81m/iFh46Zb+ChdFwNpJ9a5LAwCcMoY2KOpk=
+X-Google-Smtp-Source: ABdhPJxn81H+GEwcog15nFQEsbcjCrkGA9TTtx4NHM2DdOhwd+jxzWBgoW6VFfC6LJKbl9FKMUC+bVjGudGRxuxWr2o=
+X-Received: by 2002:a17:902:28:: with SMTP id 37mr5399908pla.107.1599745880796;
+ Thu, 10 Sep 2020 06:51:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910133854.GA8713@linux>
+References: <20200910123000.16860-1-nish.malpani25@gmail.com>
+In-Reply-To: <20200910123000.16860-1-nish.malpani25@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 10 Sep 2020 16:51:03 +0300
+Message-ID: <CAHp75VfkncWnZROUb9OVf39KcoNXoOYJdsNZStj4R3AZqs_LRw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] iio: gyro: adxrs290: Add triggered buffer &
+ debugfs support
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 10-09-20 15:39:00, Oscar Salvador wrote:
-> On Thu, Sep 10, 2020 at 02:48:47PM +0200, Michal Hocko wrote:
-> > > Is there any actual usecase for a configuration like this? What is the
-> > > point to statically define additional memory like this when the same can
-> > > be achieved on the same command line?
-> 
-> Well, for qemu I am not sure, but if David is right, it seems you can face
-> the same if you reboot a vm with hotplugged memory.
+On Thu, Sep 10, 2020 at 3:30 PM Nishant Malpani
+<nish.malpani25@gmail.com> wrote:
+>
+> Introduce DATA_RDY trigger for triggered buffer setup; this enables continuous
+> data capture. Additionally, add support for direct register access using the debugfs
+> iio interface.
+>
+> The device-tree bindings documentation illustrates an example of using a GPIO irq
+> line to trigger a data capture.
+>
 
-OK, thanks for the clarification. I was not aware of the reboot.
+Patches 1 and 3 looks good to me now
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> Moreover, it seems that the problem we spotted with [1], it was a VM running on
-> Promox (KVM).
-> The Hypervisor probably said at boot time "Ey, I do have these ACPI devices, care
-> to enable them now"?
-> 
-> As always, there are all sorts of configurations/scenarios out there in the wild.
-> 
-> > Forgot to ask one more thing. Who is going to online that memory when
-> > userspace is not running yet?
-> 
-> Depends, if you have CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE set or you specify
-> memhp_default_online_type=[online,online_*], memory will get onlined right
-> after hot-adding stage:
-> 
->         /* online pages if requested */
->         if (memhp_default_online_type != MMOP_OFFLINE)
->                 walk_memory_blocks(start, size, NULL, online_memory_block);
-> 
-> If not, systemd-udev will do the magic once the system is up.
+> Nishant Malpani (3):
+>   iio: gyro: adxrs290: Add triggered buffer support
+>   dt-bindings: iio: gyro: adxrs290: Add interrupts support
+>   iio: gyro: adxrs290: Add debugfs register access support
+>
+>  .../bindings/iio/gyroscope/adi,adxrs290.yaml  |   6 +
+>  drivers/iio/gyro/Kconfig                      |   2 +
+>  drivers/iio/gyro/adxrs290.c                   | 237 ++++++++++++++++--
+>  3 files changed, 231 insertions(+), 14 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-Does that imply that we need udev to scan all existing devices and
-reprobe them?
+
 -- 
-Michal Hocko
-SUSE Labs
+With Best Regards,
+Andy Shevchenko
