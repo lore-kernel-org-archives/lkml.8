@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9874EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC6AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE3321941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFC6214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rNWuYzU1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t24P+wZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgIJSgi (ORCPT
+        id S1726287AbgIJSh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38004 "EHLO
+        Thu, 10 Sep 2020 14:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgIJSeE (ORCPT
+        with ESMTP id S1726728AbgIJSea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:34:04 -0400
+        Thu, 10 Sep 2020 14:34:30 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23450C061799;
-        Thu, 10 Sep 2020 11:33:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29F1C061573;
+        Thu, 10 Sep 2020 11:34:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=t4cbRdKf2ijE6kqJJxv8bdn8kFWgLxOFi/schcE0nRE=; b=rNWuYzU1YtoAnXiHJRmR/JtlkT
-        oCgCfmfDzsUSKwCARtS/TK+S44gKkkmnhS2j39NPtKkamP3sSBPTDhk0G9H0k/4D7vfFABR+v9+dq
-        Xf/Yqryar1Bue7sAFWv82sIm7AHNbrxhjKjp5h/1JLNf5Q4ctkoDa+s2hZ5z541SgJ5ZoBKb8OALD
-        XwY/scqtUcymhxGLbQkaEWio8afszwY8uzZpu6Md/nBl/jIqkpiqa8L/PNQR77A/aC8lQeH1OyKnE
-        bHfZXhiwmSEqg9jwzcMj/eoxkqfd+rC6tm/tMGjfLuL7DZg/mvNaDifqxPIL/6hn/Z+sQvAVosHyL
-        nMDv1z0w==;
+        bh=9Kn2iFLtjBF2LN/hYtvFQ/WKPU3K2jlU8w46DPT4v9k=; b=t24P+wZGPBULu7P1ekGMrb5y9T
+        +Q1IxPXTncTG4gGwrZhjgf4JJghC8ojB18ezEOesNeo4Xuqjhr0wHwKeYeiTkSWAu/RAssUiItsYh
+        NYU5A8Djhbd24fNw+Oz5dTRDqjbttRVgFEDZVwFxAFDmZKu/vgIL+3rT5W9t2BvdUeUTKwYjFasW4
+        +6lT8Ru9pPL8wGIiD6mjfygYSG5lYSrgza1ShAHEuy5rL7B422LXHzNcpvSvfiupaPI4Ph8RJyLX6
+        bUKIAao2SDGexvS6Pn8LYeVeNjsBmywkZEQZuiQhcC54PcAvlH1iO/eZraGUIu0C56F46awFsb6qI
+        jNq1efPg==;
 Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGRNp-0005GO-6D; Thu, 10 Sep 2020 18:33:21 +0000
+        id 1kGRNo-0005Fu-Ho; Thu, 10 Sep 2020 18:33:20 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     linux-mm@kvack.org
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -52,9 +52,9 @@ Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         Huang Ying <ying.huang@intel.com>,
         intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/8] proc: Optimise smaps for shmem entries
-Date:   Thu, 10 Sep 2020 19:33:14 +0100
-Message-Id: <20200910183318.20139-5-willy@infradead.org>
+Subject: [PATCH v2 2/8] mm: Use find_get_incore_page in memcontrol
+Date:   Thu, 10 Sep 2020 19:33:12 +0100
+Message-Id: <20200910183318.20139-3-willy@infradead.org>
 X-Mailer: git-send-email 2.21.3
 In-Reply-To: <20200910183318.20139-1-willy@infradead.org>
 References: <20200910183318.20139-1-willy@infradead.org>
@@ -65,37 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid bumping the refcount on pages when we're only interested in the
-swap entries.
+The current code does not protect against swapoff of the underlying
+swap device, so this is a bug fix as well as a worthwhile reduction in
+code complexity.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- fs/proc/task_mmu.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ mm/memcontrol.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 5066b0251ed8..e42d9e5e9a3c 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -520,16 +520,10 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
- 			page = device_private_entry_to_page(swpent);
- 	} else if (unlikely(IS_ENABLED(CONFIG_SHMEM) && mss->check_shmem_swap
- 							&& pte_none(*pte))) {
--		page = find_get_entry(vma->vm_file->f_mapping,
-+		page = xa_load(&vma->vm_file->f_mapping->i_pages,
- 						linear_page_index(vma, addr));
--		if (!page)
--			return;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index b807952b4d43..2f02eaee7115 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5539,35 +5539,15 @@ static struct page *mc_handle_swap_pte(struct vm_area_struct *vma,
+ static struct page *mc_handle_file_pte(struct vm_area_struct *vma,
+ 			unsigned long addr, pte_t ptent, swp_entry_t *entry)
+ {
+-	struct page *page = NULL;
+-	struct address_space *mapping;
+-	pgoff_t pgoff;
 -
- 		if (xa_is_value(page))
- 			mss->swap += PAGE_SIZE;
--		else
--			put_page(page);
--
- 		return;
- 	}
+ 	if (!vma->vm_file) /* anonymous vma */
+ 		return NULL;
+ 	if (!(mc.flags & MOVE_FILE))
+ 		return NULL;
  
+-	mapping = vma->vm_file->f_mapping;
+-	pgoff = linear_page_index(vma, addr);
+-
+ 	/* page is moved even if it's not RSS of this task(page-faulted). */
+-#ifdef CONFIG_SWAP
+ 	/* shmem/tmpfs may report page out on swap: account for that too. */
+-	if (shmem_mapping(mapping)) {
+-		page = find_get_entry(mapping, pgoff);
+-		if (xa_is_value(page)) {
+-			swp_entry_t swp = radix_to_swp_entry(page);
+-			*entry = swp;
+-			page = find_get_page(swap_address_space(swp),
+-					     swp_offset(swp));
+-		}
+-	} else
+-		page = find_get_page(mapping, pgoff);
+-#else
+-	page = find_get_page(mapping, pgoff);
+-#endif
+-	return page;
++	return find_get_incore_page(vma->vm_file->f_mapping,
++			linear_page_index(vma, addr));
+ }
+ 
+ /**
 -- 
 2.28.0
 
