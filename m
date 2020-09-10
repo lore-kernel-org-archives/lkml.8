@@ -2,264 +2,178 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A8AC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426B5C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7BEB21D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CB7221E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgIJVWM (ORCPT
+        id S1726694AbgIJVWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:22:12 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:34786 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731092AbgIJOYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 17:22:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54740 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731097AbgIJOYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 10 Sep 2020 10:24:06 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 784D020182C;
-        Thu, 10 Sep 2020 16:17:04 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 940D0200788;
-        Thu, 10 Sep 2020 16:17:01 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E0D26402CA;
-        Thu, 10 Sep 2020 16:16:57 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: ak4458: Add DSD support for ak4458 and ak4497
-Date:   Thu, 10 Sep 2020 22:10:32 +0800
-Message-Id: <1599747032-20055-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 69493383A936470940D8;
+        Thu, 10 Sep 2020 22:05:52 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 22:05:44 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
+        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
+        <wright.feng@cypress.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <yanaijie@huawei.com>,
+        <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] brcmsmac: phytbl_lcn: Eliminate defined but not used 'dot11lcn_gain_tbl_rev1'
+Date:   Thu, 10 Sep 2020 22:05:05 +0800
+Message-ID: <20200910140505.1168317-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ak4458 can't support DSD512 format, but ak4497 can, so add
-a new variable in ak4458_drvdata to distinguish these two
-platform.
+This addresses the following gcc warning with "make W=1":
 
-In hw_params(), calculate bit clock according to different DSD
-format and configure DSD register.
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c:108:18:
+warning: ‘dot11lcn_gain_tbl_rev1’ defined but not used
+[-Wunused-const-variable=]
+  108 | static const u32 dot11lcn_gain_tbl_rev1[] = {
+      |                  ^~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- sound/soc/codecs/ak4458.c | 82 +++++++++++++++++++++++++++++++++++----
- sound/soc/codecs/ak4458.h |  5 ++-
- 2 files changed, 79 insertions(+), 8 deletions(-)
+ .../brcm80211/brcmsmac/phy/phytbl_lcn.c       | 99 -------------------
+ 1 file changed, 99 deletions(-)
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index 763e6839428f..9054964d5cfa 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -31,11 +31,13 @@ static const char *ak4458_supply_names[AK4458_NUM_SUPPLIES] = {
- struct ak4458_drvdata {
- 	struct snd_soc_dai_driver *dai_drv;
- 	const struct snd_soc_component_driver *comp_drv;
-+	bool  dsd512;	/* DSD512 is supported or not */
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c
+index 7526aa441de1..5331b5468e14 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c
+@@ -105,105 +105,6 @@ static const u32 dot11lcn_gain_tbl_rev0[] = {
+ 	0x00000000,
  };
  
- /* AK4458 Codec Private Data */
- struct ak4458_priv {
- 	struct regulator_bulk_data supplies[AK4458_NUM_SUPPLIES];
-+	const struct ak4458_drvdata *drvdata;
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct gpio_desc *reset_gpiod;
-@@ -136,6 +138,10 @@ static const char * const ak4458_ats_select_texts[] = {
- /* DIF2 bit Audio Interface Format Setting(BICK fs) */
- static const char * const ak4458_dif_select_texts[] = {"32fs,48fs", "64fs",};
- 
-+/* DSD input pin select */
-+static const char * const ak4497_dsd_input_path_select[] = {
-+	"16_17_19pin", "3_4_5pin"};
-+
- static const struct soc_enum ak4458_dac1_dem_enum =
- 	SOC_ENUM_SINGLE(AK4458_01_CONTROL2, 1,
- 			ARRAY_SIZE(ak4458_dem_select_texts),
-@@ -175,6 +181,10 @@ static const struct soc_enum ak4458_dif_enum =
- 	SOC_ENUM_SINGLE(AK4458_00_CONTROL1, 3,
- 			ARRAY_SIZE(ak4458_dif_select_texts),
- 			ak4458_dif_select_texts);
-+static const struct soc_enum ak4497_dsdp_enum =
-+	SOC_ENUM_SINGLE(AK4458_09_DSD2, 2,
-+			ARRAY_SIZE(ak4497_dsd_input_path_select),
-+			ak4497_dsd_input_path_select);
- 
- static int get_digfil(struct snd_kcontrol *kcontrol,
- 		      struct snd_ctl_elem_value *ucontrol)
-@@ -282,6 +292,7 @@ static const struct snd_kcontrol_new ak4497_snd_controls[] = {
- 	SOC_ENUM("AK4497 Sound Mode", ak4458_sm_enum),
- 	SOC_ENUM("AK4497 Attenuation transition Time Setting",
- 		 ak4458_ats_enum),
-+	SOC_ENUM("AK4497 DSD Data Input Pin", ak4497_dsdp_enum),
- };
- 
- /* ak4497 dapm widgets */
-@@ -325,12 +336,54 @@ static int ak4458_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_component *component = dai->component;
- 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
- 	int pcm_width = max(params_physical_width(params), ak4458->slot_width);
--	int nfs1;
--	u8 format;
-+	u8 format, dsdsel0, dsdsel1;
-+	int nfs1, dsd_bclk;
- 
- 	nfs1 = params_rate(params);
- 	ak4458->fs = nfs1;
- 
-+	/* calculate bit clock */
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_DSD_U8:
-+	case SNDRV_PCM_FORMAT_DSD_U16_LE:
-+	case SNDRV_PCM_FORMAT_DSD_U16_BE:
-+	case SNDRV_PCM_FORMAT_DSD_U32_LE:
-+	case SNDRV_PCM_FORMAT_DSD_U32_BE:
-+		dsd_bclk = nfs1 * params_physical_width(params);
-+		switch (dsd_bclk) {
-+		case 2822400:
-+			dsdsel0 = 0;
-+			dsdsel1 = 0;
-+			break;
-+		case 5644800:
-+			dsdsel0 = 1;
-+			dsdsel1 = 0;
-+			break;
-+		case 11289600:
-+			dsdsel0 = 0;
-+			dsdsel1 = 1;
-+			break;
-+		case 22579200:
-+			if (ak4458->drvdata->dsd512) {
-+				dsdsel0 = 1;
-+				dsdsel1 = 1;
-+			} else {
-+				dev_err(dai->dev, "DSD512 not supported.\n");
-+				return -EINVAL;
-+			}
-+			break;
-+		default:
-+			dev_err(dai->dev, "Unsupported dsd bclk.\n");
-+			return -EINVAL;
-+		}
-+
-+		snd_soc_component_update_bits(component, AK4458_06_DSD1,
-+					      AK4458_DSDSEL_MASK, dsdsel0);
-+		snd_soc_component_update_bits(component, AK4458_09_DSD2,
-+					      AK4458_DSDSEL_MASK, dsdsel1);
-+		break;
-+	}
-+
- 	/* Master Clock Frequency Auto Setting Mode Enable */
- 	snd_soc_component_update_bits(component, AK4458_00_CONTROL1, 0x80, 0x80);
- 
-@@ -355,6 +408,9 @@ static int ak4458_hw_params(struct snd_pcm_substream *substream,
- 		case SND_SOC_DAIFMT_DSP_B:
- 			format = AK4458_DIF_32BIT_MSB;
- 			break;
-+		case SND_SOC_DAIFMT_PDM:
-+			format = AK4458_DIF_32BIT_MSB;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -393,6 +449,7 @@ static int ak4458_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	case SND_SOC_DAIFMT_LEFT_J:
- 	case SND_SOC_DAIFMT_RIGHT_J:
- 	case SND_SOC_DAIFMT_DSP_B:
-+	case SND_SOC_DAIFMT_PDM:
- 		ak4458->fmt = fmt & SND_SOC_DAIFMT_FORMAT_MASK;
- 		break;
- 	default:
-@@ -401,6 +458,12 @@ static int ak4458_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 		return -EINVAL;
- 	}
- 
-+	/* DSD mode */
-+	snd_soc_component_update_bits(component, AK4458_02_CONTROL3,
-+				      AK4458_DP_MASK,
-+				      ak4458->fmt == SND_SOC_DAIFMT_PDM ?
-+				      AK4458_DP_MASK : 0);
-+
- 	ak4458_rstn_control(component, 0);
- 	ak4458_rstn_control(component, 1);
- 
-@@ -472,7 +535,10 @@ static int ak4458_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
- 
- #define AK4458_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE |\
- 			 SNDRV_PCM_FMTBIT_S24_LE |\
--			 SNDRV_PCM_FMTBIT_S32_LE)
-+			 SNDRV_PCM_FMTBIT_S32_LE |\
-+			 SNDRV_PCM_FMTBIT_DSD_U8 |\
-+			 SNDRV_PCM_FMTBIT_DSD_U16_LE |\
-+			 SNDRV_PCM_FMTBIT_DSD_U32_LE)
- 
- static const unsigned int ak4458_rates[] = {
- 	8000, 11025,  16000, 22050,
-@@ -668,11 +734,13 @@ static const struct regmap_config ak4458_regmap = {
- static const struct ak4458_drvdata ak4458_drvdata = {
- 	.dai_drv = &ak4458_dai,
- 	.comp_drv = &soc_codec_dev_ak4458,
-+	.dsd512 = false,
- };
- 
- static const struct ak4458_drvdata ak4497_drvdata = {
- 	.dai_drv = &ak4497_dai,
- 	.comp_drv = &soc_codec_dev_ak4497,
-+	.dsd512 = true,
- };
- 
- static const struct dev_pm_ops ak4458_pm = {
-@@ -684,7 +752,6 @@ static const struct dev_pm_ops ak4458_pm = {
- static int ak4458_i2c_probe(struct i2c_client *i2c)
- {
- 	struct ak4458_priv *ak4458;
--	const struct ak4458_drvdata *drvdata;
- 	int ret, i;
- 
- 	ak4458 = devm_kzalloc(&i2c->dev, sizeof(*ak4458), GFP_KERNEL);
-@@ -698,7 +765,7 @@ static int ak4458_i2c_probe(struct i2c_client *i2c)
- 	i2c_set_clientdata(i2c, ak4458);
- 	ak4458->dev = &i2c->dev;
- 
--	drvdata = of_device_get_match_data(&i2c->dev);
-+	ak4458->drvdata = of_device_get_match_data(&i2c->dev);
- 
- 	ak4458->reset_gpiod = devm_gpiod_get_optional(ak4458->dev, "reset",
- 						      GPIOD_OUT_LOW);
-@@ -720,8 +787,9 @@ static int ak4458_i2c_probe(struct i2c_client *i2c)
- 		return ret;
- 	}
- 
--	ret = devm_snd_soc_register_component(ak4458->dev, drvdata->comp_drv,
--					      drvdata->dai_drv, 1);
-+	ret = devm_snd_soc_register_component(ak4458->dev,
-+					      ak4458->drvdata->comp_drv,
-+					      ak4458->drvdata->dai_drv, 1);
- 	if (ret < 0) {
- 		dev_err(ak4458->dev, "Failed to register CODEC: %d\n", ret);
- 		return ret;
-diff --git a/sound/soc/codecs/ak4458.h b/sound/soc/codecs/ak4458.h
-index f906215f7e4e..9548c5d78621 100644
---- a/sound/soc/codecs/ak4458.h
-+++ b/sound/soc/codecs/ak4458.h
-@@ -83,4 +83,7 @@
- #define AK4458_ATS_SHIFT	6
- #define AK4458_ATS_MASK		GENMASK(7, 6)
- 
--#endif /* _AK4458_H */
-+#define AK4458_DSDSEL_MASK		(0x1 << 0)
-+#define AK4458_DP_MASK			(0x1 << 7)
-+
-+#endif
+-static const u32 dot11lcn_gain_tbl_rev1[] = {
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000008,
+-	0x00000004,
+-	0x00000008,
+-	0x00000001,
+-	0x00000005,
+-	0x00000009,
+-	0x0000000D,
+-	0x00000011,
+-	0x00000051,
+-	0x00000091,
+-	0x00000011,
+-	0x00000051,
+-	0x00000091,
+-	0x000000d1,
+-	0x00000053,
+-	0x00000093,
+-	0x000000d3,
+-	0x000000d7,
+-	0x00000117,
+-	0x00000517,
+-	0x00000917,
+-	0x00000957,
+-	0x00000d57,
+-	0x00001157,
+-	0x00001197,
+-	0x00005197,
+-	0x00009197,
+-	0x0000d197,
+-	0x00011197,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000008,
+-	0x00000004,
+-	0x00000008,
+-	0x00000001,
+-	0x00000005,
+-	0x00000009,
+-	0x0000000D,
+-	0x00000011,
+-	0x00000051,
+-	0x00000091,
+-	0x00000011,
+-	0x00000051,
+-	0x00000091,
+-	0x000000d1,
+-	0x00000053,
+-	0x00000093,
+-	0x000000d3,
+-	0x000000d7,
+-	0x00000117,
+-	0x00000517,
+-	0x00000917,
+-	0x00000957,
+-	0x00000d57,
+-	0x00001157,
+-	0x00005157,
+-	0x00009157,
+-	0x0000d157,
+-	0x00011157,
+-	0x00015157,
+-	0x00019157,
+-	0x0001d157,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-	0x00000000,
+-};
+-
+ static const u16 dot11lcn_aux_gain_idx_tbl_rev0[] = {
+ 	0x0401,
+ 	0x0402,
 -- 
-2.27.0
+2.25.4
 
