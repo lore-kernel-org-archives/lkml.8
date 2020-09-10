@@ -2,119 +2,118 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4430BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F329F207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C412B207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:07:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Elr96xnz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Wv3iIPZm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Z7QXKq9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgIJNHL (ORCPT
+        id S1730512AbgIJNHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:07:11 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:49512
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730909AbgIJM6T (ORCPT
+        Thu, 10 Sep 2020 09:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbgIJNFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:58:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599742198;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=s775L7iCYKpGMncC/fTv63fok23Pnh/vNT1134dXG/I=;
-        b=Elr96xnzsEBEUVxFkM7+mD6XMQzh9xlVq4Brz8bIKJnMDvSi1h14zCUFkejWeOfW
-        R5SACiNIuAObBH2Pb82/9UAy99TS7GDOfNucN4Z2Euqhv8MST+nzqQBcb1yZ5s9Cieu
-        yzLU6A6PeyNu1POswfM/bDdYqidogQwTXneVxHkg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599742198;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=s775L7iCYKpGMncC/fTv63fok23Pnh/vNT1134dXG/I=;
-        b=Wv3iIPZmLaD1mQJyPljMTQiUJ40ELe5fJ5rkE7TTk/pyGEVNsuHRr8997X2cDNW3
-        VxFwSm8ikScENv1tYJJ/UnEWPM0hQKxyOcXAtARDo5ZF+H+hdqvKqSRm4Kxulje5q5w
-        rxYqdhdLfUrgb/QP2LSW18r/xKRCcV+uXTapIEdE=
+        Thu, 10 Sep 2020 09:05:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062EEC061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:00 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k18so5710893wmj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G6p9nmKGbXBOFJlaJm/m/zH8eOM0IPKfdB5t8Uf7UlA=;
+        b=Z7QXKq9+cHr0Hks+8HPVYqsE/2qjY4vG5NUdQy0VUBicPBaiRpl5FUAEbS1iV3wL0k
+         17b7N6D5Ruc2Lnq+9prTTsLtyI90nWrkDqMqgJYjImEJL3bQvlHFuuGlykf6UlZd510O
+         iiuebXsi1TJA0unp0mjhcr2o/+DcrEd+K/eHfId7OQnBHnitNJ93oaL3KP21NlTj+n2+
+         nQTNPWbKRL2NUKULEbkQki7B8CmoMq30uJKdAPYfvR3KcjUY87PXwLDiBGmw9HVH/e2F
+         PXYRWcm0ml7UGEbJTvP3Jt6N2WaF0Ou5vkFr7eAvrzc7ILRDNn0lCaD9cyHiljNpI0n4
+         zfCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G6p9nmKGbXBOFJlaJm/m/zH8eOM0IPKfdB5t8Uf7UlA=;
+        b=i+6qbndCeShyp9W9ei8lmpJYPXHepjHUo9awxQDdSY9/8kolv9Wuapsq/ciVRzmZfm
+         j6rSl+stWcObxQbItkFCMZ1ifaTmJ5ufTGeIq6DJzSYqKSQD/BQcsAicdRmx94soRUTG
+         ypcYBwugtq5h6t+mkclKn8CUKA62edVhmbge0/tcq8Z8zCmP4hqtOPr3dYOgUTlsBK1L
+         GeHdHVr7/zP037jo6WEFH3CchTZ42ME56IUEDzGNRVLOajpOKnKrb5YZVqFYInZvCCpW
+         LAKh5O7uOCVk4yHjbZPRGKA5lEkehk/ejyeRpc376XLl3M2c795LfYDN6hipa9OI4WHX
+         eBwQ==
+X-Gm-Message-State: AOAM531uWGjWJad7y7dct8MxGU9DafW7fBZ8cgMvlEl1b7RNuaMl0Et0
+        ZkVAyq1aPTNUM1uanhLSWvG4Jg==
+X-Google-Smtp-Source: ABdhPJxUi3e922pita34aArm+ddFZanF95uA8l8B2eYmWmzgwphxpz+co7frH1pXAcbUOaASGZfL1A==
+X-Received: by 2002:a1c:408a:: with SMTP id n132mr7974517wma.45.1599743097333;
+        Thu, 10 Sep 2020 06:04:57 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id p16sm9321988wro.71.2020.09.10.06.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 06:04:56 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 00/11] rtc: rx8010: use regmap instead of i2c smbus API
+Date:   Thu, 10 Sep 2020 15:04:35 +0200
+Message-Id: <20200910130446.5689-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 10 Sep 2020 12:49:58 +0000
-From:   skakit@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V4 2/4] arm64: dts: qcom: sc7180: Improve the pin config
- settings for CTS and TX
-In-Reply-To: <CAD=FV=XZgmQXCzVx3CdeOkAWC6zz8bNW+f6Qt1=O9ZSaGUr75g@mail.gmail.com>
-References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
- <1599145498-20707-3-git-send-email-skakit@codeaurora.org>
- <CAD=FV=XZgmQXCzVx3CdeOkAWC6zz8bNW+f6Qt1=O9ZSaGUr75g@mail.gmail.com>
-Message-ID: <010101747810c24f-a169785b-0866-4932-a24e-80ff53393de2-000000@us-west-2.amazonses.com>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.10-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 2020-09-10 02:58, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Sep 3, 2020 at 8:07 AM satya priya <skakit@codeaurora.org> 
-> wrote:
->> 
->> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> @@ -474,32 +474,30 @@
->>  &qup_uart3_default {
->>         pinconf-cts {
->>                 /*
->> -                * Configure a pull-down on 38 (CTS) to match the pull 
->> of
->> -                * the Bluetooth module.
->> +                * Configure no-pull on CTS. As this is driven by BT, 
->> do not
->> +                * specify any pull in order to not conflict with BT 
->> pulls.
->>                  */
->>                 pins = "gpio38";
->> -               bias-pull-down;
->> -               output-high;
-> 
-> Weird, how did that output-high sneak in there?  Glad it's going away.
-> 
-> 
->> +               bias-disable;
-> 
-> I'm not convinced that the removal of the pul is the correct thing
-> here.  Specifically for the rx line the comment makes the argument
-> that if we power off the Bluetooth module then it will stop driving
-> this pin.  In that case if we remove the pull here then the line will
-> be floating and that can cause some extra power consumption as the
-> line floats between different logic levels.  Do you really need to
-> remove this pull?
-> 
+I want to use this driver on a platform where the i2c controller doesn't
+speak SMBUS. This series converts the driver to i2c regmap which can
+figure out the correct protocol to use.
 
-Okay, will keep the pull-down back for CTS.
+The actual conversion happens in patch 10, the rest are just cleanups and
+refactoring.
 
-> Same comment for the next patch where you add the sleep settings.
-> 
-> 
-> -Doug
+v1 -> v2:
+- s/parentheses/brackets/g
+- add a patch switching the driver to using the preferred RTC API
+- rework the patch removing magic values
+- use range_max and range_min instead of manual range checks
+- add a patch adding a helper variable in probe() for client->dev
+- add a patch using sizeof(*rx8010) instead of sizeof(struct rx8010_data)
+
+--
+
+Alexandre: I believe that the implementation of devm_rtc_allocate_device()
+and rtc_register_device() is wrong as I explained under the previous
+version of this series. I'll send an RFC that reworks this part soon.
+
+Bartosz Golaszewski (11):
+  rtc: rx8010: remove unnecessary brackets
+  rtc: rx8010: consolidate local variables of the same type
+  rtc: rx8010: use tabs instead of spaces for code formatting
+  rtc: rx8010: rename ret to err in rx8010_set_time()
+  rtc: rx8010: don't use magic values for time buffer length
+  rtc: rx8010: drop unnecessary initialization
+  rtc: rx8010: use a helper variable for client->dev in probe()
+  rtc: rx8010: prefer sizeof(*val) over sizeof(struct type_of_val)
+  rtc: rx8010: switch to using the preferred RTC API
+  rtc: rx8010: convert to using regmap
+  rtc: rx8010: use range checking provided by core RTC code
+
+ drivers/rtc/rtc-rx8010.c | 306 +++++++++++++++++----------------------
+ 1 file changed, 131 insertions(+), 175 deletions(-)
+
+-- 
+2.26.1
+
