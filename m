@@ -2,137 +2,174 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A4CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E03208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9617E221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFF9tYL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgIJVbo (ORCPT
+        id S1728331AbgIJVb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:31:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:36660 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730955AbgIJNvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:51:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 155C1113E;
-        Thu, 10 Sep 2020 06:51:54 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BEE23F66E;
-        Thu, 10 Sep 2020 06:51:51 -0700 (PDT)
-Subject: Re: [PATCH 12/12] dma-mapping: move the dma_declare_coherent_memory
- documentation
-To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20200908164758.3177341-1-hch@lst.de>
- <20200908164758.3177341-13-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <07c51b70-fb7d-cf44-b5c3-54e3148c11ae@arm.com>
-Date:   Thu, 10 Sep 2020 14:51:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 17:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730637AbgIJNvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:51:45 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4FDC061796;
+        Thu, 10 Sep 2020 06:51:44 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id j7so949550plk.11;
+        Thu, 10 Sep 2020 06:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s8hpTJ5jpmu25r8Rx3Kgs3iF4PPo1Ln9S4YDeFEjnfs=;
+        b=CFF9tYL5KeE0BlS/F84CUI6dKWsCH+MrmT4ZuZWKR13iqL116kIqKL1o6m842w8bVD
+         uL3e4eicEGPy/IHrqguM7QLSYYW7C670Ce4wGcGxAFE/UhiV7fP/g0A+WRGqYVpvb6km
+         6PsnW0mkpB6++hV7TRwnFNtuEP8NLhrl7AJqWNtqhbahlOluKnClxol2j9+Yz3OcI6SR
+         b3Qt5+w7r6toPI1LyCNeQ69qBZSbkPYmdCiqKsItJ52yw5JZX1zA3PWDzj3wtN0REcCU
+         mfxd6ssCbAHJrJbOfDmX4Qr8f232lXABltZ2Zf1ltrrCO3/h4Y5RlHmUtdyPO4RHu5fI
+         JU9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s8hpTJ5jpmu25r8Rx3Kgs3iF4PPo1Ln9S4YDeFEjnfs=;
+        b=agJNeE9Qq5U8Ja391WdDkYiboOOZLC+53W9iFwBOqASmyHlWqaI1mZOPX4v+qBrEGX
+         iZRnJBKENF200tx25dGKFI0cD4TAkDz/tNi6Kci+AVGkszGwSLwXk8KDz/KVeNB4hS8k
+         DAdEfWiIMcHFoGowBX7IBAh1JeAh9rUfI4nBHVyOM0v0m/GaWTGoZD/jbEC5JX8ag7u9
+         gATMYXNMZ696PUsMp4+lVtZSyUNoWWyRiBH4dWlhpkNQEIx08s6irSfiyoQtACE01IxO
+         vLwCLoFf4N1zytTURq7qGUVQVpUJbZCMpTWwdLEXwQ4vE0vkaZmbJl101fMFTCBp9aio
+         14cQ==
+X-Gm-Message-State: AOAM532opxQFTHNok+Nkux0pEdl5u3l2nzENiZVKJgufT6I1HyhIJnGB
+        C4LudZM4tSbufB6EDvsr4KQ/JdDdkpKqeGpvbJJcrPkX9yrWM+F3
+X-Google-Smtp-Source: ABdhPJz3RqmvrCZbiqBb7VrCUo9x60EzXi4LWBPQA9Ku3MI22FHzXcVDfKsiKq9AIWOmp08oGgBgCXXYTR9Fi6FSgdA=
+X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr23153pjb.181.1599745904138;
+ Thu, 10 Sep 2020 06:51:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200908164758.3177341-13-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200910122711.16670-1-nish.malpani25@gmail.com>
+In-Reply-To: <20200910122711.16670-1-nish.malpani25@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 10 Sep 2020 16:51:26 +0300
+Message-ID: <CAHp75VeMJruyOCskBGZtyeR-p3sh7hLk2QH32LULAo7wSX3KUA@mail.gmail.com>
+Subject: Re: [PATCH] iio: gyro: adxrs290: use hook for devm resource unwinding
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 17:47, Christoph Hellwig wrote:
-> dma_declare_coherent_memory should not be in a DMA API guide aimed
-> at driver writers (that is consumers of the API).  Move it to a comment
-> near the function instead.
+On Thu, Sep 10, 2020 at 3:27 PM Nishant Malpani
+<nish.malpani25@gmail.com> wrote:
+>
+> Make use of devm_add_action_or_reset() hook to switch device into STANDBY
+> mode during standard resource unwinding. The patch includes a helper
+> function, in the form of adxrs290_set_mode(), to realise driving the
+> device into STANDBY mode.
 
-I still think there might be an occasional valid use for device-local 
-memory outside the scope of platform code without the driver having to 
-go full ZONE_DEVICE/HMM/TTM, e.g. with stuff like PCIe-based FPGA 
-prototyping cards, but the kind of driver I'm imagining for that case 
-would never be upstream anyway (if it were even written, rather than 
-just using hard-coded hacks), so meh.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 > ---
->   Documentation/core-api/dma-api.rst | 24 ------------------------
->   kernel/dma/coherent.c              | 17 +++++++++++++++++
->   2 files changed, 17 insertions(+), 24 deletions(-)
-> 
-> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
-> index 3b3abbbb4b9a6f..90239348b30f6f 100644
-> --- a/Documentation/core-api/dma-api.rst
-> +++ b/Documentation/core-api/dma-api.rst
-> @@ -586,30 +586,6 @@ the DMA_ATTR_NON_CONSISTENT flag starting at virtual address vaddr and
->   continuing on for size.  Again, you *must* observe the cache line
->   boundaries when doing this.
->   
-> -::
-> -
-> -	int
-> -	dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
-> -				    dma_addr_t device_addr, size_t size);
-> -
-> -Declare region of memory to be handed out by dma_alloc_coherent() when
-> -it's asked for coherent memory for this device.
-> -
-> -phys_addr is the CPU physical address to which the memory is currently
-> -assigned (this will be ioremapped so the CPU can access the region).
-> -
-> -device_addr is the DMA address the device needs to be programmed
-> -with to actually address this memory (this will be handed out as the
-> -dma_addr_t in dma_alloc_coherent()).
-> -
-> -size is the size of the area (must be multiples of PAGE_SIZE).
-> -
-> -As a simplification for the platforms, only *one* such region of
-> -memory may be declared per device.
-> -
-> -For reasons of efficiency, most platforms choose to track the declared
-> -region only at the granularity of a page.  For smaller allocations,
-> -you should use the dma_pool() API.
->   
->   Part III - Debug drivers use of the DMA-API
->   -------------------------------------------
-> diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
-> index 2a0c4985f38e41..f85d14bbfcbe03 100644
-> --- a/kernel/dma/coherent.c
-> +++ b/kernel/dma/coherent.c
-> @@ -107,6 +107,23 @@ static int dma_assign_coherent_memory(struct device *dev,
->   	return 0;
->   }
->   
-> +/*
-> + * Declare a region of memory to be handed out by dma_alloc_coherent() when it
-> + * is asked for coherent memory for this device.  This shall only be used
-> + * from platform code, usually based on the device tree description.
-> + *
-> + * phys_addr is the CPU physical address to which the memory is currently
-> + * assigned (this will be ioremapped so the CPU can access the region).
-> + *
-> + * device_addr is the DMA address the device needs to be programmed with to
-> + * actually address this memory (this will be handed out as the dma_addr_t in
-> + * dma_alloc_coherent()).
-> + *
-> + * size is the size of the area (must be a multiple of PAGE_SIZE).
-> + *
-> + * As a simplification for the platforms, only *one* such region of memory may
-> + * be declared per device.
-> + */
->   int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
->   				dma_addr_t device_addr, size_t size)
->   {
-> 
+>  drivers/iio/gyro/adxrs290.c | 61 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 58 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
+> index ff989536d2fb..2864eb443957 100644
+> --- a/drivers/iio/gyro/adxrs290.c
+> +++ b/drivers/iio/gyro/adxrs290.c
+> @@ -192,15 +192,70 @@ static int adxrs290_set_filter_freq(struct iio_dev *indio_dev,
+>         return adxrs290_spi_write_reg(st->spi, ADXRS290_REG_FILTER, val);
+>  }
+>
+> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
+> +{
+> +       struct adxrs290_state *st = iio_priv(indio_dev);
+> +       int val, ret;
+> +
+> +       if (st->mode == mode)
+> +               return 0;
+> +
+> +       mutex_lock(&st->lock);
+> +
+> +       ret = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
+> +       if (ret < 0)
+> +               goto out_unlock;
+> +
+> +       val = ret;
+> +
+> +       switch (mode) {
+> +       case ADXRS290_MODE_STANDBY:
+> +               val &= ~ADXRS290_MEASUREMENT;
+> +               break;
+> +       case ADXRS290_MODE_MEASUREMENT:
+> +               val |= ADXRS290_MEASUREMENT;
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               goto out_unlock;
+> +       }
+> +
+> +       ret = adxrs290_spi_write_reg(st->spi, ADXRS290_REG_POWER_CTL, val);
+> +       if (ret < 0) {
+> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
+> +               goto out_unlock;
+> +       }
+> +
+> +       /* update cached mode */
+> +       st->mode = mode;
+> +
+> +out_unlock:
+> +       mutex_unlock(&st->lock);
+> +       return ret;
+> +}
+> +
+> +static void adxrs290_chip_off_action(void *data)
+> +{
+> +       struct iio_dev *indio_dev = data;
+> +
+> +       adxrs290_set_mode(indio_dev, ADXRS290_MODE_STANDBY);
+> +}
+> +
+>  static int adxrs290_initial_setup(struct iio_dev *indio_dev)
+>  {
+>         struct adxrs290_state *st = iio_priv(indio_dev);
+> +       struct spi_device *spi = st->spi;
+> +       int ret;
+> +
+> +       ret = adxrs290_spi_write_reg(spi, ADXRS290_REG_POWER_CTL,
+> +                                    ADXRS290_MEASUREMENT | ADXRS290_TSM);
+> +       if (ret < 0)
+> +               return ret;
+>
+>         st->mode = ADXRS290_MODE_MEASUREMENT;
+>
+> -       return adxrs290_spi_write_reg(st->spi,
+> -                                     ADXRS290_REG_POWER_CTL,
+> -                                     ADXRS290_MEASUREMENT | ADXRS290_TSM);
+> +       return devm_add_action_or_reset(&spi->dev, adxrs290_chip_off_action,
+> +                                       indio_dev);
+>  }
+>
+>  static int adxrs290_read_raw(struct iio_dev *indio_dev,
+> --
+> 2.20.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
