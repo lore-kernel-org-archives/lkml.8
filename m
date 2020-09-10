@@ -6,87 +6,74 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D153C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D34C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0D6A2145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F422145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbgIJOrZ (ORCPT
+        id S1731169AbgIJOsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:47:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53474 "EHLO mx2.suse.de"
+        Thu, 10 Sep 2020 10:48:35 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55232 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbgIJOkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:40:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 747A6B333;
-        Thu, 10 Sep 2020 14:40:34 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 16:40:18 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Laurent Dufour <ldufour@linux.ibm.com>, akpm@linux-foundation.org,
-        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200910144018.GK28354@dhcp22.suse.cz>
-References: <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
- <20200910072331.GB28354@dhcp22.suse.cz>
- <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
- <20200910111246.GE28354@dhcp22.suse.cz>
- <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
- <20200910120343.GA6635@linux>
- <20200910124755.GG28354@dhcp22.suse.cz>
- <20200910124847.GH28354@dhcp22.suse.cz>
- <20200910133854.GA8713@linux>
- <20200910135106.GI28354@dhcp22.suse.cz>
+        id S1730669AbgIJOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:47:10 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kGNqf-00E57e-Cn; Thu, 10 Sep 2020 16:46:53 +0200
+Date:   Thu, 10 Sep 2020 16:46:53 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     Pavel Machek <pavel@ucw.cz>, netdev@vger.kernel.org,
+        linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
+ for LEDs controlled by Marvell PHYs
+Message-ID: <20200910144653.GA3354160@lunn.ch>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+ <20200909162552.11032-7-marek.behun@nic.cz>
+ <20200910122341.GC7907@duo.ucw.cz>
+ <20200910131541.GD3316362@lunn.ch>
+ <20200910161522.3cf3ad63@dellmb.labs.office.nic.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910135106.GI28354@dhcp22.suse.cz>
+In-Reply-To: <20200910161522.3cf3ad63@dellmb.labs.office.nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 10-09-20 15:51:07, Michal Hocko wrote:
-> On Thu 10-09-20 15:39:00, Oscar Salvador wrote:
-> > On Thu, Sep 10, 2020 at 02:48:47PM +0200, Michal Hocko wrote:
-[...]
-> > > Forgot to ask one more thing. Who is going to online that memory when
-> > > userspace is not running yet?
-> > 
-> > Depends, if you have CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE set or you specify
-> > memhp_default_online_type=[online,online_*], memory will get onlined right
-> > after hot-adding stage:
-> > 
-> >         /* online pages if requested */
-> >         if (memhp_default_online_type != MMOP_OFFLINE)
-> >                 walk_memory_blocks(start, size, NULL, online_memory_block);
-> > 
-> > If not, systemd-udev will do the magic once the system is up.
+> Moreover I propose (and am willing to do) this:
+>   Rewrite phy_led_trigger so that it registers one trigger, `phydev`.
+>   The identifier of the PHY which should be source of the trigger can be
+>   set via a separate sysfs file, `device_name`, like in netdev trigger.
+>   The linked speed on which the trigger should light the LED will be
+>   selected via sysfs file `mode` (or do you propose another name?
+>   `trigger_on` or something?)
 > 
-> Does that imply that we need udev to scan all existing devices and
-> reprobe them?
+>   Example:
+>     # cd /sys/class/leds/<LED>
+>     # echo phydev >trigger
+>     # echo XYZ >device_name
+>     # cat mode
+>     1Gbps 100Mbps 10Mbps
+>     # echo 1Gbps >mode
+>     # cat mode
+>     [1Gbps] 100Mbps 10Mbps
+> 
+>   Also the code should be moved from driver/net/phy to
+>   drivers/leds/trigger.
+> 
+>   The old API can be declared deprecated or removed, but outright
+>   removal may cause some people to complain.
 
-I've checked the sysfs side of things and it seems that the KOBJ_ADD
-event gets lost because there are no listeners
-(create_memory_block_devices -> .... -> device_register -> ... ->
-device_add -> kobject_uevent(&dev->kobj, KOBJ_ADD) ->
-kobject_uevent_net_broadcast). So the only way to find out about those
-devices once the init is up and something than intercept those events is
-to rescan devices.
+This is ABI, so you cannot remove it, or change it. You can however
+add to it, in a backwards compatible way.
 
-This is really unfortunate because this solution really doesn't scale
-with most usecases which do not do early boot hotplug and this can get
-more than interesting on machines like ppc which have gazillions of
-memory block devices because they use insanly small blocks and just
-imagine a multi TB machine how that scales. Sigh...
--- 
-Michal Hocko
-SUSE Labs
+    Andrew
