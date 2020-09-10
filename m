@@ -2,94 +2,134 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B94C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D633C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20862221E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599772821;
-	bh=Ze7vXi1wbkU0MsV4ETWUDVXtSmlXna+i8eZq+cvFNxM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nayKCMRR2595Eubb4OZimDgXCt+StsqdALeQzUHzbEBVTtbYHx15CF3ZSVZK3FTm7
-	 FhqAJjFARdI3gqT/2W5F3U9jrAYi8xuYYbvrupywMHTJxTcKckPZenZ96dUvk/x3Vd
-	 w5kr5aB6mEpzLgJViRqQ0Joi5i0jRg8ZCmDnaueY=
+	by mail.kernel.org (Postfix) with ESMTP id 74F9F221E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgIJVUT (ORCPT
+        id S1728212AbgIJVUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:20:19 -0400
-Received: from condef-05.nifty.com ([202.248.20.70]:42807 "EHLO
-        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730262AbgIJO0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:26:13 -0400
-Received: from conuserg-09.nifty.com ([10.126.8.72])by condef-05.nifty.com with ESMTP id 08ADllED030900;
-        Thu, 10 Sep 2020 22:47:48 +0900
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 08ADiY4U001894;
-        Thu, 10 Sep 2020 22:44:34 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 08ADiY4U001894
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599745475;
-        bh=WL98q/7s+UmiqnVaDR4JUCigpcZ/zOKRJsU9m2uipak=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uMHg8B9hXQAKipMm67kWTGQPCaRSrrFL5TEi64sGGq0dDnT2S79HsPKf9LczpVOKC
-         cmixqMGo40sBqVF1Eag9hqFIJZ2EtwXi2ZtNuUTT+cgeqdkPZzeH1EYaXGFkOB1cC6
-         twd9D/964iMd/sUoFHr+qF9uqwaMpEiw+hQK3LDrl4rwxjNk34vWi2bjt4SJ0hHNe9
-         44qVFnaomtwi1C9JtKZs3b/l+5E5D+xWN8RAqzCHGEx5osmh7EOpqhHGQg6YJat/Zs
-         ZEfhk5b/uUkrH9m7dJ2L/qhVdfN/LHLehchIlUDlmoLxdy5a23fSL9fO4GeuspcgSr
-         O0SjVT0MmZIiw==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] kbuild: remove redundant CONFIG_KASAN check from scripts/Makefile.kasan
-Date:   Thu, 10 Sep 2020 22:44:28 +0900
-Message-Id: <20200910134429.3525408-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Thu, 10 Sep 2020 17:20:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11796 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731118AbgIJO0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:26:02 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 985C9E1D2419A1DEE8BB;
+        Thu, 10 Sep 2020 22:05:42 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 22:05:33 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
+        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
+        <wright.feng@cypress.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <lee.jones@linaro.org>,
+        <yanaijie@huawei.com>, <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] brcmsmac: phy_lcn: Eliminate defined but not used 'lcnphy_rx_iqcomp_table_rev0'
+Date:   Thu, 10 Sep 2020 22:04:55 +0800
+Message-ID: <20200910140455.1168174-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit e0fe0bbe57b8 ("kbuild: include scripts/Makefile.* only
-when relevant CONFIG is enabled"), this file is included only when
-CONFIG_KASAN=y.
+This addresses the following gcc warning with "make W=1":
 
-This ifdef is redundant.
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c:361:25:
+warning: ‘lcnphy_rx_iqcomp_table_rev0’ defined but not used
+[-Wunused-const-variable=]
+  361 | struct lcnphy_rx_iqcomp lcnphy_rx_iqcomp_table_rev0[] = {
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
+ .../broadcom/brcm80211/brcmsmac/phy/phy_lcn.c | 55 -------------------
+ 1 file changed, 55 deletions(-)
 
- scripts/Makefile.kasan | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
-index f4beee1b0013..1532f1a41a8f 100644
---- a/scripts/Makefile.kasan
-+++ b/scripts/Makefile.kasan
-@@ -1,8 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
--ifdef CONFIG_KASAN
- CFLAGS_KASAN_NOSANITIZE := -fno-builtin
- KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
--endif
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
+index b8193c99e864..7071b63042cd 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
+@@ -357,61 +357,6 @@ u16 rxiq_cal_rf_reg[11] = {
+ 	RADIO_2064_REG12A,
+ };
  
- ifdef CONFIG_KASAN_GENERIC
- 
+-static const
+-struct lcnphy_rx_iqcomp lcnphy_rx_iqcomp_table_rev0[] = {
+-	{1, 0, 0},
+-	{2, 0, 0},
+-	{3, 0, 0},
+-	{4, 0, 0},
+-	{5, 0, 0},
+-	{6, 0, 0},
+-	{7, 0, 0},
+-	{8, 0, 0},
+-	{9, 0, 0},
+-	{10, 0, 0},
+-	{11, 0, 0},
+-	{12, 0, 0},
+-	{13, 0, 0},
+-	{14, 0, 0},
+-	{34, 0, 0},
+-	{38, 0, 0},
+-	{42, 0, 0},
+-	{46, 0, 0},
+-	{36, 0, 0},
+-	{40, 0, 0},
+-	{44, 0, 0},
+-	{48, 0, 0},
+-	{52, 0, 0},
+-	{56, 0, 0},
+-	{60, 0, 0},
+-	{64, 0, 0},
+-	{100, 0, 0},
+-	{104, 0, 0},
+-	{108, 0, 0},
+-	{112, 0, 0},
+-	{116, 0, 0},
+-	{120, 0, 0},
+-	{124, 0, 0},
+-	{128, 0, 0},
+-	{132, 0, 0},
+-	{136, 0, 0},
+-	{140, 0, 0},
+-	{149, 0, 0},
+-	{153, 0, 0},
+-	{157, 0, 0},
+-	{161, 0, 0},
+-	{165, 0, 0},
+-	{184, 0, 0},
+-	{188, 0, 0},
+-	{192, 0, 0},
+-	{196, 0, 0},
+-	{200, 0, 0},
+-	{204, 0, 0},
+-	{208, 0, 0},
+-	{212, 0, 0},
+-	{216, 0, 0},
+-};
+-
+ static const u32 lcnphy_23bitgaincode_table[] = {
+ 	0x200100,
+ 	0x200200,
 -- 
-2.25.1
+2.25.4
 
