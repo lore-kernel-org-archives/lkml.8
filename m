@@ -2,230 +2,89 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF56D221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DD921D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="clnfXBZq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUDAZHWm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgIJVL5 (ORCPT
+        id S1726731AbgIJVMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:11:57 -0400
-Received: from mail-eopbgr700113.outbound.protection.outlook.com ([40.107.70.113]:34657
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727122AbgIJVKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:10:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mM/Aj8Utb0xlzApAR15JceC3BiRpmJKIEW+0loSqCVhCtOFnbw4CUxl6PYTua+TsNN1HpcEmytisrqIUUX4Yxgo03mhhIWhxppk/X1GBwYvIgQ2SPXSIBYOtkZP6xD2mUChNHF+lP/NQSkvEAWfNIa/Od/5+3RMiVaUBlbMXU5YNtzNqPWiE3tucYcDueS2CIeuq3nuEMuI8QqGkZkv+6rEx74TIc2XTVTvhA7zMu9JyZ/bpN/vPKXgrdXu6oy/szMzypEbD9d0a1SiLTMOK8I9Nt8MpNyNh+bgMcFNjCmwObRGbZTSDbY2p4+S1wzHlBL9Tp4/aE8EIkO76VjQy+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GCGjL3fKXdW7gGWwfTc732rzvBw5Z8D52EdstYJBykM=;
- b=edzqDp4YbojYXXt5oZYc6KCu60Y/r0yBNbM+0afQP5KiAsTmtv5PfSbDmxw/ZPH4Id3K75PL5gcEpbsNI8+q5O2q173H0X9k1ksScUs6UcLCxw178JfgW+/6zKhRcSDeaj2Yq1Xw+qo5umvE8zemqr4dNa8qGetfl63pDBFrGKjeejyAenrD1znJkWAmN3Lk+qzmHuH9n0OyPbceafm4WWjb45VtlgfyT4UMYWKieGCB2aE6UcUz8UAhG32kZ307VknKRPna6D/sduUT8A/tRzfYgpVDHF2N1iq/Bq3qcWE8bp194vTiU1Pu2GRn160KESrNbPV/1yezT4MAJ2Z8hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GCGjL3fKXdW7gGWwfTc732rzvBw5Z8D52EdstYJBykM=;
- b=clnfXBZq9VBCUQhTm0/m/HVTSQSZzfRUmfusxPl3Pj0RCr8IOCwZRrORCD1kR3rcxlOOxpPAQQMU8hqWGj/yhj4P6DFy17pFJiWSl3hhFlWwl8xT9+eGa2/2f2/zfezs39c781TwD0HbRoS05b57mlKFE6Sbjuqo1vvlJrlz33k=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by BL0PR2101MB0963.namprd21.prod.outlook.com
- (2603:10b6:207:30::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.6; Thu, 10 Sep
- 2020 21:10:11 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::21e4:e6b6:10c:e66f]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::70b5:f505:ae8b:c773%10]) with mapi id 15.20.3391.005; Thu, 10 Sep
- 2020 21:10:11 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V values
-Thread-Topic: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V
- values
-Thread-Index: AQHWh3CiaBH0lchHw06AORvXwhPeSaliXZ+Q
-Date:   Thu, 10 Sep 2020 21:10:11 +0000
-Message-ID: <BL0PR2101MB0930659825AD89FF5A8DC2C4CA270@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200910124748.19217-1-parri.andrea@gmail.com>
-In-Reply-To: <20200910124748.19217-1-parri.andrea@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d007ab8c-0d09-44a0-a78d-0a90f0f8d24e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-10T21:06:29Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 66123bc8-db4c-485c-7e9b-08d855cde789
-x-ms-traffictypediagnostic: BL0PR2101MB0963:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB0963C61A42B6A556C0FC8718CA270@BL0PR2101MB0963.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: v+9Hx+eMpjlHJ3KsUNamU8v/WkRzF6wcQYsICwqrcNaX5fONAD4PXVng9HNrqkBk0+Xj4Eh2O0DUbDLNtehtcEQ8Duv0K/iWKJHJqgsU3Hjlb7b82I9ztWAFzq0777Ox+dZ/snQBVGrufZboCDJx+psbDqWYRhlvF9L6i6q2kHyekqmuYNxKeOR2Suaee4QzBd629VrVlmkgREpp/pwWs/XrsI5RGv79rcNKZz8Mu/RIhVslodR753wf7JVrjj927XEuQwkbutVrWygKGkhir2axXY+Z5FghZJH5//Qq5QLg6jMc3Iq9MYb9lplmaIU+YGRKdZOLtNpCFMOHjX823Je3DZfwCAg2ORWOY6At3uw+ByKPhMYt5bgAUE4eYVIG
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(26005)(55016002)(110136005)(52536014)(66476007)(71200400001)(76116006)(54906003)(66556008)(66946007)(316002)(10290500003)(83380400001)(64756008)(478600001)(5660300002)(8936002)(86362001)(66446008)(4326008)(2906002)(82960400001)(7696005)(33656002)(82950400001)(8990500004)(6506007)(186003)(53546011)(8676002)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: uV7Hp/XFSqtODaWGsNBqnqfCrx4ol04xoSDpeOnugWeahmqpTLP84pCufdlqlCL5s/KE53GiuOpwI0vpDtLBTt2ZM3sjawu2X7Buw8tfXFJstHSH4eYzl2F0IBha8DIR3mIeKlkkl5XNHR5eEPy5rDNrQHehCOn5XEQm8XWAE3QPh4UlVl8FmruggmRXnYdRV0fVgniJgpbB25Rn2YtkVVpLMKWXPpzeEmvaVL8VBSxjFMuPKxNWLPP+9DMLucguE2xtzayXEDTfFPD460ENzQK7Z2i7aclodRTiYmQ6vdmCuLDjut/3reT0PvJvKVsGprgdO0dHPXiPoiuLAbUog8o6+81tsfFh2ThkkcD+U27Dwob7sLnDQcrZFQ+FR9X/Q6IoEK3qtPZKiZkoTKH4hDpEQaS/xaFnTPjz438EVEvwXtK+s4etKlRkf+ZZJVDEvhTcnxZryaEktsOMUr3oRyZg6PXMwj2+GmIgFIHjjfsDt40MDvUZ1m61sem61Pz073IhG3h4lbD658f4rtI5U6Nm312OjCf8jU8xz1YzDgFDvvuJyPsk7RTFucwHq8toD1JqaDjge1RzaE1WR582qzRCT1tpcPWjIeGejnfy9MuY3cTY5PG4rznuXcsQwxj9JTI2Ii9/rWHGccEW/ge+YQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Sep 2020 17:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731135AbgIJOcg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:32:36 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A72CC0617AA;
+        Thu, 10 Sep 2020 07:20:48 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id q21so6530339edv.1;
+        Thu, 10 Sep 2020 07:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DqYP69u6EXo/SysyWBW0+nlQMG0J6Ocm49GIaUZelBo=;
+        b=bUDAZHWm9YF4plGhsM1Nza1WuKrIrg3kVvCIilsl7y96mCWYP/2edjQVFXlzqm3LqA
+         z1x0oHSkiWBt5dCCVloB6KxbVuT6zXqQ7NoRmvRoQQk+0nGhemZ4vL1XItmz7eCQwCIk
+         O4zJNB2Vw4K/+ywSpq+x4ByKQ9pV5wFVdvj9E4SaLWJlriRaONdbZbF5IVjwQH8rB5z6
+         wmMRd4LQzwo7OHoFvxxpAblyj94sW+WzZiUhNtOujX9L3XDfPjiPV/yPq9BF/W6Dmygy
+         w3Rs/8EK5FAhW2k3Iw4IUDJL09YJTyi7yT0rXZqqH+6oozTtBDZoVDWMOjoPPNu5C1+x
+         ArWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DqYP69u6EXo/SysyWBW0+nlQMG0J6Ocm49GIaUZelBo=;
+        b=ufhuVXPdzBnXaXPNc43K989KJFpD+pCNFyAXx1fd9x2T6VoExGYLJ7eVbtR4DZByfW
+         HeRVTBQ9vEoYe4z40IZhHWTa9SnbMC1L0qmJ9yZQ0so+msgx/doE01pgxVDJUULrRyet
+         YujIYB3u0tt4E/tF7vV0k32Cf+gozcXNdWGIaRWnk3ckKXXoivkpv0adC1ZuXSdSKLuP
+         0LFy6DADk9dErJsRL8/+g+TZDcNb81twtbjX3LFTueBG8ILlpHVAZYJIUDjVUeILNPQm
+         FkBsbXGco3ZiUrA1TKsLY/wyly0GhZOAGaJqNC1eQGEliQjSJcPoiWzxURxOyysGJFZ6
+         8A/g==
+X-Gm-Message-State: AOAM532EQxnKTWtCXIy+ij1Wjm7TCDFZK6G7P2d50pIcWZedUVgyzbn9
+        C8KdpdaOEzPq335FVuShfxkosNVnrmGzmVfwkkvZ66OWBRI=
+X-Google-Smtp-Source: ABdhPJz1awMw7XZ11QjIEJ4q0d1xkTs1E/NS/8CmOFBaVYYqxRVkRHSm8uiDeK4OOuiOKf9v4V/YZ0XXO9+OvrdlPy8=
+X-Received: by 2002:aa7:c504:: with SMTP id o4mr9794775edq.82.1599747646976;
+ Thu, 10 Sep 2020 07:20:46 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66123bc8-db4c-485c-7e9b-08d855cde789
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 21:10:11.2720
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /WW651SUB33t1XZXozJqxyWlWKjPi4n8coTChCKpalJPxgSPn9eqCbcgrh4a5+FaBu4vJ0ZLS5kvxvLD1ae4Qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0963
+References: <CADxRZqwGH3c5SvByBB3WSQhR_0NLCY=3RZ6541m8afX-scA4HA@mail.gmail.com>
+ <20200910134040.GZ1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200910134040.GZ1362448@hirez.programming.kicks-ass.net>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Thu, 10 Sep 2020 17:20:35 +0300
+Message-ID: <CADxRZqyQo5XhMeyGy2regB4rcRp6tm4DLd=LK6DOJ=c-RTmHww@mail.gmail.com>
+Subject: Re: [sparc64] kernel OOPS bisected from "lockdep: improve
+ current->(hard|soft)irqs_enabled synchronisation with actual irq state"
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sparc kernel list <sparclinux@vger.kernel.org>,
+        Linux Kernel list <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 10, 2020 at 4:40 PM <peterz@infradead.org> wrote:
+>
+> On Thu, Sep 10, 2020 at 02:43:13PM +0300, Anatoly Pugachev wrote:
+> > Hello!
+> >
+> > The following git patch 044d0d6de9f50192f9697583504a382347ee95ca
+> > (linux git master branch) introduced the following kernel OOPS upon
+> > kernel boot on my sparc64 T5-2 ldom (VM):
+>
+> https://lkml.kernel.org/r/20200908154157.GV1362448@hirez.programming.kicks-ass.net
 
+Peter, thanks!
 
-> -----Original Message-----
-> From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Sent: Thursday, September 10, 2020 8:48 AM
-> To: linux-kernel@vger.kernel.org
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; Wei Liu <wei.liu@kernel.org>; linux-
-> hyperv@vger.kernel.org; Andres Beltran <lkmlabelt@gmail.com>; Michael
-> Kelley <mikelley@microsoft.com>; Saruhan Karademir
-> <skarade@microsoft.com>; Juan Vazquez <juvazq@microsoft.com>; Andrea
-> Parri <parri.andrea@gmail.com>; David S. Miller <davem@davemloft.net>;
-> Jakub Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
-> Subject: [PATCH v2] hv_netvsc: Add validation for untrusted Hyper-V value=
-s
->=20
-> From: Andres Beltran <lkmlabelt@gmail.com>
->=20
-> For additional robustness in the face of Hyper-V errors or malicious
-> behavior, validate all values that originate from packets that Hyper-V
-> has sent to the guest in the host-to-guest ring buffer. Ensure that
-> invalid values cannot cause indexing off the end of an array, or
-> subvert an existing validation via integer overflow. Ensure that
-> outgoing packets do not have any leftover guest memory that has not
-> been zeroed out.
->=20
-> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> ---
-> Changes in v2:
->   - Replace size check on struct nvsp_message with sub-checks (Haiyang)
->=20
->  drivers/net/hyperv/hyperv_net.h   |   4 +
->  drivers/net/hyperv/netvsc.c       | 120 ++++++++++++++++++++++++++----
->  drivers/net/hyperv/netvsc_drv.c   |   7 ++
->  drivers/net/hyperv/rndis_filter.c |  73 ++++++++++++++++--
->  4 files changed, 184 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/net/hyperv/hyperv_net.h
-> b/drivers/net/hyperv/hyperv_net.h
-> index 4d2b2d48ff2a1..da78bd0fb2aa2 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -860,6 +860,10 @@ static inline u32 netvsc_rqstor_size(unsigned long
-> ringbytes)
->  	       ringbytes / NETVSC_MIN_IN_MSG_SIZE;
->  }
->=20
-> +#define NETVSC_XFER_HEADER_SIZE(rng_cnt) \
-> +		(offsetof(struct vmtransfer_page_packet_header, ranges) +
-> \
-> +		(rng_cnt) * sizeof(struct vmtransfer_page_range))
-> +
->  struct multi_send_data {
->  	struct sk_buff *skb; /* skb containing the pkt */
->  	struct hv_netvsc_packet *pkt; /* netvsc pkt pending */
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 03e93e3ddbad8..90b7a39c2dc78 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -388,6 +388,15 @@ static int netvsc_init_buf(struct hv_device *device,
->  	net_device->recv_section_size =3D resp->sections[0].sub_alloc_size;
->  	net_device->recv_section_cnt =3D resp->sections[0].num_sub_allocs;
->=20
-> +	/* Ensure buffer will not overflow */
-> +	if (net_device->recv_section_size < NETVSC_MTU_MIN ||
-> (u64)net_device->recv_section_size *
-> +	    (u64)net_device->recv_section_cnt > (u64)buf_size) {
-> +		netdev_err(ndev, "invalid recv_section_size %u\n",
-> +			   net_device->recv_section_size);
-> +		ret =3D -EINVAL;
-> +		goto cleanup;
-> +	}
-> +
->  	/* Setup receive completion ring.
->  	 * Add 1 to the recv_section_cnt because at least one entry in a
->  	 * ring buffer has to be empty.
-> @@ -460,6 +469,12 @@ static int netvsc_init_buf(struct hv_device *device,
->  	/* Parse the response */
->  	net_device->send_section_size =3D init_packet->msg.
->=20
-> 	v1_msg.send_send_buf_complete.section_size;
-> +	if (net_device->send_section_size < NETVSC_MTU_MIN) {
-> +		netdev_err(ndev, "invalid send_section_size %u\n",
-> +			   net_device->send_section_size);
-> +		ret =3D -EINVAL;
-> +		goto cleanup;
-> +	}
->=20
->  	/* Section count is simply the size divided by the section size. */
->  	net_device->send_section_cnt =3D buf_size / net_device-
-> >send_section_size;
-> @@ -740,12 +755,45 @@ static void netvsc_send_completion(struct
-> net_device *ndev,
->  				   int budget)
->  {
->  	const struct nvsp_message *nvsp_packet =3D hv_pkt_data(desc);
-> +	u32 msglen =3D hv_pkt_datalen(desc);
-> +
-> +	/* Ensure packet is big enough to read header fields */
-> +	if (msglen < sizeof(struct nvsp_message_header)) {
-> +		netdev_err(ndev, "nvsp_message length too small: %u\n",
-> msglen);
-> +		return;
-> +	}
->=20
->  	switch (nvsp_packet->hdr.msg_type) {
->  	case NVSP_MSG_TYPE_INIT_COMPLETE:
-> +		if (msglen < sizeof(struct nvsp_message_init_complete)) {
-
-This and other similar places should include header size:
-		if (msglen < sizeof(struct nvsp_message_header) + sizeof(struct nvsp_mess=
-age_init_complete)) {
-
-Thanks,
-- Haiyang
+That fixes the issue for me.
