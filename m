@@ -2,241 +2,150 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F179C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420BAC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CCA20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="fuWtlize"
+	by mail.kernel.org (Postfix) with ESMTP id ED805208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgIJVoB (ORCPT
+        id S1726440AbgIJVoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:44:01 -0400
-Received: from mail-eopbgr1410111.outbound.protection.outlook.com ([40.107.141.111]:28108
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730882AbgIJM42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:56:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NiJzO79xoMcP2uhSfDzleit9hMHLcrmEbj/2kZhpR92Ou+blL5mV/1RjmQ6HFloZ0XNr4xP5EhFIjseE5VhyXZockdNHk5+061nvXK0rUeb1dUtH4TxOvs3sFC6a/gCDjTMfhPAm1K6SuDi7exorHbVia7K04hEtma/Bg/69JLuVC/kPAfCAT5uPHJoHGZ08SH1m47Uwls9oRmhQV0dtszw5Py/mSUU2Vq1N+cSNp+wJMnIRnt5eyutjpJClmQ06abiNSEeUtccqJk9PJVvjaKNX1hTVAq2v0+X8uTtvN9FiR2VSWm16U/0p98uuZFUD7Vj1KkNhDIePKV+4vA4AFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HJZ3Srsu94pbCuY9WWrkaLbtXPLvw4G/ciPj90FSSs4=;
- b=TGpe9Hg63WsujvUbgXnT52ucW4ORrmkdZKdPSSODNSJmgxjbMVT0xccQuOU4KoRubTn6K5SzOnnz2lj2aZiThCRFq+yjxsouXcKkbF4xltrgK5nOrQFuxGNWISYTk8u9oFyH6+G2pErx+Oxr7o7KeBd3S+MgJvtzAMVHohyqgdFZKCX5jpd2xKZvHIh2Y6vnZ8aVTIR1oVWBJ3tE1Nw14JVM/UdvWRwnGXTMmvNJ/dLLQSyqBBBebXNJ5c1BchtppoSlpMMATuU9pK2UCUw9w559id5tbW2nE+1mH3P0BUKObUZY/fv0+Ao8NfTEIF/Y22F0D0BCqkUq3Yf+/CvtDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HJZ3Srsu94pbCuY9WWrkaLbtXPLvw4G/ciPj90FSSs4=;
- b=fuWtlizePv+qhE2bDzOlg9WgEKYOwJlWA+Xg/arRVRWv00SwDtZTRLRPurUib066dx30kbO1L4I4BsdbLEO//pDWirTs3tN3lo/LVSq9VQ3VMpIT6ARKs8uHjmBXfEhqqzKssL/nuMufgX8LrpeeLVqeD02lzrF/cxRHLahnxwM=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TYAPR01MB1902.jpnprd01.prod.outlook.com (2603:1096:404:7::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Thu, 10 Sep
- 2020 12:56:24 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9055:525d:2d64:b625]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9055:525d:2d64:b625%5]) with mapi id 15.20.3348.019; Thu, 10 Sep 2020
- 12:56:24 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Mathias Nyman <mathias.nyman@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        Jason Yan <yanaijie@huawei.com>,
-        Chuhong Yuan <hslester96@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Saurav Girepunje <saurav.girepunje@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: RE: [PATCH RESEND v3 04/11] usb: xhci-rcar: convert to
- readl_poll_timeout_atomic()
-Thread-Topic: [PATCH RESEND v3 04/11] usb: xhci-rcar: convert to
- readl_poll_timeout_atomic()
-Thread-Index: AQHWh0vD+aj1y+DFoU+XUmXRM8L6jalh0rag
-Date:   Thu, 10 Sep 2020 12:56:23 +0000
-Message-ID: <TY2PR01MB369214103C701DC5E78D56F9D8270@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <1599726112-4439-1-git-send-email-chunfeng.yun@mediatek.com>
- <1599726112-4439-4-git-send-email-chunfeng.yun@mediatek.com>
-In-Reply-To: <1599726112-4439-4-git-send-email-chunfeng.yun@mediatek.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [240f:60:5f3e:1:29e4:1562:227f:bbc3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 97121736-22b4-4c6b-4841-08d85588ec56
-x-ms-traffictypediagnostic: TYAPR01MB1902:
-x-microsoft-antispam-prvs: <TYAPR01MB1902D95347D2B525BD8F2F2BD8270@TYAPR01MB1902.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nomcnc0c2r0sVRlCOQpQW5zIl5NNFwfxCQotKKfzLk0fbyitIj3Vy3To5zQ6eo522QuV8ewWbyXkBMPuw1tfNmsfJweYoFAdvinE0NDtrBVQmRg95JONbZrWGvhqEf/6P/MOVs5Jn2tAHh7YjcB4WWDLvpi4sB5FpkkBQKicJQI7VCoG6HhMu1rM4j9H4XBrU1Yx8KR17Xu+BEqRYv8r3o3+Fj8o4tYfI6CYt6Umy2OFjmJxXWKwa/Iu5UI+qM6+tItaNVT1f38csDMAhvs5XnIq8crCexR8ItAgzwiBKbrStSEkhKjFabu78XYyvSIlyHVO5U5D7Zlu5BXLm9YDTRZ2ml6XfjPS3Pt+KNH027EyOui8zwNZ65G3Z/D3yvPV
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66446008)(5660300002)(83380400001)(33656002)(66946007)(66476007)(64756008)(7696005)(76116006)(55016002)(52536014)(2906002)(66556008)(9686003)(186003)(110136005)(498600001)(8676002)(86362001)(8936002)(4326008)(54906003)(6506007)(7416002)(71200400001)(309714004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: WldI93QEqaTIN2pBENPyuG2f6YBAgADnTkydEYMosGh67anr2x1r60aNnQk55ncKs+ZA74HJyt2m9hmuVlOs9tvxQIoM5O9uQKe9ETDaYE/IpkFX+PnOyRIr1iFuFj83YeXcfLcsb+rfO+oA/n94gNRgU4czow3F6Gx4CQsaajgTXWPSUFYxj4yNhOIL8maH0YjkR32ZtDo8ZcD9N36JaI+5Bk7Bp3+Zgm438Vx5nHk0YtbFDrFvhyl9Og/ZLZgLvoADkBflgYTik+S7bjP32F7meHFi+o6r9WzI5edTDcMfO1RbXgqqqdsxlI/1xbhZm1ha+ieAUiN/r15UFmtRw1rpKxtuTYVv5mFsxpxLo9hFYw1A/Ws+Sz3egQVOxLrL34dkkkk/0H/AYfRdn+423s/T0j1MO9i4u5MJu9DnlhIoUzJ/mpGFOQ+I8Wx0tbwOgnqiyBQQo6mIhYtAR6BvVZYX4OW9yv6xalfTe+5Y45yq8wG0xOo0GedcgNTgUJBjDKRefTLPKDYmbIgiWtC3KKJUxKG+9tEr+Pf6SgLP+62x07oTx++5zwHX0qL0C2B6IX6756csCXYofojSo7wTL2rgNOOrbKMv8W9fkrLCUyhXFiN2ZH2Jru5X7SiCmiyQMg+R5eCuatKMmb1uVr5lVEI/nc/ASs4TcZDbXnooEp/EzkiYhLV7kUcbhD09dLeZnpVoAkS7DtiJXkLyD8U+NQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Sep 2020 17:44:13 -0400
+Received: from mail-io1-f80.google.com ([209.85.166.80]:48490 "EHLO
+        mail-io1-f80.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730832AbgIJMzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:55:43 -0400
+Received: by mail-io1-f80.google.com with SMTP id u3so4231758iow.15
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 05:55:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=CJdeGnfvTdFShzW3CvkO0Zv30IHEQqOXfaVuXTwQMzk=;
+        b=FwJZ/lQV+3pwKXvrZcYzYpzmjGcs+k2k+jxmPmEVf7kKIdWO9NIDne3Rzi/b7157Nv
+         1p8i+OMNrNvTkLUlMAWOjLFqC2o7lINoa0jISCcnqH4lsmCtTERrK5lNLIN2VV+rCmiw
+         IEzFOwFxUmG1HYxL8MgRyVUrKUKFvhQu0OnD5Gj9oV2pPv+aSf64e5BPVpcLJaTZDOEb
+         qnzpOTz2iqG6MLUNfb5TU3gRq/91XjqePIp9KSDGn884zcJo6CGaEnNoO5Fgl5olfSUR
+         OnsxY6VwSnVIhwys5CnuAOUqnZ+HADXEZU7tZHHtuKQtbqyaZK/mBfSJBxJtjlZOie5D
+         ky4A==
+X-Gm-Message-State: AOAM532OwO9HrslW/n1YCPhOIU5QHpuxnEcPwKDOzjqfO9lHY2zYCE0d
+        CS9V1HQilEo6DPdHtfX2CrTj52iwGCfq6rpy3ezTqOhP4fPI
+X-Google-Smtp-Source: ABdhPJzhzNIDm37fSE+kzTV+nR7ABFssw+mTyY+5bOgc61FzQgFtzAXuSg+9m11NqJCiF2JQlZQK2Cvdbtt11HMFFbuchT8TW6Gr
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97121736-22b4-4c6b-4841-08d85588ec56
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Sep 2020 12:56:23.9837
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3DkmQ8FZzvna8lDokA2U5YlBawPGnov6Y2DitNPz+NOVFB6B0H1UQNl6c+yOjNyKMpoXTPzhBlpvlhqQ0DTIJKnFIj6O3IfKynhTg9ScXJP6KQx1LCFMiJ8IO1QsqMJK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB1902
+X-Received: by 2002:a6b:2c44:: with SMTP id s65mr7251195ios.185.1599742521360;
+ Thu, 10 Sep 2020 05:55:21 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 05:55:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b7c4dd05aef51494@google.com>
+Subject: BUG: unable to handle kernel paging request in free_swap_cache
+From:   syzbot <syzbot+b41193cb6e40673119c1@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chunfeng,
+Hello,
 
-Thank you for the patch!
+syzbot found the following issue on:
 
-> From: Chunfeng Yun, Sent: Thursday, September 10, 2020 5:22 PM
->=20
-> Use readl_poll_timeout_atomic() to simplify code
->=20
-> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> v2~v3: no changes
-> ---
->  drivers/usb/host/xhci-rcar.c | 43 ++++++++++++--------------------------=
------
->  1 file changed, 12 insertions(+), 31 deletions(-)
->=20
-> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
-> index c1025d3..74f836f 100644
-> --- a/drivers/usb/host/xhci-rcar.c
-> +++ b/drivers/usb/host/xhci-rcar.c
-> @@ -6,6 +6,7 @@
->   */
->=20
->  #include <linux/firmware.h>
-> +#include <linux/iopoll.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/of.h>
-> @@ -127,8 +128,7 @@ static int xhci_rcar_download_firmware(struct usb_hcd=
- *hcd)
->  	void __iomem *regs =3D hcd->regs;
->  	struct xhci_plat_priv *priv =3D hcd_to_xhci_priv(hcd);
->  	const struct firmware *fw;
-> -	int retval, index, j, time;
-> -	int timeout =3D 10000;
-> +	int retval, index, j;
->  	u32 data, val, temp;
->  	u32 quirks =3D 0;
->  	const struct soc_device_attribute *attr;
-> @@ -166,32 +166,19 @@ static int xhci_rcar_download_firmware(struct usb_h=
-cd *hcd)
->  		temp |=3D RCAR_USB3_DL_CTRL_FW_SET_DATA0;
->  		writel(temp, regs + RCAR_USB3_DL_CTRL);
->=20
-> -		for (time =3D 0; time < timeout; time++) {
-> -			val =3D readl(regs + RCAR_USB3_DL_CTRL);
-> -			if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) =3D=3D 0)
-> -				break;
-> -			udelay(1);
-> -		}
-> -		if (time =3D=3D timeout) {
-> -			retval =3D -ETIMEDOUT;
-> +		retval =3D readl_poll_timeout_atomic(regs + RCAR_USB3_DL_CTRL,
-> +				val, !(val & RCAR_USB3_DL_CTRL_FW_SET_DATA0),
-> +				1, 10000);
-> +		if (retval < 0)
->  			break;
-> -		}
->  	}
->=20
->  	temp =3D readl(regs + RCAR_USB3_DL_CTRL);
->  	temp &=3D ~RCAR_USB3_DL_CTRL_ENABLE;
->  	writel(temp, regs + RCAR_USB3_DL_CTRL);
->=20
-> -	for (time =3D 0; time < timeout; time++) {
-> -		val =3D readl(regs + RCAR_USB3_DL_CTRL);
-> -		if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
-> -			retval =3D 0;
-> -			break;
-> -		}
-> -		udelay(1);
-> -	}
-> -	if (time =3D=3D timeout)
-> -		retval =3D -ETIMEDOUT;
-> +	retval =3D readl_poll_timeout_atomic((regs + RCAR_USB3_DL_CTRL),
-> +			val, (val & RCAR_USB3_DL_CTRL_FW_SUCCESS), 1, 10000);
+HEAD commit:    dd9fb9bb Merge tags 'auxdisplay-for-linus-v5.9-rc4', 'clan..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=164e35cd900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bd46548257448703
+dashboard link: https://syzkaller.appspot.com/bug?extid=b41193cb6e40673119c1
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-Some parentheses are not needed like below:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-	retval =3D readl_poll_timeout_atomic(regs + RCAR_USB3_DL_CTRL,
-			val, val & RCAR_USB3_DL_CTRL_FW_SUCCESS, 1, 10000);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b41193cb6e40673119c1@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: ffffea007777777f
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 12fff8067 P4D 12fff8067 PUD 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 10690 Comm: syz-executor.2 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:compound_head include/linux/page-flags.h:182 [inline]
+RIP: 0010:PageSwapCache include/linux/page-flags.h:391 [inline]
+RIP: 0010:free_swap_cache+0x32/0x300 mm/swap_state.c:325
+Code: 49 89 fc 55 4d 8d 6c 24 08 53 e8 49 10 c7 ff 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 85 02 00 00 <4d> 8b 74 24 08 31 ff 4c 89 e5 4c 89 f3 83 e3 01 48 89 de e8 b6 0c
+RSP: 0018:ffffc900088a76d0 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff888000143848 RCX: ffffffff81ad73c2
+RDX: 1ffffd400eeeeeef RSI: ffffffff81ad3ab7 RDI: ffffea0077777777
+RBP: 0000000000000107 R08: 0000000000000000 R09: ffffea00018ec9c7
+R10: 00000000000001fe R11: 0000000000000000 R12: ffffea0077777777
+R13: ffffea007777777f R14: dffffc0000000000 R15: ffffc900088a7a80
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffea007777777f CR3: 0000000214b08000 CR4: 00000000001526e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ free_pages_and_swap_cache+0x58/0x90 mm/swap_state.c:353
+ tlb_batch_pages_flush mm/mmu_gather.c:49 [inline]
+ tlb_flush_mmu_free mm/mmu_gather.c:242 [inline]
+ tlb_flush_mmu+0xe9/0x6b0 mm/mmu_gather.c:249
+ zap_pte_range mm/memory.c:1159 [inline]
+ zap_pmd_range mm/memory.c:1197 [inline]
+ zap_pud_range mm/memory.c:1226 [inline]
+ zap_p4d_range mm/memory.c:1247 [inline]
+ unmap_page_range+0x1e22/0x2b20 mm/memory.c:1268
+ unmap_single_vma+0x198/0x300 mm/memory.c:1313
+ unmap_vmas+0x168/0x2e0 mm/memory.c:1345
+ exit_mmap+0x2b1/0x530 mm/mmap.c:3183
+ __mmput+0x122/0x470 kernel/fork.c:1076
+ mmput+0x53/0x60 kernel/fork.c:1097
+ exit_mm kernel/exit.c:483 [inline]
+ do_exit+0xa8b/0x29f0 kernel/exit.c:793
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ get_signal+0x428/0x1f00 kernel/signal.c:2757
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:136 [inline]
+ exit_to_user_mode_prepare+0x1ae/0x200 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x7e/0x2e0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: Bad RIP value.
+RSP: 002b:00007f77c0d90cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: 0000000000000001 RBX: 000000000118cf48 RCX: 000000000045d5b9
+RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 000000000118cf4c
+RBP: 000000000118cf40 R08: 000000000000000e R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 000000000118cf4c
+R13: 000000000169fb6f R14: 00007f77c0d919c0 R15: 000000000118cf4c
+Modules linked in:
+CR2: ffffea007777777f
+---[ end trace 07566fd2f7a76eaf ]---
+RIP: 0010:compound_head include/linux/page-flags.h:182 [inline]
+RIP: 0010:PageSwapCache include/linux/page-flags.h:391 [inline]
+RIP: 0010:free_swap_cache+0x32/0x300 mm/swap_state.c:325
+Code: 49 89 fc 55 4d 8d 6c 24 08 53 e8 49 10 c7 ff 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 85 02 00 00 <4d> 8b 74 24 08 31 ff 4c 89 e5 4c 89 f3 83 e3 01 48 89 de e8 b6 0c
+RSP: 0018:ffffc900088a76d0 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff888000143848 RCX: ffffffff81ad73c2
+RDX: 1ffffd400eeeeeef RSI: ffffffff81ad3ab7 RDI: ffffea0077777777
+RBP: 0000000000000107 R08: 0000000000000000 R09: ffffea00018ec9c7
+R10: 00000000000001fe R11: 0000000000000000 R12: ffffea0077777777
+R13: ffffea007777777f R14: dffffc0000000000 R15: ffffc900088a7a80
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffea007777777f CR3: 0000000214b08000 CR4: 00000000001526e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
->  	release_firmware(fw);
->=20
-> @@ -200,18 +187,12 @@ static int xhci_rcar_download_firmware(struct usb_h=
-cd *hcd)
->=20
->  static bool xhci_rcar_wait_for_pll_active(struct usb_hcd *hcd)
->  {
-> -	int timeout =3D 1000;
-> +	int retval;
->  	u32 val, mask =3D RCAR_USB3_AXH_STA_PLL_ACTIVE_MASK;
->=20
-> -	while (timeout > 0) {
-> -		val =3D readl(hcd->regs + RCAR_USB3_AXH_STA);
-> -		if ((val & mask) =3D=3D mask)
-> -			return true;
-> -		udelay(1);
-> -		timeout--;
-> -	}
-> -
-> -	return false;
-> +	retval =3D readl_poll_timeout_atomic(hcd->regs + RCAR_USB3_AXH_STA,
-> +			val, ((val & mask) =3D=3D mask), 1, 1000);
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Likewise above:
-	retval =3D readl_poll_timeout_atomic(hcd->regs + RCAR_USB3_AXH_STA,
-			val, (val & mask) =3D=3D mask, 1, 1000);
-
-> +	return !!retval;
-
-This breaks the code. If I changed this to "return retval < 0 ? false : tru=
-e;",
-it works again.
-
-Best regards,
-Yoshihiro Shimoda
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
