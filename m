@@ -2,126 +2,142 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BA6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C872CC2D0A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F4207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:13:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="nBsz6061"
+	by mail.kernel.org (Postfix) with ESMTP id 87E2520BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599704042;
+	bh=YEfWR7IEaqpfFI93JDRFeAj2BOIyU5cOkPCI9C/TtrM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XRgJKdOKxmW+J71WYqk7qug4kfXpwBJk7MbCrA4T8+YL6ah0JTUhtfBG5R2bokZ66
+	 4+r9+hFtfifvgVqKhS3unUuUB92hCERLDYeVdFzYpyHf0VvPgiUJAePmwvwgJAp6ew
+	 /2rnTCPBTsYk30ybbwqL9hKywZmGY1TS1OUVv3PE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbgIJCMl (ORCPT
+        id S1730176AbgIJCNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730359AbgIJCDq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:03:46 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC7DC0617A4;
-        Wed,  9 Sep 2020 19:02:40 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id b12so4641229edz.11;
-        Wed, 09 Sep 2020 19:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=142NeoCcx3wHhBUQEiqLvgYqCFhcu9mCRWA11xQEdVg=;
-        b=nBsz6061VcS6cYSgt5yHM+R707WWE5ZZd412JS1mVQWo22/CqWZA4jbCYWRRKRySc5
-         LstyfExbNbtK4mWp/VqaQIk0dnYfPY8Gyv2JmR7CDjI6X5l81dgMIb40FSENPz8VrftB
-         erSBKmbxWGVQJ3/4S7wPVYfmwN/IPSDi5dyvM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=142NeoCcx3wHhBUQEiqLvgYqCFhcu9mCRWA11xQEdVg=;
-        b=LK4y8pH3Yg9eFgjT1zJnjVW0rWdZi82nddP8HNFktXMVPU2mRPIVqa8o1BiL8Zy/kC
-         ApM+9XEL2+BUG5XoPtAOEB+kRZ57TfdvzbTkgWMW27oewpPMAHoOYjFjjWfz//ZErcUW
-         y1NrCoYaOWyI/AYOmEw1sjmdwj4dDdoAx42oNffUmaJtqzmZMolG3JOptnW8OSchDAkR
-         vUVN4IHj4woCdqMmMezhreYLyQWEpQkuu0t0ZB/3mSG07gRf9jF3PbLv6+K6R+p4P90+
-         QtXqNxFh/AH8bhbAzsDI4/GML/BZQO7I9JZVs89Iuk7xdSMwEK88hmhYFE+Qd4BikfSO
-         JP5Q==
-X-Gm-Message-State: AOAM530wIHwRt7/CxuqQXpsb6WAMQ+4zqeTHoNClUxfzjccwMoxmp0Ki
-        sHtUaH+e07YwzJ6+EUZT4DnI3Wg70yt0J9UNb3A=
-X-Google-Smtp-Source: ABdhPJyp05MBzEqBviRTff7yzhFYD8zxQ47BHJ7qdCVuj6D4R7LJpyBwxAt5/LL+KaXatY3R5CwSh2ltSkkRFgzQfeI=
-X-Received: by 2002:aa7:de03:: with SMTP id h3mr7240898edv.232.1599703358638;
- Wed, 09 Sep 2020 19:02:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200909114312.2863675-1-andrew@aj.id.au> <20200909114312.2863675-4-andrew@aj.id.au>
-In-Reply-To: <20200909114312.2863675-4-andrew@aj.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 10 Sep 2020 02:02:26 +0000
-Message-ID: <CACPK8Xd5rE_s680Y0wdktoP4RwDzACCaetUxBrbWSTGnwBMWVQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: aspeed-g6: Add bias controls for 1.8V GPIO banks
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        johnny_huang@aspeedtech.com,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 9 Sep 2020 22:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730293AbgIJCFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:05:30 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A20E22208;
+        Thu, 10 Sep 2020 00:49:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599698967;
+        bh=YEfWR7IEaqpfFI93JDRFeAj2BOIyU5cOkPCI9C/TtrM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tmmKd3yHd58nbE9ocQ5k/aIp8qRZXpLBtS0FOw4HyBRApEWn4ol78gscrpe66XFgH
+         avoRg+gmM2VxlWpWt/p0GSIxo/c3KBLwerCB/17nWWPjp/zPltr4yB/SSHfrVrUCrE
+         /tXojWCMkETu0nBQUkIid9e9nS/3CWv+k62Y+tb0=
+Date:   Thu, 10 Sep 2020 09:49:23 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v2 4/6] tracing/kprobes: Support perf-style return probe
+Message-Id: <20200910094923.42a09f8f75f84cdbeac743c8@kernel.org>
+In-Reply-To: <159894703070.1478826.15755889933157654537.stgit@devnote2>
+References: <159894698993.1478826.2813843560314595660.stgit@devnote2>
+        <159894703070.1478826.15755889933157654537.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 9 Sep 2020 at 11:43, Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> These were skipped in the original patches adding pinconf support for
-> the AST2600.
->
-> Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On Tue,  1 Sep 2020 16:57:10 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+> Support perf-style return probe ("SYMBOL%return") in kprobe events.
+> This will allow boot-time tracing user to define a return probe event.
+> 
 
+Hmm, I think I should add this for uprobe event too.
+I'll update the series.
+
+Thank you,
+
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > ---
->  drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-> index 7efe6dbe4398..34803a6c7664 100644
-> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-> @@ -19,6 +19,7 @@
->
->  #define SCU400         0x400 /* Multi-function Pin Control #1  */
->  #define SCU404         0x404 /* Multi-function Pin Control #2  */
-> +#define SCU40C         0x40C /* Multi-function Pin Control #3  */
->  #define SCU410         0x410 /* Multi-function Pin Control #4  */
->  #define SCU414         0x414 /* Multi-function Pin Control #5  */
->  #define SCU418         0x418 /* Multi-function Pin Control #6  */
-> @@ -2591,6 +2592,22 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
->         /* MAC4 */
->         { PIN_CONFIG_POWER_SOURCE,   { F24, B24 }, SCU458, BIT_MASK(5)},
->         { PIN_CONFIG_DRIVE_STRENGTH, { F24, B24 }, SCU458, GENMASK(3, 2)},
+>  kernel/trace/trace_kprobe.c |   21 ++++++++++++++++++++-
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index aefb6065b508..391361b67c8f 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -709,6 +709,18 @@ static inline void sanitize_event_name(char *name)
+>  			*name = '_';
+>  }
+>  
+> +static inline bool split_return_suffix(char *symbol)
+> +{
+> +	char *p = strchr(symbol, '%');
 > +
-> +       /* GPIO18E */
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, Y1, Y4, SCU40C, 4),
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   Y1, Y4, SCU40C, 4),
-> +       /* GPIO18D */
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, AB4, AC5, SCU40C, 3),
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   AB4, AC5, SCU40C, 3),
-> +       /* GPIO18C */
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, E4, E1, SCU40C, 2),
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   E4, E1, SCU40C, 2),
-> +       /* GPIO18B */
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, B2, D3, SCU40C, 1),
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   B2, D3, SCU40C, 1),
-> +       /* GPIO18A */
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_PULL_DOWN, C6, A2, SCU40C, 0),
-> +       ASPEED_SB_PINCONF(PIN_CONFIG_BIAS_DISABLE,   C6, A2, SCU40C, 0),
->  };
->
->  /**
-> --
-> 2.25.1
->
+> +	if (p && !strcmp(p, "%return")) {
+> +		*p = '\0';
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static int trace_kprobe_create(int argc, const char *argv[])
+>  {
+>  	/*
+> @@ -717,6 +729,9 @@ static int trace_kprobe_create(int argc, const char *argv[])
+>  	 *      p[:[GRP/]EVENT] [MOD:]KSYM[+OFFS]|KADDR [FETCHARGS]
+>  	 *  - Add kretprobe:
+>  	 *      r[MAXACTIVE][:[GRP/]EVENT] [MOD:]KSYM[+0] [FETCHARGS]
+> +	 *    Or
+> +	 *      p:[GRP/]EVENT] [MOD:]KSYM[+0]%return [FETCHARGS]
+> +	 *
+>  	 * Fetch args:
+>  	 *  $retval	: fetch return value
+>  	 *  $stack	: fetch stack address
+> @@ -746,7 +761,6 @@ static int trace_kprobe_create(int argc, const char *argv[])
+>  	switch (argv[0][0]) {
+>  	case 'r':
+>  		is_return = true;
+> -		flags |= TPARG_FL_RETURN;
+>  		break;
+>  	case 'p':
+>  		break;
+> @@ -804,12 +818,17 @@ static int trace_kprobe_create(int argc, const char *argv[])
+>  		symbol = kstrdup(argv[1], GFP_KERNEL);
+>  		if (!symbol)
+>  			return -ENOMEM;
+> +
+> +		is_return = split_return_suffix(symbol) || is_return;
+> +
+>  		/* TODO: support .init module functions */
+>  		ret = traceprobe_split_symbol_offset(symbol, &offset);
+>  		if (ret || offset < 0 || offset > UINT_MAX) {
+>  			trace_probe_log_err(0, BAD_PROBE_ADDR);
+>  			goto parse_error;
+>  		}
+> +		if (is_return)
+> +			flags |= TPARG_FL_RETURN;
+>  		if (kprobe_on_func_entry(NULL, symbol, offset))
+>  			flags |= TPARG_FL_FENTRY;
+>  		if (offset && is_return && !(flags & TPARG_FL_FENTRY)) {
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
