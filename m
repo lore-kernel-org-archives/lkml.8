@@ -2,85 +2,176 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4002C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A62C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9388020882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABB2206DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599765751;
+	bh=3KYl1yh6UH9e2txt61rbdqNLAG/ky1vH2dapRjYUp4s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=lG04dSiBbxhuQotV6IQtOSSyiifsEaYDmjSHk+4TDqPqbOv3XumxLaLKE6i9cuJG/
+	 iHODowGMz7n4e0DYJUIeBdGnq1NyrhJcvu8JwpdavSAxZ/Vk+6PSPntR/hbhzm6fn7
+	 xSX4YWvpfj39Edk7vHiOBZBtT08RNtSOY/m9s3us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgIJTVX (ORCPT
+        id S1727818AbgIJTWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgIJTUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:20:41 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E00C061573;
-        Thu, 10 Sep 2020 12:20:40 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C64F012A2A40F;
-        Thu, 10 Sep 2020 12:03:50 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 12:20:33 -0700 (PDT)
-Message-Id: <20200910.122033.2205909020498878557.davem@davemloft.net>
-To:     geert+renesas@glider.be
-Cc:     hkallweit1@gmail.com, f.fainelli@gmail.com, andrew@lunn.ch,
-        kuba@kernel.org, gaku.inami.xh@renesas.com,
-        yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "net: linkwatch: add check for netdevice being
- present to linkwatch_do_dev"
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200901150237.15302-1-geert+renesas@glider.be>
-References: <20200901150237.15302-1-geert+renesas@glider.be>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 10 Sep 2020 12:03:51 -0700 (PDT)
+        Thu, 10 Sep 2020 15:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45122 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbgIJTUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:20:10 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE1FC21556;
+        Thu, 10 Sep 2020 19:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599765607;
+        bh=3KYl1yh6UH9e2txt61rbdqNLAG/ky1vH2dapRjYUp4s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JKXYo0sT8/sLfscnORirIvdmqCWgT3iYNxMUaxH96Ykng6B6G1dOULJivj4dTegLE
+         rccxJSPv3NhDE009t3G7/Prv5t6DtQjIy3497kVimlTcFJM2sTEd1b//trJQKhPOE2
+         ymERC2eTmFpMpX1eJrkCamj42lYI142Dp1mAD1A8=
+Date:   Thu, 10 Sep 2020 14:20:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+Message-ID: <20200910192005.GA806683@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb964c3b-9619-2df3-8661-da90d58a297d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Tue,  1 Sep 2020 17:02:37 +0200
-
-> This reverts commit 124eee3f6955f7aa19b9e6ff5c9b6d37cb3d1e2c.
+On Thu, Sep 10, 2020 at 11:50:07AM -0700, Florian Fainelli wrote:
+> On 9/10/2020 11:46 AM, Bjorn Helgaas wrote:
+> > On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+> > > On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > 
+> > > > [+cc Mark, Florian, Rob, Scott]
+> > > > 
+> > > > On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> > > > > Do not use printk in raw_spinlocks,
+> > > > > it will cause BUG: Invalid wait context.
+> > > > > 
+> > > > > The trace reported by lockdep follows.
+> > > > > 
+> > > > > [    2.986113] =============================
+> > > > > [    2.986115] [ BUG: Invalid wait context ]
+> > > > > [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> > > > > [    2.986118] -----------------------------
+> > > > > [    2.986120] swapper/0/1 is trying to lock:
+> > > > > [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> > > > > [    2.986130] other info that might help us debug this:
+> > > > > [    2.986132] context-{5:5}
+> > > > > [    2.986134] 3 locks held by swapper/0/1:
+> > > > > [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> > > > > [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> > > > > [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> > > > > [    2.986161] stack backtrace:
+> > > > > [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> > > > > [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> > > > > [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> > > > > [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> > > > > [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> > > > > [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> > > > > [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> > > > > [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> > > > > [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> > > > > [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> > > > > [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> > > > > [    2.986245]         ...
+> > > > > [    2.986250] Call Trace:
+> > > > > [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> > > > > [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> > > > > [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> > > > > [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> > > > > [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> > > > > [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> > > > > [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> > > > > [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> > > > > [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> > > > > [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> > > > > [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> > > > > [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> > > > > [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> > > > > [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> > > > > [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> > > > > [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> > > > > [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> > > > > [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> > > > > [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> > > > > [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> > > > > [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> > > > > [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> > > > > [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> > > > > [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> > > > > [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> > > > > [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> > > > > [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> > > > > [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> > > > > [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> > > > > 
+> > > > > Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+> > > > > ---
+> > > > >   drivers/pci/access.c | 3 ---
+> > > > >   1 file changed, 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > > > index 79c4a2e..b3fc164 100644
+> > > > > --- a/drivers/pci/access.c
+> > > > > +++ b/drivers/pci/access.c
+> > > > > @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+> > > > >         * write happen to have any RW1C (write-one-to-clear) bits set, we
+> > > > >         * just inadvertently cleared something we shouldn't have.
+> > > > >         */
+> > > > > -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> > > > > -                          size, pci_domain_nr(bus), bus->number,
+> > > > > -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> > > > 
+> > > > We just changed this printk (see [1]), but I think we still have this
+> > > > lockdep problem even after Mark's change.  So I guess we need another
+> > > > think about this.
+> > > > 
+> > > > Maybe we can print something when registering pci_ops that use
+> > > > pci_generic_config_write32()?
+> > > 
+> > > That was my suggestion, but as Mark pointed out that doesn't work if
+> > > pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+> > > 
+> > > Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+> > > writes to a bridge going to cause problems? For xgene, interestingly,
+> > > with DT _write32 is needed, but for ACPI it is not (only _read32). I
+> > > think xgene is practically dead though a few people still have
+> > > systems, but likely xgene with DT is really dead. The ECAM case was
+> > > for QCom server which is also pretty much dead. SA1100 nano-engine is
+> > > really old and something only a few people have at most (Russell
+> > > King). So ignoring all those, we're left with just loongson and iproc.
+> > > Maybe just remove the warning?
+> > 
+> > Sigh, removing it sounds like the best option.
 > 
-> Inami-san reported that this commit breaks bridge support in a Xen
-> environment, and that reverting it fixes this.
-> 
-> During system resume, bridge ports are no longer enabled, as that relies
-> on the receipt of the NETDEV_CHANGE notification.  This notification is
-> not sent, as netdev_state_change() is no longer called.
-> 
-> Note that the condition this commit intended to fix never existed
-> upstream, as the patch triggering it and referenced in the commit was
-> never applied upstream.  Hence I can confirm s2ram on r8a73a4/ape6evm
-> and sh73a0/kzm9g works fine before/after this revert.
-> 
-> Reported-by Gaku Inami <gaku.inami.xh@renesas.com>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Given that we have to go by a list of drivers, how about we add another
+> pci_bus_flags_t flag to indicate 32-bit configuration space accessors are
+> used and key off that bit to issue the warning?
 
-Maybe you cannot reproduce it, but the problem is there and it still
-looks very real to me.
+I think that's basically what Mark's patch does: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/enumeration&id=92ff4b49c2a9
 
-netdev_state_change() does two things:
-
-1) Emit the NETDEV_CHANGE notification
-
-2) Emit an rtmsg_ifinfo() netlink message, which in turn tries to access
-   the device statistics via ->ndo_get_stats*().
-
-It is absolutely wrong to do #2 when netif_device_present() is false.
-
-So I cannot apply this patch as-is, sorry.
+But of course we still have to deal with the lockdep problem.
