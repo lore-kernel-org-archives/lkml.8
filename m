@@ -2,143 +2,104 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61018C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF85C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5EC20795
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E291207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599718459;
+	bh=aFC77LTk6EMTYaeAvM5v439HmVwSiuNIs3x+iO6HGkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EpxP92JxupJ+LI9UcJLwWW0sN4Pnqxvy7bcbKkRRzUjkVwjhKBcMN+QlF+yNQLe/x
+	 0ekwhVtOrxtMI8BvujetAs1S63HKE+0dvKDer5kLZbDg1M09IrFktwQVH830Va02qB
+	 tNwTzlsT5gE+jRhB0lb+joYHdFUmcLDxOpnjo+Pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgIJGJc (ORCPT
+        id S1726693AbgIJGOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:09:32 -0400
-Received: from thoth.sbs.de ([192.35.17.2]:47371 "EHLO thoth.sbs.de"
+        Thu, 10 Sep 2020 02:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgIJGJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:09:30 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id 08A698gW015304
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 08:09:08 +0200
-Received: from [167.87.23.29] ([167.87.23.29])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 08A6978D012373;
-        Thu, 10 Sep 2020 08:09:07 +0200
-Subject: Re: watchdog: sp5100_tco support for AMD V/R/E series
-To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org,
-        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
-        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
-        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
-References: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
- <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
- <9e270546-7962-932b-2e4c-3c833b7d4b30@siemens.com>
- <a70578a9-4e55-602b-68fe-56a01805965e@roeck-us.net>
- <39327ba6-0eff-3555-124c-64f3f105c9fe@roeck-us.net>
- <cfa0b445-d4c7-94e3-9585-579f0103a7eb@roeck-us.net>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <bbb50d5f-869d-3a18-e568-ba541c9a2569@siemens.com>
-Date:   Thu, 10 Sep 2020 08:09:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726160AbgIJGOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:14:06 -0400
+Received: from localhost (p5486ceec.dip0.t-ipconnect.de [84.134.206.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 927E320795;
+        Thu, 10 Sep 2020 06:14:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599718445;
+        bh=aFC77LTk6EMTYaeAvM5v439HmVwSiuNIs3x+iO6HGkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y0jH3hJVYg4vKviF52V5Za+Ia1rVnIOnmyRhsn5dJxaEagRwxBcbEDlq4/Jl4ZXy4
+         plUoNrWz4+Sxq3pxzPg7F9YhPZAc6oZABgg3U7bYommZMQqKkIVyqL3HiETgxMKRxk
+         rp/wdCn5n04kokyAHgAncOz/k5YsZ80gFmeGjR28=
+Date:   Thu, 10 Sep 2020 08:13:59 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        dmitry.torokhov@gmail.com, joel@jms.id.au, andrew@aj.id.au,
+        benh@kernel.crashing.org, brendanhiggins@google.com,
+        rentao.bupt@gmail.com, ryan_chen@aspeedtech.com
+Subject: Re: [PATCH v3 2/5] input: misc: Add IBM Operation Panel driver
+Message-ID: <20200910061359.GA1031@ninjato>
+References: <20200909203059.23427-1-eajames@linux.ibm.com>
+ <20200909203059.23427-3-eajames@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <cfa0b445-d4c7-94e3-9585-579f0103a7eb@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <20200909203059.23427-3-eajames@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.09.20 18:04, Guenter Roeck wrote:
-> On 9/7/20 1:45 PM, Guenter Roeck wrote:
->> On 9/7/20 12:18 PM, Guenter Roeck wrote:
->>> On 9/7/20 8:46 AM, Jan Kiszka wrote:
->>>> On 07.09.20 17:31, Guenter Roeck wrote:
->>>>> On 9/7/20 4:20 AM, Jan Kiszka wrote:
->>>>>> Hi all,
->>>>>>
->>>>>> Arsalan reported that the upstream driver for sp5100_tco does not work
->>>>>> for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
->>>>>>
->>>>>> [   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
->>>>>> [   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
->>>>>> [   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
->>>>>>
->>>>>> ..and fix it:
->>>>>>
->>>>>> diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
->>>>>> index 85e9664318c9..5482154fde42 100644
->>>>>> --- a/drivers/watchdog/sp5100_tco.c
->>>>>> +++ b/drivers/watchdog/sp5100_tco.c
->>>>>> @@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
->>>>>>  		/* Set the Watchdog timer resolution to 1 sec and enable */
->>>>>>  		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
->>>>>>  					  ~EFCH_PM_WATCHDOG_DISABLE,
->>>>>> -					  EFCH_PM_DECODEEN_SECOND_RES);
->>>>>> +					  EFCH_PM_DECODEEN_SECOND_RES |
->>>>>> +					  EFCH_PM_DECODEEN_WDT_TMREN);
->>>>>
->>>>> Confusing. The register in question is a 32-bit register, but only a byte
->>>>> is written into it. Bit 24-25 are supposed to be the resolution, bit 25-26
->>>>> set to 0 enable the watchdog. Bit 7 is supposed to enable MMIO decoding.
->>>>> This is from AMD Publication 52740. So something in the existing code
->>>>> is (or seems to be) wrong, but either case I don't see how setting bit 7
->>>>> (or 31 ?) would enable the watchdog hardware.
->>>>>
->>>>> Hmm, I wrote that code. Guess I'll need to to spend some time figuring out
->>>>> what is going on.
->>>>
->>>> The logic came from [1] which inspired [2] - that's where I pointed out
->>>> the large overlap with the existing upstream driver. I would love to see
->>>> all that consolidated.
->>>>
->>>> BTW, the R1505G is family 0x17. Maybe something changed there, and that
->>>> bit 7 was just reserved/ignored so far. ENOSPECS
->>>>
->>>
->>> Thanks for the pointers.
->>>
->>> I think you are talking about bit 31. Bit 7 is and was WatchdogTmrEn, but that
->>> supposedly only enables watchdog timer memory access at 0xfeb00000. From what
->>> I glance from the other drivers, the existing code is wrong. It should set
->>> the disable and resolution bits in register offset 3 (bit 24..27), not 0.
->>> In other words, EFCH_PM_DECODEEN3 should be defined as 0x03, not as 0x00.
->>> Which actually makes sense from the name.
->>>
->>> Playing with my hardware, turns out that setting bit 7 in EFCH_PM_DECODEEN
->>> (register offset 0) does indeed enable the watchdog. I'll need to check
->>> if it actually works. Either case, -ENOSPECS is really a problem here.
->>>
->>
->> ... and it does work. After playing with it, it seems that on Family 17h
->> CPUs EFCH_PM_DECODEEN_WDT_TMREN not only enables watchdog timer memory
->> access at 0xfeb0000, but also enables the watchdog itself.
->>
->> Also, turns out the documentation is now public, at least for some of the
->> Family 17h CPUs (though oddly enough not for all of them). See processor
->> reference manuals at https://www.amd.com/en/support/tech-docs. The documents
->> for model 18h and model 20h include a note stating that bit 7 of
->> EFCH_PM_DECODEEN enables both memory access and the watchdog hardware.
->>
->> So we'll need two patches - one to fix the value of EFCH_PM_DECODEEN3,
->> and one to enable the watchdog bit setting bit 7 of EFCH_PM_DECODEEN
->> for Family 17h CPUs.
->>
-> Jan - any chance you can submit those patches ? Or do you want me to do it ?
 
-Oh, I was reading your reply as if you were writing the patches. The
-first one is definitely your finding, and while I can also see now what
-is wrong and needed on 17h, I'm unsure about the rest. If you have a
-better picture, please go ahead.
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Jan
+On Wed, Sep 09, 2020 at 03:30:56PM -0500, Eddie James wrote:
+> Add a driver to get the button events from the panel and provide
+> them to userspace with the input subsystem. The panel is
+> connected with I2C and controls the bus, so the driver registers
+> as an I2C slave device.
+>=20
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # I2C slave pa=
+rts
+
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9ZxCEACgkQFA3kzBSg
+KbaItA/+KArp0AcYWSxj1IIj3GMN3RvqqFm3utx62fNdSHyQTyRI5yR/zPtsRWGg
+KZQa3NZ+DtzaWNl8lReH9PC0EB6+/ouqOQQ9cqj+o4u0Uj4wCtZgap1Oiu8jYBC7
+kGHLT43Nh/Cs7YLvcNP7cpDlW+pP3FCxDKahc5vUCoNlQAR97/6v4fHiWL3LvB+c
+h2IBIiVXj8ObIe8HBeC0JJ2nT08nVrINSeQZGhP6pz/fjnRpn6q3m5rPngm+8gAV
+KQpOU7DA1XsIQI+Dmgf4j68uduXHHCYTfU39RDPAWfZoW6dN1BaGMGH3R/CNRT0K
+T04HFqrwyun5g3Ea7e5BjRY5THnLRiDXBn5UenfVCbiCThljV8Yc8a/Rq3Xu7zFr
+DcKFfQu8TDcOV6GHWqjFn0O6FAlcbLOYUVlR9Akf2WzMBX5qycurcojsu9y48OVv
+KtOyNd1LqvWiSzo7G/PNW/jNfouSp6o3n2UVbu9tbyHkp2HZN2m7x02IY7azLzNE
+nB2CpjIpRhXuTixV9OyLBYx0kyBb/KzjgC478EAWMc5/HD3ZCSGg6nlLyjsmCONY
+jDYqOKWC4XjG+rWgKXCm2Pa7hOwRuATtL3hgLKjAGMrxMBxG8auX0jcpBX1kddP7
+M67KqTPmaoa5iRDXc6Hyr9ymBIzBz7cvEhTNcYy36rQtom2Vw24=
+=bz+x
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
