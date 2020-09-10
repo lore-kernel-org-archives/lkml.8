@@ -2,44 +2,80 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E524C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D745EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9750D20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD0C2145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="fxtXh8w7";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="esHI8a9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730687AbgIJLJE (ORCPT
+        id S1730643AbgIJLKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:09:04 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:12554 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730413AbgIJLGz (ORCPT
+        Thu, 10 Sep 2020 07:10:21 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40225 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730518AbgIJKyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:06:55 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.3]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85f5a0899992-8a133; Thu, 10 Sep 2020 19:06:01 +0800 (CST)
-X-RM-TRANSID: 2ee85f5a0899992-8a133
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.112.105.130])
-        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee25f5a0896cdb-115c6;
-        Thu, 10 Sep 2020 19:06:01 +0800 (CST)
-X-RM-TRANSID: 2ee25f5a0896cdb-115c6
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     gregkh@linuxfoundation.org, paul@pwsan.com, aaro.koskinen@iki.fi,
-        tony@atomide.com
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] ARM: OMAP1: clock: Use IS_ERR_OR_NULL() to clean code
-Date:   Thu, 10 Sep 2020 19:06:40 +0800
-Message-Id: <20200910110640.4308-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 10 Sep 2020 06:54:53 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id D98BB5C10CA;
+        Thu, 10 Sep 2020 06:54:52 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 10 Sep 2020 06:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=7fKJTSl0aTWXfPqJvnHuuREMnq
+        wvVIPeCygVKzFLhOk=; b=fxtXh8w7MOT/hbSneypqL4AaQEJs9Oa7hjYBE36m6V
+        bFQbNlck8V5HR+8Og664JCIeTPrQtbMn6O3Hr2yjdfd7/fXUryMyt+rAfnkLm8Xd
+        qsmKUYhLqlv5q/zOTbqkLNMURKjvFNJQjrZY0z1qaoiM9coVN/71pOg2m4x3Pd2x
+        4iO6PM9TXcfN4FDnA3K56qTPCawdW7e1EjVv3u+Jk4cbEW3Q/x+Slp8eZVOtTeVW
+        fJ99fyfkrcVZ1TxqeYdibUf5dOq2lduZemAmyfFCLwjJYmhH3me2h6ArZvzJp7qV
+        FPoUgdf6b6vXnf4aOSYyXr9fW0Ejbq9uZyTDjNzWbZMA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7fKJTSl0aTWXfPqJv
+        nHuuREMnqwvVIPeCygVKzFLhOk=; b=esHI8a9kX3HYOmCJF/FpjTamHSxljQ/3W
+        rXI5ymnmwwzpcGOlDoiug7t8xGo+9lt3FDQ9VRMBEqZ3y3VylAk47gS9Bc6FygzY
+        g4Dd/awAKLQzZpMmKIECUUwKthXG4/tfN5aOE+OwbIXiF1cXMBs9Ib3l5DYKdHIB
+        N6SosTwHX9NIiB8/JZKiX4uCmy0JvXcNkiJwNhvQeToicI81qnUVdZ0XaYFIxX5T
+        3LNPBL163D0DFwxb3VTFJzGiZcokT9cZ/axUP2Do7020FuIr4Wj/Hw6dR0aM19+Z
+        nrcoMAmk7qggYV68akFDWEGSTmJ4FSfeEks70zvxyuv68voBVYcdg==
+X-ME-Sender: <xms:-wVaX-WKFyau5GnnmRSgZMXohkCOYq4WcdHAPTH0SyfF-wgt4_Hrfw>
+    <xme:-wVaX6n94UdHrfu_KWsqQnPz6lW_ZlplSzuGXYbrHRkvLVI3PXmhfwnDZym721iPx
+    O3LiiafmceUnQqbKQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegrjhdr
+    ihgurdgruheqnecuggftrfgrthhtvghrnhepkefhieffjeevfeevhedtieeihfefvdejle
+    dvvddthefftedujeethfeuueelfedtnecukfhppedugedrvddruddtledrkeehnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifse
+    grjhdrihgurdgruh
+X-ME-Proxy: <xmx:-wVaXyYvSwKl1dXxL0Zk70s0r7UxLVD3BrXBYfW5RSp1FNDf4l0IUg>
+    <xmx:-wVaX1WjSjZC7qa1ZMhvd0bLPwO_PLxVC_k7y4YNigLbclrZYn30iA>
+    <xmx:-wVaX4mtJbHWNwba7tbwaSIWM0uO1eOgWSTTMS0mdVXJ5Lh43_3txw>
+    <xmx:_AVaX2ZzQVYpU_Rod9vcAulCnt5CGQIkOYl7GsIZr2eJRjxbbCbQZQ>
+Received: from localhost.localdomain (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BA51F3064674;
+        Thu, 10 Sep 2020 06:54:48 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-mmc@vger.kernel.org
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org, joel@jms.id.au,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] mmc: sdhci-of-aspeed: Expose data sample phase delay tuning
+Date:   Thu, 10 Sep 2020 20:24:37 +0930
+Message-Id: <20200910105440.3087723-1-andrew@aj.id.au>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,83 +83,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use IS_ERR_OR_NULL() to make the code cleaner.
+Hello,
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- arch/arm/mach-omap1/clock.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+This series exposes some devicetree properties for tuning sample phase
+delay in the Aspeed SD/eMMC controllers. The relevant register was
+introduced on the AST2600 and is present for both the SD/MMC controller
+and the dedicated eMMC controller.
 
-diff --git a/arch/arm/mach-omap1/clock.c b/arch/arm/mach-omap1/clock.c
-index bd5be8210..9d4a0ab50 100644
---- a/arch/arm/mach-omap1/clock.c
-+++ b/arch/arm/mach-omap1/clock.c
-@@ -612,7 +612,7 @@ int clk_enable(struct clk *clk)
- 	unsigned long flags;
- 	int ret;
- 
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(&clockfw_lock, flags);
-@@ -627,7 +627,7 @@ void clk_disable(struct clk *clk)
- {
- 	unsigned long flags;
- 
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return;
- 
- 	spin_lock_irqsave(&clockfw_lock, flags);
-@@ -650,7 +650,7 @@ unsigned long clk_get_rate(struct clk *clk)
- 	unsigned long flags;
- 	unsigned long ret;
- 
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return 0;
- 
- 	spin_lock_irqsave(&clockfw_lock, flags);
-@@ -670,7 +670,7 @@ long clk_round_rate(struct clk *clk, unsigned long rate)
- 	unsigned long flags;
- 	long ret;
- 
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return 0;
- 
- 	spin_lock_irqsave(&clockfw_lock, flags);
-@@ -686,7 +686,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
- 	unsigned long flags;
- 	int ret = -EINVAL;
- 
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return ret;
- 
- 	spin_lock_irqsave(&clockfw_lock, flags);
-@@ -791,7 +791,7 @@ void clk_preinit(struct clk *clk)
- 
- int clk_register(struct clk *clk)
- {
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return -EINVAL;
- 
- 	/*
-@@ -817,7 +817,7 @@ EXPORT_SYMBOL(clk_register);
- 
- void clk_unregister(struct clk *clk)
- {
--	if (clk == NULL || IS_ERR(clk))
-+	if (IS_ERR_OR_NULL(clk))
- 		return;
- 
- 	mutex_lock(&clocks_mutex);
+Please review!
+
+Joel: If Rob's happy with the binding change can you take the dts patch
+through the aspeed dt tree?
+
+Cheers,
+
+Andrew
+
+Andrew Jeffery (3):
+  dt: bindings: mmc: Add phase control properties for the Aspeed SDHCI
+  mmc: sdhci-of-aspeed: Expose data sample phase delay tuning
+  ARM: dts: tacoma: Add data sample phase delay for eMMC
+
+ .../devicetree/bindings/mmc/aspeed,sdhci.yaml |   8 +
+ arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts   |   2 +
+ drivers/mmc/host/sdhci-of-aspeed.c            | 137 +++++++++++++++++-
+ 3 files changed, 142 insertions(+), 5 deletions(-)
+
 -- 
-2.20.1.windows.1
-
-
+2.25.1
 
