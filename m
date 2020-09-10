@@ -2,140 +2,148 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24046C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BB9C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D10B5214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gJMu+pWx"
+	by mail.kernel.org (Postfix) with ESMTP id C077D208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:55:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599778540;
+	bh=qcDtdo4KtSRqLIHBTyQuxQS343VMAgWt9vLx/LQN3EM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=obSrmT/xjD1QCnCd7oUmyAEEzpRxCAcoNL6Nz1Vx5XtcB1Q8sFe40bYo51zoNyaNl
+	 atcpA3Qtm425VCQLQ4lEj9aNS4rSBlEVh51sN+R47GDBhACYHlfN9vTPOMH1/KqAVo
+	 PuMf/MCw8b2enwz4SA/9cVTPA78wYyLmF7+u8IMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725616AbgIJWwv (ORCPT
+        id S1725536AbgIJWzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgIJWwt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:52:49 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A82C061573;
-        Thu, 10 Sep 2020 15:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=mcAyKZgcggUBfWFmqvvShivn9FlQq08qmAzFXu/vQNM=; b=gJMu+pWxULloQHpAz7Qby//ART
-        37wQ1cjCvyjw0WhWdZwUDEvpcAJ+BVx2kkijnurP3CRdAP8y9L/eWnSwqRDVUE0hQ8hYmslKYPLXA
-        gY5n6AXTmFcgw7H2ZcVk5Jy3MP7rvyLa5cdaf+kKtI8gJZTTr5FtQPjLsCZJT68f3PfGL6V1L8Pag
-        pPZDrHTu7E1XMGFXuzXdhAEOqmUymFHSJpURWeod/uskUpYR13LeZ1C28M+TL211al15ul2jZ6mMe
-        mdXx+4ZbqGPzlGte24ygwox9U5Y/KoJ4XeI9U0TM8OLv6YOJ9cSipG7BcfyjxfWxGL2s+FUJYyNN0
-        1fO3GVow==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGVQr-0008Bv-U5; Thu, 10 Sep 2020 22:52:46 +0000
-Subject: Re: [PATCH] scripts : config : Added example use when run without
- argument,extend help
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, masahiroy@kernel.org
-Cc:     jeremie.francois@gmail.com, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org
-References: <20200910110713.12782-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <13084d55-6b9a-5c6b-0ce0-84739b3e1072@infradead.org>
-Date:   Thu, 10 Sep 2020 15:52:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 10 Sep 2020 18:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgIJWzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 18:55:38 -0400
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E350521D81;
+        Thu, 10 Sep 2020 22:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599778537;
+        bh=qcDtdo4KtSRqLIHBTyQuxQS343VMAgWt9vLx/LQN3EM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EQdTeSVMOyglZrJ0y9T548kiI7MRiDSrEo47DwdhHEHN4RxB+VTRtSw56opOsDIOc
+         WYdet4IJLbdKzGORoMPu51NLQpp7MxMQev1pboeHfMxnPAK8rvhimKnpmWTJi3AikZ
+         pDmfs0Emi8Ad6yLOoRQK63OCOGC/IjNpTGDx2nnA=
+Received: by mail-ot1-f41.google.com with SMTP id e23so6790666otk.7;
+        Thu, 10 Sep 2020 15:55:36 -0700 (PDT)
+X-Gm-Message-State: AOAM532m5fsYYVUSqkmUKtrWbw8nOtXt5d4msp7DRCQRw6lR1FTL0PM0
+        OGD+u06R4hWOe9mPTwVXQiiyD5h2DDdupQaPCQ==
+X-Google-Smtp-Source: ABdhPJwxLrtw8P1iDFnINFBcq5+LFkPAZuZ45Y+BpDa4K34pf79dsdO3g4++HkIgCm6/pIKr4h47efJjCIAix2IDiXQ=
+X-Received: by 2002:a9d:411:: with SMTP id 17mr5602788otc.192.1599778536187;
+ Thu, 10 Sep 2020 15:55:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200910110713.12782-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200902193658.20539-1-krzk@kernel.org> <CAPDyKFqBS-ws6fkirDQL8EEqh9At88K2vrG5fc8K5_JiXsmfyg@mail.gmail.com>
+In-Reply-To: <CAPDyKFqBS-ws6fkirDQL8EEqh9At88K2vrG5fc8K5_JiXsmfyg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Sep 2020 16:55:24 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+ajm5aiAJfQdS2+2DO1ynBDHWha_7TsA4u-2qwd87y6g@mail.gmail.com>
+Message-ID: <CAL_Jsq+ajm5aiAJfQdS2+2DO1ynBDHWha_7TsA4u-2qwd87y6g@mail.gmail.com>
+Subject: Re: [PATCH 00/11] mmc: Minor cleanups and compile test
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Sep 3, 2020 at 2:40 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Wed, 2 Sep 2020 at 21:37, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > Set of minor cleanups.  Patches requiring more attention:
+> >  - 6/11: Testing and review would be appreciated,
+> >  - 11/11: I build tested multiple architectures but not all and
+> >    definitely no all possible configs. This one could sit on the lists
+> >    for few days so 0-day would try it.
+> >
+> > Best regards,
+> > Krzysztof
+> >
+> > Krzysztof Kozlowski (11):
+> >   mmc: bcm2835: Simplify with dev_err_probe()
+> >   mmc: davinci: Simplify with dev_err_probe()
+> >   mmc: dw_mmc-zx: Simplify with dev_err_probe()
+> >   mmc: jz4740: Simplify with dev_err_probe()
+> >   mmc: meson: Simplify with dev_err_probe()
+> >   mmc: sdhci-brcmstb: Simplify with optional clock and dev_err_probe()
+> >   mmc: sdhci-of-arasan: Simplify with dev_err_probe()
+> >   mmc: sdhci-tegra: Simplify with dev_err_probe()
+> >   mmc: dw_mmc: Simplify with dev_err_probe()
+> >   mmc: sdhci-of-sparx5: Use proper printk format for dma_addr_t
+> >   mmc: host: Enable compile testing of multiple drivers
+> >
+> >  drivers/mmc/host/Kconfig           | 42 ++++++++++++++++--------------
+> >  drivers/mmc/host/bcm2835.c         |  4 +--
+> >  drivers/mmc/host/davinci_mmc.c     |  5 ++--
+> >  drivers/mmc/host/dw_mmc-zx.c       | 11 +++-----
+> >  drivers/mmc/host/dw_mmc.c          |  9 +++----
+> >  drivers/mmc/host/jz4740_mmc.c      |  5 ++--
+> >  drivers/mmc/host/meson-gx-mmc.c    | 16 ++++--------
+> >  drivers/mmc/host/sdhci-brcmstb.c   | 12 ++++-----
+> >  drivers/mmc/host/sdhci-of-arasan.c |  7 +++--
+> >  drivers/mmc/host/sdhci-of-sparx5.c |  4 +--
+> >  drivers/mmc/host/sdhci-tegra.c     |  7 ++---
+> >  11 files changed, 51 insertions(+), 71 deletions(-)
+> >
+> > --
+> > 2.17.1
+> >
+>
+> Series applied for next, except 11, thanks!
 
-Please be more careful. There are many errors here. (see below)
+I see there's a bunch of these already, but I think we can do better
+here than dev_err_probe. We have _optional variants for the case not
+getting a resource is not an error. So the called functions like
+devm_clk_get can print an error. We already have this for
+platform_get_irq along with a coccinelle script to fix cases. I have a
+WIP branch[1] doing this.
 
+Rob
 
-On 9/10/20 4:07 AM, Bhaskar Chowdhury wrote:
-> This patch extends the help section by adding an explicit example of use.
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
->  scripts/config | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/scripts/config b/scripts/config
-> index eee5b7f3a092..b75a5aab2453 100755
-> --- a/scripts/config
-> +++ b/scripts/config
-> @@ -45,6 +45,25 @@ make time.
->  By default, $myname will upper-case the given symbol. Use --keep-case to keep
->  the case of all following symbols unchanged.
->  
-> +The concerete example, say, you want to change any particular config ,like
-
-       concrete                                                  config, like
-
-> +GKOV for profiling , you can simply use this command
-
-   GCOV
-
-> +
-> +To enable :
-
-      enable:
-
-> +
-> +#scripts/config --enable GKOV_KERNEL  && grep GKOV .config
-
-                            GCOV_KERNEL          GCOV
-
-> +
-> + and the output will be like this :
-
-                                this:
-
-> +
-> +  CONFIG_GKOV_KERNEL=y
-
-            GCOV
-
-> +
-> +To disable :
-
-      disable:
-
-> +
-> +#scripts/config --disable GKOV_KERNEL  && grep GKOV .config
-
-                             GCOV                 GCOV
-
-> +
-> +  and the output will be like this :
-
-                                 this:
-
-> +
-> +# CONFIG_GKOV_KERNEL is not set
-
-            GCOV
-
-> +
->  $myname uses 'CONFIG_' as the default symbol prefix. Set the environment
->  variable CONFIG_ to the prefix to use. Eg.: CONFIG_="FOO_" $myname ...
->  EOL
-> 
-
-
--- 
-~Randy
-
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dev_err-removal
