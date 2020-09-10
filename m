@@ -2,61 +2,97 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EF6C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A688CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17DF521556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597B821D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599766363;
+	bh=orngRUhSl9l3X7hGv/CI9HzZMY8gLdIvlGNKvUcPMhM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PA6AZYDbYRbFhMa1yFzh0Ffrf1AVbCpQ/cDYFBCOhDjxQMpEWThKFTSlxudExeez4
+	 rnc2KAKF7EPCq57JFMJiQJnndwyC9dxcrpoKGp2BFuv3id90Hek4OuFdR9mAEUUuhF
+	 +64/eQI0MsSfex8nIHi7Uwqbei08ExBDgRDEaxfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgIJTcL (ORCPT
+        id S1728033AbgIJTcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgIJT3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:29:32 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE33C061756;
-        Thu, 10 Sep 2020 12:29:31 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BA57012A2C1E2;
-        Thu, 10 Sep 2020 12:12:43 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 12:29:29 -0700 (PDT)
-Message-Id: <20200910.122929.1460871728363084990.davem@davemloft.net>
-To:     geliangtang@gmail.com
-Cc:     mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
-        kuba@kernel.org, pabeni@redhat.com, fw@strlen.de,
-        peter.krystad@linux.intel.com, netdev@vger.kernel.org,
-        mptcp@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [MPTCP][PATCH v2 net 0/2] mptcp: fix subflow's
- local_id/remote_id issues
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <cover.1599532593.git.geliangtang@gmail.com>
-References: <cover.1599532593.git.geliangtang@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 10 Sep 2020 12:12:44 -0700 (PDT)
+        Thu, 10 Sep 2020 15:32:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726474AbgIJT3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:29:30 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E598721D91;
+        Thu, 10 Sep 2020 19:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599766169;
+        bh=orngRUhSl9l3X7hGv/CI9HzZMY8gLdIvlGNKvUcPMhM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0LrVyziBD+ZKBtC0vuwxz/pdDe5ERb2/m4gWYDms2mSX8hRmJ+3MJAfN5QFCstv8H
+         hkk2UB3HmE0mb2UD26y1W/ya0AzJHesj0eCsa/mFutb1UQTxteRQu9siO1vi+7GJXH
+         6H1PWhOGfcpaCDOdcgX9+9QnXwl1zRM6Un+Zfe3o=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 2/4] crypto: caam - Simplify with dev_err_probe()
+Date:   Thu, 10 Sep 2020 21:29:17 +0200
+Message-Id: <20200910192919.12503-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910192919.12503-1-krzk@kernel.org>
+References: <20200910192919.12503-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geliang Tang <geliangtang@gmail.com>
-Date: Tue,  8 Sep 2020 10:49:37 +0800
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-> v2:
->  - add Fixes tags;
->  - simply with 'return addresses_equal';
->  - use 'reversed Xmas tree' way.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-Series applied, thanks.
+---
+
+Changes since v1:
+1. Add Reviewed-by
+---
+ drivers/crypto/caam/caamalg_qi2.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 0441e4ff2df2..076c6b04bea9 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -5115,8 +5115,7 @@ static int dpaa2_caam_probe(struct fsl_mc_device *dpseci_dev)
+ 	/* DPIO */
+ 	err = dpaa2_dpseci_dpio_setup(priv);
+ 	if (err) {
+-		if (err != -EPROBE_DEFER)
+-			dev_err(dev, "dpaa2_dpseci_dpio_setup() failed\n");
++		dev_err_probe(dev, err, "dpaa2_dpseci_dpio_setup() failed\n");
+ 		goto err_dpio_setup;
+ 	}
+ 
+-- 
+2.17.1
+
