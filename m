@@ -2,110 +2,168 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636DDC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D47C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35496208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82A3208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5+ESoK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgIJMcw (ORCPT
+        id S1730655AbgIJMdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:32:52 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42502 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730722AbgIJM2n (ORCPT
+        Thu, 10 Sep 2020 08:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729935AbgIJM1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:28:43 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 16CDC1C0B9D; Thu, 10 Sep 2020 14:28:35 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 14:28:34 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Gene Chen <gene.chen.richtek@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
-Message-ID: <20200910122834.GE7907@duo.ucw.cz>
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
- <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
- <CAHp75VdLDvoQicP1nLnjOiit6qjaw9n7+LuJ-J3MtaoHUOa_2g@mail.gmail.com>
- <CAE+NS35FETQ9ASJeYP=Sa8dm7ohRBcdAwUioCAnHPY2TiD4pNA@mail.gmail.com>
- <20200910081814.GB28357@amd>
- <CAHp75Vds75jP47Fy78gxrg05J-CYQ7yD_EiDqizKkcW5rHL_RA@mail.gmail.com>
+        Thu, 10 Sep 2020 08:27:23 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8966C061756;
+        Thu, 10 Sep 2020 05:27:23 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o20so4513301pfp.11;
+        Thu, 10 Sep 2020 05:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7NG7rD1syICfupcmPdJmvgHTE4y0/rSK73sDdgxajwU=;
+        b=B5+ESoK8bYrXvgx3dHxcsnIUuKwHmo7iP0GnnhuWXhHO+oGi7QOG6Gzvc/S1lyGmeL
+         DOELZMXCR8VyF+mIOASF5yT/C/sCzgKGkt4s2fVLDKIZ0TG2ee2zFmT/p7dMwrsBY5F7
+         vj0prJpvaH5LR3kJlajXeb8FIDVQ2ZB9eA1wqGvvDvL8upL9jxw0ltlsWOPUminvEwmP
+         wmQYNyQRXc9N7xzwmx8Epz7x5A5ME+bJkUYmd7lQtHdKYtqDpR41mTsKEDA3IqwZ8kGG
+         9qRLGPHwf3SpswbaoFfK2s/aMCnOn+6FtVvsC8Y2bTLADg8FRQiszk8tgxF1SGIwA1HW
+         eCSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7NG7rD1syICfupcmPdJmvgHTE4y0/rSK73sDdgxajwU=;
+        b=EsOscAEfvU9sYI8EmapsTWwxRhMuO+HV2GdlLt/3wpxY23cF9tqEhh5VFw9LmJjoE+
+         mTkJdxd9OQBIMxfq9GQZ7vF7Ujn5kMFnvDsxwO6hwreINiIToKSiM19upkwiZhMDKQy7
+         0Y67pFBuCCPlnBK2VVFn6yU8io7TA1NZ82O7EUodprnBrTXV/4ZmMWemQyW2DIxQ4pLc
+         OOXgFJIS6w/dOMPSFRzVhWNuMoCTX1rYafWu/NGiHyFA94qmDXUfEQ4NH3ZDE8EtzTTL
+         8S14WHiyXBezUCj0fOcZXa3oPWE4NLf31686UPmejEefQRXWhWK+uQr1GZUic6bP2LHU
+         TwYg==
+X-Gm-Message-State: AOAM531dE5D1ycYEMgn+NiiGYyOCZ3RVWlUKpCR5nbCBWi/CO1nWLI/K
+        0w9w9fiGBwsJAl8CYWYQn4qRSc3QviU=
+X-Google-Smtp-Source: ABdhPJzQycYAfd7DwXTyyhYFiu3ZXgujt6tDccJKfSYJJyQ3N1CQ2BEtP9Fn7pJYAc49eqXwgB3DWw==
+X-Received: by 2002:a63:5ec5:: with SMTP id s188mr4339691pgb.218.1599740843198;
+        Thu, 10 Sep 2020 05:27:23 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6218:54d7:9928:e984:12bb:783d])
+        by smtp.gmail.com with ESMTPSA id b18sm5181687pgk.36.2020.09.10.05.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 05:27:22 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        andy.shevchenko@gmail.com,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH] iio: gyro: adxrs290: use hook for devm resource unwinding
+Date:   Thu, 10 Sep 2020 17:57:11 +0530
+Message-Id: <20200910122711.16670-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="YkJPYEFdoxh/AXLE"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vds75jP47Fy78gxrg05J-CYQ7yD_EiDqizKkcW5rHL_RA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make use of devm_add_action_or_reset() hook to switch device into STANDBY
+mode during standard resource unwinding. The patch includes a helper
+function, in the form of adxrs290_set_mode(), to realise driving the
+device into STANDBY mode.
 
---YkJPYEFdoxh/AXLE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+---
+ drivers/iio/gyro/adxrs290.c | 61 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 58 insertions(+), 3 deletions(-)
 
-On Thu 2020-09-10 14:34:54, Andy Shevchenko wrote:
-> On Thu, Sep 10, 2020 at 11:18 AM Pavel Machek <pavel@ucw.cz> wrote:
->=20
-> ...
->=20
-> > > > > +enum {
-> > > > > +       MT6360_LED_ISNK1 =3D 0,
-> > > > > +       MT6360_LED_ISNK2,
-> > > > > +       MT6360_LED_ISNK3,
-> > > > > +       MT6360_LED_ISNK4,
-> > > > > +       MT6360_LED_FLASH1,
-> > > > > +       MT6360_LED_FLASH2,
-> > > >
-> > > > > +       MT6360_MAX_LEDS,
-> > > >
-> > > > No comma for terminator entry.
-> > > >
-> > >
-> > > ACK
-> >
-> > Actually, that comma is fine. Its absence would be fine, too.
->=20
-> It is slightly better not to have to prevent (theoretical) rebase or
-> other similar issues when a new item can go behind the terminator. In
-> such a case compiler can easily tell you if something is wrong.
+diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
+index ff989536d2fb..2864eb443957 100644
+--- a/drivers/iio/gyro/adxrs290.c
++++ b/drivers/iio/gyro/adxrs290.c
+@@ -192,15 +192,70 @@ static int adxrs290_set_filter_freq(struct iio_dev *indio_dev,
+ 	return adxrs290_spi_write_reg(st->spi, ADXRS290_REG_FILTER, val);
+ }
+ 
++static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
++{
++	struct adxrs290_state *st = iio_priv(indio_dev);
++	int val, ret;
++
++	if (st->mode == mode)
++		return 0;
++
++	mutex_lock(&st->lock);
++
++	ret = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
++	if (ret < 0)
++		goto out_unlock;
++
++	val = ret;
++
++	switch (mode) {
++	case ADXRS290_MODE_STANDBY:
++		val &= ~ADXRS290_MEASUREMENT;
++		break;
++	case ADXRS290_MODE_MEASUREMENT:
++		val |= ADXRS290_MEASUREMENT;
++		break;
++	default:
++		ret = -EINVAL;
++		goto out_unlock;
++	}
++
++	ret = adxrs290_spi_write_reg(st->spi, ADXRS290_REG_POWER_CTL, val);
++	if (ret < 0) {
++		dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
++		goto out_unlock;
++	}
++
++	/* update cached mode */
++	st->mode = mode;
++
++out_unlock:
++	mutex_unlock(&st->lock);
++	return ret;
++}
++
++static void adxrs290_chip_off_action(void *data)
++{
++	struct iio_dev *indio_dev = data;
++
++	adxrs290_set_mode(indio_dev, ADXRS290_MODE_STANDBY);
++}
++
+ static int adxrs290_initial_setup(struct iio_dev *indio_dev)
+ {
+ 	struct adxrs290_state *st = iio_priv(indio_dev);
++	struct spi_device *spi = st->spi;
++	int ret;
++
++	ret = adxrs290_spi_write_reg(spi, ADXRS290_REG_POWER_CTL,
++				     ADXRS290_MEASUREMENT | ADXRS290_TSM);
++	if (ret < 0)
++		return ret;
+ 
+ 	st->mode = ADXRS290_MODE_MEASUREMENT;
+ 
+-	return adxrs290_spi_write_reg(st->spi,
+-				      ADXRS290_REG_POWER_CTL,
+-				      ADXRS290_MEASUREMENT | ADXRS290_TSM);
++	return devm_add_action_or_reset(&spi->dev, adxrs290_chip_off_action,
++					indio_dev);
+ }
+ 
+ static int adxrs290_read_raw(struct iio_dev *indio_dev,
+-- 
+2.20.1
 
-Okay, I see your point.
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---YkJPYEFdoxh/AXLE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1ob8gAKCRAw5/Bqldv6
-8lViAJ9myb0j5o09GhH3AOC/vEPu/eVHrQCfURBxqy5ugClklDvSpz1f/ewdO60=
-=pYh1
------END PGP SIGNATURE-----
-
---YkJPYEFdoxh/AXLE--
