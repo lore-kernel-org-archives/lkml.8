@@ -2,104 +2,183 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E5DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E23C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAC1214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED65D20C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="dJRG8Qmp"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QUAkVEnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgIJTQc (ORCPT
+        id S1726942AbgIJTRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:16:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731461AbgIJPyg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:54:36 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB7EC061795
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:54:35 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id u20so6135729ilk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OZHxSy9GxPtwL4FPXTEL4wHPxBFDa6n0iEKloHdc+dY=;
-        b=dJRG8Qmps859QERXNYLJxi55QI15qf+NmhuQCnsZM3tzSEE4XDm6akhiZPmfFP2D5L
-         noKfGQmOG//ogqGq6MHNPrBzfyTsSRYDDvmU4HpGKt2M3+VX34Rn11vzjMP7dWCeXtL7
-         peTBqP2XxuoNfSrqxocG1z0zzHqFPkd4E6mCLjflVUpkyfeWBoxTosdtHT8O3weuXwoU
-         tQ9lPzZrLFElRA5AiEu/B7dHsjPFnIljwQ7uqXHEHqGd8+4jBMrrg/VTkfD3IGCBJS5B
-         tsG5z+xzaGHBSxD5B1GWK+wIELg2uX73o8AHY/LKWaXB7jjiscV+sTvRU/rMsZateAut
-         mn4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OZHxSy9GxPtwL4FPXTEL4wHPxBFDa6n0iEKloHdc+dY=;
-        b=WHybdPpEYDuv6ML0Xo+QCCvK7Ss6kPO23j9t3o9BiTYZjk94W93eb9ny5SnrEGsblR
-         k6++HOAVU2E0aDJiByF8yCUkxAsEanpqySrjQ7olzqxrB6Ebuub9/B/GH7o2EpPcCxKl
-         ECU+YZsADiBy9w/J9NdIgTtsuA4QhYD4r0BAHv1PjlC77GKn4Ox6G8G5nK2w3AnU1gQ6
-         ZR4KfxcolLDIctBwdtr+gat55A8XAW8OVBPtB1z8u6cB9Zif1jVVYye/UXgYtKl9Zjpr
-         puauBpit8Eog9UNdL+Vo+jJS7UnxcUJa3bH3PGQwc5ip2HQIx++wcwcNWVAgcqTqhuYX
-         8c3w==
-X-Gm-Message-State: AOAM530tFKKy7JbNbEgQljX+F8B8mLbwZbImPDh08mFZUC7bdAst9viI
-        VfAKnbQaqybRiXHaX6Lb/M4aNA==
-X-Google-Smtp-Source: ABdhPJxHvxNIiZ7YNxR9PEQ5wMasrzeeVlpwNZVmQsRSVIQZmYnp6kGKrBV3BTGdMbs3dPcZtBZnXQ==
-X-Received: by 2002:a92:b309:: with SMTP id p9mr6758105ilh.125.1599753274952;
-        Thu, 10 Sep 2020 08:54:34 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id z15sm3315413ilb.73.2020.09.10.08.54.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 08:54:34 -0700 (PDT)
-Subject: Re: rework check_disk_change() v2
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
+        Thu, 10 Sep 2020 15:17:25 -0400
+Received: from mout.gmx.net ([212.227.15.15]:48535 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbgIJTQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:16:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599765228;
+        bh=qeHl02+qNaZfS2zb3ool6auJUEybADfCqRcX+fplOTA=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=QUAkVEnxqvqyeCAt5nPfZVQETiNwOilqXMh0x9Ui2PmgaUP1bBMt4HCFaqskqJfMI
+         Co5MMN8cFkDDZLmGTblSwoTvAa1W1ooLlGlahTlDS/QnsMCxtMjON0YxT22UvP7vXX
+         +gC3eh3V3PRBaztZgt4pZrhM6MFK4RvPNR4rdVqM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSc1L-1k5cDl1x6H-00SyDK; Thu, 10
+ Sep 2020 21:13:48 +0200
+Date:   Thu, 10 Sep 2020 21:13:47 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200908145347.2992670-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b5e51c24-b9a6-979f-8fe0-f762f113bba3@kernel.dk>
-Date:   Thu, 10 Sep 2020 09:54:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
+Subject: Re: [PATCH v2 05/10] pwm: ntxec: Add driver for PWM function in
+ Netronix EC
+Message-ID: <20200910191347.GC3306@latitude>
+References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+ <20200905133230.1014581-6-j.neuschaefer@gmx.net>
+ <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
+ <20200908081445.GC4400@dell>
+ <CAHp75Veb5nVasy28FSksf06eVVhC8N5hHsEPM-2YcFbMjZ5Rhw@mail.gmail.com>
+ <20200908093538.GM4400@dell>
 MIME-Version: 1.0
-In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+xNpyl7Qekk2NvDX"
+Content-Disposition: inline
+In-Reply-To: <20200908093538.GM4400@dell>
+X-Provags-ID: V03:K1:8ZpIiqeMGiTole8f3GZbs/8J44fyaw8o4mnDZgvWfp6mfZoxaEt
+ BdtfDOdyJK9E+rxiu7bTQywtxF4Augq8FOBZ5ouioXKMGq5h2DzrMJ82ln6p92Uz9bwIjP+
+ WvPZ4gU1fqy3iEenraoawEBUJcjeNCcwgFAiSu22eKUWIFhA1QXqgrVSoGUYt2IoJZp03xy
+ 6X0bqHigi3TrjBpy9xDiQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DtwUwzvl8t0=:di1WMmdZW79JaiKn9/d+70
+ LUcctiYT+4V7cyroNFBquwjr1BpBiDfXdo1KI1PzrGv8xFfTzw+uupv9U2uBw4e4RY/WZtCQ7
+ 8jM7korv/q7MzSC5MtOruOXB7FXABdyRvxaw6gquvWMyKgQnvfzp6TtUKh8FvxyOwl3z/YP0s
+ 4PpGlO4m+ou4BzPj2eWOesu1bbOsq6FAI/s8l9aRAs4qQTTz8xCJzH4xrrENviF2SbLZkLzl+
+ X5TdbYUNCkdkyhIOca5w2EXpFNNhR5ARCkJyrebq36wodSU+HdF+dwzS7FQibN8GCZeZetKU8
+ TRSclwIqQh9m0ctMIrTPSboDbsIltmYXzhciRsd+Do7z2+h/Ss57ih/0VAwTPYDN9jHvUStK0
+ Oz5cqEBbe8GZzEEQT+eAzxA9ipD4tJ+lx+PWejS8mGUCTvyVF+o8vVgcDvVHvXeO3j2S95nOn
+ YnBIg7cLtLEsdEf83kKMJddmfgU9MylGTGxo3D+p3a4eTkkBBSgrftJBxUGsI/z766SILO3fz
+ jhVn5+KNf55Afi9zSKsGHm4xDHzV53WR4TQg9dgPCdvBDxgBTPcxxNdI9BLEUQCz1JUVi/1JQ
+ Q+HSb/TRDBgcuw7K+JRmO4fOzSkbd8D9eh+vQpC6AeQpCKU/RAfYSy2SFyLzO68hZ9rrlQkXP
+ pOx2qtmm8H13JogISs4+UvQo0r8I6KlQ//NkXr80A3+QTMJ+3hpJsehtFdwO15MS/UuiyNLKr
+ zcdqgW4I7dLWUgKiagQB7HyJ5ZfcbDrHSnn+Il4WFZ2fRrB0PHLZNY7KSjfPlDR1kS0iFdZPG
+ QL3L5IGdD4SPOb3W3vKoU/JzOcgMxmNof08uDAXSrYPNyG7ZLj+/mAc8uKZ39zcDJft1akhUa
+ +qFt3hhYWzTPcjF/nVpAQgFKVn1ZI/TwVoYZz8QuEDI44W3fqli2/G0ohZkABYz+mhW1uRFEd
+ rGwHSb45GFuvuFI3nc0KmAkgQSZEB7sbokJHcBs6YnxyfHVBsK0WoD+LPizKRNGorhcC6Y2ej
+ aF/Yw90qMzTxrvuR1JZqhwXz2SSHMSy2fct8Y6MvH4ZgJ/mwGsAGT53Kdjc+ZvtXkWaNXXjeF
+ QJPnu8HlbywPXWsnAzgMS3pKqYFgszIZZr778bWKl4tPzLRn5xOh8aM8S+P9nncdT1lUo1l3r
+ DixBnrnSmdvTwZjePQV7QC+37eS+ICPhmDIAkvepJiM+RMjDFv2orSgRiZHM5iv6wXxU2MQp6
+ QSoyrFBO6iRU4g/zefBg3KXri6sRnytEwpyCrxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 8:53 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series replaced the not very nice check_disk_change() function with
-> a new bdev_media_changed that avoids having the ->revalidate_disk call
-> at its end.  As a result ->revalidate_disk can be removed from a lot of
-> drivers.
 
-Applied, thanks.
+--+xNpyl7Qekk2NvDX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Jens Axboe
+On Tue, Sep 08, 2020 at 10:35:38AM +0100, Lee Jones wrote:
+> On Tue, 08 Sep 2020, Andy Shevchenko wrote:
+>=20
+> > On Tue, Sep 8, 2020 at 11:14 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > > On Sat, 05 Sep 2020, Andy Shevchenko wrote:
+> > > > On Saturday, September 5, 2020, Jonathan Neusch=C3=A4fer <j.neuscha=
+efer@gmx.net>
+[...]
+> > > > > +       depends on MFD_NTXEC && OF
+> > > >
+> > > >
+> > > > I don=E2=80=99t see need to reduce test coverage and use of the dri=
+ver by sticking
+> > > > with OF. Actually it=E2=80=99s not used.
+> > >
+> > > If the device is only known to boot with OF, then it's pointless
+> > > building it when !OF.
+> >=20
+> > No, it's not. As I pointed out the (compilation) test coverage is bette=
+r.
+>=20
+> No, it's a waste of disk space.
+>=20
+> Why would you knowingly compile something you know you can't use?
+>=20
+> That's the whole point of COMPILE_TEST.
+>=20
+> Note that when you want real coverage and you use `allyesconfig`
+> and/or `allmodconfig` then CONFIG_OF is also enabled on platforms
+> which support it.
+>=20
+> > > If you want to increase test coverage enable
+> > > COMPILE_TEST instead.
+> >=20
+> > It is one way to achieve that, yes;
+> >=20
+> >        depends on OF || COMPILE_TEST
+> >        depends on MFD_NTXEC
+>=20
+> This is better.
 
+Ok, I'll go with this variant.
+
+
+Thanks
+
+--+xNpyl7Qekk2NvDX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9aeuoACgkQCDBEmo7z
+X9vkeQ//Z6VkR7LUMRr15RrcOim2rTLOTurj8YLz+0euJs2UiKbWB1g1sq0EUbl4
+oF0lpeQ7r32jaBtYOaMbJnl+seUEeBb8UQGXtS0QTdpOiQO2l0aRWJUpGOWmFjoy
+sNPF0FJOKsJ7hE0hgHrplJcVUMaWI6RcICTpEFWXaXBjsOi0JyWVYXPmHcSXewDm
+OBWmV+AHu6xnVAnsf/d38DJSGMGGlmTqyfwy5f1Hex0k84lC8/UnZZncG0eSqEEj
+nnTb8qWCsmAuyA9VXniUsdw8czkVLXHH9Nb2gZkxC4rACWHGdx5zJQgOMl57GR3Z
+P4Be4YaCVUGrRSyxzwdZAESOR/SXyX807Vienx2oPud1EVW0WanG0E0oo51MmItm
+sy3ztPgb3KWEcB03EwNKNIyECn41sxkQYnj2hvZMDdjIwcX+zBerlkMib5FIHygk
+IvDE46MfLDxkbcWL1Rf+YsTUYfkGfg5LRaEjlIfhW+xErcW2WDjCoA9DfnZLMJUS
+tFqIYmUous2y2g8JYXUYlFLD1OhaKSjbmDFGbSzQWURynxz6pSejboqIb+FM7TNA
+f6hmHZH+O7d0uOGCzsbKszzz4haHdSzxnuMhV3ZsSxB4r/bKCBWlyGsdBqcx9eDw
+AKWxNJZlp5Mj7j5Gow94BY9+8UZMjGk+mSUh/aCHok6Ll5+Zdx4=
+=lXFL
+-----END PGP SIGNATURE-----
+
+--+xNpyl7Qekk2NvDX--
