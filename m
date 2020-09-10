@@ -2,223 +2,95 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 474F4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAED9C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1F3B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tcd-ie.20150623.gappssmtp.com header.i=@tcd-ie.20150623.gappssmtp.com header.b="YqA5PLut"
+	by mail.kernel.org (Postfix) with ESMTP id 8484F221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599773829;
+	bh=V1wKpfnBNnmhv6G3q9IsWvZn9GlN18uZFdJxqnq2jxk=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-ID:From;
+	b=ef3JFnJ11fxc3g9Uhi/ne6s+zKn8tyx2716hSW2yz0xxAzqzySAp5XVa5wYFMq/Rl
+	 vHyHWZ+m3IoFWBwHEDwkVzNHTUt8nLQkULpDxJoF8VIjn7O49PMlT1IBSvvKkjVwnl
+	 U5tPYE0ZY6YgbBqY6r7WIupK+nMuR04RM/tmmJY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgIJVhG (ORCPT
+        id S1728109AbgIJVhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730187AbgIJNfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:35:07 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F14C06179A
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:34:50 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id b6so7051819iof.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h8Tpj5wYSQjiK+TAJfFO0Tf9jiEY5yGG/m2aEP5Z4pw=;
-        b=YqA5PLut0xGMj0S2JsZ1nqoWnAI87qW2iB6rBuyzlNr/i8p2GIELK1QX+lKWUsTwzK
-         J2dSARVPeG4IwzzuA8pE1P+5OVAa2eHFRKGaWb7NjIZv2LfVgNFdgO/O5efipKLRnyRj
-         59Ivydb0yd96322f4OP7eAyli9gq1bJJqNWwr7UQp7WOJw13CiHGa50UV4LiwaciCZ54
-         rPVab7PqDAVXapxusuMo+bEb8iCDOteeaNoCp92DVDajkbd2ofZmMkGtoG3Skprhh9uL
-         /U8Q1jK9UaeuY5X3L97dgHkQYmRrGLYCXPbuv3z5NyjgpChQ4n/amkDeY/PGFcsIM7Fy
-         bAqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h8Tpj5wYSQjiK+TAJfFO0Tf9jiEY5yGG/m2aEP5Z4pw=;
-        b=r0TtAK1mIEqQAx0JgsFjPg46XpDYnvxVVXAramPYsR62iSCKUxdRdx0YZUZh1CLmTL
-         Fjp0U3pRAK50iE759SFpo+gkoseLKPcyYGsnrcJQedpq5cQjapsRYX2v6W03Yo5LGfbd
-         o2my9jY0IC5Ohh3f2GSV43C0ehc+NoBo1RfsfjZw8FxmdrI9OrPsMvIJLzt/gTczP3ZY
-         fdRSud8u+qGKWSDysNw19h4TWWP2ufj6uv3veUp1zL5/rmey3J9hkNQP6+ocr+Zww6DI
-         SPCjV+c6k+p4yzD+E0bby8pQTt68WjQxmBHodNlP7/uL9z7nwUVNWlKOkN2VeyowteDP
-         2uWw==
-X-Gm-Message-State: AOAM531Db/gO+er0STPPEQCkrHwY8zawvExquF2Pwhco52I7+mC+qnjn
-        JZlAU3m21DzkmOjWEh9qAdr8Me+58u5KOUqqfdvEAQ==
-X-Google-Smtp-Source: ABdhPJwu6upi5knKzGwyXFCyYTEZCPzreSot+419n5zt9A65oGcyQgjDJ6G718nc8PHKFashtF6vKw91+qlabsYr8+c=
-X-Received: by 2002:a02:b199:: with SMTP id t25mr8370395jah.124.1599744889300;
- Thu, 10 Sep 2020 06:34:49 -0700 (PDT)
+        Thu, 10 Sep 2020 17:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730893AbgIJNft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:35:49 -0400
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D3820C09;
+        Thu, 10 Sep 2020 13:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599744948;
+        bh=V1wKpfnBNnmhv6G3q9IsWvZn9GlN18uZFdJxqnq2jxk=;
+        h=References:In-Reply-To:From:Date:Subject:To:From;
+        b=Iu/QQeP8BdkkjmC//fxdEnzC5MvdHm2RGo1WAcNBcr9EVzPC8+MLBZHSXIf7rWBF2
+         6D9BONK2qf/U6VezTnMLux6qXZPOwqeNdD92RjA6BNJVqI/TkLyqvz2cckdmfoQW66
+         Vq3lhpyM3TycBna9MohQUjs1xHctxsM4+qg8bjx8=
+Received: by mail-ej1-f46.google.com with SMTP id i26so8707663ejb.12;
+        Thu, 10 Sep 2020 06:35:47 -0700 (PDT)
+X-Gm-Message-State: AOAM531UjY0Sa1EcdyjuLmI8tZcHa0SK6ZafU30/tzZksHhQ+8x8KRJY
+        +iyhr2h7wZqKhdwleuhYs0eSY0aagglUl+wPI3Y=
+X-Google-Smtp-Source: ABdhPJwINmV5bI33FlqWtuSmo9zSXfn21SyT8mGvBNJyprgovPHUzJONmLEebsWy015sjIsWUjJzxmOGWX+E8h1VP8s=
+X-Received: by 2002:a17:906:82d1:: with SMTP id a17mr8613075ejy.385.1599744946434;
+ Thu, 10 Sep 2020 06:35:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org> <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com> <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com> <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
- <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com> <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
- <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com> <b27cae1f-07ff-bef2-f125-a5f0d968016d@linux.intel.com>
- <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
- <7106602a-9964-851e-9c4e-d8acf4033b89@linux.intel.com> <ea24e077-5aa6-dd8e-69a7-d186b606703f@linux.intel.com>
- <CALQxJus4prs0T6G9Z4bw5BDgwmkaiynBcoknLsYEY45SNZ6Ukg@mail.gmail.com>
-In-Reply-To: <CALQxJus4prs0T6G9Z4bw5BDgwmkaiynBcoknLsYEY45SNZ6Ukg@mail.gmail.com>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Thu, 10 Sep 2020 14:34:38 +0100
-Message-ID: <CALQxJuuU4vpx=5Dg07epSWws-fshC6PJnrPWu-ir5nadgXspKw@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
- dma-iommu api
-To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc:     kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
+References: <1599730349-2160-1-git-send-email-alain.volmat@st.com>
+ <20200910100607.GJ1031@ninjato> <20200910122739.GA5093@gnbcxd0016.gnb.st.com>
+In-Reply-To: <20200910122739.GA5093@gnbcxd0016.gnb.st.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 10 Sep 2020 15:35:34 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcx1tL93KJAvVT3rAgHX-r3bxri9GwHMSgDSAhALi2aFA@mail.gmail.com>
+Message-ID: <CAJKOXPcx1tL93KJAvVT3rAgHX-r3bxri9GwHMSgDSAhALi2aFA@mail.gmail.com>
+Subject: Re: [PATCH] i2c: stm32: do not display error when DMA is not requested
+To:     Wolfram Sang <wsa@kernel.org>, pierre-yves.mordret@st.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        fabrice.gasnier@st.com, Krzysztof Kozlowski <krzk@kernel.org>,
+        Holger Assmann <h.assmann@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 at 14:33, Tom Murphy <murphyt7@tcd.ie> wrote:
+On Thu, 10 Sep 2020 at 14:27, Alain Volmat <alain.volmat@st.com> wrote:
 >
-> On Wed, 9 Sep 2020 at 13:56, Tvrtko Ursulin
-> <tvrtko.ursulin@linux.intel.com> wrote:
+> On Thu, Sep 10, 2020 at 12:06:07PM +0200, Wolfram Sang wrote:
+> > On Thu, Sep 10, 2020 at 11:32:29AM +0200, Alain Volmat wrote:
+> > > DMA usage is optional for the I2C driver. check for the -ENODEV
+> > > error in order to avoid displaying an error when no DMA
+> > > has been requested.
+> > >
+> > > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> > > ---
+> > > This patch should be applied on top of the patch [i2c: stm32: Simplify with dev_err_probe()]
 > >
-> >
-> > On 09/09/2020 10:16, Tvrtko Ursulin wrote:
-> > > On 08/09/2020 23:43, Tom Murphy wrote:
-> > >> On Tue, 8 Sep 2020 at 16:56, Tvrtko Ursulin
-> > >> <tvrtko.ursulin@linux.intel.com> wrote:
-> > >>> On 08/09/2020 16:44, Logan Gunthorpe wrote:
-> > >>>> On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
-> > >>>>>>
-> > >>>>>> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
-> > >>>>>> b/drivers/gpu/drm/i915/i915
-> > >>>>>> index b7b59328cb76..9367ac801f0c 100644
-> > >>>>>> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
-> > >>>>>> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-> > >>>>>> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
-> > >>>>>>     } __sgt_iter(struct scatterlist *sgl, bool dma) {
-> > >>>>>>            struct sgt_iter s = { .sgp = sgl };
-> > >>>>>>
-> > >>>>>> +       if (sgl && !sg_dma_len(s.sgp))
-> > >>>>>
-> > >>>>> I'd extend the condition to be, just to be safe:
-> > >>>>>       if (dma && sgl && !sg_dma_len(s.sgp))
-> > >>>>>
-> > >>>>
-> > >>>> Right, good catch, that's definitely necessary.
-> > >>>>
-> > >>>>>> +               s.sgp = NULL;
-> > >>>>>> +
-> > >>>>>>            if (s.sgp) {
-> > >>>>>>                    s.max = s.curr = s.sgp->offset;
-> > >>>>>> -               s.max += s.sgp->length;
-> > >>>>>> -               if (dma)
-> > >>>>>> +
-> > >>>>>> +               if (dma) {
-> > >>>>>> +                       s.max += sg_dma_len(s.sgp);
-> > >>>>>>                            s.dma = sg_dma_address(s.sgp);
-> > >>>>>> -               else
-> > >>>>>> +               } else {
-> > >>>>>> +                       s.max += s.sgp->length;
-> > >>>>>>                            s.pfn = page_to_pfn(sg_page(s.sgp));
-> > >>>>>> +               }
-> > >>>>>
-> > >>>>> Otherwise has this been tested or alternatively how to test it?
-> > >>>>> (How to
-> > >>>>> repro the issue.)
-> > >>>>
-> > >>>> It has not been tested. To test it, you need Tom's patch set without
-> > >>>> the
-> > >>>> last "DO NOT MERGE" patch:
-> > >>>>
-> > >>>> https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
-> > >>>
-> > >>> Tom, do you have a branch somewhere I could pull from? (Just being lazy
-> > >>> about downloading a bunch of messages from the archives.)
-> > >>
-> > >> I don't unfortunately. I'm working locally with poor internet.
-> > >>
-> > >>>
-> > >>> What GPU is in your Lenovo x1 carbon 5th generation and what
-> > >>> graphical/desktop setup I need to repro?
-> > >>
-> > >>
-> > >> Is this enough info?:
-> > >>
-> > >> $ lspci -vnn | grep VGA -A 12
-> > >> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD
-> > >> Graphics 620 [8086:5916] (rev 02) (prog-if 00 [VGA controller])
-> > >>      Subsystem: Lenovo ThinkPad X1 Carbon 5th Gen [17aa:224f]
-> > >>      Flags: bus master, fast devsel, latency 0, IRQ 148
-> > >>      Memory at eb000000 (64-bit, non-prefetchable) [size=16M]
-> > >>      Memory at 60000000 (64-bit, prefetchable) [size=256M]
-> > >>      I/O ports at e000 [size=64]
-> > >>      [virtual] Expansion ROM at 000c0000 [disabled] [size=128K]
-> > >>      Capabilities: [40] Vendor Specific Information: Len=0c <?>
-> > >>      Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
-> > >>      Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-> > >>      Capabilities: [d0] Power Management version 2
-> > >>      Capabilities: [100] Process Address Space ID (PASID)
-> > >>      Capabilities: [200] Address Translation Service (ATS)
-> > >
-> > > Works for a start. What about the steps to repro? Any desktop
-> > > environment and it is just visual corruption, no hangs/stalls or such?
-> > >
-> > > I've submitted a series consisting of what I understood are the patches
-> > > needed to repro the issue to our automated CI here:
-> > >
-> > > https://patchwork.freedesktop.org/series/81489/
-> > >
-> > > So will see if it will catch something, or more targeted testing will be
-> > > required. Hopefully it does trip over in which case I can add the patch
-> > > suggested by Logan on top and see if that fixes it. Or I'll need to
-> > > write a new test case.
-> > >
-> > > If you could glance over my series to check I identified the patches
-> > > correctly it would be appreciated.
-> >
-> > Our CI was more than capable at catching the breakage so I've copied you
-> > on a patch (https://patchwork.freedesktop.org/series/81497/) which has a
-> > good potential to fix this. (Or improve the robustness of our sg walks,
-> > depends how you look at it.)
-> >
-> > Would you be able to test it in your environment by any chance? If it
-> > works I understand it unblocks your IOMMU work, right?
+> > We can do it in this order, it just makes backporting to stable kernels
+> > (if that is desired) a bit harder than a self-contained patch. I am fine
+> > with both approaches, but just wanted to point it out.
+>
+> Indeed, that's a good point. I'll rework it then, to avoid the dependency
+> on dev_err_probe change. If that is ok, I propose to push a two patches serie
+> with both this fix (updated) followed by a rebased version of the
+> dev_err_probe patch from Krzysztof for dev_err_probe change.
 
-And yes this does unblock the iommu work
+I can rebase mine on top of yours. Indeed such cleanups as mine should
+be rather later in the queue.
 
->
-> I tested your latest patch set ([PATCH 1/2] drm/i915: Fix DMA mapped
-> scatterlist walks) and it fixes the issue. great work!
->
-> >
-> > Regards,
-> >
-> > Tvrtko
+Best regards,
+Krzysztof
