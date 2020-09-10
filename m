@@ -2,93 +2,120 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE4DC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386B0C2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33F8207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005ED207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:27:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599719236;
+	bh=Gm5FP8nCLsvEkfvRpd3DNlXiO/khQnSfhfWHWBBmjY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pGFaAJahbXX+6aE29+ADeTwydxAFyuR01GIldSMpTKEudr8ATKG+rEjX6EQJIiQTP
+	 0/C1neT8hzAwcP/eQNNJvWSA5/LeAjRnn7VgcKCce6tvAVJ6dwQdump1OteOMobK17
+	 3BjjLDXU4oM3k3WMHODcYtUD5f4xZBlydw7i7iXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIJG0z convert rfc822-to-8bit (ORCPT
+        id S1729824AbgIJG1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:26:55 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3511 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726534AbgIJG0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:26:47 -0400
-Received: from dggeme703-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 885AF6857F474B3979AB;
-        Thu, 10 Sep 2020 14:26:45 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme703-chm.china.huawei.com (10.1.199.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 10 Sep 2020 14:26:45 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Thu, 10 Sep 2020 14:26:45 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Hillf Danton <hdanton@sina.com>
-CC:     Souptick Joarder <jrdr.linux@gmail.com>,
-        syzbot <syzbot+c5d5a51dcbb558ca0cb5@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in unlink_file_vma
-Thread-Topic: general protection fault in unlink_file_vma
-Thread-Index: AdaHOf7o7TdygKeMkk6oouf0he4T3A==
-Date:   Thu, 10 Sep 2020 06:26:45 +0000
-Message-ID: <bc09fdb2ce24487b821bccc856c4c23b@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.178.74]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 10 Sep 2020 02:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726345AbgIJG1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:27:12 -0400
+Received: from localhost (p5486ceec.dip0.t-ipconnect.de [84.134.206.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EA4A207EA;
+        Thu, 10 Sep 2020 06:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599719232;
+        bh=Gm5FP8nCLsvEkfvRpd3DNlXiO/khQnSfhfWHWBBmjY0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=etU4Y2hicXxYTNu/4kWYn9Al5j8eZkOpVlo2pD0o1ZsWbpO8yQItP3MmmeCtXmeSe
+         fyvU9aDyHqv0zV0t5Qq9zQ5V1TzIGX8u0YUgsApk05uWFgTZuWfYcPmjEM53hyKvc7
+         5F65oqU/5kMGkwkHBLR+LePV9sqD9cHQMPpUiAVQ=
+Date:   Thu, 10 Sep 2020 08:27:09 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Michal Simek <michal.simek@xilinx.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 6/9] i2c: imx: Simplify with dev_err_probe()
+Message-ID: <20200910062708.GG1031@ninjato>
+References: <20200902150643.14839-1-krzk@kernel.org>
+ <20200902150643.14839-6-krzk@kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sLx0z+5FKKtIVDwd"
+Content-Disposition: inline
+In-Reply-To: <20200902150643.14839-6-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hillf Danton wrote:
->> On Thu, 10 Sep 2020 07:43:41 +0530 Souptick Joarder wrote:
->> On Wed, Sep 9, 2020 at 9:45 AM Hillf Danton wrote:
->> > Tue, 08 Sep 2020 17:19:17 -0700
->> > > syzbot found the following issue on:
->> > >
->> > > HEAD commit:    59126901 Merge tag 'perf-tools-fixes-for-v5.9-2020-09-03' ..
->> >
->> > Looks like d70cec898324 ("mm: mmap: merge vma after call_mmap() if 
->> > possible") added an extra fput.
->> 
->> Can you please help me to understand how do you figure out this commit ?
->
->Feel free to correct Hillf if I missed any thing.
->Failing to reproduce the gpf without the commit may tell us more about it than I could.
->> >
->> > --- a/mm/mmap.c
->> > +++ b/mm/mmap.c
->> > @@ -1781,7 +1781,6 @@ unsigned long mmap_region(struct file *f
->> >                         merge = vma_merge(mm, prev, vma->vm_start, vma->vm_end, vma->vm_flags,
->> >                                 NULL, vma->vm_file, vma->vm_pgoff, NULL, NULL_VM_UFFD_CTX);
->> >                         if (merge) {
->> > -                               fput(file);
->> >                                 vm_area_free(vma);
->> >                                 vma = merge;
->> >                                 /* Update vm_flags and possible addr 
->> > to pick up the change. We don't
 
-Yes, It seems vma_merge() could fput the vm_file via remove_next case in __vma_adjust(). So the fput vm_file here do the
-extra one.
+--sLx0z+5FKKtIVDwd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But we may not remove the fput here directly as vma_merge() do not always fput the vm_file. I'am not really familiar with
-the vma merge yet, but I would try my best to fix this as soon as possible.
+On Wed, Sep 02, 2020 at 05:06:40PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Many thanks for point this out. And sorry for my careless.
+Thanks, but this patch was a bit earlier:
 
+http://patchwork.ozlabs.org/project/linux-i2c/patch/1597203954-1803-1-git-s=
+end-email-Anson.Huang@nxp.com/
+
+
+--sLx0z+5FKKtIVDwd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9ZxzwACgkQFA3kzBSg
+KbYCNhAAo2nfbP6Dmy9CcAEl/QKmFLjmjJKUIQb45IeuIZWlBMUc7gk6SBrqectE
+PTAyWBluLF8Pub2rqHtIuQZBEu19HG2reXcyNugVvoz64rUFksRUw0Ap3CJW3MBC
+81/i1SLsMp6gNhXUz7T+2JypfIu/XRYB5sMYVFCLFzstxepY15cQ6DwV37ARpJDp
+Z9n5uD9qNgcCmerP8TZC6HIwLSa4FDwJ1U2MYzWHp7IVIEA6OwshA/g7b28J/VBU
+egPLlaDRy9utqwMH1LqBJe9e8+yB52M/VI6ao4iA5qaMzdy9wROhiigkSJxRK/RS
+sx33t55k+3q9CfSiVhOuVepKetiNyTMEvXvOf8DvXqfPeUzIaZr0xKU3vnTa8kE8
+RDjC9mDy1aeH92gJxwhDPg90G9kaoz2G8unIynr5aS+5qGnPMQnK3nSn5IGVktD9
+aYtx0xQw1Io+BYoyE/W4gW6xOO4MROaqU354P1y+DodMVLrkfv8pluItqu9363cY
+NRkePoQnoWP2Ac2/cP7e7bY3P/ha7SNWMLS0FRpAitYAREilgiaABW2T+2v1WoNt
+6V6Oy97ceBSNxLuVTLEGWPqJasIk07gTR5SyB4i+doS+wDwfiHh1codmfOyErKz0
+00w5u9BN78VIAkriPGp/xz5a2rptVGvT0ovdvT6jsypdGplR1tM=
+=5W+d
+-----END PGP SIGNATURE-----
+
+--sLx0z+5FKKtIVDwd--
