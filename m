@@ -2,96 +2,172 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AEDC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DB2C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC47320882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE8820882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:00:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QuCRn09G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730831AbgIJJ76 (ORCPT
+        id S1730596AbgIJKAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:59:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59262 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730596AbgIJJ5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:57:24 -0400
-IronPort-SDR: IkdEGsVYDeaSHd5zC8Fd3i1SzO3AaG5IbjMmMP1R6K/khjivYSWoMVXbHcnPb2exhCI+sS6nzb
- a6wE20bz+Rlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="157782360"
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="157782360"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 02:54:07 -0700
-IronPort-SDR: 3iiISJzVPsvq7qAGyQ55MzatYYoTRWENmLKuHQylsst8Jd+oXMVzz4BqbMfT01Ckx2SBEsrYSy
- WfpwSu//TCFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
-   d="scan'208";a="317858423"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 10 Sep 2020 02:54:01 -0700
-Received: from [10.215.160.12] (rtanwar-MOBL.gar.corp.intel.com [10.215.160.12])
-        by linux.intel.com (Postfix) with ESMTP id 87C22580223;
-        Thu, 10 Sep 2020 02:53:58 -0700 (PDT)
-Subject: Re: [PATCH 2/2] Add driver for Moortec MR75203 PVT controller
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, jdelvare@suse.com,
-        p.zabel@pengutronix.de, linux-hwmon@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rtanwar@maxlinear.com
-References: <cover.1599634208.git.rahul.tanwar@linux.intel.com>
- <ecb6794a8f2ef6576421e6d5fbdf4e6a91f06b91.1599634208.git.rahul.tanwar@linux.intel.com>
- <a3b95ea8-372b-4f03-0c04-62ee9384fafb@roeck-us.net>
- <c72665ba-b594-bbb0-00c5-ed763233d609@linux.intel.com>
- <20200910094622.GO1891694@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <457b8ff8-4093-3b82-5358-4b8460a1b012@linux.intel.com>
-Date:   Thu, 10 Sep 2020 17:53:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 06:00:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45796 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730493AbgIJJ5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:57:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599731809;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BKrok+4G3YivlFdtR5hJYqXNeCQUSOlGeu6cAcn1/oI=;
+        b=QuCRn09GMDhMLLllkX6rzVv9419j03dE5xKQXe5LCS8+6ECv06BWPD2WqFtTimTkQOGewI
+        Q3/15ctsmjOC9zkItHwhqNfuS3+0H34F6s3ZVNXIcPdzkrV7tGDvH7oVMybw/Ry2ETyPx0
+        5dOfeGLgKtZvW3cOH03UCm2hgK/dwGc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-BCBpAEiXO12tezHLeO3ZkA-1; Thu, 10 Sep 2020 05:56:45 -0400
+X-MC-Unique: BCBpAEiXO12tezHLeO3ZkA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C870C2FD00;
+        Thu, 10 Sep 2020 09:56:43 +0000 (UTC)
+Received: from [10.64.54.123] (vpn2-54-123.bne.redhat.com [10.64.54.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4E6C81F44;
+        Thu, 10 Sep 2020 09:56:41 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH 2/2] arm64/mm: Use CONT_SHIFT to define CONT_PTE_SHIFT
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, shan.gavin@gmail.com
+References: <20200908071931.47767-1-gshan@redhat.com>
+ <20200908071931.47767-2-gshan@redhat.com>
+ <459d0f64-fea9-a060-91a5-17a37834fb1b@arm.com>
+ <283283a2-f516-6890-ae25-101d2b1b46a2@redhat.com>
+ <966505a6-16f6-8129-804b-fcf890429fb8@arm.com>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <b253e307-eec4-3cd9-b921-2c6672120e9b@redhat.com>
+Date:   Thu, 10 Sep 2020 19:56:35 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200910094622.GO1891694@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <966505a6-16f6-8129-804b-fcf890429fb8@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Anshuman,
+
+On 9/10/20 7:28 PM, Anshuman Khandual wrote:
+> On 09/10/2020 02:01 PM, Gavin Shan wrote:
+>> On 9/10/20 4:17 PM, Anshuman Khandual wrote:
+>>> On 09/08/2020 12:49 PM, Gavin Shan wrote:
+>>>> The macro CONT_PTE_SHIFT actually depends on CONT_SHIFT, which has
+>>>> been defined in page-def.h, based on CONFIG_ARM64_CONT_SHIFT. Lets
+>>>> reflect the dependency.
+>>>>
+>>>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>>>> ---
+>>>>    arch/arm64/include/asm/pgtable-hwdef.h | 4 +---
+>>>>    1 file changed, 1 insertion(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+>>>> index 8a399e666837..0bd9469f4323 100644
+>>>> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+>>>> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+>>>> @@ -81,14 +81,12 @@
+>>>>    /*
+>>>>     * Contiguous page definitions.
+>>>>     */
+>>>> +#define CONT_PTE_SHIFT        (CONT_SHIFT + PAGE_SHIFT)
+>>>>    #ifdef CONFIG_ARM64_64K_PAGES
+>>>> -#define CONT_PTE_SHIFT        (5 + PAGE_SHIFT)
+>>>>    #define CONT_PMD_SHIFT        (5 + PMD_SHIFT)
+>>>>    #elif defined(CONFIG_ARM64_16K_PAGES)
+>>>> -#define CONT_PTE_SHIFT        (7 + PAGE_SHIFT)
+>>>>    #define CONT_PMD_SHIFT        (5 + PMD_SHIFT)
+>>>>    #else
+>>>> -#define CONT_PTE_SHIFT        (4 + PAGE_SHIFT)
+>>>>    #define CONT_PMD_SHIFT        (4 + PMD_SHIFT)
+>>>>    #endif
+>>> Could not a similar CONT_PMD be created from a new CONFIG_ARM64_CONT_PMD
+>>> config option, which would help unify CONT_PMD_SHIFT here as well ?
+>>>
+>>
+>> I was thinking of it, to have CONFIG_ARM64_CONT_PMD and defined the
+>> following macros in arch/arm64/include/asm/page-def.h:
+>>
+>>     #define CONT_PMD_SHIFT    CONFIG_ARM64_CONT_PMD_SHIFT
+>>     #define CONT_PMD_SIZE        (_AC(1, UL) << (CONT_PMD_SHIFT + PMD_SHIFT)
+>>     #define CONT_PMD_MASK        (~(CONT_PMD_SIZE - 1))
+>>
+>> PMD_SHIFT is variable because PMD could be folded into PUD or PGD,
+>> depending on the kernel configuration. PMD_SHIFT is declared
+> 
+> Even CONT_PMD_SHIFT via the new CONFIG_ARM64_CONT_PMD_SHIFT will
+> be a variable as well depending on page size.
+> 
+
+Yes, it depends on the variable PMD_SHIFT.
+
+>> in arch/arm64/include/asm/pgtable-types.h, which isn't supposed
+>> to be included in "page-def.h".
+> 
+> Are there build failures if <pgtable-types.h> is included from <page-def.h> ?
+> 
+
+Yes, something like this:
+
+   AS      arch/arm64/kernel/head.o
+In file included from ./arch/arm64/include/asm/pgtable-hwdef.h:8,
+                  from ./arch/arm64/include/asm/page-def.h:12,
+                  from ./arch/arm64/include/asm/page.h:11,
+                  from ./arch/arm64/include/asm/proc-fns.h:14,
+                  from ./arch/arm64/include/asm/pgtable.h:9,
+                  from ./include/linux/pgtable.h:6,
+                  from ./arch/arm64/include/asm/io.h:12,
+                  from ./include/linux/io.h:13,
+                  from drivers/bus/vexpress-config.c:9:
+./arch/arm64/include/asm/memory.h:91:55: warning: "PAGE_SHIFT" is not defined, evaluates to 0 [-Wundef]
+  #if defined(CONFIG_VMAP_STACK) && (MIN_THREAD_SHIFT < PAGE_SHIFT)
+                                                        ^~~~~~~~~~
+./arch/arm64/include/asm/memory.h:97:21: warning: "PAGE_SHIFT" is not defined, evaluates to 0 [-Wundef]
+  #if THREAD_SHIFT >= PAGE_SHIFT
+                      ^~~~~~~~~~
 
 
-On 10/9/2020 5:46 pm, Andy Shevchenko wrote:
-> On Thu, Sep 10, 2020 at 03:27:11PM +0800, Tanwar, Rahul wrote:
->> On 9/9/2020 11:05 pm, Guenter Roeck wrote:
->>> On 9/8/20 11:52 PM, Rahul Tanwar wrote:
-> ...
->
->>>> +static int pvt_get_regmap(struct platform_device *pdev, char *reg_name)
->>>> +{
->>>> +	struct device *dev = &pdev->dev;
->>>> +	struct pvt_device *pvt = platform_get_drvdata(pdev);
->>> I am quite at loss how this is supposed to work. Platform driver
->>> data is not initialized with a pointer to struct pvt_device at this point.
->>> How does this code not crash ? What am I missing ?
->> Big mistake on my part. Last minute change based on internal review feedback
->> about moving platform_set_drvdata() at the end of probe. I will fix it in v2.
->> Thanks.
-> Since IIRC it was me who suggested this I should say that reviewer can make
-> mistakes, on the other hand contributor should have had known their code to
-> refuse certain changes.
->
+>>
+>> So the peroper way to handle this might be drop the continuous page
+>> macros in page-def.h and introduce the following ones into pgtable-hwdef.h.
+>> I will post v2 to do this if it sounds good to you.
+> 
+> Sure, go ahead if that builds. But unifying both these macros seems cleaner.
+> 
 
-Totally agree. Overlooked in a hasty change..
+Thanks for your confirmation. v2 is on the way :)
 
-Regards,
-Rahul
+>>
+>>     #define CONT_PTE_SHIFT         (CONFIG_ARM64_CONT_PTE_SHIFT + PAGE_SHIFT)
+>>     #define CONT_PMD_SHIFT         (CONFIG_ARM64_CONT_PMD_SHIFT + PMD_SHIFT)
+>>
+
+Thanks,
+Gavin
 
