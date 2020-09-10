@@ -2,174 +2,91 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A4CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9617E221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFF9tYL5"
+	by mail.kernel.org (Postfix) with ESMTP id 4F9C3221E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgIJVb5 (ORCPT
+        id S1726358AbgIJVcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbgIJNvp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:51:45 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4FDC061796;
-        Thu, 10 Sep 2020 06:51:44 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id j7so949550plk.11;
-        Thu, 10 Sep 2020 06:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s8hpTJ5jpmu25r8Rx3Kgs3iF4PPo1Ln9S4YDeFEjnfs=;
-        b=CFF9tYL5KeE0BlS/F84CUI6dKWsCH+MrmT4ZuZWKR13iqL116kIqKL1o6m842w8bVD
-         uL3e4eicEGPy/IHrqguM7QLSYYW7C670Ce4wGcGxAFE/UhiV7fP/g0A+WRGqYVpvb6km
-         6PsnW0mkpB6++hV7TRwnFNtuEP8NLhrl7AJqWNtqhbahlOluKnClxol2j9+Yz3OcI6SR
-         b3Qt5+w7r6toPI1LyCNeQ69qBZSbkPYmdCiqKsItJ52yw5JZX1zA3PWDzj3wtN0REcCU
-         mfxd6ssCbAHJrJbOfDmX4Qr8f232lXABltZ2Zf1ltrrCO3/h4Y5RlHmUtdyPO4RHu5fI
-         JU9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s8hpTJ5jpmu25r8Rx3Kgs3iF4PPo1Ln9S4YDeFEjnfs=;
-        b=agJNeE9Qq5U8Ja391WdDkYiboOOZLC+53W9iFwBOqASmyHlWqaI1mZOPX4v+qBrEGX
-         iZRnJBKENF200tx25dGKFI0cD4TAkDz/tNi6Kci+AVGkszGwSLwXk8KDz/KVeNB4hS8k
-         DAdEfWiIMcHFoGowBX7IBAh1JeAh9rUfI4nBHVyOM0v0m/GaWTGoZD/jbEC5JX8ag7u9
-         gATMYXNMZ696PUsMp4+lVtZSyUNoWWyRiBH4dWlhpkNQEIx08s6irSfiyoQtACE01IxO
-         vLwCLoFf4N1zytTURq7qGUVQVpUJbZCMpTWwdLEXwQ4vE0vkaZmbJl101fMFTCBp9aio
-         14cQ==
-X-Gm-Message-State: AOAM532opxQFTHNok+Nkux0pEdl5u3l2nzENiZVKJgufT6I1HyhIJnGB
-        C4LudZM4tSbufB6EDvsr4KQ/JdDdkpKqeGpvbJJcrPkX9yrWM+F3
-X-Google-Smtp-Source: ABdhPJz3RqmvrCZbiqBb7VrCUo9x60EzXi4LWBPQA9Ku3MI22FHzXcVDfKsiKq9AIWOmp08oGgBgCXXYTR9Fi6FSgdA=
-X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr23153pjb.181.1599745904138;
- Thu, 10 Sep 2020 06:51:44 -0700 (PDT)
+        Thu, 10 Sep 2020 17:32:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37988 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730916AbgIJNvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:51:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BA407B04F;
+        Thu, 10 Sep 2020 13:51:22 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 15:51:06 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Laurent Dufour <ldufour@linux.ibm.com>, akpm@linux-foundation.org,
+        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+Message-ID: <20200910135106.GI28354@dhcp22.suse.cz>
+References: <20200909105914.GF7348@dhcp22.suse.cz>
+ <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+ <20200910072331.GB28354@dhcp22.suse.cz>
+ <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+ <20200910111246.GE28354@dhcp22.suse.cz>
+ <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
+ <20200910120343.GA6635@linux>
+ <20200910124755.GG28354@dhcp22.suse.cz>
+ <20200910124847.GH28354@dhcp22.suse.cz>
+ <20200910133854.GA8713@linux>
 MIME-Version: 1.0
-References: <20200910122711.16670-1-nish.malpani25@gmail.com>
-In-Reply-To: <20200910122711.16670-1-nish.malpani25@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Sep 2020 16:51:26 +0300
-Message-ID: <CAHp75VeMJruyOCskBGZtyeR-p3sh7hLk2QH32LULAo7wSX3KUA@mail.gmail.com>
-Subject: Re: [PATCH] iio: gyro: adxrs290: use hook for devm resource unwinding
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910133854.GA8713@linux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 3:27 PM Nishant Malpani
-<nish.malpani25@gmail.com> wrote:
->
-> Make use of devm_add_action_or_reset() hook to switch device into STANDBY
-> mode during standard resource unwinding. The patch includes a helper
-> function, in the form of adxrs290_set_mode(), to realise driving the
-> device into STANDBY mode.
+On Thu 10-09-20 15:39:00, Oscar Salvador wrote:
+> On Thu, Sep 10, 2020 at 02:48:47PM +0200, Michal Hocko wrote:
+> > > Is there any actual usecase for a configuration like this? What is the
+> > > point to statically define additional memory like this when the same can
+> > > be achieved on the same command line?
+> 
+> Well, for qemu I am not sure, but if David is right, it seems you can face
+> the same if you reboot a vm with hotplugged memory.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+OK, thanks for the clarification. I was not aware of the reboot.
 
-> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
-> ---
->  drivers/iio/gyro/adxrs290.c | 61 +++++++++++++++++++++++++++++++++++--
->  1 file changed, 58 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
-> index ff989536d2fb..2864eb443957 100644
-> --- a/drivers/iio/gyro/adxrs290.c
-> +++ b/drivers/iio/gyro/adxrs290.c
-> @@ -192,15 +192,70 @@ static int adxrs290_set_filter_freq(struct iio_dev *indio_dev,
->         return adxrs290_spi_write_reg(st->spi, ADXRS290_REG_FILTER, val);
->  }
->
-> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int val, ret;
-> +
-> +       if (st->mode == mode)
-> +               return 0;
-> +
-> +       mutex_lock(&st->lock);
-> +
-> +       ret = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
-> +       if (ret < 0)
-> +               goto out_unlock;
-> +
-> +       val = ret;
-> +
-> +       switch (mode) {
-> +       case ADXRS290_MODE_STANDBY:
-> +               val &= ~ADXRS290_MEASUREMENT;
-> +               break;
-> +       case ADXRS290_MODE_MEASUREMENT:
-> +               val |= ADXRS290_MEASUREMENT;
-> +               break;
-> +       default:
-> +               ret = -EINVAL;
-> +               goto out_unlock;
-> +       }
-> +
-> +       ret = adxrs290_spi_write_reg(st->spi, ADXRS290_REG_POWER_CTL, val);
-> +       if (ret < 0) {
-> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
-> +               goto out_unlock;
-> +       }
-> +
-> +       /* update cached mode */
-> +       st->mode = mode;
-> +
-> +out_unlock:
-> +       mutex_unlock(&st->lock);
-> +       return ret;
-> +}
-> +
-> +static void adxrs290_chip_off_action(void *data)
-> +{
-> +       struct iio_dev *indio_dev = data;
-> +
-> +       adxrs290_set_mode(indio_dev, ADXRS290_MODE_STANDBY);
-> +}
-> +
->  static int adxrs290_initial_setup(struct iio_dev *indio_dev)
->  {
->         struct adxrs290_state *st = iio_priv(indio_dev);
-> +       struct spi_device *spi = st->spi;
-> +       int ret;
-> +
-> +       ret = adxrs290_spi_write_reg(spi, ADXRS290_REG_POWER_CTL,
-> +                                    ADXRS290_MEASUREMENT | ADXRS290_TSM);
-> +       if (ret < 0)
-> +               return ret;
->
->         st->mode = ADXRS290_MODE_MEASUREMENT;
->
-> -       return adxrs290_spi_write_reg(st->spi,
-> -                                     ADXRS290_REG_POWER_CTL,
-> -                                     ADXRS290_MEASUREMENT | ADXRS290_TSM);
-> +       return devm_add_action_or_reset(&spi->dev, adxrs290_chip_off_action,
-> +                                       indio_dev);
->  }
->
->  static int adxrs290_read_raw(struct iio_dev *indio_dev,
-> --
-> 2.20.1
->
+> Moreover, it seems that the problem we spotted with [1], it was a VM running on
+> Promox (KVM).
+> The Hypervisor probably said at boot time "Ey, I do have these ACPI devices, care
+> to enable them now"?
+> 
+> As always, there are all sorts of configurations/scenarios out there in the wild.
+> 
+> > Forgot to ask one more thing. Who is going to online that memory when
+> > userspace is not running yet?
+> 
+> Depends, if you have CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE set or you specify
+> memhp_default_online_type=[online,online_*], memory will get onlined right
+> after hot-adding stage:
+> 
+>         /* online pages if requested */
+>         if (memhp_default_online_type != MMOP_OFFLINE)
+>                 walk_memory_blocks(start, size, NULL, online_memory_block);
+> 
+> If not, systemd-udev will do the magic once the system is up.
 
-
+Does that imply that we need udev to scan all existing devices and
+reprobe them?
 -- 
-With Best Regards,
-Andy Shevchenko
+Michal Hocko
+SUSE Labs
