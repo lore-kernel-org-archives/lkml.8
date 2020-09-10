@@ -2,146 +2,131 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68082C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED430C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 146FE207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:13:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NxfYxLCx";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UuYYvFIz"
+	by mail.kernel.org (Postfix) with ESMTP id A1405207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgIJNMe (ORCPT
+        id S1726215AbgIJNOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:12:34 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:54554
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730368AbgIJNHb (ORCPT
+        Thu, 10 Sep 2020 09:14:33 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:45149 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730187AbgIJNJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:07:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599742237;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=A9Lh+vWkVNILygqWZqjls4YC1TZDnQLkSvqL2XZ3eIY=;
-        b=NxfYxLCx5rlXYYDTuelbyMbjN32D2KSdTUxQIaitStu/OcDhhTxt/k7a9bInokxb
-        uH059kXmlQ8+vw8HB/aAWx/xHGdk1dOq3a9kO/LUw0Fio1z6JGWpjP1SfAg6Tq7zwLA
-        OqySPARGPcA5wO4eciHZAgAsjbsmOGOZY77+OWMk=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599742237;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=A9Lh+vWkVNILygqWZqjls4YC1TZDnQLkSvqL2XZ3eIY=;
-        b=UuYYvFIzIIrkH4W7FFzYBwgGZdTyMev1iIAKnKd2rW1t9IfsVCf9gdEPUKQvP4th
-        2RZ6X8kf3kZx+lsieWBY3qoHDy5LgQK0fdruwR8CRSVTuUjoMIXNFAmGSixWJVAUUWT
-        C5le0DXzBGAr8bN3rCn/b1n/ttvmL6+2q52GAt3g=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 10 Sep 2020 12:50:36 +0000
-From:   skakit@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        Thu, 10 Sep 2020 09:09:00 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4992F580350;
+        Thu, 10 Sep 2020 09:08:55 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 10 Sep 2020 09:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=VVbErVHSRW+XcgK4T8+BuU5pymU
+        mplYyEZNHTIBduJU=; b=TzjtPyhybN+p+jKYBxNS47cUtOeaBbzh5z8yB4wB9zp
+        gtHTdpq/S8Q3A8UFakUE0o2kY5E0QLtOImFJ7cIOBEo5vKWLsXDqmyOptIyECEGY
+        XganJjqI2GViX3bBwz9pkJijYqzuxZVdxdPszCCXYG4fVP1DGS/eXHAK+2NKubv3
+        5woBKgXPWjqv/5bJ0CyL7+LsQUJgFbq4+DE5KvUFIM2bREDsTRoUucdxlIBAROPK
+        VQu7LsjS2QRB5qzkw+0Q5PXPxF+WeCKrRKB4Aw7fmWqsaA0sN2rRhjtg3+IP1sfW
+        NxtCRikYOsU3W76LpwK7w9PrsCQR8+fW4z85Qxjv+Yg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=VVbErV
+        HSRW+XcgK4T8+BuU5pymUmplYyEZNHTIBduJU=; b=CFsumIWwHqz7pddDS4wW/j
+        EfA7CVxNE5uqOFCUe9wHYmebDXuQcMhX482xh/eklo6CwQCqaun6NSAstG0Cdnso
+        1AFK3Os8llPbhgt7GioGMGd5M3eK0ZEt5JIyjZ2PB14F4REFNcOl/0ImkXJI8hKJ
+        WYYJEBxONZXYI047gZVAo9fxNf0MEp8YfGpcnQDkuCh6ew2FWPkOMNrde/xmddwB
+        sg9tQpYJ7zu4AcpOfO9ePsQzqQVuTg0GRDVI1buz1LL5Xp88MXDLvUZ/CodHOnIT
+        c7DrPpRZUDgbu4UtsqcEdISZoKHvk8K9Ab6sEpbFrbZGffWAHEcg1SCKpSkqLV4g
+        ==
+X-ME-Sender: <xms:ZSVaX480wwkzElWwqCu6ReOpu7uzFsRaTHs2-G2SohhMPwQFGUli8A>
+    <xme:ZSVaXwv3H0cC2OB5biB8E3hBxPohTVz3WCtN8dfDXyZxlJoBIQjNA1ZrTORKEbwtQ
+    BDClSu4EnaALM7UDwE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepveegudetkeethfetgffgtdekkefghefhffefgeduleehgeehieeuveefgedv
+    ieegnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepledtrdekledrieekrd
+    ejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehm
+    rgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:ZSVaX-BpFEB6LuTSO_QNaL8RlXnvCVnMCkerFGZRumuCsONxxVzo2g>
+    <xmx:ZSVaX4fAM7-dysg1vEVlBbKhBptf8LfDA-zdShkgY0KYfmIHXMu5jw>
+    <xmx:ZSVaX9MHurJXo01CffBXED4Xqr84flaRjRp3AKL73g6c72rJkmgVkw>
+    <xmx:ZyVaX2iKMZ9hdwM6gGWjGw8MFR9saxLqQ7ZADt82ZfOz_mEMdoYzOA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 969FC328006C;
+        Thu, 10 Sep 2020 09:08:53 -0400 (EDT)
+Date:   Thu, 10 Sep 2020 15:08:52 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Martin Cerveny <M.Cerveny@computer.org>
+Cc:     devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        devel@driverdev.osuosl.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Roja Rani Yarubandi <rojay@codeaurora.org>,
-        msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V4 3/4] arm64: dts: qcom: sc7180: Add sleep state for BT
- UART
-In-Reply-To: <CAD=FV=VyRU3+BLx_6YPrOsaA6E05cJn_OpBR1y3Dt0LA0X5REA@mail.gmail.com>
-References: <1599145498-20707-1-git-send-email-skakit@codeaurora.org>
- <1599145498-20707-4-git-send-email-skakit@codeaurora.org>
- <CAD=FV=VyRU3+BLx_6YPrOsaA6E05cJn_OpBR1y3Dt0LA0X5REA@mail.gmail.com>
-Message-ID: <010101747811583e-172b27b5-ea28-4660-a64b-407b13bb6fd1-000000@us-west-2.amazonses.com>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.10-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/6] ARM: dts: sun8i: v3s: Enable video decoder
+Message-ID: <20200910130852.2bfodnkoapbtosjx@gilmour.lan>
+References: <20200904200112.5563-1-m.cerveny@computer.org>
+ <20200908062327.7o4abjnosvghtafy@gilmour.lan>
+ <alpine.GSO.2.00.2009081840380.6717@dmz.c-home.cz>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="whzuaxinuaqfn32l"
+Content-Disposition: inline
+In-Reply-To: <alpine.GSO.2.00.2009081840380.6717@dmz.c-home.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-10 02:59, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Sep 3, 2020 at 8:08 AM satya priya <skakit@codeaurora.org> 
-> wrote:
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
->> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> index cecac3e..77e3523 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> @@ -507,6 +507,43 @@
->>         };
->>  };
->> 
->> +&qup_uart3_sleep {
->> +       pinconf-cts {
->> +               /*
->> +                * Configure no-pull on CTS. As this is driven by BT, 
->> do not
->> +                * specify any pull in order to not conflict with BT 
->> pulls.
->> +                */
->> +               pins = "gpio38";
->> +               bias-disable;
-> 
-> Same comment as in the previous patch that I'm not convinced removing
-> the bias here is correct.
-> 
 
-Okay.
+--whzuaxinuaqfn32l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> +       };
->> +
->> +       pinconf-rts {
->> +               /*
->> +                * Configure pull-down on RTS to make sure that the BT 
->> SoC can
->> +                * wake up the system by sending wakeup bytes during 
->> suspend.
->> +                */
->> +               pins = "gpio39";
->> +               bias-pull-down;
->> +       };
->> +
->> +       pinconf-tx {
->> +               /* Configure pull-up on TX when it isn't actively 
->> driven */
->> +               pins = "gpio40";
->> +               bias-pull-up;
->> +       };
->> +
->> +       pinconf-rx {
->> +               /*
->> +                * Configure a pull-up on RX. This is needed to avoid
->> +                * garbage data when the TX pin of the Bluetooth 
->> module is
->> +                * in tri-state (module powered off or not driving the
->> +                * signal yet).
->> +                */
->> +               pins = "gpio41";
->> +               bias-pull-up;
->> +       };
->> +};
->> +
->>  &qup_uart8_default {
-> 
-> Slight nit that "default" starts with a "d" which sorts before "sleep"
-> which starts with an "s".  Thus "qup_uart8_default" should be above
-> "qup_uart3_sleep", not below.
+On Tue, Sep 08, 2020 at 06:44:06PM +0200, Martin Cerveny wrote:
+> Hello.
+>=20
+> On Tue, 8 Sep 2020, Maxime Ripard wrote:
+> > On Fri, Sep 04, 2020 at 10:01:06PM +0200, Martin Cerveny wrote:
+> > > First patch extends cedrus capability to all decoders
+> > > because V3s missing MPEG2 decoder.
+> > >=20
+> > > Next two patches add system control node (SRAM C1) and
+> > > next three patches add support for Cedrus VPU.
+> >=20
+> > How was it tested?
+>=20
+> On V3s with LCD and bootlin raw v4l2 api test:
+> - https://github.com/mcerveny/linux/tree/v3s_videocodec_v3
+> - https://github.com/mcerveny/v4l2-request-test
 
-Okay.
+Thanks. Can you put it in your cover letter in your next version?
+
+Maxime
+
+--whzuaxinuaqfn32l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1olZAAKCRDj7w1vZxhR
+xQqYAQCb1N/Hpp3mZzTdhwal+tCqm8yNLlEGiLL41icRvYH6VwD9H8A1QtVsUhs/
+MR5gRpuKZU6k8lUJtoLJWMCUWuFVbQk=
+=dhw8
+-----END PGP SIGNATURE-----
+
+--whzuaxinuaqfn32l--
