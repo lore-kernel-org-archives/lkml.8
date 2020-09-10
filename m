@@ -4,86 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A058CC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6851C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 639A121D91
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F47021D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599766499;
-	bh=ksxkD7CoWHBWoeooRpLgc48k96/HNdsGMEUrhw4P95M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=DSLgTnho7uRNiMUklqeSUbiZsbbST3lIAOffd11KgTNAEAnkZkTL8vBjnKPLRe8iN
-	 JvUaT0mvZ1laiJrzG0E70DX7oY4ZPYSeWjWq50V7YaHb+CEtkHgCXeg4n4JYyfoMDS
-	 VBcopXTwyrKO/No0QkhtjRvRekShVkTOmJRJgqxs=
+	s=default; t=1599766505;
+	bh=ZnkVLkdxFTHqWVbICsIxMpUCV946upQejuyAiTgNi5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X8VoJGHh6RxfQzX2DCxgx9U0M9a/2q+D1dthENT0evK08eIHZR95zwFVPnMg6PzNj
+	 R3DZcAk7+7cPlY1A6+N6tv9mYbRhE6vvdaG29nqBAs8W4QgOinSbUoYiGUArLG7k1s
+	 xEyO68rubHFyz+ZfmZvQGPPEH+GJUXYwR2e9BE5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgIJTe6 (ORCPT
+        id S1727999AbgIJTe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:34:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgIJTev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:34:51 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D115221D81;
-        Thu, 10 Sep 2020 19:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599766491;
-        bh=ksxkD7CoWHBWoeooRpLgc48k96/HNdsGMEUrhw4P95M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fyJDTrWKH893FaVVt1OBSFJ9f8hlkqYHqiIOG2oJfs84qz/Op1sf/oMRThvCTHSaU
-         hYzRyv2nHZ5cGHRz2s1hRK7BZ+s5xapIW//Kjf3VgsTE07q+fETLVHkAY9n8H69ZmW
-         l2pLX2AP6MuZ7hv25meQ8h6oN9ScbwIh5otsCAR4=
-Date:   Thu, 10 Sep 2020 14:34:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: dwc: unexport dw_pcie_link_set_max_speed
-Message-ID: <20200910193449.GA807725@bjorn-Precision-5520>
+        Thu, 10 Sep 2020 15:34:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40130 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727977AbgIJTds (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:33:48 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x123so5272705pfc.7;
+        Thu, 10 Sep 2020 12:33:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E825qm/7EG/v1qMJRENDdr8UrJ7c6Yo1KshoI/I0ueg=;
+        b=RHO8ZaK3FlihxqjCxq6T3hxIjMvu1amZ9KskbVEwh84B8cbMQiqFOfHhA8pG/xlr0B
+         qOXi8rrDMayttEX070fhGlwp0c2G3fJnbTRMfPGa8D6NPCv5QmntaQH9ATY42kVk++cJ
+         l168ikQY/ShNuJfXdaLW6IC+3CK4Dvbq6DSDlImPCyI74LpatrUii+7+DyAx6gL8CWkf
+         Z78HkgBv8qRO0YgtQW7ViCKIC2hoMdqtClk65/vJZVnYWQA0MnotrjC1P4PtBh89+Mfy
+         5OlupzTh/1Qw/ImKMMcP5s3Nqv10h4CBscfLJZo9qUMYhKMklzbajpMIkmv55YW98grm
+         TpwA==
+X-Gm-Message-State: AOAM531PJApI1N+OPJcp82IH4SSkWyNyHB7eE0WSQEkgg7DKzMWRnqMt
+        TJK78DIi/ayVjxLqAAyHLx4=
+X-Google-Smtp-Source: ABdhPJwkAXtdVJDC5/PQROYD2FplK9h+zyPV3N2nLTb28vrgLb0yHjLqShdxF8N1anfjedmdVafZXQ==
+X-Received: by 2002:a17:902:ee15:: with SMTP id z21mr4329526plb.103.1599766427635;
+        Thu, 10 Sep 2020 12:33:47 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1162:1ac0:17a6:4cc6:d1ef])
+        by smtp.gmail.com with ESMTPSA id y7sm5525188pgk.73.2020.09.10.12.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 12:33:47 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 12:33:45 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Lucy Yan <lucyyan@google.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Moritz Fischer <mdf@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        netdev@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dec: de2104x: Increase receive ring size for
+ Tulip
+Message-ID: <20200910193345.GA28525@archbook>
+References: <20200910190509.81755-1-lucyyan@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200909134234.31204-1-yuehaibing@huawei.com>
+In-Reply-To: <20200910190509.81755-1-lucyyan@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 09:42:34PM +0800, YueHaibing wrote:
-> This function has been made static, which causes warning:
+On Thu, Sep 10, 2020 at 12:05:09PM -0700, Lucy Yan wrote:
+> Increase Rx ring size to address issue where hardware is reaching
+> the receive work limit.
 > 
-> WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> Before:
 > 
-> Fixes: 3af45d34d30c ("PCI: dwc: Centralize link gen setting")
-
-This commit is still on Lorenzo's pci/dwc branch, so he should be able
-to squash this fix in.
-
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> [  102.223342] de2104x 0000:17:00.0 eth0: rx work limit reached
+> [  102.245695] de2104x 0000:17:00.0 eth0: rx work limit reached
+> [  102.251387] de2104x 0000:17:00.0 eth0: rx work limit reached
+> [  102.267444] de2104x 0000:17:00.0 eth0: rx work limit reached
+> 
+> Signed-off-by: Lucy Yan <lucyyan@google.com>
+Reviewed-by: Moritz Fischer <mdf@kernel.org>
 > ---
->  drivers/pci/controller/dwc/pcie-designware.c | 1 -
->  1 file changed, 1 deletion(-)
+>  drivers/net/ethernet/dec/tulip/de2104x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 4d105efb5722..3c3a4d1dbc0b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -508,7 +508,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
+> diff --git a/drivers/net/ethernet/dec/tulip/de2104x.c b/drivers/net/ethernet/dec/tulip/de2104x.c
+> index cb116b530f5e..2610efe4f873 100644
+> --- a/drivers/net/ethernet/dec/tulip/de2104x.c
+> +++ b/drivers/net/ethernet/dec/tulip/de2104x.c
+> @@ -85,7 +85,7 @@ MODULE_PARM_DESC (rx_copybreak, "de2104x Breakpoint at which Rx packets are copi
+>  #define DSL			CONFIG_DE2104X_DSL
+>  #endif
 >  
->  }
-> -EXPORT_SYMBOL_GPL(dw_pcie_link_set_max_speed);
->  
->  static u8 dw_pcie_iatu_unroll_enabled(struct dw_pcie *pci)
->  {
+> -#define DE_RX_RING_SIZE		64
+> +#define DE_RX_RING_SIZE		128
+>  #define DE_TX_RING_SIZE		64
+>  #define DE_RING_BYTES		\
+>  		((sizeof(struct de_desc) * DE_RX_RING_SIZE) +	\
 > -- 
-> 2.17.1
+> 2.28.0.526.ge36021eeef-goog
 > 
-> 
+
+Thanks,
+Moritz
