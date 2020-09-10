@@ -2,118 +2,99 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918B3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBD3C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43F1121D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="WVt7qUC3"
+	by mail.kernel.org (Postfix) with ESMTP id 5C0C221D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599767414;
+	bh=fQPrOqT+dPGzhbvMzpauhMm/mvp1v3NIk76kgWfOD7o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=mTfVk1GY72hPyfkt7p8F66eFvkXLR3Txy3S6arNzxTnXU7Q0XNxkg3mSpC4cwvyTs
+	 fT7tOnftZCC3UtR/n4+yHdQw3mm3B+XiA4oqKD7aWr7uftTN41FCi0dMCzDYfK9D2X
+	 WYR60Qpvvg5zjsvLpp6gHSrT2mqpAA8CwkL81epQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgIJTtl (ORCPT
+        id S1726755AbgIJTuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbgIJTsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:48:52 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE625C061757;
-        Thu, 10 Sep 2020 12:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2c66nEBP3DnG4HoyZXJPOlNFvLsRVtjflHnzpM04Cds=; b=WVt7qUC3KvQkSyJfCLY4neNlzG
-        5roByh4wUvdqv/vQ1V2RMcthBqRUdn+vthIURckBn8mMTPbtkU1y84Uxtzb+Kum2q/NTBRrJ4sPOu
-        mAuqdWRs3XovrKECyu+zzODbwxAkJsqvkYslQ+rhNBQOrYsV3zeQSqRtAIX71GfJ2p2U=;
-Received: from p200300ccff0e43001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:4300:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kGSYb-0007Sl-NR; Thu, 10 Sep 2020 21:48:34 +0200
-Date:   Thu, 10 Sep 2020 21:48:32 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, Adam Ford-BE <aford@beaconembedded.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        kernel test robot <lkp@intel.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 1/2] thermal: ti-soc-thermal: Enable addition power
- management
-Message-ID: <20200910214832.0041b3aa@aktux>
-In-Reply-To: <CAHCN7xLUrh7xr0pr5Bz0unWQXGkiKDK88hZKx7WXGyr2RBWTVg@mail.gmail.com>
-References: <20200819125925.2119434-1-aford173@gmail.com>
-        <20200910200152.72cc5d9f@aktux>
-        <4770327e-84fb-0543-097c-6525d762a01f@linaro.org>
-        <CAHCN7xLUrh7xr0pr5Bz0unWQXGkiKDK88hZKx7WXGyr2RBWTVg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 10 Sep 2020 15:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgIJTtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:49:03 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E3EA21556;
+        Thu, 10 Sep 2020 19:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599767343;
+        bh=fQPrOqT+dPGzhbvMzpauhMm/mvp1v3NIk76kgWfOD7o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DKM20eDAwuHYONhV12jFXqeC2HLdXGgogHQPtJuj5xFEUHldpKpWAOlE1rq6XO36d
+         Et3WGV5co/glraAfZ9lZXZ00mrO8xZLI0Uw50pDLZlv/dF1MZKmll4GCUIyoaT2z7S
+         IudFewmZXDDYL9/eOAHc+VL+eXBZNllc+QNoGI9E=
+Date:   Thu, 10 Sep 2020 14:49:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+Subject: Re: [PATCH v8 1/5] PCI: Conditionally initialize host bridge
+ native_* members
+Message-ID: <20200910194901.GA808976@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a76b4a524d3915d42e894da7f4dbdec6c104512.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 14:33:13 -0500
-Adam Ford <aford173@gmail.com> wrote:
-
-> On Thu, Sep 10, 2020 at 2:14 PM Daniel Lezcano <daniel.lezcano@linaro.org>
-> wrote:
+On Fri, Jul 24, 2020 at 08:58:52PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> > On 10/09/2020 20:01, Andreas Kemnade wrote:  
-> > > On Wed, 19 Aug 2020 07:59:23 -0500
-> > > Adam Ford <aford173@gmail.com> wrote:
-> > >  
-> > >> The bandgap sensor can be idled when the processor is too, but it
-> > >> isn't currently being done, so the power consumption of OMAP3
-> > >> boards can elevated if the bangap sensor is enabled.
-> > >>
-> > >> This patch attempts to use some additional power management
-> > >> to idle the clock to the bandgap when not needed.
-> > >>
-> > >> Signed-off-by: Adam Ford <aford173@gmail.com>
-> > >> Reported-by: kernel test robot <lkp@intel.com>
-> > >> ---
-> > >> V2: Fix issue where variable stating the suspend mode isn't being
-> > >>     properly set and cleared.
-> > >>  
-> > > hmm, it is not in linux-next. Can we expect that for v5.10?  
-> >
-> > The reason I did not pick this patch is because lkp reported an error on
-> > it.
-> >
-> > https://marc.info/?l=linux-pm&m=159788472017308&w=2
-> >
-> >
-> >  
-> That error message shows it's trying to be built with 'sh' cross compiler,
-> but should be build with an ARM.
-> 
-> I can run a manual test of the patch against a different branch if
-> necessary, but I had built and tested it, so I know it worked at one time.
-> 
-hmm, what about compile-testing without CONFIG_PM_SLEEP?
+> If CONFIG_PCIEPORTBUS is not enabled in kernel then initialing
+> struct pci_host_bridge PCIe specific native_* members to "1" is
+> incorrect. So protect the PCIe specific member initialization
+> with CONFIG_PCIEPORTBUS.
 
-The function definition is guarded by that.
-So it is not a sh-specific problem.
+s/initialing/initializing/
 
-Regards,
-Andreas
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/probe.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 2f66988cea25..a94b97564ceb 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -588,12 +588,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+>  	 * may implement its own AER handling and use _OSC to prevent the
+>  	 * OS from interfering.
+>  	 */
+> +#ifdef CONFIG_PCIEPORTBUS
+>  	bridge->native_aer = 1;
+>  	bridge->native_pcie_hotplug = 1;
+> -	bridge->native_shpc_hotplug = 1;
+>  	bridge->native_pme = 1;
+>  	bridge->native_ltr = 1;
+
+native_ltr isn't dependent on PCIEPORTBUS either, is it?  It's only
+used for ASPM.
+
+>  	bridge->native_dpc = 1;
+> +#endif
+> +	bridge->native_shpc_hotplug = 1;
+>  
+>  	device_initialize(&bridge->dev);
+>  }
+> -- 
+> 2.17.1
+> 
