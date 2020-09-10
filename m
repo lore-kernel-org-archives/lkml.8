@@ -2,135 +2,105 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCD7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AA0C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5A620756
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6384206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fMXOIPyy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="uwSjVicy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbgIJKPi (ORCPT
+        id S1730764AbgIJKPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44424 "EHLO
+        Thu, 10 Sep 2020 06:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbgIJKOx (ORCPT
+        with ESMTP id S1730717AbgIJKPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:14:53 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5675CC061573;
-        Thu, 10 Sep 2020 03:14:52 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f133200fd9e4f04ab274470.dip0.t-ipconnect.de [IPv6:2003:ec:2f13:3200:fd9e:4f04:ab27:4470])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 916231EC04C0;
-        Thu, 10 Sep 2020 12:14:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599732889;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Nfhs/ikKxjcFj07w0NPIX+lSHCHW+iotJoF44hLqXtw=;
-        b=fMXOIPyyo3Zl9Mgw9810U7+J+m05FzCk+T+0bGVIb4xXLlFOcqwpKRGcqHO5lzpSPB3LqM
-        I4mjeZzIUrxVNJgIGC4bxDJt4h4Mpwyo/4TaudJz7lXhE/8PoNeCaYXoyDT6GGyTOuuQ6D
-        sY7sJkc0hDVu4VFpzJ+IP7muMPw1t+c=
-Date:   Thu, 10 Sep 2020 12:14:43 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yazen Ghannam <yazen.ghannam@amd.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tony.luck@intel.com, x86@kernel.org,
-        Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 1/8] x86/CPU/AMD: Save NodeId on AMD-based systems
-Message-ID: <20200910101443.GC8357@zn.tnic>
-References: <20200903200144.310991-1-Yazen.Ghannam@amd.com>
- <20200903200144.310991-2-Yazen.Ghannam@amd.com>
- <20200909180647.GF12237@zn.tnic>
- <20200909201755.GB3014671@yaz-nikka.amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200909201755.GB3014671@yaz-nikka.amd.com>
+        Thu, 10 Sep 2020 06:15:18 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDDBC061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:15:18 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 207so4939800ybd.13
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=mYpLRmqZZNbowlnMVp5aofFQ5BShHcephw2SKa0G+DA=;
+        b=uwSjVicytfVIBYIjNeLQ0S++GaFHI6da2IvVQ1a7tPxuevmnOvVFRW8+HwjHJ8tZXr
+         gXArB/ETfRlhFAbs/BrfA2takdMvL9pHyuWt2qVvc6kQBmwqpwARV3uCMCr+xAhyTxqd
+         g4qiYBX3bwWmJWBPoys1yHgg23Qhhz4ZdhRrEpOqhFkVQYt1znuPerz2O+E3tUB/sair
+         4v8jtMYMu2pN5SAU4Dwlfc6ztiLmgYkSUODfLiQWpI2810zlOOrm7rLNyts87EGr/3mZ
+         N0H7ptJWMVDSBGZrNtiUZyfOMVC5FVb0HTQw4M3EyhEXv0Ueyq2+XZ95uw5qSyXE5kEs
+         Gu0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=mYpLRmqZZNbowlnMVp5aofFQ5BShHcephw2SKa0G+DA=;
+        b=ciLWXTyrdpSgXddgWaO9T+CCaNkpPdfqqxypAN/curEuAFJYCMMBLPBG9UX/1YSEZ4
+         J48xwl43BDtaqjMQmhG144TfInOBJv85JzYowIhZZ15+FDoYhS5AOdH/VQwThb6osaYr
+         FrBcg+M02AuMznCmuXsyEMz5/TqsT5CkI5oV2MAH2jMjMpbINo0WMYXvxUkfwCbpvlUP
+         foH2ADVCEyr2ST7pH7oX9qI79xSoYpfCntdo6KkyLKLZw96A8sRjdjtkFTPaJqFkXO2V
+         +RJCWduPpdOAvpEUd0qLBzPMIQRlJt25HJw+ogQB1UOb1a9bSe4VYRs7tw2gNLQ1r/q8
+         63lA==
+X-Gm-Message-State: AOAM531ZklM/ua09Cw41vy99QuJ+BBDqAWgMls0SFO1R4gNg4iTlb943
+        KyiHoMZRhVaO2i2HYUIqw1Tz7uzmMmEPPzQwJmY=
+X-Google-Smtp-Source: ABdhPJzATmV4RhOQNteGALkdPJ93cqcUh0oOS9eTKpZbNLT9tBvt6yJnMdaRqHNDDwBwIi8UrQjYI1T9+go2q3X89kg=
+X-Received: from huangrandall-z840-2.tao.corp.google.com ([2401:fa00:fd:2:3e52:82ff:fe5f:bc1])
+ (user=huangrandall job=sendgmr) by 2002:a25:da8c:: with SMTP id
+ n134mr12091694ybf.84.1599732917609; Thu, 10 Sep 2020 03:15:17 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 18:15:13 +0800
+Message-Id: <20200910101513.2900079-1-huangrandall@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
+Subject: [PATCH] scsi: clear UAC before sending SG_IO
+From:   Randall Huang <huangrandall@google.com>
+To:     dgilbert@interlog.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     huangrandall@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 03:17:55PM -0500, Yazen Ghannam wrote:
-> We need to access specific instances of hardware registers in the
-> Northbridge or Data Fabric. The code in arch/x86/kernel/amd_nb.c does
-> this.
+Make sure UAC is clear before sending SG_IO.
 
-So you don't need the node_id - you need the northbridge/data fabric ID?
-I'm guessing NB == DF, i.e., it was NB before Zen and it is DF now.
+Signed-off-by: Randall Huang <huangrandall@google.com>
+---
+ drivers/scsi/sg.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Yes?
-
-> Package = Socket, i.e. a field replaceable unit. Socket may not be
-> useful for software, but I think it helps users identify the hardware.
-> 
-> I think the following could be changed in the documentation:
-> 
-> "In the past a socket always contained a single package (see below), but
-> with the advent of Multi Chip Modules (MCM) a socket can hold more than one
-> package."
-> 
-> Replace "package" with "die".
-
-So first of all, we have:
-
-"AMD nomenclature for package is 'Node'."
-
-so we either change that because as you explain, node != package on AMD.
-
-What you need is the ID of that northbridge or data fabric instance,
-AFAIU.
-
-> You take multiple dies from the foundry and you "package" them together
-> into a single unit.
-
-I think you're overloading the word "package" here and that leads to
-more confusion. Package in our definition - Linux' - is:
-
-"Packages contain a number of cores plus shared resources, e.g. DRAM
-controller, shared caches etc." If you glue several packages together,
-you get an MCM.
-
-> They could be equal depending on the system. The values are different on
-> MCM systems like Bulldozer and Naples though.
-> 
-> The functions and structures in amd_nb.c are indexed by the node_id.
-> This is done implicitly right now by using amd_get_nb_id()/cpu_llc_id.
-> But the LLC isn't always equal to the Node/Die like in Naples. So the
-> patches in this set save and explicitly use the node_id when needed.
-> 
-> What do you think?
-
-Sounds to me that you want to ID that data fabric instance which
-logically belongs to one or multiple packages. Or can a DF a single
-package?
-
-So let's start simple: how does a DF instance map to a logical NUMA
-node or package? Can a DF serve multiple packages?
-
-You could use the examples at the end of Documentation/x86/topology.rst
-to explain how those things play together. And remember to not think
-about the physical aspect of the hardware structure because it doesn't
-mean anything to software. All you wanna do is address the proper DF
-instance so this needs to be enumerable and properly represented by sw.
-
-Confused?
-
-I am.
-
-:-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 20472aaaf630..ad11bca47ae8 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -922,6 +922,7 @@ sg_ioctl_common(struct file *filp, Sg_device *sdp, Sg_fd *sfp,
+ 	int result, val, read_only;
+ 	Sg_request *srp;
+ 	unsigned long iflags;
++	int _cmd;
+ 
+ 	SCSI_LOG_TIMEOUT(3, sg_printk(KERN_INFO, sdp,
+ 				   "sg_ioctl: cmd=0x%x\n", (int) cmd_in));
+@@ -933,6 +934,13 @@ sg_ioctl_common(struct file *filp, Sg_device *sdp, Sg_fd *sfp,
+ 			return -ENODEV;
+ 		if (!scsi_block_when_processing_errors(sdp->device))
+ 			return -ENXIO;
++
++		_cmd = SCSI_UFS_REQUEST_SENSE;
++		if (sdp->device->host->wlun_clr_uac) {
++			sdp->device->host->hostt->ioctl(sdp->device, _cmd, NULL);
++			sdp->device->host->wlun_clr_uac = false;
++		}
++
+ 		result = sg_new_write(sfp, filp, p, SZ_SG_IO_HDR,
+ 				 1, read_only, 1, &srp);
+ 		if (result < 0)
