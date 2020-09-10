@@ -2,150 +2,158 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C327BC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D80BC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899DA20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D642621556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFahawZL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiUbvVLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgIJWAo (ORCPT
+        id S1725914AbgIJWBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:00:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42040 "EHLO
+        Thu, 10 Sep 2020 18:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgIJWAl (ORCPT
+        with ESMTP id S1725355AbgIJWBG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:00:41 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D97C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 15:00:40 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id e7so6142045qtj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 15:00:40 -0700 (PDT)
+        Thu, 10 Sep 2020 18:01:06 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0955C061573;
+        Thu, 10 Sep 2020 15:01:05 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id p6so5047626ybk.10;
+        Thu, 10 Sep 2020 15:01:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PT5fNi7xEflk8GkI4Xi2kkoOSPhyGZTLMGtsTW99lM8=;
-        b=UFahawZL4avRAiB31WSjU4euU3yRJTvrwhgJJi+Qn9x5fE7mBIWZH9kFeYWriHmGo0
-         8DHjQ50B0xl5dOak65fkLcV7yN5nOj1VsXQgQL4pnpjyXKeRmShEKNeJfTtR0mesghnq
-         1CvMe0xbWvYL/GH0IlhuCHB3VedkLXkWosVaUZVL1AbvGCkv73Vg4ZUIg+1YfY2orVY4
-         ibgOpRDf2ulUeLZOiriIIhngYnlgiH1Ul0bXET7r0sUeUwXoYVnH3b1erPyJJ+CTh/gW
-         7BPZdJCEA0WMx6E0iFl0XvHMlzIpVULhWwJ3piwrrgfe0RTT3ZLO3kQzq2D2JvEyh2f7
-         1g4Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NqyY0998nnTOOx9j6km0P/zJSInnI5dSi92OehQyjG8=;
+        b=UiUbvVLCF7pkYoifxWjoGeHF94Pvk61F3V2rzi2kA+rcKJlCbkUfKw3lx+VE4VN0uW
+         t3yIY/H64pDtRYoqYeLAto/MznOtX0B6pl1ONIYEt61St+d50gHAOc3MWX1+sr4n2Q03
+         pjDtltvSwqJ8Fspx0tHxF2eD6SNxevNOCvojCm2706UOdrTwJYhMjlanY0FMs8XzyemZ
+         xrp3PVLvqoQJeluueuuyBZQRync+rzo5RMR6iyoDvJ/l+y8UDE4rz8IqK8XMEc7pY88J
+         rZP8KM6KFBprO5H0fLOkJmT50uKNNQYAuCmNrStgpTeS+OiukQOST7/117mvnYVUXbvk
+         Q91w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PT5fNi7xEflk8GkI4Xi2kkoOSPhyGZTLMGtsTW99lM8=;
-        b=kvFW/kn6J7gGcrMU9QxYJ+POvrALVPKhD1UroNEymQK7LnFYaBqa59jrT37Amb9sYW
-         LCXFkZIoCb+79kG/0qCWlZJaZaiDXk0kkvpzPC7rxG2A7gPtdsGUVKZ+ws1TAf+jkt20
-         gi0MPTsgaIVTwHG4UfhXLe49ub6X6oS8clafw6p/FavYQQ09NonoposrcuhXJz4zFlvh
-         tQeK/LOnwjSe7PxHO9gf/oCkanSYf8Mn1ONZaeBB05eMMUauwJcyllKnBVMEkFcHd+iD
-         idK3lZu2e1+bChuKfhWJ7g8U8hU75aZLZgKh6sDSorxDnmpaJa3EAkUis10r8n9Z0qHG
-         UzdA==
-X-Gm-Message-State: AOAM533uKrPNTeG61OKs0vrJ3PZhkeHBVbbaHS8PajWIdoWEHPIF5Ir7
-        HmEbp428oUQins6KxmVwunns/g==
-X-Google-Smtp-Source: ABdhPJzkV98KqvV9kj+Vq3Fl6B3U5epSGI8O2umuU/HuE10PsA2MfBhWuzMuy+vaiCys73JsOVxnXA==
-X-Received: by 2002:ac8:376d:: with SMTP id p42mr10057359qtb.288.1599775239625;
-        Thu, 10 Sep 2020 15:00:39 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id u66sm406702qka.136.2020.09.10.15.00.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 15:00:39 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 22:00:37 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH 2/3] arm64: dts: sc7180: add bus clock to mdp node for
- sc7180 target
-Message-ID: <20200910220037.GA472@uller>
-References: <1594899334-19772-1-git-send-email-kalyan_t@codeaurora.org>
- <1594899334-19772-2-git-send-email-kalyan_t@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NqyY0998nnTOOx9j6km0P/zJSInnI5dSi92OehQyjG8=;
+        b=Fn58vwfi5mcPOzJuU5m8nzBa3clykJduemeGV6cjcmMf63820QLEMcLZOFqFJmzkD/
+         PBfVVWLO0fPR2vo7450P+E0NV/lrBs2U4goWFMcTR4Z7gCj5cl5DYRLKBWJKRcxj4SBH
+         yPRvuvhvEqbnVHWZfd2QIDYrOu1vaZRMMi4l4HQEW9pGjEP9hFtsSO5CgPYHtEVuzSDJ
+         CtvHd8xHrhTPSe/6N5oj5uRk+bfVeGyfXJmLiysuSOrfZbeCX93uOdX1vI+4OJQwz6fF
+         63WJubUyEPEXSH7GrrofxmTZ1lz7rJh3pTUaoyKBjzhfTv3C9kGF3uMUfYfdT5wOpUpM
+         5uVQ==
+X-Gm-Message-State: AOAM531PhImTpUGnKCdwBwyWRp12HtXEkLmnHD+NvHDimYYN8RTi9wQi
+        gxvpID+gW/dPcNkT83qRkqx6Q+/8srXbf7L/wbA=
+X-Google-Smtp-Source: ABdhPJwwJaJVkvBKNQpfSNCAzEM3ujd4iniWp5aQeouKQJp3UeGDkrhhhdijSfKOsiJ3r0E5PNKHrJJ9eDRzFsLpEbs=
+X-Received: by 2002:a25:aa8f:: with SMTP id t15mr15916005ybi.459.1599775264934;
+ Thu, 10 Sep 2020 15:01:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594899334-19772-2-git-send-email-kalyan_t@codeaurora.org>
+References: <000000000000c82fe505aef233c6@google.com>
+In-Reply-To: <000000000000c82fe505aef233c6@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 10 Sep 2020 15:00:54 -0700
+Message-ID: <CAEf4BzbuUDEktVCYZAonUTM6iYBcAOPjKho2gMRD+9Q=N5cYxQ@mail.gmail.com>
+Subject: Re: WARNING in bpf_raw_tp_link_fill_link_info
+To:     syzbot <syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com>
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        Martin Lau <kafai@fb.com>, KP Singh <kpsingh@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16 Jul 11:35 UTC 2020, Kalyan Thota wrote:
+On Thu, Sep 10, 2020 at 2:31 AM syzbot
+<syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    7fb5eefd selftests/bpf: Fix test_sysctl_loop{1, 2} failure..
+> git tree:       bpf-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1424fdb3900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b6856d16f78d8fa9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=976d5ecfab0c7eb43ac3
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a1f411900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10929c11900000
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+976d5ecfab0c7eb43ac3@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 check_copy_size include/linux/thread_info.h:150 [inline]
+> WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 copy_to_user include/linux/uaccess.h:167 [inline]
+> WARNING: CPU: 0 PID: 6854 at include/linux/thread_info.h:150 bpf_raw_tp_link_fill_link_info+0x306/0x350 kernel/bpf/syscall.c:2661
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 6854 Comm: syz-executor574 Not tainted 5.9.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x4a kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+>  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+> RIP: 0010:check_copy_size include/linux/thread_info.h:150 [inline]
+> RIP: 0010:copy_to_user include/linux/uaccess.h:167 [inline]
+> RIP: 0010:bpf_raw_tp_link_fill_link_info+0x306/0x350 kernel/bpf/syscall.c:2661
+> Code: 41 bc ea ff ff ff e9 35 ff ff ff 4c 89 ff e8 41 66 33 00 e9 d0 fd ff ff 4c 89 ff e8 a4 66 33 00 e9 06 ff ff ff e8 ca ed f2 ff <0f> 0b eb 94 48 89 ef e8 2e 66 33 00 e9 65 fd ff ff e8 24 66 33 00
+> RSP: 0018:ffffc900051c7bd0 EFLAGS: 00010293
+> RAX: 0000000000000000 RBX: ffffc900051c7c60 RCX: ffffffff818179d6
+> RDX: ffff88808b490000 RSI: ffffffff81817a96 RDI: 0000000000000006
+> RBP: 0000000000000019 R08: 0000000000000000 R09: ffffc900051c7c7f
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000019
+> R13: 0000000000001265 R14: ffffffff8986ecc0 R15: ffffc900051c7c78
+>  bpf_link_get_info_by_fd kernel/bpf/syscall.c:3626 [inline]
+>  bpf_obj_get_info_by_fd+0x43a/0xc40 kernel/bpf/syscall.c:3664
+>  __do_sys_bpf+0x1906/0x4b30 kernel/bpf/syscall.c:4237
+>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x4405f9
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fff47155808 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004405f9
+> RDX: 0000000000000010 RSI: 00000000200000c0 RDI: 000000000000000f
+> RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+> R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401e00
+> R13: 0000000000401e90 R14: 0000000000000000 R15: 0000000000000000
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
 
-> From: Krishna Manikandan <mkrishn@codeaurora.org>
-> 
-> Move the bus clock to mdp device node,in order
-> to facilitate bus band width scaling on sc7180
-> target.
-> 
-> The parent device MDSS will not vote for bus bw,
-> instead the vote will be triggered by mdp device
-> node. Since a minimum vote is required to turn
-> on bus clock, move the clock node to mdp device
-> from where the votes are requested.
-> 
-> This patch has dependency on the below series
-> https://patchwork.kernel.org/patch/11468783/
-> 
+#syz fix: b474959d5afd ("bpf: Fix a buffer out-of-bound access when
+filling raw_tp link_info")
 
-Isn't this dependency on an old revision of patch 3/3 in this series?
-
-Regardless, I don't see either the linked patch or patch 3 merged in
-linux-next, so I presume I should not merge this?
-
-Regards,
-Bjorn
-
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+>
 > ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 4f2c0d1..31fed6d 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1510,10 +1510,9 @@
->  			power-domains = <&dispcc MDSS_GDSC>;
->  
->  			clocks = <&gcc GCC_DISP_AHB_CLK>,
-> -				 <&gcc GCC_DISP_HF_AXI_CLK>,
->  				 <&dispcc DISP_CC_MDSS_AHB_CLK>,
->  				 <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> -			clock-names = "iface", "bus", "ahb", "core";
-> +			clock-names = "iface", "ahb", "core";
->  
->  			assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
->  			assigned-clock-rates = <300000000>;
-> @@ -1539,12 +1538,13 @@
->  				      <0 0x0aeb0000 0 0x2008>;
->  				reg-names = "mdp", "vbif";
->  
-> -				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +				clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
-> +					 <&dispcc DISP_CC_MDSS_AHB_CLK>,
->  					 <&dispcc DISP_CC_MDSS_ROT_CLK>,
->  					 <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
->  					 <&dispcc DISP_CC_MDSS_MDP_CLK>,
->  					 <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> -				clock-names = "iface", "rot", "lut", "core",
-> +				clock-names = "bus", "iface", "rot", "lut", "core",
->  					      "vsync";
->  				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
->  						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> -- 
-> 1.9.1
-> 
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
