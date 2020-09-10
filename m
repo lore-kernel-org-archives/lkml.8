@@ -2,60 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872AFC2D0E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5FF3206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D2A20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgIJVoe (ORCPT
+        id S1728831AbgIJVow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:44:34 -0400
-Received: from ozlabs.org ([203.11.71.1]:33465 "EHLO ozlabs.org"
+        Thu, 10 Sep 2020 17:44:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41698 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730878AbgIJM40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:56:26 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BnJlT4jccz9sTr; Thu, 10 Sep 2020 22:55:33 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Joel Stanley <joel@jms.id.au>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org
-In-Reply-To: <1599125247-28488-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1599125247-28488-1-git-send-email-ego@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] cpuidle-pseries: Fix CEDE latency conversion from tb to us
-Message-Id: <159974250748.1017939.3766182148722011711.b4-ty@ellerman.id.au>
-Date:   Thu, 10 Sep 2020 22:55:33 +1000 (AEST)
+        id S1730395AbgIJMsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:48:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D0466AD1A;
+        Thu, 10 Sep 2020 12:48:11 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 14:47:55 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Laurent Dufour <ldufour@linux.ibm.com>, akpm@linux-foundation.org,
+        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+Message-ID: <20200910124755.GG28354@dhcp22.suse.cz>
+References: <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+ <20200909090953.GE7348@dhcp22.suse.cz>
+ <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+ <20200909105914.GF7348@dhcp22.suse.cz>
+ <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+ <20200910072331.GB28354@dhcp22.suse.cz>
+ <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+ <20200910111246.GE28354@dhcp22.suse.cz>
+ <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
+ <20200910120343.GA6635@linux>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910120343.GA6635@linux>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 14:57:27 +0530, Gautham R. Shenoy wrote:
-> commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-> CEDE(0)") sets the exit latency of CEDE(0) based on the latency values
-> of the Extended CEDE states advertised by the platform. The values
-> advertised by the platform are in timebase ticks. However the cpuidle
-> framework requires the latency values in microseconds.
+On Thu 10-09-20 14:03:48, Oscar Salvador wrote:
+> On Thu, Sep 10, 2020 at 01:35:32PM +0200, Laurent Dufour wrote:
+>  
+> > That points has been raised by David, quoting him here:
+> > 
+> > > IIRC, ACPI can hotadd memory while SCHEDULING, this patch would break that.
+> > > 
+> > > Ccing Oscar, I think he mentioned recently that this is the case with ACPI.
+> > 
+> > Oscar told that he need to investigate further on that.
 > 
-> If the tb-ticks value advertised by the platform correspond to a value
-> smaller than 1us, during the conversion from tb-ticks to microseconds,
-> in the current code, the result becomes zero. This is incorrect as it
-> puts a CEDE state on par with the snooze state.
+> I think my reply got lost.
 > 
-> [...]
+> We can see acpi hotplugs during SYSTEM_SCHEDULING:
+> 
+> $QEMU -enable-kvm -machine pc -smp 4,sockets=4,cores=1,threads=1 -cpu host -monitor pty \
+>         -m size=$MEM,slots=255,maxmem=4294967296k  \
+>         -numa node,nodeid=0,cpus=0-3,mem=512 -numa node,nodeid=1,mem=512 \
+>         -object memory-backend-ram,id=memdimm0,size=134217728 -device pc-dimm,node=0,memdev=memdimm0,id=dimm0,slot=0 \
+>         -object memory-backend-ram,id=memdimm1,size=134217728 -device pc-dimm,node=0,memdev=memdimm1,id=dimm1,slot=1 \
+>         -object memory-backend-ram,id=memdimm2,size=134217728 -device pc-dimm,node=0,memdev=memdimm2,id=dimm2,slot=2 \
+>         -object memory-backend-ram,id=memdimm3,size=134217728 -device pc-dimm,node=0,memdev=memdimm3,id=dimm3,slot=3 \
+>         -object memory-backend-ram,id=memdimm4,size=134217728 -device pc-dimm,node=1,memdev=memdimm4,id=dimm4,slot=4 \
+>         -object memory-backend-ram,id=memdimm5,size=134217728 -device pc-dimm,node=1,memdev=memdimm5,id=dimm5,slot=5 \
+>         -object memory-backend-ram,id=memdimm6,size=134217728 -device pc-dimm,node=1,memdev=memdimm6,id=dimm6,slot=6 \
+> 
+> kernel: [    0.753643] __add_memory: nid: 0 start: 0100000000 - 0108000000 (size: 134217728)
+> kernel: [    0.756950] register_mem_sect_under_node: system_state= 1
+> 
+> kernel: [    0.760811]  register_mem_sect_under_node+0x4f/0x230
+> kernel: [    0.760811]  walk_memory_blocks+0x80/0xc0
+> kernel: [    0.760811]  link_mem_sections+0x32/0x40
+> kernel: [    0.760811]  add_memory_resource+0x148/0x250
+> kernel: [    0.760811]  __add_memory+0x5b/0x90
+> kernel: [    0.760811]  acpi_memory_device_add+0x130/0x300
+> kernel: [    0.760811]  acpi_bus_attach+0x13c/0x1c0
+> kernel: [    0.760811]  acpi_bus_attach+0x60/0x1c0
+> kernel: [    0.760811]  acpi_bus_scan+0x33/0x70
+> kernel: [    0.760811]  acpi_scan_init+0xea/0x21b
+> kernel: [    0.760811]  acpi_init+0x2f1/0x33c
+> kernel: [    0.760811]  do_one_initcall+0x46/0x1f4
 
-Applied to powerpc/fixes.
-
-[1/1] cpuidle: pseries: Fix CEDE latency conversion from tb to us
-      https://git.kernel.org/powerpc/c/1d3ee7df009a46440c58508b8819213c09503acd
-
-cheers
+Is there any actual usecase for a configuration like this? What is the
+point to statically define additional memory like this when the same can
+be achieved on the same command line?
+-- 
+Michal Hocko
+SUSE Labs
