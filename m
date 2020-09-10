@@ -2,93 +2,71 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D084C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033DFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7CD21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18CA2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599754948;
-	bh=cFm01d5A2xJtuwGGnkI+tpSI9gpBQSqULzzvO5shbnk=;
+	s=default; t=1599754964;
+	bh=eYB7NVQ0w8fEmrT5JGCldNlkgVi29FDwCgpinZyi2XQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SbaVVRUQV9ky3yHn/lGLxjp8yGTu4EouQjIesUqaxEJSdMQGzGy1cfUshBrP0ZOvo
-	 TdGtP0ciUWNlyloegeLw94rAJQLg//CyWzOW+5kM1pGKorpB1Z2KGGKEAYHQusYXKT
-	 9P2ywF4U5JTqd5rJ1Jg6cJmAglOraoUBlN9cP6Ho=
+	b=v1xyDdIKA89PK3XFXVrx642ofRiIBgSJ0qiNnrJgeJ5Bel1gIDB2mBBIoAx923uiR
+	 tC0rnfmGbhCA2k8EEgPVS21Oci6Rgns6pLABcDcOqrqs3n5T/qi3sR0APNZd+7Xsdg
+	 t1Px2NggvO4n5+abp016Nn8K2WqNbblR7oacYR1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgIJQWW (ORCPT
+        id S1726847AbgIJQWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:22:22 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:38337 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgIJQOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:14:12 -0400
-Received: by mail-ej1-f67.google.com with SMTP id i22so9558589eja.5;
-        Thu, 10 Sep 2020 09:14:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UlWeBO5XXsVkxeqCqR5Hh1T/dXmevbm+y0dv6NWqW5E=;
-        b=LpPNVk86sMy2KDgrWnb7UxCte0zXxhgIWlrxXDr5bFMXeXiS/0qgotYWAUdV7FtpdX
-         EStLLainBAqcdYUIDwe/2NPTVQc8sFavT5UM8Du3ttRgOR33LSkMW1A2Dt8VrmSXmK2g
-         jQAoIKlmXtx3b5FpoG+Bj5Dv4y7xDsrJy6+AK209K4ZcgUOQk++rv9GukQmIWr3u0z3B
-         V4GuY598sz9B3A2zOHK97EDdPvfwH41L6YCRCnJZMvyzkuaIP/itKRnsq4IlZ9oadzkg
-         1CoE+h49w4UIABbnxxI+qz607I+nqHRPaGPzV2wPoRgoHRfEWKaSHcgtQeT0ub6/Yh3+
-         Wnaw==
-X-Gm-Message-State: AOAM5320MZwQn0zC5VRCnTeiaLZpuYRyO8T/RE7bys2y1lmo6yprBk+r
-        bax5CGrzxSXCPQXUc5MqYPs=
-X-Google-Smtp-Source: ABdhPJwIIQ8dJ5uLZ10q13CyfyBK+itpFUo2QKO7vjp47zYPGf4bkS+d38Lcvwn5F7hpQoBbFA1R6A==
-X-Received: by 2002:a17:906:69c1:: with SMTP id g1mr9261970ejs.285.1599754450515;
-        Thu, 10 Sep 2020 09:14:10 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id f13sm7520054ejb.81.2020.09.10.09.14.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Sep 2020 09:14:09 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 18:14:06 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Opasiak <k.opasiak@samsung.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-nfc@lists.01.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 9/9] arm64: defconfig: Enable Samsung S3FWRN5 NFC
- driver
-Message-ID: <20200910161406.GA6491@kozik-lap>
-References: <20200906153654.2925-1-krzk@kernel.org>
- <20200906153654.2925-10-krzk@kernel.org>
+        Thu, 10 Sep 2020 12:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbgIJQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:20:27 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84D920BED;
+        Thu, 10 Sep 2020 16:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599754735;
+        bh=eYB7NVQ0w8fEmrT5JGCldNlkgVi29FDwCgpinZyi2XQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jHIvIfNsKVPc9XIzCo8yq2jod8gfmfg1He2Wu7Vdq/HqnG4w2/SjjTAf7quC2jVdh
+         6lWNtY4ubxIJkErPeecN+N0iHCMn36Du911dNUbYJSDSPHFfwuzvQWA4u633Zt3v4c
+         lKUVIfb8nqPfA+0oZiQCwRXygSk5ApyiR2M5NOCI=
+Date:   Thu, 10 Sep 2020 18:19:02 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Tri Vo <trong@android.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v3 1/2] idr: Document calling context for IDA APIs
+ mustn't use locks
+Message-ID: <20200910161902.GB1180022@kroah.com>
+References: <20200910055246.2297797-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200906153654.2925-10-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200910055246.2297797-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 05:36:54PM +0200, Krzysztof Kozlowski wrote:
-> Enable the Samsung S3FWRN5 NFC driver present in Exynos5433-based
-> TM2/TM2E boards.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm64/configs/defconfig | 3 +++
+On Wed, Sep 09, 2020 at 10:52:45PM -0700, Stephen Boyd wrote:
+> The documentation for these functions indicates that callers don't need
+> to hold a lock while calling them, but that documentation is only in one
+> place under "IDA Usage". Let's state the same information on each IDA
+> function so that it's clear what the calling context requires.
+> Furthermore, let's document ida_simple_get() with the same information
+> so that callers know how this API works.
 
-Applied.
+Thank you for this, I always have to go look it up too...
 
-Best regards,
-Krzysztof
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
