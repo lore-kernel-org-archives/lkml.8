@@ -2,174 +2,146 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B44DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F046EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99CD20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B1E20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:42:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JnI3+HuS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDmpCbFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbgIJJks (ORCPT
+        id S1730030AbgIJJmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:40:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42054 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728207AbgIJJkm (ORCPT
+        Thu, 10 Sep 2020 05:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgIJJm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:40:42 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08A9Vt6b119469;
-        Thu, 10 Sep 2020 05:39:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=41BJsvawiBO1ghr06VQIrffJCPHY4UzVo4fvKE+7RMs=;
- b=JnI3+HuSFQICzixnbEr3lD/KU407bMni7V5mL/H47oPLaomhPs6t57kI2sBNlnitleWU
- Ljv2tAQ6Y00VBu0RV7fJV/uOYIaFn2+L3EVF73PBzpDn0xMhXi4S9uZF+n3tyogr9cL8
- ytPNf7pxi3XLZLzrvhLCPhCFdXv9qVuX2Is4ueWpwdN5VmTvJ7ZPUFIC/eAC2eqsGvRz
- 0ArbCVZIdHdWjs4nUhCUUciXheJ/YGqiDnhHtZPbG7C2gBZK+PQzRO1oEWokDf3RJaPK
- qEdPrU10FoZR5nshuEVIEbRP9lZ8x2Pm0AWZdo3HKCBJEvEDjwjaM3Kk9J6p8hBlCJ8m ng== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fg9ejw18-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 05:39:36 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08A9WV5v121274;
-        Thu, 10 Sep 2020 05:39:35 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fg9ejvxx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 05:39:35 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08A9c3QB011125;
-        Thu, 10 Sep 2020 09:39:32 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma01fra.de.ibm.com with ESMTP id 33c2a81b0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 09:39:32 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08A9dTSv34800078
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 09:39:29 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2EE38AE04D;
-        Thu, 10 Sep 2020 09:39:29 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BD21AE053;
-        Thu, 10 Sep 2020 09:39:27 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.67.15])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 10 Sep 2020 09:39:27 +0000 (GMT)
-Date:   Thu, 10 Sep 2020 11:39:25 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200910093925.GB29166@oc3871087118.ibm.com>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
- <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad>
- <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad>
- <20200909180324.GI87483@ziepe.ca>
+        Thu, 10 Sep 2020 05:42:26 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B508C061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:42:26 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b17so2773072pji.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tfIByuMMo7C/Clnj6jXryHuR4zdcV5TwuhVI0+9ZXqk=;
+        b=uDmpCbFh1psm0nkusAJFY/dcLXBPE4iE9E7slyes1DD5ltL23+HkFPZPaAoW01eEP4
+         2vXjPNq2s/exWc+Pgplo/DJpbut9xfgknVSIV2dbNNUD8qcqEBJxPnzKiHw8Jkt/XOHj
+         nu4dYmVLRLzHj/bH7I4kO5qUD+ALbAHSdvOaR5Xq4M3FtkIlabCNYWf++M87+AQxYdab
+         F3Ewn9WGLULNvFuJleRF/eZbc2StBBn29B4fq/EM8MLDt6iF6ZdrIYHLNo+jwO2yU4jZ
+         Z5nNdXfEhORhGLmvyvskJcZvaGsVkmCdBLuntcCnFrN/OaHRQu8F/QG00qCXm6X86QhW
+         MnWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tfIByuMMo7C/Clnj6jXryHuR4zdcV5TwuhVI0+9ZXqk=;
+        b=I5liVFJV9DnsS2jjm9sCB/7yDzkjNfv6aGpPv3Q+JZ5Js5kHcE14D4x2BtEswxpdC+
+         T6mk5Kq5zMJAygG50pcojpVenvj6yj0msgOSIBBjUwJQVLV3ADpEN2C/zhWNX0saC0j3
+         r1JRZU3e9uLujK4WVMaVT/lSo9BM9JRAJO7cwSiBB+ndxasiyJ6thHBZpJQXQu/TkL3l
+         Hg163jy8Z2svwYArIZWVCV2pafTO/lsYMFzNGw9QSbyGu6rrbwze24Kb0WESZcHWUVf4
+         GRolmxSFZff9CWehX5WfMLizEFj+cC6/0PewEHIg7MRKjzWisFxs6+CabPtnAjSiMnmK
+         YXRg==
+X-Gm-Message-State: AOAM532HIPSPUvCzRs+3kJqXhC07HkYxOKRWnv6LogNmMkcao123jkC3
+        MMCKxH1WrOYbioz3wFvB8N8Ja49u0ZK3zdqV1Cv3BA==
+X-Google-Smtp-Source: ABdhPJz7PvLSYCqK0ku+A1ysRCQYzogbgA6IYq2pcoIqNsN3XrY5qY/AABceMIzcPX+1vQVAyYI6uTYl64B6AvrCmqI=
+X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr4517568pjb.20.1599730945276;
+ Thu, 10 Sep 2020 02:42:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200909180324.GI87483@ziepe.ca>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxscore=0 suspectscore=0 clxscore=1011 adultscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100085
+References: <20200902180950.4bc7c4de@canb.auug.org.au> <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
+ <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org> <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
+ <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org> <20200909104619.0902238c@canb.auug.org.au>
+ <dea1bacd-48c2-067b-1bb2-00a0ee91196d@infradead.org> <90719242-ab0e-7bd9-1cce-5aac8940eb23@linuxfoundation.org>
+In-Reply-To: <90719242-ab0e-7bd9-1cce-5aac8940eb23@linuxfoundation.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 10 Sep 2020 02:42:14 -0700
+Message-ID: <CAFd5g452HH1Zfo+tqYzZuMVBnz-x=ePkits6uUnVDBXvaU=nzg@mail.gmail.com>
+Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 03:03:24PM -0300, Jason Gunthorpe wrote:
-> On Wed, Sep 09, 2020 at 07:25:34PM +0200, Gerald Schaefer wrote:
-> > I actually had to draw myself a picture to get some hold of
-> > this, or rather a walk-through with a certain pud-crossing
-> > range in a folded 3-level scenario. Not sure if I would have
-> > understood my explanation above w/o that, but I hope you can
-> > make some sense out of it. Or draw yourself a picture :-)
-> 
-> What I don't understand is how does anything work with S390 today?
-> 
-> If the fix is only to change pxx_addr_end() then than generic code
-> like mm/pagewalk.c will iterate over a *different list* of page table
-> entries. 
-> 
-> It's choice of entries to look at is entirely driven by pxx_addr_end().
-> 
-> Which suggest to me that mm/pagewalk.c also doesn't work properly
-> today on S390 and this issue is not really about stack variables?
-> 
-> Fundamentally if pXX_offset() and pXX_addr_end() must be consistent
-> together, if pXX_offset() is folded then pXX_addr_end() must cause a
-> single iteration of that level.
+On Tue, Sep 8, 2020 at 5:55 PM Shuah Khan <skhan@linuxfoundation.org> wrote=
+:
+>
+> On 9/8/20 6:49 PM, Randy Dunlap wrote:
+> > On 9/8/20 5:46 PM, Stephen Rothwell wrote:
+> >> Hi Randy,
+> >>
+> >> On Tue, 8 Sep 2020 07:38:31 -0700 Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+> >>>
+> >>> On 9/4/20 12:59 AM, Brendan Higgins wrote:
+> >>>> On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+> >>>>>
+> >>>>> On 9/2/20 8:44 AM, Randy Dunlap wrote:
+> >>>>>> On 9/2/20 1:09 AM, Stephen Rothwell wrote:
+> >>>>>>> Hi all,
+> >>>>>>>
+> >>>>>>> Changes since 20200828:
+> >>>>>>>
+> >>>>>>
+> >>>>>>
+> >>>>>> on i386:
+> >>>>>>
+> >>>>>> ../lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
+> >>>>>> ../lib/ubsan.c:141:2: error: implicit declaration of function =E2=
+=80=98kunit_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_te=
+st=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+> >>>>>>    kunit_fail_current_test();
+> >>>>>>
+> >>>>>>
+> >>>>>> Full randconfig file is attached.
+> >>>>>>
+> >>>>>
+> >>>>> Hi Brendan,
+> >>>>>
+> >>>>> Do you know anything about this build error?
+> >>>>>
+> >>>>> I can't find kunit_fail_current_test() anywhere.
+> >>>>
+> >>>> Yeah, this got applied for some reason without the prerequisite
+> >>>> patches. It is from a two patch series, the other being here:
+> >>>>
+> >>>> https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-uri=
+elguajardojr@gmail.com/
+> >>>>
+> >>>> which in turn depends on another patchset which didn't make it into =
+5.9.
+> >>>>
+> >>>> Again, I don't know why this was applied without it's prereqs. Sorry=
+ about that.
+> >>>>
+> >>>
+> >>> Well.  Who is responsible for this small mess?
+> >>> It is still killing linux-next builds for me (2020-0908).
+> >>
+> >> It came in via the kunit-next tree (Shuah cc'd).  I will revert commit
+> >> abe83f7621ee ("kunit: ubsan integration") today.
+> >
+> >
+>
+> Sorry about that. I picked this up for 5.10 since it had the reviewed
+> by tags from Brendan.
+>
+> I will drop this from kselftest kunit
 
-Your observation is correct.
-
-Another way to describe the problem is existing pXd_addr_end helpers
-could be applied to mismatching levels on s390 (e.g p4d_addr_end
-applied to pud or pgd_addr_end applied to p4d). As you noticed,
-all *_pXd_range iterators could be called with address ranges that
-exceed single pXd table.
-
-However, when it happens with pointers to real page tables (passed to
-*_pXd_range iterators) we still operate on valid tables, which just
-(lucky for us) happened to be folded. Thus we still reference correct
-table entries.
-
-It is only gup_fast case that exposes the issue. It hits because
-pointers to stack copies are passed to gup_pXd_range iterators, not
-pointers to real page tables itself.
-
-As Gerald mentioned, it is very difficult to explain in a clear way.
-Hopefully, one could make sense ot of it.
-
-> Jason
+Thanks for taking care of this!
