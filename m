@@ -2,70 +2,365 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6841BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4742C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 203EC207EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAC421941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DoLR2kRH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y5AYEWJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgIJJhu (ORCPT
+        id S1730629AbgIJJg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:37:50 -0400
-Received: from elvis.franken.de ([193.175.24.41]:33971 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730461AbgIJJhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:37:46 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1kGJ1U-00030W-00; Thu, 10 Sep 2020 11:37:44 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 905F6C0F61; Thu, 10 Sep 2020 11:37:09 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 11:37:09 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH v1] MIPS: uasm: false warning on use of
- uasm_i_lui()
-Message-ID: <20200910093709.GA10310@alpha.franken.de>
-References: <20200908164512.15379-1-james.quinlan@broadcom.com>
+        Thu, 10 Sep 2020 05:36:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38932 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730353AbgIJJW1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:22:27 -0400
+Date:   Thu, 10 Sep 2020 09:22:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599729742;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FA4tlg2njTohukM65NAP0aZkJKvv1mBtF1U20Qk+Q7c=;
+        b=DoLR2kRHFcgNtysmDRZDT4bGgDPBaz2zDRm7paB8qOp6Imj/v4yqyCKgEBznSpEb5oDQ1l
+        Fvb/mxNjxsVkRqnl8cupDAF7jPjDdpovFQK1w6WLRLLucA56AodWfziseuQPzBon/Nz7k0
+        8xtUTk1X7LxY53RLMqN4uBLaJWXqX2ucp97KKZH1JDQMrbf73Limse+P9LHftFGGj3bh4V
+        OFRfBwKTDIuiYzwApR7hEDT7oJjgTiieqP2penwV5hOZzwf5G1s7URDf95cnKG3SsZYu8x
+        HyaMdabdhYHgfyd9Tek++6g4MymN6IHhmxefEpLmls0bnnwRYikS+4KjR2JDdA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599729742;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FA4tlg2njTohukM65NAP0aZkJKvv1mBtF1U20Qk+Q7c=;
+        b=y5AYEWJnapbXph+nF8VXIpfTZAh6AXY2DNVQRdo/gHqCW12l1R7KJ2dR6ZTVFp5pXGzono
+        cBX+a4tLGouRZbDg==
+From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/seves] x86/sev-es: Add support for handling IOIO exceptions
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200907131613.12703-26-joro@8bytes.org>
+References: <20200907131613.12703-26-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908164512.15379-1-james.quinlan@broadcom.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Message-ID: <159972974218.20229.18333865131600086102.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 12:45:06PM -0400, Jim Quinlan wrote:
-> Currently, the example uasm code
-> 
-> 	uasm_i_lui(p, tmp, 0xa000);
-> 
-> issues a warning at Linux boot when the code is "assembled".  This is
-> because the "lui" instruction is defined by the macro "Ip_u1s2(_lui)" -- I
-> believe it should be Ip_u1u2(_lui) -- and its definition is associated with
-> the SIMM macro -- I believe it should be the UIMM macro.  The current code
-> takes a 32bit number and checks that it can be converted to a 16bit signed
-> immediate.  This check fails of course for an immediate such as 0x0000a000.
+The following commit has been merged into the x86/seves branch of tip:
 
-IMHO SIMM is correct as the upper 16bits will be sign extended on 64bit
-CPUs.
+Commit-ID:     25189d08e5168c098c307a0eaae5b30c13a331ef
+Gitweb:        https://git.kernel.org/tip/25189d08e5168c098c307a0eaae5b30c13a331ef
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Mon, 07 Sep 2020 15:15:26 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 07 Sep 2020 19:45:26 +02:00
 
-Your example looks like to try to load a KSEG1 address, so just use 
+x86/sev-es: Add support for handling IOIO exceptions
 
-uasm_i_lui(p, tmp, uasm_rel_hi(0xa0000000));
+Add support for decoding and handling #VC exceptions for IOIO events.
 
-which even makes it clearer, what this is about.
+[ jroedel@suse.de: Adapted code to #VC handling framework ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200907131613.12703-26-joro@8bytes.org
+---
+ arch/x86/boot/compressed/sev-es.c |  32 ++++-
+ arch/x86/kernel/sev-es-shared.c   | 214 +++++++++++++++++++++++++++++-
+ 2 files changed, 246 insertions(+)
 
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 1e1fab5..61504eb 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -24,6 +24,35 @@
+ struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
+ struct ghcb *boot_ghcb;
+ 
++/*
++ * Copy a version of this function here - insn-eval.c can't be used in
++ * pre-decompression code.
++ */
++static bool insn_has_rep_prefix(struct insn *insn)
++{
++	int i;
++
++	insn_get_prefixes(insn);
++
++	for (i = 0; i < insn->prefixes.nbytes; i++) {
++		insn_byte_t p = insn->prefixes.bytes[i];
++
++		if (p == 0xf2 || p == 0xf3)
++			return true;
++	}
++
++	return false;
++}
++
++/*
++ * Only a dummy for insn_get_seg_base() - Early boot-code is 64bit only and
++ * doesn't use segments.
++ */
++static unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
++{
++	return 0UL;
++}
++
+ static inline u64 sev_es_rd_ghcb_msr(void)
+ {
+ 	unsigned long low, high;
+@@ -151,6 +180,9 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 		goto finish;
+ 
+ 	switch (exit_code) {
++	case SVM_EXIT_IOIO:
++		result = vc_handle_ioio(boot_ghcb, &ctxt);
++		break;
+ 	default:
+ 		result = ES_UNSUPPORTED;
+ 		break;
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 7ac6e6b..bae7cf2 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -218,3 +218,217 @@ static enum es_result vc_insn_string_write(struct es_em_ctxt *ctxt,
+ 
+ 	return ret;
+ }
++
++#define IOIO_TYPE_STR  BIT(2)
++#define IOIO_TYPE_IN   1
++#define IOIO_TYPE_INS  (IOIO_TYPE_IN | IOIO_TYPE_STR)
++#define IOIO_TYPE_OUT  0
++#define IOIO_TYPE_OUTS (IOIO_TYPE_OUT | IOIO_TYPE_STR)
++
++#define IOIO_REP       BIT(3)
++
++#define IOIO_ADDR_64   BIT(9)
++#define IOIO_ADDR_32   BIT(8)
++#define IOIO_ADDR_16   BIT(7)
++
++#define IOIO_DATA_32   BIT(6)
++#define IOIO_DATA_16   BIT(5)
++#define IOIO_DATA_8    BIT(4)
++
++#define IOIO_SEG_ES    (0 << 10)
++#define IOIO_SEG_DS    (3 << 10)
++
++static enum es_result vc_ioio_exitinfo(struct es_em_ctxt *ctxt, u64 *exitinfo)
++{
++	struct insn *insn = &ctxt->insn;
++	*exitinfo = 0;
++
++	switch (insn->opcode.bytes[0]) {
++	/* INS opcodes */
++	case 0x6c:
++	case 0x6d:
++		*exitinfo |= IOIO_TYPE_INS;
++		*exitinfo |= IOIO_SEG_ES;
++		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
++		break;
++
++	/* OUTS opcodes */
++	case 0x6e:
++	case 0x6f:
++		*exitinfo |= IOIO_TYPE_OUTS;
++		*exitinfo |= IOIO_SEG_DS;
++		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
++		break;
++
++	/* IN immediate opcodes */
++	case 0xe4:
++	case 0xe5:
++		*exitinfo |= IOIO_TYPE_IN;
++		*exitinfo |= (u64)insn->immediate.value << 16;
++		break;
++
++	/* OUT immediate opcodes */
++	case 0xe6:
++	case 0xe7:
++		*exitinfo |= IOIO_TYPE_OUT;
++		*exitinfo |= (u64)insn->immediate.value << 16;
++		break;
++
++	/* IN register opcodes */
++	case 0xec:
++	case 0xed:
++		*exitinfo |= IOIO_TYPE_IN;
++		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
++		break;
++
++	/* OUT register opcodes */
++	case 0xee:
++	case 0xef:
++		*exitinfo |= IOIO_TYPE_OUT;
++		*exitinfo |= (ctxt->regs->dx & 0xffff) << 16;
++		break;
++
++	default:
++		return ES_DECODE_FAILED;
++	}
++
++	switch (insn->opcode.bytes[0]) {
++	case 0x6c:
++	case 0x6e:
++	case 0xe4:
++	case 0xe6:
++	case 0xec:
++	case 0xee:
++		/* Single byte opcodes */
++		*exitinfo |= IOIO_DATA_8;
++		break;
++	default:
++		/* Length determined by instruction parsing */
++		*exitinfo |= (insn->opnd_bytes == 2) ? IOIO_DATA_16
++						     : IOIO_DATA_32;
++	}
++	switch (insn->addr_bytes) {
++	case 2:
++		*exitinfo |= IOIO_ADDR_16;
++		break;
++	case 4:
++		*exitinfo |= IOIO_ADDR_32;
++		break;
++	case 8:
++		*exitinfo |= IOIO_ADDR_64;
++		break;
++	}
++
++	if (insn_has_rep_prefix(insn))
++		*exitinfo |= IOIO_REP;
++
++	return ES_OK;
++}
++
++static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
++{
++	struct pt_regs *regs = ctxt->regs;
++	u64 exit_info_1, exit_info_2;
++	enum es_result ret;
++
++	ret = vc_ioio_exitinfo(ctxt, &exit_info_1);
++	if (ret != ES_OK)
++		return ret;
++
++	if (exit_info_1 & IOIO_TYPE_STR) {
++
++		/* (REP) INS/OUTS */
++
++		bool df = ((regs->flags & X86_EFLAGS_DF) == X86_EFLAGS_DF);
++		unsigned int io_bytes, exit_bytes;
++		unsigned int ghcb_count, op_count;
++		unsigned long es_base;
++		u64 sw_scratch;
++
++		/*
++		 * For the string variants with rep prefix the amount of in/out
++		 * operations per #VC exception is limited so that the kernel
++		 * has a chance to take interrupts and re-schedule while the
++		 * instruction is emulated.
++		 */
++		io_bytes   = (exit_info_1 >> 4) & 0x7;
++		ghcb_count = sizeof(ghcb->shared_buffer) / io_bytes;
++
++		op_count    = (exit_info_1 & IOIO_REP) ? regs->cx : 1;
++		exit_info_2 = min(op_count, ghcb_count);
++		exit_bytes  = exit_info_2 * io_bytes;
++
++		es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
++
++		/* Read bytes of OUTS into the shared buffer */
++		if (!(exit_info_1 & IOIO_TYPE_IN)) {
++			ret = vc_insn_string_read(ctxt,
++					       (void *)(es_base + regs->si),
++					       ghcb->shared_buffer, io_bytes,
++					       exit_info_2, df);
++			if (ret)
++				return ret;
++		}
++
++		/*
++		 * Issue an VMGEXIT to the HV to consume the bytes from the
++		 * shared buffer or to have it write them into the shared buffer
++		 * depending on the instruction: OUTS or INS.
++		 */
++		sw_scratch = __pa(ghcb) + offsetof(struct ghcb, shared_buffer);
++		ghcb_set_sw_scratch(ghcb, sw_scratch);
++		ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_IOIO,
++					  exit_info_1, exit_info_2);
++		if (ret != ES_OK)
++			return ret;
++
++		/* Read bytes from shared buffer into the guest's destination. */
++		if (exit_info_1 & IOIO_TYPE_IN) {
++			ret = vc_insn_string_write(ctxt,
++						   (void *)(es_base + regs->di),
++						   ghcb->shared_buffer, io_bytes,
++						   exit_info_2, df);
++			if (ret)
++				return ret;
++
++			if (df)
++				regs->di -= exit_bytes;
++			else
++				regs->di += exit_bytes;
++		} else {
++			if (df)
++				regs->si -= exit_bytes;
++			else
++				regs->si += exit_bytes;
++		}
++
++		if (exit_info_1 & IOIO_REP)
++			regs->cx -= exit_info_2;
++
++		ret = regs->cx ? ES_RETRY : ES_OK;
++
++	} else {
++
++		/* IN/OUT into/from rAX */
++
++		int bits = (exit_info_1 & 0x70) >> 1;
++		u64 rax = 0;
++
++		if (!(exit_info_1 & IOIO_TYPE_IN))
++			rax = lower_bits(regs->ax, bits);
++
++		ghcb_set_rax(ghcb, rax);
++
++		ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_IOIO, exit_info_1, 0);
++		if (ret != ES_OK)
++			return ret;
++
++		if (exit_info_1 & IOIO_TYPE_IN) {
++			if (!ghcb_rax_is_valid(ghcb))
++				return ES_VMM_ERROR;
++			regs->ax = lower_bits(ghcb->save.rax, bits);
++		}
++	}
++
++	return ret;
++}
