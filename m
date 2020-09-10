@@ -2,66 +2,145 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D1BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5120221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EDF208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JWLt/K0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgIJVe0 (ORCPT
+        id S1730497AbgIJNtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:34:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:36620 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730951AbgIJNuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:50:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 429D011B3;
-        Thu, 10 Sep 2020 06:43:27 -0700 (PDT)
-Received: from [192.168.1.79] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D603F66E;
-        Thu, 10 Sep 2020 06:43:25 -0700 (PDT)
-Subject: Re: [PATCH] drm/panfrost: Ensure GPU quirks are always initialised
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        "Marty E. Plummer" <hanetzer@startmail.com>
-References: <20200909122957.51667-1-steven.price@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <dd65be77-7410-3365-24b0-91d88c24568e@arm.com>
-Date:   Thu, 10 Sep 2020 14:42:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200909122957.51667-1-steven.price@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 10 Sep 2020 09:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730952AbgIJNkV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:40:21 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAD9C0617A1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:36 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id o68so4779152pfg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:38:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/0UJlMMYS97ZEd1pzZy1E70sLlZzGqr7O+AUirQ/jf8=;
+        b=JWLt/K0QwNvzoj6nxqKPcWAMMXsRyj3oN5+4omDOjxwKh6VeMqT0tOggHi3F5AYIbt
+         hyxo5lP35yLC+r5RRZWsGyW9UD6G6hm5mW+ADILi1Dx59pSfOnkl9/xG79xybquIlCoH
+         DyvTbrQzw43bvNGC6PdmN3nZHYQSm/Xd0bIqyFoCceAhDa5mfOugjvUD8i8vrGipBWg+
+         lrW5SQU3A/CUOJncDK5n26xHziFS7caOipKAve2w4lQ5me4Pe3f0dwnvCJTbfJyXp414
+         AhmAVU5GTrcKuNrA3ZaUk+yiBVryOa4cmozrqoePAqtkn7dyg53KoTrqedbYX86jouPV
+         yNoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=/0UJlMMYS97ZEd1pzZy1E70sLlZzGqr7O+AUirQ/jf8=;
+        b=PuAlHgKoeSe1AmUQOc7zjB9rP81O6/5Z/Rtt03jEDPXYGMUNUwUXxFDTAFhvXYbcC9
+         MUgV70R7S9f7yIbZuUEmCx3AWfJp9eQyRU6GC+zHtb+tykFT7hHkuFpUr3UfFzdSkZ4n
+         6MkbjehJqW5ErEY42e9I047Q5wfhZso/jjM1cx1uUaRs6hm4Uiw/llPkohAGBK+paoqo
+         z2wnRGG4x5gPiOx4MLAjejixsbOPfBAuVuuR3I8hHXkrKmh1EmsoYNOCTp+Du7MO/RiT
+         dpvZxTIAfYclORL7bQO30O+5ZL2EeZDdqFmM0c3mK2wWwSS0vZq9Jyl40ABSrvJHAXi+
+         mrsw==
+X-Gm-Message-State: AOAM531cFm9MmcvCkVCRdiBc5iOGHhqXHxL9grFwnw+hszxIcj/9CWVa
+        8xADVj/zQcgYfbvhKi98CC8f
+X-Google-Smtp-Source: ABdhPJzqI5xjENQcYNVIlYz3X+XwkhIeEHTTbg43DOqqVs41K+m+0e9zySQ0dINzjL9/TNZ774pDzQ==
+X-Received: by 2002:a62:19c2:: with SMTP id 185mr5497347pfz.1.1599745115588;
+        Thu, 10 Sep 2020 06:38:35 -0700 (PDT)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id o30sm5603801pgc.45.2020.09.10.06.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 06:38:35 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev.kurt@vandijck-laurijssen.be,
+        o.rempel@pengutronix.de,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 5/6] can: mcp25xxfd: add listen-only mode
+Date:   Thu, 10 Sep 2020 19:08:05 +0530
+Message-Id: <20200910133806.25077-6-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
+References: <20200910133806.25077-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/09/2020 13:29, Steven Price wrote:
-> The GPU 'CONFIG' registers used to work around hardware issues are
-> cleared on reset so need to be programmed every time the GPU is reset.
-> However panfrost_device_reset() failed to do this.
-> 
-> To avoid this in future instead move the call to
-> panfrost_gpu_init_quirks() to panfrost_gpu_power_on() so that the
-> regsiters are always programmed just before the cores are powered.
-> 
-> Fixes: f3ba91228e8e ("drm/panfrost: Add initial panfrost driver")
-> Signed-off-by: Steven Price <steven.price@arm.com>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
 
-Applied to drm-misc-next
+This commit enables listen-only mode, which works internally like CANFD mode.
 
-Steve
+Signed-off-by: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c
+index eea3ef69f585..905ea98448cd 100644
+--- a/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c
++++ b/drivers/net/can/spi/mcp25xxfd/mcp25xxfd-core.c
+@@ -392,7 +392,8 @@ static int mcp25xxfd_ring_alloc(struct mcp25xxfd_priv *priv)
+ 	int ram_free, i;
+ 
+ 	tef_obj_size = sizeof(struct mcp25xxfd_hw_tef_obj);
+-	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
++	/* listen-only mode works like FD mode */
++	if (priv->can.ctrlmode & (CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_FD)) {
+ 		tx_obj_num = MCP25XXFD_TX_OBJ_NUM_CANFD;
+ 		tx_obj_size = sizeof(struct mcp25xxfd_hw_tx_obj_canfd);
+ 		rx_obj_size = sizeof(struct mcp25xxfd_hw_rx_obj_canfd);
+@@ -807,7 +808,7 @@ mcp25xxfd_chip_rx_fifo_init_one(const struct mcp25xxfd_priv *priv,
+ 		MCP25XXFD_REG_FIFOCON_RXOVIE |
+ 		MCP25XXFD_REG_FIFOCON_TFNRFNIE;
+ 
+-	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
++	if (priv->can.ctrlmode & (CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_FD))
+ 		fifo_con |= FIELD_PREP(MCP25XXFD_REG_FIFOCON_PLSIZE_MASK,
+ 				       MCP25XXFD_REG_FIFOCON_PLSIZE_64);
+ 	else
+@@ -857,7 +858,7 @@ static int mcp25xxfd_chip_fifo_init(const struct mcp25xxfd_priv *priv)
+ 		MCP25XXFD_REG_FIFOCON_TXEN |
+ 		MCP25XXFD_REG_FIFOCON_TXATIE;
+ 
+-	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
++	if (priv->can.ctrlmode & (CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_FD))
+ 		val |= FIELD_PREP(MCP25XXFD_REG_FIFOCON_PLSIZE_MASK,
+ 				  MCP25XXFD_REG_FIFOCON_PLSIZE_64);
+ 	else
+@@ -930,7 +931,9 @@ static u8 mcp25xxfd_get_normal_mode(const struct mcp25xxfd_priv *priv)
+ {
+ 	u8 mode;
+ 
+-	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
++	if (priv->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
++		mode = MCP25XXFD_REG_CON_MODE_LISTENONLY;
++	else if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
+ 		mode = MCP25XXFD_REG_CON_MODE_MIXED;
+ 	else
+ 		mode = MCP25XXFD_REG_CON_MODE_CAN2_0;
+@@ -2767,8 +2770,9 @@ static int mcp25xxfd_probe(struct spi_device *spi)
+ 	priv->can.do_get_berr_counter = mcp25xxfd_get_berr_counter;
+ 	priv->can.bittiming_const = &mcp25xxfd_bittiming_const;
+ 	priv->can.data_bittiming_const = &mcp25xxfd_data_bittiming_const;
+-	priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING |
+-		CAN_CTRLMODE_FD | CAN_CTRLMODE_FD_NON_ISO;
++	priv->can.ctrlmode_supported = CAN_CTRLMODE_LISTENONLY |
++		CAN_CTRLMODE_BERR_REPORTING | CAN_CTRLMODE_FD |
++		CAN_CTRLMODE_FD_NON_ISO;
+ 	priv->ndev = ndev;
+ 	priv->spi = spi;
+ 	priv->rx_int = rx_int;
+-- 
+2.17.1
+
