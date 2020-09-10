@@ -2,115 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAD4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36344C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD77B20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E6A20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:31:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="y79UUdby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbgIJM3y (ORCPT
+        id S1730309AbgIJMbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:29:54 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:40210 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730655AbgIJM1I (ORCPT
+        Thu, 10 Sep 2020 08:31:03 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10470 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730439AbgIJM2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:27:08 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-242-gUIwh0VwNUeXA06T7Iw4zQ-1; Thu, 10 Sep 2020 13:26:54 +0100
-X-MC-Unique: gUIwh0VwNUeXA06T7Iw4zQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 10 Sep 2020 13:26:53 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 10 Sep 2020 13:26:53 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Christophe Leroy' <christophe.leroy@csgroup.eu>,
-        'Linus Torvalds' <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-CC:     linux-arch <linux-arch@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "Luis Chamberlain" <mcgrof@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: RE: remove the last set_fs() in common code, and remove it for x86
- and powerpc v3
-Thread-Topic: remove the last set_fs() in common code, and remove it for x86
- and powerpc v3
-Thread-Index: AQHWhvDyD2c/lZfV3kC0Ftay5UVebqlhgjnw///zuACAABnIEIAAOoMg
-Date:   Thu, 10 Sep 2020 12:26:53 +0000
-Message-ID: <5050b43687c84515a49b345174a98822@AcuMS.aculab.com>
-References: <20200903142242.925828-1-hch@lst.de>
- <20200903142803.GM1236603@ZenIV.linux.org.uk>
- <CAHk-=wgQNyeHxXfckd1WtiYnoDZP1Y_kD-tJKqWSksRoDZT=Aw@mail.gmail.com>
- <20200909184001.GB28786@gate.crashing.org>
- <CAHk-=whu19Du_rZ-zBtGsXAB-Qo7NtoJjQjd-Sa9OB5u1Cq_Zw@mail.gmail.com>
- <3beb8b019e4a4f7b81fdb1bc68bd1e2d@AcuMS.aculab.com>
- <186a62fc-042c-d6ab-e7dc-e61b18945498@csgroup.eu>
- <59a64e9a210847b59f70f9bd2d02b5c3@AcuMS.aculab.com>
-In-Reply-To: <59a64e9a210847b59f70f9bd2d02b5c3@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 10 Sep 2020 08:28:13 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ACLl4W029687;
+        Thu, 10 Sep 2020 14:27:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=ozH/MrmZcNkm8zensiVKRNgv2DwWIwyb8qliXp9Emeo=;
+ b=y79UUdbyDqeKo5Y6Oubk6v79C48n4YQMoXQsAjrNGWcRDbLMAbjA679tq6GSy+mlZ8LU
+ DpbO5YIjE1CoRwhsT3q1hm2nM6pCD5PWB0pfMgaNBUq6EGwOc4L7wvhO2Jv8YBZFWVeA
+ VGZgMJ8Ymojh7L6M2/FypYNuP0ZeT5rCJX2m2PCtG5yjkjjmnXJBtuakyLieNGZKfsjy
+ Q3w68TL27IlgOHdIkwu2Rg8jQAjQH6zbTpnrhGP0KqGJ2DLPN3eqNZJ+bMi7CwQ/c0f/
+ /L7OvVtr7u14TlfHeD6f1YVDIc4LzalUx7btgxuNK3abLX1yWhDiY9ZVYoMJ8exS0cS3 Ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 33byt83qpa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 14:27:44 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CBD6F10002A;
+        Thu, 10 Sep 2020 14:27:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B59E92A8B2F;
+        Thu, 10 Sep 2020 14:27:43 +0200 (CEST)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.44) by GPXDAG3NODE5.st.com
+ (10.75.127.72) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
+ 2020 14:27:43 +0200
+Date:   Thu, 10 Sep 2020 14:27:39 +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Wolfram Sang <wsa@kernel.org>
+CC:     <pierre-yves.mordret@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Holger Assmann <h.assmann@pengutronix.de>
+Subject: Re: [PATCH] i2c: stm32: do not display error when DMA is not
+ requested
+Message-ID: <20200910122739.GA5093@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, pierre-yves.mordret@st.com,
+        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com, Krzysztof Kozlowski <krzk@kernel.org>,
+        Holger Assmann <h.assmann@pengutronix.de>
+References: <1599730349-2160-1-git-send-email-alain.volmat@st.com>
+ <20200910100607.GJ1031@ninjato>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200910100607.GJ1031@ninjato>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To GPXDAG3NODE5.st.com
+ (10.75.127.72)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDEwIFNlcHRlbWJlciAyMDIwIDEwOjI2DQouLi4N
-Cj4gPiA+IEkgaGFkIGFuICdpbnRlcmVzdGluZycgaWRlYS4NCj4gPiA+DQo+ID4gPiBDYW4geW91
-IHVzZSBhIGxvY2FsIGFzbSByZWdpc3RlciB2YXJpYWJsZSBhcyBhbiBpbnB1dCBhbmQgb3V0cHV0
-IHRvDQo+ID4gPiBhbiAnYXNtIHZvbGF0aWxlIGdvdG8nIHN0YXRlbWVudD8NCj4gPiA+DQo+ID4g
-PiBXZWxsIHlvdSBjYW4gLSBidXQgaXMgaXQgZ3VhcmFudGVlZCB0byB3b3JrIDotKQ0KPiA+ID4N
-Cj4gPg0KPiA+IFdpdGggZ2NjIGF0IGxlYXN0IGl0IHNob3VsZCB3b3JrIGFjY29yZGluZyB0bw0K
-PiA+IGh0dHBzOi8vZ2NjLmdudS5vcmcvb25saW5lZG9jcy9nY2MvTG9jYWwtUmVnaXN0ZXItVmFy
-aWFibGVzLmh0bWwNCj4gPg0KPiA+IFRoZXkgZXZlbiBleHBsaWNpdGVseSB0ZWxsOiAiVGhlIG9u
-bHkgc3VwcG9ydGVkIHVzZSBmb3IgdGhpcyBmZWF0dXJlIGlzDQo+ID4gdG8gc3BlY2lmeSByZWdp
-c3RlcnMgZm9yIGlucHV0IGFuZCBvdXRwdXQgb3BlcmFuZHMgd2hlbiBjYWxsaW5nIEV4dGVuZGVk
-DQo+ID4gYXNtICINCj4gDQo+IEEgcXVpY2sgdGVzdCBpc24ndCBnb29kLi4uLg0KPiANCj4gaW50
-IGJhcihjaGFyICp6KQ0KPiB7DQo+ICAgICAgICAgX19sYWJlbF9fIGxhYmVsOw0KPiAgICAgICAg
-IHJlZ2lzdGVyIGludCBlYXggYXNtICgiZWF4IikgPSA2Ow0KPiAgICAgICAgIGFzbSB2b2xhdGls
-ZSBnb3RvICgiIG1vdiAkMSwgJSVlYXgiIDo6OiAiZWF4IiA6IGxhYmVsKTsNCj4gbGFiZWw6DQo+
-ICAgICAgICAgcmV0dXJuIGVheDsNCj4gfQ0KPiANCj4gMDAwMDAwMDAwMDAwMDA0MCA8YmFyPjoN
-Cj4gICA0MDogICBiOCAwMSAwMCAwMCAwMCAgICAgICAgICBtb3YgICAgJDB4MSwlZWF4DQo+ICAg
-NDU6ICAgYjggMDYgMDAgMDAgMDAgICAgICAgICAgbW92ICAgICQweDYsJWVheA0KPiAgIDRhOiAg
-IGMzICAgICAgICAgICAgICAgICAgICAgIHJldHENCj4gDQo+IGFsdGhvdWdoIGFkZGluZzoNCj4g
-ICAgICAgICBhc20gdm9sYXRpbGUgKCIiIDogIityIiAoZWF4KSk7DQo+IGVpdGhlciBzaWRlIG9m
-IHRoZSAnYXNtIHZvbGF0aWxlIGdvdG8nIGRvZXMgZml4IGl0Lg0KDQpBY3R1YWxseSB0aGlzIGlz
-IHByZXR0eSBzb3VuZDoNCglfX2xhYmVsX18gbGFiZWw7DQoJcmVnaXN0ZXIgaW50IGVheCBhc20g
-KCJlYXgiKTsNCgkvLyBFbnN1cmUgZWF4IGNhbid0IGJlIHJlbG9hZGVkIGZyb20gYW55d2hlcmUN
-CgkvLyBJbiBwYXJ0aWN1bGFyIGl0IGNhbid0IGJlIHJlbG9hZGVkIGFmdGVyIHRoZSBhc20gZ290
-byBsaW5lDQoJYXNtIHZvbGF0aWxlICgiIiA6ICI9ciIgKGVheCkpOw0KCS8vIFByb3ZpZGVkIGdj
-YyBkb2Vzbid0IHNhdmUgZWF4IGhlcmUuLi4NCglhc20gdm9sYXRpbGUgZ290byAoInh4eHh4IiA6
-OjogImVheCIgOiBsYWJlbCk7DQoJLy8gLi4uIGFuZCByZWxvYWQgdGhlIHNhdmVkIHZhbHVlIGhl
-cmUuDQoJLy8gVGhlIGlucHV0IHZhbHVlIGhlcmUgd2lsbCBiZSB0aGF0IG1vZGlmaWVkIGJ5IHRo
-ZSAnYXNtIGdvdG8nLg0KCS8vIFNpbmNlIHRoaXMgbW9kaWZpZXMgZWF4IGl0IGNhbid0IGJlIG1v
-dmVkIGJlZm9yZSB0aGUgJ2FzbSBnb3RvJy4NCglhc20gdm9sYXRpbGUgKCIiIDogIityIiAoZWF4
-KSk7DQoJLy8gU28gaGVyZSBlYXggbXVzdCBjb250YWluIHRoZSB2YWx1ZSBzZXQgYnkgdGhlICJ4
-eHh4eCIgaW5zdHJ1Y3Rpb25zLg0KDQogICAgRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
-IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
-UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Thu, Sep 10, 2020 at 12:06:07PM +0200, Wolfram Sang wrote:
+> On Thu, Sep 10, 2020 at 11:32:29AM +0200, Alain Volmat wrote:
+> > DMA usage is optional for the I2C driver. check for the -ENODEV
+> > error in order to avoid displaying an error when no DMA
+> > has been requested.
+> > 
+> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> > ---
+> > This patch should be applied on top of the patch [i2c: stm32: Simplify with dev_err_probe()]
+> 
+> We can do it in this order, it just makes backporting to stable kernels
+> (if that is desired) a bit harder than a self-contained patch. I am fine
+> with both approaches, but just wanted to point it out.
 
+Indeed, that's a good point. I'll rework it then, to avoid the dependency
+on dev_err_probe change. If that is ok, I propose to push a two patches serie
+with both this fix (updated) followed by a rebased version of the
+dev_err_probe patch from Krzysztof for dev_err_probe change.
