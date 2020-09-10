@@ -2,143 +2,152 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A59DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B905C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE9F20C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F09F207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qhQd43AV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vS5/9Bhu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ISjEgglO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbgIJJdH (ORCPT
+        id S1730742AbgIJJd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:33:07 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:12144 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730718AbgIJJcl (ORCPT
+        Thu, 10 Sep 2020 05:33:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38842 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730450AbgIJJXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:32:41 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08A9QfoN032717;
-        Thu, 10 Sep 2020 11:32:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=+COKLz+6WybyodfwHJziasnDtJLeiuO/fCZoNZW0ReY=;
- b=qhQd43AVtcAtVe1yYjZgrjJKsZeHIsn1fMqBGqkh+uy30fFquTmT/YHAAL1uGSygckVw
- J7GZh0ITHhQ1o0Grnr2Mz/GrSIWVo8cDQzyUFEmOdptjbUpQBxUmO36gpqiCCIofoDaq
- qI4Tq3/x5tgZfSrvhIP1TejKWVHFsVjUdzxYmUnwie6MGn1YweQrgtMhfqbCcX3YUFUY
- vLvcQk63RKwJUMrTnNGbHUXBSx2SGM6MX7iP0T6zQL3iPXIc40IMcumcPhURaDx/Ls1t
- X+6t92qT2TPCZni9udW0lPvH8lKdoSunFHLFeD+CtL6vbsnZpEZ5XEbM5rPWtcDEof0L Pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 33c0ev27vd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 11:32:29 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7F34C10002A;
-        Thu, 10 Sep 2020 11:32:29 +0200 (CEST)
-Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 756DB21CA68;
-        Thu, 10 Sep 2020 11:32:29 +0200 (CEST)
-Received: from localhost (10.75.127.50) by GPXDAG3NODE5.st.com (10.75.127.72)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep 2020 11:32:28
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@kernel.org>, <pierre-yves.mordret@st.com>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH] i2c: stm32: do not display error when DMA is not requested
-Date:   Thu, 10 Sep 2020 11:32:29 +0200
-Message-ID: <1599730349-2160-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 10 Sep 2020 05:23:32 -0400
+Date:   Thu, 10 Sep 2020 09:22:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599729749;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f5KBuFXDCkBTIRdXk+IROBfUg9GpeVlMxwgcRTooDJU=;
+        b=vS5/9BhuyPEczSCITA6snKFOJwTXVLm5Yo60kF5aHLgEDNLysIQWKSJjQJTp4yKmJqPpUr
+        qh/1TaVv5dv5kmAqiO3KmyR4iZw2Q8e7DLQAJDfO0eUkzMrQGpoNUE9ONZxR32YRH864Q7
+        nqr9rBZmJVqUCicz96VviT38E4dnmLtrKKAVX8zt+PI+05WAl6dFbNnMicdcVW5VSVgBi6
+        85A2AyBWaC8XEyQtlNAh6BSkY5n9axfV7P6Yh9gjClncQ9LCy9mveFazgTORtwfXrSs/zP
+        z1eibAQRMR2nOstmX/XPyF3ar1FXfzCuzaS1hO0P26gAtOYVa20CIY461Uii/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599729749;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f5KBuFXDCkBTIRdXk+IROBfUg9GpeVlMxwgcRTooDJU=;
+        b=ISjEgglOhVXtnSTiKFhEEJCLOJuX9mQ+bzKbQzJdLQtP19I7gRoLvhsUPFvafuaYC7h1EJ
+        jkwtEVwMEW/J9sAg==
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/seves] x86/insn: Add insn_get_modrm_reg_off()
+Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200907131613.12703-11-joro@8bytes.org>
+References: <20200907131613.12703-11-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To GPXDAG3NODE5.st.com
- (10.75.127.72)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
+Message-ID: <159972974863.20229.6794223447626019613.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA usage is optional for the I2C driver. check for the -ENODEV
-error in order to avoid displaying an error when no DMA
-has been requested.
+The following commit has been merged into the x86/seves branch of tip:
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
-This patch should be applied on top of the patch [i2c: stm32: Simplify with dev_err_probe()]
----
- drivers/i2c/busses/i2c-stm32.c   | 16 ++++++++++------
- drivers/i2c/busses/i2c-stm32f7.c |  5 +++++
- 2 files changed, 15 insertions(+), 6 deletions(-)
+Commit-ID:     7af1bd822dd45a669fc178a35cc8183922333d56
+Gitweb:        https://git.kernel.org/tip/7af1bd822dd45a669fc178a35cc8183922333d56
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Mon, 07 Sep 2020 15:15:11 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 07 Sep 2020 19:45:24 +02:00
 
-diff --git a/drivers/i2c/busses/i2c-stm32.c b/drivers/i2c/busses/i2c-stm32.c
-index 198f848b7be9..91767156d63d 100644
---- a/drivers/i2c/busses/i2c-stm32.c
-+++ b/drivers/i2c/busses/i2c-stm32.c
-@@ -25,8 +25,11 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	/* Request and configure I2C TX dma channel */
- 	dma->chan_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR(dma->chan_tx)) {
--		ret = dev_err_probe(dev, PTR_ERR(dma->chan_tx),
--				    "can't request DMA tx channel\n");
-+		if (PTR_ERR(dma->chan_tx) == -ENODEV)
-+			ret = PTR_ERR(dma->chan_tx);
-+		else
-+			ret = dev_err_probe(dev, PTR_ERR(dma->chan_tx),
-+					    "can't request DMA tx channel\n");
- 		goto fail_al;
- 	}
+x86/insn: Add insn_get_modrm_reg_off()
+
+Add a function to the instruction decoder which returns the pt_regs
+offset of the register specified in the reg field of the modrm byte.
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lkml.kernel.org/r/20200907131613.12703-11-joro@8bytes.org
+---
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index 392b4fe..f748f57 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -17,6 +17,7 @@
  
-@@ -44,8 +47,11 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	/* Request and configure I2C RX dma channel */
- 	dma->chan_rx = dma_request_chan(dev, "rx");
- 	if (IS_ERR(dma->chan_rx)) {
--		ret = dev_err_probe(dev, PTR_ERR(dma->chan_rx),
--				    "can't request DMA rx channel\n");
-+		if (PTR_ERR(dma->chan_tx) == -ENODEV)
-+			ret = PTR_ERR(dma->chan_tx);
-+		else
-+			ret = dev_err_probe(dev, PTR_ERR(dma->chan_rx),
-+					    "can't request DMA rx channel\n");
- 		goto fail_tx;
- 	}
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
+ int insn_fetch_from_user(struct pt_regs *regs,
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 2323c85..f20942c 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -20,6 +20,7 @@
  
-@@ -73,8 +79,6 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
- 	dma_release_channel(dma->chan_tx);
- fail_al:
- 	devm_kfree(dev, dma);
--	if (ret != -EPROBE_DEFER)
--		dev_info(dev, "can't use DMA\n");
+ enum reg_type {
+ 	REG_TYPE_RM = 0,
++	REG_TYPE_REG,
+ 	REG_TYPE_INDEX,
+ 	REG_TYPE_BASE,
+ };
+@@ -439,6 +440,13 @@ static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
+ 			regno += 8;
+ 		break;
  
- 	return ERR_PTR(ret);
++	case REG_TYPE_REG:
++		regno = X86_MODRM_REG(insn->modrm.value);
++
++		if (X86_REX_R(insn->rex_prefix.value))
++			regno += 8;
++		break;
++
+ 	case REG_TYPE_INDEX:
+ 		regno = X86_SIB_INDEX(insn->sib.value);
+ 		if (X86_REX_X(insn->rex_prefix.value))
+@@ -808,6 +816,21 @@ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
  }
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index a8f1758e4c5b..58f342aea3c1 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -2049,6 +2049,11 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 					     STM32F7_I2C_TXDR,
- 					     STM32F7_I2C_RXDR);
- 	if (PTR_ERR(i2c_dev->dma) == -ENODEV) {
-+		/*
-+		 * DMA usage is not mandatory for the I2C, it is not an error
-+		 * to receive -ENODEV
-+		 */
-+		dev_dbg(i2c_dev->dev, "not using DMA\n");
- 		i2c_dev->dma = NULL;
- 	} else if (IS_ERR(i2c_dev->dma)) {
- 		ret = dev_err_probe(&pdev->dev, PTR_ERR(i2c_dev->dma),
--- 
-2.7.4
-
+ 
+ /**
++ * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
++ * @insn:	Instruction containing the ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * Returns:
++ *
++ * The register indicated by the reg part of the ModRM byte. The
++ * register is obtained as an offset from the base of pt_regs.
++ */
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
++{
++	return get_reg_offset(insn, regs, REG_TYPE_REG);
++}
++
++/**
+  * get_seg_base_limit() - obtain base address and limit of a segment
+  * @insn:	Instruction. Must be valid.
+  * @regs:	Register values as seen when entering kernel mode
