@@ -2,686 +2,186 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C63C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67802206B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20274206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SqfqAuNQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LxFSj6Ls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbgIJK3R (ORCPT
+        id S1730760AbgIJK3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:29:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42186 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730181AbgIJK3K (ORCPT
+        Thu, 10 Sep 2020 06:29:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31671 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbgIJK3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:29:10 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AA1SPF095006;
-        Thu, 10 Sep 2020 06:28:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=M+cN51Eqpte7sQ9QUd/otK1GlfkLvFRcQAdEZoE4QtA=;
- b=SqfqAuNQ9q9CoOyrKzIbv7OF+m8Jlbx8MuQvba5cJ+OVl65GNCsBaNJhngX2iRH0zqzR
- n4Aq9BZNXUn+Abbnv99ycKhNkSVdXGg4mcEpDoTjznTmEKuLqd3H0nYiD02wtYOr05wv
- cVZG5jVQ+gUjUwNvvYBdRIYl5DXRgtsNVyWB95IbzEjTUvhqApzajtsIS7KUe6gs7yHN
- EVfL55M1hA+cQoibsE839BqZPDkwhj2rNGwxyyjK7diVze+uYk7ONGNsMh9z8er+6m7K
- jPt9iDLPspeh/Dd1TEhdAqcrv3Urt3oNolLMdUoq4A2U8hPrh79hvjMa7hGidfuDzwra VA== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fguvkark-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 06:28:58 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AASg8F031180;
-        Thu, 10 Sep 2020 10:28:53 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 33f3yrggar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 10:28:53 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AASomk37159310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 10:28:50 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 728C542042;
-        Thu, 10 Sep 2020 10:28:50 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01CB542047;
-        Thu, 10 Sep 2020 10:28:50 +0000 (GMT)
-Received: from funtu.home.com (unknown [9.171.39.140])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 10:28:49 +0000 (GMT)
-From:   Harald Freudenberger <freude@linux.ibm.com>
-To:     linux390-list@tuxmaker.boeblingen.de.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     hca@linux.ibm.com, gor@linux.ibm.com, hch@lst.de,
-        borntraeger@de.ibm.com, Harald Freudenberger <freude@linux.ibm.com>
-Subject: [PATCH] s390/zcrypt: remove set_fs() invocation in zcrypt device driver
-Date:   Thu, 10 Sep 2020 12:28:38 +0200
-Message-Id: <20200910102838.28887-1-freude@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 impostorscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- suspectscore=2 priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100088
+        Thu, 10 Sep 2020 06:29:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599733772;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=r+LkQBoRDw9SZhPCxjEbsY2U2Q+IYMEJJtXIh9WrTFE=;
+        b=LxFSj6LsN/bvdxuk3dNZi4eK8EPszIPZv/97Oqsfzjfje0bbUdGOoPx7ZslKoMHCDljm8K
+        IeYCeBgaha0kpGc0UOq8rVRD9x84p+PXjRGDZAXFvVaHo+/FkZwaQO74TLGnla4tjt0cgz
+        TcmkdqdXhtzyb0CPHMsmNhhxbGY9mcw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-FELPoc0tPVmlrp_IvtWaJQ-1; Thu, 10 Sep 2020 06:29:29 -0400
+X-MC-Unique: FELPoc0tPVmlrp_IvtWaJQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A23F80EDA1;
+        Thu, 10 Sep 2020 10:29:27 +0000 (UTC)
+Received: from [10.36.113.88] (ovpn-113-88.ams2.redhat.com [10.36.113.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D701B5C1CF;
+        Thu, 10 Sep 2020 10:29:24 +0000 (UTC)
+Subject: Re: [RFC 5/5] mm, page_alloc: disable pcplists during page isolation
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200907163628.26495-1-vbabka@suse.cz>
+ <20200907163628.26495-6-vbabka@suse.cz>
+ <d5d5ef64-b239-0640-5640-75c7a3c78584@suse.cz>
+ <20200909113647.GG7348@dhcp22.suse.cz>
+ <b057e618-94f1-3f5a-a4f6-55fc93ac34eb@suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <5c5753b4-8cb9-fa02-a0fa-d5ca22731cbb@redhat.com>
+Date:   Thu, 10 Sep 2020 12:29:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <b057e618-94f1-3f5a-a4f6-55fc93ac34eb@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reworks the zcrypt device driver so that the set_fs()
-invocation is not needed any more. Instead there is a new flag bool
-userspace passed through all the functions which tells if the pointer
-arguments are userspace or kernelspace. Together with the two new
-inline functions z_copy_from_user() and z_copy_to_user() which either
-invoke copy_from_user (userspace is true) or memcpy (userspace is
-false) the zcrypt dd and the AP bus now has no requirement for
-the set_fs() functionality any more.
+On 09.09.20 13:55, Vlastimil Babka wrote:
+> On 9/9/20 1:36 PM, Michal Hocko wrote:
+>> On Wed 09-09-20 12:48:54, Vlastimil Babka wrote:
+>>> Here's a version that will apply on top of next-20200908. The first 4 patches need no change.
+>>>
+>>> ----8<----
+>>> >From 8febc17272b8e8b378e2e5ea5e76b2616f029c5b Mon Sep 17 00:00:00 2001
+>>> From: Vlastimil Babka <vbabka@suse.cz>
+>>> Date: Mon, 7 Sep 2020 17:20:39 +0200
+>>> Subject: [PATCH] mm, page_alloc: disable pcplists during page isolation
+>>>
+>>> Page isolation can race with process freeing pages to pcplists in a way that
+>>> a page from isolated pageblock can end up on pcplist. This can be fixed by
+>>> repeated draining of pcplists, as done by patch "mm/memory_hotplug: drain
+>>> per-cpu pages again during memory offline" in [1].
+>>>
+>>> David and Michal would prefer that this race was closed in a way that callers
+>>> of page isolation don't need to care about drain. David suggested disabling
+>>> pcplists usage completely during page isolation, instead of repeatedly draining
+>>> them.
+>>>
+>>> To achieve this without adding special cases in alloc/free fastpath, we can use
+>>> the same 'trick' as boot pagesets - when pcp->high is 0, any pcplist addition
+>>> will be immediately flushed.
+>>>
+>>> The race can thus be closed by setting pcp->high to 0 and draining pcplists
+>>> once in start_isolate_page_range(). The draining will serialize after processes
+>>> that already disabled interrupts and read the old value of pcp->high in
+>>> free_unref_page_commit(), and processes that have not yet disabled interrupts,
+>>> will observe pcp->high == 0 when they are rescheduled, and skip pcplists.
+>>> This guarantees no stray pages on pcplists in zones where isolation happens.
+>>>
+>>> We can use the variable zone->nr_isolate_pageblock (protected by zone->lock)
+>>> to detect transitions from 0 to 1 (to change pcp->high to 0 and issue drain)
+>>> and from 1 to 0 (to restore original pcp->high and batch values cached in
+>>> struct zone). We have to avoid external updates to high and batch by taking
+>>> pcp_batch_high_lock. To allow multiple isolations in parallel, change this
+>>> lock from mutex to rwsem.
+>>>
+>>> For callers that pair start_isolate_page_range() with
+>>> undo_isolated_page_range() properly, this is transparent. Currently that's
+>>> alloc_contig_range(). __offline_pages() doesn't call undo_isolated_page_range()
+>>> in the succes case, so it has to be carful to handle restoring pcp->high and batch
+>>> and unlocking pcp_batch_high_lock.
+>>
+>> I was hoping that it would be possible to have this completely hidden
+>> inside start_isolate_page_range code path.
+> 
+> I hoped so too, but we can't know the moment when all processes that were in the
+> critical part of freeing pages to pcplists have moved on (they might have been
+> rescheduled).
+> We could change free_unref_page() to disable IRQs sooner, before
+> free_unref_page_prepare(), or at least the get_pfnblock_migratetype() part. Then
+> after the single drain, we should be safe, AFAICS?
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
----
- drivers/s390/crypto/zcrypt_api.c      | 30 +++++------
- drivers/s390/crypto/zcrypt_api.h      | 22 +++++++-
- drivers/s390/crypto/zcrypt_ccamisc.c  | 32 +++--------
- drivers/s390/crypto/zcrypt_ep11misc.c | 28 ++--------
- drivers/s390/crypto/zcrypt_msgtype6.c | 78 +++++++++++++--------------
- drivers/s390/crypto/zcrypt_msgtype6.h |  4 +-
- 6 files changed, 88 insertions(+), 106 deletions(-)
+At least moving it before getting the migratetype should not be that severe?
 
-diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index 4dbbfd88262c..a711728c3857 100644
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -797,7 +797,7 @@ static long zcrypt_rsa_crt(struct ap_perms *perms,
- 	return rc;
- }
- 
--static long _zcrypt_send_cprb(struct ap_perms *perms,
-+static long _zcrypt_send_cprb(bool userspace, struct ap_perms *perms,
- 			      struct ica_xcRB *xcRB)
- {
- 	struct zcrypt_card *zc, *pref_zc;
-@@ -813,7 +813,7 @@ static long _zcrypt_send_cprb(struct ap_perms *perms,
- 
- 	xcRB->status = 0;
- 	ap_init_message(&ap_msg);
--	rc = get_cprb_fc(xcRB, &ap_msg, &func_code, &domain);
-+	rc = get_cprb_fc(userspace, xcRB, &ap_msg, &func_code, &domain);
- 	if (rc)
- 		goto out;
- 
-@@ -878,7 +878,7 @@ static long _zcrypt_send_cprb(struct ap_perms *perms,
- 	if (*domain == AUTOSEL_DOM)
- 		*domain = AP_QID_QUEUE(qid);
- 
--	rc = pref_zq->ops->send_cprb(pref_zq, xcRB, &ap_msg);
-+	rc = pref_zq->ops->send_cprb(userspace, pref_zq, xcRB, &ap_msg);
- 
- 	spin_lock(&zcrypt_list_lock);
- 	zcrypt_drop_queue(pref_zc, pref_zq, mod, weight);
-@@ -893,7 +893,7 @@ static long _zcrypt_send_cprb(struct ap_perms *perms,
- 
- long zcrypt_send_cprb(struct ica_xcRB *xcRB)
- {
--	return _zcrypt_send_cprb(&ap_perms, xcRB);
-+	return _zcrypt_send_cprb(false, &ap_perms, xcRB);
- }
- EXPORT_SYMBOL(zcrypt_send_cprb);
- 
-@@ -924,7 +924,7 @@ static bool is_desired_ep11_queue(unsigned int dev_qid,
- 	return false;
- }
- 
--static long _zcrypt_send_ep11_cprb(struct ap_perms *perms,
-+static long _zcrypt_send_ep11_cprb(bool userspace, struct ap_perms *perms,
- 				   struct ep11_urb *xcrb)
- {
- 	struct zcrypt_card *zc, *pref_zc;
-@@ -956,7 +956,7 @@ static long _zcrypt_send_ep11_cprb(struct ap_perms *perms,
- 		}
- 
- 		uptr = (struct ep11_target_dev __force __user *) xcrb->targets;
--		if (copy_from_user(targets, uptr,
-+		if (z_copy_from_user(userspace, targets, uptr,
- 				   target_num * sizeof(*targets))) {
- 			func_code = 0;
- 			rc = -EFAULT;
-@@ -964,7 +964,7 @@ static long _zcrypt_send_ep11_cprb(struct ap_perms *perms,
- 		}
- 	}
- 
--	rc = get_ep11cprb_fc(xcrb, &ap_msg, &func_code);
-+	rc = get_ep11cprb_fc(userspace, xcrb, &ap_msg, &func_code);
- 	if (rc)
- 		goto out_free;
- 
-@@ -1015,7 +1015,7 @@ static long _zcrypt_send_ep11_cprb(struct ap_perms *perms,
- 	}
- 
- 	qid = pref_zq->queue->qid;
--	rc = pref_zq->ops->send_ep11_cprb(pref_zq, xcrb, &ap_msg);
-+	rc = pref_zq->ops->send_ep11_cprb(userspace, pref_zq, xcrb, &ap_msg);
- 
- 	spin_lock(&zcrypt_list_lock);
- 	zcrypt_drop_queue(pref_zc, pref_zq, mod, weight);
-@@ -1032,7 +1032,7 @@ static long _zcrypt_send_ep11_cprb(struct ap_perms *perms,
- 
- long zcrypt_send_ep11_cprb(struct ep11_urb *xcrb)
- {
--	return _zcrypt_send_ep11_cprb(&ap_perms, xcrb);
-+	return _zcrypt_send_ep11_cprb(false, &ap_perms, xcrb);
- }
- EXPORT_SYMBOL(zcrypt_send_ep11_cprb);
- 
-@@ -1353,12 +1353,12 @@ static int zsecsendcprb_ioctl(struct ap_perms *perms, unsigned long arg)
- 	if (copy_from_user(&xcRB, uxcRB, sizeof(xcRB)))
- 		return -EFAULT;
- 	do {
--		rc = _zcrypt_send_cprb(perms, &xcRB);
-+		rc = _zcrypt_send_cprb(true, perms, &xcRB);
- 	} while (rc == -EAGAIN);
- 	/* on failure: retry once again after a requested rescan */
- 	if ((rc == -ENODEV) && (zcrypt_process_rescan()))
- 		do {
--			rc = _zcrypt_send_cprb(perms, &xcRB);
-+			rc = _zcrypt_send_cprb(true, perms, &xcRB);
- 		} while (rc == -EAGAIN);
- 	if (rc)
- 		ZCRYPT_DBF(DBF_DEBUG, "ioctl ZSENDCPRB rc=%d status=0x%x\n",
-@@ -1377,12 +1377,12 @@ static int zsendep11cprb_ioctl(struct ap_perms *perms, unsigned long arg)
- 	if (copy_from_user(&xcrb, uxcrb, sizeof(xcrb)))
- 		return -EFAULT;
- 	do {
--		rc = _zcrypt_send_ep11_cprb(perms, &xcrb);
-+		rc = _zcrypt_send_ep11_cprb(true, perms, &xcrb);
- 	} while (rc == -EAGAIN);
- 	/* on failure: retry once again after a requested rescan */
- 	if ((rc == -ENODEV) && (zcrypt_process_rescan()))
- 		do {
--			rc = _zcrypt_send_ep11_cprb(perms, &xcrb);
-+			rc = _zcrypt_send_ep11_cprb(true, perms, &xcrb);
- 		} while (rc == -EAGAIN);
- 	if (rc)
- 		ZCRYPT_DBF(DBF_DEBUG, "ioctl ZSENDEP11CPRB rc=%d\n", rc);
-@@ -1655,12 +1655,12 @@ static long trans_xcRB32(struct ap_perms *perms, struct file *filp,
- 	xcRB64.priority_window = xcRB32.priority_window;
- 	xcRB64.status = xcRB32.status;
- 	do {
--		rc = _zcrypt_send_cprb(perms, &xcRB64);
-+		rc = _zcrypt_send_cprb(true, perms, &xcRB64);
- 	} while (rc == -EAGAIN);
- 	/* on failure: retry once again after a requested rescan */
- 	if ((rc == -ENODEV) && (zcrypt_process_rescan()))
- 		do {
--			rc = _zcrypt_send_cprb(perms, &xcRB64);
-+			rc = _zcrypt_send_cprb(true, perms, &xcRB64);
- 		} while (rc == -EAGAIN);
- 	xcRB32.reply_control_blk_length = xcRB64.reply_control_blk_length;
- 	xcRB32.reply_data_length = xcRB64.reply_data_length;
-diff --git a/drivers/s390/crypto/zcrypt_api.h b/drivers/s390/crypto/zcrypt_api.h
-index 599e68bf53f7..b9085a3e6958 100644
---- a/drivers/s390/crypto/zcrypt_api.h
-+++ b/drivers/s390/crypto/zcrypt_api.h
-@@ -59,9 +59,9 @@ struct zcrypt_ops {
- 	long (*rsa_modexpo)(struct zcrypt_queue *, struct ica_rsa_modexpo *);
- 	long (*rsa_modexpo_crt)(struct zcrypt_queue *,
- 				struct ica_rsa_modexpo_crt *);
--	long (*send_cprb)(struct zcrypt_queue *, struct ica_xcRB *,
-+	long (*send_cprb)(bool userspace, struct zcrypt_queue *, struct ica_xcRB *,
- 			  struct ap_message *);
--	long (*send_ep11_cprb)(struct zcrypt_queue *, struct ep11_urb *,
-+	long (*send_ep11_cprb)(bool userspace, struct zcrypt_queue *, struct ep11_urb *,
- 			       struct ap_message *);
- 	long (*rng)(struct zcrypt_queue *, char *, struct ap_message *);
- 	struct list_head list;		/* zcrypt ops list. */
-@@ -145,4 +145,22 @@ void zcrypt_device_status_mask_ext(struct zcrypt_device_status_ext *devstatus);
- int zcrypt_device_status_ext(int card, int queue,
- 			     struct zcrypt_device_status_ext *devstatus);
- 
-+static inline unsigned long z_copy_from_user(bool userspace,
-+					     void *to, const void __user *from, unsigned long n)
-+{
-+	if (likely(userspace))
-+		return copy_from_user(to, from, n);
-+	memcpy(to, (void __force *) from, n);
-+	return 0;
-+}
-+
-+static inline unsigned long z_copy_to_user(bool userspace,
-+					   void __user *to, const void *from, unsigned long n)
-+{
-+	if (likely(userspace))
-+		return copy_to_user(to, from, n);
-+	memcpy((void __force *) to, from, n);
-+	return 0;
-+}
-+
- #endif /* _ZCRYPT_API_H_ */
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
-index 3f5b61351cde..7d39b43ed3c0 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.c
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.c
-@@ -248,24 +248,6 @@ static inline void prep_xcrb(struct ica_xcRB *pxcrb,
- 	pxcrb->reply_control_blk_addr = (void __user *) prepcblk;
- }
- 
--/*
-- * Helper function which calls zcrypt_send_cprb with
-- * memory management segment adjusted to kernel space
-- * so that the copy_from_user called within this
-- * function do in fact copy from kernel space.
-- */
--static inline int _zcrypt_send_cprb(struct ica_xcRB *xcrb)
--{
--	int rc;
--	mm_segment_t old_fs = get_fs();
--
--	set_fs(KERNEL_DS);
--	rc = zcrypt_send_cprb(xcrb);
--	set_fs(old_fs);
--
--	return rc;
--}
--
- /*
-  * Generate (random) CCA AES DATA secure key.
-  */
-@@ -359,7 +341,7 @@ int cca_genseckey(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, errno %d\n",
- 			  __func__, (int) cardnr, (int) domain, rc);
-@@ -497,7 +479,7 @@ int cca_clr2seckey(u16 cardnr, u16 domain, u32 keybitsize,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			  __func__, (int) cardnr, (int) domain, rc);
-@@ -624,7 +606,7 @@ int cca_sec2protkey(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			  __func__, (int) cardnr, (int) domain, rc);
-@@ -850,7 +832,7 @@ int cca_gencipherkey(u16 cardnr, u16 domain, u32 keybitsize, u32 keygenflags,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
-@@ -1018,7 +1000,7 @@ static int _ip_cprb_helper(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
-@@ -1235,7 +1217,7 @@ int cca_cipher2protkey(u16 cardnr, u16 domain, const u8 *ckey,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
-@@ -1366,7 +1348,7 @@ int cca_query_crypto_facility(u16 cardnr, u16 domain,
- 	prep_xcrb(&xcrb, cardnr, preqcblk, prepcblk);
- 
- 	/* forward xcrb with request CPRB and reply CPRB to zcrypt dd */
--	rc = _zcrypt_send_cprb(&xcrb);
-+	rc = zcrypt_send_cprb(&xcrb);
- 	if (rc) {
- 		DEBUG_ERR("%s zcrypt_send_cprb (cardnr=%d domain=%d) failed, rc=%d\n",
- 			  __func__, (int) cardnr, (int) domain, rc);
-diff --git a/drivers/s390/crypto/zcrypt_ep11misc.c b/drivers/s390/crypto/zcrypt_ep11misc.c
-index 3c3d403abe92..60b6bec21c32 100644
---- a/drivers/s390/crypto/zcrypt_ep11misc.c
-+++ b/drivers/s390/crypto/zcrypt_ep11misc.c
-@@ -169,24 +169,6 @@ int ep11_check_aeskeyblob(debug_info_t *dbg, int dbflvl,
- }
- EXPORT_SYMBOL(ep11_check_aeskeyblob);
- 
--/*
-- * Helper function which calls zcrypt_send_ep11_cprb with
-- * memory management segment adjusted to kernel space
-- * so that the copy_from_user called within this
-- * function do in fact copy from kernel space.
-- */
--static inline int _zcrypt_send_ep11_cprb(struct ep11_urb *urb)
--{
--	int rc;
--	mm_segment_t old_fs = get_fs();
--
--	set_fs(KERNEL_DS);
--	rc = zcrypt_send_ep11_cprb(urb);
--	set_fs(old_fs);
--
--	return rc;
--}
--
- /*
-  * Allocate and prepare ep11 cprb plus additional payload.
-  */
-@@ -399,7 +381,7 @@ static int ep11_query_info(u16 cardnr, u16 domain, u32 query_type,
- 		 req, sizeof(*req) + sizeof(*req_pl),
- 		 rep, sizeof(*rep) + sizeof(*rep_pl) + buflen);
- 
--	rc = _zcrypt_send_ep11_cprb(urb);
-+	rc = zcrypt_send_ep11_cprb(urb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
-@@ -637,7 +619,7 @@ int ep11_genaeskey(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
- 		 req, sizeof(*req) + sizeof(*req_pl),
- 		 rep, sizeof(*rep) + sizeof(*rep_pl));
- 
--	rc = _zcrypt_send_ep11_cprb(urb);
-+	rc = zcrypt_send_ep11_cprb(urb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
-@@ -757,7 +739,7 @@ static int ep11_cryptsingle(u16 card, u16 domain,
- 		 req, sizeof(*req) + req_pl_size,
- 		 rep, sizeof(*rep) + rep_pl_size);
- 
--	rc = _zcrypt_send_ep11_cprb(urb);
-+	rc = zcrypt_send_ep11_cprb(urb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
-@@ -905,7 +887,7 @@ static int ep11_unwrapkey(u16 card, u16 domain,
- 		 req, sizeof(*req) + req_pl_size,
- 		 rep, sizeof(*rep) + sizeof(*rep_pl));
- 
--	rc = _zcrypt_send_ep11_cprb(urb);
-+	rc = zcrypt_send_ep11_cprb(urb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
-@@ -1033,7 +1015,7 @@ static int ep11_wrapkey(u16 card, u16 domain,
- 		 req, sizeof(*req) + req_pl_size,
- 		 rep, sizeof(*rep) + sizeof(*rep_pl));
- 
--	rc = _zcrypt_send_ep11_cprb(urb);
-+	rc = zcrypt_send_ep11_cprb(urb);
- 	if (rc) {
- 		DEBUG_ERR(
- 			"%s zcrypt_send_ep11_cprb(card=%d dom=%d) failed, rc=%d\n",
-diff --git a/drivers/s390/crypto/zcrypt_msgtype6.c b/drivers/s390/crypto/zcrypt_msgtype6.c
-index d77991c74c25..3db901883a5c 100644
---- a/drivers/s390/crypto/zcrypt_msgtype6.c
-+++ b/drivers/s390/crypto/zcrypt_msgtype6.c
-@@ -388,7 +388,7 @@ struct type86_fmt2_msg {
- 	struct type86_fmt2_ext fmt2;
- } __packed;
- 
--static int XCRB_msg_to_type6CPRB_msgX(struct ap_message *ap_msg,
-+static int XCRB_msg_to_type6CPRB_msgX(bool userspace, struct ap_message *ap_msg,
- 				      struct ica_xcRB *xcRB,
- 				      unsigned int *fcode,
- 				      unsigned short **dom)
-@@ -465,8 +465,8 @@ static int XCRB_msg_to_type6CPRB_msgX(struct ap_message *ap_msg,
- 	msg->hdr.FromCardLen2 = xcRB->reply_data_length;
- 
- 	/* prepare CPRB */
--	if (copy_from_user(&(msg->cprbx), xcRB->request_control_blk_addr,
--		    xcRB->request_control_blk_length))
-+	if (z_copy_from_user(userspace, &(msg->cprbx), xcRB->request_control_blk_addr,
-+			     xcRB->request_control_blk_length))
- 		return -EFAULT;
- 	if (msg->cprbx.cprb_len + sizeof(msg->hdr.function_code) >
- 	    xcRB->request_control_blk_length)
-@@ -484,16 +484,16 @@ static int XCRB_msg_to_type6CPRB_msgX(struct ap_message *ap_msg,
- 
- 	/* copy data block */
- 	if (xcRB->request_data_length &&
--	    copy_from_user(req_data, xcRB->request_data_address,
--		xcRB->request_data_length))
-+	    z_copy_from_user(userspace, req_data, xcRB->request_data_address,
-+			     xcRB->request_data_length))
- 		return -EFAULT;
- 
- 	return 0;
- }
- 
--static int xcrb_msg_to_type6_ep11cprb_msgx(struct ap_message *ap_msg,
--				       struct ep11_urb *xcRB,
--				       unsigned int *fcode)
-+static int xcrb_msg_to_type6_ep11cprb_msgx(bool userspace, struct ap_message *ap_msg,
-+					   struct ep11_urb *xcRB,
-+					   unsigned int *fcode)
- {
- 	unsigned int lfmt;
- 	static struct type6_hdr static_type6_ep11_hdr = {
-@@ -543,8 +543,8 @@ static int xcrb_msg_to_type6_ep11cprb_msgx(struct ap_message *ap_msg,
- 	msg->hdr.FromCardLen1 = xcRB->resp_len;
- 
- 	/* Import CPRB data from the ioctl input parameter */
--	if (copy_from_user(&(msg->cprbx.cprb_len),
--			   (char __force __user *)xcRB->req, xcRB->req_len)) {
-+	if (z_copy_from_user(userspace, &(msg->cprbx.cprb_len),
-+			     (char __force __user *)xcRB->req, xcRB->req_len)) {
- 		return -EFAULT;
- 	}
- 
-@@ -707,7 +707,7 @@ static int convert_type86_ica(struct zcrypt_queue *zq,
-  *
-  * Returns 0 on success or -EINVAL, -EFAULT, -EAGAIN in case of an error.
-  */
--static int convert_type86_xcrb(struct zcrypt_queue *zq,
-+static int convert_type86_xcrb(bool userspace, struct zcrypt_queue *zq,
- 			       struct ap_message *reply,
- 			       struct ica_xcRB *xcRB)
- {
-@@ -715,15 +715,15 @@ static int convert_type86_xcrb(struct zcrypt_queue *zq,
- 	char *data = reply->msg;
- 
- 	/* Copy CPRB to user */
--	if (copy_to_user(xcRB->reply_control_blk_addr,
--		data + msg->fmt2.offset1, msg->fmt2.count1))
-+	if (z_copy_to_user(userspace, xcRB->reply_control_blk_addr,
-+			   data + msg->fmt2.offset1, msg->fmt2.count1))
- 		return -EFAULT;
- 	xcRB->reply_control_blk_length = msg->fmt2.count1;
- 
- 	/* Copy data buffer to user */
- 	if (msg->fmt2.count2)
--		if (copy_to_user(xcRB->reply_data_addr,
--			data + msg->fmt2.offset2, msg->fmt2.count2))
-+		if (z_copy_to_user(userspace, xcRB->reply_data_addr,
-+				   data + msg->fmt2.offset2, msg->fmt2.count2))
- 			return -EFAULT;
- 	xcRB->reply_data_length = msg->fmt2.count2;
- 	return 0;
-@@ -738,7 +738,7 @@ static int convert_type86_xcrb(struct zcrypt_queue *zq,
-  *
-  * Returns 0 on success or -EINVAL, -EFAULT, -EAGAIN in case of an error.
-  */
--static int convert_type86_ep11_xcrb(struct zcrypt_queue *zq,
-+static int convert_type86_ep11_xcrb(bool userspace, struct zcrypt_queue *zq,
- 				    struct ap_message *reply,
- 				    struct ep11_urb *xcRB)
- {
-@@ -749,8 +749,8 @@ static int convert_type86_ep11_xcrb(struct zcrypt_queue *zq,
- 		return -EINVAL;
- 
- 	/* Copy response CPRB to user */
--	if (copy_to_user((char __force __user *)xcRB->resp,
--			 data + msg->fmt2.offset1, msg->fmt2.count1))
-+	if (z_copy_to_user(userspace, (char __force __user *)xcRB->resp,
-+			   data + msg->fmt2.offset1, msg->fmt2.count1))
- 		return -EFAULT;
- 	xcRB->resp_len = msg->fmt2.count1;
- 	return 0;
-@@ -814,9 +814,9 @@ static int convert_response_ica(struct zcrypt_queue *zq,
- 	}
- }
- 
--static int convert_response_xcrb(struct zcrypt_queue *zq,
--			    struct ap_message *reply,
--			    struct ica_xcRB *xcRB)
-+static int convert_response_xcrb(bool userspace, struct zcrypt_queue *zq,
-+				 struct ap_message *reply,
-+				 struct ica_xcRB *xcRB)
- {
- 	struct type86x_reply *msg = reply->msg;
- 
-@@ -831,7 +831,7 @@ static int convert_response_xcrb(struct zcrypt_queue *zq,
- 			return convert_error(zq, reply);
- 		}
- 		if (msg->cprbx.cprb_ver_id == 0x02)
--			return convert_type86_xcrb(zq, reply, xcRB);
-+			return convert_type86_xcrb(userspace, zq, reply, xcRB);
- 		fallthrough;	/* wrong cprb version is an unknown response */
- 	default: /* Unknown response type, this should NEVER EVER happen */
- 		xcRB->status = 0x0008044DL; /* HDD_InvalidParm */
-@@ -848,8 +848,8 @@ static int convert_response_xcrb(struct zcrypt_queue *zq,
- 	}
- }
- 
--static int convert_response_ep11_xcrb(struct zcrypt_queue *zq,
--	struct ap_message *reply, struct ep11_urb *xcRB)
-+static int convert_response_ep11_xcrb(bool userspace, struct zcrypt_queue *zq,
-+				      struct ap_message *reply, struct ep11_urb *xcRB)
- {
- 	struct type86_ep11_reply *msg = reply->msg;
- 
-@@ -861,7 +861,7 @@ static int convert_response_ep11_xcrb(struct zcrypt_queue *zq,
- 		if (msg->hdr.reply_code)
- 			return convert_error(zq, reply);
- 		if (msg->cprbx.cprb_ver_id == 0x04)
--			return convert_type86_ep11_xcrb(zq, reply, xcRB);
-+			return convert_type86_ep11_xcrb(userspace, zq, reply, xcRB);
- 		fallthrough;	/* wrong cprb version is an unknown resp */
- 	default: /* Unknown response type, this should NEVER EVER happen */
- 		zq->online = 0;
-@@ -1095,9 +1095,9 @@ static long zcrypt_msgtype6_modexpo_crt(struct zcrypt_queue *zq,
-  * by the caller with ap_init_message(). Also the caller has to
-  * make sure ap_release_message() is always called even on failure.
-  */
--unsigned int get_cprb_fc(struct ica_xcRB *xcRB,
--				struct ap_message *ap_msg,
--				unsigned int *func_code, unsigned short **dom)
-+unsigned int get_cprb_fc(bool userspace, struct ica_xcRB *xcRB,
-+			 struct ap_message *ap_msg,
-+			 unsigned int *func_code, unsigned short **dom)
- {
- 	struct response_type resp_type = {
- 		.type = CEXXC_RESPONSE_TYPE_XCRB,
-@@ -1112,7 +1112,7 @@ unsigned int get_cprb_fc(struct ica_xcRB *xcRB,
- 	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
- 	if (!ap_msg->private)
- 		return -ENOMEM;
--	return XCRB_msg_to_type6CPRB_msgX(ap_msg, xcRB, func_code, dom);
-+	return XCRB_msg_to_type6CPRB_msgX(userspace, ap_msg, xcRB, func_code, dom);
- }
- 
- /**
-@@ -1122,9 +1122,9 @@ unsigned int get_cprb_fc(struct ica_xcRB *xcRB,
-  *	CEXxC device to the request distributor
-  * @xcRB: pointer to the send_cprb request buffer
-  */
--static long zcrypt_msgtype6_send_cprb(struct zcrypt_queue *zq,
--				    struct ica_xcRB *xcRB,
--				    struct ap_message *ap_msg)
-+static long zcrypt_msgtype6_send_cprb(bool userspace, struct zcrypt_queue *zq,
-+				      struct ica_xcRB *xcRB,
-+				      struct ap_message *ap_msg)
- {
- 	int rc;
- 	struct response_type *rtype = (struct response_type *)(ap_msg->private);
-@@ -1135,7 +1135,7 @@ static long zcrypt_msgtype6_send_cprb(struct zcrypt_queue *zq,
- 	if (rc == 0) {
- 		rc = ap_msg->rc;
- 		if (rc == 0)
--			rc = convert_response_xcrb(zq, ap_msg, xcRB);
-+			rc = convert_response_xcrb(userspace, zq, ap_msg, xcRB);
- 	} else
- 		/* Signal pending. */
- 		ap_cancel_message(zq->queue, ap_msg);
-@@ -1150,9 +1150,9 @@ static long zcrypt_msgtype6_send_cprb(struct zcrypt_queue *zq,
-  * by the caller with ap_init_message(). Also the caller has to
-  * make sure ap_release_message() is always called even on failure.
-  */
--unsigned int get_ep11cprb_fc(struct ep11_urb *xcrb,
--				    struct ap_message *ap_msg,
--				    unsigned int *func_code)
-+unsigned int get_ep11cprb_fc(bool userspace, struct ep11_urb *xcrb,
-+			     struct ap_message *ap_msg,
-+			     unsigned int *func_code)
- {
- 	struct response_type resp_type = {
- 		.type = CEXXC_RESPONSE_TYPE_EP11,
-@@ -1167,7 +1167,7 @@ unsigned int get_ep11cprb_fc(struct ep11_urb *xcrb,
- 	ap_msg->private = kmemdup(&resp_type, sizeof(resp_type), GFP_KERNEL);
- 	if (!ap_msg->private)
- 		return -ENOMEM;
--	return xcrb_msg_to_type6_ep11cprb_msgx(ap_msg, xcrb, func_code);
-+	return xcrb_msg_to_type6_ep11cprb_msgx(userspace, ap_msg, xcrb, func_code);
- }
- 
- /**
-@@ -1177,7 +1177,7 @@ unsigned int get_ep11cprb_fc(struct ep11_urb *xcrb,
-  *	  CEX4P device to the request distributor
-  * @xcRB: pointer to the ep11 user request block
-  */
--static long zcrypt_msgtype6_send_ep11_cprb(struct zcrypt_queue *zq,
-+static long zcrypt_msgtype6_send_ep11_cprb(bool userspace, struct zcrypt_queue *zq,
- 					   struct ep11_urb *xcrb,
- 					   struct ap_message *ap_msg)
- {
-@@ -1237,7 +1237,7 @@ static long zcrypt_msgtype6_send_ep11_cprb(struct zcrypt_queue *zq,
- 	if (rc == 0) {
- 		rc = ap_msg->rc;
- 		if (rc == 0)
--			rc = convert_response_ep11_xcrb(zq, ap_msg, xcrb);
-+			rc = convert_response_ep11_xcrb(userspace, zq, ap_msg, xcrb);
- 	} else
- 		/* Signal pending. */
- 		ap_cancel_message(zq->queue, ap_msg);
-diff --git a/drivers/s390/crypto/zcrypt_msgtype6.h b/drivers/s390/crypto/zcrypt_msgtype6.h
-index 0de280a81dd4..0a0bf074206b 100644
---- a/drivers/s390/crypto/zcrypt_msgtype6.h
-+++ b/drivers/s390/crypto/zcrypt_msgtype6.h
-@@ -96,9 +96,9 @@ struct type86_fmt2_ext {
- 	unsigned int	  offset4;	/* 0x00000000			*/
- } __packed;
- 
--unsigned int get_cprb_fc(struct ica_xcRB *, struct ap_message *,
-+unsigned int get_cprb_fc(bool userspace, struct ica_xcRB *, struct ap_message *,
- 			 unsigned int *, unsigned short **);
--unsigned int get_ep11cprb_fc(struct ep11_urb *, struct ap_message *,
-+unsigned int get_ep11cprb_fc(bool userspace, struct ep11_urb *, struct ap_message *,
- 			     unsigned int *);
- unsigned int get_rng_fc(struct ap_message *, int *, unsigned int *);
- 
+> RT guys might not be happy though, but it's much simpler than this patch. I
+> still like some of the cleanups in 1-4 though tbh :)
+
+It would certainly make this patch much simpler. Do you have a prototype
+lying around?
+
 -- 
-2.17.1
+Thanks,
+
+David / dhildenb
 
