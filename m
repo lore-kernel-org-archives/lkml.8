@@ -2,79 +2,130 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4817C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E479C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92DDB20756
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D676D20756
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g88HRhuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgIJGBE (ORCPT
+        id S1726996AbgIJGCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:01:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:54754 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgIJGAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:00:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B79E31B;
-        Wed,  9 Sep 2020 23:00:20 -0700 (PDT)
-Received: from [10.163.71.250] (unknown [10.163.71.250])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65C283F66E;
-        Wed,  9 Sep 2020 23:00:18 -0700 (PDT)
-Subject: Re: [PATCH 1/2] arm64/mm: Remove CONT_RANGE_OFFSET
-To:     Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, shan.gavin@gmail.com
-References: <20200908071931.47767-1-gshan@redhat.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <67372610-05ce-a75a-b3c0-52e6ebd53063@arm.com>
-Date:   Thu, 10 Sep 2020 11:29:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 10 Sep 2020 02:02:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgIJGCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:02:18 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBC2C061573;
+        Wed,  9 Sep 2020 23:02:18 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s2so2502090pjr.4;
+        Wed, 09 Sep 2020 23:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1p1Yvpbl2hUtzS0Tbph8bRvhvEzrq/brMLlo+7qJTmo=;
+        b=g88HRhuzR/tEUwOcTqCszmjAXNiJCm0J1vOe3sumDx3uHfUPjReXHmKT0PJpUGjbxz
+         bCaYFJiGreJYRkyHL7n7izvSJPMLq9/tKv/Fqq09cLPKqrLyLl3sB3HdaMyemi2IV/Gy
+         T40tnjziOVI/j7zTSWEHdgu0WxCDRfgpoyiImuf2W6fpRSq+HdIhR6CFtHVEJrC5ybbQ
+         hyc2e9t+l638olaiw54lHUFjKF2O9wVjDtN5dn01LQ9PlWyOlQDEVgbty1smMbVcSgPk
+         Fnc/gjwFzfa22dmde9gU0EoLkuvAOMEJmxubwlLBrgWXojL6oNGAZnDlepN0gjKmQwbe
+         I7Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1p1Yvpbl2hUtzS0Tbph8bRvhvEzrq/brMLlo+7qJTmo=;
+        b=N65G8WEoUZD/9u96DjWvoPsBXiOpb+uxl838TbCOWWQK4+jwzXOtSLsgZQpjMOHiKN
+         FjpBJNU6vYb78/DAXLJyRxRU5eak4fSY0n5Irre0conrtxSQ+EbK3R1HeBDR89fyNjMg
+         ijzdjk0lVLJFXizDgQgVVTnV4ejaNETzB8F9Drwvrxi+TqNh6MPMGP/1J976I+oNlOFR
+         WYqXiatwHqsqqdtCYg4wL/IWHKcwYrG5ybqwuITOE0/O+AYYm5jkfRZyAjLEU5HqCsan
+         GJQ8xBblAozAP4CLl99xZzesCTsHHH52LiBn1BINjgNQoH9IisS09wkaXgt24TV+RQOU
+         dq2Q==
+X-Gm-Message-State: AOAM532O6UJoEKVdtlk3q7FdHciDcTZABK8qG9X968ezb8z+MFbMhFK1
+        ejAR+gOnyUShBQqVgo63Gqw=
+X-Google-Smtp-Source: ABdhPJzZ/CS0vTHPATpbUVEI5Yr2tYgH4VeZ6BMrwtFl2Cq9kNkZf1EdtQhp3tBvECFs97TwVRV6BQ==
+X-Received: by 2002:a17:90a:bc8d:: with SMTP id x13mr3938065pjr.229.1599717737265;
+        Wed, 09 Sep 2020 23:02:17 -0700 (PDT)
+Received: from Thinkpad ([45.118.165.156])
+        by smtp.gmail.com with ESMTPSA id l23sm3831070pgt.16.2020.09.09.23.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 23:02:16 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 11:32:08 +0530
+From:   Anmol Karn <anmol.karan123@gmail.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: Re: [PATCH] net: bluetooth: Fix null pointer dereference in
+ hci_event_packet()
+Message-ID: <20200910060208.GA22165@Thinkpad>
+References: <20200910043424.19894-1-anmol.karan123@gmail.com>
+ <20200910050659.GD828@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200908071931.47767-1-gshan@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910050659.GD828@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/08/2020 12:49 PM, Gavin Shan wrote:
-> The macro was introduced by commit <ecf35a237a85> ("arm64: PTE/PMD
-> contiguous bit definition") at the beginning. It's only used by
-> commit <348a65cdcbbf> ("arm64: Mark kernel page ranges contiguous"),
-> which was reverted later by commit <667c27597ca8>. This makes the
-> macro unused.
-> 
-> This removes the unused macro (CONT_RANGE_OFFSET).
-> 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
->  arch/arm64/include/asm/pgtable-hwdef.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> index d400a4d9aee2..8a399e666837 100644
-> --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> @@ -98,8 +98,6 @@
->  #define CONT_PMDS		(1 << (CONT_PMD_SHIFT - PMD_SHIFT))
->  #define CONT_PMD_SIZE		(CONT_PMDS * PMD_SIZE)
->  #define CONT_PMD_MASK		(~(CONT_PMD_SIZE - 1))
-> -/* the numerical offset of the PTE within a range of CONT_PTES */
-> -#define CONT_RANGE_OFFSET(addr) (((addr)>>PAGE_SHIFT)&(CONT_PTES-1))
->  
->  /*
->   * Hardware page table definitions.
+On Wed, Sep 09, 2020 at 10:06:59PM -0700, Eric Biggers wrote:
+> On Thu, Sep 10, 2020 at 10:04:24AM +0530, Anmol Karn wrote:
+> > Prevent hci_phy_link_complete_evt() from dereferencing 'hcon->amp_mgr'
+> > as NULL. Fix it by adding pointer check for it.
+> > 
+> > Reported-and-tested-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> > Link: https://syzkaller.appspot.com/bug?extid=0bef568258653cff272f
+> > Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> > ---
+> >  net/bluetooth/hci_event.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> > index 4b7fc430793c..871e16804433 100644
+> > --- a/net/bluetooth/hci_event.c
+> > +++ b/net/bluetooth/hci_event.c
+> > @@ -4936,6 +4936,11 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+> >  		return;
+> >  	}
+> >  
+> > +	if (IS_ERR_OR_NULL(hcon->amp_mgr)) {
+> > +		hci_dev_unlock(hdev);
+> > +		return;
+> > +	}
+> > +
 > 
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Hello Sir,
+
+> In patches that fix a NULL pointer dereference, please include a brief
+> explanation of why the pointer can be NULL, including what it means
+> semantically; and why the proposed change is the best fix for the problem.
+> 
+
+I will surely add more explaination in v2.
+
+> Also, why IS_ERR_OR_NULL()?
+> 
+
+I used IS_ERR_OR_NULL() to check if the 'hcon->amp_mgr' is a valid pointer or not, 
+and unregister the 'hcon' and signal error, but will make changes in v2 with only
+NULL check included, if you think it's incorrect to use IS_ERR check here along with
+NULL.
+
+
+Thanks,
+Anmol Karn
