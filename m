@@ -2,129 +2,179 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30617C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE948C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EB721D7E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B5321D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L1fFI0y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgIJU6z (ORCPT
+        id S1727933AbgIJU7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:58:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:3015 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbgIJU5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:57:37 -0400
-IronPort-SDR: 1TOdK89RVbF3hDO+XZUCXcHQLyqMN/h+TJdD5Xm0Dap1hzpGY8NsGojs3RnyDXh/Bb+7FoGx84
- nSikh2SkziqA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="159582264"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="159582264"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 13:57:34 -0700
-IronPort-SDR: +mn3ZiCSVnFZ30u7TW5QvgoUkYPpic/R9XiyV69EN7U2pwwaj+iOxS/N7afN/O1Ibq44m56u5x
- /OrvUjhRlazw==
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="505269924"
-Received: from asthajai-mobl.amr.corp.intel.com (HELO [10.209.150.113]) ([10.209.150.113])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 13:57:34 -0700
-Subject: Re: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device
- ?
-To:     David Hildenbrand <david@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <21852ccb-bd06-9281-7c8e-485ec02f2883@redhat.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <0175453a-7969-f482-a228-34c5840fe0e0@intel.com>
-Date:   Thu, 10 Sep 2020 13:57:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 16:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727915AbgIJUzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:55:39 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9492C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:55:38 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q13so10737258ejo.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:55:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6WIiEBg2V+e3hARqFde0aiNR5ScO14X3JJL78bMDSrs=;
+        b=L1fFI0y0Pe7czKsJuyVbxrmCDK0BnWq+6Kvh94sOd+r3i7msl/xLwLjzzzL9c28sAK
+         rR/+QnQaVicDMJJygLh0QwtQZRBvwqQJ5B/ajnk1a5e6wni2BRpk21gKHUzsEjqhdZlC
+         iNnidHCMLR8KiKmhBg9yFZO8/CrMLJAzGj7kfuVVeFwgzG8EdxWJtB4hNNKdRY4VNRNi
+         4fsNcbKzW3Vus8t+CEXPUuK+1etDhZqfaf5eNc0V+gczmE2YOW+pKG3W/Ot9ScdzAV9L
+         5xA17qxbjuoEpJU1m/PvmZL3DAYqeFNX1Tief9l5wRZX2ahMJBmPCcBHUhzF2E/mTgnd
+         rd8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6WIiEBg2V+e3hARqFde0aiNR5ScO14X3JJL78bMDSrs=;
+        b=OALbClo5pe0g4utKgOTZDTOTKocaK4sECDM8BUjYTIMg3ZQQozh5us/VC4QIHIlM9J
+         IJ1oTqwqEzK5nlJ8e9H4zl/lioAjE5QcebF6SpKr0w4h4RPAU68NgfcKcxpp2DeFFp+4
+         ezTHSEPYIQHWDe/jJyMh589AR5B5Py5Tjrl1FgwdM/sNLmOd/R+mUnlPoBUTkLfqsNqp
+         DNb2MRl5h2l6lfsXLPri7etLDhCcUJ8itGy4lZKWC3+NDRjKaRBKmtfxTEZAXue7k2IO
+         1JIkpzBdL8ThfT3jbDPOWoxzf8CbilxVTlFUpqUasUFuCOdZX5P0eLa+zivM7KFwsqZV
+         8BNA==
+X-Gm-Message-State: AOAM532rH3iA1dL5dmvHXYkUOIBKfGnjm3e5bQ9EH43/kOzR3skijLDd
+        uyJHsXBINM4/0jmIwNdfuOL2MPYISfQZZs858nAcPA==
+X-Google-Smtp-Source: ABdhPJz2fcbh8Swae5gqu3WCfXH+VoeuT8fBYorB0A9IvemCCzCy2a8aXjwcmpKuCfugC/8/pRR1MEGeVzo0AYRbaxo=
+X-Received: by 2002:a17:906:1513:: with SMTP id b19mr11068344ejd.537.1599771337075;
+ Thu, 10 Sep 2020 13:55:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <21852ccb-bd06-9281-7c8e-485ec02f2883@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200910202107.3799376-1-keescook@chromium.org> <20200910202107.3799376-7-keescook@chromium.org>
+In-Reply-To: <20200910202107.3799376-7-keescook@chromium.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 10 Sep 2020 22:55:11 +0200
+Message-ID: <CAG48ez0boPBDm=Uh5xHXAxTj0BTRGyGp4uCgPgw7PkOCo47Hdg@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/6] security/fbfam: Mitigate a fork brute force attack
+To:     Kees Cook <keescook@chromium.org>, John Wood <john.wood@gmx.com>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 3:20 AM, David Hildenbrand wrote:
-> While I'd love to rip it out completely, I think it would break old
-> lsmem/chmem completely - and I assume that's not acceptable. I was
-> wondering what would be considered safe to do now/in the future:
-> 
-> 1. Make it always return 0 (just as if "sclp.rzm" would be set to 0 on
-> s390x). This will make old lsmem/chmem behave differently after
-> switching to a new kernel, like if sclp.rzm would not be set by HW -
-> AFAIU, it will assume all memory is in a single memory increment. Do we
-> care?
-> 2. Restrict it to s390x only. It always returned 0 on other
-> architectures, I was not able to find any user.
+On Thu, Sep 10, 2020 at 10:22 PM Kees Cook <keescook@chromium.org> wrote:
+> In order to mitigate a fork brute force attack it is necessary to kill
+> all the offending tasks. This tasks are all the ones that share the
+> statistical data with the current task (the task that has crashed).
+>
+> Since the attack detection is done in the function fbfam_handle_attack()
+> that is called every time a core dump is triggered, only is needed to
+> kill the others tasks that share the same statistical data, not the
+> current one as this is in the path to be killed.
+>
+> When the SIGKILL signal is sent to the offending tasks from the function
+> fbfam_kill_tasks(), this one will be called again during the core dump
+> due to the shared statistical data shows a quickly crashing rate. So, to
+> avoid kill again the same tasks due to a recursive call of this
+> function, it is necessary to disable the attack detection.
+>
+> To disable this attack detection, add a condition in the function
+> fbfam_handle_attack() to not compute the crashing rate when the jiffies
+> stored in the statistical data are set to zero.
+[...]
+>  /**
+> - * fbfam_handle_attack() - Fork brute force attack detection.
+> + * fbfam_kill_tasks() - Kill the offending tasks
+> + *
+> + * When a fork brute force attack is detected it is necessary to kill all the
+> + * offending tasks. Since this function is called from fbfam_handle_attack(),
+> + * and so, every time a core dump is triggered, only is needed to kill the
+> + * others tasks that share the same statistical data, not the current one as
+> + * this is in the path to be killed.
+> + *
+> + * When the SIGKILL signal is sent to the offending tasks, this function will be
+> + * called again during the core dump due to the shared statistical data shows a
+> + * quickly crashing rate. So, to avoid kill again the same tasks due to a
+> + * recursive call of this function, it is necessary to disable the attack
+> + * detection setting the jiffies to zero.
+> + *
+> + * To improve the for_each_process loop it is possible to end it when all the
+> + * tasks that shared the same statistics are found.
 
-By "restrict it", do you mean just remove the sysfs file on everything
-other than s390x?  That seems like a good idea, especially if we don't
-have any users.  That, plus boot option or something to reenable it
-would be nice if someone trips over it disappearing.
+This is not a fastpath, there's no need to be clever and optimize
+things here, please get rid of that optimization. Especially since
+that fastpath looks racy against concurrent execve().
 
-If there is a user, we stand a chance of finding them because they'll
-hopefully get a good error message.  Worst case, an strace will show an
--ENOENT and should be pretty easy to track down.
+> + * Return: -EFAULT if the current task doesn't have statistical data. Zero
+> + *         otherwise.
+> + */
+> +static int fbfam_kill_tasks(void)
+> +{
+> +       struct fbfam_stats *stats = current->fbfam_stats;
+> +       struct task_struct *p;
+> +       unsigned int to_kill, killed = 0;
+> +
+> +       if (!stats)
+> +               return -EFAULT;
+> +
+> +       to_kill = refcount_read(&stats->refc) - 1;
+> +       if (!to_kill)
+> +               return 0;
+> +
+> +       /* Disable the attack detection */
+> +       stats->jiffies = 0;
+> +       rcu_read_lock();
+> +
+> +       for_each_process(p) {
+> +               if (p == current || p->fbfam_stats != stats)
+
+p->fbfam_stats could change concurrently, you should at least use
+READ_ONCE() here.
+
+Also, if this codepath is hit by a non-leader thread, "p == current"
+will always be false, and you'll end up killing the caller, too. You
+may want to compare with current->group_leader instead.
+
+
+> +                       continue;
+> +
+> +               do_send_sig_info(SIGKILL, SEND_SIG_PRIV, p, PIDTYPE_PID);
+> +               pr_warn("fbfam: Offending process with PID %d killed\n",
+> +                       p->pid);
+
+Normally pr_*() messages about tasks mention not just the pid, but
+also the ->comm name of the task.
+
+> +               killed += 1;
+> +               if (killed >= to_kill)
+> +                       break;
+> +       }
+> +
+> +       rcu_read_unlock();
+> +       return 0;
+> +}
