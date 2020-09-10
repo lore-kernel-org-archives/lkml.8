@@ -2,180 +2,175 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF39C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D37DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227E220BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80212078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gan/aKLZ"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="YekgucFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbgIJKV1 (ORCPT
+        id S1730833AbgIJKV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:21:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39397 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730588AbgIJKUq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:20:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599733243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:autocrypt:autocrypt;
-        bh=xiogVMZcF/3t6f2QYe0II+QsOuZb/cf7Ohd7CwObGpc=;
-        b=Gan/aKLZfTSPQMFnzCiZg6tMoQxHzvPPp8zP6EPYJNtC9jz7b7bnS8bwz4yyM+RvEP0+qC
-        O3r4u+BhzOBYsezrz6SGZFeIDHmmabWhhdK5MPUdvZduhINUJJ8R3G7TFGUJcqVk9s3TKI
-        m+OpcuHCZrIjjxrFYLPOZGaX4hL6G4U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-flWAhErEPxiTnxL7ZJ-TKw-1; Thu, 10 Sep 2020 06:20:39 -0400
-X-MC-Unique: flWAhErEPxiTnxL7ZJ-TKw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA6A1802B6C;
-        Thu, 10 Sep 2020 10:20:37 +0000 (UTC)
-Received: from [10.36.113.88] (ovpn-113-88.ams2.redhat.com [10.36.113.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B97D25D9E8;
-        Thu, 10 Sep 2020 10:20:35 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Subject: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device ?
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <21852ccb-bd06-9281-7c8e-485ec02f2883@redhat.com>
-Date:   Thu, 10 Sep 2020 12:20:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 10 Sep 2020 06:21:56 -0400
+Received: from mail-vi1eur05on2065.outbound.protection.outlook.com ([40.107.21.65]:44256
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725971AbgIJKVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:21:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MxY+/AhqgNvvk4wgIJW18yfMJR1GNO5B5FmayRjW1WEBpKw1n7qwEw5m5u4PFqczFVz5K7Cg0oTm7hRSnZEkAqgj3xbYpZnNQocyTYi0F9uECCoKpi2NIVJmbmYTJ0NqUbpgRbCWwQAwzFHmxqlaiAjgoBu9BukCmLI0Kn7WhphVB1tGdKqukviLkJn0nrklQCBBDFWhaezO9OALRkY17HcHLm0TJVT4nZrAsojo9oGM9LA+0Ep8dgqTaRJb1CENJyqwYhwaNTGdo4x7WEwBizQj8njC7b039RK3xpwSZwfioI6QkM7CNO9v6Utclp7hwiVWqx9ewb+ffUAjPAp5fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T/bgZNIfzM8XidVQcHdYIlaIF1j85ESv8HN8yVdGBqE=;
+ b=oWCMr2F5OIwxAy/FCDu4e+mm5A4URO4uaeM98/U4tkClclF+mE3s+8MmbXUF5klhUmLb8g+JvRu5hS79ZABhFelMsPAgrfyJtUf7F/zeP+d7sKmmDE/lCfYboLs7r7lXBX2MdCi1KW/AaNUbjWCTubbJs5NLzA+e2ITEiaApbxrd6OY0vXDG4TNP8PfY8VrJH++vvsw6NYi9ZMIjTIYv8jL4jrLlpxj7bbZ0DbmkkPofEuUDhfbNhllCCdhtR687DddyXW4nm8YTF5bwQd3NshIe8DcqIFtqqAjCgMSgHd5F6R60GQPoNNp2RniOjaGwEInqya4EKh9NXirxx24zwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T/bgZNIfzM8XidVQcHdYIlaIF1j85ESv8HN8yVdGBqE=;
+ b=YekgucFwGRAyqMtJHAzeyaSWSt6PtjQBhGmcvLpKiPl+Dw8KocV/COReyIbm1KgLzmNVY+7J2+susRuLb9AzjS/LYs7hZryBggQp71IhVCZ6b1DFAOIteYEcZU6prQmuoHOSY2PsPD+v66ALsocb/V2eG1r9LJSUQgbqdnyiD6c=
+Authentication-Results: ffwll.ch; dkim=none (message not signed)
+ header.d=none;ffwll.ch; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR0401MB2638.eurprd04.prod.outlook.com
+ (2603:10a6:800:56::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 10:21:32 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5d66:84a7:26de:67c3]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5d66:84a7:26de:67c3%6]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 10:21:32 +0000
+Date:   Thu, 10 Sep 2020 13:21:28 +0300
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/imx/dcss: fix compilation issue on 32bit
+Message-ID: <20200910102128.5agk4vxf2jeonw3q@fsr-ub1864-141>
+References: <20200910095250.7663-1-laurentiu.palcu@oss.nxp.com>
+ <CAKMK7uGsJcg81a_cGebBgk3pwxj4VPrFfmV5AF+5fRyK3_Pigw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGsJcg81a_cGebBgk3pwxj4VPrFfmV5AF+5fRyK3_Pigw@mail.gmail.com>
+User-Agent: NeoMutt/20171215
+X-ClientProxiedBy: AM0PR02CA0088.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::29) To VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141 (83.217.231.2) by AM0PR02CA0088.eurprd02.prod.outlook.com (2603:10a6:208:154::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 10:21:31 +0000
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4dd0c990-e6e6-4c6f-91d9-08d8557349fa
+X-MS-TrafficTypeDiagnostic: VI1PR0401MB2638:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0401MB26389591980F084AFDECEED3BE270@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4B81SCkh1DVW3i2BRcYRCc3erNDp49p5QRXjWF3ie7v7iGcUwE0JSwJc2PonPDf6UZ4A0nvAEukhkciDrsIkGR5QA9mA+PcpFMcZCHZzUmT01FPHqk7wIn+AzP3jt7nmswHC0xUch2nf4LWEe0XW9l1Gp2v73dTS4c5AHOGQw5qw41JkQwQJZDfcjMmaiMeeVFBqnIq/GQg5LrRWoYWC41lNG/MvPBLWcPSBVbi/LMiEtYsR7XxgVsBQQTHx3Pl0kSmt0m4PhIvwYp/L6y7dtiLiM15dnkfrXxbYnvTct/Q+5Ybc6iqhbDsOc5CS5TpP6VB4RK4SOsD0l8sunvIRHBhZgtBFaxGaMzH1D0G5M5+vx/Ab+o3gi/I2gWwmha3juev98zCc32dUTvFJo7fD6w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(44832011)(53546011)(83380400001)(54906003)(83080400001)(2906002)(956004)(26005)(6666004)(8676002)(1076003)(86362001)(5660300002)(9686003)(6916009)(66476007)(6496006)(66946007)(52116002)(966005)(8936002)(478600001)(16526019)(316002)(4326008)(7416002)(66556008)(186003)(33716001)(55016002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: +747ObDmVWqVi02sMZlIwwGU54RjGj1szCazEvwXo2Whz5PhOTZVQs7XFc5eIhxIDqbv/Vk9ajrrFZg3Cz5JUfDsCTcppLv6mdE3N8yUbXS+ejj3KnvMMcfsC7RTZybsFObIirSpARqzED7/IP8Gf2c9YZPJg51TnS/THH/pz4yJPjYo9I9XFpjWJj5KL74gNErdW/8Hp+AbAEddTNB3MaakRE69zN6ZVJ7UGPUD2KUJMaaOckis1sUk5mYdXzBvLdQM1IZk3Pvr/oPrFDLgdFc3sO0+qc20rmJK8n3gCxFxCEvzRGrHpWB3VBu+O1hfLDoRGl7/TJFiBKlkdHnLuyKcqS/t8OaYkFr5DKaZao2ukHORAQ64r25pEWQxk3lQQmXibqK6yFZmvn45sXWCMGakB/P0/muPnSr0fDcXPsar0gXC7eyedg4/iy7G6LkOY1HWRTGCnl3PxzBHOQ2pEI/x9RtvY5gU9BcEGX/2hIVzP8DIUfwcc4miDhldEJxV+084+T4mA0W0huTesSDjPqqlG4+FyxwaB468RCYX2mQ0p5ziOyoy8FBYEZzmogs+KyENWJWVEbw32uC4d2YU6W9ipmTqfD6ebYAAMV99uXVGkDTng9uZGQwta924kz9lDCO7YBegTWlPEBasOkga+A==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dd0c990-e6e6-4c6f-91d9-08d8557349fa
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 10:21:32.7271
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VMhq3uFOE456+42IwxOCZsm52911s5J5UBv2O8gMbUgW0UVfL87EPl6GwPWJ4yppJ/h5RzAg7YVIpU3E6OAGsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2638
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everybody,
+On Thu, Sep 10, 2020 at 11:57:10AM +0200, Daniel Vetter wrote:
+> On Thu, Sep 10, 2020 at 11:53 AM Laurentiu Palcu
+> <laurentiu.palcu@oss.nxp.com> wrote:
+> >
+> > When compiling for 32bit platforms, the compilation fails with:
+> >
+> > ERROR: modpost: "__aeabi_ldivmod"
+> > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
+> > ERROR: modpost: "__aeabi_uldivmod"
+> > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
+> >
+> > This patch adds a dependency on ARM64 since no 32bit SoCs have DCSS, so far.
+> 
+> Usual way to fix this correctly is using the right division macros,
+> not limiting the driver to 64bit. But this works for now, would be
+> good to fix this properly for compile-testing and all that.
 
-I was just exploring how /sys/devices/system/memory/memoryX/phys_device
-is/was used. It's one of these interfaces that most probably never
-should have been added but now we are stuck with it.
+I didn't see the point in using the macros since this is running only on
+64bit. Though I will probably revisit it and fix it properly in a
+subsequent patch.
 
-"phys_device" was used on s390x in older versions of lsmem[2]/chmem[3],
-back when they were still part of s390x-tools. They were later replaced
-[5] by the variants in linux-utils. For example, RHEL6 and RHEL7 contain
-lsmem/chmem from s390-utils. RHEL8 switched to versions from util-linux
-on s390x [4].
+> 
+> > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+> > Reported-by: Daniel Vetter <daniel@ffwll.ch>
+> 
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> 
+> Please push to drm-misc-next.
 
-"phys_device" was added with sysfs support for memory hotplug in commit
-3947be1969a9 ("[PATCH] memory hotplug: sysfs and add/remove functions")
-in 2005. It always returned 0.
+About that, I may need some help pushing it. Apparently, my request for
+a legacy SSH account for contributing to drm-misc got stalled:
 
-s390x started returning something != 0 on some setups (if sclp.rzm is
-set by HW) in 2010 via commit 57b552ba0b2f("memory hotplug/s390: set
-phys_device").
+https://gitlab.freedesktop.org/freedesktop/freedesktop/-/issues/289
 
-For s390x, it allowed for identifying which memory block devices belong
-to the same memory increment (RZM). Only if all memory block devices
-comprising a single memory increment were offline, the memory could
-actually be removed in the hypervisor.
-
-Since commit e5d709bb5fb7 ("s390/memory hotplug: provide
-memory_block_size_bytes() function") in 2013 a memory block devices
-spans at least one memory increment - which is why the interface isn't
-really helpful/used anymore (except by old lsmem/chmem tools).
-
-There were once RFC patches to make use of it in ACPI, but it could be
-solved using different interfaces [1].
-
-
-While I'd love to rip it out completely, I think it would break old
-lsmem/chmem completely - and I assume that's not acceptable. I was
-wondering what would be considered safe to do now/in the future:
-
-1. Make it always return 0 (just as if "sclp.rzm" would be set to 0 on
-s390x). This will make old lsmem/chmem behave differently after
-switching to a new kernel, like if sclp.rzm would not be set by HW -
-AFAIU, it will assume all memory is in a single memory increment. Do we
-care?
-2. Restrict it to s390x only. It always returned 0 on other
-architectures, I was not able to find any user.
-
-I think 2 should be safe to do (never used on other archs). I do wonder
-what the feelings are about 1.
-
-Thoughts?
-
-
-[1] https://patchwork.kernel.org/patch/2163871/
-[2] https://github.com/ibm-s390-tools/s390-tools/blob/v2.1.0/zconf/lsmem
-[3] https://github.com/ibm-s390-tools/s390-tools/blob/v2.1.0/zconf/chmem
-[4] https://bugzilla.redhat.com/show_bug.cgi?id=1504134
-[5]
-https://github.com/ibm-s390-tools/s390-tools/commit/778292e771fb00cfcbd7ff6535ee3d9fde612dc5#diff-82c32a7f4c597c50db90157ed0c581b3
-
--- 
 Thanks,
+laurentiu
 
-David / dhildenb
-
+> -Daniel
+> 
+> 
+> 
+> ---
+> >  drivers/gpu/drm/imx/dcss/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
+> > index 69860de8861f..2b17a964ff05 100644
+> > --- a/drivers/gpu/drm/imx/dcss/Kconfig
+> > +++ b/drivers/gpu/drm/imx/dcss/Kconfig
+> > @@ -3,7 +3,7 @@ config DRM_IMX_DCSS
+> >         select IMX_IRQSTEER
+> >         select DRM_KMS_CMA_HELPER
+> >         select VIDEOMODE_HELPERS
+> > -       depends on DRM && ARCH_MXC
+> > +       depends on DRM && ARCH_MXC && ARM64
+> >         help
+> >           Choose this if you have a NXP i.MX8MQ based system and want to use the
+> >           Display Controller Subsystem. This option enables DCSS support.
+> > --
+> > 2.17.1
+> >
+> 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
