@@ -2,118 +2,141 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CA1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C6BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972CC2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599726842;
-	bh=+uYj31dIE6aLQLGtOUfoRlwyftNHQyhq7bqNm1EFOzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rplGf6Tnu0D6UNc90xEekR+0BolapqbI9kx3vtz1WZ6DvbyWKsGSMK+MheQ+uBH8n
-	 tCRyxBAIkXRoAzjUbcQO/4aQKS3xx1QJiohdKq4RCHMYQtCdmeOvir8kjqxfLfgWjn
-	 D/sffZiR2ycZ0PAINF9aEY0gmCLi9F61A8GqBAWw=
+	by mail.kernel.org (Postfix) with ESMTP id C804B2076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYRZ0Z5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbgIJIeB (ORCPT
+        id S1730203AbgIJIdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbgIJIUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:20:35 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 10 Sep 2020 04:33:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54569 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730259AbgIJIVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:21:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599726087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Licpb2tWu/dWgg8H99rcLlplSx9dLzZWPJS2xlbzcFs=;
+        b=bYRZ0Z5f0Dn6zETU/u5JVEQxAeoeT4AZXQCDjl7Xq9dJs1jT3uk9G9dJdm20VqXzTEHFVO
+        N3qTsy00D2xhVApYDW3cRx/1od/dnevYOBi0K6h1MjbFqxj/CYP80JoAfiwwFhrNtLiQkX
+        PGT8c6DhuNZ4yzTNV5jtYeiwJroxap0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-huJc5G6wPgyIpErT6e2DCQ-1; Thu, 10 Sep 2020 04:21:23 -0400
+X-MC-Unique: huJc5G6wPgyIpErT6e2DCQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9878720732;
-        Thu, 10 Sep 2020 08:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599726002;
-        bh=+uYj31dIE6aLQLGtOUfoRlwyftNHQyhq7bqNm1EFOzs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kMedj2nqh7AnwsubKUx2cDGygfPeMZ/DC22/dIFpecBdxjizUINcIlzCJEoaIbbIN
-         UWw0szHE23w4EXoWTQS5bdHpXZJn+r4Qn69vCnYUsWm6z4fAaxGT/Xg3uOtH4R0Mwv
-         MHIGn/OTGcDdKwWYo8ufZTdtJgupVMoBGdzsB9ys=
-Received: by pali.im (Postfix)
-        id 736C6582; Thu, 10 Sep 2020 10:20:00 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 10:20:00 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Joseph Hwang <josephsih@chromium.org>
-Cc:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
-        luiz.dentz@gmail.com, chromeos-bluetooth-upstreaming@chromium.org,
-        josephsih@google.com, Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] Bluetooth: sco: new getsockopt options
- BT_SNDMTU/BT_RCVMTU
-Message-ID: <20200910082000.aiw74ll3z776yqgh@pali>
-References: <20200910060403.144524-1-josephsih@chromium.org>
- <20200910140342.v3.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 287B364081;
+        Thu, 10 Sep 2020 08:21:22 +0000 (UTC)
+Received: from [10.36.112.212] (ovpn-112-212.ams2.redhat.com [10.36.112.212])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A3E37E165;
+        Thu, 10 Sep 2020 08:21:16 +0000 (UTC)
+Subject: Re: [PATCH v4 10/10] vfio/fsl-mc: Add support for device reset
+To:     Diana Craciun OSS <diana.craciun@oss.nxp.com>,
+        alex.williamson@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+ <20200826093315.5279-11-diana.craciun@oss.nxp.com>
+ <629498a6-8329-1045-c1a4-ab334f3c8107@redhat.com>
+ <665b9fbc-90f9-8a7c-4ea7-73583ae30d69@oss.nxp.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <27f9d554-e147-900d-bd1f-c2890f87d7f9@redhat.com>
+Date:   Thu, 10 Sep 2020 10:21:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <665b9fbc-90f9-8a7c-4ea7-73583ae30d69@oss.nxp.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200910140342.v3.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
-User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 10 September 2020 14:04:02 Joseph Hwang wrote:
-> This patch defines new getsockopt options BT_SNDMTU/BT_RCVMTU
-> for SCO socket to be compatible with other bluetooth sockets.
-> These new options return the same value as option SCO_OPTIONS
-> which is already present on existing kernels.
-> 
-> Reviewed-by: Alain Michaud <alainm@chromium.org>
-> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+Hi Diana,
 
-Looks good,
+On 9/7/20 4:36 PM, Diana Craciun OSS wrote:
+> Hi Eric,
+> 
+> On 9/4/2020 11:21 AM, Auger Eric wrote:
+>> Hi Diana,
+>>
+>> On 8/26/20 11:33 AM, Diana Craciun wrote:
+>>> Currently only resetting the DPRC container is supported which
+>>> will reset all the objects inside it. Resetting individual
+>>> objects is possible from the userspace by issueing commands
+>>> towards MC firmware.
+>>>
+>>> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+>>> ---
+>>>   drivers/vfio/fsl-mc/vfio_fsl_mc.c | 15 ++++++++++++++-
+>>>   1 file changed, 14 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>>> b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>>> index 27713aa86878..d17c5b3148ad 100644
+>>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>>> @@ -310,7 +310,20 @@ static long vfio_fsl_mc_ioctl(void *device_data,
+>>> unsigned int cmd,
+>>>       }
+>>>       case VFIO_DEVICE_RESET:
+>>>       {
+>>> -        return -ENOTTY;
+>>> +        int ret = 0;
+>> initialization not needed
+>>> +
+>> spare empty line
+>>> +        struct fsl_mc_device *mc_dev = vdev->mc_dev;
+>>> +
+>>> +        /* reset is supported only for the DPRC */
+>>> +        if (!is_fsl_mc_bus_dprc(mc_dev))
+>>> +            return -ENOTTY;
+>> it is an error case or do we just don't care?
+> 
+> 
+> I rather don't care, but shouldn't the userspace know that the reset for
+> that device failed?I don't know what makes more sense. It was more a question.
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Thanks
 
-> ---
+Eric
 > 
-> Changes in v3:
-> - Fixed the commit message.
+>>> +
+>>> +        ret = dprc_reset_container(mc_dev->mc_io, 0,
+>>> +                       mc_dev->mc_handle,
+>>> +                       mc_dev->obj_desc.id,
+>>> +                       DPRC_RESET_OPTION_NON_RECURSIVE);
+>>> +        return ret;
+>>> +
+>>>       }
+>>>       default:
+>>>           return -ENOTTY;
+>>>
+>> Thanks
+>>
+>> Eric
+>>
 > 
-> Changes in v2:
-> - Used BT_SNDMTU/BT_RCVMTU instead of creating a new opt name.
-> - Used the existing conn->mtu instead of creating a new member
->   in struct sco_pinfo.
-> - Noted that the old SCO_OPTIONS in sco_sock_getsockopt_old()
->   would just work as it uses sco_pi(sk)->conn->mtu.
+> Thanks,
+> Diana
 > 
->  net/bluetooth/sco.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
-> index dcf7f96ff417e6..79ffcdef0b7ad5 100644
-> --- a/net/bluetooth/sco.c
-> +++ b/net/bluetooth/sco.c
-> @@ -1001,6 +1001,12 @@ static int sco_sock_getsockopt(struct socket *sock, int level, int optname,
->  			err = -EFAULT;
->  		break;
->  
-> +	case BT_SNDMTU:
-> +	case BT_RCVMTU:
-> +		if (put_user(sco_pi(sk)->conn->mtu, (u32 __user *)optval))
-> +			err = -EFAULT;
-> +		break;
-> +
->  	default:
->  		err = -ENOPROTOOPT;
->  		break;
-> -- 
-> 2.28.0.618.gf4bc123cb7-goog
-> 
+
