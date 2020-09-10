@@ -2,96 +2,140 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED333C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24046C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A9620882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10B5214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f1XUk9qZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gJMu+pWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725306AbgIJWto (ORCPT
+        id S1725616AbgIJWwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:49:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53019 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgIJWtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:49:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BnYwx3glwz9sTv;
-        Fri, 11 Sep 2020 08:49:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599778177;
-        bh=D0wT8rCItM8P34R94vyNSuZpJ206Lk3UpwgUUjtxuqY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=f1XUk9qZGKFbwTRCOdhSYE3ySZluEIBPKgh2UM+L+I07B1AmyY9RdQHmoWjzpXtaQ
-         bJhHnBpxsZma7lbscN2ru9vIOk+SrmPBsuEaD9d+appPTD9hCTXKNrso/M1r5zR3Os
-         2l8LkYvJaWbWJCLQkKJD7HENAhjFAlIjARrGkJ4IVuFWIJBlWqYM7QpQKpd3sNZYeS
-         CTBKVYIjTfq6vu+ZOtPiSjjOlDfYgx6hwS3vRgsG1z9k2yYxmArzpLGanM3GCoZsmc
-         cnuBWE/g1BgseeX1n3adN4p11eNY59A4yNBNQ5YfBDR7iRNaLf1uVG+W3EndfClYg/
-         h4RAjRrrwYgVg==
-Date:   Fri, 11 Sep 2020 08:49:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the iomap tree
-Message-ID: <20200911084936.346f3b95@canb.auug.org.au>
-In-Reply-To: <20200910223120.GE7964@magnolia>
-References: <20200911080314.4849d3b5@canb.auug.org.au>
-        <20200910223120.GE7964@magnolia>
+        Thu, 10 Sep 2020 18:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgIJWwt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 18:52:49 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A82C061573;
+        Thu, 10 Sep 2020 15:52:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=mcAyKZgcggUBfWFmqvvShivn9FlQq08qmAzFXu/vQNM=; b=gJMu+pWxULloQHpAz7Qby//ART
+        37wQ1cjCvyjw0WhWdZwUDEvpcAJ+BVx2kkijnurP3CRdAP8y9L/eWnSwqRDVUE0hQ8hYmslKYPLXA
+        gY5n6AXTmFcgw7H2ZcVk5Jy3MP7rvyLa5cdaf+kKtI8gJZTTr5FtQPjLsCZJT68f3PfGL6V1L8Pag
+        pPZDrHTu7E1XMGFXuzXdhAEOqmUymFHSJpURWeod/uskUpYR13LeZ1C28M+TL211al15ul2jZ6mMe
+        mdXx+4ZbqGPzlGte24ygwox9U5Y/KoJ4XeI9U0TM8OLv6YOJ9cSipG7BcfyjxfWxGL2s+FUJYyNN0
+        1fO3GVow==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGVQr-0008Bv-U5; Thu, 10 Sep 2020 22:52:46 +0000
+Subject: Re: [PATCH] scripts : config : Added example use when run without
+ argument,extend help
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, masahiroy@kernel.org
+Cc:     jeremie.francois@gmail.com, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+References: <20200910110713.12782-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <13084d55-6b9a-5c6b-0ce0-84739b3e1072@infradead.org>
+Date:   Thu, 10 Sep 2020 15:52:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.S+IIAEhW5iTJXRm5y+.2lV";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200910110713.12782-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.S+IIAEhW5iTJXRm5y+.2lV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi Darrick,
+Please be more careful. There are many errors here. (see below)
 
-On Thu, 10 Sep 2020 15:31:20 -0700 "Darrick J. Wong" <darrick.wong@oracle.c=
-om> wrote:
->
-> DOH, I accidentally pushed the debugging patches and other crap from the
-> tip to kernel.org.
 
-I thought that was what it looked like.
+On 9/10/20 4:07 AM, Bhaskar Chowdhury wrote:
+> This patch extends the help section by adding an explicit example of use.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  scripts/config | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/scripts/config b/scripts/config
+> index eee5b7f3a092..b75a5aab2453 100755
+> --- a/scripts/config
+> +++ b/scripts/config
+> @@ -45,6 +45,25 @@ make time.
+>  By default, $myname will upper-case the given symbol. Use --keep-case to keep
+>  the case of all following symbols unchanged.
+>  
+> +The concerete example, say, you want to change any particular config ,like
 
-> Er, if it's not too late, I rewound the tip of iomap-for-next to where
-> it's supposed to be.  If not, I guess you'll catch it up next week. :(
+       concrete                                                  config, like
 
-Thanks.  It was not too late.
+> +GKOV for profiling , you can simply use this command
 
---=20
-Cheers,
-Stephen Rothwell
+   GCOV
 
---Sig_/.S+IIAEhW5iTJXRm5y+.2lV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> +
+> +To enable :
 
------BEGIN PGP SIGNATURE-----
+      enable:
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9arYAACgkQAVBC80lX
-0GzKrwgAoNd3HMYrvK3FSPDXa/uvw314bGMivVXGjFG0PdAaEM5U4n5SBImi+RXi
-eRZOU7UgNtbqLMdyT3NoLUJDH43b1Yi4hEuAQ8uoLooZM3jAXgCLMvW97t5Xe4BQ
-txEjelAdjmSMCkj1p6g2eSBRo93+gwB0xbMU9xVzeUz8izIfjwT3g74cWOMZL09i
-biusU6F5mNizmZyfMXCHCbpNmXrYriJyF46iGBZwckVcO1YB4ntRAWD+1bFFmplV
-f7gH3eqETrob5Q4CZcWOltEf13EK0dr5C52yebEsZFO9P3xgeC8SvXlH3E8Arabv
-Ud3Q16iGZ8n12Yun7BCrnAWgV5HL2g==
-=de8A
------END PGP SIGNATURE-----
+> +
+> +#scripts/config --enable GKOV_KERNEL  && grep GKOV .config
 
---Sig_/.S+IIAEhW5iTJXRm5y+.2lV--
+                            GCOV_KERNEL          GCOV
+
+> +
+> + and the output will be like this :
+
+                                this:
+
+> +
+> +  CONFIG_GKOV_KERNEL=y
+
+            GCOV
+
+> +
+> +To disable :
+
+      disable:
+
+> +
+> +#scripts/config --disable GKOV_KERNEL  && grep GKOV .config
+
+                             GCOV                 GCOV
+
+> +
+> +  and the output will be like this :
+
+                                 this:
+
+> +
+> +# CONFIG_GKOV_KERNEL is not set
+
+            GCOV
+
+> +
+>  $myname uses 'CONFIG_' as the default symbol prefix. Set the environment
+>  variable CONFIG_ to the prefix to use. Eg.: CONFIG_="FOO_" $myname ...
+>  EOL
+> 
+
+
+-- 
+~Randy
+
