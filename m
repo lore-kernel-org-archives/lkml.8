@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC376C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA33C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6575F2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D3D2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:23:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IYpG+o8o"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k1J3sN0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbgIJDX3 (ORCPT
+        id S1729298AbgIJDXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 23:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
+        Wed, 9 Sep 2020 23:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729413AbgIJDWc (ORCPT
+        with ESMTP id S1729860AbgIJDXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 23:22:32 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D1CC06136A
-        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:15 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id o16so2174315pjr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:15 -0700 (PDT)
+        Wed, 9 Sep 2020 23:23:01 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81B2C06135E
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 17:49:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 34so3278008pgo.13
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 17:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xwN4Lh5cIbYb5K/fWg1B1RhUro5At/hehYhhAFZFYDY=;
-        b=IYpG+o8osL3jV0fGYCHqwt9RdRbRuqmWBfR4qyAuE0L6ojF4AIt2kUBpEYzxzgJk2J
-         w5ViSvufWqvaNmF17VeZMxnPIhtkxOoQKuaRHylOpBTnRM1PrsqCWy7m0qiKV698tzvM
-         zCtNtkzUdcdurd+IHQADspLB0VShaLjJNk14o=
+        bh=ReQxmAY0XLGu4xlFoP8MkkA+httZz7j6v/IQOYimHkQ=;
+        b=k1J3sN0sWEU5XfqO61nZD/yFIdQSDgiPAVunvU+PmSRlDKVd3tg1pCSnEutnHWko6e
+         8Kdl+l7X2SYWbVHbsecO+oOJxHLPOTmBVsh1XKC1A3Q0+fryfCYYggwJ009niKyu3XWs
+         BWA24Q/oMTvo6XenZ9B9v82imDaYDfbKlMpy0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xwN4Lh5cIbYb5K/fWg1B1RhUro5At/hehYhhAFZFYDY=;
-        b=NXSoiJXBLukOs2kaz0ayr8cPTnLuRxy5FMsjBi3NqIqMrmCYCmYPCb8J7zEUA9bvHQ
-         Ud6yZDSMUx9Ny+1L0zZFujesd7t2zHwdYbT9OY9s9C2qu7RS5tQhGiMcqkmKtRCDxzfC
-         lE/e8576Gj7kpndx72t3pepwTwzb4sOAMFuVAPe5+w7m4bDLk2O9ul44Yn3n48+63JsV
-         3sqMRINzgr0GnZdmairAxxl7thNbUFBocafxclM6oOytPL+QRmXVv74XcN+KkjVZNNU+
-         U9HT+5e8yxhJntlIDflSxPAvtzGoPUKI32xNX/+Xo7FuFDfn796ZDVG58qpX5zNGHtdL
-         CL3Q==
-X-Gm-Message-State: AOAM532+gcM6EIuSh0P6NmNtcRvUOzosRENtPel9ZpaFiKjn9LMHXS0C
-        7/atbfIcgycloOtLWuDV7Uv4pA==
-X-Google-Smtp-Source: ABdhPJzGfJrijyfmzqoXN5IwnenXE95DhQ2QdA9WqdBgyxT76NbFyCxjrbB9Gnby5SlF39MaiwihCg==
-X-Received: by 2002:a17:90a:e98d:: with SMTP id v13mr2893452pjy.79.1599698954869;
-        Wed, 09 Sep 2020 17:49:14 -0700 (PDT)
+        bh=ReQxmAY0XLGu4xlFoP8MkkA+httZz7j6v/IQOYimHkQ=;
+        b=BHVJeO1nGPQMr2wjK75wkDbMpVw5Wp7EnFtX3lXXCNeP80+ARxzUVhIGvoG9ZaVFWa
+         XQyL0x/YVq+YVk5lCy80HjpLNidXgVJJUWub1FKre7fZ0m7on4CRH7AkK7HRxBmHLGUE
+         Mah1slRGD8GuppLnSzvmTOAOFYWKtyqSzgK0nAOqUVz10a/AxoRNSn0gEZgthd7aYRBe
+         Acvb9k5KHOU1BtqMvTvww9tJ9CDG/BWMONEtfNfLzAXUXUgkjl9jKC48ONaofw3wJOeW
+         KVHHCt4l+IBuoJ6E9AI0uwl5/jTp4+8yhYxkzw4zuyLq95fdNIfp/z5qmH/0+K44bmpc
+         h9Qw==
+X-Gm-Message-State: AOAM530g0ar9MtJYNxNvB1DSFBsoa9WJqmNnV6oG62VvhNo1dqDmp2xw
+        ejZlyM1BGqGq8aiPDcFgyx4uSQ==
+X-Google-Smtp-Source: ABdhPJxwm25YjsmYTmeysQc8B83R4lNCe6FD8p/QRsUWpFZGTzV8n4W4KXR4srjeMv3t2bSAC0lIrQ==
+X-Received: by 2002:a63:348d:: with SMTP id b135mr2392054pga.89.1599698948187;
+        Wed, 09 Sep 2020 17:49:08 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.13
+        by smtp.gmail.com with ESMTPSA id c7sm3899050pfj.100.2020.09.09.17.49.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2020 17:49:14 -0700 (PDT)
+        Wed, 09 Sep 2020 17:49:07 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>
@@ -70,13 +70,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Sandeep Maheswaram <sanm@codeaurora.org>,
         Douglas Anderson <dianders@chromium.org>,
         Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
         Jonathan Marek <jonathan@marek.ca>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Rob Clark <robdclark@chromium.org>
-Subject: [PATCH v3 09/10] clk: qcom: dispcc: Update DP clk ops for phy design
-Date:   Wed,  9 Sep 2020 17:49:01 -0700
-Message-Id: <20200910004902.2252694-10-swboyd@chromium.org>
+Subject: [PATCH v3 03/10] phy: qcom-qmp: Remove 'initialized' in favor of 'init_count'
+Date:   Wed,  9 Sep 2020 17:48:55 -0700
+Message-Id: <20200910004902.2252694-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200910004902.2252694-1-swboyd@chromium.org>
 References: <20200910004902.2252694-1-swboyd@chromium.org>
@@ -87,98 +86,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clk_rcg2_dp_determine_rate() function is used for the DP pixel clk.
-This function should return the rate that can be achieved by the pixel
-clk in 'struct clk_rate_request::rate' and match the logic similar to
-what is seen in clk_rcg2_dp_set_rate(). But that isn't the case. Instead
-the code merely bubbles the rate request up to the parent of the pixel
-clk and doesn't try to do a rational approximation of the rate that
-would be achieved by picking some m/n value for the RCG.
-
-Let's change this logic so that we can assume the parent clk frequency
-is fixed (it is because it's the VCO of the DP PLL that is configured
-based on the link rate) and so that we can calculate what the m/n value
-will be and adjust the req->rate appropriately.
+We already track if any phy inside the qmp wrapper has been initialized
+by means of the struct qcom_qmp::init_count member. Let's drop the
+duplicate 'initalized' member to simplify the code a bit.
 
 Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
 Cc: Chandan Uddaraju <chandanu@codeaurora.org>
 Cc: Vara Reddy <varar@codeaurora.org>
 Cc: Tanmay Shah <tanmay@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Manu Gautam <mgautam@codeaurora.org>
 Cc: Sandeep Maheswaram <sanm@codeaurora.org>
 Cc: Douglas Anderson <dianders@chromium.org>
 Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: Jonathan Marek <jonathan@marek.ca>
 Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/clk/qcom/clk-rcg2.c      | 19 +++++++++++++------
- drivers/clk/qcom/dispcc-sc7180.c |  3 ---
- 2 files changed, 13 insertions(+), 9 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-index 357159fe85b5..59a5a0f261f3 100644
---- a/drivers/clk/qcom/clk-rcg2.c
-+++ b/drivers/clk/qcom/clk-rcg2.c
-@@ -1182,14 +1182,21 @@ static int clk_rcg2_dp_set_rate_and_parent(struct clk_hw *hw,
- static int clk_rcg2_dp_determine_rate(struct clk_hw *hw,
- 				struct clk_rate_request *req)
- {
--	struct clk_rate_request parent_req = *req;
--	int ret;
-+	struct clk_rcg2 *rcg = to_clk_rcg2(hw);
-+	unsigned long num, den;
-+	u64 tmp;
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 7ee9e966dc6d..4a23ba9361b3 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1844,7 +1844,6 @@ struct qmp_phy {
+  * @phys: array of per-lane phy descriptors
+  * @phy_mutex: mutex lock for PHY common block initialization
+  * @init_count: phy common block initialization count
+- * @phy_initialized: indicate if PHY has been initialized
+  * @ufs_reset: optional UFS PHY reset handle
+  */
+ struct qcom_qmp {
+@@ -1861,7 +1860,6 @@ struct qcom_qmp {
  
--	ret = __clk_determine_rate(clk_hw_get_parent(hw), &parent_req);
--	if (ret)
--		return ret;
-+	/* Parent rate is a fixed phy link rate */
-+	rational_best_approximation(req->best_parent_rate, req->rate,
-+			GENMASK(rcg->mnd_width - 1, 0),
-+			GENMASK(rcg->mnd_width - 1, 0), &den, &num);
-+
-+	if (!num || !den)
-+		return -EINVAL;
+ 	struct mutex phy_mutex;
+ 	int init_count;
+-	bool phy_initialized;
  
--	req->best_parent_rate = parent_req.rate;
-+	tmp = req->best_parent_rate * num;
-+	do_div(tmp, den);
-+	req->rate = tmp;
+ 	struct reset_control *ufs_reset;
+ };
+@@ -2748,7 +2746,6 @@ static int qcom_qmp_phy_enable(struct phy *phy)
+ 		dev_err(qmp->dev, "phy initialization timed-out\n");
+ 		goto err_pcs_ready;
+ 	}
+-	qmp->phy_initialized = true;
+ 	return 0;
  
+ err_pcs_ready:
+@@ -2792,8 +2789,6 @@ static int qcom_qmp_phy_disable(struct phy *phy)
+ 
+ 	qcom_qmp_phy_com_exit(qmp);
+ 
+-	qmp->phy_initialized = false;
+-
  	return 0;
  }
-diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
-index 0a5d395bce93..f487515701e3 100644
---- a/drivers/clk/qcom/dispcc-sc7180.c
-+++ b/drivers/clk/qcom/dispcc-sc7180.c
-@@ -202,7 +202,6 @@ static struct clk_rcg2 disp_cc_mdss_dp_crypto_clk_src = {
- 		.name = "disp_cc_mdss_dp_crypto_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_byte2_ops,
- 	},
- };
-@@ -216,7 +215,6 @@ static struct clk_rcg2 disp_cc_mdss_dp_link_clk_src = {
- 		.name = "disp_cc_mdss_dp_link_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_byte2_ops,
- 	},
- };
-@@ -230,7 +228,6 @@ static struct clk_rcg2 disp_cc_mdss_dp_pixel_clk_src = {
- 		.name = "disp_cc_mdss_dp_pixel_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
- 		.ops = &clk_dp_ops,
- 	},
- };
+ 
+@@ -2868,7 +2863,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
+ 	if (cfg->type != PHY_TYPE_USB3)
+ 		return 0;
+ 
+-	if (!qmp->phy_initialized) {
++	if (!qmp->init_count) {
+ 		dev_vdbg(dev, "PHY not initialized, bailing out\n");
+ 		return 0;
+ 	}
+@@ -2894,7 +2889,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
+ 	if (cfg->type != PHY_TYPE_USB3)
+ 		return 0;
+ 
+-	if (!qmp->phy_initialized) {
++	if (!qmp->init_count) {
+ 		dev_vdbg(dev, "PHY not initialized, bailing out\n");
+ 		return 0;
+ 	}
 -- 
 Sent by a computer, using git, on the internet
 
