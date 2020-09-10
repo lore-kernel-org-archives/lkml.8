@@ -2,71 +2,98 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B8BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18CA2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3F820795
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599754964;
-	bh=eYB7NVQ0w8fEmrT5JGCldNlkgVi29FDwCgpinZyi2XQ=;
+	s=default; t=1599755046;
+	bh=PvM0vqkMO2fQcyEuRI49Uv9clIQKDOXj9dQed/j9+V8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v1xyDdIKA89PK3XFXVrx642ofRiIBgSJ0qiNnrJgeJ5Bel1gIDB2mBBIoAx923uiR
-	 tC0rnfmGbhCA2k8EEgPVS21Oci6Rgns6pLABcDcOqrqs3n5T/qi3sR0APNZd+7Xsdg
-	 t1Px2NggvO4n5+abp016Nn8K2WqNbblR7oacYR1A=
+	b=coxM3nY4cQ2dADSOb/9VN79glBFh6Aj+8smcucjx1ilKRiqrrdltpSv4RWTsTkH5b
+	 BVw7aZZMYnbTIr2uNis/NYbaOHikCIOlBFRIqD2GnJD+eowBDb13GexD+ZOkQIOBdP
+	 IF4UeZopLRwkOAltPZCWi0ihZr2XpruPI81EAHj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgIJQWj (ORCPT
+        id S1725986AbgIJQXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgIJQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:20:27 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E84D920BED;
-        Thu, 10 Sep 2020 16:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599754735;
-        bh=eYB7NVQ0w8fEmrT5JGCldNlkgVi29FDwCgpinZyi2XQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jHIvIfNsKVPc9XIzCo8yq2jod8gfmfg1He2Wu7Vdq/HqnG4w2/SjjTAf7quC2jVdh
-         6lWNtY4ubxIJkErPeecN+N0iHCMn36Du911dNUbYJSDSPHFfwuzvQWA4u633Zt3v4c
-         lKUVIfb8nqPfA+0oZiQCwRXygSk5ApyiR2M5NOCI=
-Date:   Thu, 10 Sep 2020 18:19:02 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Tri Vo <trong@android.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v3 1/2] idr: Document calling context for IDA APIs
- mustn't use locks
-Message-ID: <20200910161902.GB1180022@kroah.com>
-References: <20200910055246.2297797-1-swboyd@chromium.org>
+        Thu, 10 Sep 2020 12:23:43 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35185 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgIJQVF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:21:05 -0400
+Received: by mail-il1-f194.google.com with SMTP id l4so6227904ilq.2;
+        Thu, 10 Sep 2020 09:21:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WFYcr99e9oKRQQf7M3oV3UjkunbVdfv+xqARYc/QMwo=;
+        b=RfdpM6K180aMMTKEr5OuaedPXkQC4BrlVYWFptCu2MGXUNdQZLljVq9QpllfpMTKHO
+         o/EmJKP9TSHS1kpd/im9E7UM7fIk8p1AnJYPMDoQ0C2aJ1FVevUh45zLUn+pHvnIZUcP
+         +xm25cNg2pr03fN4unNSx4sQ+lQF8psk27Bp/65vYo1KDyCuTV2FsTyc0hNXASSxhgEW
+         /Dq+2VY58vKn8Azek1P7PX/Y6dRb+AeLB7VnmWvML50DyGBSxrBIYEj3SFmQ02n4+A6w
+         efzdF+Jn7Q87rA6qZYgpd/dFWn3pTEF4ZBdsUDrxROguu7J7s30a4SLrbhqD+PKXnB8e
+         jBeQ==
+X-Gm-Message-State: AOAM530e0/NRGaV7Q4GQzUzavhG78/L8oGn7f+hanNFEyjCfswSxnrjG
+        8KWZcfUkdcGM47vaLBkjXg==
+X-Google-Smtp-Source: ABdhPJyw+1I4LioOUAOgnWPGmGnsnWzBAy+MSWJLjUW62/qg+HPmpMSUN5zvFwwn5q5yTRgSBSJzBw==
+X-Received: by 2002:a05:6e02:be6:: with SMTP id d6mr8553154ilu.76.1599754861486;
+        Thu, 10 Sep 2020 09:21:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id z26sm3385107ilf.60.2020.09.10.09.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 09:21:00 -0700 (PDT)
+Received: (nullmailer pid 471343 invoked by uid 1000);
+        Thu, 10 Sep 2020 16:20:59 -0000
+Date:   Thu, 10 Sep 2020 10:20:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>, linux-pci@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v11 09/11] PCI: brcmstb: Accommodate MSI for older chips
+Message-ID: <20200910162059.GA471185@bogus>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-10-james.quinlan@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200910055246.2297797-1-swboyd@chromium.org>
+In-Reply-To: <20200824193036.6033-10-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 10:52:45PM -0700, Stephen Boyd wrote:
-> The documentation for these functions indicates that callers don't need
-> to hold a lock while calling them, but that documentation is only in one
-> place under "IDA Usage". Let's state the same information on each IDA
-> function so that it's clear what the calling context requires.
-> Furthermore, let's document ida_simple_get() with the same information
-> so that callers know how this API works.
+On Mon, 24 Aug 2020 15:30:22 -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> Older BrcmSTB chips do not have a separate register for MSI interrupts; the
+> MSIs are in a register that also contains unrelated interrupts.  In
+> addition, the interrupts lie in bits [31..24] for these legacy chips.  This
+> commit provides common code for both legacy and non-legacy MSI interrupt
+> registers.
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 71 +++++++++++++++++++--------
+>  1 file changed, 50 insertions(+), 21 deletions(-)
+> 
 
-Thank you for this, I always have to go look it up too...
-
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
