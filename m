@@ -2,189 +2,94 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1232EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BE4208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N8GTm1Db"
+	by mail.kernel.org (Postfix) with ESMTP id D9AF7208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:34:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725385AbgIJXds (ORCPT
+        id S1725681AbgIJXeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 19:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgIJXdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 19:33:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC66C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:33:40 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m5so5203320pgj.9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4RBaH+SNtQZyszf95yfys9ev5YuersLuBj4oZ/8U4uI=;
-        b=N8GTm1Dbn84HIt88mWsX44tIFWprbrc8Nc57ldNK0e9KxJ6Y7OPleZjHiHVfU+EuVR
-         Nt6fd0ykv8WwDqUq/5E01PmMJR61Td7yjaCcLKAw3GmXUrIYA18yNyiRiHhfJIls1wi1
-         iTfm3bQHDHv6CpIyM6R2MGv8nAKpsNuDdrCNg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4RBaH+SNtQZyszf95yfys9ev5YuersLuBj4oZ/8U4uI=;
-        b=oYpk5ieo7hPVsc8hYG9q1YuHsBkQTJvrUfD6CF7u8KeYBZpadkvief9XC3OM+anTjk
-         2NqKz9EmNMwWL5oVsKKdolhz0rLgsK2a7a7vGta0d14JAqn/rLgz1NkYcQ85q92JSFU1
-         gBnQUweEZYRlUIoDt7eVqfUBHNCJ1LLmZFxGJG4rn+xgN0JTIVw9jQhGrW18ui1OhRAR
-         67IPTl3/vyH9odEMDNDcr3xOP0lmr7ELSxCqp2/uMSpDW3O+CLY4BpnMnZqGXm8d1NfT
-         +lPaGRCGTgx/ZtRw7XFqhCLcPZsKnvmpyX33hNKYyqi/19u4daAz0dWLZbYHUAhqWnvv
-         IkWg==
-X-Gm-Message-State: AOAM530VEI8Bm0FSHyw1MupzzSy1wY8xPzOO48TKTgs1ElUhISM9p1aL
-        JG2l2KFO5hYk3/qqAzRARdwLVQ==
-X-Google-Smtp-Source: ABdhPJyofycYEK5HfnkOAbIa42Gr5C/nTGkv9iw512ddPj4Vz91LXsCiAIST2k+Ma2HQuPcKS1NFXA==
-X-Received: by 2002:a17:902:9891:b029:d1:9bd3:6772 with SMTP id s17-20020a1709029891b02900d19bd36772mr985688plp.28.1599780820075;
-        Thu, 10 Sep 2020 16:33:40 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n7sm172755pfq.114.2020.09.10.16.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 16:33:39 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 16:33:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     John Wood <john.wood@gmx.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [RFC PATCH 3/6] security/fbfam: Use the api to manage statistics
-Message-ID: <202009101625.0E3B6242@keescook>
-References: <20200910202107.3799376-1-keescook@chromium.org>
- <20200910202107.3799376-4-keescook@chromium.org>
+        Thu, 10 Sep 2020 19:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgIJXeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 19:34:36 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65517208A9;
+        Thu, 10 Sep 2020 23:34:35 +0000 (UTC)
+Date:   Thu, 10 Sep 2020 19:34:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] tracing/boot: Add new options for tracing
+ specific period
+Message-ID: <20200910193433.236cf081@oasis.local.home>
+In-Reply-To: <159972809455.428528.4737752126800169128.stgit@devnote2>
+References: <159972809455.428528.4737752126800169128.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910202107.3799376-4-keescook@chromium.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 01:21:04PM -0700, Kees Cook wrote:
-> From: John Wood <john.wood@gmx.com>
+On Thu, 10 Sep 2020 17:54:54 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi,
 > 
-> Use the previous defined api to manage statistics calling it accordingly
-> when a task forks, calls execve or exits.
+> Here is the 3rd version of the series to improve the boot-time tracing to
+> support kretprobe and tracing_on option. Previous version is here:
 > 
-> Signed-off-by: John Wood <john.wood@gmx.com>
-> ---
->  fs/exec.c     | 2 ++
->  kernel/exit.c | 2 ++
->  kernel/fork.c | 4 ++++
->  3 files changed, 8 insertions(+)
+>  https://lkml.kernel.org/r/159894698993.1478826.2813843560314595660.stgit@devnote2
 > 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index a91003e28eaa..b30118674d32 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -71,6 +71,7 @@
->  #include "internal.h"
->  
->  #include <trace/events/sched.h>
-> +#include <fbfam/fbfam.h>
->  
->  static int bprm_creds_from_file(struct linux_binprm *bprm);
->  
-> @@ -1940,6 +1941,7 @@ static int bprm_execve(struct linux_binprm *bprm,
->  	task_numa_free(current, false);
->  	if (displaced)
->  		put_files_struct(displaced);
-> +	fbfam_execve();
-
-As mentioned in the other emails, I think this could trivially be
-converted into an LSM: all the hooks are available AFAICT. If you only
-want to introspect execve _happening_, you can use bprm_creds_for_exec
-which is called a few lines above. Otherwise, my prior suggestion ("the
-exec has happened" hook via brpm_cred_committing, etc).
-
->  	return retval;
->  
->  out:
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 733e80f334e7..39a6139dcf31 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -67,6 +67,7 @@
->  #include <linux/uaccess.h>
->  #include <asm/unistd.h>
->  #include <asm/mmu_context.h>
-> +#include <fbfam/fbfam.h>
->  
->  static void __unhash_process(struct task_struct *p, bool group_dead)
->  {
-> @@ -852,6 +853,7 @@ void __noreturn do_exit(long code)
->  		__this_cpu_add(dirty_throttle_leaks, tsk->nr_dirtied);
->  	exit_rcu();
->  	exit_tasks_rcu_finish();
-> +	fbfam_exit();
->  
->  	lockdep_free_task(tsk);
->  	do_task_dead();
-
-The place for this would be put_task_struct, and the LSM hook is
-task_free. :) (The only caveat with task_free hook is that it may be
-called in non-process context due to being freed during RCU, etc. In
-practice, this is unlikely to cause problems.)
-
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 49677d668de4..c933838450a8 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -107,6 +107,8 @@
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/task.h>
->  
-> +#include <fbfam/fbfam.h>
-> +
->  /*
->   * Minimum number of threads to boot the kernel
->   */
-> @@ -941,6 +943,8 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
->  #ifdef CONFIG_MEMCG
->  	tsk->active_memcg = NULL;
->  #endif
-> +
-> +	fbfam_fork(tsk);
->  	return tsk;
-
-Since you don't need "orig", this is also trivially an LSM hook.
-dup_task_struct() is called by copy_process(), which will also call the
-task_alloc LSM hook later on.
-
->  
->  free_stack:
-> -- 
-> 2.25.1
+> This version adds uprobe %return suffix support ([5/8]) and the testcases
+> ([8/8]), and update kprobe %suffix support([4/8]) and the uprobe event
+> document([6/8]).
+> 
+> 
+> The combination of tracing_on and kretprobe allows us to trace events
+> while a specific function call period. For example, the below bootconfig
+> will make a function callgraph in the pci_proc_init() function at boot
+> time.
+> 
+> ftrace {
+> 	tracing_on = 0  # off at start
+> 	tracer = function_graph
+> 	event.kprobes {
+> 		start_event {
+> 			probes = "pci_proc_init"
+> 			actions = "traceon"
+> 		}
+> 		end_event {
+> 			probes = "pci_proc_init%return"
+> 			actions = "traceoff"
+> 		}
+> 	}
+> }
+> 
+> Here is the example output;
 > 
 
--- 
-Kees Cook
+[..]
+
+Hi Masami,
+
+This looks really great! I just got back from a 10 day holiday, and I'm
+drowning in "catch-up".  I plan on looking at all this relatively soon
+(in a week or two?). I just don't want you to think I'm ignoring this.
+
+-- Steve
