@@ -2,74 +2,62 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C428C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B94C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA3D221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMAyDSAL"
+	by mail.kernel.org (Postfix) with ESMTP id 20862221E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599772821;
+	bh=Ze7vXi1wbkU0MsV4ETWUDVXtSmlXna+i8eZq+cvFNxM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nayKCMRR2595Eubb4OZimDgXCt+StsqdALeQzUHzbEBVTtbYHx15CF3ZSVZK3FTm7
+	 FhqAJjFARdI3gqT/2W5F3U9jrAYi8xuYYbvrupywMHTJxTcKckPZenZ96dUvk/x3Vd
+	 w5kr5aB6mEpzLgJViRqQ0Joi5i0jRg8ZCmDnaueY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgIJVTo (ORCPT
+        id S1728033AbgIJVUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbgIJVOi (ORCPT
+        Thu, 10 Sep 2020 17:20:19 -0400
+Received: from condef-05.nifty.com ([202.248.20.70]:42807 "EHLO
+        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730262AbgIJO0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:38 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 374F7C061798;
-        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id w5so8739885wrp.8;
-        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X3WbVTqqKzlg68fDpT5tykZXFj/sNRCBMiQnCdblcY4=;
-        b=fMAyDSALqxgxQTAYyfINhmy0a5ipXkxZEGOyffE1UiJ6KYv773IcvuJr6i4Tw/gdGA
-         uJZMsUYKXQm3XfY9+p7RGccU1dCbaO0U7OFAJmsIaS9A0aVEl8ddv+ppsNI0SsDJ9SsL
-         knHs8lk4kK1uQ1iNFgCxVM95cqqxQwoB4SA267UU2B+aKnCV0sWudYVgwAGz+AN2DwLU
-         vVgp4Sp9gtIAGTsoVRLg9jd6nJzi2ez2AcKZoK5bY/fFfzi0EHK3AgEp5UuXxlPX+DQI
-         oyekiMpo2xmUC4D2TGz+8cCTE2IV4QARKJdxZloCGDwJHUfjenKkinA54MIdnq81v9aO
-         KuMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X3WbVTqqKzlg68fDpT5tykZXFj/sNRCBMiQnCdblcY4=;
-        b=RyBV2Q1kNtbEZISLlXE90LYSXiR7i3kcl5sreTcVf+9HPxv+sKV0QiLhtQr7qLnMcH
-         dTNh6adF1Kg7VFMLW+UNF/2FmbAQnSbfyp8hZ2ia6pwJS6DG3Zd8j9xom+X3/6Mxt6CQ
-         m867cLRgYDIz43ch2NzDp7LsS2BDJymyVwvMbXAQtIoeUBIllOutO9nxY5H37vTBUtHT
-         0rr4EDzrosdKd1BLa00pCmVm0Tbkwy3/mD3F/opHwX5ewc4RCsszhy9/h8oO4Ph7VAmT
-         oTo2EuGoexBp0qB+JYKfH/tU9+uQdpvv90TEa9P+9F+KvF3LBbdF95BrIVIbjNt9Eye3
-         l4HA==
-X-Gm-Message-State: AOAM532LvIaMBArh8D1FKwvpj+5KH2oPNRSTgKjsX/+nopwauVdtLUXg
-        D4iW0P1Yapilqo6zVKIEL+o=
-X-Google-Smtp-Source: ABdhPJzD7EOKLb0O8bgAFsibyR4OBYm5G/3Zd495KiMjnRvQ5imgAf7BhIxuSj4Pny6FYfN/m8+9ew==
-X-Received: by 2002:a5d:68d1:: with SMTP id p17mr10499820wrw.378.1599772458707;
-        Thu, 10 Sep 2020 14:14:18 -0700 (PDT)
-Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:18 -0700 (PDT)
-From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
-To:     mtk.manpages@gmail.com
-Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 08/24] add_key.2: Cast to 'unsigned long' rather than 'long' when printing with "%lx"
-Date:   Thu, 10 Sep 2020 23:13:29 +0200
-Message-Id: <20200910211344.3562-9-colomar.6.4.3@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
-References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
+        Thu, 10 Sep 2020 10:26:13 -0400
+Received: from conuserg-09.nifty.com ([10.126.8.72])by condef-05.nifty.com with ESMTP id 08ADllED030900;
+        Thu, 10 Sep 2020 22:47:48 +0900
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 08ADiY4U001894;
+        Thu, 10 Sep 2020 22:44:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 08ADiY4U001894
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599745475;
+        bh=WL98q/7s+UmiqnVaDR4JUCigpcZ/zOKRJsU9m2uipak=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uMHg8B9hXQAKipMm67kWTGQPCaRSrrFL5TEi64sGGq0dDnT2S79HsPKf9LczpVOKC
+         cmixqMGo40sBqVF1Eag9hqFIJZ2EtwXi2ZtNuUTT+cgeqdkPZzeH1EYaXGFkOB1cC6
+         twd9D/964iMd/sUoFHr+qF9uqwaMpEiw+hQK3LDrl4rwxjNk34vWi2bjt4SJ0hHNe9
+         44qVFnaomtwi1C9JtKZs3b/l+5E5D+xWN8RAqzCHGEx5osmh7EOpqhHGQg6YJat/Zs
+         ZEfhk5b/uUkrH9m7dJ2L/qhVdfN/LHLehchIlUDlmoLxdy5a23fSL9fO4GeuspcgSr
+         O0SjVT0MmZIiw==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] kbuild: remove redundant CONFIG_KASAN check from scripts/Makefile.kasan
+Date:   Thu, 10 Sep 2020 22:44:28 +0900
+Message-Id: <20200910134429.3525408-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,24 +65,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
----
- man2/add_key.2 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Since commit e0fe0bbe57b8 ("kbuild: include scripts/Makefile.* only
+when relevant CONFIG is enabled"), this file is included only when
+CONFIG_KASAN=y.
 
-diff --git a/man2/add_key.2 b/man2/add_key.2
-index bda08c3d2..bbd2d1d03 100644
---- a/man2/add_key.2
-+++ b/man2/add_key.2
-@@ -262,7 +262,7 @@ main(int argc, char *argv[])
-         exit(EXIT_FAILURE);
-     }
+This ifdef is redundant.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/Makefile.kasan | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
+index f4beee1b0013..1532f1a41a8f 100644
+--- a/scripts/Makefile.kasan
++++ b/scripts/Makefile.kasan
+@@ -1,8 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+-ifdef CONFIG_KASAN
+ CFLAGS_KASAN_NOSANITIZE := -fno-builtin
+ KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
+-endif
  
--    printf("Key ID is %lx\en", (long) key);
-+    printf("Key ID is %lx\en", (unsigned long) key);
+ ifdef CONFIG_KASAN_GENERIC
  
-     exit(EXIT_SUCCESS);
- }
 -- 
-2.28.0
+2.25.1
 
