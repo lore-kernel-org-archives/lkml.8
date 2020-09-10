@@ -2,205 +2,962 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34106C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3354DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D36A420731
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD93D20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e1BCbpsX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZDo3qBR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgIJVn0 (ORCPT
+        id S1725923AbgIJVwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730380AbgIJNBo (ORCPT
+        Thu, 10 Sep 2020 17:52:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41308 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725440AbgIJVwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:01:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A274C061795
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:01:40 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id m6so6646776wrn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pRs7Uzub0zJIby8weUidtFyGgxBuDRRReFxv1hE4uO8=;
-        b=e1BCbpsXv9QwCCYq522KpmcV/gk6T8ibKbGXusxUOfAfP2F3CYIxea926Q3rOONKiI
-         Rzl8B7GGIANojnTkvRGBr2uu72MpTHHDCNtHhD4yyD+b7SSDXbAYdCN+ImfUBrfmPAWg
-         EnOxs50Im1TZFZVUxvBrJYQTIGujYBUAw6TypR8XcDTWN8Gvaq503Urh22FAiPblCx1k
-         PS3Zc0optxM7KKJMz86JCliv8SH1QyDsfCON0rUiTTChG5yW+3AomEktH6Lxa7h1xT+3
-         sbl6e6D5fbYtDpWmLKX7lyqsY2U970qtVw/X5OfLyjWjVVyvSgRQj0O1XdCwuFCNVIhb
-         RWDw==
+        Thu, 10 Sep 2020 17:52:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599774727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7kk2m+9MTSIxL1/zLQjnJiBqKXBWLMYPPmwhdXvCXw4=;
+        b=DZDo3qBR06138b9z3zrDZUwo4rjYR27Q1COYIvMFyGBlDofAR2aThCB+qVMiHFeNSTQ1VD
+        ATI+GdZGpKLpF8YdknHyvEKhQBB0ap0oBq7rbgNmRzyyRh4oaI9Y/hZ9lK5oGByGtD0XYl
+        4wvd9Wv/MhIhbeWHTwjGkodzZhOBxtA=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-EgUXIXoVNEKYzDvIpUGPPw-1; Thu, 10 Sep 2020 17:51:56 -0400
+X-MC-Unique: EgUXIXoVNEKYzDvIpUGPPw-1
+Received: by mail-qv1-f70.google.com with SMTP id y2so4176410qvs.14
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 14:51:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pRs7Uzub0zJIby8weUidtFyGgxBuDRRReFxv1hE4uO8=;
-        b=n7+tF7gzWkZnbdR2zriMe6GaJKz+HsoV3WA1dA7qj2YV94zhMaMS3Ur1C0SV8qv+oW
-         15DR6/1l9uf7Rsrhp1feReyPPaplXgkIswAL4WbU8tIr4tK+rUjaG+A2T60NgEOysJlL
-         UdHBbfeTwSH70hA+Zb6dBLIKIDtaLC3GkhNbkbrEnIx3afk+DJWnk/mHSLFLYVTZATM3
-         aCEZvZx9tP+uXny4Dm+LrOqaTr6CHY6oEKTTBzrXbcvQjbHPMgieWCEi7j59BEDfD8vw
-         UvdkrtS/W3UK5Ys8l3T8l1RiezVGDNj2nEVig8kPfL1LkKBN8f54vQR1bHCmFliRPbVw
-         CGaw==
-X-Gm-Message-State: AOAM530jr54w1oxh0QC9P4JW2ZLmzFXaitXpWhjwUa+ktUB1UAE9IMx3
-        CO2Axk/y6EhOKQdUXt9VYq8xKw==
-X-Google-Smtp-Source: ABdhPJx4KLaMhKr7HdhOjKyG9sCQC8O62DGqMbs3kGQb1cIb++035zPL1Wso7SB/gY7s9bimrlrhXA==
-X-Received: by 2002:adf:e6cf:: with SMTP id y15mr8886654wrm.346.1599742898647;
-        Thu, 10 Sep 2020 06:01:38 -0700 (PDT)
-Received: from alex-xps13.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y1sm9488269wru.87.2020.09.10.06.01.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 06:01:37 -0700 (PDT)
-From:   Alexandre Bailon <abailon@baylibre.com>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, mathieu.poirier@linaro.org
-Cc:     linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stephane.leprovost@mediatek.com, gpain@baylibre.com,
-        Alexandre Bailon <abailon@baylibre.com>
-Subject: [PATCH v2 1/4] dt bindings: remoteproc: Add bindings for MT8183 APU
-Date:   Thu, 10 Sep 2020 15:01:45 +0200
-Message-Id: <20200910130148.8734-2-abailon@baylibre.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200910130148.8734-1-abailon@baylibre.com>
-References: <20200910130148.8734-1-abailon@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=7kk2m+9MTSIxL1/zLQjnJiBqKXBWLMYPPmwhdXvCXw4=;
+        b=lqBOfPbBp1U/uRuRitig181MVhhnWokR4vfzxnsLn2HVpEjr/GsNgGNBvktlIpb0i6
+         mRLxACbzzKkG64TovVLBd0yRS5+jqGLqCo9n9vn4HkiFSYQdvWI9dk1CBW0FxXryhFPz
+         9Ltn8C1UxIteCWBzuZEbwxiouNnSKOyjgjvzPcoIJgBe4OfrdpUeTAV0+dhRaIXI92Qb
+         DfZ0F+oREgOeOD7vugSl4oFTF9vbvb45bsbQThjJrHLR26Z4Rgaaro8h3UpaoAPnymq3
+         IzFytDepqMvLHPKOwAjwVYU7iiqWz697xNhhSC18Y8jMkotEOXQTGA7gqFHO43Ov9EF8
+         6qng==
+X-Gm-Message-State: AOAM531oKkVAMI8m3nQS8fBwJ3v/SuleZJzc4RdiiEn77ZbP1O1lxaUB
+        fCLlEIBFdv/ewjn4AozGvto6p3QHi+duIB2WOBckwtZS3VlEcE+oEC3dTvk+EKsT0tRHYmjoxVV
+        EWg03QcxEcC0fiMH+8wGWuo45
+X-Received: by 2002:a0c:80c3:: with SMTP id 61mr10654038qvb.13.1599774715980;
+        Thu, 10 Sep 2020 14:51:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyVYIMSPPr5JaNPOnR5J33SULacRE735a5r8QctAqWE9NxCywxARAalMrMDZx9viKvAEEFPNA==
+X-Received: by 2002:a0c:80c3:: with SMTP id 61mr10654004qvb.13.1599774715439;
+        Thu, 10 Sep 2020 14:51:55 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id l29sm27812qtb.77.2020.09.10.14.51.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 14:51:54 -0700 (PDT)
+Subject: Re: [PATCH v1 01/12] fpga: fpga security manager class driver
+To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
+        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@intel.com
+References: <20200904235305.6254-1-russell.h.weight@intel.com>
+ <20200904235305.6254-2-russell.h.weight@intel.com>
+ <ebb5b52d-c296-478a-c970-a1845edb4de0@redhat.com>
+ <ebf251a0-5f13-d1a1-6915-e3c940bb19fe@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <1753de1d-e8a0-ffa3-9e2a-350df926f5cd@redhat.com>
+Date:   Thu, 10 Sep 2020 14:51:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <ebf251a0-5f13-d1a1-6915-e3c940bb19fe@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds dt bindings for the APU present in the MT8183.
 
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
----
- .../bindings/remoteproc/mtk,apu.yaml          | 107 ++++++++++++++++++
- 1 file changed, 107 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
+On 9/10/20 1:22 PM, Russ Weight wrote:
+>     
+>
+> On 9/5/20 12:09 PM, Tom Rix wrote:
+>
+>    
+>
+>>       
+>> On 9/4/20 4:52 PM, Russ Weight wrote:
+>>       
+>>>         
+>>> Create the Intel Security Manager class driver. The security
+>>> manager provides interfaces to manage secure updates for the
+>>> FPGA and BMC images that are stored in FLASH. The driver can
+>>> also be used to update root entry hashes and to cancel code
+>>> signing keys.
+>>>
+>>> This patch creates the class driver and provides sysfs
+>>> interfaces for displaying root entry hashes, canceled code
+>>> signing keys and flash counts.
+>>>
+>>> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+>>> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+>>> ---
+>>>  .../ABI/testing/sysfs-class-ifpga-sec-mgr     |  75 ++++
+>>>  MAINTAINERS                                   |   8 +
+>>>  drivers/fpga/Kconfig                          |   9 +
+>>>  drivers/fpga/Makefile                         |   3 +
+>>>  drivers/fpga/ifpga-sec-mgr.c                  | 339 ++++++++++++++++++
+>>>  include/linux/fpga/ifpga-sec-mgr.h            | 145 ++++++++
+>>>  6 files changed, 579 insertions(+)
+>>>  create mode 100644 Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+>>>  create mode 100644 drivers/fpga/ifpga-sec-mgr.c
+>>>  create mode 100644 include/linux/fpga/ifpga-sec-mgr.h
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+>>> new file mode 100644
+>>> index 000000000000..86f8992559bf
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+>>> @@ -0,0 +1,75 @@
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/name
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Name of low level fpga security manager driver.
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/sr_root_entry_hash
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns the root entry hash for the static
+>>> +		region if one is programmed, else it returns the
+>>> +		string: "hash not programmed".  This file is only
+>>> +		visible if the underlying device supports it.
+>>> +		Format: "0x%x".
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/pr_root_entry_hash
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns the root entry hash for the partial
+>>> +		reconfiguration region if one is programmed, else it
+>>> +		returns the string: "hash not programmed".  This file
+>>> +		is only visible if the underlying device supports it.
+>>> +		Format: "0x%x".
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/bmc_root_entry_hash
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns the root entry hash for the BMC image
+>>> +		if one is programmed, else it returns the string:
+>>> +		"hash not programmed".  This file is only visible if the
+>>> +		underlying device supports it.
+>>> +		Format: "0x%x".
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/sr_canceled_csks
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns a list of indices for canceled code
+>>> +		signing keys for the static region. The standard bitmap
+>>> +		list format is used (e.g. "1,2-6,9").
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/pr_canceled_csks
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns a list of indices for canceled code
+>>> +		signing keys for the partial reconfiguration region. The
+>>> +		standard bitmap list format is used (e.g. "1,2-6,9").
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/bmc_canceled_csks
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns a list of indices for canceled code
+>>> +		signing keys for the BMC.  The standard bitmap list format
+>>> +		is used (e.g. "1,2-6,9").
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/user_flash_count
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns number of times the user image for the
+>>> +		static region has been flashed.
+>>> +		Format: "%d".
+>>>       
+>>       
+>> could this be %u ?
+>>     
+> Yes - I'll make the change for both of the flash update counts.
+>
+>>       
+>>>         
+>>> +
+>>> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/security/bmc_flash_count
+>>> +Date:		Sep 2020
+>>> +KernelVersion:  5.10
+>>> +Contact:	Russ Weight <russell.h.weight@intel.com>
+>>> +Description:	Read only. Returns number of times the BMC image has been
+>>> +		flashed.
+>>> +		Format: "%d".
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index deaafb617361..4a2ebe6b120d 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -6830,6 +6830,14 @@ F:	Documentation/fpga/
+>>>  F:	drivers/fpga/
+>>>  F:	include/linux/fpga/
+>>>  
+>>> +INTEL FPGA SECURITY MANAGER DRIVERS
+>>> +M:	Russ Weight <russell.h.weight@intel.com>
+>>> +L:	linux-fpga@vger.kernel.org
+>>> +S:	Maintained
+>>> +F:	Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+>>> +F:	drivers/fpga/ifpga-sec-mgr.c
+>>> +F:	include/linux/fpga/ifpga-sec-mgr.h
+>>> +
+>>>  FPU EMULATOR
+>>>  M:	Bill Metzenthen <billm@melbpc.org.au>
+>>>  S:	Maintained
+>>> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+>>> index 88f64fbf55e3..97c0a6cc2ba7 100644
+>>> --- a/drivers/fpga/Kconfig
+>>> +++ b/drivers/fpga/Kconfig
+>>> @@ -235,4 +235,13 @@ config FPGA_MGR_ZYNQMP_FPGA
+>>>  	  to configure the programmable logic(PL) through PS
+>>>  	  on ZynqMP SoC.
+>>>  
+>>> +config IFPGA_SEC_MGR
+>>> +	tristate "Intel Security Manager for FPGA"
+>>> +        help
+>>> +	  The Intel Security Manager class driver presents a common
+>>> +	  user API for managing secure updates for Intel FPGA
+>>> +	  devices, including flash images for the FPGA static
+>>> +	  region and for the BMC. Select this option to enable
+>>> +	  updates for secure FPGA devices.
+>>> +
+>>>  endif # FPGA
+>>> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+>>> index c69bfc931519..ec9fbacdedd8 100644
+>>> --- a/drivers/fpga/Makefile
+>>> +++ b/drivers/fpga/Makefile
+>>> @@ -21,6 +21,9 @@ obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)	+= zynqmp-fpga.o
+>>>  obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
+>>>  obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
+>>>  
+>>> +# Intel FPGA Security Manager Framework
+>>> +obj-$(CONFIG_IFPGA_SEC_MGR)		+= ifpga-sec-mgr.o
+>>> +
+>>>  # FPGA Bridge Drivers
+>>>  obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
+>>>  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
+>>> diff --git a/drivers/fpga/ifpga-sec-mgr.c b/drivers/fpga/ifpga-sec-mgr.c
+>>> new file mode 100644
+>>> index 000000000000..97bf80277ed2
+>>> --- /dev/null
+>>> +++ b/drivers/fpga/ifpga-sec-mgr.c
+>>> @@ -0,0 +1,339 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Intel Security Manager for FPGA
+>>> + *
+>>> + * Copyright (C) 2019-2020 Intel Corporation, Inc.
+>>> + */
+>>> +
+>>> +#include <linux/fpga/ifpga-sec-mgr.h>
+>>> +#include <linux/idr.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/vmalloc.h>
+>>> +
+>>> +static DEFINE_IDA(ifpga_sec_mgr_ida);
+>>> +static struct class *ifpga_sec_mgr_class;
+>>> +
+>>> +static ssize_t show_canceled_csk(struct ifpga_sec_mgr *imgr,
+>>> +				 sysfs_csk_hndlr_t get_csk,
+>>> +				 sysfs_csk_nbits_t get_csk_nbits,
+>>>       
+>>       
+>> Param 2&3 can be accessed by imgr->iops so the signature
+>>
+>> of this and similar functions should be reduced.
+>>     
+> There are three different types of CSK vectors (sr, pr, and bmc).
+> For each type, there are two function pointers. When calling
+> show_canceled_csk, it is necessary to identify the type of CSK.
+> While it is true that all three pairs of pointers are in imgr->iops,
+> I think the easiest way to identify the CSK type is by passing in
+> the appropriate pair of pointers.
+ok.
+>>       
+>>       
+>>>         
+>>> +				 char *buf)
+>>> +{
+>>> +	unsigned long *csk_map = NULL;
+>>> +	unsigned int nbits;
+>>> +	int cnt, ret;
+>>> +
+>>> +	ret = get_csk_nbits(imgr);
+>>>       
+>>       
+>> Any access to a function pointer must check if the
+>>
+>> the pointer is valid.
+>>     
+> The pointers are all validated when a device driver registers with the class
+> driver. The corresponding CSK sysfs file will only be visible if the pointers
+> have been validated. Is that sufficient, or should I add a redundant check
+> here? I don't mind doing it if you think it is needed.
+ok, fine as-is.
+>
+>>       
+>>       
+>>>         
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	nbits = (unsigned int)ret;
+>>> +	csk_map = vmalloc(sizeof(unsigned long) * BITS_TO_LONGS(nbits));
+>>> +	if (!csk_map)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	ret = get_csk(imgr, csk_map, nbits);
+>>>       
+>>       
+>> The type of returned by get_csk_nbits and its use should
+>>
+>> be consistent. likely this is 'int'
+> The CSK data is returned using memory provided by the csk_map pointer parameter. The
+> return value is an integer value and provides error/success status. Do you think
+> something should be changed here?
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml b/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
-new file mode 100644
-index 000000000000..7a71d2f5c4e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mtk,apu.yaml
-@@ -0,0 +1,107 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+
-+---
-+$id: "http://devicetree.org/schemas/remoteproc/mtk,apu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: MT8183 AI Processor Unit (APU) a.k.a. Vision Processor Unit (VPU)
-+
-+description:
-+  This document defines the binding for the APU, a co-processor that could
-+  offload the CPU for machine learning and neural network.
-+
-+maintainers:
-+  - Alexandre Bailon <abailon@bayLibre.com>
-+
-+properties:
-+  compatible:
-+    const: mediatek,mt8183-apu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      Three clocks are expected for AXI, IPU and JTAG.
-+      The JTAG clock seems to be required to run the DSP,
-+      even when JTAG is not in use."
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: axi
-+      - const: ipu
-+      - const: jtag
-+
-+  iommus:
-+    maxItems: 3
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  pinctrl:
-+    description: pinctrl handles, required to configure pins for JTAG.
-+
-+  pinctrl-names:
-+    items:
-+      - const: jtag
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - iommus
-+  - memory-region
-+  - power-domains
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/mt8183-clk.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/memory/mt8183-larb-port.h>
-+    #include <dt-bindings/power/mt8183-power.h>
-+
-+    reserved-memory {
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges;
-+
-+      apu_ram: apu_ram@0x60000000 {
-+        compatible = "shared-dma-pool";
-+        reg = <0x60000000 0x040000000>;
-+        no-map;
-+        linux,cma-default;
-+      };
-+    };
-+
-+    apu0: apu@19100000 {
-+      compatible = "mediatek,mt8183-apu";
-+      reg = <0x19180000 0x14000>;
-+      interrupts = <GIC_SPI 292 IRQ_TYPE_LEVEL_LOW>;
-+
-+      iommus = <&iommu M4U_PORT_IMG_IPUO>,
-+         <&iommu M4U_PORT_IMG_IPU3O>,
-+         <&iommu M4U_PORT_IMG_IPUI>;
-+
-+      clocks = <&ipu_core0 CLK_IPU_CORE0_AXI>,
-+         <&ipu_core0 CLK_IPU_CORE0_IPU>,
-+         <&ipu_core0 CLK_IPU_CORE0_JTAG>;
-+
-+      clock-names = "axi", "ipu", "jtag";
-+
-+      power-domains = <&scpsys MT8183_POWER_DOMAIN_VPU_CORE0>;
-+      memory-region = <&apu_ram>;
-+    };
-+...
--- 
-2.26.2
+Later i comment on how the error code duplicate standard error codes.
+
+It would be good the standard codes could be used, part of that
+
+is returning int.
+
+>
+>>       
+>>>         
+>>> +	if (ret)
+>>> +		goto vfree_exit;
+>>> +
+>>> +	cnt = bitmap_print_to_pagebuf(1, buf, csk_map, nbits);
+>>>       
+>>       
+>> simplify to
+>>
+>> ret = ..
+> Sure - I will do that.
+>
+>>
+>>       
+>>>         
+>>> +
+>>> +vfree_exit:
+>>> +	vfree(csk_map);
+>>> +	return ret ? : cnt;
+>>> +}
+>>> +
+>>> +static ssize_t show_root_entry_hash(struct ifpga_sec_mgr *imgr,
+>>> +				    sysfs_reh_hndlr_t get_reh,
+>>> +				    sysfs_reh_size_t get_reh_size,
+>>> +				    char *buf)
+>>> +{
+>>> +	unsigned int size, i;
+>>> +	int ret, cnt = 0;
+>>> +	u8 *hash;
+>>> +
+>>> +	ret = get_reh_size(imgr);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +	else if (!ret)
+>>> +		return sprintf(buf, "hash not programmed\n");
+>>> +
+>>> +	size = (unsigned int)ret;
+>>>       
+>>       
+>> does size and i need to unsigned?
+> In the context of their usage here, they should never be negative. Sizes are
+> typically unsigned, right? Would there be a reason to prefer int over unsigned?
+
+My issue is specifically the typecast. It would be good
+
+if the typecast could be removed.
+
+>
+>>       
+>>>         
+>>> +	hash = vmalloc(size);
+>>> +	if (!hash)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	ret = get_reh(imgr, hash, size);
+>>> +	if (ret)
+>>> +		goto vfree_exit;
+>>>       
+>>       
+>> ret is 0 here
+>>
+>> so simplify replacing cnt with ret.
+> Is the goal to have less variables? It seems like a trade-off with readability...
+>
+> I can make this change.
+
+The next comment/change will makes this comment superfluous.
+
+ignore it. 
+
+>
+>>       
+>>>         
+>>> +
+>>> +	cnt += sprintf(buf, "0x");
+>>>       
+>>       
+>> or change += to =, this is the first time sprintf is done.
+> Sure - I 'll just do the assignment instead if initializing to zero.
+>
+>>       
+>>>         
+>>> +	for (i = 0; i < size; i++)
+>>> +		cnt += sprintf(buf + cnt, "%02x", hash[i]);
+>>> +	cnt += sprintf(buf + cnt, "\n");
+>>> +
+>>> +vfree_exit:
+>>> +	vfree(hash);
+>>> +	return ret ? : cnt;
+>>>       
+>>       
+>> with simplification this should be
+>>
+>> return ret;
+>>
+>>       
+>>>         
+>>> +}
+>>> +
+>>> +#define to_sec_mgr(d) container_of(d, struct ifpga_sec_mgr, dev)
+>>>       
+>>       
+>> Since this is used widely move closer to top of file.
+> OK
+>
+>>       
+>>>         
+>>> +
+>>> +#define DEVICE_ATTR_SEC_CSK(_name) \
+>>> +static ssize_t _name##_canceled_csks_show(struct device *dev, \
+>>> +					  struct device_attribute *attr, \
+>>> +					  char *buf) \
+>>> +{ \
+>>> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev); \
+>>> +	return show_canceled_csk(imgr, \
+>>> +	       imgr->iops->_name##_canceled_csks, \
+>>> +	       imgr->iops->_name##_canceled_csk_nbits, buf); \
+>>> +} \
+>>> +static DEVICE_ATTR_RO(_name##_canceled_csks)
+>>> +
+>>> +#define DEVICE_ATTR_SEC_ROOT_ENTRY_HASH(_name) \
+>>> +static ssize_t _name##_root_entry_hash_show(struct device *dev, \
+>>> +				     struct device_attribute *attr, \
+>>> +				     char *buf) \
+>>> +{ \
+>>> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev); \
+>>> +	return show_root_entry_hash(imgr, \
+>>> +	       imgr->iops->_name##_root_entry_hash, \
+>>> +	       imgr->iops->_name##_reh_size, buf); \
+>>> +} \
+>>> +static DEVICE_ATTR_RO(_name##_root_entry_hash)
+>>> +
+>>> +#define DEVICE_ATTR_SEC_FLASH_CNT(_name) \
+>>> +static ssize_t _name##_flash_count_show(struct device *dev, \
+>>> +		    struct device_attribute *attr, char *buf) \
+>>> +{ \
+>>> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev); \
+>>> +	int cnt = imgr->iops->_name##_flash_count(imgr); \
+>>> +	return cnt < 0 ? cnt : sprintf(buf, "%d\n", cnt); \
+>>> +} \
+>>> +static DEVICE_ATTR_RO(_name##_flash_count)
+>>> +
+>>> +DEVICE_ATTR_SEC_ROOT_ENTRY_HASH(sr);
+>>> +DEVICE_ATTR_SEC_ROOT_ENTRY_HASH(pr);
+>>> +DEVICE_ATTR_SEC_ROOT_ENTRY_HASH(bmc);
+>>> +DEVICE_ATTR_SEC_FLASH_CNT(user);
+>>> +DEVICE_ATTR_SEC_FLASH_CNT(bmc);
+>>> +DEVICE_ATTR_SEC_CSK(sr);
+>>> +DEVICE_ATTR_SEC_CSK(pr);
+>>> +DEVICE_ATTR_SEC_CSK(bmc);
+>>> +
+>>> +static struct attribute *sec_mgr_security_attrs[] = {
+>>> +	&dev_attr_user_flash_count.attr,
+>>> +	&dev_attr_bmc_flash_count.attr,
+>>> +	&dev_attr_bmc_root_entry_hash.attr,
+>>> +	&dev_attr_sr_root_entry_hash.attr,
+>>> +	&dev_attr_pr_root_entry_hash.attr,
+>>> +	&dev_attr_sr_canceled_csks.attr,
+>>> +	&dev_attr_pr_canceled_csks.attr,
+>>> +	&dev_attr_bmc_canceled_csks.attr,
+>>> +	NULL,
+>>> +};
+>>> +
+>>> +#define check_attr(attribute, _name) \
+>>> +	((attribute) == &dev_attr_##_name.attr && imgr->iops->_name)
+>>> +
+>>> +static umode_t sec_mgr_visible(struct kobject *kobj,
+>>> +			       struct attribute *attr, int n)
+>>> +{
+>>> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(kobj_to_dev(kobj));
+>>> +
+>>> +	if (check_attr(attr, user_flash_count) ||
+>>> +	    check_attr(attr, bmc_flash_count) ||
+>>> +	    check_attr(attr, bmc_root_entry_hash) ||
+>>> +	    check_attr(attr, sr_root_entry_hash) ||
+>>> +	    check_attr(attr, pr_root_entry_hash) ||
+>>> +	    check_attr(attr, sr_canceled_csks) ||
+>>> +	    check_attr(attr, pr_canceled_csks) ||
+>>> +	    check_attr(attr, bmc_canceled_csks))
+>>> +		return attr->mode;
+>>> +
+>>>       
+>>       
+>> This is all or nothing, shouldn't the interface
+>>
+>> allow for null iop ?
+> All or nothing? Each of the above attributes is optional and is enabled by
+> providing a handler function. This is the "is_visible" op for sysfs and it
+> ensures that only the enabled sysfs entries are displayed (any combination
+> of enabled sysfs files).
+>
+> While these operations are all optional, there are some required operations in iops
+> for the update process (in a later patch), so for the overall patchset iops
+> cannot be NULL.
+Ok. then add a comment.
+>
+>>       
+>>>         
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static struct attribute_group sec_mgr_security_attr_group = {
+>>> +	.name = "security",
+>>> +	.attrs = sec_mgr_security_attrs,
+>>> +	.is_visible = sec_mgr_visible,
+>>> +};
+>>> +
+>>> +static ssize_t name_show(struct device *dev,
+>>> +			 struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
+>>> +
+>>> +	return sprintf(buf, "%s\n", imgr->name);
+>>> +}
+>>> +static DEVICE_ATTR_RO(name);
+>>> +
+>>> +static struct attribute *sec_mgr_attrs[] = {
+>>> +	&dev_attr_name.attr,
+>>> +	NULL,
+>>> +};
+>>> +
+>>> +static struct attribute_group sec_mgr_attr_group = {
+>>> +	.attrs = sec_mgr_attrs,
+>>> +};
+>>> +
+>>> +static const struct attribute_group *ifpga_sec_mgr_attr_groups[] = {
+>>> +	&sec_mgr_attr_group,
+>>> +	&sec_mgr_security_attr_group,
+>>> +	NULL,
+>>> +};
+>>> +
+>>> +static bool check_sysfs_handler(struct device *dev,
+>>> +				void *sysfs_handler, void *size_handler,
+>>> +				const char *sysfs_handler_name,
+>>> +				const char *size_handler_name)
+>>> +{
+>>> +	if (sysfs_handler) {
+>>>       
+>>       
+>> These two checks can be simplified to
+>>
+>> if (!sysfs_handler || !size_handler)
+> That would require changes to the "else if" condition that follows, which
+> assumes that syfs_handler is null. The purpose of this block of code is
+> to ensure that if the size_handler or the sysfs_handler is defined, that
+> they are both defined. It is OK if they are both undefined.
+>
+> If you wanted to reduce the code, I think we could do something like this, but
+> but I'm afraid it might be confusing and less readable.
+>
+> if (!!size_handler != !!sysfs_handler) {
+> 	dev_err(dev, "%s and %s must both be registered to enable the sysfs file\n",
+> 		size_handler_name, sysfs_handler_name);
+> 	return false;
+> }
+>
+> What do you think?
+
+The more creative uses of '!' the better. ;)
+
+This is fine as-is, maybe add a comment.
+
+>
+>>       
+>>>         
+>>> +		if (!size_handler) {
+>>> +			dev_err(dev, "%s registered without %s\n",
+>>> +				sysfs_handler_name, size_handler_name);
+>>> +			return false;
+>>> +		}
+>>> +	} else if (size_handler) {
+>>> +		dev_err(dev, "%s registered without %s\n",
+>>> +			size_handler_name, sysfs_handler_name);
+>>> +		return false;
+>>> +	}
+>>> +	return true;
+>>> +}
+>>> +
+>>> +#define check_reh_handler(_dev, _iops, _name) \
+>>> +	check_sysfs_handler(_dev, (_iops)->_name##_root_entry_hash, \
+>>> +			    (_iops)->_name##_reh_size, \
+>>> +			    __stringify(_name##_root_entry_hash), \
+>>> +			    __stringify(_name##_reh_size))
+>>> +
+>>> +#define check_csk_handler(_dev, _iops, _name) \
+>>> +	check_sysfs_handler(_dev, (_iops)->_name##_canceled_csks, \
+>>> +			    (_iops)->_name##_canceled_csk_nbits, \
+>>> +			    __stringify(_name##_canceled_csks), \
+>>> +			    __stringify(_name##_canceled_csk_nbits))
+>>> +
+>>> +/**
+>>> + * ifpga_sec_mgr_register - register an IFPGA security manager struct
+>>> + *
+>>> + * @dev:  create ifpga security manager device from pdev
+>>> + * @name: ifpga security manager name
+>>> + * @iops: pointer to a structure of ifpga callback functions
+>>> + * @priv: ifpga security manager private data
+>>> + *
+>>> + * Returns &struct ifpga_sec_mgr pointer on success, or ERR_PTR() on error.
+>>> + */
+>>> +struct ifpga_sec_mgr *
+>>> +ifpga_sec_mgr_register(struct device *dev, const char *name,
+>>> +		       const struct ifpga_sec_mgr_ops *iops, void *priv)
+>>> +{
+>>> +	struct ifpga_sec_mgr *imgr;
+>>> +	int id, ret;
+>>> +
+>>> +	if (!check_reh_handler(dev, iops, bmc) ||
+>>> +	    !check_reh_handler(dev, iops, sr) ||
+>>> +	    !check_reh_handler(dev, iops, pr) ||
+>>> +	    !check_csk_handler(dev, iops, bmc) ||
+>>> +	    !check_csk_handler(dev, iops, sr) ||
+>>> +	    !check_csk_handler(dev, iops, pr)) {
+>>> +		return ERR_PTR(-EINVAL);
+>>> +	}
+>>> +
+>>> +	if (!name || !strlen(name)) {
+>>> +		dev_err(dev, "Attempt to register with no name!\n");
+>>> +		return ERR_PTR(-EINVAL);
+>>> +	}
+>>> +
+>>> +	imgr = kzalloc(sizeof(*imgr), GFP_KERNEL);
+>>> +	if (!imgr)
+>>> +		return ERR_PTR(-ENOMEM);
+>>> +
+>>> +	imgr->name = name;
+>>>       
+>>       
+>> should name be dup-ed?
+> The name is string constant that is provided by the underlying device driver
+> (from the kernel space) so I don't think it would be necessary to dup the string.
+
+If the underlying driver unloads, the name ptr will be invalid.
+
+Will the driver unregister remove its use here ?
+
+>
+>>       
+>>>         
+>>> +	imgr->priv = priv;
+>>> +	imgr->iops = iops;
+>>> +	mutex_init(&imgr->lock);
+>>> +
+>>> +	id = ida_simple_get(&ifpga_sec_mgr_ida, 0, 0, GFP_KERNEL);
+>>> +	if (id < 0) {
+>>> +		ret = id;
+>>> +		goto exit_free;
+>>> +	}
+>>> +
+>>> +	imgr->dev.class = ifpga_sec_mgr_class;
+>>> +	imgr->dev.parent = dev;
+>>> +	imgr->dev.id = id;
+>>> +
+>>> +	ret = dev_set_name(&imgr->dev, "ifpga_sec%d", id);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Failed to set device name: ifpga_sec%d\n", id);
+>>> +		ida_simple_remove(&ifpga_sec_mgr_ida, id);
+>>> +		goto exit_free;
+>>> +	}
+>>> +
+>>> +	ret = device_register(&imgr->dev);
+>>> +	if (ret) {
+>>> +		put_device(&imgr->dev);
+>>> +		return ERR_PTR(ret);
+>>> +	}
+>>> +
+>>> +	return imgr;
+>>> +
+>>> +exit_free:
+>>> +	kfree(dev);
+>>> +	return ERR_PTR(ret);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(ifpga_sec_mgr_register);
+>>> +
+>>> +/**
+>>> + * ifpga_sec_mgr_unregister - unregister a IFPGA security manager
+>>> + *
+>>> + * @mgr: fpga manager struct
+>>> + *
+>>> + * This function is intended for use in a IFPGA security manager
+>>> + * driver's remove() function.
+>>> + */
+>>> +void ifpga_sec_mgr_unregister(struct ifpga_sec_mgr *imgr)
+>>> +{
+>>> +	dev_info(&imgr->dev, "%s %s\n", __func__, imgr->name);
+>>> +
+>>> +	device_unregister(&imgr->dev);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(ifpga_sec_mgr_unregister);
+>>> +
+>>> +static void ifpga_sec_mgr_dev_release(struct device *dev)
+>>> +{
+>>> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
+>>> +
+>>> +	mutex_destroy(&imgr->lock);
+>>> +	ida_simple_remove(&ifpga_sec_mgr_ida, imgr->dev.id);
+>>> +	kfree(imgr);
+>>> +}
+>>> +
+>>> +static int __init ifpga_sec_mgr_class_init(void)
+>>> +{
+>>> +	pr_info("Intel FPGA Security Manager\n");
+>>> +
+>>> +	ifpga_sec_mgr_class = class_create(THIS_MODULE, "ifpga_sec_mgr");
+>>> +	if (IS_ERR(ifpga_sec_mgr_class))
+>>> +		return PTR_ERR(ifpga_sec_mgr_class);
+>>> +
+>>> +	ifpga_sec_mgr_class->dev_groups = ifpga_sec_mgr_attr_groups;
+>>> +	ifpga_sec_mgr_class->dev_release = ifpga_sec_mgr_dev_release;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void __exit ifpga_sec_mgr_class_exit(void)
+>>> +{
+>>> +	class_destroy(ifpga_sec_mgr_class);
+>>> +	ida_destroy(&ifpga_sec_mgr_ida);
+>>> +}
+>>> +
+>>> +MODULE_DESCRIPTION("Intel FPGA Security Manager Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>> +
+>>> +subsys_initcall(ifpga_sec_mgr_class_init);
+>>> +module_exit(ifpga_sec_mgr_class_exit)
+>>> diff --git a/include/linux/fpga/ifpga-sec-mgr.h b/include/linux/fpga/ifpga-sec-mgr.h
+>>> new file mode 100644
+>>> index 000000000000..e391b0c8f448
+>>> --- /dev/null
+>>> +++ b/include/linux/fpga/ifpga-sec-mgr.h
+>>> @@ -0,0 +1,145 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * Header file for Intel FPGA Security Manager
+>>> + *
+>>> + * Copyright (C) 2019-2020 Intel Corporation, Inc.
+>>> + */
+>>> +#ifndef _LINUX_IFPGA_SEC_MGR_H
+>>> +#define _LINUX_IFPGA_SEC_MGR_H
+>>> +
+>>> +#include <linux/device.h>
+>>> +#include <linux/mutex.h>
+>>> +#include <linux/types.h>
+>>> +
+>>> +struct ifpga_sec_mgr;
+>>> +
+>>> +/**
+>>> + * typedef sysfs_reh_size_t - Function to return byte size of root entry hash
+>>> + *
+>>> + * @imgr:      pointer to security manager structure
+>>> + *
+>>> + * This datatype is used to define a function that returns the byte size of a
+>>> + * root entry hash.
+>>> + *
+>>> + * Context: No locking requirements are imposed by the security manager.
+>>> + * Return:  Byte count on success, negative errno on failure
+>>> + */
+>>> +typedef int (*sysfs_reh_size_t)(struct ifpga_sec_mgr *imgr);
+>>> +
+>>> +/**
+>>> + * typedef sysfs_reh_hndlr_t - Function pointer to sysfs file handler
+>>> + *			       for root entry hashes
+>>> + * @imgr:      pointer to security manager structure
+>>> + * @hash:      pointer to an array of bytes in which to store the hash
+>>> + * @size:      byte size of root entry hash
+>>> + *
+>>> + * This datatype is used to define a sysfs file handler function to
+>>> + * return root entry hash data to be displayed via sysfs.
+>>> + *
+>>> + * Context: No locking requirements are imposed by the security manager.
+>>> + * Return:  0 on success, negative errno on failure
+>>> + */
+>>> +typedef int (*sysfs_reh_hndlr_t)(struct ifpga_sec_mgr *imgr, u8 *hash,
+>>> +				 unsigned int size);
+>>> +
+>>> +/**
+>>> + * typedef sysfs_cnt_hndlr_t - Function pointer to sysfs file handler
+>>> + *			       for flash counts
+>>> + * @imgr: pointer to security manager structure
+>>> + *
+>>> + * This datatype is used to define a sysfs file handler function to
+>>> + * return a flash count to be displayed via sysfs.
+>>> + *
+>>> + * Context: No locking requirements are imposed by the security manager
+>>> + * Return: flash count or negative errno
+>>> + */
+>>> +typedef int (*sysfs_cnt_hndlr_t)(struct ifpga_sec_mgr *imgr);
+>>> +
+>>> +/**
+>>> + * typedef sysfs_csk_nbits_t - Function to return the number of bits in
+>>> + *				      a Code Signing Key cancellation vector
+>>> + *
+>>> + * @imgr:      pointer to security manager structure
+>>> + *
+>>> + * This datatype is used to define a function that returns the number of bits
+>>> + * in a Code Signing Key cancellation vector.
+>>> + *
+>>> + * Context: No locking requirements are imposed by the security manager.
+>>> + * Return:  Number of bits on success, negative errno on failure
+>>> + */
+>>> +typedef int (*sysfs_csk_nbits_t)(struct ifpga_sec_mgr *imgr);
+>>> +
+>>> +/**
+>>> + * typedef sysfs_csk_hndlr_t - Function pointer to sysfs file handler
+>>> + *			       bit vector of canceled keys
+>>> + *
+>>> + * @imgr:    pointer to security manager structure
+>>> + * @csk_map: pointer to a bitmap to contain cancellation key vector
+>>> + * @nbits:   number of bits in CSK vector
+>>> + *
+>>> + * This datatype is used to define a sysfs file handler function to
+>>> + * return a bitmap of canceled keys to be displayed via sysfs.
+>>> + *
+>>> + * Context: No locking requirements are imposed by the security manager.
+>>> + * Return:  0 on success, negative errno on failure
+>>> + */
+>>> +typedef int (*sysfs_csk_hndlr_t)(struct ifpga_sec_mgr *imgr,
+>>> +				 unsigned long *csk_map, unsigned int nbits);
+>>> +
+>>> +/**
+>>> + * struct ifpga_sec_mgr_ops - device specific operations
+>>> + * @user_flash_count:	    Optional: Return sysfs string output for FPGA
+>>> + *			    image flash count
+>>> + * @bmc_flash_count:	    Optional: Return sysfs string output for BMC
+>>> + *			    image flash count
+>>> + * @sr_root_entry_hash:	    Optional: Return sysfs string output for static
+>>> + *			    region root entry hash
+>>> + * @pr_root_entry_hash:	    Optional: Return sysfs string output for partial
+>>> + *			    reconfiguration root entry hash
+>>> + * @bmc_root_entry_hash:    Optional: Return sysfs string output for BMC
+>>> + *			    root entry hash
+>>> + * @sr_canceled_csks:	    Optional: Return sysfs string output for static
+>>> + *			    region canceled keys
+>>> + * @pr_canceled_csks:	    Optional: Return sysfs string output for partial
+>>> + *			    reconfiguration canceled keys
+>>> + * @bmc_canceled_csks:	    Optional: Return sysfs string output for bmc
+>>> + *			    canceled keys
+>>> + * @bmc_canceled_csk_nbits: Optional: Return BMC canceled csk vector bit count
+>>> + * @sr_canceled_csk_nbits:  Optional: Return SR canceled csk vector bit count
+>>> + * @pr_canceled_csk_nbits:  Optional: Return PR canceled csk vector bit count
+>>> + * @bmc_reh_size:	    Optional: Return byte size for BMC root entry hash
+>>> + * @sr_reh_size:	    Optional: Return byte size for SR root entry hash
+>>> + * @pr_reh_size:	    Optional: Return byte size for PR root entry hash
+>>> + */
+>>> +struct ifpga_sec_mgr_ops {
+>>> +	sysfs_cnt_hndlr_t user_flash_count;
+>>>       
+>>       
+>> These typedef's hide the function signatures and are
+>>
+>> not consistent with how the other headers in include/linux/fpga
+>>
+>> specify ops.
+> OK - I can remove the typedefs.
+>
+>>       
+>>>         
+>>> +	sysfs_cnt_hndlr_t bmc_flash_count;
+>>> +	sysfs_cnt_hndlr_t smbus_flash_count;
+>>> +	sysfs_reh_hndlr_t sr_root_entry_hash;
+>>> +	sysfs_reh_hndlr_t pr_root_entry_hash;
+>>> +	sysfs_reh_hndlr_t bmc_root_entry_hash;
+>>> +	sysfs_csk_hndlr_t sr_canceled_csks;
+>>> +	sysfs_csk_hndlr_t pr_canceled_csks;
+>>> +	sysfs_csk_hndlr_t bmc_canceled_csks;
+>>> +	sysfs_reh_size_t bmc_reh_size;
+>>> +	sysfs_reh_size_t sr_reh_size;
+>>> +	sysfs_reh_size_t pr_reh_size;
+>>> +	sysfs_csk_nbits_t bmc_canceled_csk_nbits;
+>>> +	sysfs_csk_nbits_t sr_canceled_csk_nbits;
+>>> +	sysfs_csk_nbits_t pr_canceled_csk_nbits;
+>>> +};
+>>> +
+>>> +struct ifpga_sec_mgr {
+>>> +	const char *name;
+>>> +	struct device dev;
+>>> +	const struct ifpga_sec_mgr_ops *iops;
+>>> +	struct mutex lock;		/* protect data structure contents */
+>>>       
+>>       
+>> comment is redundant for a lock.
+> "scripts/checkpatch.pl --strict" will complain about mutex definitions that do not
+> have a comment. Are you asking for a more descriptive comment? Or are you saying
+> that the comment is not required?
+
+Fine as-is.
+
+If checkpatch wants it, just do it.
+
+Tom
+
+>
+>> Tom
+>>
+>>       
+>>>         
+>>> +	void *priv;
+>>> +};
+>>> +
+>>> +struct ifpga_sec_mgr *
+>>> +ifpga_sec_mgr_register(struct device *dev, const char *name,
+>>> +		       const struct ifpga_sec_mgr_ops *iops, void *priv);
+>>> +void ifpga_sec_mgr_unregister(struct ifpga_sec_mgr *imgr);
+>>> +
+>>> +#endif
+>>>       
+>>     
 
