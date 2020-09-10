@@ -2,101 +2,119 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF7C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4FAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCF722067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:41:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TalcK8c1"
+	by mail.kernel.org (Postfix) with ESMTP id 742622067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgIJRkx (ORCPT
+        id S1726914AbgIJRlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:40:53 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52758 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbgIJRem (ORCPT
+        Thu, 10 Sep 2020 13:41:46 -0400
+Received: from smtp-8fa8.mail.infomaniak.ch ([83.166.143.168]:50587 "EHLO
+        smtp-8fa8.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726979AbgIJRW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:34:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AHYZd6070090;
-        Thu, 10 Sep 2020 12:34:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599759275;
-        bh=HNcXE24gLodGk/pYnEjtALKDPSSo1riHaJjB1RV+ZCw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TalcK8c1fG7RnK2xc+mbsJks00QLpOoGxnT47DmAJp3XSQZCXa9HD5q2FUrXBMKds
-         eUylw3V/mYfdFbE6yjoNYEqQ/bTaqrGx8NiXfus1PdyJdVLYd7L3wBDpruu9dq4fTF
-         gARNSoQWP80FbGd74iW7MbXgF5T2bw0TTUzxCr7c=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AHYZNc121733
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 12:34:35 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Sep 2020 12:34:35 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Sep 2020 12:34:35 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AHYYxE007690;
-        Thu, 10 Sep 2020 12:34:34 -0500
-Subject: Re: [PATCH net-next v3 3/3] net: dp83869: Add speed optimization
- feature
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200903114259.14013-1-dmurphy@ti.com>
- <20200903114259.14013-4-dmurphy@ti.com>
- <20200905113818.7962b6d4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <9848c3ee-51c2-2e06-a51b-3aacc1384557@ti.com>
- <20200908104719.0b8aced3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <9d5c56ab-fe37-f132-8891-f20f2bfddb9f@ti.com>
-Date:   Thu, 10 Sep 2020 12:34:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 13:22:58 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BnQfr608ZzlhcF4;
+        Thu, 10 Sep 2020 19:21:56 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BnQfp4Lxmzlh8T3;
+        Thu, 10 Sep 2020 19:21:54 +0200 (CEST)
+Subject: Re: [RFC PATCH v9 0/3] Add introspect_access(2) (was O_MAYEXEC)
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200910164612.114215-1-mic@digikod.net>
+ <20200910170424.GU6583@casper.infradead.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <f6e2358c-8e5e-e688-3e66-2cdd943e360e@digikod.net>
+Date:   Thu, 10 Sep 2020 19:21:37 +0200
+User-Agent: 
 MIME-Version: 1.0
-In-Reply-To: <20200908104719.0b8aced3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200910170424.GU6583@casper.infradead.org>
+Content-Type: text/plain; charset=iso-8859-15
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jakub
 
-On 9/8/20 12:47 PM, Jakub Kicinski wrote:
-> On Tue, 8 Sep 2020 09:07:22 -0500 Dan Murphy wrote:
->> On 9/5/20 1:38 PM, Jakub Kicinski wrote:
->>> On Thu, 3 Sep 2020 06:42:59 -0500 Dan Murphy wrote:
->>>> +static int dp83869_set_downshift(struct phy_device *phydev, u8 cnt)
->>>> +{
->>>> +	int val, count;
->>>> +
->>>> +	if (cnt > DP83869_DOWNSHIFT_8_COUNT)
->>>> +		return -E2BIG;
->>> ERANGE
->> This is not checking a range but making sure it is not bigger then 8.
->>
->> IMO I would use ERANGE if the check was a boundary check for upper and
->> lower bounds.
-> Yeah, ERANGE is not perfect, but the strerror for E2BIG is
-> "Argument list too long" - IDK if users seeing that will know that it
-> means the value is too large. Perhaps we should stick to EINVAL?
+On 10/09/2020 19:04, Matthew Wilcox wrote:
+> On Thu, Sep 10, 2020 at 06:46:09PM +0200, Mickaël Salaün wrote:
+>> This ninth patch series rework the previous AT_INTERPRETED and O_MAYEXEC
+>> series with a new syscall: introspect_access(2) .  Access check are now
+>> only possible on a file descriptor, which enable to avoid possible race
+>> conditions in user space.
+> 
+> But introspection is about examining _yourself_.  This isn't about
+> doing that.  It's about doing ... something ... to a script that you're
+> going to execute.  If the script were going to call the syscall, then
+> it might be introspection.  Or if the interpreter were measuring itself,
+> that would be introspection.  But neither of those would be useful things
+> to do, because an attacker could simply avoid doing them.
 
-EINVAL works for me to.
+Picking a good name other than "access" (or faccessat2) is not easy. The
+idea with introspect_access() is for the calling task to ask the kernel
+if this task should allows to do give access to a kernel resource which
+is already available to this task. In this sense, we think that
+introspection makes sense because it is the choice of the task to allow
+or deny an access.
 
-Dan
+> 
+> So, bad name.  What might be better?  sys_security_check()?
+> sys_measure()?  sys_verify_fd()?  I don't know.
+> 
 
+"security_check" looks quite broad, "measure" doesn't make sense here,
+"verify_fd" doesn't reflect that it is an access check. Yes, not easy,
+but if this is the only concern we are on the good track. :)
+
+
+Other ideas:
+- interpret_access (mainly, but not only, for interpreters)
+- indirect_access
+- may_access
+- faccessat3
