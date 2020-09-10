@@ -2,95 +2,127 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67FFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246DDC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC1B20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF9521D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZnPWMXRT";
+	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AHsRL/hk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbgIJCRE (ORCPT
+        id S1726534AbgIJCRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:17:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52348 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730581AbgIJCNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:13:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B68A2AC1F;
-        Wed,  9 Sep 2020 22:51:06 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Thu, 10 Sep 2020 08:50:42 +1000
-Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-In-Reply-To: <f4d38a20cb0f25b137fe07a7f43358ab3a459038.camel@kernel.org>
-References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
- <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
- <20200908112742.GA2956@quack2.suse.cz>
- <f4d38a20cb0f25b137fe07a7f43358ab3a459038.camel@kernel.org>
-Message-ID: <87mu1yk1j1.fsf@notabene.neil.brown.name>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        Wed, 9 Sep 2020 22:17:38 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:53047 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730150AbgIJCP6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:15:58 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 888825C00DB;
+        Wed,  9 Sep 2020 22:15:53 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Wed, 09 Sep 2020 22:15:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=tFrYXSEwyjn07BpgFaxpcCF3u4JS6a2
+        l5VCkYQ8zpJw=; b=ZnPWMXRTFyOhRNKgUQYKLPW1mXyf27K5QVqSSJA7k9OWR5Z
+        hcD1Iv0Qf2c+azh4Go3omN7bLlbGN7r3/vGFGUujpLjMcZfD8iT7044YIuqPBC9V
+        QFQRYiBGHN67LzxQu9zBZTuqTAtWWIxS4ymsTFqVrd7hRXGWJ133YBz29aAm3+2Q
+        V2nR7mzW0FpQFQ/J9/CGqrM4CsROd2hv3o5q677BxSeLeiH0ehJeYCMYw6kXhDln
+        blr6uiz46lAA5SQp4nnTgF0vHvZXh8BUYKB5+z07X/bvcbqUDdbW9imXpvAtdFdd
+        LCgURzSUL0BXYAEsa3T6Be3J5Aku51kV53/mJBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=tFrYXS
+        Ewyjn07BpgFaxpcCF3u4JS6a2l5VCkYQ8zpJw=; b=AHsRL/hke0PEO20lK2MgSa
+        /e81mN5INU4tKln03n1wD6LiACl4UdQ8VPtojsfwm3imf5PNBn0bJ/LXKD7nDexx
+        /K1k2xkRIE5mE9T8dvzfMKyNz+KiOiml8Ay8ibOUNJpJ6cQZxDXMG6k46XUIjLNz
+        194OwmICrnElaN1QJR+iPOFbD0Porlk7HWkVOXfCSzkd+4AWDRNi2G47Y2HLnZKg
+        aOYSya2Hbt+uo7obAZjXyRKkhhsPrb6xvPrinWSLdiXqd9A8HQmf4y8nQOFWIMcE
+        8gHbySLF3JYvYQqdPm5jw2i2vb1kFmLs9f8B9Lyr553SnpwEKSCesKbpExPWfUaQ
+        ==
+X-ME-Sender: <xms:WIxZX06yv2ohcHJKn9TFHPF4w2xiJVI3a4OxtYucsnvU0eK352BMYg>
+    <xme:WIxZX14br_myZuOpzmNfIA6mFGC1m-cqmY42UL1J9N2k5aNXUnYXoPgPwAD8VZ-WG
+    H7RtKjRuV9_RAxx6g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhepuddttdekueeggedvtddtueekiedutdfguedutdefieeuteefieelteet
+    vddthfeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:WIxZXzdzLViROxxLHBzHqRX1a1NQlSQgUkSJfEtlQqFTEPBlox02jA>
+    <xmx:WIxZX5LkdI6Zd4phlrUUgqHN97sGVDI34YcF4qpCWtYRoRsW-NdgjQ>
+    <xmx:WIxZX4JC_DuuQJ9kE_QYrBfPfiKr5jofn-XMM23ngpUzKz-Q4tzl6w>
+    <xmx:WYxZXyjRnScmnUzM-jECiFE8YJXGzf2njjfcfatYyX19BNNSvVhsUA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id F00FFE00A6; Wed,  9 Sep 2020 22:15:51 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-259-g88fbbfa-fm-20200903.003-g88fbbfa3
+Mime-Version: 1.0
+Message-Id: <ec40306b-39d4-48cb-8e14-28e5ed615655@www.fastmail.com>
+In-Reply-To: <CACPK8XeOf1H2Cdo434DsAjDNGrohip_MZTSMMOh1nhspz2y7dA@mail.gmail.com>
+References: <20200909114312.2863675-1-andrew@aj.id.au>
+ <20200909114312.2863675-2-andrew@aj.id.au>
+ <CACPK8XeOf1H2Cdo434DsAjDNGrohip_MZTSMMOh1nhspz2y7dA@mail.gmail.com>
+Date:   Thu, 10 Sep 2020 11:45:30 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Joel Stanley" <joel@jms.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Johnny Huang" <johnny_huang@aspeedtech.com>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re:_[PATCH_1/3]_pinctrl:_aspeed:_Format_pinconf_debug_consiste?=
+ =?UTF-8?Q?nt_with_pinmux?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 08 2020, Jeff Layton wrote:
-
->
-> Yep.
->
-> My only comment is that there is nothing special about EIO and ENOSPC.
-
-There are two type of errors that fsync can return.
- EBADF EROFS EINVAL  - these are usage errors.
- EIO ENOSPC EDQUOT   - these are functional failures.
-
-So I would say there *is* something special about those errors, though
-it isn't *very* special, and it isn't *just* those errors. EDQUOT should
-be included in the list.
-
-NeilBrown
 
 
-> All errors are the same in this regard. Basically, issuing a new fsync
-> after a failed one doesn't do any good. You need to redirty the pages
-> first.
-> --=20
-> Jeff Layton <jlayton@kernel.org>
+On Thu, 10 Sep 2020, at 11:22, Joel Stanley wrote:
+> On Wed, 9 Sep 2020 at 11:43, Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > When displaying which pinconf register and field is being touched, format the
+> > field mask so that it's consistent with the way the pinmux portion
+> > formats the mask.
+> >
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > ---
+> >  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> > index 53f3f8aec695..d8972911d505 100644
+> > --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> > +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> > @@ -539,9 +539,9 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
+> >                 if (rc < 0)
+> >                         return rc;
+> >
+> > -               pr_debug("%s: Set SCU%02X[%lu]=%d for param %d(=%d) on pin %d\n",
+> > -                               __func__, pconf->reg, __ffs(pconf->mask),
+> > -                               pmap->val, param, arg, offset);
+> > +               pr_debug("%s: Set SCU%02X[0x%08X]=%d for param %d(=%d) on pin %d\n",
+> 
+> 
+> The pr_debug in pinmux-aspeed.c prints val as 0x%X. Did you want to do
+> that here?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Fair point, I'll do a v2.
 
------BEGIN PGP SIGNATURE-----
-
-iQJCBAEBCAAsFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl9ZXEMOHG5laWxiQHN1
-c2UuZGUACgkQOeye3VZigbmtzxAAhBP7kWRRvSM5FxqzA6R1/UmOSLt/LHYytyww
-brm0loAU/lStB6kJcF7eTUBo+4hQaKNyTwfoAQCVTi+u3oEhvz/TsR1Zmc8qLY5X
-6N0f0bFjIbRghPVBjqi1HZX08ZPJkiQF1XsYRKwnijf6WChLZy8Fh6bi5hPo61KU
-KyG6Lt0S2NQj62lPvCdy6JfxXDeQPZ4nMRu99d5of8yShcdPyIhH1nTRg0gnLsvF
-4HDmxYiY6DzJwdjvHOohTMIvQNd8v+fUWLP8TbI7F6xJeqSEWpi2SMs9q5HL/rGq
-Dn6DA3xkS4kqH1iWRZYdhvPSoWHLeHMl6z5GIvKsc1PuxGuek1sqR9Lw9KQSFBY6
-QMf2RkBSQnmm5PFPq1xQsm3SDDS9YIFHt+GRDZWtD6yHzUoz8xe27g9j4uUqDVNn
-lzG2v+Ae7UcyhJIOJjiYh3n+JysUgUhEbx/1VSc0Sykg7O778OWafouAsp9UEoDD
-zyWNp2n9cltcjJ4cRA0qmWNYcSf6tTeJSaCkfsqnsYdVMmpjRM04MHm1K7nlYs2L
-dBbAfwXLw3aMkZFXuFLhigFyjgqj0+OBLR4imrfbYn83OfH/im3Hd6umhP05eaZ+
-HbJi7W0Vj9xUavYd09qkrdRD/JHJnqazKD4o6FIV4jvfcMfl0iRnTK6Y5aq1WcQ1
-T4ak25w=
-=8VKx
------END PGP SIGNATURE-----
---=-=-=--
+Andrew
