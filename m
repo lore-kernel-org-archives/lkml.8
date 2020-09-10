@@ -2,101 +2,286 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98664C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F73C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE7321D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C9221556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eRaklC5d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGCpMABX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgIJTgY (ORCPT
+        id S1727952AbgIJTho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
+        Thu, 10 Sep 2020 15:37:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgIJTgB (ORCPT
+        with ESMTP id S1731371AbgIJPnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:36:01 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149E2C061796
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:35:50 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l17so7500327edq.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:35:50 -0700 (PDT)
+        Thu, 10 Sep 2020 11:43:22 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90069C0617BF;
+        Thu, 10 Sep 2020 08:06:45 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id s17so1512748ooe.6;
+        Thu, 10 Sep 2020 08:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n5g2VKT0NX2V9vUtFME4ZGEhrr3w5KhEAQNj+WuBjkQ=;
-        b=eRaklC5d1OINOyJjswenVydz4ubWff2ZOHUDzyUYBYlhwIvLhATs7LPbmS8S82Z4lp
-         dBBLs23oLG1A+i+tpvyMGegBDoBUu7NJEunvws8RCEl+p7/XPm3dFQhGLP+zwto9hZ69
-         aTuANMTAwk4X7SoipEiYWxdEojWxpdVCrajzFV5zC/15j7GkeIt4P6Jdj5IAwzERgxWN
-         ZzLU6B3a+nGAnbO9O6LclWovDfKhopwc3XhQQFjROWvXdnV2bLinzSsSbbGj/O/R6ge8
-         /TDkuxc9tcNX0yee/XK3UWd/vTfdgi+Ld7e39taLQmlJQPaajw1F4ds4WpnQlTzke6W7
-         lE1g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E8M/z3Gk8Sa5l74LlHbuoj+hzq9e3nUuKXKapEQzdbo=;
+        b=FGCpMABX1xjbP76ciDMXt+fndgM/+Q3T3yt0PNXdw4jK1m9i0XLOcvIXxcNaf1XYs0
+         fgC82F34gB5t1XgSg8dc3NvGhu8hnYRIWlc3/3m4/bPXbc/zLgHr37dRZeiRlPs7NaX1
+         LZgmw1DjXJPgxAM4cWI+9MGHlOOAtkm7wMGfdLPLRRNXT/Ah1Q20OlqK42xMq9koaRkg
+         45ahSOWHx2s3tt99tp7z5h8RENdv19nDK7d8cVnbZHgwo1+2NQEW2+efKBD/Sh2Wdahv
+         xBvl/f2IzKM/Zwr0QlVDA43b/ib9J5vSgWp1PgMZVipL876xgbEd3Vyp4HbcOUooBHG+
+         6aAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n5g2VKT0NX2V9vUtFME4ZGEhrr3w5KhEAQNj+WuBjkQ=;
-        b=HGptNBRK32r90da8CZtu6hoLiIKWHtf+5pRN06cSqdcUXQG4N8xcFDVyX0S43zJdwA
-         qHOFbPHYkTgXyx99NspguLJdIZXWI7+ajOemr+6nC4s91uPblqpogdD8MmV8ZfqEXQNk
-         uUjOzKPuGmblsMmjfHwvmm2g3IgsSO7cU+nW9dWAmuhgsek8XowKLlKoKskX/OFRwDQw
-         AVtI26XVwQpYpiCp5uijfgfgMJ24sLM+x4rMPlErHys5X25Mj8YLsVC/jFquRIybhqpW
-         4ER7tExnmoVar9I2io7qLTGzAHsHXtFrVYD/k9vxZLZB+1TNwG8+OzRWB/PT9Cy0nHn5
-         NF8g==
-X-Gm-Message-State: AOAM532qAGth+ro2vn3gaRjIJupWsr6wZEHbg2ufDqProgKFC3Yv6Sm/
-        dqhGro9WLD4d+1oB1+wz6eAdkfbuwKjrrBIJeiCXtjUolw8=
-X-Google-Smtp-Source: ABdhPJy8lW8ACRd6m8wxRF741QmPd/9at5g6mpJsh4fXdHopAzzHzh6/Rlsqaq8CbAwrVltCpTGsysH1d6lOYQ8FkEY=
-X-Received: by 2002:aa7:c554:: with SMTP id s20mr11006793edr.230.1599766548307;
- Thu, 10 Sep 2020 12:35:48 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E8M/z3Gk8Sa5l74LlHbuoj+hzq9e3nUuKXKapEQzdbo=;
+        b=hVQiAFZBSB/UKwjavPFdM5tGnyrRVUlG4t1cMG+y9Bo05EpC5yuvfFoFkmhVcxTVpn
+         /MMPNCZ8OrDPKwDI5KK923uPzZz6X4sZVVvKi4otoEpW32WD3SJgTG1PXlPRyfYsLEoa
+         qG+RbKe50jEvIhghwRhgYpxNzHr2U7JwptzMLvsha1ltGWe3j90gxVRYZajpFmG4EynH
+         l9RF/Q3npQgXvp72ht0qUjqj+XsRK86iwrZ07SwT/KnCytFm4Keerk+Ks/KZBdLNShWK
+         GOiiiByCWalcVdM/Q71TjR8E+lF1WhJhqEWDM+4kII85XXvadW+MFu3K6qh+TDTVC8j3
+         4avg==
+X-Gm-Message-State: AOAM5311Edr+r2otFOJgMa9Yxq/QCI7TnwIGhU6Ja8cuQvnM1QSUncct
+        PNDPWQafM9J6ujBMDkZm7RYpJx9N+SI=
+X-Google-Smtp-Source: ABdhPJyDtlXFIVYUBe127YbUQ6+YoEPaAzyAWY0MqiMzEsGGevl1or4lgJZEJX31A/wLBhaJAUgl3w==
+X-Received: by 2002:a4a:b443:: with SMTP id h3mr4785413ooo.45.1599750404724;
+        Thu, 10 Sep 2020 08:06:44 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a6sm855665otf.51.2020.09.10.08.06.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 10 Sep 2020 08:06:44 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 08:06:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v7 1/3] virtio: add dma-buf support for exported objects
+Message-ID: <20200910150640.GA148344@roeck-us.net>
+References: <20200818071343.3461203-1-stevensd@chromium.org>
+ <20200818071343.3461203-2-stevensd@chromium.org>
 MIME-Version: 1.0
-References: <20200910134802.3160311-1-lenaptr@google.com>
-In-Reply-To: <20200910134802.3160311-1-lenaptr@google.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 10 Sep 2020 21:35:22 +0200
-Message-ID: <CAG48ez3x51kkDt19ONXbi8Se+2swMgwfmaj7AFbBqmss=D38Ug@mail.gmail.com>
-Subject: Re: [PATCH] sched.h: drop in_ubsan field when UBSAN is in trap mode
-To:     Elena Petrova <lenaptr@google.com>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818071343.3461203-2-stevensd@chromium.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 3:48 PM Elena Petrova <lenaptr@google.com> wrote:
-> in_ubsan field of task_struct is only used in lib/ubsan.c, which in its
-> turn is used only `ifneq ($(CONFIG_UBSAN_TRAP),y)`.
->
-> Removing unnecessary field from a task_struct will help preserve the
-> ABI between vanilla and CONFIG_UBSAN_TRAP'ed kernels. In particular,
-> this will help enabling bounds sanitizer transparently for Android's
-> GKI.
+On Tue, Aug 18, 2020 at 04:13:41PM +0900, David Stevens wrote:
+> This change adds a new flavor of dma-bufs that can be used by virtio
+> drivers to share exported objects. A virtio dma-buf can be queried by
+> virtio drivers to obtain the UUID which identifies the underlying
+> exported object.
+> 
+> Signed-off-by: David Stevens <stevensd@chromium.org>
 
-The diff looks reasonable to me, but I'm curious about the
-justification in the commit message:
+This makes VIRTIO dependent on DMA_SHARED_BUFFER. That means "select
+DMA_SHARED_BUFFER" will have to be added to "config VIRTIO".
 
-Is the intent here that you want to be able to build a module without
-CONFIG_UBSAN and load it into a kernel that is built with
-CONFIG_UBSAN? Or the inverse?
+Guenter
 
-Does this mean that in the future, gating new exported functions, or
-new struct fields, on CONFIG_UBSAN (independent of whether
-CONFIG_UBSAN_TRAP is set) will break Android?
-
-If you really want to do this, and using alternatives to patch out the
-ubsan instructions is not an option, I wonder whether it would be more
-reasonable to at least add a configuration where CONFIG_UBSAN is
-enabled but the compiler flag is not actually set. Then you could
-unconditionally build that android kernel and its modules with that
-config option, and wouldn't have to worry about structure size issues,
-dependencies on undefined symbols and so on.
+> ---
+>  drivers/virtio/Makefile         |  2 +-
+>  drivers/virtio/virtio.c         |  6 +++
+>  drivers/virtio/virtio_dma_buf.c | 85 +++++++++++++++++++++++++++++++++
+>  include/linux/virtio.h          |  1 +
+>  include/linux/virtio_dma_buf.h  | 37 ++++++++++++++
+>  5 files changed, 130 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/virtio/virtio_dma_buf.c
+>  create mode 100644 include/linux/virtio_dma_buf.h
+> 
+> diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+> index 29a1386ecc03..ecdae5b596de 100644
+> --- a/drivers/virtio/Makefile
+> +++ b/drivers/virtio/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o
+> +obj-$(CONFIG_VIRTIO) += virtio.o virtio_ring.o virtio_dma_buf.o
+>  obj-$(CONFIG_VIRTIO_MMIO) += virtio_mmio.o
+>  obj-$(CONFIG_VIRTIO_PCI) += virtio_pci.o
+>  virtio_pci-y := virtio_pci_modern.o virtio_pci_common.o
+> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> index a977e32a88f2..5d46f0ded92d 100644
+> --- a/drivers/virtio/virtio.c
+> +++ b/drivers/virtio/virtio.c
+> @@ -357,6 +357,12 @@ int register_virtio_device(struct virtio_device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(register_virtio_device);
+>  
+> +bool is_virtio_device(struct device *dev)
+> +{
+> +	return dev->bus == &virtio_bus;
+> +}
+> +EXPORT_SYMBOL_GPL(is_virtio_device);
+> +
+>  void unregister_virtio_device(struct virtio_device *dev)
+>  {
+>  	int index = dev->index; /* save for after device release */
+> diff --git a/drivers/virtio/virtio_dma_buf.c b/drivers/virtio/virtio_dma_buf.c
+> new file mode 100644
+> index 000000000000..45d6e8647dcf
+> --- /dev/null
+> +++ b/drivers/virtio/virtio_dma_buf.c
+> @@ -0,0 +1,85 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * dma-bufs for virtio exported objects
+> + *
+> + * Copyright (C) 2020 Google, Inc.
+> + */
+> +
+> +#include <linux/virtio_dma_buf.h>
+> +
+> +/**
+> + * virtio_dma_buf_export - Creates a new dma-buf for a virtio exported object
+> + * @exp_info: [in] see dma_buf_export(). ops MUST refer to a dma_buf_ops
+> + *	struct embedded in a virtio_dma_buf_ops.
+> + *
+> + * This wraps dma_buf_export() to allow virtio drivers to create a dma-buf
+> + * for an virtio exported object that can be queried by other virtio drivers
+> + * for the object's UUID.
+> + */
+> +struct dma_buf *virtio_dma_buf_export
+> +	(const struct dma_buf_export_info *exp_info)
+> +{
+> +	const struct virtio_dma_buf_ops *virtio_ops =
+> +		container_of(exp_info->ops,
+> +			     const struct virtio_dma_buf_ops, ops);
+> +
+> +	if (!exp_info->ops ||
+> +	    exp_info->ops->attach != &virtio_dma_buf_attach ||
+> +	    !virtio_ops->get_uuid) {
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return dma_buf_export(exp_info);
+> +}
+> +EXPORT_SYMBOL(virtio_dma_buf_export);
+> +
+> +/**
+> + * virtio_dma_buf_attach - mandatory attach callback for virtio dma-bufs
+> + */
+> +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
+> +			  struct dma_buf_attachment *attach)
+> +{
+> +	int ret;
+> +	const struct virtio_dma_buf_ops *ops =
+> +		container_of(dma_buf->ops,
+> +			     const struct virtio_dma_buf_ops, ops);
+> +
+> +	if (ops->device_attach) {
+> +		ret = ops->device_attach(dma_buf, attach);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(virtio_dma_buf_attach);
+> +
+> +/**
+> + * is_virtio_dma_buf - returns true if the given dma-buf is a virtio dma-buf
+> + * @dma_buf: buffer to query
+> + */
+> +bool is_virtio_dma_buf(struct dma_buf *dma_buf)
+> +{
+> +	return dma_buf->ops->attach == &virtio_dma_buf_attach;
+> +}
+> +EXPORT_SYMBOL(is_virtio_dma_buf);
+> +
+> +/**
+> + * virtio_dma_buf_get_uuid - gets a virtio dma-buf's exported object's uuid
+> + * @dma_buf: [in] buffer to query
+> + * @uuid: [out] the uuid
+> + *
+> + * Returns: 0 on success, negative on failure.
+> + */
+> +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf,
+> +			    uuid_t *uuid)
+> +{
+> +	const struct virtio_dma_buf_ops *ops =
+> +		container_of(dma_buf->ops,
+> +			     const struct virtio_dma_buf_ops, ops);
+> +
+> +	if (!is_virtio_dma_buf(dma_buf))
+> +		return -EINVAL;
+> +
+> +	return ops->get_uuid(dma_buf, uuid);
+> +}
+> +EXPORT_SYMBOL(virtio_dma_buf_get_uuid);
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index 15f906e4a748..9397e25616c4 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -128,6 +128,7 @@ static inline struct virtio_device *dev_to_virtio(struct device *_dev)
+>  void virtio_add_status(struct virtio_device *dev, unsigned int status);
+>  int register_virtio_device(struct virtio_device *dev);
+>  void unregister_virtio_device(struct virtio_device *dev);
+> +bool is_virtio_device(struct device *dev);
+>  
+>  void virtio_break_device(struct virtio_device *dev);
+>  
+> diff --git a/include/linux/virtio_dma_buf.h b/include/linux/virtio_dma_buf.h
+> new file mode 100644
+> index 000000000000..a2fdf217ac62
+> --- /dev/null
+> +++ b/include/linux/virtio_dma_buf.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * dma-bufs for virtio exported objects
+> + *
+> + * Copyright (C) 2020 Google, Inc.
+> + */
+> +
+> +#ifndef _LINUX_VIRTIO_DMA_BUF_H
+> +#define _LINUX_VIRTIO_DMA_BUF_H
+> +
+> +#include <linux/dma-buf.h>
+> +#include <linux/uuid.h>
+> +#include <linux/virtio.h>
+> +
+> +/**
+> + * struct virtio_dma_buf_ops - operations possible on exported object dma-buf
+> + * @ops: the base dma_buf_ops. ops.attach MUST be virtio_dma_buf_attach.
+> + * @device_attach: [optional] callback invoked by virtio_dma_buf_attach during
+> + *		   all attach operations.
+> + * @get_uid: [required] callback to get the uuid of the exported object.
+> + */
+> +struct virtio_dma_buf_ops {
+> +	struct dma_buf_ops ops;
+> +	int (*device_attach)(struct dma_buf *dma_buf,
+> +			     struct dma_buf_attachment *attach);
+> +	int (*get_uuid)(struct dma_buf *dma_buf, uuid_t *uuid);
+> +};
+> +
+> +int virtio_dma_buf_attach(struct dma_buf *dma_buf,
+> +			  struct dma_buf_attachment *attach);
+> +
+> +struct dma_buf *virtio_dma_buf_export
+> +	(const struct dma_buf_export_info *exp_info);
+> +bool is_virtio_dma_buf(struct dma_buf *dma_buf);
+> +int virtio_dma_buf_get_uuid(struct dma_buf *dma_buf, uuid_t *uuid);
+> +
+> +#endif /* _LINUX_VIRTIO_DMA_BUF_H */
