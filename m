@@ -2,121 +2,102 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B99EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A763B21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA84621D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eC6xHFZe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLHZ+M99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgIJTqd (ORCPT
+        id S1727066AbgIJTrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:46:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726966AbgIJTpr (ORCPT
+        Thu, 10 Sep 2020 15:47:11 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28696 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730769AbgIJPZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:45:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250CCC0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:45:47 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id v196so5435292pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kT3st5L2W/yGrskNA7hV4WTKcp+VzTZ5Pgaqe30vqT8=;
-        b=eC6xHFZebGzDOu2iJFlC4sYhGBsPBPtk9a7oklICzLNlEMzSAdGnasLCc1rhvVduzw
-         WWGkAB927UqclP1++HPY0zndFIqCAsSEoCB33GsJW1zgx9zdnqi9fNwkG+wGtFEr+T3z
-         bUYjH1Oc2jBMRnj0f0FQ3tH0tHQIOzzYF+914=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kT3st5L2W/yGrskNA7hV4WTKcp+VzTZ5Pgaqe30vqT8=;
-        b=ZG4tp+t71CqLf458mTUuC2iYKl38mD407TkRDBbMwpg1rP/cLxZnel3nZJD24CSXWD
-         ocsUx2oE+pcRJ0RtAseW9f2Fix6WanLSAMRxB1aOOt9AWAHNuml5vpQoaGQrClISumWB
-         BHJLVuIVd7gWwMSJ/Rh3i2COLdLdMN6A8TPZqmMySqqLQqYsmknBoWla9Uxt7zg3l8vg
-         YPT9BcCjv5ve3EE739kAMGORrrVCTPF/pyPtLlh17rxKzJWLcRnH+Rp+O+F7Y1vRV05K
-         3dzDVJ8H+uo0oLG1Jhroo/+WaTSkwEE/sREe49Zel7J1i+C06QmRs7Qa2cVswmFR5a9r
-         ET2Q==
-X-Gm-Message-State: AOAM530cO+IW6pGMkULtT/XdZ1ofQ3X/hSdFWFpuD6OyBfMqCTe5OVcj
-        ExQEhoL6GgCWdHzpCCKsQ/apXw==
-X-Google-Smtp-Source: ABdhPJwWpKs77i2Pw4YhFhAT5cZe6s0qx17kIVE+as0BWVJNc55TKLnEBagdP5cQWEjWPugWxrbACw==
-X-Received: by 2002:aa7:858e:: with SMTP id w14mr2753410pfn.95.1599767146631;
-        Thu, 10 Sep 2020 12:45:46 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l79sm2905776pfd.210.2020.09.10.12.45.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 12:45:45 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 12:45:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-ia64@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-arch@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
-        Jessica Yu <jeyu@kernel.org>, linux-um@lists.infradead.org,
-        linux-m68k@lists.linux-m68k.org, Tony Luck <tony.luck@intel.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] kbuild: preprocess module linker script
-Message-ID: <202009101245.493610D05@keescook>
-References: <20200904133122.133071-1-masahiroy@kernel.org>
+        Thu, 10 Sep 2020 11:25:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599751512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UQEeRxYOrGoLGB9nBiblTSrr/ssmHsXtBv8lg+YH02U=;
+        b=RLHZ+M99unTCxJefSM7gm84nOTOuR4KFNUJmaO62dkN7aC+KXOEkal43q+X0du3nWju9rl
+        AlLeLDgUGq15L51TflErnmGHfPVzRBozvSDk8eMFYeOTGT1Dfe0I+IDTbb4ZpVyKMuoB7v
+        J3Z1i/j2qF8B1xoAhdaUuIIZcbEyGWE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-572-6uLkSfj2Ny-0totYFoFYqA-1; Thu, 10 Sep 2020 11:25:10 -0400
+X-MC-Unique: 6uLkSfj2Ny-0totYFoFYqA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07BE318C89CB;
+        Thu, 10 Sep 2020 15:25:09 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-119-118.rdu2.redhat.com [10.10.119.118])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62E645D9EF;
+        Thu, 10 Sep 2020 15:25:08 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] objtool: Fix noreturn detection for ignored functions
+Date:   Thu, 10 Sep 2020 10:24:57 -0500
+Message-Id: <5b1e2536cdbaa5246b60d7791b76130a74082c62.1599751464.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904133122.133071-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 10:31:21PM +0900, Masahiro Yamada wrote:
-> There was a request to preprocess the module linker script like we do
-> for the vmlinux one (https://lkml.org/lkml/2020/8/21/512).
-> 
-> The difference between vmlinux.lds and module.lds is that the latter
-> is needed for external module builds, thus must be cleaned up by
-> 'make mrproper' instead of 'make clean' (also, it must be created by
-> 'make modules_prepare').
-> 
-> You cannot put it in arch/*/kernel/ because 'make clean' descends into
-> it. I moved arch/*/kernel/module.lds to arch/*/include/asm/module.lds.h,
-> which is included from scripts/module.lds.S.
-> 
-> scripts/module.lds is fine because 'make clean' keeps all the build
-> artifacts under scripts/.
-> 
-> You can add arch-specific sections in <asm/module.lds.h>.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+When a function is annotated with STACK_FRAME_NON_STANDARD, objtool
+doesn't validate its code paths.  It also skips sibling call detection
+within the function.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+But sibling call detection is actually needed for the case where the
+ignored function doesn't have any return instructions.  Otherwise
+objtool naively marks the function as implicit static noreturn, which
+affects the reachability of its callers, resulting in "unreachable
+instruction" warnings.
 
+Fix it by just enabling sibling call detection for ignored functions.
+The 'insn->ignore' check in add_jump_destinations() is no longer needed
+after commit e6da9567959e ("objtool: Don't use ignore flag for fake
+jumps").
+
+Fixes the following warning:
+
+  arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x142: unreachable instruction
+
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e034a8f24f46..90a66891441a 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -619,7 +619,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 		if (!is_static_jump(insn))
+ 			continue;
+ 
+-		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
++		if (insn->offset == FAKE_JUMP_OFFSET)
+ 			continue;
+ 
+ 		reloc = find_reloc_by_dest_range(file->elf, insn->sec,
 -- 
-Kees Cook
+2.25.4
+
