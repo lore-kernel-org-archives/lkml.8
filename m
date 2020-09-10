@@ -2,112 +2,164 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B37C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D07C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07B752078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250862078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:46:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="INguoyub"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="fW03118K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbgIJIqC (ORCPT
+        id S1730277AbgIJIqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58570 "EHLO
+        Thu, 10 Sep 2020 04:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728626AbgIJIoN (ORCPT
+        with ESMTP id S1729990AbgIJInk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:44:13 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A2CC061799
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:39 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a3so5205941oib.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:39 -0700 (PDT)
+        Thu, 10 Sep 2020 04:43:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06924C061796
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b124so4196291pfg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RM+6YCueDPy1nkorG5jfOVGfbj1m5UCHBF4PF2PU/iI=;
-        b=INguoyube130+8WwnXu/RYMh/Ju9WC30cNYDrviHqjIJBbZccMMVak/rSrOZ3ijhHR
-         OmyS41tmWGU9bUjUr28yjCNpFgi3MHy2KYoaUXyZmwIZPZiIiwAojnfIKdvrGosGbjPA
-         JydJiXyNitT7guWnNfOTvv7Z4wIAc2T/tudn8=
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DydHZR1p/a4YgWod1jge5YOze1r87n8O9ViW1sroOHE=;
+        b=fW03118K7OqoKHn0n/T5KvrtUYFGItUGF5N6guUzhftq5pe6S/cCuNZOc7HvKn8Eey
+         IDNdM9hwsCF4NZkTkAwKmCSYy5a2dFlOA9lp46ncqkgd1q3DoUJBFxmUZUZt6kufBXDw
+         pYTgoq8v1ApLaGpSc4X6a84Kaosdt95njNvvWGVCbOHsa7bfTKEnm+5pbShj746vZxEM
+         b+3wSM92YFInqZYqb9WhPEDbL8IxDn5xD9kvQ3mFFAd9hJY0Ini76LCw7FtbXR+ymhl4
+         VUof+fRcGtKEQQO3SOy6ZDwd0/xU/N2QLdSZhnFwnfuFkKPNnJZKNuYqkAsm/aEf/aXB
+         rmLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RM+6YCueDPy1nkorG5jfOVGfbj1m5UCHBF4PF2PU/iI=;
-        b=G4nQtatGcrwTb/d8jh/9IqF/GiZl2G5j0ccKHin/M+lbgS62S12FnKj5yWLw4vN0LS
-         cZAt61p6EtilCeznrQoF6d4jYTPkGOKt1nUeGVMbLTjl60OHI47YoUyVILSwLKYviz1G
-         5EM7+8YpWiHs9cTZFbka1VQi7o2wPZRna4j/Yu6vEDAGNjBy3dDn28ydelKbSAHKPs+R
-         6pXMdgkWlGioTbRmunXdCE03C50T8rauMS58TQGAh8IclrMo/ruE3KxBBRjOROSMMmLy
-         uJmuGPOphP7n65DNqd5Sh7Xbe8+tMuLQYNDORRjbU4uTc+TkMiTXVN8C0AL7XHH1o9dA
-         1V6g==
-X-Gm-Message-State: AOAM530MXiElTejmYpo7v8qL7Q2Rt8tNihMeIslJ3X4E9lXPwHhErAc1
-        ReciBZ8h4iVnRKMOI5YCzUo7P3YdY8ImwQ==
-X-Google-Smtp-Source: ABdhPJyOIgCy8bTT4F2F5B/dmdOHcoUL5mm7txNmA2slzYvEjfaq7NiBwgcqAqxP7Nw8xddEtE5Xrw==
-X-Received: by 2002:aca:da06:: with SMTP id r6mr3091923oig.88.1599727418170;
-        Thu, 10 Sep 2020 01:43:38 -0700 (PDT)
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com. [209.85.167.179])
-        by smtp.gmail.com with ESMTPSA id z5sm749795otp.16.2020.09.10.01.43.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 01:43:37 -0700 (PDT)
-Received: by mail-oi1-f179.google.com with SMTP id i17so5184172oig.10
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:43:36 -0700 (PDT)
-X-Received: by 2002:aca:1209:: with SMTP id 9mr2982017ois.94.1599727416353;
- Thu, 10 Sep 2020 01:43:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DydHZR1p/a4YgWod1jge5YOze1r87n8O9ViW1sroOHE=;
+        b=tlNTbDDqscXpqWMlI9nNso1efUJF4K+rkjqmfapmJ13ZkJnMp2UJJtmXjkCOxJLA43
+         i7nm0MLdaWgy1oMBzLpIC4NRLeq9vJVOnyvaZZTn/8224T6cuOwGXlhhbwd9IEN/aK2z
+         36tcPTa7qjwdLm4clGfVR9pjl2qrtZLC1u6va9Byq5GR8tbw/kcZA66hSitmFIS6wDeM
+         tsxVxB56j482ubrcK3dXCjIejZEwyTWCbTHhJ7SvaKJLzEk3JHGIsxJqgplJA3tLyG0c
+         yz6vEjBRip8Euk0OhIpPaU3qdL515qMOK5ZOuRNL0lL/jvwbEph4bBGER9VACr0NDk7d
+         HMmQ==
+X-Gm-Message-State: AOAM533fLy35UQulEXsGNttVQ4SaGmfu95OEKFpH1r14oZMdcNRPcdFn
+        CnI2W6wtctfjzQNGPDvb9dV6gg==
+X-Google-Smtp-Source: ABdhPJw1G2Xl2QigaSTG41KX4+ivGSijQkSvMrzle/xljTr3qEDQNI3MjDlu9qARs4whVg2vcMPJEw==
+X-Received: by 2002:a63:f53:: with SMTP id 19mr3741250pgp.26.1599727395106;
+        Thu, 10 Sep 2020 01:43:15 -0700 (PDT)
+Received: from Smcdef-MBP.local.net ([103.136.221.71])
+        by smtp.gmail.com with ESMTPSA id n21sm4447567pgl.7.2020.09.10.01.43.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Sep 2020 01:43:14 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH] mm: memcontrol: Add the missing numa stat of anon and file for cgroup v2
+Date:   Thu, 10 Sep 2020 16:42:58 +0800
+Message-Id: <20200910084258.22293-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-References: <20200518174011.15543-1-ezequiel@collabora.com>
- <20200518174011.15543-3-ezequiel@collabora.com> <CAPBb6MXezNVxPrJ05mpS1=yE8V81DjeQ2gA4pGfC8QQzgfUi8A@mail.gmail.com>
-In-Reply-To: <CAPBb6MXezNVxPrJ05mpS1=yE8V81DjeQ2gA4pGfC8QQzgfUi8A@mail.gmail.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Thu, 10 Sep 2020 17:43:24 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MVqq-3JLBe9k5WtYL-LHmXYwj7HFt8tAVLNnuqKJA0p9Q@mail.gmail.com>
-Message-ID: <CAPBb6MVqq-3JLBe9k5WtYL-LHmXYwj7HFt8tAVLNnuqKJA0p9Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] media: uapi: Add VP9 stateless decoder controls
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Gustavo Padovan <gustavo.padovan@collabora.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 3:04 PM Alexandre Courbot <acourbot@chromium.org> wrote:
->
-> Hi Ezequiel, sorry for the late review!
->
-> On Tue, May 19, 2020 at 2:40 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> >
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> >
-> > Add the VP9 stateless decoder controls plus the documentation that goes
-> > with it.
-> >
-> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  .../userspace-api/media/v4l/biblio.rst        |  10 +
-> >  .../media/v4l/ext-ctrls-codec.rst             | 550 ++++++++++++++++++
-> >  drivers/media/v4l2-core/v4l2-ctrls.c          | 239 ++++++++
-> >  drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
-> >  include/media/v4l2-ctrls.h                    |   1 +
-> >  include/media/vp9-ctrls.h                     | 485 +++++++++++++++
+In the cgroup v1, we have a numa_stat interface. This is useful for
+providing visibility into the numa locality information within an
+memcg since the pages are allowed to be allocated from any physical
+node. One of the use cases is evaluating application performance by
+combining this information with the application's CPU allocation.
+But the cgroup v2 does not. So this patch adds the missing information.
 
-Also another thing I missed: shouldn't the new pointer controls be
-added to union v4l2_ctrl_ptr in v4l2-ctrls.h?
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ mm/memcontrol.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 75cd1a1e66c8..c779673f29b2 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1492,10 +1492,34 @@ static bool mem_cgroup_wait_acct_move(struct mem_cgroup *memcg)
+ 	return false;
+ }
+ 
++#ifdef CONFIG_NUMA
++static unsigned long memcg_node_page_state(struct mem_cgroup *memcg,
++					   unsigned int nid,
++					   enum node_stat_item idx)
++{
++	long x;
++	struct mem_cgroup_per_node *pn;
++	struct lruvec *lruvec = mem_cgroup_lruvec(memcg, NODE_DATA(nid));
++
++	VM_BUG_ON(nid >= nr_node_ids);
++
++	pn = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
++	x = atomic_long_read(&pn->lruvec_stat[idx]);
++#ifdef CONFIG_SMP
++	if (x < 0)
++		x = 0;
++#endif
++	return x;
++}
++#endif
++
+ static char *memory_stat_format(struct mem_cgroup *memcg)
+ {
+ 	struct seq_buf s;
+ 	int i;
++#ifdef CONFIG_NUMA
++	int nid;
++#endif
+ 
+ 	seq_buf_init(&s, kmalloc(PAGE_SIZE, GFP_KERNEL), PAGE_SIZE);
+ 	if (!s.buffer)
+@@ -1512,12 +1536,30 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+ 	 * Current memory state:
+ 	 */
+ 
+-	seq_buf_printf(&s, "anon %llu\n",
++	seq_buf_printf(&s, "anon %llu",
+ 		       (u64)memcg_page_state(memcg, NR_ANON_MAPPED) *
+ 		       PAGE_SIZE);
+-	seq_buf_printf(&s, "file %llu\n",
++#ifdef CONFIG_NUMA
++	for_each_node_state(nid, N_MEMORY)
++		seq_buf_printf(&s, " N%d=%llu", nid,
++			       (u64)memcg_node_page_state(memcg, nid,
++							  NR_ANON_MAPPED) *
++			       PAGE_SIZE);
++#endif
++	seq_buf_putc(&s, '\n');
++
++	seq_buf_printf(&s, "file %llu",
+ 		       (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
+ 		       PAGE_SIZE);
++#ifdef CONFIG_NUMA
++	for_each_node_state(nid, N_MEMORY)
++		seq_buf_printf(&s, " N%d=%llu", nid,
++			       (u64)memcg_node_page_state(memcg, nid,
++							  NR_FILE_PAGES) *
++			       PAGE_SIZE);
++#endif
++	seq_buf_putc(&s, '\n');
++
+ 	seq_buf_printf(&s, "kernel_stack %llu\n",
+ 		       (u64)memcg_page_state(memcg, NR_KERNEL_STACK_KB) *
+ 		       1024);
+-- 
+2.20.1
+
