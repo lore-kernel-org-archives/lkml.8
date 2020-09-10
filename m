@@ -2,143 +2,88 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E59C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33745C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9C44206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:25:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ejgtl18y"
+	by mail.kernel.org (Postfix) with ESMTP id EF4C321D91
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725878AbgIJWZz (ORCPT
+        id S1725791AbgIJW2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 18:25:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41464 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgIJWZq (ORCPT
+        Thu, 10 Sep 2020 18:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgIJW2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 18:25:46 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AMPiAM090190;
-        Thu, 10 Sep 2020 17:25:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599776744;
-        bh=gD11JyVdwWaHLo3Ml11eQLz7gFzw5VXQ8yRD/2vidE4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Ejgtl18ysksbw3s01cEeE+pITUeihYnS4w5v4uTkaxP+6cCK+jFBpBRyd+qF/RdxO
-         jdG9NvxIxeoZqSHUGHyU3ISW4ZOeIYdoDtHw9QNLyf3KOG3dGRJi3YohJQ2xWNH/VQ
-         PsdCJGmddYoWiGzFv5qTkFm0WI6lW2mNFrdURVc4=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AMPiGL088296
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 17:25:44 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Sep 2020 17:25:43 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Sep 2020 17:25:43 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AMPgiP121612;
-        Thu, 10 Sep 2020 17:25:43 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH next 3/3] ARM: dts: am437x-l4: drop legacy cpsw dt node
-Date:   Fri, 11 Sep 2020 01:25:18 +0300
-Message-ID: <20200910222518.32486-4-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910222518.32486-1-grygorii.strashko@ti.com>
-References: <20200910222518.32486-1-grygorii.strashko@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 10 Sep 2020 18:28:14 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4B8C061573;
+        Thu, 10 Sep 2020 15:28:13 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2C9B4135EDBF1;
+        Thu, 10 Sep 2020 15:11:25 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 15:28:11 -0700 (PDT)
+Message-Id: <20200910.152811.210183159970625640.davem@davemloft.net>
+To:     natechancellor@gmail.com
+Cc:     kuba@kernel.org, rmk+kernel@armlinux.org.uk, andrew@lunn.ch,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH net-next] net: mvpp2: Initialize link in
+ mvpp2_isr_handle_{xlg,gmac_internal}
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200910174826.511423-1-natechancellor@gmail.com>
+References: <20200910174826.511423-1-natechancellor@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 27.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 10 Sep 2020 15:11:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All am437x boards have been converted to use new driver, so drop legacy
-cpsw dt node.
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Thu, 10 Sep 2020 10:48:27 -0700
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm/boot/dts/am437x-l4.dtsi | 51 --------------------------------
- 1 file changed, 51 deletions(-)
+> Clang warns (trimmed for brevity):
+> 
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3073:7: warning:
+> variable 'link' is used uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>                 if (val & MVPP22_XLG_STATUS_LINK_UP)
+>                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3075:31: note:
+> uninitialized use occurs here
+>                 mvpp2_isr_handle_link(port, link);
+>                                             ^~~~
+> ...
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3090:8: warning:
+> variable 'link' is used uninitialized whenever 'if' condition is false
+> [-Wsometimes-uninitialized]
+>                         if (val & MVPP2_GMAC_STATUS0_LINK_UP)
+>                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:3092:32: note:
+> uninitialized use occurs here
+>                         mvpp2_isr_handle_link(port, link);
+>                                                     ^~~~
+> 
+> Initialize link to false like it was before the refactoring that
+> happened around link status so that a valid valid is always passed into
+> mvpp2_isr_handle_link.
+> 
+> Fixes: 36cfd3a6e52b ("net: mvpp2: restructure "link status" interrupt handling")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1151
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index e702e9576115..d82a6eeaf1b3 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -521,57 +521,6 @@
- 			#size-cells = <1>;
- 			ranges = <0x0 0x100000 0x8000>;
- 
--			mac: ethernet@0 {
--				compatible = "ti,am4372-cpsw","ti,cpsw";
--				reg = <0x0 0x800
--				       0x1200 0x100>;
--				interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH
--					      GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH
--					      GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH
--					      GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
--				#address-cells = <1>;
--				#size-cells = <1>;
--				clocks = <&cpsw_125mhz_gclk>, <&cpsw_cpts_rft_clk>,
--					 <&dpll_clksel_mac_clk>;
--				clock-names = "fck", "cpts", "50mclk";
--				assigned-clocks = <&dpll_clksel_mac_clk>;
--				assigned-clock-rates = <50000000>;
--				status = "disabled";
--				cpdma_channels = <8>;
--				ale_entries = <1024>;
--				bd_ram_size = <0x2000>;
--				mac_control = <0x20>;
--				slaves = <2>;
--				active_slave = <0>;
--				cpts_clock_mult = <0x80000000>;
--				cpts_clock_shift = <29>;
--				ranges = <0 0 0x8000>;
--				syscon = <&scm_conf>;
--
--				davinci_mdio: mdio@1000 {
--					compatible = "ti,am4372-mdio","ti,cpsw-mdio","ti,davinci_mdio";
--					reg = <0x1000 0x100>;
--					clocks = <&cpsw_125mhz_clkctrl AM4_CPSW_125MHZ_CPGMAC0_CLKCTRL 0>;
--					clock-names = "fck";
--					#address-cells = <1>;
--					#size-cells = <0>;
--					bus_freq = <1000000>;
--					status = "disabled";
--				};
--
--				cpsw_emac0: slave@200 {
--					/* Filled in by U-Boot */
--					mac-address = [ 00 00 00 00 00 00 ];
--					phys = <&phy_gmii_sel 1 0>;
--				};
--
--				cpsw_emac1: slave@300 {
--					/* Filled in by U-Boot */
--					mac-address = [ 00 00 00 00 00 00 ];
--					phys = <&phy_gmii_sel 2 0>;
--				};
--			};
--
- 			mac_sw: switch@0 {
- 				compatible = "ti,am4372-cpsw","ti,cpsw-switch";
- 				reg = <0x0 0x4000>;
--- 
-2.17.1
-
+This got fixed via another change, a much mode simply one in fact,
+changing the existing assignments to be unconditional and of the
+form "link = (bits & MASK);"
