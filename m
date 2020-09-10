@@ -2,75 +2,115 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA6CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B66C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306AC20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7A920829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3oiey2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgIJUMy (ORCPT
+        id S1726828AbgIJUOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:12:54 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57162 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731104AbgIJO7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:59:23 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BE9B23FBCEBC2E6F4CDE;
-        Thu, 10 Sep 2020 22:59:18 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
- 22:59:09 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <snelson@pensando.io>,
-        <colin.king@canonical.com>, <maz@kernel.org>, <luobin9@huawei.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 4/6] net: hns: Fix some kernel-doc warnings in hns_enet.c
-Date:   Thu, 10 Sep 2020 22:56:18 +0800
-Message-ID: <20200910145620.27470-5-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910145620.27470-1-wanghai38@huawei.com>
-References: <20200910145620.27470-1-wanghai38@huawei.com>
+        Thu, 10 Sep 2020 16:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbgIJULU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:11:20 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D49FC061573;
+        Thu, 10 Sep 2020 13:11:16 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id i17so7150236oig.10;
+        Thu, 10 Sep 2020 13:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PIaw4viVscD0xciePTKoxfM/fPGxfckTUhgAPLwZWUs=;
+        b=F3oiey2grTNpBYbsJEvFtUCJHyYz7k3lOnbE+yuhGY5ji8Bjbk6qzqq1WlUZLXCI7l
+         KvC8/vqPXdHZUYMkYXA8/RpJvvWfnwrhYnPHOPFIwPN37r83hes12G8KnvEGrZRZD22r
+         CSh1RdNpvb5xDXNX9/wuKRoI61zyo4wahZOwp9n79/K1whLaqHYrgCiwYxGGYGH4iGuw
+         sdHE7sjomnaHm70GtcQuhqY1eH4sKOcsaBkTkOoKjntzVFwnoesE21cnArKlOioSBSJA
+         G29iOiMrBmZqn1pGXrb44n65vkf6SU+towPk8Ky5JV43LPHvBuz0tckD0BC5mArzhOyW
+         YKfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PIaw4viVscD0xciePTKoxfM/fPGxfckTUhgAPLwZWUs=;
+        b=BpKAMaGHHw4MXQKZHW/k1BmEjlwS0oHL+cPJZ9hVJZ269I7IUujsKBVGAm/4v5JDwC
+         TtP8EETY+5x85cL4wo570M1rIuHLrcFqXP82tYbDmibVQui8Thybi567XPUVd5PytUmw
+         fP0BygGCTH+dyHNNIm9cKtXAaxyTxMiERoahwA+/CY3KZevG3z1z9Hb9qByfXPAHgeDS
+         7j/RoPZVXzthpCSCcgqwzJHtkUIGh1rbtSl+fSO1hOCX81SNlpA4Gc+PUJzlU4Etdasi
+         SbZIP0+VJonn5jCaM9q62Q7Aiqcyh3MeazylstNZdSUIOQRR4Mv8qrDDKb/xe3tXpmVR
+         zpGg==
+X-Gm-Message-State: AOAM533ZsCP1XRgXwcPqQ6kX+0Ix0Xqu+Vb8+dJEHE/PzesMwjFRq/6u
+        95H438MFz+YbVa59HVO7NfxgZ5PYF9SQPosll0OrrBshCMrElg==
+X-Google-Smtp-Source: ABdhPJz2APy1qRsuVPEiADmwZ0os2nfZdnFyBncVhvPhiY7hJleSOr4sZiGeIwiwC6mBjq5qWzxi0lcxYT4JFmz0E24=
+X-Received: by 2002:a05:6808:a05:: with SMTP id n5mr1139541oij.154.1599768675322;
+ Thu, 10 Sep 2020 13:11:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+References: <20200910161126.30948-1-oded.gabbay@gmail.com> <20200910161126.30948-13-oded.gabbay@gmail.com>
+ <20200910130138.6d595527@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200910130138.6d595527@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 10 Sep 2020 23:10:47 +0300
+Message-ID: <CAFCwf113A_=da2fGxgMbq_V0OcHsxdp5MpfHiUfeew+gEdnjaQ@mail.gmail.com>
+Subject: Re: [PATCH 12/15] habanalabs/gaudi: add debugfs entries for the NIC
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Omer Shpigelman <oshpigelman@habana.ai>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On Thu, Sep 10, 2020 at 11:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> On Thu, 10 Sep 2020 19:11:23 +0300 Oded Gabbay wrote:
+> > From: Omer Shpigelman <oshpigelman@habana.ai>
+> >
+> > Add several debugfs entries to help us debug the NIC engines and ports and
+> > also the communication layer of the DL training application that use them.
+> >
+> > There are eight new entries. Detailed description is in the documentation
+> > file but here is a summary:
+> >
+> > - nic_mac_loopback: enable mac loopback mode per port
+> > - nic_ports_status: print physical connection status per port
+> > - nic_pcs_fail_time_frame: configure windows size for measuring pcs
+> >                            failures
+> > - nic_pcs_fail_threshold: configure pcs failures threshold for
+> >                           reconfiguring the link
+> > - nic_pam4_tx_taps: configure PAM4 TX taps
+> > - nic_polarity: configure polarity for NIC port lanes
+> > - nic_check_link: configure whether to check the PCS link periodically
+> > - nic_phy_auto_neg_lpbk: enable PHY auto-negotiation loopback
+> >
+> > Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+> > Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+> > Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+>
+> debugfs configuration interfaces are not acceptable in netdev.
 
-drivers/net/ethernet/hisilicon/hns/hns_enet.c:1841: warning: Excess function parameter 'netdev' description in 'hns_set_multicast_list'
-drivers/net/ethernet/hisilicon/hns/hns_enet.c:1841: warning: Excess function parameter 'p' description in 'hns_set_multicast_list'
+no problem, but can we have only these two entries:
+> - nic_mac_loopback: enable mac loopback mode per port
+> - nic_ports_status: print physical connection status per port
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+nic_ports_status is print only (not configuration). nic_mac_loopback
+is to set a port to loopback mode and out of it. It's not really
+configuration but rather a mode change.
+If not, what's the alternative ?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index b13f3a5cdf59..b658b9de81d7 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -1829,8 +1829,7 @@ static int hns_nic_uc_unsync(struct net_device *netdev,
- 
- /**
-  * nic_set_multicast_list - set mutl mac address
-- * @netdev: net device
-- * @p: mac address
-+ * @ndev: net device
-  *
-  * return void
-  */
--- 
-2.17.1
-
+Thanks,
+Oded
