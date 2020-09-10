@@ -2,174 +2,162 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEA8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60560C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2319120684
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 053D320684
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUxVcG8/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTfxPqUk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgIJVF0 (ORCPT
+        id S1726612AbgIJVFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
+        Thu, 10 Sep 2020 17:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731063AbgIJOhX (ORCPT
+        with ESMTP id S1728060AbgIJVFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:37:23 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2690C0617A9;
-        Thu, 10 Sep 2020 07:35:26 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id ay8so6532250edb.8;
-        Thu, 10 Sep 2020 07:35:26 -0700 (PDT)
+        Thu, 10 Sep 2020 17:05:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CA0C061573;
+        Thu, 10 Sep 2020 14:05:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id jw11so644951pjb.0;
+        Thu, 10 Sep 2020 14:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8HvRoiCT6Kaqw+ME0No79Ijetq5cFPuTsghNfxraGwU=;
-        b=nUxVcG8/Gc71+4ot2A2Swhq1iHl5I5udIPQA5pErGqnEZcNyUf/HZVQqQqCohsrxzn
-         5cyDq7J56l7uFC0o2cj7YN1PoGuVFh7yqFbJ7iWrPT347WXmOVmFTwvpUtGLy7JXESll
-         8/YNkAbKEh22aN2uPfGV656lszd48mEZuuoyIJqvOynJpsKoolic0DdiX1khR5k/09fF
-         xMGnXkMj1Jz7+55GFmHszF/42TLtQO3wg6BLZRCyTF4z6ZTLKY5Uu1P8Zs4+eN74SIsT
-         ISomZMNoJvDbRDkqsk+mDo0Uwa8AdajBskyTH88+9FVf25WlpAHJWFIKWSmjqt+UvkDB
-         l5tw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u3ZSYZIE11VVPHHcA2Umq2k8ZqXKEUiv80isAt4/Bxs=;
+        b=YTfxPqUk4Uz3ZAivteNj8RKC2MZcFwnOy2aKX161D2TaIYwOPVmIBOWDSWCBj7JISC
+         4QXuctBSeEKDdm5wwW3Be0f2VtGnnhPwD9Q1NyH8uoYYX5csEE/IjYSOuLHHRdpASFjP
+         24JV4dJg8wg06CCbQBX9DaVoyRss1VkdmC9FrKW4rfdVU/stktfnlrIx7fHi+GJULkXn
+         cT1XUM5hw6C0mg9CEX2KWQQsBV9pZ+ppcb7UewuWgmERLz0h8pEoTfJHzuvq6viD/S/s
+         GHxlgd38hGFzDQeqJ8ARlQtyccMlDLsiea6E8+gBxOTBKnf9FBkcbJjDtpoqfT6wmK4W
+         kCqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8HvRoiCT6Kaqw+ME0No79Ijetq5cFPuTsghNfxraGwU=;
-        b=GyfBFSnjfXRgcH663axb+NcMDPkxPZcFI64pMpmrOhy4KVMTNypX6oHLMfYI2UnTYw
-         8igjAUyaUJs7DR9JTRZg+5rccOYR09wVAaAu8iakky/G/nRb+4bG6LPKH3HhfHgOtdWb
-         5vWmgOPaLb57xFt9iDQ8OjmukPVCAIzCCRvp4Us0eoQ1RxSdxcmKLCe+gtYeHvAqYSdq
-         dYF8Q9DwbGryMUSAQOKLgvb4vAjFQhNXPZMKEjC3vdUX+ryf47ngBzChDHDllWsj4/+Y
-         yRryFZwpxZQ4X4IdjMLq7bjXsB61gy2lTUJpalwLPChylXwwfzmQinPsZT+mN28aYb/m
-         apLw==
-X-Gm-Message-State: AOAM530D7NuTBPgMA+fZwlETlDkVm2kcmRwFe6tt0aY/w/cq88wRSDwn
-        yJ5wOQPUDjpK0XGDLsVAiTs=
-X-Google-Smtp-Source: ABdhPJwNXgGLyf78LllCxiKYdXIqr7RFMl9vsJSHfdNs3cPpKF5gm4SQXM9MIAPD1KxMYSw9WhyOOA==
-X-Received: by 2002:aa7:c987:: with SMTP id c7mr9890667edt.385.1599748525404;
-        Thu, 10 Sep 2020 07:35:25 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id e16sm7311945ejk.68.2020.09.10.07.35.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Sep 2020 07:35:24 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 5BC2827C00A3;
-        Thu, 10 Sep 2020 10:35:21 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 10 Sep 2020 10:35:21 -0400
-X-ME-Sender: <xms:qTlaX-gM8Ru-FxewhZyXlYl-UwXC6Y0CFCg0p8Jy3EcPlsPh5ENknw>
-    <xme:qTlaX_AKEdWXcDEEq3tON-e2IwnVTi6ySPNJmOwJ1DzCPxM97lw305JXqvvS6pTkp
-    6CtUYmrWoHCnZeUrw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgjedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvffufffkofgjfhgggfes
-    tdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnh
-    hgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeehvdevteefgfeiudettdef
-    vedvvdelkeejueffffelgeeuhffhjeetkeeiueeuleenucfkphephedvrdduheehrdduud
-    durdejudenucevlhhushhtvghrufhiiigvpeeknecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtd
-    eigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehf
-    ihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:qTlaX2GgtTTN8eFG5oCuvPw2QOuzdK0bc_vU_OaN-Bm97GbaWecroQ>
-    <xmx:qTlaX3Tbu9sAvwzGETMjhs5oW8ioJFDg15SXhOCtHAYmdQ3bYvl4oQ>
-    <xmx:qTlaX7xsWnnmPsqpY8f8y2Vg75B-bM_7lc2XQwLx5nqwjXgSKHaCCA>
-    <xmx:qTlaXyi7Nng2jgVb-9M1_der89Caf2YGcJenFZ2SGDi5wMUD4_99rrxZNuY>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 92ED73280059;
-        Thu, 10 Sep 2020 10:35:20 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>, will@kernel.org,
-        ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
-        mark.rutland@arm.com, maz@kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH v3 10/11] Driver: hv: util: Make ringbuffer at least take two pages
-Date:   Thu, 10 Sep 2020 22:34:54 +0800
-Message-Id: <20200910143455.109293-11-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200910143455.109293-1-boqun.feng@gmail.com>
-References: <20200910143455.109293-1-boqun.feng@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u3ZSYZIE11VVPHHcA2Umq2k8ZqXKEUiv80isAt4/Bxs=;
+        b=g7G/fQ73YAbNA/0Gudbzrjb2zx8aDIkydvi40d0P9k6pkDbMfe5M3hXcghThUamO6d
+         dIZ6FzuIXqtxDC5Aa+jo3QmzE6HWO5CJJP0Gmh7sm0r2QiIdI65fhOhr5GkW+FpEqP96
+         Rrg7V8nH8FWQFKs2dKPd6IEXFhU1WmOPpjlM6Da3TPEsUZ3d1UPL9YSTp1ykXrimRt87
+         zb0ckEnVZe9MgnTjSIzwTnEwltvb8twq70B7IlyA9BVxttt9xMfhXJ0zTIC9r/suLDgQ
+         g4zayxqn5WTA/tb1XTEzpJRhKn5gAuY9+hxEcn+tbRcmM+gWkSsxV26/Zxr/tjH7w8k5
+         fkbw==
+X-Gm-Message-State: AOAM533twWVLa3Eslu1k8W7BO3fVp4QULVYK+NtkRCrBaH7OcSq6lr6O
+        rtEr8ppdZeWQS8VMV1+B3pWnqzYqD4E=
+X-Google-Smtp-Source: ABdhPJxMgRg+FNEDbF7a6Czn58yBRVG6yMKsz5u5qFIEKnOBNR7j1B1hXHvuNjYaXEzpymcM82Hdgg==
+X-Received: by 2002:a17:90a:481:: with SMTP id g1mr1663925pjg.157.1599771918100;
+        Thu, 10 Sep 2020 14:05:18 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id in10sm2686145pjb.11.2020.09.10.14.05.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 14:05:17 -0700 (PDT)
+Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200910161126.30948-1-oded.gabbay@gmail.com>
+ <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
+ <20200910132835.1bf7b638@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAFCwf127fssgiDEwYvv3rFW7iFFfKKZDE=oxDUbFBcwpz3yQkQ@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a13199ce-0c73-920d-857d-3223144f41f0@gmail.com>
+Date:   Thu, 10 Sep 2020 14:05:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFCwf127fssgiDEwYvv3rFW7iFFfKKZDE=oxDUbFBcwpz3yQkQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When PAGE_SIZE > HV_HYP_PAGE_SIZE, we need the ringbuffer size to be at
-least 2 * PAGE_SIZE: one page for the header and at least one page of
-the data part (because of the alignment requirement for double mapping).
 
-So make sure the ringbuffer sizes to be at least 2 * PAGE_SIZE when
-using vmbus_open() to establish the vmbus connection.
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- drivers/hv/hv_util.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+On 9/10/2020 1:32 PM, Oded Gabbay wrote:
+> On Thu, Sep 10, 2020 at 11:28 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>
+>> On Thu, 10 Sep 2020 23:16:22 +0300 Oded Gabbay wrote:
+>>> On Thu, Sep 10, 2020 at 11:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>>> On Thu, 10 Sep 2020 19:11:11 +0300 Oded Gabbay wrote:
+>>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
+>>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
+>>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
+>>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
+>>>>>   create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
+>>>>>   create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
+>>>>
+>>>> The relevant code needs to live under drivers/net/(ethernet/).
+>>>> For one thing our automation won't trigger for drivers in random
+>>>> (/misc) part of the tree.
+>>>
+>>> Can you please elaborate on how to do this with a single driver that
+>>> is already in misc ?
+>>> As I mentioned in the cover letter, we are not developing a
+>>> stand-alone NIC. We have a deep-learning accelerator with a NIC
+>>> interface.
+>>> Therefore, we don't have a separate PCI physical function for the NIC
+>>> and I can't have a second driver registering to it.
+>>
+>> Is it not possible to move the files and still build them into a single
+>> module?
+> hmm...
+> I actually didn't try that as I thought it will be very strange and
+> I'm not familiar with other drivers that build as a single ko but have
+> files spread out in different subsystems.
+> I don't feel it is a better option than what we did here.
+> 
+> Will I need to split pull requests to different subsystem maintainers
+> ? For the same driver ?
+> Sounds to me this is not going to fly.
 
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index a4e8d96513c2..3996c16568a3 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -500,6 +500,14 @@ static void heartbeat_onchannelcallback(void *context)
- 	}
- }
- 
-+/*
-+ * The size of each ring should be at least 2 * PAGE_SIZE, because we need one
-+ * page for the header and at least another page (because of the alignment
-+ * requirement for double mapping) for data part.
-+ */
-+#define HV_UTIL_RING_SEND_SIZE max(4 * HV_HYP_PAGE_SIZE, 2 * PAGE_SIZE)
-+#define HV_UTIL_RING_RECV_SIZE max(4 * HV_HYP_PAGE_SIZE, 2 * PAGE_SIZE)
-+
- static int util_probe(struct hv_device *dev,
- 			const struct hv_vmbus_device_id *dev_id)
- {
-@@ -530,8 +538,8 @@ static int util_probe(struct hv_device *dev,
- 
- 	hv_set_drvdata(dev, srv);
- 
--	ret = vmbus_open(dev->channel, 4 * HV_HYP_PAGE_SIZE,
--			 4 * HV_HYP_PAGE_SIZE, NULL, 0, srv->util_cb,
-+	ret = vmbus_open(dev->channel, HV_UTIL_RING_SEND_SIZE,
-+			 HV_UTIL_RING_RECV_SIZE, NULL, 0, srv->util_cb,
- 			 dev->channel);
- 	if (ret)
- 		goto error;
-@@ -590,8 +598,8 @@ static int util_resume(struct hv_device *dev)
- 			return ret;
- 	}
- 
--	ret = vmbus_open(dev->channel, 4 * HV_HYP_PAGE_SIZE,
--			 4 * HV_HYP_PAGE_SIZE, NULL, 0, srv->util_cb,
-+	ret = vmbus_open(dev->channel, HV_UTIL_RING_SEND_SIZE,
-+			 HV_UTIL_RING_RECV_SIZE, NULL, 0, srv->util_cb,
- 			 dev->channel);
- 	return ret;
- }
+Not necessarily, you can post your patches to all relevant lists and 
+seek maintainer review/acked-by tags from the relevant maintainers. This 
+is not unheard of with mlx5 for instance.
+
+Have you considered using notifiers to get your NIC driver registered 
+while the NIC code lives in a different module?
 -- 
-2.28.0
-
+Florian
