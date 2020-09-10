@@ -2,265 +2,212 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B1FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EC8C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CB820882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B0F20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:12:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XtsBMeQW"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aLt0WaHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgIJTLh (ORCPT
+        id S1727102AbgIJTMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgIJTFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:05:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BD83C06179B
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:05:46 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z9so1443943wmk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:05:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JTg4k6vet7EQh4DzWnz74Qr6ZRyLW1om2lD8kq6uIf4=;
-        b=XtsBMeQWXn4wIpyzA8S5MMzJ2c772DRMdvO9fx1pAvWIuy1CzxGB8JbEMfROeMDixz
-         kDKZcGkQsh7DwvTFyOy2UoCO1WxWjEOp2Zo280ctQFUl+HxobFTCahJhAZt1rlDMEeGV
-         c9woiBK5G+R/EOMX/sgW7KKfZROeRHp3ds0uQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JTg4k6vet7EQh4DzWnz74Qr6ZRyLW1om2lD8kq6uIf4=;
-        b=GPZ9rAC5/mh/lCov50NdnbaAxElPAyUzkjZheQh9gUiFHESc5lbwDGoKueqnINCy5y
-         QKkNngJPAwxeDiNEdV1rGD1R6PCr0lChR8JNrAt/z0aNSn2tW0NRZkqqqQEWTCofMxAl
-         QlgnlshctNrxIcW1HKC31LrGeBCciFmG7+gYHtG5Vfs6u1v97o0GeMIUvrYi/gsr0PpG
-         KxrDO9hOZHImomz/BAxWJuqJeWUWrZoRcNTVEIs8GMDIGURA1B+OKjFPIGz5FHcJYIiK
-         ZKnMNEJ8NGeJ+g8BRL/n1MtKWUTJey5cFp8DGdJFmFP5l4XrhnbNWr1slrsh4Wdh/oOH
-         MtaA==
-X-Gm-Message-State: AOAM5313L7SFQZYGWYftUmHoCtWQkrN4EVJeG512ehqMECq8PX89RMIN
-        /IR9utELHgdU8RCIH8L7ThWU57gGUZa7r6h2NyOJKQ==
-X-Google-Smtp-Source: ABdhPJwlD5Q8lj0SVn7hyv2oM08lwqVl9n3zHuU4m0J6RFUUa3UT7tAEeix8XxulZJFNFcxbZaGYBHG0hpS+ZuHN8gk=
-X-Received: by 2002:a1c:2dc6:: with SMTP id t189mr1545489wmt.92.1599764744932;
- Thu, 10 Sep 2020 12:05:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-5-james.quinlan@broadcom.com> <20200910155637.GA423872@bogus>
- <CA+-6iNy9g8fhJvd7SOKtc-SZcL8_gLLN1HEs-W8fe-=q6n430A@mail.gmail.com> <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 10 Sep 2020 15:05:31 -0400
-Message-ID: <CA+-6iNwcLZcQcge2E6GUi71rveFaneeCBwxBTfn8MipwhaPvEQ@mail.gmail.com>
-Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        Thu, 10 Sep 2020 15:12:16 -0400
+Received: from mout.gmx.net ([212.227.15.18]:43267 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbgIJTLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:11:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599765003;
+        bh=e/GjHdRDaBKeltHwO5EENqEZEm8NoRyfw4WXvri23to=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=aLt0WaHp2K+27F8mFTyBRsEOuF3eHSIgFfbQfhSFJgr9Yffrr/ZRunmO2Bbat6tMx
+         WtZn4odHoFdb4wJOURVOAr+tqg5Jh1yvULJgPpK7F/U+OY5hIG79BEL3z/AjA8LJ1T
+         Oymy+kgmhcmsUTihUWDayy2ttFebbyhjolXg25ow=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxDkw-1kRUd10zG4-00xe8D; Thu, 10
+ Sep 2020 21:10:03 +0200
+Date:   Thu, 10 Sep 2020 21:09:57 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000005effa805aefa4109"
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
+Subject: Re: [PATCH v2 05/10] pwm: ntxec: Add driver for PWM function in
+ Netronix EC
+Message-ID: <20200910190957.GB3306@latitude>
+References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+ <20200905133230.1014581-6-j.neuschaefer@gmx.net>
+ <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
+X-Provags-ID: V03:K1:2kulQix1IwHTgVYh/suxTjvDyKy9vES/+dG4cKEhMDL8fo3cwpx
+ Ap8fmH3Xtn9sE0LmqdTVBm00y1TH3G+F5etIJE86d0XqwbeKveBHu/E0tCgmMRaKrU/5s4N
+ kQBHyi5bHZdyFfVbKuTVZ1/KOtFUtCsIi7Rdszh5c+0OXRUMm0xHTbMx2b6zA4s3EnEFoFW
+ QnrEy5D38+d/J881Yeyog==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lYBiP+Z8Kk4=:chYqtZ+cZIbZ8Fq3mKK+xf
+ 0hsweLTA8hKYEdccbNZmU+tLUdqoXmCEzkPeGaHkwXhMKheaNSavaaU3j2QgXXKli/H5lWhQf
+ mcgc50GPgkQ4CwY5LmRz7m+iUq7xwYgfUG9dq/+yk6PBHr/PVKVxTTRUpU/Gdtt7I0KYKcott
+ 6RZ1QGKvZjK5iA9Jl/nbkqDURaiPfve6C9inR8zm0F39IQEvzRMnU8tb6p5Y6FKiU63Jvabwc
+ Z1pbYTyzVQAWdruLO2+XRyuBq5bvaT28mNqmA5oZN6v0Y2A06tXRYzVTA6pvG56gqEys1rYAA
+ 2Aw1DjBaW/DeQGzcMokboyUHGg+EsJDFyUMKEhCSlnZ30cfc1toZorH5HEY7zbWVINJZgMqRZ
+ jLet36tfXyOOiF/rERI3vdeEMQ8oPTDXLB07rUOLF4PzkVShztLV9y3XDq6gjhAUWoVupLWD3
+ xz5e8mFdXFg3wzgBfSdOj2331/a8dmuGta4fXlXVKj+j9TY3gtL59Yn/rXeLb+IW+snfZroKf
+ 9lpkYBYnMTYkQoNNxcMwAkPfvS4O4yk2D+gNp1mepW0SBtAUNL8TifSlqIgnuR08DWxPiHubW
+ WgVjeqlmekr/mPhSCWYtOVsluN9rDhsX4pU5EY+T8rwVeav51ayElpncTZwPiP++nas3lkVt4
+ grkYkU0lE1xpCvnNHqEvm7GKd1Xw7Xwz/ouUNA14+W4eV5zuXDFXtfewF8J/ftcKFX+a7R3gz
+ hzbRygdytltvgyDUUWXTkjiZfxEDn1EimlprHBnOvpX/RLnInSpG6sDaJqnsKczkMUYLnxBp+
+ G9tz5+Ke4AFSJll4+dWBAkAhdTc//sgxIuwpX/jaK6vLst9aHRJ32mpdfYeQRFau0PnKRpHMR
+ fxkbu1WeI0AffX3hHq295RmXAggDrhxB1Crr6bGG4nn9jBA/prVkhSW1rJ/YQK4wV644/nMd7
+ WItPBuxqqDJSUrErYiClR6rQRpbmkyMEV7zzkqbnY8GT92CPQyRuJUdE4tJquOHxoQ9IYUqNJ
+ mbqRUfgso3i5PC5DOx9HsywTgH8/JIZwNy5i1W7E1E9ohbcQSTRxD24zkxqqVPgVdHQRd72Q1
+ jreSPAVNEz/ekECmD6i9hp+05Jsp5gXGausBDvYB/laIDCmzglACJ9TM3mkA8/OGIQMYoI5ZE
+ EHF9BtmZXGCJ3fsJc/Uhlh3IeRHNVawSWW8bAJxKm2BW8qhNxUbVrA4mNY4YuPYa0gBKzaPA2
+ VoLjuDALpQNG98yZlblET1kpE6NEvHHJ3J+j9mg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000005effa805aefa4109
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Sep 10, 2020 at 2:50 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Sep 10, 2020 at 10:42 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+--mxv5cy4qt+RJ9ypb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Sep 05, 2020 at 09:08:49PM +0300, Andy Shevchenko wrote:
+> On Saturday, September 5, 2020, Jonathan Neusch=C3=A4fer <j.neuschaefer@g=
+mx.net>
+> wrote:
+>=20
+> > The Netronix EC provides a PWM output which is used for the backlight
+> > on some ebook readers. This patches adds a driver for the PWM output.
 > >
-> > On Thu, Sep 10, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
-> > > > From: Jim Quinlan <jquinlan@broadcom.com>
-> > > >
-> > > > Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
-> > > > and resume.  Now the PCIe driver may do so as well.
-> > > >
-> > > > Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> > > > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> > > > ---
-> > > >  drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
-> > > >  1 file changed, 47 insertions(+)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> > > > index c2b3d2946a36..3d588ab7a6dd 100644
-> > > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > > @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> > > >       brcm_pcie_bridge_sw_init_set(pcie, 1);
-> > > >  }
-> > > >
-> > > > +static int brcm_pcie_suspend(struct device *dev)
-> > > > +{
-> > > > +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> > > > +
-> > > > +     brcm_pcie_turn_off(pcie);
-> > > > +     clk_disable_unprepare(pcie->clk);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +static int brcm_pcie_resume(struct device *dev)
-> > > > +{
-> > > > +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> > > > +     void __iomem *base;
-> > > > +     u32 tmp;
-> > > > +     int ret;
-> > > > +
-> > > > +     base = pcie->base;
-> > > > +     clk_prepare_enable(pcie->clk);
-> > > > +
-> > > > +     /* Take bridge out of reset so we can access the SERDES reg */
-> > > > +     brcm_pcie_bridge_sw_init_set(pcie, 0);
-> > > > +
-> > > > +     /* SERDES_IDDQ = 0 */
-> > > > +     tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> > > > +     u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
-> > > > +     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> > > > +
-> > > > +     /* wait for serdes to be stable */
-> > > > +     udelay(100);
-> > >
-> > > Really needs to be a spinloop?
-> > >
-> > > > +
-> > > > +     ret = brcm_pcie_setup(pcie);
-> > > > +     if (ret)
-> > > > +             return ret;
-> > > > +
-> > > > +     if (pcie->msi)
-> > > > +             brcm_msi_set_regs(pcie->msi);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > >  static void __brcm_pcie_remove(struct brcm_pcie *pcie)
-> > > >  {
-> > > >       brcm_msi_remove(pcie);
-> > > > @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> > > >
-> > > >  MODULE_DEVICE_TABLE(of, brcm_pcie_match);
-> > > >
-> > > > +static const struct dev_pm_ops brcm_pcie_pm_ops = {
-> > > > +     .suspend_noirq = brcm_pcie_suspend,
-> > > > +     .resume_noirq = brcm_pcie_resume,
-> > >
-> > > Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
-> > > and 1352 of .suspend in the tree.
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > ---
+[...]
+> > +#include <linux/of_device.h>
+>=20
+>=20
+> mod_devicetable.h
+
+Okay
+
+> > +/* Convert an 8-bit value into the correct format for writing into a
+> > register */
+> > +#define u8_to_reg(x) (((x) & 0xff) << 8)
+>=20
+>=20
+> You spread this macro among the drivers w/o explanation what=E2=80=99s go=
+ing on. I
+> think there will be better approach.
+
+Okay, I'll move it to ntxec.h and expand on the explanation. I think
+what's missing is the following part:
+
+  Some registers, such as the battery status register (0x41), are in
+  big-endian, but others only have eight significant bits, which are in
+  the first byte transmitted over I2C (the MSB of the big-endian value).
+  This convenience macro/function converts an 8-bit value to 16-bit for
+  use in the second kind of register.
+
+> > +
+> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_PERIOD_HIGH,
+> > u8_to_reg(period >> 8));
+> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_PERIOD_LOW,
+> > u8_to_reg(period));
+> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_DUTY_HIGH,
+> > u8_to_reg(duty >> 8));
+> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_DUTY_LOW,
+> > u8_to_reg(duty));
+>=20
+>=20
+> These funny res |=3D is unusual pattern for returned error codes. Moreover
+> you are shadowing the real ones. Same go the rest drovers. Please fix by
+> checking each separately.
+
+Okay
+
+> > +       platform_set_drvdata(pdev, pwm);
+> > +
+> > +       return (res < 0) ? -EIO : 0;
+>=20
+>=20
+> What?!
+
+That's an editing error, sorry.
+
+> > +static const struct of_device_id ntxec_pwm_of_match[] =3D {
+> > +       { .compatible =3D "netronix,ntxec-pwm" },
 > >
-> > I will test switching this to  suspend_late/resume_early.
->
-> Why not just the 'regular' flavor suspend/resume?
->
-> Rob
-We must have our PCIe driver suspend last and resume first because our
-current driver turns off/on the power for the EPs.  Note that this
-code isn't in the driver as we are still figuring out a way to make it
-upstreamable.
+> >
+>=20
+> > +       { },
+>=20
+>=20
+> No comma.
 
-Jim
+Okay
 
---0000000000005effa805aefa4109
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
 
-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
-mOxPm7sNHsn0TVdPryi9+T2d8fVC/kUmuEdTYP/Hdu4W4b4T9BcW57fInYrmaJ+uotS6X59rAgMB
-AAGjggHRMIIBzTAOBgNVHQ8BAf8EBAMCBaAwgZ4GCCsGAQUFBwEBBIGRMIGOME0GCCsGAQUFBzAC
-hkFodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3BlcnNvbmFsc2lnbjJzaGEy
-ZzNvY3NwLmNydDA9BggrBgEFBQcwAYYxaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL2dzcGVy
-c29uYWxzaWduMnNoYTJnMzBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYm
-aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBEBgNVHR8E
-PTA7MDmgN6A1hjNodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzcGVyc29uYWxzaWduMnNoYTJn
-My5jcmwwJQYDVR0RBB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
-KwYBBQUHAwQwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwHQYDVR0OBBYEFNYm4GDl
-4WOt3laB3gNKFfYyaM8bMA0GCSqGSIb3DQEBCwUAA4IBAQBD+XYEgpG/OqeRgXAgDF8sa+lQ/00T
-wCP/3nBzwZPblTyThtDE/iaL/YZ5rdwqXwdCnSFh9cMhd/bnA+Eqw89clgTixvz9MdL9Vuo8LACI
-VpHO+sxZ2Cu3bO5lpK+UVCyr21y1zumOICsOuu4MJA5mtkpzBXQiA7b/ogjGxG+5iNjt9FAMX4JP
-V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
-lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
-5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
-di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIH/jrDjRLmdN
-HxnNO4Qi19S0/eLulickePCcVAYtHj3MMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMDkxMDE5MDU0NVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
-YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCB/luJ0vpygCgikA/uVk5idXyig5D0
-eZpj7FXLEFq8puvjgz/3hojmCF4C347zxz+dfPV5HGEqrkUNXFpZcoKUqiHgWO+hDSdiXZmE+T3C
-LmqH9PKyG/OYC1VqLF3R6r7rTD31TC5VT3LxMy2PNruWkKK1/Skwvw+gVF1YtikMno2APpBhu8l6
-IevujpLLR+Kl9EVhCvOnihTsSaBUWW4WLxnWUJXJ9EUKfGxdpFI/Rl8HDc95kTD8j146sB9qOVlA
-pUepQijNc/5maj57wJCKfoW2N/3WaBIB+7Yql/ESqwi6N8gLNof0Z33QKFzh6p94oj3JRg3kh+14
-GLcjBmuS
---0000000000005effa805aefa4109--
+Thanks for the review,
+Jonathan Neusch=C3=A4fer
+
+--mxv5cy4qt+RJ9ypb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9aefUACgkQCDBEmo7z
+X9s28xAAnaOJ911XlEgMRmp99aYqJpEdZgZvH/LVKEQBPLYT/XeUf/t2X5MqVTSG
+VjhU4kbYvnUWrVL3Ud63qNe2TV73lI2mUOsz9wFu7coD/+QVmNv5Y2+/SsHBxNcr
+sf6mOX5TTKkwe0bS6bChJZmpZ19fottJ6STYPgeTMJK7zxn299D4gEuO3KNjK8I2
+k0PoE/U/CMAGb4lwzOQ55qXK9u/rmrPp15ME09TSePU0Mqip1ki/jg2qagSuxyfC
+mvsUWZJlHSnx412cJucSpZmT/2IzlVgqn3YDuWOT+gvF0XrUXbKcGYsU4hkCeyb5
+TFostixxqKy7YPXbgNJDQ9AXUXmAOBAMjy+knnR1EFgt8SLNITeiFgqoubIe1vJj
+RA6V9ZNRCsBzRboplVeyjQYqmAWul4mlzezhVp6P9A5S/GfgziKOD5zrDMaGorUP
+qA9Q00SbQuo2WMasehHeo0x1vDan2kzMNBm2F54VZn1awDP/UwI/0s6bDxKK8Bsl
+djXY509LfGcc5phgl199m8rE7PUIaHQQHsEw1T+Z867vPES7pjL0OFnsG4NiiX5o
+QecSeK7xp8BK6c3wAebX3VqMISPfj+R66lhspCtfsbJ1yeVX/nwh8V4OouZtTQJJ
+WF1FS5izzOQO/QaajIE3gH0+ZPfkC9QoH8vEBBtL0mzEbljNq+E=
+=P/2J
+-----END PGP SIGNATURE-----
+
+--mxv5cy4qt+RJ9ypb--
