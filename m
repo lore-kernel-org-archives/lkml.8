@@ -2,116 +2,126 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E669AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A7CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 698852087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:20:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VjstSm6S";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="EAP81zcm"
+	by mail.kernel.org (Postfix) with ESMTP id A2500207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599744155;
+	bh=Uq/WtRdu4g9AjMocRHbFbokL/7jnfk8qKopPXcHuXm0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sK+u2PFCOsqRNULb3N2TWoLY73tr/oUMGHCYBwHRVp+kz8qUgLORc3bwT39tOqyUA
+	 n56K+6NEc+B9+gk/TkAKc2Gxt7TNO1Lug+OT53rGvd5iCZp5rhIPRUOOuLPGp15A3v
+	 j+VVwFK98+z0Qi00VT63RY1uWHwcAOUFtiq6ue0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgIJNUj (ORCPT
+        id S1730697AbgIJNWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:20:39 -0400
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:55914
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728350AbgIJNTD (ORCPT
+        Thu, 10 Sep 2020 09:22:23 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44310 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730637AbgIJNS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:19:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599743499;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=q1h4X0rhfpIJxvratDwVA1xQ2ilL0QOAEAb+uD7egDE=;
-        b=VjstSm6SLxkPGyaLYcFwWUhmBToXnHG7l+rPcxgvCItWVC0aa+7BTPxCIEiutCBF
-        2p5s6MXaf3uKMyr0AzVSiTQbQoOyhXGhHgl+aPbEwdjDR+gmpqr4L939wRwraQM7fDN
-        GIchkauHt3Q1jTqkC87trqepleIPWxEz8EL4YeNk=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599743499;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=q1h4X0rhfpIJxvratDwVA1xQ2ilL0QOAEAb+uD7egDE=;
-        b=EAP81zcmtP5pM8qeNkBZwikGEcWsITaMeTFgnhhfP/D0RTXC9/1oiApbm+j5aTiQ
-        F3AMLWsXs1oJjeEtga7PvYsGxOczIdA4BGHQWTUacdnXP/yl6EsfMKsQdgLP9RfUZK+
-        AofoY6SjblTMp97w49y9/GMCbmUqRByEVpP/uixA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92023C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=pillair@codeaurora.org
-From:   "Rakesh Pillai" <pillair@codeaurora.org>
-To:     "'Kalle Valo'" <kvalo@codeaurora.org>
-Cc:     <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ath10k@lists.infradead.org>
-References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org>  <87y2ls4lbf.fsf@codeaurora.org> <0101017459fdd62b-791355e4-ea88-4142-96a7-06849bcd7b09-000000@us-west-2.amazonses.com> <87k0x51rz3.fsf@codeaurora.org>
-In-Reply-To: <87k0x51rz3.fsf@codeaurora.org>
-Subject: RE: [PATCH] ath10k: Use bdf calibration variant for snoc targets
-Date:   Thu, 10 Sep 2020 13:11:39 +0000
-Message-ID: <0101017478249a7e-ec85ae99-51da-4af5-9314-c3a6b205795e-000000@us-west-2.amazonses.com>
+        Thu, 10 Sep 2020 09:18:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s12so6645175wrw.11
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:18:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBLcgxMKAbS1n+eV0fIrOxnLTOdgcrxYXmGgYjmbzNc=;
+        b=cYGgBsovPCI9GsQi3tgODPRsJ++Nk/Q1do7WRDofOANKw+ZuAQzf9RtkUVMgzmMGKd
+         YULPVk1jC1sTsc8onNX/QUtCqR04n8HTSQdeJfc2Eu+4tZL2mm3/OzGkrv6z4L70kOPB
+         J4UteWYTZzAzUfTiOul3mWqUqtadcZ/CRM98MypVbXilRjBEN3tpOUxtpiDZUtdyjf6v
+         Vtge5yqh4wVFx3ugkCFeK7Tv4L13YiWe4XThXEi/IB3PORhc7eCGbO5KtKMfRH1ZHQ0d
+         rXk+gx8rUC6sY9noBGEZ9JuG+2XpiOoPz6OaFSwiWnikk4QCEmMA6MTuI1XiX9nLjOaM
+         E7cw==
+X-Gm-Message-State: AOAM533gjDvh948+ws7C3z76X2tAuaZg5zIeNE4zVOcSBHUQz9YEgaUT
+        EzSAJIa4s5IvgcqjkrSxjRh7k+WAeVnwg09NdBw=
+X-Google-Smtp-Source: ABdhPJzwRRz7MSfItsm5iWwVdskWnMYjeP04rqzvvAMNaPw6svYw4kD6cZVFQAKjysexDmFJVxl8DysHd1uaoDBDmE8=
+X-Received: by 2002:adf:a3c9:: with SMTP id m9mr9159127wrb.80.1599743916042;
+ Thu, 10 Sep 2020 06:18:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJRm8Tt2m+V2vXQfAtV0J7j7miBFwIt3U/7AmGQD+ACiFXeLKgy8eGg
-Content-Language: en-us
-X-SES-Outgoing: 2020.09.10-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <20200908044228.61197-1-namhyung@kernel.org> <20200908044228.61197-2-namhyung@kernel.org>
+ <20200910085926.GC1627030@krava>
+In-Reply-To: <20200910085926.GC1627030@krava>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 10 Sep 2020 22:18:25 +0900
+Message-ID: <CAM9d7chYfxQWNkDVXk2vLPgn4EhkH3WcAve+zzVGc7Jshri5VA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf evsel: Add evsel__clone() function
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jiri,
 
-
-> -----Original Message-----
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Sent: Monday, September 7, 2020 9:48 PM
-> To: Rakesh Pillai <pillair@codeaurora.org>
-> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
-> ath10k@lists.infradead.org
-> Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
-> 
-> "Rakesh Pillai" <pillair@codeaurora.org> writes:
-> 
-> >> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
-> >> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> >> > @@ -576,6 +576,8 @@ static int
-> ath10k_qmi_cap_send_sync_msg(struct
-> >> ath10k_qmi *qmi)
-> >> >  	if (resp->chip_info_valid) {
-> >> >  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
-> >> >  		qmi->chip_info.chip_family =
-resp->chip_info.chip_family;
-> >> > +	} else {
-> >> > +		qmi->chip_info.chip_id = 0xFF;
-> >> >  	}
-> >>
-> >> So you hard code chip_id to 0xff if it's not valid. Is it 100%
-> >> guaranteed that there never will be a chip id with 0xff?
+On Thu, Sep 10, 2020 at 5:59 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Tue, Sep 08, 2020 at 01:42:25PM +0900, Namhyung Kim wrote:
+> > The evsel__clone() is to create an exactly same evsel from same
+> > attributes.  Note that metric events will be handled by later patch.
 > >
-> > 0x0 and 0xff are invalid chip id and are are not used.
-> > If the chip_id read fails, we fallback to the default board data.
-> > 0xff is used to go to the default board data (Also this is in alignment
-with
-> > the current implementation of board_id)
+> > It will be used by perf stat to generate separate events for each
+> > cgroup.
 > >
-> > Does that make sense ?
-> 
-> I'm a bit hesitant, over the years I have seen cases so many cases where
-> "foo is not used anywhere" and later that foo is actually used
-> somewhere. 0xff means that there's only 254 different values, but I
-> guess there are not that many chip ids? So a chip id is very different
-> from a board id, right?
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/evsel.c | 57 +++++++++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/evsel.h |  1 +
+> >  2 files changed, 58 insertions(+)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index fd865002cbbd..4f50f9499973 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -331,6 +331,63 @@ struct evsel *evsel__new_cycles(bool precise)
+> >       goto out;
+> >  }
+> >
+> > +/**
+> > + * evsel__clone - create a new evsel copied from @orig
+> > + * @orig: original evsel
+> > + *
+> > + * The assumption is that @orig is not configured nor opened yet.
+> > + * So we only care about the attributes that can be set while it's parsed.
+> > + */
+> > +struct evsel *evsel__clone(struct evsel *orig)
+> > +{
+> > +     struct evsel *evsel;
+> > +     struct evsel_config_term *pos, *tmp;
+> > +
+> > +     BUG_ON(orig->core.fd);
+> > +
+> > +     evsel = evsel__new(&orig->core.attr);
+> > +     if (evsel == NULL)
+> > +             return NULL;
+> > +
+> > +     *evsel = *orig;
+>
+> this seems wild ;-) I saw that assumption above,
+> but I wonder we could add some check or zero/init
+> the rest of the fields fields
 
-Yes that's correct.
-Chip id is already being used in case of qca6174 (pci bus)
-We are bringing this to snoc bus chipset (WCN3990)
+Alternatively, we could only copy relevant fields explicitly.
+Other fields will remain zero by evsel__new() above.
+But it might be easy to be missed by future changes..
 
-> 
-> --
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingp
-> atches
-
+Thanks
+Namhyung
