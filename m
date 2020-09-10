@@ -2,169 +2,280 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F254AC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3F8C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC3D3214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E5E214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="zPte7GDE"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OXV4oE4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgIJTJ1 (ORCPT
+        id S1727790AbgIJTKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:09:27 -0400
-Received: from mail-dm6nam10on2105.outbound.protection.outlook.com ([40.107.93.105]:38625
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727776AbgIJTIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:08:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EfgJHRrgSURwo1d7SnAqZavi+p4qVX+/QhVFLJlkn35fZre0/X0bR9Dbm9tt7dkGRpzVmAR+C7sAPPBe64VeRs8IR8VMrNKdyNFBTPzAQSsy39+CfQFdygrrfWDXVbXFkZIXbYWTJ3TsxBE+WxYPA9LtMxlcQUSNFtPiZ6+SasYm2ky2N7EzTWn6QNPPqQYxloY+Wt/ZLNlYhsrtPtSe8C+axTicBanX6tflVHL5Q0IxnYTxcuEPW8S1Oycnf2CMNqZXUGFF2b4cMIFCwrLua5juQtogutZZR+Kq9uh0wEAiuyyooN4AQxWUbN1gKCfo0KtT7U8F19MhIv/dhKyMuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sX4nnm/V0SCt+v6d2qmgPgeeqsS2Lwlmfs6jg+9dn6c=;
- b=Eunmd7UMIp3F5Q0yYm9+ydwaUugigKQECgjBJ221tTXy8OxbomOqvMrSNAkyVcEfDPR22YmPpdC7u/1yRl6iOzDn2By6K0d4cqPpGwQ77RLhc6Rqev5oh0OGfZGCOiXqjD2I0XuYEeh/PzAqEx/hQabBc6gJgwTJb8E+HzSyMTnq4Upr0mZQOe73n0wlS/TtH6oG+vGgKuUBoW8NxE6dv631Yr9D6FtQgMJjai7Wtu1MiA0/iLQfKTfN5brY9f6wRHPDbo25Iy3XtFPGlQgnqwhFblRPsMZIHaZxC/R1YQhP7uhl7JjJXyKQkntYjtAjqI00G7LYrX0gWj3mmCEuRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=amperemail.onmicrosoft.com; dkim=pass
- header.d=amperemail.onmicrosoft.com; arc=none
+        Thu, 10 Sep 2020 15:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgIJTJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:09:30 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01034C061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:09:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x23so1346744wmi.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sX4nnm/V0SCt+v6d2qmgPgeeqsS2Lwlmfs6jg+9dn6c=;
- b=zPte7GDEwNe/H0JEggnyaq17BXbynlf5VCtRX8Dy7/5x4PYqNhdFr676/Q3dp2znRo/WWaT3ck5GKb4XdK8YROl1aG399nbCog6LxDhe3XATM05sf7ZrlLvOcSMEj1cbBAJmpTB2UUNg71Ustk9gZFABLvbsyBAwRT7YYzVCkjk=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none
- header.from=amperemail.onmicrosoft.com;
-Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
- BYAPR01MB3686.prod.exchangelabs.com (2603:10b6:a02:8f::32) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3370.16; Thu, 10 Sep 2020 19:07:54 +0000
-Received: from BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::419e:edaf:d4b1:3b29]) by BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::419e:edaf:d4b1:3b29%4]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
- 19:07:54 +0000
-From:   Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5] perf: arm_dsu: Support DSU ACPI devices
-Date:   Thu, 10 Sep 2020 12:07:52 -0700
-In-Reply-To: <202009102143.A4pW4A7I%lkp@intel.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1599694141-16056-1-git-send-email-tuanphan@os.amperecomputing.com>
- <202009102143.A4pW4A7I%lkp@intel.com>
-Message-Id: <C7729DCE-57C3-4ADD-AFD4-3992798F1FF9@amperemail.onmicrosoft.com>
-X-Mailer: Apple Mail (2.3654.0.3.2.26)
-X-ClientProxiedBy: CY4PR02CA0028.namprd02.prod.outlook.com
- (2603:10b6:903:117::14) To BYAPR01MB4598.prod.exchangelabs.com
- (2603:10b6:a03:8a::18)
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VhR6FlWJ3N2khXUeT/jDe92vr+OP3o8C/3GijhCr0wg=;
+        b=OXV4oE4dVVaatnu2X93+jW78fHUfZmnE+HmCcq20unYRevIE8B0tj9ePFyznRosVbi
+         ffLmxlA+Vn9o21+3m1N8+W9fgS16OywIEIByzPp2+8XloxrRLFXc0fCL0qG1YdKLXDx4
+         n9aDCEQjgv7nEGHXtq+cGa0XcRLuooRK6INZ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VhR6FlWJ3N2khXUeT/jDe92vr+OP3o8C/3GijhCr0wg=;
+        b=VmSw1/zj4ezZLkKZWVZrMuAltiX1G3YqVRpleC72S4pCtLkmLwj5dQIVX11O8ipu7K
+         62HXw0qPQMRmtoFyGrdxO/k6n0pu3mjDtoaN3pjKMRF0l6PAp2TNOTTUXQ4W3ahRG6Vu
+         mKVPwshQpiMLicPti4F2V88dY7Q8qetkAfE7JaoSEm0kU3tIGiokF1og4jueqWxGwS7r
+         xBBnXwMmwNuvCkfyLVUyjggOzj8l29bwVUUBLl+4kUmrBAOai2fs/aIpJK2Dm0ZK390u
+         qdyi4BCcdTUx3Pzj5du02cejYNeGnLS/1m4PfotLt2F2jYTBeUW9gYPbi9Es/zwXgjOz
+         GYbA==
+X-Gm-Message-State: AOAM53048JdOCa+UDxPMUTAC1onMgTCU/Y190mMkaT+3Zrlzi2qj2jTE
+        vdxiWqV+8FszSH7ezjosxT7U2HXUaC4t1tFCyedz7g==
+X-Google-Smtp-Source: ABdhPJwzs36aj1sjc++Pnam87auA8iF/tLJfweQbDE2WUAisFry+UZZLK/sNBdzcVgjeP2hiFYoj4BDrOdNX9Mlk8SI=
+X-Received: by 2002:a1c:bad5:: with SMTP id k204mr1520296wmf.111.1599764968373;
+ Thu, 10 Sep 2020 12:09:28 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (73.151.56.145) by CY4PR02CA0028.namprd02.prod.outlook.com (2603:10b6:903:117::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 19:07:53 +0000
-X-Mailer: Apple Mail (2.3654.0.3.2.26)
-X-Originating-IP: [73.151.56.145]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 36e5cea4-3c61-4b6e-2849-08d855bcd21d
-X-MS-TrafficTypeDiagnostic: BYAPR01MB3686:
-X-Microsoft-Antispam-PRVS: <BYAPR01MB36864705D038B1137A3FBB7FE0270@BYAPR01MB3686.prod.exchangelabs.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:48;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KGTTQEK26+uXPNSqw+++u/5Gs4C6LYUTUiYSzhSTzL9WOuSl3whdRXrn6335yF6dNxjpcpLOk6TSJeaFZLktA+U+UGuhDCxUXKWw1Syr+oYHv3idupN0rcgUrbrA88MU0cb5SSMyvdDmuVKgdIKmlFTVDb8gocLIbxQRQbpICI7FmtCckMVPV7Crg4Vt521AOZY5PsapPY6Ktujn1zZWCaLmGuWMnitrI/ZNPRHnwnJKm/1qW8xu86vOtMdhZFhtxN+Ss1lTkRot5F9MUbLrnmXR+JBXjBSLxkZTbuWmDrq0b3BuDUbsqXad0mwhIrlCkiXWCu4qDR2eFGb6MqsUrYoFFBhPLYAKmUN5C1GmoO/Q7SF5dhBpuVFefbYtx8JbZST5MdLOx7joTk80cGthY0F8m1lDTz6WEaCDbyo/JiOtP+O7/WYirWsJE8AprLXk4XJP69CDtWMVtYWSdQP9GQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39840400004)(346002)(376002)(366004)(396003)(54906003)(2906002)(6512007)(26005)(966005)(52116002)(8676002)(42882007)(8936002)(33656002)(4326008)(53546011)(83170400001)(16526019)(66946007)(66476007)(6506007)(186003)(66556008)(5660300002)(316002)(83080400001)(6486002)(2616005)(109986005)(956004)(83380400001)(478600001)(1758585002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: EsFH4nYod3Teiihp1sQQrMd/VMzT52TGkv778lkE+VDg02uKRBu6+5b6TxtSXDxYsjYqtyIAeeJJMP04F5+9RtTfDmNPRTvz4MHN6V3HdDHPYrGoPF1MQCrR/85+GRUEVCvUEISIrB29ss8RqPwuUg8KSo5f6qtJJclhg5OVyIsLn8XvmTVFmDwTxttd0X1rxYOGGRdJ/gPBMD/haHJprNT2gfLb/nC+UXiU32+gJvuGkYhZ5V7bmZq2I42ntsvPXRZpjdbmvVGi/hHBaDSRTXPMnEDppAb0uCUuoBOEfNAtjFWg+iUQkuYHTKGKObjCRZlPYzqxj6+s7UzY7oqO6NQP4ybs7NoQfBl0cYuG/l3yEJ6ggo/ckM4CpXt/H0M7ZLPrEXCfFHwfTIwbPzFb0jKO3zL5nMI46dbU+4cOQQbwZYhGfyYqBGfMVGEcj2UbKKYeAT9JlpQA7vXQCVQ/hEpTVf0HX7Uj9RJs1gWT+t6WrwFVJ+4ZskliOrhwDDpxa0F1D9FaSlRYk5wPrzXAHUkL+y5kMHvJPLbedqKp6JI8jk8UMlSIqYihKqdy/MoIXqoKgmeywBvfu+Vm0CeZopcCLMVRKUlH8OuMc7aDSzj6NtGn7+pzIpG1Ls51QokpwR+mYu330REP32Ep2H/5eg==
-X-OriginatorOrg: amperemail.onmicrosoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36e5cea4-3c61-4b6e-2849-08d855bcd21d
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR01MB4598.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 19:07:54.2432
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: chrh7oR1QBOgB9LrRN5V3fecSqetd3tjyFJLaBbkAty1m0WOz9s9fT8VGCiSUrur0V914Eqc7+4yyjhqmyLMrOJbgJLctOshu6R2yD8RgrKazypzbsvBI8fazPedDWy0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB3686
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-5-james.quinlan@broadcom.com> <20200910155637.GA423872@bogus>
+ <CA+-6iNy9g8fhJvd7SOKtc-SZcL8_gLLN1HEs-W8fe-=q6n430A@mail.gmail.com>
+ <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
+ <CA+-6iNwcLZcQcge2E6GUi71rveFaneeCBwxBTfn8MipwhaPvEQ@mail.gmail.com> <3c6a0acc-8966-fd38-1613-8da7bece81c7@gmail.com>
+In-Reply-To: <3c6a0acc-8966-fd38-1613-8da7bece81c7@gmail.com>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 10 Sep 2020 15:09:15 -0400
+Message-ID: <CA+-6iNxfDuTREDj3_MWwKuNYfq8YgBT1hghKjh=GQjkzdbH+hA@mail.gmail.com>
+Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000b10c0405aefa4e77"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+--000000000000b10c0405aefa4e77
+Content-Type: text/plain; charset="UTF-8"
 
-> On Sep 10, 2020, at 6:40 AM, kernel test robot <lkp@intel.com> wrote:
->=20
-> Hi Tuan,
->=20
-> Thank you for the patch! Perhaps something to improve:
->=20
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v5.9-rc4 next-20200910]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Tuan-Phan/perf-arm_dsu-S=
-upport-DSU-ACPI-devices/20200910-105630
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t ab29a807a7ddaa7c84d2f4cb8d29e74e33759072
-> config: arm64-randconfig-r012-20200909 (attached as .config)
-> compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project 0a5d=
-c7effb191eff740e0e7ae7bd8e1f6bdb3ad9)
-> reproduce (this is a W=3D1 build):
->        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin=
-/make.cross -O ~/bin/make.cross
->        chmod +x ~/bin/make.cross
->        # install arm64 cross compiling tool for clang build
->        # apt-get install binutils-aarch64-linux-gnu
->        # save the attached .config to linux build tree
->        COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang make.cross ARC=
-H=3Darm64=20
->=20
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->=20
-> All warnings (new ones prefixed by >>):
->=20
->>> drivers/perf/arm_dsu_pmu.c:799:36: warning: unused variable 'dsu_pmu_ac=
-pi_match' [-Wunused-const-variable]
->   static const struct acpi_device_id dsu_pmu_acpi_match[] =3D {
->                                      ^
->   1 warning generated.
->=20
+On Thu, Sep 10, 2020 at 3:08 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 9/10/2020 12:05 PM, Jim Quinlan wrote:
+> > On Thu, Sep 10, 2020 at 2:50 PM Rob Herring <robh@kernel.org> wrote:
+> >>
+> >> On Thu, Sep 10, 2020 at 10:42 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+> >>>
+> >>> On Thu, Sep 10, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
+> >>>>
+> >>>> On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
+> >>>>> From: Jim Quinlan <jquinlan@broadcom.com>
+> >>>>>
+> >>>>> Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
+> >>>>> and resume.  Now the PCIe driver may do so as well.
+> >>>>>
+> >>>>> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> >>>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>>> ---
+> >>>>>   drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
+> >>>>>   1 file changed, 47 insertions(+)
+> >>>>>
+> >>>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> >>>>> index c2b3d2946a36..3d588ab7a6dd 100644
+> >>>>> --- a/drivers/pci/controller/pcie-brcmstb.c
+> >>>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> >>>>> @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
+> >>>>>        brcm_pcie_bridge_sw_init_set(pcie, 1);
+> >>>>>   }
+> >>>>>
+> >>>>> +static int brcm_pcie_suspend(struct device *dev)
+> >>>>> +{
+> >>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> >>>>> +
+> >>>>> +     brcm_pcie_turn_off(pcie);
+> >>>>> +     clk_disable_unprepare(pcie->clk);
+> >>>>> +
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>> +static int brcm_pcie_resume(struct device *dev)
+> >>>>> +{
+> >>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
+> >>>>> +     void __iomem *base;
+> >>>>> +     u32 tmp;
+> >>>>> +     int ret;
+> >>>>> +
+> >>>>> +     base = pcie->base;
+> >>>>> +     clk_prepare_enable(pcie->clk);
+> >>>>> +
+> >>>>> +     /* Take bridge out of reset so we can access the SERDES reg */
+> >>>>> +     brcm_pcie_bridge_sw_init_set(pcie, 0);
+> >>>>> +
+> >>>>> +     /* SERDES_IDDQ = 0 */
+> >>>>> +     tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> >>>>> +     u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
+> >>>>> +     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+> >>>>> +
+> >>>>> +     /* wait for serdes to be stable */
+> >>>>> +     udelay(100);
+> >>>>
+> >>>> Really needs to be a spinloop?
+> >>>>
+> >>>>> +
+> >>>>> +     ret = brcm_pcie_setup(pcie);
+> >>>>> +     if (ret)
+> >>>>> +             return ret;
+> >>>>> +
+> >>>>> +     if (pcie->msi)
+> >>>>> +             brcm_msi_set_regs(pcie->msi);
+> >>>>> +
+> >>>>> +     return 0;
+> >>>>> +}
+> >>>>> +
+> >>>>>   static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+> >>>>>   {
+> >>>>>        brcm_msi_remove(pcie);
+> >>>>> @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+> >>>>>
+> >>>>>   MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+> >>>>>
+> >>>>> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
+> >>>>> +     .suspend_noirq = brcm_pcie_suspend,
+> >>>>> +     .resume_noirq = brcm_pcie_resume,
+> >>>>
+> >>>> Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
+> >>>> and 1352 of .suspend in the tree.
+> >>>
+> >>> I will test switching this to  suspend_late/resume_early.
+> >>
+> >> Why not just the 'regular' flavor suspend/resume?
+> >>
+> >> Rob
+> > We must have our PCIe driver suspend last and resume first because our
+> > current driver turns off/on the power for the EPs.  Note that this
+> > code isn't in the driver as we are still figuring out a way to make it
+> > upstreamable.
+>
+> The suspend/resume ordering should be guaranteed by the Linux device
+> driver model though if not, this is a bug that ought to be fixed. The
+> PCI bridge sits at the top of the pci_device list and all EPs should be
+> child devices, so the suspend order should be from EPs down to the
+> bridge, and the resume the converse.
+I remembered that after I hit send.
+Jim
+> --
+> Florian
 
-Do you need me to fix this warning when CONFIG_ACPI not defined?
+--000000000000b10c0405aefa4e77
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Tuan
-> # https://github.com/0day-ci/linux/commit/40c3a0c70d4472e2fe1f5364d50939b=
-863874fa1
-> git remote add linux-review https://github.com/0day-ci/linux
-> git fetch --no-tags linux-review Tuan-Phan/perf-arm_dsu-Support-DSU-ACPI-=
-devices/20200910-105630
-> git checkout 40c3a0c70d4472e2fe1f5364d50939b863874fa1
-> vim +/dsu_pmu_acpi_match +799 drivers/perf/arm_dsu_pmu.c
->=20
->   798=09
->> 799	static const struct acpi_device_id dsu_pmu_acpi_match[] =3D {
->   800		{ "ARMHD500", 0},
->   801		{},
->   802	};
->   803	MODULE_DEVICE_TABLE(acpi, dsu_pmu_acpi_match);
->   804=09
->=20
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> <.config.gz>
-
+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
+mOxPm7sNHsn0TVdPryi9+T2d8fVC/kUmuEdTYP/Hdu4W4b4T9BcW57fInYrmaJ+uotS6X59rAgMB
+AAGjggHRMIIBzTAOBgNVHQ8BAf8EBAMCBaAwgZ4GCCsGAQUFBwEBBIGRMIGOME0GCCsGAQUFBzAC
+hkFodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3BlcnNvbmFsc2lnbjJzaGEy
+ZzNvY3NwLmNydDA9BggrBgEFBQcwAYYxaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL2dzcGVy
+c29uYWxzaWduMnNoYTJnMzBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYm
+aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBEBgNVHR8E
+PTA7MDmgN6A1hjNodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzcGVyc29uYWxzaWduMnNoYTJn
+My5jcmwwJQYDVR0RBB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
+KwYBBQUHAwQwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwHQYDVR0OBBYEFNYm4GDl
+4WOt3laB3gNKFfYyaM8bMA0GCSqGSIb3DQEBCwUAA4IBAQBD+XYEgpG/OqeRgXAgDF8sa+lQ/00T
+wCP/3nBzwZPblTyThtDE/iaL/YZ5rdwqXwdCnSFh9cMhd/bnA+Eqw89clgTixvz9MdL9Vuo8LACI
+VpHO+sxZ2Cu3bO5lpK+UVCyr21y1zumOICsOuu4MJA5mtkpzBXQiA7b/ogjGxG+5iNjt9FAMX4JP
+V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
+lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
+5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
+di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEILyhJTSbKToI
+B49kCKI8tKPwNhRgU0WrGWS92/9KIkYaMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMDkxMDE5MDkyOFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBXEkIdgAnn7D+y09wrfOml2qZMNKAd
+gyOqKNTyLf1OSZes7fHqiCkX2YPtJUQKlCXFxUTxQGnXM5H3waK1gGNTLkfzENE/Prxkm7ebgJMa
+6ynRDAlVkIwAZl5FfQ/62OHES2TIeUE+HEKxkTrC0Guc7urC99vD5KRGBZdpt87bptA7Ngau1Fkv
+8oOMiupKPHb/S/igzJvXwkySjb10wqcOEN7RiKXYqXMeqsqBc1SYBWn4ciaW/pTbz/6p0kL4ahdC
+JlYwBNNbk+7jsarkIagIJ4ejfD+CQzz8R1RljebKqeNEoImrq4BJOeO4p2APRjxNpOcTVAbqOyLO
+yt0pc1Sd
+--000000000000b10c0405aefa4e77--
