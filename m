@@ -2,73 +2,133 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625CEC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A94DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5AD20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DD920BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yl4BPTxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgIJTOK (ORCPT
+        id S1726534AbgIJTOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:14:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12229 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731489AbgIJQAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:00:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3DB6C218A54D1A7EEC1C;
-        Thu, 10 Sep 2020 23:12:23 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
- 23:12:17 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <jeffrey.t.kirsher@intel.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <intel-wired-lan@lists.osuosl.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 1/3] i40e: Fix some kernel-doc warnings in i40e_client.c
-Date:   Thu, 10 Sep 2020 23:09:32 +0800
-Message-ID: <20200910150934.34605-2-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910150934.34605-1-wanghai38@huawei.com>
-References: <20200910150934.34605-1-wanghai38@huawei.com>
+        Thu, 10 Sep 2020 15:14:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46390 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgIJTNy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:13:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AJD8rM024418;
+        Thu, 10 Sep 2020 14:13:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599765188;
+        bh=wVHpXIuoo9L0dFhVi0aJ08O8whODuj4HNYWrOX4NFVw=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=yl4BPTxdastirBjKVIUEbYlKhJVs+eC45YfSESLfNSGpRaj5H77Wldw4r+pESKZsA
+         GdjSwevWbvMm9fEk+EOkbjovsCE08XrltrwJ+zugtJRJRX9XUlJZ7oALrK6tDZdhKW
+         ZKzX5baYKc4I7S2SLccZUq0PnF4UKdn5S7ybT5/k=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AJD8s5064725
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 14:13:08 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 14:13:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 14:13:07 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AJD5v2030041;
+        Thu, 10 Sep 2020 14:13:07 -0500
+Date:   Thu, 10 Sep 2020 14:13:05 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 01/15] dt-bindings: gpio: convert bindings for NXP
+ PCA953x family to dtschema
+Message-ID: <20200910191305.phjtijx2fhkhqavu@akan>
+References: <20200910175733.11046-1-krzk@kernel.org>
+ <20200910175733.11046-2-krzk@kernel.org>
+ <20200910182814.veviax3n377undkv@akan>
+ <CAJKOXPdQJz7aLu4sjds46SiZwxvB-VMBR=stjpUme+8iEo+d-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPdQJz7aLu4sjds46SiZwxvB-VMBR=stjpUme+8iEo+d-w@mail.gmail.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+On 20:53-20200910, Krzysztof Kozlowski wrote:
+> On Thu, 10 Sep 2020 at 20:28, Nishanth Menon <nm@ti.com> wrote:
+> >
+> > On 19:57-20200910, Krzysztof Kozlowski wrote:
+> > [...]
+> > > +  wakeup-source:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +
+> > > +patternProperties:
+> > > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+> >
+> > I wonder if "hog" is too generic and might clash with "something-hog" in
+> > the future?
+> 
+> This pattern is already used in
+> Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml. It will
+> match only children and so far it did not find any other nodes in ARM
+> and ARM64 dts. I don't expect clashes. Also the question is then - if
+> one adds a child of GPIO expander named "foobar-hog" and it is not a
+> GPIO hog, then what is it?
 
-drivers/net/ethernet/intel/i40e/i40e_client.c:286: warning: Excess function parameter 'client' description in 'i40e_client_add_instance'
-drivers/net/ethernet/intel/i40e/i40e_client.c:286: warning: Excess function parameter 'existing' description in 'i40e_client_add_instance'
+Probably a nitpick.. but then,.. I have'nt seen us depend on hierarchy
+for uniqueness of naming.. we choose for example "bus" no matter where
+in the hierarchy it falls in, as long it is a bus.. etc.. same argument
+holds good for properties as well.. "gpio-hog;" is kinda redundant if
+you think of it for a compatible that is already gpio ;)..
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/ethernet/intel/i40e/i40e_client.c | 2 --
- 1 file changed, 2 deletions(-)
+I did'nt mean to de-rail the discussion, but was curious what the DT
+maintainers think..
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_client.c b/drivers/net/ethernet/intel/i40e/i40e_client.c
-index befd3018183f..a2dba32383f6 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_client.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_client.c
-@@ -278,8 +278,6 @@ void i40e_client_update_msix_info(struct i40e_pf *pf)
- /**
-  * i40e_client_add_instance - add a client instance struct to the instance list
-  * @pf: pointer to the board struct
-- * @client: pointer to a client struct in the client list.
-- * @existing: if there was already an existing instance
-  *
-  **/
- static void i40e_client_add_instance(struct i40e_pf *pf)
 -- 
-2.17.1
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
