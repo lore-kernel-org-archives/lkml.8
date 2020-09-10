@@ -2,136 +2,117 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF788C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5750C07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38742078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708E020829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599733584;
+	bh=fgfiyAtrFCoLlnnEOEO9teOqv1JFGl0mGCGkOu01V1o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uVZ2oVIe3O3aQH+AjFWRXIAYjMFRMibMDx6szzeIDgHQ+qXy9zegufBBoyl+QtuhQ
+	 46+SwhzLDTNvPMolwHyxMZyCQn1caHtOYQT4mhDQ02ZlMnRYu0Nu+uYcgb83JbXlhS
+	 cCvzKp89W44exgm4UjiBDtM6/XF6ZCr9K4z7S474=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbgIJKZu (ORCPT
+        id S1730926AbgIJK0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:25:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730779AbgIJKZF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:25:05 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0594DC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:25:02 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kGJl0-0007HR-Ia; Thu, 10 Sep 2020 12:24:46 +0200
-Message-ID: <a325e1594dff339ddd6858f0ac93698582a6000a.camel@pengutronix.de>
-Subject: Re: [PATCH] drm/imx/dcss: fix compilation issue on 32bit
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 10 Sep 2020 12:24:44 +0200
-In-Reply-To: <20200910102128.5agk4vxf2jeonw3q@fsr-ub1864-141>
-References: <20200910095250.7663-1-laurentiu.palcu@oss.nxp.com>
-         <CAKMK7uGsJcg81a_cGebBgk3pwxj4VPrFfmV5AF+5fRyK3_Pigw@mail.gmail.com>
-         <20200910102128.5agk4vxf2jeonw3q@fsr-ub1864-141>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 10 Sep 2020 06:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730729AbgIJKY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:24:29 -0400
+Received: from mail.kernel.org (ip5f5ad5ac.dynamic.kabel-deutschland.de [95.90.213.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9C4221E5;
+        Thu, 10 Sep 2020 10:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599733450;
+        bh=fgfiyAtrFCoLlnnEOEO9teOqv1JFGl0mGCGkOu01V1o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kgTflP/83AXdk/kctYAENTpI9SV0gCQGWweaisBNz+c3NXD1Rfmf8dj9mG7TvKviW
+         oSdWjSx3WORYJpyFwcotL2FWNBuRectCX2HFf9ik3dypynJbveWPD7bveqqQ67Mj46
+         s/EHGbrZbbOiZrrWn+1jo+RTjM2aAnDcAkA4tZNM=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kGJkO-00EIOE-PU; Thu, 10 Sep 2020 12:24:08 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 14/14] gpu: docs: amdgpu.rst: get rid of wrong kernel-doc markups
+Date:   Thu, 10 Sep 2020 12:24:07 +0200
+Message-Id: <d56b09093b4325c39d6ecf3297f9eb520e9e2897.1599732764.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599732764.git.mchehab+huawei@kernel.org>
+References: <cover.1599732764.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Do, 2020-09-10 at 13:21 +0300, Laurentiu Palcu wrote:
-> On Thu, Sep 10, 2020 at 11:57:10AM +0200, Daniel Vetter wrote:
-> > On Thu, Sep 10, 2020 at 11:53 AM Laurentiu Palcu
-> > <laurentiu.palcu@oss.nxp.com> wrote:
-> > > When compiling for 32bit platforms, the compilation fails with:
-> > > 
-> > > ERROR: modpost: "__aeabi_ldivmod"
-> > > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
-> > > ERROR: modpost: "__aeabi_uldivmod"
-> > > [drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
-> > > 
-> > > This patch adds a dependency on ARM64 since no 32bit SoCs have DCSS, so far.
-> > 
-> > Usual way to fix this correctly is using the right division macros,
-> > not limiting the driver to 64bit. But this works for now, would be
-> > good to fix this properly for compile-testing and all that.
-> 
-> I didn't see the point in using the macros since this is running only on
-> 64bit. Though I will probably revisit it and fix it properly in a
-> subsequent patch.
-> 
-> > > Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-> > > Reported-by: Daniel Vetter <daniel@ffwll.ch>
-> > 
-> > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > 
-> > Please push to drm-misc-next.
-> 
-> About that, I may need some help pushing it.
+As reported by kernel-doc:
+    ./drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c:1: warning: no structured comments found
+    ./drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c:1: warning: no structured comments found
 
-I've already pushed a few minutes ago, so we don't disturb the build
-tests any longer.
+Those files only contain
 
-Regards,
-Lucas
+	/**
+	 * DOC:
+	 */
 
-> Apparently, my request for
-> a legacy SSH account for contributing to drm-misc got stalled:
-> 
-> https://gitlab.freedesktop.org/freedesktop/freedesktop/-/issues/289
-> 
-> Thanks,
-> laurentiu
-> 
-> > -Daniel
-> > 
-> > 
-> > 
-> > ---
-> > >  drivers/gpu/drm/imx/dcss/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-> > > index 69860de8861f..2b17a964ff05 100644
-> > > --- a/drivers/gpu/drm/imx/dcss/Kconfig
-> > > +++ b/drivers/gpu/drm/imx/dcss/Kconfig
-> > > @@ -3,7 +3,7 @@ config DRM_IMX_DCSS
-> > >         select IMX_IRQSTEER
-> > >         select DRM_KMS_CMA_HELPER
-> > >         select VIDEOMODE_HELPERS
-> > > -       depends on DRM && ARCH_MXC
-> > > +       depends on DRM && ARCH_MXC && ARM64
-> > >         help
-> > >           Choose this if you have a NXP i.MX8MQ based system and want to use the
-> > >           Display Controller Subsystem. This option enables DCSS support.
-> > > --
-> > > 2.17.1
-> > > 
-> > 
-> > -- 
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+markups, but they're included twice there: one to parse
+such markup, and another one to parse internal functions.
+
+In the case of amdgpu_xgmi.c, as it has just one such
+markup, we can simply include the file once, and let it
+parse the entire file without passing arguments to kernel-doc.
+
+This should place everything altogether.
+
+For amdgpu_ras.c, however, we need to remove the kernel-doc
+with just internal. This should be re-introduced if this
+file ever gets new non-DOC markups.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/gpu/amdgpu.rst | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/Documentation/gpu/amdgpu.rst b/Documentation/gpu/amdgpu.rst
+index 9656f5f5bbcf..d46bfe52b722 100644
+--- a/Documentation/gpu/amdgpu.rst
++++ b/Documentation/gpu/amdgpu.rst
+@@ -74,10 +74,6 @@ AMDGPU XGMI Support
+ ===================
+ 
+ .. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c
+-   :doc: AMDGPU XGMI Support
+-
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c
+-   :internal:
+ 
+ AMDGPU RAS Support
+ ==================
+@@ -115,9 +111,6 @@ RAS VRAM Bad Pages sysfs Interface
+ .. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+    :doc: AMDGPU RAS sysfs gpu_vram_bad_pages Interface
+ 
+-.. kernel-doc:: drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+-   :internal:
+-
+ Sample Code
+ -----------
+ Sample code for testing error injection can be found here:
+-- 
+2.26.2
 
