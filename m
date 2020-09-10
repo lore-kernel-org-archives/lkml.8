@@ -2,107 +2,85 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1D9C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4002C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D903206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599765675;
-	bh=MBYb+G6ZR9qZvRGiKB8EyZH8pHRv+f6dt1gmCTS1Itg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Lvi1+5vyIgQkV1GGa5/dboIrKb8iCsb1YzivhNZmoalpIxWmgopd+mLX7Z1CYaEj
-	 Cwkg06dqYbcSsd7uP6NMF404kJs8uZ1+h4cFbN6J2pi0JhP+ItUi12427RCi7XSNrA
-	 ppOUjEhShs0iXI/pH42ykUn93iDzfaNx+a/8Aihs=
+	by mail.kernel.org (Postfix) with ESMTP id 9388020882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgIJTVF (ORCPT
+        id S1727801AbgIJTVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:21:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39849 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731454AbgIJPwd (ORCPT
+        Thu, 10 Sep 2020 15:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgIJTUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:52:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n14so4870571pff.6;
-        Thu, 10 Sep 2020 08:52:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Yt6inZ4UVSNp7xfQ5Plp2PnI8YcMVVKMln56iwBh8fs=;
-        b=F0qPmPKaR71w7SxVOhw3Hj46grlXMK8kT5UdunY/7kwzLLUSEKQw7oS1UFGPdRe6C3
-         pptJp2O1VyL1kCOg/m6YnSDQFaDoxdRn5eMuwCMLseK/E4CwBXQ+NQY0xXzQz0x7/OeC
-         tLMGp7ppwuWoO+CdyAaC5anTasnnKk9v4qwijLi9ZnoAJyURzpYAxaD9oo2mHayDizq2
-         iTLT/b20GUAKtb/IAv2pz1hGhYlPRHe7h776lcxLKtqrkgZq+cYwrOe3JygWT+Q6lysc
-         L13x7UZuVFskF/WyJCHBzhQHlKY8fiX9KiAaKxiCCqGdKRBgNBQ1J4dr8Ux3P0fi1Yd4
-         EpxA==
-X-Gm-Message-State: AOAM533i2S4SviFv8mcW67sIp/ArakZr0eErpYHMvwAEBiJTmhytREd4
-        PzV9Qw46BiP1u1vEQeEhjE6gMR1hk/Zj
-X-Google-Smtp-Source: ABdhPJz6scHFdf953mHrwXN0AX9Pbo0NXFqGtbx0EruBY0rGXTEyV/UoIGrIfI2nDFwWE4bP1rfySg==
-X-Received: by 2002:a5d:928a:: with SMTP id s10mr7999788iom.166.1599752680735;
-        Thu, 10 Sep 2020 08:44:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id m87sm3388997ilb.58.2020.09.10.08.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 08:44:40 -0700 (PDT)
-Received: (nullmailer pid 423370 invoked by uid 1000);
-        Thu, 10 Sep 2020 15:44:37 -0000
-Date:   Thu, 10 Sep 2020 09:44:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 03/11] PCI: brcmstb: Add bcm7278 register info
-Message-ID: <20200910154437.GA415514@bogus>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-4-james.quinlan@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824193036.6033-4-james.quinlan@broadcom.com>
+        Thu, 10 Sep 2020 15:20:41 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E00C061573;
+        Thu, 10 Sep 2020 12:20:40 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C64F012A2A40F;
+        Thu, 10 Sep 2020 12:03:50 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 12:20:33 -0700 (PDT)
+Message-Id: <20200910.122033.2205909020498878557.davem@davemloft.net>
+To:     geert+renesas@glider.be
+Cc:     hkallweit1@gmail.com, f.fainelli@gmail.com, andrew@lunn.ch,
+        kuba@kernel.org, gaku.inami.xh@renesas.com,
+        yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "net: linkwatch: add check for netdevice being
+ present to linkwatch_do_dev"
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200901150237.15302-1-geert+renesas@glider.be>
+References: <20200901150237.15302-1-geert+renesas@glider.be>
+X-Mailer: Mew version 6.8 on Emacs 27.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Thu, 10 Sep 2020 12:03:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:30:16PM -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> Add in compatibility strings and code for three Broadcom STB chips.  Some
-> of the register locations, shifts, and masks are different for certain
-> chips, requiring the use of different constants based on of_id.
-> 
-> We would like to add the following at this time to the match list but we
-> need to wait until the end of this patchset so that everything works.
-> 
->     { .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
->     { .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
->     { .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
->     { .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
-> 
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 105 +++++++++++++++++++++++---
->  1 file changed, 93 insertions(+), 12 deletions(-)
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Tue,  1 Sep 2020 17:02:37 +0200
 
-I think a better abstraction would be to have 2 versions of the 2 
-functions that need to be different. But as-is is fine.
+> This reverts commit 124eee3f6955f7aa19b9e6ff5c9b6d37cb3d1e2c.
+> 
+> Inami-san reported that this commit breaks bridge support in a Xen
+> environment, and that reverting it fixes this.
+> 
+> During system resume, bridge ports are no longer enabled, as that relies
+> on the receipt of the NETDEV_CHANGE notification.  This notification is
+> not sent, as netdev_state_change() is no longer called.
+> 
+> Note that the condition this commit intended to fix never existed
+> upstream, as the patch triggering it and referenced in the commit was
+> never applied upstream.  Hence I can confirm s2ram on r8a73a4/ape6evm
+> and sh73a0/kzm9g works fine before/after this revert.
+> 
+> Reported-by Gaku Inami <gaku.inami.xh@renesas.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Maybe you cannot reproduce it, but the problem is there and it still
+looks very real to me.
+
+netdev_state_change() does two things:
+
+1) Emit the NETDEV_CHANGE notification
+
+2) Emit an rtmsg_ifinfo() netlink message, which in turn tries to access
+   the device statistics via ->ndo_get_stats*().
+
+It is absolutely wrong to do #2 when netif_device_present() is false.
+
+So I cannot apply this patch as-is, sorry.
