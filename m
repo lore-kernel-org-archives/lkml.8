@@ -2,236 +2,105 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650B1C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 225B4208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCD32065E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OZvRIiWx"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="fiF0C/7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725792AbgIJXtV (ORCPT
+        id S1725385AbgIJX4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 19:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58848 "EHLO
+        Thu, 10 Sep 2020 19:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgIJXtL (ORCPT
+        with ESMTP id S1725275AbgIJX4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 19:49:11 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AD6C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:49:10 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id v196so5932362pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IaBh+ddcuDpz6mDgalgDYidOFzTPwsq/h7xo4uSnjys=;
-        b=OZvRIiWxvgbgV7rDrzwW/mo7pKOcUBLaRM/3F39IPc1E9icQFqomZHx0N4US35FTp7
-         vSsnel87R3svfqBGdMoOlyN5B8k6YMqAy64tGhVQUCa1SGGb6+xnGqr9dmXdn7NgrUmc
-         d/YNAWAvalvIjWW1alPmRiVUPHjkZXuTlKro4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IaBh+ddcuDpz6mDgalgDYidOFzTPwsq/h7xo4uSnjys=;
-        b=MGQDC3qB5ZHkfk687FMa+wBuTKpkW1ZFFud5CqB3h1UxbjkVD0A6q/s9hfbvOXxSh6
-         bTKLuDa6qSnkoBsqgPnd0V7jUa0Lza5o+4nPq+Ol3qnitMTnkNUFa2lNGMI45Zp9QFB0
-         ET0If56v7dTBGqvN9reGI9c0mn3V3TSCKsW88q2xPSQFN52upi7B8pKZ6lE2bVJR4Mro
-         TXxHhBtIimGwBBGWxSozp4RGs7kC8tmKm6RjEDct9qazn9SdeeujeN4KBS4hSSUw1CWt
-         Fmii6D7NIpAERvZ2cJZorFfuaqGIoO7xGlrViaxmfiWMwyJU3H0pqdsiKBJ6mD4jitCO
-         RwWg==
-X-Gm-Message-State: AOAM531Iz+qG4tAQf4+/N8x+C+G3/XnjvtnUh5Y8l8Jb6pQktVvHfyE9
-        iOQgcpDtappo3dl3NhxC+3+bJA==
-X-Google-Smtp-Source: ABdhPJwZ1J9qu1mZJrqinh8jNTWdAMVS2FuQ2HVvvaEDccGanTL5jugLR2huQsSNnXe/gHlg9CGKaA==
-X-Received: by 2002:a05:6a00:f:b029:13e:d13d:a089 with SMTP id h15-20020a056a00000fb029013ed13da089mr7496884pfk.32.1599781750231;
-        Thu, 10 Sep 2020 16:49:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p190sm215398pfp.9.2020.09.10.16.49.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 16:49:09 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 16:49:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     kernel-hardening@lists.openwall.com
-Cc:     John Wood <john.wood@gmx.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [RFC PATCH 5/6] security/fbfam: Detect a fork brute force attack
-Message-ID: <202009101634.52ED6751AD@keescook>
-References: <20200910202107.3799376-1-keescook@chromium.org>
- <20200910202107.3799376-6-keescook@chromium.org>
+        Thu, 10 Sep 2020 19:56:16 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D61C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:56:15 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BnbPl66bTz9sTH;
+        Fri, 11 Sep 2020 09:56:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1599782172;
+        bh=fhFJZ8tEpaeqeNQqQJBDCnkVPmjyjoBOeg1MMkx7t98=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=fiF0C/7y/PY6O3hcXo1Lr0G8h2KUoVOQ0yVIE95pe3SzigpO7zLBaU0q7fC52lQHE
+         fDUggJ33LnNs+9gSvqqzLLLfb5FBEou6AgsTAkNP8Kw6cP0RBT5OFuFVmXly5iGAq6
+         gu4ynJxXjgXP7uc6eJs6G3p/JctST3uW7jly9pOqoofjEgHRsK8DxCKyttV8upoKgq
+         R/UQplVajVpJdw0Od7AmphrWhKG4QyireE9PHNQqxnIL6TNJDu2UXMU9CB/pAjASSH
+         l8GnvM2fyZZ/+ewjYZlQVdYudyZ/dgbEgWOATDzulYjrbbe6gRrPj1Tt1QWvph2+TH
+         df2raJL1uDicw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/powermac: Fix low_sleep_handler with KUAP and KUEP
+In-Reply-To: <74472ea2a7e8698273643cde7d382bd9f31cd1dd.1598945727.git.christophe.leroy@csgroup.eu>
+References: <74472ea2a7e8698273643cde7d382bd9f31cd1dd.1598945727.git.christophe.leroy@csgroup.eu>
+Date:   Fri, 11 Sep 2020 09:56:10 +1000
+Message-ID: <871rj9rxt1.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910202107.3799376-6-keescook@chromium.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 01:21:06PM -0700, Kees Cook wrote:
-> From: John Wood <john.wood@gmx.com>
-> 
-> To detect a fork brute force attack it is necessary to compute the
-> crashing rate of the application. This calculation is performed in each
-> fatal fail of a task, or in other words, when a core dump is triggered.
-> If this rate shows that the application is crashing quickly, there is a
-> clear signal that an attack is happening.
-> 
-> Since the crashing rate is computed in milliseconds per fault, if this
-> rate goes under a certain threshold a warning is triggered.
-> 
-> Signed-off-by: John Wood <john.wood@gmx.com>
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> low_sleep_handler() has an hardcoded restore of segment registers
+> that doesn't take KUAP and KUEP into account.
+>
+> Use head_32's load_segment_registers() routine instead.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
+> Fixes: 31ed2b13c48d ("powerpc/32s: Implement Kernel Userspace Execution Prevention.")
+> Cc: stable@vger.kernel.org
 > ---
->  fs/coredump.c          |  2 ++
->  include/fbfam/fbfam.h  |  2 ++
->  security/fbfam/fbfam.c | 39 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 43 insertions(+)
-> 
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index 76e7c10edfc0..d4ba4e1828d5 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -51,6 +51,7 @@
->  #include "internal.h"
+>  arch/powerpc/platforms/powermac/sleep.S | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+
+Doesn't build? pmac32_defconfig, gcc 9.3.0:
+
+ld: arch/powerpc/platforms/powermac/sleep.o: in function `core99_wake_up':
+(.text+0x25c): undefined reference to `load_segment_registers'
+
+Missing _GLOBAL() presumably?
+
+cheers
+
+> diff --git a/arch/powerpc/platforms/powermac/sleep.S b/arch/powerpc/platforms/powermac/sleep.S
+> index f9a680fdd9c4..51bfdfe85058 100644
+> --- a/arch/powerpc/platforms/powermac/sleep.S
+> +++ b/arch/powerpc/platforms/powermac/sleep.S
+> @@ -294,14 +294,7 @@ grackle_wake_up:
+>  	 * we do any r1 memory access as we are not sure they
+>  	 * are in a sane state above the first 256Mb region
+>  	 */
+> -	li	r0,16		/* load up segment register values */
+> -	mtctr	r0		/* for context 0 */
+> -	lis	r3,0x2000	/* Ku = 1, VSID = 0 */
+> -	li	r4,0
+> -3:	mtsrin	r3,r4
+> -	addi	r3,r3,0x111	/* increment VSID */
+> -	addis	r4,r4,0x1000	/* address of next segment */
+> -	bdnz	3b
+> +	bl	load_segment_registers
+>  	sync
+>  	isync
 >  
->  #include <trace/events/sched.h>
-> +#include <fbfam/fbfam.h>
->  
->  int core_uses_pid;
->  unsigned int core_pipe_limit;
-> @@ -825,6 +826,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  fail_creds:
->  	put_cred(cred);
->  fail:
-> +	fbfam_handle_attack(siginfo->si_signo);
-
-I don't think this is the right place for detecting a crash -- isn't
-this only for the "dumping core" condition? In other words, don't you
-want to do this in get_signal()'s "fatal" block? (i.e. very close to the
-do_coredump, but without the "should I dump?" check?)
-
-Hmm, but maybe I'm wrong? It looks like you're looking at noticing the
-process taking a signal from SIG_KERNEL_COREDUMP_MASK ?
-
-(Better yet: what are fatal conditions that do NOT match
-SIG_KERNEL_COREDUMP_MASK, and should those be covered?)
-
-Regardless, *this* looks like the only place without an LSM hook. And it
-doesn't seem unreasonable to add one here. I assume it would probably
-just take the siginfo pointer, which is also what you're checking.
-
-e.g. for include/linux/lsm_hook_defs.h:
-
-LSM_HOOK(int, 0, task_coredump, const kernel_siginfo_t *siginfo);
-
-
->  	return;
->  }
->  
-> diff --git a/include/fbfam/fbfam.h b/include/fbfam/fbfam.h
-> index 2cfe51d2b0d5..9ac8e33d8291 100644
-> --- a/include/fbfam/fbfam.h
-> +++ b/include/fbfam/fbfam.h
-> @@ -12,10 +12,12 @@ extern struct ctl_table fbfam_sysctls[];
->  int fbfam_fork(struct task_struct *child);
->  int fbfam_execve(void);
->  int fbfam_exit(void);
-> +int fbfam_handle_attack(int signal);
->  #else
->  static inline int fbfam_fork(struct task_struct *child) { return 0; }
->  static inline int fbfam_execve(void) { return 0; }
->  static inline int fbfam_exit(void) { return 0; }
-> +static inline int fbfam_handle_attack(int signal) { return 0; }
->  #endif
->  
->  #endif /* _FBFAM_H_ */
-> diff --git a/security/fbfam/fbfam.c b/security/fbfam/fbfam.c
-> index 9be4639b72eb..3aa669e4ea51 100644
-> --- a/security/fbfam/fbfam.c
-> +++ b/security/fbfam/fbfam.c
-> @@ -4,7 +4,9 @@
->  #include <linux/errno.h>
->  #include <linux/gfp.h>
->  #include <linux/jiffies.h>
-> +#include <linux/printk.h>
->  #include <linux/refcount.h>
-> +#include <linux/signal.h>
->  #include <linux/slab.h>
->  
->  /**
-> @@ -172,3 +174,40 @@ int fbfam_exit(void)
->  	return 0;
->  }
->  
-> +/**
-> + * fbfam_handle_attack() - Fork brute force attack detection.
-> + * @signal: Signal number that causes the core dump.
-> + *
-> + * The crashing rate of an application is computed in milliseconds per fault in
-> + * each crash. So, if this rate goes under a certain threshold there is a clear
-> + * signal that the application is crashing quickly. At this moment, a fork brute
-> + * force attack is happening.
-> + *
-> + * Return: -EFAULT if the current task doesn't have statistical data. Zero
-> + *         otherwise.
-> + */
-> +int fbfam_handle_attack(int signal)
-> +{
-> +	struct fbfam_stats *stats = current->fbfam_stats;
-> +	u64 delta_jiffies, delta_time;
-> +	u64 crashing_rate;
-> +
-> +	if (!stats)
-> +		return -EFAULT;
-> +
-> +	if (!(signal == SIGILL || signal == SIGBUS || signal == SIGKILL ||
-> +	      signal == SIGSEGV || signal == SIGSYS))
-> +		return 0;
-
-This will only be called for:
-
-#define SIG_KERNEL_COREDUMP_MASK (\
-        rt_sigmask(SIGQUIT)   |  rt_sigmask(SIGILL)    | \
-        rt_sigmask(SIGTRAP)   |  rt_sigmask(SIGABRT)   | \
-        rt_sigmask(SIGFPE)    |  rt_sigmask(SIGSEGV)   | \
-        rt_sigmask(SIGBUS)    |  rt_sigmask(SIGSYS)    | \
-        rt_sigmask(SIGXCPU)   |  rt_sigmask(SIGXFSZ)   | \
-        SIGEMT_MASK                                    )
-
-So you're skipping:
-
-	SIGQUIT
-	SIGTRAP
-	SIGABRT
-	SIGFPE
-	SIGXCPU
-	SIGXFSZ
-	SIGEMT_MASK
-
-I would include SIGABRT (e.g. glibc will call abort() for stack
-canary, malloc, etc failures, which may indicate a mitigation has
-fired).
-
--- 
-Kees Cook
+> -- 
+> 2.25.0
