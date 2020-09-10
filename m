@@ -2,214 +2,186 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F98C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB080C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B30F21D90
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oF8f1feB"
+	by mail.kernel.org (Postfix) with ESMTP id 58275206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599772230;
+	bh=g4XA0OhZdTxYHsjGUoM4EODYDVaBXCCLgN8ikHiReSE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PK0cWd/Z1qShH7ISBOiFJxg7dowdqSJ5vFAny9iu9yHXa6oFBSnEUBNluV/XtI4JI
+	 WY9vTAGJZ7MWPWAxOm+rVTTUY4IzbgDYgFMKkbV6IlaLbAJuokUgwJ6QX2MPGA5Erj
+	 yEBKOcZ9p294D3pUFrcd58SB9+Xv5E1VEgc+EWSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgIJVJQ (ORCPT
+        id S1727825AbgIJVK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731061AbgIJOfT (ORCPT
+        Thu, 10 Sep 2020 17:10:27 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:56145 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730687AbgIJOex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:35:19 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EB8C061757;
-        Thu, 10 Sep 2020 07:35:09 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id q21so6579413edv.1;
-        Thu, 10 Sep 2020 07:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VuITL6ssVJ2JograAwzCT8JrN+4pTWzj/K7rI7rnj+Y=;
-        b=oF8f1feBcDoWI0Mx+EWnTen+A/7+i3O81kYJqopMLTyZ3z9pKa6wGCuBSL90hzVbB+
-         595QlbNpNJkWybdOcQecZgZkBqntN0ampP0+wgTrpLtkYyBAv4MATvlZrT5r2Cq14bP3
-         8g1/V4My35WNgs5VOxWYkz6L9ZZJuQY/tkhKHrSaPJcTi4kLJ8VDh6oXwpfonYG0gdaj
-         wx3cVmOH4hFGht4wGmHAOWHNqFqasW/cs4N74mAwy4gVBZinIcF8RvbDVisdZwq2QUHf
-         JJFPa14X8cKTQFIfyEs+hEp9i/BkUVt3ynbEoDf2S6mwLEYsh7MTzhSq/iOXR9c/ZQoT
-         CVpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VuITL6ssVJ2JograAwzCT8JrN+4pTWzj/K7rI7rnj+Y=;
-        b=sO1S/Mwo3qedXNfJw0G2g+kXTdMm0qctbv5laiabgi0k82EsiSpoyabe98l8J8DB1A
-         uobu+cz7FZ9yXxpXNdHXC+iuRW2ucClFsJNsUr69G5mwIYmuMGb1ZGgJQZN27ZynarWz
-         NO5rI9D3qxT4wb23ryx8sul28+Un1R83jx6NyEjtr83ZgtjbLVu1+oEX9WJm7oHv77fv
-         r6B0igDW3IB8zOwed48gRy8xXDzENGSSLMyeahVjKvnGnEabsygaoQDogdGJe01I9817
-         PpFjBclNzSi0DGFiEcd2IHKHp5cB+f907Xstsk38ZzcnmoEDNhgKEx+LLYqQdsM/N/FA
-         ggBw==
-X-Gm-Message-State: AOAM531LzAt18Cq0GFKNzdxB3sUi2n4xDxQVHLuSCrKe2zP8SN3lwOAh
-        ItUcwqVTwBBApsJ1uodrvMA=
-X-Google-Smtp-Source: ABdhPJxok/n2ml7Rrcym/ZZrGrg8ZdFjvJOgn8pl+rC9iufO433GRXFiFH5UuFTpp75qUASFb0FgbQ==
-X-Received: by 2002:a50:ee10:: with SMTP id g16mr10111835eds.258.1599748507839;
-        Thu, 10 Sep 2020 07:35:07 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id r8sm7245817edy.87.2020.09.10.07.35.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Sep 2020 07:35:06 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 42F4627C00A0;
-        Thu, 10 Sep 2020 10:35:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 10 Sep 2020 10:35:02 -0400
-X-ME-Sender: <xms:lTlaX3UHxIonHxYav49X4NIXZyTHGUi9W4WQNqLbDKiYAQg79bh_9g>
-    <xme:lTlaX_lm_NHw0r3HLh9ZImkFf-asNzl46fuN_9dMwhTPqcJ05beXYfoqYRTq__w9W
-    3XRoy4DJ916BBzXwQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgjedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvffufffkofgggfestdek
-    redtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgse
-    hgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeeiueevjeelheduteefveeflefg
-    jeetfeehvdekudekgfegudeghfduhfetveejudenucffohhmrghinhepkhgvrhhnvghlrd
-    horhhgnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgep
-    tdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhph
-    gvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdr
-    fhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:lTlaXzbm5__xi8H5D0mxniybalMNXdp46InopCxuNcPtPn3nFrvZeQ>
-    <xmx:lTlaXyX1PKHnACNV4J3Jw1jkAwbxshvRNO0qobK5MlWoUghWYFjBLA>
-    <xmx:lTlaXxljk7uR6iCNR2yk9MCkGLprRXirBRBvNOAeog5ShD0G9FK0dA>
-    <xmx:ljlaXzUAowJrUoOj9t9Z2qCuQT6VlvoyhzbNwtzhCUlxfcCn1LYl5eJ7pfM>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8CD33306468B;
-        Thu, 10 Sep 2020 10:35:00 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>, will@kernel.org,
-        ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
-        mark.rutland@arm.com, maz@kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH v3 00/11] Hyper-V: Support PAGE_SIZE larger than 4K
-Date:   Thu, 10 Sep 2020 22:34:44 +0800
-Message-Id: <20200910143455.109293-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 10 Sep 2020 10:34:53 -0400
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 08AEYdgG016269
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 23:34:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 08AEYdgG016269
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599748480;
+        bh=sRzKztLNYO9dVkooKp3ATkjmauOzjgVG2OeZtQ33KmE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h+ZfW4R2E7GlVJvBXsfaLsAoG03hssdcPru3bjK+VsTNORsAFrILbDvsBz7VUC11S
+         Ln+tAukmipUzcWGlZn2i6V4MkR/XNR9IyyunUotmyS8H1jep+vzepji+3kWADzrajn
+         v7/8CUrI2tqezY1St+GCcJzq5SnwcFklqPCSojqcTskxfawXbiBhHoNsnHOq61vULO
+         iR/DnLDfviFB2YJqpT9duAfSBgL8YBLvt3BOz860l/uI0oqoll/IQIhjzcJXbF2oXe
+         04G2Fa+jJamApEbrjIprOXRW93RU7oQwbHk8tF/U9fkLdujFk8k8Br6PCgmkmkfYE/
+         4Hw3usw2+5zMA==
+X-Nifty-SrcIP: [209.85.214.170]
+Received: by mail-pl1-f170.google.com with SMTP id bh1so1009613plb.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:34:39 -0700 (PDT)
+X-Gm-Message-State: AOAM533YmHht3gv3U3Zyv6SGsSTlPsMslIwQ0EigAhbRyCKOeWW5KeZz
+        ThTdAz4QwpL8ovLShQ8IDG47U06lcVE14Wj10Tk=
+X-Google-Smtp-Source: ABdhPJw7e5OMq90ugQRkmYXK0HqYljmS43OHOyJIx8xvojK9zEk4Wyk9oDQKXJ9vjnQgz53soIJqwDSsBOEPtFXqpEc=
+X-Received: by 2002:a17:90b:1211:: with SMTP id gl17mr219548pjb.87.1599748479069;
+ Thu, 10 Sep 2020 07:34:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200910112701.13853-1-linux@rasmusvillemoes.dk>
+In-Reply-To: <20200910112701.13853-1-linux@rasmusvillemoes.dk>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 10 Sep 2020 23:34:02 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARE6NpCYAd7=--m-oO8_LweBWhP2aWfSRdTz=TX8dM5rw@mail.gmail.com>
+Message-ID: <CAK7LNARE6NpCYAd7=--m-oO8_LweBWhP2aWfSRdTz=TX8dM5rw@mail.gmail.com>
+Subject: Re: [PATCH] scripts/setlocalversion: make git describe output more reliable
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset add the necessary changes to support guests whose page
-size is larger than 4K. And the main architecture which we develop this
-for is ARM64 (also it's the architecture that I use to test this
-feature). Now as the patchset has been deeply reviewed, I change it from
-"RFC" to "PATCH", and also add ARM64 people Cced for broader insights
-(although the code is arch-independent).
+On Thu, Sep 10, 2020 at 8:57 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> When building for an embedded target using Yocto, we're sometimes
+> observing that the version string that gets built into vmlinux (and
+> thus what uname -a reports) differs from the path under /lib/modules/
+> where modules get installed in the rootfs, but only in the length of
+> the -gabc123def suffix. Hence modprobe always fails.
+>
+> The problem is that Yocto has the concept of "sstate" (shared state),
+> which allows different developers/buildbots/etc. to share build
+> artifacts, based on a hash of all the metadata that went into building
+> that artifact - and that metadata includes all dependencies (e.g. the
+> compiler used etc.). That normally works quite well; usually a clean
+> build (without using any sstate cache) done by one developer ends up
+> being binary identical to a build done on another host. However, one
+> thing that can cause two developers to end up with different builds
+> [and thus make one's vmlinux package incompatible with the other's
+> kernel-dev package], which is not captured by the metadata hashing, is
+> this `git describe`: The output of that can be affected by
+>
+> (1) git version: before 2.11 git defaulted to a minimum of 7, since
+> 2.11 (git.git commit e6c587) the default is dynamic based on the
+> number of objects in the repo
+> (2) hence even if both run the same git version, the output can differ
+> based on how many remotes are being tracked (or just lots of local
+> development branches or plain old garbage)
+> (3) and of course somebody could have a core.abbrev config setting in
+> ~/.gitconfig
+>
+> So in order to avoid `uname -a` output relying on such random details
+> of the build environment which are rather hard to ensure are
+> consistent between developers and buildbots, use an explicit
+> --abbrev=15 option (and for consistency, also use rev-parse --short=15
+> for the unlikely case of no signed tags being usable).
+>
+> Now, why is 60 bits enough for everyone? It's not mathematically
+> guaranteed that git won't have to use 16 in some git repo, but it is
+> beyond unlikely: Even in a repo with 100M objects, the probability
+> that any given commit (i.e. the one being described) clashes with some
+> other object in the first 15 hex chars is less than 1e-10, and
+> currently a git repo tracking Linus', -stable and -rt only has around
+> 10M objects.
 
-Previous version:
-v1: https://lore.kernel.org/lkml/20200721014135.84140-1-boqun.feng@gmail.com/
-v2: https://lore.kernel.org/lkml/20200902030107.33380-1-boqun.feng@gmail.com
 
-Changes since v2:
+I agree that any randomness should be avoided.
 
-*	Use a simpler and straight-forwards method to set up the payload
-	array for storvsc thanks to the inspiration from Michael Kelley.
-
-*	Some typo fixes as per suggestion from Michael Kelley.
-
-*	Fixes compiler warnings due to the different types of two
-	operands for max().
+My question is, do we need 15-digits?
 
 
-Hyper-V always uses 4K as the page size and expects the same page size
-when communicating with guests. That is, all the "pfn"s in the
-hypervisor-guest communication protocol are the page numbers in the unit
-of HV_HYP_PAGE_SIZE rather than PAGE_SIZE. To support guests with larger
-page size, we need to convert between these two page sizes correctly in
-the hypervisor-guest communication, which is basically what this
-patchset does.
+The kernelrelease is formed by
+[kernel version] + [some digits of git hash].
 
-In this conversion, one challenge is how to handle the ringbuffer. A
-ringbuffer has two parts: a header and a data part, both of which want
-to be PAGE_SIZE aligned in the guest, because we use the "double
-mapping" trick to map the data part twice in the guest virtual address
-space for faster wrap-around and ease to process data in place. However,
-the Hyper-V hypervisor always treats the ringbuffer headers as 4k pages.
-To overcome this gap, we enlarge the hv_ring_buffer structure to be
-always PAGE_SIZE aligned, and introduce the gpadl type concept to allow
-vmbus_establish_gpadl() to handle ringbuffer cases specially. Note that
-gpadl type is only meaningful to the guest, there is no such concept in
-Hyper-V hypervisor.
 
-This patchset consists of 11 patches:
+For example, "git describe" shows as follows:
 
-Patch 1~4: Introduce the types of gpadl, so that we can handle
-	   ringbuffer when PAGE_SIZE != HV_HYP_PAGE_SIZE, and also fix
-	   a few places where we should use HV_HYP_PAGE_SIZE other than
-	   PAGE_SIZE.
+v5.9.0-rc4-00034-g7fe10096c150
 
-Patch 5~6: Add a few helper functions to help calculate the hvpfn (page
-	   number in the unit of HV_HYP_PAGE_SIZE) and other related
-	   data. So that we can use them in the code of drivers.
 
-Patch 7~11: Use the helpers and change the driver code accordingly to
-	    make net/input/util/storage driver work with PAGE_SIZE !=
-	    HV_HYP_PAGE_SIZE
+Linus gives a new tag every week (or every two week).
 
-I've done some tests with PAGE_SIZE=64k and PAGE_SIZE=16k configurations
-on ARM64 guests (with Michael's patchset[1] for ARM64 Hyper-V guest
-support), everything worked fine ;-) (I could observe an error caused
-by unaligned firmware data, but it's better to have it fixed in the
-Hyper-V). I also have done a build and boot test on x86, everything
-worked well.
 
-Looking forwards to comments and suggestions!
+So, I think the conflict happens
+only when we have two commits that start with the same 7-digits
+in the _same_ release. Is this correct?
 
-Regards,
-Boqun
+We have 14000 - 15000 commits in each release,
+not 100M.
 
-[1]: https://lore.kernel.org/lkml/1598287583-71762-1-git-send-email-mikelley@microsoft.com/
 
-Boqun Feng (11):
-  Drivers: hv: vmbus: Always use HV_HYP_PAGE_SIZE for gpadl
-  Drivers: hv: vmbus: Move __vmbus_open()
-  Drivers: hv: vmbus: Introduce types of GPADL
-  Drivers: hv: Use HV_HYP_PAGE in hv_synic_enable_regs()
-  Drivers: hv: vmbus: Move virt_to_hvpfn() to hyperv header
-  hv: hyperv.h: Introduce some hvpfn helper functions
-  hv_netvsc: Use HV_HYP_PAGE_SIZE for Hyper-V communication
-  Input: hyperv-keyboard: Make ringbuffer at least take two pages
-  HID: hyperv: Make ringbuffer at least take two pages
-  Driver: hv: util: Make ringbuffer at least take two pages
-  scsi: storvsc: Support PAGE_SIZE larger than 4K
 
- drivers/hid/hid-hyperv.c              |   4 +-
- drivers/hv/channel.c                  | 461 ++++++++++++++++----------
- drivers/hv/hv.c                       |   4 +-
- drivers/hv/hv_util.c                  |  16 +-
- drivers/input/serio/hyperv-keyboard.c |   4 +-
- drivers/net/hyperv/netvsc.c           |   2 +-
- drivers/net/hyperv/netvsc_drv.c       |  46 +--
- drivers/net/hyperv/rndis_filter.c     |  13 +-
- drivers/scsi/storvsc_drv.c            |  54 ++-
- include/linux/hyperv.h                |  64 +++-
- 10 files changed, 441 insertions(+), 227 deletions(-)
+
+
+>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+> I could probably fix things by adding a 'git config --local
+> core.abbrev 15' step to the Yocto build process after the repo to
+> build from has been cloned but before building has started. But in the
+> interest of binary reproducibility outside of just Yocto builds, I
+> think it's better if this lives in the kernel.
+>
+>  scripts/setlocalversion | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+> index 20f2efd57b11..c5262f0d953d 100755
+> --- a/scripts/setlocalversion
+> +++ b/scripts/setlocalversion
+> @@ -45,7 +45,7 @@ scm_version()
+>
+>         # Check for git and a git repo.
+>         if test -z "$(git rev-parse --show-cdup 2>/dev/null)" &&
+> -          head=$(git rev-parse --verify --short HEAD 2>/dev/null); then
+> +          head=$(git rev-parse --verify --short=15 HEAD 2>/dev/null); then
+>
+>                 # If we are at a tagged commit (like "v2.6.30-rc6"), we ignore
+>                 # it, because this version is defined in the top level Makefile.
+> @@ -59,7 +59,7 @@ scm_version()
+>                         fi
+>                         # If we are past a tagged commit (like
+>                         # "v2.6.30-rc5-302-g72357d5"), we pretty print it.
+> -                       if atag="$(git describe 2>/dev/null)"; then
+> +                       if atag="$(git describe --abbrev=15 2>/dev/null)"; then
+>                                 echo "$atag" | awk -F- '{printf("-%05d-%s", $(NF-1),$(NF))}'
+>
+>                         # If we don't have a tag at all we print -g{commitish}.
+> --
+> 2.23.0
+>
+
 
 -- 
-2.28.0
-
+Best Regards
+Masahiro Yamada
