@@ -2,133 +2,107 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F26DC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4732C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D7C2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7919A2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RF3P/tH4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjJMhcLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgIJEcM (ORCPT
+        id S1726300AbgIJEer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 00:32:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51678 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbgIJEcK (ORCPT
+        Thu, 10 Sep 2020 00:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgIJEen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 00:32:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089MiVL4156976;
-        Wed, 9 Sep 2020 22:44:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=ZJSWj8UDSgwVvdQeB1Q6BSZE1Es3ixnnotRP8TRgN6o=;
- b=RF3P/tH4qLGee2XEa4s4rwbn+vrl/a0mcYAsQtMXbU2cV5G71WwcSYGEOqb7At4ftVba
- /CbbLxC/exYoayLX7V5zJRQYuiXH21IgdBpM1Ae1LX0Otp1GzOg/nUqLQf0becWmULLy
- fW+0y0ZdbzlCZ1Kh4C6TldbMmjxy1o4qUEyqEF6x+AJrYYZn+WjrE+XfgPubBSwX0uWY
- Pr0gp6VgRQknYwScAZ4TnTi9RvbvRz/dXlRjJikkP01H7rR/EkNqYq0vA1deh4haUKHW
- PqIr0FyH22YWxLUirxY35CX0DUpVRGYxBjxzhEH0Epx8W9Rgm3cdlk8htI0tQtTpHdcZ Qw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 33c2mm4pmm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 09 Sep 2020 22:44:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 089MdcWP132724;
-        Wed, 9 Sep 2020 22:44:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 33dacm6e4s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Sep 2020 22:44:46 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 089Miet6010647;
-        Wed, 9 Sep 2020 22:44:41 GMT
-Received: from dhcp-10-65-181-26.vpn.oracle.com (/10.65.181.26)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Sep 2020 15:44:40 -0700
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v2] certs: Add EFI_CERT_X509_GUID support for dbx entries
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-In-Reply-To: <5074bc5c-8dd4-16d7-2760-3e657b90bfa2@infradead.org>
-Date:   Wed, 9 Sep 2020 16:44:37 -0600
-Cc:     dhowells@redhat.com, dwmw2@infradead.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        jmorris@namei.org, serge@hallyn.com, nayna@linux.ibm.com,
-        Mimi Zohar <zohar@linux.ibm.com>, erichte@linux.ibm.com,
-        mpe@ellerman.id.au, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0D3BE738-67D5-41DB-B58E-FCD2ECD9A4F0@oracle.com>
-References: <20200909172736.73003-1-eric.snowberg@oracle.com>
- <5074bc5c-8dd4-16d7-2760-3e657b90bfa2@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-X-Mailer: Apple Mail (2.3273)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 phishscore=0 adultscore=0 suspectscore=3 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090198
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999
- malwarescore=0 suspectscore=3 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009090199
+        Thu, 10 Sep 2020 00:34:43 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1163CC061573;
+        Wed,  9 Sep 2020 21:34:42 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l191so3561231pgd.5;
+        Wed, 09 Sep 2020 21:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mLWBFcBZV8fmFx5Xk0PVn4QE4aV7gSoFbhf906XUkPs=;
+        b=NjJMhcLe4iQ8X5gqAeC+mPeQdB0ZCqaUU7mPw3W/D1GX/8B2q+7jyxu01ySUanM1AP
+         XWLRdQ4Ygmq6foo4o51n6qzzhlMY8jt0AuBbbm5ZGfPvBftrhAlI5jR1j9d9rUgO48Zv
+         3nt3vC+NKv+yMvAwRrd9oBZghO/4msxbwX1MkPD/pMaLsWI1twbeLVt0jlqh6RQjNPqv
+         Q26XqLtkZuJuP/6N1v3qcx9UkIfpsRWUbMIDIHhtC5yect8TFVWqO6rRLCXAUFzUDmdd
+         37JxvHGTFtLPc5FV00qdssrm+rSevrHMgr9hB4//8nNwkTrWo33AxIHH3j5/lwv5J4Sz
+         UsXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mLWBFcBZV8fmFx5Xk0PVn4QE4aV7gSoFbhf906XUkPs=;
+        b=oMFTiQp4ZJ4UG4i4oHwt2b/M7CDzl5f7IXHidHqe8nUVnn7vq7uMN2D5P6g0wYElNA
+         a4iejcthTRzmbMw2GWDXOrNZWdWHEj/aIxUnDE3TpoJFQ+8rynz9+ua+F49yhvrF3cAB
+         v1xw87dRImSUfEAknyaX/qHL0ohSF41ft5kfyzev+xdBqfGc1Y4+4icvKWb+K/49G+ja
+         iUNG41LgUPoU7gagBC7qn43ga//Iabnn7dT0T3RziCcnuEo26xLJ/4Jw27BilfozuHKR
+         tUWyCSi9R0ScF1Q4PuBkHdG/AyG0cIiI30xOdkXTqfLhbO2qIJNJRL5x5z09eLIk6TJD
+         zxvQ==
+X-Gm-Message-State: AOAM532WYkwv18xdJPVRoNMKGy3q6dMTEt+L87Xp+91h7cw3q5R8KNmi
+        frKPFhg/Nj1lmuELCYuU6O0=
+X-Google-Smtp-Source: ABdhPJzFKv4KxelRN1MBEhwmEPGdlzS/d7UG1Dn2QL3AG6VpQwxMK6fYsIxpdOIV7ceTnSwts2E6Vw==
+X-Received: by 2002:a63:471b:: with SMTP id u27mr3050649pga.139.1599712481765;
+        Wed, 09 Sep 2020 21:34:41 -0700 (PDT)
+Received: from localhost.localdomain ([45.118.165.148])
+        by smtp.googlemail.com with ESMTPSA id s19sm4384211pfc.69.2020.09.09.21.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 21:34:40 -0700 (PDT)
+From:   Anmol Karn <anmol.karan123@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net, anmol.karan123@gmail.com,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer dereference in hci_event_packet()
+Date:   Thu, 10 Sep 2020 10:04:24 +0530
+Message-Id: <20200910043424.19894-1-anmol.karan123@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Prevent hci_phy_link_complete_evt() from dereferencing 'hcon->amp_mgr'
+as NULL. Fix it by adding pointer check for it.
 
-> On Sep 9, 2020, at 11:40 AM, Randy Dunlap <rdunlap@infradead.org> =
-wrote:
->=20
-> On 9/9/20 10:27 AM, Eric Snowberg wrote:
->> diff --git a/include/crypto/pkcs7.h b/include/crypto/pkcs7.h
->> index 38ec7f5f9041..d8f2e0fdfbf4 100644
->> --- a/include/crypto/pkcs7.h
->> +++ b/include/crypto/pkcs7.h
->> @@ -26,11 +26,19 @@ extern int pkcs7_get_content_data(const struct =
-pkcs7_message *pkcs7,
->> 				  const void **_data, size_t *_datalen,
->> 				  size_t *_headerlen);
->>=20
->> +#ifdef CONFIG_PKCS7_MESSAGE_PARSER
->> /*
->>  * pkcs7_trust.c
->>  */
->> extern int pkcs7_validate_trust(struct pkcs7_message *pkcs7,
->> 				struct key *trust_keyring);
->> +#else
->> +static inline int pkcs7_validate_trust(struct pkcs7_message *pkcs7,
->> +				       struct key *trust_keyring)
->> +{
->> +	return -ENOKEY;
->> +}
->> +#endif
->=20
-> Just to be clear, you want to do the #else block when
-> CONFIG_PKCS7_MESSAGE_PARSER=3Dm.  Is that correct?
->=20
-> If so, it might be clearer to use
->=20
-> #if IS_BUILTIN(CONFIG_PKCS7_MESSAGE_PARSER)
->=20
+Reported-and-tested-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=0bef568258653cff272f
+Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+---
+ net/bluetooth/hci_event.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I just added this part to fix a build error when none of the
-asymmetrical keys are defined within a config.  I failed to notice
-CONFIG_PKCS7_MESSAGE_PARSER could be configured to build as a module
-too.  The code I added that uses pkcs7_validate_trust is always=20
-builtin. Taking this into account, please disregard this patch. =20
-I will need to solve this a different way.  Thanks for pointing this=20
-out.
-
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 4b7fc430793c..871e16804433 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4936,6 +4936,11 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+ 		return;
+ 	}
+ 
++	if (IS_ERR_OR_NULL(hcon->amp_mgr)) {
++		hci_dev_unlock(hdev);
++		return;
++	}
++
+ 	if (ev->status) {
+ 		hci_conn_del(hcon);
+ 		hci_dev_unlock(hdev);
+-- 
+2.28.0
