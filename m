@@ -2,128 +2,176 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1239C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E036CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79AFD206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A42C4206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Pnkoe39b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgIJCVV (ORCPT
+        id S1730462AbgIJCVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:21:21 -0400
-Received: from mga03.intel.com ([134.134.136.65]:52209 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbgIJCSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:18:35 -0400
-IronPort-SDR: IzZnHC92zX56tSI2JiAj352zGjlBYSii2icYTIWU6+U42tFtgHuCRMcIcjkEdLw/wlOBPU59GC
- FRgfqUtlQXKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="158468124"
-X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="158468124"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:07:09 -0700
-IronPort-SDR: qkfpSoKV1QeBLR8tjA8HAJxMsc61Q3klbLaexWsYoj4/2+poJ8zDHk1wXd4u6VEzMkKvkZoTVx
- KbyeR31mj0lQ==
-X-IronPort-AV: E=Sophos;i="5.76,410,1592895600"; 
-   d="scan'208";a="300309339"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.243.130]) ([10.212.243.130])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 16:07:08 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
- <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
- <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
- <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
- <46dffdfd-92f8-0f05-6164-945f217b0958@intel.com>
- <ed929729-4677-3d3b-6bfd-b379af9272b8@intel.com>
- <6e1e22a5-1b7f-2783-351e-c8ed2d4893b8@intel.com>
- <5979c58d-a6e3-d14d-df92-72cdeb97298d@intel.com>
- <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <08c91835-8486-9da5-a7d1-75e716fc5d36@intel.com>
-Date:   Wed, 9 Sep 2020 16:07:07 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <ab1a3344-60f4-9b9d-81d4-e6538fdcafcf@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 9 Sep 2020 22:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730523AbgIJCUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:20:44 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C9FC061796
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 19:20:34 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so2273549pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 19:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=uZtoOwKYtsNFinbEP17eK0TcjEDx3wgWg9ndpqP7KNU=;
+        b=Pnkoe39bqJabvoo0ojb/o9LLCXqc1onnL4qfdvXXN0/K1OsPwsfjivIL5vQDSGnSrO
+         P02SnjA3159MaHvxZZyNdFWY7b1mM6uIi36g9edeoXtUuCLd+dgBXfGzsranod+EIBa0
+         VxqS4ufxRWaw3081ZcwaJlD3y/1v1FQYUgplOEG32nGnC6Su8JtNasPueRFL04Jb+lj3
+         7myYYhWKpL18SADIJBZC7AmqWix9Ra0eHkwop0I4f7GQwzvqdJmvuRVGN20z8yIojo7+
+         5kHqFbb/NJDrB0pGfLOHKBrU3vbgmq3fAXpX5U/IQLoAm5m8g+qGnAmLjQzsJ2u1sw3J
+         A7JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uZtoOwKYtsNFinbEP17eK0TcjEDx3wgWg9ndpqP7KNU=;
+        b=d8ILLjGgzhm1KJicr6tFt5s9flwAGIL8lazXiUBaT/yKPQN5zBVsVWrjPzJlhe/zQg
+         j//alIHGnIdNDSQ3Rgu/OQ/LgxB70bCY5oG1QeYx/qGAWOBzU5zIXfhbzDb+8ry/QLV8
+         6cB3p33MjywIocbeMF7dIukz7OyyrLxpVqWiiL/zMtitICq1W8dMyJmwTicqNJbpJQrL
+         gcvf9Oxz8/5jarrFlxIBleo0JFQzFwfqyh123gHB9KbdcHxu8Tdtum6r1pmRj7eyiYZp
+         x7ytu80KsHN2e3xeCwaTVURfvUlRXHDSeBS7Q35HpQYZYzwALZe7oxmkSwS4Nj68BQsI
+         7mLg==
+X-Gm-Message-State: AOAM532TOEQSaNrXRZiXpJws1rZUjDtTD42Jfnn8kBkoMBs6oWoJiqfk
+        kmXwB0zjqB1ssEoc3VETNDYvJA==
+X-Google-Smtp-Source: ABdhPJw1VwIuxeCYOYqJLuox6GtHjWg3dPNyTtj4gQflfBSTKC8v0l+FkgTB0W5JxGpfQ6GPlMFn6Q==
+X-Received: by 2002:a17:902:c253:: with SMTP id 19mr3444489plg.65.1599704433135;
+        Wed, 09 Sep 2020 19:20:33 -0700 (PDT)
+Received: from libai.bytedance.net ([61.120.150.71])
+        by smtp.gmail.com with ESMTPSA id o1sm3781664pfg.83.2020.09.09.19.20.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 09 Sep 2020 19:20:32 -0700 (PDT)
+From:   zhenwei pi <pizhenwei@bytedance.com>
+To:     axboe@kernel.dk
+Cc:     pizhenwei@bytedance.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] block: add io_error stat for block device
+Date:   Thu, 10 Sep 2020 10:20:26 +0800
+Message-Id: <20200910022026.632617-1-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/2020 3:59 PM, Dave Hansen wrote:
-> On 9/9/20 3:08 PM, Yu, Yu-cheng wrote:
->> After looking at this more, I found the changes are more similar to
->> mprotect() than madvise().  We are going to change an anonymous mapping
->> to a read-only mapping, and add the VM_SHSTK flag to it.  Would an
->> x86-specific mprotect(PROT_SHSTK) make more sense?
->>
->> One alternative would be requiring a read-only mapping for
->> madvise(MADV_SHSTK).  But that is inconvenient for the application.
-> 
-> Why?  It's just:
-> 
-> 	mmap()/malloc();
-> 	mprotect(PROT_READ);
-> 	madvise(MADV_SHSTK);
-> 
-> vs.
-> 
-> 	mmap()/malloc();
-> 	mprotect(PROT_SHSTK);
-> 
-> I'm not sure a single syscall counts as inconvenient.
-> 
-> I don't quite think we should use a PROT_ bit for this.  It seems like
-> the kind of thing that could be fragile and break existing expectations.
->   I don't care _that_ strongly though.
-> 
-What if a writable mapping is passed to madvise(MADV_SHSTK)?  Should 
-that be rejected?
+Currently if hitting block req error, block layer only prints error
+log with a rate limitation. Then agent has to parse kernel log to
+record what happens.
+
+In this patch, add read/write/discard/flush stat counter to record
+io errors.
+
+Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+---
+ block/blk-core.c          | 14 +++++++++++---
+ block/genhd.c             | 19 +++++++++++++++++++
+ include/linux/part_stat.h |  1 +
+ 3 files changed, 31 insertions(+), 3 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 10c08ac50697..8f1424835700 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1558,9 +1558,17 @@ bool blk_update_request(struct request *req, blk_status_t error,
+ 		req->q->integrity.profile->complete_fn(req, nr_bytes);
+ #endif
+ 
+-	if (unlikely(error && !blk_rq_is_passthrough(req) &&
+-		     !(req->rq_flags & RQF_QUIET)))
+-		print_req_error(req, error, __func__);
++	if (unlikely(error && !blk_rq_is_passthrough(req))) {
++		if (op_is_flush(req_op(req)))
++			part_stat_inc(&req->rq_disk->part0,
++				io_errors[STAT_FLUSH]);
++		else
++			part_stat_inc(&req->rq_disk->part0,
++				io_errors[op_stat_group(req_op(req))]);
++
++		if (!(req->rq_flags & RQF_QUIET))
++			print_req_error(req, error, __func__);
++	}
+ 
+ 	blk_account_io_completion(req, nr_bytes);
+ 
+diff --git a/block/genhd.c b/block/genhd.c
+index 99c64641c314..852035095485 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -104,6 +104,7 @@ static void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
+ 			stat->sectors[group] += ptr->sectors[group];
+ 			stat->ios[group] += ptr->ios[group];
+ 			stat->merges[group] += ptr->merges[group];
++			stat->io_errors[group] += ptr->io_errors[group];
+ 		}
+ 
+ 		stat->io_ticks += ptr->io_ticks;
+@@ -1374,6 +1375,22 @@ static ssize_t disk_discard_alignment_show(struct device *dev,
+ 	return sprintf(buf, "%d\n", queue_discard_alignment(disk->queue));
+ }
+ 
++static ssize_t io_error_show(struct device *dev,
++		      struct device_attribute *attr, char *buf)
++{
++	struct hd_struct *p = dev_to_part(dev);
++	struct disk_stats stat;
++
++	part_stat_read_all(p, &stat);
++
++	return sprintf(buf,
++		"%8lu %8lu %8lu %8lu\n",
++		stat.io_errors[STAT_READ],
++		stat.io_errors[STAT_WRITE],
++		stat.io_errors[STAT_DISCARD],
++		stat.io_errors[STAT_FLUSH]);
++}
++
+ static DEVICE_ATTR(range, 0444, disk_range_show, NULL);
+ static DEVICE_ATTR(ext_range, 0444, disk_ext_range_show, NULL);
+ static DEVICE_ATTR(removable, 0444, disk_removable_show, NULL);
+@@ -1386,6 +1403,7 @@ static DEVICE_ATTR(capability, 0444, disk_capability_show, NULL);
+ static DEVICE_ATTR(stat, 0444, part_stat_show, NULL);
+ static DEVICE_ATTR(inflight, 0444, part_inflight_show, NULL);
+ static DEVICE_ATTR(badblocks, 0644, disk_badblocks_show, disk_badblocks_store);
++static DEVICE_ATTR(io_error, 0444, io_error_show, NULL);
+ 
+ #ifdef CONFIG_FAIL_MAKE_REQUEST
+ ssize_t part_fail_show(struct device *dev,
+@@ -1437,6 +1455,7 @@ static struct attribute *disk_attrs[] = {
+ #ifdef CONFIG_FAIL_IO_TIMEOUT
+ 	&dev_attr_fail_timeout.attr,
+ #endif
++	&dev_attr_io_error.attr,
+ 	NULL
+ };
+ 
+diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
+index 24125778ef3e..4fe3836d2308 100644
+--- a/include/linux/part_stat.h
++++ b/include/linux/part_stat.h
+@@ -9,6 +9,7 @@ struct disk_stats {
+ 	unsigned long sectors[NR_STAT_GROUPS];
+ 	unsigned long ios[NR_STAT_GROUPS];
+ 	unsigned long merges[NR_STAT_GROUPS];
++	unsigned long io_errors[NR_STAT_GROUPS];
+ 	unsigned long io_ticks;
+ 	local_t in_flight[2];
+ };
+-- 
+2.11.0
+
