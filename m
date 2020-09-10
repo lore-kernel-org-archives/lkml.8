@@ -2,166 +2,165 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D378C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6C0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00A0720758
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2154D20770
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YFX3C21Z"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="iCPs4WtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbgIJIaa (ORCPT
+        id S1730367AbgIJIal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:30:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbgIJI0V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:26:21 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C8DC061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:26:20 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id c19so1343188wmd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:26:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jV15et7Yw8A7Imw4OszYwam1pGezadF7ay4AoPCRTlw=;
-        b=YFX3C21ZwVO7s35wZGtviE1XqbE7aCLtO3wFFDiZBQLPyeEj7XL687V0Ka17r+pHow
-         trvRePYr75Vgj+evG/sbfJ5EEYunaBaoAbSvIka3o38lU7/FKTwwJQ7jj74iOjPtp4iL
-         YrUv5JVWK1FJoTvd7t+cUgJAdvv6LvUo9pvjg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jV15et7Yw8A7Imw4OszYwam1pGezadF7ay4AoPCRTlw=;
-        b=p+AXdCPsj9nc+VfpX01l/yo2GOo2UQX9oPlWbagxs09snVUF/8aqAsFsrsrm0DRF3u
-         1cWbZ8UzItOrsNfgfBWR/+/mM+UlNk1J/Jg6tITInEwt+m3knvtX20G6R7NkyWbq9mtK
-         EmXtAzStfk/rKCuboZonxszS8tkc/FQhIL+aVMMpt/O8fOBFu6YJkSof8vjDWTWRUSGm
-         A9qWGkquFkWWc7cgzv3ymBv2do28ojcZ6gyF8Lu3J4I+ccZqIVG2gsQJdYbJHs0BYB+I
-         FE2zsszbqruOVLUsabW7oYihAt5XlI2XHezV2rbVlyQWHYhpu1ni/YQcYT/OGrSn7JVq
-         43lQ==
-X-Gm-Message-State: AOAM533OOKjLXnzG4Xun8EOf31LtvzeaLyY6rhuK01bWb85ox4rQxGtM
-        LKnKAhO5yRt6ggTRYTV/lNw3slYQ7m0JwZmrReMbj2w3hF2IMg==
-X-Google-Smtp-Source: ABdhPJwMw0Wh177JlXOipH/ky7eUTophvRRubdU+aDyAbXNA/Xm+BsW76uAWLWKihoVqdk9x08SGwZLIRGafLV94erc=
-X-Received: by 2002:a7b:c384:: with SMTP id s4mr7073300wmj.138.1599726379101;
- Thu, 10 Sep 2020 01:26:19 -0700 (PDT)
+        Thu, 10 Sep 2020 04:30:41 -0400
+Received: from mail-eopbgr150110.outbound.protection.outlook.com ([40.107.15.110]:7436
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728443AbgIJIZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:25:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S/fefeqz/ZxfhsMYMxWd6ETk7N/X41RDAxHdFPjc1pTKbKsuxpbgix7URzNrhFVoNdZDT/bP3H3K+bmURmVNVgO8Q6lqxz6CkBNKJE7zcLMsaesOwU/l2A/fdemywGPOkx3b2fr9MGaQEwGcEkFX2NLfIyhXa/57nEjFNmYNnsADt79OofQNClr6XYapFnGKNU0V+UXJ/xT7jDddS9WC+UioLmmi/YuefTG8SWwH4exyJqONQuZX2MMpNnWhX20pg6F1pAkHLWEfjDBs6Rt1aWpwo7Cq1btA0KCUl5eXUbHEun6tOg0CsAvcHnhxegn85kocJNVCq1At9Rzd3o5flA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hTW8Oh/w6GwgN7togwyX59eIyhrtQIxFpRV1KBLMrUU=;
+ b=cAHZBRNznpaPAXNMMbRHe5E01BNKeXWdPTu2FN+QUKq/eUMaRUOIDW3sLzoL+/E0GLAzG72Ib8IAP6JWT+GL0cd1Fd6yx4hAUrlnts+fht8E6j4XP1h/r51CePOmJu0rc91TQ1Rc5cbCMBZw5IRBFX8rSUYBRF2He9FidK4rJKe5AgD0wqdhGBwERYJ6T98FgYA0x+qxLbWA7bZzt7p5cGgCVk+iMrMFKjiOJxGl0S5ZDMyU7ZHPsVvUTXxGxqnIgnZHZ+k/a53JS9yxXoAs0H9RJ7rY02AnZwp58IA5xF38Egz1zUKbYAgqvFI+ps0GCbyiXQqxMK7aqRzxX8eBcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hTW8Oh/w6GwgN7togwyX59eIyhrtQIxFpRV1KBLMrUU=;
+ b=iCPs4WtHF9atrvUskTxP87DDodxUZGOa5LVxpevCuk5TqJteCXjpAtwPMGaLFZxaCKndaFwOIGo9gQbvWvzshVhzAlI0weFLs3Ba4ai950DkB/Q2GdzlZrIjPYFjuPCye5XNjxwA3XC2ekO88elg5s9qTVEO81/JXG7t62M9w+4=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0362.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5f::31) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3348.15; Thu, 10 Sep 2020 08:25:17 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::c1ab:71de:6bc2:89fe]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::c1ab:71de:6bc2:89fe%6]) with mapi id 15.20.3348.019; Thu, 10 Sep 2020
+ 08:25:17 +0000
+Date:   Thu, 10 Sep 2020 11:25:12 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [PATCH net-next v7 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+Message-ID: <20200910082512.GE20411@plvision.eu>
+References: <20200904165222.18444-1-vadym.kochan@plvision.eu>
+ <20200904165222.18444-2-vadym.kochan@plvision.eu>
+ <CAHp75Vc_MN-tD+iQNbUcB6fbYizyfKJSJnm1W7uXCT6JAvPauA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc_MN-tD+iQNbUcB6fbYizyfKJSJnm1W7uXCT6JAvPauA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM6PR04CA0055.eurprd04.prod.outlook.com
+ (2603:10a6:20b:f0::32) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
 MIME-Version: 1.0
-References: <20200909053234.17027-1-srinath.mannam@broadcom.com> <1996b772-774c-3475-05cc-77ae87176c3f@arm.com>
-In-Reply-To: <1996b772-774c-3475-05cc-77ae87176c3f@arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Thu, 10 Sep 2020 13:56:07 +0530
-Message-ID: <CABe79T6fAmovPdx6ZzBeR8D9mJoX5qoAOG3=ZOt5TYpeT=LUJQ@mail.gmail.com>
-Subject: Re: [PATCH] iommu/dma: Fix IOVA reserve dma ranges
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, poza@codeaurora.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM6PR04CA0055.eurprd04.prod.outlook.com (2603:10a6:20b:f0::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 08:25:15 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a2e9f0d4-401f-4ba8-82dd-08d855630bed
+X-MS-TrafficTypeDiagnostic: HE1P190MB0362:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB03626968F05E11E178E4CC8995270@HE1P190MB0362.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W7BYRvg91eJbBf9T+QNGr2v2weHL7S+neZJRw/j07DCEsY+QTFQt8wYTWnnTksoANy/H7hy7yFbEjxaNTA0H/KeoVqalMZT6GW0OFb/JGtk82/K0wOnKj4Qpb+TzE9YY4bGEJIm6worue0dKunqUeCWjbm/50WuSM77+c6mlc0JbHRzIANiz+HtCguFGLwREsiwzGWiHyAp5GqKlF2UkRmW1HGcPmILcffLHWNyAPF92q0chHbPTcW0EFcEUWCPwPIvxOCFN2DywGU740gaQW6o9qaa0UIP62PatuYgeHU8nbjPXdRwgNf7DainEykkPAy84/J1WSTYwxXHkhBqpoA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(366004)(396003)(39830400003)(346002)(376002)(136003)(5660300002)(36756003)(4326008)(316002)(2906002)(8886007)(1076003)(8676002)(44832011)(53546011)(478600001)(66556008)(66476007)(26005)(86362001)(66946007)(83380400001)(33656002)(956004)(2616005)(54906003)(55016002)(6666004)(52116002)(8936002)(16526019)(6916009)(7696005)(186003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: W1J39bN+mrZzNR+thg3XCZ/wBs8xbz+LM8fy0NUdRnM+eg5zGR8qL86ilIEW8Qhx0NRLi7r4qUqqn7aoypdz9F5EWSMaD2wXwwu2oB+1jqrzEgWhGTyi1k+98jHLFNoEkXHm/Fincc72wIzdgC32agR+JRf/OyH5NleOymmck4b5Vgl1CYfOEE7+BtI3jLhqKBfav2DCJQhbtr9uVT1QDgQu7w+T0qED5CG2BBUe0bb3LCczgBeWgFrpwR2PaJy5yQ/A90+cHW7D7PvN5GmmS0A4IgLTBHDjBwo3Ocv7Rqq9DNXJnmXVq6CBa1kN7NVoTZOES2pSh6Uqj4tgEkDTd/R5VIya6lRH7AyTYd+TuaZV/JWEx0vnnhVL2nAzNAxSuA+k8aP0k5F517+KfHlDDaKRvTAsi0Ziu1JRa8VZQ9Mc5jxYXBpaYEhbqD00p4c6Vuyp2NgGFXOBzHN/cgeJ1JwTLr52ZlOBfRhGpnU44K1A/3/EotdBl7OeLe6/fAsijBGFgp8wjFAJZV8930kEuC+nnxxIoqLsRUNR5XSpaG7tzHcY0GlXrgSYQ2quqK+9lZ//gVpHyHnexOfzFAa7xAHOSqzr4eilJIU/CgXU9ZvrPyouKAVr8mBSrJ9RPt5xCL0L8zERIINkcgAhfl7AZw==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2e9f0d4-401f-4ba8-82dd-08d855630bed
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 08:25:16.8700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yvfVfvSK5PHIlmL6Tcltp/I9GMim5JEx9Tn3d797Citx1qJdfnVxAlT1W37JRtNUshnqiONjnT5XGFv0p6dZQ6tADxpo2tv5CxH3DygDxIg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0362
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 9, 2020 at 5:35 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-Hi Robin,
-Thanks for review
-> On 2020-09-09 06:32, Srinath Mannam wrote:
-> > Fix IOVA reserve failure for memory regions listed in dma-ranges in the
-> > following cases.
+On Fri, Sep 04, 2020 at 10:12:07PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 > >
-> > - start address of memory region is 0x0.
->
-> That's fair enough, and in fact generalises to the case of zero-sized
-> gaps between regions, which is indeed an oversight.
-Yes this is the main reason for the requirement of this fix.
->
-> > - end address of a memory region is equal to start address of next memory
-> >    region.
->
-> This part doesn't make much sense, however - if the regions described in
-> bridge->dma_ranges overlap, that's a bug in whoever created a malformed
-> list to begin with. Possibly it's just poor wording, and you're using
-> "memory regions" to refer to any or all of the dma_ranges, the reserved
-> IOVA ranges, and what "start" and "end" in this function represent which
-> isn't quite either of those.
-You are right, this case is very unlikely that nobody lists regions with zero
-gap, in such a case they will combine both the regions. Reason for highlighting
-this point is, the same fix will handle this case also. Here I used memory
-regions to refer entries of dma-ranges(allowed IOVA addresses range) not
-reserved IOVA ranges. start and end variables in this function refers to
-start and end addresses of reserved IOVA ranges which are derived from
-dma ranges resources start and end values.
->
-> > Fixes: aadad097cd46f ("iommu/dma: Reserve IOVA for PCIe inaccessible DMA address")
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > ---
-> >   drivers/iommu/dma-iommu.c | 15 +++++++++++----
-> >   1 file changed, 11 insertions(+), 4 deletions(-)
+> > Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+> > ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+> > wireless SMB deployment.
 > >
-> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > index 5141d49a046b..0a3f67a4f9ae 100644
-> > --- a/drivers/iommu/dma-iommu.c
-> > +++ b/drivers/iommu/dma-iommu.c
-> > @@ -213,14 +213,21 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
-> >       resource_list_for_each_entry(window, &bridge->dma_ranges) {
-> >               end = window->res->start - window->offset;
-> >   resv_iova:
-> > +             if (end < start) {
-> > +                     /* dma_ranges list should be sorted */
-> > +                     dev_err(&dev->dev, "Failed to reserve IOVA\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +             /*
-> > +              * Skip the cases when start address of first memory region is
-> > +              * 0x0 and end address of one memory region and start address
-> > +              * of next memory region are equal. Reserve IOVA for rest of
-> > +              * addresses fall in between given memory ranges.
-> > +              */
-> >               if (end > start) {
-> >                       lo = iova_pfn(iovad, start);
-> >                       hi = iova_pfn(iovad, end);
-> >                       reserve_iova(iovad, lo, hi);
-> > -             } else {
->
-> Surely this only needs to be a one-liner?
-Yes I agree with you this one line is sufficient.
->
-> -               } else {
-> +               } else if (end < start) {
->
-> (or possibly "end != start"; I can't quite decide which expresses the
-> semantic intent better)
-I think "end < start" is better choice because it tells list is not sorted
-and "!=" contradicts previous condition "end > start".
->
-> The rest just looks like unnecessary churn - I don't think it needs
-> commenting that a sorted list may simply not have gaps between entries,
-> and as above I think the wording of that comment is actively misleading.
-I agree with you, these lines were added to explain the issue and fix with
-more details.
-I will send a new patch with a single line change as you said.
-" } else if (end < start) {"
+> > The current implementation supports only boards designed for the Marvell
+> > Switchdev solution and requires special firmware.
+> >
+> > The core Prestera switching logic is implemented in prestera_main.c,
+> > there is an intermediate hw layer between core logic and firmware. It is
+> > implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+> > related logic, in future there is a plan to support more devices with
+> > different HW related configurations.
+> >
+> > This patch contains only basic switch initialization and RX/TX support
+> > over SDMA mechanism.
+> >
+> > Currently supported devices have DMA access range <= 32bit and require
+> > ZONE_DMA to be enabled, for such cases SDMA driver checks if the skb
+> > allocated in proper range supported by the Prestera device.
+> >
+> > Also meanwhile there is no TX interrupt support in current firmware
+> > version so recycling work is scheduled on each xmit.
+> >
+> > Port's mac address is generated from the switch base mac which may be
+> > provided via device-tree (static one or as nvme cell), or randomly
+> > generated. This is required by the firmware.
+> 
+> ...
+> 
+[SNIP]
+> ...
+> 
+> > +               .param = {.admin_state = admin_state}
+> 
+> + white spaces? Whatever you choose, just be consistent among all
+> similar definitions.
+> 
 
-Thanks & Regards,
-Srinath.
->
-> Robin.
->
-> > -                     /* dma_ranges list should be sorted */
-> > -                     dev_err(&dev->dev, "Failed to reserve IOVA\n");
-> > -                     return -EINVAL;
-> >               }
-> >
-> >               start = window->res->end - window->offset + 1;
-> >
+Can I use following format for one-liner embedded struct ?
+
+	.param = {
+		.admin_state = admin_state,
+	}
+> ...
+> 
+
+I think it looks better when all of the members filled looks similar
+(even if it requires 2 additional lines) instead of having:
+
+    .member = { E } ?
+
+[SNIP]
