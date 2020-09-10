@@ -2,101 +2,164 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF6EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0623C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 772AE20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926C320882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CeRbx548"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KMkqAsWF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SRNhO+Y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgIJT00 (ORCPT
+        id S1726755AbgIJT1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
+        Thu, 10 Sep 2020 15:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgIJT0G (ORCPT
+        with ESMTP id S1731351AbgIJPsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:26:06 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5969C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tvGp2dFSlnOW2S1ik1GkqcvaK5bxciluW8+nr4qAfqo=; b=CeRbx548EKw5nH0PU3rgpg1Cf7
-        rNIldiIxxgEHpcg9nuKheObdqHw5ui2Fn4iOj6GaSIUf1NZ91gmkSWbVm5IhSpwb7TRtS4TEoxVRS
-        t/au6fr4ZK0WjAIFZaxXjAw10A7cv/H0Ew8lwi/MViGg6QRzueXz2rJ/YaAg6QHMdkKzOJIV/bQe0
-        LOIbCfKeUW76WVZzwBNZ0mccA9Lva45Q33I+Ciii5/8IrxfNQ/mDCr508+31wub8YF1GwSlBVnsCS
-        SKeUbbA+nACEJnOAHD42HDQA2AcCJuMndX1u2kI4+uquW1sYernvLSNYsXEZtedvRgnFTttn2W9mi
-        4I2GoPCQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGSCY-0005Y9-IZ; Thu, 10 Sep 2020 19:25:46 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 88D5B980D81; Thu, 10 Sep 2020 21:25:44 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 21:25:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        David Laight <David.Laight@aculab.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200910192544.GC7131@worktop.programming.kicks-ass.net>
-References: <1d06ed6485b66b9f674900368b63d7ef79f666ca.1599756789.git.jpoimboe@redhat.com>
+        Thu, 10 Sep 2020 11:48:17 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEA5C06134E;
+        Thu, 10 Sep 2020 08:08:28 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 15:08:26 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599750506;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nxy1DHpcw4NzFK3ktRgxyoEl9LnzftlIXEEZObm4SdE=;
+        b=KMkqAsWFJlF3Hvw0ytOBueMi+rAuY1Qidu9TRR1KzAATkOkcjlRIfwNR2Y+GbDLjsr8iR6
+        Iz0sSpGOqSNIKwCOX7/KLtHviA5WQ7n+DBgfk1KXMr2Qb9puGHuUHAbfEA4d0fFo1KON2H
+        lwnHrV8A2uaXjiLfNDGC/ZmwT3imu/EbiGtjlkwzRBnAE96S3u49AV/prCJvEsJVpIj1Sx
+        fD+/LbZqEnFEg9Ti2Nfzqm8VJjwlLQ3BOhc0F1UK56uDxNNQgt+5T7QYrnZXYLqOb2qawm
+        mBFolJMbWdfXztxGEGNa2AL5FhOHjiepbo7eHIBmbubykxCe6ySEYM/PGKcNpg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599750506;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nxy1DHpcw4NzFK3ktRgxyoEl9LnzftlIXEEZObm4SdE=;
+        b=SRNhO+Y2qINVHNZLVvIZrwsgDdl3woNvIqAS44dIK8b/kd8qFPwTxtaMVdPwOeVfXixA4B
+        B48I6NsdI9k2IKAA==
+From:   "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] seqlock: seqcount latch APIs: Only allow seqcount_latch_t
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200827114044.11173-9-a.darwish@linutronix.de>
+References: <20200827114044.11173-9-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d06ed6485b66b9f674900368b63d7ef79f666ca.1599756789.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <159975050603.20229.9844172785774718591.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:22:53PM -0500, Josh Poimboeuf wrote:
-> The x86 uaccess code uses barrier_nospec() in various places to prevent
-> speculative dereferencing of user-controlled pointers (which might be
-> combined with further gadgets or CPU bugs to leak data).
-> 
-> There are some issues with the current implementation:
-> 
-> - The barrier_nospec() in copy_from_user() was inadvertently removed
->   with: 4b842e4e25b1 ("x86: get rid of small constant size cases in
->   raw_copy_{to,from}_user()")
-> 
-> - copy_to_user() and friends should also have a speculation barrier,
->   because a speculative write to a user-controlled address can still
->   populate the cache line with the original data.
-> 
-> - The LFENCE in barrier_nospec() is overkill, when more lightweight user
->   pointer masking can be used instead.
-> 
-> Remove all existing barrier_nospec() usage, and instead do user pointer
-> masking, throughout the x86 uaccess code.  This is similar to what arm64
-> is already doing with uaccess_mask_ptr().
-> 
-> barrier_nospec() is now unused, and can be removed.
-> 
-> Fixes: 4b842e4e25b1 ("x86: get rid of small constant size cases in raw_copy_{to,from}_user()")
-> Suggested-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+The following commit has been merged into the locking/core branch of tip:
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Commit-ID:     0c9794c8b6781eb7dad8e19b78c5d4557790597a
+Gitweb:        https://git.kernel.org/tip/0c9794c8b6781eb7dad8e19b78c5d4557790597a
+Author:        Ahmed S. Darwish <a.darwish@linutronix.de>
+AuthorDate:    Thu, 27 Aug 2020 13:40:44 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 10 Sep 2020 11:19:30 +02:00
+
+seqlock: seqcount latch APIs: Only allow seqcount_latch_t
+
+All latch sequence counter call-sites have now been converted from plain
+seqcount_t to the new seqcount_latch_t data type.
+
+Enforce type-safety by modifying seqlock.h latch APIs to only accept
+seqcount_latch_t.
+
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200827114044.11173-9-a.darwish@linutronix.de
+---
+ include/linux/seqlock.h | 36 +++++++++++++++---------------------
+ 1 file changed, 15 insertions(+), 21 deletions(-)
+
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 88b917d..f2a7a46 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -620,7 +620,7 @@ static inline void seqcount_latch_init(seqcount_latch_t *s)
+ 
+ /**
+  * raw_read_seqcount_latch() - pick even/odd latch data copy
+- * @s: Pointer to seqcount_t, seqcount_raw_spinlock_t, or seqcount_latch_t
++ * @s: Pointer to seqcount_latch_t
+  *
+  * See raw_write_seqcount_latch() for details and a full reader/writer
+  * usage example.
+@@ -629,17 +629,14 @@ static inline void seqcount_latch_init(seqcount_latch_t *s)
+  * picking which data copy to read. The full counter must then be checked
+  * with read_seqcount_latch_retry().
+  */
+-#define raw_read_seqcount_latch(s)						\
+-({										\
+-	/*									\
+-	 * Pairs with the first smp_wmb() in raw_write_seqcount_latch().	\
+-	 * Due to the dependent load, a full smp_rmb() is not needed.		\
+-	 */									\
+-	_Generic(*(s),								\
+-		 seqcount_t:		  READ_ONCE(((seqcount_t *)s)->sequence),			\
+-		 seqcount_raw_spinlock_t: READ_ONCE(((seqcount_raw_spinlock_t *)s)->seqcount.sequence),	\
+-		 seqcount_latch_t:	  READ_ONCE(((seqcount_latch_t *)s)->seqcount.sequence));	\
+-})
++static inline unsigned raw_read_seqcount_latch(const seqcount_latch_t *s)
++{
++	/*
++	 * Pairs with the first smp_wmb() in raw_write_seqcount_latch().
++	 * Due to the dependent load, a full smp_rmb() is not needed.
++	 */
++	return READ_ONCE(s->seqcount.sequence);
++}
+ 
+ /**
+  * read_seqcount_latch_retry() - end a seqcount_latch_t read section
+@@ -656,7 +653,7 @@ read_seqcount_latch_retry(const seqcount_latch_t *s, unsigned start)
+ 
+ /**
+  * raw_write_seqcount_latch() - redirect latch readers to even/odd copy
+- * @s: Pointer to seqcount_t, seqcount_raw_spinlock_t, or seqcount_latch_t
++ * @s: Pointer to seqcount_latch_t
+  *
+  * The latch technique is a multiversion concurrency control method that allows
+  * queries during non-atomic modifications. If you can guarantee queries never
+@@ -735,14 +732,11 @@ read_seqcount_latch_retry(const seqcount_latch_t *s, unsigned start)
+  *	When data is a dynamic data structure; one should use regular RCU
+  *	patterns to manage the lifetimes of the objects within.
+  */
+-#define raw_write_seqcount_latch(s)						\
+-{										\
+-       smp_wmb();      /* prior stores before incrementing "sequence" */	\
+-       _Generic(*(s),								\
+-		seqcount_t:		((seqcount_t *)s)->sequence++,		\
+-		seqcount_raw_spinlock_t:((seqcount_raw_spinlock_t *)s)->seqcount.sequence++, \
+-		seqcount_latch_t:	((seqcount_latch_t *)s)->seqcount.sequence++); \
+-       smp_wmb();      /* increment "sequence" before following stores */	\
++static inline void raw_write_seqcount_latch(seqcount_latch_t *s)
++{
++	smp_wmb();	/* prior stores before incrementing "sequence" */
++	s->seqcount.sequence++;
++	smp_wmb();      /* increment "sequence" before following stores */
+ }
+ 
+ /*
