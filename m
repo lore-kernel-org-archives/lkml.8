@@ -2,145 +2,117 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA2C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6004C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B5D2078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599722015;
-	bh=xOzDDEuhcg0+WXu//QXZGuTvH72fhH7NrPswesxiZA8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cgU6oqLVGZbeYuVYzh+dBjXMo+gNO82OOKhGhA7zOBKmFINywJyBMrFuBLT3bJLEr
-	 NjFH86hA6SdsC4sOemobUaO5MLSge51oSAzH1onYnfvuEZiWxRzJe/6Cmh8vqanSgP
-	 D+ZpGz9cBUMyh5XKc3D0/bM5NeGEVR8iX5VkbVOE=
+	by mail.kernel.org (Postfix) with ESMTP id A6B4F2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b58biad/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgIJHNZ (ORCPT
+        id S1730260AbgIJHNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:13:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730021AbgIJG7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:59:11 -0400
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D585821D40;
-        Thu, 10 Sep 2020 06:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599721151;
-        bh=xOzDDEuhcg0+WXu//QXZGuTvH72fhH7NrPswesxiZA8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gXL+ijTBw11FfLjLqyYUZfKHTa4Zvs2N1LU7JLoiGcBQ7DNHaV/PzX6MCoDp00EAp
-         wlCG83HzbzCGx6nVtzWC2pIby9quHCEjEIqQec3QmfPoutTorFkcOj+v+bXRg2MhHa
-         jwCRShpKk3NeYVaSR0bdXRVGBByi3LEGRCE3M3wI=
-Received: by mail-ej1-f54.google.com with SMTP id r7so7071637ejs.11;
-        Wed, 09 Sep 2020 23:59:10 -0700 (PDT)
-X-Gm-Message-State: AOAM530WBIRzWslzlsBcuGP2kDBY0deZMa9dTEbWrs4Th51duXFWR8HV
-        UG88jKwJDE3Dr0BsAM36V7dWEf6+3rDs6rqwgNE=
-X-Google-Smtp-Source: ABdhPJyaVrBohjZL8QO712q55aVYmvP/Im4PscZba1DFwlJPfAPVYEdWgkk0QsgOlmQCRth1GWIRcKjY7V63cmwrs/Y=
-X-Received: by 2002:a17:907:724f:: with SMTP id ds15mr7191226ejc.119.1599721149291;
- Wed, 09 Sep 2020 23:59:09 -0700 (PDT)
+        Thu, 10 Sep 2020 03:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41576 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbgIJG65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:58:57 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF25C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 23:55:19 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c19so1180119wmd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Uh/4XLJuHqHnwRZLTq1ZUB9DkVVyoID5KW3qwMfLQX4=;
+        b=b58biad/XGI7tZnOxpmXY1CLrJGO4deSAXnVhLBoQsbxJfJZ8c4jiF8EYJNHb5lHK2
+         XQrjAQ1JIo2aE3OCezphq6f5NgvtG6Y2zPyhQgMEbshfya4UCrVtWy5fqFuw88BCJI8u
+         uEyIgiDCY3RdhzbIRfQIjoAEIcTQRqks5yhDqkKOQzHcy2+Zdagk4l3XRY5vk8W6pi/W
+         5Al6M8AZCE7wY6c9N58Nb48+JL/c7HEm+Mja2V8JcRUSrJgQU6SNxDklFys8QPlDBgmw
+         w0voIjkDY/BmPz/FyH1As2oNe4vuNsKo/O1xtHlib33ptXIv+XsySM1H4hdarNCGA1P8
+         cl9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Uh/4XLJuHqHnwRZLTq1ZUB9DkVVyoID5KW3qwMfLQX4=;
+        b=bzLYQWFXTGEVu1jBsBzMS/MQuKh0yfBRRu6DqJldwpFIRP/SK9EbvRFdQsfnljZ3c2
+         icyVKk+7zcOpA0BdydLRRL24y438278mF7uOnoVm8uKNcAg38MNGDvRTxKVUmBUwJgAs
+         1b2iOjhsSuyAOYeFqkLTDjo/nwnNX2HURjGTVK00MJHhG45p9+Xk5KwlCUSkLN2GjgWi
+         6zk95wllOxgnfzj8oE/dxqQCRMpuxiyYBa/hnWJZrT7C+h99/OJM21fodfbJN4yv2ruq
+         1oc5blkR0SHXWsstLiXsU5DOTpODv2Z013IFeLhdaQ9fvguAuP/fOC8zWoIVC2zzUd9H
+         0nMw==
+X-Gm-Message-State: AOAM53044WJGEDhuWAPfWH55dW/M5i/8nXwTAtHjIo0h5V8n74XoTVZe
+        DFNWppgeps6keg30JfpLxCjZQQ==
+X-Google-Smtp-Source: ABdhPJyAHuPlm0h6lSyKmcxI8wakglC5O0OE4mjADtTWdtET1ee+5auZMS/hd6A//Know+QFpOOIKQ==
+X-Received: by 2002:a1c:6254:: with SMTP id w81mr6751162wmb.94.1599720917761;
+        Wed, 09 Sep 2020 23:55:17 -0700 (PDT)
+Received: from dell.default ([91.110.221.246])
+        by smtp.gmail.com with ESMTPSA id m3sm2444028wme.31.2020.09.09.23.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2020 23:55:17 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
+Subject: [PATCH 21/29] wil6210: wil_platform: Demote kernel-doc header to standard comment block
+Date:   Thu, 10 Sep 2020 07:54:23 +0100
+Message-Id: <20200910065431.657636-22-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200910065431.657636-1-lee.jones@linaro.org>
+References: <20200910065431.657636-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <20200829064726.26268-1-krzk@kernel.org> <20200829064726.26268-8-krzk@kernel.org>
- <20200909193600.41970d8c@archlinux> <CAJKOXPeo8SXWaRmiFG6z+t9jcnaSMRpvRPm2X22Rf6rtEeKVew@mail.gmail.com>
- <a37c69f2-1f16-2680-2716-0c1b77748d55@axentia.se> <CAHp75Vc4-zkkWtOz8w7pA0Vu1yMAVodhPSLQ1NJH4K+j9XD52g@mail.gmail.com>
-In-Reply-To: <CAHp75Vc4-zkkWtOz8w7pA0Vu1yMAVodhPSLQ1NJH4K+j9XD52g@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 10 Sep 2020 08:58:57 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdNAw8scFKCGaC_hp4jMyLD_mFLKr=+fGKSm6nCkcRF9g@mail.gmail.com>
-Message-ID: <CAJKOXPdNAw8scFKCGaC_hp4jMyLD_mFLKr=+fGKSm6nCkcRF9g@mail.gmail.com>
-Subject: Re: [PATCH v3 08/18] iio: adc: stm32: Simplify with dev_err_probe()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 at 08:52, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
->
->
-> On Thursday, September 10, 2020, Peter Rosin <peda@axentia.se> wrote:
->>
->> Hi!
->>
->> On 2020-09-09 21:57, Krzysztof Kozlowski wrote:
->> > On Wed, 9 Sep 2020 at 20:36, Jonathan Cameron <jic23@kernel.org> wrote:
->> >>
->> >> On Sat, 29 Aug 2020 08:47:16 +0200
->> >> Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> >>
->> >>> Common pattern of handling deferred probe can be simplified with
->> >>> dev_err_probe().  Less code and also it prints the error value.
->> >>>
->> >>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> >>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> >>>
->> >> I don't have the thread to hand, but this tripped a warning next
->> >> and the patch was dropped as a result. See below.
->> >
->> > Thanks for letting me know. If you mean the warning caused by:
->> > https://lore.kernel.org/lkml/20200909073716.GA560912@kroah.com/
->> > then the driver-core patch was dropped, not the iio one:
->> > https://lore.kernel.org/linux-next/20200909074130.GB561485@kroah.com/T/#t
->> >
->> > So we are good here :)
->>
->> No, we are definitely not good. See below. That means "See below", and
->> not "Please take a guess at what is being talking about".
->
->
->
->>
->> >>> @@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->> >>>               priv->booster = devm_regulator_get_optional(dev, "booster");
->> >>>               if (IS_ERR(priv->booster)) {
->> >>>                       ret = PTR_ERR(priv->booster);
->> >>> -                     if (ret != -ENODEV) {
->> >>> -                             if (ret != -EPROBE_DEFER)
->> >>> -                                     dev_err(dev, "can't get booster %d\n",
->> >>> -                                             ret);
->> >>> -                             return ret;
->> >>> -                     }
->> >>> +                     if (ret != -ENODEV)
->> >>> +                             dev_err_probe(dev, ret, "can't get booster\n");
->> >>
->> >> This tripped a warning and got the patch dropped because we no longer
->> >> return on error.
->>
->> As Jonathan already said, we no longer return in this hunk. I.e., you have
->> clobbered the error path.
->
->
-> Exactly my point why I proposed _must_check in the first place.
+There has been no attempt to document any of the function parameters
+here.
 
-That was not exactly that point as you did not mention possible errors
-but only "miss the opportunity to optimize". Optimization is different
-things than a mistake.
+Fixes the following W=1 kernel build warning(s):
 
-Best regards,
-Krzysztof
+ drivers/net/wireless/ath/wil6210/wil_platform.c:27: warning: Function parameter or member 'dev' not described in 'wil_platform_init'
+ drivers/net/wireless/ath/wil6210/wil_platform.c:27: warning: Function parameter or member 'ops' not described in 'wil_platform_init'
+ drivers/net/wireless/ath/wil6210/wil_platform.c:27: warning: Function parameter or member 'rops' not described in 'wil_platform_init'
+ drivers/net/wireless/ath/wil6210/wil_platform.c:27: warning: Function parameter or member 'wil_handle' not described in 'wil_platform_init'
+
+Cc: Maya Erez <merez@codeaurora.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: wil6210@qti.qualcomm.com
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/ath/wil6210/wil_platform.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/wil6210/wil_platform.c b/drivers/net/wireless/ath/wil6210/wil_platform.c
+index 10e10dc9fedfb..e152dc29d177b 100644
+--- a/drivers/net/wireless/ath/wil6210/wil_platform.c
++++ b/drivers/net/wireless/ath/wil6210/wil_platform.c
+@@ -15,8 +15,7 @@ void wil_platform_modexit(void)
+ {
+ }
+ 
+-/**
+- * wil_platform_init() - wil6210 platform module init
++/* wil_platform_init() - wil6210 platform module init
+  *
+  * The function must be called before all other functions in this module.
+  * It returns a handle which is used with the rest of the API
+-- 
+2.25.1
+
