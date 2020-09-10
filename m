@@ -2,80 +2,155 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84E7C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760B020770
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5F321941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599705665;
+	bh=PzCYZ+ZLKI2hK96aTswj9Z4sauc8GxoDp1F2TjE+tOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=v5P5CXCM/0ImaztzrnZO6MJtcNL+jTp5ODSsQqRwt7UR1GZG1ggxPCaB2YS8cBJkx
+	 iCHOdwgFPARNEWjoLCh85GTF+0wEw0tBPBvVWWL1skf87gAGU27VLjrJZM6LIqB/nj
+	 rSlCOceHjhj3Vbj7vWHczcCyWtjyWZwd0Ap1yklc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbgIJCkb (ORCPT
+        id S1730275AbgIJCkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:40:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46288 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730680AbgIJCic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:38:32 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1487A9E9BBC2C9955179;
-        Thu, 10 Sep 2020 10:38:21 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 10 Sep 2020 10:38:13 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <nirmoy.das@amd.com>, <christian.koenig@amd.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <jingxiangfeng@huawei.com>
-Subject: [PATCH] drm/mm: prevent a potential null-pointer dereference
-Date:   Thu, 10 Sep 2020 10:38:58 +0800
-Message-ID: <20200910023858.43759-1-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 9 Sep 2020 22:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727900AbgIJCH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:07:56 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95A38207DE;
+        Thu, 10 Sep 2020 02:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599703663;
+        bh=PzCYZ+ZLKI2hK96aTswj9Z4sauc8GxoDp1F2TjE+tOE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VYv3I/YhstRPVnokLdnVWzdsNEB1ztLKHEoSNek/X1wbb9C75U5e2kFDdYoRfUh6n
+         7wV0ZLeq204viip6RzvDMtL16b9T2WBMuOt7N+VUsi6oWmZVTm3Nm2Wk5DxCHha3RO
+         e3qnBmRwYaZnRS0AYmbRxrGXRSF5b4vKevxvbnYg=
+Date:   Wed, 9 Sep 2020 21:07:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xingxing Su <suxingxing@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+Message-ID: <20200910020742.GA748627@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596245149-28628-1-git-send-email-suxingxing@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The macro 'DECLARE_NEXT_HOLE_ADDR' may hit a potential null-pointer
-dereference. So use 'entry' after checking it.
+[+cc Mark, Florian, Rob, Scott]
 
-Fixes: 5fad79fd66ff ("drm/mm: cleanup and improve next_hole_*_addr()")
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
----
- drivers/gpu/drm/drm_mm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+> Do not use printk in raw_spinlocks, 
+> it will cause BUG: Invalid wait context.
+> 
+> The trace reported by lockdep follows.
+> 
+> [    2.986113] =============================
+> [    2.986115] [ BUG: Invalid wait context ]
+> [    2.986116] 5.8.0-rc1+ #11 Not tainted
+> [    2.986118] -----------------------------
+> [    2.986120] swapper/0/1 is trying to lock:
+> [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+> [    2.986130] other info that might help us debug this:
+> [    2.986132] context-{5:5}
+> [    2.986134] 3 locks held by swapper/0/1:
+> [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+> [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+> [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+> [    2.986161] stack backtrace:
+> [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+> [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+> [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+> [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+> [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+> [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+> [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+> [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+> [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+> [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+> [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+> [    2.986245]         ...
+> [    2.986250] Call Trace:
+> [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+> [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+> [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+> [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+> [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+> [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+> [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+> [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+> [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+> [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+> [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+> [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+> [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+> [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+> [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+> [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+> [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+> [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+> [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+> [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+> [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+> [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+> [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+> [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+> [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+> [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+> [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+> [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+> [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+> 
+> Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+> ---
+>  drivers/pci/access.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2e..b3fc164 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>  	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+>  	 * just inadvertently cleared something we shouldn't have.
+>  	 */
+> -	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> -			     size, pci_domain_nr(bus), bus->number,
+> -			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
 
-diff --git a/drivers/gpu/drm/drm_mm.c b/drivers/gpu/drm/drm_mm.c
-index a4a04d246135..6fcf70f71962 100644
---- a/drivers/gpu/drm/drm_mm.c
-+++ b/drivers/gpu/drm/drm_mm.c
-@@ -392,11 +392,14 @@ first_hole(struct drm_mm *mm,
- #define DECLARE_NEXT_HOLE_ADDR(name, first, last)			\
- static struct drm_mm_node *name(struct drm_mm_node *entry, u64 size)	\
- {									\
--	struct rb_node *parent, *node = &entry->rb_hole_addr;		\
-+	struct rb_node *parent, *node;					\
- 									\
--	if (!entry || RB_EMPTY_NODE(node))				\
-+	if (!entry)							\
- 		return NULL;						\
- 									\
-+	node = &entry->rb_hole_addr;					\
-+	if (RB_EMPTY_NODE(node))					\
-+		return NULL;						\
- 	if (usable_hole_addr(node->first, size)) {			\
- 		node = node->first;					\
- 		while (usable_hole_addr(node->last, size))		\
--- 
-2.17.1
+We just changed this printk (see [1]), but I think we still have this
+lockdep problem even after Mark's change.  So I guess we need another
+think about this.
 
+Maybe we can print something when registering pci_ops that use
+pci_generic_config_write32()?
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/enumeration&id=92ff4b49c2a9
+
+>  	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+>  	tmp = readl(addr) & mask;
+> -- 
+> 2.1.0
+> 
