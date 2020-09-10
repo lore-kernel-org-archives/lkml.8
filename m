@@ -2,406 +2,181 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SHORT_URL,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E663C2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BFBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4A52076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FC42075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 04:40:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTHoYaMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgIJEiH (ORCPT
+        id S1726440AbgIJEkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 00:38:07 -0400
-Received: from mail-il1-f208.google.com ([209.85.166.208]:35393 "EHLO
-        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbgIJEhY (ORCPT
+        Thu, 10 Sep 2020 00:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgIJEkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 00:37:24 -0400
-Received: by mail-il1-f208.google.com with SMTP id p16so3687635ilp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 21:37:22 -0700 (PDT)
+        Thu, 10 Sep 2020 00:40:12 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB2E7C061573;
+        Wed,  9 Sep 2020 21:40:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id a9so4403950wmm.2;
+        Wed, 09 Sep 2020 21:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mc9SNJlcG+CRra5ZD7ro4UIYeqbPZf8MuQyyBF3eIN4=;
+        b=LTHoYaMk5cQETYo/PMWMjoLIuUg0dtbCwLfx27HE4m8ksDcqiDZUz08HtGzlvImGuA
+         4R/336vmqWeBNR53AtfB8dbj9NEP9zFjGqASl4MHMbute89Fvps+3Fy0HCaGzCCXD6A6
+         zxl/tlOefZjf4O+m4iDtaM68dQcoGnzHBKXOwDBm6GXbUQCQJSA81/xabUK2beM8XN4A
+         Km9EfQ6FAqawq6wYGSJVD0LQoniC7rhX7X5FY0T06um1LH/3gLYMY/FJ1tRSQhMESjUn
+         AruZDX1jcPtowc3cXe50dTdmlImFE6ImylL8PW8SRU+A+MizPZ0en8ULjVCKOEZixgPd
+         /drw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cRb1PLmASYYGw1Fmzq24cU897CwVfD9msFh4OhP5aZM=;
-        b=J+g7v/1BjtwEOLl1dLsm8BpBXY0yb02HI3sVynER/K6+6a2M3bc92OLiCwUFnBPJ/p
-         gZx9v7fi1FEX1nLEtK9pPnaLE4WL3TAAgDiUASON5fEiZCx3efecTlZ9qSFAjZrnWhAZ
-         GN8svgS7jkoEPrxY/MbG0jEWrhegNxg5oAzAgg997tNlfdFuMzTq4TIBaMg9ZMNvJOXu
-         1WVerzJlozvWT/Bh3xngKklXZXqiir/0jLCJBJWWpKwAfLlT4EcKAlRFkwU9AQRtAiSo
-         I1bxX3tzAWZcKcpqkSy7ZtH7wjplEtk2Q5aCRXhaww9ZNZS+5rWfQaK9RJkjQK8CKU1U
-         XCkQ==
-X-Gm-Message-State: AOAM533uxetqf2HYbUoN6Kjjits4t3JfpTMYRYlgLYpKhhUHFc3wbAls
-        yZSzXc86okYq/iCocaM6J4OJphmqViqIKFCv7j47iOOJlLkl
-X-Google-Smtp-Source: ABdhPJwq80HEOkyyMJ2rDfEMMlVzF0k8iWSGMjzf0GMZqlSowrxXUO2cgZS3sciiG7lc1gnfCUrI22mARBgKutjX4iUgO+nAvSpB
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mc9SNJlcG+CRra5ZD7ro4UIYeqbPZf8MuQyyBF3eIN4=;
+        b=S762FsE1PBBzh3GacVhVJwalKkXVhTGRVian3dmgO+0PVkOp0IQyq2W64PcZDD5Jaj
+         dfkgucLwVvDyo/G4CvshQw9f8Ij3n8bzqzsCPW+ZD6t2BWIpWKRwHNxHIwrMdmymT+ak
+         54umkhUOCTJ9Pe/NoSOAmQ9dQUSZw63UpE/JlDPF4sDUtd3kwyWD7Rq6qn2yFwcKBPuN
+         9nmlGf/rq/g84nCzwpBMx5xKSZC4HRt9/tr1FKqvKL8vQ1HhvT+KwP4rMCoMktAn60vZ
+         XSyuGlRCbldEXNr3Yr9uQ43vaXKucPlT0tykh5Cl3baw5fNIitItubnpl6oOYO+GQx4Q
+         krYw==
+X-Gm-Message-State: AOAM532M5XNZgqczDrnWPF4rdm3YCDIqhlDxJUXUOzfe5if3M+kO0i4G
+        3Rw82QTvfemTuLnaFfD8fi9HwfwAy/sMjJXTv6hauxLdEXo=
+X-Google-Smtp-Source: ABdhPJxd//jSojRixlr0FByN5tErk8/x5DHyd+5Pmz7vOOMTDT9m1YCBgpJAtJb+RfR/4yxVUyP6SZDMrWbtkn4bbwU=
+X-Received: by 2002:a1c:14e:: with SMTP id 75mr6893527wmb.114.1599712809340;
+ Wed, 09 Sep 2020 21:40:09 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:d0d0:: with SMTP id y16mr69265ila.158.1599712642176;
- Wed, 09 Sep 2020 21:37:22 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 21:37:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c79dcf05aeee1fb8@google.com>
-Subject: BUG: stack guard page was hit in validate_chain (2)
-From:   syzbot <syzbot+5846c06bbd501a165e52@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
-        hawk@kernel.org, jiri@mellanox.com, john.fastabend@gmail.com,
-        kafai@fb.com, kpsingh@chromium.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        roopa@cumulusnetworks.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
+References: <20200909193419.2006744-1-james.hilliard1@gmail.com>
+ <1599706954.10822.3.camel@suse.de> <D2C1360E-65CC-410A-8B39-48F7340FEFCE@marcansoft.com>
+ <CADvTj4o-T92C0bO6Bp9p1N-CjX80nzL+y6bPfosMqU2ftdex8Q@mail.gmail.com> <17A89C84-23A1-42DD-B541-F61BC7693560@marcansoft.com>
+In-Reply-To: <17A89C84-23A1-42DD-B541-F61BC7693560@marcansoft.com>
+From:   James Hilliard <james.hilliard1@gmail.com>
+Date:   Wed, 9 Sep 2020 22:39:56 -0600
+Message-ID: <CADvTj4p7BuegLic+i9eW_JwXBPhkKZy85K98sX_as3S5Tv3vPg@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: serial: Repair FTDI FT232R bricked eeprom
+To:     Hector Martin marcan <hector@marcansoft.com>
+Cc:     Oliver Neukum <oneukum@suse.de>, linux-usb@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russ Dill <Russ.Dill@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Sep 9, 2020 at 9:49 PM Hector Martin "marcan"
+<hector@marcansoft.com> wrote:
+>
+>
+>
+> On September 10, 2020 12:46:20 PM GMT+09:00, James Hilliard <james.hilliard1@gmail.com> wrote:
+> >On Wed, Sep 9, 2020 at 9:17 PM Hector Martin "marcan"
+> ><hector@marcansoft.com> wrote:
+> >>
+> >>
+> >>
+> >> On September 10, 2020 12:02:34 PM GMT+09:00, Oliver Neukum
+> ><oneukum@suse.de> wrote:
+> >> >Am Mittwoch, den 09.09.2020, 13:34 -0600 schrieb James Hilliard:
+> >> >> This patch detects and reverses the effects of the malicious FTDI
+> >> >> Windows driver version 2.12.00(FTDIgate).
+> >> >
+> >> >Hi,
+> >> >
+> >> >this raises questions.
+> >> >Should we do this unconditionally without asking?
+> >> >Does this belong into kernel space?
+> >>
+> >> I agree; this is very cute, but does it really need to be an
+> >automatic Linux feature? Presumably someone looking to fix a bricked
+> >FTDI chip can just run my script, and those who just want to use those
+> >chips with Linux already can since the driver binds to the zero PID.
+> >Well for one your script is not easily useable with embedded platforms
+> >like mine where I ran into this issue, I have no python2 interpreter
+> >available in my production builds.
+>
+> Surely you can port the exact same algorithm to plain userspace C, as you did to kernel space C :)
+Sure, but it would be significantly more complex, require a lot more code
+and testing since there can be other userspace apps interacting with the
+hardware, in addition to being less reliable and potentially difficult
+to install
+for some setups. Detecting and dealing with this issue in the kernel is
+very simple and reliable in comparison. There's also potentially permissions
+issues if one wants to do this from userspace from my understanding.
+>
+> >>
+> >> I am deeply amused by the idea of Linux automatically fixing problems
+> >caused by malicious Windows drivers, but thinking objectively, I'm not
+> >sure if that's the right thing to do.
+> >From my understanding Linux fixing up hardware issues caused
+> >by faulty/weird Windows drivers isn't exactly unusual.
+>
+> I'm not aware of any instances like this where nonvolatile memory is modified. At most you'll get things like resetting devices that a previous windows warm boot misconfigured, I think?
+Yeah, I think it's mostly nonvolatile memory, I've seen this issue quite a bit
+with some of the Realtek ethernet drivers.
 
-syzbot found the following issue on:
-
-HEAD commit:    9322c47b Merge tag 'xfs-5.9-fixes-2' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11428395900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e1c560d0f4e121c9
-dashboard link: https://syzkaller.appspot.com/bug?extid=5846c06bbd501a165e52
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5846c06bbd501a165e52@syzkaller.appspotmail.com
-
-BUG: stack guard page was hit at 00000000554f5028 (stack is 00000000460081ac..000000007ee658c0)
-kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 17122 Comm: syz-executor.2 Not tainted 5.9.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:validate_chain+0x3f/0x88a0 kernel/locking/lockdep.c:3171
-Code: 01 00 00 49 89 ce 89 54 24 68 48 89 7c 24 28 65 48 8b 04 25 28 00 00 00 48 89 84 24 b0 01 00 00 49 bf 00 00 00 00 00 fc ff df <48> 89 34 24 4c 8d 6e 20 4c 89 e8 48 c1 e8 03 48 89 44 24 58 42 8a
-RSP: 0018:ffffc90008d1ffe0 EFLAGS: 00010082
-RAX: ffa821a9c58d6a00 RBX: ffffffff8afcba70 RCX: 041395c41cf575f9
-RDX: 0000000000000000 RSI: ffff88808c830990 RDI: ffff88808c830080
-RBP: ffffc90008d201d0 R08: dffffc0000000000 R09: fffffbfff167d899
-R10: fffffbfff167d899 R11: 0000000000000000 R12: 041395c41cf575f9
-R13: ffff88808c8309b0 R14: 041395c41cf575f9 R15: dffffc0000000000
-FS:  00007f2bfc628700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90008d1ffe0 CR3: 0000000015958000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __lock_acquire+0x110b/0x2ae0 kernel/locking/lockdep.c:4426
- lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
- seqcount_lockdep_reader_access include/linux/seqlock.h:102 [inline]
- read_seqcount_t_begin+0xb3/0x1a0 include/linux/seqlock.h:311
- read_seqbegin include/linux/seqlock.h:752 [inline]
- zone_span_seqbegin include/linux/memory_hotplug.h:80 [inline]
- page_outside_zone_boundaries mm/page_alloc.c:561 [inline]
- bad_range+0x7e/0x260 mm/page_alloc.c:590
- rmqueue+0xde/0x1c90 mm/page_alloc.c:3409
- get_page_from_freelist+0x631/0xcc0 mm/page_alloc.c:3828
- __alloc_pages_nodemask+0x27e/0x5c0 mm/page_alloc.c:4882
- __alloc_pages include/linux/gfp.h:509 [inline]
- __alloc_pages_node include/linux/gfp.h:522 [inline]
- kmem_getpages+0x37/0x1d0 mm/slab.c:1376
- cache_grow_begin+0x64/0x2b0 mm/slab.c:2590
- cache_alloc_refill+0x359/0x3f0 mm/slab.c:2962
- ____cache_alloc mm/slab.c:3045 [inline]
- slab_alloc_node mm/slab.c:3241 [inline]
- kmem_cache_alloc_node_trace+0x285/0x2a0 mm/slab.c:3592
- __do_kmalloc_node mm/slab.c:3614 [inline]
- __kmalloc_node_track_caller+0x37/0x60 mm/slab.c:3629
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xde/0x4f0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1094 [inline]
- nlmsg_new include/net/netlink.h:940 [inline]
- rtmsg_ifinfo_build_skb+0x81/0x180 net/core/rtnetlink.c:3804
- rtmsg_ifinfo_event net/core/rtnetlink.c:3840 [inline]
- rtnetlink_event+0xed/0x1b0 net/core/rtnetlink.c:5614
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain kernel/notifier.c:83 [inline]
- __raw_notifier_call_chain kernel/notifier.c:361 [inline]
- raw_notifier_call_chain+0xe7/0x170 kernel/notifier.c:368
- call_netdevice_notifiers_info net/core/dev.c:2033 [inline]
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9372 [inline]
- __netdev_update_features+0xa11/0x1860 net/core/dev.c:9503
- netdev_change_features+0x2e/0x140 net/core/dev.c:9575
- bond_compute_features+0x5d0/0x690 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x31a/0xb50 drivers/net/bonding/bond_main.c:3415
- raw_notifier_call_chain+0x
-Lost 239 message(s)!
----[ end trace fceae5a866b0f30f ]---
-RIP: 0010:validate_chain+0x3f/0x88a0 kernel/locking/lockdep.c:3171
-Code: 01 00 00 49 89 ce 89 54 24 68 48 89 7c 24 28 65 48 8b 04 25 28 00 00 00 48 89 84 24 b0 01 00 00 49 bf 00 00 00 00 00 fc ff df <48> 89 34 24 4c 8d 6e 20 4c 89 e8 48 c1 e8 03 48 89 44 24 58 42 8a
-RSP: 0018:ffffc90008d1ffe0 EFLAGS: 00010082
-RAX: ffa821a9c58d6a00 RBX: ffffffff8afcba70 RCX: 041395c41cf575f9
-RDX: 0000000000000000 RSI: ffff88808c830990 RDI: ffff88808c830080
-RBP: ffffc90008d201d0 R08: dffffc0000000000 R09: fffffbfff167d899
-R10: fffffbfff167d899 R11: 0000000000000000 R12: 041395c41cf575f9
-R13: ffff88808c8309b0 R14: 041395c41cf575f9 R15: dffffc0000000000
-FS:  00007f2bfc628700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc90008d1ffe0 CR3: 0000000015958000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+I think user experience for devices should be that one can move
+a USB device from Linux to Windows and back without having to manually
+reprogram an eeprom. The sheer amount of resources FTDI has wasted
+with their malicious Windows driver is crazy and likely far exceeds any losses
+from counterfeiting. I think due to how widespread this issue is it makes sense
+to aggressively and automatically mitigate the damages wherever possible, it's
+also likely a major source of ewaste since people may throw out perfectly
+functional hardware without knowing it can be fixed easily.
+>
+> >>
+> >> >
+> >> >> +static int ftdi_repair_brick(struct usb_serial_port *port)
+> >> >> +{
+> >> >> +    struct ftdi_private *priv = usb_get_serial_port_data(port);
+> >> >> +    int orig_latency;
+> >> >> +    int rv;
+> >> >> +    u16 *eeprom_data;
+> >> >> +    u16 checksum;
+> >> >> +    int eeprom_size;
+> >> >> +    int result;
+> >> >> +
+> >> >> +    switch (priv->chip_type) {
+> >> >> +    case FT232RL:
+> >> >> +            eeprom_size = 0x40;
+> >> >> +            break;
+> >> >> +    default:
+> >> >> +            /* Unsupported for brick repair */
+> >> >> +            return 0;
+> >> >> +    }
+> >> >> +
+> >> >> +    /* Latency timer needs to be 0x77 to unlock EEPROM
+> >programming */
+> >> >> +    if (priv->latency != 0x77) {
+> >> >> +            orig_latency = priv->latency;
+> >> >> +            priv->latency = 0x77;
+> >> >> +            rv = write_latency_timer(port);
+> >> >> +            priv->latency = orig_latency;
+> >> >> +            if (rv < 0)
+> >> >> +                    return -EIO;
+> >> >> +    }
+> >> >
+> >> >Do you really want to change this without returning to the original?
+> >> >
+> >> >       Regards
+> >> >               Oliver
+> >>
+> >> --
+> >> Hector Martin "marcan" (hector@marcansoft.com)
+> >> Public key: https://mrcn.st/pub
+>
+> --
+> Hector Martin "marcan" (hector@marcansoft.com)
+> Public key: https://mrcn.st/pub
