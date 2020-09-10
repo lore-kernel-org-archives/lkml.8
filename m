@@ -2,118 +2,180 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD63C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 562B3206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDB720708
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cYL3QKW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbgIJOOU (ORCPT
+        id S1730165AbgIJORu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:14:20 -0400
-Received: from mga06.intel.com ([134.134.136.31]:39485 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726725AbgIJOKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:10:21 -0400
-IronPort-SDR: Min1bTY0xZGuny46PvCA/BEQOjNFljgjnvzRz3XPg1WB4jEDBdUBu8vdaWkLDGGHOriUdzAcI0
- S2mwOdEFfvGQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="220094622"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="220094622"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 07:09:53 -0700
-IronPort-SDR: klNNvDgZxDCuviZmobswONAVyPCmP8GaAcA/Kr423br6kkD+2RYE1Q3RDiV2PzL75tSKryK/fw
- 5DwIQfn1Mn6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="334185991"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 07:09:52 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kGNGn-00Fhaa-Q4; Thu, 10 Sep 2020 17:09:49 +0300
-Date:   Thu, 10 Sep 2020 17:09:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200910140949.GV1891694@smile.fi.intel.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
- <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
- <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
- <20200827224742.GA3714@sol>
- <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
- <20200829013532.GA5905@sol>
- <CAMpxmJWjPzueMeKopo7qFke05CEePVD4YGbUiN7b_STKoYt0ZQ@mail.gmail.com>
+        Thu, 10 Sep 2020 10:17:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731058AbgIJOK6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:10:58 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024C4C061348
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:07:45 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id w2so191608wmi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QJ5xEB2z11c85j6v+J4UJJ6T/KCHaYAOj5sVJT9cY58=;
+        b=cYL3QKW0nMiKASGS3CJTqYRW4EJhwjV95TkNT0tAhERyHlIVcKujnsUZ992Tgt805x
+         3uuPEFEzZ6VgoEVJunPO22PvL1THHkv0rx45qgLJ5V4frgzv84ZS4X4awVwGcqp6sl2v
+         zR1Fglj6zs5XzvZseqGJun2dk9bpkq3nUYWLNEEqA+T0eMTr23JSl7M9K0Ok+jnduwEj
+         /eZHnRWGDiVRXE8KK+upeUUGtW6Y/g7j8relgaZTHwu0oIF4TJHUCIUCUAvmS6x/EDXI
+         nevfOC1kp/P7s7F8psEC35HXkrbOLNy0uO6x8SSD50eVqa4iYCMPePAxogexL4gtbNlP
+         ESIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QJ5xEB2z11c85j6v+J4UJJ6T/KCHaYAOj5sVJT9cY58=;
+        b=EWosRrIyXjO/SNdws0qXpIU2sXrlDGl2CA6LXJ6bL+sdLP81jJzz4L/DOgFPv8nQqH
+         jCV+Hleuj+cysSFJ1AmHGsM1wWzZpi4jG4B5C4QkjwaNSgNE0mr29tmnX2ozFWVg4BTE
+         OEKwnp2yXsw+H/YiAtWzspZwhEIsiijWgSPUvHZIq3OaZbTNAgNq7FC9ehX/gIpxaRhb
+         x7X0EQszWmV0ntRz/xpnOp/rwlvrPks3/NkIzGHzIhyqLLTzpOF/wzwUPhneeHRafRnQ
+         2sE8J8/uXl6opsRm8BKStKKBOBz1iOooS6K16yaOApmFvKpOoOAwucnyF/0tz9CO8HUW
+         /+NA==
+X-Gm-Message-State: AOAM533KSIWWY/TzcBcFrCow1bEMKNvUzn6E25FGN82QuOTQUrDgfl9Z
+        Tm5jY4Rm9ZAjBCugliu3nGNCOg==
+X-Google-Smtp-Source: ABdhPJxlhCOonhA/QUW6OuXk1EjfpUKr/GIkLwPXiWKB30qBaOqPGDH5pFin00r8M+FnE6NxmcHIbg==
+X-Received: by 2002:a05:600c:21c4:: with SMTP id x4mr149856wmj.107.1599746864225;
+        Thu, 10 Sep 2020 07:07:44 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:109:4a0f:cfff:fe4a:6363])
+        by smtp.gmail.com with ESMTPSA id v128sm3801248wme.2.2020.09.10.07.07.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 07:07:43 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 15:07:38 +0100
+From:   Andrew Scull <ascull@google.com>
+To:     David Brazdil <dbrazdil@google.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Dennis Zhou <dennis@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, linux-arch@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 10/10] kvm: arm64: Remove unnecessary hyp mappings
+Message-ID: <20200910140738.GE93664@google.com>
+References: <20200903091712.46456-1-dbrazdil@google.com>
+ <20200903091712.46456-11-dbrazdil@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJWjPzueMeKopo7qFke05CEePVD4YGbUiN7b_STKoYt0ZQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200903091712.46456-11-dbrazdil@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 11:28:13AM +0200, Bartosz Golaszewski wrote:
-> On Sat, Aug 29, 2020 at 3:35 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Fri, Aug 28, 2020 at 04:37:19PM +0200, Linus Walleij wrote:
-> > > On Fri, Aug 28, 2020 at 12:47 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > > The particular use case I am considering is one I had been asked about -
-> > > > changing a requested line from input with edge detection to output, and
-> > > > vice versa. Losing interrupts isn't really an issue for this use case -
-> > > > it is expected.  Yet the current implementation requires a re-request.
-> > >
-> > > This is possible to do for in-kernel users, but I don't know if that makes
-> > > sense for userspace. It is for one-offs and prototyping after all, there
-> > > is no need (IMO) to make it overly convenient for users to implement
-> > > all kind of weirdness in userspace unless there is a very real use case.
-> > >
-> >
-> > Fair point - in fact it is the same one that made me reconsider why I
-> > was so concerned about potentially losing an edge event in a few rare
-> > corner cases.
-> >
-> > Another point for this change are that it actually simplifies the kernel
-> > code, as it takes as much code to detect and filter these cases as it
-> > does to include them in the normal flow.
-> >
-> > I had a play with it yesterday and the change removes two whole
-> > functions, gpio_v2_line_config_change_validate() and
-> > gpio_v2_line_config_has_edge_detection() at the expense of making
-> > debounce_update() a little more complicated. I'm happy to put together a
-> > v6 that incorporates those changes if there aren't any strenuous
-> > objections - we can always revert to v5.  Or I could mail the couple of
-> > patches I've made and if they seem reasonable then I could merge them
-> > into this set?
-> >
-> > Cheers,
-> > Kent.
+On Thu, Sep 03, 2020 at 11:17:12AM +0200, 'David Brazdil' via kernel-team wrote:
+> With all nVHE per-CPU variables being part of the hyp per-CPU region,
+> mapping them individual is not necessary any longer. They are mapped to hyp
+> as part of the overall per-CPU region.
 > 
-> I personally like v6 more. The code is more elegant and we've also
-> tried limiting GPIO chardev features before and now we're doing v2 so
-> let's not make the same mistake twice. :)
+> Signed-off-by: David Brazdil <dbrazdil@google.com>
+
+Acked-by: Andrew Scull<ascull@google.com>
+
+> ---
+>  arch/arm64/include/asm/kvm_mmu.h | 25 +++++++------------------
+>  arch/arm64/kvm/arm.c             | 17 +----------------
+>  2 files changed, 8 insertions(+), 34 deletions(-)
 > 
-> I'll try to review v6 in detail later today.
+> diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
+> index 9db93da35606..bbe9df76ff42 100644
+> --- a/arch/arm64/include/asm/kvm_mmu.h
+> +++ b/arch/arm64/include/asm/kvm_mmu.h
+> @@ -531,28 +531,17 @@ static inline int kvm_map_vectors(void)
+>  DECLARE_PER_CPU_READ_MOSTLY(u64, arm64_ssbd_callback_required);
+>  DECLARE_KVM_NVHE_PER_CPU(u64, arm64_ssbd_callback_required);
+>  
+> -static inline int hyp_init_aux_data(void)
+> +static inline void hyp_init_aux_data(void)
+>  {
+> -	int cpu, err;
+> +	int cpu;
+>  
+> -	for_each_possible_cpu(cpu) {
+> -		u64 *ptr;
+> -
+> -		ptr = per_cpu_ptr_nvhe(arm64_ssbd_callback_required, cpu);
+> -		err = create_hyp_mappings(ptr, ptr + 1, PAGE_HYP);
+> -		if (err)
+> -			return err;
+> -
+> -		/* Copy value from kernel to hyp. */
+> -		*ptr = per_cpu(arm64_ssbd_callback_required, cpu);
+> -	}
+> -	return 0;
+> +	/* Copy arm64_ssbd_callback_required values from kernel to hyp. */
+> +	for_each_possible_cpu(cpu)
+> +		*(per_cpu_ptr_nvhe(arm64_ssbd_callback_required, cpu)) =
+> +			per_cpu(arm64_ssbd_callback_required, cpu);
 
-Let me briefly review to this. Can you remind which patch has a top level
-description of what features are provided in comparison to uAPI v1?
-(Btw, do we have some kind of comparison table?)
+Careful with breaking allocations across lines, that seems to be taboo
+in this subsystem.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  }
+>  #else
+> -static inline int hyp_init_aux_data(void)
+> -{
+> -	return 0;
+> -}
+> +static inline void hyp_init_aux_data(void) {}
+>  #endif
+>  
+>  #define kvm_phys_to_vttbr(addr)		phys_to_ttbr(addr)
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index df7d133056ce..dfe1baa5bbb7 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -1631,22 +1631,7 @@ static int init_hyp_mode(void)
+>  		}
+>  	}
+>  
+> -	for_each_possible_cpu(cpu) {
+> -		kvm_host_data_t *cpu_data;
+> -
+> -		cpu_data = per_cpu_ptr_hyp(kvm_host_data, cpu);
+> -		err = create_hyp_mappings(cpu_data, cpu_data + 1, PAGE_HYP);
+> -
+> -		if (err) {
+> -			kvm_err("Cannot map host CPU state: %d\n", err);
+> -			goto out_err;
+> -		}
+> -	}
+> -
+> -	err = hyp_init_aux_data();
+> -	if (err)
+> -		kvm_err("Cannot map host auxiliary data: %d\n", err);
+> -
+> +	hyp_init_aux_data();
+>  	return 0;
+>  
+>  out_err:
+> -- 
+> 2.28.0.402.g5ffc5be6b7-goog
+> 
+> -- 
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> 
