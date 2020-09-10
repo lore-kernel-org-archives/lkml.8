@@ -2,195 +2,164 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F8CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1D2C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B041208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AF621D81
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jM1asNJt"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="NojERvsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgIJTun (ORCPT
+        id S1726872AbgIJTu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:50:43 -0400
-Received: from mout.gmx.net ([212.227.15.19]:44107 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbgIJTs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:48:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599767332;
-        bh=S5yPB053GMXMHY3i5MJ4KAmLRKTmf2lq+7D4srpxwxA=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=jM1asNJt/ix2ZlIOnXfAE6sccIIMgf8FxojhOifClk+HKpCj9HgRFuUXrsm1ManNZ
-         RZFdeuO858ImmrQfexQpRKbRsIqrX4fDwdLlj/fdrAIp21A4ZbyGMb4sm92sgupfUT
-         woI+Yij2bBzD59wPPu1fmCTwJ4Yv0I+TcK9Zd3OI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5wLZ-1k9buV46Xb-007YSO; Thu, 10
- Sep 2020 21:42:25 +0200
-Date:   Thu, 10 Sep 2020 21:42:20 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: Re: [PATCH v2 08/10] rtc: New driver for RTC in Netronix embedded
- controller
-Message-ID: <20200910194220.GE3306@latitude>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
- <20200905144503.1067124-1-j.neuschaefer@gmx.net>
- <CAHp75Vca+Tp0v_Q4RBuUNSo_5aq_u6mBGeXecHULC1Avgm5=Xg@mail.gmail.com>
+        Thu, 10 Sep 2020 15:50:59 -0400
+Received: from mail-eopbgr60110.outbound.protection.outlook.com ([40.107.6.110]:16487
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725616AbgIJPEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 11:04:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UHkdPiq3mss8syqZNNTzgfS9ZtJufjpw6trLfRJMGn4l3pSOgEhdxkdpkjutIBAvPMYfrq65auGWU8fTGpzQUVCOehURtTxrRQ1UtmoH6EUrPsAEpqojWQyKZ6J3Qa+gnmcRzUEnhvb+CY3l8JeDav6X3+MQypeEoLrwAe51a2IVhn9JQjctWdxhsOnj6amfW1VCkhZbEQCMWLND0TF/ETMAHQgs+Ba+KH4autW1txi+NH4T8h1lPbYhxPxTZRvNyso9zOpa6AE8RbViytHfrdSqfR85uuUoYzZcVO1P3lS2yOpvUFIVud3FO/dXbiGoJuZgYXrc6NAKzxWGTDVzsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUm1aS9UUuseD4nWcf7QHncYBRxQA+2Hm6PztoMAtIA=;
+ b=NcuSxIAgj61H84w0e46gnf89tHzCpthPEXeVjd5eW2imodpLDFX9XPgcGjFzYlRcfjF7NAaDohYSJJX85wuzYmVqSj68txyG6YKZCQaG0BIpOoDZGKq5REtWamBHZu8ZhDkq7LuUAL057vOEgffek8A0VygNcDfDTMGJI5wF/hK0j8KvCZcEpTe4H+Zsmt7O3r1ul/R709fTptWEiwZhAyFhsuOQ0RNfYi4kbOD/tbZkOQb0DElszlPKrrJKyAcYabM+oAe3OD1BcAQ4JXvPvJdI/V5fEDAdaIeDoFreXov2fCk/uWqJH+iPNRLEQOao/6UDYBodo31fRjHl4it89w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUm1aS9UUuseD4nWcf7QHncYBRxQA+2Hm6PztoMAtIA=;
+ b=NojERvsjo54O08RnMfIYKkuxV2VC8Cmv6ab7CrAf1GXSmuMaercf/q+Fo8QzfLXGEM0AwdrLwoWCK+Gj9JZ/m+WDk+RkAcV+TbyZod9v+WoWltsfMjBr6PVdT2/Sz+wRN385Zn2XWq/iFjep626lF2Xfs4WCkPlFB5+p3ic8LmA=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0459.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:5b::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3348.19; Thu, 10 Sep 2020 15:01:25 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::c1ab:71de:6bc2:89fe]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::c1ab:71de:6bc2:89fe%6]) with mapi id 15.20.3348.019; Thu, 10 Sep 2020
+ 15:01:25 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mickey Rachamim <mickeyr@marvell.com>,
+        Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [net-next v8 6/6] dt-bindings: marvell,prestera: Add description for device-tree bindings
+Date:   Thu, 10 Sep 2020 18:00:55 +0300
+Message-Id: <20200910150055.15598-7-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910150055.15598-1-vadym.kochan@plvision.eu>
+References: <20200910150055.15598-1-vadym.kochan@plvision.eu>
+Content-Type: text/plain
+X-ClientProxiedBy: BE0P281CA0009.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:a::19) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="M/SuVGWktc5uNpra"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vca+Tp0v_Q4RBuUNSo_5aq_u6mBGeXecHULC1Avgm5=Xg@mail.gmail.com>
-X-Provags-ID: V03:K1:I+JHLMuApGMJsrLC1+HTMJo4e+AdFLZlrfPoEwt9cZhavkBEALt
- KEuqmQh83PWYEOPX4hpSBy14KsqEc22Bv6M6KBWlWjugfK8dQ3fqoEsSgzpUTPBP3klCStn
- DLchNVAcurXMi7f7tztEYTNgRxekTEMRiFgRLqlbVmP7sBQsU9ROBaYKU6iBVigHi6IRHCM
- nxMX7UNeDkSoMvWURjeOg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2dHLMKghe+A=:ParlLhkgApuJLRZToMXMcX
- SpZV16KncewUV8cUZPir1GulBY6LLM7bRPIPzZSLpJpB45Vqzkeo7FM/HurFQE8E8W0qKnNhr
- DFoA/0Pf0YVlO2wRmUDuhrp1tVWchHBG/6ewIpOcvLL9JYchQfdhADkiB69P7yeEo/AV8AIWX
- 7CG10fYKzQyvw4vCNzcndiJZfnngABszAuxzHvhWltTR14kNBZB5K32I6/sOOEYpW1Exi4nYf
- OTDN31IoJmuMlAFni9uHsZPh2qK8v76hmuD2XU+28FAEuR5OTWYD86hsV/gEu6wN5ktBmXTQ4
- DVS+uucosDVAQ1LWYeU9x4CmuY1pnc8BB9y21uYTR/cxkQ1BH2lvHb4A478XxNFP9gXX+LqdN
- S11H5fHzqzQxZvKAoAUWk49uOIFt4ExaCsOTe3uByll7YJ3LESe8wiAafBcPM4+II5oLqB8Sk
- LuBXvXOeaHgqHK3iJReQG2w5HAHF/LP2SA1W714eLZuGYYk9qwfQsHmu8wevDjsBJW5mPVdba
- 2zhBUfhkXQX3Lb8B5bXom6pZIoXR12XfIfqSSijCNB6y/wU1ejoK4NReoB63DhioFiI95GA2e
- tZCtAo0D5YJBMbV7anJ79881AuavVnpVQ1/dWH+BilBeyIyrL3AM9t3bqc0pqWkG6W8q+n9Qe
- mjtzMuGa3RygjmPnZqBHNOimIeRqgkn20LFvfgyI5saQGp2L6G3w240I4/d6NTp81LvCA2G0d
- ik58XSwa/bS3JjnHDrEIl7yBbmXWGoPjgXiBW07nIL9p5gdovyNVZljj1Q7cUerDZSRJqVI8a
- Wyym8gRauOSoQEAoJRyslUzFjZnr3egV78YxMw+nQIzr0+PwWsbvm/3oSGTCjSRnsfUninb8D
- 8162fTVWJr47U0602S5QSNG49yzFFQCPStfU1gAOYN/2KGhPkNhqfNBSWoIyEFrZuToLKSVE+
- QXBcg3aka+jps1BR2pf9EohJNe+g4hPrlM+AYuTg14PEVmKDFVEz0X9l68TusDxJ/zUbEYoLR
- Iy+6sHpmZpR01F6CDv8WesD2pb2SwV5Usa8/MQ/sR9IdGJ/NmpzxZpSDpAZA6pTF+QkiShkQ1
- 8tFc1WSulCH4YD+ItoIZgNYwdZ8mj/wqnTCxMJXTn1x8dNpOcbVZHHp0HnSOl0o8G64N5hSRs
- 1K/EzKoTeY4Uplxz8QiGVu4aygQpaY+BhZ/FsGXWLupwubeizQTUZI7W9C/87aOPuZzYEgn4D
- X3RQBD2lrmt0ItZvvbqDI9XqQKjYEkN+Fyd37vA==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by BE0P281CA0009.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:a::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.10 via Frontend Transport; Thu, 10 Sep 2020 15:01:24 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3c48ebea-ecfa-45b2-b60b-08d8559a6389
+X-MS-TrafficTypeDiagnostic: HE1P190MB0459:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB0459E594078DF47F00DC3D1995270@HE1P190MB0459.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: haBAvJ0it3u0Qujw43GjQBSdFiV8uALErBvD9wkgNyqrFQwIpm14/tnHqnZFffxkEHm16CoidzbCJ/Zdf9nKNdYmecBQPcx9xspLaqkIDPhlC7LkcgmUpMKvdOg37a0fMAwhakk8miPjw8OQz/65vxzmNNu3Vq9jsjbYc8lhZkQNk/NVCZ0xMRTaBsrG3CPKgyslnOG710p2tnHcalv2ym+0rshA98xJ+mhGAUeWxFFkk/3aig8yeIBCF5NO0I71MvVk3QSEAiMozb55ix/gFs4cD676nFOciNleeWi61GJIYVJO3WsoVQh+5zEqNkYnk0h2ijxrU+qv0rQ1JsIJXe4gt8Xgwyhhi+CKgMbEe0cQNhN3QgdJDz3WiTGYTt+25Kw5W0NvluEkC1bj0e94sA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(136003)(39830400003)(396003)(346002)(366004)(376002)(26005)(2906002)(8936002)(110136005)(186003)(16526019)(8676002)(2616005)(83380400001)(44832011)(4326008)(66556008)(66946007)(54906003)(66476007)(1076003)(6506007)(5660300002)(6666004)(107886003)(956004)(6486002)(478600001)(86362001)(316002)(6512007)(36756003)(52116002)(142933001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: jnm1mTpkrVFkE2+MIVfvsnkCib78YJWuQg6ySoy47j+QxTl5DBNt5Wj0C1ZfGDTsRpqXBkjmZLE4/7GBqJFCR/QiEflHJktz3eTqPWFX1jL9nQ//ALsJAOAyOoTXbZFgaO4Mfy0qDXs3l+KjSDafxdF+aqTeQwiw7k5ef6mjTfALXciCxIRytt9DCaHH9vn86i8baoeZmAKItRNLAuQH2E1G+snaszlRP2Ez5HTMwmVt7l/yJHq4AO8AR9B8Da6tPVWUivlTKyeLM7Rh/2ckOXtP7sRYg3bLVUUp6cAkGd8JqtzmFaoVevwyH+jOt73bEaLEgH2tWvyuaYFEFrrl8EAPekf2IIKvlMTy9Y0AxKwU7+6UgFaCzTG2dQ6GSWFq7AHF6EsnhW5vkHj6zXdaNEzyBNfTpk6hJ7f9T+8/z1XpY9x2pI1lPQsVimO5k5hHJAYnxBGGPMsfrDnPWsi29j2cNHeaHTEoJQpVvEUVPM8bYzls/y2+d7qE6qoir9dS4QnxDgwu1Qthq7ung6o8WVXV9AR3diAI1yqgXJ7hqCljfFhWIw/P6xu3pexDekhsUf+rFqgWilB1N8Reu2gwmFMYNGaKpeX21n4926JKHvdbGZtFXJDzBT9aWFGtiFbArKemN/b2zcwrkzdJwufFbw==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c48ebea-ecfa-45b2-b60b-08d8559a6389
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 15:01:25.8287
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JZC1W7zyoXsAAzA4+q1kQrPOa/Ut2YGlqZLk9IwXRstDWgrWDbtUNer6jinVbq2SUeOGaRjabZ2hX+FE1GBcKU3fVy63RBNCO1yJNUEvL2w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0459
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add brief description how to configure base mac address binding in
+device-tree.
 
---M/SuVGWktc5uNpra
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Describe requirement for the PCI port which is connected to the ASIC, to
+allow access to the firmware related registers.
 
-On Sat, Sep 05, 2020 at 08:56:35PM +0300, Andy Shevchenko wrote:
-> On Saturday, September 5, 2020, Jonathan Neusch=C3=A4fer <j.neuschaefer@g=
-mx.net>
-> wrote:
-[...]
-> > +#include <linux/of_device.h>
->=20
->=20
-> No user for this. Perhaps you meant mod_devicetable.h?
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+---
+ .../bindings/net/marvell,prestera.txt         | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Yes
+diff --git a/Documentation/devicetree/bindings/net/marvell,prestera.txt b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+index 83370ebf5b89..e28938ddfdf5 100644
+--- a/Documentation/devicetree/bindings/net/marvell,prestera.txt
++++ b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+@@ -45,3 +45,37 @@ dfx-server {
+ 	ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+ 	reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+ };
++
++Marvell Prestera SwitchDev bindings
++-----------------------------------
++Optional properties:
++- compatible: must be "marvell,prestera"
++- base-mac-provider: describes handle to node which provides base mac address,
++	might be a static base mac address or nvme cell provider.
++
++Example:
++
++eeprom_mac_addr: eeprom-mac-addr {
++       compatible = "eeprom,mac-addr-cell";
++       status = "okay";
++
++       nvmem = <&eeprom_at24>;
++};
++
++prestera {
++       compatible = "marvell,prestera";
++       status = "okay";
++
++       base-mac-provider = <&eeprom_mac_addr>;
++};
++
++The current implementation of Prestera Switchdev PCI interface driver requires
++that BAR2 is assigned to 0xf6000000 as base address from the PCI IO range:
++
++&cp0_pcie0 {
++	ranges = <0x81000000 0x0 0xfb000000 0x0 0xfb000000 0x0 0xf0000
++		0x82000000 0x0 0xf6000000 0x0 0xf6000000 0x0 0x2000000
++		0x82000000 0x0 0xf9000000 0x0 0xf9000000 0x0 0x100000>;
++	phys = <&cp0_comphy0 0>;
++	status = "okay";
++};
+-- 
+2.17.1
 
-> > +/* Convert an 8-bit value into the correct format for writing into a
-> > register */
-> > +#define u8_to_reg(x) (((x) & 0xff) << 8)
->=20
->=20
-> This needs more explanation. Does register be16?
-
-Yes, the registers are treated as be16 in the base driver. I wrote a
-slightly longer explanation in response to your other review.
-
-> > +static int ntxec_set_time(struct device *dev, struct rtc_time *tm)
-> > +{
-> > +       struct ntxec_rtc *rtc =3D dev_get_drvdata(dev);
-> > +       int res =3D 0;
-> > +
-> > +       res |=3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_YEAR,
-> > u8_to_reg(tm->tm_year - 100));
-> > +       res |=3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MONTH,
-> > u8_to_reg(tm->tm_mon + 1));
-> > +       res |=3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_DAY,
-> > u8_to_reg(tm->tm_mday));
-> > +       res |=3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_HOUR,
-> > u8_to_reg(tm->tm_hour));
-> > +       res |=3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_MINUTE,
-> > u8_to_reg(tm->tm_min));
-> > +       res |=3D regmap_write(rtc->ec->regmap, NTXEC_REG_WRITE_SECOND,
-> > u8_to_reg(tm->tm_sec));
-> > +
-> > +       return (res < 0) ? -EIO : 0;
->=20
->=20
-> Hmm... (I stumbled over res |=3D parts)
-
-I'll convert it to the (more verbose but also more correct) pattern of
-returning each error early.
-
-> > +static const struct of_device_id ntxec_rtc_of_match[] =3D {
-> > +       { .compatible =3D "netronix,ntxec-rtc" },
-> > +       { },
->=20
->=20
-> No need for comma in terminator line.
-
-Okay
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---M/SuVGWktc5uNpra
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9agZQACgkQCDBEmo7z
-X9t7Vg//TklGb5L5lL/xuITfZUbaWRE0NO9ebO0gQJ0jIXLZw0XMii5+QFlgjmn/
-53tgs2wghDAcz4Es/t9azuuiTLkt76nIZU2uYGX17ULQ9RK3bEA3Wz8N+7VY3QXM
-txcZ4McFlMCmWAhclQDnK3VVywI3Nu0iF6CNnWQY1xRH4KmjyIAbXkalDiYI3y3s
-VRcdUjBTaOEQSnNoQFSew2DN1yl+OpN5z7XONYznBWMpnMAzB5+QL/IHrIYjvVZt
-3lnu2beHd4eUGHH6RsyqyRGJHM59uUckMynmEdXjuoktOdLJte3pXdce4EE7HF6k
-LJCMrRcZP7XKe+AP4DQaFD3fr9ZHU6z6yqtgePzGh6aAtgjjnC16Y4mgEK0Lvvb8
-5Z1PU9e39G1WqsSnacmdRPBgxTT8hbogcnroW4GKfE3VW2ph1CE4CDCc1cBYzu93
-NhtNw6fTa9gXJXETC5zEH+Xf/Yf9K5cCwsuvzVGnBJbw57530eMuzV4/PjwOlayM
-fDa4BM+N9Lf/EIfzupT5CTcTFvUmz5Ao4aM1XQOFTtdtEjKdqZV1O2Y1tH7+Zfj3
-TDG1itKF2vm9iToGWEr4wMoe/X75/uf7YV7kGhN8kv3kIPBpeeygOyP96dJo1Gk5
-gQ2N3HBm2oesXQSvoEhMmCuUSLHkuL5sB7Zz1NRMN7XomQ+7rEA=
-=9c8/
------END PGP SIGNATURE-----
-
---M/SuVGWktc5uNpra--
