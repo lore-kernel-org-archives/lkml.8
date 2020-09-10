@@ -2,72 +2,139 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01211C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38E6C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACB462078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B872921556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgIJIsO (ORCPT
+        id S1730465AbgIJIsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:48:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57716 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726847AbgIJIsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:48:13 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 3ED772AD370DCE52AB3D;
-        Thu, 10 Sep 2020 16:48:06 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
- 16:47:56 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <steffen.klassert@secunet.com>,
-        <willemb@google.com>, <mstarovoitov@marvell.com>,
-        <kuba@kernel.org>, <mchehab+huawei@kernel.org>,
-        <antoine.tenart@bootlin.com>, <edumazet@google.com>,
-        <Jason@zx2c4.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Fix broken NETIF_F_CSUM_MASK spell in netdev_features.h
-Date:   Thu, 10 Sep 2020 04:46:40 -0400
-Message-ID: <20200910084640.55688-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 10 Sep 2020 04:48:30 -0400
+Received: from mail-io1-f77.google.com ([209.85.166.77]:36207 "EHLO
+        mail-io1-f77.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbgIJIsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:48:22 -0400
+Received: by mail-io1-f77.google.com with SMTP id h8so3844988ioa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:48:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ss+NDibV+9A1A4nhUiuCZmAy2xJiaoswkCsDPh/ljK0=;
+        b=I5U1sbjPW4bcyRq3AHBEz/Lso5dOS2NORavzmdcrXNA40tzBCmpzI2c0gqxczom3bd
+         bYY9rKSHJQJlT4dewR4C55i2UuWYhlPRoqu484X3btiiaj1+oX+dYrzpZF6/geMlWz9Y
+         /a3dNrmFB+eEo8tE/pTI2fEVJA8h8XYSHYqQuwWBhtPZMANVaggl39ECxNCpp2kE0Dl8
+         42r6djAXeQJr3qtCEHpFkSNWgsrVh2Likev64SFwd009KnPbJfwUCjPmZTGXZwKoqkzj
+         CVV1nJYRwlP4A+Stiqhor6IG5k6WTykqQaXL/dYIJT2RDKUZqm6vy4HOfU/jVhOXLUzH
+         lsJA==
+X-Gm-Message-State: AOAM530QOp6l8mGQIvqiM7Kw9XhmitoeJt0UBTUYZZ2G7hh+t5MlGslj
+        fJZq0iT4J/8lp6N7/zAj9KjXl+CMfUcevCgO5DLYYpZDbCdK
+X-Google-Smtp-Source: ABdhPJwskIZBJxIhH+SvsruZKozcsWaPSpr2Ik9ydDFAt2JAIkl+GjSkZWwUURXqIRfRMllMo5kAD/PUXnvUAnZN3Uy6qTbXqPii
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a05:6638:144:: with SMTP id y4mr7640549jao.61.1599727701395;
+ Thu, 10 Sep 2020 01:48:21 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 01:48:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000610c6805aef1a1b8@google.com>
+Subject: kernel BUG at net/rxrpc/conn_object.c:LINE!
+From:   syzbot <syzbot+52071f826a617b9c76ed@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dhowells@redhat.com, kuba@kernel.org,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, netdev@vger.kernel.org, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the weird space inside the NETIF_F_CSUM_MASK.
+Hello,
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+syzbot found the following issue on:
+
+HEAD commit:    f5499c67 nfc: pn533/usb.c: fix spelling of "functions"
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=16415055900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2b946b3cd0adc99
+dashboard link: https://syzkaller.appspot.com/bug?extid=52071f826a617b9c76ed
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16be260d900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=100b7cdd900000
+
+The issue was bisected to:
+
+commit 245500d853e9f20036cec7df4f6984ece4c6bf26
+Author: David Howells <dhowells@redhat.com>
+Date:   Wed Jul 1 10:15:32 2020 +0000
+
+    rxrpc: Rewrite the client connection manager
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11950759900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13950759900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15950759900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+52071f826a617b9c76ed@syzkaller.appspotmail.com
+Fixes: 245500d853e9 ("rxrpc: Rewrite the client connection manager")
+
+rxrpc: Assertion failed
+------------[ cut here ]------------
+kernel BUG at net/rxrpc/conn_object.c:481!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 234 Comm: kworker/u4:5 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: netns cleanup_net
+RIP: 0010:rxrpc_destroy_all_connections.cold+0x11/0x13 net/rxrpc/conn_object.c:481
+Code: c0 48 c7 c1 00 b0 14 89 48 89 f2 48 c7 c7 80 ac 14 89 e8 04 4d 0c fa 0f 0b e8 be 15 23 fa 48 c7 c7 80 af 14 89 e8 f1 4c 0c fa <0f> 0b 41 57 41 56 41 55 41 54 55 53 48 89 f3 48 83 ec 20 48 89 3c
+RSP: 0018:ffffc90000f57b18 EFLAGS: 00010282
+RAX: 0000000000000017 RBX: ffff8880945a8000 RCX: 0000000000000000
+RDX: ffff8880a85ca200 RSI: ffffffff815dbd97 RDI: fffff520001eaf55
+RBP: ffff8880945a8064 R08: 0000000000000017 R09: ffff8880ae731927
+R10: 0000000000000000 R11: 0000000034333254 R12: ffff8880945a8068
+R13: ffff8880945a8078 R14: ffff8880945a8078 R15: ffff8880945a7eb8
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdbae898020 CR3: 00000000963ae000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ rxrpc_exit_net+0x1a4/0x2e0 net/rxrpc/net_ns.c:119
+ ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
+ cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Modules linked in:
+---[ end trace b82f4cc98146655f ]---
+RIP: 0010:rxrpc_destroy_all_connections.cold+0x11/0x13 net/rxrpc/conn_object.c:481
+Code: c0 48 c7 c1 00 b0 14 89 48 89 f2 48 c7 c7 80 ac 14 89 e8 04 4d 0c fa 0f 0b e8 be 15 23 fa 48 c7 c7 80 af 14 89 e8 f1 4c 0c fa <0f> 0b 41 57 41 56 41 55 41 54 55 53 48 89 f3 48 83 ec 20 48 89 3c
+RSP: 0018:ffffc90000f57b18 EFLAGS: 00010282
+RAX: 0000000000000017 RBX: ffff8880945a8000 RCX: 0000000000000000
+RDX: ffff8880a85ca200 RSI: ffffffff815dbd97 RDI: fffff520001eaf55
+RBP: ffff8880945a8064 R08: 0000000000000017 R09: ffff8880ae731927
+R10: 0000000000000000 R11: 0000000034333254 R12: ffff8880945a8068
+R13: ffff8880945a8078 R14: ffff8880945a8078 R15: ffff8880945a7eb8
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fdbae89e000 CR3: 0000000093fd8000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
 ---
- include/linux/netdev_features.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/include/linux/netdev_features.h b/include/linux/netdev_features.h
-index 2cc3cf80b49a..0b17c4322b09 100644
---- a/include/linux/netdev_features.h
-+++ b/include/linux/netdev_features.h
-@@ -193,7 +193,7 @@ static inline int find_next_netdev_feature(u64 feature, unsigned long start)
- #define NETIF_F_GSO_MASK	(__NETIF_F_BIT(NETIF_F_GSO_LAST + 1) - \
- 		__NETIF_F_BIT(NETIF_F_GSO_SHIFT))
- 
--/* List of IP checksum features. Note that NETIF_F_ HW_CSUM should not be
-+/* List of IP checksum features. Note that NETIF_F_HW_CSUM should not be
-  * set in features when NETIF_F_IP_CSUM or NETIF_F_IPV6_CSUM are set--
-  * this would be contradictory
-  */
--- 
-2.19.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
