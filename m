@@ -2,76 +2,83 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A41C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A0FC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64DE214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hi70TzZF"
+	by mail.kernel.org (Postfix) with ESMTP id DEC1F214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599771247;
+	bh=8uitls0FwMbXxeUeaJe4v+UryX88G0t2cRNAeu715Ig=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pOKZUIm2eDw42GZwx1Bdp3guTJA2N4dXAE9Dp956Vovik0SiI9YbMOZp+eRIbjiQj
+	 12EN+3AMK76mKlh5WCwUmlZ9OY38dpNIs3/ZF3rARZ3r5wkw+pBLrRUb6z3F+HRdf+
+	 4RTwx1YVVFUwD85D5uLmBf50mJTgJSHWDgODGBhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgIJUx4 (ORCPT
+        id S1727071AbgIJUyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731220AbgIJOv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:51:59 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D032C06179B
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=carJyeF/DQ7x8PMcqrq+bkt1/xRqTM2W/ttF2nvAfHs=; b=hi70TzZFP012Zg3sUOsuFg1wn8
-        U+yznKpZwdVBZ4gK29aRMMjaI76rnCteGRjqKCRoMMM0S4hN1zGSFZProkWh4GGqNFajfxWf0a3rb
-        TnA4rhrQowWRL/y63Rs8QuixYYbUGMwkNIP7SmQ4XgNzq/MezqxdSMsLNlwv5T2spGOtpX7vn++dw
-        qx4BvrEEaanp2I5+qvl8lk0siibwK9ooBkh7r2LX1mjIrtAOH5me41jepBS8hZul7F0iqGZj/mb9z
-        T77LUA3EppRU6x+4/R25q4l7NgQ9AKD+QUq6bRIf7CFYyTn2ganUaqCzyTn0iRST9L6dNKiDoL7yv
-        dvQu5rew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGNu1-0007Ao-18; Thu, 10 Sep 2020 14:50:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD4CE3012DC;
-        Thu, 10 Sep 2020 16:50:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9FD362B7765C0; Thu, 10 Sep 2020 16:50:18 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 16:50:18 +0200
-From:   peterz@infradead.org
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, anna-maria@linutronix.de,
-        vbabka@suse.cz, mgorman@techsingularity.net, mhocko@suse.com,
-        linux-mm@kvack.org
-Subject: Re: kcompactd hotplug fail
-Message-ID: <20200910145018.GF35926@hirez.programming.kicks-ass.net>
-References: <20200910141006.GA1362448@hirez.programming.kicks-ass.net>
- <20200910143745.GE35926@hirez.programming.kicks-ass.net>
+        Thu, 10 Sep 2020 16:54:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730677AbgIJOuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:50:40 -0400
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F21B20809;
+        Thu, 10 Sep 2020 13:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599746101;
+        bh=8uitls0FwMbXxeUeaJe4v+UryX88G0t2cRNAeu715Ig=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=q4zDVMQ/4u5dTCoj1HmW39yDoXKxpPkpsIHUR9BNTRhKKd5sATQbWkpHJJ4bCVCin
+         0Oal+bJrb5SFqHNOLs5ZNiLOqPA0HXqezywrZmj8EpmrzFqk3gNOvYl7NjBcwkXu5q
+         IXJnVZLiPY+zotF6RtpwTNtAK77Lz8zJ5uwNoolI=
+Received: by mail-oo1-f41.google.com with SMTP id 4so1448305ooh.11;
+        Thu, 10 Sep 2020 06:55:01 -0700 (PDT)
+X-Gm-Message-State: AOAM531FIDH6C6K7Or/KR59yiP+G5/K2iexICPb58oKwKfFyEUP+lYXJ
+        oq9GWoq9xcVRGIoQDzTMrMv+Wl6gDlaFjrCgfg==
+X-Google-Smtp-Source: ABdhPJy+lHlOja04YRvhjttbYYqlKO/f60ffG9yIDtiL2dYnlDTTuqAcRCeqB1xYH1rB13Um+cg0/NOEacjYYhVASrQ=
+X-Received: by 2002:a4a:d306:: with SMTP id g6mr4550240oos.25.1599746100549;
+ Thu, 10 Sep 2020 06:55:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910143745.GE35926@hirez.programming.kicks-ass.net>
+References: <20200909134234.31204-1-yuehaibing@huawei.com>
+In-Reply-To: <20200909134234.31204-1-yuehaibing@huawei.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Sep 2020 07:54:49 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+mdgAF5bq5wv8JYj6bMyRAYyUSYnx3ab_UQzrRYpeAug@mail.gmail.com>
+Message-ID: <CAL_Jsq+mdgAF5bq5wv8JYj6bMyRAYyUSYnx3ab_UQzrRYpeAug@mail.gmail.com>
+Subject: Re: [PATCH -next] PCI: dwc: unexport dw_pcie_link_set_max_speed
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 04:37:45PM +0200, peterz@infradead.org wrote:
-> On Thu, Sep 10, 2020 at 04:10:06PM +0200, peterz@infradead.org wrote:
-> > Hi,
-> > 
-> > While playing with hotplug, I ran into the below:
-> 
-> Ah, it could be I wrecked my kernel bad... :-(
-> 
-> I'll let you know if I can reproduce this on a pristine kernel.
+On Wed, Sep 9, 2020 at 7:42 AM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> This function has been made static, which causes warning:
+>
+> WARNING: modpost: "dw_pcie_link_set_max_speed" [vmlinux] is a static EXPORT_SYMBOL_GPL
+>
+> Fixes: 3af45d34d30c ("PCI: dwc: Centralize link gen setting")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Yeah, sorry, I'll go search for one of them brown-paper things to wear.
+Thanks for fixing.
+
+Acked-by: Rob Herring <robh@kernel.org>
