@@ -2,75 +2,93 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38BFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C169C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3EA2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD12C2078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lbyYS0wk";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="kohVCh69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgIJHX5 (ORCPT
+        id S1730262AbgIJHYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:23:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54574 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbgIJHXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 03:23:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0AA18B165;
-        Thu, 10 Sep 2020 07:23:48 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 09:23:31 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-Message-ID: <20200910072331.GB28354@dhcp22.suse.cz>
-References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
- <20200908170835.85440-1-ldufour@linux.ibm.com>
- <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <20200909105914.GF7348@dhcp22.suse.cz>
- <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+        Thu, 10 Sep 2020 03:24:05 -0400
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:56620
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726932AbgIJHXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 03:23:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599722628;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=rBdxxxmDhpAfoIEEJUGR//NUhzr+yOlKNMkan6WiZag=;
+        b=lbyYS0wk/dHrFob5sp7wdBNFi4vJDZ3U9lS+2uy97YWB+67lAxh0yXm8erl3vl5/
+        5/1GOmhg7qIwssMnW3+RHRXN9y73gTJg6EXENk948hXx1tgbr8ZBmJHy5vIl4p+NRCj
+        Klf/QaQQALWa15SBFPuUSNZhvOACOp4hUBgkj1+I=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599722628;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=rBdxxxmDhpAfoIEEJUGR//NUhzr+yOlKNMkan6WiZag=;
+        b=kohVCh69KUJKCNnZg7wun4zs2vdhkIYo7pnnQRsGx4+K+q9o/83XNzWjCaCyJ+Y4
+        eRnbUBdUlnORvpVIsX3W6ZwW+RhwX4hbuh2NIaY2Dk2IdsBkt62vIgdGY0/Yu7G5+0X
+        6e1z0vgvFK93my6KweLBOqKz7RYEh7Ge7+y4aKfA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F09E4C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ath11k@lists.infradead.org
+Subject: Re: linux-next: Tree for Sep 9 (ath11k)
+References: <20200909202624.2cc6c3d1@canb.auug.org.au>
+        <3f8649d7-c64a-4b0a-a2db-69f1b11e31e5@infradead.org>
+        <0101017476bd06e1-16ca4de8-647e-4423-9630-753fb5675e8b-000000@us-west-2.amazonses.com>
+Date:   Thu, 10 Sep 2020 07:23:48 +0000
+In-Reply-To: <0101017476bd06e1-16ca4de8-647e-4423-9630-753fb5675e8b-000000@us-west-2.amazonses.com>
+        (Kalle Valo's message of "Thu, 10 Sep 2020 06:38:53 +0000")
+Message-ID: <0101017476e62656-22a95a04-af3b-4d23-b454-70e8a6d8a45c-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+Content-Type: text/plain
+X-SES-Outgoing: 2020.09.10-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 09-09-20 18:07:15, Laurent Dufour wrote:
-> Le 09/09/2020 à 12:59, Michal Hocko a écrit :
-> > On Wed 09-09-20 11:21:58, Laurent Dufour wrote:
-[...]
-> > > For the point a, using the enum allows to know in
-> > > register_mem_sect_under_node() if the link operation is due to a hotplug
-> > > operation or done at boot time.
-> > 
-> > Yes, but let me repeat. We have a mess here and different paths check
-> > for the very same condition by different ways. We need to unify those.
-> 
-> What are you suggesting to unify these checks (using a MP_* enum as
-> suggested by David, something else)?
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-We do have system_state check spread at different places. I would use
-this one and wrap it behind a helper. Or have I missed any reason why
-that wouldn't work for this case?
+> Randy Dunlap <rdunlap@infradead.org> writes:
+>
+>> On 9/9/20 3:26 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>> 
+>>> Changes since 20200908:
+>>> 
+>>
+>> on x86_64:
+>>
+>> ld: drivers/net/wireless/ath/ath11k/core.o: in function `ath11k_core_init':
+>> core.c:(.text+0x121f): undefined reference to `rproc_get_by_phandle'
+>
+> This is because CONFIG_REMOTEPROC is not, I'll fix the dependency in
+> ath11k. Thanks for the report.
+
+Patch sent:
+
+ath11k: fix link error when CONFIG_REMOTEPROC is disabled
+
+https://patchwork.kernel.org/patch/11766849/
 
 -- 
-Michal Hocko
-SUSE Labs
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
