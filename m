@@ -2,109 +2,132 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B15CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591B221D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599706346;
-	bh=xZgHaS/AuVVZO8yGCPOPXDcpWyNutVURYRYfQPr7Bss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=r3WjTCWPevGVUGOpK1rAi9HM4YQ5YiACr3zNJ+skM7ZTbR0ZX59/5bighWSGqMNrd
-	 nkgkg6kGWqeExTYy4Z2LM3RT6J5bc2Y5d/ip9vL4l1o9n83frDJmk6Yoo2ftm5r3Bv
-	 ao4CIKRXDcD3L+rcXCNeuAIOJu+Kuxeft1vo4mqs=
+	by mail.kernel.org (Postfix) with ESMTP id CB41321D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:52:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Dl/XEoko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgIJB6a (ORCPT
+        id S1729824AbgIJCwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 21:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbgIJBfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:35:34 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        Wed, 9 Sep 2020 22:52:44 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48742 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729135AbgIJCwF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:52:05 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F22820BED;
-        Thu, 10 Sep 2020 01:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599701144;
-        bh=xZgHaS/AuVVZO8yGCPOPXDcpWyNutVURYRYfQPr7Bss=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=txo7aca9vIw5rLwXzQT8UF0NYSKzIfloMTcnJx6ZdTO3R4ZCacyJMggjs+EMAuj6b
-         NHpMd135cykYDYK61eWWmBTadSmzFtjzr6hrg/xjia5KhINN0b+kWlnmDm68RC/5FH
-         68HZR8LN14yL8kZwA+6ymLjOgMmwi6l4NyKA0CRI=
-Date:   Wed, 9 Sep 2020 20:25:43 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiang Biao <benbjiang@gmail.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in
- pci_read_config
-Message-ID: <20200910012543.GA745909@bjorn-Precision-5520>
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1A5A4806B5;
+        Thu, 10 Sep 2020 14:51:57 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599706317;
+        bh=lQhwDjP6TNS2Ik4pBM/Zgt2mpKx73CO14Av4nyUHdV0=;
+        h=From:To:Cc:Subject:Date;
+        b=Dl/XEokogax91p9/0956kDDlgva9mRwc6HTUWXhpsAx/lat3/xlutBsKDpTbVFWC+
+         hEqYYP8vF8ISmzC94Pm95DB9GaK6kbZPV7bmxh3VPQ8bJ9G4MZPsQAYj2q/YP3Fvvy
+         5rhUcg450FlhWEg2KjGFKj2+UqY8YVrXWFHPlOwW7bOnTguhu/UZ38UI9mbNUfxCGm
+         SQWEz2GE+v8eUwQ9RtC0Q3qPlsJbPPdnp1OHNglBnUDvFHltRAqhmMRtgbmKJegVJE
+         JY+wniQ5CRYWMsjy6Nlo6VrwPzrNKYIftExZxiGh5lX128w3ORRTtkVVeYwmi17N42
+         t1rHCz85oJdJA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f5994cc0000>; Thu, 10 Sep 2020 14:51:56 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id DC6C913EEBA;
+        Thu, 10 Sep 2020 14:51:55 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id C3FE5280076; Thu, 10 Sep 2020 14:51:56 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     stern@rowland.harvard.edu, linux@prisktech.co.nz,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] usb: host: ehci-platform: Add workaround for brcm,xgs-iproc-ehci
+Date:   Thu, 10 Sep 2020 14:51:53 +1200
+Message-Id: <20200910025154.20848-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824052025.48362-1-benbjiang@tencent.com>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
-> From: Jiang Biao <benbjiang@tencent.com>
-> 
-> pci_read_config() could block several ms in kernel space, mainly
-> caused by the while loop to call pci_user_read_config_dword().
-> Singel pci_user_read_config_dword() loop could consume 130us+,
->               |    pci_user_read_config_dword() {
->               |      _raw_spin_lock_irq() {
-> ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> ! 137.582 us  |      }
->               |      pci_read() {
->               |        raw_pci_read() {
->               |          pci_conf1_read() {
->   0.230 us    |            _raw_spin_lock_irqsave();
->   0.035 us    |            _raw_spin_unlock_irqrestore();
->   8.476 us    |          }
->   8.790 us    |        }
->   9.091 us    |      }
-> ! 147.263 us  |    }
-> and dozens of the loop could consume ms+.
-> 
-> If we execute some lspci commands concurrently, ms+ scheduling
-> latency could be detected.
-> 
-> Add scheduling chance in the loop to improve the latency.
+The ehci controller found in some Broadcom switches with integrated SoCs
+has an issue which causes a soft lockup with large transfers like you
+see when running ext4 on USB3 flash drive.
 
-Thanks for the patch, this makes a lot of sense.
+Port the fix from the Broadcom XLDK to increase the OUT_THRESHOLD to
+avoid the problem.
 
-Shouldn't we do the same in pci_write_config()?
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 
-> Reported-by: Bin Lai <robinlai@tencent.com>
-> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
-> ---
->  drivers/pci/pci-sysfs.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d78df9..3b9f63d 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
->  		data[off - init_off + 3] = (val >> 24) & 0xff;
->  		off += 4;
->  		size -= 4;
-> +		cond_resched();
->  	}
->  
->  	if (size >= 2) {
-> -- 
-> 1.8.3.1
-> 
+I don't have much data on what this change does. I can say it is needed t=
+o
+avoid a soft lockup when using a USB3 Flash drive formatted has ext4 (USB=
+2 +
+ext4 is OK, USB3 + fat is OK). I presume the affected combination ends up=
+ using
+larger transfers triggering the problem.
+
+The equivalent change in the Broadcom XLDK is
+
+	if (IS_ENABLED(CONFIG_USB_EHCI_XGS_IPROC))
+		ehci_writel(ehci, BCM_USB_FIFO_THRESHOLD,
+				&ehci->regs->reserved4[6]);
+
+This is problematic because it would unconditionally apply to all ehci
+controllers whenever CONFIG_USB_EHCI_XGS_IPROC is enabled (also reserved4=
+ only
+goes to 6 so technically it's indexing off the end of the array).
+
+I wasn't sure if I should add a new property or somehow detect the affect=
+ed
+host controller. I settled on using of_device_is_compatible() as that see=
+med
+the simplest thing to do.
+
+ drivers/usb/host/ehci-platform.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-pla=
+tform.c
+index 006c4f6188a5..0d2de8faa3c1 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -53,6 +53,9 @@ struct ehci_platform_priv {
+=20
+ static const char hcd_name[] =3D "ehci-platform";
+=20
++#define bcm_iproc_insnreg01	hostpc
++#define BCM_USB_FIFO_THRESHOLD	0x00800040
++
+ static int ehci_platform_reset(struct usb_hcd *hcd)
+ {
+ 	struct platform_device *pdev =3D to_platform_device(hcd->self.controlle=
+r);
+@@ -358,6 +361,9 @@ static int ehci_platform_probe(struct platform_device=
+ *dev)
+=20
+ 	device_wakeup_enable(hcd->self.controller);
+ 	device_enable_async_suspend(hcd->self.controller);
++	if (of_device_is_compatible(dev->dev.of_node, "brcm,xgs-iproc-ehci"))
++		ehci_writel(ehci, BCM_USB_FIFO_THRESHOLD,
++			    ehci->regs->bcm_iproc_insnreg01);
+ 	platform_set_drvdata(dev, hcd);
+=20
+ 	if (priv->quirk_poll)
+--=20
+2.28.0
+
