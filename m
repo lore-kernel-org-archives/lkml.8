@@ -2,199 +2,176 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E69C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A8EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414E9208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2D62076D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kZmnTX3F";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GQL9apK2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJZM7y9h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgIJTyn (ORCPT
+        id S1726267AbgIJTzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:54:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42186 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgIJTwh (ORCPT
+        Thu, 10 Sep 2020 15:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgIJTwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:52:37 -0400
-Date:   Thu, 10 Sep 2020 19:52:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599767554;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=txick5ALC6qL2ykJRTautBk8DbO3VkbKX42YfmaBpbM=;
-        b=kZmnTX3FFcCbCG+L3BrefarI3tkpGuUt+FhVbdKNmgb5/lmdZ8d+ktnhK7gul0E8eSZeLm
-        Ld+VB4FKE7qq3p0vL/39zhh6geLpQ7yO8+kDGah/UPW3zPokRNgYNO/+bgL70WyRrinLJA
-        1ICHdUbSkR2bi/qKLeGOZv4eILYCWwqqzY/lJ5l3cgXBpmKMRkG3oW2GMnKFCovQ60BOtA
-        b51wkIltXr13IA3Jkn9BIy/GaszjyKMQshnE8cNqjY/YEBENdrnKKbaxf1PYxA8Mkhb0xZ
-        MT2Tap9Fw9+4hHZ73+9n+tzfRW1W4AHlae2eIaXomQ1PeS3JteJWgHT5HAosKQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599767554;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=txick5ALC6qL2ykJRTautBk8DbO3VkbKX42YfmaBpbM=;
-        b=GQL9apK209A/3+foBWH6zTET29SRNIcKfgEZLm/ZeaKR0bZkiD0BPWSGTuOtm9NCO6SQKo
-        ZXGyrS8LPUlcbxCg==
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/efi: Add GHCB mappings when SEV-ES is active
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
-        Ard Biesheuvel <ardb@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-72-joro@8bytes.org>
-References: <20200907131613.12703-72-joro@8bytes.org>
+        Thu, 10 Sep 2020 15:52:36 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBACC061756;
+        Thu, 10 Sep 2020 12:43:23 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z9so1632644wmk.1;
+        Thu, 10 Sep 2020 12:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CwGn8n9DjuYuvwODgQD4bX4lUI5/xXZdPT97oPczTMs=;
+        b=KJZM7y9hdzVyWNf7f1qoB4Wktk621YrUrhpUDOvcukvT63EF8R84wlJhvi/P5GxTF2
+         DgVnMn1cewgEZQrEK2Zb53S8pO9k647dGn76eTm/AtFHqrTR7/+lOwsRnWSzqhDOnG6u
+         wUTJ6aPYl+wy4HH7oPfEqHSW+hb9/FrcgFBs46tcM26e4y/zJ97lex0sFhYvT1/gb9c1
+         yeKQNR1y16R9kp0WhLClrK/AQf1aZC7mYinv8KUN2L1XnUNi9/o0TWcrm8u6KI7McujW
+         03F2bXayfNo65nRhrpbSK/YkmQQ1ilzYwkOBvhR3enSXoQUR88NlUICxoCj1sM90fhoc
+         tU9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=CwGn8n9DjuYuvwODgQD4bX4lUI5/xXZdPT97oPczTMs=;
+        b=D/k3DpOYIlyzBqDNmxQD5uigc8OXQrXCjiawVbTVa2NYRjL05akYJ4SQU/G2xajCMS
+         muIV24/+V9mnYgENTi55NYx+Q03jjJsGJqYskX6slzWyk3RZ9XuuQZCCBzkcZmXRoN05
+         TKrh9hyB3LHNzSsB5Ti/4lOzeFh+oJf7oF5ynHETp/fcg8xnplI4fWjwr9aP7jhj5ekN
+         U7xGEq9BglCruhiSK38p1Rdn2JwQhrvYK8ly6h1MQV3fFbE8YYlhZU7zSAEyLdcN1xG5
+         NSIVtID7pfd72qHLsT2E6aJw8xQikFIyJmsA+SfPrG2/kmJpSPwDXDI3odcxcuxPQoLN
+         G7Sg==
+X-Gm-Message-State: AOAM531+DEb6TcsIuOs/IXeiNwcUpw9lE2d2k6EfVXEgbRP1U6enManX
+        tdojebQMBcQe+0EU2WPaHDbg0RqvPXFXDQ==
+X-Google-Smtp-Source: ABdhPJy9Wbjk4v9KRoN+PO6CaMB3PwTmTGG7o5JJ6kOlB4GKYR8FUebB9/YpCVx7HTvK1/f3NRJifA==
+X-Received: by 2002:a05:600c:414e:: with SMTP id h14mr1617383wmm.2.1599767001805;
+        Thu, 10 Sep 2020 12:43:21 -0700 (PDT)
+Received: from eldamar (80-218-24-251.dclient.hispeed.ch. [80.218.24.251])
+        by smtp.gmail.com with ESMTPSA id q186sm5099567wma.45.2020.09.10.12.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 12:43:20 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 21:43:19 +0200
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Daniel.Craig@csiro.au,
+        Nicolas Courtel <courtel@cena.fr>
+Subject: Re: [PATCH 4.19 142/206] gfs2: fix use-after-free on transaction ail
+ lists
+Message-ID: <20200910194319.GA131386@eldamar.local>
+References: <20200623195316.864547658@linuxfoundation.org>
+ <20200623195323.968867013@linuxfoundation.org>
 MIME-Version: 1.0
-Message-ID: <159976755405.20229.8190086156867136296.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623195323.968867013@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/seves branch of tip:
+Hi,
 
-Commit-ID:     39336f4ffb2478ad384075cf4ba7ef2e5db2bbd7
-Gitweb:        https://git.kernel.org/tip/39336f4ffb2478ad384075cf4ba7ef2e5db2bbd7
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Mon, 07 Sep 2020 15:16:12 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 10 Sep 2020 21:48:50 +02:00
+On Tue, Jun 23, 2020 at 09:57:50PM +0200, Greg Kroah-Hartman wrote:
+> From: Bob Peterson <rpeterso@redhat.com>
+> 
+> [ Upstream commit 83d060ca8d90fa1e3feac227f995c013100862d3 ]
+> 
+> Before this patch, transactions could be merged into the system
+> transaction by function gfs2_merge_trans(), but the transaction ail
+> lists were never merged. Because the ail flushing mechanism can run
+> separately, bd elements can be attached to the transaction's buffer
+> list during the transaction (trans_add_meta, etc) but quickly moved
+> to its ail lists. Later, in function gfs2_trans_end, the transaction
+> can be freed (by gfs2_trans_end) while it still has bd elements
+> queued to its ail lists, which can cause it to either lose track of
+> the bd elements altogether (memory leak) or worse, reference the bd
+> elements after the parent transaction has been freed.
+> 
+> Although I've not seen any serious consequences, the problem becomes
+> apparent with the previous patch's addition of:
+> 
+> 	gfs2_assert_warn(sdp, list_empty(&tr->tr_ail1_list));
+> 
+> to function gfs2_trans_free().
+> 
+> This patch adds logic into gfs2_merge_trans() to move the merged
+> transaction's ail lists to the sdp transaction. This prevents the
+> use-after-free. To do this properly, we need to hold the ail lock,
+> so we pass sdp into the function instead of the transaction itself.
+> 
+> Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+> Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  fs/gfs2/log.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+> index d3f0612e33471..06752db213d21 100644
+> --- a/fs/gfs2/log.c
+> +++ b/fs/gfs2/log.c
+> @@ -877,8 +877,10 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+>   * @new: New transaction to be merged
+>   */
+>  
+> -static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
+> +static void gfs2_merge_trans(struct gfs2_sbd *sdp, struct gfs2_trans *new)
+>  {
+> +	struct gfs2_trans *old = sdp->sd_log_tr;
+> +
+>  	WARN_ON_ONCE(!test_bit(TR_ATTACHED, &old->tr_flags));
+>  
+>  	old->tr_num_buf_new	+= new->tr_num_buf_new;
+> @@ -890,6 +892,11 @@ static void gfs2_merge_trans(struct gfs2_trans *old, struct gfs2_trans *new)
+>  
+>  	list_splice_tail_init(&new->tr_databuf, &old->tr_databuf);
+>  	list_splice_tail_init(&new->tr_buf, &old->tr_buf);
+> +
+> +	spin_lock(&sdp->sd_ail_lock);
+> +	list_splice_tail_init(&new->tr_ail1_list, &old->tr_ail1_list);
+> +	list_splice_tail_init(&new->tr_ail2_list, &old->tr_ail2_list);
+> +	spin_unlock(&sdp->sd_ail_lock);
+>  }
+>  
+>  static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+> @@ -901,7 +908,7 @@ static void log_refund(struct gfs2_sbd *sdp, struct gfs2_trans *tr)
+>  	gfs2_log_lock(sdp);
+>  
+>  	if (sdp->sd_log_tr) {
+> -		gfs2_merge_trans(sdp->sd_log_tr, tr);
+> +		gfs2_merge_trans(sdp, tr);
+>  	} else if (tr->tr_num_buf_new || tr->tr_num_databuf_new) {
+>  		gfs2_assert_withdraw(sdp, test_bit(TR_ALLOCED, &tr->tr_flags));
+>  		sdp->sd_log_tr = tr;
+> -- 
+> 2.25.1
 
-x86/efi: Add GHCB mappings when SEV-ES is active
+In Debian two user confirmed issues on writing on a GFS2 partition
+with this commit applied. The initial Debian report is at
+https://bugs.debian.org/968567 and Daniel Craig reported it into
+Bugzilla at https://bugzilla.kernel.org/show_bug.cgi?id=209217 .
 
-Calling down to EFI runtime services can result in the firmware
-performing VMGEXIT calls. The firmware is likely to use the GHCB of the
-OS (e.g., for setting EFI variables), so each GHCB in the system needs
-to be identity-mapped in the EFI page tables, as unencrypted, to avoid
-page faults.
+Writing to a gfs2 filesystem fails and results in a soft lookup of the
+machine for kernels with that commit applied. I cannot reporduce the
+issue myself due not having a respective setup available, but Daniel
+described a minimal serieos of steps to reproduce the issue.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Moved GHCB mapping loop to sev-es.c ]
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lkml.kernel.org/r/20200907131613.12703-72-joro@8bytes.org
----
- arch/x86/boot/compressed/sev-es.c |  1 +-
- arch/x86/include/asm/sev-es.h     |  2 ++-
- arch/x86/kernel/sev-es.c          | 30 ++++++++++++++++++++++++++++++-
- arch/x86/platform/efi/efi_64.c    | 10 ++++++++++-
- 4 files changed, 43 insertions(+)
+This might affect as well other stable series where this commit was
+applied, as there was a similar report for someone running 5.4.58 in
+https://www.redhat.com/archives/linux-cluster/2020-August/msg00000.html
+.
 
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 5f15e58..2a6c7c3 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -12,6 +12,7 @@
-  */
- #include "misc.h"
- 
-+#include <asm/pgtable_types.h>
- #include <asm/sev-es.h>
- #include <asm/trapnr.h>
- #include <asm/trap_pf.h>
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index e919f09..cf1d957 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -102,11 +102,13 @@ static __always_inline void sev_es_nmi_complete(void)
- 	if (static_branch_unlikely(&sev_es_enable_key))
- 		__sev_es_nmi_complete();
- }
-+extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
- static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
- static inline void sev_es_nmi_complete(void) { }
-+static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
- #endif
- 
- #endif
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index b6518e9..8cac9f8 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -491,6 +491,36 @@ int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
- 	return 0;
- }
- 
-+/*
-+ * This is needed by the OVMF UEFI firmware which will use whatever it finds in
-+ * the GHCB MSR as its GHCB to talk to the hypervisor. So make sure the per-cpu
-+ * runtime GHCBs used by the kernel are also mapped in the EFI page-table.
-+ */
-+int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
-+{
-+	struct sev_es_runtime_data *data;
-+	unsigned long address, pflags;
-+	int cpu;
-+	u64 pfn;
-+
-+	if (!sev_es_active())
-+		return 0;
-+
-+	pflags = _PAGE_NX | _PAGE_RW;
-+
-+	for_each_possible_cpu(cpu) {
-+		data = per_cpu(runtime_data, cpu);
-+
-+		address = __pa(&data->ghcb_page);
-+		pfn = address >> PAGE_SHIFT;
-+
-+		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
-+			return 1;
-+	}
-+
-+	return 0;
-+}
-+
- static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- {
- 	struct pt_regs *regs = ctxt->regs;
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 6af4da1..8f5759d 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -47,6 +47,7 @@
- #include <asm/realmode.h>
- #include <asm/time.h>
- #include <asm/pgalloc.h>
-+#include <asm/sev-es.h>
- 
- /*
-  * We allocate runtime services regions top-down, starting from -4G, i.e.
-@@ -230,6 +231,15 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 	}
- 
- 	/*
-+	 * When SEV-ES is active, the GHCB as set by the kernel will be used
-+	 * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
-+	 */
-+	if (sev_es_efi_map_ghcbs(pgd)) {
-+		pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
-+		return 1;
-+	}
-+
-+	/*
- 	 * When making calls to the firmware everything needs to be 1:1
- 	 * mapped and addressable with 32-bit pointers. Map the kernel
- 	 * text and allocate a new stack because we can't rely on the
+Regards,
+Salvatore
