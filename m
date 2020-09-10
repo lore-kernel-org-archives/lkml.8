@@ -2,97 +2,102 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2778CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF36C206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F734206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgIJVUb (ORCPT
+        id S1731141AbgIJOZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:20:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12068 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbgIJOZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:25:57 -0400
-IronPort-SDR: kPO62fZkwfzYhdSQ0dNB85ynMgaYXz1hKWvKIUWeMMTwx9POTo8nOVgLI0RQSyGTwtbEgBSg0Q
- +C5kzvq2/j3g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="146242409"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="146242409"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 07:18:19 -0700
-IronPort-SDR: u749v4INZv0nb2WLsGJ89vgi00gipbviohUiUYv71p9n1iqJxIzmd12RqNVm2/xYLH+N+9oTR0
- /7xoZh4vZj2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="334188036"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 07:18:17 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kGNOx-00Fhg9-3K; Thu, 10 Sep 2020 17:18:15 +0300
-Date:   Thu, 10 Sep 2020 17:18:15 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200910141815.GW1891694@smile.fi.intel.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
- <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
- <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
- <20200827224742.GA3714@sol>
- <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
- <20200829013532.GA5905@sol>
- <CAMpxmJWjPzueMeKopo7qFke05CEePVD4YGbUiN7b_STKoYt0ZQ@mail.gmail.com>
- <20200910140949.GV1891694@smile.fi.intel.com>
- <CAMpxmJVG+0ndrnNODv=niNtULBBtGJi+R7LKRh6R1Kex+ef_Cw@mail.gmail.com>
+        Thu, 10 Sep 2020 10:25:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56932 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730434AbgIJOK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:10:27 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 911E06F8FFDF841198DC;
+        Thu, 10 Sep 2020 22:09:57 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 22:09:48 +0800
+From:   Zheng Bin <zhengbin13@huawei.com>
+To:     <pkshih@realtek.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
+Subject: [PATCH -next 3/3] rtlwifi: rtl8723ae: fix comparison pointer to bool warning in phy.c
+Date:   Thu, 10 Sep 2020 22:16:42 +0800
+Message-ID: <20200910141642.127006-4-zhengbin13@huawei.com>
+X-Mailer: git-send-email 2.26.0.106.g9fadedd
+In-Reply-To: <20200910141642.127006-1-zhengbin13@huawei.com>
+References: <20200910141642.127006-1-zhengbin13@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJVG+0ndrnNODv=niNtULBBtGJi+R7LKRh6R1Kex+ef_Cw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 04:12:08PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Sep 10, 2020 at 4:09 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Sep 01, 2020 at 11:28:13AM +0200, Bartosz Golaszewski wrote:
-> > > On Sat, Aug 29, 2020 at 3:35 AM Kent Gibson <warthog618@gmail.com> wrote:
+Fixes coccicheck warning:
 
-...
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c:191:5-13: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c:205:5-13: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c:211:5-13: WARNING: Comparison to bool
+drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c:625:5-30: WARNING: Comparison to bool
 
-> > > I personally like v6 more. The code is more elegant and we've also
-> > > tried limiting GPIO chardev features before and now we're doing v2 so
-> > > let's not make the same mistake twice. :)
-> > >
-> > > I'll try to review v6 in detail later today.
-> >
-> > Let me briefly review to this. Can you remind which patch has a top level
-> > description of what features are provided in comparison to uAPI v1?
-> > (Btw, do we have some kind of comparison table?)
-> 
-> We are now at v8 for this series. The cover letter contains a lot of
-> info and patch 4/20 defining the uAPI header explains v2 even more. I
-> think these are the most important parts. Any implementation details
-> can be fixed later as opposed to the API itself.
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Right, thanks for pointers!
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
+index 5ba645bc46dc..fa0eed434d4f 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
+@@ -188,7 +188,7 @@ static bool _rtl8723e_phy_bb8192c_config_parafile(struct ieee80211_hw *hw)
+ 	rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE, "\n");
+ 	rtstatus = _rtl8723e_phy_config_bb_with_headerfile(hw,
+ 						BASEBAND_CONFIG_PHY_REG);
+-	if (rtstatus != true) {
++	if (!rtstatus) {
+ 		pr_err("Write BB Reg Fail!!\n");
+ 		return false;
+ 	}
+@@ -202,13 +202,13 @@ static bool _rtl8723e_phy_bb8192c_config_parafile(struct ieee80211_hw *hw)
+ 		rtstatus = _rtl8723e_phy_config_bb_with_pgheaderfile(hw,
+ 					BASEBAND_CONFIG_PHY_REG);
+ 	}
+-	if (rtstatus != true) {
++	if (!rtstatus) {
+ 		pr_err("BB_PG Reg Fail!!\n");
+ 		return false;
+ 	}
+ 	rtstatus =
+ 	  _rtl8723e_phy_config_bb_with_headerfile(hw, BASEBAND_CONFIG_AGC_TAB);
+-	if (rtstatus != true) {
++	if (!rtstatus) {
+ 		pr_err("AGC Table Fail\n");
+ 		return false;
+ 	}
+@@ -622,7 +622,7 @@ void rtl8723e_phy_set_txpower_level(struct ieee80211_hw *hw, u8 channel)
+ 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
+ 	u8 cckpowerlevel[2], ofdmpowerlevel[2];
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+-	if (rtlefuse->txpwr_fromeprom == false)
++	if (!rtlefuse->txpwr_fromeprom)
+ 		return;
+ 	_rtl8723e_get_txpower_index(hw, channel,
+ 				    &cckpowerlevel[0], &ofdmpowerlevel[0]);
+--
+2.26.0.106.g9fadedd
 
