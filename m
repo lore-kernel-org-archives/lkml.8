@@ -2,90 +2,90 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F18C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9607C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA4D32078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:23:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="fjv+fthr"
+	by mail.kernel.org (Postfix) with ESMTP id 78A4020829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599733486;
+	bh=QtVsdijgAZcdE3kTpy6dLQb5cyC+X4NHcdeK4YFG4O4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GR09S+y4OAraX84GkhNx0kVa1mjFkonw1I0RElDWMiMhQBaHrHdV6R73Fs0gKsRae
+	 8lBypgCzktZQfLE9TmM5VNcLXlR4Pk0brgHfwN6i/iVPNIAXRolow6gW6kjpVtQxtY
+	 c7Sap3V0gJfEqdp2gotQXBPoFWMq+KFLsL98IzZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgIJKXx (ORCPT
+        id S1725876AbgIJKYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:23:53 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:36801 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725887AbgIJKXp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:23:45 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id GJjykZHBFPTBMGJjzkQoiT; Thu, 10 Sep 2020 12:23:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1599733424; bh=CbVywzRhTwESwTLncavT0QOmGghx5xoDHScuLakxdAg=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=fjv+fthr0z+fWLqk/saFqMJwPludDCUjwvWTedb3L16Vu7PX/MPccgt/B1gRDrYAc
-         7sHQpHtccd2GVqK7zMn+/BqzcFfxn9UJXYMPuVRN4yvdduRagU4JAsoBniY1R53EpJ
-         rp1vi4KyH2+aCuyR231CfVuCQBmS0Z82CcMQH1+moG6PNCov8NIy8UYFa+m8vBDKEn
-         TWJCqaKDoRFnCtgCXlvHb3mrJENaS/f2ta8gUb7iTwyqKFFS5gJatsxCBHlgyfSrb9
-         BvJE7dElT+3ymi5Li6x50pzYUyb8CNPu86lO6pfpyMlTfqr1fuMTa2UwQnWr+poCBk
-         mvS+xMaDkuTPw==
-Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-References: <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de>
- <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
- <20200820165407.GD12693@lst.de>
- <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
- <20200901110617.GA13232@lst.de>
- <CAAFQd5CmPVSxmZJVn7HnNUn8srZbAbnfzpNMYw3KcDzn7xD2cg@mail.gmail.com>
- <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
- <20200910094921.GB97481@google.com>
- <f92991e1-e0d7-69ca-9541-1546bb139dd3@xs4all.nl>
- <20200910101431.GC97481@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <257cbc46-84a0-e7bc-10c8-d08d3e395d1a@xs4all.nl>
-Date:   Thu, 10 Sep 2020 12:23:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 06:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726431AbgIJKYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:24:11 -0400
+Received: from mail.kernel.org (ip5f5ad5ac.dynamic.kabel-deutschland.de [95.90.213.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D8F20829;
+        Thu, 10 Sep 2020 10:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599733450;
+        bh=QtVsdijgAZcdE3kTpy6dLQb5cyC+X4NHcdeK4YFG4O4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g+wU7E/AN96tOHkRolHBhZjrIyh32gSQUFJa6pO/LLulx3Q4rvQFVEPmHCt0yawHc
+         nxAD284+r28N011/UJrdqS2R4bgXcYwJRMKWFEhWMrgKO87q7FA+xMcFx8DBzxuxE2
+         VUuim/q6fla8DB1md78s2JaWLiiq+IAua+pAS8mI=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kGJkO-00EINn-Dz; Thu, 10 Sep 2020 12:24:08 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 05/14] iio: docs: add description for a new function member
+Date:   Thu, 10 Sep 2020 12:23:58 +0200
+Message-Id: <8e84ebcc9ba1e0f4faae4cc2edee9c9d71270da8.1599732764.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599732764.git.mchehab+huawei@kernel.org>
+References: <cover.1599732764.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200910101431.GC97481@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfM7Ra6p3Jyqxv7W+xDLc98yw+tw+AKF0Qg3MBVGA02lxjo8bqeX7Y1NPjnYUaGU9upiJzdO826cgl4PvvnMIUKVtLQiDd866YY7q9MgVBDf8+sKXAo1s
- z+2eEOq+MyS7yuIyi0/qyS80/opBYJ0a2uI1dLzO64eoJz6esZGvy6gu211Iorh9ZfKD5PAEhy0tThW6KqrbFkqWVaBCdvLZP6x7ucTXHxWdtOCYzUwkwKDf
- eGn01eSzcuexKRT7nn3qPlx0B+KA2sOH/byVi0F0gksIF7vymgMEQcmJL1uMwawAJzXXkfxCrmUXLwVNyTxPw0t8JmgX2irAh/Kxw5gKhOFPIF5ScNWknWuQ
- Rl5buj+2dHw8XSpz8cThaDz6qsEhVjlpjhUITPWdIEhsnIGbJsSozMTVCxgubXKQPtOAO2hOSHQkTB+U9FHXe8RfzkjEwLlOz20I9kjcrXmpHelWbOXI0aNA
- zl4Na7QiXUMn+zEF
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/09/2020 12:14, Sergey Senozhatsky wrote:
-> On (20/09/10 11:57), Hans Verkuil wrote:
->>
->> Perhaps, but this patch is meant to revert *all* changes relating to
->> V4L2_FLAG_MEMORY_NON_CONSISTENT. We don't want to have unused fields
->> in the public API.
-> 
-> OK, would you prefer a squashed patch for all the kernel rollbacks and
-> cleanups or a patch series?
+Changeset 78289b4a58b5 ("iio: core: pass parent device as parameter during allocation")
+added a new parameter to the allocation function, but didn't
+add the corresponding kernel-doc markup, as reported:
+	./drivers/iio/industrialio-core.c:1531: warning: Function parameter or member 'parent' not described in 'iio_device_alloc'
 
-My preference is a single patch.
+Copy the parameter description for the devm_ variant.
 
-Regards,
+Fixes: 78289b4a58b5 ("iio: core: pass parent device as parameter during allocation")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/iio/industrialio-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	Hans
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index b05ff9154310..f60e7bda7f38 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1524,6 +1524,8 @@ struct device_type iio_device_type = {
+ 
+ /**
+  * iio_device_alloc() - allocate an iio_dev from a driver
++ * @parent:		Device to allocate iio_dev for, and parent for
++ *			this IIO device
+  * @sizeof_priv:	Space to allocate for private structure.
+  **/
+ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+-- 
+2.26.2
+
