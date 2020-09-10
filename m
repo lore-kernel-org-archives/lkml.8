@@ -2,86 +2,132 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA72C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67393C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DB620C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1332120C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:52:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rW+wPK6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgIJLwN (ORCPT
+        id S1730431AbgIJLwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:52:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11766 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727787AbgIJLvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:51:22 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A926BB0100AB96D96DFD;
-        Thu, 10 Sep 2020 19:32:01 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 10 Sep 2020 19:31:53 +0800
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <tdas@codeaurora.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <jingxiangfeng@huawei.com>
-Subject: [PATCH v2] clk: qcom: lpass: Correct goto target in lpass_core_sc7180_probe()
-Date:   Thu, 10 Sep 2020 19:32:43 +0800
-Message-ID: <20200910113243.46036-1-jingxiangfeng@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Sep 2020 07:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729455AbgIJLsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:48:55 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A6FC0617A0;
+        Thu, 10 Sep 2020 04:35:11 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j34so4088504pgi.7;
+        Thu, 10 Sep 2020 04:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OAIIi6uo3XgXFJ7QsLwLusqGAN4H6rcenY71bNI/1l8=;
+        b=rW+wPK6uNUbrUcprGE+bQuCpqDWnZ0VJbYkiOw/LceoiimtmO+K5zGaJ8VH0fntmp+
+         60B98AoB2KqakAI4TCQ0uZ4WWLuPJehYgr5Srs+vOTsO7s8hRxHwTPM9ARbWajgphq2B
+         eWF9fHapKu16Jsi6TEfaoFS4dpvFBS9QK41CJGk+o7RlAABDvo/dM9b4B650BS9FLS4p
+         yMJaz5yYQL0WEuCDL8GAudTrpDIShQA3TuQLtjqRDVN0d9IrSXJcdxiN51NAOtaJEQnw
+         oxKzVKa1VyeWniKn9nW3b/8r4kUc1kNt9Z6dWm93DAtQAozF65v8SL+LPP/lanfG6nC1
+         uJPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OAIIi6uo3XgXFJ7QsLwLusqGAN4H6rcenY71bNI/1l8=;
+        b=AVRtOUlyEtkWC05Ly0x2EA/ZMpiF9mfyFgBbhgy6OabeH/qYVZS46eBG2J9AC5inPk
+         x79tqJKgL/bl8QfbN7+XB/nLXQ/a8bRsDlU3bn+1cS+Whr+Y948kquUtpW2PieL/TMkL
+         /q+A9RvrXJ8tmhxdoqZOMnHKaAFhPx9rXSYIio3FrgyR143GSML4x3CJdz1/dbCE0y2u
+         3YTa5+6TemGf88r1/7E7aMQqYkXz/DGPsE/TLt3bZxFeXWje+HsDWWAm1/dKWCvjpSr5
+         e8gd1EWNSt9a3ETSCw3Tkb8HtTPOBN7f1NbnYsXCdO4EfuyUC4PoCnhCkSVUZsP/Hqop
+         Hxeg==
+X-Gm-Message-State: AOAM531VgFbtO40dx9PjEYnrxLbOd9r8Uurn+XvPBkfWbfluZqRVkIaq
+        SvN1I7on697jT5TALTrHfacCfqwGMR1vM2zdA7o=
+X-Google-Smtp-Source: ABdhPJyA7xJQIZk5VHdsH5jeJ1GijVp07O14SJTxho9owohQ9HM6j6M0zAQbtOSB3XzQ6HyGQ+uJhc1FwEQ8T7FSZbs=
+X-Received: by 2002:a63:ec4c:: with SMTP id r12mr4042041pgj.74.1599737711469;
+ Thu, 10 Sep 2020 04:35:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
+ <CAHp75VdLDvoQicP1nLnjOiit6qjaw9n7+LuJ-J3MtaoHUOa_2g@mail.gmail.com>
+ <CAE+NS35FETQ9ASJeYP=Sa8dm7ohRBcdAwUioCAnHPY2TiD4pNA@mail.gmail.com> <20200910081814.GB28357@amd>
+In-Reply-To: <20200910081814.GB28357@amd>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 10 Sep 2020 14:34:54 +0300
+Message-ID: <CAHp75Vds75jP47Fy78gxrg05J-CYQ7yD_EiDqizKkcW5rHL_RA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Gene Chen <gene.chen.richtek@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lpass_core_sc7180_probe() misses to call pm_clk_destroy() and
-pm_runtime_disable() in error paths. Correct goto target to fix it.
-This issue is found by code inspection.
+On Thu, Sep 10, 2020 at 11:18 AM Pavel Machek <pavel@ucw.cz> wrote:
 
-Fixes: edab812d802d ("clk: qcom: lpass: Add support for LPASS clock controller for SC7180")
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
----
- drivers/clk/qcom/lpasscorecc-sc7180.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+...
 
-diff --git a/drivers/clk/qcom/lpasscorecc-sc7180.c b/drivers/clk/qcom/lpasscorecc-sc7180.c
-index d4c1864e1ee9..228d08f5d26f 100644
---- a/drivers/clk/qcom/lpasscorecc-sc7180.c
-+++ b/drivers/clk/qcom/lpasscorecc-sc7180.c
-@@ -420,17 +420,18 @@ static int lpass_core_sc7180_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
- 	ret = pm_clk_create(&pdev->dev);
- 	if (ret)
--		return ret;
-+		goto disable_pm_runtime;
- 
- 	ret = pm_clk_add(&pdev->dev, "iface");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to acquire iface clock\n");
--		goto disable_pm_runtime;
-+		goto destroy_pm_clk;
- 	}
- 
-+	ret = -EINVAL;
- 	clk_probe = of_device_get_match_data(&pdev->dev);
- 	if (!clk_probe)
--		return -EINVAL;
-+		goto destroy_pm_clk;
- 
- 	ret = clk_probe(pdev);
- 	if (ret)
+> > > > +enum {
+> > > > +       MT6360_LED_ISNK1 = 0,
+> > > > +       MT6360_LED_ISNK2,
+> > > > +       MT6360_LED_ISNK3,
+> > > > +       MT6360_LED_ISNK4,
+> > > > +       MT6360_LED_FLASH1,
+> > > > +       MT6360_LED_FLASH2,
+> > >
+> > > > +       MT6360_MAX_LEDS,
+> > >
+> > > No comma for terminator entry.
+> > >
+> >
+> > ACK
+>
+> Actually, that comma is fine. Its absence would be fine, too.
+
+It is slightly better not to have to prevent (theoretical) rebase or
+other similar issues when a new item can go behind the terminator. In
+such a case compiler can easily tell you if something is wrong.
+
+> > > > +};
+
+...
+
+> > > > +static const struct of_device_id __maybe_unused mt6360_led_of_id[] = {
+> > > > +       { .compatible = "mediatek,mt6360-led", },
+> > >
+> > > > +       {},
+> > >
+> > > No need comma.
+> >
+> > ACK
+>
+> It is also no hurting comma.
+
+Same explanation. It doesn't hurt per se, but its absence might serve a purpose.
+
 -- 
-2.26.0.106.g9fadedd
-
+With Best Regards,
+Andy Shevchenko
