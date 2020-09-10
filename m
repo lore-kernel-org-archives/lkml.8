@@ -2,103 +2,113 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B659C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDACC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC31207EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599716357;
-	bh=slfoOlP+1JHzp7xwsOBZsLfX5EPh3tunDJ+Rr1YF7OY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uFx21W7rCtfshlNW+hiB4OX1v7kUsM/84tz6qsMgxpbd8GeCfQteD2JI+nYoGfyQ7
-	 tFiP/QzFz472EDVt37qe6ioCikDXRa5H+hRSw9smyuoMT9PPjpUaDuzQ5tY6HGh8hT
-	 PwnA+mjghgnJl5NSx3RbCTbs2I0QV91rh+J29zxU=
+	by mail.kernel.org (Postfix) with ESMTP id 7655620731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 05:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kah51+Sh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgIJFjO (ORCPT
+        id S1726663AbgIJFlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 01:39:14 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35023 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgIJFjL (ORCPT
+        Thu, 10 Sep 2020 01:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgIJFkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 01:39:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y15so4483853wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 22:39:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h28yCpMqjTx42+9sKkj9v/1Q8KRAf6Z0CfZQB2q4PMg=;
-        b=qJP50gAOAWcTP3fCegsYOF0UtyZm8z6WSibih4iELyJ144MXwA3XOFO7hKKhsKK/vz
-         42Er752P4TgscNDbOfEITAJV+RHYcPpMCivt7IiN4dcaVFqincaob/qgi/YY305BDdSX
-         grDpKhHTbNlmETNuFIqKb5H2c7VMIXTN1peQJPkf0fs0tDLjbsEWRzSfzzlJSKJPZoFq
-         HdtDOMYDyB1dvN5l4eGqxK4p3ZAmHHNhZkVOrQROkMcu9jI2GxOYdDMVNB52m449Xiha
-         EYWU3d1gAfXq6ZmeCip/NUvbHNug24XvadolkUaaklbkPgPO7j3pRxF8y8hbKSvqNOzF
-         y8wQ==
-X-Gm-Message-State: AOAM5334pLTSBo/PWRQ/qliyOP8fLFmZ0bCJ4ViHgK900/Wz9tw0Q5En
-        TGRRzKais4FKIzzuA/kvQHaQe0+pQ3JSp/7sYMg=
-X-Google-Smtp-Source: ABdhPJyHxzM3qxhNqiwQaWSQKJMbTXpBMcGbCcgNgoIrQkYc5eFAhWJrFN8cAFSpiVXJ9xvf84qvPQ4RXiOxgP7NBHo=
-X-Received: by 2002:a05:600c:4142:: with SMTP id h2mr6587414wmm.128.1599716349451;
- Wed, 09 Sep 2020 22:39:09 -0700 (PDT)
+        Thu, 10 Sep 2020 01:40:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4389C061756;
+        Wed,  9 Sep 2020 22:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=jUBa0iu1eX5jIcAMx7CVSwzh+xe4DajZ3p568CeYFVQ=; b=kah51+ShOTTV+Jr+aRlgd0UmMs
+        NcPtLrFn4E7MudK1Si/fT7/TqxK5SWVfKBVWRLJ8+JXu/KdY+ku4LFycLe+BAZegN1VB+rAFo76U3
+        S177eVeSuDFVbkgbXgW0Sqyz3T3mkIm7NOn80nM5T/BGthD1RASCpvExnNdOBjrnYuw6+AB/Sa2Q+
+        ckdaHE+5oXGeq3oExrsn4dz+C7/TGleVTseKtHQJPCdiCPjhMrCwXAfn7da2bLCiIDf0F7/L+sWzn
+        +4HLw8QEwdsFmUsWlbEg59eM7RHmgcuGNXffoy8tU/lFefCjWvyaTfcdBvtznJphl6AMvKHV8R+WY
+        hRZEQN4w==;
+Received: from [2001:4bb8:184:af1:d8d0:3027:a666:4c4e] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGFK5-0001tZ-IQ; Thu, 10 Sep 2020 05:40:42 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org,
+        Russell King <linux@armlinux.org.uk>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH 2/3] ARM/keystone: move the DMA offset handling under ifdef CONFIG_ARM_LPAE
+Date:   Thu, 10 Sep 2020 07:40:37 +0200
+Message-Id: <20200910054038.324517-3-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910054038.324517-1-hch@lst.de>
+References: <20200910054038.324517-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200910032632.511566-1-irogers@google.com> <20200910032632.511566-2-irogers@google.com>
-In-Reply-To: <20200910032632.511566-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 10 Sep 2020 14:38:58 +0900
-Message-ID: <CAM9d7cjiL92Y8pCurXUpVznDUYZ8F2N0H-fSW4sPi8=M3gGSfQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf metricgroup: Fix typo in comment.
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:26 PM Ian Rogers <irogers@google.com> wrote:
->
-> Add missing character.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+The DMA offset notifier can only be used if PHYS_OFFSET is at least
+KEYSTONE_HIGH_PHYS_START, which can't be represented by a 32-bit
+phys_addr_t.  Currently the code compiles fine despite that, a pending
+change to the DMA offset handling would create a compiler warning for
+this case.  Add an ifdef to not compile the code except for LPAE
+configs.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm/mach-keystone/keystone.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks
-Namhyung
+diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+index 638808c4e12247..dcd031ba84c2e0 100644
+--- a/arch/arm/mach-keystone/keystone.c
++++ b/arch/arm/mach-keystone/keystone.c
+@@ -24,6 +24,7 @@
+ 
+ #include "keystone.h"
+ 
++#ifdef CONFIG_ARM_LPAE
+ static unsigned long keystone_dma_pfn_offset __read_mostly;
+ 
+ static int keystone_platform_notifier(struct notifier_block *nb,
+@@ -48,14 +49,17 @@ static int keystone_platform_notifier(struct notifier_block *nb,
+ static struct notifier_block platform_nb = {
+ 	.notifier_call = keystone_platform_notifier,
+ };
++#endif /* CONFIG_ARM_LPAE */
+ 
+ static void __init keystone_init(void)
+ {
++#ifdef CONFIG_ARM_LPAE
+ 	if (PHYS_OFFSET >= KEYSTONE_HIGH_PHYS_START) {
+ 		keystone_dma_pfn_offset = PFN_DOWN(KEYSTONE_HIGH_PHYS_START -
+ 						   KEYSTONE_LOW_PHYS_START);
+ 		bus_register_notifier(&platform_bus_type, &platform_nb);
+ 	}
++#endif
+ 	keystone_pm_runtime_init();
+ }
+ 
+-- 
+2.28.0
 
-> ---
->  tools/perf/util/metricgroup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 8831b964288f..662f4e8777d5 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -150,7 +150,7 @@ static void expr_ids__exit(struct expr_ids *ids)
->  }
->
->  /**
-> - * Find a group of events in perf_evlist that correpond to those from a parsed
-> + * Find a group of events in perf_evlist that correspond to those from a parsed
->   * metric expression. Note, as find_evsel_group is called in the same order as
->   * perf_evlist was constructed, metric_no_merge doesn't need to test for
->   * underfilling a group.
-> --
-> 2.28.0.526.ge36021eeef-goog
->
