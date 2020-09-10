@@ -2,155 +2,186 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F00DC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACBDC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D840A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599775197;
-	bh=HTszp/ytn0CEGJpXVag3BgkL2GSz7yzU9v7ODyQefvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0/CREFwuqCtjR6nYshaQh7/89RhupDd8TfGZKdck543UMo0AUpBLLp62WJziioRnp
-	 glOoj3DThUT3GekkxwoBekRb4r05WuCcv+OPi18DCNpSv2zprtLeEpB6faQs3tUc+8
-	 pKGarcBb6zHa3SrJ6Vq3oe0qsrC1A9TMs3G2DBc4=
+	by mail.kernel.org (Postfix) with ESMTP id C680B20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 22:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOUmCKMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgIJV74 (ORCPT
+        id S1725921AbgIJWAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:59:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35845 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730636AbgIJLKY (ORCPT
+        Thu, 10 Sep 2020 18:00:06 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33690 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730353AbgIJKr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:10:24 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so7650738ljm.3;
-        Thu, 10 Sep 2020 04:10:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=khsISv6KrMDMd3j57rJbO3CE20Pfs/l3bC/RR73dbF4=;
-        b=YcLdyUsHp/qQnTy5Xw0TQwgBcNeDgwAlOYNJ8SwNmKzSha5n8+lFdk6T/Lz6DGWM7I
-         E/OsKLldIY4iEMpfnPnHnH53F50ryBUHMrE2sQE1Aan5oKF+YnOuHOMkoTS8xfN3OKUQ
-         GUph7HfsQ2+xsBjVS5kH/dVzeQNekilVfpuiQGP07BQjt3CP3bJxvI1kP5bIdIosmvoF
-         sk25YVnKGQkEi0W7BwFC+XhJ8+0yDA1TBo1IDfxd5zwKlq0PWB8SieaekHbgnThr7ViC
-         EsM2kOMcsgoUiLMoxN37NCTj2+uMCyy7Za8EkkUwtJErixfa28WxpfamBrixFIezqSLf
-         ahMw==
-X-Gm-Message-State: AOAM532KB5A5NSjo3uKbpydEMvFPCkI0GzWW3BoncNY7xQWC7CNUkS+y
-        F1zakHXHBQrp2Q4fCP1Wiew=
-X-Google-Smtp-Source: ABdhPJxE2eVsfsgDJpsGn8d/K4cY6mYTZqt67kV/mH7Rg97qgCPm6khS6FyHNSOfUaFmKUJ/C0/beA==
-X-Received: by 2002:a05:651c:319:: with SMTP id a25mr4059203ljp.281.1599736219850;
-        Thu, 10 Sep 2020 04:10:19 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id k14sm1280483lfm.90.2020.09.10.04.10.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 04:10:19 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1kGKT1-0006qV-S1; Thu, 10 Sep 2020 13:10:15 +0200
-Date:   Thu, 10 Sep 2020 13:10:15 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Johan Hovold <johan@kernel.org>, Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 2/2] serial: core: fix console port-lock regression
-Message-ID: <20200910111015.GE24441@localhost>
-References: <20200909143101.15389-1-johan@kernel.org>
- <20200909143101.15389-3-johan@kernel.org>
- <20200909154815.GD1891694@smile.fi.intel.com>
- <20200910073527.GC24441@localhost>
- <20200910092715.GM1891694@smile.fi.intel.com>
+        Thu, 10 Sep 2020 06:47:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599734876;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=Gj1W0VV+KwP/vrX80XQEgb3zlQTE91ZIA027vNpvJNc=;
+        b=UOUmCKMzVPfDBp8UwfaFbPUirA2HCkuj+orenwaf7Zm3SyC0lgBfGB6TzMOODsiJsf6Q7I
+        durgf3fJmmo5ieciCZDvaRNY6tR/i84DJh6f1T3W0TMYVvmmvL0QuqF6roHAc1DytB5h1C
+        LfRsfTyFm7Wk/tSfNrgh7yLYsKhTnv0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-SKvjvWmcP4ybG0tBA4OYaQ-1; Thu, 10 Sep 2020 06:47:54 -0400
+X-MC-Unique: SKvjvWmcP4ybG0tBA4OYaQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D0E118B9ED7;
+        Thu, 10 Sep 2020 10:47:52 +0000 (UTC)
+Received: from [10.36.113.88] (ovpn-113-88.ams2.redhat.com [10.36.113.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE9065D9E8;
+        Thu, 10 Sep 2020 10:47:49 +0000 (UTC)
+Subject: Re: [RFC 1/5] mm, page_alloc: clean up pageset high and batch update
+To:     Oscar Salvador <osalvador@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200907163628.26495-1-vbabka@suse.cz>
+ <20200907163628.26495-2-vbabka@suse.cz> <20200910083116.GA2285@linux>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <9aefa9e1-a7d1-de4b-b41c-42bb462661b2@redhat.com>
+Date:   Thu, 10 Sep 2020 12:47:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910092715.GM1891694@smile.fi.intel.com>
+In-Reply-To: <20200910083116.GA2285@linux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:27:15PM +0300, Andy Shevchenko wrote:
-> +Cc: Tony, let me add Tony to the discussion.
+On 10.09.20 10:31, Oscar Salvador wrote:
+> On Mon, Sep 07, 2020 at 06:36:24PM +0200, Vlastimil Babka wrote:
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > 
-> On Thu, Sep 10, 2020 at 09:35:27AM +0200, Johan Hovold wrote:
-> > On Wed, Sep 09, 2020 at 06:48:15PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Sep 09, 2020 at 04:31:01PM +0200, Johan Hovold wrote:
-> > > > Fix the port-lock initialisation regression introduced by commit
-> > > > a3cb39d258ef ("serial: core: Allow detach and attach serial device for
-> > > > console") by making sure that the lock is again initialised during
-> > > > console setup.
-> > > > 
-> > > > The console may be registered before the serial controller has been
-> > > > probed in which case the port lock needs to be initialised during
-> > > > console setup by a call to uart_set_options(). The console-detach
-> > > > changes introduced a regression in several drivers by effectively
-> > > > removing that initialisation by not initialising the lock when the port
-> > > > is used as a console (which is always the case during console setup).
-> > > > 
-> > > > Add back the early lock initialisation and instead use a new
-> > > > console-reinit flag to handle the case where a console is being
-> > > > re-attached through sysfs.
-> > > > 
-> > > > The question whether the console-detach interface should have been added
-> > > > in the first place is left for another discussion.
-> > > 
-> > > It was discussed in [1]. TL;DR: OMAP would like to keep runtime PM available
-> > > for UART while at the same time we disable it for kernel consoles in
-> > > bedb404e91bb.
-> > > 
-> > > [1]: https://lists.openwall.net/linux-kernel/2018/09/29/65
-> > 
-> > Yeah, I remember that. My fear is just that the new interface opens up a
-> > can of worms as it removes the earlier assumption that the console would
-> > essentially never be deregistered without really fixing all those
-> > drivers, and core functions, written under that assumption. Just to
-> > mention a few issues; we have drivers enabling clocks and other
-> > resources during console setup which can now be done repeatedly,
+>>  	for_each_possible_cpu(cpu)
+>> -		setup_pageset(&per_cpu(boot_pageset, cpu), 0);
+>> +		setup_pageset(&per_cpu(boot_pageset, cpu));
 > 
-> The series introduced the console ->exit() callback, so it should be
-> easy to fix.
-
-I'm not saying it's necessarily hard, I'm suggesting it should have been
-considered before merging. But there could still be complications as the
-console have always been considered a special case that's been hacked
-around.
-
-> >	and
-> > several drivers whose setup callbacks are marked __init and will oops
-> > the minute you reattach the console.
+> This is not really anything important but I realized we have like 7 functions
+> messing with pcp lists, and everytime I try to follow them my head spins.
 > 
-> I believe this can be fixed relatively easy. As a last resort it can
-> be a quirk that disables console detachment for problematic consoles.
+> Since setup_pageset is only being called here, could we replace it by the
+> pageset_init and pageset_update?
 
-Sure, but just removing the __init without vetting the drivers and
-testing the new interface may not be much better than letting them oops.
+Had the same thought, so +1.
 
-> > And what about power management
-> > which was the reason for wanting this on OMAP in the first place; tty
-> > core never calls shutdown() for a console port, not even when it's been
-> > detached using the new interface.
+>> -/*
+>> - * pageset_set_high() sets the high water mark for hot per_cpu_pagelist
+>> - * to the value high for the pageset p.
+>> - */
+>> -static void pageset_set_high(struct per_cpu_pageset *p,
+>> -				unsigned long high)
+>> -{
+>> -	unsigned long batch = max(1UL, high / 4);
+>> -	if ((high / 4) > (PAGE_SHIFT * 8))
+>> -		batch = PAGE_SHIFT * 8;
+>> -
+>> -	pageset_update(&p->pcp, high, batch);
+>> +	pageset_update(&p->pcp, 0, 1);
+>>  }
 > 
-> That is interesting... Tony, do we have OMAP case working because of luck?
+> Could we restore the comment we had in pageset_set_high, and maybe
+> update it to match this new function? I think it would be useful.
+
+At least I didn't really understand what "pageset_set_high() sets the
+high water mark for hot per_cpu_pagelist to the value high for the
+pageset p." was trying to tell me.
+
+I think the only valuable information is the "hot", meaning it is in use
+and we have to be careful when updating, right?
+
+>>  
+>>  static void pageset_set_high_and_batch(struct zone *zone,
+>> -				       struct per_cpu_pageset *pcp)
+>> +				       struct per_cpu_pageset *p)
+>>  {
+>> -	if (percpu_pagelist_fraction)
+>> -		pageset_set_high(pcp,
+>> -			(zone_managed_pages(zone) /
+>> -				percpu_pagelist_fraction));
+>> -	else
+>> -		pageset_set_batch(pcp, zone_batchsize(zone));
+>> +	unsigned long new_high;
+>> +	unsigned long new_batch;
+>> +	int fraction = READ_ONCE(percpu_pagelist_fraction);
 > 
-> > I know, the console setup is all a mess, but this still seems a little
-> > rushed to me. I'm even inclined to suggest a revert until the above and
-> > similar issues have been addressed properly rather keeping a known buggy
-> > interface.
-> 
-> You know that it will be a dead end. Any solution how to move forward?
+> Why the READ_ONCE? In case there is a parallel update so things to get
+> messed up?
 
-I guess that depends on how broken this is. I only gave a few examples
-of the top of my head of issues that needs to be considered. 
+Agreed, this is an actual change in the code. If this is a fix, separate
+patch?
 
-But if this is to stay then making the feature opt-in by only exposing
-the attribute for console drivers that implement the new exit() callback
-or some other serial-driver flag might work.
+Apart from that, looks much better to me!
 
-Johan
+-- 
+Thanks,
+
+David / dhildenb
+
