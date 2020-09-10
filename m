@@ -2,68 +2,103 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D3AC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B804AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C457207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703B5207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599718712;
+	bh=Yb+E0PRlu6XWp+SFCdFVy2QdpRJHcT0DRIae7I/j2nU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TAAan+OLnkuNEu4B5q0CIaLFeISQue9F7rwdgsiAWxjyuyDA+cIzFo8XNjqQdSXx1
+	 szzM5pib33M1MMLATQ5TnFieFbbuc0lCrpQy8zGxKzDaM6qfWOne2t/t02rInResqR
+	 JRECZsdNjXnDSdkgRRyw3scqdk4UKzoRleggpSo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgIJGSS (ORCPT
+        id S1726792AbgIJGS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:18:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51024 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725971AbgIJGSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:18:12 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DA7628AD70B6634F38B;
-        Thu, 10 Sep 2020 14:18:08 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
- 14:17:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <mchehab+huawei@kernel.org>, <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] staging: regulator: hi6421v600-regulator: Remove unused including <linux/version.h>
-Date:   Thu, 10 Sep 2020 14:17:56 +0800
-Message-ID: <20200910061756.40864-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 10 Sep 2020 02:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727087AbgIJGSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 02:18:17 -0400
+Received: from localhost (p5486ceec.dip0.t-ipconnect.de [84.134.206.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E2F207DE;
+        Thu, 10 Sep 2020 06:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599718696;
+        bh=Yb+E0PRlu6XWp+SFCdFVy2QdpRJHcT0DRIae7I/j2nU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ypEc5ZDDVu4Jqu+/NmndRj9tWWySD60+6jffn47aHxMEJQ34N4cl3EAvUrfCpZvm/
+         pSVMLC3N59ozyXKy2DtvxdSH5Tmk2sTbYbdpQI0DD2jLUmlvEBDXMMbyTPIjR2/lWU
+         Ctun7fviFDUDrBFo8iukZrJb68jtd1tlkbpDYrvk=
+Date:   Thu, 10 Sep 2020 08:18:13 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        dmitry.torokhov@gmail.com, joel@jms.id.au, andrew@aj.id.au,
+        benh@kernel.crashing.org, brendanhiggins@google.com,
+        rentao.bupt@gmail.com, ryan_chen@aspeedtech.com
+Subject: Re: [PATCH v3 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+Message-ID: <20200910061813.GB1031@ninjato>
+References: <20200909203059.23427-1-eajames@linux.ibm.com>
+ <20200909203059.23427-4-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
+Content-Disposition: inline
+In-Reply-To: <20200909203059.23427-4-eajames@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/hikey9xx/hi6421v600-regulator.c | 1 -
- 1 file changed, 1 deletion(-)
+--CdrF4e02JqNVZeln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/staging/hikey9xx/hi6421v600-regulator.c b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-index 82635ff54a74..614b03c9ddfb 100644
---- a/drivers/staging/hikey9xx/hi6421v600-regulator.c
-+++ b/drivers/staging/hikey9xx/hi6421v600-regulator.c
-@@ -36,7 +36,6 @@
- #include <linux/spmi.h>
- #include <linux/time.h>
- #include <linux/uaccess.h>
--#include <linux/version.h>
- 
- #define rdev_dbg(rdev, fmt, arg...)	\
- 		 pr_debug("%s: %s: " fmt, (rdev)->desc->name, __func__, ##arg)
--- 
-2.17.1
+On Wed, Sep 09, 2020 at 03:30:57PM -0500, Eddie James wrote:
+> Mask the IRQ status to only the bits that the driver checks. This
+> prevents excessive driver warnings when operating in slave mode
+> when additional bits are set that the driver doesn't handle.
+>=20
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
+
+I reconsidered and applied it now because this helps whenever slave mode
+is used. So, applied to for-current, thanks!
 
 
+--CdrF4e02JqNVZeln
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9ZxSUACgkQFA3kzBSg
+KbY4lA/7BPR/KKPe3DlbFxWjisVzVubyppY3DMDQn/HM5WbyLRuMQN0Szncjq0TS
+dQyx/bBDZSUtxRL7P+IXHPJW+4LdR/kkl9Cd5uruSnD5gy2wlgpUeNu7Ox7EoTJ4
+GQU76iXiCKwwLr+LXO3FUinO7CV3Q6Id1oItp0i0GaYnkN1BEU612x674yoC0TLg
+szWdRfum2fEFik2wH1OONrtQLiua7RxrOAQ8IrW9vuba0ArztdYiioupM/Sph2as
+PFnvXEZNZ4Lqag9Yu7RTZ69umjjsvQ0PCMGmyW6gPdXWUt+9erKFlCUpo2APnjHQ
+hLz+d1zY6VI57Xy7vM5eVaBXAADLf1p4EtviUHQK2YnBuKt7dvEQkkSzCowShcxS
+ykWscCRrAw2cMl6uXZATUQwV71XI8QOotXr0Do76FEuzlLTUWIxtfPsdvj4qVfW4
+HkgvnVnUgMINM2WPx910RAi5QxskMuzbqLEgSrSNapUa6xrev3y2cgEvkSe34+fE
+6tkdMMtFbXV7opN7JW9xj8iG04p/OzBKvXEG2g4rdZyLnwPziIOc88IexLB/dbej
+mAOQjBVwndmjroCqjeTB7G94KQe16y9nh0fHt24driD/txSzPjSAM2qWDhbJWbCE
+1M7fIH5V55rFJVtP8BhVGzzcpVzEaF4ATg4KG78srwnwxe9K0ho=
+=Eqed
+-----END PGP SIGNATURE-----
+
+--CdrF4e02JqNVZeln--
