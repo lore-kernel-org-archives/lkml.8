@@ -2,177 +2,108 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E98C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C87FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E52121D79
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E25E206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599755764;
+	bh=dzZnmnmW/OcULkwgSlJBXQmNt6Lts9wz/zHvPwNp9Eo=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
+	 Cc:Cc:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cs2XjM1fGG0xk8kc6tvoGuYFvt+ZkBbI8N0UJL8OWl3PxAgmgVk4p+6y6Qyq47Xmw
+	 7g3XqH0xPd1b9c+/+lZe6Sf5E+Bk3wpLXXKxlpnGnkkkPLAzk5Sgo7m4gateolFFoz
+	 ujY7+Z9LrnwPgx5PgNK5WFx6WlSRiam49CWXw73U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgIJQek (ORCPT
+        id S1726660AbgIJQf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:34:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26773 "EHLO mga07.intel.com"
+        Thu, 10 Sep 2020 12:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726966AbgIJQeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:34:01 -0400
-IronPort-SDR: ouUstQj+VuVgsiwEkqLXhO7yTqZyQDRuJmtqQgDsVhVeo9X3EC6Voywa/7pSRcM8c1G4LbscCF
- BRyIlbpVwBBg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="222775235"
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="222775235"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 09:33:43 -0700
-IronPort-SDR: q/E56XbZOgmdGC0LLjuxAu4XtgducAuZR1EhCilxQohyu2sQLCR5OF0aw7FZkJb/kEqbUCZz0X
- 7PmGbybfHnxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
-   d="scan'208";a="304935202"
-Received: from irsmsx601.ger.corp.intel.com ([163.33.146.7])
-  by orsmga006.jf.intel.com with ESMTP; 10 Sep 2020 09:33:41 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- irsmsx601.ger.corp.intel.com (163.33.146.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 10 Sep 2020 17:33:40 +0100
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Thu, 10 Sep 2020 09:33:39 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "refactormyself@gmail.com" <refactormyself@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlhsPgAgAD1HQA=
-Date:   Thu, 10 Sep 2020 16:33:39 +0000
-Message-ID: <5b7513ff64315d7a1c2529d34cd78b51ce3c3605.camel@intel.com>
-References: <20200910015558.GA746864@bjorn-Precision-5520>
-In-Reply-To: <20200910015558.GA746864@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.213.168.175]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <80079870F7FF5D489D3F2F8D8C947861@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1725951AbgIJQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:34:17 -0400
+Received: from localhost (unknown [70.37.104.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16DB121582;
+        Thu, 10 Sep 2020 16:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599755657;
+        bh=dzZnmnmW/OcULkwgSlJBXQmNt6Lts9wz/zHvPwNp9Eo=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
+         Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=YpwMjIwo8m5ztCnRf7uNWp5ABWFf5uIsg56Ck/Eaw1TrHozTf4PNKD0au+S2BG6Zi
+         iy9hvggmavdj7R+XijSp1G4Jq13Fdz/pfIZ50NBq1VBmhRTe7QaDFEIrbvXqnCCzo4
+         lPALA2tpLa5g2okAe36l/zqwGrcoi/YYz5GM99C0=
+Date:   Thu, 10 Sep 2020 16:34:16 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Kim Phillips <kim.phillips@amd.com>
+To:     Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>
+Cc:     Stephane Eranian <eranian@google.com>
+Cc:     Stephane Eranian <eranian@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Borislav Petkov <bp@alien8.de>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Petlan <mpetlan@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86 <x86@kernel.org>
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
+In-Reply-To: <20200908214740.18097-2-kim.phillips@amd.com>
+References: <20200908214740.18097-2-kim.phillips@amd.com>
+Message-Id: <20200910163417.16DB121582@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmpvcm4NCg0KT24gV2VkLCAyMDIwLTA5LTA5IGF0IDIwOjU1IC0wNTAwLCBCam9ybiBIZWxn
-YWFzIHdyb3RlOg0KPiBbK2NjIFNhaGVlZF0NCj4gDQo+IE9uIEZyaSwgQXVnIDIxLCAyMDIwIGF0
-IDA4OjMyOjIwUE0gKzA4MDAsIEthaS1IZW5nIEZlbmcgd3JvdGU6DQo+ID4gTmV3IEludGVsIGxh
-cHRvcHMgd2l0aCBWTUQgY2Fubm90IHJlYWNoIGRlZXBlciBwb3dlciBzYXZpbmcgc3RhdGUsDQo+
-ID4gcmVuZGVycyB2ZXJ5IHNob3J0IGJhdHRlcnkgdGltZS4NCj4gPiANCj4gPiBBcyBCSU9TIG1h
-eSBub3QgYmUgYWJsZSB0byBwcm9ncmFtIHRoZSBjb25maWcgc3BhY2UgZm9yIGRldmljZXMgdW5k
-ZXINCj4gPiBWTUQgZG9tYWluLCBBU1BNIG5lZWRzIHRvIGJlIHByb2dyYW1tZWQgbWFudWFsbHkg
-Ynkgc29mdHdhcmUuIFRoaXMgaXMNCj4gPiBhbHNvIHRoZSBjYXNlIHVuZGVyIFdpbmRvd3MuDQo+
-ID4gDQo+ID4gVGhlIFZNRCBjb250cm9sbGVyIGl0c2VsZiBpcyBhIHJvb3QgY29tcGxleCBpbnRl
-Z3JhdGVkIGVuZHBvaW50IHRoYXQNCj4gPiBkb2Vzbid0IGhhdmUgQVNQTSBjYXBhYmlsaXR5LCBz
-byB3ZSBjYW4ndCBwcm9wYWdhdGUgdGhlIEFTUE0gc2V0dGluZ3MgdG8NCj4gPiBkZXZpY2VzIHVu
-ZGVyIGl0LiBIZW5jZSwgc2ltcGx5IGFwcGx5IEFTUE1fU1RBVEVfQUxMIHRvIHRoZSBsaW5rcyB1
-bmRlcg0KPiA+IFZNRCBkb21haW4sIHVuc3VwcG9ydGVkIHN0YXRlcyB3aWxsIGJlIGNsZWFyZWQg
-b3V0IGFueXdheS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBLYWktSGVuZyBGZW5nIDxrYWku
-aGVuZy5mZW5nQGNhbm9uaWNhbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL3BjaWUv
-YXNwbS5jIHwgIDMgKystDQo+ID4gIGRyaXZlcnMvcGNpL3F1aXJrcy5jICAgIHwgMTEgKysrKysr
-KysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9wY2kuaCAgICAgfCAgMiArKw0KPiA+ICAzIGZpbGVz
-IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMgYi9kcml2ZXJzL3BjaS9wY2llL2FzcG0u
-Yw0KPiA+IGluZGV4IDI1M2MzMGNjMTk2Ny4uZGNjMDAyZGJjYTE5IDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvcGNpZS9hc3Bt
-LmMNCj4gPiBAQCAtNjI0LDcgKzYyNCw4IEBAIHN0YXRpYyB2b2lkIHBjaWVfYXNwbV9jYXBfaW5p
-dChzdHJ1Y3QgcGNpZV9saW5rX3N0YXRlICpsaW5rLCBpbnQgYmxhY2tsaXN0KQ0KPiA+ICAJCWFz
-cG1fY2FsY19sMXNzX2luZm8obGluaywgJnVwcmVnLCAmZHdyZWcpOw0KPiA+ICANCj4gPiAgCS8q
-IFNhdmUgZGVmYXVsdCBzdGF0ZSAqLw0KPiA+IC0JbGluay0+YXNwbV9kZWZhdWx0ID0gbGluay0+
-YXNwbV9lbmFibGVkOw0KPiA+ICsJbGluay0+YXNwbV9kZWZhdWx0ID0gcGFyZW50LT5kZXZfZmxh
-Z3MgJiBQQ0lfREVWX0ZMQUdTX0VOQUJMRV9BU1BNID8NCj4gPiArCQkJICAgICBBU1BNX1NUQVRF
-X0FMTCA6IGxpbmstPmFzcG1fZW5hYmxlZDsNCj4gDQo+IFRoaXMgZnVuY3Rpb24gaXMgcmlkaWN1
-bG91c2x5IGNvbXBsaWNhdGVkIGFscmVhZHksIGFuZCBJIHJlYWxseSBkb24ndA0KPiB3YW50IHRv
-IG1ha2UgaXQgd29yc2UuDQo+IA0KPiBXaGF0IGV4YWN0bHkgaXMgdGhlIFBDSWUgdG9wb2xvZ3kg
-aGVyZT8gIEFwcGFyZW50bHkgdGhlIFZNRCBjb250cm9sbGVyDQo+IGlzIGEgUm9vdCBDb21wbGV4
-IEludGVncmF0ZWQgRW5kcG9pbnQsIHNvIGl0J3MgYSBUeXBlIDAgKG5vbi1icmlkZ2UpDQo+IGRl
-dmljZS4gIEFuZCBpdCBoYXMgbm8gTGluaywgaGVuY2Ugbm8gTGluayBDYXBhYmlsaXRpZXMgb3Ig
-Q29udHJvbCBhbmQNCj4gaGVuY2Ugbm8gQVNQTS1yZWxhdGVkIGJpdHMuICBSaWdodD8NClRoYXQn
-cyBjb3JyZWN0LiBWTUQgaXMgdGhlIFR5cGUgMCBkZXZpY2UgcHJvdmlkaW5nIGNvbmZpZy9tbWlv
-DQphcGVydHVyZXMgdG8gYW5vdGhlciBzZWdtZW50IGFuZCBNU0kvWCByZW1hcHBpbmcuIE5vIGxp
-bmsgYW5kIG5vIEFTUE0NCnJlbGF0ZWQgYml0cy4NCg0KSGllcmFyY2h5IGlzIHVzdWFsbHkgc29t
-ZXRoaW5nIGxpa2U6DQoNClNlZ21lbnQgMCAgICAgICAgICAgfCBWTUQgc2VnbWVudA0KUm9vdCBD
-b21wbGV4IC0+IFZNRCB8IFR5cGUgMCAoUlAvQnJpZGdlOyBwaHlzaWNhbCBzbG90KSAtIFR5cGUg
-MQ0KICAgICAgICAgICAgICAgICAgICB8IFR5cGUgMCAoUlAvQnJpZGdlOyBwaHlzaWNhbCBzbG90
-KSAtIFR5cGUgMQ0KDQo+IA0KPiBBbmQgdGhlIGRldmljZXMgdW5kZXIgdGhlIFZNRCBjb250cm9s
-bGVyPyAgSSBndWVzcyB0aGV5IGFyZSByZWd1bGFyDQo+IFBDSWUgRW5kcG9pbnRzLCBTd2l0Y2gg
-UG9ydHMsIGV0Yz8gIE9idmlvdXNseSB0aGVyZSdzIGEgTGluayBpbnZvbHZlZA0KPiBzb21ld2hl
-cmUuICBEb2VzIHRoZSBWTUQgY29udHJvbGxlciBoYXZlIHNvbWUgbWFnaWMsIG5vbi1hcmNoaXRl
-Y3RlZA0KPiBQb3J0IG9uIHRoZSBkb3duc3RyZWFtIHNpZGU/DQpDb3JyZWN0OiBUeXBlIDAgYW5k
-IFR5cGUgMSBkZXZpY2VzLCBhbmQgYW55IG51bWJlciBvZiBTd2l0Y2ggcG9ydHMgYXMNCml0J3Mg
-dXN1YWxseSBwaW5uZWQgb3V0IHRvIHBoeXNpY2FsIHNsb3QuDQoNCg0KPiANCj4gRG9lcyB0aGlz
-IHBhdGNoIGVuYWJsZSBBU1BNIG9uIHRoaXMgbWFnaWMgTGluayBiZXR3ZWVuIFZNRCBhbmQgdGhl
-DQo+IG5leHQgZGV2aWNlPyAgQ29uZmlndXJpbmcgQVNQTSBjb3JyZWN0bHkgcmVxdWlyZXMga25v
-d2xlZGdlIGFuZCBrbm9icw0KPiBmcm9tIGJvdGggZW5kcyBvZiB0aGUgTGluaywgYW5kIGFwcGFy
-ZW50bHkgd2UgZG9uJ3QgaGF2ZSB0aG9zZSBmb3IgdGhlDQo+IFZNRCBlbmQuDQpWTUQgaXRzZWxm
-IGRvZXNuJ3QgaGF2ZSB0aGUgbGluayB0byBpdCdzIGRvbWFpbi4gSXQncyByZWFsbHkganVzdCB0
-aGUNCmNvbmZpZy9tbWlvIGFwZXJ0dXJlIGFuZCBNU0kvWCByZW1hcHBlci4gVGhlIFBDSWUgbGlu
-ayBpcyBiZXR3ZWVuIHRoZQ0KVHlwZSAwIGFuZCBUeXBlIDEgZGV2aWNlcyBvbiB0aGUgVk1EIGRv
-bWFpbi4gU28gZm9ydHVuYXRlbHkgdGhlIFZNRA0KaXRzZWxmIGlzIG5vdCB0aGUgdXBzdHJlYW0g
-cGFydCBvZiB0aGUgbGluay4NCg0KPiANCj4gT3IgaXMgaXQgZm9yIExpbmtzIGRlZXBlciBpbiB0
-aGUgaGllcmFyY2h5PyAgSSBhc3N1bWUgdGhvc2Ugc2hvdWxkDQo+IGp1c3Qgd29yayBhbHJlYWR5
-LCBhbHRob3VnaCB0aGVyZSBtaWdodCBiZSBpc3N1ZXMgd2l0aCBsYXRlbmN5DQo+IGNvbXB1dGF0
-aW9uLCBldGMuLCBiZWNhdXNlIHdlIG1heSBub3QgYmUgYWJsZSB0byBhY2NvdW50IGZvciB0aGUg
-cGFydA0KPiBvZiB0aGUgcGF0aCBhYm92ZSBWTUQuDQpUaGF0J3MgY29ycmVjdC4gVGhpcyBpcyBm
-b3IgdGhlIGxpbmtzIHdpdGhpbiB0aGUgZG9tYWluIGl0c2VsZiwgc3VjaCBhcw0KYmV0d2VlbiBh
-IHR5cGUgMCBhbmQgTlZNZSBkZXZpY2UuDQoNCj4gDQo+IEkgd2FudCBhc3BtLmMgdG8gZXZlbnR1
-YWxseSBnZXQgb3V0IG9mIHRoZSBidXNpbmVzcyBvZiBtYW5hZ2luZyBzdHJ1Y3QNCj4gcGNpZV9s
-aW5rX3N0YXRlLiAgSSB0aGluayBpdCBzaG91bGQgbWFuYWdlICpkZXZpY2UqIHN0YXRlIGZvciBl
-YWNoIGVuZA0KPiBvZiB0aGUgbGluay4gIE1heWJlIHRoYXQncyBhIHBhdGggZm9yd2FyZCwgZS5n
-LiwgaWYgd2UgY2FjaGUgdGhlIExpbmsNCj4gQ2FwYWJpbGl0aWVzIGR1cmluZyBlbnVtZXJhdGlv
-biwgcXVpcmtzIGNvdWxkIG1vZGlmeSB0aGF0IGRpcmVjdGx5LA0KPiBhbmQgYXNwbS5jIGNvdWxk
-IGp1c3QgY29uc3VtZSB0aGF0IGNhY2hlZCBpbmZvcm1hdGlvbi4gIEkgdGhpbmsgU2FoZWVkDQo+
-IChjYydkKSBpcyBhbHJlYWR5IHdvcmtpbmcgb24gcGF0Y2hlcyBpbiB0aGlzIGRpcmVjdGlvbi4N
-Cj4gDQo+IEknbSBzdGlsbCBub3Qgc3VyZSBob3cgdGhpcyB3b3JrcyBpZiBWTUQgaXMgdGhlIHVw
-c3RyZWFtIGVuZCBvZiBhDQo+IExpbmssIHRob3VnaC4NCj4gDQo+ID4gIAkvKiBTZXR1cCBpbml0
-aWFsIGNhcGFibGUgc3RhdGUuIFdpbGwgYmUgdXBkYXRlZCBsYXRlciAqLw0KPiA+ICAJbGluay0+
-YXNwbV9jYXBhYmxlID0gbGluay0+YXNwbV9zdXBwb3J0Ow0KPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL3BjaS9xdWlya3MuYyBiL2RyaXZlcnMvcGNpL3F1aXJrcy5jDQo+ID4gaW5kZXggYmRmOWI1
-MjU2N2UwLi4yZTJmNTI1YmQ4OTIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcXVpcmtz
-LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9xdWlya3MuYw0KPiA+IEBAIC01NjMyLDMgKzU2MzIs
-MTQgQEAgc3RhdGljIHZvaWQgYXBleF9wY2lfZml4dXBfY2xhc3Moc3RydWN0IHBjaV9kZXYgKnBk
-ZXYpDQo+ID4gIH0NCj4gPiAgREVDTEFSRV9QQ0lfRklYVVBfQ0xBU1NfSEVBREVSKDB4MWFjMSwg
-MHgwODlhLA0KPiA+ICAJCQkgICAgICAgUENJX0NMQVNTX05PVF9ERUZJTkVELCA4LCBhcGV4X3Bj
-aV9maXh1cF9jbGFzcyk7DQo+ID4gKw0KPiA+ICsvKg0KPiA+ICsgKiBEZXZpY2UgWzgwODY6OWEw
-OV0NCj4gPiArICogQklPUyBtYXkgbm90IGJlIGFibGUgdG8gYWNjZXNzIGNvbmZpZyBzcGFjZSBv
-ZiBkZXZpY2VzIHVuZGVyIFZNRCBkb21haW4sIHNvDQo+ID4gKyAqIGl0IHJlbGllcyBvbiBzb2Z0
-d2FyZSB0byBlbmFibGUgQVNQTSBmb3IgbGlua3MgdW5kZXIgVk1ELg0KPiA+ICsgKi8NCj4gPiAr
-c3RhdGljIHZvaWQgcGNpX2ZpeHVwX2VuYWJsZV9hc3BtKHN0cnVjdCBwY2lfZGV2ICpwZGV2KQ0K
-PiA+ICt7DQo+ID4gKwlwZGV2LT5kZXZfZmxhZ3MgfD0gUENJX0RFVl9GTEFHU19FTkFCTEVfQVNQ
-TTsNCj4gPiArfQ0KPiA+ICtERUNMQVJFX1BDSV9GSVhVUF9IRUFERVIoUENJX1ZFTkRPUl9JRF9J
-TlRFTCwgMHg5YTA5LCBwY2lfZml4dXBfZW5hYmxlX2FzcG0pOw0KPiA+IGRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L3BjaS5oIGIvaW5jbHVkZS9saW51eC9wY2kuaA0KPiA+IGluZGV4IDgzNTUz
-MDYwNWMwZC4uNjZhNDU5MTZjN2M2IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgvcGNp
-LmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3BjaS5oDQo+ID4gQEAgLTIyNyw2ICsyMjcsOCBA
-QCBlbnVtIHBjaV9kZXZfZmxhZ3Mgew0KPiA+ICAJUENJX0RFVl9GTEFHU19OT19GTFJfUkVTRVQg
-PSAoX19mb3JjZSBwY2lfZGV2X2ZsYWdzX3QpICgxIDw8IDEwKSwNCj4gPiAgCS8qIERvbid0IHVz
-ZSBSZWxheGVkIE9yZGVyaW5nIGZvciBUTFBzIGRpcmVjdGVkIGF0IHRoaXMgZGV2aWNlICovDQo+
-ID4gIAlQQ0lfREVWX0ZMQUdTX05PX1JFTEFYRURfT1JERVJJTkcgPSAoX19mb3JjZSBwY2lfZGV2
-X2ZsYWdzX3QpICgxIDw8IDExKSwNCj4gPiArCS8qIEVuYWJsZSBBU1BNIHJlZ2FyZGxlc3Mgb2Yg
-aG93IExua0N0bCBpcyBwcm9ncmFtbWVkICovDQo+ID4gKwlQQ0lfREVWX0ZMQUdTX0VOQUJMRV9B
-U1BNID0gKF9fZm9yY2UgcGNpX2Rldl9mbGFnc190KSAoMSA8PCAxMiksDQo+ID4gIH07DQo+ID4g
-IA0KPiA+ICBlbnVtIHBjaV9pcnFfcmVyb3V0ZV92YXJpYW50IHsNCj4gPiAtLSANCj4gPiAyLjE3
-LjENCj4gPiANCg==
+Hi
+
+[This is an automated email]
+
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs").
+
+The bot has tested the following trees: v5.8.7, v5.4.63, v4.19.143, v4.14.196.
+
+v5.8.7: Build OK!
+v5.4.63: Failed to apply! Possible dependencies:
+    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
+    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
+    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+
+v4.19.143: Failed to apply! Possible dependencies:
+    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
+    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
+    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
+    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+
+v4.14.196: Failed to apply! Possible dependencies:
+    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
+    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
+    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
+    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
