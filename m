@@ -2,166 +2,85 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3792C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A548EC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA1D2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aZBbWgDM"
+	by mail.kernel.org (Postfix) with ESMTP id 538DE207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgIJOxj (ORCPT
+        id S1730720AbgIJOzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731153AbgIJOus (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:50:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098E1C0617B9;
-        Thu, 10 Sep 2020 07:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=30TjXOdnpDp07+Y2EmVpqqUY8VLMnUGZI+E0/QlSfTE=; b=aZBbWgDMcicAcxmQ3IzlsLiveP
-        0HqUahF787FHkeoLnaRUtYKLhuS6LMrG9OzJvsKfjJZ37Vl1lmAvKlCTxGX4+U2C8inJyWLlmpPQL
-        8xCspOOThTnnH3YWggYMYmPThY6aCQloB04kN3OD4LF8lwG6fqlWw09+aGrKZ02pK6i3/bQscUXaO
-        TNrrSIIL1uaEp/X3FEmhollxlCwyaVd/IM0ejkJeZ2o2zDFWemKwjaLRRZv/FmgTtPYGh9q1Mt4Xz
-        lfVhoHKI8KzlURBwvCh37TjBd+mraLInbe3dmNhzmHI0r8alXmLU1twQUzaEAMQY3CY225HhCflOs
-        6u1SGnKQ==;
-Received: from [2001:4bb8:184:af1:3ecc:ac5b:136f:434a] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGNsa-0006yh-98; Thu, 10 Sep 2020 14:48:52 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Minchan Kim <minchan@kernel.org>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: [PATCH 11/12] bdi: invert BDI_CAP_NO_ACCT_WB
-Date:   Thu, 10 Sep 2020 16:48:31 +0200
-Message-Id: <20200910144833.742260-12-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200910144833.742260-1-hch@lst.de>
-References: <20200910144833.742260-1-hch@lst.de>
+        Thu, 10 Sep 2020 10:55:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38644 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730261AbgIJOyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:54:14 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CFA006BE360D71439816;
+        Thu, 10 Sep 2020 22:05:06 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 22:04:56 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <Roy.Pledge@nxp.com>, <leoyang.li@nxp.com>,
+        <youri.querry_1@nxp.com>, <linux-kernel@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] soc: fsl: dpio: remove set but not used 'addr_cena'
+Date:   Thu, 10 Sep 2020 22:04:15 +0800
+Message-ID: <20200910140415.1132266-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace BDI_CAP_NO_ACCT_WB with a positive BDI_CAP_WRITEBACK_ACCT to
-make the checks more obvious.  Also remove the pointless
-bdi_cap_account_writeback wrapper that just obsfucates the check.
+This addresses the following gcc warning with "make W=1":
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+drivers/soc/fsl/dpio/qbman-portal.c: In function
+‘qbman_swp_enqueue_multiple_direct’:
+drivers/soc/fsl/dpio/qbman-portal.c:650:11: warning: variable
+‘addr_cena’ set but not used [-Wunused-but-set-variable]
+  650 |  uint64_t addr_cena;
+      |           ^~~~~~~~~
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- fs/fuse/inode.c             |  3 ++-
- include/linux/backing-dev.h | 13 +++----------
- mm/backing-dev.c            |  1 +
- mm/page-writeback.c         |  4 ++--
- 4 files changed, 8 insertions(+), 13 deletions(-)
+ drivers/soc/fsl/dpio/qbman-portal.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 17b00670fb539e..581329203d6860 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -1050,7 +1050,8 @@ static int fuse_bdi_init(struct fuse_conn *fc, struct super_block *sb)
- 		return err;
+diff --git a/drivers/soc/fsl/dpio/qbman-portal.c b/drivers/soc/fsl/dpio/qbman-portal.c
+index 0ab85bfb116f..659b4a570d5b 100644
+--- a/drivers/soc/fsl/dpio/qbman-portal.c
++++ b/drivers/soc/fsl/dpio/qbman-portal.c
+@@ -647,7 +647,6 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
+ 	const uint32_t *cl = (uint32_t *)d;
+ 	uint32_t eqcr_ci, eqcr_pi, half_mask, full_mask;
+ 	int i, num_enqueued = 0;
+-	uint64_t addr_cena;
  
- 	/* fuse does it's own writeback accounting */
--	sb->s_bdi->capabilities = BDI_CAP_NO_ACCT_WB | BDI_CAP_STRICTLIMIT;
-+	sb->s_bdi->capabilities &= ~BDI_CAP_WRITEBACK_ACCT;
-+	sb->s_bdi->capabilities |= BDI_CAP_STRICTLIMIT;
+ 	spin_lock(&s->access_spinlock);
+ 	half_mask = (s->eqcr.pi_ci_mask>>1);
+@@ -701,7 +700,6 @@ int qbman_swp_enqueue_multiple_direct(struct qbman_swp *s,
  
- 	/*
- 	 * For a single fuse filesystem use max 1% of dirty +
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index 5da4ea3dd0cc5c..b217344a2c63be 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -120,17 +120,17 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
-  *
-  * BDI_CAP_NO_ACCT_DIRTY:  Dirty pages shouldn't contribute to accounting
-  * BDI_CAP_NO_WRITEBACK:   Don't write pages back
-- * BDI_CAP_NO_ACCT_WB:     Don't automatically account writeback pages
-+ * BDI_CAP_WRITEBACK_ACCT: Automatically account writeback pages
-  * BDI_CAP_STRICTLIMIT:    Keep number of dirty pages below bdi threshold.
-  */
- #define BDI_CAP_NO_ACCT_DIRTY	0x00000001
- #define BDI_CAP_NO_WRITEBACK	0x00000002
--#define BDI_CAP_NO_ACCT_WB	0x00000004
-+#define BDI_CAP_WRITEBACK_ACCT	0x00000004
- #define BDI_CAP_STRICTLIMIT	0x00000010
- #define BDI_CAP_CGROUP_WRITEBACK 0x00000020
- 
- #define BDI_CAP_NO_ACCT_AND_WRITEBACK \
--	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY | BDI_CAP_NO_ACCT_WB)
-+	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY)
- 
- extern struct backing_dev_info noop_backing_dev_info;
- 
-@@ -179,13 +179,6 @@ static inline bool bdi_cap_account_dirty(struct backing_dev_info *bdi)
- 	return !(bdi->capabilities & BDI_CAP_NO_ACCT_DIRTY);
- }
- 
--static inline bool bdi_cap_account_writeback(struct backing_dev_info *bdi)
--{
--	/* Paranoia: BDI_CAP_NO_WRITEBACK implies BDI_CAP_NO_ACCT_WB */
--	return !(bdi->capabilities & (BDI_CAP_NO_ACCT_WB |
--				      BDI_CAP_NO_WRITEBACK));
--}
--
- static inline bool mapping_cap_writeback_dirty(struct address_space *mapping)
- {
- 	return bdi_cap_writeback_dirty(inode_to_bdi(mapping->host));
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index f9a2842bd81c3d..ab0415dde5c66c 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -744,6 +744,7 @@ struct backing_dev_info *bdi_alloc(int node_id)
- 		kfree(bdi);
- 		return NULL;
- 	}
-+	bdi->capabilities = BDI_CAP_WRITEBACK_ACCT;
- 	bdi->ra_pages = VM_READAHEAD_PAGES;
- 	bdi->io_pages = VM_READAHEAD_PAGES;
- 	return bdi;
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index e9c36521461aaa..0139f9622a92da 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2738,7 +2738,7 @@ int test_clear_page_writeback(struct page *page)
- 		if (ret) {
- 			__xa_clear_mark(&mapping->i_pages, page_index(page),
- 						PAGECACHE_TAG_WRITEBACK);
--			if (bdi_cap_account_writeback(bdi)) {
-+			if (bdi->capabilities & BDI_CAP_WRITEBACK_ACCT) {
- 				struct bdi_writeback *wb = inode_to_wb(inode);
- 
- 				dec_wb_stat(wb, WB_WRITEBACK);
-@@ -2791,7 +2791,7 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
- 						   PAGECACHE_TAG_WRITEBACK);
- 
- 			xas_set_mark(&xas, PAGECACHE_TAG_WRITEBACK);
--			if (bdi_cap_account_writeback(bdi))
-+			if (bdi->capabilities & BDI_CAP_WRITEBACK_ACCT)
- 				inc_wb_stat(inode_to_wb(inode), WB_WRITEBACK);
- 
- 			/*
+ 	/* Flush all the cacheline without load/store in between */
+ 	eqcr_pi = s->eqcr.pi;
+-	addr_cena = (size_t)s->addr_cena;
+ 	for (i = 0; i < num_enqueued; i++)
+ 		eqcr_pi++;
+ 	s->eqcr.pi = eqcr_pi & full_mask;
 -- 
-2.28.0
+2.25.4
 
