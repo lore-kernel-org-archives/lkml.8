@@ -2,147 +2,176 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38470C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD1520756
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE7220719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="f2+BlMuU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rnoi6H+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgIJVmb (ORCPT
+        id S1725808AbgIJV6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42146 "EHLO
+        Thu, 10 Sep 2020 17:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729908AbgIJNDE (ORCPT
+        with ESMTP id S1727782AbgIJLn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:03:04 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC59C06179B
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:02:38 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id d20so5922269qka.5
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:02:38 -0700 (PDT)
+        Thu, 10 Sep 2020 07:43:27 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5056EC0617A4;
+        Thu, 10 Sep 2020 04:43:26 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id lo4so8194670ejb.8;
+        Thu, 10 Sep 2020 04:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZMHVjl3+9TgVg2XMpsqEGzDzTL85oyvjl7Ly6KJECZs=;
-        b=f2+BlMuUGxSPKYE1QP62oEt/bC0dGgrFO/pevuVdYEPal0FxZbbtojVdbZbQ6sqmoz
-         jaJs9e7Yg3oQ36AJtmPt+bWSweDM603M+W0NfngEfLnlu8waQhxBgX6HgQdgQkAOsQvN
-         Imc2Ip25I3geF80IGGT4DFhCwFFWUwFOfv4oqMhYXEEoXV/3te0bj60yPFJV8SXZ1nIN
-         1cOGfWeoU7Qerilj2IP4cT0hDPg8C8eGeDjj8ADKqV0CudBo5FDoF28Zeb24SsNY1XCA
-         ye3tKdEeX5uSb4xgr1Zl54/2+vf6Hqdh4TzuL59fwFBW+mdrXHCpM+fh1UX1VSvqoYEC
-         Wv+g==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=W1JDflo8cgm4wnW3SEWEeLep6SeHVGwwH72bCedaQio=;
+        b=Rnoi6H+joWbARSCxl8x6FJqKLHSWV0pk8yXybey9Rxp9j3TKb/ze5Vl5jhhpCjDLSO
+         ok0UVWHMyLN6Sbo1Y/oRQXSmdf/GN/vSwxrfBJBlgkfEj1brlNdm+885H2Xe/2ijqbtZ
+         ur15wY+7IyuEIcbXHLRcuZ3j7fEmoeSBJqJ8y/uTwn0wfNevjvWAaK1IEQydQ9yINMce
+         me3aZvVLbvazmGphG90Tde3b2fd3IUyEFBBvRoXKd5sVunjWjC4PrHx3jidVcmffAJMz
+         cb9Bi+RDo8X+Tw04J43T+bi/TA512QHp9hd5r/coaP8xHdPzji9ciiUKa8PtmKOnTpBH
+         vang==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZMHVjl3+9TgVg2XMpsqEGzDzTL85oyvjl7Ly6KJECZs=;
-        b=biYOQN+w6LtIPsW/ZsDJ12IYfA+gyd3JQJzBHBUZ2mzrZ9TYiVQmS8v4ogW9OxSZvK
-         EAePhIzPVeRNTzOVXWkVCgu/ScclPKIGNmCal7GgnceecJumiPqnGuDoL5oRloKpk22o
-         HAPt/oqcpbf1hf/FSnp5e2wO7I7mJxr5u/9kgtl8R43SyRcoUp+j+LMpSb8GPoDK9mvk
-         RIO7CzKzKcficGajy7zIqWwoOgcUOnfj6er7wja03XoqJbbTl5IpJ9u+tSm2k73Cf+YR
-         5bgArME1xhrm/aed7+pgfvFqjmFwYmxAjF7NKrvtoPuUIjiksftgbBxBwnG07MpQ9EyR
-         J+Vw==
-X-Gm-Message-State: AOAM531M7/KuCM28CGPGU/uhYy2EwLvb8axGlWqih59A61Tlg4SZ28vC
-        ryeZr8lw7JkaliJxy6uu0ccREA==
-X-Google-Smtp-Source: ABdhPJxqOTcVzVF1zXXEOkRZLnf0cpg1VMvwjaF3fePKiOG08DrkmppE8sGHLJTo61W1PPeWEXyFQQ==
-X-Received: by 2002:a05:620a:410:: with SMTP id 16mr7289645qkp.133.1599742955509;
-        Thu, 10 Sep 2020 06:02:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id i1sm6457907qkd.58.2020.09.10.06.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 06:02:34 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kGMDh-004Ksi-Dp; Thu, 10 Sep 2020 10:02:33 -0300
-Date:   Thu, 10 Sep 2020 10:02:33 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200910130233.GK87483@ziepe.ca>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
- <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad>
- <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad>
- <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=W1JDflo8cgm4wnW3SEWEeLep6SeHVGwwH72bCedaQio=;
+        b=tv2LTV2tExc6nKKr05Cu8ld7XGfuTeNgcfczC1cWsR4Ub2I3MPvGg7jRSYyidJruBf
+         VfCCeRulZwpmdaF4bNznB+w6BCwk+Fe85wBXlciT0kzsLlJfwDGbFzFbQHGLVM4owSGX
+         eAfBsHfMMgkIUu4COYTcQEwF09lDmO5jY91J8NSHMsXolPssk9Jm53FcHerAwhA763E1
+         po5uTrE+27lbYT/S07Wel92b/aTfanODgDKS1A/2h3YVWSaxWkTKIsnsipX0hkL6tBQS
+         qiDDm7W/9xU4zNncVEbBUl75HyTjeTwuDRVz0glApV9CrfUeGoPWl/nOpXIWgA9XQyaF
+         ZirQ==
+X-Gm-Message-State: AOAM532yHunvXETbs1l0rzweH5U5KpUkJoCU+An3weY90XLargaI6v+D
+        VCrqmmmXQoxTW/48vavGl807d/x7jG0UQPj734lPgXik8kmkkw==
+X-Google-Smtp-Source: ABdhPJwF0ksgguUN9gWBuFhnnJ+aMLRrdqYql/B1YWTkMs8Lu/P94YYrncfeOjcycJVULaT+3i5EPOMptbMITvPPNiA=
+X-Received: by 2002:a17:907:110f:: with SMTP id qu15mr8806891ejb.359.1599738204481;
+ Thu, 10 Sep 2020 04:43:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910093925.GB29166@oc3871087118.ibm.com>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Thu, 10 Sep 2020 14:43:13 +0300
+Message-ID: <CADxRZqwGH3c5SvByBB3WSQhR_0NLCY=3RZ6541m8afX-scA4HA@mail.gmail.com>
+Subject: [sparc64] kernel OOPS bisected from "lockdep: improve
+ current->(hard|soft)irqs_enabled synchronisation with actual irq state"
+To:     Sparc kernel list <sparclinux@vger.kernel.org>,
+        Linux Kernel list <linux-kernel@vger.kernel.org>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 11:39:25AM +0200, Alexander Gordeev wrote:
+Hello!
 
-> As Gerald mentioned, it is very difficult to explain in a clear way.
-> Hopefully, one could make sense ot of it.
+The following git patch 044d0d6de9f50192f9697583504a382347ee95ca
+(linux git master branch) introduced the following kernel OOPS upon
+kernel boot on my sparc64 T5-2 ldom (VM):
 
-I would say the page table API requires this invariant:
+$ uname -a
+Linux ttip 5.9.0-rc2-00011-g044d0d6de9f5 #59 SMP Thu Sep 10 13:07:45
+MSK 2020 sparc64 GNU/Linux
 
-        pud = pud_offset(p4d, addr);
-        do {
-		WARN_ON(pud != pud_offset(p4d, addr);
-                next = pud_addr_end(addr, end);
-        } while (pud++, addr = next, addr != end);
+(OOPS is from the latest tag, but the same on commit above)
+...
+rcu: Hierarchical SRCU implementation.
+smp: Bringing up secondary CPUs ...
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:4875 check_flags+0x9c/0x2c0
+DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc4 #36
+Call Trace:
+[<00000000004727a8>] __warn+0xa8/0x120
+[<0000000000472c10>] warn_slowpath_fmt+0x64/0x74
+[<00000000004e859c>] check_flags+0x9c/0x2c0
+[<0000000000c17ca0>] lock_is_held_type+0x20/0x140
+[<00000000005095f4>] rcu_read_lock_sched_held+0x54/0xa0
+[<00000000004ed4c0>] lock_acquire+0x120/0x480
+[<0000000000c21610>] _raw_spin_lock+0x30/0x60
+[<00000000009b9bdc>] p1275_cmd_direct+0x1c/0x60
+[<00000000009b9ab0>] prom_startcpu_cpuid+0x30/0x40
+[<00000000004427e4>] __cpu_up+0x184/0x3a0
+[<0000000000474600>] bringup_cpu+0x20/0x120
+[<000000000047378c>] cpuhp_invoke_callback+0xec/0x340
+[<00000000004753d4>] cpu_up+0x154/0x220
+[<0000000000475c60>] bringup_nonboot_cpus+0x60/0xa0
+[<0000000000fbc338>] smp_init+0x28/0xa0
+[<0000000000fad3b4>] kernel_init_freeable+0x18c/0x300
+irq event stamp: 5135
+hardirqs last  enabled at (5135): [<0000000000c21a28>]
+_raw_spin_unlock_irqrestore+0x28/0x60
+hardirqs last disabled at (5134): [<0000000000c217e0>]
+_raw_spin_lock_irqsave+0x20/0x80
+softirqs last  enabled at (1474): [<0000000000c245a0>] __do_softirq+0x4e0/0x560
+softirqs last disabled at (1467): [<000000000042d394>]
+do_softirq_own_stack+0x34/0x60
+random: get_random_bytes called from __warn+0xc8/0x120 with crng_init=0
+---[ end trace 4cf960ae85148e2e ]---
+possible reason: unannotated irqs-off.
+irq event stamp: 5135
+hardirqs last  enabled at (5135): [<0000000000c21a28>]
+_raw_spin_unlock_irqrestore+0x28/0x60
+hardirqs last disabled at (5134): [<0000000000c217e0>]
+_raw_spin_lock_irqsave+0x20/0x80
+softirqs last  enabled at (1474): [<0000000000c245a0>] __do_softirq+0x4e0/0x560
+softirqs last disabled at (1467): [<000000000042d394>]
+do_softirq_own_stack+0x34/0x60
+smp: Brought up 1 node, 32 CPUs
+devtmpfs: initialized
+...
 
-ie pud++ is supposed to be a shortcut for 
-  pud_offset(p4d, next)
+full boot log in [1], kernel config in [2]
 
-While S390 does not follow this. Fixing addr_end brings it into
-alignment by preventing pud++ from happening.
+linux-2.6$ git bisect log
+git bisect start
+# good: [d012a7190fc1fd72ed48911e77ca97ba4521bccd] Linux 5.9-rc2
+git bisect good d012a7190fc1fd72ed48911e77ca97ba4521bccd
+# bad: [34d4ddd359dbcdf6c5fb3f85a179243d7a1cb7f8] Merge tag
+'linux-kselftest-5.9-rc5' of
+git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+git bisect bad 34d4ddd359dbcdf6c5fb3f85a179243d7a1cb7f8
+# bad: [e1d0126ca3a66c284a02b083a42e2b39558002cd] Merge tag
+'xfs-5.9-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
+git bisect bad e1d0126ca3a66c284a02b083a42e2b39558002cd
+# good: [24148d8648e37f8c15bedddfa50d14a31a0582c5] Merge tag
+'io_uring-5.9-2020-08-28' of git://git.kernel.dk/linux-block
+git bisect good 24148d8648e37f8c15bedddfa50d14a31a0582c5
+# bad: [b69bea8a657b681442765b06be92a2607b1bd875] Merge tag
+'locking-urgent-2020-08-30' of
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+git bisect bad b69bea8a657b681442765b06be92a2607b1bd875
+# good: [20934c0de13b49a072fb1e0ca79fe0fe0e40eae5] usb: storage: Add
+unusual_uas entry for Sony PSZ drives
+git bisect good 20934c0de13b49a072fb1e0ca79fe0fe0e40eae5
+# good: [c4011283a7d5d64a50991dd3baa9acdf3d49092c] Merge tag
+'dma-mapping-5.9-2' of git://git.infradead.org/users/hch/dma-mapping
+git bisect good c4011283a7d5d64a50991dd3baa9acdf3d49092c
+# good: [8bb5021cc2ee5d5dd129a9f2f5ad2bb76eea297d] Merge tag
+'powerpc-5.9-4' of
+git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+git bisect good 8bb5021cc2ee5d5dd129a9f2f5ad2bb76eea297d
+# good: [00b0ed2d4997af6d0a93edef820386951fd66d94] locking/lockdep: Cleanup
+git bisect good 00b0ed2d4997af6d0a93edef820386951fd66d94
+# bad: [044d0d6de9f50192f9697583504a382347ee95ca] lockdep: Only trace IRQ edges
+git bisect bad 044d0d6de9f50192f9697583504a382347ee95ca
+# good: [021c109330ebc1f54b546c63a078ea3c31356ecb] arm64: Implement
+arch_irqs_disabled()
+git bisect good 021c109330ebc1f54b546c63a078ea3c31356ecb
+# good: [99dc56feb7932020502d40107a712fa302b32082] mips: Implement
+arch_irqs_disabled()
+git bisect good 99dc56feb7932020502d40107a712fa302b32082
+# first bad commit: [044d0d6de9f50192f9697583504a382347ee95ca]
+lockdep: Only trace IRQ edges
 
-The only currently known side effect is that gup_fast crashes, but it
-sure is an unexpected thing.
 
-This suggests another fix, which is to say that pud++ is undefined and
-pud_offset() must always be called, but I think that would cause worse
-codegen on all other archs.
-
-Jason
-
+1. https://github.com/mator/sparc64-dmesg/blob/master/dmesg-5.9.0-rc4
+2. https://github.com/mator/sparc64-dmesg/blob/master/config-5.9.0-rc4.gz
