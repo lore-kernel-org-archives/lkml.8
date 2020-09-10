@@ -2,176 +2,154 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38470C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96132C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEE7220719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7F320719
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rnoi6H+j"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ni4zoTFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725808AbgIJV6V (ORCPT
+        id S1725825AbgIJV6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgIJLn1 (ORCPT
+        Thu, 10 Sep 2020 17:58:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22698 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730206AbgIJLlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:43:27 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5056EC0617A4;
-        Thu, 10 Sep 2020 04:43:26 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id lo4so8194670ejb.8;
-        Thu, 10 Sep 2020 04:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=W1JDflo8cgm4wnW3SEWEeLep6SeHVGwwH72bCedaQio=;
-        b=Rnoi6H+joWbARSCxl8x6FJqKLHSWV0pk8yXybey9Rxp9j3TKb/ze5Vl5jhhpCjDLSO
-         ok0UVWHMyLN6Sbo1Y/oRQXSmdf/GN/vSwxrfBJBlgkfEj1brlNdm+885H2Xe/2ijqbtZ
-         ur15wY+7IyuEIcbXHLRcuZ3j7fEmoeSBJqJ8y/uTwn0wfNevjvWAaK1IEQydQ9yINMce
-         me3aZvVLbvazmGphG90Tde3b2fd3IUyEFBBvRoXKd5sVunjWjC4PrHx3jidVcmffAJMz
-         cb9Bi+RDo8X+Tw04J43T+bi/TA512QHp9hd5r/coaP8xHdPzji9ciiUKa8PtmKOnTpBH
-         vang==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=W1JDflo8cgm4wnW3SEWEeLep6SeHVGwwH72bCedaQio=;
-        b=tv2LTV2tExc6nKKr05Cu8ld7XGfuTeNgcfczC1cWsR4Ub2I3MPvGg7jRSYyidJruBf
-         VfCCeRulZwpmdaF4bNznB+w6BCwk+Fe85wBXlciT0kzsLlJfwDGbFzFbQHGLVM4owSGX
-         eAfBsHfMMgkIUu4COYTcQEwF09lDmO5jY91J8NSHMsXolPssk9Jm53FcHerAwhA763E1
-         po5uTrE+27lbYT/S07Wel92b/aTfanODgDKS1A/2h3YVWSaxWkTKIsnsipX0hkL6tBQS
-         qiDDm7W/9xU4zNncVEbBUl75HyTjeTwuDRVz0glApV9CrfUeGoPWl/nOpXIWgA9XQyaF
-         ZirQ==
-X-Gm-Message-State: AOAM532yHunvXETbs1l0rzweH5U5KpUkJoCU+An3weY90XLargaI6v+D
-        VCrqmmmXQoxTW/48vavGl807d/x7jG0UQPj734lPgXik8kmkkw==
-X-Google-Smtp-Source: ABdhPJwF0ksgguUN9gWBuFhnnJ+aMLRrdqYql/B1YWTkMs8Lu/P94YYrncfeOjcycJVULaT+3i5EPOMptbMITvPPNiA=
-X-Received: by 2002:a17:907:110f:: with SMTP id qu15mr8806891ejb.359.1599738204481;
- Thu, 10 Sep 2020 04:43:24 -0700 (PDT)
+        Thu, 10 Sep 2020 07:41:46 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ABXV2H086899;
+        Thu, 10 Sep 2020 07:35:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=43Zp61683vjVVWofNj/lwqGmm7TBNx9KEoiLeaHuiJw=;
+ b=ni4zoTFNhK2odYrOepHEOrN5j8lxasAW9h6S2BQDJdSrLCw9welaMGLGGPVU1vDgEgq5
+ G66NBANAHz4McE02a3cuF9JDroKS8fszer4zOmzwP7nHvj6cnFC/41nvWCaenKf6N+qA
+ bh56XLkUEcChS6w/5e3ssZ1lbbv4JZ4wy/IolUY/fIUZGwT2XoAr1+CwQn31nnNCnMx/
+ Xj8FnXLZag0C9blTpN73v7Lb0FQI9rNKEiPcdl4dB5y3IKfIViRzdQbS/uXNWdacfv6e
+ kb/G+CsJQBdyConQPz0jm3sUIDkyYKC7vkFlaPXyGPgyfwZIyFJuuf6Lh+NWxCve0WXQ QA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fh2hmyxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 07:35:39 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08ABY51c089423;
+        Thu, 10 Sep 2020 07:35:38 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fh2hmywv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 07:35:38 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08ABRKxc002916;
+        Thu, 10 Sep 2020 11:35:36 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 33dxdr35jn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 11:35:36 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08ABZXv036635092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 11:35:33 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EA9DA4055;
+        Thu, 10 Sep 2020 11:35:33 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B76CBA4051;
+        Thu, 10 Sep 2020 11:35:32 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.147.189])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 11:35:32 +0000 (GMT)
+Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
+ operations
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>, rafael@kernel.org,
+        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <5cbd92e1-c00a-4253-0119-c872bfa0f2bc@redhat.com>
+ <20200908170835.85440-1-ldufour@linux.ibm.com>
+ <20200909074011.GD7348@dhcp22.suse.cz>
+ <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
+ <20200909090953.GE7348@dhcp22.suse.cz>
+ <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
+ <20200909105914.GF7348@dhcp22.suse.cz>
+ <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
+ <20200910072331.GB28354@dhcp22.suse.cz>
+ <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
+ <20200910111246.GE28354@dhcp22.suse.cz>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
+Date:   Thu, 10 Sep 2020 13:35:32 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-From:   Anatoly Pugachev <matorola@gmail.com>
-Date:   Thu, 10 Sep 2020 14:43:13 +0300
-Message-ID: <CADxRZqwGH3c5SvByBB3WSQhR_0NLCY=3RZ6541m8afX-scA4HA@mail.gmail.com>
-Subject: [sparc64] kernel OOPS bisected from "lockdep: improve
- current->(hard|soft)irqs_enabled synchronisation with actual irq state"
-To:     Sparc kernel list <sparclinux@vger.kernel.org>,
-        Linux Kernel list <linux-kernel@vger.kernel.org>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200910111246.GE28354@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ spamscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009100107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Le 10/09/2020 à 13:12, Michal Hocko a écrit :
+> On Thu 10-09-20 09:51:39, Laurent Dufour wrote:
+>> Le 10/09/2020 à 09:23, Michal Hocko a écrit :
+>>> On Wed 09-09-20 18:07:15, Laurent Dufour wrote:
+>>>> Le 09/09/2020 à 12:59, Michal Hocko a écrit :
+>>>>> On Wed 09-09-20 11:21:58, Laurent Dufour wrote:
+>>> [...]
+>>>>>> For the point a, using the enum allows to know in
+>>>>>> register_mem_sect_under_node() if the link operation is due to a hotplug
+>>>>>> operation or done at boot time.
+>>>>>
+>>>>> Yes, but let me repeat. We have a mess here and different paths check
+>>>>> for the very same condition by different ways. We need to unify those.
+>>>>
+>>>> What are you suggesting to unify these checks (using a MP_* enum as
+>>>> suggested by David, something else)?
+>>>
+>>> We do have system_state check spread at different places. I would use
+>>> this one and wrap it behind a helper. Or have I missed any reason why
+>>> that wouldn't work for this case?
+>>
+>> That would not work in that case because memory can be hot-added at the
+>> SYSTEM_SCHEDULING system state and the regular memory is also registered at
+>> that system state too. So system state is not enough to discriminate between
+>> the both.
+> 
+> If that is really the case all other places need a fix as well.
+> Btw. could you be more specific about memory hotplug during early boot?
+> How that happens? I am only aware of https://lkml.kernel.org/r/20200818110046.6664-1-osalvador@suse.de
+> and that doesn't happen as early as SYSTEM_SCHEDULING.
 
-The following git patch 044d0d6de9f50192f9697583504a382347ee95ca
-(linux git master branch) introduced the following kernel OOPS upon
-kernel boot on my sparc64 T5-2 ldom (VM):
+That points has been raised by David, quoting him here:
 
-$ uname -a
-Linux ttip 5.9.0-rc2-00011-g044d0d6de9f5 #59 SMP Thu Sep 10 13:07:45
-MSK 2020 sparc64 GNU/Linux
+> IIRC, ACPI can hotadd memory while SCHEDULING, this patch would break that.
+> 
+> Ccing Oscar, I think he mentioned recently that this is the case with ACPI.
 
-(OOPS is from the latest tag, but the same on commit above)
-...
-rcu: Hierarchical SRCU implementation.
-smp: Bringing up secondary CPUs ...
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/locking/lockdep.c:4875 check_flags+0x9c/0x2c0
-DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc4 #36
-Call Trace:
-[<00000000004727a8>] __warn+0xa8/0x120
-[<0000000000472c10>] warn_slowpath_fmt+0x64/0x74
-[<00000000004e859c>] check_flags+0x9c/0x2c0
-[<0000000000c17ca0>] lock_is_held_type+0x20/0x140
-[<00000000005095f4>] rcu_read_lock_sched_held+0x54/0xa0
-[<00000000004ed4c0>] lock_acquire+0x120/0x480
-[<0000000000c21610>] _raw_spin_lock+0x30/0x60
-[<00000000009b9bdc>] p1275_cmd_direct+0x1c/0x60
-[<00000000009b9ab0>] prom_startcpu_cpuid+0x30/0x40
-[<00000000004427e4>] __cpu_up+0x184/0x3a0
-[<0000000000474600>] bringup_cpu+0x20/0x120
-[<000000000047378c>] cpuhp_invoke_callback+0xec/0x340
-[<00000000004753d4>] cpu_up+0x154/0x220
-[<0000000000475c60>] bringup_nonboot_cpus+0x60/0xa0
-[<0000000000fbc338>] smp_init+0x28/0xa0
-[<0000000000fad3b4>] kernel_init_freeable+0x18c/0x300
-irq event stamp: 5135
-hardirqs last  enabled at (5135): [<0000000000c21a28>]
-_raw_spin_unlock_irqrestore+0x28/0x60
-hardirqs last disabled at (5134): [<0000000000c217e0>]
-_raw_spin_lock_irqsave+0x20/0x80
-softirqs last  enabled at (1474): [<0000000000c245a0>] __do_softirq+0x4e0/0x560
-softirqs last disabled at (1467): [<000000000042d394>]
-do_softirq_own_stack+0x34/0x60
-random: get_random_bytes called from __warn+0xc8/0x120 with crng_init=0
----[ end trace 4cf960ae85148e2e ]---
-possible reason: unannotated irqs-off.
-irq event stamp: 5135
-hardirqs last  enabled at (5135): [<0000000000c21a28>]
-_raw_spin_unlock_irqrestore+0x28/0x60
-hardirqs last disabled at (5134): [<0000000000c217e0>]
-_raw_spin_lock_irqsave+0x20/0x80
-softirqs last  enabled at (1474): [<0000000000c245a0>] __do_softirq+0x4e0/0x560
-softirqs last disabled at (1467): [<000000000042d394>]
-do_softirq_own_stack+0x34/0x60
-smp: Brought up 1 node, 32 CPUs
-devtmpfs: initialized
-...
+Oscar told that he need to investigate further on that.
 
-full boot log in [1], kernel config in [2]
+On my side I can't get these ACPI "early" hot-plug operations to happen so I 
+can't check that.
 
-linux-2.6$ git bisect log
-git bisect start
-# good: [d012a7190fc1fd72ed48911e77ca97ba4521bccd] Linux 5.9-rc2
-git bisect good d012a7190fc1fd72ed48911e77ca97ba4521bccd
-# bad: [34d4ddd359dbcdf6c5fb3f85a179243d7a1cb7f8] Merge tag
-'linux-kselftest-5.9-rc5' of
-git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
-git bisect bad 34d4ddd359dbcdf6c5fb3f85a179243d7a1cb7f8
-# bad: [e1d0126ca3a66c284a02b083a42e2b39558002cd] Merge tag
-'xfs-5.9-fixes-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-git bisect bad e1d0126ca3a66c284a02b083a42e2b39558002cd
-# good: [24148d8648e37f8c15bedddfa50d14a31a0582c5] Merge tag
-'io_uring-5.9-2020-08-28' of git://git.kernel.dk/linux-block
-git bisect good 24148d8648e37f8c15bedddfa50d14a31a0582c5
-# bad: [b69bea8a657b681442765b06be92a2607b1bd875] Merge tag
-'locking-urgent-2020-08-30' of
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad b69bea8a657b681442765b06be92a2607b1bd875
-# good: [20934c0de13b49a072fb1e0ca79fe0fe0e40eae5] usb: storage: Add
-unusual_uas entry for Sony PSZ drives
-git bisect good 20934c0de13b49a072fb1e0ca79fe0fe0e40eae5
-# good: [c4011283a7d5d64a50991dd3baa9acdf3d49092c] Merge tag
-'dma-mapping-5.9-2' of git://git.infradead.org/users/hch/dma-mapping
-git bisect good c4011283a7d5d64a50991dd3baa9acdf3d49092c
-# good: [8bb5021cc2ee5d5dd129a9f2f5ad2bb76eea297d] Merge tag
-'powerpc-5.9-4' of
-git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-git bisect good 8bb5021cc2ee5d5dd129a9f2f5ad2bb76eea297d
-# good: [00b0ed2d4997af6d0a93edef820386951fd66d94] locking/lockdep: Cleanup
-git bisect good 00b0ed2d4997af6d0a93edef820386951fd66d94
-# bad: [044d0d6de9f50192f9697583504a382347ee95ca] lockdep: Only trace IRQ edges
-git bisect bad 044d0d6de9f50192f9697583504a382347ee95ca
-# good: [021c109330ebc1f54b546c63a078ea3c31356ecb] arm64: Implement
-arch_irqs_disabled()
-git bisect good 021c109330ebc1f54b546c63a078ea3c31356ecb
-# good: [99dc56feb7932020502d40107a712fa302b32082] mips: Implement
-arch_irqs_disabled()
-git bisect good 99dc56feb7932020502d40107a712fa302b32082
-# first bad commit: [044d0d6de9f50192f9697583504a382347ee95ca]
-lockdep: Only trace IRQ edges
-
-
-1. https://github.com/mator/sparc64-dmesg/blob/master/dmesg-5.9.0-rc4
-2. https://github.com/mator/sparc64-dmesg/blob/master/config-5.9.0-rc4.gz
+If this is clear that ACPI memory hotplug doesn't happen at SYSTEM_SCHEDULING, 
+the patch I proposed at first is enough to fix the issue.
