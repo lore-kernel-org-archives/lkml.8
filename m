@@ -2,101 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05760C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5A0C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D7C2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:27:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aCEU0dys"
+	by mail.kernel.org (Postfix) with ESMTP id F011F2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599762463;
+	bh=q1rg91ildqwQp1JpT5pyOVKu0sLxm0TRD5ysEKFUEkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1xJczAw87JhmhYcvPL3/Vu9mGGKs4MjrLKhmr9u++xppT7J/vugkSJbFEHmTnHmOe
+	 2APiDqqnFeLZkV0pRO01IBF8k3jWmyMTPNzwSG9+ZCK9fMDiFPA6Y8m2STHMygAs7M
+	 FIjhHMgkcax1wwjj5XrrkMCVSSDJNybR9z4w2DvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgIJS0t (ORCPT
+        id S1726458AbgIJS0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:26:49 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38734 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgIJSV5 (ORCPT
+        Thu, 10 Sep 2020 14:26:44 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41930 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbgIJSUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:21:57 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AILigX125786;
-        Thu, 10 Sep 2020 13:21:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599762104;
-        bh=11GKWFJbgoEwg1d2kcqLWyqiPTh+7X6kqteZc6SwQ4w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aCEU0dysBTDbi+CxFop2c316bT1UMJrS3GI1M+x9u7cK3p/ChvKqH9CNBdz6KfyC0
-         ECkoE2OnaCJtKhMvxoMdrbDumY6nKvhgJp6w2maB4LF+/ZiDu84DzX1x93gn4Sd0VF
-         ld7200zXRD/G3VXBWIFjmTWbiS6oyr9shz2JXBlQ=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AILiQD127001
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 13:21:44 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Sep 2020 13:21:43 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Sep 2020 13:21:43 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AILhLN051137;
-        Thu, 10 Sep 2020 13:21:43 -0500
-Subject: Re: [PATCH net-next v3 2/3] net: phy: dp83869: support Wake on LAN
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Jakub Kicinski <kuba@kernel.org>, <davem@davemloft.net>,
-        <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200903114259.14013-1-dmurphy@ti.com>
- <20200903114259.14013-3-dmurphy@ti.com>
- <20200905113428.5bd7dc95@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <5051f1e2-4f8e-a021-df6c-d4066938422f@ti.com>
- <20200910180257.GD3354160@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <acb8368f-2ead-cf3e-c099-18aeeab2b3f3@ti.com>
-Date:   Thu, 10 Sep 2020 13:21:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 10 Sep 2020 14:20:54 -0400
+Received: by mail-il1-f194.google.com with SMTP id f82so1926967ilh.8;
+        Thu, 10 Sep 2020 11:20:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nm+cpWqF/0w8fPRtUs5YT9BMbNN+qWhAn3urvKoqdsQ=;
+        b=asTBWdmTyIOn/eTV69q4+7ozP1Kt3gB2GR7ad7TMIDKhP86AGlY1wZnHpXbzlKe0Vf
+         jGcsB6KZfXeNC6cXMJL/4841NpsAfmT05ubDPT4CNs2cpY4xmkats+vBxI2sDqHknBtW
+         S2o0/ZXERVwiCH8oJum8ND3WODXaMMJGWMK0Q2W4D4ZmaAI/lr7L9/c6vE8RIxGudJRJ
+         KqUh4tpA3CPhbhBHjC9u7E4zwZGpHrPHRK4IwbLmIQ+IL/JL0Ifhf5r0RFy1jRQQ0Uw/
+         AmEAWHLnGmQsWIA9zxz0ln72N3ohLirdw+umemApbVjWn0pEBe2/+hlqe8yj5nWfBBJS
+         b0dg==
+X-Gm-Message-State: AOAM532+a+RQxwxutpbEIYHIGjYKXFcyVsi0qeEDBpXChsNPvpDVbgYL
+        Z39LP8c4c7WnUEo9nRZ6Gg==
+X-Google-Smtp-Source: ABdhPJzqhhjaHzYvYkjaNFzZT4HCADVFhWy5EKa/cO2kMKG2i/3FrZl2iswxcaos80RAbzMBsKOuNA==
+X-Received: by 2002:a92:6f11:: with SMTP id k17mr9527739ilc.178.1599762044394;
+        Thu, 10 Sep 2020 11:20:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id z18sm3709635ill.1.2020.09.10.11.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 11:20:43 -0700 (PDT)
+Received: (nullmailer pid 626172 invoked by uid 1000);
+        Thu, 10 Sep 2020 18:20:42 -0000
+Date:   Thu, 10 Sep 2020 12:20:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     devicetree@vger.kernel.org,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v6 2/6] PCI: dwc: Add msi_host_isr() callback
+Message-ID: <20200910182042.GA626124@bogus>
+References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1596795922-705-3-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20200910180257.GD3354160@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596795922-705-3-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On Fri, 07 Aug 2020 19:25:18 +0900, Kunihiko Hayashi wrote:
+> This adds msi_host_isr() callback function support to describe
+> SoC-dependent service triggered by MSI.
+> 
+> For example, when AER interrupt is triggered by MSI, the callback function
+> reads SoC-dependent registers and detects that the interrupt is from AER,
+> and invoke AER interrupts related to MSI.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 +++
+>  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+>  2 files changed, 4 insertions(+)
+> 
 
-On 9/10/20 1:02 PM, Andrew Lunn wrote:
->>>>    static int dp83869_config_port_mirroring(struct phy_device *phydev)
->>>>    {
->>>>    	struct dp83869_private *dp83869 = phydev->priv;
->>> Overall this code looks quite similar to dp83867, is there no way to
->>> factor this out?
->> Factor what out?  Yes the DP83867 and DP83869 are very similar in registers
->> and bitmaps.  They just differ in their feature sets.
->>
->> The WoL code was copied and pasted to the 869 and I would like to keep the
->> two files as similar as I can as it will be easier to fix and find bugs.
-> It will be even easier if they shared the same code. You could create
-> a library of functions, like bcm-phy-lib.c.
-
-If I do that I would want to add in the DP83822 and the DP83811 as well 
-even though the SOP and Data registers are different the code is the same.
-
-I can just pass in the register numbers in.
-
-That will have to be something I refactor later as it will rip up at 
-least 4 TI drivers if not more.
-
-Dan
-
+Acked-by: Rob Herring <robh@kernel.org>
