@@ -2,155 +2,109 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118BDC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EA421D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Us/bEkXq"
+	by mail.kernel.org (Postfix) with ESMTP id 591B221D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599706346;
+	bh=xZgHaS/AuVVZO8yGCPOPXDcpWyNutVURYRYfQPr7Bss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=r3WjTCWPevGVUGOpK1rAi9HM4YQ5YiACr3zNJ+skM7ZTbR0ZX59/5bighWSGqMNrd
+	 nkgkg6kGWqeExTYy4Z2LM3RT6J5bc2Y5d/ip9vL4l1o9n83frDJmk6Yoo2ftm5r3Bv
+	 ao4CIKRXDcD3L+rcXCNeuAIOJu+Kuxeft1vo4mqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgIJCvv (ORCPT
+        id S1730251AbgIJB6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:51:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44595 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730068AbgIJCuj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:50:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599706234;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QJQOTeTVHeQk2Lc8CRwNu9NdRVyDZ7qS/l1V2jelAI8=;
-        b=Us/bEkXqNKvmHsSj7u57ZoxJyLU6clnWgPZx6BCPjyUHA2c+kW5YLf/au4NpxwEcfans3+
-        ofqkPkFyLTHf35LpxQUvRYa1R5G4jlZMOiZZuwBvwet4Yvu1XXH0yhpIsUTWZrA1cjzujJ
-        dQk2l0heUpOdNRPuG4DtCL/wMUjDxUY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-181-IKKAOBSFMvKLG1cL0f7GMw-1; Wed, 09 Sep 2020 22:50:30 -0400
-X-MC-Unique: IKKAOBSFMvKLG1cL0f7GMw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 9 Sep 2020 21:58:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727087AbgIJBfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 21:35:34 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80EAD1007464;
-        Thu, 10 Sep 2020 02:50:29 +0000 (UTC)
-Received: from llong.remote.csb (unknown [10.10.115.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D7797E175;
-        Thu, 10 Sep 2020 02:50:28 +0000 (UTC)
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIIHYzXSBkZWJ1Z29iamVjdHM6IGluc3Rh?=
- =?UTF-8?Q?ll_CPU_hotplug_callback?=
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "elver@google.com" <elver@google.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200908062709.11441-1-qiang.zhang@windriver.com>
- <3bcdacd0-10c4-78c0-6e63-a73811a0ced6@redhat.com>
- <BYAPR11MB26324FE54B890DD73417F6B8FF270@BYAPR11MB2632.namprd11.prod.outlook.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <fc7702c8-6d85-66ee-3220-8c1a3e9acf0b@redhat.com>
-Date:   Wed, 9 Sep 2020 22:50:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F22820BED;
+        Thu, 10 Sep 2020 01:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599701144;
+        bh=xZgHaS/AuVVZO8yGCPOPXDcpWyNutVURYRYfQPr7Bss=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=txo7aca9vIw5rLwXzQT8UF0NYSKzIfloMTcnJx6ZdTO3R4ZCacyJMggjs+EMAuj6b
+         NHpMd135cykYDYK61eWWmBTadSmzFtjzr6hrg/xjia5KhINN0b+kWlnmDm68RC/5FH
+         68HZR8LN14yL8kZwA+6ymLjOgMmwi6l4NyKA0CRI=
+Date:   Wed, 9 Sep 2020 20:25:43 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jiang Biao <benbjiang@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jiang Biao <benbjiang@tencent.com>,
+        Bin Lai <robinlai@tencent.com>
+Subject: Re: [PATCH] driver/pci: reduce the single block time in
+ pci_read_config
+Message-ID: <20200910012543.GA745909@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR11MB26324FE54B890DD73417F6B8FF270@BYAPR11MB2632.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824052025.48362-1-benbjiang@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/9/20 9:48 PM, Zhang, Qiang wrote:
->
-> ________________________________________
-> 发件人: Waiman Long <longman@redhat.com>
-> 发送时间: 2020年9月9日 2:23
-> 收件人: Zhang, Qiang; tglx@linutronix.de; mingo@kernel.org; elver@google.com
-> 抄送: linux-kernel@vger.kernel.org
-> 主题: Re: [PATCH v3] debugobjects: install CPU hotplug callback
->
-> On 9/8/20 2:27 AM, qiang.zhang@windriver.com wrote:
->> From: Zqiang <qiang.zhang@windriver.com>
->>
->> Due to CPU hotplug, it may never be online after it's offline,
->> some objects in percpu pool is never free. in order to avoid
->> this happening, install CPU hotplug callback, call this callback
->> func to free objects in percpu pool when CPU going offline.
->>
->> Signed-off-by: Zqiang <qiang.zhang@windriver.com>
->> ---
->>    v1->v2:
->>    Modify submission information.
->>
->>    v2->v3:
->>    In CPU hotplug callback func, add clear percpu pool "obj_free" operation.
->>    capitalize 'CPU', and use shorter preprocessor sequence.
->>
->>    include/linux/cpuhotplug.h |  1 +
->>    lib/debugobjects.c         | 24 ++++++++++++++++++++++++
->>    2 files changed, 25 insertions(+)
->>
->> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
->> index 3215023d4852..0c39d57e5342 100644
->> --- a/include/linux/cpuhotplug.h
->> +++ b/include/linux/cpuhotplug.h
->> @@ -36,6 +36,7 @@ enum cpuhp_state {
->>        CPUHP_X86_MCE_DEAD,
->>        CPUHP_VIRT_NET_DEAD,
->>        CPUHP_SLUB_DEAD,
->> +     CPUHP_DEBUG_OBJ_DEAD,
->>        CPUHP_MM_WRITEBACK_DEAD,
->>        CPUHP_MM_VMSTAT_DEAD,
->>        CPUHP_SOFTIRQ_DEAD,
->> diff --git a/lib/debugobjects.c b/lib/debugobjects.c
->> index fe4557955d97..bb69a02c3e7b 100644
->> --- a/lib/debugobjects.c
->> +++ b/lib/debugobjects.c
->> @@ -19,6 +19,7 @@
->>    #include <linux/slab.h>
->>    #include <linux/hash.h>
->>    #include <linux/kmemleak.h>
->> +#include <linux/cpu.h>
->>
->>    #define ODEBUG_HASH_BITS    14
->>    #define ODEBUG_HASH_SIZE    (1 << ODEBUG_HASH_BITS)
->> @@ -433,6 +434,24 @@ static void free_object(struct debug_obj *obj)
->>        }
->>    }
->>
->> +#ifdef CONFIG_HOTPLUG_CPU
->> +static int object_cpu_offline(unsigned int cpu)
->> +{
->> +     struct debug_percpu_free *percpu_pool;
->> +     struct hlist_node *tmp;
->> +     struct debug_obj *obj;
->> +
->> +     percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
->> +     hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
->> +             hlist_del(&obj->node);
->> +             kmem_cache_free(obj_cache, obj);
->> +     }
->> +     percpu_pool->obj_free = 0;
->>> For pointer, it is better to use NULL for clarity.
->>> Cheers,
->>> Longman
-> Do you mean "->obj_free" variable ?   this represents the number of free objects in  percpu_pool .
->
-You are right. I got confused. Sorry for the noise.
+On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
+> From: Jiang Biao <benbjiang@tencent.com>
+> 
+> pci_read_config() could block several ms in kernel space, mainly
+> caused by the while loop to call pci_user_read_config_dword().
+> Singel pci_user_read_config_dword() loop could consume 130us+,
+>               |    pci_user_read_config_dword() {
+>               |      _raw_spin_lock_irq() {
+> ! 136.698 us  |        native_queued_spin_lock_slowpath();
+> ! 137.582 us  |      }
+>               |      pci_read() {
+>               |        raw_pci_read() {
+>               |          pci_conf1_read() {
+>   0.230 us    |            _raw_spin_lock_irqsave();
+>   0.035 us    |            _raw_spin_unlock_irqrestore();
+>   8.476 us    |          }
+>   8.790 us    |        }
+>   9.091 us    |      }
+> ! 147.263 us  |    }
+> and dozens of the loop could consume ms+.
+> 
+> If we execute some lspci commands concurrently, ms+ scheduling
+> latency could be detected.
+> 
+> Add scheduling chance in the loop to improve the latency.
 
-Cheers,
-Longman
+Thanks for the patch, this makes a lot of sense.
 
+Shouldn't we do the same in pci_write_config()?
+
+> Reported-by: Bin Lai <robinlai@tencent.com>
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 6d78df9..3b9f63d 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+>  		data[off - init_off + 3] = (val >> 24) & 0xff;
+>  		off += 4;
+>  		size -= 4;
+> +		cond_resched();
+>  	}
+>  
+>  	if (size >= 2) {
+> -- 
+> 1.8.3.1
+> 
