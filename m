@@ -2,139 +2,147 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A317DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB2EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B20206DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A3221556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:23:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoOzMGSv"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="b5XeNNvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgIJTXY (ORCPT
+        id S1727791AbgIJTXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:23:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31543 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726588AbgIJTXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:23:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599765782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aO5Uccl5Oi5KJ41E3z0pO/LdRmt1WMvp7bc2MBKi/rk=;
-        b=UoOzMGSvwbWInCk+u+9ShoKW5LcZK+mjOID7XFDhIuX6U7Yw3INVhKRTLrDd9XMNbFBulT
-        Ob0NBmaK7gfZR9eaDRvqd2aAFAwsCxgnfSS011AaNhU72OWCYNOpORp+7SrFALM9RvzjUl
-        vOCts1I6nRQ6f9ClIXEdRzLNqQb55bY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-nH1tbEipMPOnT8j1YMvhfA-1; Thu, 10 Sep 2020 15:23:00 -0400
-X-MC-Unique: nH1tbEipMPOnT8j1YMvhfA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 271FC1008550;
-        Thu, 10 Sep 2020 19:22:58 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-5.gru2.redhat.com [10.97.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA28360BF4;
-        Thu, 10 Sep 2020 19:22:54 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 2E4E541853FD; Thu, 10 Sep 2020 16:22:08 -0300 (-03)
-Date:   Thu, 10 Sep 2020 16:22:08 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, frederic@kernel.org,
-        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
-Subject: Re: [RFC][Patch v1 3/3] PCI: Limit pci_alloc_irq_vectors as per
- housekeeping CPUs
-Message-ID: <20200910192208.GA24845@fuller.cnet>
-References: <20200909150818.313699-1-nitesh@redhat.com>
- <20200909150818.313699-4-nitesh@redhat.com>
+        Thu, 10 Sep 2020 15:23:43 -0400
+Received: from mout.gmx.net ([212.227.17.20]:46917 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727872AbgIJTWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:22:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599765697;
+        bh=kDCS9dN7hqNGMC055GQUbyi4MlM92SA6KMWryr8hAJs=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=b5XeNNvDCXlPPb+K9G5hSueCN5zQJ5Zm/04uYQASm3zmYki2QphpNis7IWd1b2mjZ
+         uUERKqA9LQ9GwI57Ynl9qoOKMFa+dQrWQ4uICZdTlpN+iiNysA3rSuY9VLqG1EzWb9
+         qQjasbRmg/58oq/efQ8IL5kTkm6HbaGQryhIgkHw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26r3-1kEWKW0cxd-002Wa6; Thu, 10
+ Sep 2020 21:21:37 +0200
+Date:   Thu, 10 Sep 2020 21:21:24 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
+Subject: Re: [PATCH v2 07/10] rtc: Introduce RTC_TIMESTAMP_END_2255
+Message-ID: <20200910192124.GD3306@latitude>
+References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+ <20200905133230.1014581-8-j.neuschaefer@gmx.net>
+ <20200908093946.GQ230586@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9UV9rz0O2dU/yYYn"
 Content-Disposition: inline
-In-Reply-To: <20200909150818.313699-4-nitesh@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200908093946.GQ230586@piout.net>
+X-Provags-ID: V03:K1:E21EYSXgKsjD3uQMAQCJ/0uwFmX9uxR62kFo4Q7nePnG3YxtxG6
+ nzcUlvqNHdjM0/OT5wL1hOajMmonor+UaNtyZ6AnmhFwDb4oxQmU14eO8zcBVMGi779txLV
+ gAK24vGk4z1tAlqRCFXqqdSKC7IQg7Zp31MSdPUUqgipotsboY0FZRqxOZNLL+LF2J1RN1s
+ g4uekZKWU6jtpOD9VtGSw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sK50RuEuY6o=:W4Civog64LEYTCU7ztKXIm
+ mNhnFDzQesMJ1YoqPZScxAz2RzsAcpC5AACK2AeKPzKvQqYpsb1S7tdb7CcoveLwEDqU6uRcZ
+ 8V+lkzrJVWdYMS1Uw+xDChlW85tHWbVGUftWS3SC33gPLm2H1DAczkWTPyShwQPFIejwNnBz3
+ e/DnK6gb0WLi2InFw0nQBBbtK2Uhv9+Da69am8VQ0h+0Y3gQALjjYFf+IdO26fgoQ1rJJiTjs
+ 1Wx1HaeH/nC/6n1/jnLcng8BfVRqy1fsNG1h3TOys+4fQIUmj9p1L9wbnymvfg1K+IQetheOr
+ wi0FM7cecNzuB/xA7j2ownKcY2yR9fh7wYxhREw/5UfS8RYjmGhllvUmFpQFCWpyi0dVVxsmC
+ 6tTB2gYjr+5+xrUbGoVlI2b9MYVDC7v25HG9mJsv3Qb4Ypb49fVl4/RGK/OWaLNVcRvQlpecR
+ Pu101jLxu4joxNv7gfFGcBp9YaYdyCLkw3JAyr4t0Ef/uiGfann3n8/wMbNOKBkzQHffbx9iX
+ D1wOREBYa2Y6WGZn6G98cxBaG+Dvepv1vbKu8t9tsuahuTF6NEvkomb2fQCnw0XVZSdi655bi
+ uUwEik1WCqJJLzfgH8tPgDW/r6Kjz1npU27Nvy29YMdRuAqoDhy64IBdMgiAQmKBZlZcPpQRJ
+ JKCQEu/bXBmTq3AmrOlLGGTxiXfPa9CjiN2pz177G6e0908/dcmDjP4GsPLZKNhS2zK1hq6Yb
+ H/h0uS0zAwWfcQLQ4bDU34J7EQX+rCFZpg/fWcJ/erklTGB1pmTp/omIHjpaqR5tOe2n1QSVL
+ tjCqOG5+0Xexnaax7n13wL2vL6p0T/tPUoM7q/SsMzzJjs8EJlZEsHqfRJ7XSNHwn1Q91WLcn
+ c1wMgFEzGYrFZqqil5de0PocdwVMBhf7xyA3QC/GH5NLHG7bAwu1nFtbjAi+lsiw1AoCLAuyg
+ rnxKNncRLoFhoVk/UV5EBaI0h4zO1r71CBqUtkIkf7xgJJ9qBgVVVbgBXPIz94oMyjdnkscc3
+ tbI53j9XbhNYhmD8u8YpDz/pw71ozabCFHcitrdAB7u6PZUBt8dRfZgr/iIEy1UUMzGYzl7UT
+ jocHlFyu3ikaGTHm7x9gW9yCvNisUXWVgK6nLDfcqrtMZw0anDj1XNOMRfNsRtmKo3Ir2dEVk
+ jSzjO0u6/qGBv4yHDZN90LDkpi9SatruX9EOsSwmp8lxvaIYlH+3TvZVjih3d/4LB2ULHTudE
+ e+0/KF5QLIkPT92UuHvQ4aMQBOGJ+rB1ggszo/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 09, 2020 at 11:08:18AM -0400, Nitesh Narayan Lal wrote:
-> This patch limits the pci_alloc_irq_vectors max vectors that is passed on
-> by the caller based on the available housekeeping CPUs by only using the
-> minimum of the two.
-> 
-> A minimum of the max_vecs passed and available housekeeping CPUs is
-> derived to ensure that we don't create excess vectors which can be
-> problematic specifically in an RT environment. This is because for an RT
-> environment unwanted IRQs are moved to the housekeeping CPUs from
-> isolated CPUs to keep the latency overhead to a minimum. If the number of
-> housekeeping CPUs are significantly lower than that of the isolated CPUs
-> we can run into failures while moving these IRQs to housekeeping due to
-> per CPU vector limit.
-> 
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  include/linux/pci.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 835530605c0d..750ba927d963 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -38,6 +38,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/resource_ext.h>
-> +#include <linux/sched/isolation.h>
->  #include <uapi/linux/pci.h>
->  
->  #include <linux/pci_ids.h>
-> @@ -1797,6 +1798,21 @@ static inline int
->  pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
->  		      unsigned int max_vecs, unsigned int flags)
->  {
-> +	unsigned int num_housekeeping = num_housekeeping_cpus();
-> +	unsigned int num_online = num_online_cpus();
-> +
-> +	/*
-> +	 * Try to be conservative and at max only ask for the same number of
-> +	 * vectors as there are housekeeping CPUs. However, skip any
-> +	 * modification to the of max vectors in two conditions:
-> +	 * 1. If the min_vecs requested are higher than that of the
-> +	 *    housekeeping CPUs as we don't want to prevent the initialization
-> +	 *    of a device.
-> +	 * 2. If there are no isolated CPUs as in this case the driver should
-> +	 *    already have taken online CPUs into consideration.
-> +	 */
-> +	if (min_vecs < num_housekeeping && num_housekeeping != num_online)
-> +		max_vecs = min_t(int, max_vecs, num_housekeeping);
->  	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
->  					      NULL);
->  }
 
-If min_vecs > num_housekeeping, for example:
+--9UV9rz0O2dU/yYYn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-/* PCI MSI/MSIx support */
-#define XGBE_MSI_BASE_COUNT     4
-#define XGBE_MSI_MIN_COUNT      (XGBE_MSI_BASE_COUNT + 1)
+On Tue, Sep 08, 2020 at 11:39:46AM +0200, Alexandre Belloni wrote:
+> On 05/09/2020 15:32:27+0200, Jonathan Neusch=C3=A4fer wrote:
+[...]
+> >  #define RTC_TIMESTAMP_END_2079		3471292799LL /* 2079-12-31 23:59:59 */
+> >  #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
+> >  #define RTC_TIMESTAMP_END_2199		7258118399LL /* 2199-12-31 23:59:59 */
+> > +#define RTC_TIMESTAMP_END_2255		9025257599LL /* 2255-12-31 23:59:59 */
+>=20
+> Honestly, I wouldn't bother adding that one unless you have examples of
+> other RTCs endng at the same date, I'm fine having the value and comment
+> directly in the probe function.
 
-Then the protection fails.
-
-How about reducing max_vecs down to min_vecs, if min_vecs >
-num_housekeeping ?
+Indeed, it's the only RTC I know with this end date. I'll fold it into
+the driver.
 
 
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--9UV9rz0O2dU/yYYn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9afLQACgkQCDBEmo7z
+X9vFEg//WZbPqecNb6hQ+RFL7wU4xLDRzNy4eCVqc6qH7tkAnJwUJ+j37Vf0J/0n
++sZ9KmrTvdYLstgd8ixk42+eZ81cq2mgShUmf3/NedAVnKR87K/DIytOQkFAWzF4
+N4LGV0sBdYzvRpKXab6M5UfXJueNvejvbxVMyA0T3IUyVY7LcfkPpn833cdRfc6h
+K4XPpdE+TOTO297ZeIarFSaigdj7GMU28pPrXnfooUo6Q3BpnsvHMceKS8n35O/P
+98JJazxQ3jxxEP3qzHR5DG4Rt1FdGZy44PunvmwryhzM+cCUvyyFxtkVz1Haa2IU
+eMmDWsOPeSWkZvDsBcsr+1RwINtU9FaQFyTMcCaS40G4+BdPpdPCCt3CT6nDApkV
+XYCLChLlDcgaovuahRkWV4up9TtpqYSG8dOtUTWRLRKH0N605lsfFxs7e8vGaMgV
+zDKPc0H+lgp3E0pK3r2D12Sw2iiU3jsVIV0uXEZOx8n4UZSnwuKC2yKlumKDNtU/
+eQy+6NMNmXfpBo6maK53nOlwXp9+lwNPguALLW7XLnit9qD/B/ENXYAy1htqZyt7
+jHR6386FzpBIrca4Z79oUailzCORGj6WAV+IcWjhks/k1YPLFw2Skrs2FBEhO1V1
+B9uYKI+6LsuF7wj8odaxhNwCqPQJbhXCx86V9BuabnZJLtO3py4=
+=ZcyE
+-----END PGP SIGNATURE-----
+
+--9UV9rz0O2dU/yYYn--
