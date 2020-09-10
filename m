@@ -2,59 +2,92 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12240C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D379C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C792087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B5C2080A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:31:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599762680;
+	bh=tBuZCR5xiv1qjye1QG9PxK9ZNp+DEVBnbx0PDmvTlWo=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=iAOEmGvnxb+BxqdwvueXhx73/s5sqTDe55QeScj3EtTjt8+3uJtHESLReI2i0Z9Hi
+	 79veRQrApNd9eKvD04Vo5p7jpjutB8AAWUN5hSAVydyX5dBf7zG+hRefh0Vkfa/oME
+	 sTcfQSp40kRtBwC8KbN3D2aD74VhKFRB9t6dDXek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgIJSa2 (ORCPT
+        id S1726738AbgIJSaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:30:28 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:48482 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgIJS3B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:29:01 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 10 Sep 2020 14:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726973AbgIJSXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:23:25 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8B76A2004B;
-        Thu, 10 Sep 2020 20:28:33 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 20:28:32 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        od@zcrc.me, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4] gpu/drm: ingenic: Add option to mmap GEM buffers
- cached
-Message-ID: <20200910182832.GB893045@ravnborg.org>
-References: <20200822164233.71583-1-paul@crapouillou.net>
- <S08EGQ.NOF31L8HCYTS1@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <S08EGQ.NOF31L8HCYTS1@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=CaYmGojl c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=FqK6QesGHyGuQBTwX3IA:9 a=CjuIK1q_8ugA:10
+        by mail.kernel.org (Postfix) with ESMTPSA id 9852B21D90;
+        Thu, 10 Sep 2020 18:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599762181;
+        bh=tBuZCR5xiv1qjye1QG9PxK9ZNp+DEVBnbx0PDmvTlWo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=w3cgk1iB7ZLIrA0yy4zGNS3HxFo56zh1fZWmQFAAtzadkDP21Fiv0SnhiZh+0WMJA
+         AmzINdUfkal+hH3DceZI9B/uinG7Q+7UzDAwX+m29jbmdXd3siLtVhFF43ymTIka8/
+         Z+2utdvl4stghrFkNMjpUThswNFuPfs9H28bTn5E=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/4] dt-bindings: i2c: imx: Fix i.MX 7 compatible matching
+Date:   Thu, 10 Sep 2020 20:22:44 +0200
+Message-Id: <20200910182244.5815-4-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910182244.5815-1-krzk@kernel.org>
+References: <20200910182244.5815-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+The i.MX 7 DTSes use two compatibles so update the binding to fix
+dtbs_check warnings like:
 
-On Wed, Sep 09, 2020 at 03:26:52PM +0200, Paul Cercueil wrote:
-> Any love for my patch? I have more pending :)
-I have looked through the patch a few times. And I did not find any
-spelling errors. But the memory magic was beyond me so I hope someone
-more knowledgeable can chime in here.
+  arch/arm/boot/dts/imx7d-cl-som-imx7.dt.yaml: i2c@30a20000:
+    compatible: ['fsl,imx7d-i2c', 'fsl,imx21-i2c'] is not valid under any of the given schemas (Possible causes of the failure):
 
-	Sam
+  arch/arm/boot/dts/imx7d-cl-som-imx7.dt.yaml: i2c@30a20000:
+    compatible: ['fsl,imx7d-i2c', 'fsl,imx21-i2c'] is too long
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+index 19c9daba6e9f..3a0fbeea7aaf 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
+@@ -21,6 +21,9 @@ properties:
+       - items:
+           - const: fsl,imx35-i2c
+           - const: fsl,imx1-i2c
++      - items:
++          - const: fsl,imx7d-i2c
++          - const: fsl,imx21-i2c
+       - items:
+           - enum:
+               - fsl,imx25-i2c
+-- 
+2.17.1
+
