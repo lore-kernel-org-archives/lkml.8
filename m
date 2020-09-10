@@ -2,108 +2,81 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C87FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C4BC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E25E206D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:36:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599755764;
-	bh=dzZnmnmW/OcULkwgSlJBXQmNt6Lts9wz/zHvPwNp9Eo=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
-	 Cc:Cc:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cs2XjM1fGG0xk8kc6tvoGuYFvt+ZkBbI8N0UJL8OWl3PxAgmgVk4p+6y6Qyq47Xmw
-	 7g3XqH0xPd1b9c+/+lZe6Sf5E+Bk3wpLXXKxlpnGnkkkPLAzk5Sgo7m4gateolFFoz
-	 ujY7+Z9LrnwPgx5PgNK5WFx6WlSRiam49CWXw73U=
+	by mail.kernel.org (Postfix) with ESMTP id 672872075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgIJQf6 (ORCPT
+        id S1725372AbgIJQib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgIJQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:34:17 -0400
-Received: from localhost (unknown [70.37.104.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16DB121582;
-        Thu, 10 Sep 2020 16:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599755657;
-        bh=dzZnmnmW/OcULkwgSlJBXQmNt6Lts9wz/zHvPwNp9Eo=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
-         Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=YpwMjIwo8m5ztCnRf7uNWp5ABWFf5uIsg56Ck/Eaw1TrHozTf4PNKD0au+S2BG6Zi
-         iy9hvggmavdj7R+XijSp1G4Jq13Fdz/pfIZ50NBq1VBmhRTe7QaDFEIrbvXqnCCzo4
-         lPALA2tpLa5g2okAe36l/zqwGrcoi/YYz5GM99C0=
-Date:   Thu, 10 Sep 2020 16:34:16 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-To:     Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>
-Cc:     Stephane Eranian <eranian@google.com>
-Cc:     Stephane Eranian <eranian@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Borislav Petkov <bp@alien8.de>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86 <x86@kernel.org>
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
-In-Reply-To: <20200908214740.18097-2-kim.phillips@amd.com>
-References: <20200908214740.18097-2-kim.phillips@amd.com>
-Message-Id: <20200910163417.16DB121582@mail.kernel.org>
+        Thu, 10 Sep 2020 12:38:31 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:52458 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgIJQfw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:35:52 -0400
+Date:   Thu, 10 Sep 2020 12:35:24 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-api@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: add fchmodat2 syscall
+Message-ID: <20200910163524.GI3265@brightrain.aerifal.cx>
+References: <20200910142335.GG3265@brightrain.aerifal.cx>
+ <20200910161615.GA1180022@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910161615.GA1180022@kroah.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Thu, Sep 10, 2020 at 06:16:15PM +0200, Greg KH wrote:
+> On Thu, Sep 10, 2020 at 10:23:37AM -0400, Rich Felker wrote:
+> > POSIX defines fchmodat as having a 4th argument, flags, that can be
+> > AT_SYMLINK_NOFOLLOW. Support for changing the access mode of symbolic
+> > links is optional (EOPNOTSUPP allowed if not supported), but this flag
+> > is important even on systems where symlinks do not have access modes,
+> > since it's the only way to safely change the mode of a file which
+> > might be asynchronously replaced with a symbolic link, without a race
+> > condition whereby the link target is changed.
+> > 
+> > It's possible to emulate AT_SYMLINK_NOFOLLOW in userspace, and both
+> > musl libc and glibc do this, by opening an O_PATH file descriptor and
+> > performing chmod on the corresponding magic symlink in /proc/self/fd.
+> > However, this requires procfs to be mounted and accessible.
+> > 
+> > It was determined (see glibc issue #14578 and commit a492b1e5ef) that,
+> > on some filesystems, performing chmod on the link itself produces a
+> > change in the inode's access mode, but returns an EOPNOTSUPP error.
+> > This is non-conforming and wrong. Rather than try to fix all the
+> > broken filesystem backends, block attempts to change the symlink
+> > access mode via fchmodat2 at the frontend layer. This matches the
+> > userspace emulation done in libc implementations. No change is made to
+> > the underlying chmod_common(), so it's still possible to attempt
+> > changes via procfs, if desired. If at some point all filesystems have
+> > been fixed, this could be relaxed to allow filesystems to make their
+> > own decision whether changing access mode of links is supported.
+> 
+> A new syscall just because we have broken filesystems seems really odd,
+> why not just fix the filesystems instead?
 
-[This is an automated email]
+The part about broken filesystems is just the justification for doing
+the EOPNOTSUPP check at this layer rather than relying on the
+filesystem to do it, not the purposse for the syscall.
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs").
+The purpose of the syscall is fixing the deficiency in the original
+one, which lacked the flags argument, making it so you have to do a
+complicated emulation dance involving O_PATH and procfs magic symlinks
+to implement the standard functionality.
 
-The bot has tested the following trees: v5.8.7, v5.4.63, v4.19.143, v4.14.196.
-
-v5.8.7: Build OK!
-v5.4.63: Failed to apply! Possible dependencies:
-    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
-    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
-    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
-
-v4.19.143: Failed to apply! Possible dependencies:
-    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
-    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
-    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
-    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
-
-v4.14.196: Failed to apply! Possible dependencies:
-    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
-    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
-    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
-    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks
-Sasha
+Rich
