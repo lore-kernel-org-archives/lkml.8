@@ -2,113 +2,213 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E583C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA98DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1484206E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9412206E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599774658;
+	bh=oVN9GF85pkdyT1vUsIhYyDM+zvcZ+4Ygedc8ht+u1Fk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vM0oUPJYVM/vDkPIAWj/jKrgeWn6ftmssoE3aCxuK/bqid/wKuooo55YiHrhCUv1l
+	 al2cfqqBlzdsLZqCjC+RahaeTzLCxiJYxWPTGKYf/ni0m4m0F7EyHechL3SVCTW51l
+	 3TbOGM2vIijGpM/4SwtMmGV6K+SQLjvJqmPm4GH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgIJVur (ORCPT
+        id S1725836AbgIJVuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:50:47 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:41655 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730761AbgIJMiX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:38:23 -0400
-Received: by mail-io1-f72.google.com with SMTP id j4so4173361iob.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 05:38:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=VwrlinUd9kcwoUzQiQFmPRuCi3c6IG53KKTkPvCrpzw=;
-        b=N6ACfaWO6/d9rDx+tTSEcGaeTwktEn1MJ0Q0m8z5WEbxa7ZkCEHgofStW6Ulm81Ee1
-         YjSGBVEF8KU60h6bDx5QzKnkPhCG7sPKi91+JrcUUt9h/W6k9EjsyG1tsZ8fD4BDiNMx
-         fhfrwHyEzcFvap8rAHn9SM8NF74A3xpapwVghYIa0L/6pyB5eknB5jHjz8IX9zVdwX6/
-         68xbRiXbiC0ht+cF/WWaYUXS15V3LOvZuy2AT0e6W8XQ2z/kZBYkWSpm/HFKhTR+BaUf
-         iBKkySzvXzA3evgbY3WVR0G8fd1lhPvx89b9xe1/KgtkxNI5J4BZzWI6ivCbWKBYw71i
-         XRBQ==
-X-Gm-Message-State: AOAM530aEBKQHgV/z5PQ/ZhjyQ7pPGCTQ+vs6gGuwp7mfB1yNtsXp7Md
-        cD0IE10lzT4Z5ETs8rYULB2JnBwm6JCGd/zPv9HeT1iUH2Ln
-X-Google-Smtp-Source: ABdhPJyjTYvh1M3ybPxkFS58uNVt6Y64hVVYzYW7pgEStSABBQd+BfOcqLa5rX1BCN4hHSH1erBwZ1TTwM4QYfGq6hWE7lc4nO1t
+        Thu, 10 Sep 2020 17:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730780AbgIJMi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 08:38:57 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 084B3214F1;
+        Thu, 10 Sep 2020 12:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599741532;
+        bh=oVN9GF85pkdyT1vUsIhYyDM+zvcZ+4Ygedc8ht+u1Fk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Qo/hW2xw7Qg2kppdyQoXfFjfwdYXmgJsg7q43c3BF0zurQ9P3YRsH2qdGbzatMYE8
+         awZ/GvmZvS27EmVLbhfe/n6e5ScEXUpjfzQ0ILQ5dJwpMtJcSISSkkdENFjXe6OnCO
+         HFXcO8HI+67xQ6ccgvO12P+R4iBva8K4fHJ5PG7Q=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 2/6] tracing: Define event fields early stage
+Date:   Thu, 10 Sep 2020 21:38:48 +0900
+Message-Id: <159974152862.478751.2023768466808361350.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159974150897.478751.17933810682730471522.stgit@devnote2>
+References: <159974150897.478751.17933810682730471522.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-X-Received: by 2002:a92:d07:: with SMTP id 7mr4985339iln.243.1599741499410;
- Thu, 10 Sep 2020 05:38:19 -0700 (PDT)
-Date:   Thu, 10 Sep 2020 05:38:19 -0700
-In-Reply-To: <000000000000a74731059f545387@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce0feb05aef4d7a1@google.com>
-Subject: Re: WARNING in tracepoint_probe_register_prio (4)
-From:   syzbot <syzbot+1b2f76c6fb6f549f728b@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        mathieu.desnoyers@polymtl.ca, mingo@elte.hu,
-        netdev@vger.kernel.org, rfontana@redhat.com, rostedt@goodmis.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+Define event fields at early stage so that boot-time tracing can
+access the event fields (like per-event filter setting).
 
-HEAD commit:    34d4ddd3 Merge tag 'linux-kselftest-5.9-rc5' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ab2b7d900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f5c353182ed6199
-dashboard link: https://syzkaller.appspot.com/bug?extid=1b2f76c6fb6f549f728b
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145c4735900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d31621900000
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_events.c |   92 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 55 insertions(+), 37 deletions(-)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1b2f76c6fb6f549f728b@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 6978 at kernel/tracepoint.c:243 func_add kernel/tracepoint.c:147 [inline]
-WARNING: CPU: 1 PID: 6978 at kernel/tracepoint.c:243 tracepoint_add_func kernel/tracepoint.c:241 [inline]
-WARNING: CPU: 1 PID: 6978 at kernel/tracepoint.c:243 tracepoint_probe_register_prio+0x4ac/0x590 kernel/tracepoint.c:315
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 6978 Comm: syz-executor432 Not tainted 5.9.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1d6/0x29e lib/dump_stack.c:118
- panic+0x2c0/0x800 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:tracepoint_add_func kernel/tracepoint.c:147 [inline]
-RIP: 0010:tracepoint_probe_register_prio+0x4ac/0x590 kernel/tracepoint.c:315
-Code: 48 89 df e8 16 b2 1f 00 89 c5 31 ff 89 c6 e8 1b 7c fe ff 85 ed 7e 1a e8 02 78 fe ff eb 20 e8 fb 77 fe ff 49 c7 c7 ef ff ff ff <0f> 0b 44 89 fd eb 4f e8 e8 77 fe ff 48 89 df e8 30 b8 1f 00 31 ed
-RSP: 0018:ffffc900055a7c38 EFLAGS: 00010293
-RAX: ffffffff81768595 RBX: dffffc0000000000 RCX: ffff88808d43e1c0
-RDX: 0000000000000000 RSI: 000000000000000a RDI: 000000000000000a
-RBP: ffff88809d603660 R08: ffffffff8176831e R09: fffffbfff13164de
-R10: fffffbfff13164de R11: 0000000000000000 R12: 000000000000000a
-R13: 0000000000000003 R14: 00000000ffffffff R15: ffffffffffffffef
- bpf_raw_tracepoint_open kernel/bpf/syscall.c:2741 [inline]
- __do_sys_bpf+0x63ae/0x11060 kernel/bpf/syscall.c:4220
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x446bd9
-Code: e8 8c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6d31c3eda8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446bd9
-RDX: 0000000000000010 RSI: 00000000200001c0 RDI: 0000000000000011
-RBP: 00000000006dbc30 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 0000000020000100 R14: 00000000004aebc0 R15: 0000000000000064
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index a85effb2373b..a2531301b44f 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2123,12 +2123,48 @@ event_subsystem_dir(struct trace_array *tr, const char *name,
+ 	return NULL;
+ }
+ 
++static int
++event_define_fields(struct trace_event_call *call)
++{
++	struct list_head *head;
++	int ret = 0;
++
++	/*
++	 * Other events may have the same class. Only update
++	 * the fields if they are not already defined.
++	 */
++	head = trace_get_fields(call);
++	if (list_empty(head)) {
++		struct trace_event_fields *field = call->class->fields_array;
++		unsigned int offset = sizeof(struct trace_entry);
++
++		for (; field->type; field++) {
++			if (field->type == TRACE_FUNCTION_TYPE) {
++				field->define_fields(call);
++				break;
++			}
++
++			offset = ALIGN(offset, field->align);
++			ret = trace_define_field(call, field->type, field->name,
++						 offset, field->size,
++						 field->is_signed, field->filter_type);
++			if (WARN_ON_ONCE(ret)) {
++				pr_err("error code is %d\n", ret);
++				break;
++			}
++
++			offset += field->size;
++		}
++	}
++
++	return ret;
++}
++
+ static int
+ event_create_dir(struct dentry *parent, struct trace_event_file *file)
+ {
+ 	struct trace_event_call *call = file->event_call;
+ 	struct trace_array *tr = file->tr;
+-	struct list_head *head;
+ 	struct dentry *d_events;
+ 	const char *name;
+ 	int ret;
+@@ -2162,35 +2198,10 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
+ 				  &ftrace_event_id_fops);
+ #endif
+ 
+-	/*
+-	 * Other events may have the same class. Only update
+-	 * the fields if they are not already defined.
+-	 */
+-	head = trace_get_fields(call);
+-	if (list_empty(head)) {
+-		struct trace_event_fields *field = call->class->fields_array;
+-		unsigned int offset = sizeof(struct trace_entry);
+-
+-		for (; field->type; field++) {
+-			if (field->type == TRACE_FUNCTION_TYPE) {
+-				ret = field->define_fields(call);
+-				break;
+-			}
+-
+-			offset = ALIGN(offset, field->align);
+-			ret = trace_define_field(call, field->type, field->name,
+-						 offset, field->size,
+-						 field->is_signed, field->filter_type);
+-			if (ret)
+-				break;
+-
+-			offset += field->size;
+-		}
+-		if (ret < 0) {
+-			pr_warn("Could not initialize trace point events/%s\n",
+-				name);
+-			return -1;
+-		}
++	ret = event_define_fields(call);
++	if (ret < 0) {
++		pr_warn("Could not initialize trace point events/%s\n", name);
++		return ret;
+ 	}
+ 
+ 	/*
+@@ -2493,7 +2504,7 @@ __trace_early_add_new_event(struct trace_event_call *call,
+ 	if (!file)
+ 		return -ENOMEM;
+ 
+-	return 0;
++	return event_define_fields(call);
+ }
+ 
+ struct ftrace_module_file_ops;
+@@ -3431,6 +3442,18 @@ static __init int event_trace_enable_again(void)
+ 
+ early_initcall(event_trace_enable_again);
+ 
++/* Init fields which doesn't related to the tracefs */
++static __init int event_trace_init_fields(void)
++{
++	if (trace_define_generic_fields())
++		pr_warn("tracing: Failed to allocated generic fields");
++
++	if (trace_define_common_fields())
++		pr_warn("tracing: Failed to allocate common fields");
++
++	return 0;
++}
++
+ __init int event_trace_init(void)
+ {
+ 	struct trace_array *tr;
+@@ -3451,12 +3474,6 @@ __init int event_trace_init(void)
+ 	if (!entry)
+ 		pr_warn("Could not create tracefs 'available_events' entry\n");
+ 
+-	if (trace_define_generic_fields())
+-		pr_warn("tracing: Failed to allocated generic fields");
+-
+-	if (trace_define_common_fields())
+-		pr_warn("tracing: Failed to allocate common fields");
+-
+ 	ret = early_event_add_tracer(d_tracer, tr);
+ 	if (ret)
+ 		return ret;
+@@ -3474,6 +3491,7 @@ void __init trace_event_init(void)
+ 	event_trace_memsetup();
+ 	init_ftrace_syscalls();
+ 	event_trace_enable();
++	event_trace_init_fields();
+ }
+ 
+ #ifdef CONFIG_EVENT_TRACE_STARTUP_TEST
 
