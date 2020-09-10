@@ -2,108 +2,105 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F1FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA20C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6448214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0779720829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BhxXHjiT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gWXdSveh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgIJUyz (ORCPT
+        id S1727900AbgIJUzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:54:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49941 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730921AbgIJOuF (ORCPT
+        Thu, 10 Sep 2020 16:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731197AbgIJOtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:50:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599749402;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bvnl+oZNY7fSyrT1rYfr08kEJ6c9MI0yMW+cHdyj6Us=;
-        b=BhxXHjiTwtv9WHCCuq+wUgPt6McGP5ocihLphql9cXHjoyClq/VbdGQ9yAbbBg55pJMfU7
-        0xAB+L2r7aml4jojc3cuZ6E6vbx6Pzw2FYYSjZj6FZmXsvpuN6yAhRAjoAN9sEm22X3z6x
-        sqe0tixqPMzGgY6iR/06iexiM0mX1bc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-1fCbfGeXMlCHyZyhcD0t6g-1; Thu, 10 Sep 2020 10:49:13 -0400
-X-MC-Unique: 1fCbfGeXMlCHyZyhcD0t6g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01AF5425CE;
-        Thu, 10 Sep 2020 14:47:48 +0000 (UTC)
-Received: from krava (unknown [10.40.192.120])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D79865C22E;
-        Thu, 10 Sep 2020 14:47:45 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 16:47:44 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Wade Mealing <wmealing@redhat.com>
-Subject: Re: [PATCH] perf: Fix race in perf_mmap_close function
-Message-ID: <20200910144744.GA1663813@krava>
-References: <20200910104153.1672460-1-jolsa@kernel.org>
- <CAM9d7cjqq8+wcZWJ77oONKXu-FsaT_YvRxzaGbRT8PjLOw-AkQ@mail.gmail.com>
+        Thu, 10 Sep 2020 10:49:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633F1C0617AA;
+        Thu, 10 Sep 2020 07:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=Src/OqkjxQSdZ62Mh67bzsrUw3RijigPMK2ar4X7t2Y=; b=gWXdSvehOkowhVdpfH7VZCocig
+        yCLRi9ERfOF5FIu+vkFBTfgi/Ds264r21uA1sYnnKRHsbndIIzWlUwXOIc/d8xLROAG94FPRv9U/l
+        YdVHVVIZBRvmivfYFh2OvsuHWAr/CvB+AYT+L4hrsBozPgF0AywPU/qNWYgRO+fkYne9yR8LQKyCT
+        p+OEsoCxOCl8CkYKajH+aXBU5tpDhlTvTSgfLixGvTKRUIArPswCyijGZpGPCOx2VPs6BW+dOmeV3
+        jvB9tBZEnbfTmR8tXDOf9OBOPPhG2cIyBweSYO8w7sKGMPb24r1j2auUllYxH/o4jBG8JpoEFkcHa
+        2eQjefKQ==;
+Received: from [2001:4bb8:184:af1:3ecc:ac5b:136f:434a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGNsX-0006xO-0l; Thu, 10 Sep 2020 14:48:49 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: [PATCH 09/12] mm: use SWP_SYNCHRONOUS_IO more intelligently
+Date:   Thu, 10 Sep 2020 16:48:29 +0200
+Message-Id: <20200910144833.742260-10-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910144833.742260-1-hch@lst.de>
+References: <20200910144833.742260-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cjqq8+wcZWJ77oONKXu-FsaT_YvRxzaGbRT8PjLOw-AkQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:48:02PM +0900, Namhyung Kim wrote:
+There is no point in trying to call bdev_read_page if SWP_SYNCHRONOUS_IO
+is not set, as the device won't support it.
 
-SNIP
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ mm/page_io.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-> >   _do_fork+0x83/0x3a0
-> >   __do_sys_wait4+0x83/0x90
-> >   __do_sys_clone+0x85/0xa0
-> >   do_syscall_64+0x5b/0x1e0
-> >   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > Using atomic decrease and check instead of separated calls.
-> > This fixes CVE-2020-14351.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  kernel/events/core.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 7ed5248f0445..29313cc54d9e 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -5903,8 +5903,6 @@ static void perf_mmap_close(struct vm_area_struct *vma)
-> >                 mutex_unlock(&event->mmap_mutex);
-> >         }
-> >
-> > -       atomic_dec(&rb->mmap_count);
-> > -
-> >         if (!atomic_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-> >                 goto out_put;
-> 
-> But when it takes the goto, rb->mmap_count won't decrement anymore..
-
-event->mmap_count is per event, so if we have have race in here,
-2 threads can go through with each event->mmap_count reaching zero
-
-jirka
+diff --git a/mm/page_io.c b/mm/page_io.c
+index e485a6e8a6cddb..b199b87e0aa92b 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -403,15 +403,17 @@ int swap_readpage(struct page *page, bool synchronous)
+ 		goto out;
+ 	}
+ 
+-	ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
+-	if (!ret) {
+-		if (trylock_page(page)) {
+-			swap_slot_free_notify(page);
+-			unlock_page(page);
+-		}
++	if (sis->flags & SWP_SYNCHRONOUS_IO) {
++		ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
++		if (!ret) {
++			if (trylock_page(page)) {
++				swap_slot_free_notify(page);
++				unlock_page(page);
++			}
+ 
+-		count_vm_event(PSWPIN);
+-		goto out;
++			count_vm_event(PSWPIN);
++			goto out;
++		}
+ 	}
+ 
+ 	ret = 0;
+-- 
+2.28.0
 
