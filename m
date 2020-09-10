@@ -7,58 +7,60 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF63C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B20C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36ABB21582
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E664921941
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="duPmDBMf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="StVpUaql"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YBm5YN/s";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TRBbI9zq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgIJJYT (ORCPT
+        id S1730449AbgIJJXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:24:19 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38768 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730277AbgIJJWT (ORCPT
+        Thu, 10 Sep 2020 05:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730256AbgIJJWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:22:19 -0400
-Date:   Thu, 10 Sep 2020 09:22:08 -0000
+        Thu, 10 Sep 2020 05:22:18 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A978C061573;
+        Thu, 10 Sep 2020 02:22:13 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 09:22:03 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729729;
+        s=2020; t=1599729724;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PnXv12gGBDaSrD0ETKCH4ffZcRC1dqZFTwndZAy2Q/4=;
-        b=duPmDBMfMRTAcuacqlRsOjLHbyWJA2lDIOHNW9hKeHD/tPLK5OoLwI+w/wLfGuM8QWLeZa
-        ryhJf1Nmn/YTpHaNcoSYkjNmpc6WDwqhd500Hf7WbWEdzz0llgVX/utGX5qFdh+ou2rz5c
-        Zr2dcx0e9DlQm96pQQkjpYUNEwIwLm1BC6pFRY/IlOjZ8xkPLX8qM36AOpyoEZowQdJ802
-        B2HxdJ1CAEAYyuoqLs7ng0ShUm6SiAOYQuf7DqMYBKs21KTM/9OOr3GRGiU+F3pJ2sY0E4
-        6+KS7P0734JeXjUa/3Q5PStbteQc6gbvMd/LoXpE5C1vCNoENCLU0clgK38qIg==
+        bh=rlAPKhAPt7Ru9E88uu7h3W+YtKb9boFq9fZiHizVMUQ=;
+        b=YBm5YN/s3eQZinHJZRNg0bfB8IswOE2GOB4XhUkXC1yz5+JBvtd44y6vdRQ7jq4W8kth/w
+        R4uE3vYc8EL/xB3zZLvnA668nSG+Jtl01XFmzhJDQxQYSS2lS/MxzaZEbS0ityfztoeUwU
+        sWOLshunyZ6D3Gtq2hNL0MN7oSWFg/u0D9s+IHM2PzWlbVwY8lIv86RTKZ5HkIwpRawxy0
+        fXg3TaaokuJ6svEg9dK7SW2sfWlbk51sjpN7+na7IGmKlP5pDvdv6UmJcx0C3jmi2V5l4n
+        TUX6QoTmtYkZhzvDOs3FJOTLJq4MbFNA9xSITuZBz2SV3xeLCZsv7axOs675QQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729729;
+        s=2020e; t=1599729724;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PnXv12gGBDaSrD0ETKCH4ffZcRC1dqZFTwndZAy2Q/4=;
-        b=StVpUaqlQe+FQnCFYtdqs1MevyxK+opsL4vs1BQOS+KpVHPNN1GE5d1PtzoPdzCxfHuMzn
-        Q1jSUOxJKHTDlLDg==
-From:   "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+        bh=rlAPKhAPt7Ru9E88uu7h3W+YtKb9boFq9fZiHizVMUQ=;
+        b=TRBbI9zq2vX4IXctMHa9D7bnSwOZHzeuWJDlIo9Cdk2ue3L7xzrm0m2b4YZEbSfUMwuCmn
+        c50DwqGu9nzMmiDQ==
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/sev-es: Handle INVD Events
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+Subject: [tip: x86/seves] x86/sev-es: Support CPU offline/online
+Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-57-joro@8bytes.org>
-References: <20200907131613.12703-57-joro@8bytes.org>
+In-Reply-To: <20200907131613.12703-70-joro@8bytes.org>
+References: <20200907131613.12703-70-joro@8bytes.org>
 MIME-Version: 1.0
-Message-ID: <159972972887.20229.4347569173529097534.tip-bot2@tip-bot2>
+Message-ID: <159972972356.20229.13010951780081767464.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,40 +72,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/seves branch of tip:
 
-Commit-ID:     8b4ce83707cb2cff5f6d175ea38f751ac4456096
-Gitweb:        https://git.kernel.org/tip/8b4ce83707cb2cff5f6d175ea38f751ac4456096
-Author:        Tom Lendacky <thomas.lendacky@amd.com>
-AuthorDate:    Mon, 07 Sep 2020 15:15:57 +02:00
+Commit-ID:     094794f59720d7e877a1eeb372ecedeed6b441ab
+Gitweb:        https://git.kernel.org/tip/094794f59720d7e877a1eeb372ecedeed6b441ab
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Mon, 07 Sep 2020 15:16:10 +02:00
 Committer:     Borislav Petkov <bp@suse.de>
 CommitterDate: Wed, 09 Sep 2020 11:33:20 +02:00
 
-x86/sev-es: Handle INVD Events
+x86/sev-es: Support CPU offline/online
 
-Implement a handler for #VC exceptions caused by INVD instructions.
-Since Linux should never use INVD, just mark it as unsupported.
+Add a play_dead handler when running under SEV-ES. This is needed
+because the hypervisor can't deliver an SIPI request to restart the AP.
+Instead, the kernel has to issue a VMGEXIT to halt the VCPU until the
+hypervisor wakes it up again.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200907131613.12703-57-joro@8bytes.org
+Link: https://lkml.kernel.org/r/20200907131613.12703-70-joro@8bytes.org
 ---
- arch/x86/kernel/sev-es.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/include/uapi/asm/svm.h |  1 +-
+ arch/x86/kernel/sev-es.c        | 63 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 64 insertions(+)
 
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index 346b8a7..c1dcf3e 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -84,6 +84,7 @@
+ /* SEV-ES software-defined VMGEXIT events */
+ #define SVM_VMGEXIT_MMIO_READ			0x80000001
+ #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
++#define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
+ #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
+ #define SVM_VMGEXIT_SET_AP_JUMP_TABLE		0
+ #define SVM_VMGEXIT_GET_AP_JUMP_TABLE		1
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index b2d7287..236cfc1 100644
+index 9ad36ce..d1bcd0d 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -892,6 +892,10 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_RDPMC:
- 		result = vc_handle_rdpmc(ghcb, ctxt);
- 		break;
-+	case SVM_EXIT_INVD:
-+		pr_err_ratelimited("#VC exception for INVD??? Seriously???\n");
-+		result = ES_UNSUPPORTED;
-+		break;
- 	case SVM_EXIT_CPUID:
- 		result = vc_handle_cpuid(ghcb, ctxt);
- 		break;
+@@ -29,6 +29,8 @@
+ #include <asm/realmode.h>
+ #include <asm/traps.h>
+ #include <asm/svm.h>
++#include <asm/smp.h>
++#include <asm/cpu.h>
+ 
+ #define DR7_RESET_VALUE        0x400
+ 
+@@ -518,6 +520,65 @@ static bool __init sev_es_setup_ghcb(void)
+ 	return true;
+ }
+ 
++#ifdef CONFIG_HOTPLUG_CPU
++static void sev_es_ap_hlt_loop(void)
++{
++	struct ghcb_state state;
++	struct ghcb *ghcb;
++
++	ghcb = sev_es_get_ghcb(&state);
++
++	while (true) {
++		vc_ghcb_invalidate(ghcb);
++		ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_HLT_LOOP);
++		ghcb_set_sw_exit_info_1(ghcb, 0);
++		ghcb_set_sw_exit_info_2(ghcb, 0);
++
++		sev_es_wr_ghcb_msr(__pa(ghcb));
++		VMGEXIT();
++
++		/* Wakeup signal? */
++		if (ghcb_sw_exit_info_2_is_valid(ghcb) &&
++		    ghcb->save.sw_exit_info_2)
++			break;
++	}
++
++	sev_es_put_ghcb(&state);
++}
++
++/*
++ * Play_dead handler when running under SEV-ES. This is needed because
++ * the hypervisor can't deliver an SIPI request to restart the AP.
++ * Instead the kernel has to issue a VMGEXIT to halt the VCPU until the
++ * hypervisor wakes it up again.
++ */
++static void sev_es_play_dead(void)
++{
++	play_dead_common();
++
++	/* IRQs now disabled */
++
++	sev_es_ap_hlt_loop();
++
++	/*
++	 * If we get here, the VCPU was woken up again. Jump to CPU
++	 * startup code to get it back online.
++	 */
++	start_cpu0();
++}
++#else  /* CONFIG_HOTPLUG_CPU */
++#define sev_es_play_dead	native_play_dead
++#endif /* CONFIG_HOTPLUG_CPU */
++
++#ifdef CONFIG_SMP
++static void __init sev_es_setup_play_dead(void)
++{
++	smp_ops.play_dead = sev_es_play_dead;
++}
++#else
++static inline void sev_es_setup_play_dead(void) { }
++#endif
++
+ static void __init alloc_runtime_data(int cpu)
+ {
+ 	struct sev_es_runtime_data *data;
+@@ -566,6 +627,8 @@ void __init sev_es_init_vc_handling(void)
+ 		setup_vc_stacks(cpu);
+ 	}
+ 
++	sev_es_setup_play_dead();
++
+ 	/* Secondary CPUs use the runtime #VC handler */
+ 	initial_vc_handler = (unsigned long)safe_stack_exc_vmm_communication;
+ }
