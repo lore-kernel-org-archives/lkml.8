@@ -2,89 +2,116 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223D1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44D32075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D527820732
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Us6DXPIf";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="N4cugInA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClOsXW2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgIJQkI (ORCPT
+        id S1726474AbgIJQkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:40:08 -0400
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:35516
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726979AbgIJQfw (ORCPT
+        Thu, 10 Sep 2020 12:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbgIJQh5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:35:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599755294;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
-        bh=QJgTcfrPcTXgRkBOLIEGlx3bhnq3+fZghmrt8poCN5E=;
-        b=Us6DXPIf2G7jAJLQEO5CZLilLEnZiGPZNxK4rH7R4wk9LzzPJ3d+z5KYOKRELW95
-        iKZyTrtNoGZNuKPGjQNPBt4TYuBIXP+zNv6ZPLKQ8gYl6pHad1dzJqhGH3DuOWYSoFG
-        p2mhbAaj+isCuX9lVT/a41JpkJoPFr03I5Hy2v30=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599755294;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
-        bh=QJgTcfrPcTXgRkBOLIEGlx3bhnq3+fZghmrt8poCN5E=;
-        b=N4cugInAChys50fhmqgyv7j1YCCQqc4RV45QeoVyyejMKsp850eeswk0fm2KYK7O
-        4XjTmqWOecbyamoiKxSWloiKJfh+Hwr6jt9rPAG/MpCUnx1ryxGanD+WOqVi5izFrRf
-        Ocv2acfc3D9cDd76zj4fPHzLzEXYcjnLHM7gRtqk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3BCADC433F0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 10 Sep 2020 12:37:57 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00CBC0617AB;
+        Thu, 10 Sep 2020 09:37:18 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id o16so6682127qkj.10;
+        Thu, 10 Sep 2020 09:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JdFFsE37eiFTRP6BERxF8cO71XTx86+LjItRyfR3qXo=;
+        b=ClOsXW2gu5WYa1DOpSj8Qg6yWGAGzcCI2Y3HA3bciB+WiLOoamEyLaQmn2CqQ0P3wJ
+         fgMTx+umTjA9TeAfZqBrN12gEo5pDLbYZInQ/zTIt2a0XX/VALOFw3Fi4CGDriyA4fXv
+         TP4g7DMxSr+OVQTUJFkz5Qn4y2VxdeXA3PdyzJ8W1uuAbaBQ/LKeydAH0KPwJIysUB8w
+         JZgaJw6/uWPmqydgxe8iTR4ToAgQ8G7G4AuKOCgvxtmV+zhFXrUikBceIuBMBFKYzqgO
+         3qlGjxVfXub25qXG/VxaqxoKpmrp4EJsyF/fZNCc0sF+3tWYTMMjJXOMrduNQjzphCHd
+         P1pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JdFFsE37eiFTRP6BERxF8cO71XTx86+LjItRyfR3qXo=;
+        b=b3/N7Xn1r/fe9EMQFBmmzSGqLksI4+6bVq4kkR4Q5y/jAQLqqyiGWi7athnaylU/dw
+         3P/YQSq9AN+XrafciJSvcLpEN9KhKVAcsQy7iU0L7BMeSwXlkh28asaBEkDCEy1m8sPG
+         AxrwXxar+G4427jknWnXzgFcEjW68UoMU2Cfy1L/zaNNocie1qSp0zYzK9XdGurk79ot
+         kaS9OfC18F3bvQuqiEFX5RzubkwOZuQL1F8AWEEkFoP6vrYCv8T9DvefaAMoyTTow/bB
+         Y7QNObf8VSynC8WMVebRNxvsuPBoKg0IQv1g6pVxRu37WEUmdnLe9WBVO90jhahwqqpI
+         vSCg==
+X-Gm-Message-State: AOAM5302c1BgfFxMBsKRa+BCpydKxhy6bXqd0JofJGNnFU6gBBUnmWcC
+        snNgKkDOhApbZc0neHHyM6UygzasA4A=
+X-Google-Smtp-Source: ABdhPJwmIWRMgSWl7iXkstmJ0pPLM9KnhtDIQ7NDzOEjOhXb6+ZuSpcZwFhxi6ViIB0BIKX8qUa5Dw==
+X-Received: by 2002:a37:e508:: with SMTP id e8mr8499277qkg.380.1599755837906;
+        Thu, 10 Sep 2020 09:37:17 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id y7sm7245670qtn.11.2020.09.10.09.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 09:37:17 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 09:37:16 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] kbuild: remove cc-option test of -fno-stack-check
+Message-ID: <20200910163716.GC3119896@ubuntu-n2-xlarge-x86>
+References: <20200910135120.3527468-1-masahiroy@kernel.org>
+ <20200910135120.3527468-3-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH net-next] ath5k: fix 'mode' kernel-doc warning in
- ath5k_hw_pcu_init()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200909131858.70391-1-wanghai38@huawei.com>
-References: <20200909131858.70391-1-wanghai38@huawei.com>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     <jirislaby@kernel.org>, <mickflemm@gmail.com>, <mcgrof@kernel.org>,
-        <davem@davemloft.net>, <kuba@kernel.org>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-ID: <0101017478d89404-f89af71e-5c00-45b7-a8c9-02d98996d92f-000000@us-west-2.amazonses.com>
-Date:   Thu, 10 Sep 2020 16:28:13 +0000
-X-SES-Outgoing: 2020.09.10-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910135120.3527468-3-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wang Hai <wanghai38@huawei.com> wrote:
-
-> Fixes the following W=1 kernel build warning(s):
+On Thu, Sep 10, 2020 at 10:51:19PM +0900, Masahiro Yamada wrote:
+> The minimal compiler versions, GCC 4.9 and Clang 10 support this flag.
 > 
-> drivers/net/wireless/ath/ath5k/pcu.c:955: warning: Excess function parameter 'mode' description in 'ath5k_hw_pcu_init'
+> Here is the godbolt:
+> https://godbolt.org/z/59cK6o
 > 
-> This parameter is not in use. Remove it.
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+This flag is technically ignored by clang (see commit
+05b0798916f01690b5903302e51f3136274e291f) but that obviously does not
+matter for the sake of this.
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-
-Already fixed in ath.git.
-
-error: patch failed: drivers/net/wireless/ath/ath5k/pcu.c:945
-error: drivers/net/wireless/ath/ath5k/pcu.c: patch does not apply
-stg import: Diff does not apply cleanly
-
-Patch set to Rejected.
-
--- 
-https://patchwork.kernel.org/patch/11765471/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+>  Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 1b6abecc5cab..5102c89d3167 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -934,7 +934,7 @@ KBUILD_CFLAGS	+= -fno-merge-all-constants
+>  KBUILD_CFLAGS	+= $(call cc-option,-fmerge-constants)
+>  
+>  # Make sure -fstack-check isn't enabled (like gentoo apparently did)
+> -KBUILD_CFLAGS  += $(call cc-option,-fno-stack-check,)
+> +KBUILD_CFLAGS  += -fno-stack-check
+>  
+>  # conserve stack if available
+>  KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
+> -- 
+> 2.25.1
+> 
