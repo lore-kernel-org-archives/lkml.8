@@ -2,160 +2,195 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E303C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3AEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4F7208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GZ2G1BNy"
+	by mail.kernel.org (Postfix) with ESMTP id 7512C20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599768706;
+	bh=VxQVC648qQ3aQ7KAntrOBMaixdukqiVVbKsy/UOgfbo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nhe/cNqMyvle1/421JGS8Lwy5eNTsjeM5pgXalW+V7+bhG8dpPcYpmHEzWMBgIe72
+	 HTmn3DHMcpza4pHFA6LjRJHNLFcJjFB2Blzf2jnBL/b+Aw1/tJOPcGm2K9FbB64KcV
+	 eY0oLfp17xQ0BRnYc7QahvVc36AHwFEqvZCUQb4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgIJULM (ORCPT
+        id S1726962AbgIJULp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:11:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57032 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731029AbgIJPAm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:00:42 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ADVwbj156061;
-        Thu, 10 Sep 2020 09:55:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=uAJ358VnHFKZvUebteG+ZwkjrTg7lzgNh1aBoFkoHpk=;
- b=GZ2G1BNy+s9Zu39AdCM8v721KGKk26Vt/6LGxwvE4CfsTkJyANcLma4ZKsQYFkae9NfG
- s25+sWBk3wJF9/nJBeFH27CoQh17AO4byjDzUHqfe0nWMrHgtM5hyfk41xyirKwL3mBG
- w4/6kQRbpkG+sqS1w2BP0ihz2ZqUIRDt+tJ0mMDXCjV1MIxNKnkcZQg7fnG1RoBFNICY
- 9QsdVhNGSbMnZqU6YstDD1xlgdiajDyFjNSNubeglI6AtVJlasZvMrQe7vBhJCEtwz66
- 9XHHW8ONZZO0BNMIsODWT42eV6X/yMj4x5I27JO++Zb6W1s/FCaUB8xku+jURKNhwWHT QA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fn1x0xd2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 09:55:42 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08ADWGVT157762;
-        Thu, 10 Sep 2020 09:55:42 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fn1x0xcm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 09:55:42 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08ADqBZ1008486;
-        Thu, 10 Sep 2020 13:55:41 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 33c2a9snn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 13:55:41 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08ADtaZ823200424
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 13:55:36 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4943C6062;
-        Thu, 10 Sep 2020 13:55:39 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 470DDC605D;
-        Thu, 10 Sep 2020 13:55:39 +0000 (GMT)
-Received: from [9.211.140.115] (unknown [9.211.140.115])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 13:55:39 +0000 (GMT)
-Subject: Re: [PATCH v3 3/5] i2c: aspeed: Mask IRQ status to relevant bits
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     linux-input@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        wsa@kernel.org, rentao.bupt@gmail.com,
-        Ryan Chen <ryan_chen@aspeedtech.com>
-References: <20200909203059.23427-1-eajames@linux.ibm.com>
- <20200909203059.23427-4-eajames@linux.ibm.com>
- <CAFd5g46ghV7ArmM8LnMkGa-Nip_fT934+3cPOkVxS-b5odZXYw@mail.gmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <b092f884-9aa9-5d0b-1a90-36af558e43a8@linux.ibm.com>
-Date:   Thu, 10 Sep 2020 08:55:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 10 Sep 2020 16:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727830AbgIJO7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:59:51 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 374E12075A;
+        Thu, 10 Sep 2020 14:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599749986;
+        bh=VxQVC648qQ3aQ7KAntrOBMaixdukqiVVbKsy/UOgfbo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EVNBnRotKgVhSUvQ8fjuA/p57cW1gM3ixuT6H+i2fFWc0tBV1Kl6O8vv6UW26vTYC
+         qOEtDdXT2U5Dhv5fAkDYxM4odfmArF5CqgTupH0rO9tvLu6uhulA+c6nv3QrFgitaj
+         pqwgbtf58sVqHXdgFJSAjeYuvOopPRxRzQSjG8rs=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 48FE240D3D; Thu, 10 Sep 2020 11:59:44 -0300 (-03)
+Date:   Thu, 10 Sep 2020 11:59:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCHv2] perf tools: Call test_attr__open directly
+Message-ID: <20200910145944.GE4018363@kernel.org>
+References: <20200827134830.126721-1-jolsa@kernel.org>
+ <20200827134830.126721-2-jolsa@kernel.org>
+ <20200827193201.GB127372@krava>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g46ghV7ArmM8LnMkGa-Nip_fT934+3cPOkVxS-b5odZXYw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827193201.GB127372@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Thu, Aug 27, 2020 at 09:32:01PM +0200, Jiri Olsa escreveu:
+> nack.. forgot python header change :-\ v2 attached
+> 
+> thanks,
+> jirka
 
-On 9/10/20 4:00 AM, Brendan Higgins wrote:
-> On Wed, Sep 9, 2020 at 1:31 PM Eddie James <eajames@linux.ibm.com> wrote:
->> Mask the IRQ status to only the bits that the driver checks. This
->> prevents excessive driver warnings when operating in slave mode
->> when additional bits are set that the driver doesn't handle.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> Reviewed-by: Tao Ren <rentao.bupt@gmail.com>
-> Sorry, looks like I didn't get my comment in in time.
->
-> Looks good in principle. One minor comment below:
->
->> ---
->>   drivers/i2c/busses/i2c-aspeed.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
->> index 31268074c422..724bf30600d6 100644
->> --- a/drivers/i2c/busses/i2c-aspeed.c
->> +++ b/drivers/i2c/busses/i2c-aspeed.c
->> @@ -69,6 +69,7 @@
->>    * These share bit definitions, so use the same values for the enable &
->>    * status bits.
->>    */
->> +#define ASPEED_I2CD_INTR_RECV_MASK                     0xf000ffff
-> Could we define ASPEED_I2CD_INTR_RECV_MASK to be ASPEED_I2CD_INTR_ALL ?
+Thanks, applied.
+ 
+> 
+> ---
+> There's no longer need to have test_attr__open inside
+> sys_perf_event_open call, because both record and stat
+> call evsel__open_cpu, so we can call it directly from
+> there and not polute perf-sys.h header.
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/perf-sys.h    | 22 ++--------------------
+>  tools/perf/tests/attr.c  |  2 +-
+>  tools/perf/util/evsel.c  |  5 +++++
+>  tools/perf/util/python.c |  2 +-
+>  tools/perf/util/util.h   |  6 ++++++
+>  5 files changed, 15 insertions(+), 22 deletions(-)
+> 
+> diff --git a/tools/perf/perf-sys.h b/tools/perf/perf-sys.h
+> index 15e458e150bd..7a2264e1e4e1 100644
+> --- a/tools/perf/perf-sys.h
+> +++ b/tools/perf/perf-sys.h
+> @@ -9,31 +9,13 @@
+>  
+>  struct perf_event_attr;
+>  
+> -extern bool test_attr__enabled;
+> -void test_attr__ready(void);
+> -void test_attr__init(void);
+> -void test_attr__open(struct perf_event_attr *attr, pid_t pid, int cpu,
+> -		     int fd, int group_fd, unsigned long flags);
+> -
+> -#ifndef HAVE_ATTR_TEST
+> -#define HAVE_ATTR_TEST 1
+> -#endif
+> -
+>  static inline int
+>  sys_perf_event_open(struct perf_event_attr *attr,
+>  		      pid_t pid, int cpu, int group_fd,
+>  		      unsigned long flags)
+>  {
+> -	int fd;
+> -
+> -	fd = syscall(__NR_perf_event_open, attr, pid, cpu,
+> -		     group_fd, flags);
+> -
+> -#if HAVE_ATTR_TEST
+> -	if (unlikely(test_attr__enabled))
+> -		test_attr__open(attr, pid, cpu, fd, group_fd, flags);
+> -#endif
+> -	return fd;
+> +	return syscall(__NR_perf_event_open, attr, pid, cpu,
+> +		       group_fd, flags);
+>  }
+>  
+>  #endif /* _PERF_SYS_H */
+> diff --git a/tools/perf/tests/attr.c b/tools/perf/tests/attr.c
+> index a9599ab8c471..ec972e0892ab 100644
+> --- a/tools/perf/tests/attr.c
+> +++ b/tools/perf/tests/attr.c
+> @@ -30,9 +30,9 @@
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <unistd.h>
+> -#include "../perf-sys.h"
+>  #include <subcmd/exec-cmd.h>
+>  #include "event.h"
+> +#include "util.h"
+>  #include "tests.h"
+>  
+>  #define ENV "PERF_TEST_ATTR"
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index fd865002cbbd..6f0e23105cf8 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1680,6 +1680,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  			FD(evsel, cpu, thread) = fd;
+>  
+> +			if (unlikely(test_attr__enabled)) {
+> +				test_attr__open(&evsel->core.attr, pid, cpus->map[cpu],
+> +						fd, group_fd, flags);
+> +			}
+> +
+>  			if (fd < 0) {
+>  				err = -errno;
+>  
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 75a9b1d62bba..74f85948d101 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -17,7 +17,7 @@
+>  #include "mmap.h"
+>  #include "util/env.h"
+>  #include <internal/lib.h>
+> -#include "../perf-sys.h"
+> +#include "util.h"
+>  
+>  #if PY_MAJOR_VERSION < 3
+>  #define _PyUnicode_FromString(arg) \
+> diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+> index f486fdd3a538..ad737052e597 100644
+> --- a/tools/perf/util/util.h
+> +++ b/tools/perf/util/util.h
+> @@ -62,4 +62,10 @@ char *perf_exe(char *buf, int len);
+>  #endif
+>  #endif
+>  
+> +extern bool test_attr__enabled;
+> +void test_attr__ready(void);
+> +void test_attr__init(void);
+> +struct perf_event_attr;
+> +void test_attr__open(struct perf_event_attr *attr, pid_t pid, int cpu,
+> +		     int fd, int group_fd, unsigned long flags);
+>  #endif /* GIT_COMPAT_UTIL_H */
+> -- 
+> 2.26.2
+> 
 
+-- 
 
-That was my original thought... there is another define for that already 
-a few lines down though.
-
-
-Thanks,
-
-Eddie
-
-
->
->>   #define ASPEED_I2CD_INTR_SDA_DL_TIMEOUT                        BIT(14)
->>   #define ASPEED_I2CD_INTR_BUS_RECOVER_DONE              BIT(13)
->>   #define ASPEED_I2CD_INTR_SLAVE_MATCH                   BIT(7)
->> @@ -604,6 +605,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
->>          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
->>                 bus->base + ASPEED_I2C_INTR_STS_REG);
->>          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
->> +       irq_received &= ASPEED_I2CD_INTR_RECV_MASK;
->>          irq_remaining = irq_received;
->>
->>   #if IS_ENABLED(CONFIG_I2C_SLAVE)
->> --
->> 2.26.2
->>
+- Arnaldo
