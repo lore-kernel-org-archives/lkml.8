@@ -2,94 +2,74 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C7C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C59C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FAC208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F30D20C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgIJR3K (ORCPT
+        id S1727826AbgIJR3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:29:10 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54570 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgIJR2k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:28:40 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 3C01029BB05
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, fparent@baylibre.com,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        weiyi.lu@mediatek.com, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH 00/12] soc: mediatek: pm-domains: Add new driver for SCPSYS power domains controller
-Date:   Thu, 10 Sep 2020 19:28:14 +0200
-Message-Id: <20200910172826.3074357-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Sep 2020 13:29:32 -0400
+Received: from gate.crashing.org ([63.228.1.57]:45363 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726996AbgIJRYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:24:09 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 08AHFhOX006110;
+        Thu, 10 Sep 2020 12:15:43 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 08AHFgui006109;
+        Thu, 10 Sep 2020 12:15:42 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Thu, 10 Sep 2020 12:15:42 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "'Christophe Leroy'" <christophe.leroy@csgroup.eu>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: remove the last set_fs() in common code, and remove it for x86 and powerpc v3
+Message-ID: <20200910171542.GL28786@gate.crashing.org>
+References: <20200903142803.GM1236603@ZenIV.linux.org.uk> <CAHk-=wgQNyeHxXfckd1WtiYnoDZP1Y_kD-tJKqWSksRoDZT=Aw@mail.gmail.com> <20200909184001.GB28786@gate.crashing.org> <CAHk-=whu19Du_rZ-zBtGsXAB-Qo7NtoJjQjd-Sa9OB5u1Cq_Zw@mail.gmail.com> <3beb8b019e4a4f7b81fdb1bc68bd1e2d@AcuMS.aculab.com> <186a62fc-042c-d6ab-e7dc-e61b18945498@csgroup.eu> <59a64e9a210847b59f70f9bd2d02b5c3@AcuMS.aculab.com> <5050b43687c84515a49b345174a98822@AcuMS.aculab.com> <20200910152030.GJ28786@gate.crashing.org> <18fdbaeacba349a0a8bf7568f709e991@AcuMS.aculab.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <18fdbaeacba349a0a8bf7568f709e991@AcuMS.aculab.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On Thu, Sep 10, 2020 at 03:31:53PM +0000, David Laight wrote:
+> > > 	asm volatile ("" : "+r" (eax));
+> > > 	// So here eax must contain the value set by the "xxxxx" instructions.
+> > 
+> > No, the register eax will contain the value of the eax variable.  In the
+> > asm; it might well be there before or after the asm as well, but none of
+> > that is guaranteed.
+> 
+> Perhaps not 'guaranteed', but very unlikely to be wrong.
+> It doesn't give gcc much scope for not generating the desired code.
 
-This is a new driver with the aim to deprecate the mtk-scpsys driver.
-The problem with that driver is that, in order to support more Mediatek
-SoCs you need to add some logic to handle properly the power-up
-sequence of newer Mediatek SoCs, doesn't handle parent-child power
-domains and need to hardcode all the clocks in the driver itself. The
-result is that the driver is getting bigger and bigger every time a
-new SoC needs to be supported.
+Wanna bet?  :-)
 
-All this information can be getted from a properly defined binding, so
-can be cleaner and smaller, hence, we implemented a new driver. For
-now, only MT8173 and MT8183 is supported but should be fairly easy to
-add support for new SoCs.
+Correct is correct.  Anything else is not.
 
-Best regards,
-  Enric
 
-Enric Balletbo i Serra (4):
-  dt-bindings: power: Add bindings for the Mediatek SCPSYS power domains
-    controller
-  soc: mediatek: Add MediaTek SCPSYS power domains
-  arm64: dts: mediatek: Add mt8173 power domain controller
-  dt-bindings: power: Add MT8183 power domains
-
-Matthias Brugger (8):
-  soc: mediatek: pm-domains: Add bus protection protocol
-  soc: mediatek: pm_domains: Make bus protection generic
-  soc: mediatek: pm-domains: Add SMI block as bus protection block
-  soc: mediatek: pm-domains: Add extra sram control
-  soc: mediatek: pm-domains: Add subsystem clocks
-  soc: mediatek: pm-domains: Allow bus protection to ignore clear ack
-  soc: mediatek: pm-domains: Add support for mt8183
-  arm64: dts: mediatek: Add mt8183 power domains controller
-
- .../power/mediatek,power-controller.yaml      | 173 ++++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi      |  78 +-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 160 +++
- drivers/soc/mediatek/Kconfig                  |  13 +
- drivers/soc/mediatek/Makefile                 |   1 +
- drivers/soc/mediatek/mtk-infracfg.c           |   5 -
- drivers/soc/mediatek/mtk-pm-domains.c         | 952 ++++++++++++++++++
- include/dt-bindings/power/mt8183-power.h      |  26 +
- include/linux/soc/mediatek/infracfg.h         |  39 +
- 9 files changed, 1433 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/mediatek,power-controller.yaml
- create mode 100644 drivers/soc/mediatek/mtk-pm-domains.c
- create mode 100644 include/dt-bindings/power/mt8183-power.h
-
--- 
-2.28.0
-
+Segher
