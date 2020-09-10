@@ -2,148 +2,249 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F51C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73323C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26D36206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E95207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgIJG0h (ORCPT
+        id S1729822AbgIJG04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:26:37 -0400
-Received: from mail-io1-f79.google.com ([209.85.166.79]:49322 "EHLO
-        mail-io1-f79.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgIJG0Q (ORCPT
+        Thu, 10 Sep 2020 02:26:56 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:44790 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbgIJG0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:26:16 -0400
-Received: by mail-io1-f79.google.com with SMTP id k133so3643594iof.16
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 23:26:16 -0700 (PDT)
+        Thu, 10 Sep 2020 02:26:47 -0400
+Received: by mail-oo1-f65.google.com with SMTP id 4so1169563ooh.11;
+        Wed, 09 Sep 2020 23:26:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=KtI7zCGAfmR7j9D5AmBqtrbK4m+XAkYeujT7FJKCF9Q=;
-        b=M500AEP8OscVQiN+rDhazaMAVb+9q24XhseDLSEe1EdBy7qc1mhQjtvqeSjrVYQyx9
-         CIOQqIxtcVnDmKWLxsAjeQRubrgkpzxzFZa75VBw+naYAFbMtrpJDzkBWP77vv4L1YBn
-         CCoFYB5ljCaFOBusZ8L4xblQGBDyNlseYaTZdEwEcin9UsAsHMGl1uYrxznIvFNcBIQ1
-         s0eeJx9LZeVVnUIELGztv6qN+ohy8BAgNRa7uiuEh6Eu8ANL5mrqVf+/jmnC95qA1Q6H
-         UuD9YGXdeWf9FEDEGxjSPvJDJ+qyLphb8H+kszK1e8GmEKiZ4Rkc0IV76f6E60EZultO
-         wKzQ==
-X-Gm-Message-State: AOAM531dw7MG1uN1YSyKoyIdzxRNOEMCOfEPrdd6meKso7unWnNAnibC
-        CW2gFNNHg6Qqk+664VK1I5PmAICGVv4W+cij7GbW68HTiR3a
-X-Google-Smtp-Source: ABdhPJyZlROu+4aHcckA8yVJ35pUpxIXpu/0oAsd5lMnu/tuMH2dH5fJWwr+WvzmrzsFkQ/WfZtvOHK9dpiZ9p+2TSsjLzoDZxGx
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hMYWnen1mp2PndBlySJixNLe9ykpSa1kAF8b27d2SW4=;
+        b=j3SLHG6t3RlCeO2Rol2D1kZWPKSi6GSVj3sX7Sn2UwotvjE+jS9wegZs14jI/Q4t5W
+         PliN6cZvI2xV94aqmrc6yV3s22Xl6h8LggD+Rx4StDrFwf3DrhHrk11Qo0bz8irVOiLS
+         Jsszk7NtkD6JuDqfXbHD/CRKnp4wST+CIWEE72tDLylfNBmLxrTbN6Yg1mHxUIMWKjJS
+         JfMvvVlqawMw+0Gy7w2f4+vGA2dKB1hQFELK3AXdPWTZuHO54QOAOXw4waCkr10paRfv
+         TURHkqD1alpBME5TR1g9xYepraN0OXFHkdnHs6ZK+ihaNu2MXl8LYjO8t/LwHTsF7E09
+         nTfQ==
+X-Gm-Message-State: AOAM531ie4WOtBzVWL0pzAkSeQcFUa2kGVH/k5xsLNj0RoC0DaTDBrzN
+        6ltREe4AfXpynZfi9ZvUZmc6HjiaH8W2pbvOYYiV5HK+pRo=
+X-Google-Smtp-Source: ABdhPJwHAxLWbiJvqI4z5ncngizc77OWVEiCuTTKUyB3gH9LhEOE2S354S2jGEyEqCnaWU7DIGJt2lytkJHFPfZJVZM=
+X-Received: by 2002:a4a:4201:: with SMTP id h1mr3337821ooj.1.1599719206860;
+ Wed, 09 Sep 2020 23:26:46 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:1b85:: with SMTP id f5mr6751390ill.201.1599719175712;
- Wed, 09 Sep 2020 23:26:15 -0700 (PDT)
-Date:   Wed, 09 Sep 2020 23:26:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000035772805aeefa526@google.com>
-Subject: BUG: unable to handle kernel NULL pointer dereference in
- qlist_free_all (8)
-From:   syzbot <syzbot+4bba137eaf7cc94b57ca@syzkaller.appspotmail.com>
-To:     jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
+References: <00ee44fe6ecdce1c783c3cc3b1b9a62b498dcdb2.1597736545.git.fthain@telegraphics.com.au>
+ <CAMuHMdWAi6+75Mq0U8x7Ut6viHvF7XEZAcYnxq=jJmtJyAX8pw@mail.gmail.com> <alpine.LNX.2.23.453.2009100920001.8@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.23.453.2009100920001.8@nippy.intranet>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 10 Sep 2020 08:26:35 +0200
+Message-ID: <CAMuHMdVMvhJRHOwJapi+LAdPbPuoT73ST_Nj0qeCqQd3XWvoSQ@mail.gmail.com>
+Subject: Re: [PATCH] ide/macide: Convert Mac IDE driver to platform driver
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Finn,
 
-syzbot found the following issue on:
+On Thu, Sep 10, 2020 at 2:23 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+> On Wed, 9 Sep 2020, Geert Uytterhoeven wrote:
+> > > --- a/arch/m68k/mac/config.c +++ b/arch/m68k/mac/config.c
+> >
+> > > @@ -940,6 +941,50 @@ static const struct resource mac_scsi_ccl_rsrc[] __initconst = {
+> > >         },
+> > >  };
+> > >
+> > > +static const struct resource mac_ide_quadra_rsrc[] __initconst = {
+> > > +       {
+> > > +               .flags = IORESOURCE_MEM,
+> > > +               .start = 0x50F1A000,
+> > > +               .end   = 0x50F1A103,
+> > > +       }, {
+> > > +               .flags = IORESOURCE_IRQ,
+> > > +               .start = IRQ_NUBUS_F,
+> > > +               .end   = IRQ_NUBUS_F,
+> > > +       },
+> > > +};
+> > > +
+> > > +static const struct resource mac_ide_pb_rsrc[] __initconst = {
+> > > +       {
+> > > +               .flags = IORESOURCE_MEM,
+> > > +               .start = 0x50F1A000,
+> > > +               .end   = 0x50F1A103,
+> > > +       }, {
+> > > +               .flags = IORESOURCE_IRQ,
+> > > +               .start = IRQ_NUBUS_C,
+> > > +               .end   = IRQ_NUBUS_C,
+> > > +       },
+> > > +};
+> >
+> > As the above two variants are almost identical, perhaps it makes sense
+> > to drop one of them, drop the const, and override the irq values
+> > dynamically?
+> >
+>
+> I prefer a declarative or data-driven style, even if it takes a few more
+> lines of code. But there is a compromise:
+>
+> static const struct resource mac_ide_quadra_rsrc[] __initconst = {
+>         DEFINE_RES_MEM(0x50F1A000, 0x104),
+>         DEFINE_RES_IRQ(IRQ_NUBUS_F),
+> }
+>
+> static const struct resource mac_ide_pb_rsrc[] __initconst = {
+>         DEFINE_RES_MEM(0x50F1A000, 0x104),
+>         DEFINE_RES_IRQ(IRQ_NUBUS_C),
+> }
+>
+> The reason I didn't use these macros was to avoid making the reader go and
+> look up their definitions. Anyway, would that style be preferred here?
 
-HEAD commit:    34d4ddd3 Merge tag 'linux-kselftest-5.9-rc5' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=147c760d900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9075b36a6ae26c9
-dashboard link: https://syzkaller.appspot.com/bug?extid=4bba137eaf7cc94b57ca
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+I think the DEFINE_RES_*() are sufficiently common (well, in pre-DT
+platforms ;-)
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> I could do the same with the mac_ide_baboon_rsrc[] initializer:
+>
+> static const struct resource mac_pata_baboon_rsrc[] __initconst = {
+>         DEFINE_RES_MEM(0x50F1A000, 0x38),
+>         DEFINE_RES_MEM(0x50F1A038, 0x04),
+>         DEFINE_RES_IRQ(IRQ_BABOON_1),
+> };
+>
+> ... but that would lose the IORESOURCE_IRQ_SHAREABLE flag. I'm not sure
+> whether that matters (it's a vestige of macide.c).
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4bba137eaf7cc94b57ca@syzkaller.appspotmail.com
+You can still use DEFINE_RES_NAMED() to pass the flags.
+Would you consider that to be a good compromise?
 
-BUG: kernel NULL pointer dereference, address: 0000000000000080
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 4bbac067 P4D 4bbac067 PUD 9468a067 PMD 0 
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 3936 Comm: syz-executor.0 Not tainted 5.9.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:qlink_to_object mm/kasan/quarantine.c:137 [inline]
-RIP: 0010:qlink_free mm/kasan/quarantine.c:142 [inline]
-RIP: 0010:qlist_free_all+0x36/0x170 mm/kasan/quarantine.c:168
-Code: 53 48 83 ec 10 48 8b 37 48 85 f6 0f 84 36 01 00 00 49 bf 00 00 00 00 00 fc ff df 48 85 ed 49 89 fd 48 89 ef 0f 84 97 00 00 00 <48> 63 87 80 00 00 00 4c 8b 26 48 29 c6 48 83 3d 75 e5 01 08 00 0f
-RSP: 0018:ffffc90004dd7a10 EFLAGS: 00010246
-RAX: ffffea0000000000 RBX: 0000000000000282 RCX: ffffea0000000007
-RDX: 0000000000000000 RSI: ffff888000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffffff8c5f5a77
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888000000000
-R13: ffffc90004dd7a58 R14: 0000000000000200 R15: dffffc0000000000
-FS:  0000000003563940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000080 CR3: 000000003d19c000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- quarantine_reduce+0x17e/0x200 mm/kasan/quarantine.c:261
- __kasan_kmalloc.constprop.0+0x9e/0xd0 mm/kasan/common.c:442
- slab_post_alloc_hook mm/slab.h:518 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- __do_kmalloc mm/slab.c:3653 [inline]
- __kmalloc+0x178/0x310 mm/slab.c:3664
- kmalloc include/linux/slab.h:559 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- tomoyo_encode2.part.0+0xe9/0x3a0 security/tomoyo/realpath.c:45
- tomoyo_encode2 security/tomoyo/realpath.c:31 [inline]
- tomoyo_encode+0x28/0x50 security/tomoyo/realpath.c:80
- tomoyo_path_perm+0x35f/0x3f0 security/tomoyo/file.c:831
- tomoyo_path_symlink+0x94/0xe0 security/tomoyo/tomoyo.c:200
- security_path_symlink+0xdf/0x150 security/security.c:1109
- do_symlinkat+0x123/0x2c0 fs/namei.c:3984
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d2e7
-Code: 0f 1f 00 b8 5c 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 1d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 58 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 fd b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:000000000169fda8 EFLAGS: 00000202 ORIG_RAX: 0000000000000058
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045d2e7
-RDX: 000000000169fe43 RSI: 00000000004c30cd RDI: 000000000169fe30
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000013
-R10: 0000000000000075 R11: 0000000000000202 R12: 0000000000000000
-R13: 000000000169fde0 R14: 0000000000000000 R15: 000000000169fdf0
-Modules linked in:
-CR2: 0000000000000080
----[ end trace 9fd83eee6918f461 ]---
-RIP: 0010:qlink_to_object mm/kasan/quarantine.c:137 [inline]
-RIP: 0010:qlink_free mm/kasan/quarantine.c:142 [inline]
-RIP: 0010:qlist_free_all+0x36/0x170 mm/kasan/quarantine.c:168
-Code: 53 48 83 ec 10 48 8b 37 48 85 f6 0f 84 36 01 00 00 49 bf 00 00 00 00 00 fc ff df 48 85 ed 49 89 fd 48 89 ef 0f 84 97 00 00 00 <48> 63 87 80 00 00 00 4c 8b 26 48 29 c6 48 83 3d 75 e5 01 08 00 0f
-RSP: 0018:ffffc90004dd7a10 EFLAGS: 00010246
-RAX: ffffea0000000000 RBX: 0000000000000282 RCX: ffffea0000000007
-RDX: 0000000000000000 RSI: ffff888000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffffff8c5f5a77
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888000000000
-R13: ffffc90004dd7a58 R14: 0000000000000200 R15: dffffc0000000000
-FS:  0000000003563940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000749198 CR3: 000000003d19c000 CR4: 00000000001526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > +static const struct resource mac_pata_baboon_rsrc[] __initconst = {
+> > > +       {
+> > > +               .flags = IORESOURCE_MEM,
+> > > +               .start = 0x50F1A000,
+> > > +               .end   = 0x50F1A037,
+> > > +       }, {
+> > > +               .flags = IORESOURCE_MEM,
+> > > +               .start = 0x50F1A038,
+> > > +               .end   = 0x50F1A03B,
+> > > +       }, {
+> > > +               .flags = IORESOURCE_IRQ | IORESOURCE_IRQ_SHAREABLE,
+> > > +               .start = IRQ_BABOON_1,
+> > > +               .end   = IRQ_BABOON_1,
+> > > +       },
+> > > +};
+> > > +
+> > > +static const struct pata_platform_info mac_pata_baboon_data __initconst = {
+> > > +       .ioport_shift  = 2,
+> > > +};
+> >
+> > Just wondering: how is this implemented in drivers/ide/macide.c, which
+> > doesn't use the platform info?
+>
+> That factor of 4 is embedded in the address caclulation:
+>
+>         for (i = 0; i < 8; i++)
+>                 hw->io_ports_array[i] = base + i * 4;
 
+IC. But in the new code, the platform info is passed for Baboon only,
+while the old code used it for all variants.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > > --- a/drivers/ide/macide.c
+> > > +++ b/drivers/ide/macide.c
+> > > @@ -18,10 +18,11 @@
+> > >  #include <linux/delay.h>
+> > >  #include <linux/ide.h>
+> > >  #include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > >
+> > >  #include <asm/macintosh.h>
+> > > -#include <asm/macints.h>
+> > > -#include <asm/mac_baboon.h>
+> > > +
+> > > +#define DRV_NAME "mac_ide"
+> > >
+> > >  #define IDE_BASE 0x50F1A000    /* Base address of IDE controller */
+> >
+> > Do you still need this definition?
+> > Yes, because it's still used to access IDE_IFR.
+> > Ideally, that should be converted to use the base from the resource,
+> > too.
+> >
+>
+> Yes, that was my thought too. I can make the change if you like, but I
+> can't test it until I set up the appropriate hardware (MAC_IDE_QUADRA or
+> MAC_IDE_PB). I do own that hardware but it is located in Melbourne and it
+> is now illegal to visit Melbourne without official papers. Besides, once I
+> can test on that hardware I can replace the entire driver anyway, and
+> this kind of refactoring would become moot.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+OK.
+
+> > > @@ -109,42 +110,65 @@ static const char *mac_ide_name[] =
+> > >   * Probe for a Macintosh IDE interface
+> > >   */
+> > >
+> > > -static int __init macide_init(void)
+> > > +static int mac_ide_probe(struct platform_device *pdev)
+> > >  {
+> > > -       unsigned long base;
+> > > -       int irq;
+> > > +       struct resource *mem, *irq;
+> > >         struct ide_hw hw, *hws[] = { &hw };
+> > >         struct ide_port_info d = macide_port_info;
+> > > +       struct ide_host *host;
+> > > +       int rc;
+> > >
+> > >         if (!MACH_IS_MAC)
+> > >                 return -ENODEV;
+> > >
+> > > -       switch (macintosh_config->ide_type) {
+> > > -       case MAC_IDE_QUADRA:
+> > > -               base = IDE_BASE;
+> > > -               irq = IRQ_NUBUS_F;
+> > > -               break;
+> > > -       case MAC_IDE_PB:
+> > > -               base = IDE_BASE;
+> > > -               irq = IRQ_NUBUS_C;
+> > > -               break;
+> > > -       case MAC_IDE_BABOON:
+> > > -               base = BABOON_BASE;
+> > > -               d.port_ops = NULL;
+> >
+> > How does the driver know not to use the special port_ops after
+> > this change?
+> >
+>
+> The driver always uses the special port_ops after this change because it
+> no longer handles the MAC_IDE_BABOON case. That case is handled by either
+
+non-MAC_IDE_BABOON case?
+
+> drivers/ata/pata_platform.c or drivers/ide/ide_platform.c, depending on
+> .config.
+
+Ideally, we do need to differentiate, right?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
