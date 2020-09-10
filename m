@@ -2,107 +2,260 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D51C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BABDC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87917214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2194F21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="SqTOBGdd";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="SqTOBGdd"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4rilgN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgIJQL5 (ORCPT
+        id S1726771AbgIJQNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:11:57 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:54580 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725820AbgIJQJo (ORCPT
+        Thu, 10 Sep 2020 12:13:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgIJQKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:09:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B4B848EE11E;
-        Thu, 10 Sep 2020 09:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1599754150;
-        bh=vjqoZjjs4ZL988BGG7sXtVJHzIb1zQDOeZ88/1JThQw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SqTOBGdd05DEXZCUAUSRCFQLQh+D8HlmsHDZknIpCoLNKWMiASjKLlkwGQpE1qB2y
-         Ra66T5QAZClQDQ1tI6wCPqz6A+A1azS+MUvPfnrYOwq0bWYX6ZlSPFX3WbX9nPfwsv
-         HXiNLeDe7+r88pNXMcY6eguRdu3R4RQu703OyKHk=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c7vL7lTQ-z-f; Thu, 10 Sep 2020 09:09:10 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 6C6ED8EE0E2;
-        Thu, 10 Sep 2020 09:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1599754150;
-        bh=vjqoZjjs4ZL988BGG7sXtVJHzIb1zQDOeZ88/1JThQw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SqTOBGdd05DEXZCUAUSRCFQLQh+D8HlmsHDZknIpCoLNKWMiASjKLlkwGQpE1qB2y
-         Ra66T5QAZClQDQ1tI6wCPqz6A+A1azS+MUvPfnrYOwq0bWYX6ZlSPFX3WbX9nPfwsv
-         HXiNLeDe7+r88pNXMcY6eguRdu3R4RQu703OyKHk=
-Message-ID: <1599754148.3575.4.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 1/2] scsi: ufs: Abort tasks before clear them from
- doorbell
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Can Guo <cang@codeaurora.org>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, hongwus@codeaurora.org,
-        ziqichen@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 10 Sep 2020 09:09:08 -0700
-In-Reply-To: <1599725880.10649.35.camel@mtkswgap22>
-References: <1599099873-32579-1-git-send-email-cang@codeaurora.org>
-         <1599099873-32579-2-git-send-email-cang@codeaurora.org>
-         <1599627906.10803.65.camel@linux.ibm.com>
-         <yq14ko62wn5.fsf@ca-mkp.ca.oracle.com>
-         <1599706080.10649.30.camel@mtkswgap22>
-         <1599718697.3851.3.camel@HansenPartnership.com>
-         <1599725880.10649.35.camel@mtkswgap22>
+        Thu, 10 Sep 2020 12:10:33 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B270C061795
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 09:10:31 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y2so3878632lfy.10
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 09:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kQgWv8tP/mIsTIaHVB2pZNWYND0t5P9IhVZh51psRFQ=;
+        b=v4rilgN8QHJIugdS3zS0eNDdG0npIlrnqrIbjqTj/ttxLW42RtR+GzpuyFpCHQWt5D
+         uyEUfNGcSMoqzxO1I+k+YF8A8HDx/L4R+QXilCE4oLNqZHx7Vd9y3zDfmRsTRPc2fFqg
+         YEGBEfpU03XmHqkWmMvgsVatFOtQaatdc9jKQS9BbxxenINMx2NLxDvculChxaEUeNXg
+         3I1Mur4xaujZQzLrOsFwxMA3B0p+UgmXqs1coDdaO7ZAEL4xJ/aSVmKOQbHsZpkEReeI
+         mx3Or9pu5gtiTmey8HgXRd7MNtBiOIkZ8N+kQB6UnYoy5vTvI5PdOvHDKPCFPal0lbUP
+         aNdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kQgWv8tP/mIsTIaHVB2pZNWYND0t5P9IhVZh51psRFQ=;
+        b=tV5LPHn3e/pnMb/XvE0opa4qi0VszqJzwmNoVpTtaIAvZH+63Ocw/hl3ZZx44MduG2
+         xPodh7zGGkCmQK4QMEbSc9qHQ1ay+X54NI/Le0vd71G41/1OaIGxihdBJmShxigMJj6Q
+         4AfqByfrscQojzS0t4i/hw9iyLhEMdeAdaSVSddVPQwqFO7nOG9tCubt5NbSTWxLNVrR
+         fudku1PfZWe7vBpkpIIk5P3r+h8bp8YRob60lX1CnNs8Qt0GlX8n8L2MJsF3Lq5m2q0g
+         Jl+onuwWyhTjIODXn1Oxz6SftOEHGBkPnQ/G3y6CmhhyY7uYx9OwwkXJvVY+IF1r/Utc
+         p5xQ==
+X-Gm-Message-State: AOAM533TDrFyOjQnWYb++cn2yNbpFLmIyL3HuoV4EaKZps28djWsafKb
+        Jf+acXphMZbd1nLGQWrDMFo3+R+5/S8XLovALQGPhA==
+X-Google-Smtp-Source: ABdhPJzijWg3vU9ZGbZG+XZJK8d4PmQ5H9p4dDg/+jvyg8Egp0XxgKSmR90qRecpk+XJ1GkepMOB+U2QDWHZbX3NBAA=
+X-Received: by 2002:a19:c8c6:: with SMTP id y189mr4615627lff.125.1599754229862;
+ Thu, 10 Sep 2020 09:10:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200909215752.1725525-1-shakeelb@google.com> <20200910063656.25038-1-sjpark@amazon.com>
+In-Reply-To: <20200910063656.25038-1-sjpark@amazon.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 10 Sep 2020 09:10:18 -0700
+Message-ID: <CALvZod7y0kTVU5Y6-678OW8pLF8P4n3rNoWg8CXrem-diSMXXQ@mail.gmail.com>
+Subject: Re: [PATCH] memcg: introduce per-memcg reclaim interface
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Greg Thelen <gthelen@google.com>,
+        David Rientjes <rientjes@google.com>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-09-10 at 16:18 +0800, Stanley Chu wrote:
-[...]
-> > + 	if (!err) {
-> >  +cleanup:
-> 
-> Yeah, considering Bean Huo's patch "scsi: ufs: No need to send Abort
-> Task if the task in DB was cleared", "cleanup" label shall be added
-> back here.
-> 
-> So your resolution looks good to me.
-> 
-> Thanks so much : )
+On Wed, Sep 9, 2020 at 11:37 PM SeongJae Park <sjpark@amazon.com> wrote:
+>
+> On 2020-09-09T14:57:52-07:00 Shakeel Butt <shakeelb@google.com> wrote:
+>
+> > Introduce an memcg interface to trigger memory reclaim on a memory cgroup.
+> >
+> > Use cases:
+> > ----------
+> >
+> > 1) Per-memcg uswapd:
+> >
+> > Usually applications consists of combination of latency sensitive and
+> > latency tolerant tasks. For example, tasks serving user requests vs
+> > tasks doing data backup for a database application. At the moment the
+> > kernel does not differentiate between such tasks when the application
+> > hits the memcg limits. So, potentially a latency sensitive user facing
+> > task can get stuck in high reclaim and be throttled by the kernel.
+> >
+> > Similarly there are cases of single process applications having two set
+> > of thread pools where threads from one pool have high scheduling
+> > priority and low latency requirement. One concrete example from our
+> > production is the VMM which have high priority low latency thread pool
+> > for the VCPUs while separate thread pool for stats reporting, I/O
+> > emulation, health checks and other managerial operations. The kernel
+> > memory reclaim does not differentiate between VCPU thread or a
+> > non-latency sensitive thread and a VCPU thread can get stuck in high
+> > reclaim.
+> >
+> > One way to resolve this issue is to preemptively trigger the memory
+> > reclaim from a latency tolerant task (uswapd) when the application is
+> > near the limits. Finding 'near the limits' situation is an orthogonal
+> > problem.
+> >
+> > 2) Proactive reclaim:
+> >
+> > This is a similar to the previous use-case, the difference is instead of
+> > waiting for the application to be near its limit to trigger memory
+> > reclaim, continuously pressuring the memcg to reclaim a small amount of
+> > memory. This gives more accurate and uptodate workingset estimation as
+> > the LRUs are continuously sorted and can potentially provide more
+> > deterministic memory overcommit behavior. The memory overcommit
+> > controller can provide more proactive response to the changing behavior
+> > of the running applications instead of being reactive.
+> >
+> > Benefit of user space solution:
+> > -------------------------------
+> >
+> > 1) More flexible on who should be charged for the cpu of the memory
+> > reclaim. For proactive reclaim, it makes more sense to centralized the
+> > overhead while for uswapd, it makes more sense for the application to
+> > pay for the cpu of the memory reclaim.
+> >
+> > 2) More flexible on dedicating the resources (like cpu). The memory
+> > overcommit controller can balance the cost between the cpu usage and
+> > the memory reclaimed.
+> >
+> > 3) Provides a way to the applications to keep their LRUs sorted, so,
+> > under memory pressure better reclaim candidates are selected. This also
+> > gives more accurate and uptodate notion of working set for an
+> > application.
+> >
+> > Questions:
+> > ----------
+> >
+> > 1) Why memory.high is not enough?
+> >
+> > memory.high can be used to trigger reclaim in a memcg and can
+> > potentially be used for proactive reclaim as well as uswapd use cases.
+> > However there is a big negative in using memory.high. It can potentially
+> > introduce high reclaim stalls in the target application as the
+> > allocations from the processes or the threads of the application can hit
+> > the temporary memory.high limit.
+> >
+> > Another issue with memory.high is that it is not delegatable. To
+> > actually use this interface for uswapd, the application has to introduce
+> > another layer of cgroup on whose memory.high it has write access.
+> >
+> > 2) Why uswapd safe from self induced reclaim?
+> >
+> > This is very similar to the scenario of oomd under global memory
+> > pressure. We can use the similar mechanisms to protect uswapd from self
+> > induced reclaim i.e. memory.min and mlock.
+> >
+> > Interface options:
+> > ------------------
+> >
+> > Introducing a very simple memcg interface 'echo 10M > memory.reclaim' to
+> > trigger reclaim in the target memory cgroup.
+> >
+> > In future we might want to reclaim specific type of memory from a memcg,
+> > so, this interface can be extended to allow that. e.g.
+> >
+> > $ echo 10M [all|anon|file|kmem] > memory.reclaim
+> >
+> > However that should be when we have concrete use-cases for such
+> > functionality. Keep things simple for now.
+> >
+> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > ---
+> >  Documentation/admin-guide/cgroup-v2.rst |  9 ++++++
+> >  mm/memcontrol.c                         | 37 +++++++++++++++++++++++++
+> >  2 files changed, 46 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> > index 6be43781ec7f..58d70b5989d7 100644
+> > --- a/Documentation/admin-guide/cgroup-v2.rst
+> > +++ b/Documentation/admin-guide/cgroup-v2.rst
+> > @@ -1181,6 +1181,15 @@ PAGE_SIZE multiple when read back.
+> >       high limit is used and monitored properly, this limit's
+> >       utility is limited to providing the final safety net.
+> >
+> > +  memory.reclaim
+> > +     A write-only file which exists on non-root cgroups.
+> > +
+> > +     This is a simple interface to trigger memory reclaim in the
+> > +     target cgroup. Write the number of bytes to reclaim to this
+> > +     file and the kernel will try to reclaim that much memory.
+> > +     Please note that the kernel can over or under reclaim from
+> > +     the target cgroup.
+> > +
+> >    memory.oom.group
+> >       A read-write single value file which exists on non-root
+> >       cgroups.  The default value is "0".
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 75cd1a1e66c8..2d006c36d7f3 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -6456,6 +6456,38 @@ static ssize_t memory_oom_group_write(struct kernfs_open_file *of,
+> >       return nbytes;
+> >  }
+> >
+> > +static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
+> > +                           size_t nbytes, loff_t off)
+> > +{
+> > +     struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
+> > +     unsigned int nr_retries = MAX_RECLAIM_RETRIES;
+> > +     unsigned long nr_to_reclaim, nr_reclaimed = 0;
+> > +     int err;
+> > +
+> > +     buf = strstrip(buf);
+> > +     err = page_counter_memparse(buf, "", &nr_to_reclaim);
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     while (nr_reclaimed < nr_to_reclaim) {
+> > +             unsigned long reclaimed;
+> > +
+> > +             if (signal_pending(current))
+> > +                     break;
+> > +
+> > +             reclaimed = try_to_free_mem_cgroup_pages(memcg,
+> > +                                             nr_to_reclaim - nr_reclaimed,
+> > +                                             GFP_KERNEL, true);
+> > +
+> > +             if (!reclaimed && !nr_retries--)
+> > +                     break;
+>
+> Shouldn't the if condition use '||' instead of '&&'?
 
-You're welcome ... but just remember I have to explain this to Linus
-when the merge window opens.  It would be a lot easier if this hadn't
-happened so please don't make it any worse ...
+I copied the pattern from memory_high_write().
 
-James
+> I think it could be
+> easier to read if we put the 'nr_retires' condition in the while condition as
+> below (just my personal preference, though).
+>
+>     while (nr_reclaimed < nr_to_reclaim && nr_retires--)
+>
 
+The semantics will be different. In my version, it means tolerate
+MAX_RECLAIM_RETRIES reclaim failures and your suggestion means total
+MAX_RECLAIM_RETRIES tries.
+
+Please note that try_to_free_mem_cgroup_pages() internally does
+'nr_to_reclaim = max(nr_pages, SWAP_CLUSTER_MAX)', so, we might need
+more than MAX_RECLAIM_RETRIES successful tries to actually reclaim the
+amount of memory the user has requested.
+
+>
+> Thanks,
+> SeongJae Park
