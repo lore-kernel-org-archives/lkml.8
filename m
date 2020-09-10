@@ -2,72 +2,116 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BABFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E669AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01B8D208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698852087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VjstSm6S";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="EAP81zcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbgIJNTm (ORCPT
+        id S1729913AbgIJNUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:19:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55028 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbgIJNQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:16:01 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kGMQP-00E4Q5-83; Thu, 10 Sep 2020 15:15:41 +0200
-Date:   Thu, 10 Sep 2020 15:15:41 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
- for LEDs controlled by Marvell PHYs
-Message-ID: <20200910131541.GD3316362@lunn.ch>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-7-marek.behun@nic.cz>
- <20200910122341.GC7907@duo.ucw.cz>
+        Thu, 10 Sep 2020 09:20:39 -0400
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:55914
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728350AbgIJNTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 09:19:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599743499;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=q1h4X0rhfpIJxvratDwVA1xQ2ilL0QOAEAb+uD7egDE=;
+        b=VjstSm6SLxkPGyaLYcFwWUhmBToXnHG7l+rPcxgvCItWVC0aa+7BTPxCIEiutCBF
+        2p5s6MXaf3uKMyr0AzVSiTQbQoOyhXGhHgl+aPbEwdjDR+gmpqr4L939wRwraQM7fDN
+        GIchkauHt3Q1jTqkC87trqepleIPWxEz8EL4YeNk=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599743499;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=q1h4X0rhfpIJxvratDwVA1xQ2ilL0QOAEAb+uD7egDE=;
+        b=EAP81zcmtP5pM8qeNkBZwikGEcWsITaMeTFgnhhfP/D0RTXC9/1oiApbm+j5aTiQ
+        F3AMLWsXs1oJjeEtga7PvYsGxOczIdA4BGHQWTUacdnXP/yl6EsfMKsQdgLP9RfUZK+
+        AofoY6SjblTMp97w49y9/GMCbmUqRByEVpP/uixA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92023C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Kalle Valo'" <kvalo@codeaurora.org>
+Cc:     <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <ath10k@lists.infradead.org>
+References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org>  <87y2ls4lbf.fsf@codeaurora.org> <0101017459fdd62b-791355e4-ea88-4142-96a7-06849bcd7b09-000000@us-west-2.amazonses.com> <87k0x51rz3.fsf@codeaurora.org>
+In-Reply-To: <87k0x51rz3.fsf@codeaurora.org>
+Subject: RE: [PATCH] ath10k: Use bdf calibration variant for snoc targets
+Date:   Thu, 10 Sep 2020 13:11:39 +0000
+Message-ID: <0101017478249a7e-ec85ae99-51da-4af5-9314-c3a6b205795e-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200910122341.GC7907@duo.ucw.cz>
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJRm8Tt2m+V2vXQfAtV0J7j7miBFwIt3U/7AmGQD+ACiFXeLKgy8eGg
+Content-Language: en-us
+X-SES-Outgoing: 2020.09.10-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 02:23:41PM +0200, Pavel Machek wrote:
-> On Wed 2020-09-09 18:25:51, Marek Behún wrote:
-> > This patch adds support for controlling the LEDs connected to several
-> > families of Marvell PHYs via the PHY HW LED trigger API. These families
-> > are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-> > be added.
-> > 
-> > This patch does not yet add support for compound LED modes. This could
-> > be achieved via the LED multicolor framework.
-> > 
-> > Settings such as HW blink rate or pulse stretch duration are not yet
-> > supported.
-> > 
-> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
+
+
+> -----Original Message-----
+> From: Kalle Valo <kvalo@codeaurora.org>
+> Sent: Monday, September 7, 2020 9:48 PM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> ath10k@lists.infradead.org
+> Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
 > 
-> I suggest limiting to "useful" hardware modes, and documenting what
-> those modes do somewhere.
+> "Rakesh Pillai" <pillair@codeaurora.org> writes:
+> 
+> >> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
+> >> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
+> >> > @@ -576,6 +576,8 @@ static int
+> ath10k_qmi_cap_send_sync_msg(struct
+> >> ath10k_qmi *qmi)
+> >> >  	if (resp->chip_info_valid) {
+> >> >  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
+> >> >  		qmi->chip_info.chip_family =
+resp->chip_info.chip_family;
+> >> > +	} else {
+> >> > +		qmi->chip_info.chip_id = 0xFF;
+> >> >  	}
+> >>
+> >> So you hard code chip_id to 0xff if it's not valid. Is it 100%
+> >> guaranteed that there never will be a chip id with 0xff?
+> >
+> > 0x0 and 0xff are invalid chip id and are are not used.
+> > If the chip_id read fails, we fallback to the default board data.
+> > 0xff is used to go to the default board data (Also this is in alignment
+with
+> > the current implementation of board_id)
+> >
+> > Does that make sense ?
+> 
+> I'm a bit hesitant, over the years I have seen cases so many cases where
+> "foo is not used anywhere" and later that foo is actually used
+> somewhere. 0xff means that there's only 254 different values, but I
+> guess there are not that many chip ids? So a chip id is very different
+> from a board id, right?
 
-I think to keep the YAML DT verification happy, they will need to be
-listed in the marvell PHY binding documentation.
+Yes that's correct.
+Chip id is already being used in case of qca6174 (pci bus)
+We are bringing this to snoc bus chipset (WCN3990)
 
-       Andrew
+> 
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingp
+> atches
+
