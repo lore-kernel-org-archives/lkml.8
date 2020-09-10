@@ -2,166 +2,115 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C934FC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB39C10DAA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753892080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599703729;
-	bh=0pv/t21ONbGS8OMxlG8e+YQCpa0mHZfiPXOrYCKcUDQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=EiDVyJXcpff0pIvp7Wil8KArZmQ8S8sPPvTKCpV8Igt1ajVmGSUbMUi+beXrYPCVd
-	 Id/LHiyAQFJR8FzTXOJrscp9ycR+MF2N1/C1MPrl4c+MnAM7zSPeJ36u3XpKDnJsk7
-	 zGXN57+3fCzAS4OM/9CvMe0pKEwwCyyB8Yro7UpU=
+	by mail.kernel.org (Postfix) with ESMTP id 5E69520768
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="NoNawaGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbgIJCIb (ORCPT
+        id S1730687AbgIJCIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:08:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730187AbgIJB4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:56:10 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 873F6206DB;
-        Thu, 10 Sep 2020 01:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599702960;
-        bh=0pv/t21ONbGS8OMxlG8e+YQCpa0mHZfiPXOrYCKcUDQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vKwkjxl2TiEvihJm3uVP3drewJd4xUtplcDOkYzAJLmgGQlLBrOXwolosBYEX5ewJ
-         LFC2tuLsRFvwMchTyRQGNkePt5RuEO+72fVXhWKm2eVLiJKlLRiOxmJS/JUharUWoB
-         Zid13h3j9O6nqjX0dpOxnJqBFLCtGrD7buFXwfkI=
-Date:   Wed, 9 Sep 2020 20:55:58 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, jonathan.derrick@intel.com,
-        Mario.Limonciello@dell.com, Heiner Kallweit <hkallweit1@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Krzysztof Wilczynski <kw@linux.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200910015558.GA746864@bjorn-Precision-5520>
+        Wed, 9 Sep 2020 22:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbgIJB4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 21:56:19 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC7EC061343;
+        Wed,  9 Sep 2020 18:52:49 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w1so4663510edr.3;
+        Wed, 09 Sep 2020 18:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O4wihOtUGmKvM6OV1xz49d7GF6s8tThElPC8COTjJhw=;
+        b=NoNawaGqtXD5PPRDwAAu3FydxWGnfWzWyB7YxDfsBTacqM0bBAm9iioberpOzHVRkX
+         jTlVeOAZYbWO6LryijXb9r+fRSkQpWcD5qHVHJD7o9UWxOmYSRlJo6jojXpp9A/vDsDl
+         qqxsimwLjGd0pfnV++gPK5PtI/JIFAWP9CaBk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O4wihOtUGmKvM6OV1xz49d7GF6s8tThElPC8COTjJhw=;
+        b=RQOF40Duc2a8CJ1AR3jA91Pmd0qbwpUNpqZRsZARJtwgXUePqHi4QgXPTV7+FjTXlF
+         OBlXT/yzZrRNMYpFPpeiAEbIudy8GNqLS/z2eHi6Jh9QXJ25/0pyV7jfzSPwF76U0YDN
+         j1XRIBiKBVmQRNF7nE6zdLA13vbL6wGwpKxDaeOLP92pqxwyAQv/cCPYrJ/RndAsilZA
+         3nmoodhkFoKXBSe5/PbHn2c/WILzx28GiHNWZO9p5xNxxG9vlq4nnt5qcLsOO3c4kFXf
+         f4l/QKMXRlK0BJM/0CupqPqt4Wnjtg6ph0DqkC8/P80veH2oSL4ej7l1ff2I9kdU6QTd
+         kIeQ==
+X-Gm-Message-State: AOAM530LKEn3XAD+6z2aTCwj1gayNb8u7rENrABFiJy9f60FdJbpeEB8
+        HvzA/eAWjp6l1hzTSHjZVbQ0CLDWSEgGzWTcihg=
+X-Google-Smtp-Source: ABdhPJx3tc6th2NQ3W5yI0UnQXkvVnc2gSxYPh/skJvLZlUli2agzUUaOAOxKvX4m89LXd0PAOcDIyBSHEkZWdpqMVo=
+X-Received: by 2002:aa7:de03:: with SMTP id h3mr7213014edv.232.1599702768129;
+ Wed, 09 Sep 2020 18:52:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+References: <20200909114312.2863675-1-andrew@aj.id.au> <20200909114312.2863675-3-andrew@aj.id.au>
+In-Reply-To: <20200909114312.2863675-3-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 10 Sep 2020 01:52:36 +0000
+Message-ID: <CACPK8Xe0WqmyXOHdxw=OWbFEzHew7F2aBQ9B5EPRJfDhj=vhmw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: aspeed: Use the right pinconf mask
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        johnny_huang@aspeedtech.com,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Saheed]
+On Wed, 9 Sep 2020 at 11:43, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> The Aspeed pinconf data structures are split into 'conf' and 'map'
+> types, where the 'conf' struct defines which register and bitfield to
+> manipulate, while the 'map' struct defines what value to write to
+> the register and bitfield.
+>
+> Both structs have a mask member, and the wrong mask was being used to
+> tell the regmap which bits to update.
+>
+> A todo is to look at whether we can remove the mask from the 'map'
+> struct.
+>
+> Cc: Johnny Huang <johnny_huang@aspeedtech.com>
+> Fixes: 5f52c853847f ("pinctrl: aspeed: Use masks to describe pinconf bitfields")
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-On Fri, Aug 21, 2020 at 08:32:20PM +0800, Kai-Heng Feng wrote:
-> New Intel laptops with VMD cannot reach deeper power saving state,
-> renders very short battery time.
-> 
-> As BIOS may not be able to program the config space for devices under
-> VMD domain, ASPM needs to be programmed manually by software. This is
-> also the case under Windows.
-> 
-> The VMD controller itself is a root complex integrated endpoint that
-> doesn't have ASPM capability, so we can't propagate the ASPM settings to
-> devices under it. Hence, simply apply ASPM_STATE_ALL to the links under
-> VMD domain, unsupported states will be cleared out anyway.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Owch.
+
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+
 > ---
->  drivers/pci/pcie/aspm.c |  3 ++-
->  drivers/pci/quirks.c    | 11 +++++++++++
->  include/linux/pci.h     |  2 ++
->  3 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 253c30cc1967..dcc002dbca19 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -624,7 +624,8 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
->  		aspm_calc_l1ss_info(link, &upreg, &dwreg);
->  
->  	/* Save default state */
-> -	link->aspm_default = link->aspm_enabled;
-> +	link->aspm_default = parent->dev_flags & PCI_DEV_FLAGS_ENABLE_ASPM ?
-> +			     ASPM_STATE_ALL : link->aspm_enabled;
-
-This function is ridiculously complicated already, and I really don't
-want to make it worse.
-
-What exactly is the PCIe topology here?  Apparently the VMD controller
-is a Root Complex Integrated Endpoint, so it's a Type 0 (non-bridge)
-device.  And it has no Link, hence no Link Capabilities or Control and
-hence no ASPM-related bits.  Right?
-
-And the devices under the VMD controller?  I guess they are regular
-PCIe Endpoints, Switch Ports, etc?  Obviously there's a Link involved
-somewhere.  Does the VMD controller have some magic, non-architected
-Port on the downstream side?
-
-Does this patch enable ASPM on this magic Link between VMD and the
-next device?  Configuring ASPM correctly requires knowledge and knobs
-from both ends of the Link, and apparently we don't have those for the
-VMD end.
-
-Or is it for Links deeper in the hierarchy?  I assume those should
-just work already, although there might be issues with latency
-computation, etc., because we may not be able to account for the part
-of the path above VMD.
-
-I want aspm.c to eventually get out of the business of managing struct
-pcie_link_state.  I think it should manage *device* state for each end
-of the link.  Maybe that's a path forward, e.g., if we cache the Link
-Capabilities during enumeration, quirks could modify that directly,
-and aspm.c could just consume that cached information.  I think Saheed
-(cc'd) is already working on patches in this direction.
-
-I'm still not sure how this works if VMD is the upstream end of a
-Link, though.
-
->  	/* Setup initial capable state. Will be updated later */
->  	link->aspm_capable = link->aspm_support;
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index bdf9b52567e0..2e2f525bd892 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5632,3 +5632,14 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
->  			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-> +
-> +/*
-> + * Device [8086:9a09]
-> + * BIOS may not be able to access config space of devices under VMD domain, so
-> + * it relies on software to enable ASPM for links under VMD.
-> + */
-> +static void pci_fixup_enable_aspm(struct pci_dev *pdev)
-> +{
-> +	pdev->dev_flags |= PCI_DEV_FLAGS_ENABLE_ASPM;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a09, pci_fixup_enable_aspm);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 835530605c0d..66a45916c7c6 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -227,6 +227,8 @@ enum pci_dev_flags {
->  	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
->  	/* Don't use Relaxed Ordering for TLPs directed at this device */
->  	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> +	/* Enable ASPM regardless of how LnkCtl is programmed */
-> +	PCI_DEV_FLAGS_ENABLE_ASPM = (__force pci_dev_flags_t) (1 << 12),
->  };
->  
->  enum pci_irq_reroute_variant {
-> -- 
-> 2.17.1
-> 
+>  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> index d8972911d505..e03ee78b2434 100644
+> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+> @@ -534,7 +534,7 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
+>                 val = pmap->val << __ffs(pconf->mask);
+>
+>                 rc = regmap_update_bits(pdata->scu, pconf->reg,
+> -                                       pmap->mask, val);
+> +                                       pconf->mask, val);
+>
+>                 if (rc < 0)
+>                         return rc;
+> --
+> 2.25.1
+>
