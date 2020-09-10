@@ -2,150 +2,140 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DCFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61502C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF9D20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F390B214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uBOlTGMa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0IcqgCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgIJUws (ORCPT
+        id S1727114AbgIJUxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        Thu, 10 Sep 2020 16:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730813AbgIJO6V (ORCPT
+        with ESMTP id S1726746AbgIJUwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:58:21 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A12C061573
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:58:07 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id k25so5073151qtu.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:58:07 -0700 (PDT)
+        Thu, 10 Sep 2020 16:52:36 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3EB0C061756;
+        Thu, 10 Sep 2020 13:52:33 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id x14so7275891oic.9;
+        Thu, 10 Sep 2020 13:52:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=psWYZztgZCmOanZbN0KVSKVg8aC+fzD9jcmxhuC+NNI=;
-        b=uBOlTGMa94CWWF6b+8C6NaJQaNcmte0pvB20fB/uVnBUUG8bvWgUMpgmpjaAvmfxr7
-         AOtJ+KbVmezhukeZRCHFU6HqC8v/EauaFyhX9aa15oWd0ENqKLPrc8KSgg30BLwgc/yj
-         AapZ46xO0EI3jLRHYfn/B5QbXVDv9AKyvij0LRF3yZomuokQyFfGZCZuGmBYRJuT/lH+
-         cweg8VGv/ZI014+jDzWXQPJjA4oi3ZWbNm4yvus4D8czoI73PkA8zOT/lsnuJ0Or7lM6
-         Vv8DYVqjz6dYkI89w1eFdCBIcEOC0NR9mZBsy2hRME9X71MtGhDIwU80FS74v9831tWA
-         E5wg==
+        bh=VPpl9Z9qKG4w005uSztVwu76pM5CDuAiXfIO8K3+qrE=;
+        b=m0IcqgCQ9O8AuJcc7fc+TKNe4VmhTEZJDFncPoOZ5TbiTYuYueITM56QOkId2CVxV2
+         0gvEEE765IgF+bY/v5gwti5C0IOA4JSKESYmODEJIf8gORQE1e5sGNzM6BXT31OmqUo1
+         lbB/ThjTaUw3H8i+s2aG1yW7Uh+SbdOBzkS6Oj0rHYQqHUDdnEipdQ5744RGzfaYadJB
+         eiVWaDByrojf73q7kgDUG26umWC0smerQAkMRe99vw6xU5R0paFJDb1axzoGle9iBok3
+         IRNHTi2Rycw0xuyqTC0jEQe8r7WhnrAuW9AVMGRq3ZD9pKFR+uYR833FRY6NLj+mYcS7
+         k26Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=psWYZztgZCmOanZbN0KVSKVg8aC+fzD9jcmxhuC+NNI=;
-        b=YOL9Q95HdeWo+dYi7a0iLB3aaRsuNNpcBJVJfwkyRNMiRuDwnDGLqFbX7Gcy+Bjn69
-         w7+KHGZez5G6UgYfMPgKbAHy77k7vGZkGHcNiH0tGdQ7szSL7+6nXmufauRpHe2DuT1w
-         cluocKo9tmtl3j+S2nqo8lMqSbvoitxbYqRKdsKY5hJSU20hFyzZBT5zpxhecNCX8vcQ
-         iZxiGgq7A+E0kt0YNaKTYYPA0B0unedxC9HlU/ZsXhZ0JNYeRTLskkHDisaenGRfzrOY
-         zg51GWLpz/GRb0DsYI/OaJVcDNnsEkmh5vodf4DM3BpbYXTLmIwQREkfecO/WmJipPXf
-         j9Rw==
-X-Gm-Message-State: AOAM532GnD4lpu3MvLxl/PGTMG98LtYBJ91GpSjBGjPPoaufdEGlhENL
-        CKMAAoeiwJbWn7Pz0hhFghJy2VWjKAXjdFj+kZ4BFg==
-X-Google-Smtp-Source: ABdhPJyXKZK4qpETW5dxMgNJ4lmga0bIB3HhLdqOmOK7G/KhIAL9x+/iQr16cfal7ToieRC4QB+fxYBPp6QW6lBF30g=
-X-Received: by 2002:ac8:5215:: with SMTP id r21mr8150267qtn.257.1599749886066;
- Thu, 10 Sep 2020 07:58:06 -0700 (PDT)
+        bh=VPpl9Z9qKG4w005uSztVwu76pM5CDuAiXfIO8K3+qrE=;
+        b=sA7gfFoGu5eZZtUm6HMP02T8Fu0y8imCZn+0hLZ1X5IiEAn5MqhPNNf5En+Fe2D4kr
+         Vwi8fEZiQ45W4pNQN/GvMY5RfxWuUdUB80e4p/HWNmPVT450X1Ex1ld593PAg0tnWJ6k
+         7u0DX4MdjWdtj/V78gPzSnzV9+UYaHjrC6gWIlWkf3MMKUBKWrdIolcR8RDU3ZHZQiDR
+         IbH7m6PYjKkI9YSIu0FeHWFIGGmiaQe0mxFVXfxlOLk5mppZsPqDm2nlNgsjlIAE4bE4
+         D72HaLBGhF6v2Ay7Jh6tyTftB1FA1bPw63DisTPwUIg+xNd9TBHLVXP3VUYiw3ppbmvI
+         RW4A==
+X-Gm-Message-State: AOAM532aSk9j93rEjOVg+qjGSLlyCZ/dXkXX31fDyAN820lWTKlW6Q6C
+        4kvDSzuv7WocGmzqSHj5pbStwdGhTQzPLyEUKZPZqLO3bKgfZQ==
+X-Google-Smtp-Source: ABdhPJz2YnloFEb/FVPpViU/szPTv8JRkAq5DfqeUSr54M6RCUBDo/FV9Z1sv6DupqGJdZStQbnui98DDHhKlm0E+gI=
+X-Received: by 2002:a05:6808:3bb:: with SMTP id n27mr1192198oie.130.1599771153123;
+ Thu, 10 Sep 2020 13:52:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com> <20200907134055.2878499-2-elver@google.com>
-In-Reply-To: <20200907134055.2878499-2-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 10 Sep 2020 16:57:54 +0200
-Message-ID: <CACT4Y+aBpeQYOWGrCoaJ=HAa0BsSekyL88kcLBTGwc--C+Ch0w@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/10] mm: add Kernel Electric-Fence infrastructure
-To:     Marco Elver <elver@google.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eric Dumazet <edumazet@google.com>,
+References: <20200910161126.30948-1-oded.gabbay@gmail.com> <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
+ <20200910202513.GH3354160@lunn.ch> <CAFCwf11P7pEJ+Av9oiwdQFor5Kh9JeKvVTBXnMzWusKCRz7mHw@mail.gmail.com>
+ <20200910203848.GJ3354160@lunn.ch>
+In-Reply-To: <20200910203848.GJ3354160@lunn.ch>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Thu, 10 Sep 2020 23:52:05 +0300
+Message-ID: <CAFCwf13NofvixWbdg0g2bGkN-UtgyQxNLyMxj3FmMDG669TXYQ@mail.gmail.com>
+Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-MM <linux-mm@kvack.org>
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 3:41 PM Marco Elver <elver@google.com> wrote:
-> +config KFENCE_NUM_OBJECTS
-> +       int "Number of guarded objects available"
-> +       default 255
-> +       range 1 65535
-> +       help
-> +         The number of guarded objects available. For each KFENCE object, 2
-> +         pages are required; with one containing the object and two adjacent
-> +         ones used as guard pages.
+On Thu, Sep 10, 2020 at 11:38 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Thu, Sep 10, 2020 at 11:30:33PM +0300, Oded Gabbay wrote:
+> > On Thu, Sep 10, 2020 at 11:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > >
+> > > > Can you please elaborate on how to do this with a single driver that
+> > > > is already in misc ?
+> > > > As I mentioned in the cover letter, we are not developing a
+> > > > stand-alone NIC. We have a deep-learning accelerator with a NIC
+> > > > interface.
+> > >
+> > > This sounds like an MFD.
+> > >
+> > >      Andrew
+> >
+> > Yes and no. There is only one functionality - training of deep
+> > learning (Accelerating compute operations) :)
+> > The rdma is just our method of scaling-out - our method of
+> > intra-connection between GAUDI devices (similar to NVlink or AMD
+> > crossfire).
+> > So the H/W exposes a single physical function at the PCI level. And
+> > thus Linux can call a single driver for it during the PCI probe.
+>
+> Yes, it probes the MFD driver. The MFD driver then creates platform
+> drivers for the sub functions. i.e. it would create an Ethernet
+> platform driver. That then gets probed in the usual way. The child
+> device can get access to the parent device, if it needs to share
+> things, e.g. a device on a bus. This is typically I2C or SPI, but
+> there is no reason it cannot be a PCI device.
+>
+> Go look in drivers/mfd.
+>
+>       Andrew
 
-Hi Marco,
+I'm slightly familiar with drivers/mfd and as you mentioned, those are
+for "simple" devices, which use a bus with different functionality on
+them, like I2C with many devices (sensors for various things, etc).
+I've never seen anyone doing a PCI device there and frankly, I don't
+see the benefit of trying to migrate our complex PCI driver to that
+subsystem, if it will even work.
+And I would like to reiterate that our NIC ports are highly integrated
+with our compute engines.
+They "talk" to each other via sync objects inside the SOC, and all of
+them are used as part of the training of the deep learning network.
+Another example why this is not MFD - when a compute engine gets
+stuck, all the NIC ports are going through reset.
+So it's not the same as multiple devices that use the same bus or H/W.
+It's a single device with some engines that work in harmony.
+The bottom line is that we have single functionality and the scale-out
+is done via RDMA that is integrated on the device.
+We could have chosen other ways to scale-out (like some proprietary
+bus) and then would that count as another functionality ? I think not.
 
-Wonder if you tested build/boot with KFENCE_NUM_OBJECTS=65535? Can a
-compiler create such a large object?
+So I'm not going to drivers/mfd with our driver. I wish that I had
+multiple PCI PF so I could do a proper Ethernet driver but I can't for
+this H/W.
+And I think that physically splitting the files into two subsystems
+will be very hard to maintain and definitely I will want to hear
+Greg's opinion on that.
 
-
-> +config KFENCE_FAULT_INJECTION
-> +       int "Fault injection for stress testing"
-> +       default 0
-> +       depends on EXPERT
-> +       help
-> +         The inverse probability with which to randomly protect KFENCE object
-> +         pages, resulting in spurious use-after-frees. The main purpose of
-> +         this option is to stress-test KFENCE with concurrent error reports
-> +         and allocations/frees. A value of 0 disables fault injection.
-
-I would name this differently. "FAULT_INJECTION" is already taken for
-a different thing, so it's a bit confusing.
-KFENCE_DEBUG_SOMETHING may be a better name.
-It would also be good to make it very clear in the short description
-that this is for testing of KFENCE itself. When I configure syzbot I
-routinely can't figure out if various DEBUG configs detect user
-errors, or enable additional unit tests, or something else.
-Maybe it should depend on DEBUG_KERNEL as well?
-
-> +/*
-> + * Get the canary byte pattern for @addr. Use a pattern that varies based on the
-> + * lower 3 bits of the address, to detect memory corruptions with higher
-> + * probability, where similar constants are used.
-> + */
-> +#define KFENCE_CANARY_PATTERN(addr) ((u8)0xaa ^ (u8)((unsigned long)addr & 0x7))
-
-(addr) in macro body
-
-> +       seq_con_printf(seq,
-> +                      "kfence-#%zd [0x" PTR_FMT "-0x" PTR_FMT
-
-PTR_FMT is only used in this file, should it be declared in report.c?
-
-Please post example reports somewhere. It's hard to figure out all
-details of the reporting/formatting.
+Thanks,
+Oded
