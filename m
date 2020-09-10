@@ -2,151 +2,171 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABE5C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA47C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9453A214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GJealwQi"
+	by mail.kernel.org (Postfix) with ESMTP id D084520C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599728167;
+	bh=wI+o7l6xyWnZkwD9Z2sUxIBAfYQ5d3573I9H1mMjVxo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dIrt05dse/1a2oUQYEe3zBcn9kZ98oG3yTZDBvHyDfy/yCDhCdnF+tr1ymZF04CI4
+	 dwj10a4hC4rFcDPCHt3gq5nlZzoKA/EsoVUcmlnU3+A7am3oGwa4tqt90rp05YyqZ8
+	 +hsy62PS9mZPSkELELZiwpMMNaeWPKjDjdJJpiDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgIJIy7 (ORCPT
+        id S1730425AbgIJI4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:54:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23494 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729005AbgIJIyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:54:10 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08A8XweY103296;
-        Thu, 10 Sep 2020 04:54:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=yO1GjViRv1bglEtAAUDSoRen6fdrhR52DgjMHr1Ss7E=;
- b=GJealwQiVQrXqukAXO9zL3qSD0+he4QldOpyqughATuLoumJLkwN2ElncH1Zg1cFFmRD
- j/ufpEIKJKXxnACxidzrxkci2ns+kPwoB6JOMYHLc8DCphqUagtwz7Zd3O/7yxygdzkp
- AHNdCTb3M1y+5YI0Z260ImbvhDYYt9j7XteLw6eRJGsDUaMtYsN7NLE9dWhyi+EsM8fj
- q/ZowfqWXtAWg8nM4eOUFFMskEguOLqnBvssfHc8GyACkesgXipe34UKRA7K8j9ZCtmB
- RjBEpPLaVvDz2gCc6lO0iucO86vBEX+umNv0n4p8ye5KBmAszYvSho7G7Kgqk8nKKieW kw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fgmn0p35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 04:54:01 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08A8YIV4103913;
-        Thu, 10 Sep 2020 04:54:01 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fgmn0p1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 04:54:01 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08A8qqOI024628;
-        Thu, 10 Sep 2020 08:53:57 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 33f91w885p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 08:53:57 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08A8qL4R60031370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 08:52:21 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C12511C050;
-        Thu, 10 Sep 2020 08:53:54 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8050211C058;
-        Thu, 10 Sep 2020 08:53:53 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.28.144])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 08:53:53 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v12 2/2] s390: virtio: PV needs VIRTIO I/O device protection
-Date:   Thu, 10 Sep 2020 10:53:50 +0200
-Message-Id: <1599728030-17085-3-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1599728030-17085-1-git-send-email-pmorel@linux.ibm.com>
-References: <1599728030-17085-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
- adultscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009100079
+        Thu, 10 Sep 2020 04:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727820AbgIJIzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:55:01 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62B492078B;
+        Thu, 10 Sep 2020 08:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599728100;
+        bh=wI+o7l6xyWnZkwD9Z2sUxIBAfYQ5d3573I9H1mMjVxo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fs19XQ7nPvnlkUAZcRhKE9n5KkZbFVK1xCOCrH9eofj82OgUCWwdDTgV1tcKAi/az
+         xifMX33ajKxnsujvAg/mm1Kvp3nuBgetTCxAF4v0GLztP6Q5fEytYrrvdaciIXFRgZ
+         SA7xGF8TLicYox9Znt0fU36myjsissLBdkHJ8D2M=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: [PATCH v3 0/8] tracing/boot: Add new options for tracing specific period
+Date:   Thu, 10 Sep 2020 17:54:54 +0900
+Message-Id: <159972809455.428528.4737752126800169128.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If protected virtualization is active on s390, VIRTIO has only retricted
-access to the guest memory.
-Define CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS and export
-arch_has_restricted_virtio_memory_access to advertize VIRTIO if that's
-the case.
+Hi,
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Here is the 3rd version of the series to improve the boot-time tracing to
+support kretprobe and tracing_on option. Previous version is here:
+
+ https://lkml.kernel.org/r/159894698993.1478826.2813843560314595660.stgit@devnote2
+
+This version adds uprobe %return suffix support ([5/8]) and the testcases
+([8/8]), and update kprobe %suffix support([4/8]) and the uprobe event
+document([6/8]).
+
+
+The combination of tracing_on and kretprobe allows us to trace events
+while a specific function call period. For example, the below bootconfig
+will make a function callgraph in the pci_proc_init() function at boot
+time.
+
+ftrace {
+	tracing_on = 0  # off at start
+	tracer = function_graph
+	event.kprobes {
+		start_event {
+			probes = "pci_proc_init"
+			actions = "traceon"
+		}
+		end_event {
+			probes = "pci_proc_init%return"
+			actions = "traceoff"
+		}
+	}
+}
+
+Here is the example output;
+
+# tracer: function_graph
+#
+# CPU  DURATION                  FUNCTION CALLS
+# |     |   |                     |   |   |   |
+ 0)               |  pci_proc_init() {
+ 0)               |    proc_mkdir() {
+ 0)               |      proc_mkdir_data() {
+ 0)               |        __proc_create() {
+ 0)               |          _raw_read_lock() {
+ 0)   0.179 us    |            preempt_count_add();
+ 0)   0.203 us    |            do_raw_read_lock();
+ 0)   1.210 us    |          }
+ 0)               |          __xlate_proc_name() {
+ 0)   0.449 us    |            pde_subdir_find();
+ 0)   0.913 us    |          }
+ 0)               |          _raw_read_unlock() {
+ 0)   0.169 us    |            do_raw_read_unlock();
+ 0)   0.175 us    |            preempt_count_sub();
+ 0)   0.841 us    |          }
+ 0)               |          kmem_cache_alloc() {
+ 0)               |            fs_reclaim_acquire() {
+ 0)   0.154 us    |              __need_fs_reclaim();
+ 0)   0.240 us    |              fs_reclaim_acquire.part.0();
+ 0)   0.889 us    |            }
+ 0)               |            fs_reclaim_release() {
+ 0)   0.174 us    |              __need_fs_reclaim();
+ 0)   0.516 us    |            }
+ 0)   0.157 us    |            should_failslab();
+ 0)               |            rcu_read_lock_sched_held() {
+ 0)               |              rcu_read_lock_held_common() {
+ 0)   0.156 us    |                rcu_is_watching();
+ 0)   0.158 us    |                rcu_lockdep_current_cpu_online();
+ 0)   0.735 us    |              }
+ 0)   1.054 us    |            }
+ 0)   3.407 us    |          }
+ 0)   0.168 us    |          __raw_spin_lock_init();
+ 0)   7.575 us    |        }
+ 0)               |        proc_register() {
+ 0)               |          _raw_spin_lock_irqsave() {
+ 0)   0.187 us    |            preempt_count_add();
+...
+
+
+Thank you,
+
 ---
- arch/s390/Kconfig   |  1 +
- arch/s390/mm/init.c | 11 +++++++++++
- 2 files changed, 12 insertions(+)
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index b29fcc66ec39..938246200d39 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -820,6 +820,7 @@ menu "Virtualization"
- config PROTECTED_VIRTUALIZATION_GUEST
- 	def_bool n
- 	prompt "Protected virtualization guest support"
-+	select ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
- 	help
- 	  Select this option, if you want to be able to run this
- 	  kernel as a protected virtualization KVM guest.
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 0d282081dc1f..e27f050cb516 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -45,6 +45,7 @@
- #include <asm/kasan.h>
- #include <asm/dma-mapping.h>
- #include <asm/uv.h>
-+#include <linux/virtio_config.h>
- 
- pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
- 
-@@ -160,6 +161,16 @@ bool force_dma_unencrypted(struct device *dev)
- 	return is_prot_virt_guest();
- }
- 
-+#ifdef CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-+
-+int arch_has_restricted_virtio_memory_access(void)
-+{
-+	return is_prot_virt_guest();
-+}
-+EXPORT_SYMBOL(arch_has_restricted_virtio_memory_access);
-+
-+#endif
-+
- /* protected virtualization */
- static void pv_init(void)
- {
--- 
-2.25.1
+Masami Hiramatsu (8):
+      kprobes: tracing/kprobes: Fix to kill kprobes on initmem after boot
+      tracing/boot: Add per-instance tracing_on option support
+      Documentation: tracing: Add tracing_on option to boot-time tracer
+      tracing/kprobes: Support perf-style return probe
+      tracing/uprobes: Support perf-style return probe
+      Documentation: tracing: Add %return suffix description
+      Documentation: tracing: boot: Add an example of tracing function-calls
+      selftests/ftrace: Add %return suffix tests
 
+
+ Documentation/trace/boottime-trace.rst             |   24 ++++++++++++++++++++
+ Documentation/trace/kprobetrace.rst                |    2 ++
+ Documentation/trace/uprobetracer.rst               |    2 ++
+ include/linux/kprobes.h                            |    5 ++++
+ init/main.c                                        |    2 ++
+ kernel/kprobes.c                                   |   22 ++++++++++++++++++
+ kernel/trace/trace.c                               |    4 ++-
+ kernel/trace/trace_boot.c                          |   10 ++++++++
+ kernel/trace/trace_kprobe.c                        |   18 ++++++++++++++-
+ kernel/trace/trace_probe.h                         |    1 +
+ kernel/trace/trace_uprobe.c                        |   15 ++++++++++++-
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    6 +++++
+ .../test.d/kprobe/kretprobe_return_suffix.tc       |   21 ++++++++++++++++++
+ .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |    6 +++++
+ 14 files changed, 134 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kretprobe_return_suffix.tc
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
