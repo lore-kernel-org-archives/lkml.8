@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5A3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83179C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF91221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BD721D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aa2oLGC+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q31h2nnq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgIJVTk (ORCPT
+        id S1728081AbgIJVTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34814 "EHLO
+        Thu, 10 Sep 2020 17:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgIJVOi (ORCPT
+        with ESMTP id S1727995AbgIJVOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:38 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB19FC061799;
-        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id m6so8795131wrn.0;
-        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
+        Thu, 10 Sep 2020 17:14:15 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D41C0613ED;
+        Thu, 10 Sep 2020 14:14:14 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id a9so2104642wmm.2;
+        Thu, 10 Sep 2020 14:14:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MLBdHdm5cYk8dfxdkOCuHqs4ImelW6eqd8o4yH+DFEY=;
-        b=Aa2oLGC+K0Hx85Gvq7caNDqwpIq7iZdPaXmAGheW4YhF+N+GhDbBF8GFZhn1t/XLvX
-         oRPkVlgvjUw9N4twwtvPNmCt1JHJ82iBrqx9458llE/WRLLXiX6CBIAjq4EyLuKNtFeo
-         nC4gtDn7kaLad8HsGdnHRl6auLHkB8WhIr3vmskR4MaHsl++0QpPGOA4uZiBreavim6g
-         iSs8N31PIa1fEKTDU4RsriPGYgz0/Z6U1UqzQbW9pyaT/r9a0tsjjboBlQkD6qNbZsVO
-         Y3xQW+PISO3eFmESexmdjwHBLU4n+aJngAgZ4NVLjjQRjLmuxEJ8K8IzC9YX+pB0CspN
-         47Fw==
+        bh=eDnzDkzS7un/T3HQQEdcrFP62+pebf6XutqN/w48ZaY=;
+        b=q31h2nnqPmjjXuIUt8EkDVn4Nt6SLWQXISTfw21Xrr6xyXDzm73mo2MNAy5hH+CrWL
+         S0ojhRlFr4VYBapqcBT/yTW8V9aAK2SSQpnnJHfB7FvconofM+QETzrl4kDTuCqAJk2x
+         fSu9ru9JI9PSbgdJvoBwpE/YCAft4DI19gehkJf8xQis91hn2+o6WDKhsaYAhA7HkvEq
+         MyuzGy+/gGIb9a8QcxYBPCedWiAK4nJWJ6poyr7CfAjBIhbIybTYwjgE36hsR3sXI/i+
+         YbwCqferTIGINx2YIH376VBMzKzCkEZGCQrpt0O8/LWI1rfzcoca3+6aZG+vupLjs3RO
+         +RAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MLBdHdm5cYk8dfxdkOCuHqs4ImelW6eqd8o4yH+DFEY=;
-        b=NIr+HZaDMCmytks38e58uCV0AC+inenHu/lvWRpkeorcEJPivoeUogYQ4VhYMUsACl
-         qXdf5FjTYHi9kOyPZmy5u77e4UeHitoSIX2u6bKpEr/zFzytqOprO/yg9y4D1STww6+R
-         ooMYc4ajVnF1DEQ681ShOTUAyn7Zt1/2yBXmTcJql7ozTvD79Jt9rA7RQLdRWoDLeZ/W
-         8MyzCV4jSai9zxYkrmX7feBj61y+B6+e92LgnFk00FCNH1M08T44ENzLHrFaAPRpx8jz
-         UceQsIKcq96Zp3XeWke8hapw5OZn9Ez72HQdQbN2oIHm3+vesdOsplxO4xRucFzWgCWB
-         yi1Q==
-X-Gm-Message-State: AOAM530K8bpIVo66pWl1CNSAYi4uMIyX5VT+his5vt25Wc1ypIF9krVy
-        SI+5BPQki5L7v+SVTwHkw+s=
-X-Google-Smtp-Source: ABdhPJxa75juhj0PLEXC39HhkFgEQbKz0vzH4n5/4eVYyax5GoyyMYp4lKLAVu735xoSw809seMYqw==
-X-Received: by 2002:adf:dfd1:: with SMTP id q17mr12036829wrn.347.1599772457636;
-        Thu, 10 Sep 2020 14:14:17 -0700 (PDT)
+        bh=eDnzDkzS7un/T3HQQEdcrFP62+pebf6XutqN/w48ZaY=;
+        b=mDPnO+jisVh6yNrO5+5RhQeeMeOmPUnvXy0DXbTRw7HFcKEbW1A0uIcPi1zrRBnZWf
+         AaYsavvYkTtoZsQ62R/CpZ2R0eLROZp9E97/1ev2dfizmYAxjrYDlO/Zs24u5CMtp8fW
+         sZjyXGPkCb64lu/dlHRrdUdq/YfbyVjZgrQXlcy3nyY03M/3V2YktzJg+N9uKxeDoubP
+         eZsdwrH2Go130E1LLUR/YbkjSGk4VkJ948c08DuFx0bjQbNMsaoIAPW0VxZNTwdW+dZW
+         AtDMpVdAU6lEe17JU/ROMp7SKJ6kqMV3yBOP0ta0mvvjUaGkP6odZEDWISp4PEsDhvnY
+         ZaTA==
+X-Gm-Message-State: AOAM532pBXfuVPN60pzGXl0ED73mL5+xEeWL1y6RyeCpzA+ards+crKU
+        i/xyA9zO2xSCDoj3vTpaRs49ef5vddCT8w==
+X-Google-Smtp-Source: ABdhPJwr5kxBSqKAn0AhOROeSmVy21Z4EUpZ8oZSpiyOGxZeHmGemNv3rFUJ8f1ltvkYrj8HRR+kKg==
+X-Received: by 2002:a1c:2bc7:: with SMTP id r190mr1979391wmr.116.1599772453314;
+        Thu, 10 Sep 2020 14:14:13 -0700 (PDT)
 Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.16
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:17 -0700 (PDT)
+        Thu, 10 Sep 2020 14:14:12 -0700 (PDT)
 From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
 To:     mtk.manpages@gmail.com
 Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 07/24] request_key.2: Cast to 'unsigned long' rather than 'long' when printing with "%lx"
-Date:   Thu, 10 Sep 2020 23:13:28 +0200
-Message-Id: <20200910211344.3562-8-colomar.6.4.3@gmail.com>
+Subject: [PATCH 03/24] timerfd_create.2: Use 'PRIxN' macros when printing C99 fixed-width integer types
+Date:   Thu, 10 Sep 2020 23:13:24 +0200
+Message-Id: <20200910211344.3562-4-colomar.6.4.3@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
@@ -79,22 +79,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man2/request_key.2 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ man2/timerfd_create.2 | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/man2/request_key.2 b/man2/request_key.2
-index e28c11ded..c14bcb000 100644
---- a/man2/request_key.2
-+++ b/man2/request_key.2
-@@ -537,7 +537,7 @@ main(int argc, char *argv[])
-         exit(EXIT_FAILURE);
+diff --git a/man2/timerfd_create.2 b/man2/timerfd_create.2
+index 67a13dba3..90e35d9b5 100644
+--- a/man2/timerfd_create.2
++++ b/man2/timerfd_create.2
+@@ -624,6 +624,7 @@ a.out 3 1 100
+ #include <sys/timerfd.h>
+ #include <time.h>
+ #include <unistd.h>
++#include <inttypes.h>      /* Definition of PRIu64 */
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <stdint.h>        /* Definition of uint64_t */
+@@ -706,9 +707,7 @@ main(int argc, char *argv[])
+ 
+         tot_exp += exp;
+         print_elapsed_time();
+-        printf("read: %llu; total=%llu\en",
+-                (unsigned long long) exp,
+-                (unsigned long long) tot_exp);
++        printf("read: %"PRIu64"; total=%"PRIu64"\en", exp, tot_exp);
      }
  
--    printf("Key ID is %lx\en", (long) key);
-+    printf("Key ID is %lx\en", (unsigned long) key);
- 
      exit(EXIT_SUCCESS);
- }
 -- 
 2.28.0
 
