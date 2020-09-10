@@ -2,124 +2,101 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12838C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DDB206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599759626;
-	bh=eoZV/4n0ptuA8626OxlGlZVQ5Lm/f4NMMJfN4yyY/ZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lbbP0jz2rTAEvDizNmFWbHs1Zn5kCQGOeekWxD91ZjDqEAmHEvvCCpTrEpeqLiZRj
-	 PVESzTRM9atB7oUi28OsEPsdy7DuCaVY//4pCWoAc+ptkOJIOJ8iGBmgNxyQztnpb3
-	 d3rcP3BMkMVb0FSLBDk4Df3J6a2vYkqfrJfoi+Xc=
+	by mail.kernel.org (Postfix) with ESMTP id CCF722067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TalcK8c1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgIJRkZ (ORCPT
+        id S1727115AbgIJRkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgIJRfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:35:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642B8206A1;
-        Thu, 10 Sep 2020 17:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599759300;
-        bh=eoZV/4n0ptuA8626OxlGlZVQ5Lm/f4NMMJfN4yyY/ZU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ysjUja//f6Wumt5D2oORZzXD8C7F+uQkRoyqYKW5382EG2mSf0ffkyHMAEXQnK9on
-         I9zwfQgggE9Vf1Yq6qyTiRWrq+p53U6LzQmY4Q08fH5hAdG1wMTZKKfozs4yKqDmMc
-         24F4mn6pALcKKpr6Lu2BcI7FWRUxMOqqGQ46yKO8=
-Date:   Thu, 10 Sep 2020 18:34:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-Message-ID: <20200910173414.GD4898@sirena.org.uk>
-References: <20200819124913.37261-1-broonie@kernel.org>
- <20200819124913.37261-4-broonie@kernel.org>
- <alpine.LSU.2.21.2009021128500.23200@pobox.suse.cz>
- <20200902184935.GA5875@C02TD0UTHF1T.local>
+        Thu, 10 Sep 2020 13:40:53 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52758 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgIJRem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:34:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AHYZd6070090;
+        Thu, 10 Sep 2020 12:34:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599759275;
+        bh=HNcXE24gLodGk/pYnEjtALKDPSSo1riHaJjB1RV+ZCw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TalcK8c1fG7RnK2xc+mbsJks00QLpOoGxnT47DmAJp3XSQZCXa9HD5q2FUrXBMKds
+         eUylw3V/mYfdFbE6yjoNYEqQ/bTaqrGx8NiXfus1PdyJdVLYd7L3wBDpruu9dq4fTF
+         gARNSoQWP80FbGd74iW7MbXgF5T2bw0TTUzxCr7c=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AHYZNc121733
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 12:34:35 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 12:34:35 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 12:34:35 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AHYYxE007690;
+        Thu, 10 Sep 2020 12:34:34 -0500
+Subject: Re: [PATCH net-next v3 3/3] net: dp83869: Add speed optimization
+ feature
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200903114259.14013-1-dmurphy@ti.com>
+ <20200903114259.14013-4-dmurphy@ti.com>
+ <20200905113818.7962b6d4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <9848c3ee-51c2-2e06-a51b-3aacc1384557@ti.com>
+ <20200908104719.0b8aced3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <9d5c56ab-fe37-f132-8891-f20f2bfddb9f@ti.com>
+Date:   Thu, 10 Sep 2020 12:34:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pQhZXvAqiZgbeUkD"
-Content-Disposition: inline
-In-Reply-To: <20200902184935.GA5875@C02TD0UTHF1T.local>
-X-Cookie: I disagree with unanimity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200908104719.0b8aced3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jakub
 
---pQhZXvAqiZgbeUkD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 9/8/20 12:47 PM, Jakub Kicinski wrote:
+> On Tue, 8 Sep 2020 09:07:22 -0500 Dan Murphy wrote:
+>> On 9/5/20 1:38 PM, Jakub Kicinski wrote:
+>>> On Thu, 3 Sep 2020 06:42:59 -0500 Dan Murphy wrote:
+>>>> +static int dp83869_set_downshift(struct phy_device *phydev, u8 cnt)
+>>>> +{
+>>>> +	int val, count;
+>>>> +
+>>>> +	if (cnt > DP83869_DOWNSHIFT_8_COUNT)
+>>>> +		return -E2BIG;
+>>> ERANGE
+>> This is not checking a range but making sure it is not bigger then 8.
+>>
+>> IMO I would use ERANGE if the check was a boundary check for upper and
+>> lower bounds.
+> Yeah, ERANGE is not perfect, but the strerror for E2BIG is
+> "Argument list too long" - IDK if users seeing that will know that it
+> means the value is too large. Perhaps we should stick to EINVAL?
 
-On Wed, Sep 02, 2020 at 07:50:27PM +0100, Mark Rutland wrote:
-> On Wed, Sep 02, 2020 at 11:32:13AM +0200, Miroslav Benes wrote:
+EINVAL works for me to.
 
-> > > -		start_backtrace(&frame,
-> > > -				(unsigned long)__builtin_frame_address(0),
-> > > -				(unsigned long)__save_stack_trace);
+Dan
 
-> Oh whoops; I'm annoyed I didn't spot that.
-
-> With that gone this cannot work for (task == current && regs == NULL), as
-> we'll erroneously use stale values from the task struct.
-
-I remember somehow convincing myself at the time I originally did this
-that doing the above was redundant with the new interface but that was
-quite some time ago and I can't reconstruct my reasoning any more, I'm
-pretty sure I was just mistaken.  I've added it back in, thanks for
-spotting this.
-
-> It looks like the LKDTM tests only trigger cases with non-NULL regs, but
-> IIUC this should show up with show_stack(NULL, NULL, KERN_INFO), as
-> drivers/tty/sysrq.c does for other cpus.
-
-show_stack() doesn't go through this bit of the stacktrace code, it goes
-through dump_backtrace() in traps.c which used the underlying arch
-specific unwinder directly so is unaffected by arch_stack_walk().
-Actually now I look at LKDTM it's ending up using show_stack() mostly
-if not entirely so my testing with it was not exercising this change
-as much as might be expected anyway (the modified code was getting hit
-by other things like /proc/N/stack).
-
---pQhZXvAqiZgbeUkD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9aY5YACgkQJNaLcl1U
-h9AoNgf/bxtql5YMDWhCmeDMNhMAagB2dVCtaee/UDna+zUsH1N44ptx9JFeXcW/
-f9sDitnklB+I+tyAlXTeej76l/ohXZL6jkVGL1SYOQZZDgGw+bUkf9KsZLYjrtK/
-TY4aybyOzZdHrwtImEb9GlLPZ65UWrzsUdDgnWOmWy0sBgsoa2g0YwkrM5EhbS/5
-WHttMds5ootnjvB6znsKHoLOvi84gnIEAZf1F+gYDshZFdpeDVK7Zk4E7t+ZRpeE
-wE1kUJd2UKJhZsyaqE2ewXL+0N9wIJgQ1F17aOqcRfHcWBrsyzyZzJSib6ygUfax
-pWT5j9mXTEP/L6TiDwy/FIsH1+X2ZA==
-=Vsd/
------END PGP SIGNATURE-----
-
---pQhZXvAqiZgbeUkD--
