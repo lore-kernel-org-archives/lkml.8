@@ -2,95 +2,91 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC8BC2BB84
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AE4C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7A820665
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D2F20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgIJJpp (ORCPT
+        id S1730259AbgIJJqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:45:45 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:46165 "EHLO h3cspam01-ex.h3c.com"
+        Thu, 10 Sep 2020 05:46:52 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20464 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbgIJJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:45:42 -0400
-Received: from DAG2EX08-IDC.srv.huawei-3com.com ([10.8.0.71])
-        by h3cspam01-ex.h3c.com with ESMTPS id 08A9irMK054157
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 17:44:53 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX08-IDC.srv.huawei-3com.com (10.8.0.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 10 Sep 2020 17:44:56 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
- mapi id 15.01.1713.004; Thu, 10 Sep 2020 17:44:56 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     Jens Axboe <axboe@kernel.dk>, "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kafai@fb.com" <kafai@fb.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "yhs@fb.com" <yhs@fb.com>, "andriin@fb.com" <andriin@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: RE: [PATCH] block: remove redundant empty check of mq_list
-Thread-Topic: [PATCH] block: remove redundant empty check of mq_list
-Thread-Index: AQHWhnZLNDw9Ap0NoUKJovJuaKCnsqlf1fuAgAHGWJA=
-Date:   Thu, 10 Sep 2020 09:44:56 +0000
-Message-ID: <d0b4d3e984d2499d9c2f28834a21e9ae@h3c.com>
-References: <20200909064814.5704-1-tian.xianting@h3c.com>
- <466b8c40-9d53-8a40-6c5b-f76db2974c04@kernel.dk>
-In-Reply-To: <466b8c40-9d53-8a40-6c5b-f76db2974c04@kernel.dk>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728443AbgIJJqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:46:48 -0400
+IronPort-SDR: RSFpXgk9nZww271BvcZdqf6JzrEkhi+O5Ko2odDr/hsTxWMliyZblIykJogBk82WmgrxTRoZ2L
+ EobltJLnNAPw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="176562609"
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="176562609"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 02:46:28 -0700
+IronPort-SDR: XJWYxuPu2GWVcdPC1X7jIACq/yOg+98XSsMf6itNFjMakvjQbmI6JPAEK9khdqPzls+soUVDIq
+ uVnblaCZrVLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,412,1592895600"; 
+   d="scan'208";a="334124576"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 10 Sep 2020 02:46:25 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kGJ9q-00FeiO-8e; Thu, 10 Sep 2020 12:46:22 +0300
+Date:   Thu, 10 Sep 2020 12:46:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, jdelvare@suse.com,
+        p.zabel@pengutronix.de, linux-hwmon@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH 2/2] Add driver for Moortec MR75203 PVT controller
+Message-ID: <20200910094622.GO1891694@smile.fi.intel.com>
+References: <cover.1599634208.git.rahul.tanwar@linux.intel.com>
+ <ecb6794a8f2ef6576421e6d5fbdf4e6a91f06b91.1599634208.git.rahul.tanwar@linux.intel.com>
+ <a3b95ea8-372b-4f03-0c04-62ee9384fafb@roeck-us.net>
+ <c72665ba-b594-bbb0-00c5-ed763233d609@linux.intel.com>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 08A9irMK054157
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c72665ba-b594-bbb0-00c5-ed763233d609@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmVucywNClRoYW5rcyBmb3IgeW91ciBmZWVkYmFjaywNClllcywgYmxrX2ZsdXNoX3BsdWdf
-bGlzdCgpIGlzIG9ubHkgY2FsbGVyIG9mIGJsa19tcV9mbHVzaF9wbHVnX2xpc3QoKS4NClNvIEkg
-Y2hlY2tlZCB0aGUgY2FsbGVycyBvZiBibGtfZmx1c2hfcGx1Z19saXN0KCksIGZvdW5kIGJlbG93
-IGNvZGUgcGF0aCB3aWxsIGNhbGwgYmxrX2ZsdXNoX3BsdWdfbGlzdCgpOg0KCWlvX3NjaGVkdWxl
-X3ByZXBhcmUvc2NoZWRfc3VibWl0X3dvcmstPmJsa19zY2hlZHVsZV9mbHVzaF9wbHVnDQoJd3Jp
-dGViYWNrX3NiX2lub2Rlcy0+YmxrX2ZsdXNoX3BsdWcNCglibGtfZmluaXNoX3BsdWcNCglkbV9z
-dWJtaXRfYmlvL19fc3VibWl0X2Jpb19ub2FjY3RfbXEvX19zdWJtaXRfYmlvLT5ibGtfbXFfc3Vi
-bWl0X2Jpbw0KCWJsa19wb2xsDQoNClNvIEkgdGhpbmsgdGhlcmUgYXJlIHN0aWxsIG1hbnkgY2hh
-bmNlcyB0byBkbyB0aGUgcmVkdW5kYW50IGp1ZGdlPw0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KRnJvbTogSmVucyBBeGJvZSBbbWFpbHRvOmF4Ym9lQGtlcm5lbC5ka10gDQpTZW50OiBX
-ZWRuZXNkYXksIFNlcHRlbWJlciAwOSwgMjAyMCAxMDoyMSBQTQ0KVG86IHRpYW54aWFudGluZyAo
-UkQpIDx0aWFuLnhpYW50aW5nQGgzYy5jb20+OyBhc3RAa2VybmVsLm9yZzsgZGFuaWVsQGlvZ2Vh
-cmJveC5uZXQ7IGthZmFpQGZiLmNvbTsgc29uZ2xpdWJyYXZpbmdAZmIuY29tOyB5aHNAZmIuY29t
-OyBhbmRyaWluQGZiLmNvbTsgam9obi5mYXN0YWJlbmRAZ21haWwuY29tOyBrcHNpbmdoQGNocm9t
-aXVtLm9yZw0KQ2M6IGxpbnV4LWJsb2NrQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgYnBmQHZnZXIua2VybmVsLm9y
-Zw0KU3ViamVjdDogUmU6IFtQQVRDSF0gYmxvY2s6IHJlbW92ZSByZWR1bmRhbnQgZW1wdHkgY2hl
-Y2sgb2YgbXFfbGlzdA0KDQpPbiA5LzkvMjAgMTI6NDggQU0sIFhpYW50aW5nIFRpYW4gd3JvdGU6
-DQo+IGJsa19tcV9mbHVzaF9wbHVnX2xpc3QoKSBpdHNlbGYgd2lsbCBkbyB0aGUgZW1wdHkgY2hl
-Y2sgb2YgbXFfbGlzdCwgc28gDQo+IHJlbW92ZSBzdWNoIGNoZWNrIGluIGJsa19mbHVzaF9wbHVn
-X2xpc3QoKS4NCj4gQWN0dWFsbHkgbm9ybWFsbHkgbXFfbGlzdCBpcyBub3QgZW1wdHkgd2hlbiBi
-bGtfZmx1c2hfcGx1Z19saXN0IGlzIA0KPiBjYWxsZWQuDQoNCkl0J3MgY2hlYXBlciB0byBkbyBp
-biB0aGUgY2FsbGVyLCBpbnN0ZWFkIG9mIGRvaW5nIHRoZSBmdW5jdGlvbiBjYWxsIGFuZCB0aGVu
-IGFib3J0aW5nIGlmIGl0J3MgZW1wdHkuIFNvIEknZCBzdWdnZXN0IGp1c3QgbGVhdmluZyBpdCBh
-bG9uZS4NClJpZ2h0IG5vdyB0aGlzIGlzIHRoZSBvbmx5IGNhbGxlciwgYnV0IGl0J3MgbmljZXIg
-dG8gYXNzdW1lIHdlIGNhbiBiZSBjYWxsZWQgaW4gYW55IHN0YXRlIHZzIG5vdCBoYXZpbmcgdGhl
-IGNoZWNrLg0KDQotLQ0KSmVucyBBeGJvZQ0KDQo=
+On Thu, Sep 10, 2020 at 03:27:11PM +0800, Tanwar, Rahul wrote:
+> On 9/9/2020 11:05 pm, Guenter Roeck wrote:
+> > On 9/8/20 11:52 PM, Rahul Tanwar wrote:
+
+...
+
+> >> +static int pvt_get_regmap(struct platform_device *pdev, char *reg_name)
+> >> +{
+> >> +	struct device *dev = &pdev->dev;
+> >> +	struct pvt_device *pvt = platform_get_drvdata(pdev);
+> > I am quite at loss how this is supposed to work. Platform driver
+> > data is not initialized with a pointer to struct pvt_device at this point.
+> > How does this code not crash ? What am I missing ?
+> 
+> Big mistake on my part. Last minute change based on internal review feedback
+> about moving platform_set_drvdata() at the end of probe. I will fix it in v2.
+> Thanks.
+
+Since IIRC it was me who suggested this I should say that reviewer can make
+mistakes, on the other hand contributor should have had known their code to
+refuse certain changes.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
