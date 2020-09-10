@@ -2,179 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE948C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEFEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B5321D90
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF98D21D90
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L1fFI0y0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IN7JZpI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgIJU7P (ORCPT
+        id S1727943AbgIJU7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
+        Thu, 10 Sep 2020 16:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbgIJUzj (ORCPT
+        with ESMTP id S1731180AbgIJOsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:55:39 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9492C0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:55:38 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id q13so10737258ejo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 13:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6WIiEBg2V+e3hARqFde0aiNR5ScO14X3JJL78bMDSrs=;
-        b=L1fFI0y0Pe7czKsJuyVbxrmCDK0BnWq+6Kvh94sOd+r3i7msl/xLwLjzzzL9c28sAK
-         rR/+QnQaVicDMJJygLh0QwtQZRBvwqQJ5B/ajnk1a5e6wni2BRpk21gKHUzsEjqhdZlC
-         iNnidHCMLR8KiKmhBg9yFZO8/CrMLJAzGj7kfuVVeFwgzG8EdxWJtB4hNNKdRY4VNRNi
-         4fsNcbKzW3Vus8t+CEXPUuK+1etDhZqfaf5eNc0V+gczmE2YOW+pKG3W/Ot9ScdzAV9L
-         5xA17qxbjuoEpJU1m/PvmZL3DAYqeFNX1Tief9l5wRZX2ahMJBmPCcBHUhzF2E/mTgnd
-         rd8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6WIiEBg2V+e3hARqFde0aiNR5ScO14X3JJL78bMDSrs=;
-        b=OALbClo5pe0g4utKgOTZDTOTKocaK4sECDM8BUjYTIMg3ZQQozh5us/VC4QIHIlM9J
-         IJ1oTqwqEzK5nlJ8e9H4zl/lioAjE5QcebF6SpKr0w4h4RPAU68NgfcKcxpp2DeFFp+4
-         ezTHSEPYIQHWDe/jJyMh589AR5B5Py5Tjrl1FgwdM/sNLmOd/R+mUnlPoBUTkLfqsNqp
-         DNb2MRl5h2l6lfsXLPri7etLDhCcUJ8itGy4lZKWC3+NDRjKaRBKmtfxTEZAXue7k2IO
-         1JIkpzBdL8ThfT3jbDPOWoxzf8CbilxVTlFUpqUasUFuCOdZX5P0eLa+zivM7KFwsqZV
-         8BNA==
-X-Gm-Message-State: AOAM532rH3iA1dL5dmvHXYkUOIBKfGnjm3e5bQ9EH43/kOzR3skijLDd
-        uyJHsXBINM4/0jmIwNdfuOL2MPYISfQZZs858nAcPA==
-X-Google-Smtp-Source: ABdhPJz2fcbh8Swae5gqu3WCfXH+VoeuT8fBYorB0A9IvemCCzCy2a8aXjwcmpKuCfugC/8/pRR1MEGeVzo0AYRbaxo=
-X-Received: by 2002:a17:906:1513:: with SMTP id b19mr11068344ejd.537.1599771337075;
- Thu, 10 Sep 2020 13:55:37 -0700 (PDT)
+        Thu, 10 Sep 2020 10:48:50 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D013C0617A1;
+        Thu, 10 Sep 2020 07:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=iAWmHQBw0kh6rX2xz3yUX0hw8/2a2BhJq7lAu3Cbxmg=; b=IN7JZpI7Qt3jhTw51rzq1KZOe3
+        8pzQfiHkXBOl9r8YD/Gl8PdSA6lQWae62Sr/jpxPzIHHr5jMwEGCXuazDnNN4wdfSJoo2rjfuNZWX
+        fbxYYNXXs2XXK7lQIJxt9bvqRjAAmCHbm48MDjGyEEAbuVz/AjF3hnZsggGqIaAcCTb9iPlpsY3WF
+        E3WMUtZHDB4PZ/JIt7ZUpPS6ATu29C8u17ncM/42fHEyNAba/0BDVGOyRDn4VuBlkW3Ea/UZ7+TIt
+        lp+eayiIP6umygg7WIuWTolnHvPAhFV3Y7AxHoPywQVRZThTno2G0mMB76A+oP2m04qwuuwud9az0
+        +vOm6GnA==;
+Received: from [2001:4bb8:184:af1:3ecc:ac5b:136f:434a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGNsL-0006vm-QH; Thu, 10 Sep 2020 14:48:38 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: [PATCH 02/12] drbd: remove dead code in device_to_statistics
+Date:   Thu, 10 Sep 2020 16:48:22 +0200
+Message-Id: <20200910144833.742260-3-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910144833.742260-1-hch@lst.de>
+References: <20200910144833.742260-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200910202107.3799376-1-keescook@chromium.org> <20200910202107.3799376-7-keescook@chromium.org>
-In-Reply-To: <20200910202107.3799376-7-keescook@chromium.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 10 Sep 2020 22:55:11 +0200
-Message-ID: <CAG48ez0boPBDm=Uh5xHXAxTj0BTRGyGp4uCgPgw7PkOCo47Hdg@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/6] security/fbfam: Mitigate a fork brute force attack
-To:     Kees Cook <keescook@chromium.org>, John Wood <john.wood@gmx.com>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-doc@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:22 PM Kees Cook <keescook@chromium.org> wrote:
-> In order to mitigate a fork brute force attack it is necessary to kill
-> all the offending tasks. This tasks are all the ones that share the
-> statistical data with the current task (the task that has crashed).
->
-> Since the attack detection is done in the function fbfam_handle_attack()
-> that is called every time a core dump is triggered, only is needed to
-> kill the others tasks that share the same statistical data, not the
-> current one as this is in the path to be killed.
->
-> When the SIGKILL signal is sent to the offending tasks from the function
-> fbfam_kill_tasks(), this one will be called again during the core dump
-> due to the shared statistical data shows a quickly crashing rate. So, to
-> avoid kill again the same tasks due to a recursive call of this
-> function, it is necessary to disable the attack detection.
->
-> To disable this attack detection, add a condition in the function
-> fbfam_handle_attack() to not compute the crashing rate when the jiffies
-> stored in the statistical data are set to zero.
-[...]
->  /**
-> - * fbfam_handle_attack() - Fork brute force attack detection.
-> + * fbfam_kill_tasks() - Kill the offending tasks
-> + *
-> + * When a fork brute force attack is detected it is necessary to kill all the
-> + * offending tasks. Since this function is called from fbfam_handle_attack(),
-> + * and so, every time a core dump is triggered, only is needed to kill the
-> + * others tasks that share the same statistical data, not the current one as
-> + * this is in the path to be killed.
-> + *
-> + * When the SIGKILL signal is sent to the offending tasks, this function will be
-> + * called again during the core dump due to the shared statistical data shows a
-> + * quickly crashing rate. So, to avoid kill again the same tasks due to a
-> + * recursive call of this function, it is necessary to disable the attack
-> + * detection setting the jiffies to zero.
-> + *
-> + * To improve the for_each_process loop it is possible to end it when all the
-> + * tasks that shared the same statistics are found.
+Ever since the switch to blk-mq, a lower device not used for VM
+writeback will not be marked congested, so the check will never
+trigger.
 
-This is not a fastpath, there's no need to be clever and optimize
-things here, please get rid of that optimization. Especially since
-that fastpath looks racy against concurrent execve().
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/drbd/drbd_nl.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-> + * Return: -EFAULT if the current task doesn't have statistical data. Zero
-> + *         otherwise.
-> + */
-> +static int fbfam_kill_tasks(void)
-> +{
-> +       struct fbfam_stats *stats = current->fbfam_stats;
-> +       struct task_struct *p;
-> +       unsigned int to_kill, killed = 0;
-> +
-> +       if (!stats)
-> +               return -EFAULT;
-> +
-> +       to_kill = refcount_read(&stats->refc) - 1;
-> +       if (!to_kill)
-> +               return 0;
-> +
-> +       /* Disable the attack detection */
-> +       stats->jiffies = 0;
-> +       rcu_read_lock();
-> +
-> +       for_each_process(p) {
-> +               if (p == current || p->fbfam_stats != stats)
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index 43c8ae4d9fca81..aaff5bde391506 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -3370,7 +3370,6 @@ static void device_to_statistics(struct device_statistics *s,
+ 	if (get_ldev(device)) {
+ 		struct drbd_md *md = &device->ldev->md;
+ 		u64 *history_uuids = (u64 *)s->history_uuids;
+-		struct request_queue *q;
+ 		int n;
+ 
+ 		spin_lock_irq(&md->uuid_lock);
+@@ -3384,11 +3383,6 @@ static void device_to_statistics(struct device_statistics *s,
+ 		spin_unlock_irq(&md->uuid_lock);
+ 
+ 		s->dev_disk_flags = md->flags;
+-		q = bdev_get_queue(device->ldev->backing_bdev);
+-		s->dev_lower_blocked =
+-			bdi_congested(q->backing_dev_info,
+-				      (1 << WB_async_congested) |
+-				      (1 << WB_sync_congested));
+ 		put_ldev(device);
+ 	}
+ 	s->dev_size = drbd_get_capacity(device->this_bdev);
+-- 
+2.28.0
 
-p->fbfam_stats could change concurrently, you should at least use
-READ_ONCE() here.
-
-Also, if this codepath is hit by a non-leader thread, "p == current"
-will always be false, and you'll end up killing the caller, too. You
-may want to compare with current->group_leader instead.
-
-
-> +                       continue;
-> +
-> +               do_send_sig_info(SIGKILL, SEND_SIG_PRIV, p, PIDTYPE_PID);
-> +               pr_warn("fbfam: Offending process with PID %d killed\n",
-> +                       p->pid);
-
-Normally pr_*() messages about tasks mention not just the pid, but
-also the ->comm name of the task.
-
-> +               killed += 1;
-> +               if (killed >= to_kill)
-> +                       break;
-> +       }
-> +
-> +       rcu_read_unlock();
-> +       return 0;
-> +}
