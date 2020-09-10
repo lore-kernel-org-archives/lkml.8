@@ -2,74 +2,133 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E3FC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FBFC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99DF2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE074221F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIJDxk (ORCPT
+        id S1728631AbgIJD4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 23:53:40 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63045 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725772AbgIJDxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 23:53:30 -0400
-IronPort-SDR: 8h/wURbms3yqbthoS0URkKUmr9lnhgUdrzcjd/I8PU64qN+upRiDAsw6U7TMJ7LrZ//18NoeCn
- NE7QbzBH6Seg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9739"; a="243281260"
-X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
-   d="scan'208";a="243281260"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 20:53:22 -0700
-IronPort-SDR: 2C2Qn0KIzD//fxE2BOxjBhycDNhnvBbKkYKTe/AzFKeT3xTVq/5VicZrqGulGq0omWnnCdgONW
- DVi4ibfZ7Olg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,411,1592895600"; 
-   d="scan'208";a="449443228"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga004.jf.intel.com with ESMTP; 09 Sep 2020 20:53:20 -0700
-Date:   Thu, 10 Sep 2020 11:49:04 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        trix@redhat.com, lgoncalv@redhat.com, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH v8 1/2] fpga: dfl: create a dfl bus type to support DFL
-  devices
-Message-ID: <20200910034904.GA20920@yilunxu-OptiPlex-7050>
-References: <1599488593-16433-1-git-send-email-yilun.xu@intel.com>
- <20200910033217.GA3003@epycbox.lan>
+        Wed, 9 Sep 2020 23:56:23 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55858 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725773AbgIJD4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 23:56:21 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4A242310023CDB6C3C49;
+        Thu, 10 Sep 2020 11:56:18 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Thu, 10 Sep 2020
+ 11:56:12 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
+        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
+        <wright.feng@cypress.com>, <kvalo@codeaurora.org>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <lee.jones@linaro.org>
+CC:     <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] brcmsmac: phy_lcn: Remove unused variable lcnphy_rx_iqcomp_table_rev0
+Date:   Thu, 10 Sep 2020 11:56:00 +0800
+Message-ID: <20200910035600.21736-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910033217.GA3003@epycbox.lan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > 
-> Applied to for-next,
-> 
-> (I added the Documentation/ABI/testing...) file to MAINTAINERS.
-> 
-> Please run checkpatch next time.
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c:361:25: warning: ‘lcnphy_rx_iqcomp_table_rev0’ defined but not used [-Wunused-const-variable=]
+ struct lcnphy_rx_iqcomp lcnphy_rx_iqcomp_table_rev0[] = {
+                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thanks for your fix. I run the checkpatch but I do ignored the
-warning about MAINTAINERS. I'll take care of it then.
+commit 38c95e0258a0 ("brcmsmac: phy_lcn: Remove a bunch of unused variables")
+left behind this, remove it.
 
-Thanks,
-Yilun
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ .../broadcom/brcm80211/brcmsmac/phy/phy_lcn.c | 55 -------------------
+ 1 file changed, 55 deletions(-)
 
-> 
-> Cheers,
-> Moritz
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
+index b8193c99e864..7071b63042cd 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
+@@ -357,61 +357,6 @@ u16 rxiq_cal_rf_reg[11] = {
+ 	RADIO_2064_REG12A,
+ };
+ 
+-static const
+-struct lcnphy_rx_iqcomp lcnphy_rx_iqcomp_table_rev0[] = {
+-	{1, 0, 0},
+-	{2, 0, 0},
+-	{3, 0, 0},
+-	{4, 0, 0},
+-	{5, 0, 0},
+-	{6, 0, 0},
+-	{7, 0, 0},
+-	{8, 0, 0},
+-	{9, 0, 0},
+-	{10, 0, 0},
+-	{11, 0, 0},
+-	{12, 0, 0},
+-	{13, 0, 0},
+-	{14, 0, 0},
+-	{34, 0, 0},
+-	{38, 0, 0},
+-	{42, 0, 0},
+-	{46, 0, 0},
+-	{36, 0, 0},
+-	{40, 0, 0},
+-	{44, 0, 0},
+-	{48, 0, 0},
+-	{52, 0, 0},
+-	{56, 0, 0},
+-	{60, 0, 0},
+-	{64, 0, 0},
+-	{100, 0, 0},
+-	{104, 0, 0},
+-	{108, 0, 0},
+-	{112, 0, 0},
+-	{116, 0, 0},
+-	{120, 0, 0},
+-	{124, 0, 0},
+-	{128, 0, 0},
+-	{132, 0, 0},
+-	{136, 0, 0},
+-	{140, 0, 0},
+-	{149, 0, 0},
+-	{153, 0, 0},
+-	{157, 0, 0},
+-	{161, 0, 0},
+-	{165, 0, 0},
+-	{184, 0, 0},
+-	{188, 0, 0},
+-	{192, 0, 0},
+-	{196, 0, 0},
+-	{200, 0, 0},
+-	{204, 0, 0},
+-	{208, 0, 0},
+-	{212, 0, 0},
+-	{216, 0, 0},
+-};
+-
+ static const u32 lcnphy_23bitgaincode_table[] = {
+ 	0x200100,
+ 	0x200200,
+-- 
+2.17.1
+
+
