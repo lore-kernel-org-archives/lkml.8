@@ -1,419 +1,89 @@
-Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D6DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449A8C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69FCA214D8
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F241120731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BQUMz09o";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mF06nnFR";
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="elLH0mlO"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h/kuxUk0";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="krDjWDPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgIFPhw (ORCPT
+        id S1727898AbgIJS7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgIFPhT (ORCPT
+        Thu, 10 Sep 2020 14:59:40 -0400
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:55220
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727101AbgIJS5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:37:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D10D8C061574;
-        Sun,  6 Sep 2020 08:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Resent-To:Resent-Message-ID:Resent-Date:
-        Resent-From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        In-Reply-To:References; bh=y0Rh3YlzbBctzi3WdY354Yyw3/889TYkzB9+yv3Ev/o=; b=BQ
-        UMz09oAKHzRf2ZQKQmUfOckMBzZljf3nqEK2bmQNYYpt44che0Sa2kSPl74agb5dmfyaKzrjHHs29
-        gAKmfFNe+g5uEYSCFmKSSsW7CWxKVi9wTInjerEiCvDpog3GqQz4joZ4USrB1kpuPWhHQvc9lD6ZJ
-        5BW7bwxLhr1fmuWE0nuIR6sGNEnQPkJxjLKgFJIoWC1f5p3APwblFKAPt9hmqxU0qV0QlIrXahzro
-        55xLB7I2rTC6oihUu4q+DwwuaQRONi8oTYM2vIgoT2DbVCThT8ywDLPwNs8i4BP/9xSvLR/1cRWmd
-        iIlEQJggt4L6UIJvKgAnSf5VnCw7imSg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEwiw-0000yl-PX; Sun, 06 Sep 2020 15:36:58 +0000
-Received: from merlin.infradead.org ([2001:8b0:10b:1231::1])
-        by casper.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEwUv-000062-4a
-        for willy@casper.infradead.org; Sun, 06 Sep 2020 15:22:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=y0Rh3YlzbBctzi3WdY354Yyw3/889TYkzB9+yv3Ev/o=; b=mF06nnFRpEvbNsoS33IxMOhS5N
-        NumwzTBkXiHPlGwKIzlOt9IFGtqr6Zk4wt5yOHlHO1NYKAbitPcO3BDp1RuQUhThgI6UvPWC4gnDG
-        muFVQtCcbet9s2PUAAFozGiQgFJe3CaWyOADkC6SbIZh2MBqiHNtsPwzPuAcpspT+YnMXzPlI1QzV
-        RAwLE+BDaBVycn4Nwp75Q8I7flsPmi+WgLYFLsgYqGR7QhcOwHmBARwrpBeE5U67F6QZVGglwlf1q
-        uq5soyYfPdT01WLIuEmEMnopvlPWZfcTRfCR1YUNPk21EOyJ93nzOEKKN1Hctg+khupgG2uu4U8ty
-        3U69Cbsg==;
-Received: from mout.gmx.net ([212.227.15.19])
-        by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEwUt-00053R-4Z
-        for willy@infradead.org; Sun, 06 Sep 2020 15:22:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599405745;
-        bh=x4JGcFUaDkLWdBvPJjm2HPbCsVaucqP6yPxA5Yn9DWQ=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=elLH0mlOC5O6Az/FhmihqDhK5WzGQ2sxkNq02uTy4hNQmwkokjFB1b4uRz9vI8Xse
-         EqoqIeSibAk0CLNVVhKSpM9WFwtrZLlKuSY1y8Tqq41CPJRW4vyVoRHqSsrRcjLKUJ
-         qDFapOCCBz8AIaUuxADEjMLtM5QT8T8LSz5nD4HM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.73.70]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1McH5a-1kp5bB1Rbo-00chcC; Sun, 06 Sep 2020 17:22:25 +0200
-From:   John Wood <john.wood@gmx.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     John Wood <john.wood@gmx.com>
-Subject: [RFC PATCH 2/9] security/fbfam: Add the api to manage statistics
-Date:   Sun,  6 Sep 2020 17:22:05 +0200
-Message-Id: <20200906152205.7095-1-john.wood@gmx.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CWgT2GRMCZRhinh/463FDuev+ft7FYh9kFYG3p5FLUJwRGuQ+Ns
- L+A5OPhlSFdwKcQJ1gDkDQq0Da8UEYYut6B7n0oDhnIJLdOinJkumdzzWy1za8oD1ypnb6w
- 7awtDim47JRB2JosEvZDvtznRYzxIu2Rbop4L+fXYkl086d77m79vHdKiz7cXCFa7ZAzTwR
- o8dnLfn7wqvf6N4vL6Ymw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6NGKTE8pME0=:lj/Zrv78yyGg1YOm8OqeJN
- sqn/+TPw2fgsZ6RowyZws60WmMyhUExWI6HBF+LSwgc8t831Qun1I3mEJVBr5RMxs02GDliCp
- uG/h+KCTukNLRmIcZ5zuJf8yCtL4ilRablnavsoO17s4jaDTG/ofslgzlFco6kXJlu5WEB71T
- 63zaCh5dqMXvIvOLYkzd0EVqw+FH6FxiqainSlkb74lsSoWUNE/M/ynHSK7BFKjk9FwMRxXjT
- SLqwb7S2yw16DKqYKmyv5fsCMgUgJPFH5aYa/2+2+8uQK/WG33X3Y/lcIUfRc8WF5lPIYJ1aV
- b8kClwvbyMYUm5RyelqzOrZh6AvWuob8AZy+n6fcJtJaqgtmoQf0RfaH7l6cNvZ7TtVrH8vOz
- TdfnttYHUu0s2agVudq9wPjBSl0vKVbkNgJ6NaD7HD+PYCXh8SPmzM5Fhl0WGaeE7ZOu8f5dp
- 83JDMFsy42NeE4UhtJl7X0EbL7Ck7BSH9OXPScjJRgbhtU5Xd2l/2M2lwzxfqD+6sH1piCDOV
- D/8n5T+/kZBw+qWbi7LKcZEaxlSwhxAO3rkFpykGq6h5fWqTUtERqgShI6mgyca+QsIkUrQEd
- pTz/GFGS73sYK45B/MZSZ/nYqP6CKJz+F05+l0WN0pAUuXt3lSLiqknRdhK9IB+bGODXiLiAi
- cH3fXYMyVrGHqF+Fy1Q+mT+qcqzeBbTzj/sj5VuavVpEc2hdbn1+Uggw8g/Jtiq6NlvSZeOYm
- h4dNzd5y4gYzI8jqJvUVQ6ViXe9bKmnFSN91M8k3l2nnE20HZwJZ+U9939DzrnnGUJCAErZ8Y
- mpy5b7PVWDT/43woEvnwkUUEgT3igrio1dJXW1Mf6RWkOzOwzfIqd8p/3EKxl14HA0YWQlmcb
- IOdgl0NU53PRkuzkGASKLRLFExK9orX4aVc6NHNuzM5XXZXEIAOhCsiJGQX9dtInlt6oXYt3Q
- ZPvmVLmidh2FAsoj2M67KWPYYGwbrX48R7DyG22h13ovUFFtayb/CPvZ5HBAtE9ffz0ybNxuP
- epS3rKt0crOQkD+EKIuiXanu9kBV/AqtbLTBl4pwS599wd24g3qpMQQBVdUaz3dYJVQA10DWN
- sbbV2yTU6DEM1+YxLgpTm2okGEo6B5wYPmu0YU8+VXsjI973iEwJXlL3mJJWcquJiVJudDnBo
- s2cTyUZW5W8v+WQlZeJ+SgnajaNB4ZKK5m+rMJnp6PxSabIcAPsLESuAxKM1iYVkWWDRzNyr4
- vns93VnN8C7wsIF/SbAvB5NAZPXhoSrnfghiGCA==
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20200906_112227_418338_B1339D84 
-X-CRM114-Status: GOOD (  29.52  )
+        Thu, 10 Sep 2020 14:57:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599764254;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=ioDx5B0toCoamwPqHgDugjYxi1Wnq03ayhiGirqdZvo=;
+        b=h/kuxUk0+mL1BLt1ZORF9ZJQDq6wQ8rTtrW1PIm6+qAL5iAaXFc2KHfG3HOSoq+L
+        kbJjlPq7IG7fVL3sDMZzp5dyAHMRL9sQcaZMe3dlp9F+tIfH++tmhKioMzgakQ1l/0W
+        8zXZqzv0XLxuWqfxcj7s1cea0GywR6x9IZy8fq+A=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599764254;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=ioDx5B0toCoamwPqHgDugjYxi1Wnq03ayhiGirqdZvo=;
+        b=krDjWDPLLpbpLofBxuJQ3uv9J0IqZh2UX8Pb7HvA5h2tDSRNwltIlR6stoqkBINg
+        7C+DqgEjj/MSv1f6xOlw7CL4TzkFdWk5y4is1TaVLkjDmd+dTXq8HFCyvfA4gQXAWCv
+        pKKc4eI5tGOS/0nJRhLwC0wPJ28ig5qylcDjpIaU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78FE4C43387
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=sidgup@codeaurora.org
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com
+Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org,
+        linux-doc@vger.kernel.org, Gurbir Arora <gurbaror@codeaurora.org>
+Subject: [PATCH v4 3/3] remoteproc: qcom: Add minidump id for sm8150 modem remoteproc
+Date:   Thu, 10 Sep 2020 18:57:34 +0000
+Message-ID: <0101017479614db2-6fd70b02-38a7-44f2-9b34-2bb43832a330-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599764242-690-1-git-send-email-sidgup@codeaurora.org>
+References: <1599764242-690-1-git-send-email-sidgup@codeaurora.org>
+X-SES-Outgoing: 2020.09.10-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a statistical data structure to hold all the necessary
-information involve in a fork brute force attack. This info is a
-timestamp for the first fork or execve and the number of crashes since
-then. Moreover, due to this statitistical data will be shared between
-different tasks, a reference counter it is necessary.
+Add minidump id for modem in sm8150 chipset.
 
-For a correct management of an attack it is also necessary that all the
-tasks hold statistical data. The same statistical data needs to be
-shared between all the tasks that hold the same memory contents or in
-other words, between all the tasks that have been forked without any
-execve call.
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Signed-off-by: Gurbir Arora <gurbaror@codeaurora.org>
+Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_pas.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-When a forked task calls the execve system call, the memory contents are
-set with new values. So, in this scenario the parent's statistical data
-no need to be share. Instead, a new statistical data structure must be
-allocated to start a new cycle.
-
-The statistical data that every task holds needs to be clear when a task
-exits. Due to this data is shared across multiples tasks, the reference
-counter is useful to free the previous allocated data only when there
-are not other pointers to the same data. Or in other words, when the
-reference counter reaches zero.
-
-So, based in all the previous information add the api to manage all the
-commented cases.
-
-Also, add to the struct task_struct a new field to point to the
-statitistical data related to an attack. This way, all the tasks will
-have access to this information.
-
-Signed-off-by: John Wood <john.wood@gmx.com>
-=2D--
- include/fbfam/fbfam.h   |  18 +++++
- include/linux/sched.h   |   4 +
- security/Makefile       |   4 +
- security/fbfam/Makefile |   2 +
- security/fbfam/fbfam.c  | 163 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 191 insertions(+)
- create mode 100644 include/fbfam/fbfam.h
- create mode 100644 security/fbfam/Makefile
- create mode 100644 security/fbfam/fbfam.c
-
-diff --git a/include/fbfam/fbfam.h b/include/fbfam/fbfam.h
-new file mode 100644
-index 000000000000..b5b7d1127a52
-=2D-- /dev/null
-+++ b/include/fbfam/fbfam.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _FBFAM_H_
-+#define _FBFAM_H_
-+
-+#include <linux/sched.h>
-+
-+#ifdef CONFIG_FBFAM
-+int fbfam_fork(struct task_struct *child);
-+int fbfam_execve(void);
-+int fbfam_exit(void);
-+#else
-+static inline int fbfam_fork(struct task_struct *child) { return 0; }
-+static inline int fbfam_execve(void) { return 0; }
-+static inline int fbfam_exit(void) { return 0; }
-+#endif
-+
-+#endif /* _FBFAM_H_ */
-+
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 93ecd930efd3..f3f0cc169204 100644
-=2D-- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1315,6 +1315,10 @@ struct task_struct {
- 	struct callback_head		mce_kill_me;
- #endif
-
-+#ifdef CONFIG_FBFAM
-+	struct fbfam_stats		*fbfam_stats;
-+#endif
-+
- 	/*
- 	 * New fields for task_struct should be added above here, so that
- 	 * they are included in the randomized portion of task_struct.
-diff --git a/security/Makefile b/security/Makefile
-index 3baf435de541..36dc4b536349 100644
-=2D-- a/security/Makefile
-+++ b/security/Makefile
-@@ -36,3 +36,7 @@ obj-$(CONFIG_BPF_LSM)			+=3D bpf/
- # Object integrity file lists
- subdir-$(CONFIG_INTEGRITY)		+=3D integrity
- obj-$(CONFIG_INTEGRITY)			+=3D integrity/
-+
-+# Object fbfam file lists
-+subdir-$(CONFIG_FBFAM)			+=3D fbfam
-+obj-$(CONFIG_FBFAM)			+=3D fbfam/
-diff --git a/security/fbfam/Makefile b/security/fbfam/Makefile
-new file mode 100644
-index 000000000000..f4b9f0b19c44
-=2D-- /dev/null
-+++ b/security/fbfam/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_FBFAM) +=3D fbfam.o
-diff --git a/security/fbfam/fbfam.c b/security/fbfam/fbfam.c
-new file mode 100644
-index 000000000000..0387f95f6408
-=2D-- /dev/null
-+++ b/security/fbfam/fbfam.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <asm/current.h>
-+#include <fbfam/fbfam.h>
-+#include <linux/errno.h>
-+#include <linux/gfp.h>
-+#include <linux/jiffies.h>
-+#include <linux/refcount.h>
-+#include <linux/slab.h>
-+
-+/**
-+ * struct fbfam_stats - Fork brute force attack mitigation statistics.
-+ * @refc: Reference counter.
-+ * @faults: Number of crashes since jiffies.
-+ * @jiffies: First fork or execve timestamp.
-+ *
-+ * The purpose of this structure is to manage all the necessary informati=
-on to
-+ * compute the crashing rate of an application. So, it holds a first fork=
- or
-+ * execve timestamp and a number of crashes since then. This way the cras=
-hing
-+ * rate in milliseconds per fault can be compute when necessary with the
-+ * following formula:
-+ *
-+ * u64 delta_jiffies =3D get_jiffies_64() - fbfam_stats::jiffies;
-+ * u64 delta_time =3D jiffies64_to_msecs(delta_jiffies);
-+ * u64 crashing_rate =3D delta_time / (u64)fbfam_stats::faults;
-+ *
-+ * If the fbfam_stats::faults is zero, the above formula can't be used. I=
-n this
-+ * case, the crashing rate is zero.
-+ *
-+ * Moreover, since the same allocated structure will be used in every for=
-k
-+ * since the first one or execve, it's also necessary a reference counter=
-.
-+ */
-+struct fbfam_stats {
-+	refcount_t refc;
-+	unsigned int faults;
-+	u64 jiffies;
-+};
-+
-+/**
-+ * fbfam_new_stats() - Allocation of new statistics structure.
-+ *
-+ * If the allocation is successful the reference counter is set to one to
-+ * indicate that there will be one task that points to this structure. Th=
-e
-+ * faults field is initialize to zero and the timestamp for this moment i=
-s set.
-+ *
-+ * Return: NULL if the allocation fails. A pointer to the new allocated
-+ *         statistics structure if it success.
-+ */
-+static struct fbfam_stats *fbfam_new_stats(void)
-+{
-+	struct fbfam_stats *stats =3D kmalloc(sizeof(struct fbfam_stats),
-+					    GFP_KERNEL);
-+
-+	if (stats) {
-+		refcount_set(&stats->refc, 1);
-+		stats->faults =3D 0;
-+		stats->jiffies =3D get_jiffies_64();
-+	}
-+
-+	return stats;
-+}
-+
-+/*
-+ * fbfam_fork() - Fork management.
-+ * @child: Pointer to the child task that will be created with the fork s=
-ystem
-+ *         call.
-+ *
-+ * For a correct management of a fork brute force attack it is necessary =
-that
-+ * all the tasks hold statistical data. The same statistical data needs t=
-o be
-+ * shared between all the tasks that hold the same memory contents or in =
-other
-+ * words, between all the tasks that have been forked without any execve =
-call.
-+ *
-+ * To ensure this, if the current task doesn't have statistical data when=
- forks
-+ * (only possible in the first fork of the zero task), it is mandatory to
-+ * allocate a new one. This way, the child task always will share the sta=
-tistics
-+ * with its parent.
-+ *
-+ * Return: -ENOMEN if the allocation of the new statistics structure fail=
-s.
-+ *         Zero otherwise.
-+ */
-+int fbfam_fork(struct task_struct *child)
-+{
-+	struct fbfam_stats **stats =3D &current->fbfam_stats;
-+
-+	if (!*stats) {
-+		*stats =3D fbfam_new_stats();
-+		if (!*stats)
-+			return -ENOMEM;
-+	}
-+
-+	refcount_inc(&(*stats)->refc);
-+	child->fbfam_stats =3D *stats;
-+	return 0;
-+}
-+
-+/**
-+ * fbfam_execve() - Execve management.
-+ *
-+ * When a forked task calls the execve system call, the memory contents a=
-re set
-+ * with new values. So, in this scenario the parent's statistical data no=
- need
-+ * to be share. Instead, a new statistical data structure must be allocat=
-ed to
-+ * start a new cycle. This condition is detected when the statistics refe=
-rence
-+ * counter holds a value greater than or equal to two (a fork always sets=
- the
-+ * statistics reference counter to two since the parent and the child tas=
-k are
-+ * sharing the same data).
-+ *
-+ * However, if the execve function is called immediately after another ex=
-ecve
-+ * call, althought the memory contents are reset, there is no need to all=
-ocate
-+ * a new statistical data structure. This is possible because at this mom=
-ent
-+ * only one task (the task that calls the execve function) points to the =
-data.
-+ * In this case, the previous allocation is used and only the faults and =
-time
-+ * fields are reset.
-+ *
-+ * Return: -ENOMEN if the allocation of the new statistics structure fail=
-s.
-+ *         -EFAULT if the current task doesn't have statistical data. Zer=
-o
-+ *         otherwise.
-+ */
-+int fbfam_execve(void)
-+{
-+	struct fbfam_stats **stats =3D &current->fbfam_stats;
-+
-+	if (!*stats)
-+		return -EFAULT;
-+
-+	if (!refcount_dec_not_one(&(*stats)->refc)) {
-+		/* execve call after an execve call */
-+		(*stats)->faults =3D 0;
-+		(*stats)->jiffies =3D get_jiffies_64();
-+		return 0;
-+	}
-+
-+	/* execve call after a fork call */
-+	*stats =3D fbfam_new_stats();
-+	if (!*stats)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+/**
-+ * fbfam_exit() - Exit management.
-+ *
-+ * The statistical data that every task holds needs to be clear when a ta=
-sk
-+ * exits. Due to this data is shared across multiples tasks, the referenc=
-e
-+ * counter is useful to free the previous allocated data only when there =
-are
-+ * not other pointers to the same data. Or in other words, when the refer=
-ence
-+ * counter reaches zero.
-+ *
-+ * Return: -EFAULT if the current task doesn't have statistical data. Zer=
-o
-+ *         otherwise.
-+ */
-+int fbfam_exit(void)
-+{
-+	struct fbfam_stats *stats =3D current->fbfam_stats;
-+
-+	if (!stats)
-+		return -EFAULT;
-+
-+	if (refcount_dec_and_test(&stats->refc))
-+		kfree(stats);
-+
-+	return 0;
-+}
-+
-=2D-
-2.25.1
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index c01e81e..5760995 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -709,6 +709,7 @@ static const struct adsp_data mpss_resource_init = {
+ 	.crash_reason_smem = 421,
+ 	.firmware_name = "modem.mdt",
+ 	.pas_id = 4,
++	.minidump_id = 3,
+ 	.has_aggre2_clk = false,
+ 	.auto_boot = false,
+ 	.active_pd_names = (char*[]){
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
