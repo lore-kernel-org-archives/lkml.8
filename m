@@ -2,219 +2,144 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D772C2D0E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73607C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401D520882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3907320882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 23:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gSNaWPdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725772AbgIJXFZ (ORCPT
+        id S1725446AbgIJXGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 19:05:25 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:43682 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgIJXFX (ORCPT
+        Thu, 10 Sep 2020 19:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgIJXGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 19:05:23 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 2132F2A937;
-        Thu, 10 Sep 2020 19:05:17 -0400 (EDT)
-Date:   Fri, 11 Sep 2020 09:05:21 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     "David S. Miller" <davem@davemloft.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: Re: [PATCH] ide/macide: Convert Mac IDE driver to platform driver
-In-Reply-To: <CAMuHMdVMvhJRHOwJapi+LAdPbPuoT73ST_Nj0qeCqQd3XWvoSQ@mail.gmail.com>
-Message-ID: <alpine.LNX.2.23.453.2009110847480.8@nippy.intranet>
-References: <00ee44fe6ecdce1c783c3cc3b1b9a62b498dcdb2.1597736545.git.fthain@telegraphics.com.au> <CAMuHMdWAi6+75Mq0U8x7Ut6viHvF7XEZAcYnxq=jJmtJyAX8pw@mail.gmail.com> <alpine.LNX.2.23.453.2009100920001.8@nippy.intranet>
- <CAMuHMdVMvhJRHOwJapi+LAdPbPuoT73ST_Nj0qeCqQd3XWvoSQ@mail.gmail.com>
+        Thu, 10 Sep 2020 19:06:43 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE8E8C061756
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:06:42 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id p65so6312683qtd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 16:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NDyjd2iMqequc7LRMcRbG7To5TWvVyedy/KOdmHGA9k=;
+        b=gSNaWPdEY2QnZcjph+epkQoIRckMJ874n0EFerBdUUjyUl30uIWC34VWoHykoJjQ2E
+         LN6wVH8yVGRLppCxyuiY0kt80KWFDFQiTkmaSgmu+hAuWpTiNqVNLOP8xx0sm3oagMAK
+         LS3rYYs5b0CjLr4QYfdFymg1HeGqT4gMXc/0KpHr6N7uvpfAqSB4j7t78+WfK6eBcu6R
+         TNXKjNwS/tZ/jQ8dslR7h8Wx51Mbm4uE7jjsvWar+SQ4a1TA3Yk1hP+zwMFH0HhgCVIr
+         lDdfV7C3fE7uYZh82uHb5FyEvrmCINbklup9YkD6ZmBLHnkbyLW+++sR1/UOpvP+1LPq
+         3DHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NDyjd2iMqequc7LRMcRbG7To5TWvVyedy/KOdmHGA9k=;
+        b=HkUGjNm1JYYW8/YTdLe6kw2bC4rCNRv7UCW2KHxdncSBOZcegh9bKOZtQYW3Ua5tsz
+         ZFRwMAvfetUSd2hhO1ZYcPT9KmlkB8wsEgoUgCi1xAiIc2UI0zb4OIwRbioebz6dCqj4
+         rgPMMZpnHFzbfosYEv11ca+708cxtXa7CBrFS4ylv8E7+bHf+BtibeWWefE4JzlmD43n
+         L7t7G1utgb9nBB1vVzH5WxPd2Sd3hOxgMEubM+5shIl41NT3RTBXzyOFbbOL53gndhej
+         wqAbkDdGlROkndAzcYis9WvcoqDF1GIYjPWgdPLd/+H/NXVrpN6cVcmAc3TjQLa57wIa
+         L0cQ==
+X-Gm-Message-State: AOAM533KMHXFQ/ntLaYw5UPdNqvEWoepZRCi0Uu86UkD049eNN/BLt/4
+        Ro91Begt4glrXj2hldgp3SX5ww==
+X-Google-Smtp-Source: ABdhPJwUNn1cTdcJJNctsCsTgJWF1pa/DKRujT7/DrPwH/+LKqQh/m6CHBbRIBeoyfdun9zY14Czpw==
+X-Received: by 2002:ac8:7188:: with SMTP id w8mr3165127qto.134.1599779201381;
+        Thu, 10 Sep 2020 16:06:41 -0700 (PDT)
+Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
+        by smtp.gmail.com with ESMTPSA id u55sm288593qtu.42.2020.09.10.16.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 16:06:40 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 23:06:39 +0000
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     satya priya <skakit@codeaurora.org>, gregkh@linuxfoundation.org
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        dianders@chromium.org
+Subject: Re: [PATCH V5 4/4] tty: serial: qcom_geni_serial: Fix the UART
+ wakeup issue
+Message-ID: <20200910230639.GB472@uller>
+References: <1599742438-16811-1-git-send-email-skakit@codeaurora.org>
+ <1599742438-16811-5-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599742438-16811-5-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020, Geert Uytterhoeven wrote:
+On Thu 10 Sep 12:53 UTC 2020, satya priya wrote:
 
-> On Thu, Sep 10, 2020 at 2:23 AM Finn Thain <fthain@telegraphics.com.au> wrote:
-> > I prefer a declarative or data-driven style, even if it takes a few 
-> > more lines of code. But there is a compromise:
-> >
-> > static const struct resource mac_ide_quadra_rsrc[] __initconst = {
-> >         DEFINE_RES_MEM(0x50F1A000, 0x104),
-> >         DEFINE_RES_IRQ(IRQ_NUBUS_F),
-> > }
-> >
-> > static const struct resource mac_ide_pb_rsrc[] __initconst = {
-> >         DEFINE_RES_MEM(0x50F1A000, 0x104),
-> >         DEFINE_RES_IRQ(IRQ_NUBUS_C),
-> > }
-> >
-> > The reason I didn't use these macros was to avoid making the reader go and
-> > look up their definitions. Anyway, would that style be preferred here?
+> As a part of system suspend uart_port_suspend is called from the
+> Serial driver, which calls set_mctrl passing mctrl as 0. This
+> makes RFR high(NOT_READY) during suspend.
 > 
-> I think the DEFINE_RES_*() are sufficiently common (well, in pre-DT
-> platforms ;-)
+> Due to this BT SoC is not able to send wakeup bytes to UART during
+> suspend. Include if check for non-suspend case to keep RFR low
+> during suspend.
 > 
 
-OK, I'll use the macros in v2.
+Seems reasonable.
 
-> > I could do the same with the mac_ide_baboon_rsrc[] initializer:
-> >
-> > static const struct resource mac_pata_baboon_rsrc[] __initconst = {
-> >         DEFINE_RES_MEM(0x50F1A000, 0x38),
-> >         DEFINE_RES_MEM(0x50F1A038, 0x04),
-> >         DEFINE_RES_IRQ(IRQ_BABOON_1),
-> > };
-> >
-> > ... but that would lose the IORESOURCE_IRQ_SHAREABLE flag. I'm not sure
-> > whether that matters (it's a vestige of macide.c).
-> 
-> You can still use DEFINE_RES_NAMED() to pass the flags.
-> Would you consider that to be a good compromise?
-> 
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Sure. I was happy with v1. I'm not that worried about brevity.
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Anyway, the question remains, is the flag actually needed. I can't see a 
-need for it so I'll omit the flag in v2 and ask Stan to test again.
+Greg, I don't see this depending on anything else, will you pick this
+patch through your tree? I will take the dts patches through the qcom
+tree.
 
-> > > > +static const struct resource mac_pata_baboon_rsrc[] __initconst = {
-> > > > +       {
-> > > > +               .flags = IORESOURCE_MEM,
-> > > > +               .start = 0x50F1A000,
-> > > > +               .end   = 0x50F1A037,
-> > > > +       }, {
-> > > > +               .flags = IORESOURCE_MEM,
-> > > > +               .start = 0x50F1A038,
-> > > > +               .end   = 0x50F1A03B,
-> > > > +       }, {
-> > > > +               .flags = IORESOURCE_IRQ | IORESOURCE_IRQ_SHAREABLE,
-> > > > +               .start = IRQ_BABOON_1,
-> > > > +               .end   = IRQ_BABOON_1,
-> > > > +       },
-> > > > +};
-> > > > +
-> > > > +static const struct pata_platform_info mac_pata_baboon_data __initconst = {
-> > > > +       .ioport_shift  = 2,
-> > > > +};
-> > >
-> > > Just wondering: how is this implemented in drivers/ide/macide.c, which
-> > > doesn't use the platform info?
-> >
-> > That factor of 4 is embedded in the address caclulation:
-> >
-> >         for (i = 0; i < 8; i++)
-> >                 hw->io_ports_array[i] = base + i * 4;
-> 
-> IC. But in the new code, the platform info is passed for Baboon only,
-> while the old code used it for all variants.
-> 
+Regards,
+Bjorn
 
-Correct. Is that a problem for some reason?
-
-> > > > --- a/drivers/ide/macide.c
-> > > > +++ b/drivers/ide/macide.c
-> > > > @@ -18,10 +18,11 @@
-> > > >  #include <linux/delay.h>
-> > > >  #include <linux/ide.h>
-> > > >  #include <linux/module.h>
-> > > > +#include <linux/platform_device.h>
-> > > >
-> > > >  #include <asm/macintosh.h>
-> > > > -#include <asm/macints.h>
-> > > > -#include <asm/mac_baboon.h>
-> > > > +
-> > > > +#define DRV_NAME "mac_ide"
-> > > >
-> > > >  #define IDE_BASE 0x50F1A000    /* Base address of IDE controller */
-> > >
-> > > Do you still need this definition?
-> > > Yes, because it's still used to access IDE_IFR.
-> > > Ideally, that should be converted to use the base from the resource,
-> > > too.
-> > >
-> >
-> > Yes, that was my thought too. I can make the change if you like, but I
-> > can't test it until I set up the appropriate hardware (MAC_IDE_QUADRA or
-> > MAC_IDE_PB). I do own that hardware but it is located in Melbourne and it
-> > is now illegal to visit Melbourne without official papers. Besides, once I
-> > can test on that hardware I can replace the entire driver anyway, and
-> > this kind of refactoring would become moot.
+> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - This patch fixes the UART flow control issue during suspend.
+>    Newly added in V2.
 > 
-> OK.
+> Changes in V3:
+>  - As per Matthias's comment removed the extra parentheses.
 > 
-> > > > @@ -109,42 +110,65 @@ static const char *mac_ide_name[] =
-> > > >   * Probe for a Macintosh IDE interface
-> > > >   */
-> > > >
-> > > > -static int __init macide_init(void)
-> > > > +static int mac_ide_probe(struct platform_device *pdev)
-> > > >  {
-> > > > -       unsigned long base;
-> > > > -       int irq;
-> > > > +       struct resource *mem, *irq;
-> > > >         struct ide_hw hw, *hws[] = { &hw };
-> > > >         struct ide_port_info d = macide_port_info;
-> > > > +       struct ide_host *host;
-> > > > +       int rc;
-> > > >
-> > > >         if (!MACH_IS_MAC)
-> > > >                 return -ENODEV;
-> > > >
-> > > > -       switch (macintosh_config->ide_type) {
-> > > > -       case MAC_IDE_QUADRA:
-> > > > -               base = IDE_BASE;
-> > > > -               irq = IRQ_NUBUS_F;
-> > > > -               break;
-> > > > -       case MAC_IDE_PB:
-> > > > -               base = IDE_BASE;
-> > > > -               irq = IRQ_NUBUS_C;
-> > > > -               break;
-> > > > -       case MAC_IDE_BABOON:
-> > > > -               base = BABOON_BASE;
-> > > > -               d.port_ops = NULL;
-> > >
-> > > How does the driver know not to use the special port_ops after
-> > > this change?
-> > >
-> >
-> > The driver always uses the special port_ops after this change because it
-> > no longer handles the MAC_IDE_BABOON case. That case is handled by either
+> Changes in V4:
+>  - No change.
 > 
-> non-MAC_IDE_BABOON case?
+> Changes in V5:
+>  - As per Matthias comment, fixed nit-pick in commit text.
 > 
-> > drivers/ata/pata_platform.c or drivers/ide/ide_platform.c, depending on
-> > .config.
+>  drivers/tty/serial/qcom_geni_serial.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Ideally, we do need to differentiate, right?
-> 
-
-Sorry, I'm lost.
-
-The commit log explains that the macide driver is only intended to support 
-two of the three variants, because the generic drivers are already able to 
-support the third variant (Baboon). Stan confirmed this on his PB 190.
-
-But, IIUC, you seem to want macide to continue to support all three 
-variants (?) The existing code to implement that has an old bug that 
-reassigns d.port_ops when it is const. IMO, the const is correct because 
-macide should concern itself with mac hardware quirks and should not try 
-to mimic a generic driver by setting d.port_ops = NULL. Does that make 
-sense?
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 3aa29d2..bc63c54 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -242,7 +242,7 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
+>  	if (mctrl & TIOCM_LOOP)
+>  		port->loopback = RX_TX_CTS_RTS_SORTED;
+>  
+> -	if (!(mctrl & TIOCM_RTS))
+> +	if (!(mctrl & TIOCM_RTS) && !uport->suspended)
+>  		uart_manual_rfr = UART_MANUAL_RFR_EN | UART_RFR_NOT_READY;
+>  	writel(uart_manual_rfr, uport->membase + SE_UART_MANUAL_RFR);
+>  }
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+> of Code Aurora Forum, hosted by The Linux Foundation
 > 
