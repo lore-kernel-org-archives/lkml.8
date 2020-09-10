@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA18C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C744C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B368B21D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46623221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWyypZoJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qSMhYnRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgIJVTO (ORCPT
+        id S1728192AbgIJVTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
+        Thu, 10 Sep 2020 17:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgIJVOl (ORCPT
+        with ESMTP id S1728048AbgIJVOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:41 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00862C06179A;
-        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c18so8737758wrm.9;
-        Thu, 10 Sep 2020 14:14:20 -0700 (PDT)
+        Thu, 10 Sep 2020 17:14:50 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A197AC0617A3;
+        Thu, 10 Sep 2020 14:14:28 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j2so8757890wrx.7;
+        Thu, 10 Sep 2020 14:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2ReUn4s9LGs+Wc1qa0Wl54OLhH+3YOfASWWo0CBEymQ=;
-        b=PWyypZoJc6BPiQwDax3WwcV3cXwmEQeLGMNWjpLxjW3ZDOvhwAI8gaIQnSrT7JjpPt
-         WXtxb5ypgcHqga0h7GYIEQV4Lvcw8jhMxLgFbKljO8gMIfXv7rMCw30sKoaHFLk1cRXx
-         xmd4XZ4F2ZeaOZloE8c2SL9ZHSJuCYwadRgmCt0vtH0xKE+x30ElA3nPfQA0pphHfTxB
-         idZHLhwNvtDwhfUzSwOyWZYJSyoQlFkmW5oaC7wpixfRJO2UJVqSgpb1inJRj/5i8Dqx
-         tIsWtXmWwEDxqICje7Ibl4ZNrAwB4sdhBaiLcstnH/t2b0psshxt8VmtYyq3GzlbVOsK
-         vo1Q==
+        bh=CRsaeVhcaauvFcHZ+aRnL+oVg5BB/PSpmiLD4CesFu4=;
+        b=qSMhYnRKYLve3Zw45NlEZlwwlqJXF859tjvmj4IzRVIOuA82+AEDDnp5lfmmqDUXXV
+         J22+hS7TwAOR5zoMe5oGXzfS6dJ2hF0oXPcPRtxvsMvM9mPZUH+s+o+AlBUPRSq5G0Yo
+         4ODflp1+YKk4IctrG4ik9b1lU6paFN+GezI3L76W4my/J8CBMAMjx1EENSg7/R02T3KH
+         mZwikqy1f7PhOgFwyshZyvHyvxXjDdlQP0iN8wLc8zrIQniSs3CL1XqbYtDmGtwEEpnF
+         RUnT8EM3h4SgHkSLqnmIVuZ5khozscpbywQG+oZ6oyQDDsN2xeVzkJwx4KFQk1URBZmk
+         KB5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2ReUn4s9LGs+Wc1qa0Wl54OLhH+3YOfASWWo0CBEymQ=;
-        b=j63HT2wX9tZ/RHaJC5AoyFU/06lprhejxALfYFCMpNIW4L3gqAJtMa75fk5/MKHUik
-         zqFBUEdcm1BEIcmoWw2L48DqUtYw/NrqwfV+LFpm7RGmYfarEdWe5VsbGDdlVCBoFghD
-         6dYpvqYADWwKzO+XBjUes5JFvaHq2fjUPiEQ/KQhi0IRz0nN6kpy3+5IavzlLw9CrCx1
-         Rqje4dvYRvivCCi4918gXw+RYVymYLuwXhcpsOPIXOU8jwRUZwHfzVPW627o6nups123
-         ESgHCCe4//yjNJjtv3afI5pQ4vUhu0lEQR3tFrMdBGaQNYZpN13IZtw7Z1/ger4yo3Aa
-         Jv0A==
-X-Gm-Message-State: AOAM533PKPzjVeml+pgGMj7gDgQRshmr4LskaBT8r4yICXBCl55ID7ne
-        lp0GxlIDBkgg/xhSHfRFwurcKccfXqDLiw==
-X-Google-Smtp-Source: ABdhPJzB/zOuW5pRmJib0Zkf/bplgkS1XsWd03JCQyHYUlzMb6jcDRjzye/d92mwZHbYg78z233z0w==
-X-Received: by 2002:adf:f750:: with SMTP id z16mr10413808wrp.377.1599772459739;
-        Thu, 10 Sep 2020 14:14:19 -0700 (PDT)
+        bh=CRsaeVhcaauvFcHZ+aRnL+oVg5BB/PSpmiLD4CesFu4=;
+        b=slQGw/wmIT76KZVTyDWTkrGN7vQ49a/C/4dPza1Ha3qSE+htU0NFaKXr3m8YFF2a5w
+         qr/CghQ1ez6iPuDvAamIzEUXqT1cFlxNBWOSZJevRPibfn5d48NuiZ+b2vRCIf+3WX9B
+         wPLGQkT8ujiC3rKxH03WdA3cUf1Qe2VBmjMxqDCZS445aA1x/imL6kIf620gxxbrEpjg
+         fl4D7w077mpnDmUtF9HJEL9ONuU6624UlGmmzDgfCz2XaiKtZiY2i6rOgEMb/lez63FO
+         cHqVxdYz7SRztKLISzVYfnZwvFixIw7AnQIFmsrrnyqCQ7X1Ic4AcnsrROXMCtrmUWqH
+         6H0A==
+X-Gm-Message-State: AOAM533GcJHM+Pn58P/3sAekpUGh5+nX7WyE8lYDHpColVzsOFfKxQo2
+        LV5lC4gavwToemT4Y8LtR7w=
+X-Google-Smtp-Source: ABdhPJy6AhdBjr5KxHsukUop/YSOxOdmBp6q9bFMtiz0McSFGeg8U0cm51ioiFBajZoi1tDkbyQ2qQ==
+X-Received: by 2002:a5d:61c7:: with SMTP id q7mr11072892wrv.343.1599772467355;
+        Thu, 10 Sep 2020 14:14:27 -0700 (PDT)
 Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.18
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:19 -0700 (PDT)
+        Thu, 10 Sep 2020 14:14:26 -0700 (PDT)
 From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
 To:     mtk.manpages@gmail.com
 Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 09/24] clock_getcpuclockid.3: Remove unneeded cast
-Date:   Thu, 10 Sep 2020 23:13:30 +0200
-Message-Id: <20200910211344.3562-10-colomar.6.4.3@gmail.com>
+Subject: [PATCH 16/24] getpwent_r.3: Declare variables with different types in different lines
+Date:   Thu, 10 Sep 2020 23:13:37 +0200
+Message-Id: <20200910211344.3562-17-colomar.6.4.3@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
@@ -77,27 +77,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Member 'tv_nsec' of 'struct timespec' is of type 'long' (see time.h.0p),
-and therefore, the cast is completely redundant.
-
 Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man3/clock_getcpuclockid.3 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ man3/getpwent_r.3 | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/man3/clock_getcpuclockid.3 b/man3/clock_getcpuclockid.3
-index 283f92557..050d7ad13 100644
---- a/man3/clock_getcpuclockid.3
-+++ b/man3/clock_getcpuclockid.3
-@@ -154,7 +154,7 @@ main(int argc, char *argv[])
-     }
+diff --git a/man3/getpwent_r.3 b/man3/getpwent_r.3
+index 0f7581091..b6c1c281f 100644
+--- a/man3/getpwent_r.3
++++ b/man3/getpwent_r.3
+@@ -184,7 +184,8 @@ in the stream with all other threads.
+ int
+ main(void)
+ {
+-    struct passwd pw, *pwp;
++    struct passwd pw;
++    struct passwd *pwp;
+     char buf[BUFLEN];
+     int i;
  
-     printf("CPU-time clock for PID %s is %ld.%09ld seconds\en",
--            argv[1], (long) ts.tv_sec, (long) ts.tv_nsec);
-+            argv[1], (long) ts.tv_sec, ts.tv_nsec);
-     exit(EXIT_SUCCESS);
- }
- .EE
 -- 
 2.28.0
 
