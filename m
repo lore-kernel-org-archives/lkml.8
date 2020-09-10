@@ -2,212 +2,180 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EC8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EAFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B0F20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E8820882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aLt0WaHp"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fiX1ACq3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgIJTMQ (ORCPT
+        id S1726662AbgIJTM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:12:16 -0400
-Received: from mout.gmx.net ([212.227.15.18]:43267 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgIJTLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:11:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599765003;
-        bh=e/GjHdRDaBKeltHwO5EENqEZEm8NoRyfw4WXvri23to=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=aLt0WaHp2K+27F8mFTyBRsEOuF3eHSIgFfbQfhSFJgr9Yffrr/ZRunmO2Bbat6tMx
-         WtZn4odHoFdb4wJOURVOAr+tqg5Jh1yvULJgPpK7F/U+OY5hIG79BEL3z/AjA8LJ1T
-         Oymy+kgmhcmsUTihUWDayy2ttFebbyhjolXg25ow=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxDkw-1kRUd10zG4-00xe8D; Thu, 10
- Sep 2020 21:10:03 +0200
-Date:   Thu, 10 Sep 2020 21:09:57 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: Re: [PATCH v2 05/10] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <20200910190957.GB3306@latitude>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
- <20200905133230.1014581-6-j.neuschaefer@gmx.net>
- <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
+        Thu, 10 Sep 2020 15:12:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62516 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726301AbgIJTMB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:12:01 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AJ9hP3029497;
+        Thu, 10 Sep 2020 15:10:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=bhd54zBM73u/yq2HRIihmqiW/u3pPjFAxPUoy8ryJBY=;
+ b=fiX1ACq35ttt4+RJzwrdq4hwCPjAMWBrDgv3xzYVNddsOEjpjmKVN/bLEVE8kNI+lrd8
+ 2V5zTdbCzuXAIJKq06+cnwjWbI31iPSz7u7Ge8uXXw+CIgsnK8KHIKz1LzLmJVdTfLzP
+ DZJWo1BxWF3t9Tnu0A/E+OBkqlSOrCeRJOrzIPYvxxl00Fgbg632fYbSMUtCV6PpKmjR
+ 4ErZ4aBfwdBmotGSYNehkgwhAoSWzdwI0XagEpEY/JylEXyM3nrO3NVxHaO9iuXS7Ej5
+ yLW9JUMZCRajaJ5NdBvtbAxd3enCiY/0o8F+GRFYCWfupIyYCvwzJyllPkcBLqneWy6r 5g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fsga12eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:10:48 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AJ9pxe034482;
+        Thu, 10 Sep 2020 15:10:38 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fsga122a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:10:38 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AJ87np004123;
+        Thu, 10 Sep 2020 19:10:17 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 33c2a86cjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 19:10:16 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AJADKl32637386
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 19:10:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 389AC4C059;
+        Thu, 10 Sep 2020 19:10:13 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CAD14C046;
+        Thu, 10 Sep 2020 19:10:12 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.93.242])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu, 10 Sep 2020 19:10:11 +0000 (GMT)
+Date:   Thu, 10 Sep 2020 21:10:10 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200910211010.46d064a7@thinkpad>
+In-Reply-To: <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+        <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+        <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+        <20200909142904.00b72921@thinkpad>
+        <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+        <20200909192534.442f8984@thinkpad>
+        <20200909180324.GI87483@ziepe.ca>
+        <20200910093925.GB29166@oc3871087118.ibm.com>
+        <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+        <20200910181319.GO87483@ziepe.ca>
+        <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
-X-Provags-ID: V03:K1:2kulQix1IwHTgVYh/suxTjvDyKy9vES/+dG4cKEhMDL8fo3cwpx
- Ap8fmH3Xtn9sE0LmqdTVBm00y1TH3G+F5etIJE86d0XqwbeKveBHu/E0tCgmMRaKrU/5s4N
- kQBHyi5bHZdyFfVbKuTVZ1/KOtFUtCsIi7Rdszh5c+0OXRUMm0xHTbMx2b6zA4s3EnEFoFW
- QnrEy5D38+d/J881Yeyog==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lYBiP+Z8Kk4=:chYqtZ+cZIbZ8Fq3mKK+xf
- 0hsweLTA8hKYEdccbNZmU+tLUdqoXmCEzkPeGaHkwXhMKheaNSavaaU3j2QgXXKli/H5lWhQf
- mcgc50GPgkQ4CwY5LmRz7m+iUq7xwYgfUG9dq/+yk6PBHr/PVKVxTTRUpU/Gdtt7I0KYKcott
- 6RZ1QGKvZjK5iA9Jl/nbkqDURaiPfve6C9inR8zm0F39IQEvzRMnU8tb6p5Y6FKiU63Jvabwc
- Z1pbYTyzVQAWdruLO2+XRyuBq5bvaT28mNqmA5oZN6v0Y2A06tXRYzVTA6pvG56gqEys1rYAA
- 2Aw1DjBaW/DeQGzcMokboyUHGg+EsJDFyUMKEhCSlnZ30cfc1toZorH5HEY7zbWVINJZgMqRZ
- jLet36tfXyOOiF/rERI3vdeEMQ8oPTDXLB07rUOLF4PzkVShztLV9y3XDq6gjhAUWoVupLWD3
- xz5e8mFdXFg3wzgBfSdOj2331/a8dmuGta4fXlXVKj+j9TY3gtL59Yn/rXeLb+IW+snfZroKf
- 9lpkYBYnMTYkQoNNxcMwAkPfvS4O4yk2D+gNp1mepW0SBtAUNL8TifSlqIgnuR08DWxPiHubW
- WgVjeqlmekr/mPhSCWYtOVsluN9rDhsX4pU5EY+T8rwVeav51ayElpncTZwPiP++nas3lkVt4
- grkYkU0lE1xpCvnNHqEvm7GKd1Xw7Xwz/ouUNA14+W4eV5zuXDFXtfewF8J/ftcKFX+a7R3gz
- hzbRygdytltvgyDUUWXTkjiZfxEDn1EimlprHBnOvpX/RLnInSpG6sDaJqnsKczkMUYLnxBp+
- G9tz5+Ke4AFSJll4+dWBAkAhdTc//sgxIuwpX/jaK6vLst9aHRJ32mpdfYeQRFau0PnKRpHMR
- fxkbu1WeI0AffX3hHq295RmXAggDrhxB1Crr6bGG4nn9jBA/prVkhSW1rJ/YQK4wV644/nMd7
- WItPBuxqqDJSUrErYiClR6rQRpbmkyMEV7zzkqbnY8GT92CPQyRuJUdE4tJquOHxoQ9IYUqNJ
- mbqRUfgso3i5PC5DOx9HsywTgH8/JIZwNy5i1W7E1E9ohbcQSTRxD24zkxqqVPgVdHQRd72Q1
- jreSPAVNEz/ekECmD6i9hp+05Jsp5gXGausBDvYB/laIDCmzglACJ9TM3mkA8/OGIQMYoI5ZE
- EHF9BtmZXGCJ3fsJc/Uhlh3IeRHNVawSWW8bAJxKm2BW8qhNxUbVrA4mNY4YuPYa0gBKzaPA2
- VoLjuDALpQNG98yZlblET1kpE6NEvHHJ3J+j9mg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_08:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 spamscore=0 phishscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009100173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 10 Sep 2020 11:33:17 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
---mxv5cy4qt+RJ9ypb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Sep 05, 2020 at 09:08:49PM +0300, Andy Shevchenko wrote:
-> On Saturday, September 5, 2020, Jonathan Neusch=C3=A4fer <j.neuschaefer@g=
-mx.net>
-> wrote:
->=20
-> > The Netronix EC provides a PWM output which is used for the backlight
-> > on some ebook readers. This patches adds a driver for the PWM output.
+> On Thu, Sep 10, 2020 at 11:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > >
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > ---
-[...]
-> > +#include <linux/of_device.h>
->=20
->=20
-> mod_devicetable.h
+> > So.. To change away from the stack option I think we'd have to pass
+> > the READ_ONCE value to pXX_offset() as an extra argument instead of it
+> > derefing the pointer internally.
+> 
+> Yeah, but I think that would actually be the better model than passing
+> an address to a random stack location.
+> 
+> It's also effectively what we do in some other places, eg the whole
+> logic with "orig" in the regular pte fault handling is basically doing
+> unlocked loads of the pte, various decisions on that, and then doing a
+> final "is this still the same pte" after it has gotten the page table
+> lock.
 
-Okay
+That sounds a lot like the pXd_offset_orig() from Martins first approach
+in this thread:
+https://lore.kernel.org/linuxppc-dev/20190418100218.0a4afd51@mschwideX1/
 
-> > +/* Convert an 8-bit value into the correct format for writing into a
-> > register */
-> > +#define u8_to_reg(x) (((x) & 0xff) << 8)
->=20
->=20
-> You spread this macro among the drivers w/o explanation what=E2=80=99s go=
-ing on. I
-> think there will be better approach.
+It is also the "Patch 1" option from the start of this thread:
+https://lore.kernel.org/lkml/20200828140314.8556-1-gerald.schaefer@linux.ibm.com/
 
-Okay, I'll move it to ntxec.h and expand on the explanation. I think
-what's missing is the following part:
+I guess I chose wrongly there, should have had more trust in Martins
+approach, and not try so hard to do it like others...
 
-  Some registers, such as the battery status register (0x41), are in
-  big-endian, but others only have eight significant bits, which are in
-  the first byte transmitted over I2C (the MSB of the big-endian value).
-  This convenience macro/function converts an 8-bit value to 16-bit for
-  use in the second kind of register.
+So, maybe we can start over again, from that patch option. It would of
+course also initially introduce some gup-specific helpers, like with
+the other approach. It seemed harder to generalize when I thought
+about it back then, but I guess it should not be a lot harder than
+the _addr_end stuff.
 
-> > +
-> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_PERIOD_HIGH,
-> > u8_to_reg(period >> 8));
-> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_PERIOD_LOW,
-> > u8_to_reg(period));
-> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_DUTY_HIGH,
-> > u8_to_reg(duty >> 8));
-> > +       res |=3D regmap_write(pwm->ec->regmap, NTXEC_REG_DUTY_LOW,
-> > u8_to_reg(duty));
->=20
->=20
-> These funny res |=3D is unusual pattern for returned error codes. Moreover
-> you are shadowing the real ones. Same go the rest drovers. Please fix by
-> checking each separately.
+Or, maybe this time, just not to risk Christian getting a heart attack,
+we could go for the gup-specific helper first, so that we would at
+least have a fix for the possible s390 data corruption. Jason, would
+you agree that we send a new RFC, this time with pXd_offset_orig()
+approach, and have that accepted as short-term fix?
 
-Okay
-
-> > +       platform_set_drvdata(pdev, pwm);
-> > +
-> > +       return (res < 0) ? -EIO : 0;
->=20
->=20
-> What?!
-
-That's an editing error, sorry.
-
-> > +static const struct of_device_id ntxec_pwm_of_match[] =3D {
-> > +       { .compatible =3D "netronix,ntxec-pwm" },
-> >
-> >
->=20
-> > +       { },
->=20
->=20
-> No comma.
-
-Okay
-
-
-Thanks for the review,
-Jonathan Neusch=C3=A4fer
-
---mxv5cy4qt+RJ9ypb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9aefUACgkQCDBEmo7z
-X9s28xAAnaOJ911XlEgMRmp99aYqJpEdZgZvH/LVKEQBPLYT/XeUf/t2X5MqVTSG
-VjhU4kbYvnUWrVL3Ud63qNe2TV73lI2mUOsz9wFu7coD/+QVmNv5Y2+/SsHBxNcr
-sf6mOX5TTKkwe0bS6bChJZmpZ19fottJ6STYPgeTMJK7zxn299D4gEuO3KNjK8I2
-k0PoE/U/CMAGb4lwzOQ55qXK9u/rmrPp15ME09TSePU0Mqip1ki/jg2qagSuxyfC
-mvsUWZJlHSnx412cJucSpZmT/2IzlVgqn3YDuWOT+gvF0XrUXbKcGYsU4hkCeyb5
-TFostixxqKy7YPXbgNJDQ9AXUXmAOBAMjy+knnR1EFgt8SLNITeiFgqoubIe1vJj
-RA6V9ZNRCsBzRboplVeyjQYqmAWul4mlzezhVp6P9A5S/GfgziKOD5zrDMaGorUP
-qA9Q00SbQuo2WMasehHeo0x1vDan2kzMNBm2F54VZn1awDP/UwI/0s6bDxKK8Bsl
-djXY509LfGcc5phgl199m8rE7PUIaHQQHsEw1T+Z867vPES7pjL0OFnsG4NiiX5o
-QecSeK7xp8BK6c3wAebX3VqMISPfj+R66lhspCtfsbJ1yeVX/nwh8V4OouZtTQJJ
-WF1FS5izzOQO/QaajIE3gH0+ZPfkC9QoH8vEBBtL0mzEbljNq+E=
-=P/2J
------END PGP SIGNATURE-----
-
---mxv5cy4qt+RJ9ypb--
+Or would you rather also wait for some proper generic change? Have
+lost that option from my radar, so cannot really judge how much more
+effort it would be. I'm on vacation next week anyway, but Alexander
+or Vasily (who did the option 1 patch) could look into this further.
