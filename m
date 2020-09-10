@@ -2,198 +2,107 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9D8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E3CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1021320719
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0603820731
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZMcMkaW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgIJVnQ (ORCPT
+        id S1725934AbgIJVws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:43:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:35410 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730898AbgIJM6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:58:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDF1313D5;
-        Thu, 10 Sep 2020 05:57:55 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54FF43F66E;
-        Thu, 10 Sep 2020 05:57:51 -0700 (PDT)
-Subject: Re: [PATCH 06/12] dma-direct: remove dma_direct_{alloc,free}_pages
-To:     Christoph Hellwig <hch@lst.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20200908164758.3177341-1-hch@lst.de>
- <20200908164758.3177341-7-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d944983d-fd7e-f59b-75a9-c6e60919f3a5@arm.com>
-Date:   Thu, 10 Sep 2020 13:57:48 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 17:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgIJVwh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 17:52:37 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F8CC061573;
+        Thu, 10 Sep 2020 14:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Fg/b55yxoFWkolyAkcEjzousJpXve06w9VMuL5Sdnkk=; b=ZMcMkaW/c2U4wME0yN3lN8iyq
+        Cabjm7Hra/p2QLrT5mmKewtEBX98jKbULNaeCzksnOjXFd/KBPMjWzggqocB6CD3soSxk08QfgkWj
+        n9IShJX5HFbbZEejR0jEf+mNi4loEuaPf3zI+zz2liShClwNpC0+1q6T15cbGEijkp+yBWD2tqfjW
+        sbvjsE1c0h9pMsh/XzqMtZSYdfSDxQrX8/XS/GPQqcsqDjkuQrVtt1xRqvAF/iAJkp5MRdlrs/gHy
+        IgqIc3Q/VXMM0vvUJTXwsBbAHpB+d9p+sH/F9wMsGxVs53ENrxphr7fW4/Qo2vEIBhSJJI8gh1bKv
+        N7TWu3fvg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:32992)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1kGUNG-0006e5-W4; Thu, 10 Sep 2020 22:44:59 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1kGUNC-0007bp-S9; Thu, 10 Sep 2020 22:44:54 +0100
+Date:   Thu, 10 Sep 2020 22:44:54 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Pavel Machek <pavel@ucw.cz>,
+        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
+ for LEDs controlled by Marvell PHYs
+Message-ID: <20200910214454.GE1551@shell.armlinux.org.uk>
+References: <20200909162552.11032-1-marek.behun@nic.cz>
+ <20200909162552.11032-7-marek.behun@nic.cz>
+ <20200910122341.GC7907@duo.ucw.cz>
+ <20200910131541.GD3316362@lunn.ch>
+ <20200910182434.GA22845@duo.ucw.cz>
+ <20200910183154.GF3354160@lunn.ch>
+ <20200910183435.GC1551@shell.armlinux.org.uk>
+ <20200910223112.26b57dd6@nic.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200908164758.3177341-7-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910223112.26b57dd6@nic.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 17:47, Christoph Hellwig wrote:
-> Just merge these helpers into the main dma_direct_{alloc,free} routines,
-> as the additional checks are always false for the two callers.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   arch/x86/kernel/amd_gart_64.c |  6 +++---
->   include/linux/dma-direct.h    |  4 ----
->   kernel/dma/direct.c           | 39 ++++++++++++++---------------------
->   kernel/dma/pool.c             |  2 +-
->   4 files changed, 19 insertions(+), 32 deletions(-)
+On Thu, Sep 10, 2020 at 10:31:12PM +0200, Marek Behun wrote:
+> On Thu, 10 Sep 2020 19:34:35 +0100
+> Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
 > 
-> diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-> index bccc5357bffd6c..153374b996a279 100644
-> --- a/arch/x86/kernel/amd_gart_64.c
-> +++ b/arch/x86/kernel/amd_gart_64.c
-> @@ -467,7 +467,7 @@ gart_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_addr,
->   {
->   	void *vaddr;
->   
-> -	vaddr = dma_direct_alloc_pages(dev, size, dma_addr, flag, attrs);
-> +	vaddr = dma_direct_alloc(dev, size, dma_addr, flag, attrs);
->   	if (!vaddr ||
->   	    !force_iommu || dev->coherent_dma_mask <= DMA_BIT_MASK(24))
->   		return vaddr;
-> @@ -479,7 +479,7 @@ gart_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_addr,
->   		goto out_free;
->   	return vaddr;
->   out_free:
-> -	dma_direct_free_pages(dev, size, vaddr, *dma_addr, attrs);
-> +	dma_direct_free(dev, size, vaddr, *dma_addr, attrs);
->   	return NULL;
->   }
->   
-> @@ -489,7 +489,7 @@ gart_free_coherent(struct device *dev, size_t size, void *vaddr,
->   		   dma_addr_t dma_addr, unsigned long attrs)
->   {
->   	gart_unmap_page(dev, dma_addr, size, DMA_BIDIRECTIONAL, 0);
-> -	dma_direct_free_pages(dev, size, vaddr, dma_addr, attrs);
-> +	dma_direct_free(dev, size, vaddr, dma_addr, attrs);
->   }
->   
->   static int no_agp;
-> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-> index 95e3e28bd93f47..20eceb2e4f91f8 100644
-> --- a/include/linux/dma-direct.h
-> +++ b/include/linux/dma-direct.h
-> @@ -77,10 +77,6 @@ void *dma_direct_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
->   		gfp_t gfp, unsigned long attrs);
->   void dma_direct_free(struct device *dev, size_t size, void *cpu_addr,
->   		dma_addr_t dma_addr, unsigned long attrs);
-> -void *dma_direct_alloc_pages(struct device *dev, size_t size,
-> -		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs);
-> -void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
-> -		dma_addr_t dma_addr, unsigned long attrs);
->   int dma_direct_get_sgtable(struct device *dev, struct sg_table *sgt,
->   		void *cpu_addr, dma_addr_t dma_addr, size_t size,
->   		unsigned long attrs);
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 949c1cbf08b2d5..1d564bea58571b 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -151,13 +151,18 @@ static struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
->   	return page;
->   }
->   
-> -void *dma_direct_alloc_pages(struct device *dev, size_t size,
-> +void *dma_direct_alloc(struct device *dev, size_t size,
->   		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
->   {
->   	struct page *page;
->   	void *ret;
->   	int err;
->   
-> +	if (!IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
-> +	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> +	    dma_alloc_need_uncached(dev, attrs))
-> +		return arch_dma_alloc(dev, size, dma_handle, gfp, attrs);
-> +
->   	size = PAGE_ALIGN(size);
->   
->   	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
-> @@ -256,11 +261,18 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->   	return NULL;
->   }
->   
-> -void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
-> -		dma_addr_t dma_addr, unsigned long attrs)
-> +void dma_direct_free(struct device *dev, size_t size,
-> +		void *cpu_addr, dma_addr_t dma_addr, unsigned long attrs)
->   {
->   	unsigned int page_order = get_order(size);
->   
-> +	if (!IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
-> +	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> +	    dma_alloc_need_uncached(dev, attrs)) {
-> +		arch_dma_free(dev, size, cpu_addr, dma_addr, attrs);
-> +		return;
-> +	}
-> +
->   	/* If cpu_addr is not from an atomic pool, dma_free_from_pool() fails */
->   	if (dma_should_free_from_pool(dev, attrs) &&
->   	    dma_free_from_pool(dev, cpu_addr, PAGE_ALIGN(size)))
-> @@ -284,27 +296,6 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
->   	dma_free_contiguous(dev, dma_direct_to_page(dev, dma_addr), size);
->   }
->   
-> -void *dma_direct_alloc(struct device *dev, size_t size,
-> -		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
-> -{
-> -	if (!IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
-> -	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> -	    dma_alloc_need_uncached(dev, attrs))
-> -		return arch_dma_alloc(dev, size, dma_handle, gfp, attrs);
-> -	return dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
-> -}
-> -
-> -void dma_direct_free(struct device *dev, size_t size,
-> -		void *cpu_addr, dma_addr_t dma_addr, unsigned long attrs)
-> -{
-> -	if (!IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
-> -	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
-> -	    dma_alloc_need_uncached(dev, attrs))
-> -		arch_dma_free(dev, size, cpu_addr, dma_addr, attrs);
-> -	else
-> -		dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
-> -}
-> -
->   #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
->       defined(CONFIG_SWIOTLB)
->   void dma_direct_sync_sg_for_device(struct device *dev,
-> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-> index 1281c0f0442bc5..fe11643ff9cc7b 100644
-> --- a/kernel/dma/pool.c
-> +++ b/kernel/dma/pool.c
-> @@ -115,7 +115,7 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
->   #endif
->   	/*
->   	 * Memory in the atomic DMA pools must be unencrypted, the pools do not
-> -	 * shrink so no re-encryption occurs in dma_direct_free_pages().
-> +	 * shrink so no re-encryption occurs in dma_direct_free().
->   	 */
->   	ret = set_memory_decrypted((unsigned long)page_to_virt(page),
->   				   1 << order);
+> > On Thu, Sep 10, 2020 at 08:31:54PM +0200, Andrew Lunn wrote:
+> > > Generally the driver will default to the hardware reset blink
+> > > pattern. There are a few PHY drivers which change this at probe, but
+> > > not many. The silicon defaults are pretty good.  
+> > 
+> > The "right" blink pattern can be a matter of how the hardware is
+> > wired.  For example, if you have bi-colour LEDs and the PHY supports
+> > special bi-colour mixing modes.
+> > 
 > 
+> Have you seen such, Russell? This could be achieved via the multicolor
+> LED framework, but I don't have a device which uses such LEDs, so I
+> did not write support for this in the Marvell PHY driver.
+> 
+> (I guess I could test it though, since on my device LED0 and LED1
+> are used, and this to can be put into bi-colour LED mode.)
+
+I haven't, much to my dismay. The Macchiatobin would have been ideal -
+the 10G RJ45s have bi-colour on one side and green on the other. It
+would have been useful if they were wired to support the PHYs bi-
+colour mode.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
