@@ -2,158 +2,116 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACD3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F4C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDF8206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4E9206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599728216;
-	bh=rfxlWXkoFVg1nBhyifXGxOJ6QA+J4LqvbC5/ABiyWGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8sS2extQQSxw0bplSlQWmnY+hypgJz4ohIV/xUmV4lqxdbxWP92QHGyNWnUgd4Z2
-	 IbDGMaGI4DA9e4nNpygyjaOrFQ/n1yBxL2WNJ70MZD8ojhGK+I33XAZRu+Ylo6QIvl
-	 /OWrNeDV7isxuVnfeF/tjsSqFYA2A2hz4RrH30ZI=
+	s=default; t=1599728226;
+	bh=Sw3cSgiiRVB7WjdtgUzZk4fAw77GoTjxM0/fy6CX2UQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qa88s1Ai38X3SBY4EqKwJNmPQoxsSXEAITMombKECWl8NrkUMy2V+PsmMhOFKmvr0
+	 AFJoWnas62IDANiljhZ7+xeFh2jQpi1NLVjN+Ql+eqb++CQ2J2cp8gO+Ufj/S6EmNF
+	 E/yuUBHREtzhPsUNbpy2nKjQRpU73dRAaBabzPkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgIJI4s (ORCPT
+        id S1730477AbgIJI5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
+        Thu, 10 Sep 2020 04:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgIJIzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:55:14 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730400AbgIJIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 04:55:34 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9AC820C09;
-        Thu, 10 Sep 2020 08:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA2D206A1;
+        Thu, 10 Sep 2020 08:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599728109;
-        bh=rfxlWXkoFVg1nBhyifXGxOJ6QA+J4LqvbC5/ABiyWGI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWdRgGJzJ/iOoEw77p0uCQzWo6ihi5UVTZdPvCAp633+7sgdfbtl0/e3ou+I885Qp
-         1U3uSuCPIbtBHNpFdjTtrMnwk3OaTmx4SA0Vcmt5Pe2dDpeDkIwYUbGmS8vPhWpIGF
-         7fqmwQLWsYawtSEx+xgpVlSpA87TMH6T4dsihthM=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 1/8] kprobes: tracing/kprobes: Fix to kill kprobes on initmem after boot
-Date:   Thu, 10 Sep 2020 17:55:05 +0900
-Message-Id: <159972810544.428528.1839307531600646955.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159972809455.428528.4737752126800169128.stgit@devnote2>
-References: <159972809455.428528.4737752126800169128.stgit@devnote2>
-User-Agent: StGit/0.19
+        s=default; t=1599728134;
+        bh=Sw3cSgiiRVB7WjdtgUzZk4fAw77GoTjxM0/fy6CX2UQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VaYGy1DGNz7YN5SG68MnqqzLWdNriwbjMQ5P5LsPml47jMyrueTtPJK9N4uvEJKvL
+         nlDlIV9BHCB629AE3/7hHlSrrgov2Z+N4dr2ZS5/gZ1ZPZrtHthGSvJLhMUKQOuOJw
+         J9az9zqi3guXQPR7Oh/HlzGZzv+FCRNKi24CcDWY=
+Date:   Thu, 10 Sep 2020 10:55:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     James Hilliard <james.hilliard1@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>, Lars Melin <larsm17@gmail.com>,
+        Oliver Neukum <oneukum@suse.de>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russ Dill <Russ.Dill@gmail.com>,
+        Hector Martin <hector@marcansoft.com>
+Subject: Re: [PATCH v2] usb: serial: Repair FTDI FT232R bricked eeprom
+Message-ID: <20200910085541.GA1099591@kroah.com>
+References: <20200909193419.2006744-1-james.hilliard1@gmail.com>
+ <1599706954.10822.3.camel@suse.de>
+ <a1161f77-5b37-39ea-eb91-7b0b59278960@gmail.com>
+ <20200910080850.GD24441@localhost>
+ <CADvTj4rDdj8KtLhGZEZP+XZcF4DTE4oW9sNf=zNWaRPzkny93A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADvTj4rDdj8KtLhGZEZP+XZcF4DTE4oW9sNf=zNWaRPzkny93A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since kprobe_event= cmdline option allows user to put kprobes on the
-functions in initmem, kprobe has to make such probes gone after boot.
-Currently the probes on the init functions in modules will be handled
-by module callback, but the kernel init text isn't handled.
-Without this, kprobes may access non-exist text area to disable or
-remove it.
+On Thu, Sep 10, 2020 at 02:17:44AM -0600, James Hilliard wrote:
+> On Thu, Sep 10, 2020 at 2:08 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Thu, Sep 10, 2020 at 12:33:55PM +0700, Lars Melin wrote:
+> > > On 9/10/2020 10:02, Oliver Neukum wrote:
+> > > > Am Mittwoch, den 09.09.2020, 13:34 -0600 schrieb James Hilliard:
+> > > >> This patch detects and reverses the effects of the malicious FTDI
+> > > >> Windows driver version 2.12.00(FTDIgate).
+> > > >
+> > > > Hi,
+> > > >
+> > > > this raises questions.
+> > > > Should we do this unconditionally without asking?
+> > > > Does this belong into kernel space?
+> > > >
+> > >
+> > > My answer to both of those question is a strong NO.
+> > >
+> > > The patch author tries to justify the patch with egoistical arguments
+> > > (easier for him and his customers) without thinking of all other users
+> > > of memory constrained embedded hardware that doesn't need the patch code
+> > > but have to carry it.
+> > >
+> > > The bricked PID is btw already supported by the linux ftdi driver so
+> > > there is no functionality gain in the patch.
+> >
+> > I fully agree. This doesn't belong in the kernel. If the Windows driver
+> > breaks someones device on purpose they should know about it, and *if*
+> > they want they can reprogram the device using the tools mentioned in the
+> > thread. But the kernel shouldn't be playing such games and reprogram
+> > eeproms behind people's backs.
+> One of the main issues is that this issue is very often not-obvious, FTDI
+> specifically designed their malicious driver to make it appear that the
+> hardware failed, they intentionally do not provide proper feedback to
+> the user when they soft-brick it. I assume this is because they want
+> to push the support costs related to their malicious driver onto the
+> integrator rather than themselves.
 
-Fixes: 970988e19eb0 ("tracing/kprobe: Add kprobe_event= boot parameter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
-  Changes in v2:
-   - Fix kprobe_free_init_mem() not depending on CONFIG_DEBUG_FS.
----
- include/linux/kprobes.h |    5 +++++
- init/main.c             |    2 ++
- kernel/kprobes.c        |   22 ++++++++++++++++++++++
- 3 files changed, 29 insertions(+)
+That's fine, but why is it the Linux kernel's job to fix up this mess?
 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 9be1bff4f586..8aab327b5539 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -373,6 +373,8 @@ void unregister_kretprobes(struct kretprobe **rps, int num);
- void kprobe_flush_task(struct task_struct *tk);
- void recycle_rp_inst(struct kretprobe_instance *ri, struct hlist_head *head);
- 
-+void kprobe_free_init_mem(void);
-+
- int disable_kprobe(struct kprobe *kp);
- int enable_kprobe(struct kprobe *kp);
- 
-@@ -435,6 +437,9 @@ static inline void unregister_kretprobes(struct kretprobe **rps, int num)
- static inline void kprobe_flush_task(struct task_struct *tk)
- {
- }
-+static inline void kprobe_free_init_mem(void)
-+{
-+}
- static inline int disable_kprobe(struct kprobe *kp)
- {
- 	return -ENOSYS;
-diff --git a/init/main.c b/init/main.c
-index ae78fb68d231..038128b2a755 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -33,6 +33,7 @@
- #include <linux/nmi.h>
- #include <linux/percpu.h>
- #include <linux/kmod.h>
-+#include <linux/kprobes.h>
- #include <linux/vmalloc.h>
- #include <linux/kernel_stat.h>
- #include <linux/start_kernel.h>
-@@ -1402,6 +1403,7 @@ static int __ref kernel_init(void *unused)
- 	kernel_init_freeable();
- 	/* need to finish all async __init code before freeing the memory */
- 	async_synchronize_full();
-+	kprobe_free_init_mem();
- 	ftrace_free_init_mem();
- 	free_initmem();
- 	mark_readonly();
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 287b263c9cb9..2880cdf37c47 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2452,6 +2452,28 @@ static struct notifier_block kprobe_module_nb = {
- extern unsigned long __start_kprobe_blacklist[];
- extern unsigned long __stop_kprobe_blacklist[];
- 
-+void kprobe_free_init_mem(void)
-+{
-+	void *start = (void *)(&__init_begin);
-+	void *end = (void *)(&__init_end);
-+	struct hlist_head *head;
-+	struct kprobe *p;
-+	int i;
-+
-+	mutex_lock(&kprobe_mutex);
-+
-+	/* Kill all kprobes on initmem */
-+	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
-+		head = &kprobe_table[i];
-+		hlist_for_each_entry(p, head, hlist) {
-+			if (start <= (void *)p->addr && (void *)p->addr < end)
-+				kill_kprobe(p);
-+		}
-+	}
-+
-+	mutex_unlock(&kprobe_mutex);
-+}
-+
- static int __init init_kprobes(void)
- {
- 	int i, err = 0;
+There is already a userspace tool that can be run to resolve this for
+devices that wish to have this fixed up for.  Use that.  We want to keep
+things that can be done in userspace, in userspace, whenever possible.
 
+And again, Linux runs just fine with these devices so why is it Linux's
+
+I'm with Johan here, reprogramming eeproms when people least expect it
+is not nice, and in a way, is much the same thing that the Windows
+drivers are doing.
+
+thanks,
+
+greg k-h
