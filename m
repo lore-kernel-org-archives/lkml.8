@@ -2,216 +2,257 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B7EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87694C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B967321941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB9421556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Edlxp9JS"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="rvdAnCfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgIJJ6R (ORCPT
+        id S1730354AbgIJJ7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730764AbgIJJzs (ORCPT
+        Thu, 10 Sep 2020 05:59:02 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:40971 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730585AbgIJJ5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:55:48 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38229C06179F
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:55:48 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id s2so2779184pjr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 02:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IaGTFnDJBMBefRV/KyfCTUkPl/xUCziFjmJJ4w4CjXw=;
-        b=Edlxp9JSKyIwQ3d/65GRMff66HrC1LW3hK1xF7+fYi4S6Ae7V+W1mIakpvOTcZon4U
-         uKl4ve/gMbyjqYC5YhLJXnXlJlPCtCu7YZDE0yKdmiBUnG/ZlxdUXJkg596ZDVjZwwhe
-         bh1seKT7/YWFj3gVY1RAzKdf1BvZPtlp5fuylziTmuSW7fJ0uqXqO0Hl9rYrYZhzt6vK
-         lAnwIFGqCsHGlHUHQSWZ++lQAX0n7wKlwA5octgAgeiMFwjkAnfwvmLXDjpsLbFj6YQb
-         BHICuApDFIBstBzxunt/ssewC+a8+qyGh0mam78c+TCYgHB+iRq57dCkJAQL2qOzYCLR
-         FlzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IaGTFnDJBMBefRV/KyfCTUkPl/xUCziFjmJJ4w4CjXw=;
-        b=sFVaMSkRRoKKP2VV0u7FeNW5koM94oS/T1xw/PKs4w9mWUwdq3mS0oUbSMUhuIO66L
-         v+kyzamKy7yVvDCV6M17PlXnsrEGwuwRUAOQiMJUYKuz5QxTNAMRloNvCiDKF2HV49rD
-         zxEja9nyOgKoHZpz+zKh6jZHHPqfO4+vyqqQkq1QWDZVQZfsZxLOElrTsqyDBnbpWlR/
-         r6HZegwN2ZXx2ST/ufyHEKMbUh2ekUfeZbTiKkF8ioxT61cChtbJ4iprDq1EF+amivwj
-         n4+CaDZ5fXOzCT/1sCYVEJo/rwKUm67/39Pv0hsYWwZRQmDws14s5T5Xsc7C0QuAnhOV
-         dnDQ==
-X-Gm-Message-State: AOAM5327t/sVgRr/LoPvXFvSCWI5Y7/kIk+MONL6roGIJLi5fvkxvyGR
-        4HGLoelq8HJuHVZFgTwY7I//rg==
-X-Google-Smtp-Source: ABdhPJygFUaL7C711MVvp4VE0w8Sln3tVyFCklbJMeZp+qTd1iK1V5+XL+JPHZwQC6VD2MqmYq4ewQ==
-X-Received: by 2002:a17:90b:3105:: with SMTP id gc5mr4616714pjb.225.1599731746660;
-        Thu, 10 Sep 2020 02:55:46 -0700 (PDT)
-Received: from localhost ([122.181.54.133])
-        by smtp.gmail.com with ESMTPSA id s3sm5385018pfe.116.2020.09.10.02.55.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Sep 2020 02:55:46 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 2/2] dt-bindings: mailbox: add doorbell support to ARM MHU
-Date:   Thu, 10 Sep 2020 15:25:19 +0530
-Message-Id: <5d448f579a41345130ae25d01bb94a6e293a6460.1599731645.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <7f50b23d157a97242c79bd8f2ab649a9272b9b59.1599731645.git.viresh.kumar@linaro.org>
-References: <7f50b23d157a97242c79bd8f2ab649a9272b9b59.1599731645.git.viresh.kumar@linaro.org>
+        Thu, 10 Sep 2020 05:57:16 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id GJKKkZ7LRPTBMGJKLkQjEX; Thu, 10 Sep 2020 11:57:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1599731833; bh=Pjm09VRMHAwXWG/kn+Ca+AdZepmnLrRLLzgFezfvBAk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=rvdAnCfAhAqz8g834UriS1/zLRYWyal/U5rSMvQdO4jBOwXiezX2X3sU7SJuaNKtu
+         ggr8NWAJ6dYojYxq1kJWdARBCRMzcyDVLQNEViYa7l4XykUmQjuRztUlE9DMpSxGrC
+         b3vky4jmU0w3x+LVKTaocbm4pODvmvhUSGuRMHVm/m+Ueb0oCJ4ycVATYE/1NS14P4
+         Iifbmr+5P7VbxkfWx8O3LWGeQuedCWte2yPiiFq431tTitosMmQ0R9xP/kjWs79luL
+         cVcW9tj3fCOb1E0s1NoPRiLcbMOp8FIdJmEgXn+o/57QEFolmcm3u30icnvpYm9g58
+         +dCJQfPIKzy+Q==
+Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+References: <20200819135454.GA17098@lst.de>
+ <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
+ <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de>
+ <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
+ <20200820165407.GD12693@lst.de>
+ <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
+ <20200901110617.GA13232@lst.de>
+ <CAAFQd5CmPVSxmZJVn7HnNUn8srZbAbnfzpNMYw3KcDzn7xD2cg@mail.gmail.com>
+ <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
+ <20200910094921.GB97481@google.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f92991e1-e0d7-69ca-9541-1546bb139dd3@xs4all.nl>
+Date:   Thu, 10 Sep 2020 11:57:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910094921.GB97481@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIQ2qMJezgcQCm9DR+Wi0ZCirorfLLmWhi2ok5hOy7wsZrWpeXGm9ksinIhRxjrxf7V/aEQhfo+cqGr7TBVOeY9yXbAXtLs6dyUp2FbUvKt3JnSjg401
+ b5ypH54XtrQtb5wgqraR/JljbRtFumGizVCE5+hKFWkYbtSOh80JNx0ZKfhJ3nMRxNqWFFqyACOFVHvLsU/le8r+7Nj8nWCLquy5qd6rF8udM3XQ5mVxrpN5
+ s16bm2NXpah+J8kSW0VINCg428/+D9F/zLJv1WGhdE0mYwo+MPRgT+GNTzyQNC5SPhjqkTHGGdRBnAVlenvdZI8DycmpmPWzdEqQFJ7v1QZq5XVj577oGOAu
+ A68ZzK+YE5m5oedqeYwgWYH8Gql1eOFohji2mzdeRCjy1Wy5frjhiseK7hoesVIK6134+Rlp27SBSxNAI23/833Wkf5vksiZxq5EFuHhqnKp1Za03TdO0CNb
+ 9Ft07715YvW4pFiT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+On 10/09/2020 11:49, Sergey Senozhatsky wrote:
+> Hi,
+> 
+> On (20/09/08 23:58), Tomasz Figa wrote:
+>>
+>> Given the above, we would like to make changes that affect the UAPI.
+>> Would you still be able to revert this series?
+>>
+> 
+> If we want to apply only "media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT"
+> patch and keep the rest of the buffer cache hints series in the kernel, then
+> I'd add one or two more patches. We don't need ->flags argument in
+> create_bufs() and reqbufs() functions, that argument was introduced in order
+> to pass in the requested coherency flag.
+> 
+> 
+> Now.
+> 
+> Then we have a question - do we need flags member in struct
+> v4l2_requestbuffers and v4l2_create_buffers or shall we just
+> return back those 4 bytes to reserved[]? We pass BUF_FLAG_NO_CACHE_INVALIDATE
+> and V4L2_BUF_FLAG_NO_CACHE_SYNC in struct v4l2_buffer.flags.
 
-The ARM MHU's reference manual states following:
+Drop the now unused flags member in v4l2_requestbuffers and v4l2_create_buffers.
 
-"The MHU drives the signal using a 32-bit register, with all 32 bits
-logically ORed together. The MHU provides a set of registers to enable
-software to set, clear, and check the status of each of the bits of this
-register independently.  The use of 32 bits for each interrupt line
-enables software to provide more information about the source of the
-interrupt. For example, each bit of the register can be associated with
-a type of event that can contribute to raising the interrupt."
+> 
+> If we decide to remove v4l2_requestbuffers and v4l2_create_buffers ->flags,
+> then we also need to rollback documentation changes.
 
-This patch thus extends the MHU controller's DT binding to add support
-for doorbell mode.
+Correct.
 
-Though the same MHU hardware controller is used in the two modes, A new
-compatible string is added here to represent the combination of the MHU
-hardware and the firmware sitting on the other side (which expects each
-bit to represent a different signal now).
+> 
+> Then we need to change CLEAR_AFTER_FIELD(foo, capabilities) in
+> v4l2-ioctl to zero out reserved[] areas in v4l2_requestbuffers
+> and v4l2_create_buffers. I think v4l2_create_buffers is fine,
+> but requstbuffers has flags and reversed[1] in the union so for
+> requestbuffers we simply removed the CLEAR_AFTER_FIELD() and
+> hence dropped the corresponding check from v4l-compliance.
+> 
+> So, do we plan on using .flags in v4l2_requestbuffers and
+> v4l2_create_buffers?
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Co-developed-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V3: Update the json schema and fix number of interrupt lines.
+Perhaps, but this patch is meant to revert *all* changes relating to
+V4L2_FLAG_MEMORY_NON_CONSISTENT. We don't want to have unused fields
+in the public API.
 
- .../devicetree/bindings/mailbox/arm,mhu.yaml  | 60 +++++++++++++++++--
- 1 file changed, 54 insertions(+), 6 deletions(-)
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml b/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml
-index 4e840cedb2e4..88980ba005a4 100644
---- a/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml
-+++ b/Documentation/devicetree/bindings/mailbox/arm,mhu.yaml
-@@ -18,20 +18,40 @@ description: |
-   remote clears it after having read the data.  The last channel is specified to
-   be a 'Secure' resource, hence can't be used by Linux running NS.
- 
-+  The MHU hardware also allows operations in doorbell mode. The MHU drives the
-+  interrupt signal using a 32-bit register, with all 32-bits logically ORed
-+  together. It provides a set of registers to enable software to set, clear and
-+  check the status of each of the bits of this register independently. The use
-+  of 32 bits per interrupt line enables software to provide more information
-+  about the source of the interrupt. For example, each bit of the register can
-+  be associated with a type of event that can contribute to raising the
-+  interrupt. Each of the 32-bits can be used as "doorbell" to alert the remote
-+  processor.
-+
- # We need a select here so we don't match all nodes with 'arm,primecell'
- select:
-   properties:
-     compatible:
-       contains:
--        const: arm,mhu
-+        enum:
-+          - arm,mhu
-+          - arm,mhu-doorbell
-   required:
-     - compatible
- 
- properties:
-   compatible:
--    items:
--      - const: arm,mhu
--      - const: arm,primecell
-+    oneOf:
-+      - description: Data transfer mode
-+        items:
-+          - const: arm,mhu
-+          - const: arm,primecell
-+
-+      - description: Doorbell mode
-+        items:
-+          - const: arm,mhu-doorbell
-+          - const: arm,primecell
-+
- 
-   reg:
-     maxItems: 1
-@@ -50,8 +70,11 @@ description: |
-       - const: apb_pclk
- 
-   '#mbox-cells':
--    description: Index of the channel.
--    const: 1
-+    description: |
-+      Set to 1 in data transfer mode and represents index of the channel.
-+      Set to 2 in doorbell mode and represents index of the channel and doorbell
-+      number.
-+    enum: [ 1, 2 ]
- 
- required:
-   - compatible
-@@ -62,6 +85,7 @@ description: |
- additionalProperties: false
- 
- examples:
-+  # Data transfer mode.
-   - |
-     soc {
-         #address-cells = <2>;
-@@ -84,3 +108,27 @@ additionalProperties: false
-             mboxes = <&mhuA 1>; /* HP-NonSecure */
-         };
-     };
-+
-+  # Doorbell mode.
-+  - |
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        mhuB: mailbox@2b2f0000 {
-+            #mbox-cells = <2>;
-+            compatible = "arm,mhu-doorbell", "arm,primecell";
-+            reg = <0 0x2b2f0000 0 0x1000>;
-+            interrupts = <0 36 4>, /* LP-NonSecure */
-+                         <0 35 4>, /* HP-NonSecure */
-+                         <0 37 4>; /* Secure */
-+            clocks = <&clock 0 2 1>;
-+            clock-names = "apb_pclk";
-+        };
-+
-+        mhu_client_scpi: scpi@2f000000 {
-+            compatible = "arm,scpi";
-+            reg = <0 0x2f000000 0 0x200>;
-+            mboxes = <&mhuB 1 4>; /* HP-NonSecure, 5th doorbell */
-+        };
-+    };
--- 
-2.25.0.rc1.19.g042ed3e048af
+	Hans
+
+> 
+> 
+> - create_bufs()/reqbufs() flags argument removal patch
+> (no struct-s/documentation cleanup yet).
+> 
+> ====8<====
+> Subject: [PATCH] remove redundant flags argument
+> 
+> ---
+>  drivers/media/common/videobuf2/videobuf2-core.c | 10 +++++-----
+>  drivers/media/common/videobuf2/videobuf2-v4l2.c |  6 ++----
+>  include/media/videobuf2-core.h                  |  6 ++----
+>  3 files changed, 9 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+> index 66a41cef33c1..4eab6d81cce1 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-core.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
+> @@ -722,7 +722,7 @@ int vb2_verify_memory_type(struct vb2_queue *q,
+>  EXPORT_SYMBOL(vb2_verify_memory_type);
+>  
+>  int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+> -		     unsigned int flags, unsigned int *count)
+> +		     unsigned int *count)
+>  {
+>  	unsigned int num_buffers, allocated_buffers, num_planes = 0;
+>  	unsigned plane_sizes[VB2_MAX_PLANES] = { };
+> @@ -861,7 +861,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+>  EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
+>  
+>  int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+> -			 unsigned int flags, unsigned int *count,
+> +			 unsigned int *count,
+>  			 unsigned int requested_planes,
+>  			 const unsigned int requested_sizes[])
+>  {
+> @@ -2547,7 +2547,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
+>  	fileio->memory = VB2_MEMORY_MMAP;
+>  	fileio->type = q->type;
+>  	q->fileio = fileio;
+> -	ret = vb2_core_reqbufs(q, fileio->memory, 0, &fileio->count);
+> +	ret = vb2_core_reqbufs(q, fileio->memory, &fileio->count);
+>  	if (ret)
+>  		goto err_kfree;
+>  
+> @@ -2604,7 +2604,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
+>  
+>  err_reqbufs:
+>  	fileio->count = 0;
+> -	vb2_core_reqbufs(q, fileio->memory, 0, &fileio->count);
+> +	vb2_core_reqbufs(q, fileio->memory, &fileio->count);
+>  
+>  err_kfree:
+>  	q->fileio = NULL;
+> @@ -2624,7 +2624,7 @@ static int __vb2_cleanup_fileio(struct vb2_queue *q)
+>  		vb2_core_streamoff(q, q->type);
+>  		q->fileio = NULL;
+>  		fileio->count = 0;
+> -		vb2_core_reqbufs(q, fileio->memory, 0, &fileio->count);
+> +		vb2_core_reqbufs(q, fileio->memory, &fileio->count);
+>  		kfree(fileio);
+>  		dprintk(q, 3, "file io emulator closed\n");
+>  	}
+> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> index d2879f53455b..96d3b2b2aa31 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> @@ -728,8 +728,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
+>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
+>  
+>  	fill_buf_caps(q, &req->capabilities);
+> -	return ret ? ret : vb2_core_reqbufs(q, req->memory,
+> -					    req->flags, &req->count);
+> +	return ret ? ret : vb2_core_reqbufs(q, req->memory, &req->count);
+>  }
+>  EXPORT_SYMBOL_GPL(vb2_reqbufs);
+>  
+> @@ -804,7 +803,6 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
+>  		if (requested_sizes[i] == 0)
+>  			return -EINVAL;
+>  	return ret ? ret : vb2_core_create_bufs(q, create->memory,
+> -						create->flags,
+>  						&create->count,
+>  						requested_planes,
+>  						requested_sizes);
+> @@ -993,7 +991,7 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
+>  		return res;
+>  	if (vb2_queue_is_busy(vdev, file))
+>  		return -EBUSY;
+> -	res = vb2_core_reqbufs(vdev->queue, p->memory, p->flags, &p->count);
+> +	res = vb2_core_reqbufs(vdev->queue, p->memory, &p->count);
+>  	/* If count == 0, then the owner has released all buffers and he
+>  	   is no longer owner of the queue. Otherwise we have a new owner. */
+>  	if (res == 0)
+> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+> index 4c7f25b07e93..bbb3f26fbde9 100644
+> --- a/include/media/videobuf2-core.h
+> +++ b/include/media/videobuf2-core.h
+> @@ -744,7 +744,6 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
+>   * vb2_core_reqbufs() - Initiate streaming.
+>   * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+>   * @memory:	memory type, as defined by &enum vb2_memory.
+> - * @flags:	auxiliary queue/buffer management flags.
+>   * @count:	requested buffer count.
+>   *
+>   * Videobuf2 core helper to implement VIDIOC_REQBUF() operation. It is called
+> @@ -769,13 +768,12 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
+>   * Return: returns zero on success; an error code otherwise.
+>   */
+>  int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+> -		    unsigned int flags, unsigned int *count);
+> +		    unsigned int *count);
+>  
+>  /**
+>   * vb2_core_create_bufs() - Allocate buffers and any required auxiliary structs
+>   * @q: pointer to &struct vb2_queue with videobuf2 queue.
+>   * @memory: memory type, as defined by &enum vb2_memory.
+> - * @flags: auxiliary queue/buffer management flags.
+>   * @count: requested buffer count.
+>   * @requested_planes: number of planes requested.
+>   * @requested_sizes: array with the size of the planes.
+> @@ -793,7 +791,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+>   * Return: returns zero on success; an error code otherwise.
+>   */
+>  int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+> -			 unsigned int flags, unsigned int *count,
+> +			 unsigned int *count,
+>  			 unsigned int requested_planes,
+>  			 const unsigned int requested_sizes[]);
+>  
+> 
 
