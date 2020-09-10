@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA8CC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E05EFC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1186920BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9904822206
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="zLiBumH9"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="l4NjfMb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgIJVlV (ORCPT
+        id S1728456AbgIJVla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42804 "EHLO
+        Thu, 10 Sep 2020 17:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730201AbgIJNFh (ORCPT
+        with ESMTP id S1730145AbgIJNFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:05:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61021C06179B
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:04 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id s13so5571972wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:04 -0700 (PDT)
+        Thu, 10 Sep 2020 09:05:35 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CD2C061798
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id e16so6654037wrm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 06:05:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=33HvCzmAdaLlwRHDyqC4pE+Fu8CzZCLUT7jQwq64ZmM=;
-        b=zLiBumH9bdvbhME9635lK8sWPXtz3wvQnRLN9BiB1M3oT8+jGRsuYqrEYl+HeFpVPG
-         MdHF/TDk9l9J0Khjw/HFvFlLyZfaw67RZCjWroX8eHw6n48Tr9jad0k0BIasBeGXYfIU
-         3fVh1gOEHYnyoQpHZ5BPOYIM1skUomvAwszglWpp5nY4i/0JoDX84drE1t6NW03tIHeR
-         2d5icLUkSlc+ub6SILnCplsWfcN+XDnnxdYkkUbgKX6cL6oqYRiR4ZgD2MklsIo2afH1
-         kfLKs+85otXaNLZlj84TYTmMSG3P0n7EhURwz5xJ83A1N/q/shHrH1j3Dyc0PLFOHZ3B
-         Zksw==
+        bh=41Qpf9U4SrfFhPD50QAUNJfCt0M/GeyQmwAlMT5vSWE=;
+        b=l4NjfMb++5EhmU+ddqjntiOo6Mxg1QeAS1hNO17T4UxCaryj+60CJMFbO45FHq2JlM
+         ZVYLs9M/TzTdU/Hr6Hmu7pq7Lum3ydkkF4gW7f9qiQ8pztH4JfIlkmhM0k85PpIh0uhl
+         Uhq6NYhfyz/hMQfpaa2cpAcKIVxzdcKmqGmm+mYTgmtBrsYjeX1g73Nkf489TyPBvQpn
+         L0JFNnKDAsHIxbMg5qnRL4byAOSEctNjMXJmeWa/LpPgUqLFqshoKrMudGctxpIDgkiq
+         VBYFap1vRRyUPCqcLuLYcRqCSPLGg/kECDQEAu03eOD4/fzl9JtenwTmyxZ09uToJ9Gd
+         kl5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=33HvCzmAdaLlwRHDyqC4pE+Fu8CzZCLUT7jQwq64ZmM=;
-        b=Bx3H/t/YtRXoH3KsF9PGDcgYhOZnHU10Za6PlZAjictae2++02/9Qc7xezIIerZ4MN
-         AG99SKukGc1SogK7d6CtOH55RMdhi7V56RDgdfZ/MSHoLNAJJUW+qAI6PfJ95aQs3j77
-         IM181MoARl1hIZ0TMh74fE69hdGcGd3R7P0sqUGKXCBC6PLLNul+2pCbvWfP67PoBhm5
-         mCND1MIgZlisdPncaZQM01JyhoRyeTDRZvDBdanWU0sh0MbcXEthMCTA6n9YfSH9J7Kc
-         WtU+c92NC5NSGPxshG3fxEnS4PXXn0QH5M1GkjwUtdQ7HQPD7Vk3ss0t6jIqKA4cHfho
-         3kZA==
-X-Gm-Message-State: AOAM5318hHXfo2ga5ruZP7i9fWXQhir1mp3QIKkQdqVkRWQMK2bnt8f6
-        rpgdpSbqXSiMIfuiT2SdE7rzUi9NMMHZ+Q==
-X-Google-Smtp-Source: ABdhPJy3raa9gr29pIrx1im1S+1sVLkicexIz3zya//5Zki/QyyDsHCxqhFkSJOUK1G18zoRaAeIQg==
-X-Received: by 2002:a1c:7c1a:: with SMTP id x26mr2709wmc.112.1599743103105;
-        Thu, 10 Sep 2020 06:05:03 -0700 (PDT)
+        bh=41Qpf9U4SrfFhPD50QAUNJfCt0M/GeyQmwAlMT5vSWE=;
+        b=IoApRXfA2rBWLmzc8z2RjAIq4r6BHAT9Di/bs1+9xxAHApJ1wqNR5IALVtkFtNor/d
+         ircMRXjuWKX0O5P5wjMEci+xunUTd2LgyND9RR72dCfq4M/SaDKO9njIOjzlQ5/1jdAS
+         Pt/P0PerKsRMe6mvdDhaEGqTKfdE2INfZ46awZ9Pc6R4r3DqGQhX7aVHcCcZwEOSMORG
+         +fWxxlTgnQKU4S4Sd6hYxrIrBdPEwhSvHDCm+RzWtYUPt5vVEG/cwAGgh2vIBV6PPQdE
+         Jr17ZtbbecUXu+HII6ogcNf1jSysL55X/wgwXKa+wntjPJk4WNa+BLZ95ZH/DLHDhDKA
+         97MA==
+X-Gm-Message-State: AOAM532RtUTMuvbbvxK6kblXo91RahFqH1jdhWpRYSWpUFpdc1BkHoyi
+        WhuQFBCVTvSvMxbHGnkcVbuXEA==
+X-Google-Smtp-Source: ABdhPJzL3YlrjpcmsxEB7n/Pv9j6SWBA7DI0VDlwxl9zrHhyGEvdyBVu6xoXFllHtccBs5Nhxd6BWA==
+X-Received: by 2002:a5d:4a49:: with SMTP id v9mr4866601wrs.153.1599743100798;
+        Thu, 10 Sep 2020 06:05:00 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id p16sm9321988wro.71.2020.09.10.06.05.02
+        by smtp.gmail.com with ESMTPSA id p16sm9321988wro.71.2020.09.10.06.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 06:05:02 -0700 (PDT)
+        Thu, 10 Sep 2020 06:05:00 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 05/11] rtc: rx8010: don't use magic values for time buffer length
-Date:   Thu, 10 Sep 2020 15:04:40 +0200
-Message-Id: <20200910130446.5689-6-brgl@bgdev.pl>
+Subject: [PATCH v2 03/11] rtc: rx8010: use tabs instead of spaces for code formatting
+Date:   Thu, 10 Sep 2020 15:04:38 +0200
+Message-Id: <20200910130446.5689-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200910130446.5689-1-brgl@bgdev.pl>
 References: <20200910130446.5689-1-brgl@bgdev.pl>
@@ -79,58 +79,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-The time buffer len is used directly in this driver. For readability
-it's better to define it as the difference between the date register
-offsets and use sizeof() whenever referencing it.
+The define values in this driver are close to their names and they are
+separated by spaces. Use tabs instead and align all defines.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/rtc/rtc-rx8010.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/rtc/rtc-rx8010.c | 58 ++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/rtc/rtc-rx8010.c b/drivers/rtc/rtc-rx8010.c
-index 67ff06a76629..b065973b8a14 100644
+index 4c790d33f589..2038700a3e8e 100644
 --- a/drivers/rtc/rtc-rx8010.c
 +++ b/drivers/rtc/rtc-rx8010.c
-@@ -108,7 +108,7 @@ static irqreturn_t rx8010_irq_1_handler(int irq, void *dev_id)
- static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
- {
- 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
--	u8 date[7];
-+	u8 date[RX8010_YEAR - RX8010_SEC + 1];
- 	int flagreg, err;
+@@ -13,40 +13,40 @@
+ #include <linux/module.h>
+ #include <linux/rtc.h>
  
- 	flagreg = i2c_smbus_read_byte_data(rx8010->client, RX8010_FLAG);
-@@ -121,8 +121,8 @@ static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
- 	}
+-#define RX8010_SEC     0x10
+-#define RX8010_MIN     0x11
+-#define RX8010_HOUR    0x12
+-#define RX8010_WDAY    0x13
+-#define RX8010_MDAY    0x14
+-#define RX8010_MONTH   0x15
+-#define RX8010_YEAR    0x16
+-#define RX8010_RESV17  0x17
+-#define RX8010_ALMIN   0x18
+-#define RX8010_ALHOUR  0x19
+-#define RX8010_ALWDAY  0x1A
+-#define RX8010_TCOUNT0 0x1B
+-#define RX8010_TCOUNT1 0x1C
+-#define RX8010_EXT     0x1D
+-#define RX8010_FLAG    0x1E
+-#define RX8010_CTRL    0x1F
++#define RX8010_SEC		0x10
++#define RX8010_MIN		0x11
++#define RX8010_HOUR		0x12
++#define RX8010_WDAY		0x13
++#define RX8010_MDAY		0x14
++#define RX8010_MONTH		0x15
++#define RX8010_YEAR		0x16
++#define RX8010_RESV17		0x17
++#define RX8010_ALMIN		0x18
++#define RX8010_ALHOUR		0x19
++#define RX8010_ALWDAY		0x1A
++#define RX8010_TCOUNT0		0x1B
++#define RX8010_TCOUNT1		0x1C
++#define RX8010_EXT		0x1D
++#define RX8010_FLAG		0x1E
++#define RX8010_CTRL		0x1F
+ /* 0x20 to 0x2F are user registers */
+-#define RX8010_RESV30  0x30
+-#define RX8010_RESV31  0x31
+-#define RX8010_IRQ     0x32
++#define RX8010_RESV30		0x30
++#define RX8010_RESV31		0x31
++#define RX8010_IRQ		0x32
  
- 	err = i2c_smbus_read_i2c_block_data(rx8010->client, RX8010_SEC,
--					    7, date);
--	if (err != 7)
-+					    sizeof(date), date);
-+	if (err != sizeof(date))
- 		return err < 0 ? err : -EIO;
+-#define RX8010_EXT_WADA  BIT(3)
++#define RX8010_EXT_WADA		BIT(3)
  
- 	dt->tm_sec = bcd2bin(date[RX8010_SEC - RX8010_SEC] & 0x7f);
-@@ -139,7 +139,7 @@ static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
- static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
- {
- 	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
--	u8 date[7];
-+	u8 date[RX8010_YEAR - RX8010_SEC + 1];
- 	int ctrl, flagreg, err;
+-#define RX8010_FLAG_VLF  BIT(1)
+-#define RX8010_FLAG_AF   BIT(3)
+-#define RX8010_FLAG_TF   BIT(4)
+-#define RX8010_FLAG_UF   BIT(5)
++#define RX8010_FLAG_VLF		BIT(1)
++#define RX8010_FLAG_AF		BIT(3)
++#define RX8010_FLAG_TF		BIT(4)
++#define RX8010_FLAG_UF		BIT(5)
  
- 	if ((dt->tm_year < 100) || (dt->tm_year > 199))
-@@ -164,7 +164,8 @@ static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
- 	date[RX8010_WDAY - RX8010_SEC] = bin2bcd(1 << dt->tm_wday);
+-#define RX8010_CTRL_AIE  BIT(3)
+-#define RX8010_CTRL_UIE  BIT(5)
+-#define RX8010_CTRL_STOP BIT(6)
+-#define RX8010_CTRL_TEST BIT(7)
++#define RX8010_CTRL_AIE		BIT(3)
++#define RX8010_CTRL_UIE		BIT(5)
++#define RX8010_CTRL_STOP	BIT(6)
++#define RX8010_CTRL_TEST	BIT(7)
  
- 	err = i2c_smbus_write_i2c_block_data(rx8010->client,
--					     RX8010_SEC, 7, date);
-+					     RX8010_SEC, sizeof(date),
-+					     date);
- 	if (err < 0)
- 		return err;
+-#define RX8010_ALARM_AE  BIT(7)
++#define RX8010_ALARM_AE		BIT(7)
  
+ static const struct i2c_device_id rx8010_id[] = {
+ 	{ "rx8010", 0 },
 -- 
 2.26.1
 
