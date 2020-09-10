@@ -2,89 +2,97 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B93C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BC1C2D0E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AFE21D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75B521D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599762843;
+	bh=/lCqompaU4J7OaqiXkk9Bzxz+r9grKwZNR9v6cvgsyw=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UAR5Um5xN09Fa6lz/95p76tcpmqLL+5TZvdJpFNaiFSVDUukrkRuATcb7S/8mLJv7
+	 KxGjC2R0CkZlgfJiY1lHJWtQb31SAl1cnm0uReEOHtJ9iLYdDPkzXUywLaptqAtoBf
+	 gTLTTHlhe5N7UW9RxyV4JEdWDjiezpjDWIvURNc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgIJScf (ORCPT
+        id S1725992AbgIJSdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:32:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55876 "EHLO vps0.lunn.ch"
+        Thu, 10 Sep 2020 14:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbgIJScG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:32:06 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kGRMQ-00E6zh-Hd; Thu, 10 Sep 2020 20:31:54 +0200
-Date:   Thu, 10 Sep 2020 20:31:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next + leds v2 6/7] net: phy: marvell: add support
- for LEDs controlled by Marvell PHYs
-Message-ID: <20200910183154.GF3354160@lunn.ch>
-References: <20200909162552.11032-1-marek.behun@nic.cz>
- <20200909162552.11032-7-marek.behun@nic.cz>
- <20200910122341.GC7907@duo.ucw.cz>
- <20200910131541.GD3316362@lunn.ch>
- <20200910182434.GA22845@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200910182434.GA22845@duo.ucw.cz>
+        id S1726935AbgIJSXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:23:24 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F3D21D79;
+        Thu, 10 Sep 2020 18:22:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599762175;
+        bh=/lCqompaU4J7OaqiXkk9Bzxz+r9grKwZNR9v6cvgsyw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=AKXO5lYZFQ3OaPM1xxM98DhEuqohj3wAhu7BH++n/ylW5Q67e2feOTKisKYuJLShv
+         r3mquNIAoCvEHbTd0gmYReYUcxgyX1GMQ1uX8FwdrfWezo6tQlS3t0wy79IoIEWNhA
+         moTQxMBlsidNS+fcICPMvvxiJ3rsNxvtlqGQh8k4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/4] dt-bindings: i2c: imx-lpi2c: Fix i.MX 8QXP compatible matching
+Date:   Thu, 10 Sep 2020 20:22:42 +0200
+Message-Id: <20200910182244.5815-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910182244.5815-1-krzk@kernel.org>
+References: <20200910182244.5815-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 08:24:34PM +0200, Pavel Machek wrote:
-> On Thu 2020-09-10 15:15:41, Andrew Lunn wrote:
-> > On Thu, Sep 10, 2020 at 02:23:41PM +0200, Pavel Machek wrote:
-> > > On Wed 2020-09-09 18:25:51, Marek Behún wrote:
-> > > > This patch adds support for controlling the LEDs connected to several
-> > > > families of Marvell PHYs via the PHY HW LED trigger API. These families
-> > > > are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-> > > > be added.
-> > > > 
-> > > > This patch does not yet add support for compound LED modes. This could
-> > > > be achieved via the LED multicolor framework.
-> > > > 
-> > > > Settings such as HW blink rate or pulse stretch duration are not yet
-> > > > supported.
-> > > > 
-> > > > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > > 
-> > > I suggest limiting to "useful" hardware modes, and documenting what
-> > > those modes do somewhere.
-> > 
-> > I think to keep the YAML DT verification happy, they will need to be
-> > listed in the marvell PHY binding documentation.
-> 
-> Well, this should really go to the sysfs documenation. Not sure what
-> to do with DT.
+The i.MX 8QXP DTSes use two compatibles so update the binding to fix
+dtbs_check warnings like:
 
-In DT you can set how you want the LED to blink by default. I expect
-that will be the most frequent use cases, and nearly nobody will
-change it at runtime.
+  arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: i2c@5a820000:
+    compatible: ['fsl,imx8qxp-lpi2c', 'fsl,imx7ulp-lpi2c'] is too long
 
-> But perhaps driver can set reasonable defaults without DT input?
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.yaml        | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Generally the driver will default to the hardware reset blink
-pattern. There are a few PHY drivers which change this at probe, but
-not many. The silicon defaults are pretty good.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+index 918535b33384..8b088a34a8e6 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+@@ -14,10 +14,13 @@ allOf:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx7ulp-lpi2c
+-      - fsl,imx8qxp-lpi2c
+-      - fsl,imx8qm-lpi2c
++    oneOf:
++      - enum:
++          - fsl,imx7ulp-lpi2c
++          - fsl,imx8qm-lpi2c
++      - items:
++          - const: fsl,imx8qxp-lpi2c
++          - const: fsl,imx7ulp-lpi2c
+ 
+   '#address-cells': true
+   '#size-cells': true
+-- 
+2.17.1
 
-    Andrew
