@@ -2,326 +2,141 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE11C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F13C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A24921D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVO067DK"
+	by mail.kernel.org (Postfix) with ESMTP id 6C34421D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599759974;
+	bh=TXUjfWQi9tM2HzGm/oaJfdPsQO5fWIgylvuQhOYz4m4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SOXG/E5LO/IAiPrWJRSRVUtqasHZ9SmO6IZFCMScVGNwxmXnY6w6/qLVhRSCBRPUL
+	 PmpQO/8nmZxvF+J3uLpdEvbJHVPyNuEk3qHah1dNorfHGAvqhSzfA8cFiKbT7IJvtl
+	 F/Q/RgRUtewvXdfTELshVn7CGkFExFrUNAAnOrH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgIJRov (ORCPT
+        id S1726440AbgIJRqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58202 "EHLO
+        Thu, 10 Sep 2020 13:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgIJRmh (ORCPT
+        with ESMTP id S1727023AbgIJRm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:42:37 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B68C06179F
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:03:55 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c10so6651326edk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 08:03:55 -0700 (PDT)
+        Thu, 10 Sep 2020 13:42:58 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E6C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:42:41 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id c2so9258943ljj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PPUHmhNkM3clI/FRO8oFz2HVwSTGOnBMXUedMDl1l20=;
-        b=gVO067DKPOPRtUYJy+VbFr5xgapGju2+C22mTjF3Jt4IqOu/DLFK/jBCxPK0brXfDF
-         L0IYVqA7pBoMYdSNWRvu2HAOJRHfUOlyL+1e/7eqXqRDsbPQ1Zu1wUopWeb9KJnHXrro
-         Zira+C7cgrfsC3SN/3ymCxRed63IQjnXI6E+PNBNRHLPXN0GGOnyikHENit+gv6xeQ1P
-         CK/zGVsDkhfbnLcBz/e927JvRP7wJgUm7ArGlnx0tqReUjfO9zGfJlLPPr4eJrckDwpr
-         Hf6e6Z1dhjBUeXCtAKNj4luKejpRjgvrZPEh46vvMHgya6foSWFK7FtuctNSye64hM+M
-         Is3g==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tV9NvYryEbzez94zd9hdsCWt3FfBuGGawTOfDap0eBk=;
+        b=CyoQUM+SKXH6085O6WtByg3nDuki2CTSBORvYvwm25BqShZutFnNs6mSZACayZwSEH
+         qcd6gDs3XmrAOcCBysWWLpsCbEXmLRDCQnQxo0ENK46fWC+ppV/l5rSOr47qH79HuDsY
+         BAC6cJAHl7u65bYmrM5WLZPBZBfoI7ltEXEKA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=PPUHmhNkM3clI/FRO8oFz2HVwSTGOnBMXUedMDl1l20=;
-        b=UptyrVkbKzixUoz2qkkry/eSbP6hkrQhfZ/Ba8WCf2MvMF7glck4upo896gBLEE6Qc
-         w84/9LjZfHPZgHjoJy/oPd8TtPfsY6at+P8wQbVwNXZ7FJTozgYfALS1dmcvZt+A7t+A
-         4Ibo32UxOHRbeDapcesDp+lSlQQ9cqGFZ6bm4tyxIkh641SXmxn3njOAL6GmmTLVeke5
-         IF4jKuLn/i3/pjNA2CwNhfcSJxM2GSaDhFrWQWPXMBHS3DtWmscxL57JELZRoS+DRHve
-         FaD2K9UXI75usW3x/NmyJ6aqqdgNeu4tDBOoGZtOpwvcZ8sIdADnj1a3QgorLbleU3pM
-         bI9w==
-X-Gm-Message-State: AOAM532KGP0mbDszoOAFFYMLamrcCcaVQukguViH+0gNVMRiXf8T+ToO
-        8ZufpGxUKVP9m9swTPBIconFQmA45/Q=
-X-Google-Smtp-Source: ABdhPJwPK7QhlkbUcqKVEJDDfTQQWqzH7epjk2U5mtiTmxLLZ3MC8wziDa/sdM0fn1/aX9YViglvxQ==
-X-Received: by 2002:a50:bb65:: with SMTP id y92mr9658239ede.53.1599750233891;
-        Thu, 10 Sep 2020 08:03:53 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id o3sm7443925edt.79.2020.09.10.08.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 08:03:52 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
-Subject: [PATCH 07/15] habanalabs/gaudi: allow user to get MAC addresses in INFO IOCTL
-Date:   Thu, 10 Sep 2020 18:03:20 +0300
-Message-Id: <20200910150328.20545-8-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200910150328.20545-1-oded.gabbay@gmail.com>
-References: <20200910150328.20545-1-oded.gabbay@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tV9NvYryEbzez94zd9hdsCWt3FfBuGGawTOfDap0eBk=;
+        b=gaxeIL1UgV6zoe7GWetUE3JjPlgTm/X5pVQ00k/OZDKQrq6c5PRLIVhi8kAemoy5ps
+         0x86BFP2GZaLbIvFrB7LlPc1ObX6yWnx7PjT6Kl+uRgBQ7SYnH+WNNTKQVSOdoDLPSQ/
+         KELD2jAX7P5H7vhpHm32HcMM5lphNrh3gM7ZRY6f4+Kfpz0x7La22mX54LTh68Fw3YDm
+         PHFUyslCe3K/LjZuZ7dMMw4lMryBkx7FGOpaEjOP0rmiq97zsG1GHZpMdw1KaXz18CZk
+         VH8ryN95hNffSAl1SoyHo7DAJnAST4ls4agqZyEZKVqVs7w8Tqhbu1F/ZVu1LwM32Sss
+         goJw==
+X-Gm-Message-State: AOAM531slHtsCwgFPVs39pmhW7QgBOfxIzDwG8u8VG9ExhEJkJywikrz
+        27PB+TS+/Y0relb78Y0rP8T9ra/1bV4cCA==
+X-Google-Smtp-Source: ABdhPJyhWTw2yd7niyvGkh6b2x2kXbNyNxMZaHZ+ZAMzB8ie0jBkLA6wBWwZ1pJ5m3lp16Kd/krN/w==
+X-Received: by 2002:a2e:6a04:: with SMTP id f4mr4611377ljc.119.1599759759148;
+        Thu, 10 Sep 2020 10:42:39 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id u18sm1489111lfg.86.2020.09.10.10.42.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 10:42:38 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id b19so9256106lji.11
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:42:38 -0700 (PDT)
+X-Received: by 2002:a19:7d8b:: with SMTP id y133mr4765702lfc.152.1599759354367;
+ Thu, 10 Sep 2020 10:35:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com> <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+ <20200909142904.00b72921@thinkpad> <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+ <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca> <20200910093925.GB29166@oc3871087118.ibm.com>
+In-Reply-To: <20200910093925.GB29166@oc3871087118.ibm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 10 Sep 2020 10:35:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+Message-ID: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table folding
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+On Thu, Sep 10, 2020 at 2:40 AM Alexander Gordeev
+<agordeev@linux.ibm.com> wrote:
+>
+> It is only gup_fast case that exposes the issue. It hits because
+> pointers to stack copies are passed to gup_pXd_range iterators, not
+> pointers to real page tables itself.
 
-The user needs this information when working in a distributed environment
-with master/slave configuration. All the slaves get their MAC addresses
-from the driver and send them to the master.
+Can we possibly change fast-gup to not do the stack copies?
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/common/habanalabs.h   |  5 +++
- .../misc/habanalabs/common/habanalabs_ioctl.c | 31 +++++++++++++++++++
- drivers/misc/habanalabs/gaudi/gaudi.c         |  1 +
- drivers/misc/habanalabs/gaudi/gaudiP.h        |  2 ++
- drivers/misc/habanalabs/gaudi/gaudi_nic.c     | 27 ++++++++++++++++
- drivers/misc/habanalabs/goya/goya.c           |  9 ++++++
- include/uapi/misc/habanalabs.h                | 20 +++++++++++-
- 7 files changed, 94 insertions(+), 1 deletion(-)
+I'd actually rather do something like that, than the "addr_end" thing.
 
-diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
-index f99db3483ba4..6bfef3da6e61 100644
---- a/drivers/misc/habanalabs/common/habanalabs.h
-+++ b/drivers/misc/habanalabs/common/habanalabs.h
-@@ -602,6 +602,8 @@ enum div_select_defs {
- 	DIV_SEL_DIVIDED_PLL = 3,
- };
- 
-+struct hl_info_mac_addr;
-+
- /**
-  * struct hl_asic_funcs - ASIC specific functions that are can be called from
-  *                        common code.
-@@ -679,6 +681,7 @@ enum div_select_defs {
-  * @get_hw_state: retrieve the H/W state
-  * @pci_bars_map: Map PCI BARs.
-  * @init_iatu: Initialize the iATU unit inside the PCI controller.
-+ * @get_mac_addr: Get list of MAC addresses.
-  * @rreg: Read a register. Needed for simulator support.
-  * @wreg: Write a register. Needed for simulator support.
-  * @halt_coresight: stop the ETF and ETR traces.
-@@ -782,6 +785,8 @@ struct hl_asic_funcs {
- 	enum hl_device_hw_state (*get_hw_state)(struct hl_device *hdev);
- 	int (*pci_bars_map)(struct hl_device *hdev);
- 	int (*init_iatu)(struct hl_device *hdev);
-+	int (*get_mac_addr)(struct hl_device *hdev,
-+				struct hl_info_mac_addr *mac_addr);
- 	u32 (*rreg)(struct hl_device *hdev, u32 reg);
- 	void (*wreg)(struct hl_device *hdev, u32 reg, u32 val);
- 	void (*halt_coresight)(struct hl_device *hdev);
-diff --git a/drivers/misc/habanalabs/common/habanalabs_ioctl.c b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-index 07317ea49129..01425b821828 100644
---- a/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-+++ b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
-@@ -203,6 +203,33 @@ static int debug_coresight(struct hl_device *hdev, struct hl_debug_args *args)
- 	return rc;
- }
- 
-+static int mac_addr_info(struct hl_device *hdev, struct hl_info_args *args)
-+{
-+	struct hl_info_mac_addr *mac_addr;
-+	u32 max_size = args->return_size;
-+	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
-+	int rc;
-+
-+	if (!max_size || !out)
-+		return -EINVAL;
-+
-+	mac_addr = kzalloc(sizeof(struct hl_info_mac_addr), GFP_KERNEL);
-+	if (!mac_addr)
-+		return -ENOMEM;
-+
-+	rc = hdev->asic_funcs->get_mac_addr(hdev, mac_addr);
-+	if (rc)
-+		goto out;
-+
-+	rc = copy_to_user(out, mac_addr,
-+		min((size_t) max_size, sizeof(struct hl_info_mac_addr))) ?
-+								-EFAULT : 0;
-+
-+out:
-+	kfree(mac_addr);
-+	return rc;
-+}
-+
- static int device_utilization(struct hl_device *hdev, struct hl_info_args *args)
- {
- 	struct hl_info_device_utilization device_util = {0};
-@@ -423,6 +450,10 @@ static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
- 		rc = hw_idle(hdev, args);
- 		break;
- 
-+	case HL_INFO_MAC_ADDR:
-+		rc = mac_addr_info(hdev, args);
-+		break;
-+
- 	case HL_INFO_DEVICE_UTILIZATION:
- 		rc = device_utilization(hdev, args);
- 		break;
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index d350519a9e31..8ce20e0f8c59 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -7470,6 +7470,7 @@ static const struct hl_asic_funcs gaudi_funcs = {
- 	.get_hw_state = gaudi_get_hw_state,
- 	.pci_bars_map = gaudi_pci_bars_map,
- 	.init_iatu = gaudi_init_iatu,
-+	.get_mac_addr = gaudi_nic_get_mac_addr,
- 	.rreg = hl_rreg,
- 	.wreg = hl_wreg,
- 	.halt_coresight = gaudi_halt_coresight,
-diff --git a/drivers/misc/habanalabs/gaudi/gaudiP.h b/drivers/misc/habanalabs/gaudi/gaudiP.h
-index bf3a215e0f8e..17560510a05f 100644
---- a/drivers/misc/habanalabs/gaudi/gaudiP.h
-+++ b/drivers/misc/habanalabs/gaudi/gaudiP.h
-@@ -566,6 +566,8 @@ void gaudi_nic_ports_fini(struct hl_device *hdev);
- int gaudi_nic_hard_reset_prepare(struct hl_device *hdev);
- void gaudi_nic_stop(struct hl_device *hdev);
- void gaudi_nic_ports_reopen(struct hl_device *hdev);
-+int gaudi_nic_get_mac_addr(struct hl_device *hdev,
-+				struct hl_info_mac_addr *mac_addr);
- void gaudi_nic_ctx_fini(struct hl_ctx *ctx);
- irqreturn_t gaudi_nic_rx_irq_handler(int irq, void *arg);
- irqreturn_t gaudi_nic_cq_irq_handler(int irq, void *arg);
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi_nic.c b/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-index ff08cfc81e69..491f426ab0bb 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi_nic.c
-@@ -2743,6 +2743,33 @@ void gaudi_nic_ports_reopen(struct hl_device *hdev)
- 	gaudi->hw_cap_initialized |= HW_CAP_NIC_DRV;
- }
- 
-+int gaudi_nic_get_mac_addr(struct hl_device *hdev,
-+				struct hl_info_mac_addr *mac_addr)
-+{
-+	struct gaudi_device *gaudi = hdev->asic_specific;
-+	struct net_device *ndev;
-+	int i, number_of_ports;
-+
-+	if (!(gaudi->hw_cap_initialized & HW_CAP_NIC_DRV))
-+		goto out;
-+
-+	number_of_ports = min_t(int, NIC_NUMBER_OF_PORTS,
-+				HL_INFO_MAC_ADDR_MAX_NUM);
-+
-+	for (i = 0 ; i < number_of_ports ; i++) {
-+		if (!(hdev->nic_ports_mask & BIT(i)))
-+			continue;
-+
-+		ndev = gaudi->nic_devices[i].ndev;
-+		if (!ndev)
-+			continue;
-+
-+		ether_addr_copy(mac_addr->array[i].addr, ndev->dev_addr);
-+		mac_addr->mask[i / 64] |= BIT_ULL(i % 64);
-+	}
-+out:
-+	return 0;
-+}
- void gaudi_nic_ctx_fini(struct hl_ctx *ctx)
- {
- }
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 8e15d9f85af8..e49ee24cde50 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -5265,6 +5265,14 @@ static enum hl_device_hw_state goya_get_hw_state(struct hl_device *hdev)
- 	return RREG32(mmHW_STATE);
- }
- 
-+static int goya_get_mac_addr(struct hl_device *hdev,
-+			struct hl_info_mac_addr *mac_addr)
-+{
-+	dev_err_ratelimited(hdev->dev,
-+				"No MAC addresses are assigned to Goya\n");
-+	return -ENXIO;
-+}
-+
- static int goya_ctx_init(struct hl_ctx *ctx)
- {
- 	return 0;
-@@ -5384,6 +5392,7 @@ static const struct hl_asic_funcs goya_funcs = {
- 	.get_hw_state = goya_get_hw_state,
- 	.pci_bars_map = goya_pci_bars_map,
- 	.init_iatu = goya_init_iatu,
-+	.get_mac_addr = goya_get_mac_addr,
- 	.rreg = hl_rreg,
- 	.wreg = hl_wreg,
- 	.halt_coresight = goya_halt_coresight,
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index e8a5b62b95dd..cd600a52f40a 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/types.h>
- #include <linux/ioctl.h>
-+#include <linux/if_ether.h>
- 
- /*
-  * Defines that are asic-specific but constitutes as ABI between kernel driver
-@@ -248,6 +249,8 @@ enum hl_device_status {
-  *                         internal engine.
-  * HL_INFO_DEVICE_STATUS - Retrieve the device's status. This opcode doesn't
-  *                         require an open context.
-+ * HL_INFO_MAC_ADDR      - Retrieve the list of MAC addresses of the device's
-+ *                         network ports, if the device has network ports.
-  * HL_INFO_DEVICE_UTILIZATION  - Retrieve the total utilization of the device
-  *                               over the last period specified by the user.
-  *                               The period can be between 100ms to 1s, in
-@@ -274,6 +277,7 @@ enum hl_device_status {
- #define HL_INFO_DRAM_USAGE		2
- #define HL_INFO_HW_IDLE			3
- #define HL_INFO_DEVICE_STATUS		4
-+#define HL_INFO_MAC_ADDR		5
- #define HL_INFO_DEVICE_UTILIZATION	6
- #define HL_INFO_HW_EVENTS_AGGREGATE	7
- #define HL_INFO_CLK_RATE		8
-@@ -285,9 +289,11 @@ enum hl_device_status {
- #define HL_INFO_SYNC_MANAGER		14
- #define HL_INFO_TOTAL_ENERGY		15
- 
--#define HL_INFO_VERSION_MAX_LEN	128
-+#define HL_INFO_VERSION_MAX_LEN		128
- #define HL_INFO_CARD_NAME_MAX_LEN	16
- 
-+#define HL_INFO_MAC_ADDR_MAX_NUM	128
-+
- struct hl_info_hw_ip_info {
- 	__u64 sram_base_address;
- 	__u64 dram_base_address;
-@@ -334,6 +340,18 @@ struct hl_info_device_status {
- 	__u32 pad;
- };
- 
-+struct hl_mac_addr {
-+	__u8 addr[ETH_ALEN];
-+	__u8 pad[2];
-+};
-+
-+struct hl_info_mac_addr {
-+	/* MAC address at index N is of the corresponding PORT ID */
-+	struct hl_mac_addr array[HL_INFO_MAC_ADDR_MAX_NUM];
-+	/* Mask of valid entries at the MAC addresses array */
-+	__u64 mask[2];
-+};
-+
- struct hl_info_device_utilization {
- 	__u32 utilization;
- 	__u32 pad;
--- 
-2.17.1
+As you say, none of the other page table walking code does what the
+GUP code does, and I don't think it's required.
 
+The GUP code is kind of strange, I'm not quite sure why. Some of it
+unusually came from the powerpc code that handled their special odd
+hugepage model, and that may be why it's so different.
+
+How painful would it be to just pass the pmd (etc) _pointers_ around,
+rather than do the odd "take the address of local copies"?
+
+                  Linus
