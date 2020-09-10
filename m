@@ -2,153 +2,138 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6028C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE1620BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920B120C09
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fsi8tMgr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qG/rKcK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbgIJMhY (ORCPT
+        id S1730252AbgIJMh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:37:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18212 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730629AbgIJMdE (ORCPT
+        Thu, 10 Sep 2020 08:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730396AbgIJMdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:33:04 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ACREPD090926;
-        Thu, 10 Sep 2020 08:32:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=UdKC4iFr09EHp/EEFoTiuPzvrqhtYISXi8fJ0IdZ1U4=;
- b=Fsi8tMgrKCaZM/lqBoa2qSpERUH5S91V3ByKmF+YAD67ZEANtVL1NA9J0ohIQIR2Y5M8
- 6PxDDW0pKLCscdEeChDIJZrLNKfLc1ykfCXEOFiOCnff0vsBVKlEsIANMwbhcnbnon1w
- JHmOHYM4oldJiWuf4myBfgLex3q2DfCd0VKuCN+LwruH/Ua0YQSM4Jyf15RSUrASIadW
- ABgzScRuZope//9SZkjS+8mrOPlDI1BXQp4GYQaSwnedR/KKx2/1NsYaSqMTha/3qGcF
- MjjHsfdnSgX0FKmP+kUj9RNMTaSPTM7BLk4yp5zvfoKYi30Tkwy16NACOdG+viy47lXK WA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fkta0vhs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 08:32:17 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08ACRdDG092327;
-        Thu, 10 Sep 2020 08:32:11 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fkta0vfk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 08:32:10 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08ACVBX7011978;
-        Thu, 10 Sep 2020 12:32:07 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 33c2a83fse-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 12:32:06 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08ACUU5K63570418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 12:30:31 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3FEDA405B;
-        Thu, 10 Sep 2020 12:32:03 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F2B4A4053;
-        Thu, 10 Sep 2020 12:32:03 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.147.189])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 12:32:03 +0000 (GMT)
-Subject: Re: [PATCH] mm: don't rely on system state to detect hot-plug
- operations
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org,
-        David Hildenbrand <david@redhat.com>, rafael@kernel.org,
-        nathanl@linux.ibm.com, cheloha@linux.ibm.com,
-        stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <20200909074011.GD7348@dhcp22.suse.cz>
- <9faac1ce-c02d-7dbc-f79a-4aaaa5a73d28@linux.ibm.com>
- <20200909090953.GE7348@dhcp22.suse.cz>
- <4cdb54be-1a92-4ba4-6fee-3b415f3468a9@linux.ibm.com>
- <20200909105914.GF7348@dhcp22.suse.cz>
- <74a62b00-235e-7deb-2814-f3b240fea25e@linux.ibm.com>
- <20200910072331.GB28354@dhcp22.suse.cz>
- <31cfdf35-618f-6f56-ef16-0d999682ad02@linux.ibm.com>
- <20200910111246.GE28354@dhcp22.suse.cz>
- <bd6f2d09-f4e2-0a63-3511-e0f9bf283fe3@linux.ibm.com>
- <20200910120343.GA6635@linux>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <5104d47f-9b39-6f51-2cee-f2a153fab1df@linux.ibm.com>
-Date:   Thu, 10 Sep 2020 14:32:02 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Thu, 10 Sep 2020 08:33:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA80C061757;
+        Thu, 10 Sep 2020 05:33:00 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d16so831768pll.13;
+        Thu, 10 Sep 2020 05:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4mAC7AY2dom2okuDhz5TwwH+eN++c0Zg21VAJ30tmZE=;
+        b=qG/rKcK2HhixjeHOwx22cnu5vsq8XLz5RXaPsgu9QDXQi0LEGNYwf6bpkI5tuOVfQT
+         qL94/g9KbH0MlePhTboZv1bJUtR36YPqv+MbGfsqVXmu+Pc7gs527U0DLNOq2WYytdgI
+         P3KsMw7cWHxNhbHzImQRJBSsk2vprNBqSXj/tC3ub/BKPPqhSgOxjhXzbseGFv15Jxlx
+         LmmPekD31CngpQVRV1iRcLrwUXYE9y7kymgY5eNhL5o9G9grrXtPUj6862e9XZd7kBFP
+         u/qtP2vXk/DHK7cOlm6L2z46IB1k2nCopfwArf4KK0oRAfF+B33VAl4wFMWfUYLcT/T9
+         vtSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4mAC7AY2dom2okuDhz5TwwH+eN++c0Zg21VAJ30tmZE=;
+        b=IvznwsfCnS262FikdhG5KNk+Q6736DELg7yHjNIvE4zJotlmWroF6QF53JeB4qLR+h
+         d1K7oxyXUfRuY/6/MuAVSJy1fzJVYj13fYYJxBK7fnG2YWJHYOWXB5Mwnzyue4u90ty1
+         dABEar+eU5fKNlx16LWfrlhouCk/LmDGSxkwZtdL7JWnEjiIS5SuD8fcEPDuupaAAPEj
+         5epe0uvU3YF5j3qKCC6iurzanCOZk/rU4zTwjKvHNEUwlFRACWzzT7+rmAx0NCr+yb2H
+         +rXktMmw4mw8E1p0iTLjvYOXVRersRxN2TfhyeA1DceO2MA9j6DgY3YSY0wcr95A85dG
+         seDA==
+X-Gm-Message-State: AOAM533YJuH6/eLHFqYsFT8sTBaMRuBnl9VloKNjIcXfSIzz7C7u365g
+        BcYH4P6NIVJpNBuVReDmI14=
+X-Google-Smtp-Source: ABdhPJxLK5IOkPuZQSvSgkg8AkXwFKqrh/T7qtwK4UBm7gI5yfAXyN4l5FBr5fZALkKhZHOCS02vEg==
+X-Received: by 2002:a17:902:74c8:: with SMTP id f8mr5383439plt.78.1599741180451;
+        Thu, 10 Sep 2020 05:33:00 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6218:54d7:9928:e984:12bb:783d])
+        by smtp.gmail.com with ESMTPSA id j14sm5031485pgf.76.2020.09.10.05.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 05:32:59 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH v3 3/3] iio: gyro: adxrs290: Add debugfs register access support
+Date:   Thu, 10 Sep 2020 18:02:49 +0530
+Message-Id: <20200910123249.17204-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200910120343.GA6635@linux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 impostorscore=0 lowpriorityscore=0
- bulkscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 10/09/2020 à 14:03, Oscar Salvador a écrit :
-> On Thu, Sep 10, 2020 at 01:35:32PM +0200, Laurent Dufour wrote:
->   
->> That points has been raised by David, quoting him here:
->>
->>> IIRC, ACPI can hotadd memory while SCHEDULING, this patch would break that.
->>>
->>> Ccing Oscar, I think he mentioned recently that this is the case with ACPI.
->>
->> Oscar told that he need to investigate further on that.
-> 
-> I think my reply got lost.
-> 
-> We can see acpi hotplugs during SYSTEM_SCHEDULING:
-> 
-> $QEMU -enable-kvm -machine pc -smp 4,sockets=4,cores=1,threads=1 -cpu host -monitor pty \
->          -m size=$MEM,slots=255,maxmem=4294967296k  \
->          -numa node,nodeid=0,cpus=0-3,mem=512 -numa node,nodeid=1,mem=512 \
->          -object memory-backend-ram,id=memdimm0,size=134217728 -device pc-dimm,node=0,memdev=memdimm0,id=dimm0,slot=0 \
->          -object memory-backend-ram,id=memdimm1,size=134217728 -device pc-dimm,node=0,memdev=memdimm1,id=dimm1,slot=1 \
->          -object memory-backend-ram,id=memdimm2,size=134217728 -device pc-dimm,node=0,memdev=memdimm2,id=dimm2,slot=2 \
->          -object memory-backend-ram,id=memdimm3,size=134217728 -device pc-dimm,node=0,memdev=memdimm3,id=dimm3,slot=3 \
->          -object memory-backend-ram,id=memdimm4,size=134217728 -device pc-dimm,node=1,memdev=memdimm4,id=dimm4,slot=4 \
->          -object memory-backend-ram,id=memdimm5,size=134217728 -device pc-dimm,node=1,memdev=memdimm5,id=dimm5,slot=5 \
->          -object memory-backend-ram,id=memdimm6,size=134217728 -device pc-dimm,node=1,memdev=memdimm6,id=dimm6,slot=6 \
-> 
-> kernel: [    0.753643] __add_memory: nid: 0 start: 0100000000 - 0108000000 (size: 134217728)
-> kernel: [    0.756950] register_mem_sect_under_node: system_state= 1
-> 
-> kernel: [    0.760811]  register_mem_sect_under_node+0x4f/0x230
-> kernel: [    0.760811]  walk_memory_blocks+0x80/0xc0
-> kernel: [    0.760811]  link_mem_sections+0x32/0x40
-> kernel: [    0.760811]  add_memory_resource+0x148/0x250
-> kernel: [    0.760811]  __add_memory+0x5b/0x90
-> kernel: [    0.760811]  acpi_memory_device_add+0x130/0x300
-> kernel: [    0.760811]  acpi_bus_attach+0x13c/0x1c0
-> kernel: [    0.760811]  acpi_bus_attach+0x60/0x1c0
-> kernel: [    0.760811]  acpi_bus_scan+0x33/0x70
-> kernel: [    0.760811]  acpi_scan_init+0xea/0x21b
-> kernel: [    0.760811]  acpi_init+0x2f1/0x33c
-> kernel: [    0.760811]  do_one_initcall+0x46/0x1f4
+Extend support to read/write byte data from/to the device using
+debugfs iio interface.
 
-Thanks Oscar!
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+---
+
+Changes in v3:
+  - refactor code based on Andy's suggestions
+
+No changes in v2
+---
+ drivers/iio/gyro/adxrs290.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
+index 41b1f995a143..ca6fc234076e 100644
+--- a/drivers/iio/gyro/adxrs290.c
++++ b/drivers/iio/gyro/adxrs290.c
+@@ -436,6 +436,31 @@ static int adxrs290_read_avail(struct iio_dev *indio_dev,
+ 	}
+ }
+ 
++static int adxrs290_reg_access_rw(struct spi_device *spi, unsigned int reg,
++				  unsigned int *readval)
++{
++	int ret;
++
++	ret = spi_w8r8(spi, ADXRS290_READ_REG(reg));
++	if (ret < 0)
++		return ret;
++
++	*readval = ret;
++
++	return 0;
++}
++
++static int adxrs290_reg_access(struct iio_dev *indio_dev, unsigned int reg,
++			       unsigned int writeval, unsigned int *readval)
++{
++	struct adxrs290_state *st = iio_priv(indio_dev);
++
++	if (readval)
++		return adxrs290_reg_access_rw(st->spi, reg, readval);
++	else
++		return adxrs290_spi_write_reg(st->spi, reg, writeval);
++}
++
+ static int adxrs290_data_rdy_trigger_set_state(struct iio_trigger *trig,
+ 					       bool state)
+ {
+@@ -551,6 +576,7 @@ static const struct iio_info adxrs290_info = {
+ 	.read_raw = &adxrs290_read_raw,
+ 	.write_raw = &adxrs290_write_raw,
+ 	.read_avail = &adxrs290_read_avail,
++	.debugfs_reg_access = &adxrs290_reg_access,
+ };
+ 
+ static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
+-- 
+2.20.1
+
