@@ -2,127 +2,264 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C88EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A8AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E22C221E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qtJIUX3C"
+	by mail.kernel.org (Postfix) with ESMTP id D7BEB21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgIJVV4 (ORCPT
+        id S1728251AbgIJVWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731116AbgIJOYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:24:14 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58361C0617A1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 07:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=G8KFWo1YZT/jwQRpDVwfY4DfSs9Xk8pRCGIbApr9hxQ=; b=qtJIUX3C9OPEUoxhRq5qtVjFrN
-        liojIf66iFvov5CqAyuArA/k4c6N6e3DClhZs3TCVt1tdQc77cLPxerkhbaHk2qqqBTwkEbjA696q
-        Jgh0eDiE15I1t923HciVm/1IX1nvIOYM+65XXlZrfYoYgC3vb2HXo7XpFGPgJE93saBFHlrIk0cLV
-        vIjrCfmicxgrJaQHs+CYxFnk6wq7LgYlPzVK/AC5Z6B7Z5ht4cXr0qPy7z8lFR11j8K7SW+FiWdkD
-        iUU2pHH631+0XehEYg1oXBk+NNw3qIh2R20NkMi0IdxEfz+YUd0l01txTaB3fKUC42YpiSHhnm32u
-        IjKIbavg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGNH7-0004sp-RP; Thu, 10 Sep 2020 14:10:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4C9E4305815;
-        Thu, 10 Sep 2020 16:10:07 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EEBCC2651245B; Thu, 10 Sep 2020 16:10:06 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 16:10:06 +0200
-From:   peterz@infradead.org
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, anna-maria@linutronix.de,
-        vbabka@suse.cz, mgorman@techsingularity.net, mhocko@suse.com,
-        linux-mm@kvack.org
-Subject: kcompactd hotplug fail
-Message-ID: <20200910141006.GA1362448@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Thu, 10 Sep 2020 17:22:12 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:34786 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731092AbgIJOYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:24:06 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 784D020182C;
+        Thu, 10 Sep 2020 16:17:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 940D0200788;
+        Thu, 10 Sep 2020 16:17:01 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E0D26402CA;
+        Thu, 10 Sep 2020 16:16:57 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: ak4458: Add DSD support for ak4458 and ak4497
+Date:   Thu, 10 Sep 2020 22:10:32 +0800
+Message-Id: <1599747032-20055-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+ak4458 can't support DSD512 format, but ak4497 can, so add
+a new variable in ak4458_drvdata to distinguish these two
+platform.
 
-While playing with hotplug, I ran into the below:
+In hw_params(), calculate bit clock according to different DSD
+format and configure DSD register.
 
-[ 2305.676384] ------------[ cut here ]------------
-[ 2305.681543] WARNING: CPU: 1 PID: 15 at kernel/sched/core.c:1924 __set_cpus_allowed_ptr+0x1bd/0x230
-[ 2305.691540] Modules linked in: kvm_intel kvm irqbypass rapl intel_cstate intel_uncore
-[ 2305.700284] CPU: 1 PID: 15 Comm: cpuhp/1 Tainted: G        W         5.9.0-rc1-00126-g560d2f906d7e-dirty #392
-[ 2305.711349] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
-[ 2305.722803] RIP: 0010:__set_cpus_allowed_ptr+0x1bd/0x230
-[ 2305.728732] Code: ba 00 02 00 00 48 c7 c6 20 78 9e 82 4c 89 ef e8 19 ec 5f 00 85 c0 0f 85 5e ff ff ff 83 bb 60 03 00 00 01 0f 84 51 ff ff ff 90 <0f> 0b 90 e9 48 ff ff ff 83 bd 10 0a 00 00 02 48 89 5c 24 10 44 89
-[ 2305.749687] RSP: 0000:ffffc900033dbdd8 EFLAGS: 00010002
-[ 2305.755518] RAX: 0000000000000000 RBX: ffff88842c33cbc0 RCX: 0000000000000200
-[ 2305.763478] RDX: 0000000000000008 RSI: ffffffff829e7820 RDI: ffffffff83055720
-[ 2305.771439] RBP: ffff88842f43b4c0 R08: 0000000000000009 R09: ffffffff83055720
-[ 2305.779399] R10: 0000000000000008 R11: 0000000000000000 R12: 00000000ffffffea
-[ 2305.787360] R13: ffffffff83055720 R14: 000000000000000d R15: 00000000000000b6
-[ 2305.795321] FS:  0000000000000000(0000) GS:ffff88842f480000(0000) knlGS:0000000000000000
-[ 2305.804348] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2305.810760] CR2: 0000000000000000 CR3: 0000000002810001 CR4: 00000000001706e0
-[ 2305.818720] Call Trace:
-[ 2305.821454]  kcompactd_cpu_online+0xa1/0xb0
-[ 2305.826119]  ? __compaction_suitable+0xa0/0xa0
-[ 2305.831079]  cpuhp_invoke_callback+0x9a/0x360
-[ 2305.835941]  cpuhp_thread_fun+0x19d/0x220
-[ 2305.840414]  ? smpboot_thread_fn+0x1b4/0x280
-[ 2305.845178]  ? smpboot_thread_fn+0x26/0x280
-[ 2305.849842]  ? smpboot_register_percpu_thread+0xe0/0xe0
-[ 2305.855672]  smpboot_thread_fn+0x1d0/0x280
-[ 2305.860243]  kthread+0x153/0x170
-[ 2305.863843]  ? kthread_create_worker_on_cpu+0x70/0x70
-[ 2305.869482]  ret_from_fork+0x22/0x30
-[ 2305.873474] irq event stamp: 236
-[ 2305.877067] hardirqs last  enabled at (235): [<ffffffff81cfad7c>] _raw_spin_unlock_irqrestore+0x4c/0x60
-[ 2305.887550] hardirqs last disabled at (236): [<ffffffff81cf4050>] __schedule+0xc0/0xb10
-[ 2305.896482] softirqs last  enabled at (0): [<ffffffff810b9849>] copy_process+0x889/0x1d40
-[ 2305.905611] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[ 2305.912602] ---[ end trace e7f6c2a95b741e6b ]---
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/codecs/ak4458.c | 82 +++++++++++++++++++++++++++++++++++----
+ sound/soc/codecs/ak4458.h |  5 ++-
+ 2 files changed, 79 insertions(+), 8 deletions(-)
 
+diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
+index 763e6839428f..9054964d5cfa 100644
+--- a/sound/soc/codecs/ak4458.c
++++ b/sound/soc/codecs/ak4458.c
+@@ -31,11 +31,13 @@ static const char *ak4458_supply_names[AK4458_NUM_SUPPLIES] = {
+ struct ak4458_drvdata {
+ 	struct snd_soc_dai_driver *dai_drv;
+ 	const struct snd_soc_component_driver *comp_drv;
++	bool  dsd512;	/* DSD512 is supported or not */
+ };
+ 
+ /* AK4458 Codec Private Data */
+ struct ak4458_priv {
+ 	struct regulator_bulk_data supplies[AK4458_NUM_SUPPLIES];
++	const struct ak4458_drvdata *drvdata;
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct gpio_desc *reset_gpiod;
+@@ -136,6 +138,10 @@ static const char * const ak4458_ats_select_texts[] = {
+ /* DIF2 bit Audio Interface Format Setting(BICK fs) */
+ static const char * const ak4458_dif_select_texts[] = {"32fs,48fs", "64fs",};
+ 
++/* DSD input pin select */
++static const char * const ak4497_dsd_input_path_select[] = {
++	"16_17_19pin", "3_4_5pin"};
++
+ static const struct soc_enum ak4458_dac1_dem_enum =
+ 	SOC_ENUM_SINGLE(AK4458_01_CONTROL2, 1,
+ 			ARRAY_SIZE(ak4458_dem_select_texts),
+@@ -175,6 +181,10 @@ static const struct soc_enum ak4458_dif_enum =
+ 	SOC_ENUM_SINGLE(AK4458_00_CONTROL1, 3,
+ 			ARRAY_SIZE(ak4458_dif_select_texts),
+ 			ak4458_dif_select_texts);
++static const struct soc_enum ak4497_dsdp_enum =
++	SOC_ENUM_SINGLE(AK4458_09_DSD2, 2,
++			ARRAY_SIZE(ak4497_dsd_input_path_select),
++			ak4497_dsd_input_path_select);
+ 
+ static int get_digfil(struct snd_kcontrol *kcontrol,
+ 		      struct snd_ctl_elem_value *ucontrol)
+@@ -282,6 +292,7 @@ static const struct snd_kcontrol_new ak4497_snd_controls[] = {
+ 	SOC_ENUM("AK4497 Sound Mode", ak4458_sm_enum),
+ 	SOC_ENUM("AK4497 Attenuation transition Time Setting",
+ 		 ak4458_ats_enum),
++	SOC_ENUM("AK4497 DSD Data Input Pin", ak4497_dsdp_enum),
+ };
+ 
+ /* ak4497 dapm widgets */
+@@ -325,12 +336,54 @@ static int ak4458_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_component *component = dai->component;
+ 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
+ 	int pcm_width = max(params_physical_width(params), ak4458->slot_width);
+-	int nfs1;
+-	u8 format;
++	u8 format, dsdsel0, dsdsel1;
++	int nfs1, dsd_bclk;
+ 
+ 	nfs1 = params_rate(params);
+ 	ak4458->fs = nfs1;
+ 
++	/* calculate bit clock */
++	switch (params_format(params)) {
++	case SNDRV_PCM_FORMAT_DSD_U8:
++	case SNDRV_PCM_FORMAT_DSD_U16_LE:
++	case SNDRV_PCM_FORMAT_DSD_U16_BE:
++	case SNDRV_PCM_FORMAT_DSD_U32_LE:
++	case SNDRV_PCM_FORMAT_DSD_U32_BE:
++		dsd_bclk = nfs1 * params_physical_width(params);
++		switch (dsd_bclk) {
++		case 2822400:
++			dsdsel0 = 0;
++			dsdsel1 = 0;
++			break;
++		case 5644800:
++			dsdsel0 = 1;
++			dsdsel1 = 0;
++			break;
++		case 11289600:
++			dsdsel0 = 0;
++			dsdsel1 = 1;
++			break;
++		case 22579200:
++			if (ak4458->drvdata->dsd512) {
++				dsdsel0 = 1;
++				dsdsel1 = 1;
++			} else {
++				dev_err(dai->dev, "DSD512 not supported.\n");
++				return -EINVAL;
++			}
++			break;
++		default:
++			dev_err(dai->dev, "Unsupported dsd bclk.\n");
++			return -EINVAL;
++		}
++
++		snd_soc_component_update_bits(component, AK4458_06_DSD1,
++					      AK4458_DSDSEL_MASK, dsdsel0);
++		snd_soc_component_update_bits(component, AK4458_09_DSD2,
++					      AK4458_DSDSEL_MASK, dsdsel1);
++		break;
++	}
++
+ 	/* Master Clock Frequency Auto Setting Mode Enable */
+ 	snd_soc_component_update_bits(component, AK4458_00_CONTROL1, 0x80, 0x80);
+ 
+@@ -355,6 +408,9 @@ static int ak4458_hw_params(struct snd_pcm_substream *substream,
+ 		case SND_SOC_DAIFMT_DSP_B:
+ 			format = AK4458_DIF_32BIT_MSB;
+ 			break;
++		case SND_SOC_DAIFMT_PDM:
++			format = AK4458_DIF_32BIT_MSB;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -393,6 +449,7 @@ static int ak4458_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	case SND_SOC_DAIFMT_LEFT_J:
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+ 	case SND_SOC_DAIFMT_DSP_B:
++	case SND_SOC_DAIFMT_PDM:
+ 		ak4458->fmt = fmt & SND_SOC_DAIFMT_FORMAT_MASK;
+ 		break;
+ 	default:
+@@ -401,6 +458,12 @@ static int ak4458_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 		return -EINVAL;
+ 	}
+ 
++	/* DSD mode */
++	snd_soc_component_update_bits(component, AK4458_02_CONTROL3,
++				      AK4458_DP_MASK,
++				      ak4458->fmt == SND_SOC_DAIFMT_PDM ?
++				      AK4458_DP_MASK : 0);
++
+ 	ak4458_rstn_control(component, 0);
+ 	ak4458_rstn_control(component, 1);
+ 
+@@ -472,7 +535,10 @@ static int ak4458_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
+ 
+ #define AK4458_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE |\
+ 			 SNDRV_PCM_FMTBIT_S24_LE |\
+-			 SNDRV_PCM_FMTBIT_S32_LE)
++			 SNDRV_PCM_FMTBIT_S32_LE |\
++			 SNDRV_PCM_FMTBIT_DSD_U8 |\
++			 SNDRV_PCM_FMTBIT_DSD_U16_LE |\
++			 SNDRV_PCM_FMTBIT_DSD_U32_LE)
+ 
+ static const unsigned int ak4458_rates[] = {
+ 	8000, 11025,  16000, 22050,
+@@ -668,11 +734,13 @@ static const struct regmap_config ak4458_regmap = {
+ static const struct ak4458_drvdata ak4458_drvdata = {
+ 	.dai_drv = &ak4458_dai,
+ 	.comp_drv = &soc_codec_dev_ak4458,
++	.dsd512 = false,
+ };
+ 
+ static const struct ak4458_drvdata ak4497_drvdata = {
+ 	.dai_drv = &ak4497_dai,
+ 	.comp_drv = &soc_codec_dev_ak4497,
++	.dsd512 = true,
+ };
+ 
+ static const struct dev_pm_ops ak4458_pm = {
+@@ -684,7 +752,6 @@ static const struct dev_pm_ops ak4458_pm = {
+ static int ak4458_i2c_probe(struct i2c_client *i2c)
+ {
+ 	struct ak4458_priv *ak4458;
+-	const struct ak4458_drvdata *drvdata;
+ 	int ret, i;
+ 
+ 	ak4458 = devm_kzalloc(&i2c->dev, sizeof(*ak4458), GFP_KERNEL);
+@@ -698,7 +765,7 @@ static int ak4458_i2c_probe(struct i2c_client *i2c)
+ 	i2c_set_clientdata(i2c, ak4458);
+ 	ak4458->dev = &i2c->dev;
+ 
+-	drvdata = of_device_get_match_data(&i2c->dev);
++	ak4458->drvdata = of_device_get_match_data(&i2c->dev);
+ 
+ 	ak4458->reset_gpiod = devm_gpiod_get_optional(ak4458->dev, "reset",
+ 						      GPIOD_OUT_LOW);
+@@ -720,8 +787,9 @@ static int ak4458_i2c_probe(struct i2c_client *i2c)
+ 		return ret;
+ 	}
+ 
+-	ret = devm_snd_soc_register_component(ak4458->dev, drvdata->comp_drv,
+-					      drvdata->dai_drv, 1);
++	ret = devm_snd_soc_register_component(ak4458->dev,
++					      ak4458->drvdata->comp_drv,
++					      ak4458->drvdata->dai_drv, 1);
+ 	if (ret < 0) {
+ 		dev_err(ak4458->dev, "Failed to register CODEC: %d\n", ret);
+ 		return ret;
+diff --git a/sound/soc/codecs/ak4458.h b/sound/soc/codecs/ak4458.h
+index f906215f7e4e..9548c5d78621 100644
+--- a/sound/soc/codecs/ak4458.h
++++ b/sound/soc/codecs/ak4458.h
+@@ -83,4 +83,7 @@
+ #define AK4458_ATS_SHIFT	6
+ #define AK4458_ATS_MASK		GENMASK(7, 6)
+ 
+-#endif /* _AK4458_H */
++#define AK4458_DSDSEL_MASK		(0x1 << 0)
++#define AK4458_DP_MASK			(0x1 << 7)
++
++#endif
+-- 
+2.27.0
 
-Given:
-
-
-static int __init kcompactd_init(void)
-{
-	...
-	ret = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-					"mm/compaction:online",
-					kcompactd_cpu_online, NULL);
-
-and:
-
-
-	CPUHP_AP_ONLINE_DYN,
-	CPUHP_AP_ONLINE_DYN_END		= CPUHP_AP_ONLINE_DYN + 30,
-	CPUHP_AP_X86_HPET_ONLINE,
-	CPUHP_AP_X86_KVM_CLK_ONLINE,
-	CPUHP_AP_ACTIVE,
-
-this is somewhat expected behaviour.
-
-It tries and set the compaction affinity to include the newly onlined
-CPU before it is marked active and that's a no-no.
-
-Ideally the kcompactd notifier is ran after AP_ACTIVE, not before.
