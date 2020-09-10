@@ -2,53 +2,90 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553AFC07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A436AC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1191620C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F822145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSVmDTNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgIJKyY (ORCPT
+        id S1727887AbgIJKyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:54:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:32832 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730328AbgIJKvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:51:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D34D1063;
-        Thu, 10 Sep 2020 03:51:18 -0700 (PDT)
-Received: from [10.163.71.250] (unknown [10.163.71.250])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0CE13F68F;
-        Thu, 10 Sep 2020 03:51:15 -0700 (PDT)
-Subject: Re: [PATCH] arm64/mm: add fallback option to allocate virtually
- contiguous memory
-To:     Steven Price <steven.price@arm.com>,
-        Sudarshan Rajagopalan <sudaraja@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Thu, 10 Sep 2020 06:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730245AbgIJKvs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:51:48 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9518BC061757;
+        Thu, 10 Sep 2020 03:51:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id q9so5177524wmj.2;
+        Thu, 10 Sep 2020 03:51:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ot8jLrMGoKI52DFvpwNiXxm1aPXePUwKu6AER+w1zcA=;
+        b=OSVmDTNce3UfD6pLMp92sJYy7LtVaFsAUNTTq3z3WcBkr1iDsczZ5VKWsZtSs+fpm7
+         Q11hAKIHC12W7xWiyKUq6pll4rGVaiuE/d0GxjJ1E+fhYLIN82QcOjQvZ/2x6psxTDqY
+         RhvofhMrT37rJvvmxlgmD/VkS28WoLGFz/SqCe8o+Er6ILlmPogxtYp2fG0gElOv5VjJ
+         GPcRB1e/kugyqd5l1wNLdjsvrKT2tnugRbITg1gyFGzE6Uo3cd/QImRfsdm8/YKemdOR
+         Ce5fHpuMjBGnE6dft/WV0U28keX5cVX1ctbb5Qp5F5KhFOrxpqVMXNioQKDaaWwqVRKE
+         iI0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ot8jLrMGoKI52DFvpwNiXxm1aPXePUwKu6AER+w1zcA=;
+        b=sbfReBXeTyis1RYumxfqVCjx+WHKCa1gLoPM3MBXuQNlgigGWBf9ViOGTUH+NtBKNp
+         apf9jPbj0fxb/cEdfck759Fwin3bngs9NZDsoVlH02HFHf/of9edVz2gMumgnTxeLxH1
+         JbVTTLKBLq+hmOjCJ1xNb4vbEksgBIcFNdYjM1GSyjKJbLR8wHoMHEXbVUMGnDxF/yRr
+         N3PclR5pwymWuTBDLK7R4No4tQVyDmmk4ZfXOY40+sYCAGk5k3nupokIEerPMeMekmRy
+         jouwUUle6DtPy6ah7SlbXm2s/YWopxQqerQNh6beNqXV/YnZtoAEYwpVozJzZW8ug8MZ
+         wZpQ==
+X-Gm-Message-State: AOAM53256jgQiEMxGLdCYec5M8HNg8Ga37rsX6NSSzZFsftn1ca3vLfX
+        GCtO0vxlzUSq69EDmIrp0BkM005gejQ=
+X-Google-Smtp-Source: ABdhPJwUp9n39OfdocNAzLEpVjdh2cJbTXLst76QyqtMocve1sQWinFB2t0gtuOCrJhfTEb8XehRig==
+X-Received: by 2002:a1c:5a87:: with SMTP id o129mr8184635wmb.145.1599735107055;
+        Thu, 10 Sep 2020 03:51:47 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.201])
+        by smtp.gmail.com with ESMTPSA id q12sm8287954wrp.17.2020.09.10.03.51.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 03:51:46 -0700 (PDT)
+Subject: Re: [PATCH v21 4/4] arm64: dts: mt8183: add scp node
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Eddie Huang <eddie.huang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <01010174769e2b68-a6f3768e-aef8-43c7-b357-a8cb1e17d3eb-000000@us-west-2.amazonses.com>
- <b8c6e11f-00f3-a89c-6ebc-eef55f92298b@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <145c57a3-1753-3ff8-4353-3bf7bac0b7de@arm.com>
-Date:   Thu, 10 Sep 2020 16:20:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191112110330.179649-1-pihsun@chromium.org>
+ <20191112110330.179649-5-pihsun@chromium.org>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <74669282-bb02-d753-e117-666fea5d7a9a@gmail.com>
+Date:   Thu, 10 Sep 2020 12:51:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <b8c6e11f-00f3-a89c-6ebc-eef55f92298b@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191112110330.179649-5-pihsun@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -56,96 +93,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 09/10/2020 01:57 PM, Steven Price wrote:
-> On 10/09/2020 07:05, Sudarshan Rajagopalan wrote:
->> When section mappings are enabled, we allocate vmemmap pages from physically
->> continuous memory of size PMD_SZIE using vmemmap_alloc_block_buf(). Section
->> mappings are good to reduce TLB pressure. But when system is highly fragmented
->> and memory blocks are being hot-added at runtime, its possible that such
->> physically continuous memory allocations can fail. Rather than failing the
->> memory hot-add procedure, add a fallback option to allocate vmemmap pages from
->> discontinuous pages using vmemmap_populate_basepages().
->>
->> Signed-off-by: Sudarshan Rajagopalan <sudaraja@codeaurora.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Logan Gunthorpe <logang@deltatee.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Steven Price <steven.price@arm.com>
->> ---
->>   arch/arm64/mm/mmu.c | 15 ++++++++++++---
->>   1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index 75df62f..a46c7d4 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -1100,6 +1100,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>       p4d_t *p4dp;
->>       pud_t *pudp;
->>       pmd_t *pmdp;
->> +    int ret = 0;
->>         do {
->>           next = pmd_addr_end(addr, end);
->> @@ -1121,15 +1122,23 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>               void *p = NULL;
->>                 p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
->> -            if (!p)
->> -                return -ENOMEM;
->> +            if (!p) {
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +                vmemmap_free(start, end, altmap);
->> +#endif
->> +                ret = -ENOMEM;
->> +                break;
->> +            }
->>                 pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
->>           } else
->>               vmemmap_verify((pte_t *)pmdp, node, addr, next);
->>       } while (addr = next, addr != end);
->>   -    return 0;
->> +    if (ret)
->> +        return vmemmap_populate_basepages(start, end, node, altmap);
->> +    else
->> +        return ret;
+On 12/11/2019 12:03, Pi-Hsun Shih wrote:
+> From: Eddie Huang <eddie.huang@mediatek.com>
 > 
-> Style comment: I find this usage of 'ret' confusing. When we assign -ENOMEM above that is never actually the return value of the function (in that case vmemmap_populate_basepages() provides the actual return value).
-
-Right.
-
+> Add scp node to mt8183 and mt8183-evb
 > 
-> Also the "return ret" is misleading since we know by that point that ret==0 (and the 'else' is redundant).
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 
-Right.
+Applied again to v5.9-next/dts64
+Thanks!
 
+> ---
+> Changes from v20 ... v14:
+>   - No change.
 > 
-> Can you not just move the call to vmemmap_populate_basepages() up to just after the (possible) vmemmap_free() call and remove the 'ret' variable?
+> Changes from v13:
+>   - Change the size of the cfg register region.
 > 
-> AFAICT the call to vmemmap_free() also doesn't need the #ifdef as the function is a no-op if CONFIG_MEMORY_HOTPLUG isn't set. I also feel you 
-
-Right, CONFIG_MEMORY_HOTPLUG is not required.
-
-need at least a comment to explain Anshuman's point that it looks like you're freeing an unmapped area. Although if I'm reading the code correctly it seems like the unmapped area will just be skipped.
-Proposed vmemmap_free() attempts to free the entire requested vmemmap range
-[start, end] when an intermediate PMD entry can not be allocated. Hence even
-if vmemap_free() could skip an unmapped area (will double check on that), it
-unnecessarily goes through large sections of unmapped range, which could not
-have been mapped.
-
-So, basically there could be two different methods for doing this fallback.
-
-1. Call vmemmap_populate_basepages() for sections when PMD_SIZE allocation fails
-
-	- vmemmap_free() need not be called
-
-2. Abort at the first instance of PMD_SIZE allocation failure
-
-	- Call vmemmap_free() to unmap all sections mapped till that point
-	- Call vmemmap_populate_basepages() to map the entire request section
-
-The proposed patch tried to mix both approaches. Regardless, the first approach
-here seems better and is the case in vmemmap_populate_hugepages() implementation
-on x86 as well.
+> Changes from v12 ... v10:
+>   - No change.
+> 
+> Changes from v9:
+>   - Remove extra reserve-memory-vpu_share node.
+> 
+> Changes from v8:
+>   - New patch.
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
+>   arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+>   2 files changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> index 1fb195c683c3..ddb7a7ac9655 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> @@ -24,6 +24,17 @@ memory@40000000 {
+>   	chosen {
+>   		stdout-path = "serial0:921600n8";
+>   	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		scp_mem_reserved: scp_mem_region {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0 0x50000000 0 0x2900000>;
+> +			no-map;
+> +		};
+> +	};
+>   };
+>   
+>   &auxadc {
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 10b32471bc7b..e582f5e6691d 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -269,6 +269,18 @@ pwrap: pwrap@1000d000 {
+>   			clock-names = "spi", "wrap";
+>   		};
+>   
+> +		scp: scp@10500000 {
+> +			compatible = "mediatek,mt8183-scp";
+> +			reg = <0 0x10500000 0 0x80000>,
+> +			      <0 0x105c0000 0 0x19080>;
+> +			reg-names = "sram", "cfg";
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> +			clock-names = "main";
+> +			memory-region = <&scp_mem_reserved>;
+> +			status = "disabled";
+> +		};
+> +
+>   		systimer: timer@10017000 {
+>   			compatible = "mediatek,mt8183-timer",
+>   				     "mediatek,mt6765-timer";
+> 
