@@ -2,194 +2,174 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA311C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B44DC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA491207EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99CD20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 09:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hgVHzqZd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="32goGh+6"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JnI3+HuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgIJJjR (ORCPT
+        id S1730233AbgIJJks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 05:39:17 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38578 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728971AbgIJJWH (ORCPT
+        Thu, 10 Sep 2020 05:40:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42054 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728207AbgIJJkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 05:22:07 -0400
-Date:   Thu, 10 Sep 2020 09:22:02 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599729723;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a25V2E+wAE7dX5+wwOu3rkr4Vai48wnbBAxgmbtRXVs=;
-        b=hgVHzqZdOdPrBZJYGGu1JUfDaE3z/CnwUxa0Uf6tdLwc13LKaLN5ORam7TeXe4WRf+bRRB
-        AKszmMO232Gb/7VRYwLDL6D+y0BBiqoSalIjGaciSrd9/8aTDPBc8GUbRw8Jt7+T9Lc3iS
-        oC2V3KpLFK6ddmPy/AU/D6fwQAskR82AdALRAemzsINbpdY+VKwZi73Ql9w5m9fGiPx5zQ
-        HAJQ45NOEaFutdIAyMGzVqldL26ZJoZLb2ahwLX1AKsBTaK9/6J9kIo6PXnmXnCNNKkNDw
-        Xd0ozSQZEaCmJ6XRJpvipK7nOZmzmQjQObhoPx+D1cS2dF28Z1A8APAk6rGB4Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599729723;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a25V2E+wAE7dX5+wwOu3rkr4Vai48wnbBAxgmbtRXVs=;
-        b=32goGh+6k6CcU2iKY86EAJbdZHoi8VC41sZtBatdXK2iIWXoR3eidGUqTEL4z6JLHke83f
-        d2z79w16GmHU4cBA==
-From:   "tip-bot2 for Martin Radev" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/seves] x86/sev-es: Check required CPU features for SEV-ES
-Cc:     Martin Radev <martin.b.radev@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200907131613.12703-73-joro@8bytes.org>
-References: <20200907131613.12703-73-joro@8bytes.org>
+        Thu, 10 Sep 2020 05:40:42 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08A9Vt6b119469;
+        Thu, 10 Sep 2020 05:39:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=41BJsvawiBO1ghr06VQIrffJCPHY4UzVo4fvKE+7RMs=;
+ b=JnI3+HuSFQICzixnbEr3lD/KU407bMni7V5mL/H47oPLaomhPs6t57kI2sBNlnitleWU
+ Ljv2tAQ6Y00VBu0RV7fJV/uOYIaFn2+L3EVF73PBzpDn0xMhXi4S9uZF+n3tyogr9cL8
+ ytPNf7pxi3XLZLzrvhLCPhCFdXv9qVuX2Is4ueWpwdN5VmTvJ7ZPUFIC/eAC2eqsGvRz
+ 0ArbCVZIdHdWjs4nUhCUUciXheJ/YGqiDnhHtZPbG7C2gBZK+PQzRO1oEWokDf3RJaPK
+ qEdPrU10FoZR5nshuEVIEbRP9lZ8x2Pm0AWZdo3HKCBJEvEDjwjaM3Kk9J6p8hBlCJ8m ng== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fg9ejw18-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 05:39:36 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08A9WV5v121274;
+        Thu, 10 Sep 2020 05:39:35 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fg9ejvxx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 05:39:35 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08A9c3QB011125;
+        Thu, 10 Sep 2020 09:39:32 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 33c2a81b0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 09:39:32 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08A9dTSv34800078
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 09:39:29 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EE38AE04D;
+        Thu, 10 Sep 2020 09:39:29 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BD21AE053;
+        Thu, 10 Sep 2020 09:39:27 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.67.15])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 10 Sep 2020 09:39:27 +0000 (GMT)
+Date:   Thu, 10 Sep 2020 11:39:25 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200910093925.GB29166@oc3871087118.ibm.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+ <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+ <20200909142904.00b72921@thinkpad>
+ <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+ <20200909192534.442f8984@thinkpad>
+ <20200909180324.GI87483@ziepe.ca>
 MIME-Version: 1.0
-Message-ID: <159972972230.20229.13856025450251640816.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909180324.GI87483@ziepe.ca>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 suspectscore=0 clxscore=1011 adultscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/seves branch of tip:
+On Wed, Sep 09, 2020 at 03:03:24PM -0300, Jason Gunthorpe wrote:
+> On Wed, Sep 09, 2020 at 07:25:34PM +0200, Gerald Schaefer wrote:
+> > I actually had to draw myself a picture to get some hold of
+> > this, or rather a walk-through with a certain pud-crossing
+> > range in a folded 3-level scenario. Not sure if I would have
+> > understood my explanation above w/o that, but I hope you can
+> > make some sense out of it. Or draw yourself a picture :-)
+> 
+> What I don't understand is how does anything work with S390 today?
+> 
+> If the fix is only to change pxx_addr_end() then than generic code
+> like mm/pagewalk.c will iterate over a *different list* of page table
+> entries. 
+> 
+> It's choice of entries to look at is entirely driven by pxx_addr_end().
+> 
+> Which suggest to me that mm/pagewalk.c also doesn't work properly
+> today on S390 and this issue is not really about stack variables?
+> 
+> Fundamentally if pXX_offset() and pXX_addr_end() must be consistent
+> together, if pXX_offset() is folded then pXX_addr_end() must cause a
+> single iteration of that level.
 
-Commit-ID:     1ac0dc494a9796d6f94ff392f16e0c9a8cea7021
-Gitweb:        https://git.kernel.org/tip/1ac0dc494a9796d6f94ff392f16e0c9a8cea7021
-Author:        Martin Radev <martin.b.radev@gmail.com>
-AuthorDate:    Mon, 07 Sep 2020 15:16:13 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 09 Sep 2020 18:03:48 +02:00
+Your observation is correct.
 
-x86/sev-es: Check required CPU features for SEV-ES
+Another way to describe the problem is existing pXd_addr_end helpers
+could be applied to mismatching levels on s390 (e.g p4d_addr_end
+applied to pud or pgd_addr_end applied to p4d). As you noticed,
+all *_pXd_range iterators could be called with address ranges that
+exceed single pXd table.
 
-Make sure the machine supports RDRAND, otherwise there is no trusted
-source of randomness in the system.
+However, when it happens with pointers to real page tables (passed to
+*_pXd_range iterators) we still operate on valid tables, which just
+(lucky for us) happened to be folded. Thus we still reference correct
+table entries.
 
-To also check this in the pre-decompression stage, make has_cpuflag()
-not depend on CONFIG_RANDOMIZE_BASE anymore.
+It is only gup_fast case that exposes the issue. It hits because
+pointers to stack copies are passed to gup_pXd_range iterators, not
+pointers to real page tables itself.
 
-Signed-off-by: Martin Radev <martin.b.radev@gmail.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20200907131613.12703-73-joro@8bytes.org
----
- arch/x86/boot/compressed/cpuflags.c |  4 ----
- arch/x86/boot/compressed/misc.h     |  5 +++--
- arch/x86/boot/compressed/sev-es.c   |  3 +++
- arch/x86/kernel/sev-es-shared.c     | 15 +++++++++++++++
- arch/x86/kernel/sev-es.c            |  3 +++
- 5 files changed, 24 insertions(+), 6 deletions(-)
+As Gerald mentioned, it is very difficult to explain in a clear way.
+Hopefully, one could make sense ot of it.
 
-diff --git a/arch/x86/boot/compressed/cpuflags.c b/arch/x86/boot/compressed/cpuflags.c
-index 6448a81..0cc1323 100644
---- a/arch/x86/boot/compressed/cpuflags.c
-+++ b/arch/x86/boot/compressed/cpuflags.c
-@@ -1,6 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#ifdef CONFIG_RANDOMIZE_BASE
--
- #include "../cpuflags.c"
- 
- bool has_cpuflag(int flag)
-@@ -9,5 +7,3 @@ bool has_cpuflag(int flag)
- 
- 	return test_bit(flag, cpu.flags);
- }
--
--#endif
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index c0e0ffe..6d31f1b 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -85,8 +85,6 @@ void choose_random_location(unsigned long input,
- 			    unsigned long *output,
- 			    unsigned long output_size,
- 			    unsigned long *virt_addr);
--/* cpuflags.c */
--bool has_cpuflag(int flag);
- #else
- static inline void choose_random_location(unsigned long input,
- 					  unsigned long input_size,
-@@ -97,6 +95,9 @@ static inline void choose_random_location(unsigned long input,
- }
- #endif
- 
-+/* cpuflags.c */
-+bool has_cpuflag(int flag);
-+
- #ifdef CONFIG_X86_64
- extern int set_page_decrypted(unsigned long address);
- extern int set_page_encrypted(unsigned long address);
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 2a6c7c3..954cb27 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -145,6 +145,9 @@ void sev_es_shutdown_ghcb(void)
- 	if (!boot_ghcb)
- 		return;
- 
-+	if (!sev_es_check_cpu_features())
-+		error("SEV-ES CPU Features missing.");
-+
- 	/*
- 	 * GHCB Page must be flushed from the cache and mapped encrypted again.
- 	 * Otherwise the running kernel will see strange cache effects when
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 4be8af2..5f83cca 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -9,6 +9,21 @@
-  * and is included directly into both code-bases.
-  */
- 
-+#ifndef __BOOT_COMPRESSED
-+#define error(v)	pr_err(v)
-+#define has_cpuflag(f)	boot_cpu_has(f)
-+#endif
-+
-+static bool __init sev_es_check_cpu_features(void)
-+{
-+	if (!has_cpuflag(X86_FEATURE_RDRAND)) {
-+		error("RDRAND instruction not supported - no trusted source of randomness available\n");
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void sev_es_terminate(unsigned int reason)
- {
- 	u64 val = GHCB_SEV_TERMINATE;
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 8cac9f8..6fcfdd3 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -665,6 +665,9 @@ void __init sev_es_init_vc_handling(void)
- 	if (!sev_es_active())
- 		return;
- 
-+	if (!sev_es_check_cpu_features())
-+		panic("SEV-ES CPU Features missing");
-+
- 	/* Enable SEV-ES special handling */
- 	static_branch_enable(&sev_es_enable_key);
- 
+> Jason
