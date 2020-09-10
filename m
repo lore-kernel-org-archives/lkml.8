@@ -2,255 +2,135 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757C4C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DBEC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A2520882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4503D20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkPaw/Bf"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="K1pNt111"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbgIJKAt (ORCPT
+        id S1730522AbgIJKBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730560AbgIJKAJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:00:09 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1ECCC061573;
-        Thu, 10 Sep 2020 03:00:08 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id s13so5015769wmh.4;
-        Thu, 10 Sep 2020 03:00:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pAh7hXPGRHBjo/PFoe0HlRkn4NDf5lJ5Fqfadp23JQo=;
-        b=XkPaw/Bf2ZxPsXS0G3PAgfhAF2zYa/Z0822udedqbRSAt5+TsgEN7bpgFl8cugEIws
-         gcqgd40aF6cB1PvDV7dJvgAnJ4QpkOcYuZQxaavlP8XcIxsfudNrnMfcJXiyn8sRR1Xt
-         jN17ZW3MVjyLqRLaRxWC1g1a+IGXew+dphACe8szgXVSfLl9oIJeCLRSonTYqYmvAKnA
-         bzkItSBDuT+z5hgkDyFlg4IXTon9hLvlqUIrKWhbxxoemf1MzBhMKlGlQntnbiON6mgQ
-         minX3OX0oPv2P/s0mrzq63llnMrXoSZ0xb7+Te6NRzxxe8lo7HDt/UTzzUUF7mAJ/7+e
-         V7qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pAh7hXPGRHBjo/PFoe0HlRkn4NDf5lJ5Fqfadp23JQo=;
-        b=bAZWnI8kKgvuvAuDDS2TdQFcJEWlFLcusaOXYYRm3y42H8R/Df8syDbY3SGpSQIAbV
-         jVqQuDV2XKsdcypUXVg6n7nm3AQo44F+RQtuFyHleO8KXMCMXrndHy5B/njMBdCbmnHT
-         AD5LP9L1vvh6lNpQShADHNEOEQz/16q9j6NxI0xNE7+udQL4ZT+7KG4K3A3UzFsI75Hv
-         WwKbRMxx3eZj9bZfBcEoVYBqETE4F5H+YQuekXM9ZNd065wDYaPaBLr7O03YRB6S3KEQ
-         bCJ40yd5iBM5Mf2wrkF2I8sPrZE91VsBa7o7x5rQ2GlK3lLJd5n080HrXEfihpJ7yUJs
-         DpBw==
-X-Gm-Message-State: AOAM533WPCO1xKQcr3HM6Dudvg0yPjtGztczZWkfqAkURjVsIyKHnFvX
-        GF0GKhWbsiSiVsEItNY5LJh7KREG3p4=
-X-Google-Smtp-Source: ABdhPJw/Oq0Me8hNHlZrBHLTOH04QA6Ldk15PpFJKErIMLiqbOg+X8LkFaexnffoQFPh5M27G1UPEQ==
-X-Received: by 2002:a05:600c:2183:: with SMTP id e3mr8187778wme.49.1599732006529;
-        Thu, 10 Sep 2020 03:00:06 -0700 (PDT)
-Received: from localhost.localdomain ([178.60.199.158])
-        by smtp.gmail.com with ESMTPSA id v128sm2872960wme.2.2020.09.10.03.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 03:00:06 -0700 (PDT)
-From:   Era Mayflower <mayflowerera@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mayflowerera@gmail.com
-Subject: [PATCH v2] macsec: Support 32bit PN netlink attribute for XPN links
-Date:   Thu, 10 Sep 2020 09:56:09 +0000
-Message-Id: <20200910095609.17999-1-mayflowerera@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 10 Sep 2020 06:01:13 -0400
+Received: from mail-eopbgr130084.outbound.protection.outlook.com ([40.107.13.84]:20964
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730257AbgIJJx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 05:53:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EzE9DSqWlOhG8byWPawXOFbS97DfbH5zdeJ48ezME74GB56PXz96E+CQVapQcQLRH675B8z2yZm3t4ALwDvab4Ryyc2LNEUtX4tvg7jL/NfUFMQfhMLI64O0TPykvEPEmRUcBWN6cyeNtDKF0gbU0Qy2el7ydSXZrICs8IqumKntUi8DP+Aam5l/AVcKKXPBtWplONG04P6gUxYEk/cIfYJnplaLpTjROtB7GVPY2zBmn9cNHr+Acql3Ny4smpjJzD0kqrLs43VNscWvcxjL+b4m5Rf9fvdqok7SYRDrAInsDKsbQwKycEXtECZFGRuxr8CmPvOHHp2zdZM01uuMtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ha1EMLVI9HUpx1K4c7dBqLXXT+yXsjCxmxAdl5/LyqM=;
+ b=EEkm9l3CvIOk7BImLHRmVjAe8wyyIY9i3DTCtutHm6tau/nMQUnZRLRXfa5PrVcT+5U0mOFF3YwUMQeXbijW5FX+ECNkHPd/u5TWxLr4ovbkHOJxyFi0Zu870FnrWzeDyurSD7x1naGSJ3IL1/NMk/5ibXtdsyA0aAbCBcFsVNUJIBhQv89CHcv/Q9I6pnsUNGxAcCIjV2e7exHoypKZIJVNOdKoe9dbSCuSOrR2rKhrpKRXGfrcYTVE+Uqnx1FE0jEvFiMkD6+edH0LDJa4LNWxLN7kM4f2FW2xLZlDgzBh8wYhbEv3o/wmGWSooL+AQWG6eP3CdJzKOduEl3bTCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ha1EMLVI9HUpx1K4c7dBqLXXT+yXsjCxmxAdl5/LyqM=;
+ b=K1pNt111nehrjClCOiEdA3Xet9lv6hVJ2d9B/aR4u9XoABalaSz9ctfVmAIj7cAovIQ22HlBlenvnbOCedzK2FDqQFIuTgu9dRgd1DOLtsCexHdK8F18U4WuOyCsMG6A3EmgEZdadHvNUjT0wZX9a5Z6Knuy/YuitBnmq9aehs8=
+Authentication-Results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27) by VI1PR04MB6031.eurprd04.prod.outlook.com
+ (2603:10a6:803:102::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Thu, 10 Sep
+ 2020 09:53:10 +0000
+Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5d66:84a7:26de:67c3]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
+ ([fe80::5d66:84a7:26de:67c3%6]) with mapi id 15.20.3370.016; Thu, 10 Sep 2020
+ 09:53:10 +0000
+From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     laurentiu.palcu@oss.nxp.com, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/imx/dcss: fix compilation issue on 32bit
+Date:   Thu, 10 Sep 2020 12:52:50 +0300
+Message-Id: <20200910095250.7663-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset="us-ascii"
+X-ClientProxiedBy: AM0PR01CA0076.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:10e::17) To VI1PR0402MB3902.eurprd04.prod.outlook.com
+ (2603:10a6:803:22::27)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR01CA0076.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Thu, 10 Sep 2020 09:53:08 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4923d17d-d612-458d-9535-08d8556f533d
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6031:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB6031CA4449152B69796C3934BE270@VI1PR04MB6031.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nBbiFZ4DH06NS3uJS21pmv6jUQj+h5SsRF7Nc+ubrDvRLcEI2wfQ9EehuYP2EFeIpp1F1bcsZS/Bvk06mzZwbkfVWMzQ6dYJKJV/zdFyk7Uthmj6zGaAH4GRdLmLygMhCBNRqyhoo1vrPu+w0YdyIYJhlJ7rbeceqoFmsmj1QVztLyqqveUXB/9QzjGjTkrapSAwP+5d2NfUjUhBvuZb1BWEWws0Z4T7kn1p4lf1cNwKCAOamcNteF9d6yusqVOEltY6MUsqJGxb+Nv2gALV6+v2ozXo6nwPxP3qUwcWIwyEiTxTIjtW6JUA7eKrZ1sYLjFYEGaJ+WsyXnlma2xDdA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(366004)(396003)(346002)(136003)(2616005)(8676002)(956004)(66476007)(66556008)(66946007)(44832011)(16526019)(5660300002)(4326008)(110136005)(6666004)(6506007)(83380400001)(26005)(6486002)(8936002)(86362001)(2906002)(7416002)(316002)(478600001)(186003)(6512007)(52116002)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: bTQdx7EHNjPd6mb1lZiKIpLQKH+xmBVcCxRZKKivGiWS5xTExrtuWoNPuISAheTk9ZdExyQpTzg28lUU3aOx8TTh74ndisuxqOoFT4lSvERk6CfmLRfXIsVr/WVgw1pJ3sBR6bkest4AS3ScmG+OoCiBgx2UYNqtz9hqXq7icBxj243tyT/GudJGykeKUi1+9aMAPP5037Z5KskQGYAYYoCV7eGnSsZ1zWJ12jFxyliXPoze6m4eKIfhB+A0SsQnSDDmaf4EUmKjE1JA7F0eg8H++0NIA8bocuGAHbLVfOVEQtm+torx30ehGyNXdG4lx60cWWOdBlhkP4vjc3AzEZ+vBnySeJobEPgkcwPYocE67M6WqNnpGX9+s/N+QQ60ifMXLEThVJCXYARqvjwuH/hNOYQnv03GHsYqthLw1KhLQ6f7vd5GPZCDz4XlSxZPZUWnRXtGWAghX44SVSIvwHpuyPmTi5aTyNF8Q7xj49Pxe7qzPAUKxyOfrFPPwO6SGSOgwQn8W7372nzrAB0PZ/sqHQpeOFkYa/+qHc1OpLwmGEAlCn4ERrV09SsLav3vMyeeOehQCrN+HPVcPEThjqUP12Fz+nlP8BcRS8Gj+Nk1pst4EyTIIJb6Bzz0mkODkZesybcwF5XJMZ7CGbrF2Q==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4923d17d-d612-458d-9535-08d8556f533d
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2020 09:53:10.1709
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TPCvlchW/zYgdYZUY2Dn8kQ6T5qst/nR3IqAZBpD1DnU2p1MZ5J15Vp2ocpM3tuasWCbBRm27zxHBK5zoBmkkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow using 32bit netlink attribute for packet number when creating or
-updating SA in an XPN link.
-Now utilities like iproute2's `ip` do not have to know the link type
-(XPN or not) when setting the packet number field of an SA.
+When compiling for 32bit platforms, the compilation fails with:
 
-Signed-off-by: Era Mayflower <mayflowerera@gmail.com>
+ERROR: modpost: "__aeabi_ldivmod"
+[drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
+ERROR: modpost: "__aeabi_uldivmod"
+[drivers/gpu/drm/imx/dcss/imx-dcss.ko] undefined!
+
+This patch adds a dependency on ARM64 since no 32bit SoCs have DCSS, so far.
+
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Reported-by: Daniel Vetter <daniel@ffwll.ch>
 ---
- drivers/net/macsec.c | 95 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 69 insertions(+), 26 deletions(-)
+ drivers/gpu/drm/imx/dcss/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index e56547bfdac9..7d3c3a38ea81 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1691,8 +1691,7 @@ static bool validate_add_rxsa(struct nlattr **attrs)
- 	if (nla_get_u8(attrs[MACSEC_SA_ATTR_AN]) >= MACSEC_NUM_AN)
- 		return false;
- 
--	if (attrs[MACSEC_SA_ATTR_PN] &&
--	    *(u64 *)nla_data(attrs[MACSEC_SA_ATTR_PN]) == 0)
-+	if (attrs[MACSEC_SA_ATTR_PN] && nla_get_u64(attrs[MACSEC_SA_ATTR_PN]) == 0)
- 		return false;
- 
- 	if (attrs[MACSEC_SA_ATTR_ACTIVE]) {
-@@ -1714,7 +1713,6 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
- 	struct macsec_rx_sc *rx_sc;
- 	struct macsec_rx_sa *rx_sa;
- 	unsigned char assoc_num;
--	int pn_len;
- 	struct nlattr *tb_rxsc[MACSEC_RXSC_ATTR_MAX + 1];
- 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
- 	int err;
-@@ -1747,12 +1745,26 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
- 		return -EINVAL;
- 	}
- 
--	pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
--	if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
--		pr_notice("macsec: nl: add_rxsa: bad pn length: %d != %d\n",
--			  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
--		rtnl_unlock();
--		return -EINVAL;
-+	if (tb_sa[MACSEC_SA_ATTR_PN]) {
-+		switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
-+		case MACSEC_DEFAULT_PN_LEN:
-+			break;
-+
-+		case MACSEC_XPN_PN_LEN:
-+			if (secy->xpn)
-+				break;
-+
-+			pr_notice("macsec: nl: add_rxsa: pn length on non-xpn links must be %d\n",
-+				  MACSEC_DEFAULT_PN_LEN);
-+			rtnl_unlock();
-+			return -EINVAL;
-+
-+		default:
-+			pr_notice("macsec: nl: add_rxsa: pn length must be %d or %d\n",
-+				  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
-+			rtnl_unlock();
-+			return -EINVAL;
-+		}
- 	}
- 
- 	if (secy->xpn) {
-@@ -1934,7 +1946,7 @@ static bool validate_add_txsa(struct nlattr **attrs)
- 	if (nla_get_u8(attrs[MACSEC_SA_ATTR_AN]) >= MACSEC_NUM_AN)
- 		return false;
- 
--	if (nla_get_u32(attrs[MACSEC_SA_ATTR_PN]) == 0)
-+	if (nla_get_u64(attrs[MACSEC_SA_ATTR_PN]) == 0)
- 		return false;
- 
- 	if (attrs[MACSEC_SA_ATTR_ACTIVE]) {
-@@ -1956,7 +1968,6 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
- 	struct macsec_tx_sc *tx_sc;
- 	struct macsec_tx_sa *tx_sa;
- 	unsigned char assoc_num;
--	int pn_len;
- 	struct nlattr *tb_sa[MACSEC_SA_ATTR_MAX + 1];
- 	bool was_operational;
- 	int err;
-@@ -1989,10 +2000,22 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
- 		return -EINVAL;
- 	}
- 
--	pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
--	if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
--		pr_notice("macsec: nl: add_txsa: bad pn length: %d != %d\n",
--			  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
-+	switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
-+	case MACSEC_DEFAULT_PN_LEN:
-+		break;
-+
-+	case MACSEC_XPN_PN_LEN:
-+		if (secy->xpn)
-+			break;
-+
-+		pr_notice("macsec: nl: add_txsa: pn length on non-xpn links must be %d\n",
-+			  MACSEC_DEFAULT_PN_LEN);
-+		rtnl_unlock();
-+		return -EINVAL;
-+
-+	default:
-+		pr_notice("macsec: nl: add_txsa: pn length must be %d or %d\n",
-+			  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
- 		rtnl_unlock();
- 		return -EINVAL;
- 	}
-@@ -2288,7 +2311,7 @@ static bool validate_upd_sa(struct nlattr **attrs)
- 	if (nla_get_u8(attrs[MACSEC_SA_ATTR_AN]) >= MACSEC_NUM_AN)
- 		return false;
- 
--	if (attrs[MACSEC_SA_ATTR_PN] && nla_get_u32(attrs[MACSEC_SA_ATTR_PN]) == 0)
-+	if (attrs[MACSEC_SA_ATTR_PN] && nla_get_u64(attrs[MACSEC_SA_ATTR_PN]) == 0)
- 		return false;
- 
- 	if (attrs[MACSEC_SA_ATTR_ACTIVE]) {
-@@ -2332,12 +2355,22 @@ static int macsec_upd_txsa(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
--		int pn_len;
-+		switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
-+		case MACSEC_DEFAULT_PN_LEN:
-+			break;
-+
-+		case MACSEC_XPN_PN_LEN:
-+			if (secy->xpn)
-+				break;
-+
-+			pr_notice("macsec: nl: upd_txsa: pn length on non-xpn links must be %d\n",
-+				  MACSEC_DEFAULT_PN_LEN);
-+			rtnl_unlock();
-+			return -EINVAL;
- 
--		pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
--		if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
--			pr_notice("macsec: nl: upd_txsa: bad pn length: %d != %d\n",
--				  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
-+		default:
-+			pr_notice("macsec: nl: upd_txsa: pn length must be %d or %d\n",
-+				  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
- 			rtnl_unlock();
- 			return -EINVAL;
- 		}
-@@ -2429,12 +2462,22 @@ static int macsec_upd_rxsa(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	if (tb_sa[MACSEC_SA_ATTR_PN]) {
--		int pn_len;
-+		switch (nla_len(tb_sa[MACSEC_SA_ATTR_PN])) {
-+		case MACSEC_DEFAULT_PN_LEN:
-+			break;
-+
-+		case MACSEC_XPN_PN_LEN:
-+			if (secy->xpn)
-+				break;
- 
--		pn_len = secy->xpn ? MACSEC_XPN_PN_LEN : MACSEC_DEFAULT_PN_LEN;
--		if (nla_len(tb_sa[MACSEC_SA_ATTR_PN]) != pn_len) {
--			pr_notice("macsec: nl: upd_rxsa: bad pn length: %d != %d\n",
--				  nla_len(tb_sa[MACSEC_SA_ATTR_PN]), pn_len);
-+			pr_notice("macsec: nl: upd_rxsa: pn length on non-xpn links must be %d\n",
-+				  MACSEC_DEFAULT_PN_LEN);
-+			rtnl_unlock();
-+			return -EINVAL;
-+
-+		default:
-+			pr_notice("macsec: nl: upd_rxsa: pn length must be %d or %d\n",
-+				  MACSEC_DEFAULT_PN_LEN, MACSEC_XPN_PN_LEN);
- 			rtnl_unlock();
- 			return -EINVAL;
- 		}
-
-base-commit: bc7d17d55762421b98089f5f7496e48cab89de50
+diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
+index 69860de8861f..2b17a964ff05 100644
+--- a/drivers/gpu/drm/imx/dcss/Kconfig
++++ b/drivers/gpu/drm/imx/dcss/Kconfig
+@@ -3,7 +3,7 @@ config DRM_IMX_DCSS
+ 	select IMX_IRQSTEER
+ 	select DRM_KMS_CMA_HELPER
+ 	select VIDEOMODE_HELPERS
+-	depends on DRM && ARCH_MXC
++	depends on DRM && ARCH_MXC && ARM64
+ 	help
+ 	  Choose this if you have a NXP i.MX8MQ based system and want to use the
+ 	  Display Controller Subsystem. This option enables DCSS support.
 -- 
-2.20.1
+2.17.1
 
