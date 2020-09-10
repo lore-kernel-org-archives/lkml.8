@@ -2,206 +2,177 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E76DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39115C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0231E20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599732411;
-	bh=PsgV3/p7HeIxS4BDkyn1Hz8uhnBf8EDv0rx5idJ+6iw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VNbE51LfMVum0c4GMff5r8zm9sb/lGCQ4qBpPvfQj/SigOxQw6ULgGzrzlX3Tmhi8
-	 CfvlGfSS42uXxbVk7FX92YtAuTnfY3sgUk2yaD5TEGQSLbJ3GQLU6ZeXU0vv9UAVrY
-	 HGZx626l5m8RrvODjXsJ5PE0E77c8zHgdFuBTwk0=
+	by mail.kernel.org (Postfix) with ESMTP id BA44720BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:09:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="E7TorUAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgIJKGt (ORCPT
+        id S1730368AbgIJKJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:06:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgIJKGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:06:37 -0400
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8197B21D80;
-        Thu, 10 Sep 2020 10:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599732396;
-        bh=PsgV3/p7HeIxS4BDkyn1Hz8uhnBf8EDv0rx5idJ+6iw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EOhIebwwXUwe3ifWsLdqeXcJhzZ+u4e9RHyS20FYpNjUUKBPmQot4iV18AtmUEfW0
-         Eu7gtA6IrHE75kCgs8wEzO0Qu3kLUYp5V8vqHa/a8mikB2age+7TlSynQUDdeKHWm0
-         3+heFSxPgS61ZpmRclX9kbCkBoNHhkyqQAXkL9mg=
-Received: by mail-oi1-f173.google.com with SMTP id c13so5379944oiy.6;
-        Thu, 10 Sep 2020 03:06:36 -0700 (PDT)
-X-Gm-Message-State: AOAM533egzEjdWIocBhHDtGSAEivtFBQA92IwPuZJ5XwnywEUacpg8mo
-        5hTtwlPTNIfkFJuN+trsXGq5I49Li1ZR3M+pUL0=
-X-Google-Smtp-Source: ABdhPJz2vXLwznJzG7G9XegKF0TCGXzgUeoxI4CtyIa3q99Kdzxypfv6JDuj8TZ9L0IMAIjb7rdHepQhNcigO8z75gI=
-X-Received: by 2002:aca:d845:: with SMTP id p66mr3033135oig.47.1599732395679;
- Thu, 10 Sep 2020 03:06:35 -0700 (PDT)
+        Thu, 10 Sep 2020 06:09:55 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13648 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725992AbgIJKJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 06:09:52 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AA7lbg013374;
+        Thu, 10 Sep 2020 12:09:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=RJlwxPBVNUGsDj4AiY3vLscF2tTp2a4WGIjfMF+LtGA=;
+ b=E7TorUABIhLY4iNnpKLxLE2vNBn7Z2fAH8FZsbFhPevI9ZPj1U7RDCfLAlr0FxIDcgdp
+ Vb9AsiIlHgEahH9Y+D6kJ+iruAgrOPJWnrNyZXrWf8+y9uVe+y+0ASEATnxtTe6ZzLyc
+ sq64s9wa6ZBcX5cudz7ZnNuW6oID1V5ZHVe26yoZX5mul9jrJpZJNhtX/yrzK0NpiIB3
+ I/NeLUj8ts7NU2cJSxNCVFFtnOWga3PudlW26XB59uBVVMuOJsjdRWYZAiq6NoPKRvKm
+ bqtm//ygrmp4iurRpfMJJOXk4hY39JU8vNdPphCPqLyRLWkYqYmTICzlWn6M+6jrB4fU Mg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 33byt8333y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 12:09:33 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7670610002A;
+        Thu, 10 Sep 2020 12:09:32 +0200 (CEST)
+Received: from Webmail-eu.st.com (gpxdag5node5.st.com [10.75.127.78])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1C3FF221FED;
+        Thu, 10 Sep 2020 12:09:32 +0200 (CEST)
+Received: from GPXDAG5NODE4.st.com (10.75.127.77) by GPXDAG5NODE5.st.com
+ (10.75.127.78) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
+ 2020 12:09:31 +0200
+Received: from GPXDAG5NODE4.st.com ([fe80::f1ac:b650:75f9:818a]) by
+ GPXDAG5NODE4.st.com ([fe80::f1ac:b650:75f9:818a%19]) with mapi id
+ 15.00.1473.003; Thu, 10 Sep 2020 12:09:31 +0200
+From:   Hugues FRUCHET <hugues.fruchet@st.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] media: i2c: ov5640: Add support for BT656 mode
+Thread-Topic: [PATCH v2 3/4] media: i2c: ov5640: Add support for BT656 mode
+Thread-Index: AQHWaaLnGsegUrjL8k+L/QYmrofV66lhwCaA
+Date:   Thu, 10 Sep 2020 10:09:31 +0000
+Message-ID: <ac104d73-eaaf-1199-d7a3-d1c6ccbc68c0@st.com>
+References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596465107-14251-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1596465107-14251-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C9FE1A9D2BF42648BBAFA9CB177F4708@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200909225354.3118328-1-keescook@chromium.org>
-In-Reply-To: <20200909225354.3118328-1-keescook@chromium.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 10 Sep 2020 13:06:24 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXGP_EH661xYXKydo5ph5BKLhs9DeLrgr9gtxeXrwBSCLg@mail.gmail.com>
-Message-ID: <CAMj1kXGP_EH661xYXKydo5ph5BKLhs9DeLrgr9gtxeXrwBSCLg@mail.gmail.com>
-Subject: Re: [PATCH v5] test_firmware: Test platform fw loading on non-EFI systems
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_01:2020-09-10,2020-09-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 at 01:54, Kees Cook <keescook@chromium.org> wrote:
->
-> On non-EFI systems, it wasn't possible to test the platform firmware
-> loader because it will have never set "checked_fw" during __init.
-> Instead, allow the test code to override this check. Additionally split
-> the declarations into a private symbol namespace so there is greater
-> enforcement of the symbol visibility.
->
-> Fixes: 548193cba2a7 ("test_firmware: add support for firmware_request_platform")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> This is split out from the larger kernel_read_file series:
->     https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/
-> specifically this was:
->     https://lore.kernel.org/lkml/20200729175845.1745471-2-keescook@chromium.org/
->
-> I've dropped the review tags, since this is changing the "how" of the patch...
-> ---
->  drivers/firmware/efi/embedded-firmware.c | 10 +++++-----
->  include/linux/efi_embedded_fw.h          |  6 ++----
->  lib/test_firmware.c                      |  9 +++++++++
->  3 files changed, 16 insertions(+), 9 deletions(-)
->
-
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
-> diff --git a/drivers/firmware/efi/embedded-firmware.c b/drivers/firmware/efi/embedded-firmware.c
-> index a1b199de9006..84e32634ed6c 100644
-> --- a/drivers/firmware/efi/embedded-firmware.c
-> +++ b/drivers/firmware/efi/embedded-firmware.c
-> @@ -16,9 +16,9 @@
->
->  /* Exported for use by lib/test_firmware.c only */
->  LIST_HEAD(efi_embedded_fw_list);
-> -EXPORT_SYMBOL_GPL(efi_embedded_fw_list);
-> -
-> -static bool checked_for_fw;
-> +EXPORT_SYMBOL_NS_GPL(efi_embedded_fw_list, TEST_FIRMWARE);
-> +bool efi_embedded_fw_checked;
-> +EXPORT_SYMBOL_NS_GPL(efi_embedded_fw_checked, TEST_FIRMWARE);
->
->  static const struct dmi_system_id * const embedded_fw_table[] = {
->  #ifdef CONFIG_TOUCHSCREEN_DMI
-> @@ -119,14 +119,14 @@ void __init efi_check_for_embedded_firmwares(void)
->                 }
->         }
->
-> -       checked_for_fw = true;
-> +       efi_embedded_fw_checked = true;
->  }
->
->  int efi_get_embedded_fw(const char *name, const u8 **data, size_t *size)
->  {
->         struct efi_embedded_fw *iter, *fw = NULL;
->
-> -       if (!checked_for_fw) {
-> +       if (!efi_embedded_fw_checked) {
->                 pr_warn("Warning %s called while we did not check for embedded fw\n",
->                         __func__);
->                 return -ENOENT;
-> diff --git a/include/linux/efi_embedded_fw.h b/include/linux/efi_embedded_fw.h
-> index 57eac5241303..a97a12bb2c9e 100644
-> --- a/include/linux/efi_embedded_fw.h
-> +++ b/include/linux/efi_embedded_fw.h
-> @@ -8,8 +8,8 @@
->  #define EFI_EMBEDDED_FW_PREFIX_LEN             8
->
->  /*
-> - * This struct and efi_embedded_fw_list are private to the efi-embedded fw
-> - * implementation they are in this header for use by lib/test_firmware.c only!
-> + * This struct is private to the efi-embedded fw implementation.
-> + * They are in this header for use by lib/test_firmware.c only!
->   */
->  struct efi_embedded_fw {
->         struct list_head list;
-> @@ -18,8 +18,6 @@ struct efi_embedded_fw {
->         size_t length;
->  };
->
-> -extern struct list_head efi_embedded_fw_list;
-> -
->  /**
->   * struct efi_embedded_fw_desc - This struct is used by the EFI embedded-fw
->   *                               code to search for embedded firmwares.
-> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-> index 9fee2b93a8d1..06c955057756 100644
-> --- a/lib/test_firmware.c
-> +++ b/lib/test_firmware.c
-> @@ -26,6 +26,8 @@
->  #include <linux/vmalloc.h>
->  #include <linux/efi_embedded_fw.h>
->
-> +MODULE_IMPORT_NS(TEST_FIRMWARE);
-> +
->  #define TEST_FIRMWARE_NAME     "test-firmware.bin"
->  #define TEST_FIRMWARE_NUM_REQS 4
->  #define TEST_FIRMWARE_BUF_SIZE SZ_1K
-> @@ -489,6 +491,9 @@ static ssize_t trigger_request_store(struct device *dev,
->  static DEVICE_ATTR_WO(trigger_request);
->
->  #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
-> +extern struct list_head efi_embedded_fw_list;
-> +extern bool efi_embedded_fw_checked;
-> +
->  static ssize_t trigger_request_platform_store(struct device *dev,
->                                               struct device_attribute *attr,
->                                               const char *buf, size_t count)
-> @@ -501,6 +506,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
->         };
->         struct efi_embedded_fw efi_embedded_fw;
->         const struct firmware *firmware = NULL;
-> +       bool saved_efi_embedded_fw_checked;
->         char *name;
->         int rc;
->
-> @@ -513,6 +519,8 @@ static ssize_t trigger_request_platform_store(struct device *dev,
->         efi_embedded_fw.data = (void *)test_data;
->         efi_embedded_fw.length = sizeof(test_data);
->         list_add(&efi_embedded_fw.list, &efi_embedded_fw_list);
-> +       saved_efi_embedded_fw_checked = efi_embedded_fw_checked;
-> +       efi_embedded_fw_checked = true;
->
->         pr_info("loading '%s'\n", name);
->         rc = firmware_request_platform(&firmware, name, dev);
-> @@ -530,6 +538,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
->         rc = count;
->
->  out:
-> +       efi_embedded_fw_checked = saved_efi_embedded_fw_checked;
->         release_firmware(firmware);
->         list_del(&efi_embedded_fw.list);
->         kfree(name);
-> --
-> 2.25.1
->
+DQpIaSBQcmFiaGFrYXIsDQoNCkknbSBjdXJyZW50bHkgdGVzdGluZyB0aGUgT1Y1NjQwIENDSVI2
+NTYgZW1iZWRkZWQgc3luY2hyb25pc2F0aW9uIG1vZGUgDQpvbiBTVE0zMk1QMSBydW5uaW5nIFNU
+TTMyIERDTUkgY2FtZXJhIGludGVyZmFjZS4NClRlc3RzIG5vdCB5ZXQgZnVsbHkgY29tcGxldGVk
+IGJ1dCBzb3VuZHMgZ29vZCwgbW9yZSBkZXRhaWxzIGJlbG93Lg0KDQpPbiA4LzMvMjAgNDozMSBQ
+TSwgTGFkIFByYWJoYWthciB3cm90ZToNCj4gRW5hYmxlIHN1cHBvcnQgZm9yIEJUNjU2IG1vZGUu
+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMYWQgUHJhYmhha2FyIDxwcmFiaGFrYXIubWFoYWRldi1s
+YWQucmpAYnAucmVuZXNhcy5jb20+DQo+IFJldmlld2VkLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXMu
+anpAYnAucmVuZXNhcy5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvbWVkaWEvaTJjL292NTY0MC5j
+IHwgNDAgKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gICAxIGZpbGUg
+Y2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMgYi9kcml2ZXJzL21lZGlhL2kyYy9vdjU2
+NDAuYw0KPiBpbmRleCBlYzQ0NGJlZTJjZTkuLjA4YzY3MjUwMDQyZiAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9pMmMvb3Y1
+NjQwLmMNCj4gQEAgLTgyLDYgKzgyLDcgQEANCj4gICAjZGVmaW5lIE9WNTY0MF9SRUdfVkZJRk9f
+SFNJWkUJCTB4NDYwMg0KPiAgICNkZWZpbmUgT1Y1NjQwX1JFR19WRklGT19WU0laRQkJMHg0NjA0
+DQo+ICAgI2RlZmluZSBPVjU2NDBfUkVHX0pQR19NT0RFX1NFTEVDVAkweDQ3MTMNCj4gKyNkZWZp
+bmUgT1Y1NjQwX1JFR19DQ0lSNjU2X0NUUkwwMAkweDQ3MzANCj4gICAjZGVmaW5lIE9WNTY0MF9S
+RUdfUE9MQVJJVFlfQ1RSTDAwCTB4NDc0MA0KPiAgICNkZWZpbmUgT1Y1NjQwX1JFR19NSVBJX0NU
+UkwwMAkJMHg0ODAwDQo+ICAgI2RlZmluZSBPVjU2NDBfUkVHX0RFQlVHX01PREUJCTB4NDgxNA0K
+PiBAQCAtMTIxNiw2ICsxMjE3LDE4IEBAIHN0YXRpYyBpbnQgb3Y1NjQwX3NldF9hdXRvZ2Fpbihz
+dHJ1Y3Qgb3Y1NjQwX2RldiAqc2Vuc29yLCBib29sIG9uKQ0KPiAgIAkJCSAgICAgIEJJVCgxKSwg
+b24gPyAwIDogQklUKDEpKTsNCj4gICB9DQo+ICAgDQo+ICtzdGF0aWMgaW50IG92NTY0MF9zZXRf
+c3RyZWFtX2J0NjU2KHN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3IsIGJvb2wgb24pDQo+ICt7DQo+
+ICsJaW50IHJldDsNCj4gKw0KPiArCXJldCA9IG92NTY0MF93cml0ZV9yZWcoc2Vuc29yLCBPVjU2
+NDBfUkVHX0NDSVI2NTZfQ1RSTDAwLCBvbiA/IDB4MSA6IDB4MDApOw0KPiArCWlmIChyZXQpDQo+
+ICsJCXJldHVybiByZXQ7DQoNClBsZWFzZSBhZGQgYSBjb21tZW50IGV4cGxhaW5pbmcgYml0IGZp
+ZWxkcyBmcm9tIGRhdGFzaGVldDoNCkJpdFs3XTogU1lOQyBjb2RlIHNlbGVjdGlvbg0KMDogQXV0
+b21hdGljYWxseSBnZW5lcmF0ZSBTWU5DIGNvZGUNCjE6IFNZTkMgY29kZSBmcm9tIHJlZ2lzdGVy
+IHNldHRpbmcgMHg0NzMyfjQ3MzUNCkJpdFs0OjNdOiBCbGFuayB0b2dnbGUgZGF0YSBvcHRpb25z
+DQowMDogVG9nZ2xlIGRhdGEgaXMgMSdoMDQwLzEnaDIwMA0KQml0WzFdOiBDbGlwIGRhdGEgZGlz
+YWJsZSAoc28gY2xpcCBpcyBlbmFibGVkKQ0KQml0WzBdOiBDQ0lSNjU2IG1vZGUgZW5hYmxlDQoN
+ClNvIDB4MSBzdGFuZHMgZm9yIENDSVI2NTYgd2l0aCBhdXRvbWF0aWMgU1lOQyBjb2RlczogU0FW
+L0VBViB3aXRoIA0KZGVmYXVsdCB2YWx1ZXMgaWUgU0FWPTB4RkYwMDAwODAgJiBFQVY9MHhGRjAw
+MDA5ZC4NCg0KT24gU1RNMzIgcGxhdGZvcm0sIHRoaXMgY29ycmVzcG9uZCB0byBEQ01JIGNvbmZp
+Z3VyYXRpb24gRVNDUj0weGZmOWQ4MGZmIA0KYW5kIEVTVVI9MHhmZmZmZmZmZi4NCk9uIFJlbmVz
+YXMgcGxhdGZvcm0sIEkgaGF2ZSBub3Qgc2VlbiBhbnkgY29uZmlndXJhdGlvbiBpbiBjb2RlLCB0
+aGlzIA0KU0FWL0VBViBtb2RlIHNlZW1zIHRvIGJlIGhhbmRsZWQgYnkgZGVmYXVsdCBieSBoYXJk
+d2FyZSwgZG8geW91IGNvbmZpcm0gPw0KDQpOb3RlIHRoYXQgYW5vdGhlciBDQ0lSNjU2IGVtYmVk
+ZGVkIHN5bmNocm8gbW9kZSBjb3VsZCBiZSB1c2VkIHdpdGggDQpjdXN0b20gc3luY2hybyBjb2Rl
+cyBGUy9GRS9MUy9MRSBpbiByZWdpc3RlcnMgMHg0NzMyLTB4NDczNSwgdGhpcw0KbW9kZSBpcyBl
+bmFibGVkIHdpdGggQ0NJUjY1Nl9DVFJMMDAoMHg0NzMwKSBzZXQgdG8gMHg4MToNCkJpdFs3XTog
+U1lOQyBjb2RlIHNlbGVjdGlvbg0KMTogU1lOQyBjb2RlIGZyb20gcmVnaXN0ZXIgc2V0dGluZyAw
+eDQ3MzJ+NDczNQ0KDQo+ICsNCj4gKwlyZXR1cm4gb3Y1NjQwX3dyaXRlX3JlZyhzZW5zb3IsIE9W
+NTY0MF9SRUdfU1lTX0NUUkwwLCBvbiA/DQo+ICsJCQkJT1Y1NjQwX1NPRlRXQVJFX1dBS0VVUCA6
+IE9WNTY0MF9TT0ZUV0FSRV9QV0ROKTsNCj4gK30NCj4gKw0KPiAgIHN0YXRpYyBpbnQgb3Y1NjQw
+X3NldF9zdHJlYW1fZHZwKHN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3IsIGJvb2wgb24pDQo+ICAg
+ew0KPiAgIAlyZXR1cm4gb3Y1NjQwX3dyaXRlX3JlZyhzZW5zb3IsIE9WNTY0MF9SRUdfU1lTX0NU
+UkwwLCBvbiA/DQo+IEBAIC0yMDIyLDE4ICsyMDM1LDIwIEBAIHN0YXRpYyBpbnQgb3Y1NjQwX3Nl
+dF9kdnAoc3RydWN0IG92NTY0MF9kZXYgKnNlbnNvciwgYm9vbCBvbikNCj4gICAJICoJCWRhdGFz
+aGVldCBhbmQgaGFyZHdhcmUsIDAgaXMgYWN0aXZlIGhpZ2gNCj4gICAJICoJCWFuZCAxIGlzIGFj
+dGl2ZSBsb3cuLi4pDQo+ICAgCSAqLw0KPiAtCWlmIChmbGFncyAmIFY0TDJfTUJVU19QQ0xLX1NB
+TVBMRV9SSVNJTkcpDQo+IC0JCXBjbGtfcG9sID0gMTsNCj4gLQlpZiAoZmxhZ3MgJiBWNEwyX01C
+VVNfSFNZTkNfQUNUSVZFX0hJR0gpDQo+IC0JCWhzeW5jX3BvbCA9IDE7DQo+IC0JaWYgKGZsYWdz
+ICYgVjRMMl9NQlVTX1ZTWU5DX0FDVElWRV9MT1cpDQo+IC0JCXZzeW5jX3BvbCA9IDE7DQo+ICsJ
+aWYgKHNlbnNvci0+ZXAuYnVzX3R5cGUgPT0gVjRMMl9NQlVTX1BBUkFMTEVMKSB7DQo+ICsJCWlm
+IChmbGFncyAmIFY0TDJfTUJVU19QQ0xLX1NBTVBMRV9SSVNJTkcpDQo+ICsJCQlwY2xrX3BvbCA9
+IDE7DQo+ICsJCWlmIChmbGFncyAmIFY0TDJfTUJVU19IU1lOQ19BQ1RJVkVfSElHSCkNCj4gKwkJ
+CWhzeW5jX3BvbCA9IDE7DQo+ICsJCWlmIChmbGFncyAmIFY0TDJfTUJVU19WU1lOQ19BQ1RJVkVf
+TE9XKQ0KPiArCQkJdnN5bmNfcG9sID0gMTsNCj4gICANCj4gLQlyZXQgPSBvdjU2NDBfd3JpdGVf
+cmVnKHNlbnNvciwgT1Y1NjQwX1JFR19QT0xBUklUWV9DVFJMMDAsDQo+IC0JCQkgICAgICAgKHBj
+bGtfcG9sIDw8IDUpIHwgKGhzeW5jX3BvbCA8PCAxKSB8IHZzeW5jX3BvbCk7DQo+ICsJCXJldCA9
+IG92NTY0MF93cml0ZV9yZWcoc2Vuc29yLCBPVjU2NDBfUkVHX1BPTEFSSVRZX0NUUkwwMCwNCj4g
+KwkJCQkgICAgICAgKHBjbGtfcG9sIDw8IDUpIHwgKGhzeW5jX3BvbCA8PCAxKSB8IHZzeW5jX3Bv
+bCk7DQo+ICAgDQo+IC0JaWYgKHJldCkNCj4gLQkJcmV0dXJuIHJldDsNCj4gKwkJaWYgKHJldCkN
+Cj4gKwkJCXJldHVybiByZXQ7DQo+ICsJfQ0KPiAgIA0KPiAgIAkvKg0KPiAgIAkgKiBwb3dlcmRv
+d24gTUlQSSBUWC9SWCBQSFkgJiBkaXNhYmxlIE1JUEkNCj4gQEAgLTIwNTcsNyArMjA3Miw4IEBA
+IHN0YXRpYyBpbnQgb3Y1NjQwX3NldF9kdnAoc3RydWN0IG92NTY0MF9kZXYgKnNlbnNvciwgYm9v
+bCBvbikNCj4gICAJICogLSA0OgkJUENMSyBvdXRwdXQgZW5hYmxlDQo+ICAgCSAqIC0gWzM6MF06
+CURbOTo2XSBvdXRwdXQgZW5hYmxlDQo+ICAgCSAqLw0KPiAtCXJldCA9IG92NTY0MF93cml0ZV9y
+ZWcoc2Vuc29yLCBPVjU2NDBfUkVHX1BBRF9PVVRQVVRfRU5BQkxFMDEsIDB4N2YpOw0KPiArCXJl
+dCA9IG92NTY0MF93cml0ZV9yZWcoc2Vuc29yLCBPVjU2NDBfUkVHX1BBRF9PVVRQVVRfRU5BQkxF
+MDEsDQo+ICsJCQkgICAgICAgc2Vuc29yLT5lcC5idXNfdHlwZSA9PSBWNEwyX01CVVNfUEFSQUxM
+RUwgPyAweDdmIDogMHgxZik7DQo+ICAgCWlmIChyZXQpDQo+ICAgCQlyZXR1cm4gcmV0Ow0KPiAg
+IA0KPiBAQCAtMjkxMSw2ICsyOTI3LDggQEAgc3RhdGljIGludCBvdjU2NDBfc19zdHJlYW0oc3Ry
+dWN0IHY0bDJfc3ViZGV2ICpzZCwgaW50IGVuYWJsZSkNCj4gICANCj4gICAJCWlmIChzZW5zb3It
+PmVwLmJ1c190eXBlID09IFY0TDJfTUJVU19DU0kyX0RQSFkpDQo+ICAgCQkJcmV0ID0gb3Y1NjQw
+X3NldF9zdHJlYW1fbWlwaShzZW5zb3IsIGVuYWJsZSk7DQo+ICsJCWVsc2UgaWYgKHNlbnNvci0+
+ZXAuYnVzX3R5cGUgPT0gVjRMMl9NQlVTX0JUNjU2KQ0KPiArCQkJcmV0ID0gb3Y1NjQwX3NldF9z
+dHJlYW1fYnQ2NTYoc2Vuc29yLCBlbmFibGUpOw0KPiAgIAkJZWxzZQ0KPiAgIAkJCXJldCA9IG92
+NTY0MF9zZXRfc3RyZWFtX2R2cChzZW5zb3IsIGVuYWJsZSk7DQo+ICAgDQo+IA0KDQpCUiwgSHVn
+dWVzLg==
