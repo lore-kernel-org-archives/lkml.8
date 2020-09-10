@@ -2,130 +2,87 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88657C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF03C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2840421941
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:07:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t28s2ohA"
+	by mail.kernel.org (Postfix) with ESMTP id 6F691207EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbgIJSGz (ORCPT
+        id S1726176AbgIJSHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:06:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgIJSFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:05:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBABC061757;
-        Thu, 10 Sep 2020 11:05:47 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w7so5091875pfi.4;
-        Thu, 10 Sep 2020 11:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mEwZSmSPM9tJPXbfj/hisKYRPYb4G1wKBGhUAXFVXQE=;
-        b=t28s2ohAlSG3nVPgGmhJ9BtHHniLCxcuBl1dSx2uX8dRKSd84C+/w6E7KceCTwhEBG
-         DMLxo6p3upAgq3btstD8SUZfDQypTTqA2JjOm/dbtwqTeWvJkJPI/5RiO6DMh7EhFImN
-         cqM46aKbyCYnaGx0RX3lIaSognEZkwZ+15E5fDWU/2p9wP+ZTLkAXbHSMvrX8lscBbq+
-         //h0PQuybrORv3zCLQ48eqLcTQO7n8EW7BXnEoOcUNay1NpF0sAkwi5bf1I9fmltNYK1
-         t/GmQjm4oZM4MHB1RkNXfpcgOwHN/BLhFPI32MDk6Vtln8npZF4aq2QB0ZqT2BcTJPNL
-         a0Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mEwZSmSPM9tJPXbfj/hisKYRPYb4G1wKBGhUAXFVXQE=;
-        b=TEFhcUSWGu4ys6+jgIF1SLuKtZ4navr/XjilKRCJQS0shY5fMKEKACc27Q/1Z/wqjK
-         duA3HcXIL9rlbhhRB+WJYNSTgdvRlfJ+qRel9YjRSndRRSKthDSkSMa1FevAiicAtQcz
-         YdvORBRQ6IzODFgJAvnUKDzE5K3G1FgGpqg0nTXWUcCzMEIQyooSQeW2Hacl4HQJv28D
-         EIkuAsVy793mpyBeDV8mYLlfecf0iLwv2BSIRS7xCXpPKD1jrCwDQS9bNgzHxiQdg+MN
-         w8WF8pxZm4sjqHG2iJu+Nz32eGv2rBd8ZrTh3Y+DdMynZPfnmfksrv1SgjKF57vgkFhM
-         NEAQ==
-X-Gm-Message-State: AOAM533bV8zGzsDH9m2gshi+kEPimwB6KYmYhsq2MJSPO4FaHb8VSCaO
-        SIBLTnyz5DOJ2jXXa90i9kA=
-X-Google-Smtp-Source: ABdhPJzsznNUs52Ek6gTw2Dn9tG7jAPka/nCKtVSJh1zGME/XM/9xnhHT59acXC+Hho9CxqNHMkHDg==
-X-Received: by 2002:a62:8c86:: with SMTP id m128mr6545841pfd.111.1599761146894;
-        Thu, 10 Sep 2020 11:05:46 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6218:54d7:9928:e984:12bb:783d])
-        by smtp.gmail.com with ESMTPSA id f4sm5799390pfj.147.2020.09.10.11.05.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:05:46 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, andy.shevchenko@gmail.com,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [RESEND PATCH v3 2/3] dt-bindings: iio: gyro: adxrs290: Add interrupts support
-Date:   Thu, 10 Sep 2020 23:34:49 +0530
-Message-Id: <20200910180450.29696-3-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200910180450.29696-1-nish.malpani25@gmail.com>
-References: <20200910180450.29696-1-nish.malpani25@gmail.com>
+        Thu, 10 Sep 2020 14:07:12 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8888 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbgIJSGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 14:06:33 -0400
+IronPort-SDR: ihsw14IEDztMFrsbGpSMqaAo10izxb84dtuwYqaYXw50kbAvP7ek/oBZ5pCOzNQNvvojWdOxMY
+ MY20tK7KAKAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="158643332"
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="158643332"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 11:06:13 -0700
+IronPort-SDR: TbgBTxIPfPO2q3x6WUpY71mIX7SVfd8A37B2i0+LloyCOO9FB+mrsi21XpYbGQaGB26TwRPORs
+ yr/lw+0Tr2KQ==
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="505920334"
+Received: from rdraharj-mobl1.amr.corp.intel.com (HELO [10.209.137.6]) ([10.209.137.6])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 11:06:11 -0700
+Subject: Re: [PATCH V6] ASoC: Intel: boards: Use FS as nau8825 sysclk in
+ nau88125_* machine
+To:     Radoslaw Biernacki <rad@semihalf.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     Lech Betlej <Lech.Betlej@intel.com>, alsa-devel@alsa-project.org,
+        Todd Broch <tbroch@google.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        John Hsu <KCHSU0@nuvoton.com>, linux-kernel@vger.kernel.org,
+        michal.sienkiewicz@intel.com, Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Yong Zhi <yong.zhi@intel.com>, Marcin Wojtas <mw@semihalf.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Alex Levin <levinale@google.com>
+References: <20200910172538.31425-1-rad@semihalf.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <ea119537-f998-b1fb-6665-648d78a25928@linux.intel.com>
+Date:   Thu, 10 Sep 2020 13:06:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200910172538.31425-1-rad@semihalf.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include 'interrupts' property and provide a suitable example for using
-a GPIO interrupt line.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
 
-Changes in v3:
-  - remove gpio.h header since unused
+On 9/10/20 12:25 PM, Radoslaw Biernacki wrote:
+> Since 256xFS clocks cannot be generated by SKL, the NAU8825 is
+> configured to re-generate its system clock from the BCLK using the
+> FLL. The link is configured to use a 48kHz frame rate, and 24 bits in
+> 25-bit slot. The SSP configuration is extracted from NHLT settings and
+> not dynamically changed. Listening tests and measurements do not show
+> any distortion or issues
+> 
+> Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
+> Signed-off-by: Yong Zhi <yong.zhi@intel.com>
+> Signed-off-by: Mac Chiang <mac.chiang@intel.com>
+> Signed-off-by: Ben Zhang <benzh@chromium.org>
+> Signed-off-by: Radoslaw Biernacki <rad@semihalf.com>
+> ---
 
-Changes in v2:
+LGTM, thanks!
 
-  - remove 'interrupts' property from the required properties list
-  - rewrite commit message
----
- .../devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-index 61adb2c2454b..662ec59ca0af 100644
---- a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
-@@ -28,6 +28,9 @@ properties:
- 
-   spi-cpha: true
- 
-+  interrupts:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-@@ -39,6 +42,7 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-     spi {
-         #address-cells = <1>;
-         #size-cells = <0>;
-@@ -48,6 +52,8 @@ examples:
-                    spi-max-frequency = <5000000>;
-                    spi-cpol;
-                    spi-cpha;
-+                   interrupt-parent = <&gpio>;
-+                   interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-         };
-     };
- ...
--- 
-2.20.1
-
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
