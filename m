@@ -2,213 +2,212 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B6DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5E1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D513E20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC86E20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:24:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSHPR5zh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYx4+/kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgIJTYf (ORCPT
+        id S1727952AbgIJTXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:24:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45352 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731435AbgIJPte (ORCPT
+        Thu, 10 Sep 2020 15:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgIJTWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 11:49:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599752954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rA8BS9/0jZ+l2MQA+dZBWWcPqUsG5Wsdp/FCuxiOFaM=;
-        b=NSHPR5zhzsl5t/mbc63Ra8rric8q5IZj4jc6f/+ycvun5bWKz6E+Gx5ysHYXhxQ7asp0mf
-        7JCF3bzUlZeDYwkreKrpqqeRvzd5nvJDvZPD8Q18hzs+dWY5shPT3h4rKwOSDe0dvzLdLF
-        yHZn6ky+zR7oCt2j4+QQCJzZLIqvjIY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-Lu5N34tZPGKIAJMthXwWzA-1; Thu, 10 Sep 2020 11:49:11 -0400
-X-MC-Unique: Lu5N34tZPGKIAJMthXwWzA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 087AA84E246;
-        Thu, 10 Sep 2020 15:49:05 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 43B6319C71;
-        Thu, 10 Sep 2020 15:49:04 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 09:49:03 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, kwankhede@nvidia.com, linux-fpga@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
-        lgoncalv@redhat.com,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: Re: [PATCH 3/3] Documentation: fpga: dfl: Add description for VFIO
-  Mdev support
-Message-ID: <20200910094903.51deb038@x1.home>
-In-Reply-To: <20200910083230.GA16318@yilunxu-OptiPlex-7050>
-References: <1599549212-24253-1-git-send-email-yilun.xu@intel.com>
-        <1599549212-24253-4-git-send-email-yilun.xu@intel.com>
-        <20200908151002.553ed7ae@w520.home>
-        <20200910083230.GA16318@yilunxu-OptiPlex-7050>
-Organization: Red Hat
+        Thu, 10 Sep 2020 15:22:35 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E49C061573;
+        Thu, 10 Sep 2020 12:22:35 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t14so4775964pgl.10;
+        Thu, 10 Sep 2020 12:22:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9w45VZWOTWHRpHJKDRnd2gj0CH4v1KqsTw3tcnUZHeI=;
+        b=CYx4+/kvgCH5DjBgR+5x/RJEoBf8ZyZArlM2wlF++zcSk97mDeoQg4AZj9ZgtMY0fe
+         VKNgle+PLT9O607zSr7p/xfATsY0pGsuevFDhoRS5mSGTS/OxJtygbBRTJOaw/1ZJPqf
+         UuICb6s8728K2pmHGALoOUEvBmyruamWGlJ7Pensw0WBXDf0YfzA/NcIPk4+V630KDZH
+         v3hhrg76XL97lTAj2HHEaabt5JN5aAWCSYgoSePq6pF4phrGUAhigPbrTwpCeFBtMZQe
+         Wtb/104t8GRRhT6Vr3RXxu3vzCTPIfvdkR6u6k7Pa9xwWbi8m01WnKwHojCJtxv2PZ4Q
+         9Jmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9w45VZWOTWHRpHJKDRnd2gj0CH4v1KqsTw3tcnUZHeI=;
+        b=lTQ6Q9h6A50IiqXoJglmL00jYM1pLdwMCptv2oyXq1h6N1O5gu3OZDfCUNoEtMvVZ1
+         lUHxcE9M3ho8P8CXgQgXMiAwCpOTjY7HmGHikKhRuuaUtuzBldm6nMTJw578RbqgZaB4
+         F7/xkotIXHbndBmyZW/e2Nnk+U9Lkuathd6Q36ZpzLnA+OC1WkLMKzvwshT/6j51INOB
+         Prqvnk9/7F4Be8za+d9oAgZbXcMRTv8cRYbiJ11gXWAOEP2/R5+NkkknMc4r/LOyfKHQ
+         OXtli8IDws10LNFEW9N4giw6tfkvEEhpRuMvvbUsLVt6hkzl4KRGvwLVUsAK7mdVnTBX
+         wR4Q==
+X-Gm-Message-State: AOAM531+wS/floWCBDYfn+Dv3t7xpYKszirsAhgSeQffbiwqb0YPXvXt
+        RWZjkM9SFFW+14U4FEvxunQQdtEKvUM=
+X-Google-Smtp-Source: ABdhPJzSscWb0cVMv9W7q8t3QGWP3BKF8sKkKLSy9cavufpNaFGr03+GXUXWaF49nnLZrZEBeh0YZA==
+X-Received: by 2002:a05:6a00:15c1:b029:13e:d13d:a07a with SMTP id o1-20020a056a0015c1b029013ed13da07amr6964647pfu.17.1599765754634;
+        Thu, 10 Sep 2020 12:22:34 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id q5sm6727887pfn.109.2020.09.10.12.22.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 12:22:33 -0700 (PDT)
+Subject: Re: [PATCH] PCI: Don't use Printk in raw_spinlocks
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Xingxing Su <suxingxing@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        Scott Branden <scott.branden@broadcom.com>
+References: <20200910192005.GA806683@bjorn-Precision-5520>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <100a750c-e359-9836-38be-6a6b5d2917d4@gmail.com>
+Date:   Thu, 10 Sep 2020 12:22:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200910192005.GA806683@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 16:32:30 +0800
-Xu Yilun <yilun.xu@intel.com> wrote:
 
-> Hi Alex:
+
+On 9/10/2020 12:20 PM, Bjorn Helgaas wrote:
+> On Thu, Sep 10, 2020 at 11:50:07AM -0700, Florian Fainelli wrote:
+>> On 9/10/2020 11:46 AM, Bjorn Helgaas wrote:
+>>> On Thu, Sep 10, 2020 at 08:21:06AM -0600, Rob Herring wrote:
+>>>> On Wed, Sep 9, 2020 at 8:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>
+>>>>> [+cc Mark, Florian, Rob, Scott]
+>>>>>
+>>>>> On Sat, Aug 01, 2020 at 09:25:49AM +0800, Xingxing Su wrote:
+>>>>>> Do not use printk in raw_spinlocks,
+>>>>>> it will cause BUG: Invalid wait context.
+>>>>>>
+>>>>>> The trace reported by lockdep follows.
+>>>>>>
+>>>>>> [    2.986113] =============================
+>>>>>> [    2.986115] [ BUG: Invalid wait context ]
+>>>>>> [    2.986116] 5.8.0-rc1+ #11 Not tainted
+>>>>>> [    2.986118] -----------------------------
+>>>>>> [    2.986120] swapper/0/1 is trying to lock:
+>>>>>> [    2.986122] ffffffff80f5ddd8 (console_owner){....}-{3:3}, at: console_unlock+0x284/0x820
+>>>>>> [    2.986130] other info that might help us debug this:
+>>>>>> [    2.986132] context-{5:5}
+>>>>>> [    2.986134] 3 locks held by swapper/0/1:
+>>>>>> [    2.986135]  #0: 98000007fa03c990 (&dev->mutex){....}-{0:0}, at: device_driver_attach+0x28/0x90
+>>>>>> [    2.986144]  #1: ffffffff80fb83a8 (pci_lock){....}-{2:2}, at: pci_bus_write_config_word+0x60/0xb8
+>>>>>> [    2.986152]  #2: ffffffff80f5ded0 (console_lock){+.+.}-{0:0}, at: vprintk_emit+0x1b0/0x3b8
+>>>>>> [    2.986161] stack backtrace:
+>>>>>> [    2.986163] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.8.0-rc1+ #11
+>>>>>> [    2.986164] Stack : 0000000000001d67 98000000030be9b0 0000000000000001 7b2aba74f6c4785b
+>>>>>> [    2.986172]         7b2aba74f6c4785b 0000000000000000 98000007f89cb438 ffffffff80e7dc80
+>>>>>> [    2.986181]         0000000000000001 000000000000000a 0000000000000001 0000000000000001
+>>>>>> [    2.986189]         ffffffff80f4e156 fffffffffffffffd ffffffff80cc2d98 fffffffff8000000
+>>>>>> [    2.986197]         0000000024000000 ffffffff80f40000 0000000000000000 0000000000000000
+>>>>>> [    2.986205]         ffffffff9500cce0 0000000000000000 ffffffff80f50000 ffffffff81546318
+>>>>>> [    2.986213]         ffffffff81c4c3c0 0000000000000018 ffffffffbc000000 0000000000000000
+>>>>>> [    2.986221]         ffffffff81340000 98000007f89c8000 98000007f89cb430 98000007f8a00000
+>>>>>> [    2.986229]         ffffffff806be568 0000000000000000 0000000000000000 0000000000000000
+>>>>>> [    2.986237]         0000000000000000 0000000000000000 ffffffff80211c1c 7b2aba74f6c4785b
+>>>>>> [    2.986245]         ...
+>>>>>> [    2.986250] Call Trace:
+>>>>>> [    2.986251] [<ffffffff80211c1c>] show_stack+0x9c/0x130
+>>>>>> [    2.986253] [<ffffffff806be568>] dump_stack+0xe8/0x150
+>>>>>> [    2.986255] [<ffffffff802ad408>] __lock_acquire+0x570/0x3250
+>>>>>> [    2.986257] [<ffffffff802abed0>] lock_acquire+0x118/0x558
+>>>>>> [    2.986259] [<ffffffff802be764>] console_unlock+0x2e4/0x820
+>>>>>> [    2.986261] [<ffffffff802c0a68>] vprintk_emit+0x1c0/0x3b8
+>>>>>> [    2.986263] [<ffffffff807f45a8>] dev_vprintk_emit+0x1c8/0x210
+>>>>>> [    2.986265] [<ffffffff807f462c>] dev_printk_emit+0x3c/0x60
+>>>>>> [    2.986267] [<ffffffff807f499c>] _dev_warn+0x5c/0x80
+>>>>>> [    2.986269] [<ffffffff806eea9c>] pci_generic_config_write32+0x154/0x160
+>>>>>> [    2.986271] [<ffffffff806edca4>] pci_bus_write_config_word+0x84/0xb8
+>>>>>> [    2.986273] [<ffffffff806f1664>] pci_setup_device+0x22c/0x768
+>>>>>> [    2.986275] [<ffffffff806f26a0>] pci_scan_single_device+0xc8/0x100
+>>>>>> [    2.986277] [<ffffffff806f2788>] pci_scan_slot+0xb0/0x178
+>>>>>> [    2.986279] [<ffffffff806f3ae4>] pci_scan_child_bus_extend+0x5c/0x370
+>>>>>> [    2.986281] [<ffffffff806f407c>] pci_scan_root_bus_bridge+0x6c/0xf0
+>>>>>> [    2.986283] [<ffffffff806f411c>] pci_host_probe+0x1c/0xd8
+>>>>>> [    2.986285] [<ffffffff807fa03c>] platform_drv_probe+0x54/0xb8
+>>>>>> [    2.986287] [<ffffffff807f71f8>] really_probe+0x130/0x388
+>>>>>> [    2.986289] [<ffffffff807f7594>] driver_probe_device+0x64/0xd8
+>>>>>> [    2.986291] [<ffffffff807f7844>] device_driver_attach+0x84/0x90
+>>>>>> [    2.986293] [<ffffffff807f7918>] __driver_attach+0xc8/0x128
+>>>>>> [    2.986295] [<ffffffff807f4cac>] bus_for_each_dev+0x74/0xd8
+>>>>>> [    2.986297] [<ffffffff807f6408>] bus_add_driver+0x170/0x250
+>>>>>> [    2.986299] [<ffffffff807f899c>] driver_register+0x84/0x150
+>>>>>> [    2.986301] [<ffffffff80200b08>] do_one_initcall+0x98/0x458
+>>>>>> [    2.986303] [<ffffffff810212dc>] kernel_init_freeable+0x2c0/0x36c
+>>>>>> [    2.986305] [<ffffffff80be7540>] kernel_init+0x10/0x128
+>>>>>> [    2.986307] [<ffffffff80209d44>] ret_from_kernel_thread+0x14/0x1c
+>>>>>>
+>>>>>> Signed-off-by: Xingxing Su <suxingxing@loongson.cn>
+>>>>>> ---
+>>>>>>    drivers/pci/access.c | 3 ---
+>>>>>>    1 file changed, 3 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>>>>>> index 79c4a2e..b3fc164 100644
+>>>>>> --- a/drivers/pci/access.c
+>>>>>> +++ b/drivers/pci/access.c
+>>>>>> @@ -160,9 +160,6 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>>>>>>          * write happen to have any RW1C (write-one-to-clear) bits set, we
+>>>>>>          * just inadvertently cleared something we shouldn't have.
+>>>>>>          */
+>>>>>> -     dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+>>>>>> -                          size, pci_domain_nr(bus), bus->number,
+>>>>>> -                          PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+>>>>>
+>>>>> We just changed this printk (see [1]), but I think we still have this
+>>>>> lockdep problem even after Mark's change.  So I guess we need another
+>>>>> think about this.
+>>>>>
+>>>>> Maybe we can print something when registering pci_ops that use
+>>>>> pci_generic_config_write32()?
+>>>>
+>>>> That was my suggestion, but as Mark pointed out that doesn't work if
+>>>> pci_generic_config_write32 is wrapped (which is 4 out of 8 cases).
+>>>>
+>>>> Also, 3 of the cases are only for the root bus (bridge). Are 32-bit
+>>>> writes to a bridge going to cause problems? For xgene, interestingly,
+>>>> with DT _write32 is needed, but for ACPI it is not (only _read32). I
+>>>> think xgene is practically dead though a few people still have
+>>>> systems, but likely xgene with DT is really dead. The ECAM case was
+>>>> for QCom server which is also pretty much dead. SA1100 nano-engine is
+>>>> really old and something only a few people have at most (Russell
+>>>> King). So ignoring all those, we're left with just loongson and iproc.
+>>>> Maybe just remove the warning?
+>>>
+>>> Sigh, removing it sounds like the best option.
+>>
+>> Given that we have to go by a list of drivers, how about we add another
+>> pci_bus_flags_t flag to indicate 32-bit configuration space accessors are
+>> used and key off that bit to issue the warning?
 > 
-> Thanks for your quick response and is helpful to me. I did some more
-> investigation and some comments inline.
+> I think that's basically what Mark's patch does: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/enumeration&id=92ff4b49c2a9
+
+Yes indeed, not enough coffee, clearly.
+
 > 
-> On Tue, Sep 08, 2020 at 03:10:02PM -0600, Alex Williamson wrote:
-> > On Tue,  8 Sep 2020 15:13:32 +0800
-> > Xu Yilun <yilun.xu@intel.com> wrote:
-> >   
-> > > This patch adds description for VFIO Mdev support for dfl devices on
-> > > dfl bus.
-> > > 
-> > > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> > > ---
-> > >  Documentation/fpga/dfl.rst | 20 ++++++++++++++++++++
-> > >  1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
-> > > index 0404fe6..f077754 100644
-> > > --- a/Documentation/fpga/dfl.rst
-> > > +++ b/Documentation/fpga/dfl.rst
-> > > @@ -502,6 +502,26 @@ FME Partial Reconfiguration Sub Feature driver (see drivers/fpga/dfl-fme-pr.c)
-> > >  could be a reference.
-> > >  
-> > >  
-> > > +VFIO Mdev support for DFL devices
-> > > +=================================
-> > > +As we introduced a dfl bus for private features, they could be added to dfl bus
-> > > +as independent dfl devices. There is a requirement to handle these devices
-> > > +either by kernel drivers or by direct access from userspace. Usually we bind
-> > > +the kernel drivers to devices which provide board management functions, and
-> > > +gives user direct access to devices which cooperate closely with user
-> > > +controlled Accelerated Function Unit (AFU). We realize this with a VFIO Mdev
-> > > +implementation. When we bind the vfio-mdev-dfl driver to a dfl device, it
-> > > +realizes a group of callbacks and registers to the Mdev framework as a
-> > > +parent (physical) device. It could then create one (available_instances == 1)
-> > > +mdev device.
-> > > +Since dfl devices are sub devices of FPGA DFL physical devices (e.g. PCIE
-> > > +device), which provide no DMA isolation for each sub device, this may leads to
-> > > +DMA isolation problem if a private feature is designed to be capable of DMA.
-> > > +The AFU user could potentially access the whole device addressing space and
-> > > +impact the private feature. So now the general HW design rule is, no DMA
-> > > +capability for private features. It eliminates the DMA isolation problem.  
-> > 
-> > What's the advantage of entangling mdev/vfio in this approach versus
-> > simply exposing the MMIO region of the device via sysfs (similar to a
-> > resource file in pci-sysfs)?  This implementation doesn't support
-> > interrupts, it doesn't support multiplexing of a device, it doesn't
-> > perform any degree of mediation, it seems to simply say "please don't
-> > do DMA".  I don't think that's acceptable for an mdev driver.  If you
-> > want to play loose with isolation, do it somewhere else.  Thanks,  
+> But of course we still have to deal with the lockdep problem.
 > 
-> The intention of the patchset is to enable the userspace drivers for dfl
-> devices. The dfl devices are actually different IP blocks integrated in
-> FPGA to support different board functionalities. They are sub devices of
-> the FPGA PCIe device. Their mmio blocks are in PCIE bar regions. And we
-> want some of the dfl devices handled by the userspace drivers.
-> 
-> Some dfl devices are capable of interrupt. I didn't add interrupt code
-> in this patch cause now the IRQ capable dfl devices are all handled by
-> kernel drivers. But as a generic FPGA platform, IRQ handling for userspace
-> drivers should be supported.
-> 
-> And I can see there are several ways to enable the userspace driver.
-> 
-> 1. Some specific sysfs like pci do. But seems it is not the common way for
-> userspace driver. It does't support interrupt. And potentially users
-> operate on the same mmio region together with kernel driver at the same
-> time.
-> 
-> 2. VFIO driver with NOIOMMU enabled. I think it meets our needs. Do you
-> think it is good we implement an VFIO driver for dfl devices?
-> 
-> 3. VFIO mdev. I implemented it because it will not block us from lacking
-> of valid iommu group. And since the driver didn't perform any mediation,
-> I should give up.
-> 
-> 4. UIO driver. It should work. I'm wondering if option 2 covers the
-> functionalities of UIO and has more enhancement. So option 2 may be
-> better?
-> 
-> Thanks again for your time, and I really appreciate you would give some
-> guide on it.
 
-
-VFIO no-iommu was intended as a transition helper for platforms that do
-not support an IOMMU, particularly running within a VM where we use
-regular, IOMMU protected devices within the host, but allow no-iommu
-within the guest such that the host is still protected from the guest
-sandbox.  There should be no new use cases of no-iommu, it's unsafe, it
-taints the kernel where it's used (guest in the above intended use
-case).  If you intend long term distribution support of a solution,
-VFIO no-iommu should not be considered an option.
-
-VFIO mdev requires that the mdev vendor driver mediates access to the
-device in order to provide isolation.  In the initial vGPU use cases,
-we expect that isolation to be provided via devices specific means, ex.
-GPU GART, but we've since included system level components like IOMMU
-backing devices and auxiliary domains, the latter to make use of IOMMU
-PASID support.
-
-As implemented in this proposal, mdev is being used only to subvert the
-IOMMU grouping requirements of VFIO in order to order to expose a
-device that is potentially fully capable of DMA to userspace with no
-isolation whatsoever.  If not for the IOMMU grouping, this driver could
-simply be a VFIO bus driver making use of the vfio-platform interface.
-Either way, without isolation, this does not belong in the realm of
-VFIO.
-
-Given your architecture, the only potentially valid mdev use case I can
-see would be if the mdev vendor driver binds to the PCIe device,
-allowing multiplexing of the parent device by carving out fpga
-functional blocks from MMIO BAR space, and providing isolation by
-enforcing that the parent device never enables bus master, assuming
-that would prevent any of the fpga sub-components from performing DMA.
-
-Are there worthwhile use cases of these fpga devices without DMA?
-
-If you need DMA (or the device is potentially capable of DMA and
-cannot be audited to prevent it) and cannot provide isolation then
-please don't use VFIO or mdev, doing so would violate the notion of
-secure userspace device access that we've worked to achieve in this
-ecosystem.
-
-If you choose another route, pci-sysfs already provides full BAR access
-via the resource files in sysfs, but you could also expose individual
-sysfs files with the same capabilities per fpga functional unit to
-resolve the conflict between kernel and userspace "ownership".  UIO
-might also be a solution.  This proposal to restrict userspace usage to
-devices that don't perform DMA is akin to uio_pci_generic, where the
-user is not expected to enable bus master, but nothing prevents them
-from doing so and as a result it's a gateway for all sorts of
-unsupportable drivers.  mdev should not be used to follow that example.
-Thanks,
-
-Alex
-
+-- 
+Florian
