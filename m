@@ -2,113 +2,179 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514CEC07548
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA3DB20809
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DzGgN564"
+	by mail.kernel.org (Postfix) with ESMTP id EE9F5208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 13:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgIJNbl (ORCPT
+        id S1730920AbgIJNeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 09:31:41 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21196 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730821AbgIJN2E (ORCPT
+        Thu, 10 Sep 2020 09:34:19 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:1704 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726080AbgIJN0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 09:28:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599744477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/m+8BzcTQhMcOHlC8kleMb4zFUjUqXj7v07BC3dfEx0=;
-        b=DzGgN564wsyfSk9eWic4PI8FLT5q1/IDt782KpTB+aRcM1h6imlJdrs3Q4QRSVKaf9TdRI
-        rIRnsKVcn9B+6nHMf07P6w0j4oUAQ0756mTE2lp0vZLhYGOByj8uVvK1uJjbfqu2hKUyq6
-        SOJ4/CP1FtIv92q+4sRPVxA8LbRaPEY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-GGMbtMqWME-oXJaqIo8ZqA-1; Thu, 10 Sep 2020 09:27:55 -0400
-X-MC-Unique: GGMbtMqWME-oXJaqIo8ZqA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B93B425D2;
-        Thu, 10 Sep 2020 13:27:54 +0000 (UTC)
-Received: from work-vm (ovpn-113-128.ams2.redhat.com [10.36.113.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6612F19C59;
-        Thu, 10 Sep 2020 13:27:51 +0000 (UTC)
-Date:   Thu, 10 Sep 2020 14:27:48 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     Richard Henderson <richard.henderson@linaro.org>,
-        Steven Price <steven.price@arm.com>,
-        Peter Maydell <Peter.Maydell@arm.com>,
-        Juan Quintela <quintela@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        qemu-devel@nongnu.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] MTE support for KVM guest
-Message-ID: <20200910132748.GF2814@work-vm>
-References: <20200904160018.29481-1-steven.price@arm.com>
- <20200909152540.ylnrljd6aelxoxrf@kamzik.brq.redhat.com>
- <5cb1d7ed-54a5-4337-6c3d-2e3e7df89f17@linaro.org>
- <20200910054440.pvnzk7p7riiy45e2@kamzik.brq.redhat.com>
+        Thu, 10 Sep 2020 09:26:34 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ADOUUN003353;
+        Thu, 10 Sep 2020 09:26:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-00128a01.pphosted.com with ESMTP id 33fmjp842k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 09:26:25 -0400
+Received: from m0167088.ppops.net (m0167088.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08ADQOqG014905;
+        Thu, 10 Sep 2020 09:26:24 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 33fmjp842e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 09:26:24 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 08ADQNmk019361
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 10 Sep 2020 09:26:23 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 10 Sep 2020 06:26:21 -0700
+Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 10 Sep 2020 06:26:21 -0700
+Received: from btogorean-pc.ad.analog.com ([10.48.65.108])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 08ADPnkb007313;
+        Thu, 10 Sep 2020 09:26:16 -0400
+From:   Bogdan Togorean <bogdan.togorean@analog.com>
+To:     <linux-media@vger.kernel.org>
+CC:     Bogdan Togorean <bogdan.togorean@analog.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Shawn Tu <shawnx.tu@intel.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] media: dt-bindings: media: i2c: Add bindings for ADDI9036
+Date:   Thu, 10 Sep 2020 19:24:07 +0300
+Message-ID: <20200910162426.55306-2-bogdan.togorean@analog.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200910162426.55306-1-bogdan.togorean@analog.com>
+References: <20200910162426.55306-1-bogdan.togorean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910054440.pvnzk7p7riiy45e2@kamzik.brq.redhat.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 clxscore=1011 impostorscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew Jones (drjones@redhat.com) wrote:
-> On Wed, Sep 09, 2020 at 06:45:33PM -0700, Richard Henderson wrote:
-> > On 9/9/20 8:25 AM, Andrew Jones wrote:
-> > >>  * Provide a KVM-specific method to extract the tags from guest memory.
-> > >>    This might also have benefits in terms of providing an easy way to
-> > >>    read bulk tag data from guest memory (since the LDGM instruction
-> > >>    isn't available at EL0).
-> > > 
-> > > Maybe we need a new version of KVM_GET_DIRTY_LOG that also provides
-> > > the tags for all addresses of each dirty page.
-> > 
-> > KVM_GET_DIRTY_LOG just provides one bit per dirty page, no?  Then VMM copies
-> > the data out from its local address to guest memory.
-> > 
-> > There'd be no difference with or without tags, afaik.  It's just about how VMM
-> > copies the data, with or without tags.
-> 
-> Right, as long as it's fast enough to do
-> 
->   for_each_dirty_page(page, dirty_log)
->     for (i = 0; i < host-page-size/16; i += 16)
->       append_tag(LDG(page + i))
-> 
-> to get all the tags for each dirty page. I understood it would be faster
-> to use LDGM, but we'd need a new ioctl for that. So I was proposing we
-> just piggyback on a new dirty-log ioctl instead.
+Add YAML device tree bindings for Analog Devices Inc. ADDI9036 CCD TOF
+front-end.
 
-That feels a bad idea to me; there's a couple of different ways dirty
-page checking work; lets keep extracting the tags separate.
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+---
+ .../bindings/media/i2c/adi,addi9036.yaml      | 72 +++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/adi,addi9036.yaml
 
-Dave
-
-> Thanks,
-> drew 
+diff --git a/Documentation/devicetree/bindings/media/i2c/adi,addi9036.yaml b/Documentation/devicetree/bindings/media/i2c/adi,addi9036.yaml
+new file mode 100644
+index 000000000000..8af7f397d4e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adi,addi9036.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/adi,addi9036.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADDI9036 VGA CCD Time of Flight Sensor
++
++maintainers:
++  - Bogdan Togorean <bogdan.togorean@analog.com>
++
++description: |-
++  The ADDI9036 is a complete, 45 MHz, front-end solution for charge coupled
++  device (CCD) time of flight (TOF) imaging applications. It is programmable
++  through I2C interface. Image data is sent through MIPI CSI-2 2 lanes and
++  can output two RAW12 packed data streams. One is IR and the other is Depth.
++  Each data stream is on a separate or same MIPI Virtual Channel, depending
++  on configuration and each have 640x480 resolution.
++
++properties:
++  compatible:
++    const: adi,addi9036
++
++  reset-gpios:
++    description: |-
++      Reference to the GPIO connected to the RST/SYNC pin, if any.
++      Must be released (set high) after all supplies are applied.
++
++  # See ../video-interfaces.txt for more details
++  port:
++    type: object
++    properties:
++      endpoint:
++        type: object
++        properties:
++          data-lanes:
++            description: |-
++              The sensor supports two-lane operation.
++              For two-lane operation the property must be set to <1 2>.
++            items:
++              - const: 1
++              - const: 2
++
++required:
++  - compatible
++  - reg
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        addi9036: addi9036_tof@64 {
++            compatible = "adi,addi9036";
++            reg = <0x64>;
++
++            reset-gpios = <&gpio 41 1>;
++
++            port {
++                addi9036_ep: endpoint {
++                    remote-endpoint = <&csi1_ep>;
++                    data-lanes = <1 2>;
++                };
++            };
++        };
++    };
++
++...
 -- 
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+2.28.0
 
