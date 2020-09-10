@@ -2,280 +2,117 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3F8C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B7DC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E5E214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5121520BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OXV4oE4d"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VrdgTAIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgIJTKN (ORCPT
+        id S1726942AbgIJTLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
+        Thu, 10 Sep 2020 15:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgIJTJa (ORCPT
+        with ESMTP id S1726286AbgIJTGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:09:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01034C061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:09:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x23so1346744wmi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:09:29 -0700 (PDT)
+        Thu, 10 Sep 2020 15:06:21 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16713C06179E
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:06:08 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x77so4214452lfa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VhR6FlWJ3N2khXUeT/jDe92vr+OP3o8C/3GijhCr0wg=;
-        b=OXV4oE4dVVaatnu2X93+jW78fHUfZmnE+HmCcq20unYRevIE8B0tj9ePFyznRosVbi
-         ffLmxlA+Vn9o21+3m1N8+W9fgS16OywIEIByzPp2+8XloxrRLFXc0fCL0qG1YdKLXDx4
-         n9aDCEQjgv7nEGHXtq+cGa0XcRLuooRK6INZ0=
+        bh=1VaKTVNQG/MS4VikQREyIs4KXpzJcL7hR40l97tZdj0=;
+        b=VrdgTAIURoCk9FvstPzXIWoDxbgN9o0EAGwgNgOl+kp3kj+fHQ7bEn+5pylmp58MjZ
+         4F7I4q5nDLYkUCrr3rIv1XGnkTi8udCCbOVF7r13QTf9HXmphW+SDTBAph6TCuwHrY4M
+         9cCUFLnGVOQL8VJ4F7iR7YuIW6YFqwp3GcL7k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VhR6FlWJ3N2khXUeT/jDe92vr+OP3o8C/3GijhCr0wg=;
-        b=VmSw1/zj4ezZLkKZWVZrMuAltiX1G3YqVRpleC72S4pCtLkmLwj5dQIVX11O8ipu7K
-         62HXw0qPQMRmtoFyGrdxO/k6n0pu3mjDtoaN3pjKMRF0l6PAp2TNOTTUXQ4W3ahRG6Vu
-         mKVPwshQpiMLicPti4F2V88dY7Q8qetkAfE7JaoSEm0kU3tIGiokF1og4jueqWxGwS7r
-         xBBnXwMmwNuvCkfyLVUyjggOzj8l29bwVUUBLl+4kUmrBAOai2fs/aIpJK2Dm0ZK390u
-         qdyi4BCcdTUx3Pzj5du02cejYNeGnLS/1m4PfotLt2F2jYTBeUW9gYPbi9Es/zwXgjOz
-         GYbA==
-X-Gm-Message-State: AOAM53048JdOCa+UDxPMUTAC1onMgTCU/Y190mMkaT+3Zrlzi2qj2jTE
-        vdxiWqV+8FszSH7ezjosxT7U2HXUaC4t1tFCyedz7g==
-X-Google-Smtp-Source: ABdhPJwzs36aj1sjc++Pnam87auA8iF/tLJfweQbDE2WUAisFry+UZZLK/sNBdzcVgjeP2hiFYoj4BDrOdNX9Mlk8SI=
-X-Received: by 2002:a1c:bad5:: with SMTP id k204mr1520296wmf.111.1599764968373;
- Thu, 10 Sep 2020 12:09:28 -0700 (PDT)
+        bh=1VaKTVNQG/MS4VikQREyIs4KXpzJcL7hR40l97tZdj0=;
+        b=QYfjiQvmLh4+EbGzxTUSxzQm5pPk2DrTZHDZPX+iqBh+PDRts/zKN14sMf7x9oD7+o
+         1+2AO7YCX50fpV9HHVKaB3dYCCMHsauCxKGQuFerygomSEdwFTK4/rqwSmW8K6+DwKEm
+         1c551WUruGIH+C3CLOwxxa4kkfuUsNLBOWZdihMynan6PgDVShvD9HwvPsyXAqoTmSQe
+         TcTgiNDQjDeLnhHzVe3uxpCkarw6+d7HNuiU3t0ClYQMfZ+aV4GaT6gdHh96vooRRuuG
+         TG4CueFLpxa56z4qntciZk5YSD53JFfFu3O/Uw8JWcmIQ/zswKtmRYPr/3wSx39p81aB
+         5RIA==
+X-Gm-Message-State: AOAM530kRJwoUGrwylfdenjxirRV8Gta0XDvfLvz/v8iRMy6YhgcC//j
+        8qGY9A3pk3WJw1pEdS6pKK1rrmg67/dAbA==
+X-Google-Smtp-Source: ABdhPJy7yr0KYMQNFI0JOPa+hft7ZmJ7fZUuBOVDiMTafwXU0Gtnh/ojCz8DrV+u0beGOACvWFZedA==
+X-Received: by 2002:ac2:4e82:: with SMTP id o2mr5094786lfr.170.1599764765346;
+        Thu, 10 Sep 2020 12:06:05 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id a1sm1815393ljb.64.2020.09.10.12.06.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 12:06:04 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id a15so9658943ljk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:06:04 -0700 (PDT)
+X-Received: by 2002:a2e:b704:: with SMTP id j4mr4966232ljo.329.1599764763554;
+ Thu, 10 Sep 2020 12:06:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <20200824193036.6033-5-james.quinlan@broadcom.com> <20200910155637.GA423872@bogus>
- <CA+-6iNy9g8fhJvd7SOKtc-SZcL8_gLLN1HEs-W8fe-=q6n430A@mail.gmail.com>
- <CAL_JsqJR4wALnsFKKPQ8h2y-o-933rzxHbV29zGXiptgYuuHTg@mail.gmail.com>
- <CA+-6iNwcLZcQcge2E6GUi71rveFaneeCBwxBTfn8MipwhaPvEQ@mail.gmail.com> <3c6a0acc-8966-fd38-1613-8da7bece81c7@gmail.com>
-In-Reply-To: <3c6a0acc-8966-fd38-1613-8da7bece81c7@gmail.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Thu, 10 Sep 2020 15:09:15 -0400
-Message-ID: <CA+-6iNxfDuTREDj3_MWwKuNYfq8YgBT1hghKjh=GQjkzdbH+hA@mail.gmail.com>
-Subject: Re: [PATCH v11 04/11] PCI: brcmstb: Add suspend and resume pm_ops
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000b10c0405aefa4e77"
+References: <20200910112701.13853-1-linux@rasmusvillemoes.dk> <CAK7LNARE6NpCYAd7=--m-oO8_LweBWhP2aWfSRdTz=TX8dM5rw@mail.gmail.com>
+In-Reply-To: <CAK7LNARE6NpCYAd7=--m-oO8_LweBWhP2aWfSRdTz=TX8dM5rw@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Thu, 10 Sep 2020 12:05:51 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXOuK=iCdzWbtc+aRhBy=8xy860XqxwJg+wFuQaXKfg3UQ@mail.gmail.com>
+Message-ID: <CA+ASDXOuK=iCdzWbtc+aRhBy=8xy860XqxwJg+wFuQaXKfg3UQ@mail.gmail.com>
+Subject: Re: [PATCH] scripts/setlocalversion: make git describe output more reliable
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000b10c0405aefa4e77
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Sep 10, 2020 at 7:35 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> On Thu, Sep 10, 2020 at 8:57 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> > So in order to avoid `uname -a` output relying on such random details
+> > of the build environment which are rather hard to ensure are
+> > consistent between developers and buildbots, use an explicit
+> > --abbrev=15 option (and for consistency, also use rev-parse --short=15
+> > for the unlikely case of no signed tags being usable).
 
-On Thu, Sep 10, 2020 at 3:08 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 9/10/2020 12:05 PM, Jim Quinlan wrote:
-> > On Thu, Sep 10, 2020 at 2:50 PM Rob Herring <robh@kernel.org> wrote:
-> >>
-> >> On Thu, Sep 10, 2020 at 10:42 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> >>>
-> >>> On Thu, Sep 10, 2020 at 11:56 AM Rob Herring <robh@kernel.org> wrote:
-> >>>>
-> >>>> On Mon, Aug 24, 2020 at 03:30:17PM -0400, Jim Quinlan wrote:
-> >>>>> From: Jim Quinlan <jquinlan@broadcom.com>
-> >>>>>
-> >>>>> Broadcom Set-top (BrcmSTB) boards typically support S2, S3, and S5 suspend
-> >>>>> and resume.  Now the PCIe driver may do so as well.
-> >>>>>
-> >>>>> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> >>>>> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> >>>>> ---
-> >>>>>   drivers/pci/controller/pcie-brcmstb.c | 47 +++++++++++++++++++++++++++
-> >>>>>   1 file changed, 47 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> >>>>> index c2b3d2946a36..3d588ab7a6dd 100644
-> >>>>> --- a/drivers/pci/controller/pcie-brcmstb.c
-> >>>>> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> >>>>> @@ -978,6 +978,47 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
-> >>>>>        brcm_pcie_bridge_sw_init_set(pcie, 1);
-> >>>>>   }
-> >>>>>
-> >>>>> +static int brcm_pcie_suspend(struct device *dev)
-> >>>>> +{
-> >>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> >>>>> +
-> >>>>> +     brcm_pcie_turn_off(pcie);
-> >>>>> +     clk_disable_unprepare(pcie->clk);
-> >>>>> +
-> >>>>> +     return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>> +static int brcm_pcie_resume(struct device *dev)
-> >>>>> +{
-> >>>>> +     struct brcm_pcie *pcie = dev_get_drvdata(dev);
-> >>>>> +     void __iomem *base;
-> >>>>> +     u32 tmp;
-> >>>>> +     int ret;
-> >>>>> +
-> >>>>> +     base = pcie->base;
-> >>>>> +     clk_prepare_enable(pcie->clk);
-> >>>>> +
-> >>>>> +     /* Take bridge out of reset so we can access the SERDES reg */
-> >>>>> +     brcm_pcie_bridge_sw_init_set(pcie, 0);
-> >>>>> +
-> >>>>> +     /* SERDES_IDDQ = 0 */
-> >>>>> +     tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> >>>>> +     u32p_replace_bits(&tmp, 0, PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK);
-> >>>>> +     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> >>>>> +
-> >>>>> +     /* wait for serdes to be stable */
-> >>>>> +     udelay(100);
-> >>>>
-> >>>> Really needs to be a spinloop?
-> >>>>
-> >>>>> +
-> >>>>> +     ret = brcm_pcie_setup(pcie);
-> >>>>> +     if (ret)
-> >>>>> +             return ret;
-> >>>>> +
-> >>>>> +     if (pcie->msi)
-> >>>>> +             brcm_msi_set_regs(pcie->msi);
-> >>>>> +
-> >>>>> +     return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>>   static void __brcm_pcie_remove(struct brcm_pcie *pcie)
-> >>>>>   {
-> >>>>>        brcm_msi_remove(pcie);
-> >>>>> @@ -1087,12 +1128,18 @@ static int brcm_pcie_probe(struct platform_device *pdev)
-> >>>>>
-> >>>>>   MODULE_DEVICE_TABLE(of, brcm_pcie_match);
-> >>>>>
-> >>>>> +static const struct dev_pm_ops brcm_pcie_pm_ops = {
-> >>>>> +     .suspend_noirq = brcm_pcie_suspend,
-> >>>>> +     .resume_noirq = brcm_pcie_resume,
-> >>>>
-> >>>> Why do you need interrupts disabled? There's 39 cases of .suspend_noirq
-> >>>> and 1352 of .suspend in the tree.
-> >>>
-> >>> I will test switching this to  suspend_late/resume_early.
-> >>
-> >> Why not just the 'regular' flavor suspend/resume?
-> >>
-> >> Rob
-> > We must have our PCIe driver suspend last and resume first because our
-> > current driver turns off/on the power for the EPs.  Note that this
-> > code isn't in the driver as we are still figuring out a way to make it
-> > upstreamable.
->
-> The suspend/resume ordering should be guaranteed by the Linux device
-> driver model though if not, this is a bug that ought to be fixed. The
-> PCI bridge sits at the top of the pci_device list and all EPs should be
-> child devices, so the suspend order should be from EPs down to the
-> bridge, and the resume the converse.
-I remembered that after I hit send.
-Jim
-> --
-> Florian
+For the patch:
 
---000000000000b10c0405aefa4e77
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Reviewed-by: Brian Norris <briannorris@chromium.org>
 
-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
-mOxPm7sNHsn0TVdPryi9+T2d8fVC/kUmuEdTYP/Hdu4W4b4T9BcW57fInYrmaJ+uotS6X59rAgMB
-AAGjggHRMIIBzTAOBgNVHQ8BAf8EBAMCBaAwgZ4GCCsGAQUFBwEBBIGRMIGOME0GCCsGAQUFBzAC
-hkFodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3BlcnNvbmFsc2lnbjJzaGEy
-ZzNvY3NwLmNydDA9BggrBgEFBQcwAYYxaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL2dzcGVy
-c29uYWxzaWduMnNoYTJnMzBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYm
-aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBEBgNVHR8E
-PTA7MDmgN6A1hjNodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzcGVyc29uYWxzaWduMnNoYTJn
-My5jcmwwJQYDVR0RBB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
-KwYBBQUHAwQwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwHQYDVR0OBBYEFNYm4GDl
-4WOt3laB3gNKFfYyaM8bMA0GCSqGSIb3DQEBCwUAA4IBAQBD+XYEgpG/OqeRgXAgDF8sa+lQ/00T
-wCP/3nBzwZPblTyThtDE/iaL/YZ5rdwqXwdCnSFh9cMhd/bnA+Eqw89clgTixvz9MdL9Vuo8LACI
-VpHO+sxZ2Cu3bO5lpK+UVCyr21y1zumOICsOuu4MJA5mtkpzBXQiA7b/ogjGxG+5iNjt9FAMX4JP
-V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
-lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
-5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
-di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEILyhJTSbKToI
-B49kCKI8tKPwNhRgU0WrGWS92/9KIkYaMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMDkxMDE5MDkyOFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
-YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBXEkIdgAnn7D+y09wrfOml2qZMNKAd
-gyOqKNTyLf1OSZes7fHqiCkX2YPtJUQKlCXFxUTxQGnXM5H3waK1gGNTLkfzENE/Prxkm7ebgJMa
-6ynRDAlVkIwAZl5FfQ/62OHES2TIeUE+HEKxkTrC0Guc7urC99vD5KRGBZdpt87bptA7Ngau1Fkv
-8oOMiupKPHb/S/igzJvXwkySjb10wqcOEN7RiKXYqXMeqsqBc1SYBWn4ciaW/pTbz/6p0kL4ahdC
-JlYwBNNbk+7jsarkIagIJ4ejfD+CQzz8R1RljebKqeNEoImrq4BJOeO4p2APRjxNpOcTVAbqOyLO
-yt0pc1Sd
---000000000000b10c0405aefa4e77--
+> I agree that any randomness should be avoided.
+>
+> My question is, do we need 15-digits?
+...
+> So, I think the conflict happens
+> only when we have two commits that start with the same 7-digits
+> in the _same_ release. Is this correct?
+
+For the rev-parse usage ("unlikely case where we have no signed tag"),
+the total number of objects is definitely relevant, and the man-page
+says:
+"unique prefix with at least length characters"
+i.e., it might be longer, if needed for uniqueness.
+
+For git-describe (the case where we have a tag to base off):
+"use <n> digits, or as many digits as needed to form a unique object name"
+I'm not quite sure whether the uniqueness is including anything about
+the tag-relative prefix, but if not, then we have the same problem.
+
+At least, that's my reading of the situation.
+
+Brian
