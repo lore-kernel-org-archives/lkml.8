@@ -2,122 +2,341 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92FAC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A70BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6609421D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D8B821D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 03:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="lvkLvV+6";
-	dkim=temperror (0-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rNCmrSB0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fMPFg4Kr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgIJC7G (ORCPT
+        id S1729719AbgIJDDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:59:06 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:40851 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728971AbgIJC5l (ORCPT
+        Wed, 9 Sep 2020 23:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgIJDCe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:57:41 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id CA09C5C0158;
-        Wed,  9 Sep 2020 22:57:29 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 09 Sep 2020 22:57:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=YE2vRbVOU5d4u
-        pRUylPGxyphDiisOKAQ6iHDzsqNpKA=; b=lvkLvV+6VfcOhVE157CML9zlZ9bsA
-        PhaVE+chAIdJKaOVJCYjxpErC098nDzZMGxe8rNMd36tmemPVjeLJPgWxFVSwvnC
-        jnJ9t+ngrlQxiXiM96Xyq8zcSiqodq6spk96teH+aWTKoh6PFkfBzJ0Im313C0vX
-        8iz1sssKUKh4cajzVMhAarkf8u3f2ADHFCXY/6ryfrMcGkJ6dKQxtTRKtfaChWwn
-        aG5M1EcUV4bjCW7jgQ40R9zhjROoaOb+2d7G7Ap6RhcdHd1W1My288QUqeMnFIvd
-        JrufPkBlQ/7i72pwQx69lqGpDzd/rjjJUIyxCLQmnYQW0pCBEByuaAYaw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=YE2vRbVOU5d4upRUylPGxyphDiisOKAQ6iHDzsqNpKA=; b=rNCmrSB0
-        h3BhRsnE/n2kDKakTNpcx4ooTgWDXtQUi8sHLjsjUvNaLaBDB3iQYpqXvB9b1r5v
-        LLIJlTJ/u1wCKgxu7nDsFjGIAoQcGOBhpVF5lVBVQtrn1FSiod51ytPa3yK6SiEK
-        kPkQ7R9FY0maLtwhKaNRPcF6mk86XJoSgDQwYf9Xkdsy6ynVirCo/8hItBD1xJWG
-        LbhxbwthY/B9ahaibe6Gndf2sx60vYkNxUsluMDoOQKPaohl6BQzPlcTUoxDV2IM
-        fhw7D9RWH97arNgrUB0Z5Lvy1rAcHpYCuEj/CrxGZps33yyWph0yUbENRH8A75LO
-        hKPkf0u6CkPbGQ==
-X-ME-Sender: <xms:GZZZX7i8X6Ez6uBkqYBCQHvUmbz1_lGXc-R6CyfXl68vTX2TaCFC1A>
-    <xme:GZZZX4DG5ooYdXGJ98UynOmW0AXJ9MKQ7jji05zfWTfKszDt3TSIPnginyIxttntI
-    Qula18JWM_eymckrw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehiedgieegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecuggftrfgrthhtvghrnhepjefgvdevheetkeevgeegleelgfelte
-    etjeffleffvdduudevieffgeetleevhfetnecukfhppedugedrvddruddtledrkeehnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvg
-    ifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:GZZZX7Hc-W8yrJ8pXreuoONHOGtfNKYuFZwbF5ZPSBwlvd78IMNeKQ>
-    <xmx:GZZZX4RpuV-Vyy5OM5WMIlYb3UT7ouqC57B4om3ud2t5XsHsqY4DSQ>
-    <xmx:GZZZX4xJslCWETXF9cQsKjChJkNWitGFNovyUpv5shUVdOZlcHfR9w>
-    <xmx:GZZZX3rjr-ZXzySYiS8AwnArvp7SK5aKj1HRS5tvyY7aWpvUVT1SgQ>
-Received: from mistburn.lan (ppp14-2-109-85.adl-apt-pir-bras32.tpg.internode.on.net [14.2.109.85])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CDFF13069096;
-        Wed,  9 Sep 2020 22:57:26 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, joel@jms.id.au,
-        johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] pinctrl: aspeed: Use the right pinconf mask
-Date:   Thu, 10 Sep 2020 12:26:30 +0930
-Message-Id: <20200910025631.2996342-3-andrew@aj.id.au>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200910025631.2996342-1-andrew@aj.id.au>
-References: <20200910025631.2996342-1-andrew@aj.id.au>
+        Wed, 9 Sep 2020 23:02:34 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59506C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  9 Sep 2020 20:02:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g29so3476220pgl.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Sep 2020 20:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7wmqHwuWgwCLEAmNKT7oSxTHKRbzHI6O9rQQYc3usEo=;
+        b=fMPFg4Kr2jeFE2wrK3v++wDHIN59L4QGJHxuwhzQjWgeT1YnsW9kg/SZZCawYfJbrr
+         nq//znYcQYKWPs89B0CPxwtVKk3iuAH1ZKEGsNHbei5bv9O0HresYf/sNXoecpnoieuY
+         oHXr2297U69poayAPPrRZjD3EDgh5pBnTySMzj6hNKeWw1uypH+gvLuc9eJzFWxpbsqA
+         HGIinAksy3Cs17xuyuYz19NLc60ow76F8KzElnfjqb7ChokJz1pUSERKxedcLEz6qW+A
+         hJhpQLZwM1flkuL2ywK4bGKgvSlDTExM1j3JJC7gFnPNW7AOzDxmacLrRGe5UhJxRfhD
+         crbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7wmqHwuWgwCLEAmNKT7oSxTHKRbzHI6O9rQQYc3usEo=;
+        b=etbv1vwA2bgK/XGTWE6ehhAJAeRjphNsY0wu95Fik9svEd/T6AE4w0eLUW4rYjJj6t
+         R3tWZ4mnArCUlRHI29Xydf0yRm7Txv+gkW/FOMjSEv0bDIaZndlF1KmMJw4D4I42Xmem
+         VOLZwIDkp79P7/RYdQpSHA4keOfRhxQ1bADONGvzifoAHJwxkmcdsREx1wfaxukfegWT
+         +yGlynWBSY/b8Ly24znvbQC+nBUw20S6YwUpahwFxLPAzthm+oa5y/56XCj/ArUEsb5t
+         /UQ17IZjTfgSaivsC+7Pr4SG6+b3keHTabIcGtks/PoAD3SSMYMkGjsrzK1vu1M2/2c1
+         Gs+w==
+X-Gm-Message-State: AOAM533DQO9MtPAGesf1RyC+rVlmn6XOw+3Goa0g/TleA1bFaT/iH288
+        kX1wM1uzx2WNfqMg9B/yynwl
+X-Google-Smtp-Source: ABdhPJx8ZkjTltlGvVabpDziR1G6W5Pmxbe646gRwG34I21NsnRHyT8DP1bEDugQCF4yAoAnSPCmiQ==
+X-Received: by 2002:a63:5043:: with SMTP id q3mr2752250pgl.293.1599706953368;
+        Wed, 09 Sep 2020 20:02:33 -0700 (PDT)
+Received: from mani ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id i1sm4087390pfk.21.2020.09.09.20.02.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Sep 2020 20:02:32 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 08:32:25 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+Subject: Re: [PATCH v2 1/1] i2c: busses: Add support for atomic transfers in
+ Actions Semi Owl driver
+Message-ID: <20200910030225.GA10495@mani>
+References: <b6c56858854805b0f03e29b7dde40b20796d5c93.1599561278.git.cristian.ciocaltea@gmail.com>
+ <20200909151748.GA11397@mani>
+ <20200909165915.GA387239@BV030612LT>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200909165915.GA387239@BV030612LT>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Aspeed pinconf data structures are split into 'conf' and 'map'
-types, where the 'conf' struct defines which register and bitfield to
-manipulate, while the 'map' struct defines what value to write to
-the register and bitfield.
+On 0909, Cristian Ciocaltea wrote:
+> Hi Mani,
+> 
+> Thanks for the review!
+> 
+> On Wed, Sep 09, 2020 at 08:47:48PM +0530, Manivannan Sadhasivam wrote:
+> > Hi Cristi,
+> > 
+> > On 0908, Cristian Ciocaltea wrote:
+> > > Atomic transfers are required to properly power off a machine through
+> > > an I2C controlled PMIC, such as the Actions Semi ATC260x series.
+> > > 
+> > > System shutdown may happen with interrupts being disabled and, as a
+> > > consequence, the kernel may hang if the driver does not support atomic
+> > > transfers.
+> > > 
+> > > This functionality is essentially implemented by polling the FIFO
+> > > Status register until either Command Execute Completed or NACK Error
+> > > bits are set.
+> > > 
+> > 
+> > Thanks for the patch! I just have couple of minor comments and other
+> > than that it looks good to me.
+> > 
+> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > ---
+> > > Changes in v2:
+> > >  - Dropped unused return codes from owl_i2c_xfer_data(), per Mani's review
+> > >  - Rebased patch on v5.9-rc4
+> > > 
+> > >  drivers/i2c/busses/i2c-owl.c | 78 ++++++++++++++++++++++++++----------
+> > >  1 file changed, 57 insertions(+), 21 deletions(-)
+> > > 
+> > > diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
+> > > index 672f1f239bd6..29605257831f 100644
+> > > --- a/drivers/i2c/busses/i2c-owl.c
+> > > +++ b/drivers/i2c/busses/i2c-owl.c
+> > > @@ -14,6 +14,7 @@
+> > >  #include <linux/i2c.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/io.h>
+> > > +#include <linux/iopoll.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/of_device.h>
+> > >  
+> > > @@ -76,6 +77,7 @@
+> > >  #define OWL_I2C_FIFOCTL_TFR	BIT(2)
+> > >  
+> > >  /* I2Cc_FIFOSTAT Bit Mask */
+> > > +#define OWL_I2C_FIFOSTAT_CECB	BIT(0)
+> > >  #define OWL_I2C_FIFOSTAT_RNB	BIT(1)
+> > >  #define OWL_I2C_FIFOSTAT_RFE	BIT(2)
+> > >  #define OWL_I2C_FIFOSTAT_TFF	BIT(5)
+> > > @@ -83,7 +85,8 @@
+> > >  #define OWL_I2C_FIFOSTAT_RFD	GENMASK(15, 8)
+> > >  
+> > >  /* I2C bus timeout */
+> > > -#define OWL_I2C_TIMEOUT		msecs_to_jiffies(4 * 1000)
+> > > +#define OWL_I2C_TIMEOUT_MS	(4 * 1000)
+> > > +#define OWL_I2C_TIMEOUT		msecs_to_jiffies(OWL_I2C_TIMEOUT_MS)
+> > >  
+> > >  #define OWL_I2C_MAX_RETRIES	50
+> > >  
+> > > @@ -161,29 +164,25 @@ static void owl_i2c_set_freq(struct owl_i2c_dev *i2c_dev)
+> > >  	writel(OWL_I2C_DIV_FACTOR(val), i2c_dev->base + OWL_I2C_REG_CLKDIV);
+> > >  }
+> > >  
+> > > -static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> > > +static void owl_i2c_xfer_data(struct owl_i2c_dev *i2c_dev)
+> > >  {
+> > > -	struct owl_i2c_dev *i2c_dev = _dev;
+> > >  	struct i2c_msg *msg = i2c_dev->msg;
+> > > -	unsigned long flags;
+> > >  	unsigned int stat, fifostat;
+> > >  
+> > > -	spin_lock_irqsave(&i2c_dev->lock, flags);
+> > > -
+> > >  	i2c_dev->err = 0;
+> > >  
+> > >  	/* Handle NACK from slave */
+> > >  	fifostat = readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
+> > >  	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
+> > >  		i2c_dev->err = -ENXIO;
+> > > -		goto stop;
+> > > +		return;
+> > >  	}
+> > >  
+> > >  	/* Handle bus error */
+> > >  	stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
+> > >  	if (stat & OWL_I2C_STAT_BEB) {
+> > >  		i2c_dev->err = -EIO;
+> > > -		goto stop;
+> > > +		return;
+> > >  	}
+> > >  
+> > >  	/* Handle FIFO read */
+> > > @@ -196,18 +195,28 @@ static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> > >  	} else {
+> > >  		/* Handle the remaining bytes which were not sent */
+> > >  		while (!(readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
+> > > -			 OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
+> > > +			OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
+> > 
+> > Spurious change?
+> 
+> I have just fixed a small indentation issue (removed extra space char
+> in front of OWL_I2C...). I will revert it if you think it's not the right
+> context for doing this (located ~10 lines bellow the previous edit).
+> 
 
-Both structs have a mask member, and the wrong mask was being used to
-tell the regmap which bits to update.
+The extra space was there to align with the starting of 'readl', so please keep
+it as it is.
 
-A todo is to look at whether we can remove the mask from the 'map'
-struct.
+> > >  			writel(msg->buf[i2c_dev->msg_ptr++],
+> > >  			       i2c_dev->base + OWL_I2C_REG_TXDAT);
+> > >  		}
+> > >  	}
+> > > +}
+> > > +
+> > > +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> > > +{
+> > > +	struct owl_i2c_dev *i2c_dev = _dev;
+> > > +	unsigned long flags;
+> > > +
+> > > +	spin_lock_irqsave(&i2c_dev->lock, flags);
+> > > +
+> > > +	owl_i2c_xfer_data(i2c_dev);
+> > >  
+> > > -stop:
+> > >  	/* Clear pending interrupts */
+> > >  	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_STAT,
+> > >  			   OWL_I2C_STAT_IRQP, true);
+> > >  
+> > >  	complete_all(&i2c_dev->msg_complete);
+> > > +
+> > >  	spin_unlock_irqrestore(&i2c_dev->lock, flags);
+> > >  
+> > >  	return IRQ_HANDLED;
+> > > @@ -235,8 +244,8 @@ static int owl_i2c_check_bus_busy(struct i2c_adapter *adap)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > > -			       int num)
+> > > +static int owl_i2c_xfer_common(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > > +			       int num, bool atomic)
+> > >  {
+> > >  	struct owl_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+> > >  	struct i2c_msg *msg;
+> > > @@ -280,11 +289,12 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > >  		goto err_exit;
+> > >  	}
+> > >  
+> > > -	reinit_completion(&i2c_dev->msg_complete);
+> > > +	if (!atomic)
+> > > +		reinit_completion(&i2c_dev->msg_complete);
+> > >  
+> > > -	/* Enable I2C controller interrupt */
+> > > +	/* Enable/disable I2C controller interrupt */
+> > >  	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
+> > > -			   OWL_I2C_CTL_IRQE, true);
+> > > +			   OWL_I2C_CTL_IRQE, !atomic);
+> > >  
+> > >  	/*
+> > >  	 * Select: FIFO enable, Master mode, Stop enable, Data count enable,
+> > > @@ -352,20 +362,33 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > >  
+> > >  	spin_unlock_irqrestore(&i2c_dev->lock, flags);
+> > >  
+> > > -	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
+> > > -						adap->timeout);
+> > > +	if (atomic) {
+> > > +		/* Wait for Command Execute Completed or NACK Error bits */
+> > > +		ret = readl_poll_timeout_atomic(i2c_dev->base + OWL_I2C_REG_FIFOSTAT,
+> > > +						val, val & (OWL_I2C_FIFOSTAT_CECB |
+> > > +							    OWL_I2C_FIFOSTAT_RNB),
+> > > +						10, OWL_I2C_TIMEOUT_MS * 1000);
+> > > +	} else {
+> > > +		time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
+> > > +							adap->timeout);
+> > > +		if (!time_left)
+> > > +			ret = -ETIMEDOUT;
+> > > +	}
+> > >  
+> > >  	spin_lock_irqsave(&i2c_dev->lock, flags);
+> > > -	if (time_left == 0) {
+> > > +
+> > > +	if (ret) {
+> > >  		dev_err(&adap->dev, "Transaction timed out\n");
+> > >  		/* Send stop condition and release the bus */
+> > >  		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
+> > >  				   OWL_I2C_CTL_GBCC_STOP | OWL_I2C_CTL_RB,
+> > >  				   true);
+> > > -		ret = -ETIMEDOUT;
+> > >  		goto err_exit;
+> > >  	}
+> > >  
+> > > +	if (atomic)
+> > > +		owl_i2c_xfer_data(i2c_dev);
+> > 
+> > You are not clearing the pending interrupts here.
+> 
+> I assumed this is not needed for atomic contexts since the controller
+> interrupt is disabled (please see the comment above: Enable/disable I2C
+> controller interrupt).
+> 
+> Otherwise I will simply move the clear pending interrupts code from 
+> owl_i2c_interrupt() to owl_i2c_xfer_data().
+> 
 
-Cc: Johnny Huang <johnny_huang@aspeedtech.com>
-Fixes: 5f52c853847f ("pinctrl: aspeed: Use masks to describe pinconf bitfields")
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm. My intention was to say that we are not clearing the error bits when they
+happen but I misinterpreted that setting IRQP will take care of that but it
+doesn't.
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-index 2e0260c1a57c..6a94eaecf638 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-@@ -534,7 +534,7 @@ int aspeed_pin_config_set(struct pinctrl_dev *pctldev, unsigned int offset,
- 		val = pmap->val << __ffs(pconf->mask);
- 
- 		rc = regmap_update_bits(pdata->scu, pconf->reg,
--					pmap->mask, val);
-+					pconf->mask, val);
- 
- 		if (rc < 0)
- 			return rc;
--- 
-2.25.1
+So I think you should submit a patch which writes to RNB and BEB fields when
+they are set (writing 1 will clear the interrupts) and ignore my previous
+comment.
 
+Thanks,
+Mani
+
+> > Thanks,
+> > Mani
+> > 
+> > > +
+> > >  	ret = i2c_dev->err < 0 ? i2c_dev->err : num;
+> > >  
+> > >  err_exit:
+> > > @@ -379,9 +402,22 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +static int owl_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > > +			int num)
+> > > +{
+> > > +	return owl_i2c_xfer_common(adap, msgs, num, false);
+> > > +}
+> > > +
+> > > +static int owl_i2c_xfer_atomic(struct i2c_adapter *adap,
+> > > +			       struct i2c_msg *msgs, int num)
+> > > +{
+> > > +	return owl_i2c_xfer_common(adap, msgs, num, true);
+> > > +}
+> > > +
+> > >  static const struct i2c_algorithm owl_i2c_algorithm = {
+> > > -	.master_xfer    = owl_i2c_master_xfer,
+> > > -	.functionality  = owl_i2c_func,
+> > > +	.master_xfer	     = owl_i2c_xfer,
+> > > +	.master_xfer_atomic  = owl_i2c_xfer_atomic,
+> > > +	.functionality	     = owl_i2c_func,
+> > >  };
+> > >  
+> > >  static const struct i2c_adapter_quirks owl_i2c_quirks = {
+> > > -- 
+> > > 2.28.0
+> > > 
+> 
+> Kind regards,
+> Cristi
