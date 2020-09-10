@@ -2,145 +2,92 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F9EC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43478C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF6BB207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:41:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLMSr5mh"
+	by mail.kernel.org (Postfix) with ESMTP id EFEFA21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 14:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599749061;
+	bh=X1oz6LSaNNagHRh+ADTx8a6iFsrP03AhWhXXDzITLVo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=McUGFI8/QOlpoaVWheFDDNae0Pgod3cYGGm4ziN54Nh87PVxPcdaEmUQdqsBJ5CHs
+	 kideNIjvalqDoHauuPkop5+pSpB796xTi9KbB9yC0F/7v1Ugjf1acq7SHlTG6ZQ4Jc
+	 iyeJEB63fGemKLf9n6OVyuD+Nd3LlIdHj87/Ru2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgIJOk7 (ORCPT
+        id S1730770AbgIJOlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 10:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731019AbgIJOfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 10:35:23 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10ECC0617A3;
-        Thu, 10 Sep 2020 07:35:19 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id nw23so9063267ejb.4;
-        Thu, 10 Sep 2020 07:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KCYaWwcvDjz/OmO+LXtbRJ6LszuyteB8m/JYCI1W1Mk=;
-        b=PLMSr5mhrZi80kquG3UTKc10L5Ed+nu36WWw+z2lZB7jY2NtSZwMDvRpv3TuwllizR
-         7wpc1iofk2ZoyyDJwpWceFzTiHn90TWZgiZ045Rqz/ctDq5xo9epE09YznVy4EY1BmCs
-         l2St/n4EQLGLl4Irlj/CjiNUTGWsQjI0pEg6F+baJPziJDFYBOwuCCOyMb+xCs9CEFvu
-         9KFGfkT69xlzT78AdIbRIVXoCrdn7bCNxNeWDPtg/woOLBOGoZLIKsWAlBjbsXvCsg9/
-         +ESlgsmFyeGx507Da/rJqBOVrFWssFaCbV59079oaLVMMMb6jhwsRiqhXjYp00Drq8eS
-         JdWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KCYaWwcvDjz/OmO+LXtbRJ6LszuyteB8m/JYCI1W1Mk=;
-        b=UFEPDaW6+yZMFx6m0VsNz3MGpAwL6M01lCF9AbqLIjFd63jnlOiw5djUQvdTIPokW3
-         VHmxa+Vyv/WzdOTxr2SEOnyD7j43evAls5fS/lI86MXSaDa0UJ4YQZtQIWxiRD6THmWN
-         bAJLAf2VKkdvTOG53mLFImXh7ZuiLo3x+AllljfJ05YnflmrDrNHPaHgqRjD8b9mplFw
-         qNA8sImuiwgO9O/xK4HaS71jXLVHsGygYDog/+ooCpxRm+5AKKYfhIISJKs5CzDrL72/
-         7RdEVaio6ZEY4Oz+W2hQfcrkPv+OP8EXky2dFoJPf1j6s82Z5lRnX/+bbaLC4AHaJthY
-         KAfA==
-X-Gm-Message-State: AOAM532OKeSERX9CGPVjdviG55sYo/xPyfeuQYo69cztuMbQJwywpaeQ
-        iwII9gjap6tv8/JWgpadtTA=
-X-Google-Smtp-Source: ABdhPJzWHmRORR4s5GPtiMxYzRL7RIeJHACIEt31sw6plEpoQQDbSHFzrwWgxYbTiAiLDLiHODRGHA==
-X-Received: by 2002:a17:906:e4f:: with SMTP id q15mr9640896eji.155.1599748518392;
-        Thu, 10 Sep 2020 07:35:18 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id ot19sm6825559ejb.121.2020.09.10.07.35.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 10 Sep 2020 07:35:17 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id CE39C27C00A2;
-        Thu, 10 Sep 2020 10:35:13 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 10 Sep 2020 10:35:13 -0400
-X-ME-Sender: <xms:oTlaX8LSfERbecu5P4Y3VnX8QDSTfUIGezI8Hipxv2LnPtz7F4DBPg>
-    <xme:oTlaX8IkTh1tJF26F5X221FUudtaV7u56qa6z1D_VKOQW2Lmh0L4mwdo_h5rkdvG_
-    ECZe3GDzwCWnxUEXg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehjedgjedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvffufffkofgjfhgggfes
-    tdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnh
-    hgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeehvdevteefgfeiudettdef
-    vedvvdelkeejueffffelgeeuhffhjeetkeeiueeuleenucfkphephedvrdduheehrdduud
-    durdejudenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepmhgrihhlfhhrohhm
-    pegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtd
-    eigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehf
-    ihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:oTlaX8tKhMX0KlXUF85wFnPzW9q02D2iV3z0nFlfNh75RGMaWwXWZw>
-    <xmx:oTlaX5amjTY7Rkksn5WCySfesXGC-eH8Vs3Dz60JGqN1ty073ZFy0Q>
-    <xmx:oTlaXzZ2hmDQiNVFuEI1gHCMoz1HeGK-QKZrR6fgxUOJ1Lq-hcO6gw>
-    <xmx:oTlaXwJ27AAct8MQcnQ5XmCc0ME2n0zxJ-szRB9WVJWXntdGTOzVGz5uryA>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 106293280059;
-        Thu, 10 Sep 2020 10:35:13 -0400 (EDT)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Kelley <mikelley@microsoft.com>, will@kernel.org,
-        ardb@kernel.org, arnd@arndb.de, catalin.marinas@arm.com,
-        mark.rutland@arm.com, maz@kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: [PATCH v3 06/11] hv: hyperv.h: Introduce some hvpfn helper functions
-Date:   Thu, 10 Sep 2020 22:34:50 +0800
-Message-Id: <20200910143455.109293-7-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200910143455.109293-1-boqun.feng@gmail.com>
-References: <20200910143455.109293-1-boqun.feng@gmail.com>
+        Thu, 10 Sep 2020 10:41:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731198AbgIJOi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 10:38:59 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC112076D;
+        Thu, 10 Sep 2020 14:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599748739;
+        bh=X1oz6LSaNNagHRh+ADTx8a6iFsrP03AhWhXXDzITLVo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RZ7rFkO96+mbI3Z/iZVF8jynxmbTyOlnthuYOo/WRibTwUg/4y0Kdbi6IJydO/+Gs
+         9FMajZDz8TUNsPeiGt1eMuq25u6LEbdIp/VBuHr/QxnidNzohZGaDzEE4l5VfH/Ohj
+         5GNeRXyt48/zUXHJPclCht+lC7ZZUK3lRqbFWJQs=
+Date:   Thu, 10 Sep 2020 09:44:19 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     linux@dominikbrodowski.net, linux-kernel@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] pcmcia: db1xxx_ss: remove unneeded semicolon
+Message-ID: <20200910144419.GB4162@embeddedor>
+References: <20200910140524.1191003-1-yanaijie@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200910140524.1191003-1-yanaijie@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a guest communicate with the hypervisor, it must use HV_HYP_PAGE to
-calculate PFN, so introduce a few hvpfn helper functions as the
-counterpart of the page helper functions. This is the preparation for
-supporting guest whose PAGE_SIZE is not 4k.
+On Thu, Sep 10, 2020 at 10:05:24PM +0800, Jason Yan wrote:
+> Eliminate the following coccicheck warning:
+> 
+> drivers/pcmcia/db1xxx_ss.c:455:2-3: Unneeded semicolon
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- include/linux/hyperv.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 6f4831212979..00c09d2ff9ad 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1687,4 +1687,9 @@ static inline unsigned long virt_to_hvpfn(void *addr)
- 	return  paddr >> HV_HYP_PAGE_SHIFT;
- }
- 
-+#define NR_HV_HYP_PAGES_IN_PAGE	(PAGE_SIZE / HV_HYP_PAGE_SIZE)
-+#define offset_in_hvpage(ptr)	((unsigned long)(ptr) & ~HV_HYP_PAGE_MASK)
-+#define HVPFN_UP(x)	(((x) + HV_HYP_PAGE_SIZE-1) >> HV_HYP_PAGE_SHIFT)
-+#define page_to_hvpfn(page)	(page_to_pfn(page) * NR_HV_HYP_PAGES_IN_PAGE)
-+
- #endif /* _HYPERV_H */
--- 
-2.28.0
+Thanks
+--
+Gustavo
 
+> ---
+>  drivers/pcmcia/db1xxx_ss.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pcmcia/db1xxx_ss.c b/drivers/pcmcia/db1xxx_ss.c
+> index a7c7c7cd2326..a6fbc709913e 100644
+> --- a/drivers/pcmcia/db1xxx_ss.c
+> +++ b/drivers/pcmcia/db1xxx_ss.c
+> @@ -452,7 +452,7 @@ static int db1x_pcmcia_socket_probe(struct platform_device *pdev)
+>  		printk(KERN_INFO "db1xxx-ss: unknown board %d!\n", bid);
+>  		ret = -ENODEV;
+>  		goto out0;
+> -	};
+> +	}
+>  
+>  	/*
+>  	 * gather resources necessary and optional nice-to-haves to
+> -- 
+> 2.25.4
+> 
