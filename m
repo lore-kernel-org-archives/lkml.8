@@ -2,128 +2,236 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E87CC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35BA82076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052F920795
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 06:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Lcg6e/Dj";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="gOQerc4S"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SQXd37fk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIJGFv (ORCPT
+        id S1726603AbgIJGJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 02:05:51 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:53016
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728617AbgIJGFP (ORCPT
+        Thu, 10 Sep 2020 02:09:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:54292 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgIJGJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 02:05:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599717911;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=8aYBJyZG/tinKAweATWIriZSqX7vdJP9zCTtlHAcLSA=;
-        b=Lcg6e/Dj72yrU0r4QxAVr5n0ECCw/tP2stjFzVqaWheuJjubdmn8zOq56lMcATVa
-        t5sl8L0YPGcFqediX2Ahurdf5iTNpFf3YJVU1jax0Yur18iS16sa0dBZ2dL0dR7EtgX
-        mmsoCpxC2Z6CVdj8f1X5IGYbHPT5SGFhXZvtDGBk=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599717911;
-        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
-        bh=8aYBJyZG/tinKAweATWIriZSqX7vdJP9zCTtlHAcLSA=;
-        b=gOQerc4Sn+Q+y9FlB2vO/vYmsskvaQ+BYK4uvP9y7QG5V+PTjaWDZi2uTxGaxWQo
-        YzD8rKO+2IOQAFdw4o18YX6r1GLPpOk1rLmi0x0wLk2VPhbAktnZtDQWgus9p5RMbMi
-        C5rxQWwcChMTVTp2qxf2jQkiu1fnRJfw5+WUaxfs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 06DEAC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=sudaraja@codeaurora.org
-From:   Sudarshan Rajagopalan <sudaraja@codeaurora.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Sudarshan Rajagopalan <sudaraja@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        David Hildenbrand <david@redhat.com>,
+        Thu, 10 Sep 2020 02:09:01 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A65LZx078701;
+        Thu, 10 Sep 2020 06:08:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=BZKbxxW9fRj1O1NrXCl2qK3IkQQc10VGvhE4jGAfas0=;
+ b=SQXd37fk/BtuTbYp748oOSVO53w3aOoQNP/3F8naKXGJyn/Emxpln0uo/FP1QQV+SwMa
+ RBhwXY0N1ICtDL0IyNhtKdYr/x1cuW3XL2cBm+0sWFG56khgarmwH2MCGdaN4EccRrPE
+ MUQt2bNNa1U79RvqRBkOb7IBAzP/e2K57RAWoWPvO1kLLlv1H1ezz2s3vRIai/o0y3Tq
+ NTjth5D+U0sr3oEGQ75nz9VilMpJtKHxtUzNuXqujU6uXz7W1agd0/zYZ8BzSWeLM9VD
+ um2WB6SFr+wXVxYgW/iOatGGl2OXv3/a97+AzwUvQesXQ8j7totADeGAJNYINuUP9SpS kg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 33c23r5yje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 06:08:36 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A66Pc7133170;
+        Thu, 10 Sep 2020 06:06:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 33cmm0c2ea-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 06:06:36 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08A66TSK001564;
+        Thu, 10 Sep 2020 06:06:29 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Sep 2020 23:06:28 -0700
+Date:   Wed, 9 Sep 2020 23:06:26 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH] arm64/mm: add fallback option to allocate virtually contiguous memory
-Date:   Thu, 10 Sep 2020 06:05:11 +0000
-Message-ID: <01010174769e2cc4-79f26633-9a7d-48d5-a13b-af8c8486975e-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-X-SES-Outgoing: 2020.09.10-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH 2/2] xfs: don't update mtime on COW faults
+Message-ID: <20200910060626.GA7964@magnolia>
+References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009050805250.12419@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200905153652.GA7955@magnolia>
+ <alpine.LRH.2.02.2009051229180.542@file01.intranet.prod.int.rdu2.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2009051229180.542@file01.intranet.prod.int.rdu2.redhat.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=1
+ spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009100056
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=1 spamscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When section mappings are enabled, we allocate vmemmap pages from physically
-continuous memory of size PMD_SZIE using vmemmap_alloc_block_buf(). Section
-mappings are good to reduce TLB pressure. But when system is highly fragmented
-and memory blocks are being hot-added at runtime, its possible that such
-physically continuous memory allocations can fail. Rather than failing the
-memory hot-add procedure, add a fallback option to allocate vmemmap pages from
-discontinuous pages using vmemmap_populate_basepages().
+On Sat, Sep 05, 2020 at 01:02:33PM -0400, Mikulas Patocka wrote:
+> 
+> 
+> On Sat, 5 Sep 2020, Darrick J. Wong wrote:
+> 
+> > On Sat, Sep 05, 2020 at 08:13:02AM -0400, Mikulas Patocka wrote:
+> > > When running in a dax mode, if the user maps a page with MAP_PRIVATE and
+> > > PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
+> > > when the user hits a COW fault.
+> > > 
+> > > This breaks building of the Linux kernel.
+> > > How to reproduce:
+> > > 1. extract the Linux kernel tree on dax-mounted xfs filesystem
+> > > 2. run make clean
+> > > 3. run make -j12
+> > > 4. run make -j12
+> > > - at step 4, make would incorrectly rebuild the whole kernel (although it
+> > >   was already built in step 3).
+> > > 
+> > > The reason for the breakage is that almost all object files depend on
+> > > objtool. When we run objtool, it takes COW page fault on its .data
+> > > section, and these faults will incorrectly update the timestamp of the
+> > > objtool binary. The updated timestamp causes make to rebuild the whole
+> > > tree.
+> > > 
+> > > Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+> > > Cc: stable@vger.kernel.org
+> > > 
+> > > ---
+> > >  fs/xfs/xfs_file.c |   11 +++++++++--
+> > >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > > 
+> > > Index: linux-2.6/fs/xfs/xfs_file.c
+> > > ===================================================================
+> > > --- linux-2.6.orig/fs/xfs/xfs_file.c	2020-09-05 10:01:42.000000000 +0200
+> > > +++ linux-2.6/fs/xfs/xfs_file.c	2020-09-05 13:59:12.000000000 +0200
+> > > @@ -1223,6 +1223,13 @@ __xfs_filemap_fault(
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +static bool
+> > > +xfs_is_write_fault(
+> > 
+> > Call this xfs_is_shared_dax_write_fault, and throw in the IS_DAX() test?
+> > 
+> > You might as well make it a static inline.
+> 
+> Yes, it is possible. I'll send a second version.
+> 
+> > > +	struct vm_fault		*vmf)
+> > > +{
+> > > +	return vmf->flags & FAULT_FLAG_WRITE && vmf->vma->vm_flags & VM_SHARED;
+> > 
+> > Also, is "shortcutting the normal fault path" the reason for ext2 and
+> > xfs both being broken?
+> > 
+> > /me puzzles over why write_fault is always true for page_mkwrite and
+> > pfn_mkwrite, but not for fault and huge_fault...
+> > 
+> > Also: Can you please turn this (checking for timestamp update behavior
+> > wrt shared and private mapping write faults) into an fstest so we don't
+> > mess this up again?
+> 
+> I've written this program that tests it - you can integrate it into your 
+> testsuite.
 
-Signed-off-by: Sudarshan Rajagopalan <sudaraja@codeaurora.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Price <steven.price@arm.com>
----
- arch/arm64/mm/mmu.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+I don't get it.  You're a filesystem maintainer too, which means you're
+a regular contributor.  Do you:
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 75df62f..a46c7d4 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1100,6 +1100,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 	p4d_t *p4dp;
- 	pud_t *pudp;
- 	pmd_t *pmdp;
-+	int ret = 0;
- 
- 	do {
- 		next = pmd_addr_end(addr, end);
-@@ -1121,15 +1122,23 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 			void *p = NULL;
- 
- 			p = vmemmap_alloc_block_buf(PMD_SIZE, node, altmap);
--			if (!p)
--				return -ENOMEM;
-+			if (!p) {
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+				vmemmap_free(start, end, altmap);
-+#endif
-+				ret = -ENOMEM;
-+				break;
-+			}
- 
- 			pmd_set_huge(pmdp, __pa(p), __pgprot(PROT_SECT_NORMAL));
- 		} else
- 			vmemmap_verify((pte_t *)pmdp, node, addr, next);
- 	} while (addr = next, addr != end);
- 
--	return 0;
-+	if (ret)
-+		return vmemmap_populate_basepages(start, end, node, altmap);
-+	else
-+		return ret;
- }
- #endif	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
- void vmemmap_free(unsigned long start, unsigned long end,
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+(a) not use fstests?  If you don't, I really hope you use something else
+to QA hpfs.
 
+(b) really think that it's my problem to integrate and submit your
+regression tests for you?
+
+> Mikulas
+> 
+> 
+> #include <stdio.h>
+
+and (c) what do you want me to do with a piece of code that has no
+signoff tag, no copyright, and no license?  This is your patch, and
+therefore your responsibility to develop enough of an appropriate
+regression test in a proper form that the rest of us can easily
+determine we have the rights to contribute to it.
+
+I don't have a problem with helping to tweak a properly licensed and
+tagged test program into fstests, but this is a non-starter.
+
+--D
+
+> #include <stdlib.h>
+> #include <unistd.h>
+> #include <fcntl.h>
+> #include <string.h>
+> #include <sys/mman.h>
+> #include <sys/stat.h>
+> 
+> #define FILE_NAME	"test.txt"
+> 
+> static struct stat st1, st2;
+> 
+> int main(void)
+> {
+> 	int h, r;
+> 	char *map;
+> 	unlink(FILE_NAME);
+> 	h = creat(FILE_NAME, 0600);
+> 	if (h == -1) perror("creat"), exit(1);
+> 	r = write(h, "x", 1);
+> 	if (r != 1) perror("write"), exit(1);
+> 	if (close(h)) perror("close"), exit(1);
+> 	h = open(FILE_NAME, O_RDWR);
+> 	if (h == -1) perror("open"), exit(1);
+> 
+> 	map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE, h, 0);
+> 	if (map == MAP_FAILED) perror("mmap"), exit(1);
+> 	if (fstat(h, &st1)) perror("fstat"), exit(1);
+> 	sleep(2);
+> 	*map = 'y';
+> 	if (fstat(h, &st2)) perror("fstat"), exit(1);
+> 	if (memcmp(&st1, &st2, sizeof(struct stat))) fprintf(stderr, "BUG: COW fault changed time!\n"), exit(1);
+> 	if (munmap(map, 4096)) perror("munmap"), exit(1);
+> 
+> 	map = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, h, 0);
+> 	if (map == MAP_FAILED) perror("mmap"), exit(1);
+> 	if (fstat(h, &st1)) perror("fstat"), exit(1);
+> 	sleep(2);
+> 	*map = 'z';
+> 	if (fstat(h, &st2)) perror("fstat"), exit(1);
+> 	if (st1.st_mtime == st2.st_mtime) fprintf(stderr, "BUG: Shared fault did not change mtime!\n"), exit(1);
+> 	if (st1.st_ctime == st2.st_ctime) fprintf(stderr, "BUG: Shared fault did not change ctime!\n"), exit(1);
+> 	if (munmap(map, 4096)) perror("munmap"), exit(1);
+> 
+> 	if (close(h)) perror("close"), exit(1);
+> 	if (unlink(FILE_NAME)) perror("unlink"), exit(1);
+> 	return 0;
+> }
+> 
