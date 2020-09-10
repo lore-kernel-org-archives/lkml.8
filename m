@@ -2,162 +2,241 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AF8C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E10CD21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599766386;
-	bh=aloI9zn6pT5iiPm2GPUnkRhR22DDXmljQEw/xLcySz4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pJStrGVdxoGbZUWb/xbcNsvDxiHMp5iOBi3YpEL1GPp7QCUzpmqHmOj3N80Hdzo1R
-	 TLq9wzCd3MIqeRuKDtygU9gR0uL0UMhFgX+8+3YlkLLo/TVx2nVioS0HTcwPIBWkdP
-	 raOKYSwRKKuU4hYMQpKmQtvu6MQPZBMyC6cMWIjs=
+	by mail.kernel.org (Postfix) with ESMTP id 5EDEC21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:33:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i5/8muUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgIJTdF (ORCPT
+        id S1727947AbgIJTdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgIJTcb (ORCPT
+        Thu, 10 Sep 2020 15:33:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26045 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728014AbgIJTcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:32:31 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6710BC061756
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:32:24 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id k25so9731430ljk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nTbGWidANXm2pjjCI9iaMQBY/df45EdumvXop+9a4ao=;
-        b=gkhGKJWFcLTHyB5x5aFfN6rnXH8dCRqQWjJKd9NZmHZK/NC/oX0q6HVDmBmeekhRv6
-         GTPYMsgUuX5KTeHU91CyIJtiMizZNYrRnX9QG0ENhdKweAOaB0W4mGxVSrji+PC28UP6
-         VshPJp7YLq+DwXcjz/A/kXWDuc/ae+MhCxRmA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nTbGWidANXm2pjjCI9iaMQBY/df45EdumvXop+9a4ao=;
-        b=c2ZH5sV/Mm0/NWAhnFLpVnUe2pD1GcaIgJcKi+ImIef/K1YmOiCCI31tCzecQTpcOH
-         hUgHjlttlQ+vkz2MuH68Dmt9ULdUcBSwUHHoZWW0FOhTb1oUT5PDSHJLoeBE7/0XRixZ
-         SDYILq8it4iaWA+sVo0soPQJfvH7m5xbp+X3m5Ig6dpATAYGiRDMhq95Nm0k55L9e6SF
-         X9Rusg9H27kRny5rgS8+meGmc+h6AV9m/vYxUeQweI1smyxJElFZ+vrj16aXcf9l+rE1
-         xSPoLBGXjYdSIsmKG0ykBbbljkoZ1CUKGfpSmUhjLV11BMSebKiAweSUfvZfn4y08NyU
-         pPqw==
-X-Gm-Message-State: AOAM530HmLBW4voBmTvorr9z/XEPlEAIZHLw/MEjSR6t9Fo2rs73316/
-        SbvdjBySIcTIAmUDzIHHEkTlqVOpK+svdA==
-X-Google-Smtp-Source: ABdhPJzmNePhsjN2hIWbsgPhIenG5kGXElwpO2C8PxKGUtODX8ehCZTBhoZFrNe31lwbPEFHcAf/6Q==
-X-Received: by 2002:a05:651c:107b:: with SMTP id y27mr4844962ljm.338.1599766342760;
-        Thu, 10 Sep 2020 12:32:22 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id v25sm1821740ljh.102.2020.09.10.12.32.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Sep 2020 12:32:22 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id y4so9669671ljk.8
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:32:22 -0700 (PDT)
-X-Received: by 2002:a2e:7819:: with SMTP id t25mr5043564ljc.371.1599766341582;
- Thu, 10 Sep 2020 12:32:21 -0700 (PDT)
+        Thu, 10 Sep 2020 15:32:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599766327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=n3ZX3FM+OHTZE8GRqFEqVKUqxyj7rJoV+yf6LuEY0nk=;
+        b=i5/8muUr5BoOQ1oTP0Om1XEY0gRCGUx7b9/uSCNOqvWiZ7ARYqJ97HfXe13LBtEpO4fMr3
+        +IdrEpyRIKuXdfW/kCUowiLzL25sIjvAvJqTQe0o0HSjSs1iamxN1SBz921EqfAmQdvj8N
+        UciiY8hit8lJUCeEAsRCMM1/tSPmHUA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-wYDXwM_pOyug0sKvvsT3Xg-1; Thu, 10 Sep 2020 15:32:04 -0400
+X-MC-Unique: wYDXwM_pOyug0sKvvsT3Xg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B8A518BA28C;
+        Thu, 10 Sep 2020 19:32:02 +0000 (UTC)
+Received: from [10.10.115.84] (ovpn-115-84.rdu2.redhat.com [10.10.115.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4EAC85D9F3;
+        Thu, 10 Sep 2020 19:31:59 +0000 (UTC)
+Subject: Re: [RFC][Patch v1 3/3] PCI: Limit pci_alloc_irq_vectors as per
+ housekeeping CPUs
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, frederic@kernel.org,
+        sassmann@redhat.com, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jerinj@marvell.com, mathias.nyman@intel.com, jiri@nvidia.com
+References: <20200909150818.313699-1-nitesh@redhat.com>
+ <20200909150818.313699-4-nitesh@redhat.com>
+ <20200910192208.GA24845@fuller.cnet>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <cfdf9186-89a4-2a29-9bbb-3bf3ffebffcd@redhat.com>
+Date:   Thu, 10 Sep 2020 15:31:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com> <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad> <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com> <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
- <20200910181319.GO87483@ziepe.ca> <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
- <20200910211010.46d064a7@thinkpad>
-In-Reply-To: <20200910211010.46d064a7@thinkpad>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 10 Sep 2020 12:32:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg3ggXU98Mnv-ss-hEcvUNc9vCtgSRc7GpcGfvyOw_h3g@mail.gmail.com>
-Message-ID: <CAHk-=wg3ggXU98Mnv-ss-hEcvUNc9vCtgSRc7GpcGfvyOw_h3g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table folding
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200910192208.GA24845@fuller.cnet>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="Nn7UuK1yQjSSr1T9L7Zv8zociIvpUvuk0"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:11 PM Gerald Schaefer
-<gerald.schaefer@linux.ibm.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Nn7UuK1yQjSSr1T9L7Zv8zociIvpUvuk0
+Content-Type: multipart/mixed; boundary="ZCBAnGu3RVN93jfDVzyjk8jPhXft6veOQ"
+
+--ZCBAnGu3RVN93jfDVzyjk8jPhXft6veOQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+
+
+On 9/10/20 3:22 PM, Marcelo Tosatti wrote:
+> On Wed, Sep 09, 2020 at 11:08:18AM -0400, Nitesh Narayan Lal wrote:
+>> This patch limits the pci_alloc_irq_vectors max vectors that is passed o=
+n
+>> by the caller based on the available housekeeping CPUs by only using the
+>> minimum of the two.
+>>
+>> A minimum of the max_vecs passed and available housekeeping CPUs is
+>> derived to ensure that we don't create excess vectors which can be
+>> problematic specifically in an RT environment. This is because for an RT
+>> environment unwanted IRQs are moved to the housekeeping CPUs from
+>> isolated CPUs to keep the latency overhead to a minimum. If the number o=
+f
+>> housekeeping CPUs are significantly lower than that of the isolated CPUs
+>> we can run into failures while moving these IRQs to housekeeping due to
+>> per CPU vector limit.
+>>
+>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>> ---
+>>  include/linux/pci.h | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 835530605c0d..750ba927d963 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -38,6 +38,7 @@
+>>  #include <linux/interrupt.h>
+>>  #include <linux/io.h>
+>>  #include <linux/resource_ext.h>
+>> +#include <linux/sched/isolation.h>
+>>  #include <uapi/linux/pci.h>
+>> =20
+>>  #include <linux/pci_ids.h>
+>> @@ -1797,6 +1798,21 @@ static inline int
+>>  pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>>  =09=09      unsigned int max_vecs, unsigned int flags)
+>>  {
+>> +=09unsigned int num_housekeeping =3D num_housekeeping_cpus();
+>> +=09unsigned int num_online =3D num_online_cpus();
+>> +
+>> +=09/*
+>> +=09 * Try to be conservative and at max only ask for the same number of
+>> +=09 * vectors as there are housekeeping CPUs. However, skip any
+>> +=09 * modification to the of max vectors in two conditions:
+>> +=09 * 1. If the min_vecs requested are higher than that of the
+>> +=09 *    housekeeping CPUs as we don't want to prevent the initializati=
+on
+>> +=09 *    of a device.
+>> +=09 * 2. If there are no isolated CPUs as in this case the driver shoul=
+d
+>> +=09 *    already have taken online CPUs into consideration.
+>> +=09 */
+>> +=09if (min_vecs < num_housekeeping && num_housekeeping !=3D num_online)
+>> +=09=09max_vecs =3D min_t(int, max_vecs, num_housekeeping);
+>>  =09return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags=
+,
+>>  =09=09=09=09=09      NULL);
+>>  }
+> If min_vecs > num_housekeeping, for example:
 >
-> That sounds a lot like the pXd_offset_orig() from Martins first approach
-> in this thread:
-> https://lore.kernel.org/linuxppc-dev/20190418100218.0a4afd51@mschwideX1/
+> /* PCI MSI/MSIx support */
+> #define XGBE_MSI_BASE_COUNT     4
+> #define XGBE_MSI_MIN_COUNT      (XGBE_MSI_BASE_COUNT + 1)
+>
+> Then the protection fails.
 
-I have to admit to finding that name horrible, but aside from that, yes.
+Right, I was ignoring that case.
 
-I don't think "pXd_offset_orig()" makes any sense as a name. Yes,
-"orig" may make sense as the variable name (as in "this was the
-original value we read"), but a function name should describe what it
-*does*, not what the arguments are.
+>
+> How about reducing max_vecs down to min_vecs, if min_vecs >
+> num_housekeeping ?
 
-Plus "original" doesn't make sense to me anyway, since we're not
-modifying it. To me, "original" means that there's a final version
-too, which this interface in no way implies. It's just "this is the
-value we already read".
+Yes, I think this makes sense.
+I will wait a bit to see if anyone else has any other comment and will post
+the next version then.
 
-("orig" does make some sense in that fault path - because by
-definition we *are* going to modify the page table entry, that's the
-whole point of the fault - we need to do something to not keep
-faulting. But here, we're not at all necessarily modifying the page
-table contents, we're just following them and readign the values once)
+>
+--=20
+Nitesh
 
-Of course, I don't know what a better name would be to describe what
-is actually going on, I'm just explaining why I hate that naming.
 
-*Maybe* something like just "pXd_offset_value()" together with a
-comment explaining that it's given the upper pXd pointer _and_ the
-value behind it, and it needs to return the next level offset? I
-dunno. "value" doesn't really seem horribly descriptive either, but at
-least it doesn't feel actively misleading to me.
+--ZCBAnGu3RVN93jfDVzyjk8jPhXft6veOQ--
 
-Yeah, I get hung up on naming sometimes. I don't tend to care much
-about private local variables ("i" is a perfectly fine variable name),
-but these kinds of somewhat subtle cross-architecture definitions I
-feel matter.
+--Nn7UuK1yQjSSr1T9L7Zv8zociIvpUvuk0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-               Linus
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl9afy0ACgkQo4ZA3AYy
+oznj9BAArL9Lf/r9SlX2R5OaGs0NE/EhttYtOxiYlsFeXOilO9r2R6nGJLhzEAuz
+/kmYx2xbVqKyYhJE5qNOO365aiATxu6ZNZixN90++dwGrtj4IjA0Wqdy71IAiW8/
+G4jB1UqF2WxA2KWGjaSrIGYfIYXW3J0AukTBxrXcRpEjEp3v5RHBJJwJou7lfEG8
+ReQrw57XiS01TzqImv4Ki1g+cD2Iw7Y06b8tes2R9eyZNXwb7AdzZNlw3U0aB+lJ
+q1ufx5Uya6Q5sVTDxrZ4emeCfFl3g8bQrdV1jXrGudVtR/CuzLtmvzQIAw/RNZiw
+y8uuQHd8KBFy0m7Diwt/gR671t4Wu3I8p+zcdVqsS29k2hTmFxZCLSgG8SCzpH2u
+1dyl3ZrM5Sj/nGJNFkUzNQDxyhVgjOD9I71utncTlXkv9oYbN8GtslviGLje4Hej
+lLoLsQ/tBMJrmi5VZMVGGMlMRMoyIaMb9f8/7axUxgqu/2IMp34+LABSgiNArTjS
+w9PdZNS2XlesqzQ2xTLhwPY1lDAQisIaXxFoZwjNr60a9zbwJdU8Hn/ChlhPe899
+HPJs2UrKiNazPSafQcxaTuy5gZSmhoICx6CtxKJPz2hDS8ZV+itz2lB18sivia3g
+7YCQe7IYYZbup61jJj7M6EbhXHhUbGxnPshRGSYpmHbti5h0pzY=
+=RA8s
+-----END PGP SIGNATURE-----
+
+--Nn7UuK1yQjSSr1T9L7Zv8zociIvpUvuk0--
+
