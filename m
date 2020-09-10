@@ -2,114 +2,92 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C066C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2E4C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF5D214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599755617;
-	bh=E5MilslhrwDTn9643nyVveDghPC9CwnzqfWv/QBY2oA=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=Ed6TrzCPwUB2DtPmmM5K4/rUYqqIKklY53/iq1+11td2zRMrjYFbPBeB60jOFbOIA
-	 zgZk8SdqkLbRIMVsiO/xzX3HUEcijB5nWCjhB3azqVTE2+VGy4gIb0Xn9sLFDwjUjY
-	 37fX/QBRUQvy07LaR9L8c0mX+QtPl41QmmKhb+rQ=
+	by mail.kernel.org (Postfix) with ESMTP id 796DC21582
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="b2kjpfb+";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VCf1Y3n7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgIJQdd (ORCPT
+        id S1726612AbgIJQdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:33:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgIJQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:20:27 -0400
-Received: from localhost.localdomain (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25690206A1;
-        Thu, 10 Sep 2020 16:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599754781;
-        bh=E5MilslhrwDTn9643nyVveDghPC9CwnzqfWv/QBY2oA=;
-        h=From:To:Subject:Date:From;
-        b=OF8xq9xhv+JmwGyjqxkh9SDIuZDYO3T85mMKEHok2TZefbQyNUqptmBg2DbF5ESAi
-         LA0FbreygSKV8b+pD5lSmoAtnGHNg3P3w99wFmGyqwNUcESwwHhY65ypiOtty5g9uJ
-         CwR/Z7tFZBQ1RAj5U3e+1I9vhJXj5CLb+xGhPJSg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: iio: adc: exynos-adc: require second interrupt with touch screen
-Date:   Thu, 10 Sep 2020 18:19:32 +0200
-Message-Id: <20200910161933.9156-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 10 Sep 2020 12:33:45 -0400
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:41792
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726434AbgIJQce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:32:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599755553;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
+        bh=4Fjo2jbfKJs0jj/mE1J1uJ+YhzsgWtAsfAtLfkSlWn8=;
+        b=b2kjpfb+a4yp/EfmWpeN6OdgMxKHrgDqTNLh9LbkaDPICz4PftWjcDkL6UfOv8AE
+        sPPt5SOrxNEkHSiX3d/tRXtriTF//FVN67Vu9Lkq/JoUZW+wb9ChFGp3aMZr3BwV2oB
+        cFXiEDUVvwYYTImRYZSrIbLYq/qqs3/8VE/FLIPQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599755553;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
+        bh=4Fjo2jbfKJs0jj/mE1J1uJ+YhzsgWtAsfAtLfkSlWn8=;
+        b=VCf1Y3n7j14mzluf7LeETP5YzFuQ8sKGxlF95RB77dlyWBHH7fiPuaBFEyGu/UHO
+        fjhknMNms+iuPLrSpkPwgESipLGVCP8mkM/HF4FeonNtUG/uO0xcr8ANnVtCt8N0kR0
+        q4FJWgC3KCHIydBzYrWgpPJivA3t0P3mKRdfMhTE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC1E2C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 25/29] ath9k: ar9001_initvals: Remove unused array
+ 'ar5416Bank6_9100'
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200910065431.657636-26-lee.jones@linaro.org>
+References: <20200910065431.657636-26-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-ID: <0101017478dc89a2-6deb7f77-18a0-4361-9c5e-975b047d556e-000000@us-west-2.amazonses.com>
+Date:   Thu, 10 Sep 2020 16:32:33 +0000
+X-SES-Outgoing: 2020.09.10-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
-screen.  In such case the second interrupt is required.  This second
-interrupt can be anyway provided, even without touch screens.  This
-fixes dtbs_check warnings like:
+Lee Jones <lee.jones@linaro.org> wrote:
 
-  arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/net/wireless/ath/ath9k/ar9001_initvals.h:462:18: warning: ‘ar5416Bank6_9100’ defined but not used [-Wunused-const-variable=]
+> 
+> Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Already fixed in ath.git.
 
----
+error: patch failed: drivers/net/wireless/ath/ath9k/ar9001_initvals.h:459
+error: drivers/net/wireless/ath/ath9k/ar9001_initvals.h: patch does not apply
+stg import: Diff does not apply cleanly
 
-Changes since v1:
-1. Fix if:has-touchscreen, as pointed by Rob.
-2. Add Ack.
----
- .../bindings/iio/adc/samsung,exynos-adc.yaml       | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Patch set to Rejected.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-index cc3c8ea6a894..17a08be3fe85 100644
---- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-@@ -41,7 +41,10 @@ properties:
-     maxItems: 2
- 
-   interrupts:
--    maxItems: 1
-+    description:
-+      ADC interrupt followed by optional touchscreen interrupt.
-+    minItems: 1
-+    maxItems: 2
- 
-   "#io-channel-cells":
-     const: 1
-@@ -107,6 +110,15 @@ allOf:
-           items:
-             - const: adc
- 
-+  - if:
-+      required:
-+        - has-touchscreen
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 2
-+          maxItems: 2
-+
- examples:
-   - |
-     adc: adc@12d10000 {
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/11766813/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
