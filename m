@@ -2,75 +2,104 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF429C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA1DC2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5440A20829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599724673;
-	bh=4pKISiYZhY3EeSnAyleLcIQNYM/Dt5k93S8IrckrwTs=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=CPEeOTOYvdC9xEb4tZzP7epx4NVGw2BVRKcPqkh+Ppee7ITZmTBwtUEFKlB9AZp9r
-	 /CjdRKb3LNQgh08c6p3T5YBAlNZ2hWlaeFPFtzm65ulHc+RBzqGcpfMDh2If05nwMt
-	 YoYNC3WYHylDmPj+OP+XMDIWuB1DVH+JiDUPw9Bk=
+	by mail.kernel.org (Postfix) with ESMTP id 87F3F20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 07:58:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HHQ0KEJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIJH5u (ORCPT
+        id S1729691AbgIJH6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 03:57:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbgIJH5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 03:57:47 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49E4020829;
-        Thu, 10 Sep 2020 07:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599724667;
-        bh=4pKISiYZhY3EeSnAyleLcIQNYM/Dt5k93S8IrckrwTs=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=s78HttgmbSoO2M+1IKqaQXEEF0Dz6GoeOC9ac+QJmYnlh01qs9LpethP8h7oZ9lko
-         ++tmd3Dp5vC0lqd6buHZM2iRVZ9kroxrRpQkf8nhB0XsqmCfBaoSy/sDiITQ7JhLMt
-         X5BpSQIUP0JerYjBPciWzDYf+gc4Za0gH0aFuqps=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 10 Sep 2020 03:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgIJH6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 03:58:13 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A04C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 00:58:13 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id p13so4849263ils.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 00:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tai8qFjVTbhhMUuPlONXFVjFgWeR4r6/lSqQDCLq2Ok=;
+        b=HHQ0KEJWk1ralebxe9GR2V01kcrVKprxD80d3zhG0zDJlDbWa9ZKlHRw5Ek9+YgTFE
+         g4rJm2dV+c95CN7Fc7NsqQh6fzmVSt1VL9/9QhLdmRBciKqnWJMIfwDXYUBZMkwHcVI6
+         qzq8M89gNp9EI0BZB84MzWbdZmibXau0F4SCM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tai8qFjVTbhhMUuPlONXFVjFgWeR4r6/lSqQDCLq2Ok=;
+        b=BtuYzjkHH96CelDalaq/bam+jukRxziGiFDAm1+p6AmNdYLv9DVLDLnxdY59xBx9hp
+         eJO3vE3qW1xn6UT1l1iSmlbFyW0P7cKLzdDG/0iVpV1nwOmB4fSc6TmRo2t80RfsWcF3
+         FqnnYmPWNmEvkEIxLWQ7zDJJO2nfncFvPSwPLVUCvlfwYtrxYCbbTuVVwDqSBOlO0ygJ
+         H4nHL2skYITELcwfd+4CJ+NwF7DvhlO6F/CYswgkC1x8g95iFWXKWiU4junZNlJwZump
+         iM8g7k+Q9cMvQK9CCs9z2FogXC3jvwy2RKHkd62NneSuPqvRGeaf0Tq2U1mhDGq24StE
+         Tugg==
+X-Gm-Message-State: AOAM533iqNt8VHfW9pRKH4Pc3BswSLJGTe64n05JYoZ2M3RbKY3+B/p4
+        Ks4VTG+syHhw6zdB6IDTOzyTrSBREvO93mBxgHj0Dw==
+X-Google-Smtp-Source: ABdhPJyPFdwKoALShiSo00RiIsvWpaoDC6tNAVzVFRh5HuKKh0MkaY3m7URBqCj+sI1i+vLSoqqISiWX5+cWI3mCkyw=
+X-Received: by 2002:a92:906:: with SMTP id y6mr7173891ilg.106.1599724692310;
+ Thu, 10 Sep 2020 00:58:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200829175704.GA10998@Kaladin>
-References: <20200829175704.GA10998@Kaladin>
-Subject: Re: [PATCH] clk: versatile: Add of_node_put() before return statement
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, Julia.Lawall@lip6.fr,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        linus.walleij@linaro.org
-Date:   Thu, 10 Sep 2020 00:57:45 -0700
-Message-ID: <159972466586.2295844.9075545722301677556@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200910054635.3337487-1-hsinyi@chromium.org> <ba77586c-7902-9ce4-0f4f-ad1743596d85@collabora.com>
+In-Reply-To: <ba77586c-7902-9ce4-0f4f-ad1743596d85@collabora.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 10 Sep 2020 15:57:46 +0800
+Message-ID: <CAJMQK-j_Syejw1Bc53fN8OuRYppns7g_=EQW+PUDkQDhnwxvSw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: mt8173: elm: Set uart0 to mmio32 iotype
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sumera Priyadarsini (2020-08-29 10:57:04)
-> Every iteration of for_each_available_child_of_node() decrements
-> the reference count of the previous node, however when control is
-> transferred from the middle of the loop, as in the case of a return
-> or break or goto, there is no decrement thus ultimately resulting in
-> a memory leak.
->=20
-> Fix a potential memory leak in clk-impd1.c by inserting
-> of_node_put() before a return statement.
->=20
-> Issue found with Coccinelle.
->=20
-> Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
-> ---
-
-Applied to clk-fixes
+On Thu, Sep 10, 2020 at 3:20 PM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Hsin-Yi,
+>
+> On 10/9/20 7:46, Hsin-Yi Wang wrote:
+> > Set uart0 iotype to mmio32 to make earlycon work with stdout-path.
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> > index a5a12b2599a4a..d54e62f72c65d 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> > @@ -1160,6 +1160,8 @@ &thermal {
+> >  };
+> >
+> >  &uart0 {
+> > +     reg-io-width = <4>;
+> > +     reg-shift = <2>;
+>
+> I am wondering if these properties are common enough to go to mt8173.dtsi
+> instead of here.
+>
+Since stdout-path is set on elm.dtsi (using uart0), so I add this
+attribute here.
