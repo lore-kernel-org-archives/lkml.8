@@ -2,120 +2,100 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C69C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0007FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B30A3214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599770790;
-	bh=cyXH2m9SbRuw7AjC0kYLstZqv7BypKK9aZYMN9yTQBY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0SMNfGbXz55c1fAEZHoliHrmBk59p6XVyaSrTEZwgvn9wlT5YdYL/Fez7duQhLkU2
-	 sp7JCEsuMbKHa04WQ07WUkyl+R7LHkQkcQJEPGLlqdgqpUHFVfY8HhPTWqsRLQbqmT
-	 Wj8SgEU4PJyeJ/M0EXBZX6IBslIpx1wZnQQGBwBo=
+	by mail.kernel.org (Postfix) with ESMTP id AC8C921D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uPtksaCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgIJUq2 (ORCPT
+        id S1727796AbgIJUqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:46:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbgIJU2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:28:40 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3D1320BED;
-        Thu, 10 Sep 2020 20:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599769718;
-        bh=cyXH2m9SbRuw7AjC0kYLstZqv7BypKK9aZYMN9yTQBY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WsTM7hlODce3jLyshd/OIuWYBbW5Hl6gkfAQaPzbD1pKZklQmyFakMp/wn4q2jDCT
-         OOkI5U8JXddYLqyGrcZFXIqPzbJuIKkeJ0szKPvWa65u9BDMmPS2w88TxbL4rxTlk2
-         nLIO5y0zyPGgsWLXf+Abz4t+xek4YXNDj+3M36yA=
-Date:   Thu, 10 Sep 2020 13:28:35 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
-Message-ID: <20200910132835.1bf7b638@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
-References: <20200910161126.30948-1-oded.gabbay@gmail.com>
-        <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
+        Thu, 10 Sep 2020 16:46:14 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52872 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgIJU2m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:28:42 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08AKSbpF057713;
+        Thu, 10 Sep 2020 15:28:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599769717;
+        bh=aLrHDDzUSZnntyTRNgcA+XJgDx0ERfOCTms6pbod928=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=uPtksaCucms+eERJ5uWSYAsys6oz32h4Y+xnu5hg7p2YzxvDL+GdEUy9YS8+B5m3M
+         jpEPMCTVbRABBStO/A9NeemiHYZw+Jc8RaW2Z45DKf7lFaPmAASs45s1724k7MXK+A
+         ETG5ajKFLqaZ5hpcocZu8/1iAynF//P1BhuL7WXE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08AKSarM041540
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 15:28:36 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 15:28:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 15:28:36 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08AKSZVY066204;
+        Thu, 10 Sep 2020 15:28:36 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v3 5/9] net: ethernet: ti: am65-cpsw: use dev_id for ale configuration
+Date:   Thu, 10 Sep 2020 23:28:03 +0300
+Message-ID: <20200910202807.17473-6-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200910202807.17473-1-grygorii.strashko@ti.com>
+References: <20200910202807.17473-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 10 Sep 2020 23:16:22 +0300 Oded Gabbay wrote:
-> On Thu, Sep 10, 2020 at 11:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
-> > On Thu, 10 Sep 2020 19:11:11 +0300 Oded Gabbay wrote:  
-> > >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
-> > >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
-> > >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
-> > >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
-> > >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
-> > >  create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
-> > >  create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h  
-> >
-> > The relevant code needs to live under drivers/net/(ethernet/).
-> > For one thing our automation won't trigger for drivers in random
-> > (/misc) part of the tree.  
-> 
-> Can you please elaborate on how to do this with a single driver that
-> is already in misc ?
-> As I mentioned in the cover letter, we are not developing a
-> stand-alone NIC. We have a deep-learning accelerator with a NIC
-> interface.
-> Therefore, we don't have a separate PCI physical function for the NIC
-> and I can't have a second driver registering to it.
+The previous patch has introduced possibility to select CPSW ALE by using
+ALE dev_id identifier. Switch TI TI AM65x/J721E CPSW NUSS driver to use
+dev_id.
 
-Is it not possible to move the files and still build them into a single
-module?
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> We did this design based on existing examples in the kernel
-> (registering to netdev), such as (just a few examples):
-> 1. sgi-xp driver in drivers/misc/sgi-xp (see file xpnet.c)
-> 2. bnx2fc in drivers/scsi/bnx2fc
-> 
-> Thanks,
-> Oded
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index 9baf3f3da91e..bec47e794359 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -2131,10 +2131,9 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
+ 	/* init common data */
+ 	ale_params.dev = dev;
+ 	ale_params.ale_ageout = AM65_CPSW_ALE_AGEOUT_DEFAULT;
+-	ale_params.ale_entries = 0;
+ 	ale_params.ale_ports = common->port_num + 1;
+ 	ale_params.ale_regs = common->cpsw_base + AM65_CPSW_NU_ALE_BASE;
+-	ale_params.nu_switch_ale = true;
++	ale_params.dev_id = "am65x-cpsw2g";
+ 
+ 	common->ale = cpsw_ale_create(&ale_params);
+ 	if (IS_ERR(common->ale)) {
+-- 
+2.17.1
 
