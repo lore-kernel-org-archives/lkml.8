@@ -2,155 +2,217 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4C3C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5A1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEC821D92
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7066A21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iyiND7wW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJPMVkAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgIJVXt (ORCPT
+        id S1726931AbgIJVYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:23:49 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14255 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbgIJVWw (ORCPT
+        Thu, 10 Sep 2020 17:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgIJVXq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:22:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5a99180000>; Thu, 10 Sep 2020 14:22:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 10 Sep 2020 14:22:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 10 Sep 2020 14:22:45 -0700
-Received: from [10.2.54.52] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
- 2020 21:22:37 +0000
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
- <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad>
- <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com>
- <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
- <20200910181319.GO87483@ziepe.ca>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <0c9bcb54-914b-e582-dd6d-3861267b6c94@nvidia.com>
-Date:   Thu, 10 Sep 2020 14:22:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 10 Sep 2020 17:23:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2CAC061573;
+        Thu, 10 Sep 2020 14:23:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id n14so5521058pff.6;
+        Thu, 10 Sep 2020 14:23:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=p42GK/1yAT4UofPfzHmZqP5A3xOoTOo31CfmHw1wr1s=;
+        b=XJPMVkAtCYpui67NZceYfBMv4kft64+VQ61b8ToUxUqpRj7O+mDKAi1zhdAqH8uIAx
+         8V0tA+1LhRy9INyU5E1is/vRN9UbBnadHDX3msfBYZQsNr80RyeOp2fRZNwTRV4iR7zt
+         2jilhJC66EIyD/W7lYh11bN+YhlV6hbZPaOc8GqIp32N+QQqgmYUFvzfnuxbgxqa9kMD
+         3YFWhA7iNrJ+faqbkiqJTZGcQB39VE+CSCzHHcDHSiT+CddK5GifJftIXcgK9vVJAT4D
+         xuj7UuBtHONDk7fkz3TfrMV2QADNFJ+vpvJUQDnF9fgKDqry0Zk1sIwwpLCYjK/otaGZ
+         2qWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p42GK/1yAT4UofPfzHmZqP5A3xOoTOo31CfmHw1wr1s=;
+        b=BSXfTVlOOjCJMfUSxFsfPCZgJ5U9aVPwxcyvoi0a5rRoJeq4dfx1Ldcs8AcU31KzqT
+         SB2qdo9LUeKgNOrIJKKKZupwrGTFJuB3aXXGHsC2JaYM4CqHZmFt6+AcZKUD1sbcNhJp
+         dtH0VT5e8kMyleRnz1rxxSom6Ckku78RJPexcXA1NRKN1cncCzUjaoUPazj4wK90mJsz
+         l1i7kRFPXorTztZU6rbl+UptvvkKfSQqj219I8VwS3KBq9i+ipxBk/ybo+GtlMTtlRZy
+         z/wqA+b6giNNt3YlquNRzqu9lA0UHmZo/tSI8FHTkLHFeRMSNYzrGnaTi4M838wXATK3
+         10Uw==
+X-Gm-Message-State: AOAM5329Qhs/BWOUnLbkF1ojsZLPEXePNI01NMAY6MJX0b4/G+vHowLK
+        Vnl/ATqX850/tMpU8WG+4uk=
+X-Google-Smtp-Source: ABdhPJz5mgjzJ5sEQqxOobpIPDE8NiSokM5hEZ5XV4ED7Vuj4RMc0fmRUi2BorHpt3CWmuEF4w59/A==
+X-Received: by 2002:a62:fb05:: with SMTP id x5mr7322794pfm.121.1599773026080;
+        Thu, 10 Sep 2020 14:23:46 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y126sm14224pfy.138.2020.09.10.14.23.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 14:23:45 -0700 (PDT)
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, SW_Drivers <SW_Drivers@habana.ai>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200910161126.30948-1-oded.gabbay@gmail.com>
+ <20200910130112.1f6bd9e9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAFCwf13SbXqjyu6JHKSTf-EqUxcBZUe4iAfggLhKXOi6DhXYcg@mail.gmail.com>
+ <20200910132835.1bf7b638@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAFCwf127fssgiDEwYvv3rFW7iFFfKKZDE=oxDUbFBcwpz3yQkQ@mail.gmail.com>
+ <a13199ce-0c73-920d-857d-3223144f41f0@gmail.com>
+ <CAFCwf13ak5NPc2BTWoA2cwHB5AUJjq5i1jOucbsJnwyyQCfQ4w@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 00/15] Adding GAUDI NIC code to habanalabs driver
+Message-ID: <91d6756d-8a0d-d230-7deb-3c6d6090f746@gmail.com>
+Date:   Thu, 10 Sep 2020 14:23:44 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
-In-Reply-To: <20200910181319.GO87483@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAFCwf13ak5NPc2BTWoA2cwHB5AUJjq5i1jOucbsJnwyyQCfQ4w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599772952; bh=KgUwNS6Q+E8fqoYsN87vU1D8tqx/ffcZtMThZuyBhrY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=iyiND7wWuYHj8PeTvg/XtmrYveZZgQlXRnTEfuRaqVXA6x8uYqDCj3nrByA0pX5cI
-         5pEdOff/AUuhqRtuvklooFd8NslrApTnPUOi4JcmLIL68MhkbQJc9AX9wpzPo47t5P
-         WonYZKJQ7qlOSxr7z0+3iwfyQPcDStoEMZWR2//x0MYBmno68OCeOHSxdecN4/r9lr
-         Jbhl/MI+cwSAsj1DIol///tYiiv7Ue7ZlwRJ+mqssEw4A5AmoU61blAy2i3+rfNZd4
-         /0vhPiQoPG2wWvgPHKrzc4/jcDRLgdPpH3xb6nJhrSWHQnnGiRHTVHuGyPppzkiMo2
-         pXOZNwCZ5mRKQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/20 11:13 AM, Jason Gunthorpe wrote:
-> On Thu, Sep 10, 2020 at 10:35:38AM -0700, Linus Torvalds wrote:
->> On Thu, Sep 10, 2020 at 2:40 AM Alexander Gordeev
->> <agordeev@linux.ibm.com> wrote:
+
+
+On 9/10/2020 2:15 PM, Oded Gabbay wrote:
+> On Fri, Sep 11, 2020 at 12:05 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>>
+>>
+>> On 9/10/2020 1:32 PM, Oded Gabbay wrote:
+>>> On Thu, Sep 10, 2020 at 11:28 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>>>
+>>>> On Thu, 10 Sep 2020 23:16:22 +0300 Oded Gabbay wrote:
+>>>>> On Thu, Sep 10, 2020 at 11:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>>>>> On Thu, 10 Sep 2020 19:11:11 +0300 Oded Gabbay wrote:
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.c
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_dcbnl.c
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_debugfs.c
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_nic_ethtool.c
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/gaudi/gaudi_phy.c
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_masks.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qm1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_masks.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_qpc1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxb_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_masks.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_rxe1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_stat_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_tmr_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_masks.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txe1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_masks.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic0_txs1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic1_qm1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic2_qm1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic3_qm1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm0_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/nic4_qm1_regs.h
+>>>>>>>    create mode 100644 drivers/misc/habanalabs/include/hw_ip/nic/nic_general.h
+>>>>>>
+>>>>>> The relevant code needs to live under drivers/net/(ethernet/).
+>>>>>> For one thing our automation won't trigger for drivers in random
+>>>>>> (/misc) part of the tree.
+>>>>>
+>>>>> Can you please elaborate on how to do this with a single driver that
+>>>>> is already in misc ?
+>>>>> As I mentioned in the cover letter, we are not developing a
+>>>>> stand-alone NIC. We have a deep-learning accelerator with a NIC
+>>>>> interface.
+>>>>> Therefore, we don't have a separate PCI physical function for the NIC
+>>>>> and I can't have a second driver registering to it.
+>>>>
+>>>> Is it not possible to move the files and still build them into a single
+>>>> module?
+>>> hmm...
+>>> I actually didn't try that as I thought it will be very strange and
+>>> I'm not familiar with other drivers that build as a single ko but have
+>>> files spread out in different subsystems.
+>>> I don't feel it is a better option than what we did here.
 >>>
->>> It is only gup_fast case that exposes the issue. It hits because
->>> pointers to stack copies are passed to gup_pXd_range iterators, not
->>> pointers to real page tables itself.
+>>> Will I need to split pull requests to different subsystem maintainers
+>>> ? For the same driver ?
+>>> Sounds to me this is not going to fly.
 >>
->> Can we possibly change fast-gup to not do the stack copies?
+>> Not necessarily, you can post your patches to all relevant lists and
+>> seek maintainer review/acked-by tags from the relevant maintainers. This
+>> is not unheard of with mlx5 for instance.
+> Yeah, I see what you are saying, the problem is that sometimes,
+> because everything is tightly integrated in our SOC, the patches
+> contain code from common code (common to ALL our ASICs, even those who
+> don't have NIC at all), GAUDI specific code which is not NIC related
+> and the NIC code itself.
+> But I guess that as a last resort if this is a *must* I can do that.
+> Though I would like to hear Greg's opinion on this as he is my current
+> maintainer.
+> 
+> Personally I do want to send relevant patches to netdev because I want
+> to get your expert reviews on them, but still keep the code in a
+> single location.
+
+We do have network drivers sprinkled across the kernel tree already, but 
+I would agree that from a networking maintainer perspective this makes 
+auditing code harder, you would naturally grep for net/ and drivers/net 
+and easily miss arch/uml/ for instance. When you do treewide changes, 
+having all your ducklings in the same pond is a lot easier.
+
+There is a possible "risk" with posting a patch series for the 
+habanalabs driver to netdev that people will be wondering what this is 
+about and completely miss it is about the networking bits. If there is a 
+NIC driver under drivers/net then people will start to filter or pay 
+attention based on the directory.
+
+> 
 >>
->> I'd actually rather do something like that, than the "addr_end" thing.
+>> Have you considered using notifiers to get your NIC driver registered
+>> while the NIC code lives in a different module?
+> Yes, and I prefered to keep it simple. I didn't want to start sending
+> notifications to the NIC driver every time, for example, I needed to
+> reset the SOC because a compute engine got stuck. Or vice-versa - when
+> some error happened in the NIC to start sending notifications to the
+> common driver.
 > 
->> As you say, none of the other page table walking code does what the
->> GUP code does, and I don't think it's required.
-> 
-> As I understand it, the requirement is because fast-gup walks without
-> the page table spinlock, or mmap_sem held so it must READ_ONCE the
-> *pXX.
-> 
-> It then checks that it is a valid page table pointer, then calls
-> pXX_offset().
-> 
-> The arch implementation of pXX_offset() derefs again the passed pXX
-> pointer. So it defeats the READ_ONCE and the 2nd load could observe
-> something that is no longer a page table pointer and crash.
+> In addition, from my AMD days, we had a very tough time managing two
+> drivers that "talk" to each other and manage the same H/W. I'm talking
+> about amdgpu for graphics and amdkfd for compute (which I was the
+> maintainer). AMD is working in the past years to unite those two
+> drivers to get out of that mess. That's why I didn't want to go down
+> that road.
 
-Just to be clear, though, that makes it sound a little wilder and
-reckless than it really is, right?
+You are trading an indirect call for a direct call, and it does provide 
+some nice interface, but it could be challenging to work with given the 
+context in which the notifier is called can be problematic. You could 
+still have direct module references then, and that would avoid the need 
+for notifiers.
 
-Because actually, the page tables cannot be freed while gup_fast is
-walking them, due to either IPI blocking during the walk, or the moral
-equivalent (MMU_GATHER_RCU_TABLE_FREE) for non-IPI architectures. So the
-pages tables can *change* underneath gup_fast, and for example pages can
-be unmapped. But they remain valid page tables, it's just that their
-contents are unstable. Even if pXd_none()==true.
-
-Or am I way off here, and it really is possible (aside from the current
-s390 situation) to observe something that "is no longer a page table"?
-
-
-thanks,
+You are the driver maintainer, so you definitively have a bigger say in 
+the matter than most of us, drive by contributors.
 -- 
-John Hubbard
-NVIDIA
+Florian
