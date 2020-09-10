@@ -2,100 +2,70 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D47C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0740C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F1B21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6366E206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 02:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599706062;
-	bh=eQSHJfWZ3DxC0HJ+ibhPFp1Bf0FdR9SvFxiYcGxWF6I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=w9mtgimqDtLA9f5bcNftxjRVSW7i/6QjKSS2Ww+KGJdikGkixtbYEQjTeskqs8NmO
-	 OypJPviCQEWkzmqpfE/U61OTQ6NZQ2GHgkt9j0kegK0qpZq1n5BCeYJDfnU1nFU/kl
-	 BvkYy3YJaImVwoQVWEXBoyUqOHD+QtoMvIQEK2qM=
+	s=default; t=1599706233;
+	bh=dkp7auU2FKhEvcTExb27Xv8XLSV29+CJUCDMUeythnQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=W03OpNJSw8ra+vfs8SaAtnAduE2Gotq8htcrMtQa0sBbWlfw575HdBHlwfidlzIr9
+	 kYf24Kuzs3vIpcWxdeHNzRlmLGlZyIZKPactMEALzIOuWVAV6tnkP5E22n3JnMAI3/
+	 09lBsbUimIIsAS8dr04bJ8kjn4yr2gelCip3/roM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbgIJCri (ORCPT
+        id S1729296AbgIJCu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 9 Sep 2020 22:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        Wed, 9 Sep 2020 22:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730375AbgIJB7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 9 Sep 2020 21:59:55 -0400
-Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B32F206DB;
-        Thu, 10 Sep 2020 01:59:51 +0000 (UTC)
+        id S1730453AbgIJCsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 9 Sep 2020 22:48:12 -0400
+Subject: Re: [GIT PULL] Crypto Fixes for 5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599703191;
-        bh=eQSHJfWZ3DxC0HJ+ibhPFp1Bf0FdR9SvFxiYcGxWF6I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AiZwJ0if6N9KXZ/+Y+yitBZHqIPrOj2JaQFG2eR1JW5GdcWOilKF7bRxXxdA6zYqu
-         IIjUQmmxmmyOswztPrNUh2211cq4RAa9C7t3OgRrGeWTXaCjNhSsMN+dvqK0eoK/24
-         y2s2RIpdENaFgkeNuM2/3HNLfxDLV70I53U6QsVs=
-Date:   Wed, 9 Sep 2020 20:59:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jiang Biao <benbjiang@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in
- pci_read_config
-Message-ID: <20200910015950.GA748330@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPJCdB=HzNJp36tjD0=-R-cs4+8=xhxAfmR-tZ2DkpcyiugH-g@mail.gmail.com>
+        s=default; t=1599706092;
+        bh=dkp7auU2FKhEvcTExb27Xv8XLSV29+CJUCDMUeythnQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=lnLxbhhSELHI4cgrWuryB9t0Bbchdok0uTNGkHhl+lDpVuTi22XwXQJgUA+1ts+cE
+         7J4xEYYoKZoGg2hCaBewuQxvYs2i9Qw8adUWBYuDJIClgk8y6zd1E1m+ITtzLYU+IU
+         TYbQykTJt6vaLTUAUQUVcK0VuhSQfzJJ10TBGSpQ=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200910003423.GA28062@gondor.apana.org.au>
+References: <20200803044024.GA6429@gondor.apana.org.au>
+ <20200830223304.GA16882@gondor.apana.org.au> <20200910003423.GA28062@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200910003423.GA28062@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 1b0df11fde0f14a269a181b3b7f5122415bc5ed7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7fe10096c1508c7f033d34d0741809f8eecc1ed4
+Message-Id: <159970609204.30392.6189665258916818752.pr-tracker-bot@kernel.org>
+Date:   Thu, 10 Sep 2020 02:48:12 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 09:54:02AM +0800, Jiang Biao wrote:
-> Hi,
-> 
-> On Thu, 10 Sep 2020 at 09:25, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Mon, Aug 24, 2020 at 01:20:25PM +0800, Jiang Biao wrote:
-> > > From: Jiang Biao <benbjiang@tencent.com>
-> > >
-> > > pci_read_config() could block several ms in kernel space, mainly
-> > > caused by the while loop to call pci_user_read_config_dword().
-> > > Singel pci_user_read_config_dword() loop could consume 130us+,
-> > >               |    pci_user_read_config_dword() {
-> > >               |      _raw_spin_lock_irq() {
-> > > ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> > > ! 137.582 us  |      }
-> > >               |      pci_read() {
-> > >               |        raw_pci_read() {
-> > >               |          pci_conf1_read() {
-> > >   0.230 us    |            _raw_spin_lock_irqsave();
-> > >   0.035 us    |            _raw_spin_unlock_irqrestore();
-> > >   8.476 us    |          }
-> > >   8.790 us    |        }
-> > >   9.091 us    |      }
-> > > ! 147.263 us  |    }
-> > > and dozens of the loop could consume ms+.
-> > >
-> > > If we execute some lspci commands concurrently, ms+ scheduling
-> > > latency could be detected.
-> > >
-> > > Add scheduling chance in the loop to improve the latency.
-> >
-> > Thanks for the patch, this makes a lot of sense.
-> >
-> > Shouldn't we do the same in pci_write_config()?
-> Yes, IMHO, that could be helpful too.
+The pull request you sent on Thu, 10 Sep 2020 10:34:23 +1000:
 
-If it's feasible, it would be nice to actually verify that it makes a
-difference.  I know config writes should be faster than reads, but
-they're certainly not as fast as a CPU can pump out data, so there
-must be *some* mechanism that slows the CPU down.
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-Bjorn
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7fe10096c1508c7f033d34d0741809f8eecc1ed4
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
