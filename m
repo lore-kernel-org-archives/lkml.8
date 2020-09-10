@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0BFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173CCC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2749221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60FA21D92
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 21:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehl5Lsnv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t7jKxizK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgIJVTD (ORCPT
+        id S1728198AbgIJVTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 17:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34804 "EHLO
+        Thu, 10 Sep 2020 17:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbgIJVOz (ORCPT
+        with ESMTP id S1728023AbgIJVOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 17:14:55 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3B7C0617A4;
-        Thu, 10 Sep 2020 14:14:30 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id g4so8760451wrs.5;
-        Thu, 10 Sep 2020 14:14:30 -0700 (PDT)
+        Thu, 10 Sep 2020 17:14:44 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42028C06179F;
+        Thu, 10 Sep 2020 14:14:25 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id l9so2093347wme.3;
+        Thu, 10 Sep 2020 14:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o3yHx9N5iW7pCL36Ov0mzI7ConRKQlz/EE+o5necxAA=;
-        b=ehl5Lsnv/t+cfJqfYiKWlu96+/SSpr17qPIeHONde3L4VUkDbv+/pni4ukcuHhqOVB
-         b930b28AUg7sM54SOlZepxtnsG3ikbu5AQnhJ2L722WthXFe5uJytvJI6xVQGhrYohBc
-         nLT4ymMkQpjv2o5Xp0+3J/wJ2/17wQV+9D9SvJmhRa87pgTOpwk+uKEZoSljwv18OCqw
-         9PjdyLnwdCCv7+9rlOMvJsk6NUXolgVDVQfhzyv1+Xnq/J+HR1VZnS+pBghbP7eKRDOs
-         4o2MKyQpIdUwXaPI/6As1D3bXrwFgWwA8CrCcoV+IkB6zKBuBr+mZ0gHQcBSYB5zfluu
-         ls3A==
+        bh=VbC5saaYZHnTXOXwHebFrJkh2FffiwaEU7e2jnpZU5k=;
+        b=t7jKxizKOsHR0GZ9KH2Q7Mrk4zJF39Q0887R11FPxyKx7wPPMH1bYZELE6EqzfO8Hl
+         vZPjrmhex4WpoxUqCuDbqf59PD6+LlE9djSMgzIjVZGdsovY89Oc+MQvxCiKLQdut6Zo
+         b2aLeoaUaYDVlHxdyrwk02S1pmS0vCJ7JejQJD8g+4IC0pU0ZuUavKA41p95EufAJ2TW
+         TJFkn7UVvtf8ISZfF/3ZpvP7NArBQAEyoqHSCYZdDPqf4WsY2HqYrx/efI6AVCTbH1l/
+         wXFUX3MgfA3+LE55if5LKJka1UWrLZRTur9T3wXw6PDOaGs8ZliUDDe9hUGLawTSPE7R
+         nR9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o3yHx9N5iW7pCL36Ov0mzI7ConRKQlz/EE+o5necxAA=;
-        b=K8hu3jVRpuKEa+HFbg0z0QVNKGcsBtY6bM9RCRPBiVHeZsbU5M+dP+tmAssL/n6YqN
-         pZo0IfUUYHidoFhwFPY38AwKBgid8/vQh+9YrhP0NS3fRAkH7F78IAY/Nc6OWuhVq9o+
-         ZYINyoe0U1q2P4w5xtzEVWDQs/EV/naJFwNCg3lZdn91XpLZmiPV62bnOK+V1pZtfxtW
-         3tAX7nfJD803Mk+Xpo29JDkEFndf6C3Mk1znefBUrskQTsvepTc/HGq/BBJCySyz7k1t
-         LYOXwqfzDgjB4wra8FMBhlTnkVBmct5ytjaz4tsXLWW2issFPK3BxKLlPKqVk2jJ0Pow
-         ocXA==
-X-Gm-Message-State: AOAM5300Kti/gxN9nt8yGJDoD7KhaPX3FOCvxCE3yhksBSvR/2RC44Oh
-        ZZC+r7efqv+hsZy+GG6u4Lo=
-X-Google-Smtp-Source: ABdhPJzYfpc8fOYPYu0i23K+bvAv9Wb5c47c/86tQ6e0UCp7vsosugff9C0XMZeRaRfNSwKDFkVmWw==
-X-Received: by 2002:a5d:4388:: with SMTP id i8mr10888670wrq.365.1599772468422;
-        Thu, 10 Sep 2020 14:14:28 -0700 (PDT)
+        bh=VbC5saaYZHnTXOXwHebFrJkh2FffiwaEU7e2jnpZU5k=;
+        b=fq4D3LYoCe7WCXvXNOPHjV3z+QJFXD+3pJtqriJlGuYCrRGVuv7Ze7jUftrTnPxG2R
+         jVBUyvIrLjmi2GQiTePncNV3j7Hbn9zw9UC5uzLYaxGfWSi/MYS1E7cMKmKaT9MxzA33
+         MnTmMKhcUs2n50WAGfMzsGp5dpT+k/0JWP0y1Fz3DhLiDMR7SDAx8Emge78gQxv+Tpuu
+         tKHZtUIZ1Sb3fBeuQwMoP3MDjp6Cy5WrdEXmz7r/LlQysKdRcOpZX2xNE6R8CUy999tJ
+         q1Tu2zVXWkNFHmzbWyhbRHDezmlORoQNFaCcpbYDaFacxLQVUweWiQkqhKbAF9YaIabN
+         7rOg==
+X-Gm-Message-State: AOAM532/1SXkpEaP9Qx9irV3NbZmyVtFAq6P/p7xcpE25q57MnJSEjob
+        y+Z1GqaFmW8qb0Y6RnnbC9Q=
+X-Google-Smtp-Source: ABdhPJwKLEVsspZCKYvSWCKV3osACyyrbIsswVav0nAjuKMTFu9VsPSliryNIpHd1/4I4NwRSx9Ukw==
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr1912230wml.176.1599772462037;
+        Thu, 10 Sep 2020 14:14:22 -0700 (PDT)
 Received: from localhost.localdomain ([170.253.60.68])
-        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.27
+        by smtp.googlemail.com with ESMTPSA id l10sm111502wru.59.2020.09.10.14.14.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 14:14:27 -0700 (PDT)
+        Thu, 10 Sep 2020 14:14:21 -0700 (PDT)
 From:   Alejandro Colomar <colomar.6.4.3@gmail.com>
 To:     mtk.manpages@gmail.com
 Cc:     linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alejandro Colomar <colomar.6.4.3@gmail.com>
-Subject: [PATCH 17/24] get_phys_pages.3: Write 'long' instead of 'long int'
-Date:   Thu, 10 Sep 2020 23:13:38 +0200
-Message-Id: <20200910211344.3562-18-colomar.6.4.3@gmail.com>
+Subject: [PATCH 11/24] stat.2: Remove unneeded cast
+Date:   Thu, 10 Sep 2020 23:13:32 +0200
+Message-Id: <20200910211344.3562-12-colomar.6.4.3@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
 References: <20200910211344.3562-1-colomar.6.4.3@gmail.com>
@@ -77,30 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For consistency.
-
-Most man pages use 'long' instead of 'long int'.
+Both major(3) and minor(3) return an 'unsigned int',
+so there is no need to use a 'long' for printing.
+Moreover, it should have been 'unsigned long',
+as "%lx" expects an unsigned type.
 
 Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man3/get_phys_pages.3 | 4 ++--
+ man2/stat.2 | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/man3/get_phys_pages.3 b/man3/get_phys_pages.3
-index 4a9177dfd..97ba625b7 100644
---- a/man3/get_phys_pages.3
-+++ b/man3/get_phys_pages.3
-@@ -30,8 +30,8 @@ page counts
- .nf
- .B "#include <sys/sysinfo.h>"
- .PP
--.B long int get_phys_pages(void);
--.B long int get_avphys_pages(void);
-+.B long get_phys_pages(void);
-+.B long get_avphys_pages(void);
- .fi
- .SH DESCRIPTION
- The function
+diff --git a/man2/stat.2 b/man2/stat.2
+index b35e3c615..3418e1b5d 100644
+--- a/man2/stat.2
++++ b/man2/stat.2
+@@ -664,8 +664,8 @@ main(int argc, char *argv[])
+         exit(EXIT_FAILURE);
+     }
+ 
+-    printf("ID of containing device:  [%lx,%lx]\en",
+-	    (long) major(sb.st_dev), (long) minor(sb.st_dev));
++    printf("ID of containing device:  [%x,%x]\en",
++	    major(sb.st_dev), minor(sb.st_dev));
+ 
+     printf("File type:                ");
+ 
 -- 
 2.28.0
 
