@@ -2,142 +2,129 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D063C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30617C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5010320829
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8EB721D7E
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 20:58:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgIJU6o (ORCPT
+        id S1727903AbgIJU6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 16:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727927AbgIJU6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 16:58:11 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24E6AC061756;
-        Thu, 10 Sep 2020 13:58:10 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id D5E5029BB25
-Received: by earth.universe (Postfix, from userid 1000)
-        id 35C1A3C0C84; Thu, 10 Sep 2020 22:58:06 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 22:58:05 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?utf-8?Q?Myl=C3=A8ne?= Josserand 
-        <mylene.josserand@collabora.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>
-Subject: Re: [PATCHv2 3/4] Input: rotary-encoder - Use dev_err_probe
-Message-ID: <20200910205805.dxtg2ugq25cr5bhx@earth.universe>
-References: <20200907204045.95530-1-sebastian.reichel@collabora.com>
- <20200907204045.95530-4-sebastian.reichel@collabora.com>
- <CAL_JsqJ8E4Y-kaksCXBC=_sEf4Nz8bZr-4=_g5_PjWtQJm8jsA@mail.gmail.com>
+        Thu, 10 Sep 2020 16:58:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3015 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727822AbgIJU5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 16:57:37 -0400
+IronPort-SDR: 1TOdK89RVbF3hDO+XZUCXcHQLyqMN/h+TJdD5Xm0Dap1hzpGY8NsGojs3RnyDXh/Bb+7FoGx84
+ nSikh2SkziqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9740"; a="159582264"
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="159582264"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 13:57:34 -0700
+IronPort-SDR: +mn3ZiCSVnFZ30u7TW5QvgoUkYPpic/R9XiyV69EN7U2pwwaj+iOxS/N7afN/O1Ibq44m56u5x
+ /OrvUjhRlazw==
+X-IronPort-AV: E=Sophos;i="5.76,413,1592895600"; 
+   d="scan'208";a="505269924"
+Received: from asthajai-mobl.amr.corp.intel.com (HELO [10.209.150.113]) ([10.209.150.113])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2020 13:57:34 -0700
+Subject: Re: Ways to deprecate /sys/devices/system/memory/memoryX/phys_device
+ ?
+To:     David Hildenbrand <david@redhat.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <21852ccb-bd06-9281-7c8e-485ec02f2883@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <0175453a-7969-f482-a228-34c5840fe0e0@intel.com>
+Date:   Thu, 10 Sep 2020 13:57:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nx2r6g6udosrjx7z"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ8E4Y-kaksCXBC=_sEf4Nz8bZr-4=_g5_PjWtQJm8jsA@mail.gmail.com>
+In-Reply-To: <21852ccb-bd06-9281-7c8e-485ec02f2883@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/10/20 3:20 AM, David Hildenbrand wrote:
+> While I'd love to rip it out completely, I think it would break old
+> lsmem/chmem completely - and I assume that's not acceptable. I was
+> wondering what would be considered safe to do now/in the future:
+> 
+> 1. Make it always return 0 (just as if "sclp.rzm" would be set to 0 on
+> s390x). This will make old lsmem/chmem behave differently after
+> switching to a new kernel, like if sclp.rzm would not be set by HW -
+> AFAIU, it will assume all memory is in a single memory increment. Do we
+> care?
+> 2. Restrict it to s390x only. It always returned 0 on other
+> architectures, I was not able to find any user.
 
---nx2r6g6udosrjx7z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+By "restrict it", do you mean just remove the sysfs file on everything
+other than s390x?  That seems like a good idea, especially if we don't
+have any users.  That, plus boot option or something to reenable it
+would be nice if someone trips over it disappearing.
 
-Hi Rob,
-
-On Wed, Sep 09, 2020 at 01:48:49PM -0600, Rob Herring wrote:
-> On Mon, Sep 7, 2020 at 2:40 PM Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
-> >
-> > Simplify driver a bit by making use of dev_err_probe.
-> >
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  drivers/input/misc/rotary_encoder.c | 8 ++------
-> >  1 file changed, 2 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/r=
-otary_encoder.c
-> > index e9a5dbb10513..16ad86fad7cb 100644
-> > --- a/drivers/input/misc/rotary_encoder.c
-> > +++ b/drivers/input/misc/rotary_encoder.c
-> > @@ -241,12 +241,8 @@ static int rotary_encoder_probe(struct platform_de=
-vice *pdev)
-> >                 device_property_read_bool(dev, "rotary-encoder,relative=
--axis");
-> >
-> >         encoder->gpios =3D devm_gpiod_get_array(dev, NULL, GPIOD_IN);
-> > -       if (IS_ERR(encoder->gpios)) {
-> > -               err =3D PTR_ERR(encoder->gpios);
-> > -               if (err !=3D -EPROBE_DEFER)
-> > -                       dev_err(dev, "unable to get gpios: %d\n", err);
-> > -               return err;
-> > -       }
-> > +       if (IS_ERR(encoder->gpios))
-> > +               return dev_err_probe(dev, PTR_ERR(encoder->gpios), "una=
-ble to get gpios\n");
->=20
-> I hadn't seen dev_err_probe...
-
-It got added in 5.8.
-
-> Just FYI, I'm working on a different fix here which is to print errors
-> in the subsystems instead. We already do this for IRQs, so why not
-> everything else? The original reason was no resource is sometimes not
-> an error, but now we have *_optional calls to handle this case for
-> most all subsystems. It's a coccinelle script (hacked up from
-> platform_get_irq.cocci) to convert all the drivers.
-
-Makes sense. I suppose dev_err_probe could be used within the
-framework(s) and is still useful for those resource frameworks not
-having _optional variants.
-
-FYI: There is a bunch of dev_err_probe for all kind of drivers
-being send out at the moment. I already received quite a few
-for the power-supply subsystem. Be prepared for conflicts.
-
-If this is about this specific instance: No hard feelings, I
-only cleaned up the driver a bit while adding new features
-and being able to easily test the cleanups on real HW. With
-some luck patch 4/4 applies without this one.
-
--- Sebastian
-
---nx2r6g6udosrjx7z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9ak1cACgkQ2O7X88g7
-+pp3QQ/9F5JQmMwmQUV7a6kriYUD4bNkjhdlp4k+y5+pPYKbFlN+UA6kF5aeKOZW
-YiYDTqPbtNfTxeYdwkky/Hq7fCigzwBpq+bunhTaMkEKHEqWTafozJS6sVP5lHTw
-ZW9asjTUqHYb8FHJF9Az6k5hMpdNO1sFGBQqLIYJS38ogryLowNkodqyQB08B+Sr
-wIWJ5YbqgmwAZR3ALkkwpmnIKGaPrNWXU9EEOmiQD/gfA7+/q1xFdCTyp55TJDzl
-boX9ilTkXmMsAiwjEimMLqCwJWoHwBrQ7pEKS2VldVvzX1Rw967d9xO61UNa+1W/
-g6XKghVfVxdzKs40AL9YoHHjwHyOQucFYy0zaGx3zTSzgAeXLO3mw69OTtxkTaya
-Ed0Sd/qUT0wBizM+pub/0RT4PHvaUnSnugBq/kSRu34GEFOnKB7ekeEeW4O8P7Pl
-TDKca0CNFEkW3/zSIflI5Gi1FO2hKR4ExK+sdZg9qzPHT5KHapjPpnTZHtX2BnyK
-PqJ0CvPZwNzQZwrFNB7a6E+ATesCko+58Vf5SSKwgYHxCRqpvL9xV3yz6/L/4Nlh
-C46/EqWha26v9QAWv6ppyokBOpSRPM1BJHaGv4iY9T775iYAHNKcVCmmNup032OX
-LpUUQNly2CD0cKg5nDHkxJn5C6I0tRadu1Pu2+2zzt3VME9iUXI=
-=2zx5
------END PGP SIGNATURE-----
-
---nx2r6g6udosrjx7z--
+If there is a user, we stand a chance of finding them because they'll
+hopefully get a good error message.  Worst case, an strace will show an
+-ENOENT and should be pretty easy to track down.
