@@ -2,183 +2,92 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E23C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED65D20C09
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7442C21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 19:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="QUAkVEnx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GP5wEXl8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIJTRZ (ORCPT
+        id S1726980AbgIJTSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 15:17:25 -0400
-Received: from mout.gmx.net ([212.227.15.15]:48535 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgIJTQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:16:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599765228;
-        bh=qeHl02+qNaZfS2zb3ool6auJUEybADfCqRcX+fplOTA=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=QUAkVEnxqvqyeCAt5nPfZVQETiNwOilqXMh0x9Ui2PmgaUP1bBMt4HCFaqskqJfMI
-         Co5MMN8cFkDDZLmGTblSwoTvAa1W1ooLlGlahTlDS/QnsMCxtMjON0YxT22UvP7vXX
-         +gC3eh3V3PRBaztZgt4pZrhM6MFK4RvPNR4rdVqM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MSc1L-1k5cDl1x6H-00SyDK; Thu, 10
- Sep 2020 21:13:48 +0200
-Date:   Thu, 10 Sep 2020 21:13:47 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: Re: [PATCH v2 05/10] pwm: ntxec: Add driver for PWM function in
- Netronix EC
-Message-ID: <20200910191347.GC3306@latitude>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
- <20200905133230.1014581-6-j.neuschaefer@gmx.net>
- <CAHp75VdUHoOyM3bObzhdfiqpne0AmSK_UakteTZxnjqJVrNV9A@mail.gmail.com>
- <20200908081445.GC4400@dell>
- <CAHp75Veb5nVasy28FSksf06eVVhC8N5hHsEPM-2YcFbMjZ5Rhw@mail.gmail.com>
- <20200908093538.GM4400@dell>
+        Thu, 10 Sep 2020 15:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgIJTQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 15:16:59 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43B8C061573
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:16:57 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d6so5232952pfn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 12:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WTUCcqNRIoS33fWn/0Jo09nwI98p4mA4fR3hKii5V3g=;
+        b=GP5wEXl8UxhK+wcw6bvQ8Am/4d+n1zlegGhFVlx19po9y+fxYln7mlXhhNrTC3K8aT
+         1Kpc4olKCW9bvLkkS8hjjHSD9uwEbHfJkuYPnUbjnGPZbnVQ6u58EWyooJkMwgGX8n7h
+         EsOtvSQQsa/3CRyuEbiS3dBB8W0i4oB9WOQOA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WTUCcqNRIoS33fWn/0Jo09nwI98p4mA4fR3hKii5V3g=;
+        b=BuIybvEtcFLgzFlYZRJktUrZ9jFql8AraIfzlmfSL7WByTDFI4FoLr0uVJXADcJGi1
+         j+SVEYwY4ZgcXIQy9zRNcvJv3dtj3eNiQkcziR8QykGZ1oMI0aoHso7WYsjSHBLsZiZu
+         f6hO6Q1zydKb8G5Dx9wSlFsWkf4wDoNLKJxDtMhAy2CtkR1d2y/KxfhfKbsFyijfVwcu
+         +C0H8KNpxwqaVpMTWbzTqaJclWgZAFpGtTEi4pvxKbS0LmEnDe9/BAiZ5IiSKQ0NghGx
+         2N2MqZZ9dpWXyPC8lRfDRAzAn7cbFgl3QYh4GrcveVQ++nFiPsTPktx25Bii5Yoqlmuq
+         s86Q==
+X-Gm-Message-State: AOAM533B88tzoxeldlZdWVslMB3HoIwJnx/XJchxVvQLmAycuHz8UFUq
+        wa5hROxaPX+hJ9gD+HOMqYYuAuipn/vrMOMz
+X-Google-Smtp-Source: ABdhPJxB4PeK4jJudm2ddbNQtmc+Mb5hPIfiGDzHr6/1df0l5PgqUj2b0a/gbvPaj2mmUYK8b9fLJQ==
+X-Received: by 2002:a17:902:8f88:b029:d0:cbe1:e719 with SMTP id z8-20020a1709028f88b02900d0cbe1e719mr7176681plo.39.1599765417304;
+        Thu, 10 Sep 2020 12:16:57 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y126sm6981346pfy.138.2020.09.10.12.16.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 12:16:56 -0700 (PDT)
+Date:   Thu, 10 Sep 2020 12:16:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Elena Petrova <lenaptr@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched.h: drop in_ubsan field when UBSAN is in trap mode
+Message-ID: <202009101216.1F173BD87D@keescook>
+References: <20200910134802.3160311-1-lenaptr@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+xNpyl7Qekk2NvDX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908093538.GM4400@dell>
-X-Provags-ID: V03:K1:8ZpIiqeMGiTole8f3GZbs/8J44fyaw8o4mnDZgvWfp6mfZoxaEt
- BdtfDOdyJK9E+rxiu7bTQywtxF4Augq8FOBZ5ouioXKMGq5h2DzrMJ82ln6p92Uz9bwIjP+
- WvPZ4gU1fqy3iEenraoawEBUJcjeNCcwgFAiSu22eKUWIFhA1QXqgrVSoGUYt2IoJZp03xy
- 6X0bqHigi3TrjBpy9xDiQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DtwUwzvl8t0=:di1WMmdZW79JaiKn9/d+70
- LUcctiYT+4V7cyroNFBquwjr1BpBiDfXdo1KI1PzrGv8xFfTzw+uupv9U2uBw4e4RY/WZtCQ7
- 8jM7korv/q7MzSC5MtOruOXB7FXABdyRvxaw6gquvWMyKgQnvfzp6TtUKh8FvxyOwl3z/YP0s
- 4PpGlO4m+ou4BzPj2eWOesu1bbOsq6FAI/s8l9aRAs4qQTTz8xCJzH4xrrENviF2SbLZkLzl+
- X5TdbYUNCkdkyhIOca5w2EXpFNNhR5ARCkJyrebq36wodSU+HdF+dwzS7FQibN8GCZeZetKU8
- TRSclwIqQh9m0ctMIrTPSboDbsIltmYXzhciRsd+Do7z2+h/Ss57ih/0VAwTPYDN9jHvUStK0
- Oz5cqEBbe8GZzEEQT+eAzxA9ipD4tJ+lx+PWejS8mGUCTvyVF+o8vVgcDvVHvXeO3j2S95nOn
- YnBIg7cLtLEsdEf83kKMJddmfgU9MylGTGxo3D+p3a4eTkkBBSgrftJBxUGsI/z766SILO3fz
- jhVn5+KNf55Afi9zSKsGHm4xDHzV53WR4TQg9dgPCdvBDxgBTPcxxNdI9BLEUQCz1JUVi/1JQ
- Q+HSb/TRDBgcuw7K+JRmO4fOzSkbd8D9eh+vQpC6AeQpCKU/RAfYSy2SFyLzO68hZ9rrlQkXP
- pOx2qtmm8H13JogISs4+UvQo0r8I6KlQ//NkXr80A3+QTMJ+3hpJsehtFdwO15MS/UuiyNLKr
- zcdqgW4I7dLWUgKiagQB7HyJ5ZfcbDrHSnn+Il4WFZ2fRrB0PHLZNY7KSjfPlDR1kS0iFdZPG
- QL3L5IGdD4SPOb3W3vKoU/JzOcgMxmNof08uDAXSrYPNyG7ZLj+/mAc8uKZ39zcDJft1akhUa
- +qFt3hhYWzTPcjF/nVpAQgFKVn1ZI/TwVoYZz8QuEDI44W3fqli2/G0ohZkABYz+mhW1uRFEd
- rGwHSb45GFuvuFI3nc0KmAkgQSZEB7sbokJHcBs6YnxyfHVBsK0WoD+LPizKRNGorhcC6Y2ej
- aF/Yw90qMzTxrvuR1JZqhwXz2SSHMSy2fct8Y6MvH4ZgJ/mwGsAGT53Kdjc+ZvtXkWaNXXjeF
- QJPnu8HlbywPXWsnAzgMS3pKqYFgszIZZr778bWKl4tPzLRn5xOh8aM8S+P9nncdT1lUo1l3r
- DixBnrnSmdvTwZjePQV7QC+37eS+ICPhmDIAkvepJiM+RMjDFv2orSgRiZHM5iv6wXxU2MQp6
- QSoyrFBO6iRU4g/zefBg3KXri6sRnytEwpyCrxQ==
+In-Reply-To: <20200910134802.3160311-1-lenaptr@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 10, 2020 at 02:48:02PM +0100, Elena Petrova wrote:
+> in_ubsan field of task_struct is only used in lib/ubsan.c, which in its
+> turn is used only `ifneq ($(CONFIG_UBSAN_TRAP),y)`.
+> 
+> Removing unnecessary field from a task_struct will help preserve the
+> ABI between vanilla and CONFIG_UBSAN_TRAP'ed kernels. In particular,
+> this will help enabling bounds sanitizer transparently for Android's
+> GKI.
+> 
+> Signed-off-by: Elena Petrova <lenaptr@google.com>
 
---+xNpyl7Qekk2NvDX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Kees Cook <keescook@chromium.org>
 
-On Tue, Sep 08, 2020 at 10:35:38AM +0100, Lee Jones wrote:
-> On Tue, 08 Sep 2020, Andy Shevchenko wrote:
->=20
-> > On Tue, Sep 8, 2020 at 11:14 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Sat, 05 Sep 2020, Andy Shevchenko wrote:
-> > > > On Saturday, September 5, 2020, Jonathan Neusch=C3=A4fer <j.neuscha=
-efer@gmx.net>
-[...]
-> > > > > +       depends on MFD_NTXEC && OF
-> > > >
-> > > >
-> > > > I don=E2=80=99t see need to reduce test coverage and use of the dri=
-ver by sticking
-> > > > with OF. Actually it=E2=80=99s not used.
-> > >
-> > > If the device is only known to boot with OF, then it's pointless
-> > > building it when !OF.
-> >=20
-> > No, it's not. As I pointed out the (compilation) test coverage is bette=
-r.
->=20
-> No, it's a waste of disk space.
->=20
-> Why would you knowingly compile something you know you can't use?
->=20
-> That's the whole point of COMPILE_TEST.
->=20
-> Note that when you want real coverage and you use `allyesconfig`
-> and/or `allmodconfig` then CONFIG_OF is also enabled on platforms
-> which support it.
->=20
-> > > If you want to increase test coverage enable
-> > > COMPILE_TEST instead.
-> >=20
-> > It is one way to achieve that, yes;
-> >=20
-> >        depends on OF || COMPILE_TEST
-> >        depends on MFD_NTXEC
->=20
-> This is better.
+(This should be CCed to akpm who has been taking most of the ubsan
+patches lately.)
 
-Ok, I'll go with this variant.
-
-
-Thanks
-
---+xNpyl7Qekk2NvDX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAl9aeuoACgkQCDBEmo7z
-X9vkeQ//Z6VkR7LUMRr15RrcOim2rTLOTurj8YLz+0euJs2UiKbWB1g1sq0EUbl4
-oF0lpeQ7r32jaBtYOaMbJnl+seUEeBb8UQGXtS0QTdpOiQO2l0aRWJUpGOWmFjoy
-sNPF0FJOKsJ7hE0hgHrplJcVUMaWI6RcICTpEFWXaXBjsOi0JyWVYXPmHcSXewDm
-OBWmV+AHu6xnVAnsf/d38DJSGMGGlmTqyfwy5f1Hex0k84lC8/UnZZncG0eSqEEj
-nnTb8qWCsmAuyA9VXniUsdw8czkVLXHH9Nb2gZkxC4rACWHGdx5zJQgOMl57GR3Z
-P4Be4YaCVUGrRSyxzwdZAESOR/SXyX807Vienx2oPud1EVW0WanG0E0oo51MmItm
-sy3ztPgb3KWEcB03EwNKNIyECn41sxkQYnj2hvZMDdjIwcX+zBerlkMib5FIHygk
-IvDE46MfLDxkbcWL1Rf+YsTUYfkGfg5LRaEjlIfhW+xErcW2WDjCoA9DfnZLMJUS
-tFqIYmUous2y2g8JYXUYlFLD1OhaKSjbmDFGbSzQWURynxz6pSejboqIb+FM7TNA
-f6hmHZH+O7d0uOGCzsbKszzz4haHdSzxnuMhV3ZsSxB4r/bKCBWlyGsdBqcx9eDw
-AKWxNJZlp5Mj7j5Gow94BY9+8UZMjGk+mSUh/aCHok6Ll5+Zdx4=
-=lXFL
------END PGP SIGNATURE-----
-
---+xNpyl7Qekk2NvDX--
+-- 
+Kees Cook
