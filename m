@@ -2,141 +2,139 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C6BC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9A1C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C804B2076D
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYRZ0Z5f"
+	by mail.kernel.org (Postfix) with ESMTP id 284882076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgIJIdz (ORCPT
+        id S1730581AbgIJIed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:33:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54569 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730259AbgIJIVl (ORCPT
+        Thu, 10 Sep 2020 04:34:33 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42240 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730165AbgIJISd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:21:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599726087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Licpb2tWu/dWgg8H99rcLlplSx9dLzZWPJS2xlbzcFs=;
-        b=bYRZ0Z5f0Dn6zETU/u5JVEQxAeoeT4AZXQCDjl7Xq9dJs1jT3uk9G9dJdm20VqXzTEHFVO
-        N3qTsy00D2xhVApYDW3cRx/1od/dnevYOBi0K6h1MjbFqxj/CYP80JoAfiwwFhrNtLiQkX
-        PGT8c6DhuNZ4yzTNV5jtYeiwJroxap0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-huJc5G6wPgyIpErT6e2DCQ-1; Thu, 10 Sep 2020 04:21:23 -0400
-X-MC-Unique: huJc5G6wPgyIpErT6e2DCQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 287B364081;
-        Thu, 10 Sep 2020 08:21:22 +0000 (UTC)
-Received: from [10.36.112.212] (ovpn-112-212.ams2.redhat.com [10.36.112.212])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A3E37E165;
-        Thu, 10 Sep 2020 08:21:16 +0000 (UTC)
-Subject: Re: [PATCH v4 10/10] vfio/fsl-mc: Add support for device reset
-To:     Diana Craciun OSS <diana.craciun@oss.nxp.com>,
-        alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <20200826093315.5279-11-diana.craciun@oss.nxp.com>
- <629498a6-8329-1045-c1a4-ab334f3c8107@redhat.com>
- <665b9fbc-90f9-8a7c-4ea7-73583ae30d69@oss.nxp.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <27f9d554-e147-900d-bd1f-c2890f87d7f9@redhat.com>
-Date:   Thu, 10 Sep 2020 10:21:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 10 Sep 2020 04:18:33 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id DEEBE1C0B7D; Thu, 10 Sep 2020 10:18:14 +0200 (CEST)
+Date:   Thu, 10 Sep 2020 10:18:14 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Subject: Re: [PATCH v3 1/2] leds: mt6360: Add LED driver for MT6360
+Message-ID: <20200910081814.GB28357@amd>
+References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1599474459-20853-2-git-send-email-gene.chen.richtek@gmail.com>
+ <CAHp75VdLDvoQicP1nLnjOiit6qjaw9n7+LuJ-J3MtaoHUOa_2g@mail.gmail.com>
+ <CAE+NS35FETQ9ASJeYP=Sa8dm7ohRBcdAwUioCAnHPY2TiD4pNA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <665b9fbc-90f9-8a7c-4ea7-73583ae30d69@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+In-Reply-To: <CAE+NS35FETQ9ASJeYP=Sa8dm7ohRBcdAwUioCAnHPY2TiD4pNA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Diana,
 
-On 9/7/20 4:36 PM, Diana Craciun OSS wrote:
-> Hi Eric,
-> 
-> On 9/4/2020 11:21 AM, Auger Eric wrote:
->> Hi Diana,
->>
->> On 8/26/20 11:33 AM, Diana Craciun wrote:
->>> Currently only resetting the DPRC container is supported which
->>> will reset all the objects inside it. Resetting individual
->>> objects is possible from the userspace by issueing commands
->>> towards MC firmware.
->>>
->>> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
->>> ---
->>>   drivers/vfio/fsl-mc/vfio_fsl_mc.c | 15 ++++++++++++++-
->>>   1 file changed, 14 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> index 27713aa86878..d17c5b3148ad 100644
->>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->>> @@ -310,7 +310,20 @@ static long vfio_fsl_mc_ioctl(void *device_data,
->>> unsigned int cmd,
->>>       }
->>>       case VFIO_DEVICE_RESET:
->>>       {
->>> -        return -ENOTTY;
->>> +        int ret = 0;
->> initialization not needed
->>> +
->> spare empty line
->>> +        struct fsl_mc_device *mc_dev = vdev->mc_dev;
->>> +
->>> +        /* reset is supported only for the DPRC */
->>> +        if (!is_fsl_mc_bus_dprc(mc_dev))
->>> +            return -ENOTTY;
->> it is an error case or do we just don't care?
-> 
-> 
-> I rather don't care, but shouldn't the userspace know that the reset for
-> that device failed?I don't know what makes more sense. It was more a question.
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
+Hi!
 
-Eric
-> 
->>> +
->>> +        ret = dprc_reset_container(mc_dev->mc_io, 0,
->>> +                       mc_dev->mc_handle,
->>> +                       mc_dev->obj_desc.id,
->>> +                       DPRC_RESET_OPTION_NON_RECURSIVE);
->>> +        return ret;
->>> +
->>>       }
->>>       default:
->>>           return -ENOTTY;
->>>
->> Thanks
->>
->> Eric
->>
-> 
-> Thanks,
-> Diana
-> 
+> > > +enum {
+> > > +       MT6360_LED_ISNK1 =3D 0,
+> > > +       MT6360_LED_ISNK2,
+> > > +       MT6360_LED_ISNK3,
+> > > +       MT6360_LED_ISNK4,
+> > > +       MT6360_LED_FLASH1,
+> > > +       MT6360_LED_FLASH2,
+> >
+> > > +       MT6360_MAX_LEDS,
+> >
+> > No comma for terminator entry.
+> >
+>=20
+> ACK
 
+Actually, that comma is fine. Its absence would be fine, too.
+
+> > > +};
+> >
+> > ...
+> >
+> > > +#define MT6360_ISNK_MASK               0x1F
+> >
+> > GENMASK()
+
+Again, that is fine.
+
+> > > +#define FLED_TORCH_FLAG_MASK           0x0c
+> >
+> > > +#define FLED_STROBE_FLAG_MASK          0x03
+> >
+> > GENMASK()
+> >
+>=20
+> ACK
+
+Again, that is fine.
+
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id __maybe_unused mt6360_led_of_id[] =
+=3D {
+> > > +       { .compatible =3D "mediatek,mt6360-led", },
+> >
+> > > +       {},
+> >
+> > No need comma.
+>=20
+> ACK
+
+It is also no hurting comma.
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9Z4UUACgkQMOfwapXb+vI8xwCffPv2VNdsHIiN1JW/R8U9rVgS
+wgIAn1rrY28DLYQIe3/AWsXVIEaFjfEB
+=itTo
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
