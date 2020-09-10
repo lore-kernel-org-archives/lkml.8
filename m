@@ -2,103 +2,164 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36344C43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5141AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E6A20882
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1687B20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 12:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="y79UUdby"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Juvgi+3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbgIJMbD (ORCPT
+        id S1730703AbgIJMbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 08:31:03 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10470 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730439AbgIJM2N (ORCPT
+        Thu, 10 Sep 2020 08:31:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44104 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730618AbgIJM2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 08:28:13 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08ACLl4W029687;
-        Thu, 10 Sep 2020 14:27:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=ozH/MrmZcNkm8zensiVKRNgv2DwWIwyb8qliXp9Emeo=;
- b=y79UUdbyDqeKo5Y6Oubk6v79C48n4YQMoXQsAjrNGWcRDbLMAbjA679tq6GSy+mlZ8LU
- DpbO5YIjE1CoRwhsT3q1hm2nM6pCD5PWB0pfMgaNBUq6EGwOc4L7wvhO2Jv8YBZFWVeA
- VGZgMJ8Ymojh7L6M2/FypYNuP0ZeT5rCJX2m2PCtG5yjkjjmnXJBtuakyLieNGZKfsjy
- Q3w68TL27IlgOHdIkwu2Rg8jQAjQH6zbTpnrhGP0KqGJ2DLPN3eqNZJ+bMi7CwQ/c0f/
- /L7OvVtr7u14TlfHeD6f1YVDIc4LzalUx7btgxuNK3abLX1yWhDiY9ZVYoMJ8exS0cS3 Ug== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 33byt83qpa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 14:27:44 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CBD6F10002A;
-        Thu, 10 Sep 2020 14:27:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (gpxdag3node5.st.com [10.75.127.72])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B59E92A8B2F;
-        Thu, 10 Sep 2020 14:27:43 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.44) by GPXDAG3NODE5.st.com
- (10.75.127.72) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 10 Sep
- 2020 14:27:43 +0200
-Date:   Thu, 10 Sep 2020 14:27:39 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     Wolfram Sang <wsa@kernel.org>
-CC:     <pierre-yves.mordret@st.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Holger Assmann <h.assmann@pengutronix.de>
-Subject: Re: [PATCH] i2c: stm32: do not display error when DMA is not
- requested
-Message-ID: <20200910122739.GA5093@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, pierre-yves.mordret@st.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com, Krzysztof Kozlowski <krzk@kernel.org>,
-        Holger Assmann <h.assmann@pengutronix.de>
-References: <1599730349-2160-1-git-send-email-alain.volmat@st.com>
- <20200910100607.GJ1031@ninjato>
+        Thu, 10 Sep 2020 08:28:12 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08ACRrDn038516;
+        Thu, 10 Sep 2020 07:27:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599740873;
+        bh=RLqBomBVKlGqdgICBb7RcNvbvmqq3ihITsF7qL6O9Fk=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=Juvgi+3kHSXmMgRzfS2dIRVX9TPQAvxsLYt4xgtTHIModx6AAgKbbubIRRXS5qWMJ
+         AHYgpiVCEoyQDL+5YlKl5XxRccbZbxtpBlZ9Sl7HyOoPt9MdNSCrolmviMPzlG7Lzn
+         17RVV3tdM8GJKWaWZ2zkBNYGWik83kW16Ab6yXvI=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08ACRrLE111327
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 07:27:53 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Sep 2020 07:27:53 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Sep 2020 07:27:53 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08ACRpZh057346;
+        Thu, 10 Sep 2020 07:27:51 -0500
+Subject: Re: [PATCH 2/2] ASoC: ti: j721e-evm: Add support for j7200-cpb audio
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     kernel test robot <lkp@intel.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>
+References: <20200910075433.26718-3-peter.ujfalusi@ti.com>
+ <202009101750.MT0BQY74%lkp@intel.com>
+ <e32444ee-542d-1daf-0fa3-be4d280aef35@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <9379c7b5-1cf4-3d10-ce6e-0a1b0b16bc72@ti.com>
+Date:   Thu, 10 Sep 2020 15:27:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200910100607.GJ1031@ninjato>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To GPXDAG3NODE5.st.com
- (10.75.127.72)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+In-Reply-To: <e32444ee-542d-1daf-0fa3-be4d280aef35@ti.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 12:06:07PM +0200, Wolfram Sang wrote:
-> On Thu, Sep 10, 2020 at 11:32:29AM +0200, Alain Volmat wrote:
-> > DMA usage is optional for the I2C driver. check for the -ENODEV
-> > error in order to avoid displaying an error when no DMA
-> > has been requested.
-> > 
-> > Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> > ---
-> > This patch should be applied on top of the patch [i2c: stm32: Simplify with dev_err_probe()]
-> 
-> We can do it in this order, it just makes backporting to stable kernels
-> (if that is desired) a bit harder than a self-contained patch. I am fine
-> with both approaches, but just wanted to point it out.
 
-Indeed, that's a good point. I'll rework it then, to avoid the dependency
-on dev_err_probe change. If that is ok, I propose to push a two patches serie
-with both this fix (updated) followed by a rebased version of the
-dev_err_probe patch from Krzysztof for dev_err_probe change.
+
+On 10/09/2020 14.48, Peter Ujfalusi wrote:
+> Hi,
+>=20
+> On 10/09/2020 12.54, kernel test robot wrote:
+>> Hi Peter,
+>>
+>> I love your patch! Perhaps something to improve:
+>>
+>> [auto build test WARNING on asoc/for-next]
+>> [also build test WARNING on v5.9-rc4 next-20200909]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note=
+=2E
+>> And when submitting patch, we suggest to use '--base' as documented in=
+
+>> https://git-scm.com/docs/git-format-patch]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Peter-Ujfalusi/ASoC-t=
+i-j721e-evm-Support-for-j7200-variant/20200910-155534
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.=
+git for-next
+>> config: m68k-allmodconfig (attached as .config)
+>> compiler: m68k-linux-gcc (GCC) 9.3.0
+>> reproduce (this is a W=3D1 build):
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/=
+sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-9.3.0 make.c=
+ross ARCH=3Dm68k=20
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>>> sound/soc/ti/j721e-evm.c:532:3: warning: this decimal constant is un=
+signed only in ISO C90
+>>      532 |   [J721E_CLK_PARENT_48000] =3D 2359296000, /* PLL4 */
+>>          |   ^
+>>
+>> # https://github.com/0day-ci/linux/commit/63afa4709f3914bb58dd727c1119=
+c447a23ce150
+>> git remote add linux-review https://github.com/0day-ci/linux
+>> git fetch --no-tags linux-review Peter-Ujfalusi/ASoC-ti-j721e-evm-Supp=
+ort-for-j7200-variant/20200910-155534
+>> git checkout 63afa4709f3914bb58dd727c1119c447a23ce150
+>> vim +532 sound/soc/ti/j721e-evm.c
+>>
+>>    527=09
+>>    528	static const struct j721e_audio_match_data j7200_cpb_data =3D {=
+
+>>    529		.board_type =3D J721E_BOARD_CPB,
+>>    530		.num_links =3D 2, /* CPB pcm3168a */
+>>    531		.pll_rates =3D {
+>>  > 532			[J721E_CLK_PARENT_48000] =3D 2359296000, /* PLL4 */
+
+Suffixing with 'u' silences the warning for C90, I'll send v2
+
+>=20
+> struct j721e_audio_match_data {
+> 	enum j721e_board_type board_type;
+> 	int num_links;
+> 	unsigned int pll_rates[2];
+> };
+>=20
+> pll_rates _is_ unsigned int.
+>=20
+>>    533		},
+>>    534	};
+>>    535=09
+>>
+>> ---
+>> 0-DAY CI Kernel Test Service, Intel Corporation
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>>
+>=20
+> - P=E9ter
+>=20
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
+
+- P=E9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
