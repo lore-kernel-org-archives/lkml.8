@@ -2,106 +2,106 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154BFC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B39C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C86FA2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cwOhTSGa"
+	by mail.kernel.org (Postfix) with ESMTP id 792CB2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 16:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599755157;
+	bh=+GNNkD6o/mg9Q0U2qdiIIupH3fQwZWtnQqTOp1hjVr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2GZLp5t9f5otS27bXMBBLY9TFVxdEu3SV7B0tGmnOQmIfiCUWV1vtrqEhlrrSIyMN
+	 ndz5lwEPjIH0DkFi4NlitaWTWD2kwLdq0knpkeefoEqNLf9jOgb22gC2RRKQ6QV2bx
+	 81URBPE3luUhXaxgMegBoIaVMofRC/P348t4r9Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgIJQZF (ORCPT
+        id S1726776AbgIJQZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 12:25:05 -0400
-Received: from mout.gmx.net ([212.227.17.21]:48765 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgIJQVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 12:21:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599754831;
-        bh=NbW0cwlVTptfiRCTVkmRdPqGiB8hKc7GXoxgdPOoYcE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=cwOhTSGavDrdH3L+s9heE7IXMtrHkarayM8P9VN+ttl1dlpXh7kpzgLz4TNuUjj4y
-         DGi6CkJnQ44wjzssi4VfNPylu3RBTgB/SB51Vpe6SXjtW8/iaZffo4DB3IeVn+DmUF
-         7t20qGGtlZMfYGgHyX7xhQH7ltdMv8LEZKdyqBj4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from LT02.fritz.box ([178.202.41.107]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MuDXp-1kXGR13oGz-00ucxq; Thu, 10
- Sep 2020 18:20:31 +0200
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Grant Likely <grant.likely@arm.com>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] of: properties of reserved-memory nodes
-Date:   Thu, 10 Sep 2020 18:20:20 +0200
-Message-Id: <20200910162020.3927-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.28.0
+        Thu, 10 Sep 2020 12:25:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41365 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbgIJQWs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 12:22:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id z13so7715071iom.8;
+        Thu, 10 Sep 2020 09:22:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=x6OVAQDQzdq4Ax57japRQmg3Kt6tqa724ilE749v5J4=;
+        b=KaPyBZcaC04//Ehq0Skajr+JEo26pxveDzgxEmghdQ8CV+vYdJmlhFtbnZxfWlKE70
+         jNrQ6vvKzbCdpbawDKbY9nO/TW3LbNxOAk72pfsl8SmSYp0J1mgF2u2He59JN23ktOAF
+         OIijDP7pzdYWVo+8jWqrJhkFE3Jd2EGqf5bIC7Gq5Puv+hFSD3u3bV/rOEaYLbtGRVoL
+         w5Ecc/HN41m82f+Qz4237pOZEJRr9KSBAGpP4bgIlPqNcbTcexolNKxl7daNEQ4PzcXX
+         MRR8lv8vOXMqw/TCFgUzAb3Xts1qjOG8zN69CFPpKZR1tWomrRG9bPAlkyiE9/grpnnH
+         0yag==
+X-Gm-Message-State: AOAM533Xr5o0kOMiaYRFGmI0XTDkVT6a5JaehN7Ms6DuxBL8AAix5lV6
+        xNRmUJLAyotoRRhiZA4b3g==
+X-Google-Smtp-Source: ABdhPJw4Thmx5N2ZRDFawSye6Tqzmj20WVyp4QCJb16NMBP8tvFUnBNZw3i+HbuDS33bT1SUtnOW7A==
+X-Received: by 2002:a5e:c906:: with SMTP id z6mr8071995iol.86.1599754966762;
+        Thu, 10 Sep 2020 09:22:46 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k16sm2994874ioc.15.2020.09.10.09.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Sep 2020 09:22:46 -0700 (PDT)
+Received: (nullmailer pid 473755 invoked by uid 1000);
+        Thu, 10 Sep 2020 16:22:43 -0000
+Date:   Thu, 10 Sep 2020 10:22:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-pci@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v11 10/11] PCI: brcmstb: Set bus max burst size by chip
+ type
+Message-ID: <20200910162243.GA473672@bogus>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <20200824193036.6033-11-james.quinlan@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DOgYbhvSJCp25Kh7HDVu9hQRp552LHwiNou/oQcYVi3lJGfF+Qm
- 27rJ0h5ayaBP+Be6QK7+Mp2ghPs+lLsgeg1qnm6Mbz3nxLCug0ak6hk8viG+K+d1j1VdhAN
- IY1VIgLHnOtKUFVjYKgo8ZNkAKmhcck5Hx+TlFhD2fFh91qSc+m/rmjrTpwU1rikcdqvaqH
- 3ZSlufLo9rP/Zl24Gid5g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FNKs8fnwmMk=:hKfF1w90R6Kr6H4LGRMYjZ
- ZQQGhzeeystWBgjOeVRiU/ZP1H0gZREYohf493dErswDUXAhI2fcMvyB2zcHWCq3+3qxSD6Ds
- knVQJe6HDHeaBhrQhI5KhIC8MNHsHykB8zEa631GzJj7Mire2vhCCNfgbeTFkbcY/fDd8Nj/c
- qWzH9lrjNqcIuUgBI6jfXOrkg4qM3cnoxCBqQwp6YJS5u5NbMYRuG/gbBtQteg063hpCinW4a
- PcBhggAC8+aZOSJ9gXEtaQYLa7Wz8DP7w5VgEemZGMTG+5OJgc32D0mNGiKykBlTQiankw7NY
- b3a7FjKsADtEzshVFOyHNL+SB3Egz8gscgKYgCuU8JykfRHCTAqJte94Smt3J0pbvOl/nCVyV
- VpEW8y5SbirHSCySD1KcK9MiZ6eAluZLzzvQoSd1Cp5MbImyKYleXyWyCzMXys8NT8CD9YfSW
- 7cbL6LM4/2h7YLG7RP7kj9UVE+Wy9vY5Gvbg9YKP6Qn9a1CcUkkUZT7RfmlBOHiCQ/zEscb1S
- /tUtJvlgO+KV0vOTo6nxSHB77G6qXXrlBAdYcBqoo/fJu9WOeHaTZS9MTgSBGZ2lsKcztMym6
- zWxvHBck0Kis3HM1iJOOU/f1Z1HrYKP2c3nT6mBjjGSYUrOYIZd+P9o9ZUITeK+hI88dZfcZ2
- ZFBZQJMZE5yXCDqqBFw9qm4fOH0abCxJBV/yL806jJu0wIXXjCqV26K9FUan2yBeXe1nF67m2
- A+mACEHZDBWhqT1E63dYq3TXVl2sl93gWNtH8Z4QpfmmHn+9yqa5wcw59Y6BllXv0xsyC+dLe
- ylj0TGfDp7SOnPG6LOe2AfxO88/hONeonGDo6URpeTb1qbuXx5KdqzKSgEUYSqRRaDOlqmWyY
- Fvsuo+yqfNSWBU/MCRPfMdCpAgxkZMBIKdBNhgixGItiYs7Kl7PzgrcBI4JgWI35CVPMA41QI
- AwrJSbDmDIu9BKrP/cCS8ho23Zueab4Dk6Yh0XZgrTKpM7GMuSOqnJ4ILzrYunC9w2FNFqgL0
- rkzFXGV//pvJCq967qxXeX7m6B9r+JZzdL/OzxyOpOBOo6viR9DVMFio2m8pAYyAI6AB5FyNw
- WDbttHmsVgM6z/32UxdPNBG9AeztXxMioAUW1R0XmNqmtyS5d05rCWBPxjiSrObmEzWKgzmri
- URI8BbvFJgpo4kziEIr5F+AHnn9EjGSk9PwpB1SeMa7bpL9o8WrB9ScTzHxf2jX7ucj2rhFL3
- QJEF47nlpbtjnmem3StIB/z851dpzNep0em1kgQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824193036.6033-11-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reusable and the no-map property are mutually exclusive.
-Clarify this in the documentation.
+On Mon, 24 Aug 2020 15:30:23 -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
+> 
+> The proper value of the parameter SCB_MAX_BURST_SIZE varies per chip.  The
+> 2711 family requires 128B whereas other devices can employ 512.  The
+> assignment is complicated by the fact that the values for this two-bit
+> field have different meanings;
+> 
+>   Value   Type_Generic    Type_7278
+> 
+>      00       Reserved         128B
+>      01           128B         256B
+>      10           256B         512B
+>      11           512B     Reserved
+> 
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+> 
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- .../devicetree/bindings/reserved-memory/reserved-memory.txt    | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-me=
-mory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memo=
-ry.txt
-index bac4afa3b197..eb987203548f 100644
-=2D-- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.=
-txt
-+++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.tx=
-t
-@@ -64,6 +64,9 @@ reusable (optional) - empty property
-       system can use that region to store volatile or cached data that
-       can be otherwise regenerated or migrated elsewhere.
-
-+A node must not carry both the no-map and the reusable property as these =
-are
-+logically contradictory.
-+
- Linux implementation note:
- - If a "linux,cma-default" property is present, then Linux will use the
-   region for the default pool of the contiguous memory allocator.
-=2D-
-2.28.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
