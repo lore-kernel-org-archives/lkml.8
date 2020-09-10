@@ -2,205 +2,220 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CE7C07548
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C99F20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599760050;
-	bh=mKaGdeBMiz5ZqOc/kvJB3cAWhRV08AagdLUfAwMQwvE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=rmUOTNwFhWylh8Hsmz0g+BdkirC+5G8Lo43V4Urf+0HBNpWNUcZhS+rHK+9db4lXq
-	 qMSnIGhSnRAyJt1FgyR6w1fOI9wcN5uviBA/+IQ3lV5qT176soSimCgsyVIFdwT2y9
-	 eKYfsPucRBDznLcYA1iiTVAri2dvhD6tIFboAYD4=
+	by mail.kernel.org (Postfix) with ESMTP id DD759206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 17:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vqzAkTQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgIJRr0 (ORCPT
+        id S1727801AbgIJRrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 13:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgIJRmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:42:31 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6E22067C;
-        Thu, 10 Sep 2020 17:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599759750;
-        bh=mKaGdeBMiz5ZqOc/kvJB3cAWhRV08AagdLUfAwMQwvE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AW8i7t3U2dVnW4Df2r86rtLf/Qkxa7XQ6kawV4X5oliq183NfO2vEwxuvvHJpT0c1
-         a9cKCGRdxgwShK8L8BGhMPGvgx6uFgwDz/CIr/KXk07DKXBidYWP+6GZtAWa3ERS4d
-         WXev5UprB9IrJp/ij3W4FONb/ByhGV9MJpLOVQV8=
-Message-ID: <8842543f4c929f7004cf356224230516a7fe2fb7.camel@kernel.org>
-Subject: Re: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>, Jan Kara <jack@suse.cz>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     milan.opensource@gmail.com, lkml <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Date:   Thu, 10 Sep 2020 13:42:28 -0400
-In-Reply-To: <87k0x2k0wn.fsf@notabene.neil.brown.name>
-References: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
-         <CAKgNAkiTjtdaQxbCYS67+SdqSPaGzJnfLEEMFgcoXjHLDxgemw@mail.gmail.com>
-         <20200908112742.GA2956@quack2.suse.cz>
-         <e4f5ccb298170357ba16ae2870fde6a90ca2aa81.camel@kernel.org>
-         <87k0x2k0wn.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Thu, 10 Sep 2020 13:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbgIJRq1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 13:46:27 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92399C0613ED
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:46:27 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a9so380714pjg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 10:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O7GfQG+sKNUFe8kKRZiVLdxc1h3BX3Djc8swi3u8Dlg=;
+        b=vqzAkTQ42n997JbrvglJfJuexQRV6SqlYvm28/feMx6Nj6Ndr0zYyeFVI1KJUCqLyr
+         ujE3lIcsS5OTpKNEValbrhW4vMoRXak+f81SDeZMKcDCQii5YMeRX0ob+3L61KVatELx
+         icyIsGTFGXT5LGbRy3HfNyqVrJSLCA7Ri3W7Qc1h180pcMd3O7Z/M+ThFoI7krQaIhq8
+         EUm99wTWjbbeBb+4K1tZKKhzf5PBilwANvYDEvhMl0QTNgrYjxnoUcm6AdtL8VSqLjHW
+         jHwUQHsheIfGdzi4UfSqUHMDba9FMij5vub4Es/a3246Da6+RC87A0l/c7NQDg1syIin
+         B9gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O7GfQG+sKNUFe8kKRZiVLdxc1h3BX3Djc8swi3u8Dlg=;
+        b=XG5Yaz03whRA3TZAYcTOM7UtZjO96sqTswQuUUvxiOTYTHkG7py3Wo+0RTBe2XmwEM
+         M1AkEhc1DQIrEC8KrWUGDIUH3HAwj/QjnApZ7Ho5Xod6YSR4cgAhdGT1WakhtBK8ve2m
+         DknV23c+FBTERVoZDr8RUY97Z3JrN+nEA+i7TS4NK/pahwwT7sYbSChcyXvCfVwCpMZJ
+         emBbq5YLz5q4crqEvKul4C/qBkOip3OF3KO1qFD2+2y6vyPy0ejjLZ8wyqAjSOo13ZBR
+         VNdBDyAC+onLPxAsl25iQQh4Q8QzA15m3HC0ukf6j3u3oV6KEe21wnw9E6HUsHN+qCAe
+         YwZw==
+X-Gm-Message-State: AOAM531wwL8p7/zIr7yp0N2cVp75iEfcYFbz6sJCMwoB2F5bY+7rAYCI
+        HtfjnZXVpEmnU6rglN6uuQm6jaor7cYdMZZo7mWXmg==
+X-Google-Smtp-Source: ABdhPJy4J3oMmneoZGHbDel8CuQPKIQJWCOvZRFhk4NDP/nOu7CqKgEewV5ntWRWXX8gANIrmWN1PD8BJryw/VFPevs=
+X-Received: by 2002:a17:902:d88e:b029:d0:89f4:6222 with SMTP id
+ b14-20020a170902d88eb02900d089f46222mr6538920plz.10.1599759986870; Thu, 10
+ Sep 2020 10:46:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200624203200.78870-1-samitolvanen@google.com> <20200903203053.3411268-1-samitolvanen@google.com>
+In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 10 Sep 2020 10:46:15 -0700
+Message-ID: <CAKwvOdkbkvXdfXLzTNOj8m8_YWjL6=bSn4-AbRyd-5oYGJVNSw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
+To:     ian.bearman@microsoft.com
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-09-10 at 09:04 +1000, NeilBrown wrote:
-> On Tue, Sep 08 2020, Jeff Layton wrote:
-> 
-> > On Tue, 2020-09-08 at 13:27 +0200, Jan Kara wrote:
-> > > Added Jeff to CC since he has written the code...
-> > > 
-> > > On Mon 07-09-20 09:11:06, Michael Kerrisk (man-pages) wrote:
-> > > > [Widening the CC to include Andrew and linux-fsdevel@]
-> > > > [Milan: thanks for the patch, but it's unclear to me from your commit
-> > > > message how/if you verified the details.]
-> > > > 
-> > > > Andrew, maybe you (or someone else) can comment, since long ago your
-> > > > 
-> > > >     commit f79e2abb9bd452d97295f34376dedbec9686b986
-> > > >     Author: Andrew Morton <akpm@osdl.org>
-> > > >     Date:   Fri Mar 31 02:30:42 2006 -0800
-> > > > 
-> > > > included a comment that is referred to in  stackoverflow discussion
-> > > > about this topic (that SO discussion is in turn referred to by
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=194757).
-> > > > 
-> > > > The essence as I understand it, is this:
-> > > > (1) fsync() (and similar) may fail EIO or ENOSPC, at which point data
-> > > > has not been synced.
-> > > > (2) In this case, the EIO/ENOSPC setting is cleared so that...
-> > > > (3) A subsequent fsync() might return success, but...
-> > > > (4) That doesn't mean that the data in (1) landed on the disk.
-> > > 
-> > > Correct.
-> > > 
-> > > > The proposed manual page patch below wants to document this, but I'd
-> > > > be happy to have an FS-knowledgeable person comment before I apply.
-> > > 
-> > > Just a small comment below:
-> > > 
-> > > > On Sat, 29 Aug 2020 at 09:13, <milan.opensource@gmail.com> wrote:
-> > > > > From: Milan Shah <milan.opensource@gmail.com>
-> > > > > 
-> > > > > This Fix addresses Bug 194757.
-> > > > > Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
-> > > > > ---
-> > > > >  man2/fsync.2 | 13 +++++++++++++
-> > > > >  1 file changed, 13 insertions(+)
-> > > > > 
-> > > > > diff --git a/man2/fsync.2 b/man2/fsync.2
-> > > > > index 96401cd..f38b3e4 100644
-> > > > > --- a/man2/fsync.2
-> > > > > +++ b/man2/fsync.2
-> > > > > @@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
-> > > > >  or
-> > > > >  .BR sdparm (8)
-> > > > >  to guarantee safe operation.
-> > > > > +
-> > > > > +When
-> > > > > +.BR fsync ()
-> > > > > +or
-> > > > > +.BR fdatasync ()
-> > > > > +returns
-> > > > > +.B EIO
-> > > > > +or
-> > > > > +.B ENOSPC
-> > > > > +any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
-> > > > > +will return without error. It is
-> > > > > +.I not
-> > > > > +safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
-> > > > >  .SH SEE ALSO
-> > > > >  .BR sync (1),
-> > > > >  .BR bdflush (2),
-> > > 
-> > > So the error state isn't really stored "on pages in the file mapping".
-> > > Current implementation (since 4.14) is that error state is stored in struct
-> > > file (I think this tends to be called "file description" in manpages) and
-> > > so EIO / ENOSPC is reported once for each file description of the file that
-> > > was open before the error happened. Not sure if we want to be so precise in
-> > > the manpages or if it just confuses people. Anyway your takeway that no
-> > > error on subsequent fsync() does not mean data was written is correct.
-> > > 
-> > > 
-> > 
-> > Thinking about it more, I think we ought to spell this out explicitly as
-> > we can in the manpage. This is a point of confusion for a lot of people
-> > and not understanding this can lead to data integrity bugs. Maybe
-> > something like this in the NOTES section?
-> > 
-> > '''
-> > When fsync returns an error, the file is considered to be "clean". A
-> > subsequent call to fsync will not result in a reattempt to write out the
-> > data, unless that data has been rewritten. Applications that want to
-> > reattempt writing to the file after a transient error must re-write
-> > their data.
-> > '''
-> > 
-> > To be clear:
-> > 
-> > In practice, you'd only have to write enough to redirty each page in
-> > most cases.
-> 
-> Nonononono.  In practice you have to repeat the entire write because you
-> cannot know if the cached page is from before the write failure, or has
-> since been flushed and reloaded.
-> 
+Hey Ian,
+It was nice to meet you at Linux plumbers.  You might want to take a
+look at this series.  It implements builds of the Linux kernel with
+LTO.  It would be good to get eyes on it and help review it from folks
+working on this from the GCC angle.  The series has some configs that
+split where Clang specific changes need to be made; it might be of
+interest to think about what would the similar changes be needed for
+GCC.  Also, congrats on your LWN article!
+https://lwn.net/Articles/830300/
 
-Oh, good point! There's no way for userland to know that, so you really
-do have to rewrite the whole thing.
+On Thu, Sep 3, 2020 at 1:30 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> This patch series adds support for building x86_64 and arm64 kernels
+> with Clang's Link Time Optimization (LTO).
+>
+> In addition to performance, the primary motivation for LTO is
+> to allow Clang's Control-Flow Integrity (CFI) to be used in the
+> kernel. Google has shipped millions of Pixel devices running three
+> major kernel versions with LTO+CFI since 2018.
+>
+> Most of the patches are build system changes for handling LLVM
+> bitcode, which Clang produces with LTO instead of ELF object files,
+> postponing ELF processing until a later stage, and ensuring initcall
+> ordering.
+>
+> Note that patches 1-4 are not directly related to LTO, but are
+> needed to compile LTO kernels with ToT Clang, so I'm including them
+> in the series for your convenience:
+>
+>  - Patches 1-3 are required for building the kernel with ToT Clang,
+>    and IAS, and patch 4 is needed to build allmodconfig with LTO.
+>
+>  - Patches 3-4 are already in linux-next, but not yet in 5.9-rc.
+>
+> ---
+> Changes in v2:
+>
+>   - Fixed -Wmissing-prototypes warnings with W=1.
+>
+>   - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
+>     scrubbing to make distclean.
+>
+>   - Added a comment about Clang >=11 being required.
+>
+>   - Added a patch to disable LTO for the arm64 KVM nVHE code.
+>
+>   - Disabled objtool's noinstr validation with LTO unless enabled.
+>
+>   - Included Peter's proposed objtool mcount patch in the series
+>     and replaced recordmcount with the objtool pass to avoid
+>     whitelisting relocations that are not calls.
+>
+>   - Updated several commit messages with better explanations.
+>
+>
+> Arvind Sankar (2):
+>   x86/boot/compressed: Disable relocation relaxation
+>   x86/asm: Replace __force_order with memory clobber
+>
+> Luca Stefani (1):
+>   RAS/CEC: Fix cec_init() prototype
+>
+> Nick Desaulniers (1):
+>   lib/string.c: implement stpcpy
+>
+> Peter Zijlstra (1):
+>   objtool: Add a pass for generating __mcount_loc
+>
+> Sami Tolvanen (23):
+>   objtool: Don't autodetect vmlinux.o
+>   kbuild: add support for objtool mcount
+>   x86, build: use objtool mcount
+>   kbuild: add support for Clang LTO
+>   kbuild: lto: fix module versioning
+>   kbuild: lto: postpone objtool
+>   kbuild: lto: limit inlining
+>   kbuild: lto: merge module sections
+>   kbuild: lto: remove duplicate dependencies from .mod files
+>   init: lto: ensure initcall ordering
+>   init: lto: fix PREL32 relocations
+>   PCI: Fix PREL32 relocations for LTO
+>   modpost: lto: strip .lto from module names
+>   scripts/mod: disable LTO for empty.c
+>   efi/libstub: disable LTO
+>   drivers/misc/lkdtm: disable LTO for rodata.o
+>   arm64: export CC_USING_PATCHABLE_FUNCTION_ENTRY
+>   arm64: vdso: disable LTO
+>   KVM: arm64: disable LTO for the nVHE directory
+>   arm64: allow LTO_CLANG and THINLTO to be selected
+>   x86, vdso: disable LTO only for vDSO
+>   x86, relocs: Ignore L4_PAGE_OFFSET relocations
+>   x86, build: allow LTO_CLANG and THINLTO to be selected
+>
+>  .gitignore                            |   1 +
+>  Makefile                              |  65 ++++++-
+>  arch/Kconfig                          |  67 +++++++
+>  arch/arm64/Kconfig                    |   2 +
+>  arch/arm64/Makefile                   |   1 +
+>  arch/arm64/kernel/vdso/Makefile       |   4 +-
+>  arch/arm64/kvm/hyp/nvhe/Makefile      |   4 +-
+>  arch/x86/Kconfig                      |   3 +
+>  arch/x86/Makefile                     |   5 +
+>  arch/x86/boot/compressed/Makefile     |   2 +
+>  arch/x86/boot/compressed/pgtable_64.c |   9 -
+>  arch/x86/entry/vdso/Makefile          |   5 +-
+>  arch/x86/include/asm/special_insns.h  |  28 +--
+>  arch/x86/kernel/cpu/common.c          |   4 +-
+>  arch/x86/tools/relocs.c               |   1 +
+>  drivers/firmware/efi/libstub/Makefile |   2 +
+>  drivers/misc/lkdtm/Makefile           |   1 +
+>  drivers/ras/cec.c                     |   9 +-
+>  include/asm-generic/vmlinux.lds.h     |  11 +-
+>  include/linux/init.h                  |  79 +++++++-
+>  include/linux/pci.h                   |  19 +-
+>  kernel/trace/Kconfig                  |   5 +
+>  lib/string.c                          |  24 +++
+>  scripts/Makefile.build                |  55 +++++-
+>  scripts/Makefile.lib                  |   6 +-
+>  scripts/Makefile.modfinal             |  31 ++-
+>  scripts/Makefile.modpost              |  26 ++-
+>  scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
+>  scripts/link-vmlinux.sh               |  94 ++++++++-
+>  scripts/mod/Makefile                  |   1 +
+>  scripts/mod/modpost.c                 |  16 +-
+>  scripts/mod/modpost.h                 |   9 +
+>  scripts/mod/sumversion.c              |   6 +-
+>  scripts/module-lto.lds                |  26 +++
+>  tools/objtool/builtin-check.c         |  13 +-
+>  tools/objtool/builtin.h               |   2 +-
+>  tools/objtool/check.c                 |  83 ++++++++
+>  tools/objtool/check.h                 |   1 +
+>  tools/objtool/objtool.h               |   1 +
+>  39 files changed, 883 insertions(+), 108 deletions(-)
+>  create mode 100755 scripts/generate_initcall_order.pl
+>  create mode 100644 scripts/module-lto.lds
+>
+>
+> base-commit: e28f0104343d0c132fa37f479870c9e43355fee4
+> --
+> 2.28.0.402.g5ffc5be6b7-goog
+>
 
-> > Also, it is hard to claim that the above behavior is universally true. A
-> > filesystem could opt to keep the pages dirty for some errors, but the
-> > vast majority just toss out the data whenever there is a writeback
-> > problem.
-> 
-> ...and any filesystem that doesn't behave that way is wasting effort,
-> because nothing else can be assumed.
-> 
-
-Yeah. I only made the point to be pedantic. There's no benefit to
-documenting that, I think...
-
-> Regarding your "NOTES" addition, I don't feel comfortable with the
-> "clean" language.  I would prefer something like:
-> 
->  When fsync() reports a failure (EIO, ENOSPC, EDQUOT) it must be assumed
->  that any write requests initiated since the previous successful fsync
->  was initiated may have failed, and that any cached data may have been
->  lost.  A future fsync() will not attempt to write out the same data
->  again.  If recovery is possible and desired, the application must
->  repeat all the writes that may have failed.
-> 
->  If the regions of a file that were written to prior to a failed fsync()
->  are read, the content reported may not reflect the stored content, and
->  subsequent reads may revert to the stored content at any time.
-> 
-
-Much nicer.
-
-Should we make a distinction between usage and functional classes of
-errors in this? The "usage" errors will probably not result in the pages
-being tossed out, but the functional ones almost certainly will...
 
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Thanks,
+~Nick Desaulniers
