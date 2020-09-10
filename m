@@ -2,143 +2,111 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FD9C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D386C43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E81162078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:35:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOioGQ5e"
+	by mail.kernel.org (Postfix) with ESMTP id A4E1F214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 11:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599737924;
+	bh=K5vBZ3S/QdRzsbugWeoWqbFxwvvquZDyxhGWk5y47jA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=StynMkYHr7ALA/nGQMsZSdYNfoNepWjaIN+Ba6lOm48gZnfJ1HoNikhiCA6QdCl5w
+	 hHVlgUsVApoftaAZ2wl4kgQSGBEQhEGCSttT+rUGLNKnraaFcypmQveahIQnGhb5Qn
+	 LHUKQ/2nlikOKENRBS0yj9MD89+gUeGghIXBOnVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgIJLfD (ORCPT
+        id S1729298AbgIJLhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 07:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730255AbgIJLYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 07:24:43 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEB4C061756;
-        Thu, 10 Sep 2020 04:23:28 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 5so4083897pgl.4;
-        Thu, 10 Sep 2020 04:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T1jU/BIULwBFdkoPS5XoMOevUkSDj3Vui3wyMh4knhM=;
-        b=kOioGQ5evJcV7vpyJ2QT+b8KV74xlfj4V9gz+Gi9EJKijWhwcOR2jiYEUVAY3td3LW
-         Y08bH84CTpx8e1jVbrmjV040DNvqg3GLneTw00f6P/lqlxejHGjOK+XxxAmKjlnNDMUH
-         1CL7nWgoCi8F9/LMTe4G7vr7hXTULJuAKlEwrpISSp9qOTNqMRqGI9sibilZLgXT+U+x
-         2S9vALT5XO91HHsPu7PAVi5LsQ35l8W0H5GMW5/W5UKQpM5mlE55S8I4sHH4fIZRCb4C
-         elah9RPrcRcUVGWbTbX8KVhKd0AbE/DLcWiRSNsdVPZ47jX+2LBSaOScguSScmKG/Vhc
-         cwPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T1jU/BIULwBFdkoPS5XoMOevUkSDj3Vui3wyMh4knhM=;
-        b=gVxhj0EYehb9J6fqyMhcyjfcM81GEFbREy+Dq1hW3kurKWHHzgvljrUSyYu+oNF4hK
-         Od583C2k3iiGlBmRDWKzdDXdFFk4/pXYlxvKpEN3/52LncE9NjXzJjfcieyhp6/DTg+9
-         qHm4Aovw92QtNHsmsX2DS9ygyV/b/P+SvxCh3EodYn06i8IsGUpaXDBnijnDMCaYah0y
-         S72R6qEDBTHaLx8G/NQboOHwyTN056RFZGxWqQ/+NxNMQV52BuSbqc7Wz71YoX5JJpmk
-         0fbx/2MZWCGatSG7EPql7Hb4v4/MhQrUgcDcnYQ+fv6frlqUGEctk9RHxUVEd3ZbA7Q3
-         gDOQ==
-X-Gm-Message-State: AOAM533ScDMQMj108uJ9jfPb5mLA5ar0Kbrk2pN7qd3m14vTlfol+Eh8
-        hMraFpNhWs5Ij/6vA1pURe62rVWXE4NwKwYRixQ=
-X-Google-Smtp-Source: ABdhPJyCj6CWd0QanAzErE/ynm5jwINoiczRiB4v/uRCuGY6oPJwHWMmLybWkZiYlUewNxugqJLfl5R3W8ptoe7SDh4=
-X-Received: by 2002:a63:ec4c:: with SMTP id r12mr4011616pgj.74.1599737008099;
- Thu, 10 Sep 2020 04:23:28 -0700 (PDT)
+        Thu, 10 Sep 2020 07:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730337AbgIJLOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 10 Sep 2020 07:14:55 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA38520684;
+        Thu, 10 Sep 2020 11:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599736494;
+        bh=K5vBZ3S/QdRzsbugWeoWqbFxwvvquZDyxhGWk5y47jA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZtMWVprcRDARi/mFEdxdWUYDJ1yvceQsdsAuWYG213Q729kyTpfcIs9UUdg6OakoE
+         HEq10BkfYHGqYOQS1h2qY/NsFBS7obYFJxH49HdFwzSpS5WU7UQ6hjhCxvP9Y31Qga
+         J59dYab27y53wSUazxdVZYvU/kckmTsEVm1GWd9g=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B658540D3D; Thu, 10 Sep 2020 08:14:52 -0300 (-03)
+Date:   Thu, 10 Sep 2020 08:14:52 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Kajol Jain <kjain@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 2/3] perf metricgroup: Fix typo in comment.
+Message-ID: <20200910111452.GB4018363@kernel.org>
+References: <20200910032632.511566-1-irogers@google.com>
+ <20200910032632.511566-2-irogers@google.com>
+ <CAM9d7cjiL92Y8pCurXUpVznDUYZ8F2N0H-fSW4sPi8=M3gGSfQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200829064726.26268-1-krzk@kernel.org> <20200829064726.26268-8-krzk@kernel.org>
- <20200909193600.41970d8c@archlinux> <CAJKOXPeo8SXWaRmiFG6z+t9jcnaSMRpvRPm2X22Rf6rtEeKVew@mail.gmail.com>
- <a37c69f2-1f16-2680-2716-0c1b77748d55@axentia.se> <CAHp75Vc4-zkkWtOz8w7pA0Vu1yMAVodhPSLQ1NJH4K+j9XD52g@mail.gmail.com>
- <CAJKOXPdNAw8scFKCGaC_hp4jMyLD_mFLKr=+fGKSm6nCkcRF9g@mail.gmail.com>
-In-Reply-To: <CAJKOXPdNAw8scFKCGaC_hp4jMyLD_mFLKr=+fGKSm6nCkcRF9g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Sep 2020 14:23:10 +0300
-Message-ID: <CAHp75Vc4VdfNeaLH_7MOGLsJLnbyYB+DnSpsyoDx2GDFV2N5Dg@mail.gmail.com>
-Subject: Re: [PATCH v3 08/18] iio: adc: stm32: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cjiL92Y8pCurXUpVznDUYZ8F2N0H-fSW4sPi8=M3gGSfQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 9:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Thu, 10 Sep 2020 at 08:52, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thursday, September 10, 2020, Peter Rosin <peda@axentia.se> wrote:
-> >> On 2020-09-09 21:57, Krzysztof Kozlowski wrote:
-> >> > On Wed, 9 Sep 2020 at 20:36, Jonathan Cameron <jic23@kernel.org> wrote:
-> >> >> On Sat, 29 Aug 2020 08:47:16 +0200
-> >> >> Krzysztof Kozlowski <krzk@kernel.org> wrote:
-
-...
-
-> >> >>> @@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
-> >> >>>               priv->booster = devm_regulator_get_optional(dev, "booster");
-> >> >>>               if (IS_ERR(priv->booster)) {
-> >> >>>                       ret = PTR_ERR(priv->booster);
-> >> >>> -                     if (ret != -ENODEV) {
-> >> >>> -                             if (ret != -EPROBE_DEFER)
-> >> >>> -                                     dev_err(dev, "can't get booster %d\n",
-> >> >>> -                                             ret);
-> >> >>> -                             return ret;
-> >> >>> -                     }
-> >> >>> +                     if (ret != -ENODEV)
-> >> >>> +                             dev_err_probe(dev, ret, "can't get booster\n");
-> >> >>
-> >> >> This tripped a warning and got the patch dropped because we no longer
-> >> >> return on error.
-> >>
-> >> As Jonathan already said, we no longer return in this hunk. I.e., you have
-> >> clobbered the error path.
+Em Thu, Sep 10, 2020 at 02:38:58PM +0900, Namhyung Kim escreveu:
+> On Thu, Sep 10, 2020 at 12:26 PM Ian Rogers <irogers@google.com> wrote:
 > >
+> > Add missing character.
 > >
-> > Exactly my point why I proposed _must_check in the first place.
->
-> That was not exactly that point as you did not mention possible errors
-> but only "miss the opportunity to optimize". Optimization is different
-> things than a mistake.
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Yes, and that's what happened here. You missed optimization which led
-to an error.
+Applied this and the first one, continuing...
 
-And this is a good showcase to see how dev_err_probe() may be misused
-because of overlooking subtle details.
-Perhaps we can do
-
-static inline __must_check dev_err_probe_ret(...)
-{
-  return dev_err_probe(...);
-}
-
-(or other way around, introduce dev_err_probe_noret(), yes, name sucks)
+- Arnaldo
+ 
+> Thanks
+> Namhyung
+> 
+> > ---
+> >  tools/perf/util/metricgroup.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> > index 8831b964288f..662f4e8777d5 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -150,7 +150,7 @@ static void expr_ids__exit(struct expr_ids *ids)
+> >  }
+> >
+> >  /**
+> > - * Find a group of events in perf_evlist that correpond to those from a parsed
+> > + * Find a group of events in perf_evlist that correspond to those from a parsed
+> >   * metric expression. Note, as find_evsel_group is called in the same order as
+> >   * perf_evlist was constructed, metric_no_merge doesn't need to test for
+> >   * underfilling a group.
+> > --
+> > 2.28.0.526.ge36021eeef-goog
+> >
 
 -- 
-With Best Regards,
-Andy Shevchenko
+
+- Arnaldo
