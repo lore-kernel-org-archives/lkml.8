@@ -2,167 +2,93 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A45AC43461
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880C6C2BB84
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23DE20684
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245F720872
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rilNWYgj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="da9Ha+I/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a1R7LZaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730077AbgIJIux (ORCPT
+        id S1730184AbgIJIvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgIJIus (ORCPT
+        Thu, 10 Sep 2020 04:51:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38448 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgIJIvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:50:48 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B49BBC061573;
-        Thu, 10 Sep 2020 01:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eKsZkWdvIiBRnt555PJ6VzAcymBcJaI9YZ3lDNxYBks=; b=rilNWYgjFUy/9/MU1y5a6Ej2af
-        Zz3OjPMQhDSVq43wUhkoi09DbKNkf8SSqSJy5eD6jLr4iA6+ld3q0o0KlLtFt9/4vHgePevUUeSdY
-        Pi5d4PaG1W0JZWGiqbY8r1HKwnhhRtfUeJ/Z4jjTabOYsBuN5HfSq6ljFrP7NfADSJKq+oyjxcAU+
-        12fTNz6gqkyQdSp9GFsN0m1923u+tQrYI6AEKkw2JgkGuHa3Co/rLN7p3C+5ZbbZ9kbXoYosgva3T
-        Bq5znOuD1CPAsIeYR2JsKb+gVJinOUtBCCwAbT2HWVCilg3+CCtS86XgNYQFUBISMahXmkeQvJR3+
-        A+c3gqQQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGIHu-0001vn-77; Thu, 10 Sep 2020 08:50:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 533183007CD;
-        Thu, 10 Sep 2020 10:50:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 305522651245D; Thu, 10 Sep 2020 10:50:36 +0200 (CEST)
-Date:   Thu, 10 Sep 2020 10:50:36 +0200
-From:   peterz@infradead.org
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        Stephane Eranian <stephane.eranian@google.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] arch/x86/amd/ibs: Fix re-arming IBS Fetch
-Message-ID: <20200910085036.GD35926@hirez.programming.kicks-ass.net>
-References: <20200908214740.18097-1-kim.phillips@amd.com>
- <20200908214740.18097-4-kim.phillips@amd.com>
- <20200910083223.GY1362448@hirez.programming.kicks-ass.net>
+        Thu, 10 Sep 2020 04:51:17 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599727874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qepHrW+rdQoQ9vl8ZgAgXzcx8fv7hhN4FIsqOz07Dfg=;
+        b=da9Ha+I/iosLUR9+jA0ZjI5DE4mPz0NwPQnA7utFmvwZtvsqnTZu/rwakjiVkXD3ax0DXG
+        MLAk/hEEbGMSvRHt1oRjndcsduQjOvKST3wIxFzRDqEvKPID7ExkvTL9/CE5bAQ+Frw9FA
+        Y1pmTw42x0qyHH0dA7AM6QZpmkbuxV+7VBUXgxnUUYBkd3StIHYDgWzkSMJJ1/S6cCAVf2
+        8YOjYXHVrPZAPOCNt/eTu8TnFjyQyqlaWu+x/dzuCQfIzpIZGOAwh0l9lmQBKUu2qGq2xH
+        B8695IyEWRpq7kya1xS7kMksJb4LGfY8lC/NiOLGosHJ9WU338uaxOdTRH22aQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599727874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qepHrW+rdQoQ9vl8ZgAgXzcx8fv7hhN4FIsqOz07Dfg=;
+        b=a1R7LZaRAJtMpLJTIaOSZmXkW6DemWGjMPcnAC8qEe49nc1YVYGUen3pop+3k6BWuS0iZ7
+        f0WCQETCEkxr5NAw==
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        LinusW <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list\:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+In-Reply-To: <CAD=FV=X0wjOYC9u1y=fhDTVSW+jd5G8ydSYJEE-a8BTfnhRgTA@mail.gmail.com>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-4-git-send-email-mkshah@codeaurora.org> <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com> <874koqxv6t.fsf@nanos.tec.linutronix.de> <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org> <87y2m1vhkm.fsf@nanos.tec.linutronix.de> <CAD=FV=XXf3_tjqK14WdMuKygJptMTS+bKhH_ceiUE3wyYoCnxg@mail.gmail.com> <877dtdj042.fsf@nanos.tec.linutronix.de> <CAD=FV=Ua7fLGw6JiG1rnCKpAdO1nXX4A4x1Why-LE9L_FBFe8Q@mail.gmail.com> <87zh67uife.fsf@nanos.tec.linutronix.de> <CAD=FV=U8vchyRXOjozYYroq3Mit_gt=XXADLfn0W4N4TyQzyjQ@mail.gmail.com> <87pn7150li.fsf@nanos.tec.linutronix.de> <CAD=FV=X0wjOYC9u1y=fhDTVSW+jd5G8ydSYJEE-a8BTfnhRgTA@mail.gmail.com>
+Date:   Thu, 10 Sep 2020 10:51:14 +0200
+Message-ID: <87imcmj9q5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200910083223.GY1362448@hirez.programming.kicks-ass.net>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:32:23AM +0200, peterz@infradead.org wrote:
-> > @@ -363,7 +363,14 @@ perf_ibs_event_update(struct perf_ibs *perf_ibs, struct perf_event *event,
-> >  static inline void perf_ibs_enable_event(struct perf_ibs *perf_ibs,
-> >  					 struct hw_perf_event *hwc, u64 config)
-> >  {
-> > -	wrmsrl(hwc->config_base, hwc->config | config | perf_ibs->enable_mask);
-> > +	u64 _config = (hwc->config | config) & ~perf_ibs->enable_mask;
-> > +
-> > +	/* On Fam17h, the periodic fetch counter is set when IbsFetchEn is changed from 0 to 1 */
-> > +	if (perf_ibs == &perf_ibs_fetch && boot_cpu_data.x86 >= 0x16 && boot_cpu_data.x86 <= 0x18)
-> > +		wrmsrl(hwc->config_base, _config);
+On Tue, Sep 08 2020 at 12:05, Doug Anderson wrote:
+> On Fri, Sep 4, 2020 at 2:54 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Right and that's where we want the new chip flag with the unmask if
+>> armed.
+>
+> OK, so we're back in Maulik's court to spin, right?  I think the last
+> word before our tangent was at:
+>
+> http://lore.kernel.org/r/87y2m1vhkm.fsf@nanos.tec.linutronix.de
+>
+> There you were leaning towards #2 ("a new function
+> disable_wakeup_irq_for_suspend()").  Presumably you'd now be
+> suggesting #1 ("Do the symmetric thing") since I've pointed out the
+> bunch of drivers that would need to change.
 
-> A better option would be to use hwc->flags, you're loading from that
-> line already, so it's guaranteed hot and then you only have a single
-> branch. Or stick it in perf_ibs near enable_mask, same difference.
+Yes #1 is what we need.
 
-I fixed it for you.
+Thanks,
 
----
-
-struct perf_ibs {
-	struct pmu                 pmu;                  /*     0   296 */
-	/* --- cacheline 4 boundary (256 bytes) was 40 bytes ago --- */
-	unsigned int               msr;                  /*   296     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	u64                        config_mask;          /*   304     8 */
-	u64                        cnt_mask;             /*   312     8 */
-	/* --- cacheline 5 boundary (320 bytes) --- */
-	u64                        enable_mask;          /*   320     8 */
-	u64                        valid_mask;           /*   328     8 */
-	u64                        max_period;           /*   336     8 */
-	long unsigned int          offset_mask[1];       /*   344     8 */
-	int                        offset_max;           /*   352     4 */
-	unsigned int               fetch_count_reset_broken:1; /*   356: 0  4 */
-
-	/* XXX 31 bits hole, try to pack */
-
-	struct cpu_perf_ibs *      pcpu;                 /*   360     8 */
-	struct attribute * *       format_attrs;         /*   368     8 */
-	struct attribute_group     format_group;         /*   376    40 */
-	/* --- cacheline 6 boundary (384 bytes) was 32 bytes ago --- */
-	const struct attribute_group  * attr_groups[2];  /*   416    16 */
-	u64                        (*get_count)(u64);    /*   432     8 */
-
-	/* size: 440, cachelines: 7, members: 15 */
-	/* sum members: 432, holes: 1, sum holes: 4 */
-	/* sum bitfield members: 1 bits, bit holes: 1, sum bit holes: 31 bits */
-	/* last cacheline: 56 bytes */
-};
-
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -89,6 +89,7 @@ struct perf_ibs {
- 	u64				max_period;
- 	unsigned long			offset_mask[1];
- 	int				offset_max;
-+	unsigned int			fetch_count_reset_broken : 1;
- 	struct cpu_perf_ibs __percpu	*pcpu;
- 
- 	struct attribute		**format_attrs;
-@@ -370,7 +371,13 @@ perf_ibs_event_update(struct perf_ibs *p
- static inline void perf_ibs_enable_event(struct perf_ibs *perf_ibs,
- 					 struct hw_perf_event *hwc, u64 config)
- {
--	wrmsrl(hwc->config_base, hwc->config | config | perf_ibs->enable_mask);
-+	u64 _config = (hwc->config | config) & ~perf_ibs->enable_mask;
-+
-+	if (perf_ibs->fetch_count_reset_broken)
-+		wrmsrl(hwc->config_base, _config);
-+
-+ 	_config |= perf_ibs->enable_mask;
-+	wrmsrl(hwc->config_base, _config);
- }
- 
- /*
-@@ -756,6 +763,13 @@ static __init void perf_event_ibs_init(v
- {
- 	struct attribute **attr = ibs_op_format_attrs;
- 
-+	/*
-+	 * Some chips fail to reset the fetch count when it is written; instead
-+	 * they need a 0-1 transition of IbsFetchEn.
-+	 */
-+	if (boot_cpu_data.x86 >= 0x16 && boot_cpu_data.x86 <= 0x18)
-+		perf_ibs_fetch.fetch_count_reset_broken = 1;
-+
- 	perf_ibs_pmu_init(&perf_ibs_fetch, "ibs_fetch");
- 
- 	if (ibs_caps & IBS_CAPS_OPCNT) {
+        tglx
