@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025BDC43461
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 187E32067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E362067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 08:15:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DxY9c8U9"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QMmGQYeC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbgIJIPX (ORCPT
+        id S1730206AbgIJIPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 04:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53628 "EHLO
+        Thu, 10 Sep 2020 04:15:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgIJIMo (ORCPT
+        with ESMTP id S1729161AbgIJIMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 04:12:44 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E9EC0613ED
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:12:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id 67so3816745pgd.12
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:12:43 -0700 (PDT)
+        Thu, 10 Sep 2020 04:12:48 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E09C061786
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:12:45 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id n3so961584pjq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 01:12:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tH3VhkqM1acAjytNJ62tEalL9JPHCW4E9Rj2E8HYRpU=;
-        b=DxY9c8U9Y9+lT00hgUY1Dsf/2yUU0Gi/XRr5Frt32Dvn/gZKLgbfq0kXissj8X1brN
-         zGi0+/brafrYW6kvNcl0M6gsJTBDzg4aLpdcr9NhPEvxGTXAEyaJilT9aC56iLqkAxlW
-         Gbeaiu7RxZKWqxGuMnq8LubvdzQz4qtiHH6owgpbr1c5b6pgzaZtl7W2l0hh8CbY4xXg
-         u4QnKFS/tnAflzcYUfnBT8wteBrcz4y18klUYEZsp3HtzHV0YDaQNjHDPMbcyBrlLlDQ
-         vFElbORqveFSUjvbIITPmqMO0Q83HHU9EnOYmb7bhlQKFEM3nTA6ryetRga19tUyMhJt
-         c3GQ==
+        bh=pBZg38YV3F0UBIikGh/iifz81s+4k+D3Kp7Tc68TLZI=;
+        b=QMmGQYeC6WHteUVor0MkG/umERsoUyehK2V8+a5Xgv0HC+1W/5a/3SgTR1co9SZdzr
+         b0TxGgynak/YrX59cQrA2aDjs+g1TnA4h28P1AoV4tqxL63aD4nfD9B3TmCMskjuaaL0
+         ED7eIL2mKHpTHcOvzwn2ud/ORFKZDbShWyGUO1y4bKo2Ez1uY0bFyEpRziFilumZSLv/
+         7ZuzbGVSFp6BPE8UmMIgcRfIUlyxsSeeN4XCD2hILXiWjD/pn+uUb/um1ehh4K1BPWcT
+         mwT/t1FlGLgKRToL3dEkcJDNNNOGUvmkvROg7n5fOJK1NEEf+Ar/OI9LbaMmXQut80ou
+         b+wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tH3VhkqM1acAjytNJ62tEalL9JPHCW4E9Rj2E8HYRpU=;
-        b=ef5IJMvOElHPNlu+43eU0cDmbO9K9aGxugIDb5tTTxeSt9mYIHhkhawbbx1b2YH2kE
-         qpEFQuf9qQEHd6RSoqMka6vv4V1iKx2bSXTqa1jg9L/OwRHXpUP2dPKBlvXRftzsO3p9
-         dCBIjwb+io2n9Jn6SJi2BH0+p70/vP4A3oSv+SqtVNYhNn5xE1hKpHKQ7x7jBNi72bwP
-         YABbvbvMAKnlD0ZEy67ATw0SSMsb/uG9IpJoundTKATVNWVXO2tAChaPMflCNaDsdg0e
-         03tAeO0GFV7tfOebDLI8+ZBpekge7WxMAr38IjktnN7PSlDJTuL/PeRFVseemL4opOP4
-         2/3w==
-X-Gm-Message-State: AOAM530RyHLY6cI+B96kno4IhKuLQgK70uXzOdYZw+R2UNIccpOiBqEh
-        2sXXDXRbjib+KPo3vPYjyazAiPnxNKu5Vy3j
-X-Google-Smtp-Source: ABdhPJz6n4IqjVW7yXiLfH7sWwLDESD0k7agKvdLsXi71/Eg+VoM+FG5UXouQdF/P8pn2bMKy8zmoQ==
-X-Received: by 2002:aa7:9ac9:0:b029:13e:d13d:a133 with SMTP id x9-20020aa79ac90000b029013ed13da133mr4368433pfp.27.1599725563195;
-        Thu, 10 Sep 2020 01:12:43 -0700 (PDT)
+        bh=pBZg38YV3F0UBIikGh/iifz81s+4k+D3Kp7Tc68TLZI=;
+        b=g02nkgZy5PX6KLVuO7S67Tdt6y729W4YMJdf5py0QKOnnNsJAIw6NHESZhNpTmZzlW
+         g1XVOg/GZJLhRNpuYfGDvFUwPsyyZySaF3r3k1hh68+YDLWdIMQLOrcG3K669lOq0NQv
+         gyXwo0xwsZBWAiQMtGvdkJrlA3cALBDXvkrEGlOfk8JWHL8xJbVbgTVql1/fRXg0Kvaw
+         Urd3V/NA1RTM1WUY7T++zRCLSZu3ifBHUoDN6LS9m7N0QvhnlCGygQcfJedOIhgjxWtc
+         68YJMungJzsOY5Rw021wrDesJ2Yfc+ygoMXwomYzT91LHmkc1TdSiWcTCLUaqKfJsS5C
+         T1IQ==
+X-Gm-Message-State: AOAM5316abl52AB/QO2li5b9MSOF+pe6SKZaaKzNA7ZH7aez0dt0yDQ/
+        em74EquIx+DC+XvsjcOaqxLffg==
+X-Google-Smtp-Source: ABdhPJx5AqEGmcn4ZmggG6tMGtXj1OMr4k67KXCra2/D96tG0n9Nv2iG9jor2KACZRPMEfu9BZEzBQ==
+X-Received: by 2002:a17:90b:815:: with SMTP id bk21mr1154992pjb.57.1599725565272;
+        Thu, 10 Sep 2020 01:12:45 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id e1sm2196056pfl.162.2020.09.10.01.12.41
+        by smtp.gmail.com with ESMTPSA id e1sm2196056pfl.162.2020.09.10.01.12.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 01:12:42 -0700 (PDT)
+        Thu, 10 Sep 2020 01:12:44 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
         palmer@dabbelt.com, paul.walmsley@sifive.com
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Anup Patel <anup@brainfault.org>
-Subject: [RFC PATCH v7 03/21] riscv: Extending cpufeature.c to detect V-extension
-Date:   Thu, 10 Sep 2020 16:11:58 +0800
-Message-Id: <119d2ae4fd376a2095129144b0ac32970ecf7e86.1599719352.git.greentime.hu@sifive.com>
+Cc:     Guo Ren <guoren@linux.alibaba.com>, Guo Ren <guoren@kernel.org>
+Subject: [RFC PATCH v7 04/21] riscv: Add new csr defines related to vector extension
+Date:   Thu, 10 Sep 2020 16:11:59 +0800
+Message-Id: <c75e35c53ad8eb24a3f21f17f383d1f0177138a8.1599719352.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <cover.1599719352.git.greentime.hu@sifive.com>
 References: <cover.1599719352.git.greentime.hu@sifive.com>
@@ -78,42 +77,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+Follow the riscv vector spec to add new csr numbers.
 
-Current cpufeature.c doesn't support detecting V-extension, because
-"rv64" also contain a 'v' letter and we need to skip it.
-
+[guoren@linux.alibaba.com: first porting for new vector related csr]
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Greentime Hu <greentime.hu@sifive.com>
+Acked-by: Guo Ren <guoren@kernel.org>
 ---
- arch/riscv/include/uapi/asm/hwcap.h | 1 +
- arch/riscv/kernel/cpufeature.c      | 1 +
- 2 files changed, 2 insertions(+)
+ arch/riscv/include/asm/csr.h | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/include/uapi/asm/hwcap.h b/arch/riscv/include/uapi/asm/hwcap.h
-index 46dc3f5ee99f..c52bb7bbbabe 100644
---- a/arch/riscv/include/uapi/asm/hwcap.h
-+++ b/arch/riscv/include/uapi/asm/hwcap.h
-@@ -21,5 +21,6 @@
- #define COMPAT_HWCAP_ISA_F	(1 << ('F' - 'A'))
- #define COMPAT_HWCAP_ISA_D	(1 << ('D' - 'A'))
- #define COMPAT_HWCAP_ISA_C	(1 << ('C' - 'A'))
-+#define COMPAT_HWCAP_ISA_V	(1 << ('V' - 'A'))
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index cec462e198ce..0d4c89fb97b5 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -24,6 +24,12 @@
+ #define SR_FS_CLEAN	_AC(0x00004000, UL)
+ #define SR_FS_DIRTY	_AC(0x00006000, UL)
  
- #endif /* _UAPI_ASM_RISCV_HWCAP_H */
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index ac202f44a670..f11ada3fa906 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -73,6 +73,7 @@ void riscv_fill_hwcap(void)
- 	isa2hwcap['f'] = isa2hwcap['F'] = COMPAT_HWCAP_ISA_F;
- 	isa2hwcap['d'] = isa2hwcap['D'] = COMPAT_HWCAP_ISA_D;
- 	isa2hwcap['c'] = isa2hwcap['C'] = COMPAT_HWCAP_ISA_C;
-+	isa2hwcap['v'] = isa2hwcap['V'] = COMPAT_HWCAP_ISA_V;
++#define SR_VS           _AC(0x00000600, UL) /* Vector Status */
++#define SR_VS_OFF       _AC(0x00000000, UL)
++#define SR_VS_INITIAL   _AC(0x00000200, UL)
++#define SR_VS_CLEAN     _AC(0x00000400, UL)
++#define SR_VS_DIRTY     _AC(0x00000600, UL)
++
+ #define SR_XS		_AC(0x00018000, UL) /* Extension Status */
+ #define SR_XS_OFF	_AC(0x00000000, UL)
+ #define SR_XS_INITIAL	_AC(0x00008000, UL)
+@@ -31,9 +37,9 @@
+ #define SR_XS_DIRTY	_AC(0x00018000, UL)
  
- 	elf_hwcap = 0;
+ #ifndef CONFIG_64BIT
+-#define SR_SD		_AC(0x80000000, UL) /* FS/XS dirty */
++#define SR_SD		_AC(0x80000000, UL) /* FS/VS/XS dirty */
+ #else
+-#define SR_SD		_AC(0x8000000000000000, UL) /* FS/XS dirty */
++#define SR_SD		_AC(0x8000000000000000, UL) /* FS/VS/XS dirty */
+ #endif
  
+ /* SATP flags */
+@@ -111,6 +117,12 @@
+ #define CSR_PMPADDR0		0x3b0
+ #define CSR_MHARTID		0xf14
+ 
++#define CSR_VSTART		0x8
++#define CSR_VCSR		0xf
++#define CSR_VL			0xc20
++#define CSR_VTYPE		0xc21
++#define CSR_VLENB		0xc22
++
+ #ifdef CONFIG_RISCV_M_MODE
+ # define CSR_STATUS	CSR_MSTATUS
+ # define CSR_IE		CSR_MIE
 -- 
 2.28.0
 
