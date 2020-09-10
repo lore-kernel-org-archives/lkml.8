@@ -2,153 +2,143 @@ Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A431C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55BCF21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7769F20829
+	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 10:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qytJ0anu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYKUQC5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgIJKVN (ORCPT
+        id S1730465AbgIJKVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 06:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44934 "EHLO
+        Thu, 10 Sep 2020 06:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgIJKRx (ORCPT
+        with ESMTP id S1728211AbgIJKVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 06:17:53 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611E1C061796
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:17:52 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j2so6073199wrx.7
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Sep 2020 03:17:52 -0700 (PDT)
+        Thu, 10 Sep 2020 06:21:16 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252F3C061573;
+        Thu, 10 Sep 2020 03:21:16 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id m17so6493945ioo.1;
+        Thu, 10 Sep 2020 03:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=35FP4zv+pwkbGr1a0ICMd6sQ90vGjx362WgHWWdE2EE=;
-        b=qytJ0anu0r8iejL2J6YFmry4i70Yz/OxSO1hg0YXgpdvILS87SEuM+OW/N06uatodz
-         PxYfg+QYPOwoxehP3B4PVH7HPiFr7AvPe1OGaELzxBmV8IGd8EGASeJC12C9VE6aOfXj
-         ELoDnCUfz2fhMZxAnb0fX9axz9fdFuTIrGUY6ncQU1vrXqrNMWGwHirCdtdDrcF5tLwt
-         nz4alzp1i/jrRUVE8npi1+JiG6oduIEDZHsIgpN3crEIVyP/DG9cituiP4B3LG7sL2MR
-         o0ZODSoIXBmYK62jfACiBuEneyDJHaaSJLAwewbUAyCOlxYo1NvpAwkeppcil4ggIabb
-         WFPg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WIDx3q32OpBxKEzp9SHVTFYjF0eHn3L4CiEBr1eEYX8=;
+        b=oYKUQC5oEjTGVYlyuczxuT6b7kACfyNUTuZFp1lSBBL3ll9Or6GRfh7NRSIqx90O91
+         Hx5ekTT6/oMjOiWlB2w+d77l5x2U6QWDuv7WYUG60skCp34fFti8QvHlMR/HD1KJ8TIk
+         WgHNbMPIL/wi/hn7tenhJAkUuX5RVNVEeUTWhxOHHDVuxOIFw8LZdcB60aZ9Gh480Tcm
+         Tu3+TEBdMInqLZVK6+Xb6xRKVG1BaQMVGYoEMpul6pMU5BX9fyWXyGC6Ell3MJ7PViWX
+         nF2LKkJvD3NRCzQBd6e0sS6rCcIyuL8Sw1A+2oP0mZn9BVXq0ZYpjr0miAijY156Y4g+
+         4hsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=35FP4zv+pwkbGr1a0ICMd6sQ90vGjx362WgHWWdE2EE=;
-        b=E7C9T/YSHZb6bBxkbkBWBbwNQAaiNylBCTJJmbmMKvoox24Ty1JXbI2xswL6s7IphR
-         Cq5LcReSMz2doyvCNzaxAR9S/xBtDUI9jCGkiuzwefgHf5CcUGEHg1JZJskTw3RaYldG
-         qS0bHaDYPgbNPcNrM0flSdFZ59Brs9rUFGWvjkAURa7vWFo6+fiESZfpJhXeTrpgjUVY
-         Pp6kR/Wldr6uQc79eKRat9AYK0zkX1A9LBCq7uEvRW4CnzHiTqLJ9UmxypZqkSb3IsYF
-         kwXhwFyXTIaAB0tustKXxBdd5ECNDta4ownjlUlD5fwm+TAXzkQblnQ6Vs1DBfTf58eJ
-         /ajw==
-X-Gm-Message-State: AOAM531wn1kasPtg4zlmv6ciJ/J1Bq37x5iHwTiBSncjYOBWGglTfeVw
-        UDkmYHPtHIVogH7tsmkMvXc6sg==
-X-Google-Smtp-Source: ABdhPJwwyy6FJ4lFjbkvIsHCWHQE2fqsNe40JDp5tIgVLRzzrHZGi8Opl4fcPMyaHoVU6nJlbkLJtg==
-X-Received: by 2002:adf:9e43:: with SMTP id v3mr8377833wre.306.1599733071084;
-        Thu, 10 Sep 2020 03:17:51 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
-        by smtp.gmail.com with ESMTPSA id m4sm8851731wro.18.2020.09.10.03.17.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 03:17:50 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 3/8] ASoC: q6dsp: q6afe: prepare afe_apr_send_pkt to take response opcode
-Date:   Thu, 10 Sep 2020 11:17:27 +0100
-Message-Id: <20200910101732.23484-4-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200910101732.23484-1-srinivas.kandagatla@linaro.org>
-References: <20200910101732.23484-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WIDx3q32OpBxKEzp9SHVTFYjF0eHn3L4CiEBr1eEYX8=;
+        b=BipR/uvWEidtyL2rCSUsDGMnA2VJW13mx5PfKYXQqnPkLuNEWjnUMrNB+u7ex28c+f
+         4Ft/X8XcUxm60Ci1iW6MMi15sOedSKmWRqwowkeRNhbhMVOdwhrcR279wBBWgqz0cueU
+         7YuWKZond81wPjPomwfkMPHA9GQAiDMshDF2pK2/lrVion4HzWuKxHdvawnhqfoHQrr0
+         d/BcXXNPFpuwBTw6FC2gmZC4X6k18iAnSM+wIF2xdaUledJLaVW+1L8TDoJkfDIHOO6Y
+         D1EbxJveNlCgSNS64MzZixi9HeljtMpFxI3+tOOvQ63mUxd1NNrjENVNU3V2G0Zynq1l
+         XOiQ==
+X-Gm-Message-State: AOAM532+cIygu7zIXoQHOCdy+qbMUf2ime62GIUmkOYs20nz+5F7haWO
+        qdXnTYz3vHsNgkL6Rz4F44+ozb7CPgyeVX1kHGlwfUlEb1BzuA==
+X-Google-Smtp-Source: ABdhPJyKrLNjNzW8T4M7sVP8p/JDi1lpUGIbQO8F+0rLuAnOAy6XRJ9V5vmfjSSBb9vmL7XayBvdWjtRLiQBt04fDPY=
+X-Received: by 2002:a05:6602:2245:: with SMTP id o5mr7064224ioo.105.1599733275286;
+ Thu, 10 Sep 2020 03:21:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200903012224.GL11695@sjchrist-ice> <20200903162304.19694-1-jiangshanlai@gmail.com>
+In-Reply-To: <20200903162304.19694-1-jiangshanlai@gmail.com>
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+Date:   Thu, 10 Sep 2020 18:21:04 +0800
+Message-ID: <CAJhGHyDQMsdtEe8gxDW4A_YOgu4SeCmmm18pBcPA-S4sRhSiMw@mail.gmail.com>
+Subject: Re: [PATCH V3] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update afe_apr_send_pkt() to take response opcode that it should wait for.
-This is helpful in cases where we expect response other than the
-actual command opcode.
+Hi, Paolo
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/qdsp6/q6afe.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+Could you pick the patch please?
 
-diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
-index 8ceefb431bcb..f934c69f0a14 100644
---- a/sound/soc/qcom/qdsp6/q6afe.c
-+++ b/sound/soc/qcom/qdsp6/q6afe.c
-@@ -902,10 +902,9 @@ int q6afe_get_port_id(int index)
- EXPORT_SYMBOL_GPL(q6afe_get_port_id);
- 
- static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
--			    struct q6afe_port *port)
-+			    struct q6afe_port *port, uint32_t rsp_opcode)
- {
- 	wait_queue_head_t *wait = &port->wait;
--	struct apr_hdr *hdr = &pkt->hdr;
- 	int ret;
- 
- 	mutex_lock(&afe->lock);
-@@ -919,7 +918,7 @@ static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
- 		goto err;
- 	}
- 
--	ret = wait_event_timeout(*wait, (port->result.opcode == hdr->opcode),
-+	ret = wait_event_timeout(*wait, (port->result.opcode == rsp_opcode),
- 				 msecs_to_jiffies(TIMEOUT_MS));
- 	if (!ret) {
- 		ret = -ETIMEDOUT;
-@@ -976,7 +975,7 @@ static int q6afe_port_set_param(struct q6afe_port *port, void *data,
- 	pdata->param_id = param_id;
- 	pdata->param_size = psize;
- 
--	ret = afe_apr_send_pkt(afe, pkt, port);
-+	ret = afe_apr_send_pkt(afe, pkt, port, AFE_SVC_CMD_SET_PARAM);
- 	if (ret)
- 		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
- 		       port_id, ret);
-@@ -1025,7 +1024,7 @@ static int q6afe_port_set_param_v2(struct q6afe_port *port, void *data,
- 	pdata->param_id = param_id;
- 	pdata->param_size = psize;
- 
--	ret = afe_apr_send_pkt(afe, pkt, port);
-+	ret = afe_apr_send_pkt(afe, pkt, port, AFE_PORT_CMD_SET_PARAM_V2);
- 	if (ret)
- 		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
- 		       port_id, ret);
-@@ -1155,7 +1154,7 @@ int q6afe_port_stop(struct q6afe_port *port)
- 	stop->port_id = port_id;
- 	stop->reserved = 0;
- 
--	ret = afe_apr_send_pkt(afe, pkt, port);
-+	ret = afe_apr_send_pkt(afe, pkt, port, AFE_PORT_CMD_DEVICE_STOP);
- 	if (ret)
- 		dev_err(afe->dev, "AFE close failed %d\n", ret);
- 
-@@ -1467,7 +1466,7 @@ int q6afe_port_start(struct q6afe_port *port)
- 
- 	start->port_id = port_id;
- 
--	ret = afe_apr_send_pkt(afe, pkt, port);
-+	ret = afe_apr_send_pkt(afe, pkt, port, AFE_PORT_CMD_DEVICE_START);
- 	if (ret)
- 		dev_err(afe->dev, "AFE enable for port 0x%x failed %d\n",
- 			port_id, ret);
--- 
-2.21.0
+I think it'd be better to be merged before v5.9 is released
+since it fixes a flaw.
 
+Thanks
+Lai
+
+On Thu, Sep 3, 2020 at 11:22 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
+>
+> From: Lai Jiangshan <laijs@linux.alibaba.com>
+>
+> When kvm_mmu_get_page() gets a page with unsynced children, the spt
+> pagetable is unsynchronized with the guest pagetable. But the
+> guest might not issue a "flush" operation on it when the pagetable
+> entry is changed from zero or other cases. The hypervisor has the
+> responsibility to synchronize the pagetables.
+>
+> The linux kernel behaves correctly as above for many years, but a recent
+> commit 8c8560b83390 ("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for
+> MMU specific flushes") inadvertently included a line of code to change it
+> without giving any reason in the changelog. It is clear that the commit's
+> intention was to change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT,
+> so we don't unneedlesly flush other contexts but one of the hunks changed
+> nearby KVM_REQ_MMU_SYNC instead.
+>
+> This patch changes it back.
+>
+> Fixes: 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
+> Link: https://lore.kernel.org/lkml/20200320212833.3507-26-sean.j.christopherson@intel.com/
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> ---
+> Changed from v1:
+>         update patch description
+>
+> Changed form v2:
+>         update patch description
+>
+>  arch/x86/kvm/mmu/mmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 4e03841f053d..9a93de921f2b 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+>                 }
+>
+>                 if (sp->unsync_children)
+> -                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> +                       kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+>
+>                 __clear_sp_write_flooding_count(sp);
+>
+> --
+> 2.19.1.6.gb485710b
+>
